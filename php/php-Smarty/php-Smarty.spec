@@ -1,6 +1,6 @@
 Name:           php-Smarty
 Summary:        Template/Presentation Framework for PHP
-Version:        3.1.18
+Version:        3.1.19
 Release:        1%{?dist}
 
 Source0:        http://www.smarty.net/files/Smarty-%{version}.tar.gz
@@ -16,6 +16,8 @@ Requires:       php-date
 Requires:       php-mbstring
 Requires:       php-pcre
 Requires:       php-tokenizer
+
+Provides:       php-composer(smarty/smarty) = %{version}
 
 
 %description
@@ -56,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jul 30 2014 Johan Cwiklinski <johan AT x-tnd DOT be> - 3.1.19-1
+- Last upstream release
+
 * Sat May 10 2014 Johan Cwiklinski <johan AT x-tnd DOT be> - 3.1.18-1
 - Last upstream release
 
