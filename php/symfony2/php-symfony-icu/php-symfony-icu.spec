@@ -11,18 +11,18 @@
 
 %global github_owner     symfony
 %global github_name      Icu
-%global github_version   1.2.1
-%global github_commit    98e197da54df1f966dd5e8a4992135703569c987
+%global github_version   1.2.2
+%global github_commit    d4d85d6055b87f394d941b45ddd3a9173e1e3d2a
 
 %global composer_vendor  symfony
 %global composer_project icu
 
 # "php": ">=5.3.3"
 %global php_min_ver          5.3.3
-# "symfony/intl": "~2.3" (composer.json)
+# "symfony/intl": "~2.3"
 %global symfony_intl_min_ver 2.3
 %global symfony_intl_max_ver 3.0
-# "lib-ICU": ">=4.4" (composer.json)
+# "lib-ICU": ">=4.4"
 %global libicu_min_ver       4.4
 
 %global symfony_dir          %{_datadir}/php/Symfony
@@ -32,7 +32,7 @@
 
 Name:           php-%{composer_vendor}-%{composer_project}
 Version:        %{github_version}
-Release:        3%{dist}
+Release:        1%{dist}
 Summary:        Symfony Icu Component
 
 Group:          Development/Libraries
@@ -43,21 +43,22 @@ Source0:        %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{gith
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
-# For tests
+# For tests: composer.json
 # always ok BuildRequires:  libicu >= %{libicu_min_ver}
 BuildRequires:  php(language)    >= %{php_min_ver}
 BuildRequires:  php-symfony-intl >= %{symfony_intl_min_ver}
 BuildRequires:  php-symfony-intl <  %{symfony_intl_max_ver}
-# For tests: phpcompatinfo (computed from version 1.2.1)
-Requires:       php-ctype
-Requires:       php-intl
+BuildRequires:  php-intl
+# For tests: phpcompatinfo (computed from version 1.2.2)
+BuildRequires:  php-ctype
 %endif
 
+# composer.json
 # always ok Requires:       libicu  >= %{libicu_min_ver}
-Requires:       php(language)    >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.2.1)
-Requires:       php-ctype
+Requires:       php(language) >= %{php_min_ver}
 Requires:       php-intl
+# phpcompatinfo (computed from version 1.2.2)
+Requires:       php-ctype
 
 # Composer
 Provides:       php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -107,22 +108,20 @@ do
     else
         echo "$res_file"
     fi
-done > %{name}.lang
-sed -i "s#%{buildroot}##" %{name}.lang
+done | sed "s#%{buildroot}##" > %{name}.lang
 
 
 %check
 %if %{with_tests}
-# Create tests' autoloader
+# Create autoloader
 mkdir vendor
-( cat <<'AUTOLOADER'
+cat > vendor/autoload.php <<'AUTOLOADER'
 <?php
 spl_autoload_register(function ($class) {
     $src = str_replace('\\', '/', $class).'.php';
     @include_once $src;
 });
 AUTOLOADER
-) > vendor/autoload.php
 
 # Create PHPUnit config w/ colors turned off
 sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
@@ -138,7 +137,9 @@ sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc LICENSE *.md composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *.md composer.json
 %doc Resources/data/*.txt
 
 %dir %{symfony_dir}
@@ -156,6 +157,9 @@ sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 
 %changelog
+* Thu Jul 31 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.2-1
+- Updated to 1.2.2 (BZ #1124230)
+
 * Thu Jun 12 2014 Remi Collet <remi@fedoraproject.org> 1.2.1-3
 - backport rawhide changes (composer)
 
