@@ -1,0 +1,11 @@
+diff -up php5.3-201104170830/ext/oci8/config.m4.remi-oci8 php5.3-201104170830/ext/oci8/config.m4
+--- config.m4.remi-oci8	2011-03-30 00:35:22.000000000 +0200
++++ config.m4	2011-04-17 11:55:25.628871315 +0200
+@@ -291,6 +291,7 @@ if test "$PHP_OCI8" != "no"; then 
+ 
+     dnl Header directory for Instant Client SDK RPM install
+     OCISDKRPMINC=`echo "$PHP_OCI8_INSTANT_CLIENT" | $PHP_OCI8_SED -e 's!^/usr/lib/oracle/\(.*\)/client\('${PHP_OCI8_IC_LIBDIR_SUFFIX}'\)*/lib[/]*$!/usr/include/oracle/\1/client\2!'`
++    OCISDKRPMINC=`echo "$PHP_OCI8_INSTANT_CLIENT" | $PHP_OCI8_SED -e 's!^/usr/\(lib64\|lib\)/oracle/\(.*\)/\(client64\|client\)/lib[/]*$!/usr/include/oracle/\2/\3!'`
+ 
+     dnl Header directory for Instant Client SDK zip file install
+     OCISDKZIPINC=$PHP_OCI8_INSTANT_CLIENT/sdk/include

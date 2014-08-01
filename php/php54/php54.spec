@@ -553,16 +553,31 @@ License:        PHP
 BuildRequires:  oracle-instantclient-devel >= %{oraclever}
 Requires:       php-pdo%{?_isa} = %{version}-%{release}
 Provides:       php_database
-Provides:       php-pdo_oci = %{oci8ver}, php-pdo_oci%{?_isa} = %{oci8ver}
-Provides:       php-pecl-oci8 = %{oci8ver}, php-pecl-oci8%{?_isa} = %{oci8ver}
+Provides:       php-pdo_oci, php-pdo_oci%{?_isa}
+Obsoletes:      php-pecl-oci8 <  %{oci8ver}
+Conflicts:      php-pecl-oci8 >= %{oci8ver}
 Provides:       php-pecl(oci8) = %{oci8ver}, php-pecl(oci8)%{?_isa} = %{oci8ver}
-# Should requires libclntsh.so.11.1, but it's not provided by Oracle RPM.
+# Should requires libclntsh.so.12.1, but it's not provided by Oracle RPM.
 AutoReq:        0
 Obsoletes:      php53-oci8, php53u-oci8, php54-oci8, php54w-oci8
 
 %description oci8
-The php-oci8 package contains a dynamic shared object that will add
-support for accessing OCI8 databases to PHP.
+The php-oci8 packages provides the OCI8 extension version %{oci8ver}
+and the PDO driver to access Oracle Database.
+
+The extension is linked with Oracle client libraries %{oraclever}
+(Oracle Instant Client).  For details, see Oracle's note
+"Oracle Client / Server Interoperability Support" (ID 207303.1).
+
+You must install libclntsh.so.%{oraclever} to use this package, provided
+in the database installation, or in the free Oracle Instant Client
+available from Oracle.
+
+Notice:
+- php-oci8 provides oci8 and pdo_oci extensions from php sources.
+- php-pecl-oci8 only provides oci8 extension.
+
+Documentation is at http://php.net/oci8 and http://php.net/pdo_oci
 %endif
 
 %package snmp
