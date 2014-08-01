@@ -23,7 +23,7 @@
 %global ini_name  40-%{ext_name}.ini
 %endif
 
-%if 0%{?fedora} < 19
+%if 0%{?fedora} < 19 || 0%{?fedora} > 20
 %global with_libjson 0
 %else
 %global with_libjson 1
@@ -32,7 +32,7 @@
 
 Summary:       Support for JSON serialization
 Name:          php-pecl-%{proj_name}
-Version:       1.3.5
+Version:       1.3.6
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:       PHP
 Group:         Development/Languages
@@ -47,6 +47,7 @@ BuildRequires: php-pear
 BuildRequires: pcre-devel
 %if %{with_libjson}
 BuildRequires: json-c-devel >= 0.11
+BuildRequires: json-c-devel <  0.12
 %endif
 
 Requires(post): %{__pecl}
@@ -64,10 +65,18 @@ Obsoletes:     php-pecl-json < 1.3.1-2
 Provides:      php-pecl-json = %{version}-%{release}
 Provides:      php-pecl-json%{?_isa} = %{version}-%{release}
 
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
 Obsoletes:     php54-pecl-%{proj_name}
+Obsoletes:     php54w-pecl-%{proj_name}
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{proj_name}
+Obsoletes:     php55w-pecl-%{proj_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{proj_name}
+Obsoletes:     php56w-pecl-%{proj_name}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -255,6 +264,9 @@ rm -rf %{buildroot}
 # Note to remi : remember to always build in remi-php55(56) first
 #
 %changelog
+* Fri Aug  1 2014 Remi Collet <remi@fedoraproject.org> - 1.3.6-1
+- release 1.3.6 (stable, bugfix)
+
 * Thu Apr 10 2014 Remi Collet <remi@fedoraproject.org> - 1.3.5-1.1
 - missing __sync_val_compare_and_swap_4 in el5 i386
 
