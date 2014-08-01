@@ -182,7 +182,7 @@ NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__php} -n run-tests.php --show-diff || ret=1
 
-: Clanups
+: Cleanups
 make stop-servers
 rm -rf data
 

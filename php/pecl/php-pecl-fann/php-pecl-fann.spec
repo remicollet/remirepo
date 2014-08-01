@@ -13,6 +13,7 @@
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  fann
+%global with_tests %{?_without_tests:0}%{!?_without_tests:1}
 %if "%{php_version}" < "5.6"
 %global ini_name   %{pecl_name}.ini
 %else
@@ -22,7 +23,7 @@
 Summary:        Wrapper for FANN Library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.7
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -45,16 +46,19 @@ Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
-%if "%{php_version}" > "5.4"
-Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:      php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:     php54-pecl-%{pecl_name}
+%if "%{php_version}" > "5.4"
+Obsoletes:      php54-pecl-%{pecl_name}
+Obsoletes:     php54w-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
+Obsoletes:     php55w-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name}
+Obsoletes:     php56w-pecl-%{pecl_name}
 %endif
 %endif
 
@@ -73,6 +77,9 @@ This package provides a PHP binding for FANN
 %prep
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
+
+# Don't install tests
+sed -e '/role="test"/d' -i package.xml
 
 cd NTS
 # Sanity check, really often broken
@@ -114,8 +121,7 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 
-make -C NTS \
-     install INSTALL_ROOT=%{buildroot}
+make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
@@ -124,16 +130,12 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
-make -C ZTS \
-     install INSTALL_ROOT=%{buildroot}
+make -C ZTS install INSTALL_ROOT=%{buildroot}
 
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
-for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
+# Documentation
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -156,12 +158,14 @@ cd NTS
     --define extension=modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+%if %{with_tests}
 : Upstream test suite  for NTS extension
 TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__php} -n run-tests.php
+%{__php} -n run-tests.php --show-diff
+%endif
 
 %if %{with_zts}
 cd ../ZTS
@@ -170,12 +174,14 @@ cd ../ZTS
     --define extension=modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+%if %{with_tests}
 : Upstream test suite  for ZTS extension
 TEST_PHP_EXECUTABLE=%{_bindir}/zts-php \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/zts-php -n run-tests.php
+%{_bindir}/zts-php -n run-tests.php --show-diff
+%endif
 %endif
 
 
@@ -186,7 +192,8 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
+%{?_licensedir:%license NTS/LICENSE}
+
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
@@ -198,6 +205,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Aug  1 2014 Remi Collet <remi@fedoraproject.org> - 1.0.7-3
+- don't install tests
+- fix license handling
+- add build option --without tests
+
 * Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 1.0.7-2
 - add numerical prefix to extension configuration file
 
