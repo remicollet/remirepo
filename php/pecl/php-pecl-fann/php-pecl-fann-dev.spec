@@ -24,7 +24,7 @@ Summary:        Wrapper for FANN Library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.7
 Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
-License:        BSD
+License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
@@ -155,7 +155,7 @@ fi
 cd NTS
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
-    --define extension=modules/%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 %if %{with_tests}
@@ -171,7 +171,7 @@ REPORT_EXIT_STATUS=1 \
 cd ../ZTS
 : Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
-    --define extension=modules/%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 %if %{with_tests}
