@@ -3,14 +3,14 @@
 %else
 %global with_systemd 0
 %endif
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
-%global with_dtrace 1
-%else
+#if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
+#global with_dtrace 1
+#else
 %global with_dtrace 0
-%endif
+#endif
 
 Name: mysql
-Version: 5.5.38
+Version: 5.5.39
 Release: 1%{?dist}
 
 Summary: MySQL client programs and shared libraries
@@ -344,6 +344,8 @@ cmake . -DBUILD_CONFIG=mysql_release \
 	-DENABLED_LOCAL_INFILE=ON \
 %if %{with_dtrace}
 	-DENABLE_DTRACE=ON \
+%else
+	-DENABLE_DTRACE=OFF \
 %endif
 	-DWITH_EMBEDDED_SERVER=ON \
 	-DWITH_READLINE=ON \
@@ -842,6 +844,11 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Sat Aug  2 2014 Remi Collet <RPMS@FamilleCollet.com> - 5.5.39-1
+- update to MySQL 5.5.39 Community Server GA
+  http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-39.html
+- disable dtrace
+
 * Mon Jun  2 2014 Remi Collet <RPMS@FamilleCollet.com> - 5.5.38-1
 - update to MySQL 5.5.38 Community Server GA
   http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-38.html
