@@ -24,10 +24,12 @@
 # after 40-json 20-iconv 40-propro 40-raphf
 %global ini_name  50-%{pecl_name}.ini
 %endif
+%global prever     RC1
+%global with_tests %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           %{?scl_prefix}php-pecl-http
-Version:        2.0.7
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        2.1.0
+Release:        0.1.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -37,6 +39,9 @@ Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 
 # From http://www.php.net/manual/en/http.configuration.php
 Source1:        %{proj_name}.ini
+
+# Upstream patches
+Patch0:         %{proj_name}-git.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel >= 5.3.0
@@ -165,6 +170,8 @@ These are the files needed to compile programs using HTTP extension.
 
 mv %{proj_name}-%{version}%{?prever} NTS
 cd NTS
+%patch0 -p1 -b .git
+
 extver=$(sed -n '/#define PHP_PECL_HTTP_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
    : Error: Upstream HTTP version is now ${extver}, expecting %{version}%{?prever}.
@@ -235,22 +242,44 @@ done
 modules=""
 for mod in json hash iconv propro raphf; do
   if [ -f %{php_extdir}/${mod}.so ]; then
-    modules="$modules --define extension=${mod}.so"
+    modules="$modules -d extension=${mod}.so"
   fi
 done
 
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
     $modules \
-    --define extension=$PWD/NTS/modules/%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
+
+%if %{with_tests}
+: Upstream test suite NTS extension
+cd NTS
+SKIP_ONLINE_TESTS=1 \
+TEST_PHP_EXECUTABLE=%{__php} \
+TEST_PHP_ARGS="-n $modules -d extension=$PWD/modules/%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{__php} -n run-tests.php --show-diff
+%endif
 
 %if %{with_zts}
 : Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
     $modules \
-    --define extension=$PWD/ZTS/modules/%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
+
+%if %{with_tests}
+: Upstream test suite ZTS extension
+cd ../ZTS
+SKIP_ONLINE_TESTS=1 \
+TEST_PHP_EXECUTABLE=%{__ztsphp} \
+TEST_PHP_ARGS="-n $modules -d extension=$PWD/modules/%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=0 \
+%{__ztsphp} -n run-tests.php --show-diff
+%endif
 %endif
 
 
@@ -291,6 +320,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Aug 02 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.1.RC1
+- Update to 2.1.0RC1
+- run test suite during build
+
 * Fri Jul 11 2014 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
 - Update to 2.0.7
 

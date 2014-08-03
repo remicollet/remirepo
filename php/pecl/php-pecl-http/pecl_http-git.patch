@@ -1,0 +1,50 @@
+From b08a238775e998bb07b530c3cd80219e100c95cf Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Sat, 2 Aug 2014 17:50:00 +0200
+Subject: [PATCH] set always_populate_raw_post_data=-1 to avoid failed test
+ (because of warning)
+
+---
+ tests/message002.phpt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tests/message002.phpt b/tests/message002.phpt
+index f782f8f..403fb26 100644
+--- a/tests/message002.phpt
++++ b/tests/message002.phpt
+@@ -9,6 +9,8 @@ b=c
+ HTTP_X_TEST=test
+ --COOKIE--
+ foo=bar
++--INI--
++always_populate_raw_post_data=-1
+ --FILE--
+ <?php
+ echo "Test\n";
+-- 
+1.9.2
+
+From 400771d35709df29e48f4ca43551d40beac108e9 Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Sat, 2 Aug 2014 17:50:41 +0200
+Subject: [PATCH] slip online test
+
+---
+ tests/client010.phpt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tests/client010.phpt b/tests/client010.phpt
+index 803403f..055d585 100644
+--- a/tests/client010.phpt
++++ b/tests/client010.phpt
+@@ -3,6 +3,7 @@ client upload
+ --SKIPIF--
+ <?php
+ include "skipif.inc";
++skip_online_test();
+ ?>
+ --FILE--
+ <?php
+-- 
+1.9.2
+

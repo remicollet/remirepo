@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #164 http version 2.0.7 ] {
+Extension [ <persistent> extension #165 http version 2.1.0RC1 ] {
 
   - Dependencies {
     Dependency [ raphf (Required) ]
@@ -3533,15 +3533,17 @@ Extension [ <persistent> extension #164 http version 2.0.7 ] {
 
     Class [ <internal:http> class http\Params implements ArrayAccess ] {
 
-      - Constants [9] {
+      - Constants [11] {
         Constant [ string DEF_PARAM_SEP ] { , }
         Constant [ string DEF_ARG_SEP ] { ; }
         Constant [ string DEF_VAL_SEP ] { = }
         Constant [ string COOKIE_PARAM_SEP ] {  }
         Constant [ integer PARSE_RAW ] { 0 }
-        Constant [ integer PARSE_DEFAULT ] { 1 }
+        Constant [ integer PARSE_ESCAPED ] { 1 }
         Constant [ integer PARSE_URLENCODED ] { 4 }
         Constant [ integer PARSE_DIMENSION ] { 8 }
+        Constant [ integer PARSE_RFC5987 ] { 16 }
+        Constant [ integer PARSE_DEFAULT ] { 17 }
         Constant [ integer PARSE_QUERY ] { 12 }
       }
 
