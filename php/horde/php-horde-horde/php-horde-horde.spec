@@ -12,8 +12,8 @@
 %global sysckeditor  0
 
 Name:           php-horde-horde
-Version:        5.2.0
-Release:        2%{?dist}
+Version:        5.2.1
+Release:        1%{?dist}
 Summary:        Horde Application Framework
 
 Group:          Development/Libraries
@@ -256,6 +256,9 @@ fi
 
 
 %changelog
+* Mon Aug 04 2014 Remi Collet <remi@fedoraproject.org> - 5.2.1-1
+- Update to 5.2.1
+
 * Wed Jul 23 2014 Remi Collet <remi@fedoraproject.org> - 5.2.0-2
 - add optional dep on Horde_OpenXchange
 
