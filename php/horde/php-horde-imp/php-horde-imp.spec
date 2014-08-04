@@ -11,8 +11,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-imp
-Version:        6.2.0
-Release:        2%{?dist}
+Version:        6.2.1
+Release:        1%{?dist}
 Summary:        A web based webmail system
 
 Group:          Development/Libraries
@@ -94,6 +94,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Nls) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Nls) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Notification) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Notification) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Pack) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Pack) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_SpellChecker) >= 2.0.0
@@ -254,6 +256,10 @@ fi
 
 
 %changelog
+* Mon Aug 04 2014 Remi Collet <remi@fedoraproject.org> - 6.2.1-1
+- Update to 6.2.1
+- add dependency on Horde_Pack
+
 * Wed Jul 23 2014 Remi Collet <remi@fedoraproject.org> - 6.2.0-2
 - add optional dep on Horde_Service_Gravatar
 
