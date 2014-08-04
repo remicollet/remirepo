@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    e89bfa1080dce9617c9b3e7760d50752974bfbd2
+%global gh_commit    79e29958a9c31b8e56a36a132887f34bd0ba6b15
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit-selenium
@@ -16,8 +16,8 @@
 # No test, as test suite requires a Selenium server
 
 Name:           php-phpunit-PHPUnit-Selenium
-Version:        1.3.3
-Release:        3%{?dist}.1
+Version:        1.4.0
+Release:        1%{?dist}
 Summary:        Selenium RC integration for PHPUnit
 
 Group:          Development/Libraries
@@ -30,8 +30,12 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
 
 # From composer.json
+#        "php": ">=5.3.3",
+#        "phpunit/phpunit": "3.7.*",
+#        "ext-curl": "*",
+#        "ext-dom": "*"
 Requires:       php(language) >= 5.3.3
-Requires:       php-pear-PHPUnit >= 3.7.0
+Requires:       php-composer(phpunit/phpunit) >= 3.7.0
 Requires:       php-curl
 Requires:       php-dom
 # From phpcompatinfo report for version 1.3.3
@@ -41,6 +45,8 @@ Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-zip
+
+Provides:       php-composer(phpunit/phpunit-selenium) = %{version}
 
 # For compatibility with PEAR mode
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -97,6 +103,10 @@ fi
 
 
 %changelog
+* Mon Aug  4 2014 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
+- Update to 1.4.0
+- composer dependencies
+
 * Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.3.3-3
 - cleanup pear registry
 
