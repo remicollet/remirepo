@@ -48,3 +48,46 @@ index 803403f..055d585 100644
 -- 
 1.9.2
 
+From b0d5cbf0fc0e1c9ac8868dab045d17648cc084d9 Mon Sep 17 00:00:00 2001
+From: Michael Wallner <mike@php.net>
+Date: Mon, 4 Aug 2014 10:45:19 +0200
+Subject: [PATCH] =?utf8?q?fix=20PHP-5.4=20compatibility=C2=A7?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf8
+Content-Transfer-Encoding: 8bit
+
+---
+ php_http.h                | 2 +-
+ php_http_header_parser.c  | 2 +-
+ php_http_message_parser.c | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/php_http_header_parser.c b/php_http_header_parser.c
+index f560a85..ec41a24 100644
+--- a/php_http_header_parser.c
++++ b/php_http_header_parser.c
+@@ -62,7 +62,7 @@ php_http_header_parser_state_t php_http_header_parser_state_is(php_http_header_p
+ 	php_http_header_parser_state_t state;
+ 
+ 	if (parser->stack.top) {
+-		return (php_http_header_parser_state_t) zend_ptr_stack_top(&parser->stack);
++		return (php_http_header_parser_state_t) parser->stack.elements[parser->stack.top - 1];
+ 	}
+ 
+ 	return PHP_HTTP_HEADER_PARSER_STATE_START;
+diff --git a/php_http_message_parser.c b/php_http_message_parser.c
+index 6328fa4..20ef3ac 100644
+--- a/php_http_message_parser.c
++++ b/php_http_message_parser.c
+@@ -80,7 +80,7 @@ php_http_message_parser_state_t php_http_message_parser_state_push(php_http_mess
+ php_http_message_parser_state_t php_http_message_parser_state_is(php_http_message_parser_t *parser)
+ {
+ 	if (parser->stack.top) {
+-		return (php_http_message_parser_state_t) zend_ptr_stack_top(&parser->stack);
++		return (php_http_message_parser_state_t) parser->stack.elements[parser->stack.top - 1];
+ 	}
+ 	return PHP_HTTP_MESSAGE_PARSER_STATE_START;
+ }
+-- 
+1.9.2
+
