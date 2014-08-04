@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-HashTable
-Version:        1.1.3
+Version:        1.2.0
 Release:        1%{?dist}
 Summary:        Horde Hash Table Interface
 
@@ -44,6 +44,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Log) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Memcache) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Memcache) <  3.0.0
 Requires:       php-pear(pear.nrk.io/Predis) >= 0.8.3
+# optional and ignore because of build order: Horde_Vfs
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -109,6 +110,9 @@ fi
 
 
 %changelog
+* Mon Aug 04 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- Update to 1.2.0
+
 * Wed Jun 04 2014 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
 - Update to 1.1.3
 
