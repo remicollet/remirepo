@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Core
-Version:        2.12.6
+Version:        2.13.0
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -151,7 +151,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Queue) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Queue) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_SpellChecker) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_SpellChecker) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) <  3.0.0
 
 # Optional and omited to avoid circular dep:
@@ -271,6 +271,10 @@ fi
 
 
 %changelog
+* Mon Aug 04 2014 Remi Collet <remi@fedoraproject.org> - 2.13.0-1
+- Update to 2.13.0
+- raise dependency on Horde_Vfs >= 2.2.0
+
 * Tue Jul 15 2014 Remi Collet <remi@fedoraproject.org> - 2.12.6-1
 - Update to 2.12.6
 
