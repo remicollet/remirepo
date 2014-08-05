@@ -91,3 +91,61 @@ index 6328fa4..20ef3ac 100644
 -- 
 1.9.2
 
+From 28e32ca3227d5a3a8b9a1f409aac4f7b6e3fa5ea Mon Sep 17 00:00:00 2001
+From: Michael Wallner <mike@php.net>
+Date: Tue, 5 Aug 2014 06:59:14 +0200
+Subject: [PATCH] fix leak
+
+---
+ php_http_client_curl.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/php_http_client_curl.c b/php_http_client_curl.c
+index 15d2619..baf99ce 100644
+--- a/php_http_client_curl.c
++++ b/php_http_client_curl.c
+@@ -1309,7 +1309,7 @@ static void php_http_curle_options_init(php_http_options_t *registry TSRMLS_DC)
+ 		}
+ 		if ((opt = php_http_option_register(registry, ZEND_STRL("certtype"), CURLOPT_SSLCERTTYPE, IS_STRING))) {
+ 			opt->flags |= PHP_HTTP_CURLE_OPTION_CHECK_STRLEN;
+-			ZVAL_STRING(&opt->defval, "PEM", 1);
++			ZVAL_STRING(&opt->defval, "PEM", 0);
+ 		}
+ 		if ((opt = php_http_option_register(registry, ZEND_STRL("key"), CURLOPT_SSLKEY, IS_STRING))) {
+ 			opt->flags |= PHP_HTTP_CURLE_OPTION_CHECK_STRLEN;
+@@ -1317,7 +1317,7 @@ static void php_http_curle_options_init(php_http_options_t *registry TSRMLS_DC)
+ 		}
+ 		if ((opt = php_http_option_register(registry, ZEND_STRL("keytype"), CURLOPT_SSLKEYTYPE, IS_STRING))) {
+ 			opt->flags |= PHP_HTTP_CURLE_OPTION_CHECK_STRLEN;
+-			ZVAL_STRING(&opt->defval, "PEM", 1);
++			ZVAL_STRING(&opt->defval, "PEM", 0);
+ 		}
+ 		if ((opt = php_http_option_register(registry, ZEND_STRL("keypasswd"), CURLOPT_SSLKEYPASSWD, IS_STRING))) {
+ 			opt->flags |= PHP_HTTP_CURLE_OPTION_CHECK_STRLEN;
+-- 
+1.9.2
+
+From 57bfeaae7196fd754aad2150dfd1d3258ea8ce66 Mon Sep 17 00:00:00 2001
+From: Michael Wallner <mike@php.net>
+Date: Tue, 5 Aug 2014 08:07:26 +0200
+Subject: [PATCH] fix write on stack
+
+---
+ php_http_encoding.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/php_http_encoding.c b/php_http_encoding.c
+index 403d781..7f0462c 100644
+--- a/php_http_encoding.c
++++ b/php_http_encoding.c
+@@ -53,7 +53,6 @@ const char *php_http_encoding_dechunk(const char *encoded, size_t encoded_len, c
+ 				php_error_docref(NULL TSRMLS_CC, E_NOTICE, "Data does not seem to be chunked encoded");
+ 				memcpy(*decoded, encoded, encoded_len);
+ 				*decoded_len = encoded_len;
+-				decoded[*decoded_len] = '\0';
+ 				return encoded + encoded_len;
+ 			} else {
+ 				efree(*decoded);
+-- 
+1.9.2
+

@@ -29,7 +29,7 @@
 
 Name:           %{?scl_prefix}php-pecl-http
 Version:        2.1.0
-Release:        0.1.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.2.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -112,11 +112,14 @@ Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}%{?prev
 Obsoletes:     php53-pecl-http
 Obsoletes:     php53u-pecl-http
 Obsoletes:     php54-pecl-http
+Obsoletes:     php54w-pecl-http
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-http
+Obsoletes:     php55w-pecl-http
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-http
+Obsoletes:     php56w-pecl-http
 %endif
 %endif
 
@@ -320,6 +323,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 05 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.2.RC1
+- add upstream patches
+
 * Sat Aug 02 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.1.RC1
 - Update to 2.1.0RC1
 - run test suite during build
