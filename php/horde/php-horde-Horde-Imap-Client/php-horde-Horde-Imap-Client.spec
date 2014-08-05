@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.23.2
+Version:        2.24.0
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -159,6 +159,9 @@ fi
 
 
 %changelog
+* Tue Aug 05 2014 Remi Collet <remi@fedoraproject.org> - 2.24.0-1
+- Update to 2.24.0
+
 * Wed Jul 09 2014 Remi Collet <remi@fedoraproject.org> - 2.23.2-1
 - Update to 2.23.2
 
