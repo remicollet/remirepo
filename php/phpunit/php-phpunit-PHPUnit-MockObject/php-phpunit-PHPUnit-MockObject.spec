@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    7878b9c41edb3afab92b85edf5f0981014a2713a
+%global gh_commit    42e589e08bc86e3e9bdf20d385e948347788505b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit-mock-objects
@@ -17,7 +17,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-PHPUnit-MockObject
-Version:        2.1.5
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        Mock Object library for PHPUnit
 
@@ -36,14 +36,19 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
-BuildRequires:  php-pear-PHPUnit >= 4.1.0
+BuildRequires:  php-pear-PHPUnit >= 4.2.0
 %endif
 
 # From composer.json
+#        "php": ">=5.3.3",
+#        "phpunit/php-text-template": "~1.2",
+#        "ocramius/instantiator": "~1.0"
 Requires:       php(language) >= 5.3.3
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
-# From phpcompatinfo report for version 2.0.5
+Requires:       php-composer(ocramius/instantiator) >= 1.0
+Requires:       php-composer(ocramius/instantiator) <  2
+# From phpcompatinfo report for version 2.2.0
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-soap
@@ -101,13 +106,20 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc CONTRIBUTING.md README.md LICENSE composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc CONTRIBUTING.md README.md composer.json
 %dir %{php_home}/PHPUnit
 %dir %{php_home}/PHPUnit/Framework
      %{php_home}/PHPUnit/Framework/MockObject
 
 
 %changelog
+* Mon Aug 11 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- update to 2.2.0
+- add dependency on ocramius/instantiator
+- fix license handling
+
 * Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 2.1.5-1
 - update to 2.1.5
 
