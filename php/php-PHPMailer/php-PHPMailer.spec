@@ -86,7 +86,6 @@ install -p -d -m 755 "${RPM_BUILD_ROOT}%{_datadir}/PHPMailer/language/"
 install -p -m 644 class.*.php PHPMailerAutoload.php \
 	"${RPM_BUILD_ROOT}/%{_datadir}/php/PHPMailer/"
 
-
 #	Install language files (these are not gettextized).
 
 install -p -m 644 language/*.php					\
@@ -112,6 +111,7 @@ rm -rf "${RPM_BUILD_ROOT}"
 #-------------------------------------------------------------------------------
 %files -f files.list
 #-------------------------------------------------------------------------------
+
 %defattr(-, root, root, -)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
