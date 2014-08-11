@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    ed8ac99ce38c3fd134128c898f7ca74665abef7f
+%global gh_commit    6d196af48e8c100a3ae881940123e693da5a9217
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-code-coverage
@@ -17,7 +17,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        2.0.9
+Version:        2.0.10
 Release:        1%{?dist}
 Summary:        PHP code coverage information
 
@@ -106,12 +106,18 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc CONTRIBUTING.md README.md LICENSE composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc CONTRIBUTING.md README.md composer.json
 %{php_home}/PHP/CodeCoverage
 %{php_home}/PHP/CodeCoverage.php
 
 
 %changelog
+* Mon Aug 11 2014 Remi Collet <remi@fedoraproject.org> - 2.0.10-1
+- update to 2.0.10
+- fix license handling
+
 * Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 2.0.9-1
 - update to 2.0.9
 
