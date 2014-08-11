@@ -1,7 +1,6 @@
 %global		github_user	Synchro
 %global		github_app	PHPMailer
 %global		github_tag	d3802c597bff8f6c2ccfa3eab2a511aa01b8d68f
-%global
 
 %global		arch_name	%{github_app}-%{github_tag}
 
@@ -17,7 +16,7 @@ Source0:	https://github.com/%{github_user}/%{github_app}/archive/%{github_tag}/%
 
 # Fix language default path
 # Don't rely on autoloader (for app which overides __construct)
-Patch0:     %{github_app}-path.patch
+Patch0:		%{github_app}-path.patch
 
 Buildarch:	noarch
 
