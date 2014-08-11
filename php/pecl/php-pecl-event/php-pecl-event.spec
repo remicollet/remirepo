@@ -25,7 +25,7 @@
 
 Summary:       Provides interface to libevent library
 Name:          %{?scl_prefix}php-pecl-%{pecl_name}
-Version:       1.10.2
+Version:       1.10.3
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
@@ -241,6 +241,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug 11 2014 Remi Collet <remi@fedoraproject.org> - 1.10.3-1
+- Update to 1.10.3 (no change)
+
 * Fri Jun 20 2014 Remi Collet <remi@fedoraproject.org> - 1.10.2-1
 - Update to 1.10.2 (stable)
 
