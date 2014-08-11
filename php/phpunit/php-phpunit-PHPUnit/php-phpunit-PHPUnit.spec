@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a71c4842c5fb836d8b200624583b859ec34e8a26
+%global gh_commit    58db726aa45fe26bca93f692cb3d77e9a46b7830
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,7 +17,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.1.4
+Version:        4.2.0
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -40,13 +40,14 @@ BuildRequires:  php-composer(phpunit/php-file-iterator) >= 1.3.1
 BuildRequires:  php-composer(phpunit/php-text-template) >= 1.2
 BuildRequires:  php-composer(phpunit/php-code-coverage) >= 2.0
 BuildRequires:  php-composer(phpunit/php-timer) >= 1.0.2
-BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 2.1
+BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 2.2
 BuildRequires:  php-composer(sebastian/comparator) >= 1.0
 BuildRequires:  php-composer(sebastian/diff) >= 1.1
 BuildRequires:  php-composer(sebastian/environment) >= 1.0
 BuildRequires:  php-composer(sebastian/exporter) >= 1.0
 BuildRequires:  php-composer(sebastian/version) >= 1.0
-BuildRequires:  php-symfony-yaml >= 2.0.0
+BuildRequires:  php-composer(symfony/yaml) >= 2.0
+BuildRequires:  php-composer(symfony/class-loader) >= 2.0
 BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 
 # From composer.json
@@ -55,7 +56,7 @@ BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 #        "phpunit/php-text-template": "~1.2",
 #        "phpunit/php-code-coverage": "~2.0",
 #        "phpunit/php-timer": "~1.0.2",
-#        "phpunit/phpunit-mock-objects": "~2.1",
+#        "phpunit/phpunit-mock-objects": "~2.2",
 #        "symfony/yaml": "~2.0",
 #        "sebastian/comparator": "~1.0",
 #        "sebastian/diff": "~1.1",
@@ -76,7 +77,7 @@ Requires:       php-composer(phpunit/php-code-coverage) >= 2.0
 Requires:       php-composer(phpunit/php-code-coverage) <  3
 Requires:       php-composer(phpunit/php-timer) >= 1.0.2
 Requires:       php-composer(phpunit/php-timer) <  1.1
-Requires:       php-composer(phpunit/phpunit-mock-objects) >= 2.1
+Requires:       php-composer(phpunit/phpunit-mock-objects) >= 2.2
 Requires:       php-composer(phpunit/phpunit-mock-objects) <  3
 Requires:       php-composer(sebastian/comparator) >= 1.0
 Requires:       php-composer(sebastian/comparator) <  2
@@ -88,8 +89,8 @@ Requires:       php-composer(sebastian/exporter) >= 1.0
 Requires:       php-composer(sebastian/exporter) <  2
 Requires:       php-composer(sebastian/version) >= 1.0
 Requires:       php-composer(sebastian/version) <  2
-Requires:       php-symfony-yaml >= 2.0.0
-Requires:       php-symfony-yaml <  3
+Requires:       php-composer(symfony/yaml) >= 2.0
+Requires:       php-composer(symfony/yaml) <  3
 Requires:       php-dom
 Requires:       php-json
 Requires:       php-pcre
@@ -99,6 +100,13 @@ Requires:       php-spl
 #        "phpunit/php-invoker": "~1.1"
 Requires:       php-composer(phpunit/php-invoker) >= 1.1
 Requires:       php-composer(phpunit/php-invoker) <  2
+# For our autoload patch
+Requires:       php-composer(ocramius/instantiator) >= 1.0
+Requires:       php-composer(ocramius/instantiator) <  2
+Requires:       php-composer(ocramius/lazy-map) >= 1.0.0
+Requires:       php-composer(ocramius/lazy-map) <  1.1
+Requires:       php-composer(symfony/class-loader) >= 2.0
+Requires:       php-composer(symfony/class-loader) <  3
 # From phpcompatinfo report for version 4.0.18
 Requires:       php-date
 Requires:       php-libxml
@@ -189,6 +197,12 @@ fi
 
 
 %changelog
+* Mon Aug 11 2014 Remi Collet <remi@fedoraproject.org> - 4.2.0-1
+- Update to 4.2.0
+- raise dependency on phpunit/phpunit-mock-objects >= 2.2
+- add dependency on ocramius/instantiator, ocramius/lazy-map
+  and symfony/class-loader
+
 * Fri Jul 18 2014 Remi Collet <remi@fedoraproject.org> - 4.1.4-1
 - Update to 4.1.4
 - composer dependencies

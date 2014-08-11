@@ -14,6 +14,19 @@ require_once 'SebastianBergmann/Exporter/autoload.php';
 require_once 'SebastianBergmann/Version/autoload.php';
 require_once 'SebastianBergmann/Comparator/autoload.php';
 
+$vendorDir = '/usr/share/php';
+require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+use Symfony\Component\ClassLoader\UniversalClassLoader;
+
+$loader = new UniversalClassLoader();
+$loader->registerNamespaces(array(
+    'Symfony\\Component\\Yaml'            => $vendorDir,
+    'Symfony\\Component\\ClassLoader'     => $vendorDir,
+    'LazyMap'                             => $vendorDir,
+    'Instantiator'                        => $vendorDir,
+));
+$loader->register();
+
 spl_autoload_register(
   function ($class)
   {
@@ -32,26 +45,6 @@ spl_autoload_register(
 
       if (isset($classes[$cn])) {
           require $path . $classes[$cn];
-      }
-  }
-);
-
-// Symfony Yaml autoloader
-spl_autoload_register(
-  function ($class) {
-      if (0 === strpos(ltrim($class, '/'), 'Symfony\Component\Yaml')) {
-          $file = sprintf(
-            'Symfony/Component/Yaml%s.php',
-
-            substr(
-              str_replace('\\', '/', $class),
-              strlen('Symfony\Component\Yaml')
-            )
-          );
-
-          if (stream_resolve_include_path($file)) {
-              require_once $file;
-          }
       }
   }
 );
