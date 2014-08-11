@@ -1,19 +1,30 @@
 %global		github_user	Synchro
 %global		github_app	PHPMailer
-%global		github_tag	4d9434e
+%global		github_tag	d3802c597bff8f6c2ccfa3eab2a511aa01b8d68f
+%global
 
-%global		arch_name	%{github_user}-%{github_app}-%{github_tag}
+%global		arch_name	%{github_app}-%{github_tag}
 
 Name:		php-PHPMailer
 Summary:	PHP email transport class with a lot of features
-Version:	5.2.6
-Release:	3%{?dist}
+Version:	5.2.8
+Release:	1%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
-Source0:	https://github.com/Synchro/PHPMailer/tarball/%{github_tag}/%{arch_name}-%{version}.tar.gz
 URL:		http://phpmailer.worxware.com/
-Requires:	php-mbstring >= 5.1.0
+
+Source0:	https://github.com/%{github_user}/%{github_app}/archive/%{github_tag}/%{github_app}-%{version}.tar.gz
+
+# Fix language default path
+# Don't rely on autoloader (for app which overides __construct)
+Patch0:     %{github_app}-path.patch
+
 Buildarch:	noarch
+
+Requires:	php-mbstring >= 5.1.0
+
+Provides:	php-composer(phpmailer/phpmailer) = %{version}
+
 
 %description
 Full Featured Email Transfer Class for PHP. PHPMailer features:
@@ -45,6 +56,10 @@ Full Featured Email Transfer Class for PHP. PHPMailer features:
 
 %setup -q -n %{arch_name}
 
+%patch0 -p1 -b .rpm
+
+rm docs/generatedocs.sh
+
 
 #-------------------------------------------------------------------------------
 %build
@@ -53,12 +68,6 @@ Full Featured Email Transfer Class for PHP. PHPMailer features:
 #	Make sure all file lines are \n terminated.
 
 find . -type f -exec sed -i -e 's/[\r\t ]*$//' '{}' ';'
-
-#	Change default language path.
-
-sed -i -e								\
-    "/function SetLanguage/s#'language/'#'%{_datadir}/PHPMailer/language/'#" \
-    class.phpmailer.php
 
 
 #-------------------------------------------------------------------------------
@@ -69,22 +78,19 @@ rm -rf "${RPM_BUILD_ROOT}"
 
 #	install directories.
 
-install -p -d -m 755 "${RPM_BUILD_ROOT}/%{_datadir}/php/PHPMailer/"
-install -p -d -m 755 "${RPM_BUILD_ROOT}/%{_datadir}/PHPMailer/language/"
-
+install -p -d -m 755 "${RPM_BUILD_ROOT}%{_datadir}/php/PHPMailer/"
+install -p -d -m 755 "${RPM_BUILD_ROOT}%{_datadir}/PHPMailer/language/"
 
 #	Install class files.
 
-install -p -m 644							\
-	class.phpmailer.php "${RPM_BUILD_ROOT}/%{_datadir}/php/PHPMailer/"
-install -p -m 644 class.smtp.php "${RPM_BUILD_ROOT}/%{_datadir}/php/PHPMailer/"
-install -p -m 644 class.pop3.php "${RPM_BUILD_ROOT}/%{_datadir}/php/PHPMailer/"
+install -p -m 644 class.*.php PHPMailerAutoload.php \
+	"${RPM_BUILD_ROOT}/%{_datadir}/php/PHPMailer/"
 
 
 #	Install language files (these are not gettextized).
 
 install -p -m 644 language/*.php					\
-	"${RPM_BUILD_ROOT}/%{_datadir}/PHPMailer/language"
+	"${RPM_BUILD_ROOT}%{_datadir}/PHPMailer/language"
 
 #	Tag language files.
 
@@ -107,7 +113,9 @@ rm -rf "${RPM_BUILD_ROOT}"
 %files -f files.list
 #-------------------------------------------------------------------------------
 %defattr(-, root, root, -)
-%doc docs/* README.md LICENSE changelog.md
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc docs/* README.md changelog.md
 %doc examples
 %{_datadir}/php/PHPMailer
 %dir %{_datadir}/PHPMailer
@@ -115,6 +123,14 @@ rm -rf "${RPM_BUILD_ROOT}"
 
 
 %changelog
+* Mon Aug 11 2014 Remi Collet <remi@fedoraproject.org> - 5.2.8-1
+- update to 5.2.8
+- provide php-composer(phpmailer/phpmailer)
+- explicit dependencies
+- fix license handling
+- fix language dir using a patch instead of sed
+- provide upstream autoloader
+
 * Tue Apr 16 2013 Patrick Monnerat <pm@datasphere.ch> 5.2.6-1
 - New upstream release: source moved to github.
 
