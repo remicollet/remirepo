@@ -18,6 +18,7 @@ Source0:	https://github.com/%{github_user}/%{github_app}/archive/%{github_tag}/%
 # Don't rely on autoloader (for app which overides __construct)
 Patch0:		%{github_app}-path.patch
 
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Buildarch:	noarch
 
 Requires:	php-mbstring >= 5.1.0
