@@ -22,14 +22,11 @@
 Summary:        Binpack for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.1
-Release:        0.2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/binpack/binpack-php/pull/4
-Patch0:         %{pecl_name}-pr.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -77,8 +74,6 @@ The php implementation for BINPACK.
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-%patch0 -p1 -b .pr
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define BINPACK_EXTENSION_VERSION/{s/.* "//;s/".*$//;p}' php_binpack.h)
 if test "x${extver}" != "x%{version}"; then
@@ -201,6 +196,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 12 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-0.3
+- refresh upstream temp tarball
+
 * Tue Aug 12 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-0.2
 - add patch from https://github.com/binpack/binpack-php/pull/4
 
