@@ -6,20 +6,25 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    cc754c2289ffd4483c319f6ed6ee88ce21676f64
+
+# bootstrap needed when rebuilding PHPUnit for new major version
+%global bootstrap    0
+%global gh_commit    8aa99efa86c51319afc26d23254fe6a8b5a5144a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     Ocramius
 %global gh_project   Instantiator
+%if %{bootstrap}
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%else
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 Name:           php-ocramius-instantiator
-Version:        1.0.0
+Version:        1.1.1
 Release:        1%{?dist}
 Summary:        Instantiate objects in PHP without invoking their constructors
 
 Group:          Development/Libraries
-# https://github.com/Ocramius/Instantiator/issues/9
-# License is missing but included in each file (headers)
 License:        MIT
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
@@ -71,9 +76,12 @@ phpab \
     --output autoload.php \
     src tests %{_datadir}/php/LazyMap
 
-: Disabled known to fail tests
-sed -e '/Phar/d' \
-    -i tests/InstantiatorTest/InstantiatorTest.php
+# Hack PHPUnit autoloader to not use system Instantiator
+mkdir PHPUnit
+sed -e '/Instantiator/d' \
+    -e 's:dirname(__FILE__):"/usr/share/php/PHPUnit":' \
+    /usr/share/php/PHPUnit/Autoload.php \
+    >PHPUnit/Autoload.php
 
 : Run test suite
 phpunit \
@@ -90,10 +98,16 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
 %doc *.md
 %{_datadir}/php/Instantiator/
 
 
 %changelog
+* Tue Aug 12 2014 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- update to 1.1.1
+- add LICENSE
+
 * Thu Jul 17 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package
