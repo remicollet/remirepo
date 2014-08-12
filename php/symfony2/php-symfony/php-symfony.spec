@@ -12,8 +12,8 @@
 
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.5.2
-%global github_commit    e66ee967571b89234c90946fe0d50dad195ad29c
+%global github_version   2.5.3
+%global github_commit    f077a238c781f845487a7c81fea8033ccd0e6a02
 
 %global composer_vendor  symfony
 %global composer_project symfony
@@ -70,7 +70,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       1%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -1522,7 +1522,9 @@ mkdir vendor
 cat > vendor/autoload.php <<'AUTOLOADER'
 <?php
 
-require_once __DIR__.'/../src/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+if (!class_exists('Symfony\\Component\\ClassLoader\\UniversalClassLoader', false)) {
+    require_once __DIR__.'/../src/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+}
 
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 
@@ -2202,6 +2204,10 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Tue Aug 12 2014 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
+- update to 2.5.3
+- fix test bootstrap for PHPUnit 4.2
+
 * Sat Jul 19 2014 Remi Collet <remi@fedoraproject.org> - 2.5.2-2
 - fix license handling
 
