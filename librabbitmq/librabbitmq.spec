@@ -9,16 +9,13 @@
 
 Name:      librabbitmq
 Summary:   Client library for AMQP
-Version:   0.5.0
+Version:   0.5.1
 Release:   1%{?dist}
 License:   MIT
 Group:     System Environment/Libraries
 URL:       https://github.com/alanxz/rabbitmq-c
 
 Source0:   https://github.com/alanxz/rabbitmq-c/releases/download/v%{version}/rabbitmq-c-%{version}.tar.gz
-
-# for revert, switch from 0.5.0 to 0.5.1-pre
-Patch0:    %{name}-ver.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libtool
@@ -66,8 +63,6 @@ amqp-publish        Publish a message on an AMQP server
 
 %prep
 %setup -q -n rabbitmq-c-%{version}
-
-%patch0 -p1 -R
 
 # Copy sources to be included in -devel docs.
 cp -pr examples Examples
@@ -118,12 +113,14 @@ rm -rf %{buildroot}
 
 %files
 %defattr (-,root,root,-)
-%doc AUTHORS README.md THANKS TODO LICENSE-MIT
+%{!?_licensedir:%global license %%doc}
+%license LICENSE-MIT
 %{_libdir}/%{name}.so.1*
 
 
 %files devel
 %defattr (-,root,root,-)
+%doc AUTHORS THANKS TODO *.md
 %doc Examples
 %{_libdir}/%{name}.so
 %{_includedir}/amqp*
@@ -133,10 +130,15 @@ rm -rf %{buildroot}
 %defattr (-,root,root,-)
 %{_bindir}/amqp-*
 %doc %{_mandir}/man1/amqp-*.1*
-%doc %{_mandir}/man7/librabbitmq-tools.7.gz
+%doc %{_mandir}/man7/librabbitmq-tools.7*
 
 
 %changelog
+* Wed Aug 13 2014 Remi Collet <remi@fedoraproject.org> - 0.5.1-1
+- update to 0.5.1
+- fix license handling
+- move all documentation in devel subpackage
+
 * Mon Feb 17 2014 Remi Collet <remi@fedoraproject.org> - 0.5.0-1
 - update to 0.5.0
 - open https://github.com/alanxz/rabbitmq-c/issues/169 (version is 0.5.1-pre)
