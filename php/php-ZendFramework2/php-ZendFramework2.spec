@@ -1,17 +1,21 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global composer_vendor  zendframework
+# Work in progress, disabled for now
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:      php-ZendFramework2
-Version:   2.3.1
-Release:   3%{?dist}
+Version:   2.3.2
+Release:   1%{?dist}
 Summary:   Zend Framework 2
 
 Group:     Development/Libraries
 License:   BSD
 URL:       http://framework.zend.com
 Source0:   https://packages.zendframework.com/releases/ZendFramework-%{version}/ZendFramework-%{version}.tgz
-#Source1:   https://packages.zendframework.com/releases/ZendFramework-%%{version}/ZendFramework-%%{version}-manual-en.tgz
-#Source2:   https://packages.zendframework.com/releases/ZendFramework-%%{version}/ZendFramework-%%{version}-apidoc.tgz
+# git clone https://github.com/zendframework/zf2.git
+# cd zf2 ; git checkout release-2.3.2
+# tar czf ../ZendFramework-tests-2.3.2.tgz tests
+Source1:   ZendFramework-tests-%{version}.tgz
 
 # Patch needed for GLPI
 # https://bugzilla.redhat.com/1014478
@@ -164,9 +168,9 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.barcode.intro.htm
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
 Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
+Requires: php-composer(%{composer_vendor}/zend-validator)        = %{version}
 # composer.json (optional)
 Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
-Requires: php-composer(%{composer_vendor}/zend-validator)        = %{version}
 #     zendframework/zendpdf
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-dom
@@ -1107,6 +1111,7 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.mvc.intro.html
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
 Requires: php-composer(%{composer_vendor}/zend-eventmanager)     = %{version}
+Requires: php-composer(%{composer_vendor}/zend-form)             = %{version}
 Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
 Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
@@ -1115,7 +1120,6 @@ Requires: php-composer(%{composer_vendor}/zend-config)           = %{version}
 Requires: php-composer(%{composer_vendor}/zend-console)          = %{version}
 Requires: php-composer(%{composer_vendor}/zend-di)               = %{version}
 Requires: php-composer(%{composer_vendor}/zend-filter)           = %{version}
-Requires: php-composer(%{composer_vendor}/zend-form)             = %{version}
 Requires: php-composer(%{composer_vendor}/zend-http)             = %{version}
 Requires: php-composer(%{composer_vendor}/zend-i18n)             = %{version}
 Requires: php-composer(%{composer_vendor}/zend-inputfilter)      = %{version}
@@ -1723,8 +1727,9 @@ Requires: php-composer(%{composer_vendor}/zendxml)               = %{version}
 # composer.json
 Requires: php-composer(%{composer_vendor}/zend-http)             = %{version}
 Requires: php-composer(%{composer_vendor}/zend-math)             = %{version}
-Requires: php-composer(%{composer_vendor}/zend-server)             = %{version}
+Requires: php-composer(%{composer_vendor}/zend-server)           = %{version}
 Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
+Requires: php-composer(%{composer_vendor}/zendxml)               = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-dom
@@ -1780,7 +1785,7 @@ If the XML document uses ENTITY the library throw an Exception.
 
 
 %prep
-%setup -q -n ZendFramework-%{version}
+%setup -q -n ZendFramework-%{version} -a 1
 
 %patch0 -p0
 
@@ -1803,7 +1808,41 @@ ln -s %{name}-common-%{version} %{buildroot}%{_pkgdocdir}
 
 
 %check
-# No tests provided
+%if %{with_tests}
+cd tests
+# Create autoloader
+cat > _autoload.php <<'AUTOLOADER'
+<?php
+if (!class_exists('Symfony\\Component\\ClassLoader\\UniversalClassLoader', false)) {
+    require_once __DIR__.'/../src/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+}
+
+use Symfony\Component\ClassLoader\UniversalClassLoader;
+$loader = new UniversalClassLoader();
+$loader->registerNamespace('Zend', __DIR__.'/../library');
+$loader->registerNamespace('ZendTest', __DIR__);
+$loader->useIncludePath(true);
+$loader->register();
+AUTOLOADER
+
+# ignore those for now
+rm -r ZendTest/Cache
+rm    ZendTest/Console/RequestTest.php
+rm -r ZendTest/Debug
+rm    ZendTest/File/Transfer/Adapter/HttpTest.php
+rm    ZendTest/Form/View/Helper/FormDateTimeSelectTest.php
+# Date format with microsecond in PHP 5.6
+rm    ZendTest/Ldap/Converter/ConverterTest.php
+# Need RandomLib/Source
+rm    ZendTest/Math/RandTest.php
+# Need mongodb server
+rm    ZendTest/Session/SaveHandler/MongoDBTest.php
+for dir in ZendTest/[A-Z]*
+do phpunit \
+     -d date.timezone="UTC" \
+     $dir
+done
+%endif
 
 
 %files
@@ -2434,6 +2473,11 @@ ln -s %{name}-common-%{version} %{buildroot}%{_pkgdocdir}
 # ##############################################################################
 
 %changelog
+* Wed Aug 13 2014 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
+- Update to 2.3.2
+- tests from github
+- run test suite when build --with tests (WIP)
+
 * Sun Jul 20 2014 Remi Collet <remi@fedoraproject.org> - 2.3.1-3
 - composer dependencies
 - add missing license

@@ -1,7 +1,7 @@
 diff -up Zend/I18n/Translator/Loader/Gettext.php.glpi Zend/I18n/Translator/Loader/Gettext.php
 --- library/Zend/I18n/Translator/Loader/Gettext.php.glpi	2013-10-02 09:41:18.572098028 +0200
 +++ library/Zend/I18n/Translator/Loader/Gettext.php	2013-10-02 09:41:56.658244928 +0200
-@@ -126,9 +126,11 @@ class Gettext implements FileLoaderInter
+@@ -127,9 +127,11 @@ class Gettext implements FileLoaderInter
  
                      array_shift($originalString);
  
