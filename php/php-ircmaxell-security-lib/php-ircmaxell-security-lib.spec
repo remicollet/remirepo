@@ -14,7 +14,7 @@
 
 Name:           php-ircmaxell-security-lib
 Version:        1.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A Base Security Library
 
 Group:          Development/Libraries
@@ -58,6 +58,8 @@ Optional dependency: php-gmp or php-bcmath
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+
+rm lib/SecurityLib/composer.json
 
 
 %build
@@ -104,5 +106,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Aug 13 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- drop composer.json from library path
+
 * Wed Aug 13 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package
