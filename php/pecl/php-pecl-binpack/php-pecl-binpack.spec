@@ -22,7 +22,7 @@
 Summary:        Binpack for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.1
-Release:        0.3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -196,6 +196,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Aug 13 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- update to 1.0.1 (finale)
+
 * Tue Aug 12 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-0.3
 - refresh upstream temp tarball
 
