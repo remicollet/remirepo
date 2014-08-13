@@ -1,7 +1,8 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global composer_vendor  zendframework
 # Work in progress, disabled for now
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+#global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:      php-ZendFramework2
 Version:   2.3.2
@@ -27,6 +28,47 @@ Patch0:    %{name}-glpi.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
+%if %{with_tests}
+# PHPUnit + autoloader
+BuildRequires: %{_bindir}/phpunit
+BuildRequires: php-composer(symfony/class-loader) >= 2.0
+# required by components
+BuildRequires: php(language) >= 5.3.23
+BuildRequires: php-bcmath
+BuildRequires: php-bz2
+BuildRequires: php-ctype
+BuildRequires: php-curl
+BuildRequires: php-date
+BuildRequires: php-dom
+BuildRequires: php-fileinfo
+BuildRequires: php-filter
+BuildRequires: php-gd
+BuildRequires: php-gmp
+BuildRequires: php-hash
+BuildRequires: php-iconv
+BuildRequires: php-intl
+BuildRequires: php-json
+BuildRequires: php-ldap
+BuildRequires: php-libxml
+BuildRequires: php-mbstring
+BuildRequires: php-mcrypt
+BuildRequires: php-openssl
+BuildRequires: php-pcre
+BuildRequires: php-pdo
+BuildRequires: php-reflection
+BuildRequires: php-session
+BuildRequires: php-simplexml
+BuildRequires: php-soap
+BuildRequires: php-spl
+BuildRequires: php-tidy
+BuildRequires: php-tokenizer
+BuildRequires: php-xml
+BuildRequires: php-xmlreader
+BuildRequires: php-xmlwriter
+BuildRequires: php-zip
+BuildRequires: php-zlib
+BuildRequires: php-composer(ircmaxell/random-lib)
+%endif
 
 Requires: php-composer(%{composer_vendor}/zend-authentication)   = %{version}
 Requires: php-composer(%{composer_vendor}/zend-barcode)          = %{version}
@@ -1005,8 +1047,8 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.math.introduction
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json (optional)
-#     ircmaxell/random-lib
 Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
+Requires: php-composer(ircmaxell/random-lib)
 Requires: php-bcmath
 Requires: php-gmp
 # phpcompatinfo (computed from version 2.3.1)
@@ -1819,8 +1861,10 @@ if (!class_exists('Symfony\\Component\\ClassLoader\\UniversalClassLoader', false
 
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 $loader = new UniversalClassLoader();
-$loader->registerNamespace('Zend', __DIR__.'/../library');
-$loader->registerNamespace('ZendTest', __DIR__);
+$loader->registerNamespace('Zend',        __DIR__.'/../library');
+$loader->registerNamespace('ZendTest',    __DIR__);
+$loader->registerNamespace('RandomLib',   '/usr/share/php');
+$loader->registerNamespace('SecurityLib', '/usr/share/php');
 $loader->useIncludePath(true);
 $loader->register();
 AUTOLOADER
@@ -1833,15 +1877,16 @@ rm    ZendTest/File/Transfer/Adapter/HttpTest.php
 rm    ZendTest/Form/View/Helper/FormDateTimeSelectTest.php
 # Date format with microsecond in PHP 5.6
 rm    ZendTest/Ldap/Converter/ConverterTest.php
-# Need RandomLib/Source
-rm    ZendTest/Math/RandTest.php
 # Need mongodb server
 rm    ZendTest/Session/SaveHandler/MongoDBTest.php
+
+RET=0
 for dir in ZendTest/[A-Z]*
 do phpunit \
      -d date.timezone="UTC" \
-     $dir
+     $dir || RET=1
 done
+exit $RET
 %endif
 
 
