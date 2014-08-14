@@ -11,7 +11,7 @@
 %global pear_channel  pear.netpirates.net
 
 Name:           php-theseer-autoload
-Version:        1.15.0
+Version:        1.15.1
 Release:        1%{?dist}
 Summary:        A tool and library to generate autoload code
 
@@ -120,6 +120,9 @@ fi
 
 
 %changelog
+* Thu Aug 14 2014 Remi Collet <remi@fedoraproject.org> - 1.15.1-1
+- Update to 1.15.1
+
 * Tue Aug 12 2014 Remi Collet <remi@fedoraproject.org> - 1.15.0-1
 - Update to 1.15.0
 
