@@ -10,8 +10,8 @@
 %global real_name  tcpdf
 
 Name:           php-tcpdf
-Summary:        PHP class for generating PDF documents
-Version:        6.0.089
+Summary:        PHP class for generating PDF documents and barcodes
+Version:        6.0.091
 Release:        1%{?dist}
 
 URL:            http://www.tcpdf.org
@@ -41,6 +41,8 @@ Requires:       php-tidy
 Requires:       php-xml
 Requires:       php-zlib
 # imagick is optionnal (and conflicts with gmagick)
+
+Provides:       php-composer(tecnick.com/tcpdf) = %{version}
 
 
 %description
@@ -268,6 +270,7 @@ rm -rf %{buildroot}
 %files -f corefonts.lst
 %defattr(-,root,root,-)
 %doc README.TXT CHANGELOG.TXT examples
+%doc composer.json
 %{!?_licensedir:%global license %%doc}
 %license LICENSE.TXT
 %{_bindir}/%{real_name}_addfont
@@ -319,6 +322,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Aug 15 2014 Remi Collet <remi@fedoraproject.org> - 6.0.091-1
+- update to 6.0.091
+- provide php-composer(tecnick.com/tcpdf)
+
 * Thu Jul 17 2014 Remi Collet <remi@fedoraproject.org> - 6.0.089-1
 - update to 6.0.089
 
