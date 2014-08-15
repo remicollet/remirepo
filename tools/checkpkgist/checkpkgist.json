@@ -9,10 +9,9 @@
     "twig\/twig": "php-twig-Twig",
     "zendframework\/zendframework1": "php-ZendFramework",
     "sabre\/dav": "php-sabre-dav",
-    "phpunit\/phpunit-selenium": "php-phpunit-PHPUnit-Selenium",
     "phpunit\/phpunit-story": "php-phpunit-PHPUnit-Story",
     "sebastian\/phpcpd": "php-phpunit-phpcpd",
     "sebastian\/phpdcd": "php-phpunit-phpdcd",
-    "ircmaxell/password-compat": "php-password-compat",
+    "ircmaxell\/password-compat": "php-password-compat",
     "jasig\/phpcas": "php-pear-CAS"
 }
