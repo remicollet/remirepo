@@ -9,7 +9,7 @@
 
 # bootstrap needed when rebuilding PHPUnit for new major version
 %global bootstrap    0
-%global gh_commit    8aa99efa86c51319afc26d23254fe6a8b5a5144a
+%global gh_commit    a7abbb5fc9df6e7126af741dd6c140d1a7369435
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     Ocramius
 %global gh_project   Instantiator
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-ocramius-instantiator
-Version:        1.1.1
+Version:        1.1.2
 Release:        1%{?dist}
 Summary:        Instantiate objects in PHP without invoking their constructors
 
@@ -105,6 +105,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Aug 16 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
+- update to 1.1.2
+
 * Tue Aug 12 2014 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - update to 1.1.1
 - add LICENSE
