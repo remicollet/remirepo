@@ -18,10 +18,11 @@
 %else
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 %endif
+%global phpverid     %(%{_bindir}/php -r 'echo PHP_VERSION_ID;' || echo 50000)
 
 Name:           php-ocramius-instantiator
 Version:        1.1.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Instantiate objects in PHP without invoking their constructors
 
 Group:          Development/Libraries
@@ -71,23 +72,26 @@ cp -pr src/* %{buildroot}%{_datadir}/php
 %check
 %if %{with_tests}
 : Generate autoloader
-phpab \
+%{_bindir}/php -d date.timezone=UTC \
+%{_bindir}/phpab \
     --basedir $PWD \
     --output autoload.php \
     src tests %{_datadir}/php/LazyMap
 
-# Hack PHPUnit autoloader to not use system Instantiator
+if [ -d /usr/share/php/PHPUnit ]; then
+# Hack PHPUnit 4.x autoloader to not use system Instantiator
 mkdir PHPUnit
 sed -e '/Instantiator/d' \
     -e 's:dirname(__FILE__):"/usr/share/php/PHPUnit":' \
     /usr/share/php/PHPUnit/Autoload.php \
     >PHPUnit/Autoload.php
+fi
 
-: Run test suite
-phpunit \
+: Run test suite with PHP  %{phpverid}
+%{_bindir}/phpunit \
     --bootstrap autoload.php \
-%if "%{?php_version}" > "5.6"
-    -d date.timezone=UTC || : Ignore test suite result with PHP %{?php_version}
+%if %{phpverid} >= 50600
+    -d date.timezone=UTC || : Ignore test suite result
 %else
     -d date.timezone=UTC
 %endif
@@ -109,6 +113,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Aug 16 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-2
+- fix test suite
+
 * Sat Aug 16 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - update to 1.1.2
 
