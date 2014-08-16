@@ -1,51 +1,71 @@
-%{!?__pear: %global __pear %{_bindir}/pear}
-%global pear_name   sdk
-%global channelname pear.amazonwebservices.com
+#
+# RPM spec file for php-aws-sdk
+#
+# Copyright (c) 2013-2014 Joseph Marrero <jmarrero@fedoraproject.org>
+#                         Gregor Tätzner <brummbq@fedoraproject.org>
+#                         Shawn Iwinski <shawn.iwinski@gmail.com>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 
-Name:		php-aws-sdk
-Version:	2.6.14
-Release:	1%{?dist}
-Summary:	Amazon Web Services framework for PHP
-Group:		Development/Libraries
+%global github_owner     aws
+%global github_name      aws-sdk-php
+%global github_version   2.6.15
+%global github_commit    4eaf38f0297533d48f013be7e1ffa1cb2c912e2f
 
-License:	ASL 2.0
-URL:		http://aws.amazon.com/sdkforphp/
-Source0:	http://pear.amazonwebservices.com/get/sdk-%{version}.tgz
+%global composer_vendor  aws
+%global composer_project aws-sdk-php
 
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
-BuildArch:	noarch
-BuildRequires:	php-pear(PEAR)
-BuildRequires:	php-channel(%{channelname})
+%global pear_channel     pear.amazonwebservices.com
+%global pear_name        sdk
 
-Requires(post):		%{__pear}
-Requires(postun):	%{__pear}
+# "php": ">=5.3.3"
+%global php_min_ver      5.3.3
+# "guzzle/guzzle": ">=3.7.0,<=3.9.9"
+%global guzzle_min_ver   3.7.0
+%global guzzle_max_ver   3.9.9
 
-Requires:	php(language) >= 5.2
-Requires:	php-pear(PEAR)
-Requires:	php-channel(%{channelname})
-Requires:	php-pdo
-Requires:	php-reflection
-Requires:	php-spl
-Requires:	php-simplexml
-Requires:	php-ctype
-Requires:	php-curl
-Requires:	php-date
-Requires:	php-dom
-Requires:	php-hash
-Requires:	php-json
-Requires:	php-libxml
-Requires:	php-mbstring
-Requires:	php-openssl
-Requires:	php-pcre
-Requires:	php-session
-Requires:	php-sqlite3
-Requires:	php-Monolog
-Requires:	php-Monolog-dynamo
-Requires:	php-symfony-yaml
-Requires:	php-guzzle-Guzzle >= 3.7.0
-Requires:	php-guzzle-Guzzle < 3.9.0
-Provides:	php-pear(%{pear_name}) = %{version}
-Provides:	php-pear(%{channelname}/%{pear_name}) = %{version}
+Name:      php-aws-sdk
+Version:   %{github_version}
+Release:   1%{?dist}
+Summary:   Amazon Web Services framework for PHP
+
+Group:     Development/Libraries
+License:   ASL 2.0
+URL:       http://aws.amazon.com/sdk-for-php/
+Source0:   https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch: noarch
+
+# composer.json
+Requires:  php(language)     >= %{php_min_ver}
+Requires:  php-guzzle-Guzzle >= %{guzzle_min_ver}
+Requires:  php-guzzle-Guzzle <  %{guzzle_max_ver}
+# composer.json: optional
+Requires:  php-composer(doctrine/cache)
+Requires:  php-composer(monolog/monolog)
+Requires:  php-openssl
+Requires:  php-symfony-yaml
+# phpcompatinfo (computed from version 2.6.15)
+Requires:  php-curl
+Requires:  php-date
+Requires:  php-hash
+Requires:  php-json
+Requires:  php-openssl
+Requires:  php-pcre
+Requires:  php-reflection
+Requires:  php-session
+Requires:  php-simplexml
+Requires:  php-spl
+
+# Composer
+Provides:  php-composer(%{composer_vendor}/%{composer_project}) = %{version}
+# PEAR
+Provides:  php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 %description
 Amazon Web Services SDK for PHP enables developers to build solutions for
@@ -54,11 +74,12 @@ Amazon Simple Storage Service (Amazon S3), Amazon Elastic Compute Cloud
 
 
 %prep
-%setup -q -c
+%setup -qn %{github_name}-%{github_commit}
 
-# fix doc roles
-sed -e '/aws.phar/d' \
-    package.xml >%{pear_name}-%{version}/%{name}.xml
+# Fix rpmlint issues:
+#     W: spurious-executable-perm /usr/share/doc/php-aws-sdk/composer.json
+#     E: script-without-shebang /usr/share/php/Aws/DynamoDb/Model/BatchRequest/WriteRequestBatchTransfer.php
+chmod a-x composer.json src/Aws/DynamoDb/Model/BatchRequest/WriteRequestBatchTransfer.php
 
 
 %build
@@ -66,35 +87,44 @@ sed -e '/aws.phar/d' \
 
 
 %install
-cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
+mkdir -pm 0755 %{buildroot}%{_datadir}/php/AWSSDKforPHP/
+cp -pr src/* %{buildroot}%{_datadir}/php/
+# compat with old pear package
+ln -s ../Aws %{buildroot}%{_datadir}/php/AWSSDKforPHP/Aws
 
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
 
-# Install XML package description
-mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+%check
+# Tests skipped because "Guzzle\Tests\GuzzleTestCase" is not provided by the
+# php-guzzle-Guzzle package
 
 
 %post
-%{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-%postun
-if [ $1 -eq 0 ] ; then
-    %{__pear} uninstall --nodeps --ignore-errors --register-only \
-	%{pear_name} >/dev/null || :
+# Unregister PEAR pkg (ignore errors if it was not registered)
+if [ -x %{_bindir}/pear ]; then
+    %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+        %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
 %files
 %defattr(-,root,root,-)
-%{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/AWSSDKforPHP/
+%{!?_licensedir:%global license %%doc}
+%license LICENSE.md
+%doc CHANGELOG.md README.md UPGRADING.md composer.json
+%{_datadir}/php/Aws
+%{_datadir}/php/AWSSDKforPHP
 
 
 %changelog
+* Sat Aug 16 2014 Remi Collet <remi@fedoraproject.org> - 2.6.15-1
+- update to 2.6.15
+- sync with rawhide
+- add link for compatibility with old pear package
+
+* Fri Aug 15 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.6.15-1
+- Updated to 2.6.15 (BZ #1126610)
+- PEAR install changed to Composer-ish install
+
 * Tue Aug 12 2014 Remi Collet <remi@fedoraproject.org> - 2.6.14-1
 - Update to 2.6.14
 
