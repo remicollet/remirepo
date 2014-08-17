@@ -1,4 +1,4 @@
-%global svnrel 3221
+%global svnrel 3278
 %global rdate  20140128
 %global upver  0.4
 
@@ -201,8 +201,11 @@ fi
 /usr/bin/gtk-update-icon-cache -f %{_datadir}/icons/hicolor &>/dev/null || :
 
 
+%{!?_licensedir:%global license %%doc}
+
 %files -f %{name}.lang
-%doc CREDIT LICENSE examples
+%doc CREDIT examples
+%license LICENSE
 %{_bindir}/%{name}
 %if 0%{?fedora} < 20
 %exclude %{_datadir}/appdata/%{name}.appdata.xml
@@ -220,12 +223,16 @@ fi
 
 
 %files symbols
-%doc ELEMENTS.LICENSE
+%license ELEMENTS.LICENSE
 %{_datadir}/%{name}/elements
 %{_datadir}/%{name}/titleblocks
 
 
 %changelog
+* Sun Aug 17 2014 Remi Collet <remi@fedoraproject.org> - 0,40-0.1.svn3278
+- Update to 0.4 snapshot revision 3278
+- fix license handling
+
 * Fri Jul 18 2014 Remi Collet <remi@fedoraproject.org> - 0,40-0.1.svn3221
 - Update to 0.4 snapshot revision 3221
 
