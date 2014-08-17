@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    58db726aa45fe26bca93f692cb3d77e9a46b7830
+%global gh_commit    e08a5b64400b9ca9124d38db30448d4b10b9f047
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,7 +17,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.2.0
+Version:        4.2.1
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -143,12 +143,14 @@ for the creation, execution and analysis of Unit Tests.
 
 
 %build
-phpab \
+%{_bindir}/php -d date.timezone=UTC \
+%{_bindir}/phpab \
   --output   src/Autoload.php \
   --template %{SOURCE1} \
   src
 
-phpab \
+%{_bindir}/php -d date.timezone=UTC \
+%{_bindir}/phpab \
   --output   tests/autoload.php \
   tests
 
@@ -197,6 +199,9 @@ fi
 
 
 %changelog
+* Sun Aug 17 2014 Remi Collet <remi@fedoraproject.org> - 4.2.1-1
+- Update to 4.2.1
+
 * Mon Aug 11 2014 Remi Collet <remi@fedoraproject.org> - 4.2.0-1
 - Update to 4.2.0
 - raise dependency on phpunit/phpunit-mock-objects >= 2.2

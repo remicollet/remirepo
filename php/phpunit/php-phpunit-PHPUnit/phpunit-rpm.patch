@@ -30,8 +30,8 @@ diff -up ./phpunit.rpm ./phpunit
  
  PHPUnit_TextUI_Command::main();
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
---- ./tests/bootstrap.php.rpm	2014-08-08 07:13:30.000000000 +0200
-+++ ./tests/bootstrap.php	2014-08-11 11:08:14.835209501 +0200
+--- ./tests/bootstrap.php.rpm	2014-08-17 17:36:46.325953778 +0200
++++ ./tests/bootstrap.php	2014-08-17 17:37:54.634043416 +0200
 @@ -1,5 +1,8 @@
  <?php
 -require __DIR__ . '/../vendor/autoload.php';
@@ -41,4 +41,4 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 +require __DIR__ . '/autoload.php';
  
  if (!ini_get('date.timezone') && !defined('HHVM_VERSION')) {
-   echo PHP_EOL . 'Error: PHPUnit\'s test suite requires the "date.timezone" runtime configuration to be set. Please check your php.ini.' . PHP_EOL;
+     echo PHP_EOL . 'Error: PHPUnit\'s test suite requires the "date.timezone" runtime configuration to be set. Please check your php.ini.' . PHP_EOL;
