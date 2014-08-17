@@ -1,6 +1,6 @@
 Summary:    A portable abstraction library for DVD decryption
 Name:       libdvdcss
-Version:    1.2.13
+Version:    1.3.0
 Release:    1%{?dist}
 License:    GPLv2+
 Group:      System Environment/Libraries
@@ -53,7 +53,9 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS COPYING ChangeLog README
+%{!?_licensedir:%global license %%doc}
+%license COPYING
+%doc AUTHORS ChangeLog README
 %exclude %{_libdir}/%{name}.a
 %exclude %{_libdir}/%{name}.la
 %{_libdir}/%{name}.so.*
@@ -67,6 +69,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Aug 17 2014 Remi Collet <RPMS@famillecollet.com> - 1.3.0-1
+- Update to 1.3.0
+
 * Wed Feb 27 2013 Remi Collet <RPMS@famillecollet.com> - 1.2.13-1
 - Update to 1.2.13
 
