@@ -11,8 +11,8 @@
 
 %global github_owner     sdboyer
 %global github_name      gliph
-%global github_version   0.1.6
-%global github_commit    9e2d52e22747c1410aa434a40b5f763c2755c4c8
+%global github_version   0.1.8
+%global github_commit    db9e4b77622f91e2d338cc45f83c2cd0e3cf0e1e
 
 %global composer_vendor  sdboyer
 %global composer_project gliph
@@ -37,7 +37,7 @@ BuildArch: noarch
 
 # composer.json
 Requires:  php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 0.1.6)
+# phpcompatinfo (computed from version 0.1.8)
 Requires:  php-spl
 
 # Composer
@@ -74,16 +74,18 @@ cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
 rm -rf %{buildroot}
 
 
-%{!?_licensedir:%global license %%doc}
-
 %files
 %defattr(-,root,root,-)
+%{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc README.md composer.json
 %{_datadir}/php/%{lib_name}
 
 
 %changelog
+* Sun Aug 17 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.1.8-1
+- Updated to 0.1.8 (BZ #1125361)
+
 * Sat Jul 19 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.1.6-1
 - Updated to 0.1.6 (BZ #1119424)
 - Added "php-composer(sdboyer/gliph)" virtual provide
