@@ -11,8 +11,8 @@
 
 %global github_owner     guzzle
 %global github_name      streams
-%global github_version   1.4.0
-%global github_commit    3b761a328e5ed6ed519e960aded95d7acbe77894
+%global github_version   1.5.1
+%global github_commit    fb0d1ee29987c2bdc59867bffaade6fc88c2675f
 
 %global composer_vendor  guzzlehttp
 %global composer_project streams
@@ -39,14 +39,14 @@ BuildArch:     noarch
 # For tests: composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-phpunit-PHPUnit
-# For tests: phpcompatinfo (computed from version 1.4.0)
+# For tests: phpcompatinfo (computed from version 1.5.1)
 BuildRequires: php-hash
 BuildRequires: php-spl
 %endif
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.4.0)
+# phpcompatinfo (computed from version 1.5.1)
 Requires:      php-hash
 Requires:      php-spl
 
@@ -112,6 +112,9 @@ sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 
 %changelog
+* Sun Aug 17 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.5.1-1
+- Updated to 1.5.1 (BZ #1128102)
+
 * Fri Jun 06 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.4.0-1
 - Updated to 1.4.0 (BZ #1124227)
 - Added option to build without tests ("--without tests")
