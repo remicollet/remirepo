@@ -1,11 +1,16 @@
-%{!?__pecl:      %{expand:   %%global __pecl   %{_bindir}/pecl}}
+%{!?__pecl:      %global __pecl   %{_bindir}/pecl}
 
-%global   pecl_name  parsekit
+%global pecl_name  parsekit
+%if "%{php_version}" < "5.6"
+%global ini_name   %{pecl_name}.ini
+%else
+%global ini_name   40-%{pecl_name}.ini
+%endif
 
 Summary:       PHP Opcode Analyser
 Name:          php-pecl-parsekit
 Version:       1.3.0
-Release:       2%{?CVS:.CVS%{CVS}}%{?dist}.1
+Release:       6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # https://bugs.php.net/65937 - license file
 License:       PHP
 URL:           http://pecl.php.net/package/parsekit
@@ -14,6 +19,8 @@ Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 # https://bugs.php.net/bug.php?id=61187
 Patch1:        php-pecl-parsekit-1.3-php-5.4.patch
+# https://bugs.php.net/bug.php?id=67854
+Patch2:        php-pecl-parsekit-1.3-php56-variadic-fix.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-pear
@@ -30,14 +37,21 @@ Provides:      php-%{pecl_name}%{?_isa} = %{version}
 Provides:      php-pecl(%{pecl_name}) = %{version}
 Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
 
+%if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:      php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
-%if "%{php_version}" > "5.4"
-Obsoletes:     php54-pecl-%{pecl_name}
-%endif
+Obsoletes:     php53w-pecl-%{pecl_name}
+Obsoletes:      php54-pecl-%{pecl_name}
+Obsoletes:     php54x-pecl-%{pecl_name}
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
+Obsoletes:     php55w-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.4"
+%endif
+Obsoletes:     php56u-pecl-%{pecl_name}
+Obsoletes:     php56w-pecl-%{pecl_name}
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -58,14 +72,15 @@ some code which is potentially non-threadsafe.
 %prep
 %setup -qc
 
-%if "%{php_version}" > "5.4"
 cd %{pecl_name}-%{version}
 %patch1 -p2 -b .php54
-cd ..
+%if "%{php_version}" > "5.6"
+%patch2 -p2 -b .php56
 %endif
+cd ..
 
 # Create configuration file
-cat <<'EOF' > %{pecl_name}.ini
+cat <<'EOF' > %{ini_name}
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
 EOF
@@ -96,8 +111,8 @@ make install -C %{pecl_name}-%{version} install INSTALL_ROOT=%{buildroot}
 make install -C %{pecl_name}-zts        install INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
-install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_inidir}/%{pecl_name}.ini
-install -Dpm 644 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
+install -Dpm 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
+install -Dpm 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 # Install XML package description
 install -Dpm 0664 package2.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -136,13 +151,23 @@ rm -rf %{buildroot}
 %{pecl_xmldir}/%{name}.xml
 
 %{php_extdir}/%{pecl_name}.so
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 
 %{php_ztsextdir}/%{pecl_name}.so
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 
 
 %changelog
+* Mon Aug 18 2014 Remi Collet <RPMS@famillecollet.com> - 1.3.0-6
+- backport rawhide change (php 5.6 patch) for remi-repo
+- add numerical prefix to extension configuration file
+
+* Mon Aug 18 2014 Pavel Alexeev <Pahan@Hubbitus.info> - 1.3.0-6
+- Fix FBFS bz#1111492 - ( https://bugs.php.net/bug.php?id=67854 )
+  add Patch2: php-pecl-parsekit-1.3-php56-variadic-fix.patch
+  Based on introduced incompatability from commit
+  https://github.com/php/php-src/commit/0d7a6388663b76ebed6585ac92dfca5ef65fa7af
+
 * Sat Jan  5 2013 Remi Collet <RPMS@famillecollet.com> - 1.3.0-2
 - also provides php-parsekit
 
