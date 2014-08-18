@@ -14,7 +14,7 @@
 
 Name: phpMyAdmin
 Version: 4.2.7.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -177,14 +177,17 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 %doc doc/html/ examples/
 %{_datadir}/%{name}
 %dir %{_sysconfdir}/%{name}
-%config(noreplace) %{_sysconfdir}/%{name}/config.inc.php
+%config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.inc.php
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
-%dir %{_localstatedir}/lib/%{name}/upload
-%dir %attr(755,apache,root) %{_localstatedir}/lib/%{name}/save
-%dir %attr(755,apache,root) %{_localstatedir}/lib/%{name}/config
+%dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/upload
+%dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/save
+%dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/config
 
 
 %changelog
+* Mon Aug 18 2014 Remi Collet <rpms@famillecollet.com> 4.2.7.1-2
+- restrict access to /etc/phpMyAdmin and /var/lib/phpMyAdmin
+
 * Sun Aug 17 2014 Remi Collet <rpms@famillecollet.com> 4.2.7.1-1
 - update to 4.2.7.1 (SUn, 17 Aug 2014, security)
 - fix for PMASA-2014-8 and PMASA-2014-9
