@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    79e29958a9c31b8e56a36a132887f34bd0ba6b15
+%global gh_commit    83a2b834c8395ad9510f7c8f4f46d498ce88565b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit-selenium
@@ -16,7 +16,7 @@
 # No test, as test suite requires a Selenium server
 
 Name:           php-phpunit-PHPUnit-Selenium
-Version:        1.4.0
+Version:        1.4.1
 Release:        1%{?dist}
 Summary:        Selenium RC integration for PHPUnit
 
@@ -31,11 +31,14 @@ BuildRequires:  php(language) >= 5.3.3
 
 # From composer.json
 #        "php": ">=5.3.3",
-#        "phpunit/phpunit": "3.7.*",
+#        "phpunit/phpunit": ">=3.7",
+#        "sebastian/comparator": "~1.0",
 #        "ext-curl": "*",
 #        "ext-dom": "*"
 Requires:       php(language) >= 5.3.3
-Requires:       php-composer(phpunit/phpunit) >= 3.7.0
+Requires:       php-composer(phpunit/phpunit) >= 3.7
+Requires:       php-composer(sebastian/comparator) >= 1.0
+Requires:       php-composer(sebastian/comparator) <  2
 Requires:       php-curl
 Requires:       php-dom
 # From phpcompatinfo report for version 1.3.3
@@ -103,6 +106,10 @@ fi
 
 
 %changelog
+* Tue Aug 19 2014 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
+- Update to 1.4.1
+- add dependency on sebastian/comparator
+
 * Mon Aug  4 2014 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - Update to 1.4.0
 - composer dependencies
