@@ -88,7 +88,7 @@ Version: 5.4.32
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -139,6 +139,7 @@ Patch46: php-5.4.9-fixheader.patch
 Patch47: php-5.4.9-phpinfo.patch
 
 # Upstream fixes
+Patch100: php-wddx.patch
 
 # Security fixes
 
@@ -829,6 +830,8 @@ rm -f ext/json/utf8_to_utf16.*
 %endif
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
+
+%patch100 -p1 -b .wddx
 
 %patch91 -p1 -b .remi-oci8
 
@@ -1696,6 +1699,9 @@ fi
 
 
 %changelog
+* Wed Aug 20 2014 Remi Collet <remi@fedoraproject.org> 5.4.32-2
+- test build for php bug #67873
+
 * Wed Aug 20 2014 Remi Collet <remi@fedoraproject.org> 5.4.32-1
 - Update to 5.4.32
   http://www.php.net/releases/5_4_32.php

@@ -1,0 +1,41 @@
+From 95ea1e7ca787537a93c25c401dba010d51aa8d59 Mon Sep 17 00:00:00 2001
+From: Anatol Belski <ab@php.net>
+Date: Sat, 11 May 2013 02:47:48 +0200
+Subject: [PATCH] fixed variable corruption under win x64
+
+---
+ ext/wddx/wddx.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/ext/wddx/wddx.c b/ext/wddx/wddx.c
+index 967da6a..afeca90 100644
+--- a/ext/wddx/wddx.c
++++ b/ext/wddx/wddx.c
+@@ -405,7 +405,7 @@ static void php_wddx_serialize_string(wddx_packet *packet, zval *var TSRMLS_DC)
+ 
+ 	if (Z_STRLEN_P(var) > 0) {
+ 		char *buf;
+-		int buf_len;
++		size_t buf_len;
+ 
+ 		buf = php_escape_html_entities(Z_STRVAL_P(var), Z_STRLEN_P(var), &buf_len, 0, ENT_QUOTES, NULL TSRMLS_CC);
+ 
+@@ -626,12 +626,12 @@ static void php_wddx_serialize_array(wddx_packet *packet, zval *arr)
+  */
+ void php_wddx_serialize_var(wddx_packet *packet, zval *var, char *name, int name_len TSRMLS_DC)
+ {
+-	char *tmp_buf;
+-	char *name_esc;
+-	int name_esc_len;
+ 	HashTable *ht;
+ 
+ 	if (name) {
++		size_t name_esc_len;
++		char *tmp_buf, *name_esc;
++
+ 		name_esc = php_escape_html_entities(name, name_len, &name_esc_len, 0, ENT_QUOTES, NULL TSRMLS_CC);
+ 		tmp_buf = emalloc(name_esc_len + sizeof(WDDX_VAR_S));
+ 		snprintf(tmp_buf, name_esc_len + sizeof(WDDX_VAR_S), WDDX_VAR_S, name_esc);
+-- 
+1.9.2
+
