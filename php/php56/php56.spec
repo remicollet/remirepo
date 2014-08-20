@@ -93,6 +93,12 @@
 %else
 %global with_systemdmax 0
 %endif
+# httpd 2.4.10 with httpd-filesystem and sethandler support
+%if 0%{?fedora} >= 21
+%global with_httpd2410 1
+%else
+%global with_httpd2410 0
+%endif
 
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 %global with_dtrace 1
@@ -121,7 +127,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.0
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.21.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.22.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -151,6 +157,7 @@ Source8: php-fpm.sysconfig
 Source9: php.modconf
 Source10: php.ztsmodconf
 Source11: strip.sh
+Source12: php.conf2
 # Configuration files for some extensions
 Source50: opcache.ini
 Source51: opcache-default.blacklist
@@ -197,6 +204,10 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: bzip2-devel, curl-devel >= 7.9
 BuildRequires: httpd-devel >= 2.0.46-1, pam-devel
+%if %{with_httpd2410}
+# to ensure we are using httpd with filesystem feature (see #1081453)
+BuildRequires: httpd-filesystem
+%endif
 BuildRequires: libstdc++-devel, openssl-devel
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 # For Sqlite3 extension
@@ -233,7 +244,11 @@ Requires: php-common%{?_isa} = %{version}-%{release}
 # For backwards-compatibility, require php-cli for the time being:
 Requires: php-cli%{?_isa} = %{version}-%{release}
 # To ensure correct /var/lib/php/session ownership:
+%if %{with_httpd2410}
+Requires(pre): httpd-filesystem
+%else
 Requires(pre): httpd
+%endif
 
 %if 0%{?fedora} < 20
 # Don't provides extensions, which are not shared library, as .so
@@ -305,6 +320,13 @@ Requires(post): systemd-sysv
 # This is for /sbin/service
 Requires(preun): initscripts
 Requires(postun): initscripts
+%endif
+%if %{with_httpd2410}
+# To ensure correct /var/lib/php/session ownership:
+Requires(pre): httpd-filesystem
+# For php.conf in /etc/httpd/conf.d
+# and version 2.4.10 for proxy support in SetHandler
+Requires: httpd-filesystem >= 2.4.10
 %endif
 Obsoletes: php53-fpm, php53u-fpm, php54-fpm, php54w-fpm, php55u-fpm, php55w-fpm, php56u-fpm, php56w-fpm
 
@@ -1447,6 +1469,9 @@ cat %{SOURCE10} >>$RPM_BUILD_ROOT%{_httpd_modconfdir}/10-php.conf
 %endif
 install -D -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_httpd_confdir}/php.conf
 %endif
+%if %{with_httpd2410}
+cat %{SOURCE12} >>$RPM_BUILD_ROOT%{_httpd_confdir}/php.conf
+%endif
 
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
 %if %{with_zts}
@@ -1639,6 +1664,7 @@ echo -e "You should consider upgrading to a supported release.\n"
 %endif
 
 
+%if ! %{with_httpd2410}
 %pre fpm
 # Add the "apache" user as we don't require httpd
 getent group  apache >/dev/null || \
@@ -1647,6 +1673,7 @@ getent passwd apache >/dev/null || \
   useradd -r -u 48 -g apache -s /sbin/nologin \
     -d %{_httpd_contentdir} -c "Apache" apache
 exit 0
+%endif
 
 %post fpm
 %if 0%{?systemd_post:1}
@@ -1781,6 +1808,9 @@ fi
 %license fpm_LICENSE
 %attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
 %attr(0770,root,apache) %dir %{_localstatedir}/lib/php/wsdlcache
+%if %{with_httpd2410}
+%config(noreplace) %{_httpd_confdir}/php.conf
+%endif
 %config(noreplace) %{_sysconfdir}/php-fpm.conf
 %config(noreplace) %{_sysconfdir}/php-fpm.d/www.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/php-fpm
@@ -1872,6 +1902,10 @@ fi
 
 
 %changelog
+* Wed Aug 20 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.22.RC4
+- backport rawhide stuff for F21+ and httpd-filesystem
+  with support for SetHandler to proxy_fcgi
+
 * Thu Aug 14 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.21.RC4
 - php 5.6.0RC4
 
