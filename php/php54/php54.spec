@@ -84,11 +84,11 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.31
+Version: 5.4.32
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1696,7 +1696,9 @@ fi
 
 
 %changelog
-* Wed Jul 30 2014 Remi Collet <rcollet@redhat.com> 5.4.31-2
+* Wed Aug 20 2014 Remi Collet <remi@fedoraproject.org> 5.4.32-1
+- Update to 5.4.32
+  http://www.php.net/releases/5_4_32.php
 - fix zts-php-config --php-binary output #1124605
 
 * Thu Jul 24 2014 Remi Collet <remi@fedoraproject.org> 5.4.31-1
