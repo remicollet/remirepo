@@ -176,7 +176,7 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 %doc ChangeLog README CONTRIBUTING.md
 %doc doc/html/ examples/
 %{_datadir}/%{name}
-%dir %{_sysconfdir}/%{name}
+%attr(0750,root,apache) %dir %{_sysconfdir}/%{name}
 %config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.inc.php
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/upload
