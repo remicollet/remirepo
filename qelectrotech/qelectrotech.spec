@@ -1,4 +1,4 @@
-%global svnrel 3278
+%global svnrel 3288
 %global rdate  20140128
 %global upver  0.4
 
@@ -43,8 +43,6 @@ Source0:    http://download.tuxfamily.org/qet/tags/%{rdate}/qelectrotech-%{upver
 %endif
 
 BuildRequires:    desktop-file-utils
-Requires(post):   desktop-file-utils
-Requires(postun): desktop-file-utils
 BuildRequires:    qt4-devel >= 4.6.0
 Requires:         qelectrotech-symbols = %{version}-%{release}
 Requires:         electronics-menu
@@ -186,19 +184,21 @@ cat qet.lang >>qelectrotech.lang
 
 %post
 /usr/bin/update-desktop-database &>/dev/null || :
-/usr/bin/update-mime-database %{_datadir}/mime &>/dev/null || :
 /bin/touch --no-create %{_datadir}/icons/hicolor
+/bin/touch --no-create %{_datadir}/mime/packages &> /dev/null || :
 
 %postun
 /usr/bin/update-desktop-database &>/dev/null || :
-/usr/bin/update-mime-database %{_datadir}/mime &>/dev/null || :
 if [ $1 -eq 0 ] ; then
     /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
     /usr/bin/gtk-update-icon-cache -f %{_datadir}/icons/hicolor &>/dev/null || :
+    /bin/touch --no-create %{_datadir}/mime/packages &> /dev/null || :
+    /usr/bin/update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
 fi
 
 %posttrans
 /usr/bin/gtk-update-icon-cache -f %{_datadir}/icons/hicolor &>/dev/null || :
+/usr/bin/update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
 
 
 %{!?_licensedir:%global license %%doc}
@@ -229,6 +229,10 @@ fi
 
 
 %changelog
+* Wed Aug 20 2014 Remi Collet <remi@fedoraproject.org> - 0,40-0.1.svn3288
+- Update to 0.4 snapshot revision 3288
+- update mime scriptlets, drop extraneous scriptlet deps
+
 * Sun Aug 17 2014 Remi Collet <remi@fedoraproject.org> - 0,40-0.1.svn3278
 - Update to 0.4 snapshot revision 3278
 - fix license handling
