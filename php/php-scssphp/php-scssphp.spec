@@ -12,8 +12,8 @@
 
 %global github_owner    leafo
 %global github_name     scssphp
-%global github_version  0.0.12
-%global github_commit   ff76df3e45af45e808f3fcd516a2cb5cbc77f45e
+%global github_version  0.0.15
+%global github_commit   85348dde6f193fe390aff76b21d816415ffef93b
 
 # "php": ">=5.3.0"
 %global php_min_ver     5.3.0
@@ -41,7 +41,7 @@ BuildRequires: help2man
 # For tests: composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-phpunit-PHPUnit >= %{phpunit_min_ver}
-# For tests: phpcompatinfo (computed from version 0.0.12)
+# For tests: phpcompatinfo (computed from version 0.0.15)
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-pcre
@@ -49,7 +49,7 @@ BuildRequires: php-pcre
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 0.0.12)
+# phpcompatinfo (computed from version 0.0.15)
 Requires:      php-ctype
 Requires:      php-date
 Requires:      php-pcre
@@ -121,6 +121,9 @@ sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 
 %changelog
+* Tue Aug 19 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.0.15-1
+- Updated to 0.0.15 (BZ #1126612)
+
 * Mon Jul 07 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.0.12-1
 - Updated to 0.0.12 (BZ #1116615)
 - Added option to build without tests ("--without tests")
