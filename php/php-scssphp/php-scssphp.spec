@@ -73,9 +73,6 @@ the SCSS syntax.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-# Fix version (see https://github.com/leafo/scssphp/pull/174)
-sed -i 's/0.0.11/0.0.12/' scss.inc.php
-
 # Create man page for bin
 # Required here b/c path to include file is changed in next command
 help2man --no-info ./pscss > pscss.1
