@@ -88,7 +88,7 @@ Version: 5.4.32
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -139,7 +139,7 @@ Patch46: php-5.4.9-fixheader.patch
 Patch47: php-5.4.9-phpinfo.patch
 
 # Upstream fixes
-Patch100: php-wddx.patch
+Patch100: php-bug67873.patch
 
 # Security fixes
 
@@ -1699,13 +1699,12 @@ fi
 
 
 %changelog
-* Wed Aug 20 2014 Remi Collet <remi@fedoraproject.org> 5.4.32-2
-- test build for php bug #67873
-
-* Wed Aug 20 2014 Remi Collet <remi@fedoraproject.org> 5.4.32-1
+* Thu Aug 21 2014 Remi Collet <remi@fedoraproject.org> 5.4.32-1
 - Update to 5.4.32
   http://www.php.net/releases/5_4_32.php
 - fix zts-php-config --php-binary output #1124605
+- fix segfault in php_wddx_serialize_var
+  upstream patch for https://bugs.php.net/67873
 
 * Thu Jul 24 2014 Remi Collet <remi@fedoraproject.org> 5.4.31-1
 - Update to 5.4.31
