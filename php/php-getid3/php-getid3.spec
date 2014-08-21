@@ -1,16 +1,33 @@
+%global date 20140511
+
 Name:      php-getid3
-Version:   1.9.7
-Release:   1%{?dist}
+Version:   1.9.8
+Release:   2%{?dist}
 Epoch:     1
 License:   LGPLv3+
 Summary:   The PHP media file parser
 Group:     Development/Libraries
 URL:       http://getid3.sourceforge.net/
-Source0:   http://downloads.sourceforge.net/getid3/getID3-%{version}.zip
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires:  php-common >= 5.0.0
-Requires:  php-gd
+Source0:   http://downloads.sourceforge.net/getid3/getID3-%{version}-%{date}.zip
+
 BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+# from composer.json
+#        "php": ">=5.3.0"
+Requires:  php(language) >= 5.3.0
+# from phpcompatinfo for version 1.9.8
+Requires:  php-ctype
+Requires:  php-date
+Requires:  php-exif
+Requires:  php-gd
+Requires:  php-iconv
+Requires:  php-pcre
+Requires:  php-xml
+# Optional: dba, mysql, sqlite3, rar
+
+Provides:  php-composer(james-heinrich/getid3) = %{version}
+
 
 %description
 getID3() is a PHP script that extracts useful information 
@@ -18,8 +35,9 @@ getID3() is a PHP script that extracts useful information
 other multimedia file formats (Ogg, WMA, WMV, ASF, WAV, AVI, 
 AAC, VQF, FLAC, MusePack, Real, QuickTime, Monkey's Audio, MIDI and more).
 
+
 %prep
-%setup -q -n getID3-%{version}
+%setup -q -c
 for i in ./*.txt licenses/*.txt demos/*.php; do
       iconv -f iso-8859-1 -t utf-8 < "$i" > "${i}_"
       touch -r "$i" "${i}_"
@@ -28,7 +46,9 @@ done
 sed -i 's/\r//' demos/index.php
 sed -i 's/\r//' changelog.txt
 
+
 %build
+
 
 %install
 rm -rf %{buildroot}
@@ -36,15 +56,29 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_datadir}/php
 cp -a getid3 %{buildroot}%{_datadir}/php/
 
+
 %clean
 rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc changelog.txt dependencies.txt licenses readme.txt structure.txt demos
+%doc changelog.txt dependencies.txt readme.txt structure.txt demos
+%doc composer.json
+%{?_licensedir:%license licenses/*}
+%{!?_licensedir:%doc licenses}
 %{_datadir}/php/getid3
 
+
 %changelog
+* Thu Aug 21 2014 Remi Collet <remi@fedoraproject.org> - 1:1.9.8-2
+- fix minimal PHP version
+- add explicit dependencies for all php extensions
+- fix license handling
+- provides php-composer(james-heinrich/getid3)
+
+* Wed Aug 20 2014 Adam Williamson <awilliam@redhat.com> - 1:1.9.8-1
+- new release 1.9.8
+
 * Sun Sep  8 2013 Remi Collet <RPMS@famillecollet.com> - 1:1.9.7-1
 - backport 1.9.7 for remi repo
 
