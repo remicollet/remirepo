@@ -190,6 +190,7 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
+Patch100: php-bug67865.patch
 
 # Security fixes (200+)
 
@@ -938,6 +939,7 @@ rm -rf ext/json
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
+%patch100 -p1 -b .bug67865
 
 # security patches
 
@@ -1945,6 +1947,7 @@ fi
 - Update to 5.5.16
   http://www.php.net/releases/5_5_16.php
 - fix zts-php-config --php-binary output #1124605
+- revert fix for 67724 because of 67865
 
 * Thu Jul 24 2014 Remi Collet <remi@fedoraproject.org> 5.5.15-1
 - Update to 5.5.15

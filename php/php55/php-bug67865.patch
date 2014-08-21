@@ -1,0 +1,64 @@
+From 46ee0e087e5bd6520051cb66d765fc428c51b1a4 Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Wed, 20 Aug 2014 13:15:22 -0700
+Subject: [PATCH] Revert "Fixed Bug #67724"
+
+This reverts commit e4ff7f2ee346d641715694209e61704c9e815483.
+Reverted since it causes https://bugs.php.net/bug.php?id=67865
+---
+ ext/zlib/tests/bug67724.gz.gz | Bin 171 -> 0 bytes
+ ext/zlib/tests/bug67724.phpt  |  26 --------------------------
+ ext/zlib/zlib_filter.c        |   3 +--
+ 3 files changed, 1 insertion(+), 28 deletions(-)
+ delete mode 100644 ext/zlib/tests/bug67724.gz.gz
+ delete mode 100644 ext/zlib/tests/bug67724.phpt
+
+diff --git a/ext/zlib/tests/bug67724.phpt b/ext/zlib/tests/bug67724.phpt
+deleted file mode 100644
+index 1e5026f..0000000
+--- a/ext/zlib/tests/bug67724.phpt
++++ /dev/null
+@@ -1,26 +0,0 @@
+---TEST--
+-Bug #67724 (chained zlib filters silently fail with large amounts of data)
+---SKIPIF--
+-<?php
+-extension_loaded("zlib") or die("skip need ext/zlib");
+-?>
+---FILE--
+-<?php
+-echo "Test\n";
+-
+-$f = fopen(__DIR__."/bug67724.gz.gz", "rb")
+-	or die(current(error_get_last()));
+-stream_filter_append($f, "zlib.inflate", STREAM_FILTER_READ, ["window" => 30]);
+-stream_filter_append($f, "zlib.inflate", STREAM_FILTER_READ, ["window" => 30]);
+-for ($i = 0; !feof($f); $i += strlen(fread($f, 0x1000)))
+-	;
+-fclose($f);
+-
+-var_dump($i);
+-
+-?>
+-DONE
+---EXPECT--
+-Test
+-int(25600000)
+-DONE
+diff --git a/ext/zlib/zlib_filter.c b/ext/zlib/zlib_filter.c
+index 47a68e2..2054ec2 100644
+--- a/ext/zlib/zlib_filter.c
++++ b/ext/zlib/zlib_filter.c
+@@ -302,8 +302,7 @@ static php_stream_filter *php_zlib_filter_create(const char *filtername, zval *f
+ 
+ 	data->strm.zalloc = (alloc_func) php_zlib_alloc;
+ 	data->strm.zfree = (free_func) php_zlib_free;
+-	data->strm.avail_out = data->outbuf_len = 0x8000;
+-	data->inbuf_len = 2048;
++	data->strm.avail_out = data->outbuf_len = data->inbuf_len = 2048;
+ 	data->strm.next_in = data->inbuf = (Bytef *) pemalloc(data->inbuf_len, persistent);
+ 	if (!data->inbuf) {
+ 		php_error_docref(NULL TSRMLS_CC, E_WARNING, "Failed allocating %zd bytes", data->inbuf_len);
+-- 
+1.9.2
+
