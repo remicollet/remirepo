@@ -43,7 +43,6 @@ BuildRequires:  php-composer(bartlett/php-reflect) >= 2.2
 #         "bartlett/php-reflect": "~2.3",
 #         "seld/jsonlint": "~1.1"
 Requires:       php(language) >= 5.3.0
-Requires:       php-intl
 Requires:       php-json
 Requires:       php-libxml
 Requires:       php-pcre
@@ -104,10 +103,6 @@ install -D -p -m 644 bin/phpcompatinfo.1         %{buildroot}%{_mandir}/man1/php
 # Not ready (local build with php 5.6 and xcache 4.0-dev)
 rm tests/Reference/Extension/XcacheExtensionTest.php
 
-# OK, but incomplete or skipped tests!
-# Tests: 810, Assertions: 10996, Skipped: 80, when most extensions installed
-# Tests: 551, Assertions: 6833, Skipped: 378, in mock
-# Reference tests need some fixes for EL-5, so ignore result for now
 %{_bindir}/phpunit \
     -d date.timezone=UTC \
     -d memory_limit=-1 \
@@ -136,7 +131,7 @@ fi
 
 
 %changelog
-* Fri Aug 24 2014 Remi Collet <remi@fedoraproject.org> - 3.3.0-1
+* Fri Aug 22 2014 Remi Collet <remi@fedoraproject.org> - 3.3.0-1
 - Update to 3.2.0
 - add dependency on seld/jsonlint
 - raise dependency on bartlett/php-reflect 2.3
