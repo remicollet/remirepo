@@ -1,6 +1,29 @@
+diff -up ./bin/phpreflect.json.dist.rpm ./bin/phpreflect.json.dist
+--- ./bin/phpreflect.json.dist.rpm	2014-08-22 08:04:25.256132414 +0200
++++ ./bin/phpreflect.json.dist	2014-08-22 08:04:29.413148972 +0200
+@@ -9,6 +9,19 @@
+         {
+             "name": "Analyser",
+             "class": "Bartlett\\Reflect\\Plugin\\Analyser\\AnalyserPlugin"
++        },
++        {
++            "name": "Cache",
++            "class": "Bartlett\\Reflect\\Plugin\\Cache\\CachePlugin",
++            "options": {
++                "adapter": "DoctrineCacheAdapter",
++                "backend": {
++                    "class": "Doctrine\\Common\\Cache\\FilesystemCache",
++                    "args": [
++                        "%{HOME}/.cache/phpreflect"
++                    ]
++                }
++            }
+         }
+     ],
+     "analysers" : [
 diff -up ./bin/phpreflect.rpm ./bin/phpreflect
---- ./bin/phpreflect.rpm	2014-07-23 17:49:46.000000000 +0200
-+++ ./bin/phpreflect	2014-07-24 07:32:27.586541797 +0200
+--- ./bin/phpreflect.rpm	2014-08-21 19:09:40.000000000 +0200
++++ ./bin/phpreflect	2014-08-22 08:04:07.852063131 +0200
 @@ -1,11 +1,11 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
@@ -14,8 +37,8 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
 +    $vendorDir = '/usr/share/php';
  
      if (!getenv("REFLECT")) {
-         $files = array(
-@@ -21,7 +21,25 @@ if (\Phar::running()) {
+         $home  = defined('PHP_WINDOWS_VERSION_BUILD') ? 'USERPROFILE' : 'HOME';
+@@ -22,7 +22,26 @@ if (\Phar::running()) {
          }
      }
  }
@@ -36,6 +59,7 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
 +    'Symfony\\Component\\Console'         => $vendorDir,
 +    'Symfony\\Component\\ClassLoader'     => $vendorDir,
 +    'Doctrine\\Common\\Cache'             => $vendorDir,
++    'Seld\\JsonLint'                      => $vendorDir,
 +    'Bartlett'                            => $vendorDir,
 +));
 +$loader->register();
@@ -43,8 +67,8 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
  if (PHP_SAPI !== 'cli') {
      return;
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
---- ./tests/bootstrap.php.rpm	2014-07-23 17:49:46.000000000 +0200
-+++ ./tests/bootstrap.php	2014-07-24 07:32:12.151469115 +0200
+--- ./tests/bootstrap.php.rpm	2014-08-21 19:09:40.000000000 +0200
++++ ./tests/bootstrap.php	2014-08-22 08:04:07.852063131 +0200
 @@ -1,6 +1,19 @@
  <?php
  

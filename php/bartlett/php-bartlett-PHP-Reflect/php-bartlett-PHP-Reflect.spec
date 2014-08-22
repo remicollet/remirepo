@@ -6,14 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    971d6bfaf85b89df0f40245775fb94ba806c6f84
+%global gh_commit    d29fddd3c9732d2faa74eae0c3ddfdfdef551489
 #global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     llaville
 %global gh_project   php-reflect
 
 Name:           php-bartlett-PHP-Reflect
-Version:        2.2.0
-%global specrel 2
+Version:        2.3.0
+%global specrel 1
 Release:        %{?gh_short:0.%{specrel}.git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -23,6 +23,7 @@ URL:            http://php5.laurent-laville.org/reflect/
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?gh_short:-%{gh_short}}.tar.gz
 
 # Autoloader for RPM - die composer !
+# Enable cache plugin
 Patch0:         %{name}-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -36,6 +37,7 @@ BuildRequires:  php-composer(symfony/class-loader)     >= 2.5
 BuildRequires:  php-composer(symfony/event-dispatcher) >= 2.5
 BuildRequires:  php-composer(symfony/finder)           >= 2.5
 BuildRequires:  php-composer(symfony/console)          >= 2.5
+BuildRequires:  php-composer(seld/jsonlint)            >= 1.1
 
 # From composer.json, "require"
 #        "php": ">=5.3.0",
@@ -49,10 +51,12 @@ BuildRequires:  php-composer(symfony/console)          >= 2.5
 #        "symfony/event-dispatcher": "~2.5",
 #        "symfony/finder": "~2.5",
 #        "symfony/console": "~2.5"
+#        "seld/jsonlint": "~1.1"
 Requires:       php(language)               >= 5.3
 Requires:       php-date
 Requires:       php-json
 Requires:       php-pcre
+Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-tokenizer
 Requires:       php-composer(phpunit/php-timer)        >= 1.0.0
@@ -63,15 +67,14 @@ Requires:       php-composer(symfony/finder)           >= 2.5
 Requires:       php-composer(symfony/finder)           <  3
 Requires:       php-composer(symfony/console)          >= 2.5
 Requires:       php-composer(symfony/console)          <  3
-# From coposer.json, "suggest"
-#        "doctrine/cache": "~1.3"
-Requires:       php-composer(doctrine/cache)           >= 1.3
-Requires:       php-composer(doctrine/cache)           <  2
+Requires:       php-composer(seld/jsonlint)            >= 1.1
+Requires:       php-composer(seld/jsonlint)            <  2
+# From composer.json, "suggest"
+#        "doctrine/cache": "Allow caching results"
+Requires:       php-composer(doctrine/cache)
 # For our patch
 Requires:       php-composer(symfony/class-loader)     >= 2.5
 Requires:       php-composer(symfony/class-loader)     <  3
-# From package.xml
-Requires:       php-reflection
 
 Obsoletes:      php-channel-bartlett <= 1.3
 Provides:       php-composer(bartlett/php-reflect) = %{version}
@@ -136,6 +139,10 @@ fi
 
 
 %changelog
+* Fri Aug 22 2014 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
+- Update to 2.3.0
+- add dependency on seld/jsonlint
+
 * Fri Jul 25 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-2
 - obsoletes php-channel-bartlett
 
