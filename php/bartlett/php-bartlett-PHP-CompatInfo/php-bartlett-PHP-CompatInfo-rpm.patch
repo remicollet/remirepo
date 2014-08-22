@@ -1,13 +1,36 @@
+diff -up ./bin/phpcompatinfo.json.dist.rpm ./bin/phpcompatinfo.json.dist
+--- ./bin/phpcompatinfo.json.dist.rpm	2014-08-22 08:17:40.045281815 +0200
++++ ./bin/phpcompatinfo.json.dist	2014-08-22 08:17:46.784308376 +0200
+@@ -9,6 +9,19 @@
+         {
+             "name": "Analyser",
+             "class": "Bartlett\\Reflect\\Plugin\\Analyser\\AnalyserPlugin"
++        },
++        {
++            "name": "Cache",
++            "class": "Bartlett\\Reflect\\Plugin\\Cache\\CachePlugin",
++            "options": {
++                "adapter": "DoctrineCacheAdapter",
++                "backend": {
++                    "class": "Doctrine\\Common\\Cache\\FilesystemCache",
++                    "args": [
++                        "%{HOME}/.cache/phpreflect"
++                    ]
++                }
++            }
+         }
+     ],
+     "analysers" : [
 diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
---- ./bin/phpcompatinfo.rpm	2014-07-22 20:58:01.000000000 +0200
-+++ ./bin/phpcompatinfo	2014-07-24 07:35:44.357468394 +0200
+--- ./bin/phpcompatinfo.rpm	2014-08-21 21:09:22.000000000 +0200
++++ ./bin/phpcompatinfo	2014-08-22 08:28:20.750827392 +0200
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
  <?php
  ini_set('memory_limit', -1);
  
-@@ -22,7 +22,25 @@ if (\Phar::running()) {
+@@ -23,7 +23,26 @@ if (\Phar::running()) {
          }
      }
  }
@@ -28,6 +51,7 @@ diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
 +    'Symfony\\Component\\EventDispatcher' => $vendorDir,
 +    'Symfony\\Component\\Console'         => $vendorDir,
 +    'Symfony\\Component\\ClassLoader'     => $vendorDir,
++    'Seld\\JsonLint'                      => $vendorDir,
 +    'Bartlett'                            => $vendorDir,
 +));
 +$loader->register();
@@ -35,8 +59,8 @@ diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
  if (PHP_SAPI !== 'cli') {
      return;
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
---- ./tests/bootstrap.php.rpm	2014-07-22 20:58:01.000000000 +0200
-+++ ./tests/bootstrap.php	2014-07-24 07:35:28.060391649 +0200
+--- ./tests/bootstrap.php.rpm	2014-08-21 21:09:22.000000000 +0200
++++ ./tests/bootstrap.php	2014-08-22 08:30:12.203270207 +0200
 @@ -1,8 +1,29 @@
  <?php
  

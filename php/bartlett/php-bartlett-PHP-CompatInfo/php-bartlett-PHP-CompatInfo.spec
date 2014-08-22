@@ -6,14 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    23d66048d3aac6093e215143274eb95e8556da70
+%global gh_commit    fca41fa03aec12bacf1c281a4fa6b832960f2fb4
 #global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     llaville
 %global gh_project   php-compat-info
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        3.2.0
-%global specrel 3
+Version:        3.3.0
+%global specrel 1
 Release:        %{?gh_short:0.%{specrel}.git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -24,13 +24,13 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 # Autoloader for RPM - die composer !
 Patch0:         %{name}-rpm.patch
-Patch1:         %{name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.0
 # to run test suite
 BuildRequires:  %{_bindir}/phpunit
+# 2.2 is enough for test (2.3 required for cache)
 BuildRequires:  php-composer(bartlett/php-reflect) >= 2.2
 
 # From composer.json, "require"
@@ -40,16 +40,20 @@ BuildRequires:  php-composer(bartlett/php-reflect) >= 2.2
 #        "ext-spl": "*",
 #        "ext-json": "*",
 #        "symfony/console": "~2.5",
-#        "bartlett/php-reflect": "~2.2"
+#         "bartlett/php-reflect": "~2.3",
+#         "seld/jsonlint": "~1.1"
 Requires:       php(language) >= 5.3.0
+Requires:       php-intl
 Requires:       php-json
 Requires:       php-libxml
 Requires:       php-pcre
 Requires:       php-spl
-Requires:       php-composer(bartlett/php-reflect) >= 2.2
+Requires:       php-composer(bartlett/php-reflect) >= 2.3
 Requires:       php-composer(bartlett/php-reflect) <  3
 Requires:       php-composer(symfony/console)      >= 2.5
 Requires:       php-composer(symfony/console)      <  3
+Requires:       php-composer(seld/jsonlint)        >= 1.1
+Requires:       php-composer(seld/jsonlint)        <  2
 # From composer.json, "suggest"
 #        "doctrine/cache": "Allow caching results, since bartlett/php-reflect 2.2"
 Requires:       php-composer(doctrine/cache)
@@ -59,8 +63,6 @@ Requires:       php-composer(nikic/php-parser)
 Requires:       php-composer(symfony/class-loader)
 Requires:       php-composer(symfony/event-dispatcher)
 Requires:       php-composer(symfony/finder)
-# From phpcompatinfo report for version 3.2.0
-Requires:       php-curl
 
 Provides:       phpcompatinfo = %{version}
 Provides:       php-composer(bartlett/php-compatinfo) = %{version}
@@ -79,7 +81,6 @@ Documentation: http://php5.laurent-laville.org/compatinfo/manual/3.2/en/
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
-%patch1 -p1 -b .git
 
 sed -e 's/@package_version@/%{version}/' \
     -i $(find src -name \*.php)
@@ -100,6 +101,9 @@ install -D -p -m 644 bin/phpcompatinfo.1         %{buildroot}%{_mandir}/man1/php
 
 
 %check
+# Not ready (local build with php 5.6 and xcache 4.0-dev)
+rm tests/Reference/Extension/XcacheExtensionTest.php
+
 # OK, but incomplete or skipped tests!
 # Tests: 810, Assertions: 10996, Skipped: 80, when most extensions installed
 # Tests: 551, Assertions: 6833, Skipped: 378, in mock
@@ -132,6 +136,12 @@ fi
 
 
 %changelog
+* Fri Aug 24 2014 Remi Collet <remi@fedoraproject.org> - 3.3.0-1
+- Update to 3.2.0
+- add dependency on seld/jsonlint
+- raise dependency on bartlett/php-reflect 2.3
+- enable the cache plugin in default configuration
+
 * Fri Jul 25 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-3
 - cleanup pear registration
 
