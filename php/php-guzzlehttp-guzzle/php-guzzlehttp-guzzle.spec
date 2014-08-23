@@ -9,6 +9,12 @@
 # Please preserve changelog entries
 #
 
+%if 0%{?rhel} == 5
+%global with_cacert 0
+%else
+%global with_cacert 1
+%endif
+
 %global github_owner     guzzle
 %global github_name      guzzle
 %global github_version   4.1.8
@@ -26,8 +32,13 @@
 %global psr_log_min_ver  1.0
 %global psr_log_max_ver  2.0
 
+%if 0%{?fedora} < 18 && 0%{?rhel} < 6
+# Missing nodejs
+%global with_tests 0
+%else
 # Build using "--without tests" to disable tests
 %global with_tests       %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
@@ -39,6 +50,7 @@ License:       MIT
 URL:           http://guzzlephp.org
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 %if %{with_tests}
 # For tests
@@ -62,7 +74,9 @@ BuildRequires: php-simplexml
 BuildRequires: php-spl
 %endif
 
+%if %{with_cacert}
 Requires:      ca-certificates
+%endif
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
 Requires:      php-composer(guzzlehttp/streams) >= %{streams_min_ver}
@@ -99,6 +113,7 @@ the pain out of consuming web services.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+%if %{with_cacert}
 # Remove bundled cert
 rm -f src/cacert.pem
 sed "s#__DIR__ . '/cacert.pem'#'%{_sysconfdir}/pki/tls/cert.pem'#" \
@@ -107,7 +122,7 @@ sed "s#cacert.pem#%{_sysconfdir}/pki/tls/cert.pem#" \
     -i tests/ClientTest.php
 sed "s#__DIR__ . '/../../src/cacert.pem'#'%{_sysconfdir}/pki/tls/cert.pem'#" \
     -i tests/Adapter/StreamAdapterTest.php
-
+%endif
 
 
 %build
@@ -115,6 +130,7 @@ sed "s#__DIR__ . '/../../src/cacert.pem'#'%{_sysconfdir}/pki/tls/cert.pem'#" \
 
 
 %install
+rm -rf %{buildroot}
 mkdir -pm 0755 %{buildroot}%{_datadir}/php/GuzzleHttp
 cp -pr src/* %{buildroot}%{_datadir}/php/GuzzleHttp/
 
@@ -135,11 +151,7 @@ cat > vendor/autoload.php <<'AUTOLOAD'
 
 spl_autoload_register(function ($class) {
     $src = str_replace(array('\\', '_'), '/', $class).'.php';
-    if (!@include_once $src) {
-        $psr4_class = preg_replace('#^GuzzleHttp\\\?#', '', $class);
-        $psr4_src = str_replace(array('\\', '_'), '/', $psr4_class).'.php';
-        @include_once $psr4_src;
-    }
+    @include_once $src;
 });
 
 require_once '%{_datadir}/php/GuzzleHttp/Stream/functions.php';
@@ -149,13 +161,18 @@ AUTOLOAD
 # Create PHPUnit config w/ colors turned off
 sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
-%{_bindir}/phpunit --include-path="./src:./tests" -d date.timezone="UTC"
+%{_bindir}/phpunit --include-path="%{buildroot}%{_datadir}/php" -d date.timezone="UTC"
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md composer.json
@@ -163,6 +180,9 @@ sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 
 %changelog
+* Sat Aug 23 2014 Remi Collet <remi@fedoraproject.org> - 4.1.8-1
+- backport for remi repository
+
 * Sat Aug 23 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 4.1.8-1
 - Updated to 4.1.8 (BZ #1126611)
 
