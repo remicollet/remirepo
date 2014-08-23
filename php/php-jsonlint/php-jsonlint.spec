@@ -23,7 +23,7 @@
 
 Name:          php-%{github_name}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       JSON Lint for PHP
 
 Group:         Development/Libraries
@@ -100,13 +100,18 @@ sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE *.mdown composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *.mdown composer.json
 %dir %{_datadir}/php/Seld
      %{_datadir}/php/Seld/JsonLint
 %{_bindir}/jsonlint
 
 
 %changelog
+* Sat Aug 23 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.0-2
+- %%license usage
+
 * Wed Aug 20 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.0-1
 - Updated to 1.2.0 (BZ #1124228)
 - Added option to build without tests ("--without tests")
