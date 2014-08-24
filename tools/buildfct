@@ -70,12 +70,14 @@ alias mockfc19i="  setarch i686  mock --configdir=$mocketc -r fc19i   --arch i68
 alias mockfc19i56="setarch i686  mock --configdir=$mocketc -r fc19i56 --arch i686 rebuild "
 alias mockfc19x="                mock --configdir=$mocketc -r fc19x               rebuild "
 alias mockfc19x56="              mock --configdir=$mocketc -r fc19x56             rebuild "
+alias mockfc19xscl56="           mock --configdir=$mocketc -r fc19xscl56          rebuild "
 alias mockfc19xd="               mock --configdir=$mocketc -r fc19xd              rebuild "
 
 alias mockfc20i="  setarch i686  mock --configdir=$mocketc -r fc20i   --arch i686 rebuild "
 alias mockfc20i56="setarch i686  mock --configdir=$mocketc -r fc20i56 --arch i686 rebuild "
 alias mockfc20x="                mock --configdir=$mocketc -r fc20x               rebuild "
 alias mockfc20x56="              mock --configdir=$mocketc -r fc20x56             rebuild "
+alias mockfc20xscl56="           mock --configdir=$mocketc -r fc20xscl56          rebuild "
 alias mockfc20xd="               mock --configdir=$mocketc -r fc20xd              rebuild "
 
 #alias mockel4i="setarch i686  mock --configdir=$mocketc -r el4i  --arch i386 rebuild "
@@ -100,11 +102,13 @@ alias mockel6x="               mock --configdir=$mocketc -r el6x               r
 alias mockel6xt="              mock --configdir=$mocketc -r el6xt              rebuild "
 alias mockel6x55="             mock --configdir=$mocketc -r el6x55             rebuild "
 alias mockel6x56="             mock --configdir=$mocketc -r el6x56             rebuild "
+alias mockel6xscl56="          mock --configdir=$mocketc -r el6xscl56          rebuild "
 
 alias mockel7x="               mock --configdir=$mocketc -r el7x               rebuild "
 alias mockel7xt="              mock --configdir=$mocketc -r el7xt              rebuild "
 alias mockel7x55="             mock --configdir=$mocketc -r el7x55             rebuild "
 alias mockel7x56="             mock --configdir=$mocketc -r el7x56             rebuild "
+alias mockel7xscl56="          mock --configdir=$mocketc -r el7xscl56          rebuild "
 
 alias mockscl="                mock --configdir=$mocketc -r el6xscl54          rebuild "
 
@@ -312,6 +316,32 @@ if [ -f "$1" ]; then
   do
     echo -n "$(date +%X) 56 el$i  "
     mock $quiet --configdir=$mocketc -r el${i}x56 rebuild $1 && echo " Ok." || echo " Error !"
+  done
+  date +%X
+else
+  echo "file not found '$1'"
+fi
+}
+
+# Build All distribution / version / 64bits for remi/scl-php56
+mockscl56x()
+{
+quiet=""
+if [ "$1" = "-q" ]; then
+    quiet="--quiet"
+    shift
+fi
+
+if [ -f "$1" ]; then
+  for i in $(seq 20 -1 19)
+  do
+    echo -n "$(date +%X) scl56 fc$i "
+    mock $quiet --configdir=$mocketc -r fc${i}xscl56 rebuild $1 && echo " Ok." || echo " Error !"
+  done
+  for i in $(seq 7 -1 6)
+  do
+    echo -n "$(date +%X) scl56 el$i  "
+    mock $quiet --configdir=$mocketc -r el${i}xscl56 rebuild $1 && echo " Ok." || echo " Error !"
   done
   date +%X
 else
