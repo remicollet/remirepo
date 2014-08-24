@@ -26,7 +26,7 @@ Summary:        Replacement for the standard PHP serializer
 Name:           %{?scl_prefix}php-pecl-igbinary
 Version:        1.1.2
 %if 0%{?short:1}
-Release:        0.10.git%{short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.11.git%{short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        https://github.com/%{extname}/%{extname}/archive/%{commit}/%{extname}-%{version}-%{short}.tar.gz
 %else
 Release:        2%{?dist}
@@ -60,16 +60,19 @@ Provides:       %{?scl_prefix}php-%{extname}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{extname}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{extname})%{?_isa} = %{version}
 
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{extname}
 Obsoletes:     php53u-pecl-%{extname}
 Obsoletes:     php54-pecl-%{extname}
+Obsoletes:     php54w-pecl-%{extname}
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{extname}
+Obsoletes:     php55w-pecl-%{extname}
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{extname}
+Obsoletes:     php56w-pecl-%{extname}
 %endif
 %endif
 
@@ -266,6 +269,9 @@ fi
 
 
 %changelog
+* Sun Aug 24 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-0.11.git3b8ab7e
+- improve SCL stuff
+
 * Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-0.10.git3b8ab7e
 - add numerical prefix to extension configuration file
 
