@@ -20,7 +20,7 @@
 %global oci8ver     2.0.9
 
 # Use for first build of PHP (before pecl/zip and pecl/jsonc)
-%global php_bootstrap   1
+%global php_bootstrap   0
 
 # Adds -z now to the linker flags
 %global _hardened_build 1
@@ -45,7 +45,7 @@
 %global _httpd_contentdir  /var/www
 %endif
 
-%global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
+%global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_root_sysconfdir}/rpm; echo $d)
 
 %global mysql_sock %(mysql_config --socket  2>/dev/null || echo /var/lib/mysql/mysql.sock)
 
@@ -151,7 +151,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.6.0
-Release: 0.0.%{rcver}%{?dist}
+Release: 0.1.%{rcver}%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1371,9 +1371,9 @@ install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 
 # make the cli commands available in standard root for SCL build
 %if 0%{?scl:1}
-#install -m 755 -d $RPM_BUILD_ROOT%{_root_bindir}
-#ln -s %{_bindir}/php       $RPM_BUILD_ROOT%{_root_bindir}/%{?scl_prefix}php
-#ln -s %{_bindir}/phar.phar $RPM_BUILD_ROOT%{_root_bindir}/%{?scl_prefix}phar
+install -m 755 -d $RPM_BUILD_ROOT%{_root_bindir}
+ln -s %{_bindir}/php       $RPM_BUILD_ROOT%{_root_bindir}/%{scl}
+ln -s %{_bindir}/phar.phar $RPM_BUILD_ROOT%{_root_bindir}/%{scl_prefix}phar
 %endif
 
 # Generate files lists and stub .ini files for each subpackage
@@ -1627,6 +1627,10 @@ fi
 %{_mandir}/man1/phar.phar.1*
 %{_mandir}/man1/phpize.1*
 %doc sapi/cgi/README* sapi/cli/README
+%if 0%{?scl:1}
+%{_root_bindir}/%{scl}
+%{_root_bindir}/%{scl_prefix}phar
+%endif
 
 %files dbg
 %defattr(-,root,root)
