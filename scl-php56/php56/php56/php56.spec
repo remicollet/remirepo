@@ -121,7 +121,11 @@ fi
 %files
 
 
+%if 0%{?fedora} < 19 && 0%{?rhel} < 7
+%files runtime
+%else
 %files runtime -f filesystem
+%endif
 %defattr(-,root,root)
 %doc README LICENSE
 %scl_files
