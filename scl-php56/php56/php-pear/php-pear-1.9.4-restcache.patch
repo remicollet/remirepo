@@ -1,0 +1,21 @@
+
+Workaround for:
+
+ https://bugzilla.redhat.com/show_bug.cgi?id=747361
+
+--- REST.php.restcache
++++ REST.php
+@@ -234,6 +234,13 @@
+             }
+         }
+ 
++        if (!is_writeable($cache_dir)) {
++            // If writing to the cache dir is not going to work, silently do nothing.
++            // An ugly hack, but retains compat with PEAR 1.9.1 where many commands
++            // work fine as non-root user (w/out write access to default cache dir).
++            return true;
++        }
++
+         if ($cacheid === null && $nochange) {
+             $cacheid = unserialize(implode('', file($cacheidfile)));
+         }
