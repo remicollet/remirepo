@@ -31,11 +31,14 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+%if %{with_tests}
 BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  php-pdo
 BuildRequires:  php-phpunit-PHPUnit
 BuildRequires:  php-theseer-autoload
 BuildRequires:  php-composer(ocramius/lazy-map) >= 1.0.0
 BuildRequires:  php-composer(ocramius/lazy-map) <  1.1
+%endif
 
 # From composer.json
 #        "php": ">=5.3.3"
@@ -85,6 +88,8 @@ sed -e '/Instantiator/d' \
     /usr/share/php/PHPUnit/Autoload.php \
     >PHPUnit/Autoload.php
 fi
+
+sed -e 's/colors="true"//' phpunit.xml.dist >phpunit.xml
 
 : Run test suite
 %{_bindir}/phpunit \
