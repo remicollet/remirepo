@@ -9,7 +9,7 @@
 
 # bootstrap needed when rebuilding PHPUnit for new major version
 %global bootstrap    0
-%global gh_commit    a7abbb5fc9df6e7126af741dd6c140d1a7369435
+%global gh_commit    e24a12178906ff2e7471b8aaf3a0eb789b59f881
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     Ocramius
 %global gh_project   Instantiator
@@ -18,11 +18,10 @@
 %else
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 %endif
-%global phpverid     %(%{_bindir}/php -r 'echo PHP_VERSION_ID;' || echo 50000)
 
 Name:           php-ocramius-instantiator
-Version:        1.1.2
-Release:        2%{?dist}
+Version:        1.1.3
+Release:        1%{?dist}
 Summary:        Instantiate objects in PHP without invoking their constructors
 
 Group:          Development/Libraries
@@ -87,14 +86,10 @@ sed -e '/Instantiator/d' \
     >PHPUnit/Autoload.php
 fi
 
-: Run test suite with PHP  %{phpverid}
+: Run test suite
 %{_bindir}/phpunit \
     --bootstrap autoload.php \
-%if %{phpverid} >= 50600
-    -d date.timezone=UTC || : Ignore test suite result
-%else
     -d date.timezone=UTC
-%endif
 %else
 : Test suite disabled
 %endif
@@ -113,6 +108,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug 25 2014 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
+- update to 1.1.3
+
 * Sat Aug 16 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-2
 - fix test suite
 
