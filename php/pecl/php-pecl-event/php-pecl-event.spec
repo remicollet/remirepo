@@ -26,7 +26,7 @@
 Summary:       Provides interface to libevent library
 Name:          %{?scl_prefix}php-pecl-%{pecl_name}
 Version:       1.10.3
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/event
@@ -36,7 +36,7 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel > 5.4
 BuildRequires: %{?scl_prefix}php-pear
 
-%if 0%{?scl:1} && 0%{?fedora} < 15 && 0%{?rhel} < 7
+%if 0%{?scl:1} && 0%{?fedora} < 15 && 0%{?rhel} < 7 && "%{?scl_vendor}" != "remi"
 # Filter in the SCL collection
 %{?filter_requires_in: %filter_requires_in %{_libdir}/.*\.so}
 # libvent from SCL as not available in system
@@ -62,16 +62,19 @@ Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php54-pecl-%{pecl_name}
+Obsoletes:     php54w-pecl-%{pecl_name}
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
+Obsoletes:     php55w-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name}
+Obsoletes:     php56w-pecl-%{pecl_name}
 %endif
 %endif
 
@@ -241,6 +244,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 1.10.3-2
+- improve SCL build
+
 * Mon Aug 11 2014 Remi Collet <remi@fedoraproject.org> - 1.10.3-1
 - Update to 1.10.3 (no change)
 

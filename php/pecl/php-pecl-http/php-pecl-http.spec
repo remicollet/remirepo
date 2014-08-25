@@ -29,7 +29,7 @@
 
 Name:           %{?scl_prefix}php-pecl-http
 Version:        2.1.0
-Release:        0.5.RC3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.6.RC3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -53,7 +53,7 @@ BuildRequires:  curl-devel >= 7.18.2
 BuildRequires:  %{?scl_prefix}php-pecl-propro-devel
 BuildRequires:  %{?scl_prefix}php-pecl-raphf-devel
 
-%if 0%{?scl:1} && 0%{?fedora} < 15 && 0%{?rhel} < 7
+%if 0%{?scl:1} && 0%{?fedora} < 15 && 0%{?rhel} < 7 && "%{?scl_vendor}" != "remi"
 # Filter in the SCL collection
 %{?filter_requires_in: %filter_requires_in %{_libdir}/.*\.so}
 # libvent from SCL as not available in system
@@ -104,7 +104,7 @@ Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prev
 Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}%{?prever}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}%{?prever}
 
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-http
 Obsoletes:     php53u-pecl-http
@@ -328,6 +328,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 2.1.0-0.6.RC3
+- improve SCL build
+
 * Tue Aug 19 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.5.RC3
 - Update to 2.1.0RC3
 - ignore known failed test with PHP 5.3.3
