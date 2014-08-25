@@ -6,6 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
+%{?scl:          %scl_package        php-pecl-fann}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
@@ -20,27 +21,46 @@
 %endif
 
 Summary:        Wrapper for FANN Library
-Name:           php-pecl-%{pecl_name}
+Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.7
-Release:        1%{?dist}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  fann-devel > 2.1
-BuildRequires:  php-devel > 5.2
-BuildRequires:  php-pear
+BuildRequires:  %{?scl_prefix}php-devel > 5.2
+BuildRequires:  %{?scl_prefix}php-pear
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+
+%if "%{?vendor}" == "Remi Collet"
+# Other third party repo stuff
+Obsoletes:      php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+%if "%{php_version}" > "5.4"
+Obsoletes:      php54-pecl-%{pecl_name}
+Obsoletes:     php54w-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name}
+Obsoletes:     php55w-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+Obsoletes:     php56w-pecl-%{pecl_name}
+%endif
+%endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
@@ -99,6 +119,8 @@ make %{?_smp_mflags}
 
 
 %install
+rm -rf %{buildroot}
+
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
@@ -163,7 +185,12 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
 %{?_licensedir:%license NTS/LICENSE}
 
@@ -178,11 +205,12 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
-* Fri Aug  1 2014 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
-- cleanup for review
+* Fri Aug  1 2014 Remi Collet <remi@fedoraproject.org> - 1.0.7-3
 - don't install tests
 - fix license handling
 - add build option --without tests
+
+* Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 1.0.7-2
 - add numerical prefix to extension configuration file
 
 * Wed Jan 01 2014 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
@@ -190,6 +218,9 @@ REPORT_EXIT_STATUS=1 \
 
 * Wed Jan 01 2014 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
 - Update to 1.0.6 (stable)
+
+* Fri Nov 29 2013 Remi Collet <rcollet@redhat.com> - 1.0.5-1
+- adapt for SCL
 
 * Thu Oct 17 2013 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
 - Update to 1.0.5
