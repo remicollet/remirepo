@@ -16,6 +16,7 @@
 %global pecl_name     magickwand
 %global mainversion   1.0.9
 %global patchlevel    2
+%global with_zts      0%{?__ztsphp:1}
 
 # We don't really rely on upstream ABI
 %global imbuildver %(pkg-config --silence-errors --modversion ImageMagick 2>/dev/null || echo 65536)
@@ -29,7 +30,7 @@
 Summary:       PHP API for ImageMagick
 Name:          php-magickwand
 Version:       %{mainversion}%{?patchlevel:.%{patchlevel}}
-Release:       7%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       8%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       ImageMagick
 Group:         Development/Languages
 URL:           http://www.magickwand.org/
@@ -54,22 +55,26 @@ Requires:      ImageMagick-libs%{?_isa}  >= %{imbuildver}
 BuildRequires: ImageMagick-last-devel >= 6.8.2
 Requires:      ImageMagick-last-libs%{?_isa}  >= %{imbuildver}
 %endif
-
-# Other third party repo stuff
-Obsoletes:      php53-magickwand
-Obsoletes:      php53u-magickwand
-Obsoletes:      php54-magickwand
-%if "%{php_version}" > "5.5"
-Obsoletes:      php55u-magickwand
-%endif
-%if "%{php_version}" > "5.6"
-Obsoletes:      php56u-magickwand
-%endif
-
 %else
 # From upstream documentation
 BuildRequires: ImageMagick-devel >= 6.8.2
 Requires:      ImageMagick-libs%{?_isa}  >= %{imbuildver}
+%endif
+
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+# Other third party repo stuff
+Obsoletes:      php53-magickwand
+Obsoletes:      php53u-magickwand
+Obsoletes:      php54-magickwand
+Obsoletes:      php54w-magickwand
+%if "%{php_version}" > "5.5"
+Obsoletes:      php55u-magickwand
+Obsoletes:      php55w-magickwand
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:      php56u-magickwand
+Obsoletes:      php56w-magickwand
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -104,7 +109,9 @@ fi
 sed -i 's/\r//' README
 
 cd ..
+%if %{with_zts}
 cp -pr MagickWandForPHP-%{mainversion} MagickWandForPHP-%{mainversion}-zts
+%endif
 
 
 %build
@@ -115,19 +122,22 @@ cd MagickWandForPHP-%{mainversion}
 %configure --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
+%if %{with_zts}
 cd ../MagickWandForPHP-%{mainversion}-zts
 %{_bindir}/zts-phpize
 %configure --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
-
+%endif
 
 %install
 rm -rf %{buildroot}
 make -C MagickWandForPHP-%{mainversion}     install-modules INSTALL_ROOT=%{buildroot}
-make -C MagickWandForPHP-%{mainversion}-zts install-modules INSTALL_ROOT=%{buildroot}
-
 install -D -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/%{ini_name}
+
+%if %{with_zts}
+make -C MagickWandForPHP-%{mainversion}-zts install-modules INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{ini_name}
+%endif
 
 
 %check
@@ -137,10 +147,12 @@ install -D -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{ini_name}
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+%if %{with_zts}
 %{__ztsphp} --no-php-ini \
     --define extension_dir=MagickWandForPHP-%{mainversion}-zts/modules \
     --define extension=%{pecl_name}.so \
     --modules | grep %{pecl_name}
+%endif
 
 
 %clean
@@ -150,13 +162,20 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc MagickWandForPHP-%{mainversion}/{AUTHOR,ChangeLog,CREDITS,LICENSE,README,TODO}
+
 %config(noreplace) %{php_inidir}/%{ini_name}
-%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
+
+%if %{with_zts}
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
+%endif
 
 
 %changelog
+* Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 1.0.9.2-8
+- improve SCL build
+
 * Mon Apr 14 2014 Remi Collet <rpms@famillecollet.com> - 1.0.9.2-7
 - add numerical prefix to extension configuration file
 - rebuild for ImageMagick

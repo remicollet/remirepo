@@ -27,7 +27,7 @@
 Summary:       Extension to create and modify images using ImageMagick
 Name:          %{?scl_prefix}php-pecl-imagick
 Version:       3.2.0
-Release:       0.7.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       0.8.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
@@ -64,15 +64,18 @@ Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}%{?preve
 Conflicts:     %{?scl_prefix}php-pecl-gmagick
 
 # Other third party repo stuff
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 Obsoletes:     php53-pecl-imagick
 Obsoletes:     php53u-pecl-imagick
 Obsoletes:     php54-pecl-imagick
+Obsoletes:     php54w-pecl-imagick
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-imagick
+Obsoletes:     php55w-pecl-imagick
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-imagick
+Obsoletes:     php56w-pecl-imagick
 %endif
 %endif
 
@@ -263,6 +266,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 3.2.0-0.8.RC1
+- improve SCL build
+
 * Wed Jul 23 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.7.RC1
 - ignore tests/bug20636.phpt with IM 6.7.8.9
 - add fix for php 5.6 https://github.com/mkoppanen/imagick/pull/35

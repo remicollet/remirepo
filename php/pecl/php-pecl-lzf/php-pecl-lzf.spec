@@ -14,7 +14,7 @@
 
 Name:           %{?scl_prefix}php-pecl-lzf
 Version:        1.6.2
-Release:        9%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        10%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extension to handle LZF de/compression
 Group:          Development/Languages
 License:        PHP
@@ -44,16 +44,19 @@ Provides:       %{?scl_prefix}php-%{ext_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
 Obsoletes:      php53-pecl-%{ext_name}
 Obsoletes:      php53u-pecl-%{ext_name}
 Obsoletes:      php54-pecl-%{ext_name}
+Obsoletes:      php54w-pecl-%{ext_name}
 %if "%{php_version}" > "5.5"
 Obsoletes:      php55u-pecl-%{ext_name}
+Obsoletes:      php55w-pecl-%{ext_name}
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes:      php56u-pecl-%{ext_name}
+Obsoletes:      php56w-pecl-%{ext_name}
 %endif
 %endif
 
@@ -198,6 +201,9 @@ fi
 
 
 %changelog
+* Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 1.6.2-10
+- improve SCL build
+
 * Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 1.6.2-9
 - add numerical prefix to extension configuration file
 
