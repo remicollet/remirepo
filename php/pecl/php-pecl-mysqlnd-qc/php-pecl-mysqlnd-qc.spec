@@ -45,7 +45,7 @@
 Summary:      A query cache plugin for mysqlnd
 Name:         %{?scl_prefix}php-pecl-mysqlnd-qc
 Version:      1.2.0
-Release:      5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/mysqlnd_qc
@@ -84,16 +84,19 @@ Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-mysqlnd-qc
 Obsoletes:     php53u-pecl-mysqlnd-qc
 Obsoletes:     php54-pecl-mysqlnd-qc
+Obsoletes:     php54w-pecl-mysqlnd-qc
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-mysqlnd-qc
+Obsoletes:     php55w-pecl-mysqlnd-qc
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-mysqlnd-qc
+Obsoletes:     php56w-pecl-mysqlnd-qc
 %endif
 %endif
 
@@ -216,7 +219,7 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Install the Apache configuration
-install -D -m 644 httpd.conf %{buildroot}%{_root_sysconfdir}/httpd/conf.d/mysqlnd-qc-panel.conf
+install -D -m 644 httpd.conf %{buildroot}%{_root_sysconfdir}/httpd/conf.d/%{?scl_prefix}mysqlnd-qc-panel.conf
 
 # Install the web interface
 mkdir -p %{buildroot}%{_datadir}
@@ -295,11 +298,14 @@ cd ../ZTS
 
 %files -n %{?scl_prefix}mysqlnd-qc-panel
 %defattr(-,root,root,-)
-%{_root_sysconfdir}/httpd/conf.d/mysqlnd-qc-panel.conf
+%{_root_sysconfdir}/httpd/conf.d/%{?scl_prefix}mysqlnd-qc-panel.conf
 %{_datadir}/mysqlnd-qc
 
 
 %changelog
+* Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 1.2.0-6
+- improve SCL build
+
 * Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-5
 - add numerical prefix to extension configuration file
 

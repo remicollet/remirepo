@@ -1,6 +1,8 @@
+%{?scl:          %scl_package     php-pecl-parsekit}
 %{!?__pecl:      %global __pecl   %{_bindir}/pecl}
 
 %global pecl_name  parsekit
+%global with_zts   0%{?__ztsphp:1}
 %if "%{php_version}" < "5.6"
 %global ini_name   %{pecl_name}.ini
 %else
@@ -8,9 +10,9 @@
 %endif
 
 Summary:       PHP Opcode Analyser
-Name:          php-pecl-parsekit
+Name:          %{?scl_prefix}php-pecl-parsekit
 Version:       1.3.0
-Release:       6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       7%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # https://bugs.php.net/65937 - license file
 License:       PHP
 URL:           http://pecl.php.net/package/parsekit
@@ -23,27 +25,27 @@ Patch1:        php-pecl-parsekit-1.3-php-5.4.patch
 Patch2:        php-pecl-parsekit-1.3-php56-variadic-fix.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: php-pear
-BuildRequires: php-devel
+BuildRequires: %{?scl_prefix}php-pear
+BuildRequires: %{?scl_prefix}php-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 
-Requires:      php(zend-abi) = %{php_zend_api}
-Requires:      php(api) = %{php_core_api}
+Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 
-Provides:      php-%{pecl_name} = %{version}
-Provides:      php-%{pecl_name}%{?_isa} = %{version}
-Provides:      php-pecl(%{pecl_name}) = %{version}
-Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
 Obsoletes:      php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php53w-pecl-%{pecl_name}
 Obsoletes:      php54-pecl-%{pecl_name}
-Obsoletes:     php54x-pecl-%{pecl_name}
+Obsoletes:     php54w-pecl-%{pecl_name}
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
 Obsoletes:     php55w-pecl-%{pecl_name}
@@ -85,7 +87,9 @@ cat <<'EOF' > %{ini_name}
 extension=%{pecl_name}.so
 EOF
 
+%if %{with_zts}
 cp -r %{pecl_name}-%{version} %{pecl_name}-zts
+%endif
 
 
 %build
@@ -96,23 +100,28 @@ cd %{pecl_name}-%{version}
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
+%if %{with_zts}
 cd ../%{pecl_name}-zts
 %{_bindir}/zts-phpize
 %configure \
     --with-%{pecl_name}\
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
 rm -rf %{buildroot}
 
 make install -C %{pecl_name}-%{version} install INSTALL_ROOT=%{buildroot}
-make install -C %{pecl_name}-zts        install INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
 install -Dpm 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
+
+%if %{with_zts}
+make install -C %{pecl_name}-zts        install INSTALL_ROOT=%{buildroot}
 install -Dpm 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
+%endif
 
 # Install XML package description
 install -Dpm 0664 package2.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -125,10 +134,12 @@ install -Dpm 0664 package2.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
     --define extension=%{pecl_name}.so \
     -m | grep %{pecl_name}
 
+%if %{with_zts}
 %{__ztsphp} --no-php-ini \
     --define extension_dir=%{buildroot}%{php_ztsextdir} \
     --define extension=%{pecl_name}.so \
     -m | grep %{pecl_name}
+%endif
 
 
 %post
@@ -153,11 +164,16 @@ rm -rf %{buildroot}
 %{php_extdir}/%{pecl_name}.so
 %config(noreplace) %{php_inidir}/%{ini_name}
 
+%if %{with_zts}
 %{php_ztsextdir}/%{pecl_name}.so
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
+%endif
 
 
 %changelog
+* Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 1.3.0-7
+- allow SCL build
+
 * Mon Aug 18 2014 Remi Collet <RPMS@famillecollet.com> - 1.3.0-6
 - backport rawhide change (php 5.6 patch) for remi-repo
 - add numerical prefix to extension configuration file

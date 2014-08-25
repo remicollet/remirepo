@@ -27,7 +27,7 @@
 Summary:      A replication and load balancing plugin for mysqlnd
 Name:         %{?scl_prefix}php-pecl-mysqlnd-ms
 Version:      1.6.0
-Release:      3.svn%{svnrev}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      4.svn%{svnrev}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 License:      PHP
 Group:        Development/Languages
@@ -66,16 +66,19 @@ Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-mysqlnd-ms
 Obsoletes:     php53u-pecl-mysqlnd-ms
 Obsoletes:     php54-pecl-mysqlnd-ms
+Obsoletes:     php54w-pecl-mysqlnd-ms
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-mysqlnd-ms
+Obsoletes:     php55w-pecl-mysqlnd-ms
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-mysqlnd-ms
+Obsoletes:     php56w-pecl-mysqlnd-ms
 %endif
 %endif
 
@@ -241,6 +244,9 @@ cd ../ZTS
 
 
 %changelog
+* Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 1.6.0-4.svn333506
+- improve SCL build
+
 * Fri May  9 2014 Remi Collet <remi@fedoraproject.org> - 1.6.0-3.svn333506
 - new snapshot
 

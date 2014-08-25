@@ -28,7 +28,7 @@
 %endif
 
 Summary:       PHP API for ImageMagick
-Name:          php-magickwand
+Name:          %{?scl_prefix}php-magickwand
 Version:       %{mainversion}%{?patchlevel:.%{patchlevel}}
 Release:       8%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       ImageMagick
