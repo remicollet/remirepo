@@ -25,7 +25,7 @@
 Summary:       Extension for communicating with the Redis key-value store
 Name:          %{?scl_prefix}php-pecl-redis
 Version:       2.2.5
-Release:       3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/redis
@@ -54,16 +54,19 @@ Provides:      %{?scl_prefix}php-redis%{?_isa} = %{version}-%{release}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php54-pecl-%{pecl_name}
+Obsoletes:     php54w-pecl-%{pecl_name}
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
+Obsoletes:     php55w-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name}
+Obsoletes:     php56w-pecl-%{pecl_name}
 %endif
 %endif
 
@@ -260,6 +263,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 2.2.5-4
+- improve SCL build
+
 * Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 2.2.5-3
 - add numerical prefix to extension configuration file (php 5.6)
 - add comment about session configuration

@@ -29,7 +29,7 @@ Summary(ru):      Манипулирование пользовательски�
 Summary(pl):      Obróbka zdefiniowanych przez użytkownika funkcji i klas
 Name:             %{?scl_prefix}php-pecl-%{pecl_name}
 Version:          1.0.4
-Release:          0.7%{?gh_short:.git%{gh_short}}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:          0.8%{?gh_short:.git%{gh_short}}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:          PHP
 Group:            Development/Libraries
 # URL:            http://pecl.php.net/package/runkit/
@@ -56,16 +56,19 @@ Provides:         %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:         %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:         %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
 Obsoletes:        php53-pecl-%{pecl_name}
 Obsoletes:        php53u-pecl-%{pecl_name}
 Obsoletes:        php54-pecl-%{pecl_name}
+Obsoletes:        php54w-pecl-%{pecl_name}
 %if "%{php_version}" > "5.5"
 Obsoletes:        php55u-pecl-%{pecl_name}
+Obsoletes:        php55w-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes:        php56u-pecl-%{pecl_name}
+Obsoletes:        php56w-pecl-%{pecl_name}
 %endif
 %endif
 
@@ -219,6 +222,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 1.0.4-0.8.git5e179e9
+- improve SCL build
+
 * Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-0.7.git5e179e9
 - add numerical prefix to extension configuration file (php 5.6)
 
