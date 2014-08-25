@@ -6,6 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
+%{?scl:          %scl_package        php-pecl-pdflib}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
@@ -21,9 +22,9 @@
 
 Summary:        Package for generating PDF files
 Summary(fr):    Extension pour générer des fichiers PDF
-Name:           php-pecl-pdflib
+Name:           %{?scl_prefix}php-pecl-pdflib
 Version:        3.0.4
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # https://bugs.php.net/60396 ask license file
 License:        PHP
 Group:          Development/Languages
@@ -32,24 +33,40 @@ URL:            http://pecl.php.net/package/pdflib
 Source0:        http://pecl.php.net/get/pdflib-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-devel
+BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  pdflib-lite-devel
-BuildRequires:  php-pear
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 
-Provides:       php-%{pecl_name} = %{version}%{?prever}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}%{?prever}
-Provides:       php-pecl(%{pecl_name}) = %{version}%{?prever}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}%{?prever}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}%{?prever}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}%{?prever}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
+
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+Obsoletes:     php54-pecl-%{pecl_name}
+Obsoletes:     php54w-pecl-%{pecl_name}
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name}
+Obsoletes:     php55w-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+Obsoletes:     php56w-pecl-%{pecl_name}
+%endif
 %endif
 
 # Other third party repo stuff
@@ -177,6 +194,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug 25 2014 Remi Collet <remi@fedoraproject.org> - 3.0.4-3
+- allow SCL build
+
 * Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 3.0.4-2
 - add numerical prefix to extension configuration file (php 5.6)
 

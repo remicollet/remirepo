@@ -28,7 +28,7 @@
 Summary:       Fast, stable PHP opcode cacher
 Name:          %{?scl_prefix}php-xcache
 Version:       4.0.0
-Release:       0.1.svn%{svnrev}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       0.2.svn%{svnrev}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       BSD
 Group:         Development/Languages
 URL:           http://xcache.lighttpd.net/
@@ -53,18 +53,19 @@ BuildRequires: %{?scl_prefix}php-devel
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-%if "%{php_version}" > "5.4"
 Obsoletes: php53-xcache
 Obsoletes: php53u-xcache
 Obsoletes: php54-xcache
-%endif
+Obsoletes: php54w-xcache
 %if "%{php_version}" > "5.5"
 Obsoletes: php55u-xcache
+Obsoletes: php55w-xcache
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes: php56u-xcache
+Obsoletes: php56w-xcache
 %endif
 %endif
 
@@ -195,7 +196,7 @@ mv %{buildroot}%{_datadir}/xcache/coverager/config.example.php \
    %{buildroot}%{_sysconfdir}/xcache/coverager
 
 install -D -m 644 -p xcache-httpd.conf \
-        %{buildroot}%{_root_sysconfdir}/httpd/conf.d/xcache.conf
+        %{buildroot}%{_root_sysconfdir}/httpd/conf.d/%{?scl_prefix}xcache.conf
 
 
 %check
@@ -244,13 +245,16 @@ rm -rf %{buildroot}
 
 %files -n %{?scl_prefix}xcache-admin
 %defattr(-,root,root,-)
-%config(noreplace) %{_root_sysconfdir}/httpd/conf.d/xcache.conf
+%config(noreplace) %{_root_sysconfdir}/httpd/conf.d/%{?scl_prefix}xcache.conf
 %{_datadir}/xcache
 # No real configuration files, only sample files
 %{_sysconfdir}/xcache
 
 
 %changelog
+* Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 4.0.0-0.2.svn1496
+- improve SCL build
+
 * Sat Jun  7 2014 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.1.svn1496
 - Update to 4.0.0-dev for PHP 5.6
 - add numerical prefix to configuration file

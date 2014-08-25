@@ -23,7 +23,7 @@
 
 Name:           %{?scl_prefix}php-pecl-xhprof
 Version:        0.9.4
-Release:        4%{?gitver:.git%{gitver}}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        5%{?gitver:.git%{gitver}}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 Summary:        PHP extension for XHProf, a Hierarchical Profiler
 Group:          Development/Languages
@@ -48,16 +48,19 @@ Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php54-pecl-%{pecl_name}
+Obsoletes:     php54w-pecl-%{pecl_name}
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
+Obsoletes:     php55w-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name}
+Obsoletes:     php56w-pecl-%{pecl_name}
 %endif
 %endif
 
@@ -182,7 +185,7 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # Install the Apache configuration
-install -D -m 644 httpd.conf %{buildroot}%{_root_sysconfdir}/httpd/conf.d/xhprof.conf
+install -D -m 644 httpd.conf %{buildroot}%{_root_sysconfdir}/httpd/conf.d/%{?scl_prefix}xhprof.conf
 
 # Install the web interface
 mkdir -p %{buildroot}%{_datadir}/xhprof
@@ -233,10 +236,10 @@ fi
 %doc %{pecl_docdir}/%{pecl_name}
 %exclude %{pecl_docdir}/%{pecl_name}/examples
 %exclude %{pecl_docdir}/%{pecl_name}/xhprof_html
-%config(noreplace) %{php_inidir}/%{ini_name}
-
-%{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
+
+%config(noreplace) %{php_inidir}/%{ini_name}
+%{php_extdir}/%{pecl_name}.so
 
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
@@ -249,11 +252,14 @@ fi
 %doc %{pecl_docdir}/%{pecl_name}/examples
 %doc %{pecl_docdir}/%{pecl_name}/xhprof_html
 %doc %{pecl_testdir}/%{pecl_name}
-%config(noreplace) %{_root_sysconfdir}/httpd/conf.d/xhprof.conf
+%config(noreplace) %{_root_sysconfdir}/httpd/conf.d/%{?scl_prefix}xhprof.conf
 %{_datadir}/xhprof
 
 
 %changelog
+* Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 0.9.4-5
+- improve SCL build
+
 * Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 0.9.4-4
 - add numerical prefix to extension configuration file (php 5.6)
 
