@@ -1,5 +1,5 @@
 %global VER        6.8.9
-%global Patchlevel 0
+%global Patchlevel 7
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -24,7 +24,7 @@
 
 Name:           ImageMagick-last
 Version:        %{VER}.%{Patchlevel}
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        An X application for displaying and manipulating images
 Group:          Applications/Multimedia
 License:        ImageMagick
@@ -353,7 +353,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc Magick++/AUTHORS Magick++/ChangeLog Magick++/NEWS Magick++/README
 %doc www/Magick++/COPYING
-%{_libdir}/libMagick++%{?libsuffixe}.so.3*
+%{_libdir}/libMagick++%{?libsuffixe}.so.5*
 
 %files c++-devel
 %defattr(-,root,root,-)
@@ -375,6 +375,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Aug 25 2014 Remi Collet <RPMS@FamilleCollet.com> - 6.8.9.7-1
+- update to 6.8.9-7
+- soname change: libMagick++-6.Q16.so.5
+
 * Mon Apr 14 2014 Remi Collet <RPMS@FamilleCollet.com> - 6.8.9.0-2
 - use /usr/share/ImageMagick-last to avoid conflict (f20)
 

@@ -27,7 +27,7 @@
 Summary:       Extension to create and modify images using ImageMagick
 Name:          %{?scl_prefix}php-pecl-imagick
 Version:       3.2.0
-Release:       0.8.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       0.9.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
@@ -266,6 +266,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug 25 2014 Remi Collet <rpms@famillecollet.com> - 3.2.0-0.9.RC1
+- rebuild against new ImageMagick-last version 6.8.7-4
+
 * Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 3.2.0-0.8.RC1
 - improve SCL build
 

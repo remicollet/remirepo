@@ -30,7 +30,7 @@
 Summary:       PHP API for ImageMagick
 Name:          %{?scl_prefix}php-magickwand
 Version:       %{mainversion}%{?patchlevel:.%{patchlevel}}
-Release:       8%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       9%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       ImageMagick
 Group:         Development/Languages
 URL:           http://www.magickwand.org/
@@ -173,6 +173,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug 25 2014 Remi Collet <rpms@famillecollet.com> - 1.0.9.2-8
+- rebuild against new ImageMagick-last version 6.8.7-4
+
 * Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 1.0.9.2-8
 - improve SCL build
 
