@@ -1,4 +1,5 @@
 {
+    "doctrine\/instantiator": "php-doctrine-instantiator",
     "fabpot\/goutte": "php-goutte",
     "jms\/parser-lib": "php-JMSParser",
     "justinrainbow\/json-schema": "php-JsonSchema",
