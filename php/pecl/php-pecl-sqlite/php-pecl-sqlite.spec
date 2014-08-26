@@ -29,7 +29,7 @@
 Summary:        Extension for the SQLite V2 Embeddable SQL Database Engine
 Name:           %{?scl_prefix}php-pecl-sqlite
 Version:        2.0.0
-Release:        0.6.svn%{svnver}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.7.svn%{svnver}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Group:          Development/Languages
 License:        PHP
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -66,18 +66,19 @@ Provides:       %{?scl_prefix}php-sqlite2 = 5.4.0
 Provides:       %{?scl_prefix}php-sqlite2%{?_isa} = 5.4.0
 %endif
 
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-%if "%{php_version}" > "5.4"
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:     php54-pecl-%{pecl_name}
-%endif
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name}
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -259,6 +260,9 @@ fi
 
 
 %changelog
+* Tue Aug 26 2014 Remi Collet <rcollet@redhat.com> - 2.0.0-0.7.svn332053
+- improve SCL build
+
 * Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.6.svn332053
 - add numerical prefix to extension configuration file (php 5.6)
 

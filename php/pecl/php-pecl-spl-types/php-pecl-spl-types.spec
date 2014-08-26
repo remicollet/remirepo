@@ -23,7 +23,7 @@
 Summary:        Standard PHP Library, Types Addon
 Name:           %{?scl_prefix}php-pecl-spl-types
 Version:        0.4.0
-Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -50,19 +50,23 @@ Provides:       %{?scl_prefix}php-%{ext_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-%if 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Package have been renamed
-Obsoletes:      php-pecl-SPL-Types < 0.4.0-2
-Provides:       php-pecl-SPL-Types = %{version}-%{release}
+Obsoletes:     php-pecl-SPL-Types < 0.4.0-2
+Provides:      php-pecl-SPL-Types = %{version}-%{release}
 
 # Other third party repo stuff
-%if "%{php_version}" > "5.4"
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:     php54-pecl-%{pecl_name}
-%endif
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -214,6 +218,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 26 2014 Remi Collet <rcollet@redhat.com> - 0.4.0-6
+- improve SCL build
+
 * Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 0.4.0-5
 - add numerical prefix to extension configuration file (php 5.6)
 

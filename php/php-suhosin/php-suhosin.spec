@@ -23,7 +23,7 @@
 
 Name:           %{?scl_prefix}php-suhosin
 Version:        0.9.36
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Suhosin is an advanced protection system for PHP installations
 
 Group:          Development/Languages
@@ -37,16 +37,19 @@ BuildRequires:  %{?scl_prefix}php-devel
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-%{ext_name}
-Obsoletes:     php53u-%{ext_name}
-Obsoletes:     php54-%{ext_name}
+Obsoletes:     php53-%{ext_name}  <= %{version}
+Obsoletes:     php53u-%{ext_name} <= %{version}
+Obsoletes:     php54-%{ext_name}  <= %{version}
+Obsoletes:     php54w-%{ext_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-%{ext_name}
+Obsoletes:     php55u-%{ext_name} <= %{version}
+Obsoletes:     php55w-%{ext_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-%{ext_name}
+Obsoletes:     php56u-%{ext_name} <= %{version}
+Obsoletes:     php56w-%{ext_name} <= %{version}
 %endif
 %endif
 
@@ -162,6 +165,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 26 2014 Remi Collet <rcollet@redhat.com> - 0.9.36-2
+- improve SCL build
+
 * Wed Jun 11 2014 Remi Collet <remi@fedoraproject.org> - 0.9.36-1
 - update to 0.9.35
 
