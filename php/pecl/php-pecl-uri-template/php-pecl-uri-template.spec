@@ -22,7 +22,7 @@
 Summary:        URI Template PHP Extension
 Name:           %{?scl_prefix}php-pecl-uri-template
 Version:        1.0
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -42,16 +42,19 @@ Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-uri-template
-Obsoletes:     php53u-pecl-uri-template
-Obsoletes:     php54-pecl-uri-template
+Obsoletes:     php53-pecl-uri-template  <= %{version}
+Obsoletes:     php53u-pecl-uri-template <= %{version}
+Obsoletes:     php54-pecl-uri-template  <= %{version}
+Obsoletes:     php54w-pecl-uri-template <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-uri-template
+Obsoletes:     php55u-pecl-uri-template <= %{version}
+Obsoletes:     php55w-pecl-uri-template <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-uri-template
+Obsoletes:     php56u-pecl-uri-template <= %{version}
+Obsoletes:     php56w-pecl-uri-template <= %{version}
 %endif
 %endif
 
@@ -199,6 +202,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 26 2014 Remi Collet <rcollet@redhat.com> - 1.0-4
+- improve SCL build
+
 * Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 1.0-3
 - add numerical prefix to extension configuration file (php 5.6)
 
