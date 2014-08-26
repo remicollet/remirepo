@@ -22,7 +22,7 @@
 Summary:        Constants for real
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        0.1.13
-Release:        4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -48,16 +48,19 @@ Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php54-pecl-%{pecl_name}
+Obsoletes:     php54w-pecl-%{pecl_name}
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
+Obsoletes:     php55w-pecl-%{pecl_name}
 %endif
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name}
+Obsoletes:     php56w-pecl-%{pecl_name}
 %endif
 %endif
 
@@ -80,6 +83,12 @@ mv %{pecl_name}-%{version} NTS
 
 cd NTS
 cp %{SOURCE1} LICENSE
+
+# quich fix for php 5.6
+%if "%{php_version}" > "5.6"
+sed -e 's/IS_CONSTANT_ARRAY/IS_CONSTANT_AST/' \
+    -i frozenarray.c
+%endif
 
 sed -e '/PHP_HIDEF_VERSION/s/0.1.12/%{version}/' -i php_hidef.h
 
@@ -230,6 +239,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 26 2014 Remi Collet <rcollet@redhat.com> - 0.1.13-5
+- improve SCL build
+- fix PHP 5.6 build
+
 * Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 0.1.13-4
 - add numerical prefix to extension configuration file
 

@@ -23,7 +23,7 @@
 Summary:      BBCode parsing Extension
 Name:         %{?scl_prefix}php-pecl-bbcode
 Version:      1.0.3
-Release:      0.5.%{pre}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      0.6.%{pre}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # pecl extension is PHP, bbcode2 is BSD, bstrlib (from bstring) is BSD
 License:      PHP and BSD
 Group:        Development/Languages
@@ -45,15 +45,19 @@ Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}%{?pre}
 Provides:     %{?scl_prefix}php-%{pecl_name} = %{version}%{?pre}
 Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}%{?pre}
 
-%if 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-%if "%{php_version}" > "5.4"
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php54-pecl-%{pecl_name}
-%endif
+Obsoletes:     php54w-pecl-%{pecl_name}
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
+Obsoletes:     php55w-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+Obsoletes:     php56w-pecl-%{pecl_name}
 %endif
 %endif
 
@@ -206,6 +210,9 @@ fi
 
 
 %changelog
+* Tue Aug 26 2014 Remi Collet <rcollet@redhat.com> - 1.0.3-0.6.b1
+- improve SCL build
+
 * Tue Apr 15 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-0.5.b1
 - add numerical prefix to extension configuration file
 
