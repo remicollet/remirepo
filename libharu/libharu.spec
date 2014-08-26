@@ -1,17 +1,18 @@
 Name:           libharu
 Version:        2.2.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        C library for generating PDF files
 
 Group:          System Environment/Libraries
 License:        zlib with acknowledgement
 URL:            http://libharu.org
 Source0:        http://libharu.org/files/%{name}-%{version}.tar.gz
+Patch0:         libharu-2.2.1-png15.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: glibc-headers
-BuildRequires: libpng-devel
-BuildRequires: zlib-devel
+BuildRequires:  glibc-headers
+BuildRequires:  libpng-devel
+BuildRequires:  zlib-devel
 
 
 %description
@@ -22,7 +23,7 @@ It is free, open source, written in ANSI C and cross platform.
 %package        devel
 Summary:        Development files for %{name}
 Group:          Development/Libraries
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
@@ -31,6 +32,12 @@ developing applications that use %{name}.
 
 %prep
 %setup -q
+%patch0 -p1 -b .png15
+
+# honours flag
+sed -e '/CFLAGS/s/-O0/-O2/' \
+    -e '/CFLAGS/s/-g3/-g/' \
+    -i configure
 
 
 %build
@@ -39,13 +46,13 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+rm -rf %{buildroot}
+make install DESTDIR=%{buildroot}
+find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post -p /sbin/ldconfig
@@ -66,6 +73,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Aug 26 2014 Remi Collet <remi@fedoraproject.org> - 2.2.1-2
+- add libpng15 patch from rawhide
+- honour compilation options
+
 * Thu Feb 02 2012 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - update to 2.2.1 for remi repo
 
