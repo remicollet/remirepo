@@ -24,12 +24,16 @@
 
 Name:           ImageMagick-last
 Version:        %{VER}.%{Patchlevel}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An X application for displaying and manipulating images
 Group:          Applications/Multimedia
 License:        ImageMagick
 Url:            http://www.imagemagick.org/
 Source0:        ftp://ftp.ImageMagick.org/pub/ImageMagick/ImageMagick-%{VER}-%{Patchlevel}.tar.bz2
+
+# revert change in coder/ps.c which causes
+# a regression with ghostscript 8.70
+Patch0:         ImageMagick-gs870.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  bzip2-devel, freetype-devel, libjpeg-devel, libpng-devel
@@ -206,6 +210,11 @@ however.
 
 %prep
 %setup -q -n ImageMagick-%{VER}-%{Patchlevel}
+
+%if 0%{?fedora} < 15 && 0%{?rhel} < 7
+%patch0 -p1 -b .gs870
+%endif
+
 sed -i 's/libltdl.la/libltdl.so/g' configure
 iconv -f ISO-8859-1 -t UTF-8 README.txt > README.txt.tmp
 touch -r README.txt README.txt.tmp
@@ -375,6 +384,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Aug 27 2014 Remi Collet <RPMS@FamilleCollet.com> - 6.8.9.7-2
+- revert change in coder/ps.c which cause a regression
+  with old ghostcript 8.70
+
 * Mon Aug 25 2014 Remi Collet <RPMS@FamilleCollet.com> - 6.8.9.7-1
 - update to 6.8.9-7
 - soname change: libMagick++-6.Q16.so.5
