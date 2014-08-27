@@ -25,12 +25,12 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}
 Summary:       Provides a simple abstraction over streams of data
 
 Group:         Development/Libraries
 License:       MIT
-URL:           http://docs.guzzlephp.org/en/latest/streams.html
+URL:           http://docs.guzzlephp.org/en/guzzle4/streams.html
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -53,12 +53,7 @@ Requires:      php-spl
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 %description
-Provides a simple abstraction over streams of data.
-
-This library is used in Guzzle and is an implementation of the proposed
-PSR-7 stream interface [1].
-
-[1] https://github.com/php-fig/fig-standards/blob/master/proposed/http-message.md#34-psrhttpstreaminterface
+%{summary}.
 
 
 %prep
@@ -85,18 +80,14 @@ require_once __DIR__ . '/../src/functions.php';
 
 spl_autoload_register(function ($class) {
     $src = str_replace(array('\\', '_'), '/', $class).'.php';
-    if (!@include_once $src) {
-        $psr4_class = preg_replace('#^GuzzleHttp\\\Stream\\\?#', '', $class);
-        $psr4_src = str_replace(array('\\', '_'), '/', $psr4_class).'.php';
-        @include_once $psr4_src;
-    }
+    @include_once $src;
 });
 AUTOLOAD
 
 # Create PHPUnit config w/ colors turned off
 sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
-%{_bindir}/phpunit --include-path="./src:./tests" -d date.timezone="UTC"
+%{_bindir}/phpunit --include-path="%{buildroot}%{_datadir}/php" -d date.timezone="UTC"
 %else
 : Tests skipped
 %endif
@@ -112,6 +103,10 @@ sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 
 %changelog
+* Tue Aug 26 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.5.1-2
+- Updated URL and description per upstream
+- Fix test suite when previous version installed
+
 * Sun Aug 17 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.5.1-1
 - Updated to 1.5.1 (BZ #1128102)
 
