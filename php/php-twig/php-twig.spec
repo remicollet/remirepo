@@ -31,83 +31,108 @@
 # "php": ">=5.2.4"
 %global php_min_ver 5.2.4
 
+%if 0%{?scl:1}
+# PHPUnit not available in SCL
+%global with_tests 0
+%else
 # Build using "--without tests" to disable tests
 %global with_tests %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
+%{?scl:         %scl_package       php-twig}
+%{!?scl:        %global pkg_name   %{name}}
 %{!?php_inidir: %global php_inidir %{_sysconfdir}/php.d}
 %{!?__php:      %global __php      %{_bindir}/php}
 %{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
 
-Name:          php-%{composer_project}
+Name:          %{?scl_prefix}php-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:       The flexible, fast, and secure template engine for PHP
 
 Group:         Development/Libraries
 License:       BSD
 URL:           http://twig.sensiolabs.org
-Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{pkg_name}-%{github_version}-%{github_commit}.tar.gz
 
-BuildRequires: php-devel >= %{php_min_ver}
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: %{?scl_prefix}php-devel >= %{php_min_ver}
 %if %{with_tests}
 # For tests
-BuildRequires: php-phpunit-PHPUnit
+BuildRequires: %{?scl_prefix}php-phpunit-PHPUnit
 # For tests: phpcompatinfo (computed from version 1.16.0)
-BuildRequires: php-ctype
-BuildRequires: php-date
-BuildRequires: php-dom
-BuildRequires: php-hash
-BuildRequires: php-iconv
-BuildRequires: php-json
-BuildRequires: php-mbstring
-BuildRequires: php-pcre
-BuildRequires: php-reflection
-BuildRequires: php-spl
+BuildRequires: %{?scl_prefix}php-ctype
+BuildRequires: %{?scl_prefix}php-date
+BuildRequires: %{?scl_prefix}php-dom
+BuildRequires: %{?scl_prefix}php-hash
+BuildRequires: %{?scl_prefix}php-iconv
+BuildRequires: %{?scl_prefix}php-json
+BuildRequires: %{?scl_prefix}php-mbstring
+BuildRequires: %{?scl_prefix}php-pcre
+BuildRequires: %{?scl_prefix}php-reflection
+BuildRequires: %{?scl_prefix}php-spl
 %endif
 
 # Lib
 ## composer.json
-Requires:      php(language) >= %{php_min_ver}
+Requires:      %{?scl_prefix}php(language) >= %{php_min_ver}
 ## phpcompatinfo (computed from version 1.16.0)
-Requires:      php-ctype
-Requires:      php-date
-Requires:      php-dom
-Requires:      php-hash
-Requires:      php-iconv
-Requires:      php-json
-Requires:      php-mbstring
-Requires:      php-pcre
-Requires:      php-reflection
-Requires:      php-spl
+Requires:      %{?scl_prefix}php-ctype
+Requires:      %{?scl_prefix}php-date
+Requires:      %{?scl_prefix}php-dom
+Requires:      %{?scl_prefix}php-hash
+Requires:      %{?scl_prefix}php-iconv
+Requires:      %{?scl_prefix}php-json
+Requires:      %{?scl_prefix}php-mbstring
+Requires:      %{?scl_prefix}php-pcre
+Requires:      %{?scl_prefix}php-reflection
+Requires:      %{?scl_prefix}php-spl
 # Ext
-Requires:      php(zend-abi) = %{php_zend_api}
-Requires:      php(api)      = %{php_core_api}
+Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:      %{?scl_prefix}php(api)      = %{php_core_api}
 
 # Lib
 ## Composer
-Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
+Provides:      %{?scl_prefix}php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 ## Rename
-Obsoletes:     php-twig-Twig < %{version}-%{release}
-Provides:      php-twig-Twig = %{version}-%{release}
+Obsoletes:     %{?scl_prefix}php-twig-Twig < %{version}-%{release}
+Provides:      %{?scl_prefix}php-twig-Twig = %{version}-%{release}
 ## PEAR
-Provides:      php-pear(pear.twig-project.org/Twig) = %{version}
+Provides:      %{?scl_prefix}php-pear(pear.twig-project.org/Twig) = %{version}
 # Ext
 ## Rename
-Obsoletes:     php-twig-ctwig         < %{version}-%{release}
-Provides:      php-twig-ctwig         = %{version}-%{release}
-Provides:      php-twig-ctwig%{?_isa} = %{version}-%{release}
+Obsoletes:     %{?scl_prefix}php-twig-ctwig         < %{version}-%{release}
+Provides:      %{?scl_prefix}php-twig-ctwig         = %{version}-%{release}
+Provides:      %{?scl_prefix}php-twig-ctwig%{?_isa} = %{version}-%{release}
 ## PECL
-Provides:      php-pecl(pear.twig-project.org/CTwig)         = %{version}
-Provides:      php-pecl(pear.twig-project.org/CTwig)%{?_isa} = %{version}
+Provides:      %{?scl_prefix}php-pecl(pear.twig-project.org/CTwig)         = %{version}
+Provides:      %{?scl_prefix}php-pecl(pear.twig-project.org/CTwig)%{?_isa} = %{version}
 
 # This pkg was the only one in this channel so the channel is no longer needed
-Obsoletes:     php-channel-twig
+Obsoletes:     %{?scl_prefix}php-channel-twig
+
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+# Other third party repo stuff
+Obsoletes:     php53-%{extname}  <= %{version}
+Obsoletes:     php53u-%{extname} <= %{version}
+Obsoletes:     php54-%{extname}  <= %{version}
+Obsoletes:     php54w-%{extname} <= %{version}
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-%{extname} <= %{version}
+Obsoletes:     php55w-%{extname} <= %{version}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-%{extname} <= %{version}
+Obsoletes:     php56w-%{extname} <= %{version}
+%endif
+%endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 %endif
+
 
 %description
 %{summary}.
@@ -166,6 +191,8 @@ popd
 
 
 %install
+rm -rf %{buildroot}
+
 # Lib
 mkdir -p %{buildroot}/%{_datadir}/php
 cp -rp lib/* %{buildroot}/%{_datadir}/php/
@@ -198,7 +225,7 @@ install -D -m 0644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %if %{with_tests}
 # Test suite
 ## Skip tests known to fail
-%ifarch ppc64
+%ifarch ppc64 %{ix86}
 sed 's/function testGetAttributeWithTemplateAsObject/function SKIP_testGetAttributeWithTemplateAsObject/' \
     -i test/Twig/Tests/TemplateTest.php
 %endif
@@ -217,7 +244,12 @@ sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE*
 %doc CHANGELOG README.rst composer.json
@@ -235,6 +267,10 @@ sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 
 %changelog
+* Thu Aug 28 2014 Remi Collet <remi@fedoraproject.org> - 1.16.0-2
+- allow SCL build
+- add backport stuff for EL-5
+
 * Mon Aug 25 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.16.0-2
 - Removed obsolete and provide of php-twig-CTwig (never imported into Fedora/EPEL)
 - Obsolete php-channel-twig

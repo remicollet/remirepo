@@ -1,0 +1,17 @@
+Extension [ <persistent> extension #147 twig version 1.16.0 ] {
+
+  - Functions {
+    Function [ <internal:twig> function twig_template_get_attributes ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $template ]
+        Parameter #1 [ <required> $object ]
+        Parameter #2 [ <required> $item ]
+        Parameter #3 [ <required> $arguments ]
+        Parameter #4 [ <required> $type ]
+        Parameter #5 [ <required> $isDefinedTest ]
+      }
+    }
+  }
+}
+
