@@ -121,7 +121,7 @@
 %endif
 
 #global snapdate      201405061030
-%global rcver         RC4
+#global rcver         RC4
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -189,6 +189,7 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
+Patch100: php-bug67878.patch
 
 # Security fixes (200+)
 
@@ -929,6 +930,7 @@ rm -rf ext/json
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
+%patch100 -p1 -b .b67878
 
 # security patches
 
@@ -1183,12 +1185,14 @@ build --libdir=%{_libdir}/php \
       --with-mysql=shared,mysqlnd \
       --with-mysqli=shared,mysqlnd \
       --with-mysql-sock=%{mysql_sock} \
+%if %{with_oci8}
 %ifarch x86_64
-      %{?_with_oci8:--with-oci8=shared,instantclient,%{_libdir}/oracle/%{oraclever}/client64/lib,%{oraclever}} \
+      --with-oci8=shared,instantclient,%{_libdir}/oracle/%{oraclever}/client64/lib,%{oraclever} \
 %else
-      %{?_with_oci8:--with-oci8=shared,instantclient,%{_libdir}/oracle/%{oraclever}/client/lib,%{oraclever}} \
+      --with-oci8=shared,instantclient,%{_libdir}/oracle/%{oraclever}/client/lib,%{oraclever} \
 %endif
-      %{?_with_oci8:--with-pdo-oci=shared,instantclient,/usr,%{oraclever}} \
+      --with-pdo-oci=shared,instantclient,/usr,%{oraclever} \
+%endif
       --with-interbase=shared,%{_libdir}/firebird \
       --with-pdo-firebird=shared,%{_libdir}/firebird \
       --enable-dom=shared \
@@ -1322,12 +1326,14 @@ build --includedir=%{_includedir}/php-zts \
       --with-mysqli=shared,mysqlnd \
       --with-mysql-sock=%{mysql_sock} \
       --enable-mysqlnd-threading \
+%if %{with_oci8}
 %ifarch x86_64
-      %{?_with_oci8:--with-oci8=shared,instantclient,%{_libdir}/oracle/%{oraclever}/client64/lib,%{oraclever}} \
+      --with-oci8=shared,instantclient,%{_libdir}/oracle/%{oraclever}/client64/lib,%{oraclever} \
 %else
-      %{?_with_oci8:--with-oci8=shared,instantclient,%{_libdir}/oracle/%{oraclever}/client/lib,%{oraclever}} \
+      --with-oci8=shared,instantclient,%{_libdir}/oracle/%{oraclever}/client/lib,%{oraclever} \
 %endif
-      %{?_with_oci8:--with-pdo-oci=shared,instantclient,/usr,%{oraclever}} \
+      --with-pdo-oci=shared,instantclient,/usr,%{oraclever} \
+%endif
       --with-interbase=shared,%{_libdir}/firebird \
       --with-pdo-firebird=shared,%{_libdir}/firebird \
       --enable-dom=shared \
@@ -1540,7 +1546,9 @@ for mod in pgsql odbc ldap snmp xmlrpc imap \
 %if %{with_zip}
     zip \
 %endif
-    %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} \
+%if %{with_oci8}
+    oci8 pdo_oci \
+%endif
     interbase pdo_firebird \
 %if 0%{?fedora} >= 11  || 0%{?rhel} >= 6
     sqlite3 \
@@ -1902,6 +1910,10 @@ fi
 
 
 %changelog
+* Thu Aug 28 2014 Remi Collet <remi@fedoraproject.org> 5.6.0-1
+- PHP 5.6.0 is GA
+- fix ZTS man pages, upstream patch for 67878
+
 * Wed Aug 20 2014 Remi Collet <rcollet@redhat.com> 5.6.0-0.22.RC4
 - backport rawhide stuff for F21+ and httpd-filesystem
   with support for SetHandler to proxy_fcgi

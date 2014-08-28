@@ -146,12 +146,12 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver         RC4
+#global rcver         RC4
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.6.0
-Release: 0.1.%{rcver}%{?dist}
+Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1374,6 +1374,9 @@ install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 install -m 755 -d $RPM_BUILD_ROOT%{_root_bindir}
 ln -s %{_bindir}/php       $RPM_BUILD_ROOT%{_root_bindir}/%{scl}
 ln -s %{_bindir}/phar.phar $RPM_BUILD_ROOT%{_root_bindir}/%{scl_prefix}phar
+%if %{with_lsws}
+ln -s %{_bindir}/lsphp     $RPM_BUILD_ROOT%{_root_bindir}/ls%{scl}
+%endif
 %endif
 
 # Generate files lists and stub .ini files for each subpackage
@@ -1673,6 +1676,9 @@ fi
 %files litespeed
 %defattr(-,root,root)
 %{_bindir}/lsphp
+%if 0%{?scl:1}
+%{_root_bindir}/ls%{scl}
+%endif
 %endif
 
 %files devel
@@ -1740,6 +1746,10 @@ fi
 
 
 %changelog
+* Thu Aug 28 2014 Remi Collet <remi@fedoraproject.org> 5.6.0-1
+- PHP 5.6.0 is GA
+- add lsphp56 command in base system
+
 * Sun Aug 24 2014 Remi Collet <rcollet@redhat.com> - 5.6.0-0.1.RC4
 - initial spec for PHP 5.6 as Software Collection
 - adapted from php 5.6 spec file from remi repository
