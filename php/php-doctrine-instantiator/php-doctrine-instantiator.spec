@@ -32,7 +32,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  php(language) >= 5.3
 BuildRequires:  php-phar
 BuildRequires:  php-pdo
 BuildRequires:  php-reflection
@@ -41,8 +41,8 @@ BuildRequires:  php-theseer-autoload
 %endif
 
 # From composer.json
-#        "php": ">=5.3.3"
-Requires:       php(language) >= 5.3.3
+#        "php": "~5.3"
+Requires:       php(language) >= 5.3
 # From phpcompatinfo report for version 1.0.0
 Requires:       php-reflection
 
