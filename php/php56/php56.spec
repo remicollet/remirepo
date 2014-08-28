@@ -250,6 +250,8 @@ Requires(pre): httpd-filesystem
 %else
 Requires(pre): httpd
 %endif
+# php engine for Apache httpd webserver
+Provides: php(httpd)
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Don't provides extensions, which are not shared library, as .so
@@ -328,6 +330,8 @@ Requires(pre): httpd-filesystem
 # For php.conf in /etc/httpd/conf.d
 # and version 2.4.10 for proxy support in SetHandler
 Requires: httpd-filesystem >= 2.4.10
+# php engine for Apache httpd webserver
+Provides: php(httpd)
 %endif
 Obsoletes: php53-fpm, php53u-fpm, php54-fpm, php54w-fpm, php55u-fpm, php55w-fpm, php56u-fpm, php56w-fpm
 
