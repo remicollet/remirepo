@@ -43,16 +43,16 @@ mocketc=/home/rpmbuild/SPECS/remirepo/tools/mock
 #alias mockfc14x="              mock --configdir=$mocketc -r fc14x              rebuild "
 #alias mockfc14xt="             mock --configdir=$mocketc -r fc14xt             rebuild "
 
-alias mockfc15i="setarch i686  mock --configdir=$mocketc -r fc15i  --arch i686 rebuild "
-alias mockfc15it="setarch i686 mock --configdir=$mocketc -r fc15it --arch i686 rebuild "
-alias mockfc15x="              mock --configdir=$mocketc -r fc15x              rebuild "
-alias mockfc15xt="             mock --configdir=$mocketc -r fc15xt             rebuild "
+#alias mockfc15i="setarch i686  mock --configdir=$mocketc -r fc15i  --arch i686 rebuild "
+#alias mockfc15it="setarch i686 mock --configdir=$mocketc -r fc15it --arch i686 rebuild "
+#alias mockfc15x="              mock --configdir=$mocketc -r fc15x              rebuild "
+#alias mockfc15xt="             mock --configdir=$mocketc -r fc15xt             rebuild "
 
-alias mockfc16i="setarch i686  mock --configdir=$mocketc -r fc16i  --arch i686 rebuild "
-alias mockfc16it="setarch i686 mock --configdir=$mocketc -r fc16it --arch i686 rebuild "
-alias mockfc16x="              mock --configdir=$mocketc -r fc16x              rebuild "
-alias mockfc16xt="             mock --configdir=$mocketc -r fc16xt             rebuild "
-alias mockfc16xd="             mock --configdir=$mocketc -r fc16xd             rebuild "
+#alias mockfc16i="setarch i686  mock --configdir=$mocketc -r fc16i  --arch i686 rebuild "
+#alias mockfc16it="setarch i686 mock --configdir=$mocketc -r fc16it --arch i686 rebuild "
+#alias mockfc16x="              mock --configdir=$mocketc -r fc16x              rebuild "
+#alias mockfc16xt="             mock --configdir=$mocketc -r fc16xt             rebuild "
+#alias mockfc16xd="             mock --configdir=$mocketc -r fc16xd             rebuild "
 
 alias mockfc17i="setarch i686  mock --configdir=$mocketc -r fc17i  --arch i686 rebuild "
 alias mockfc17it="setarch i686 mock --configdir=$mocketc -r fc17it --arch i686 rebuild "
@@ -125,7 +125,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in $(seq 20 -1 15)
+  for i in $(seq 20 -1 17)
   do
     echo -n "$(date +%X) fc$i "
     setarch i686  mock $quiet --configdir=$mocketc -r fc${i}i --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
@@ -239,7 +239,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in $(seq 20 -1 15)
+  for i in $(seq 20 -1 17)
   do
     echo -n "$(date +%X) fc$i "
     mock $quiet --configdir=$mocketc -r fc${i}x rebuild $1 && echo " Ok." || echo " Error !"
