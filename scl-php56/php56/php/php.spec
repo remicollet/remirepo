@@ -1374,6 +1374,7 @@ install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 install -m 755 -d $RPM_BUILD_ROOT%{_root_bindir}
 ln -s %{_bindir}/php       $RPM_BUILD_ROOT%{_root_bindir}/%{scl}
 ln -s %{_bindir}/phar.phar $RPM_BUILD_ROOT%{_root_bindir}/%{scl_prefix}phar
+ln -s %{_bindir}/phpdbg    $RPM_BUILD_ROOT%{_root_bindir}/%{scl}dbg
 %if %{with_lsws}
 ln -s %{_bindir}/lsphp     $RPM_BUILD_ROOT%{_root_bindir}/ls%{scl}
 %endif
@@ -1640,6 +1641,9 @@ fi
 %{_bindir}/phpdbg
 %{_mandir}/man1/phpdbg.1*
 %doc sapi/phpdbg/{README.md,CREDITS}
+%if 0%{?scl:1}
+%{_bindir}/%{scl}dbg
+%endif
 
 %files fpm
 %defattr(-,root,root)
