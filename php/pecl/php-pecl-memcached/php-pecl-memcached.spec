@@ -29,7 +29,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?scl_prefix}php-pecl-memcached
 Version:      2.2.0
-Release:      3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # memcached is PHP, FastLZ is MIT
 License:      PHP and MIT
 Group:        Development/Languages
@@ -52,7 +52,7 @@ BuildRequires: cyrus-sasl-devel
 BuildRequires: memcached
 %endif
 
-%if 0%{?scl:1} && 0%{?fedora} < 15 && 0%{?rhel} < 7
+%if 0%{?scl:1} && 0%{?fedora} < 15 && 0%{?rhel} < 7 && "%{?scl_vendor}" != "remi"
 # Filter in the SCL collection
 %{?filter_requires_in: %filter_requires_in %{_libdir}/.*\.so}
 # libvent from SCL as not available in system
@@ -86,7 +86,7 @@ Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
@@ -301,6 +301,9 @@ exit $ret
 
 
 %changelog
+* Fri Aug 29 2014 Remi Collet <rcollet@redhat.com> - 2.2.0-4
+- improve SCL build
+
 * Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-3
 - add numerical prefix to extension configuration file
 
