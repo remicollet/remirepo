@@ -25,7 +25,7 @@
 Summary:       PHP Bindings for yaml
 Name:          %{?scl_prefix}php-pecl-yaml
 Version:       1.1.1
-Release:       4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       MIT
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaml
@@ -80,6 +80,9 @@ Documentation: http://php.net/yaml
 %prep
 %setup -c -q
 mv %{pecl_name}-%{version} NTS
+
+# Remove test file to avoid regsitration
+sed -e '/role="test"/d' -i package.xml
 
 cd NTS
 # honour --with-libdir option
@@ -154,11 +157,8 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -Dpm644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
+# Documentation
 cd NTS
-for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -212,7 +212,6 @@ fi
 %files
 %defattr(-, root, root, -)
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -225,6 +224,9 @@ fi
 
 
 %changelog
+* Fri Aug 29 2014 Remi Collet <rcollet@redhat.com> - 1.1.1-5
+- don't install tests
+
 * Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 1.1.1-4
 - improve SCL build
 
