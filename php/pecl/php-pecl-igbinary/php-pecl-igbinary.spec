@@ -37,9 +37,6 @@ Group:          System Environment/Libraries
 
 URL:            http://pecl.php.net/package/igbinary
 
-# https://github.com/igbinary/igbinary/pull/24
-Patch0:         igbinary-apcu.patch
-
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-devel >= 5.2.0
@@ -110,15 +107,11 @@ These are the files needed to compile programs using Igbinary
 mv igbinary-%{commit}/package.xml .
 mv igbinary-%{commit} NTS
 sed -e '/release/s/-dev/dev/' -i package.xml
-
-cd %{extname}-%{version}
-
-%patch0 -p1 -b .apcu
-
 %else
 mv %{extname}-%{version} NTS
-cd NTS
 %endif
+
+cd NTS
 
 # Check version
 sed -e '/IGBINARY_VERSION/s/1.1.2-dev/%{version}/' -i igbinary.h
@@ -274,7 +267,8 @@ fi
 
 %changelog
 * Thu Aug 28 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
-- update to 1.1.1
+- update to 1.2.0
+- open https://github.com/igbinary/igbinary/pull/36
 
 * Sun Aug 24 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-0.11.git3b8ab7e
 - improve SCL stuff
