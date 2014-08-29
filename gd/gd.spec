@@ -4,7 +4,7 @@
 
 # We observe a huge memory consumption on EL-6
 # when libvpx is enabled (~500MB)
-%if 0%{?fedora} < 17 && 0%{?rhel} < 7
+%if 0%{?fedora} < 17 && 0%{?rhel} < 6
 %global  with_vpx  0
 %else
 %global  with_vpx  1
@@ -13,7 +13,7 @@
 Summary:       A graphics library for quick creation of PNG or JPEG images
 Name:          gd-last
 Version:       2.1.0
-Release:       2%{?prever}%{?short}%{?dist}
+Release:       3%{?prever}%{?short}%{?dist}
 Group:         System Environment/Libraries
 License:       MIT
 URL:           http://libgd.bitbucket.org/
@@ -26,7 +26,9 @@ Source1:       https://bitbucket.org/libgd/gd-libgd/downloads/libgd-%{version}-r
 %else
 Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/libgd-%{version}%{?prever:-%{prever}}.tar.xz
 %endif
+
 Patch1:        gd-2.1.0-multilib.patch
+Patch2:        gd-CVE-2014-2497.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: freetype-devel
@@ -93,6 +95,7 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 %prep
 %setup -q -n libgd-%{version}%{?prever:-%{prever}}
 %patch1 -p1 -b .mlib
+%patch2 -p1 -b .cve-20142-497
 
 # https://bitbucket.org/libgd/gd-libgd/issue/77
 sed -e '/GD_VERSION_STRING/s/-alpha//' \
@@ -176,6 +179,10 @@ make check
 
 
 %changelog
+* Fri Aug 29 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-3
+- enable libvpx on EL 6 (with libvpx 1.3.0)
+- add patch for CVE-2014-2497
+
 * Sun Dec 29 2013 Remi Collet <remi@fedoraproject.org> - 2.1.0-2
 - disable libvpx support on Fedora < 17 and EL < 7
   fix a huge memory consumption (~500MB)
