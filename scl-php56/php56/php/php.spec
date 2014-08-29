@@ -107,7 +107,7 @@
 # build with system libgd (gd-last in remi repo)
 %global  with_libgd 1
 
-%if 0%{?fedora} < 17 && 0%{?rhel} < 7
+%if 0%{?fedora} < 17 && 0%{?rhel} < 6
 %global  with_vpx  0
 %else
 %global  with_vpx  1
@@ -151,7 +151,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.6.0
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1374,7 +1374,7 @@ install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 install -m 755 -d $RPM_BUILD_ROOT%{_root_bindir}
 ln -s %{_bindir}/php       $RPM_BUILD_ROOT%{_root_bindir}/%{scl}
 ln -s %{_bindir}/phar.phar $RPM_BUILD_ROOT%{_root_bindir}/%{scl_prefix}phar
-ln -s %{_bindir}/phpdbg    $RPM_BUILD_ROOT%{_root_bindir}/%{scl}dbg
+ln -s %{_bindir}/phpdbg    $RPM_BUILD_ROOT%{_root_bindir}/%{scl_prefix}phpdbg
 %if %{with_lsws}
 ln -s %{_bindir}/lsphp     $RPM_BUILD_ROOT%{_root_bindir}/ls%{scl}
 %endif
@@ -1642,7 +1642,7 @@ fi
 %{_mandir}/man1/phpdbg.1*
 %doc sapi/phpdbg/{README.md,CREDITS}
 %if 0%{?scl:1}
-%{_bindir}/%{scl}dbg
+%{_root_bindir}/%{scl_prefix}phpdbg
 %endif
 
 %files fpm
@@ -1750,6 +1750,10 @@ fi
 
 
 %changelog
+* Fri Aug 29 2014 Remi Collet <remi@fedoraproject.org> 5.6.0-1.1
+- enable libvpx on EL 6 (with libvpx 1.3.0)
+- add php56-phpdbg command in base system
+
 * Thu Aug 28 2014 Remi Collet <remi@fedoraproject.org> 5.6.0-1
 - PHP 5.6.0 is GA
 - add lsphp56 command in base system

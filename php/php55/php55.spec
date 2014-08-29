@@ -49,7 +49,7 @@
 %global with_libpcre  0
 %endif
 
-%if 0%{?fedora} < 17 && 0%{?rhel} < 7
+%if 0%{?fedora} < 17 && 0%{?rhel} < 6
 %global  with_vpx  0
 %else
 %global  with_vpx  1
@@ -129,7 +129,7 @@ Version: 5.5.16
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1943,6 +1943,9 @@ fi
 
 
 %changelog
+* Fri Aug 29 2014 Remi Collet <remi@fedoraproject.org> 5.5.16-1.1
+- enable libvpx on EL 6 (with libvpx 1.3.0)
+
 * Wed Aug 20 2014 Remi Collet <rcollet@redhat.com> 5.5.16-1
 - Update to 5.5.16
   http://www.php.net/releases/5_5_16.php
