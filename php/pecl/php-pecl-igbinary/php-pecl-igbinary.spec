@@ -24,7 +24,7 @@
 
 Summary:        Replacement for the standard PHP serializer
 Name:           %{?scl_prefix}php-pecl-igbinary
-Version:        1.2.0
+Version:        1.2.1
 %if 0%{?short:1}
 Release:        0.11.git%{short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        https://github.com/%{extname}/%{extname}/archive/%{commit}/%{extname}-%{version}-%{short}.tar.gz
@@ -114,9 +114,7 @@ mv %{extname}-%{version} NTS
 cd NTS
 
 # Check version
-sed -e '/IGBINARY_VERSION/s/1.1.2-dev/%{version}/' -i igbinary.h
-
-extver=$(sed -n '/#define IGBINARY_VERSION/{s/.* "//;s/".*$//;p}' igbinary.h)
+extver=$(sed -n '/#define PHP_IGBINARY_VERSION/{s/.* "//;s/".*$//;p}' igbinary.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
    : Error: Upstream version is ${extver}, expecting %{version}%{?prever}.
    exit 1
@@ -183,14 +181,6 @@ done
 
 
 %check
-sed -e '/^extension=apc/d' -i ?TS/tests/igbinary_045*phpt
-%if "%{php_version}" < "5.4"
-# SessionHandlerInterface is 5.4 only
-rm ?TS/tests/igbinary_047.phpt
-%endif
-
-cd NTS
-
 # APC required for test 045
 if [ -f %{php_extdir}/apcu.so ]; then
   MOD="-d extension=apcu.so"
@@ -204,6 +194,7 @@ fi
     --modules | grep %{extname}
 
 : upstream test suite
+cd NTS
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
 TEST_PHP_ARGS="-n $MOD -d extension=$PWD/modules/%{extname}.so" \
 NO_INTERACTION=1 \
@@ -211,14 +202,13 @@ REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php --show-diff
 
 %if %{with_zts}
-cd ../ZTS
-
 : simple ZTS module load test, without APC, as optional
 %{__ztsphp} --no-php-ini \
     --define extension=%{buildroot}%{php_ztsextdir}/%{extname}.so \
     --modules | grep %{extname}
 
 : upstream test suite
+cd ../ZTS
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n $MOD -d extension=$PWD/modules/%{extname}.so" \
 NO_INTERACTION=1 \
@@ -266,6 +256,9 @@ fi
 
 
 %changelog
+* Fri Aug 29 2014 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- Update to 1.2.1
+
 * Thu Aug 28 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - update to 1.2.0
 - open https://github.com/igbinary/igbinary/pull/36
