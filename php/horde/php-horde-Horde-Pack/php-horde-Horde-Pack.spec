@@ -7,11 +7,12 @@
 # Please, preserve the changelog entries
 #
 %{!?__pear:       %global __pear       %{_bindir}/pear}
+%{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;')}
 %global pear_name    Horde_Pack
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Pack
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}
 Summary:        Horde Pack Utility
 
@@ -88,8 +89,10 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
+: PHP version %{php_version}
 %if "%{php_version}" < "5.5"
 sed -e 's/function testNonUtf8Pack/function SKIP_testNonUtf8Pack/' \
+    -e 's/function testBuggyDriverBackends/function SKIP_testBuggyDriverBackends/' \
     -i PackTest.php
 %endif
 
@@ -124,6 +127,9 @@ fi
 
 
 %changelog
+* Sat Aug 30 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3
+
 * Thu Jun 26 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Update to 1.0.2
 
