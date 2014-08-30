@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Prefs
-Version:        2.6.0
+Version:        2.7.0
 Release:        1%{?dist}
 Summary:        Horde Preferences API
 
@@ -87,6 +87,7 @@ sed -e '/%{pear_name}.po/d' \
     -e '/Horde_Other.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -152,6 +153,9 @@ fi
 
 
 %changelog
+* Sat Aug 30 2014 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
+- Update to 2.7.0
+
 * Sat May 03 2014 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
 - Update to 2.6.0
 - add optional dep on Horde_Cache
