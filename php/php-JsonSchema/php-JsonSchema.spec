@@ -1,12 +1,26 @@
+#
+# RPM spec file for php-JsonSchema
+#
+# Copyright (c) 2012-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
 %global github_owner   justinrainbow
 %global github_name    json-schema
-%global github_version 1.3.6
-%global github_commit  d97cf3ce890fe80f247fc08594a1c8a1029fc7ed
+%global github_version 1.3.7
+%global github_commit  87b54b460febed69726c781ab67462084e97a105
 
 # See https://github.com/justinrainbow/json-schema/pull/96
 %global php_min_ver    5.3.2
 
 %global lib_name       JsonSchema
+
+# Build using "--without tests" to disable tests
+%global with_tests     %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:          php-%{lib_name}
 Version:       %{github_version}
@@ -20,10 +34,11 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
+%if %{with_tests}
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# For tests: phpcompatinfo (computed from v1.3.6)
+BuildRequires: php-phpunit-PHPUnit
+# For tests: phpcompatinfo (computed from v1.3.7)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -31,15 +46,18 @@ BuildRequires: php-json
 BuildRequires: php-mbstring
 BuildRequires: php-pcre
 BuildRequires: php-spl
+%endif
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from v1.3.6)
+# phpcompatinfo (computed from v1.3.7)
 Requires:      php-curl
 Requires:      php-filter
 Requires:      php-json
 Requires:      php-mbstring
 Requires:      php-pcre
 Requires:      php-spl
+
+Provides:      php-composer(justinrainbow/json-schema) = %{version}
 
 %description
 A PHP implementation for validating JSON structures against a given schema.
@@ -50,20 +68,8 @@ See http://json-schema.org for more details.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-# Clean up unnecessary files
-find . -type f -name '.git*' -delete
-
-# Create autoloader for tests
-( cat <<'AUTOLOAD'
-<?php
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', $class).'.php';
-    require_once $src;
-});
-AUTOLOAD
-) > autoload.php
-
 # Update bin file
+## Shebang
 sed 's#/usr/bin/env php#%{_bindir}/php#' \
     -i bin/validate-json
 
@@ -74,32 +80,58 @@ sed 's#/usr/bin/env php#%{_bindir}/php#' \
 
 %install
 # Install lib
-mkdir -pm 755 %{buildroot}%{_datadir}/php
-cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
+mkdir -pm 0755 %{buildroot}%{_datadir}/php
+cp -rp src/* %{buildroot}%{_datadir}/php/
 
 # Install bin
 mkdir -pm 0755 %{buildroot}%{_bindir}
-cp -p bin/validate-json %{buildroot}%{_bindir}/
+install -pm 0755 bin/validate-json %{buildroot}%{_bindir}/
 
 
 %check
+%if %{with_tests}
+# Create autoloader
+cat > autoload.php <<'AUTOLOAD'
+<?php
+spl_autoload_register(function ($class) {
+    $src = str_replace('\\', '/', $class).'.php';
+    require_once $src;
+});
+AUTOLOAD
+
 # Remove empty tests
 rm -rf tests/JsonSchema/Tests/Drafts
+
+# Create PHPUnit config w/ colors turned off
+sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 %{_bindir}/phpunit \
     --include-path="./src:./tests" \
     --bootstrap="./autoload.php" \
     -d date.timezone="UTC"
+%else
+: Tests skipped
+%endif
 
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README.md composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README.md composer.json
 %{_datadir}/php/%{lib_name}
 %{_bindir}/validate-json
 
 
 %changelog
+* Fri Aug 29 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.7-1
+- Updated to 1.3.7 (BZ #1133519)
+- Added option to build without tests ("--without tests")
+- Added "php-composer(justinrainbow/json-schema)" virtual provide
+- Added PHP < 5.4.0 compatibility for "--dump-schema"
+- %%check tweaks
+- Added %%license usage
+
 * Sat Mar  8 2014 Remi Collet <remi@fedoraproject.org> - 1.3.6-1
 - backport 1.3.6 for remi repo.
 
