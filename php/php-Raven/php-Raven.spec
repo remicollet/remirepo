@@ -8,10 +8,11 @@
 #
 # Please preserve the changelog entries
 #
+
 %global github_owner    getsentry
 %global github_name     raven-php
-%global github_version  0.9.0
-%global github_commit   1177f1c51110454f3a5bcca88aec3fa30e40e277
+%global github_version  0.9.1
+%global github_commit   c6184b057d597f1449f30f2caec5d9ad07ddc4af
 
 %global lib_name        Raven
 
@@ -33,9 +34,6 @@ Group:         Development/Libraries
 License:       BSD
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{version}-%{github_commit}.tar.gz
-# Fix Raven_Tests_ClientTest::testGetAuthHeader
-# https://github.com/getsentry/raven-php/pull/155
-Patch0:        %{url}/pull/155.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -43,7 +41,7 @@ BuildArch:     noarch
 # For tests: composer.json
 BuildRequires: php(language)       >= %{php_min_ver}
 BuildRequires: php-phpunit-PHPUnit >= %{phpunit_min_ver}
-# For tests: phpcompatinfo (computed from version 0.9.0)
+# For tests: phpcompatinfo (computed from version 0.9.1)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-mbstring
@@ -57,7 +55,7 @@ BuildRequires: php-zlib
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 0.9.0)
+# phpcompatinfo (computed from version 0.9.1)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-mbstring
@@ -77,8 +75,6 @@ Provides:      php-composer(raven/raven) = %{version}
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-%patch0 -p1
-
 # Update autoloader require in bin and test bootstrap
 sed "/require.*Autoloader/s:.*:require_once 'Raven/Autoloader.php';:" \
     -i bin/raven \
@@ -90,11 +86,11 @@ sed "/require.*Autoloader/s:.*:require_once 'Raven/Autoloader.php';:" \
 
 
 %install
-mkdir -p %{buildroot}%{_datadir}/php
+mkdir -pm 0755 %{buildroot}%{_datadir}/php
 cp -rp lib/* %{buildroot}%{_datadir}/php/
 
-mkdir -p %{buildroot}%{_bindir}
-install -pm 755 bin/raven %{buildroot}%{_bindir}/
+mkdir -pm 0755 %{buildroot}%{_bindir}
+install -pm 0755 bin/raven %{buildroot}%{_bindir}/
 
 
 %check
@@ -110,12 +106,18 @@ sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE AUTHORS *.rst composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc AUTHORS *.rst composer.json
 %{_datadir}/php/%{lib_name}
 %{_bindir}/raven
 
 
 %changelog
+* Sun Aug 31 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.9.1-1
+- Updated to 0.9.1 (BZ #1134284)
+- %%license usage
+
 * Sun Jun  8 2014 Remi Collet <remi@fedoraproject.org> 0.9.0-1
 - backport 0.9.0 for remi repo
 
