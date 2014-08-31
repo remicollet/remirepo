@@ -24,13 +24,17 @@
 
 Name:          php-%{lib_name}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       PHP implementation of JSON schema
 
 Group:         Development/Libraries
 License:       BSD
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+
+# PHP < 5.4.0 compatibility for "--dump-schema"
+# https://github.com/justinrainbow/json-schema/pull/109
+Patch0:        %{name}-php-lt-5-4-0-compat.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -68,8 +72,9 @@ See http://json-schema.org for more details.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-# Update bin file
-## Shebang
+%patch0 -p1
+
+# Update bin shebang
 sed 's#/usr/bin/env php#%{_bindir}/php#' \
     -i bin/validate-json
 
@@ -124,6 +129,9 @@ sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 
 %changelog
+* Sat Aug 30 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.7-2
+- PHP < 5.4.0 compatibility patch instead of in-spec logic
+
 * Fri Aug 29 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.7-1
 - Updated to 1.3.7 (BZ #1133519)
 - Added option to build without tests ("--without tests")

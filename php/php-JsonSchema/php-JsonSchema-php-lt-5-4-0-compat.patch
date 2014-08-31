@@ -1,0 +1,23 @@
+From 3973764636b93f1b94ea6842bdf2e780b2a59822 Mon Sep 17 00:00:00 2001
+From: Shawn Iwinski <siwinski@redhat.com>
+Date: Fri, 29 Aug 2014 22:41:25 -0400
+Subject: [PATCH] PHP < 5.4.0 compatibility for "--dump-schema"
+
+---
+ bin/validate-json | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/bin/validate-json b/bin/validate-json
+index 2f2fe44..8831a6e 100755
+--- a/bin/validate-json
++++ b/bin/validate-json
+@@ -218,7 +218,8 @@ $refResolver = new JsonSchema\RefResolver($retriever);
+ $refResolver->resolve($schema, $urlSchema);
+ 
+ if (isset($arOptions['--dump-schema'])) {
+-    echo json_encode($schema, JSON_PRETTY_PRINT) . "\n";
++    $options = version_compare(PHP_VERSION, '5.4.0', '>=') ? JSON_PRETTY_PRINT : 0;
++    echo json_encode($schema, $options) . "\n";
+     exit();
+ }
+ 
