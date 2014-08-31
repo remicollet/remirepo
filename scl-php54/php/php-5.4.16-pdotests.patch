@@ -1,0 +1,34 @@
+From c08e1d2be948d63f7a9309344a0ed4092ac8dace Mon Sep 17 00:00:00 2001
+From: Nikita Popov <nikic@php.net>
+Date: Sun, 24 Mar 2013 17:52:16 +0100
+Subject: [PATCH] Fix PDO::inTransaction() test for pgsql
+
+inTransaction() nowadays casts the in_transaction result to boolean.
+I'm not sure whether the INERROR state should result in true or false.
+For now I went with the result that we actually get.
+---
+ ext/pdo_pgsql/tests/is_in_transaction.phpt | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/ext/pdo_pgsql/tests/is_in_transaction.phpt b/ext/pdo_pgsql/tests/is_in_transaction.phpt
+index 99ff561..72da4f4 100644
+--- a/ext/pdo_pgsql/tests/is_in_transaction.phpt
++++ b/ext/pdo_pgsql/tests/is_in_transaction.phpt
+@@ -57,10 +57,10 @@ var_dump($db->inTransaction());
+ ?>
+ --EXPECT--
+ Test PDO::PGSQL_TRANSACTION_INTRANS
+-int(2)
++bool(true)
+ Test PDO::PGSQL_TRANSACTION_IDLE
+-int(0)
++bool(false)
+ Test PDO::PGSQL_TRANSACTION_INERROR
+-int(3)
++bool(true)
+ Test PDO::PGSQL_TRANSACTION_IDLE
+-int(0)
++bool(false)
+-- 
+1.7.11.5
+
