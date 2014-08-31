@@ -19,7 +19,7 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-devel >= 5.1.3, php-pear
 %if "%{?vendor}" == "Remi Collet"
 %if 0%{?fedora} > 20
-BuildRequires: ImageMagick-devel >= 6.8.9
+BuildRequires: ImageMagick-devel >= 6.8.8
 Requires:      ImageMagick-libs%{?_isa}  >= %{imbuildver}
 %else
 BuildRequires: ImageMagick-last-devel >= 6.8.9
