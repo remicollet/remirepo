@@ -1,5 +1,4 @@
 {
-    "doctrine\/instantiator": "php-doctrine-instantiator",
     "fabpot\/goutte": "php-goutte",
     "jms\/parser-lib": "php-JMSParser",
     "justinrainbow\/json-schema": "php-JsonSchema",
@@ -7,7 +6,6 @@
     "michelf\/php-markdown": "php-markdown",
     "sabberworm\/php-css-parser": "php-PHP-CSS-Parser",
     "solarium\/solarium": "php-solarium",
-    "twig\/twig": "php-twig-Twig",
     "zendframework\/zendframework1": "php-ZendFramework",
     "sabre\/dav": "php-sabre-dav",
     "phpunit\/phpunit-story": "php-phpunit-PHPUnit-Story",
