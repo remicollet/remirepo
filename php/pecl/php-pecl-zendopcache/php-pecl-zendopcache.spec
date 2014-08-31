@@ -6,14 +6,16 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pecl:     %{expand: %%global __pecl     %{_bindir}/pecl}}
+%{?scl:          %scl_package        php-pecl-zendopcache}
+%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%global with_zts   0%{?__ztsphp:1}
 %global proj_name  ZendOpcache
 %global pecl_name  zendopcache
 %global plug_name  opcache
 
-Name:          php-pecl-%{pecl_name}
+Name:          %{?scl_prefix}php-pecl-%{pecl_name}
 Version:       7.0.3
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       The Zend OPcache
 
 Group:         Development/Libraries
@@ -31,21 +33,31 @@ Source3:       https://raw2.github.com/zendtech/ZendOptimizerPlus/e8e28cd95c8aa6
 Source4:       https://raw2.github.com/zendtech/ZendOptimizerPlus/e8e28cd95c8aa660c28c2166da679b50deb50faa/tests/php_cli_server.inc
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: php-devel >= 5.2.0
-BuildRequires: php-pear
+BuildRequires: %{?scl_prefix}php-devel >= 5.2.0
+BuildRequires: %{?scl_prefix}php-pear
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:      php(zend-abi) = %{php_zend_api}
-Requires:      php(api) = %{php_core_api}
+Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 
-Provides:      php-pecl(%{plug_name}) = %{version}%{?prever}
-Provides:      php-pecl(%{plug_name})%{?_isa} = %{version}%{?prever}
-Provides:      php-%{plug_name} = %{version}-%{release}
-Provides:      php-%{plug_name}%{?_isa} = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl(%{plug_name}) = %{version}%{?prever}
+Provides:      %{?scl_prefix}php-pecl(%{plug_name})%{?_isa} = %{version}%{?prever}
+Provides:      %{?scl_prefix}php-%{plug_name} = %{version}-%{release}
+Provides:      %{?scl_prefix}php-%{plug_name}%{?_isa} = %{version}-%{release}
+%if 0%{!?scl:1}
 Obsoletes:     php-pecl-zendoptimizerplus < %{version}-%{release}
 Provides:      php-pecl-zendoptimizerplus = %{version}-%{release}
 Provides:      php-pecl-zendoptimizerplus%{?_isa} = %{version}-%{release}
+%endif
+
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
+%endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared
@@ -68,8 +80,10 @@ mv %{pecl_name}-%{version} NTS
 
 cp %{SOURCE3} %{SOURCE4} NTS/tests/
 
+%if %{with_zts}
 # Duplicate source tree for NTS / ZTS build
 cp -pr NTS ZTS
+%endif
 
 
 %build
@@ -80,12 +94,14 @@ cd NTS
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
+%if %{with_zts}
 cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
     --enable-optimizer-plus \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
@@ -103,6 +119,7 @@ sed -e 's:@EXTPATH@:%{php_extdir}:' \
 # The default Zend OPcache blacklist file
 install -D -p -m 644 %{SOURCE2} %{buildroot}%{php_inidir}/%{plug_name}-default.blacklist
 
+%if %{with_zts}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
 
 install -D -p -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{plug_name}.ini
@@ -111,6 +128,7 @@ sed -e 's:@EXTPATH@:%{php_ztsextdir}:' \
     -i %{buildroot}%{php_ztsinidir}/%{plug_name}.ini
 
 install -D -p -m 644 %{SOURCE2} %{buildroot}%{php_ztsinidir}/%{plug_name}-default.blacklist
+%endif
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -132,6 +150,7 @@ NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__php} -n run-tests.php
 
+%if %{with_zts}
 cd ../ZTS
 %{__ztsphp} \
     -n -d zend_extension=%{buildroot}%{php_ztsextdir}/%{plug_name}.so \
@@ -142,6 +161,7 @@ TEST_PHP_ARGS="-n -d zend_extension=%{buildroot}%{php_ztsextdir}/%{plug_name}.so
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
+%endif
 
 
 %post
@@ -161,14 +181,20 @@ fi
 %config(noreplace) %{php_inidir}/%{plug_name}.ini
 %{php_extdir}/%{plug_name}.so
 
+%if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{plug_name}-default.blacklist
 %config(noreplace) %{php_ztsinidir}/%{plug_name}.ini
 %{php_ztsextdir}/%{plug_name}.so
+%endif
 
 %{pecl_xmldir}/%{name}.xml
 
 
 %changelog
+* Sun Aug 31 2014 Remi Collet <rcollet@redhat.com> - 7.0.3-2
+- allow SCL build
+- make ZTS build optional
+
 * Mon Jan 20 2014 Remi Collet <remi@fedoraproject.org> - 7.0.3-1
 - Update to 7.0.3
 - open https://github.com/zendtech/ZendOptimizerPlus/issues/162
