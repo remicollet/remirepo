@@ -1,9 +1,13 @@
 Name:           remi-release
 Version:        %{fedora}
+%if %{fedora} >= 21
+Release:        1%{?dist}
+%else
 %if %{fedora} >= 18
-Release:        2%{?dist}
+Release:        3%{?dist}
 %else
 Release:        7%{?dist}
+%endif
 %endif
 Summary:        YUM configuration for remi repository
 Summary(fr):	Configuration de YUM pour le dépôt remi
@@ -12,14 +16,18 @@ Group:          System Environment/Base
 License:        GPLv2+
 URL:            http://rpms.famillecollet.com/
 Source0:        RPM-GPG-KEY-remi
-Source1:	    remi-fc.repo
-Source3:	    remi.list
+Source1:        remi-fc.repo
+Source2:        remi-test-fc.repo
+Source3:        remi-php56-fc.repo
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}
 BuildArchitectures: noarch
 
+%if %{fedora} < 21
 Requires:       yum
+%endif
 Requires:       fedora-release >= %{fedora}
-Conflicts:      apt < 0.5.15lorg3
+
 
 %description
 This package contains yum configuration for the "remi" RPM Repository, 
@@ -28,16 +36,12 @@ as well as the public GPG keys used to sign them.
 The repository is not enabled after installation, so you must use
 the --enablerepo=remi option for yum.
 
-It also provides apt configuration.
-
 %description -l fr
 Ce paquetage contient le fichier de configuration de YUM pour utiliser
 les RPM du dépôt "remi" ainsi que la clé GPG utilisée pour les signer.
 
 Le dépôt n'est pas activé après l'installation, vous devez donc utiliser
 l'option --enablerepo=remi de yum.
-
-Il fournit également la configuration de apt.
 
 
 %prep
@@ -56,13 +60,10 @@ install -Dp -m 644 %{SOURCE0} %{buildroot}%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY
 
 # YUM
 install -Dp -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/yum.repos.d/remi.repo
-
-# APT
-install -dm 755 %{buildroot}%{_sysconfdir}/apt/{gpg,sources.list.d}
-install -m 644 -p %{SOURCE3} \
-    %{buildroot}%{_sysconfdir}/apt/sources.list.d/remi.list
-ln -s ../../pki/rpm-gpg/RPM-GPG-KEY-remi \
-    %{buildroot}%{_sysconfdir}/apt/gpg/gpg-pubkey-00f97f56-467e318a
+install -Dp -m 644 %{SOURCE2} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-test.repo
+%if %{fedora} < 21
+install -Dp -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php56.repo
+%endif
 
 
 %clean
@@ -71,13 +72,21 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%config(noreplace) %{_sysconfdir}/yum.repos.d/remi.repo
+%config(noreplace) %{_sysconfdir}/yum.repos.d/remi*.repo
 %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-remi
-%{_sysconfdir}/apt/gpg/gpg-pubkey-00f97f56-467e318a
-%config(noreplace) %{_sysconfdir}/apt/sources.list.d/remi.list
 
 
 %changelog
+* Sun Aug 31 2014 Remi Collet <RPMS@FamilleCollet.com> - 21-1.fc21.remi
+- Fedora release 21
+- drop dependency on yum, as dnf exists
+
+* Sun Aug 31 2014 Remi Collet <RPMS@FamilleCollet.com> - 20-3.fc20.remi
+- split configuration, one file per repository
+- add failovermethod=roundrobin for yum
+- add fastestmirror=1 for dnf > 0.4
+- drop apt configuration
+
 * Fri Feb 28 2014 Remi Collet <RPMS@FamilleCollet.com> - 19-2 and 20-2
 - add php56 repository
 

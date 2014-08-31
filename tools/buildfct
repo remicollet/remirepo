@@ -80,6 +80,9 @@ alias mockfc20x56="              mock --configdir=$mocketc -r fc20x56           
 alias mockfc20xscl56="           mock --configdir=$mocketc -r fc20xscl56          rebuild "
 alias mockfc20xd="               mock --configdir=$mocketc -r fc20xd              rebuild "
 
+alias mockfc21i="  setarch i686  mock --configdir=$mocketc -r fc21i   --arch i686 rebuild "
+alias mockfc21x="                mock --configdir=$mocketc -r fc21x               rebuild "
+
 #alias mockel4i="setarch i686  mock --configdir=$mocketc -r el4i  --arch i386 rebuild "
 #alias mockel4it="setarch i686 mock --configdir=$mocketc -r el4it --arch i386 rebuild "
 #alias mockel4x="              mock --configdir=$mocketc -r el4x              rebuild "
@@ -125,7 +128,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in $(seq 20 -1 17)
+  for i in $(seq 21 -1 17)
   do
     echo -n "$(date +%X) fc$i "
     setarch i686  mock $quiet --configdir=$mocketc -r fc${i}i --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
@@ -239,7 +242,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in $(seq 20 -1 17)
+  for i in $(seq 21 -1 17)
   do
     echo -n "$(date +%X) fc$i "
     mock $quiet --configdir=$mocketc -r fc${i}x rebuild $1 && echo " Ok." || echo " Error !"

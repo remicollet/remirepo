@@ -1,33 +1,14 @@
+# Repository: http://rpms.famillecollet.com/
+# Blog:       http://blog.famillecollet.com/
+# Forum:      http://forums.famillecollet.com/
+
+
 [remi]
-name=Les RPM de remi pour Fedora $releasever - $basearch
+name=Les RPM de remi - Fedora $releasever - $basearch
 #baseurl=http://rpms.famillecollet.com/fedora/$releasever/remi/$basearch/
 mirrorlist=http://rpms.famillecollet.com/fedora/$releasever/remi/mirror
 enabled=0
 gpgcheck=1
+failovermethod=roundrobin
+fastestmirror=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-remi
-
-[remi-php56]
-name=Les RPM de remi de PHP 5.6 pour Fedora $releasever - $basearch
-#baseurl=http://rpms.famillecollet.com/fedora/$releasever/php56/$basearch/
-mirrorlist=http://rpms.famillecollet.com/fedora/$releasever/php56/mirror
-# WARNING: If you enable this repository, you must also enable "remi"
-enabled=0
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-remi
-
-[remi-test]
-name=Les RPM de remi en test pour Fedora $releasever - $basearch
-#baseurl=http://rpms.famillecollet.com/fedora/$releasever/test/$basearch/
-mirrorlist=http://rpms.famillecollet.com/fedora/$releasever/test/mirror
-# WARNING: If you enable this repository, you must also enable "remi"
-enabled=0
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-remi
-
-[remi-dev]
-name=Les RPM experimentaux de remi pour Fedora $releasever - $basearch
-baseurl=http://rpms.famillecollet.com/fedora/$releasever/devs/$basearch/
-enabled=0
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-remi
-
