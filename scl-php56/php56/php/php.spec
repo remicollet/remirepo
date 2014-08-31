@@ -26,7 +26,7 @@
 %global _hardened_build 1
 
 # Ugly hack. Harcoded values to avoid relocation.
-%global _httpd_mmn         %(cat %{_root_includedir}/httpd/.mmn 2>/dev/null || echo missing-httpd-devel)
+%global _httpd_mmn         %(cat %{_root_includedir}/httpd/.mmn 2>/dev/null || echo 0)
 %global _httpd_confdir     %{_root_sysconfdir}/httpd/conf.d
 %global _httpd_moddir      %{_libdir}/httpd/modules
 %global _root_httpd_moddir %{_root_libdir}/httpd/modules

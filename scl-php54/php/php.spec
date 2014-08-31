@@ -22,7 +22,7 @@
 %global _hardened_build 1
 
 # Ugly hack. Harcoded values to avoid relocation.
-%global _httpd_mmn         %(cat %{_root_includedir}/httpd/.mmn 2>/dev/null || echo missing-httpd-devel)
+%global _httpd_mmn         %(cat %{_root_includedir}/httpd/.mmn 2>/dev/null || echo 0)
 %global _httpd_confdir     %{_root_sysconfdir}/httpd/conf.d
 %global _httpd_moddir      %{_libdir}/httpd/modules
 %global _root_httpd_moddir %{_root_libdir}/httpd/modules
@@ -1554,8 +1554,8 @@ fi
 %changelog
 * Sun Aug 31 2014 Remi Collet <rcollet@redhat.com> - 5.4.32-1
 - update to 5.4.32
-- cleanup
-- enable most extension
+- cleanup, merge with spec from remi repository
+- enable most extensions
 
 * Tue Feb  4 2014 Remi Collet <rcollet@redhat.com> - 5.4.16-16
 - allow multiple paths in ini_scan_dir #1058162
