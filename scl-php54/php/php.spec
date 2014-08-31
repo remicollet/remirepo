@@ -107,7 +107,7 @@
 %global with_httpd2410 0
 %endif
 
-%global with_zip     1
+%global with_zip     0
 
 %if 0%{?fedora} < 18 && 0%{?rhel} < 7
 %global db_devel  db4-devel
