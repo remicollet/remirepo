@@ -13,8 +13,8 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_datadir}/doc/%{name}-%{version}}
 
 Name: phpMyAdmin
-Version: 4.2.7.1
-Release: 2%{?dist}
+Version: 4.2.8
+Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -185,11 +185,14 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Sun Aug 31 2014 Remi Collet <rpms@famillecollet.com> 4.2.8-1
+- update to 4.2.8 (Sun, 31 Aug 2014, bugfix)
+
 * Mon Aug 18 2014 Remi Collet <rpms@famillecollet.com> 4.2.7.1-2
 - restrict access to /etc/phpMyAdmin and /var/lib/phpMyAdmin
 
 * Sun Aug 17 2014 Remi Collet <rpms@famillecollet.com> 4.2.7.1-1
-- update to 4.2.7.1 (SUn, 17 Aug 2014, security)
+- update to 4.2.7.1 (Sun, 17 Aug 2014, security)
 - fix for PMASA-2014-8 and PMASA-2014-9
 
 * Thu Jul 31 2014 Remi Collet <rpms@famillecollet.com> 4.2.7-1
