@@ -26,7 +26,7 @@ License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
-# Autoload template, from verison 3.7
+# Autoload template, from version 3.7
 Source1:        Autoload.php.in
 
 # Fix command for autoload

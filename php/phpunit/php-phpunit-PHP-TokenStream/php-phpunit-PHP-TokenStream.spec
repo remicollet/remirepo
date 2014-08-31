@@ -1,16 +1,20 @@
-%global gh_commit    ad4e1e23ae01b483c16f600ff1bebec184588e32
+%global bootstrap    0
+%global gh_commit    f8d5d08c56de5cfd592b3340424a81733259a876
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-token-stream
 %global php_home     %{_datadir}/php
 %global pear_name    PHP_TokenStream
 %global pear_channel pear.phpunit.de
-# Circular dependency with phpunit
+%if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%else
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 Name:           php-phpunit-PHP-TokenStream
-Version:        1.2.2
-Release:        5%{?dist}
+Version:        1.3.0
+Release:        1%{?dist}
 Summary:        Wrapper around PHP tokenizer extension
 
 Group:          Development/Libraries
@@ -18,9 +22,13 @@ License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
+# Autoload template, from version 1.2.2
+Source1:        Autoload.php.in
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
 BuildRequires:  php-pear-PHPUnit >= 3.7.0
 %endif
@@ -47,17 +55,15 @@ Wrapper around PHP tokenizer extension.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-rm PHP/Token/Stream/Autoload.php.in
+# Restore PSR-0 tree to ensure current sources are used by tests
+mv src PHP
 
 
 %build
-# Empty build section, most likely nothing required.
-
-# If upstream drop Autoload.php, command to generate it.
-#phpab \
-#  --output   PHP/Token/Stream/Autoload.php \
-#  --template PHP/Token/Stream/Autoload.php.in \
-#  PHP
+phpab \
+  --output   PHP/Token/Stream/Autoload.php \
+  --template %{SOURCE1} \
+  PHP
 
 
 %install
@@ -68,7 +74,15 @@ cp -pr PHP %{buildroot}%{php_home}/PHP
 
 %if %{with_tests}
 %check
-phpunit -d date.timezone=UTC
+# Use generated autoloader
+sed -e 's:vendor/autoload.php:PHP/Token/Stream/Autoload.php:' \
+    -i tests/bootstrap.php
+
+# Run tests
+phpunit  \
+   --bootstrap tests/bootstrap.php \
+   -d date.timezone=UTC \
+   tests
 %endif
 
 
@@ -85,11 +99,17 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README.md
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README.md composer.json
 %{php_home}/PHP
 
 
 %changelog
+* Sun Aug 31 2014 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- Update to 1.3.0
+- enable tests during build
+
 * Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> - 1.2.2-5
 - composer dependencies
 
