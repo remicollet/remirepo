@@ -25,9 +25,6 @@
 # Adds -z now to the linker flags
 %global _hardened_build 1
 
-# version used for php embedded library soname
-%global embed_version 5.6
-
 # Ugly hack. Harcoded values to avoid relocation.
 %global _httpd_mmn         %(cat %{_root_includedir}/httpd/.mmn 2>/dev/null || echo missing-httpd-devel)
 %global _httpd_confdir     %{_root_sysconfdir}/httpd/conf.d
@@ -49,11 +46,7 @@
 
 %global mysql_sock %(mysql_config --socket  2>/dev/null || echo /var/lib/mysql/mysql.sock)
 
-%ifarch ppc ppc64
-%global oraclever 10.2.0.2
-%else
 %global oraclever 12.1
-%endif
 
 # Build for LiteSpeed Web Server (LSAPI)
 %global with_lsws     1
@@ -82,7 +75,6 @@
 %else
 %global with_sqlite3   0
 %endif
-%global with_libedit   1
 %global with_enchant   1
 %global with_recode    1
 %global with_t1lib     1
@@ -146,8 +138,6 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver         RC4
-
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.6.0
@@ -178,7 +168,6 @@ Source51: opcache-default.blacklist
 
 # Build fixes
 Patch5: php-5.2.0-includedir.patch
-Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
 Patch8: php-5.4.7-libdb.patch
 
@@ -397,8 +386,8 @@ Provides: %{?scl_prefix}php-zlib, %{?scl_prefix}php-zlib%{?_isa}
 %{?scl:Requires: %{scl}-runtime}
 
 %description common
-The %{?scl_prefix}php-common package contains files used by both the php
-package and the %{?scl_prefix}php-cli package.
+The %{?scl_prefix}php-common package contains files used by both
+the %{?scl_prefix}php package and the %{?scl_prefix}php-cli package.
 
 %package devel
 Group: Development/Libraries
@@ -834,7 +823,8 @@ Group: System Environment/Libraries
 # All files licensed under PHP version 3.01
 License: PHP
 Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
-BuildRequires: libicu-devel >= 4.0
+# Upstream requires 4.0, we require 50 to ensure use of libicu-last
+BuildRequires: libicu-devel >= 50
 
 %description intl
 The %{?scl_prefix}php-intl package contains a dynamic shared object that will add
@@ -861,7 +851,6 @@ support for using the enchant library to PHP.
 %setup -q -n php-%{version}%{?rcver}
 
 %patch5 -p1 -b .includedir
-%patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
 %patch8 -p1 -b .libdb
 
@@ -1130,11 +1119,7 @@ build --libdir=%{_libdir}/php \
       --with-mysqli=shared,mysqlnd \
       --with-mysql-sock=%{mysql_sock} \
 %if %{with_oci8}
-%ifarch x86_64
       --with-oci8=shared,instantclient,%{_root_libdir}/oracle/%{oraclever}/client64/lib,%{oraclever} \
-%else
-      --with-oci8=shared,instantclient,%{_root_libdir}/oracle/%{oraclever}/client/lib,%{oraclever} \
-%endif
       --with-pdo-oci=shared,instantclient,%{_root_prefix},%{oraclever} \
 %endif
 %if %{with_interbase}
