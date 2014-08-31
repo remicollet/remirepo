@@ -6,18 +6,23 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    6d196af48e8c100a3ae881940123e693da5a9217
+
+%global bootstrap    0
+%global gh_commit    53603b3c995f5aab6b59c8e08c3a663d2cc810b7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-code-coverage
 %global php_home     %{_datadir}/php
 %global pear_name    PHP_CodeCoverage
 %global pear_channel pear.phpunit.de
-# disable because of circular dep with phpunit
+%if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%else
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        2.0.10
+Version:        2.0.11
 Release:        1%{?dist}
 Summary:        PHP code coverage information
 
@@ -34,25 +39,39 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
-BuildRequires:  php-pear-PHPUnit >= 4.0.14
+BuildRequires:  php-pear-PHPUnit >= 4.1
 %endif
 
-# From composer.json
+# From composer.json, require
+#        "php": ">=5.3.3",
+#        "phpunit/php-file-iterator": "~1.3",
+#        "phpunit/php-token-stream": "~1.3",
+#        "phpunit/php-text-template": "~1.2",
+#        "sebastian/environment": "~1.0",
+#        "sebastian/version": "~1.0"
 Requires:       php(language) >= 5.3.3
+Requires:       php-composer(phpunit/php-file-iterator) >= 1.3
+Requires:       php-composer(phpunit/php-file-iterator) <  2
+Requires:       php-composer(phpunit/php-token-stream) >= 1.3
+Requires:       php-composer(phpunit/php-token-stream) <  2
+Requires:       php-composer(phpunit/php-text-template) >= 1.2
+Requires:       php-composer(phpunit/php-text-template) <  2
+Requires:       php-composer(sebastian/environment) >= 1.0
+Requires:       php-composer(sebastian/environment) <  2
+Requires:       php-composer(sebastian/version) >= 1.0
+Requires:       php-composer(sebastian/version) <  2
+# From composer.json, suggest
+#        "ext-dom": "*",
+#        "ext-xdebug": ">=2.2.1",
+#        "ext-xmlwriter": "*"
 Requires:       php-dom
-Requires:       php-composer(phpunit/php-file-iterator) >= 1.3.1
-Requires:       php-composer(phpunit/php-token-stream) >= 1.2.2
-Requires:       php-composer(phpunit/php-text-template) >= 1.2.0
-Requires:       php-composer(sebastian/environment) >= 1.0.0
-Requires:       php-composer(sebastian/version) >= 1.0.3
-Requires:       php-pecl(Xdebug) >= 2.1.4
-# From phpcompatinfo report for version 2.0.7
+Requires:       php-xmlwriter
+# From phpcompatinfo report for version 2.0.11
 Requires:       php-date
 Requires:       php-json
 Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-tokenizer
-Requires:       php-xmlwriter
 
 Provides:       php-composer(phpunit/php-code-coverage) = %{version}
 
@@ -68,28 +87,30 @@ for PHP code coverage information.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+# Restore PSR-0 tree to ensure current sources are used by tests
+mv src PHP
+
 
 %build
 phpab \
-  --output   src/CodeCoverage/Autoload.php \
+  --output   PHP/CodeCoverage/Autoload.php \
   --template %{SOURCE1} \
-  src
+  PHP
 
 
 %install
 rm -rf     %{buildroot}
 mkdir -p   %{buildroot}%{php_home}
-cp -pr src %{buildroot}%{php_home}/PHP
+cp -pr PHP %{buildroot}%{php_home}/PHP
 
 
 %if %{with_tests}
 %check
-# to ensure current version is used (instead of installed one)
-ln -s src PHP
+sed -e '/log/d' phpunit.xml.dist >phpunit.xml
 
 phpunit \
   -d date.timezone=UTC \
-  --bootstrap src/CodeCoverage/Autoload.php
+  --bootstrap PHP/CodeCoverage/Autoload.php
 %endif
 
 
@@ -114,6 +135,12 @@ fi
 
 
 %changelog
+* Sun Aug 31 2014 Remi Collet <remi@fedoraproject.org> - 2.0.11-1
+- update to 2.0.11
+- raise dependency on phpunit/php-token-stream ~1.3
+- enable tests during build
+- drop optional dependency on XDebug
+
 * Mon Aug 11 2014 Remi Collet <remi@fedoraproject.org> - 2.0.10-1
 - update to 2.0.10
 - fix license handling
