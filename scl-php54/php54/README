@@ -1,0 +1,54 @@
+Package %{scl_name} provides the PHP scripting language as a Software
+Collection.  For more information about Software Collections, see
+scl(1).  By installing the %{scl_name} collection, you will get a
+minimal set of packages to have a working PHP.
+
+Usage: scl enable %{scl} 'php'
+
+Software Collections allows use of applications which are not located
+in the filesystem root hierarchy but are present in an alternative
+location, which is %{_scl_root} in case of the %{scl_name}
+collection.
+
+PHP is an HTML-embedded scripting language. PHP attempts to make it
+easy for developers to write dynamically generated web pages. PHP also
+offers built-in database integration for several commercial and
+non-commercial database management systems, so writing a
+database-enabled webpage with PHP is fairly simple. The most common
+use of PHP coding is probably as a replacement for CGI scripts.
+
+The %{?scl_prefix}php package provides the module (often referred to as mod_php)
+which adds support for the PHP language to Apache HTTP server.
+
+The %{?scl_prefix}php-fpm package provides the FastCGI process manager
+which adds support for the PHP language to FastCGI compatible servers.
+
+FastCGI process manager (php-fpm) listens on local network soket
+(by default port 9000).
+
+When working with %{scl_name} collection, use the "scl" utility (see
+scl(1) for usage) to enable the scl environment properly.
+
+Configuration for the %{scl_name} software collection is located under %{_sysconfdir}.
+
+Examples:
+scl enable %{scl_name} 'command --arg'
+  Run a specific command with argument --arg within %{scl_name} software collections
+  environment.
+
+scl enable %{scl_name} 'php'
+  Run php from %{scl_name} software collection.
+
+scl enable %{scl_name} bash
+  Run interactive shell where %{scl_name} software collection is enabled.
+
+scl enable %{scl_name} 'man php'
+  Show man pages for php command, which is part of the %{scl_name} software
+  collection.
+
+%if 0%{?rhel} >= 7
+systemctl start %{?scl_prefix}php-fpm
+%else
+service %{?scl_prefix}php-fpm start
+%endif
+  Starts the php-fpm server from %{scl_name} software collection.
