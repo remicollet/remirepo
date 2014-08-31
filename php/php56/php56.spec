@@ -232,7 +232,9 @@ BuildRequires: systemtap-sdt-devel
 BuildRequires: bison
 %endif
 
-Obsoletes: php53, php53u, php54, php54w, php55u, php55w, php56u, php56w
+Obsoletes: php53, php53u, php54w, php55u, php55w, php56u, php56w
+# Avoid obsoleting php54 from RHSCL
+Obsoletes: php54 > 5.4
 %if %{with_zts}
 Obsoletes: php-zts < 5.3.7
 Provides: php-zts = %{version}-%{release}
