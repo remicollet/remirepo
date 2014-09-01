@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #166 http version 2.1.0RC3 ] {
+Extension [ <persistent> extension #167 http version 2.1.0 ] {
 
   - Dependencies {
     Dependency [ raphf (Required) ]

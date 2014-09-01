@@ -24,12 +24,11 @@
 # after 40-json 20-iconv 40-propro 40-raphf
 %global ini_name  50-%{pecl_name}.ini
 %endif
-%global prever     RC3
 %global with_tests %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           %{?scl_prefix}php-pecl-http
 Version:        2.1.0
-Release:        0.6.RC3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -106,17 +105,17 @@ Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}%{?prev
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-http
-Obsoletes:     php53u-pecl-http
-Obsoletes:     php54-pecl-http
-Obsoletes:     php54w-pecl-http
+Obsoletes:     php53-pecl-http  <= %{version}
+Obsoletes:     php53u-pecl-http <= %{version}
+Obsoletes:     php54-pecl-http  <= %{version}
+Obsoletes:     php54w-pecl-http <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-http
-Obsoletes:     php55w-pecl-http
+Obsoletes:     php55u-pecl-http <= %{version}
+Obsoletes:     php55w-pecl-http <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-http
-Obsoletes:     php56w-pecl-http
+Obsoletes:     php56u-pecl-http <= %{version}
+Obsoletes:     php56w-pecl-http <= %{version}
 %endif
 %endif
 
@@ -146,6 +145,8 @@ Note:
 . php-pecl-http  provides API version 2
 
 Documentation : http://devel-m6w6.rhcloud.com/mdref/http
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
 
 
 %package devel
@@ -328,6 +329,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Sep  1 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+
 * Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 2.1.0-0.6.RC3
 - improve SCL build
 
