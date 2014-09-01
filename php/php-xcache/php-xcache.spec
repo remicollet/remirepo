@@ -19,13 +19,16 @@
 #global svnrev       1264
 %global with_zts     0%{?__ztsphp:1}
 
-# TODO : consider splitting pages in another subpackage
-#        to avoid httpd dependency
+%if "%{php_version}" < "5.6"
+%global ini_name  %{ext_name}.ini
+%else
+%global ini_name  40-%{ext_name}.ini
+%endif
 
 Summary:       Fast, stable PHP opcode cacher
 Name:          %{?scl_prefix}php-xcache
 Version:       3.1.0
-Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       BSD
 Group:         Development/Languages
 URL:           http://xcache.lighttpd.net/
@@ -50,19 +53,23 @@ BuildRequires: %{?scl_prefix}php-devel
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-%if "%{php_version}" > "5.4"
 Obsoletes: php53-xcache
 Obsoletes: php53u-xcache
 Obsoletes: php54-xcache
-%endif
+Obsoletes: php54w-xcache
 %if "%{php_version}" > "5.5"
-Obsoletes: php55-xcache
+Obsoletes: php55u-xcache
+Obsoletes: php55w-xcache
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes: php56u-xcache
+Obsoletes: php56w-xcache
 %endif
 %endif
 
-%if 0%{?fedora} < 20
+%if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared object
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
@@ -168,12 +175,12 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 # Install the NTS stuff
 make -C nts install INSTALL_ROOT=%{buildroot}
-install -D -m 644 nts/%{ext_name}.ini %{buildroot}%{php_inidir}/%{ext_name}.ini
+install -D -m 644 nts/%{ext_name}.ini %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with_zts}
 # Install the ZTS stuff
 make -C zts install INSTALL_ROOT=%{buildroot}
-install -D -m 644 zts/%{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ext_name}.ini
+install -D -m 644 zts/%{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Install the admin stuff
@@ -189,7 +196,7 @@ mv %{buildroot}%{_datadir}/xcache/coverager/config.example.php \
    %{buildroot}%{_sysconfdir}/xcache/coverager
 
 install -D -m 644 -p xcache-httpd.conf \
-        %{buildroot}%{_root_sysconfdir}/httpd/conf.d/xcache.conf
+        %{buildroot}%{_root_sysconfdir}/httpd/conf.d/%{?scl_prefix}xcache.conf
 
 
 %check
@@ -228,23 +235,26 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc nts/{AUTHORS,ChangeLog,COPYING,README,THANKS}
-%config(noreplace) %{php_inidir}/%{ext_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{ext_name}.so
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{ext_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{ext_name}.so
 %endif
 
 %files -n %{?scl_prefix}xcache-admin
 %defattr(-,root,root,-)
-%config(noreplace) %{_root_sysconfdir}/httpd/conf.d/xcache.conf
+%config(noreplace) %{_root_sysconfdir}/httpd/conf.d/%{?scl_prefix}xcache.conf
 %{_datadir}/xcache
 # No real configuration files, only sample files
 %{_sysconfdir}/xcache
 
 
 %changelog
+* Mon Sep  1 2014 Remi Collet <rcollet@redhat.com> - 3.1.0-3
+- improve SCL build
+
 * Thu Jan  9 2014 Remi Collet <remi@fedoraproject.org> - 3.1.0-2
 - adapt for SCL
 - drop conflicts with other opcode cache
