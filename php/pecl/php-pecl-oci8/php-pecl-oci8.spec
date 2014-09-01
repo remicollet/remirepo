@@ -6,10 +6,11 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package        php-pecl-oci8}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
+%{?scl:          %scl_package         php-pecl-oci8}
+%{!?scl:         %global _root_libdir %{_libdir}}
+%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
+%{!?__php:       %global __php        %{_bindir}/php}
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name oci8
@@ -30,7 +31,7 @@
 Summary:        Extension for Oracle Database
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        2.0.8
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 License:        PHP
 Group:          Development/Languages
@@ -62,19 +63,19 @@ Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:      php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:      php54-pecl-%{pecl_name}
-Obsoletes:     php54w-pecl-%{pecl_name}
+Obsoletes:      php53-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:      php54-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}
-Obsoletes:     php55w-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name}
-Obsoletes:     php56w-pecl-%{pecl_name}
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -194,11 +195,7 @@ export PHP_DTRACE=yes
 
 peclconf() {
 %configure \
-%ifarch x86_64
-    --with-oci8=shared,instantclient,%{_libdir}/oracle/%{oraclever}/client64/lib,%{oraclever} \
-%else
-    --with-oci8=shared,instantclient,%{_libdir}/oracle/%{oraclever}/client/lib,%{oraclever} \
-%endif
+    --with-oci8=shared,instantclient,%{_root_libdir}/oracle/%{oraclever}/client64/lib,%{oraclever} \
     --with-php-config=$1
 }
 
@@ -298,5 +295,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Sep  1 2014 Remi Collet <remi@fedoraproject.org> - 2.0.8-2
+- fix SCL build
+
 * Fri Aug  1 2014 Remi Collet <remi@fedoraproject.org> - 2.0.8-1
 - initial package, version 2.0.8
