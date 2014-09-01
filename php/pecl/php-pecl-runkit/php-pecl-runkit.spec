@@ -104,10 +104,12 @@ mv NTS/package.xml .
 
 sed -e 's/-Werror//' -i NTS/config.m4
 
+%if "%{php_version}" > "5.6"
 # Quick fix for PHP 5.6
 # https://github.com/zenovich/runkit/issues/69
 sed -e 's/IS_CONSTANT_ARRAY/IS_CONSTANT_AST/' \
     -i NTS/runkit_import.c NTS/runkit_props.c
+%endif
 
 %if %{with_zts}
 # duplicate for ZTS build
