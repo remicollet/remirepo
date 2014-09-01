@@ -6,11 +6,12 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:%scl_package php-pecl-http1}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?php_incldir: %global php_incldir %{_includedir}/php}
-%{!?__php:       %global __php       %{_bindir}/php}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{?scl:          %scl_package         php-pecl-http1}
+%{!?scl:         %global _root_prefix %{_prefix}}
+%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
+%{!?php_incldir: %global php_incldir  %{_includedir}/php}
+%{!?__php:       %global __php        %{_bindir}/php}
+%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
@@ -20,7 +21,7 @@
 # php-pecl-http exists and is version 2
 Name:           %{?scl_prefix}php-pecl-http1
 Version:        1.7.6
-Release:        4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -39,8 +40,19 @@ BuildRequires:  %{?scl_prefix}php-session
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  pcre-devel
 BuildRequires:  zlib-devel
-BuildRequires:  libevent-devel
 BuildRequires:  curl-devel
+%if 0%{?scl:1} && 0%{?fedora} < 15 && 0%{?rhel} < 7 && "%{?scl_vendor}" != "remi"
+# Filter in the SCL collection
+%{?filter_requires_in: %filter_requires_in %{_libdir}/.*\.so}
+# libvent from SCL as not available in system
+BuildRequires: %{?scl_prefix}libevent-devel  >= 2.0.2
+Requires:      %{?scl_prefix}libevent%{_isa} >= 2.0.2
+Requires:      libcurl%{_isa}
+%global        _event_prefix %{_prefix}
+%else
+BuildRequires: libevent-devel >= 2.0.2
+%global        _event_prefix %{_root_prefix}
+%endif
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -132,13 +144,19 @@ cp -pr NTS ZTS
 %build
 cd NTS
 %{_bindir}/phpize
-%configure  --with-php-config=%{_bindir}/php-config
+%configure \
+  --with-http-libcurl-dir=%{_root_prefix} \
+  --with-http-curl-libevent=%{_event_prefix} \
+  --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
 %if %{with_zts}
 cd ../ZTS
 %{_bindir}/zts-phpize
-%configure  --with-php-config=%{_bindir}/zts-php-config
+%configure \
+  --with-http-libcurl-dir=%{_root_prefix} \
+  --with-http-curl-libevent=%{_event_prefix} \
+  --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 %endif
 
@@ -245,6 +263,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Sep  1 2014 Remi Collet <remi@fedoraproject.org> - 1.7.6-5
+- improve SCL build
+
 * Thu Nov  7 2013 Remi Collet <remi@fedoraproject.org> - 1.7.6-4
 - fix dependencies for EPEL-6
 
