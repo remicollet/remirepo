@@ -1,0 +1,27 @@
+
+Drop "Configure Command" from phpinfo as it doesn't
+provide any useful information.
+The available extensions are not related to this command.
+
+--- php-5.4.9/ext/standard/info.c.orig	2012-12-11 10:43:02.450578276 +0100
++++ php-5.4.9/ext/standard/info.c	2012-12-11 10:44:12.530820821 +0100
+@@ -704,9 +704,6 @@
+ #ifdef ARCHITECTURE
+ 		php_info_print_table_row(2, "Architecture", ARCHITECTURE);
+ #endif
+-#ifdef CONFIGURE_COMMAND
+-		php_info_print_table_row(2, "Configure Command", CONFIGURE_COMMAND );
+-#endif
+ 
+ 		if (sapi_module.pretty_name) {
+ 			php_info_print_table_row(2, "Server API", sapi_module.pretty_name );
+--- php-5.4.9/ext/standard/tests/general_functions/phpinfo.phpt.orig	2012-12-11 11:07:26.959156091 +0100
++++ php-5.4.9/ext/standard/tests/general_functions/phpinfo.phpt	2012-12-11 11:07:30.899170970 +0100
+@@ -20,7 +20,6 @@
+ 
+ System => %s
+ Build Date => %s%a
+-Configure Command => %s
+ Server API => Command Line Interface
+ Virtual Directory Support => %s
+ Configuration File (php.ini) Path => %s
