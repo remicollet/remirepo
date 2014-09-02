@@ -15,6 +15,9 @@ case $dep in
 scl56el*)	dep=${dep#scl56el}
 	type=enterprise
 	;;
+scl55el*)	dep=${dep#scl55el}
+	type=enterprise
+	;;
 scl54el*)	dep=${dep#scl54el}
 	type=enterprise
 	;;
@@ -25,6 +28,9 @@ fc*)	dep=${dep#fc}
 	type=fedora
 	;;
 scl56fc*)	dep=${dep#scl56fc}
+	type=fedora
+	;;
+scl55fc*)	dep=${dep#scl55fc}
 	type=fedora
 	;;
 scl54fc*)	dep=${dep#scl54fc}
@@ -204,6 +210,16 @@ elif [ $1 = scl54 ]; then
 	for i in $(seq 19 21)
 	do
 		getOneMock scl54fc${i}x $opt
+	done
+	for i in $(seq 6 7)
+	do
+		getOneMock scl54el${i}x $opt
+	done
+
+elif [ $1 = scl55 ]; then
+	for i in 21
+	do
+		getOneMock scl55fc${i}x $opt
 	done
 	for i in $(seq 6 7)
 	do
