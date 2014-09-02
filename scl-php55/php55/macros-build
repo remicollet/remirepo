@@ -1,0 +1,16 @@
+%scl_package_override() %{expand:
+  %{?@SCL@___pear:%global __pear %@SCL@___pear}
+  %{?@SCL@___pecl:%global __pecl %@SCL@___pecl}
+  %{?@SCL@___php:%global  __php  %@SCL@___php}
+  %global pear_metadir %@SCL@_pear_metadir
+  %global pear_xmldir  %@SCL@_pear_xmldir
+  %global pecl_xmldir  %@SCL@_pecl_xmldir
+  %global php_core_api %@SCL@_php_core_api
+  %global php_zend_api %@SCL@_php_zend_api
+  %global php_pdo_api  %@SCL@_php_pdo_api
+  %global php_version  %@SCL@_php_version
+  %global php_extdir   %@SCL@_php_extdir
+  %global php_inidir   %@SCL@_php_inidir
+  %global php_incldir  %@SCL@_php_incldir
+}
+

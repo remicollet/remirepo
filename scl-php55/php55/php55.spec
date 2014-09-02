@@ -1,5 +1,5 @@
 %global scl_name_base    php
-%global scl_name_version 56
+%global scl_name_version 55
 %global scl              %{scl_name_base}%{scl_name_version}
 %global macrosdir        %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_root_sysconfdir}/rpm; echo $d)
 %scl_package %scl
@@ -7,7 +7,7 @@
 # do not produce empty debuginfo package
 %global debug_package %{nil}
 
-Summary:       Package that installs PHP 5.6
+Summary:       Package that installs PHP 5.5
 Name:          %scl_name
 Version:       1.0
 Release:       1%{?dist}
@@ -143,7 +143,7 @@ fi
 
 
 %changelog
-* Sun Aug 24 2014 Remi Collet <rcollet@redhat.com> 1.0-1
+* Tue Sep  2 2014 Remi Collet <rcollet@redhat.com> 1.0-1
 - initial packaging from php55 from rhscl 1.1
 - install macro in /usr/lib/rpm/macros.d
 - each package requires runtime (for license)

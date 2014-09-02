@@ -145,3 +145,32 @@ fi
 %changelog
 * Sun Aug 31 2014 Remi Collet <rcollet@redhat.com> 1.0-1
 - initial packaging from php55 from rhscl 1.1
+- install macro in /usr/lib/rpm/macros.d
+- each package requires runtime (for license)
+
+* Mon Mar 31 2014 Honza Horak <hhorak@redhat.com> - 1.1-7
+- Fix path typo in README
+  Related: #1061455
+
+* Mon Mar 24 2014 Remi Collet <rcollet@redhat.com> 1.1-6
+- own locale and man directories, #1074337
+
+* Wed Feb 12 2014 Remi Collet <rcollet@redhat.com> 1.1-5
+- avoid empty debuginfo subpackage
+- add LICENSE, README and php55.7 man page #1061455
+- add scldevel subpackage #1063357
+
+* Mon Jan 20 2014 Remi Collet <rcollet@redhat.com> 1.1-4
+- rebuild with latest scl-utils #1054731
+
+* Tue Nov 19 2013 Remi Collet <rcollet@redhat.com> 1.1-2
+- fix scl_package_override
+
+* Tue Nov 19 2013 Remi Collet <rcollet@redhat.com> 1.1-1
+- build for RHSCL 1.1
+
+* Tue Sep 17 2013 Remi Collet <rcollet@redhat.com> 1-1.5
+- add macros.php55-build for scl_package_override
+
+* Fri Aug  2 2013 Remi Collet <rcollet@redhat.com> 1-1
+- initial packaging
