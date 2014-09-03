@@ -62,11 +62,7 @@
 %global with_mcrypt    1
 %global with_mssql     1
 %global with_tidy      1
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 %global with_sqlite3   1
-%else
-%global with_sqlite3   0
-%endif
 %global with_enchant   1
 %global with_recode    1
 %global with_t1lib     1
