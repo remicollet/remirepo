@@ -105,23 +105,13 @@
 %global  with_vpx  1
 %endif
 
-# systemd to manage the service
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+# systemd to manage the service, Fedora >= 15
+# systemd with notify mode, Fedora >= 16
+# systemd with additional service config
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %global with_systemd 1
 %else
 %global with_systemd 0
-%endif
-# systemd with notify mode
-%if 0%{?fedora} >= 16 || 0%{?rhel} >= 7
-%global with_systemdfull 1
-%else
-%global with_systemdfull 0
-%endif
-# systemd with additional service config
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
-%global with_systemdmax 1
-%else
-%global with_systemdmax 0
 %endif
 # httpd 2.4.10 with httpd-filesystem and sethandler support
 %if 0%{?fedora} >= 21
@@ -290,10 +280,8 @@ Summary: PHP FastCGI Process Manager
 License: PHP and Zend and BSD
 Requires(pre): %{_root_sbindir}/useradd
 Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
-%if %{with_systemdfull}
-BuildRequires: systemd-devel
-%endif
 %if %{with_systemd}
+BuildRequires: systemd-devel
 BuildRequires: systemd-units
 Requires: systemd-units
 Requires(post): systemd-units
@@ -1205,7 +1193,7 @@ popd
 # Build php-fpm
 pushd build-fpm
 build --enable-fpm \
-%if %{with_systemdfull}
+%if %{with_systemd}
       --with-fpm-systemd \
 %endif
       --libdir=%{_libdir}/php \
@@ -1317,10 +1305,6 @@ mv $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf.default .
 # install -m 755 -d $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d
 # install -m 644 php-fpm.tmpfiles $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d/php-fpm.conf
 # install systemd unit files and scripts for handling server startup
-%if %{with_systemdmax}
-# this folder requires systemd >= 204
-install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/systemd/system/%{?scl_prefix}php-fpm.service.d
-%endif
 %if %{with_systemd}
 install -m 755 -d $RPM_BUILD_ROOT%{_unitdir}
 install -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{_unitdir}/%{?scl_prefix}php-fpm.service
@@ -1328,6 +1312,8 @@ sed -e 's:/run:%{_localstatedir}/run:' \
     -e 's:/etc:%{_sysconfdir}:' \
     -e 's:/usr/sbin:%{_sbindir}:' \
     -i $RPM_BUILD_ROOT%{_unitdir}/%{?scl_prefix}php-fpm.service
+# this folder requires systemd >= 204
+install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/systemd/system/%{?scl_prefix}php-fpm.service.d
 %else
 # Service
 install -m 755 -d $RPM_BUILD_ROOT%{_root_initddir}
@@ -1646,9 +1632,7 @@ fi
 # %{_prefix}/lib/tmpfiles.d/php-fpm.conf
 %if %{with_systemd}
 %{_unitdir}/%{?scl_prefix}php-fpm.service
-%if %{with_systemdmax}
 %dir %{_sysconfdir}/systemd/system/%{?scl_prefix}php-fpm.service.d
-%endif
 %else
 %{_root_initddir}/%{?scl_prefix}php-fpm
 %endif
