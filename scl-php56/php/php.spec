@@ -70,11 +70,7 @@
 %global with_mcrypt    1
 %global with_mssql     1
 %global with_tidy      1
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 %global with_sqlite3   1
-%else
-%global with_sqlite3   0
-%endif
 %global with_enchant   1
 %global with_recode    1
 %global with_t1lib     1
@@ -686,9 +682,9 @@ BuildRequires: libjpeg-devel, libpng-devel, freetype-devel
 BuildRequires: libXpm-devel
 %if %{with_t1lib}
 BuildRequires: t1lib-devel
+%endif
 %if %{with_vpx}
 BuildRequires: libvpx-devel
-%endif
 %endif
 %if %{with_libgd}
 BuildRequires: gd-devel >= 2.1.0
