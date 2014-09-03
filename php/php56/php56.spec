@@ -129,7 +129,7 @@ Version: 5.6.0
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.22.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}.1
+Release: 1%{?dist}.2
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -737,6 +737,9 @@ Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: t1lib-devel
 %if %{with_libgd}
 BuildRequires: gd-devel >= 2.1.0
+%if 0%{?fedora} <= 19 && 0%{?rhel} <= 7
+Requires: gd-last%{?_isa} >= 2.1.0-3
+%endif
 %else
 # Required to build the bundled GD library
 BuildRequires: libjpeg-devel
@@ -1916,6 +1919,9 @@ fi
 
 
 %changelog
+* Wed Sep  3 2014 Remi Collet <remi@fedoraproject.org> 5.6.0-1.2
+- ensure gd-last 2.1.0-3, with libvpx support, is used
+
 * Fri Aug 29 2014 Remi Collet <remi@fedoraproject.org> 5.6.0-1.1
 - enable libvpx on EL 6 (with libvpx 1.3.0)
 
