@@ -3,4 +3,4 @@ NAME := $(shell basename $(SRCDIR))
 include ../../common/Makefile
 
 srpm:
-	rpmbuild $(RPMDEFINES) $(SRCDEFINES) --define 'scl php54' -bs $(NAME).spec
+	rpmbuild $(RPMDEFINES) $(SRCDEFINES) --define 'scl php55' -bs $(NAME).spec

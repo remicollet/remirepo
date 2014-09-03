@@ -223,7 +223,7 @@ elif [ $1 = scl55 ]; then
 	done
 	for i in $(seq 6 7)
 	do
-		getOneMock scl54el${i}x $opt
+		getOneMock scl55el${i}x $opt
 	done
 
 elif [ $1 = scl56 ]; then
