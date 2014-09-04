@@ -1,8 +1,12 @@
+%{?scl:%scl_package php-pear}
+%{!?scl:%global pkg_name %{name}}
+%{!?scl:%global _root_sysconfdir %{_sysconfdir}}
+
 %global peardir %{_datadir}/pear
 %global metadir %{_localstatedir}/lib/pear
 
 %global getoptver 1.3.1
-%global arctarver 1.3.12
+%global arctarver 1.3.13
 # https://pear.php.net/bugs/bug.php?id=19367
 # Structures_Graph 1.0.4 - incorrect FSF address
 %global structver 1.0.4
@@ -12,14 +16,14 @@
 # Can't be run in mock / koji because PEAR is the first package
 %global with_tests       %{?_with_tests:1}%{!?_with_tests:0}
 
-%global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
+%global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_root_sysconfdir}/rpm; echo $d)
 
 #global pearprever dev1
 
 Summary: PHP Extension and Application Repository framework
-Name: php-pear
+Name: %{?scl_prefix}php-pear
 Version: 1.9.5
-Release: 2%{?dist}
+Release: 3%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util are BSD
 # Console_Getopt is PHP
@@ -47,7 +51,6 @@ Source32: peardev.1
 # https://github.com/pear/pear-core/pull/16
 Source33: pear.conf.5
 
-
 # From RHEL: ignore REST cache creation failures as non-root user (#747361)
 # TODO See https://github.com/pear/pear-core/commit/dfef86e05211d2abc7870209d69064d448ef53b3#PEAR/REST.php
 Patch0: php-pear-1.9.4-restcache.patch
@@ -56,47 +59,57 @@ Patch1: php-pear-metadata.patch
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: php-cli >= 5.1.0-1, php-xml, gnupg
+BuildRequires: %{?scl_prefix}php-cli >= 5.1.0-1
+BuildRequires: %{?scl_prefix}php-xml
+BuildRequires: gnupg
 %if %{with_tests}
 BuildRequires:  %{_bindir}/phpunit
 %endif
 
-Provides: php-pear(Console_Getopt) = %{getoptver}
-Provides: php-pear(Archive_Tar) = %{arctarver}
-Provides: php-pear(PEAR) = %{version}
-Provides: php-pear(Structures_Graph) = %{structver}
-Provides: php-pear(XML_Util) = %{xmlutil}
-Obsoletes: php-pear-XML-Util < %{xmlutil}
-Provides:  php-pear-XML-Util = %{xmlutil}
+Provides:  %{?scl_prefix}php-pear(Console_Getopt) = %{getoptver}
+Provides:  %{?scl_prefix}php-pear(Archive_Tar) = %{arctarver}
+Provides:  %{?scl_prefix}php-pear(PEAR) = %{version}
+Provides:  %{?scl_prefix}php-pear(Structures_Graph) = %{structver}
+Provides:  %{?scl_prefix}php-pear(XML_Util) = %{xmlutil}
 
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # From other third party
-Obsoletes: php53-pear
-Obsoletes: php53u-pear
-Obsoletes: php54-pear
+Obsoletes: php53-pear  <= %{version}
+Obsoletes: php53u-pear <= %{version}
+Obsoletes: php54-pear  <= %{version}
+Obsoletes: php54w-pear <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes: php55u-pear
+Obsoletes: php55u-pear <= %{version}
+Obsoletes: php55w-pear <= %{version}
 %endif
-%if "%{php_version}" > "5.5"
-Obsoletes: php56u-pear
+%if "%{php_version}" > "5.6"
+Obsoletes: php56u-pear <= %{version}
+Obsoletes: php56w-pear <= %{version}
 %endif
 %endif
 
-Requires:  php-cli
+Requires:  %{?scl_prefix}php-cli
 # phpci detected extension
 # PEAR (date, spl always builtin):
-Requires:  php-ftp
-Requires:  php-pcre
-Requires:  php-posix
-Requires:  php-tokenizer
-Requires:  php-xml
-Requires:  php-zlib
+Requires:  %{?scl_prefix}php-ftp
+Requires:  %{?scl_prefix}php-pcre
+Requires:  %{?scl_prefix}php-posix
+Requires:  %{?scl_prefix}php-tokenizer
+Requires:  %{?scl_prefix}php-xml
+Requires:  %{?scl_prefix}php-zlib
 # Console_Getopt: pcre
 # Archive_Tar: pcre, posix, zlib
-Requires:  php-bz2
+Requires:  %{?scl_prefix}php-bz2
 # Structures_Graph: none
 # XML_Util: pcre
 # optional: overload and xdebug
+%if 0%{?fedora} >= 21 && 0%{!?scl:1}
+%global with_html_dir 0
+# for /var/www/html ownership
+Requires: httpd-filesystem
+%else
+%global with_html_dir 1
+%endif
 
 
 %description
@@ -123,9 +136,10 @@ cp %{SOURCE1} %{SOURCE30} %{SOURCE31} %{SOURCE32} %{SOURCE33} .
 # apply patches on used PEAR during install
 %patch1 -p0 -b .metadata
 
-sed -e 's:@BINDIR@:%{_bindir}:' \
-    -e 's:@LIBDIR@:%{_localstatedir}/lib:' \
-    %{SOURCE13} > macros.pear
+sed -e 's/@SCL@/%{?scl:%{scl}_}/' \
+    -e 's:@VARDIR@:%{_localstatedir}:' \
+    -e 's:@BINDIR@:%{_bindir}:' \
+    %{SOURCE13} | tee macros.pear
 
 
 %build
@@ -137,7 +151,7 @@ rm -rf $RPM_BUILD_ROOT
 
 export PHP_PEAR_SYSCONF_DIR=%{_sysconfdir}
 export PHP_PEAR_SIG_KEYDIR=%{_sysconfdir}/pearkeys
-export PHP_PEAR_SIG_BIN=%{_bindir}/gpg
+export PHP_PEAR_SIG_BIN=%{_root_bindir}/gpg
 export PHP_PEAR_INSTALL_DIR=%{peardir}
 
 # 1.4.11 tries to write to the cache directory during installation
@@ -155,6 +169,8 @@ install -d $RPM_BUILD_ROOT%{peardir} \
            $RPM_BUILD_ROOT%{_sysconfdir}/pear
 
 export INSTALL_ROOT=$RPM_BUILD_ROOT
+
+%{_bindir}/php --version
 
 %{_bindir}/php -dmemory_limit=64M -dshort_open_tag=0 -dsafe_mode=0 \
          -d 'error_reporting=E_ALL&~E_DEPRECATED' -ddetect_unicode=0 \
@@ -174,6 +190,11 @@ export INSTALL_ROOT=$RPM_BUILD_ROOT
 install -m 755 %{SOURCE10} $RPM_BUILD_ROOT%{_bindir}/pear
 install -m 755 %{SOURCE11} $RPM_BUILD_ROOT%{_bindir}/pecl
 install -m 755 %{SOURCE12} $RPM_BUILD_ROOT%{_bindir}/peardev
+# Fix path in SCL
+for exe in pear pecl peardev; do
+    sed -e 's:/usr:%{_prefix}:' \
+        -i $RPM_BUILD_ROOT%{_bindir}/$exe
+done
 
 # Sanitize the pear.conf
 %{_bindir}/php %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf ext_dir >new-pear.conf
@@ -183,7 +204,7 @@ install -m 755 %{SOURCE12} $RPM_BUILD_ROOT%{_bindir}/peardev
 
 
 install -m 644 -D macros.pear \
-           $RPM_BUILD_ROOT%{macrosdir}/macros.pear
+           $RPM_BUILD_ROOT%{macrosdir}/macros.%{?scl_prefix}pear
 
 # apply patches on installed PEAR tree
 pushd $RPM_BUILD_ROOT%{peardir} 
@@ -204,6 +225,12 @@ install -d $RPM_BUILD_ROOT%{_mandir}/man1
 install -p -m 644 pear.1 pecl.1 peardev.1 $RPM_BUILD_ROOT%{_mandir}/man1/
 install -d $RPM_BUILD_ROOT%{_mandir}/man5
 install -p -m 644 pear.conf.5 $RPM_BUILD_ROOT%{_mandir}/man5/
+
+# make the cli commands available in standard root for SCL build
+%if 0%{?scl:1}
+install -m 755 -d $RPM_BUILD_ROOT%{_root_bindir}
+ln -s %{_bindir}/pear      $RPM_BUILD_ROOT%{_root_bindir}/%{scl_prefix}pear
+%endif
 
 
 %check
@@ -292,28 +319,24 @@ if [ "$current" != "%{_datadir}/tests/pecl" ]; then
 fi
 
 
-%triggerpostun -- php-pear-XML-Util
-# re-register extension unregistered during postun of obsoleted php-pear-XML-Util
-%{_bindir}/pear install --nodeps --soft --force --register-only \
-    %{_localstatedir}/lib/pear/pkgxml/XML_Util.xml >/dev/null || :
-
-
 %files
 %defattr(-,root,root,-)
 %{peardir}
 %dir %{metadir}
 %{metadir}/.channels
 %verify(not mtime size md5) %{metadir}/.depdb
-%verify(not mtime)%{metadir}/.depdblock
-%verify(not mtime size md5)%{metadir}/.filemap
-%verify(not mtime)%{metadir}/.lock
+%verify(not mtime)          %{metadir}/.depdblock
+%verify(not mtime size md5) %{metadir}/.filemap
+%verify(not mtime)          %{metadir}/.lock
 %{metadir}/.registry
 %{metadir}/pkgxml
 %{_bindir}/*
 %config(noreplace) %{_sysconfdir}/pear.conf
-%{macrosdir}/macros.pear
+%{macrosdir}/macros.%{?scl_prefix}pear
 %dir %{_localstatedir}/cache/php-pear
+%if %{with_html_dir}
 %dir %{_localstatedir}/www/html
+%endif
 %dir %{_sysconfdir}/pear
 %doc README* LICENSE*
 %dir %{_docdir}/pear
@@ -323,6 +346,10 @@ fi
 %dir %{_datadir}/tests/pecl
 %{_datadir}/tests/pear
 %{_datadir}/pear-data
+%if 0%{?scl:1}
+%dir %{_localstatedir}/www
+%{_root_bindir}/%{scl_prefix}pear
+%endif
 %{_mandir}/man1/pear.1*
 %{_mandir}/man1/pecl.1*
 %{_mandir}/man1/peardev.1*
@@ -330,6 +357,11 @@ fi
 
 
 %changelog
+* Thu Sep  4 2014 Remi Collet <remi@fedoraproject.org> 1:1.9.5-3
+- update Archive_Tar to 1.3.13
+- merge with SCL spec file
+- requires httpd-filesystem for /var/www/html ownership (F21+)
+
 * Mon Aug  4 2014 Remi Collet <remi@fedoraproject.org> 1:1.9.5-2
 - update Archive_Tar to 1.3.12
 

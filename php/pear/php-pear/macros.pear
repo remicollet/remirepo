@@ -1,8 +1,8 @@
 #
 # Define full path to pear/pecl commands to be used in scriptlets:
 #
-%__pear @BINDIR@/pear
-%__pecl @BINDIR@/pecl
+%@SCL@__pear @BINDIR@/pear
+%@SCL@__pecl @BINDIR@/pecl
 
 #
 # Define PEAR directories used in php-pear-* spec files
@@ -13,7 +13,7 @@
 %pear_datadir %(%{__pear} config-get data_dir 2> /dev/null || echo undefined)
 %pear_cfgdir  %(%{__pear} config-get cfg_dir  2> /dev/null || echo undefined)
 %pear_wwwdir  %(%{__pear} config-get www_dir  2> /dev/null || echo undefined)
-%pear_metadir %(%{__pear} config-get metadata_dir 2> /dev/null || echo undefined)
+%@SCL@pear_metadir %(%{__pear} config-get metadata_dir 2> /dev/null || echo undefined)
 
 #
 # Define PECL directories used in php-pecl-* spec files:
@@ -26,8 +26,8 @@
 #
 # Define XML directories to store package registration information:
 #
-%pear_xmldir @LIBDIR@/pear/pkgxml
-%pecl_xmldir @LIBDIR@/pear/pkgxml
+%@SCL@pear_xmldir @VARDIR@/lib/pear/pkgxml
+%@SCL@pecl_xmldir @VARDIR@/lib/pear/pkgxml
 
 #
 # Define macros to be used in scriplets for php-pecl-* spec files:
