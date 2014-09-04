@@ -126,12 +126,13 @@ done | tee ../%{pear_name}.lang
 
 
 %check
+export LANG=fr_FR.UTF8
+
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
 phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
+    -d date.timezone=Europe/Paris \
     .
 
 
