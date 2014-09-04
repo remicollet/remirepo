@@ -1,6 +1,6 @@
 --- a/src/Makefile	2013-04-30 15:15:56.000000000 +0200
 +++ b/src/Makefile	2013-06-19 12:58:12.345612310 +0200
-@@ -79,9 +79,8 @@ ifeq ($(MALLOC),tcmalloc_minimal)
+@@ -89,9 +89,8 @@ ifeq ($(MALLOC),tcmalloc_minimal)
  endif
  
  ifeq ($(MALLOC),jemalloc)

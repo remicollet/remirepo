@@ -1,15 +1,15 @@
---- a/deps/Makefile	
-+++ a/deps/Makefile	
+--- a/deps/Makefile.pic	2014-09-04 20:14:53.780910375 +0200
++++ a/deps/Makefile	2014-09-04 20:15:49.278133046 +0200
 @@ -58,7 +58,7 @@
  	LUA_CFLAGS= -D__C99FEATURES__=1
  endif
- 
+
 -LUA_CFLAGS+= -O2 -Wall -DLUA_ANSI $(CFLAGS)
 +LUA_CFLAGS+= -O2 -Wall -fPIC -DLUA_ANSI $(CFLAGS)
  LUA_LDFLAGS+= $(LDFLAGS)
- 
- lua: .make-prerequisites
---- a/deps/linenoise/Makefile	
+ # lua's Makefile defines AR="ar rcu", which is unusual, and makes it more
+ # challenging to cross-compile lua (and redis).  These defines make it easier
+--- a/deps/linenoise/Makefile
 +++ a/deps/linenoise/Makefile	
 @@ -2,7 +2,7 @@ STD=
  WARN= -Wall
