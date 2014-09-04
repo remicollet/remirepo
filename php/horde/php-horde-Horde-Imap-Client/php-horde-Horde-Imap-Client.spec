@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.24.2
+Version:        2.25.0
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -38,6 +38,7 @@ Requires(postun): %{__pear}
 # From package.xml, required
 Requires:       php(language) >= 5.3.0
 Requires:       php-hash
+Requires:       php-intl
 Requires:       php-json
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
@@ -159,6 +160,10 @@ fi
 
 
 %changelog
+* Thu Sep 04 2014 Remi Collet <remi@fedoraproject.org> - 2.25.0-1
+- Update to 2.25.0
+- add dependency on php-intl
+
 * Tue Aug 12 2014 Remi Collet <remi@fedoraproject.org> - 2.24.2-1
 - Update to 2.24.2
 
