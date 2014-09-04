@@ -338,7 +338,9 @@ fi
 %dir %{_localstatedir}/www/html
 %endif
 %dir %{_sysconfdir}/pear
-%doc README* LICENSE*
+%{!?_licensedir:%global license %%doc}
+%license LICENSE*
+%doc README*
 %dir %{_docdir}/pear
 %doc %{_docdir}/pear/*
 %dir %{_docdir}/pecl
