@@ -23,7 +23,7 @@
 
 Name:           php-phpunit-PHP-CodeCoverage
 Version:        2.0.11
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        PHP code coverage information
 
 Group:          Development/Libraries
@@ -40,6 +40,7 @@ BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
 BuildRequires:  php-pear-PHPUnit >= 4.1
+BuildRequires:  php-pecl-xdebug  >= 2.2.1
 %endif
 
 # From composer.json, require
@@ -135,6 +136,9 @@ fi
 
 
 %changelog
+* Thu Sep  4 2014 Remi Collet <remi@fedoraproject.org> - 2.0.11-2
+- add BR on php-pecl-xdebug (thanks to Koschei)
+
 * Sun Aug 31 2014 Remi Collet <remi@fedoraproject.org> - 2.0.11-1
 - update to 2.0.11
 - raise dependency on phpunit/php-token-stream ~1.3
