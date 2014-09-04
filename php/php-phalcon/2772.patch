@@ -1,0 +1,322 @@
+From f3e58e7ff4746a0607aae182c46578ac349aa73f Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 4 Sep 2014 13:44:31 +0200
+Subject: [PATCH] Fix segfault with PHP 5.6 and interned strings
+
+Signed-off-by: Remi Collet <fedora@famillecollet.com>
+---
+ ext/kernel/concat.c       | 52 +++++++++++++++++++++++------------------------
+ ext/kernel/main.h         |  4 ++++
+ ext/kernel/operators.c    |  4 ++--
+ ext/tests/issue-1277.phpt |  6 +++---
+ ext/tests/issue-1455.phpt |  2 +-
+ 5 files changed, 36 insertions(+), 32 deletions(-)
+
+diff --git a/ext/kernel/concat.c b/ext/kernel/concat.c
+index 5ea4c20..6fa82ab 100644
+--- a/ext/kernel/concat.c
++++ b/ext/kernel/concat.c
+@@ -47,7 +47,7 @@ void phalcon_concat_sv(zval **result, const char *op1, zend_uint op1_len, zval *
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -94,7 +94,7 @@ void phalcon_concat_svs(zval **result, const char *op1, zend_uint op1_len, zval
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -149,7 +149,7 @@ void phalcon_concat_svsv(zval **result, const char *op1, zend_uint op1_len, zval
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -209,7 +209,7 @@ void phalcon_concat_svsvs(zval **result, const char *op1, zend_uint op1_len, zva
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -277,7 +277,7 @@ void phalcon_concat_svsvsv(zval **result, const char *op1, zend_uint op1_len, zv
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -350,7 +350,7 @@ void phalcon_concat_svsvsvs(zval **result, const char *op1, zend_uint op1_len, z
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -431,7 +431,7 @@ void phalcon_concat_svsvsvsvs(zval **result, const char *op1, zend_uint op1_len,
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -512,7 +512,7 @@ void phalcon_concat_svsvv(zval **result, const char *op1, zend_uint op1_len, zva
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -577,7 +577,7 @@ void phalcon_concat_svv(zval **result, const char *op1, zend_uint op1_len, zval
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -636,7 +636,7 @@ void phalcon_concat_svvs(zval **result, const char *op1, zend_uint op1_len, zval
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -689,7 +689,7 @@ void phalcon_concat_vs(zval **result, zval *op1, const char *op2, zend_uint op2_
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -743,7 +743,7 @@ void phalcon_concat_vsv(zval **result, zval *op1, const char *op2, zend_uint op2
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -802,7 +802,7 @@ void phalcon_concat_vsvs(zval **result, zval *op1, const char *op2, zend_uint op
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -869,7 +869,7 @@ void phalcon_concat_vsvsv(zval **result, zval *op1, const char *op2, zend_uint o
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -941,7 +941,7 @@ void phalcon_concat_vsvsvs(zval **result, zval *op1, const char *op2, zend_uint
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -1021,7 +1021,7 @@ void phalcon_concat_vsvsvsv(zval **result, zval *op1, const char *op2, zend_uint
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -1099,7 +1099,7 @@ void phalcon_concat_vsvv(zval **result, zval *op1, const char *op2, zend_uint op
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -1177,7 +1177,7 @@ void phalcon_concat_vsvvv(zval **result, zval *op1, const char *op2, zend_uint o
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -1246,7 +1246,7 @@ void phalcon_concat_vv(zval **result, zval *op1, zval *op2, int self_var TSRMLS_
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -1304,7 +1304,7 @@ void phalcon_concat_vvs(zval **result, zval *op1, zval *op2, const char *op3, ze
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -1370,7 +1370,7 @@ void phalcon_concat_vvsv(zval **result, zval *op1, zval *op2, const char *op3, z
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -1441,7 +1441,7 @@ void phalcon_concat_vvv(zval **result, zval *op1, zval *op2, zval *op3, int self
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -1518,7 +1518,7 @@ void phalcon_concat_vvvsv(zval **result, zval *op1, zval *op2, zval *op3, const
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -1601,7 +1601,7 @@ void phalcon_concat_vvvv(zval **result, zval *op1, zval *op2, zval *op3, zval *o
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -1697,7 +1697,7 @@ void phalcon_concat_vvvvsvv(zval **result, zval *op1, zval *op2, zval *op3, zval
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+@@ -1797,7 +1797,7 @@ void phalcon_concat_vvvvv(zval **result, zval *op1, zval *op2, zval *op3, zval *
+ 
+ 		offset = Z_STRLEN_PP(result);
+ 		length += offset;
+-		Z_STRVAL_PP(result) = (char *) erealloc(Z_STRVAL_PP(result), length + 1);
++		Z_STRVAL_PP(result) = (char *) str_erealloc(Z_STRVAL_PP(result), length + 1);
+ 
+ 	} else {
+ 		Z_STRVAL_PP(result) = (char *) emalloc(length + 1);
+diff --git a/ext/kernel/main.h b/ext/kernel/main.h
+index 963987c..9fbf2a3 100644
+--- a/ext/kernel/main.h
++++ b/ext/kernel/main.h
+@@ -45,6 +45,10 @@
+ #define ISL(str)  (phalcon_interned_##str), (sizeof(#str)-1)
+ #define ISS(str)  (phalcon_interned_##str), (sizeof(#str))
+ 
++/* str_erealloc is PHP 5.6 only */
++#ifndef str_erealloc
++#define str_erealloc erealloc
++#endif
+ 
+ /* Startup functions */
+ void php_phalcon_init_globals(zend_phalcon_globals *phalcon_globals TSRMLS_DC);
+diff --git a/ext/kernel/operators.c b/ext/kernel/operators.c
+index 7d37d76..0b46284 100644
+--- a/ext/kernel/operators.c
++++ b/ext/kernel/operators.c
+@@ -82,7 +82,7 @@ void phalcon_concat_self(zval **left, zval *right TSRMLS_DC){
+ 	}
+ 
+ 	length = Z_STRLEN_PP(left) + Z_STRLEN_P(right);
+-	Z_STRVAL_PP(left) = erealloc(Z_STRVAL_PP(left), length + 1);
++	Z_STRVAL_PP(left) = str_erealloc(Z_STRVAL_PP(left), length + 1);
+ 
+ 	memcpy(Z_STRVAL_PP(left) + Z_STRLEN_PP(left), Z_STRVAL_P(right), Z_STRLEN_P(right));
+ 	Z_STRVAL_PP(left)[length] = 0;
+@@ -126,7 +126,7 @@ void phalcon_concat_self_str(zval **left, const char *right, int right_length TS
+ 	}
+ 
+ 	length = Z_STRLEN_PP(left) + right_length;
+-	Z_STRVAL_PP(left) = erealloc(Z_STRVAL_PP(left), length + 1);
++	Z_STRVAL_PP(left) = str_erealloc(Z_STRVAL_PP(left), length + 1);
+ 
+ 	memcpy(Z_STRVAL_PP(left) + Z_STRLEN_PP(left), right, right_length);
+ 	Z_STRVAL_PP(left)[length] = 0;
+diff --git a/ext/tests/issue-1277.phpt b/ext/tests/issue-1277.phpt
+index d2a530b..506c9a3 100644
+--- a/ext/tests/issue-1277.phpt
++++ b/ext/tests/issue-1277.phpt
+@@ -10,12 +10,12 @@ $c2 = clone $c1;
+ var_dump($c1);
+ var_dump($c2);
+ ?>
+---EXPECT--
+-object(Phalcon\Config)#1 (1) {
++--EXPECTF--
++object(Phalcon\Config)#%d (1) {
+   ["test"]=>
+   int(1)
+ }
+-object(Phalcon\Config)#2 (1) {
++object(Phalcon\Config)#%d (1) {
+   ["test"]=>
+   int(1)
+ }
+diff --git a/ext/tests/issue-1455.phpt b/ext/tests/issue-1455.phpt
+index f29f047..d82bc85 100644
+--- a/ext/tests/issue-1455.phpt
++++ b/ext/tests/issue-1455.phpt
+@@ -5,7 +5,7 @@ report_memleaks=1
+ --SKIPIF--
+ <?php
+ include('skipif.inc');
+-if (!function_exists('apc_store')) {
++if (!class_exists('APCIterator', false)) {
+ 	die('skip APC or APCu is required');
+ }
+ ?>
