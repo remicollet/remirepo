@@ -101,10 +101,12 @@
 %global db_devel  libdb-devel
 %endif
 
+%global rcver RC1
+
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.4.32
-Release: 1%{?dist}
+Version: 5.4.33
+Release: 0.1.RC1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1532,6 +1534,10 @@ fi
 
 
 %changelog
+* Fri Sep  5 2014 Remi Collet <rcollet@redhat.com> - 5.4.33-0.1.RC1
+- update to 5.4.33RC1
+- add system libraries to default include_path
+
 * Sun Aug 31 2014 Remi Collet <rcollet@redhat.com> - 5.4.32-1
 - update to 5.4.32
 - cleanup, merge with spec from remi repository
