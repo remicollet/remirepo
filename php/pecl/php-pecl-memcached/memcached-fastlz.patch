@@ -1,7 +1,18 @@
-diff -up ./config.m4.old ./config.m4
---- ./config.m4.old	2014-04-01 12:23:39.000000000 +0200
-+++ ./config.m4	2014-09-05 19:33:38.000000000 +0200
-@@ -26,6 +26,9 @@ PHP_ARG_ENABLE(memcached-sasl, whether t
+From ada08ebfe056514f9e67d84ec7690a8bb5987fc1 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Fri, 5 Sep 2014 19:42:54 +0200
+Subject: [PATCH] allow to use system FastLZ
+
+---
+ config.m4       | 21 ++++++++++++++++++---
+ php_memcached.c |  5 ++++-
+ 2 files changed, 22 insertions(+), 4 deletions(-)
+
+diff --git a/config.m4 b/config.m4
+index b484f29..94a0e7d 100644
+--- a/config.m4
++++ b/config.m4
+@@ -26,6 +26,9 @@ PHP_ARG_ENABLE(memcached-sasl, whether to enable memcached sasl support,
  PHP_ARG_ENABLE(memcached-protocol, whether to enable memcached protocol support,
  [  --enable-memcached-protocol          Enable memcached protocoll support], no, no)
  
@@ -43,9 +54,10 @@ diff -up ./config.m4.old ./config.m4
      ifdef([PHP_ADD_EXTENSION_DEP],
      [
        PHP_ADD_EXTENSION_DEP(memcached, spl, true)
-diff -up ./php_memcached.c.old ./php_memcached.c
---- ./php_memcached.c.old	2014-09-05 19:17:42.000000000 +0200
-+++ ./php_memcached.c	2014-09-05 19:17:49.000000000 +0200
+diff --git a/php_memcached.c b/php_memcached.c
+index b21ecd4..2bd39d1 100644
+--- a/php_memcached.c
++++ b/php_memcached.c
 @@ -30,8 +30,11 @@
  #ifdef HAVE_MEMCACHED_SESSION
  # include "php_memcached_session.h"

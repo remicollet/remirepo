@@ -38,6 +38,7 @@ URL:          http://pecl.php.net/package/%{pecl_name}
 
 Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
+# https://github.com/php-memcached-dev/php-memcached/pull/151
 Patch0:       %{pecl_name}-fastlz.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
