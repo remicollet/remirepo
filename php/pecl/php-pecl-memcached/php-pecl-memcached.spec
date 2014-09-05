@@ -13,6 +13,7 @@
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
 
+%global with_fastlz 1
 %global with_zts    0%{?__ztsphp:1}
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 %global pecl_name   memcached
@@ -29,7 +30,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?scl_prefix}php-pecl-memcached
 Version:      2.2.0
-Release:      4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # memcached is PHP, FastLZ is MIT
 License:      PHP and MIT
 Group:        Development/Languages
@@ -37,7 +38,9 @@ URL:          http://pecl.php.net/package/%{pecl_name}
 
 Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Patch0:       %{pecl_name}-fastlz.patch
+
+BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # 5.2.10 required to HAVE_JSON enabled
 BuildRequires: %{?scl_prefix}php-devel >= 5.2.10
 BuildRequires: %{?scl_prefix}php-pear
@@ -48,6 +51,9 @@ BuildRequires: %{?scl_prefix}php-pecl-msgpack-devel
 %endif
 BuildRequires: zlib-devel
 BuildRequires: cyrus-sasl-devel
+%if %{with_fastlz}
+BuildRequires: fastlz-devel
+%endif
 %if %{with_tests}
 BuildRequires: memcached
 %endif
@@ -122,13 +128,21 @@ It also provides a session handler (memcached).
 
 mv %{pecl_name}-%{version}%{?prever} NTS
 
-# Chech version as upstream often forget to update this
-extver=$(sed -n '/#define PHP_MEMCACHED_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_memcached.h)
+cd NTS
+%patch0 -p1 -b .fastlz
+%if %{with_fastlz}
+rm -r fastlz
+sed -e '/name="fastlz/d' -i ../package.xml
+%endif
+
+# Check version as upstream often forget to update this
+extver=$(sed -n '/#define PHP_MEMCACHED_VERSION/{s/.* "//;s/".*$//;p}' php_memcached.h)
 if test "x${extver}" != "x%{version}%{?intver}"; then
    : Error: Upstream HTTP version is now ${extver}, expecting %{version}%{?prever}.
    : Update the pdover macro and rebuild.
    exit 1
 fi
+cd ..
 
 cat > %{ini_name} << 'EOF'
 ; Enable %{pecl_name} extension module
@@ -173,6 +187,9 @@ peclconf() {
            --disable-memcached-protocol \
 %else
            --enable-memcached-protocol \
+%endif
+%if %{with_fastlz}
+           --with-system-fastlz \
 %endif
            --with-php-config=$1
 }
@@ -301,6 +318,9 @@ exit $ret
 
 
 %changelog
+* Fri Aug 29 2014 Remi Collet <rcollet@redhat.com> - 2.2.0-5
+- test build with system fastlz
+
 * Fri Aug 29 2014 Remi Collet <rcollet@redhat.com> - 2.2.0-4
 - improve SCL build
 
