@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-turba
-Version:        4.2.1
+Version:        4.2.2
 Release:        1%{?dist}
 Summary:        A web based address book
 
@@ -86,7 +86,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.5.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.1.3
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) <  3.0.0
@@ -232,6 +232,10 @@ fi
 
 
 %changelog
+* Sat Sep 06 2014 Remi Collet <remi@fedoraproject.org> - 4.2.2-1
+- Update to 4.2.2
+- raise dep on Horde_Util 2.5.0
+
 * Tue Aug 05 2014 Remi Collet <remi@fedoraproject.org> - 4.2.1-1
 - Update to 4.2.1
 
