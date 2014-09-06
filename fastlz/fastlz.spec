@@ -48,12 +48,14 @@ for %{name}.
 
 
 %build
+# Build the shared library
 gcc %optflags -fPIC -c fastlz.c  -o fastlz.o
 gcc %optflags -fPIC -shared \
    -Wl,-soname -Wl,lib%{name}.so.%{abi} \
    -o lib%{name}.so.%{abi} fastlz.o
 ln -s lib%{name}.so.%{abi} lib%{name}.so
 
+# Build the commands for test
 gcc %optflags -fPIC 6pack.c   -L. -l%{name} -o 6pack
 gcc %optflags -fPIC 6unpack.c -L. -l%{name} -o 6unpack
 
@@ -64,8 +66,8 @@ rm -rf %{buildroot}
 install -D -m 0755 lib%{name}.so.%{abi} %{buildroot}%{_libdir}/lib%{name}.so.%{abi}
 ln -s lib%{name}.so.%{abi} %{buildroot}%{_libdir}/lib%{name}.so
 install -D -pm 0644 %{name}.h           %{buildroot}%{_includedir}/%{name}.h
-install -D -m 0755 6pack                %{buildroot}%{_bindir}/6pack
-install -D -m 0755 6unpack              %{buildroot}%{_bindir}/6unpack
+
+# Don't install the commands, as we obviously don't need more compression tools
 
 
 %check
@@ -103,8 +105,6 @@ rm -rf %{buildroot}
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %{_libdir}/lib%{name}.so.%{abi}
-%{_bindir}/6pack
-%{_bindir}/6unpack
 
 %files devel
 %defattr (-,root,root,-)
