@@ -6,25 +6,23 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package        php-yac}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global with_zts  0%{?__ztsphp:1}
-%global pecl_name yac
-%global with_tests %{!?_without_tests:1}%{?_without_tests:0}
+%global with_zts    0%{?__ztsphp:1}
+%global pecl_name   yac
+%global with_tests  %{!?_without_tests:1}%{?_without_tests:0}
 %if "%{php_version}" < "5.6"
-%global ini_name  %{pecl_name}.ini
+%global ini_name    %{pecl_name}.ini
 %else
-%global ini_name  40-%{pecl_name}.ini
+%global ini_name    40-%{pecl_name}.ini
 %endif
-%global with_fastlz 1
 
 Summary:        Lockless user data cache
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Name:           php-pecl-%{pecl_name}
 Version:        0.9.1
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}
 
 License:        PHP
 Group:          Development/Languages
@@ -35,41 +33,23 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Patch0:         %{pecl_name}-fastlz.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel > 5.2
-BuildRequires:  %{?scl_prefix}php-pear
-%if %{with_fastlz}
+BuildRequires:  php-devel > 5.2
+BuildRequires:  php-pear
 BuildRequires:  fastlz-devel
-%endif
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
-Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+Requires:       php(zend-abi) = %{php_zend_api}
+Requires:       php(api) = %{php_core_api}
 
 # Package have be renamed
-Obsoletes:      %{?scl_prefix}php-%{pecl_name} < %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Obsoletes:      php-%{pecl_name} < %{version}
+Provides:       php-%{pecl_name} = %{version}
+Provides:       php-%{pecl_name}%{?_isa} = %{version}
+Provides:       php-pecl(%{pecl_name}) = %{version}
+Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
-# Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
-Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
-Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
-%if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
-%endif
-%endif
-
-%if 0%{?fedora} < 20
+%if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared object
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
@@ -91,16 +71,15 @@ that your product is not very sensitive to that.
 %setup -qc
 mv %{pecl_name}-%{version} NTS
 
-# Don't install the tests
+# Don't install (register) the tests
 sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd NTS
 %patch0 -p1 -b .pr42
 
-%if %{with_fastlz}
+# drop bundled fastlz to ensure it is not used
 sed -e '\:name="compressor/fastlz:d' -i ../package.xml
 rm -r compressor/fastlz
-%endif
 
 # Check version as upstream often forget to update this
 extver=$(sed -n '/#define PHP_YAC_VERSION/{s/.* "//;s/".*$//;p}' php_yac.h)
@@ -133,9 +112,7 @@ cp -pr NTS ZTS
 %build
 peclconf() {
 %configure \
-%if %{with_fastlz}
     --with-system-fastlz \
-%endif
     --with-php-config=$1
 }
 
@@ -243,7 +220,8 @@ rm -rf %{buildroot}
 
 %changelog
 * Sat Sep  6 2014 Remi Collet <remi@fedoraproject.org> - 0.9.1-3
-- test build with system fastlz
+- cleanup for review
+- build with system fastlz
 - don't install the tests
 
 * Tue Aug 26 2014 Remi Collet <rcollet@redhat.com> - 0.9.1-2

@@ -11,13 +11,13 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global with_zts  0%{?__ztsphp:1}
-%global pecl_name yac
-%global with_tests %{!?_without_tests:1}%{?_without_tests:0}
+%global with_zts    0%{?__ztsphp:1}
+%global pecl_name   yac
+%global with_tests  %{!?_without_tests:1}%{?_without_tests:0}
 %if "%{php_version}" < "5.6"
-%global ini_name  %{pecl_name}.ini
+%global ini_name    %{pecl_name}.ini
 %else
-%global ini_name  40-%{pecl_name}.ini
+%global ini_name    40-%{pecl_name}.ini
 %endif
 %global with_fastlz 1
 
@@ -69,7 +69,7 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
-%if 0%{?fedora} < 20
+%if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared object
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
@@ -91,7 +91,7 @@ that your product is not very sensitive to that.
 %setup -qc
 mv %{pecl_name}-%{version} NTS
 
-# Don't install the tests
+# Don't install (register) the tests
 sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd NTS
