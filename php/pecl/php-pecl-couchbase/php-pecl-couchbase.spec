@@ -14,6 +14,7 @@
 
 %global pecl_name couchbase
 %global with_zts  0%{?__ztsphp:1}
+%global with_fastlz 1
 
 %if "%{php_version}" < "5.6"
 # After igbinary
@@ -26,11 +27,14 @@
 Summary:       Couchbase Server PHP extension
 Name:          %{?scl_prefix}php-pecl-couchbase
 Version:       1.2.2
-Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           pecl.php.net/package/couchbase
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?svnrev:-dev}.tgz
+
+# https://github.com/couchbase/php-ext-couchbase/pull/11
+Patch0:        %{pecl_name}-fastlz.patch
 
 BuildRequires: %{?scl_prefix}php-devel >= 5.3.0
 BuildRequires: %{?scl_prefix}php-pecl-igbinary-devel
@@ -39,6 +43,9 @@ BuildRequires: zlib-devel
 BuildRequires: libcouchbase-devel
 # for tests
 BuildRequires: %{?scl_prefix}php-json
+%if %{with_fastlz}
+BuildRequires: fastlz-devel
+%endif
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -53,17 +60,17 @@ Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:     php54-pecl-%{pecl_name}
-Obsoletes:     php54w-pecl-%{pecl_name}
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}
-Obsoletes:     php55w-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name}
-Obsoletes:     php56w-pecl-%{pecl_name}
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -85,6 +92,12 @@ in a Couchbase Server.
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
+%patch0 -p1 -b .fastlz
+%if %{with_fastlz}
+rm -r fastlz
+sed -e '/name="fastlz/d' -i ../package.xml
+%endif
+
 # Fix version
 sed -e '/PHP_COUCHBASE_VERSION/s/1.2.0/%{version}/' -i php_couchbase.h
 
@@ -105,15 +118,23 @@ cp -pr NTS ZTS
 
 
 %build
+peclconf() {
+%configure \
+%if %{with_fastlz}
+     --with-system-fastlz \
+%endif
+     --with-php-config=$1
+}
+
 cd NTS
 %{_bindir}/phpize
-%configure --with-php-config=%{_bindir}/php-config
+peclconf %{_bindir}/php-config
 make %{?_smp_mflags}
 
 %if %{with_zts}
 cd ../ZTS
 %{_bindir}/zts-phpize
-%configure --with-php-config=%{_bindir}/zts-php-config
+peclconf %{_bindir}/zts-php-config
 make %{?_smp_mflags}
 %endif
 
@@ -183,6 +204,9 @@ fi
 
 
 %changelog
+* Sat Sep  6 2014 Remi Collet <remi@fedoraproject.org> - 1.2.2-3
+- test build with system fastlz
+
 * Tue Aug 26 2014 Remi Collet <rcollet@redhat.com> - 1.2.2-2
 - improve SCL build
 
