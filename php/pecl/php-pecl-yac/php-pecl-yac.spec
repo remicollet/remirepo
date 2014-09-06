@@ -32,7 +32,6 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 # https://github.com/laruence/yac/pull/42
 Patch0:         %{pecl_name}-fastlz.patch
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel > 5.2
 BuildRequires:  php-pear
 BuildRequires:  fastlz-devel
@@ -130,7 +129,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
 # Install the NTS stuff
 make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
@@ -200,12 +198,7 @@ if [ $1 -eq 0 ] ; then
 fi
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-, root, root, 0755)
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
