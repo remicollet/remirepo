@@ -19,20 +19,27 @@
 %else
 %global ini_name  40-%{pecl_name}.ini
 %endif
+%global with_fastlz 1
 
 Summary:        Lockless user data cache
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        0.9.1
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
+# https://github.com/laruence/yac/pull/42
+Patch0:         %{pecl_name}-fastlz.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.2
 BuildRequires:  %{?scl_prefix}php-pear
+%if %{with_fastlz}
+BuildRequires:  fastlz-devel
+%endif
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -84,6 +91,25 @@ that your product is not very sensitive to that.
 %setup -qc
 mv %{pecl_name}-%{version} NTS
 
+# Don't install the tests
+sed -e 's/role="test"/role="src"/' -i package.xml
+
+cd NTS
+%patch0 -p1 -b .pr42
+
+%if %{with_fastlz}
+sed -e '\:name="compressor/fastlz:d' -i ../package.xml
+rm -r compressor/fastlz
+%endif
+
+# Check version as upstream often forget to update this
+extver=$(sed -n '/#define PHP_YAC_VERSION/{s/.* "//;s/".*$//;p}' php_yac.h)
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream YAC version is ${extver}, expecting %{version}%{?prever}.
+   exit 1
+fi
+cd ..
+
 # Drop in the bit of configuration
 cat > %{ini_name} << 'EOF'
 ; Enable Yet Another Cache extension module
@@ -105,15 +131,23 @@ cp -pr NTS ZTS
 
 
 %build
+peclconf() {
+%configure \
+%if %{with_fastlz}
+    --with-system-fastlz \
+%endif
+    --with-php-config=$1
+}
+
 cd NTS
 %{_bindir}/phpize
-%configure --with-php-config=%{_bindir}/php-config
+peclconf %{_bindir}/php-config
 make %{?_smp_mflags}
 
 %if %{with_zts}
 cd ../ZTS
 %{_bindir}/zts-phpize
-%configure --with-php-config=%{_bindir}/zts-php-config
+peclconf %{_bindir}/zts-php-config
 make %{?_smp_mflags}
 %endif
 
@@ -134,9 +168,6 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Test & Documentation
-for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -199,7 +230,6 @@ rm -rf %{buildroot}
 %files
 %defattr(-, root, root, 0755)
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -212,6 +242,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Sep  6 2014 Remi Collet <remi@fedoraproject.org> - 0.9.1-3
+- test build with system fastlz
+- don't install the tests
+
 * Tue Aug 26 2014 Remi Collet <rcollet@redhat.com> - 0.9.1-2
 - improve SCL build
 
