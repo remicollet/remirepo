@@ -1,0 +1,23 @@
+From fe3dc6c5d6a8998ae917aed0b2f09fd4cdde16ba Mon Sep 17 00:00:00 2001
+From: Jeff Welch <whatthejeff@gmail.com>
+Date: Sat, 6 Sep 2014 13:37:44 -0400
+Subject: [PATCH] Refs #197: Skip variadics test on PHP < 5.6.0.
+
+---
+ tests/MockObject/class_with_method_with_variadic_arguments.phpt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/tests/MockObject/class_with_method_with_variadic_arguments.phpt b/tests/MockObject/class_with_method_with_variadic_arguments.phpt
+index bb38da7..8fb9a3c 100644
+--- a/tests/MockObject/class_with_method_with_variadic_arguments.phpt
++++ b/tests/MockObject/class_with_method_with_variadic_arguments.phpt
+@@ -1,5 +1,9 @@
+ --TEST--
+ PHPUnit_Framework_MockObject_Generator::generate('ClassWithMethodWithVariadicArguments', array(), 'MockFoo', TRUE, TRUE)
++--SKIPIF--
++<?php
++if (version_compare(PHP_VERSION, '5.6.0', '<')) print 'skip: PHP >= 5.6.0 required';
++?>
+ --FILE--
+ <?php
+ class ClassWithMethodWithVariadicArguments

@@ -6,18 +6,22 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    42e589e08bc86e3e9bdf20d385e948347788505b
+%global bootstrap    0
+%global gh_commit    b241b18d87a47093f20fae8b0ba40379b00bd53a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit-mock-objects
 %global php_home     %{_datadir}/php
 %global pear_name    PHPUnit_MockObject
 %global pear_channel pear.phpunit.de
-# disable because of circular dep with phpunit
+%if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%else
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 Name:           php-phpunit-PHPUnit-MockObject
-Version:        2.2.0
+Version:        2.2.1
 Release:        1%{?dist}
 Summary:        Mock Object library for PHPUnit
 
@@ -31,6 +35,9 @@ Source1:        Autoload.php.in
 
 # Temporary workaround, under investigation
 Patch0:         %{gh_project}-rpm.patch
+
+# Upstream patches
+Patch1:         %{gh_project}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -65,6 +72,7 @@ Mock Object library for PHPUnit
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1
+%patch1 -p1
 
 find . -name \*.orig -exec rm {} \; -print
 
@@ -84,12 +92,21 @@ cp -pr src %{buildroot}%{php_home}/PHPUnit
 
 %if %{with_tests}
 %check
+# No phpcov
+grep -v 'log' phpunit.xml.dist > phpunit.xml
+
+# Generate autoloader for tests
+phpab --output tests/_fixture/autoload.php tests/_fixture/
+
+# Fix bootstrap
 mkdir vendor
 ln -s ../src/Framework/MockObject/Autoload.php vendor/autoload.php
+cat <<EOF >>tests/bootstrap.php
+require __DIR__ . '/_fixture/autoload.php';
+EOF
 
-grep -v 'log' phpunit.xml.dist > phpunit.xml
-phpunit \
-  -d date.timezone=UTC
+# Run tests
+phpunit -d date.timezone=UTC
 %endif
 
 
@@ -115,6 +132,10 @@ fi
 
 
 %changelog
+* Sun Sep  7 2014 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
+- update to 2.2.0
+- enable test suite
+
 * Mon Aug 11 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - update to 2.2.0
 - add dependency on ocramius/instantiator
