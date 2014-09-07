@@ -39,8 +39,7 @@ Patch1:         https://github.com/phalcon/cphalcon/pull/2772.patch
 Patch2:         https://github.com/phalcon/cphalcon/pull/2774.patch
 Patch3:         https://github.com/phalcon/cphalcon/pull/2775.patch
 Patch4:         https://github.com/vpg/cphalcon/commit/d9ded2ae91afbf9a4b1f515c18c4a99760b2df5c.patch
-# still need to drop all ref to striped non-free sources
-Patch5:         %{gh_project}-rpm.patch
+Patch5:         https://github.com/phalcon/cphalcon/pull/2793.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 5.3
@@ -96,7 +95,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 chmod 644 ext/assets/filters/*.2774
 %patch3 -p1 -b .2775
 %patch4 -p1 -b .build
-%patch5 -p0 -b .rpm
+%patch5 -p1 -b .2793
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PHALCON_VERSION/{s/.* "//;s/".*$//;p}' ext/php_phalcon.h)
@@ -234,6 +233,7 @@ rm -rf %{buildroot}
 * Sun Sep  7 2014 Remi Collet <remi@fedoraproject.org> - 1.3.2-2
 - use striped archive, without non-free sources
 - generate and use optimized sources
+- open https://github.com/phalcon/cphalcon/pull/2793
 
 * Thu Sep  4 2014 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
 - initial package, version 1.3.2
