@@ -9,7 +9,7 @@
 
 Name:           perl-Gtk2-AppIndicator
 Version:        0.15
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Perl extension for libappindicator
 # From Copyright: Distributed under the same license as perl.
 License:        GPL+ or Artistic
@@ -19,7 +19,13 @@ Source0:        http://www.cpan.org/modules/by-module/Gtk2/Gtk2-AppIndicator-%{v
 
 BuildRequires:  perl
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(AutoLoader)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(Gtk2)
+BuildRequires:  perl(XSLoader)
+BuildRequires:  perl(strict)
+BuildRequires:  perl(warnings)
 BuildRequires:  pkgconfig(gtk+-2.0)
 BuildRequires:  pkgconfig(appindicator-0.1)
 
@@ -46,7 +52,6 @@ make pure_install PERL_INSTALL_ROOT=%{buildroot}
 
 find %{buildroot} -type f -name .packlist -exec rm -f {} \; -print
 find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \; -print
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \; -print
 
 %{_fixperms} %{buildroot}/*
 
@@ -60,10 +65,13 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \; -print
 %license LICENSE COPYRIGHT
 %doc Changes README
 %{perl_vendorarch}/auto/Gtk2
-%{perl_vendorarch}/Gtk2/*
+%{perl_vendorarch}/Gtk2
 %{_mandir}/man3/Gtk2*
 
 
 %changelog
+* Sun Sep  7 2014 Remi Collet <remi@fedoraproject.org> 0.15-2
+- fix BR and cleaup from review #1138980
+
 * Sun Sep  7 2014 Remi Collet <remi@fedoraproject.org> 0.15-1
 - initial package
