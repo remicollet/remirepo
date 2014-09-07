@@ -25,17 +25,22 @@
 
 Name:           %{?scl_prefix}php-phalcon
 Version:        1.3.2
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Phalcon Framework
 
 Group:          Development/Libraries
 License:        MIT
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        %{gh_project}-%{version}-strip.tar.bz2
+# Script to generate the stripped archive
+Source1:        strip.sh
 
 Patch1:         https://github.com/phalcon/cphalcon/pull/2772.patch
 Patch2:         https://github.com/phalcon/cphalcon/pull/2774.patch
 Patch3:         https://github.com/phalcon/cphalcon/pull/2775.patch
+Patch4:         https://github.com/vpg/cphalcon/commit/d9ded2ae91afbf9a4b1f515c18c4a99760b2df5c.patch
+# still need to drop all ref to striped non-free sources
+Patch5:         %{gh_project}-rpm.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 5.3
@@ -90,9 +95,8 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %patch2 -p1 -b .2774
 chmod 644 ext/assets/filters/*.2774
 %patch3 -p1 -b .2775
-
-# Drop non-free stuff
-rm ext/assets/filters/{js,css}minifier.{c,h}
+%patch4 -p1 -b .build
+%patch5 -p0 -b .rpm
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PHALCON_VERSION/{s/.* "//;s/".*$//;p}' ext/php_phalcon.h)
@@ -100,6 +104,11 @@ if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
    exit 1
 fi
+
+# Generate the optimized sources
+cd build
+php gen-build.php
+cd ..
 
 # Create configuration file
 cat << 'EOF' | tee %{ini_name}
@@ -117,10 +126,16 @@ extension=%{ext_name}.so
 ;phalcon.register_psr3_classes=0
 EOF
 
-mv ext NTS
+# Use the optimized sources, is available
+if [ -d build/%{?__isa_bits}bits ]; then
+  mv build/%{__isa_bits}bits build/NTS
+else
+  mv build/safe build/NTS
+fi
+
 %if %{with_zts}
 # Duplicate source tree for NTS / ZTS build
-cp -r NTS ZTS
+cp -r build/NTS build/ZTS
 %endif
 
 
@@ -132,7 +147,7 @@ peclconf() {
   --with-libdir=%{_lib} \
   --with-php-config=$1
 }
-cd NTS
+cd build/NTS
 %{_bindir}/phpize
 peclconf %{_bindir}/php-config
 make %{?_smp_mflags}
@@ -148,13 +163,13 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 
-make -C NTS install INSTALL_ROOT=%{buildroot}
+make -C build/NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file (z-http.ini to be loaded after json)
 install -Dpm644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with_zts}
-make -C ZTS install INSTALL_ROOT=%{buildroot}
+make -C build/ZTS install INSTALL_ROOT=%{buildroot}
 install -Dpm644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
@@ -176,7 +191,7 @@ done
 
 %if %{with_tests}
 : Upstream test suite NTS extension
-cd NTS
+cd build/NTS
 SKIP_ONLINE_TESTS=1 \
 TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n $modules -d extension=$PWD/modules/%{ext_name}.so" \
@@ -216,6 +231,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep  7 2014 Remi Collet <remi@fedoraproject.org> - 1.3.2-2
+- use striped archive, without non-free sources
+- generate and use optimized sources
+
 * Thu Sep  4 2014 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
 - initial package, version 1.3.2
 - open https://github.com/phalcon/cphalcon/pull/2772 (merged)

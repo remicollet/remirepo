@@ -1,0 +1,86 @@
+From d9ded2ae91afbf9a4b1f515c18c4a99760b2df5c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Olivier=20Garb=C3=A9?= <ogarbe@voyageprive.com>
+Date: Sat, 6 Sep 2014 23:54:53 +0200
+Subject: [PATCH] Fix #2774 - Non free minifiers build dont work
+
+---
+ ext/assets/filters/cssminifier.c   |  3 +++
+ ext/assets/filters/jsminifier.c    |  3 +++
+ ext/assets/filters/nocssminifier.c |  2 ++
+ ext/assets/filters/nojsminifier.c  |  3 +++
+ ext/config.m4                      | 13 +++++++++----
+ 5 files changed, 20 insertions(+), 4 deletions(-)
+
+diff --git a/ext/assets/filters/nocssminifier.c b/ext/assets/filters/nocssminifier.c
+index efebc82..2b42456 100644
+--- a/ext/assets/filters/nocssminifier.c
++++ b/ext/assets/filters/nocssminifier.c
+@@ -17,6 +17,7 @@
+ 
+ /* placeholder for non-free csssminifier.c */
+ 
++#ifndef PHALCON_NON_FREE
+ 
+ #include "php_phalcon.h"
+ 
+@@ -29,3 +30,4 @@ int phalcon_cssmin(zval *return_value, zval *style TSRMLS_DC) {
+ 	PHALCON_THROW_EXCEPTION_STRW(phalcon_assets_exception_ce, "Non-free csssminifier not available");
+ 	return FAILURE;
+ }
++#endif
+diff --git a/ext/assets/filters/nojsminifier.c b/ext/assets/filters/nojsminifier.c
+index 885035b..a858fbb 100644
+--- a/ext/assets/filters/nojsminifier.c
++++ b/ext/assets/filters/nojsminifier.c
+@@ -17,6 +17,7 @@
+ 
+ /* placeholder for non-free jsminifier.c */
+ 
++#ifndef PHALCON_NON_FREE
+ 
+ #include "php_phalcon.h"
+ 
+@@ -29,3 +30,5 @@ int phalcon_jsmin(zval *return_value, zval *script TSRMLS_DC) {
+ 	PHALCON_THROW_EXCEPTION_STRW(phalcon_assets_exception_ce, "Non-free jsminifier not available");
+ 	return FAILURE;
+ }
++
++#endif
+diff --git a/ext/config.m4 b/ext/config.m4
+index 2df6dcd..5ca9747 100644
+--- a/ext/config.m4
++++ b/ext/config.m4
+@@ -1,6 +1,14 @@
+ PHP_ARG_ENABLE(phalcon, whether to enable phalcon framework, [ --enable-phalcon   Enable phalcon framework])
+ PHP_ARG_WITH(non-free, wheter to enable non-free css and js minifier, [ --without-non-free Disable non-free minifiers], yes, no)
+ 
++AC_MSG_CHECKING([Include non-free minifiers])
++if test "$PHP_NON_FREE" = "yes"; then
++	AC_DEFINE([PHALCON_NON_FREE], [1], [Whether non-free minifiers are available])
++	AC_MSG_RESULT([yes, css and js])
++else
++	AC_MSG_RESULT([no])
++fi
++
+ if test "$PHP_PHALCON" = "yes"; then
+ 	AC_DEFINE(HAVE_PHALCON, 1, [Whether you have Phalcon Framework])
+ 	phalcon_sources="phalcon.c \
+@@ -366,11 +374,8 @@ registry.c"
+ 	AC_MSG_CHECKING([Include non-free minifiers])
+ 	if test "$PHP_NON_FREE" = "yes"; then
+ 		phalcon_sources="$phalcon_sources assets/filters/jsminifier.c assets/filters/cssminifier.c "
+-		AC_DEFINE([PHALCON_NON_FREE], [1], [Whether non-free minifiers are available])
+-		AC_MSG_RESULT([yes, css and js])
+ 	else
+ 		phalcon_sources="$phalcon_sources assets/filters/nojsminifier.c assets/filters/nocssminifier.c "
+-		AC_MSG_RESULT([no])
+ 	fi
+ 
+ 	PHP_NEW_EXTENSION(phalcon, $phalcon_sources, $ext_shared)
+@@ -529,4 +534,4 @@ fi
+ 
+ if test "$GCC" = "yes"; then
+ 	PHP_ADD_MAKEFILE_FRAGMENT([Makefile.frag.deps])
+-fi
+\ No newline at end of file
++fi
