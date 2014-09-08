@@ -17,7 +17,7 @@
 
 %global pecl_name ev
 # failed test, so disabled for now
-%global with_zts  0
+%global with_zts  0%{?__ztsphp:1}
 
 %if "%{php_version}" < "5.6"
 # After sockets
@@ -30,11 +30,14 @@
 Summary:        Provides interface to libev library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        0.2.11
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+# https://bitbucket.org/osmanov/pecl-ev/pull-request/3
+Patch0:         %{pecl_name}-leak.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.4
@@ -89,6 +92,7 @@ mv %{pecl_name}-%{version} NTS
 sed -e '/role="test"/d' -i package.xml
 
 cd NTS
+%patch0 -p1 -b .leak
 
 # Sanity check, really often broken
 extver=$(sed -n '/define PHP_EV_VERSION/{s/.* "//;s/".*$//;p}' php_ev.h)
@@ -219,5 +223,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Sep  8 2014 Remi Collet <rcollet@redhat.com> - 0.2.11-2
+- open https://bitbucket.org/osmanov/pecl-ev/pull-request/3
+- enable ZTS build
+
 * Mon Sep  8 2014 Remi Collet <rcollet@redhat.com> - 0.2.11-1
 - initial package, version 0.2.11 (stable)
