@@ -1,3 +1,5 @@
+%_sclreq (%{scl_vendor})
+
 %scl_package_override() %{expand:
   %{?@SCL@___pear:%global __pear %@SCL@___pear}
   %{?@SCL@___pecl:%global __pecl %@SCL@___pecl}

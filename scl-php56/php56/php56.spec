@@ -9,7 +9,7 @@
 
 Summary:       Package that installs PHP 5.6
 Name:          %scl_name
-Version:       1.0
+Version:       2.0
 Release:       1%{?dist}
 Group:         Development/Languages
 License:       GPLv2+
@@ -24,10 +24,10 @@ BuildRequires: help2man
 # Temporary work-around
 BuildRequires: iso-codes
 
-Requires:      %{?scl_prefix}php-common
-Requires:      %{?scl_prefix}php-cli
-Requires:      %{?scl_prefix}php-pear
-Requires:      %{?scl_name}-runtime
+Requires:      %{?scl_prefix}php-common%{?_isa} >= 5.6.0
+Requires:      %{?scl_prefix}php-cli%{?_isa}
+Requires:      %{?scl_prefix}php-pear           >= 1.9.5
+Requires:      %{?scl_name}-runtime%{?_isa}      = %{version}-%{release}
 
 %description
 This is the main package for %scl Software Collection,
@@ -38,6 +38,8 @@ that install PHP 5.5 language.
 Summary:   Package that handles %scl Software Collection.
 Group:     Development/Languages
 Requires:  scl-utils
+Provides:  %{?scl_name}-runtime(%{scl_vendor})
+Provides:  %{?scl_name}-runtime(%{scl_vendor})%{?_isa}
 
 %description runtime
 Package shipping essential scripts to work with %scl Software Collection.
@@ -47,7 +49,7 @@ Package shipping essential scripts to work with %scl Software Collection.
 Summary:   Package shipping basic build configuration
 Group:     Development/Languages
 Requires:  scl-utils-build
-Requires:  %{?scl_name}-runtime
+Requires:  %{?scl_name}-runtime%{?_isa} = %{version}-%{release}
 
 %description build
 Package shipping essential configuration macros
@@ -57,7 +59,7 @@ to build %scl Software Collection.
 %package scldevel
 Summary:   Package shipping development files for %scl
 Group:     Development/Languages
-Requires:  %{?scl_name}-runtime
+Requires:  %{?scl_name}-runtime%{?_isa} = %{version}-%{release}
 
 %description scldevel
 Package shipping development files, especially usefull for development of
@@ -143,6 +145,10 @@ fi
 
 
 %changelog
+* Mon Sep  8 2014 Remi Collet <remi@fedoraproject.org> 2.0-1
+- provides php56-runtime(remi)
+- add _sclreq macro
+
 * Sun Aug 24 2014 Remi Collet <rcollet@redhat.com> 1.0-1
 - initial packaging from php55 from rhscl 1.1
 - install macro in /usr/lib/rpm/macros.d
