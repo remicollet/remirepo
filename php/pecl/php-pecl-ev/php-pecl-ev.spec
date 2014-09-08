@@ -43,6 +43,8 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.4
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-sockets
+# For tests
+BuildRequires:  %{?scl_prefix}php-posix
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -171,6 +173,7 @@ fi
 %check
 DEPMOD=
 [ -f %{php_extdir}/sockets.so ] && DEPMOD="$DEPMOD -d extension=sockets.so"
+[ -f %{php_extdir}/posix.so ]   && DEPMOD="$DEPMOD -d extension=posix.so"
 
 : Minimal load test for NTS extension
 cd NTS
