@@ -10,7 +10,7 @@
 %global lockname     ocsinventoryng.lock
 
 Name:           glpi-ocsinventoryng
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}
 Summary:        Plugin to synchronize GLPI with OCS Inventory NG
 
@@ -18,11 +18,8 @@ Group:          Applications/Internet
 License:        GPLv2+
 URL:            https://forge.indepnet.net/projects/ocsinventoryng
 
-Source0:        https://forge.indepnet.net/attachments/download/1564/glpi-ocsinventoryng-1.0.2.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1847/glpi-ocsinventoryng-1.0.3.tar.gz
 Source1:        %{name}-httpd.conf
-
-# https://forge.indepnet.net/projects/ocsinventoryng/repository/revisions/332
-Patch0:         %{name}-lock.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -53,8 +50,6 @@ plugin features to provide better compatibility and extensibility with OCS.
 %prep
 %setup -q -c
 
-%patch0 -p0
-
 mv %{pluginname}/docs docs
 
 # dos2unix to avoid rpmlint warnings
@@ -63,7 +58,7 @@ for doc in docs/* ; do
 done
 
 # Create link to LICENSE for standard doc folder
-ln -s %{_datadir}/glpi/plugins/%{pluginname}/LICENSE docs/LICENSE
+ln -s %{_datadir}/glpi/plugins/%{pluginname}/LICENSE LICENSE
 
 # For developer only
 rm -rf %{pluginname}/tools
@@ -146,6 +141,8 @@ grep %{lockname} %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}/setup.php |
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
 %doc docs/*
 %config(noreplace) %{_sysconfdir}/cron.d/%{name}
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
@@ -164,5 +161,9 @@ grep %{lockname} %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}/setup.php |
 
 
 %changelog
+* Mon Sep  8 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3 for GLPI 0.84+
+  https://forge.indepnet.net/versions/957
+
 * Wed Oct  2 2013 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Initial RPM (from glpi-mass-ocs-import.spec)
