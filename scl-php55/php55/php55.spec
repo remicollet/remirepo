@@ -146,7 +146,7 @@ fi
 
 %changelog
 * Mon Sep  8 2014 Remi Collet <remi@fedoraproject.org> 2.0-1
-- provides php56-runtime(remi)
+- provides php55-runtime(remi)
 - add _sclreq macro
 
 * Tue Sep  2 2014 Remi Collet <rcollet@redhat.com> 1.0-1
