@@ -23,7 +23,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.9.5
-Release: 3%{?dist}
+Release: 4%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util are BSD
 # Console_Getopt is PHP
@@ -88,6 +88,7 @@ Obsoletes: php56w-pear <= %{version}
 %endif
 %endif
 
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}}
 Requires:  %{?scl_prefix}php-cli
 # phpci detected extension
 # PEAR (date, spl always builtin):
@@ -359,6 +360,9 @@ fi
 
 
 %changelog
+* Mon Sep  8 2014 Remi Collet <remi@fedoraproject.org> 1:1.9.5-4
+- rebuild for SCL
+
 * Thu Sep  4 2014 Remi Collet <remi@fedoraproject.org> 1:1.9.5-3
 - update Archive_Tar to 1.3.13
 - merge with SCL spec file
