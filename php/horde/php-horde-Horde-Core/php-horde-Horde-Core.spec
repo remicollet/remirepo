@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Core
-Version:        2.13.1
+Version:        2.14.0
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -81,6 +81,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Group) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_HashTable) >= 1.2.0
+Requires:       php-pear(%{pear_channel}/Horde_HashTable) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_History) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_History) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Injector) >= 2.0.0
@@ -223,12 +225,9 @@ rm -rf %{buildroot}
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+
+phpunit -d date.timezone=UTC .
 
 
 %post
@@ -271,6 +270,10 @@ fi
 
 
 %changelog
+* Tue Sep 09 2014 Remi Collet <remi@fedoraproject.org> - 2.14.0-1
+- Update to 2.14.0
+- add mandatory dependency on Horde_HashTable
+
 * Fri Aug 22 2014 Remi Collet <remi@fedoraproject.org> - 2.13.1-1
 - Update to 2.13.1
 
