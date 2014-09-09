@@ -37,7 +37,7 @@
 
 Name:           %{?scl_prefix}php-pecl-gearman
 Version:        %{extver}
-Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        PHP wrapper to libgearman
 
 Group:          Development/Tools
@@ -53,10 +53,11 @@ BuildRequires:  %{?scl_prefix}php-pear
 # Required by phpize
 BuildRequires:  autoconf, automake, libtool
 
-Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
-Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
@@ -65,17 +66,17 @@ Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:      php53-pecl-%{pecl_name}
-Obsoletes:      php53u-pecl-%{pecl_name}
-Obsoletes:      php54-pecl-%{pecl_name}
-Obsoletes:      php54w-pecl-%{pecl_name}
+Obsoletes:      php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:      php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:      php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:      php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:      php55u-pecl-%{pecl_name}
-Obsoletes:      php55w-pecl-%{pecl_name}
+Obsoletes:      php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:      php55w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:      php56u-pecl-%{pecl_name}
-Obsoletes:      php56w-pecl-%{pecl_name}
+Obsoletes:      php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:      php56w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -92,9 +93,15 @@ communicating with gearmand, and writing clients and workers
 
 Documentation: http://php.net/gearman
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+
 
 %prep
 %setup -q -c
+
+# Dont register tests on install
+sed -e 's/role="test"/role="src"/' -i package.xml
+
 mv %{pecl_name}-%{version} NTS
 
 extver=$(sed -n '/#define PHP_GEARMAN_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_gearman.h)
@@ -146,10 +153,7 @@ install -Dpm644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Test & Documentation
-for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
-for i in LICENSE $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -184,11 +188,13 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
+%{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
-%{pecl_xmldir}/%{name}.xml
+
 %if %{with_zts}
 %{php_ztsextdir}/%{pecl_name}.so
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
@@ -196,6 +202,10 @@ fi
 
 
 %changelog
+* Tue Sep  9 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-6
+- don't install tests
+- fix license handling
+
 * Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 1.1.2-5
 - improve SCL build
 
