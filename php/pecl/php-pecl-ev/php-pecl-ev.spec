@@ -29,15 +29,12 @@
 
 Summary:        Provides interface to libev library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.2.11
+Version:        0.2.12
 Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://bitbucket.org/osmanov/pecl-ev/pull-request/3
-Patch0:         %{pecl_name}-leak.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.4
@@ -94,8 +91,6 @@ mv %{pecl_name}-%{version} NTS
 sed -e '/role="test"/d' -i package.xml
 
 cd NTS
-%patch0 -p1 -b .leak
-
 # Sanity check, really often broken
 extver=$(sed -n '/define PHP_EV_VERSION/{s/.* "//;s/".*$//;p}' php_ev.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
@@ -226,6 +221,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 09 2014 Remi Collet <remi@fedoraproject.org> - 0.2.12-1
+- Update to 0.2.12 (no change, only our patch merged)
+- enable posix during build as some tests need it
+
 * Mon Sep  8 2014 Remi Collet <rcollet@redhat.com> - 0.2.11-2
 - open https://bitbucket.org/osmanov/pecl-ev/pull-request/3
 - enable ZTS build
