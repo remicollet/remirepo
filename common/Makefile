@@ -87,6 +87,9 @@ devdiff: /tmp/$(NAME)-filtered.spec
 rpmdiff:
 	rpmdiff -i T -i L $(NAME) */$(NAME)*rpm
 
-src: 
+devsrc:
+	spectool -g -S $(NAME)-dev.spec
+
+src:
 	spectool -g -S $(NAME).spec
 
