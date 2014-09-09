@@ -52,6 +52,7 @@ BuildRequires: %{?scl_prefix}php-devel
 
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -85,6 +86,8 @@ ThreadSafe is also perfectly supported.
 
 NOTICE: opcode cacher is disable to allow use with php-opcache only for user
 data cache. You need to edit configuration file (xcache.ini) to enable it.
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
 
 
 %package -n %{?scl_prefix}xcache-admin

@@ -27,8 +27,8 @@
 
 Summary:       Fast, stable PHP opcode cacher
 Name:          %{?scl_prefix}php-xcache
-Version:       3.1.0
-Release:       3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:       3.1.1
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       BSD
 Group:         Development/Languages
 URL:           http://xcache.lighttpd.net/
@@ -52,6 +52,7 @@ BuildRequires: %{?scl_prefix}php-devel
 
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -86,6 +87,8 @@ ThreadSafe is also perfectly supported.
 NOTICE: opcode cacher is disable to allow use with php-opcache only for user
 data cache. You need to edit configuration file (xcache.ini) to enable it.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+
 
 %package -n %{?scl_prefix}xcache-admin
 Summary:       XCache Administration
@@ -114,7 +117,7 @@ This requires to configure, in XCache configuration file (xcache.ini):
 %setup -q -c 
 
 # rename source folder
-mv %{ext_name}-%{version} nts
+mv %{version} nts
 
 %if 0%{?scl:1}
 sed -e 's:%{_root_datadir}:%{_datadir}:' \
@@ -252,6 +255,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep  9 2014 Remi Collet <remi@fedoraproject.org> - 3.1.1-1
+- version 3.1.1
+
 * Mon Sep  1 2014 Remi Collet <rcollet@redhat.com> - 3.1.0-3
 - improve SCL build
 
