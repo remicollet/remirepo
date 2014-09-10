@@ -23,8 +23,8 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.7.4
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.7.5
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -47,6 +47,7 @@ Requires:       %{?scl_prefix}php-common%{?_isa}
 %else
 Requires:       %{?scl_prefix}php-sockets%{?_isa}
 %endif
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
@@ -77,14 +78,20 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 
 
 %description
-PHP's asynchronous concurrent distributed networking framework.
-- Event-driven
-- Asynchronous non-blocking
-- Multi-Thread reactor
-- Multi-Process worker
-- Millisecond timer
-- Asynchronous MySQL
-- AsyncTask workers
+Asynchronous and concurrent and distributed networking framework for PHP.
+- event-driven
+- full asynchronous non-blocking
+- multi-thread reactor
+- multi-process worker
+- millisecond timer
+- async MySQL
+- async task
+- async read/write file system
+- async dns lookup
+- support IPv4/IPv6/UnixSocket/TCP/UDP
+- SSL/TLS encrypted transmission
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
 
 
 %prep
@@ -210,8 +217,10 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 
@@ -222,6 +231,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 10 2014 Remi Collet <remi@fedoraproject.org> - 1.7.5-1
+- Update to 1.7.5
+
 * Tue Aug 26 2014 Remi Collet <rcollet@redhat.com> - 1.7.4-2
 - improve SCL build
 

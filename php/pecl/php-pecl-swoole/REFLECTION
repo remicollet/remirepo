@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #142 swoole version 1.7.4 ] {
+Extension [ <persistent> extension #146 swoole version 1.7.5 ] {
 
   - INI {
     Entry [ swoole.task_worker_num <ALL> ]
@@ -18,7 +18,7 @@ Extension [ <persistent> extension #142 swoole version 1.7.4 ] {
     }
   }
 
-  - Constants [36] {
+  - Constants [33] {
     Constant [ integer SWOOLE_BASE ] { 4 }
     Constant [ integer SWOOLE_THREAD ] { 2 }
     Constant [ integer SWOOLE_PROCESS ] { 3 }
@@ -35,10 +35,10 @@ Extension [ <persistent> extension #142 swoole version 1.7.4 ] {
     Constant [ integer SWOOLE_UDP6 ] { 4 }
     Constant [ integer SWOOLE_UNIX_DGRAM ] { 5 }
     Constant [ integer SWOOLE_UNIX_STREAM ] { 6 }
-    Constant [ integer SWOOLE_RWLOCK ] { 1 }
     Constant [ integer SWOOLE_FILELOCK ] { 2 }
     Constant [ integer SWOOLE_MUTEX ] { 3 }
     Constant [ integer SWOOLE_SEM ] { 4 }
+    Constant [ integer SWOOLE_RWLOCK ] { 1 }
     Constant [ integer SWOOLE_SPINLOCK ] { 5 }
     Constant [ integer SWOOLE_SOCK_SYNC ] { 0 }
     Constant [ integer SWOOLE_SOCK_ASYNC ] { 1 }
@@ -48,17 +48,16 @@ Extension [ <persistent> extension #142 swoole version 1.7.4 ] {
     Constant [ integer SWOOLE_SSL ] { 512 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ integer SWOOLE_SIGN ] { 64 }
-    Constant [ integer SWOOLE_UNSIGN ] { 32 }
-    Constant [ integer SWOOLE_NET ] { 8 }
-    Constant [ integer SWOOLE_HOST ] { 16 }
-    Constant [ integer SWOOLE_SHORT ] { 2 }
-    Constant [ integer SWOOLE_INT ] { 4 }
-    Constant [ string SWOOLE_VERSION ] { 1.7.4 }
+    Constant [ string SWOOLE_VERSION ] { 1.7.5 }
+    Constant [ integer SWOOLE_AIO_BASE ] { 0 }
+    Constant [ integer SWOOLE_AIO_GCC ] { 1 }
+    Constant [ integer SWOOLE_AIO_LINUX ] { 2 }
   }
 
   - Functions {
     Function [ <internal:swoole> function swoole_version ] {
+    }
+    Function [ <internal:swoole> function swoole_cpu_num ] {
     }
     Function [ <internal:swoole> function swoole_server_create ] {
 
@@ -144,6 +143,8 @@ Extension [ <persistent> extension #142 swoole version 1.7.4 ] {
         Parameter #0 [ <required> swoole_server $zobject ]
         Parameter #1 [ <required> $interval ]
       }
+    }
+    Function [ <internal:swoole> function swoole_server_gettimer ] {
     }
     Function [ <internal:swoole> function swoole_server_task ] {
 
@@ -242,6 +243,8 @@ Extension [ <persistent> extension #142 swoole version 1.7.4 ] {
         Parameter #0 [ <required> $interval ]
       }
     }
+    Function [ <internal:swoole> function swoole_async_set ] {
+    }
     Function [ <internal:swoole> function swoole_async_read ] {
     }
     Function [ <internal:swoole> function swoole_async_write ] {
@@ -266,44 +269,7 @@ Extension [ <persistent> extension #142 swoole version 1.7.4 ] {
     }
   }
 
-  - Classes [4] {
-    Class [ <internal:swoole> class swoole_client ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [2] {
-        Property [ <default> public $errCode ]
-        Property [ <default> public $sock ]
-      }
-
-      - Methods [6] {
-        Method [ <internal:swoole, ctor> public method __construct ] {
-        }
-
-        Method [ <internal:swoole> public method connect ] {
-        }
-
-        Method [ <internal:swoole> public method recv ] {
-        }
-
-        Method [ <internal:swoole> public method send ] {
-        }
-
-        Method [ <internal:swoole> public method close ] {
-        }
-
-        Method [ <internal:swoole> public method on ] {
-        }
-      }
-    }
-
+  - Classes [6] {
     Class [ <internal:swoole> class swoole_server ] {
 
       - Constants [0] {
@@ -318,7 +284,7 @@ Extension [ <persistent> extension #142 swoole version 1.7.4 ] {
       - Properties [0] {
       }
 
-      - Methods [20] {
+      - Methods [22] {
         Method [ <internal:swoole, ctor> public method __construct ] {
 
           - Parameters [4] {
@@ -413,6 +379,9 @@ Extension [ <persistent> extension #142 swoole version 1.7.4 ] {
           }
         }
 
+        Method [ <internal:swoole> public method gettimer ] {
+        }
+
         Method [ <internal:swoole> public method reload ] {
 
           - Parameters [0] {
@@ -470,6 +439,9 @@ Extension [ <persistent> extension #142 swoole version 1.7.4 ] {
             Parameter #1 [ <required> $find_count ]
           }
         }
+
+        Method [ <internal:swoole> public method stats ] {
+        }
       }
     }
 
@@ -516,19 +488,25 @@ Extension [ <persistent> extension #142 swoole version 1.7.4 ] {
       - Static properties [0] {
       }
 
-      - Static methods [2] {
+      - Static methods [3] {
         Method [ <internal:swoole> static public method wait ] {
         }
 
         Method [ <internal:swoole> static public method kill ] {
+        }
+
+        Method [ <internal:swoole> static public method daemon ] {
         }
       }
 
       - Properties [0] {
       }
 
-      - Methods [6] {
+      - Methods [9] {
         Method [ <internal:swoole, ctor> public method __construct ] {
+        }
+
+        Method [ <internal:swoole> public method useQueue ] {
         }
 
         Method [ <internal:swoole> public method start ] {
@@ -540,10 +518,217 @@ Extension [ <persistent> extension #142 swoole version 1.7.4 ] {
         Method [ <internal:swoole> public method read ] {
         }
 
+        Method [ <internal:swoole> public method push ] {
+        }
+
+        Method [ <internal:swoole> public method pop ] {
+        }
+
         Method [ <internal:swoole> public method exit ] {
         }
 
         Method [ <internal:swoole> public method exec ] {
+        }
+      }
+    }
+
+    Class [ <internal:swoole> class swoole_buffer ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [7] {
+        Method [ <internal:swoole, ctor> public method __construct ] {
+        }
+
+        Method [ <internal:swoole> public method substr ] {
+        }
+
+        Method [ <internal:swoole> public method read ] {
+        }
+
+        Method [ <internal:swoole> public method write ] {
+        }
+
+        Method [ <internal:swoole> public method append ] {
+        }
+
+        Method [ <internal:swoole> public method expand ] {
+        }
+
+        Method [ <internal:swoole> public method clear ] {
+        }
+      }
+    }
+
+    Class [ <internal:swoole> class swoole_client ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [2] {
+        Property [ <default> public $errCode ]
+        Property [ <default> public $sock ]
+      }
+
+      - Methods [8] {
+        Method [ <internal:swoole, ctor> public method __construct ] {
+        }
+
+        Method [ <internal:swoole> public method connect ] {
+        }
+
+        Method [ <internal:swoole> public method recv ] {
+        }
+
+        Method [ <internal:swoole> public method send ] {
+        }
+
+        Method [ <internal:swoole> public method sendfile ] {
+        }
+
+        Method [ <internal:swoole> public method isConnected ] {
+        }
+
+        Method [ <internal:swoole> public method close ] {
+        }
+
+        Method [ <internal:swoole> public method on ] {
+        }
+      }
+    }
+
+    Class [ <internal:swoole> <iterateable> class swoole_table implements Iterator, Traversable, Countable ] {
+
+      - Constants [10] {
+        Constant [ integer TYPE_INT ] { 1 }
+        Constant [ integer TYPE_STRING ] { 7 }
+        Constant [ integer TYPE_FLOAT ] { 6 }
+        Constant [ integer FIND_GT ] { 3 }
+        Constant [ integer FIND_LT ] { 4 }
+        Constant [ integer FIND_EQ ] { 1 }
+        Constant [ integer FIND_NEQ ] { 2 }
+        Constant [ integer FIND_LEFTLIKE ] { 5 }
+        Constant [ integer FIND_RIGHTLIKE ] { 6 }
+        Constant [ integer FIND_LIKE ] { 7 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [14] {
+        Method [ <internal:swoole, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $table_size ]
+          }
+        }
+
+        Method [ <internal:swoole> public method column ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <optional> $type ]
+            Parameter #2 [ <optional> $size ]
+          }
+        }
+
+        Method [ <internal:swoole> public method create ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:swoole> public method set ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:swoole> public method get ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:swoole, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:swoole, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:swoole, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:swoole, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:swoole, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:swoole, prototype Countable> public method count ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $mode ]
+          }
+        }
+
+        Method [ <internal:swoole> public method del ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:swoole> public method lock ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:swoole> public method unlock ] {
+
+          - Parameters [0] {
+          }
         }
       }
     }
