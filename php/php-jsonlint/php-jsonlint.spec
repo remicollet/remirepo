@@ -12,8 +12,8 @@
 
 %global github_owner   Seldaek
 %global github_name    jsonlint
-%global github_version 1.2.0
-%global github_commit  9cae56dbe34f4392e7d0f559474df33749a39f8d
+%global github_version 1.3.0
+%global github_commit  a7bc2ec9520ad15382292591b617c43bdb1fec35
 
 # "php": ">=5.3.0"
 %global php_min_ver    5.3.0
@@ -23,7 +23,7 @@
 
 Name:          php-%{github_name}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       1%{?dist}
 Summary:       JSON Lint for PHP
 
 Group:         Development/Libraries
@@ -40,12 +40,12 @@ BuildArch:     noarch
 # For tests: composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-phpunit-PHPUnit
-# For tests: phpcompatinfo (computed from version 1.2.0)
+# For tests: phpcompatinfo (computed from version 1.3.0)
 BuildRequires: php-pcre
 %endif
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.2.0)
+# phpcompatinfo (computed from version 1.3.0)
 Requires:      php-pcre
 
 Provides:      php-composer(seld/jsonlint) = %{version}
@@ -92,7 +92,7 @@ AUTOLOAD
 # Create PHPUnit config w/ colors turned off
 sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
-%{_bindir}/phpunit --bootstrap=./autoload.php --include-path=./src:./tests .
+%{_bindir}/phpunit --bootstrap=./autoload.php --include-path %{buildroot}%{_datadir}/php .
 %else
 : Tests skipped
 %endif
@@ -109,6 +109,9 @@ sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 
 %changelog
+* Thu Sep 11 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.0-1
+- Updated to 1.3.0 (BZ #1138911)
+
 * Sat Aug 23 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.0-2
 - %%license usage
 
