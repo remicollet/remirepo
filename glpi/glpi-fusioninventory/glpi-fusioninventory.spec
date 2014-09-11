@@ -8,7 +8,7 @@
 #
 %global pluginname    fusioninventory
 %global glpi_version  0.84.0
-%global plug_version  3.2
+%global plug_version  3.3
 
 Name:           glpi-fusioninventory
 # New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
@@ -22,7 +22,7 @@ Group:          Applications/Internet
 License:        AGPLv3+
 URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-glpi
 
-Source0:        http://forge.fusioninventory.org/attachments/download/1558/fusioninventory-for-glpi_0.84+3.2.tar.gz
+Source0:        http://forge.fusioninventory.org/attachments/download/1589/fusioninventory-for-glpi_0.84+3.3.tar.gz
 Source1:        %{name}-httpd.conf
 
 
@@ -66,7 +66,7 @@ for doc in docs/* ; do
 done
 
 # Create link to LICENSE for standard doc folder
-ln -s %{_datadir}/glpi/plugins/%{pluginname}/LICENSE docs/LICENSE
+ln -s %{_datadir}/glpi/plugins/%{pluginname}/LICENSE LICENSE
 mv %{pluginname}/README.asciidoc docs/
 
 # .htaccess replaced by a httpd config file
@@ -108,6 +108,8 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 # fusioninventory
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
 %doc docs/*
 %dir %{_datadir}/glpi/plugins/%{pluginname}
 %dir %{_datadir}/glpi/plugins/%{pluginname}/locales
@@ -129,6 +131,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 11 2014 Remi Collet <remi@fedoraproject.org> - 1:0.84.0.3.3-1
+- update to 0.84+3.3 for GLPI 0.84
+  http://forge.fusioninventory.org/versions/196
+
 * Wed Aug 20 2014 Remi Collet <remi@fedoraproject.org> - 1:0.84.0.3.2-1
 - update to 0.84+3.2 for GLPI 0.84
   0.84+3.2: http://forge.fusioninventory.org/versions/191
