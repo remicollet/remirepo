@@ -1,7 +1,7 @@
 %global github_owner    nikic
 %global github_name     PHP-Parser
-%global github_version  1.0.0beta1
-%global github_commit   a6d46c17b10d89f35a92fa4b8fb5071615bfb36c
+%global github_version  1.0.0
+%global github_commit   2b96ab8edccd5a0d0e7a826a7dc53c421ae64f94
 
 %global oldlib_name     PHPParser
 %global newlib_name     PhpParser
@@ -10,7 +10,7 @@
 
 Name:          php-%{oldlib_name}
 Version:       1.0.0
-Release:       0.2.beta1%{?dist}
+Release:       1%{?dist}
 Summary:       A PHP parser written in PHP
 
 Group:         Development/Libraries
@@ -33,11 +33,12 @@ BuildRequires: php-tokenizer
 # From composer.json
 Requires:      php(language) >= %{php_min_ver}
 Requires:      php-tokenizer
-# phpcompatinfo requires (for 1.0.0 beta1)
-Requires:      php-ctype
+# phpcompatinfo requires (for 1.0.0)
 Requires:      php-filter
 Requires:      php-pcre
 Requires:      php-spl
+Requires:      php-xmlreader
+Requires:      php-xmlwriter
 
 Obsoletes:     %{name}-test
 
@@ -79,6 +80,9 @@ ln -s ../%{newlib_name}/Autoloader.php \
 
 
 %changelog
+* Fri Sep 12 2014 Remi Collet <remi@fedoraproject.org> 1.0.0-1
+- Update to 1.0.0
+
 * Wed Jul 23 2014 Remi Collet <remi@fedoraproject.org> 1.0.0-0.2.beta1
 - composer dependencies
 - fix license handling
