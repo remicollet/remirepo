@@ -1,9 +1,10 @@
 [Unit]
-Description=A persistent key-value database
-After=syslog.target network.target
+Description=Redis persistent key-value database
+After=network.target
 
 [Service]
-ExecStart=/usr/sbin/redis-server /etc/redis.conf --daemonize no
+ExecStart=/usr/bin/redis-server /etc/redis.conf --daemonize no
+ExecStop=/usr/bin/redis-shutdown
 User=redis
 Group=redis
 

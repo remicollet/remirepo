@@ -10,7 +10,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             redis
-Version:          2.8.14
+Version:          2.8.15
 Release:          1%{?dist}
 Summary:          A persistent key-value database
 
@@ -22,10 +22,11 @@ Source1:          %{name}.logrotate
 Source2:          %{name}.init
 Source3:          %{name}.service
 Source4:          %{name}.tmpfiles
-Source5:          sentinel.init
-Source6:          sentinel.service
+Source5:          %{name}-sentinel.init
+Source6:          %{name}-sentinel.service
+Source7:          %{name}-shutdown
 # Update configuration for Fedora
-Patch0:           %{name}-2.8.10-conf.patch
+Patch0:           %{name}-2.8.15-conf.patch
 Patch1:           %{name}-deps-PIC.patch
 Patch2:           %{name}-deps-unbundle-jemalloc.patch
 
@@ -35,6 +36,8 @@ BuildRequires:    tcl >= 8.5
 %endif
 BuildRequires:    jemalloc-devel
 
+# Required for redis-shutdown
+Requires:         /bin/awk
 Requires:         logrotate
 Requires(pre):    shadow-utils
 %if %{with_systemd}
@@ -117,13 +120,12 @@ install -p -D -m 755 %{SOURCE5} %{buildroot}%{_initrddir}/%{name}-sentinel
 # Fix non-standard-executable-perm error
 chmod 755 %{buildroot}%{_bindir}/%{name}-*
 
-# Ensure redis-server location doesn't change
-mkdir -p %{buildroot}%{_sbindir}
-mv %{buildroot}%{_bindir}/%{name}-server %{buildroot}%{_sbindir}/%{name}-server
-
 # create redis-sentinel command as described on
 # http://redis.io/topics/sentinel
-ln -s %{name}-server %{buildroot}%{_sbindir}/%{name}-sentinel
+ln -s %{name}-server %{buildroot}%{_bindir}/%{name}-sentinel
+
+# Install redis-shutdown
+install -pDm755 %{SOURCE7} %{buildroot}%{_bindir}/%{name}-shutdown
 
 
 %post
@@ -202,7 +204,6 @@ fi
 %dir %attr(0755, redis, root) %{_localstatedir}/log/%{name}
 %dir %attr(0755, redis, root) %{_localstatedir}/run/%{name}
 %{_bindir}/%{name}-*
-%{_sbindir}/%{name}-*
 %if %{with_systemd}
 %{_prefix}/lib/tmpfiles.d/%{name}.conf
 %{_unitdir}/%{name}.service
@@ -214,6 +215,12 @@ fi
 
 
 %changelog
+* Fri Sep 12 2014 Remi Collet <remi@fedoraproject.org> - 2.8.15-1
+- Redis 2.8.15 - Release date: 12 Sep 2014
+  upgrade urgency: LOW for Redis, HIGH for Sentinel.
+- move commands from /usr/sbin to /usr/bin
+- add redis-shutdown command (systemd)
+
 * Thu Sep  4 2014 Remi Collet <remi@fedoraproject.org> - 2.8.14-1
 - Redis 2.8.14 - Release date:  1 Sep 2014
   upgrade urgency: HIGH for Lua scripting users, otherwise LOW.
