@@ -13,8 +13,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   2.6.15
-%global github_commit    4eaf38f0297533d48f013be7e1ffa1cb2c912e2f
+%global github_version   2.6.16
+%global github_commit    36434f2cd96ea78844478d897fb568a1866bce5a
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -116,6 +116,9 @@ fi
 
 
 %changelog
+* Fri Sep 12 2014 Remi Collet <remi@fedoraproject.org> - 2.6.15-1
+- Update to 2.6.15
+
 * Sat Aug 16 2014 Remi Collet <remi@fedoraproject.org> - 2.6.15-1
 - update to 2.6.15
 - sync with rawhide
