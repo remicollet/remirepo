@@ -8,11 +8,16 @@
 #
 # Please preserve the changelog entries
 #
+%if 0%{?rhel} == 5
+%global with_cacert 0
+%else
+%global with_cacert 1
+%endif
 
 %global github_owner    getsentry
 %global github_name     raven-php
-%global github_version  0.9.1
-%global github_commit   c6184b057d597f1449f30f2caec5d9ad07ddc4af
+%global github_version  0.10.0
+%global github_commit   8534b131f296597c163cbc408ac2d914f43a1a2c
 
 %global lib_name        Raven
 
@@ -41,7 +46,7 @@ BuildArch:     noarch
 # For tests: composer.json
 BuildRequires: php(language)       >= %{php_min_ver}
 BuildRequires: php-phpunit-PHPUnit >= %{phpunit_min_ver}
-# For tests: phpcompatinfo (computed from version 0.9.1)
+# For tests: phpcompatinfo (computed from version 0.10.0)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-mbstring
@@ -53,9 +58,12 @@ BuildRequires: php-spl
 BuildRequires: php-zlib
 %endif
 
+%if %{with_cacert}
+Requires:      ca-certificates
+%endif
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 0.9.1)
+# phpcompatinfo (computed from version 0.10.0)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-mbstring
@@ -80,6 +88,13 @@ sed "/require.*Autoloader/s:.*:require_once 'Raven/Autoloader.php';:" \
     -i bin/raven \
     -i test/bootstrap.php
 
+%if %{with_cacert}
+# Remove bundled cert
+rm -rf lib/Raven/data
+sed "/return.*cacert\.pem/s#.*#        return '%{_sysconfdir}/pki/tls/cert.pem';#" \
+    -i lib/Raven/Client.php
+%endif
+
 
 %build
 # Empty build section, nothing to build
@@ -98,7 +113,7 @@ install -pm 0755 bin/raven %{buildroot}%{_bindir}/
 # Create PHPUnit config w/ colors turned off
 sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
-%{_bindir}/phpunit --include-path ./lib:./test
+%{_bindir}/phpunit --include-path %{buildroot}%{_datadir}/php
 %else
 : Tests skipped
 %endif
@@ -114,6 +129,9 @@ sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 
 %changelog
+* Thu Sep 11 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.10.0-1
+- Updated to 0.10.0 (BZ #1138284)
+
 * Sun Aug 31 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.9.1-1
 - Updated to 0.9.1 (BZ #1134284)
 - %%license usage
