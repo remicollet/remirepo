@@ -1,11 +1,13 @@
 Name: libxmp
 Version: 4.2.8
-Release: 2%{?dist}
+Release: 1%{?dist}
 Summary: A multi-format module playback library
+Group: System Environment/Libraries
 Source0: http://downloads.sourceforge.net/project/xmp/libxmp/%{version}/libxmp-%{version}.tar.gz
 Provides: bundled(md5-plumb)
 License: BSD and LGPLv2+ and MIT and Public Domain
 URL: http://xmp.sourceforge.net/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
 Libxmp is a library that renders module files to PCM data. It supports
@@ -17,6 +19,7 @@ and Amiga file packers including gzip, bzip2, SQSH, Powerpack, etc.
 
 %package devel
 Summary: A multi-format module playback library development files
+Group: Development/Libraries
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
@@ -52,10 +55,12 @@ make check %{?_smp_mflags}
 %postun -p /sbin/ldconfig
 
 %files
+%defattr(-,root,root,-)
 %doc README docs/COPYING.LIB docs/Changelog docs/CREDITS
 %{_libdir}/libxmp.so.*
 
 %files devel
+%defattr(-,root,root,-)
 %doc docs/libxmp.html docs/libxmp.pdf docs/*.txt
 %{_includedir}/xmp.h
 %{_mandir}/man3/libxmp.3*
@@ -63,6 +68,9 @@ make check %{?_smp_mflags}
 %{_libdir}/libxmp.so
 
 %changelog
+* Fri Sep 12 2014 Remi Collet <remi@fedoraproject.org> - 4.2.8-1
+- backport for remi repository
+
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.2.8-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
