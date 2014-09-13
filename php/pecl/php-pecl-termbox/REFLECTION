@@ -105,42 +105,118 @@ Extension [ <persistent> extension #148 termbox version 0.1.0 ] {
 
   - Functions {
     Function [ <internal:termbox> function termbox_init ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:termbox> function termbox_shutdown ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:termbox> function termbox_width ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:termbox> function termbox_height ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:termbox> function termbox_clear ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:termbox> function termbox_set_clear_attributes ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $fg ]
+        Parameter #1 [ <required> $bg ]
+      }
     }
     Function [ <internal:termbox> function termbox_present ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:termbox> function termbox_set_cursor ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $x ]
+        Parameter #1 [ <required> $y ]
+      }
     }
     Function [ <internal:termbox> function termbox_change_cell ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $x ]
+        Parameter #1 [ <required> $y ]
+        Parameter #2 [ <required> $ch ]
+        Parameter #3 [ <required> $fg ]
+        Parameter #4 [ <required> $bg ]
+      }
     }
     Function [ <internal:termbox> function termbox_set_input_mode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $mode ]
+      }
     }
     Function [ <internal:termbox> function termbox_get_input_mode ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:termbox> function termbox_set_output_mode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $mode ]
+      }
     }
     Function [ <internal:termbox> function termbox_get_output_mode ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:termbox> function termbox_peek_event ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $timeout_ms ]
+      }
     }
     Function [ <internal:termbox> function termbox_poll_event ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:termbox> function termbox_utf8_char_to_unicode ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $char ]
+      }
     }
     Function [ <internal:termbox> function termbox_utf8_unicode_to_char ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $unicode ]
+      }
     }
     Function [ <internal:termbox> function termbox_print ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $str ]
+        Parameter #1 [ <required> $x ]
+        Parameter #2 [ <required> $y ]
+        Parameter #3 [ <required> $fg ]
+        Parameter #4 [ <required> $bg ]
+      }
     }
     Function [ <internal:termbox> function termbox_last_error ] {
+
+      - Parameters [0] {
+      }
     }
   }
 }
