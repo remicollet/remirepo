@@ -12,8 +12,8 @@
 
 %global github_owner     doctrine
 %global github_name      doctrine2
-%global github_version   2.4.2
-%global github_commit    0363a5548d9263f979f9ca149decb9cfc66419ab
+%global github_version   2.4.4
+%global github_commit    fc19c3b53dcd00e6584db40669fdd699c4671f97
 
 %global composer_vendor  doctrine
 %global composer_project orm
@@ -33,7 +33,7 @@
 
 Name:      php-%{composer_vendor}-%{composer_project}
 Version:   %{github_version}
-Release:   4%{?dist}
+Release:   1%{?dist}
 Summary:   Doctrine Object-Relational-Mapper (ORM)
 
 Group:     Development/Libraries
@@ -47,6 +47,7 @@ Patch0:    %{name}-bin.patch
 
 # Upstream fix for latest PHP
 Patch1:    %{name}-upstream.patch
+Requires:  php-composer(doctrine/instantiator) >= 1.0.2
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -136,12 +137,19 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE *.md *.markdown composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *.md *.markdown composer.json
 %{_datadir}/php/Doctrine/ORM
 %{_bindir}/doctrine
 
 
 %changelog
+* Sat Sep 13 2014 Remi Collet <remi@fedoraproject.org> 2.4.4-1
+- Update to 2.4.4
+- backport upstream patch to use doctrine/instantiator
+- fix license handling
+
 * Sat Jun 21 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.4.2-4
 - Added php-composer(%%{composer_vendor}/%%{composer_project}) virtual provide
 - Updated Doctrine dependencies to use php-composer virtual provides
