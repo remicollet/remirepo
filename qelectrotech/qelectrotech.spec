@@ -1,4 +1,4 @@
-%global svnrel 3288
+%global svnrel 3309
 %global rdate  20140128
 %global upver  0.4
 
@@ -229,6 +229,9 @@ fi
 
 
 %changelog
+* Sat Sep 13 2014 Remi Collet <remi@fedoraproject.org> - 0,40-0.1.svn3309
+- Update to 0.4 snapshot revision 3309
+
 * Wed Aug 20 2014 Remi Collet <remi@fedoraproject.org> - 0,40-0.1.svn3288
 - Update to 0.4 snapshot revision 3288
 - update mime scriptlets, drop extraneous scriptlet deps
