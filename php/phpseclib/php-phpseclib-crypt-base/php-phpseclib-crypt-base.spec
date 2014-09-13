@@ -2,7 +2,7 @@
 %global pear_name Crypt_Base
 
 Name:           php-phpseclib-crypt-base
-Version:        0.3.7
+Version:        0.3.8
 Release:        1%{?dist}
 Summary:        Base class for symmetric key cryptographic algorithms
 
@@ -78,5 +78,8 @@ fi
 
 
 %changelog
+* Sat Sep 13 2014 Remi Collet <remi@fedoraproject.org> - 0.3.8-1
+- Update to 0.3.8 (no change)
+
 * Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 0.3.7-1
 - Initial packaging, version 0.3.7

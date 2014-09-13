@@ -1,6 +1,6 @@
-diff -up Crypt_RSA-0.3.7/RSA.php.role Crypt_RSA-0.3.7/RSA.php
---- Crypt_RSA-0.3.7/RSA.php.role	2014-07-07 17:19:19.711010692 +0200
-+++ Crypt_RSA-0.3.7/RSA.php	2014-07-07 17:19:19.712010697 +0200
+diff -up Crypt_RSA-0.3.8/RSA.php.role Crypt_RSA-0.3.8/RSA.php
+--- Crypt_RSA-0.3.8/RSA.php.role	2014-09-13 09:31:03.775079734 +0200
++++ Crypt_RSA-0.3.8/RSA.php	2014-09-13 09:32:39.595509197 +0200
 @@ -178,7 +178,7 @@ define('CRYPT_RSA_MODE_OPENSSL', 2);
  /**
   * Default openSSL configuration file.
@@ -25,4 +25,4 @@ diff -up Crypt_RSA-0.3.7/RSA.php.role Crypt_RSA-0.3.7/RSA.php
 +        $this->configFile = $dir . DIRECTORY_SEPARATOR . CRYPT_RSA_OPENSSL_CONFIG;
  
          if ( !defined('CRYPT_RSA_MODE') ) {
-             // Math/BigInteger's openssl requirements are a little less stringent than Crypt/RSA's. in particular,
+             switch (true) {
