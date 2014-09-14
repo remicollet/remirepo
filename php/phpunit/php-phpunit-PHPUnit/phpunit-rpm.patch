@@ -1,22 +1,24 @@
 diff -up ./phpunit.rpm ./phpunit
---- ./phpunit.rpm	2014-08-08 07:13:30.000000000 +0200
-+++ ./phpunit	2014-08-11 11:12:26.435360930 +0200
+--- ./phpunit.rpm	2014-09-14 11:31:24.000000000 +0200
++++ ./phpunit	2014-09-14 15:48:32.804943481 +0200
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
  <?php
  /* PHPUnit
   *
-@@ -35,20 +35,7 @@
+@@ -35,22 +35,7 @@
   * POSSIBILITY OF SUCH DAMAGE.
   */
- 
+
 -foreach (array(__DIR__ . '/../../autoload.php', __DIR__ . '/vendor/autoload.php') as $file) {
 -    if (file_exists($file)) {
 -        define('PHPUNIT_COMPOSER_INSTALL', $file);
 -        break;
 -    }
 -}
+-
+-unset($file);
 -
 -if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
 -    echo 'You need to set up the project dependencies using the following commands:' . PHP_EOL .
@@ -27,7 +29,7 @@ diff -up ./phpunit.rpm ./phpunit
 -
 +define ('PHPUNIT_COMPOSER_INSTALL', stream_resolve_include_path('PHPUnit/Autoload.php'));
  require PHPUNIT_COMPOSER_INSTALL;
- 
+
  PHPUnit_TextUI_Command::main();
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 --- ./tests/bootstrap.php.rpm	2014-08-17 17:36:46.325953778 +0200
