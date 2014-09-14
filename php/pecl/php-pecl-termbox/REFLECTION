@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #148 termbox version 0.1.0 ] {
+Extension [ <persistent> extension #148 termbox version 0.1.1 ] {
 
   - Constants [100] {
     Constant [ integer TB_KEY_F1 ] { 65535 }

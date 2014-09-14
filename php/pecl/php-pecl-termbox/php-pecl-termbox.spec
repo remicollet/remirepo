@@ -22,14 +22,12 @@
 
 Summary:        A termbox wrapper for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.1.0
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        0.1.1
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        ASL 2.0
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-Patch0:         %{pecl_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  termbox-devel
@@ -89,7 +87,6 @@ mv %{pecl_name}-%{version} NTS
 sed -e '/role="test"/d' -i package.xml
 
 cd NTS
-%patch0 -p1 -b .upstream
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_TERMBOX_VERSION/{s/.* "//;s/".*$//;p}' php_termbox.h)
@@ -214,6 +211,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 14 2014 Remi Collet <remi@fedoraproject.org> - 0.1.1-1
+- Update to 0.1.1
+
 * Sat Sep 13 2014 Remi Collet <remi@fedoraproject.org> - 0.1.0-2
 - add various upstream patches
 
