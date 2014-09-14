@@ -61,11 +61,76 @@ class PkgClient {
 	}
 }
 
+function run($name, $rpm) {
+	global $quiet, $verb, $client;
+
+	if (!$quiet) {
+		printf(" %-40s\r", $rpm);
+	}
+
+	$rpmver = exec("rpm -q --qf '%{VERSION}' $rpm", $out, $ret);
+	if ($ret) {
+		if ($quiet) {
+			return;
+		}
+		$rpmver = "n/a";
+	}
+	$pkgs = $client->getPackage($name);
+	if ($pkgs) {
+		$maxver = "";
+		$maxdat = false;
+		$display = false;
+		foreach ($pkgs['package']['versions'] as $pkver => $pkg) {
+			if (preg_match('/^v[\.0-9]*$/', $pkver)) {
+				$pkver = substr($pkver, 1);
+			}
+			if (strpos($pkver, 'dev') !== false) {
+				continue;
+			}
+			$date = new DateTime($pkg['time']);
+			if (version_compare($pkver, $maxver, 'gt')) {
+				$maxver = $pkver;
+				$maxdat = $date;
+			}
+			if (version_compare($pkver, $rpmver, 'gt')) {
+				$diff = $date->diff(new DateTime("now"));
+				if ($diff->days <2) {
+					$note = "(Just released)";
+				} else if ($diff->days <20) {
+					$note = $diff->format("(%a days)");
+				} else {
+					$note = "";
+				}
+
+				//print_r($pkg);
+				printf(" %-40s %15s %15s %15s %s\n", $rpm, $rpmver, $pkver, $date->format("Y-m-d"), $note);
+				if ($pkg['source']['type']=='git' && $verb) {
+					printf("\tURL:  %s\n\tHash: %s\n",
+						($pkg['source']['url']?:'unkown'),
+						($pkg['source']['reference']?:'unkown'));
+				}
+				$display = true;
+				break;
+			}
+			else if (version_compare($pkver, $rpmver, 'eq') && $verb) {
+				printf(" %-40s %15s %15s %15s\n", $rpm, $rpmver, $pkver, $date->format("Y-m-d"));
+				$display = true;
+				break;
+			}
+		}
+		if ($verb && !$display) {
+			printf(" %-40s %15s %15s %15s\n", $rpm, $rpmver, ($maxver ?: 'unkown'), ($maxdat ? $date->format("Y-m-d") : ''));
+		}
+	} else {
+		printf(" %-40s %15s %15s\n", $rpm, $rpmver, 'Not found !');
+	}
+}
+
 printf("\nCheckPkgist version %s by Remi Collet.\n\n", VERSION);
 
 if (in_array('-h', $_SERVER['argv']) || in_array('--help', $_SERVER['argv'])) {
 	echo <<<END
-usage checkpkg [ options ]
+usage checkpkg [ options ]  [ name ... ]
 
     -h
     --help     Display help (this page)
@@ -125,66 +190,18 @@ if ($sort) {
 }
 printf(" %-40s %15s %15s %15s\n", "Name", "Version", "Upstream", "Date");
 
+$tmp = array();
+for ($i=1 ; $i<$_SERVER['argc'] ; $i++) {
+	$k = array_search($_SERVER['argv'][$i], $pkgs);
+	if ($k) {
+		$tmp[$k] = $pkgs[$k];
+	}
+}
+if (count($tmp)) {
+	$verb = true;
+	$pkgs = $tmp;
+}
 foreach ($pkgs as $name => $rpm) {
-	if (!$quiet) {
-		printf(" %-40s\r", $rpm);
-	}
-
-	$rpmver = exec("rpm -q --qf '%{VERSION}' $rpm", $out, $ret);
-	if ($ret) {
-		if ($quiet) {
-			continue;
-		}
-		$rpmver = "n/a";
-	}
-	$pkgs = $client->getPackage($name);
-	if ($pkgs) {
-		$maxver = "";
-		$maxdat = false;
-		$display = false;
-		foreach ($pkgs['package']['versions'] as $pkver => $pkg) {
-			if (preg_match('/^v[\.0-9]*$/', $pkver)) {
-				$pkver = substr($pkver, 1);
-			}
-			if (strpos($pkver, 'dev') !== false) {
-				continue;
-			}
-			$date = new DateTime($pkg['time']);
-			if (version_compare($pkver, $maxver, 'gt')) {
-				$maxver = $pkver;
-				$maxdat = $date;
-			}
-			if (version_compare($pkver, $rpmver, 'gt')) {
-				$diff = $date->diff(new DateTime("now"));
-				if ($diff->days <2) {
-					$note = "(Just released)";
-				} else if ($diff->days <20) {
-					$note = $diff->format("(%a days)");
-				} else {
-					$note = "";
-				}
-
-				//print_r($pkg);
-				printf(" %-40s %15s %15s %15s %s\n", $rpm, $rpmver, $pkver, $date->format("Y-m-d"), $note);
-				if ($pkg['source']['type']=='git' && $verb) {
-					printf("\tURL:  %s\n\tHash: %s\n",
-						($pkg['source']['url']?:'unkown'),
-						($pkg['source']['reference']?:'unkown'));
-				}
-				$display = true;
-				break;
-			}
-			else if (version_compare($pkver, $rpmver, 'eq') && $verb) {
-				printf(" %-40s %15s %15s %15s\n", $rpm, $rpmver, $pkver, $date->format("Y-m-d"));
-				$display = true;
-				break;
-			}
-		}
-		if ($verb && !$display) {
-			printf(" %-40s %15s %15s %15s\n", $rpm, $rpmver, ($maxver ?: 'unkown'), ($maxdat ? $date->format("Y-m-d") : ''));
-		}
-	} else {
-		printf(" %-40s %15s %15s\n", $rpm, $rpmver, 'Not found !');
-	}
+	run($name, $rpm);
 }
 echo str_repeat(' ', 50)."\n";
