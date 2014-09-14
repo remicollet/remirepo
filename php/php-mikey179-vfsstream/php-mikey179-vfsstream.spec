@@ -6,14 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    8571f349567e02af1b7efc0fc4e3a4a1c98e664e
+%global gh_commit    61b12172292cf539685507aa65b076c1530e83c1
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     mikey179
 %global gh_project   vfsStream
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-mikey179-vfsstream
-Version:        1.3.0
+Version:        1.4.0
 Release:        1%{?dist}
 Summary:        PHP stream wrapper for a virtual file system
 
@@ -92,6 +92,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 14 2014 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
+- update to 1.4.0
+
 * Tue Jul 22 2014 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - update to 1.3.0
 - fix license handling
