@@ -12,7 +12,7 @@
 %global channel   pear.netpirates.net
 
 Name:           php-theseer-fDOMDocument
-Version:        1.5.0
+Version:        1.6.0
 Release:        1%{?dist}
 Summary:        An Extension to PHP standard DOM
 
@@ -43,8 +43,8 @@ Requires:       php-channel(%{channel})
 Requires:       php-pcre
 Requires:       php-spl
 
-
-Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
+Provides:       php-pear(%{channel}/%{pear_name})  = %{version}
+Provides:       php-composer(theseer/fdomdocument) = %{version}
 
 
 %description
@@ -80,7 +80,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 cd %{pear_name}-%{version}
-sed -e s:autoload:TheSeer/fDOMDocument/autoload: \
+sed -e s:src/autoload:TheSeer/fDOMDocument/autoload: \
     phpunit.xml.dist >phpunit.xml
 phpunit -d date.timezone=UTC
 
@@ -111,6 +111,10 @@ fi
 
 
 %changelog
+* Sun Sep 14 2014 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
+- Update to 1.6.0
+- provide php-composer(theseer/fdomdocument)
+
 * Wed Feb 19 2014 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
 - Update to 1.5.0
 
