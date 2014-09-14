@@ -1,4 +1,4 @@
-# spec file for php-horde-turba
+# spec file for php-horde-passwd
 #
 # Copyright (c) 2014 Remi Collet
 # License: CC-BY-SA
@@ -20,7 +20,7 @@ Summary:        Horde password changing application
 
 Group:          Development/Libraries
 License:        GPLv2
-URL:            http://www.horde.org/apps/turba
+URL:            http://www.horde.org/apps/passwd
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
