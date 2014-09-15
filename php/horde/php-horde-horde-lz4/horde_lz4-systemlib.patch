@@ -1,0 +1,55 @@
+diff -up ./config.m4.old ./config.m4
+--- ./config.m4.old	2014-09-15 17:01:16.231167165 +0200
++++ ./config.m4	2014-09-15 18:09:13.730717415 +0200
+@@ -24,9 +24,38 @@ fi
+ PHP_ARG_ENABLE(horde_lz4, whether to enable horde_lz4 support,
+ [  --enable-horde_lz4           Enable horde_lz4 support])
+ 
++PHP_ARG_WITH(liblz4, whether to use system liblz4,
++[  --with-liblz4                Use system liblz4], no, no)
++
+ if test "$PHP_HORDE_LZ4" != "no"; then
+ 
+-  PHP_NEW_EXTENSION(horde_lz4, horde_lz4.c lz4.c lz4hc.c, $ext_shared)
++  sources=horde_lz4.c
++
++  if test "$PHP_LIBLZ4" != "no"; then
++    AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
++    AC_MSG_CHECKING(liblz4 version)
++    if test -x "$PKG_CONFIG" && $PKG_CONFIG --exists liblz4; then
++      LIBLZ4_INCLUDE=`$PKG_CONFIG liblz4 --cflags`
++      LIBLZ4_LIBRARY=`$PKG_CONFIG liblz4 --libs`
++      LIBLZ4_VERSION=`$PKG_CONFIG liblz4 --modversion`
++    fi
++
++    if test -z "$LIBLZ4_VERSION"; then
++      AC_MSG_RESULT(liblz4.pc not found)
++      AC_CHECK_HEADERS([lz4.h])
++      PHP_CHECK_LIBRARY(lz4, LZ4_decompress_fast,
++        [PHP_ADD_LIBRARY(lz4, 1, HORDE_LZ4_SHARED_LIBADD)],
++        [AC_MSG_ERROR(lz4 library not found)])
++    else
++      AC_MSG_RESULT($LIBLZ4_VERSION)
++      PHP_EVAL_INCLINE($LIBLZ4_INCLUDE)
++      PHP_EVAL_LIBLINE($LIBLZ4_LIBRARY, HORDE_LZ4_SHARED_LIBADD)
++    fi
++  else
++    sources="$sources lz4.c lz4hc.c"
++  fi
++  PHP_NEW_EXTENSION(horde_lz4, $sources, $ext_shared)
++  PHP_SUBST(HORDE_LZ4_SHARED_LIBADD)
+ 
+   ifdef([PHP_INSTALL_HEADERS],
+   [
+diff -up ./horde_lz4.c.old ./horde_lz4.c
+--- ./horde_lz4.c.old	2014-09-15 17:24:33.521673922 +0200
++++ ./horde_lz4.c	2014-09-15 17:25:24.225908322 +0200
+@@ -150,7 +150,7 @@ PHP_FUNCTION(horde_lz4_uncompress)
+         RETURN_FALSE;
+     }
+ 
+-    output_len = LZ4_uncompress(p + header_offset, output, data_len);
++    output_len = LZ4_decompress_fast(p + header_offset, output, data_len);
+ 
+     if (output_len <= 0) {
+         RETVAL_FALSE;

@@ -1,0 +1,19 @@
+Extension [ <persistent> extension #92 horde_lz4 version 1.0.6 ] {
+
+  - Functions {
+    Function [ <internal:horde_lz4> function horde_lz4_compress ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <optional> $high ]
+      }
+    }
+    Function [ <internal:horde_lz4> function horde_lz4_uncompress ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $data ]
+      }
+    }
+  }
+}
+
