@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #118 pthreads version 2.0.7 ] {
+Extension [ <persistent> extension #122 pthreads version 2.0.8 ] {
 
   - Constants [10] {
     Constant [ integer PTHREADS_INHERIT_ALL ] { 1118481 }
@@ -13,7 +13,7 @@ Extension [ <persistent> extension #118 pthreads version 2.0.7 ] {
     Constant [ integer PTHREADS_ALLOW_GLOBALS ] { 16777216 }
   }
 
-  - Classes [7] {
+  - Classes [8] {
     Class [ <internal:pthreads> <iterateable> class Threaded implements Traversable, Countable ] {
 
       - Constants [0] {
@@ -22,7 +22,13 @@ Extension [ <persistent> extension #118 pthreads version 2.0.7 ] {
       - Static properties [0] {
       }
 
-      - Static methods [0] {
+      - Static methods [1] {
+        Method [ <internal:pthreads> static public method extend ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $class ]
+          }
+        }
       }
 
       - Properties [0] {
@@ -135,7 +141,13 @@ Extension [ <persistent> extension #118 pthreads version 2.0.7 ] {
       - Static properties [0] {
       }
 
-      - Static methods [0] {
+      - Static methods [1] {
+        Method [ <internal:pthreads> static public method extend ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $class ]
+          }
+        }
       }
 
       - Properties [0] {
@@ -248,7 +260,7 @@ Extension [ <persistent> extension #118 pthreads version 2.0.7 ] {
       - Static properties [0] {
       }
 
-      - Static methods [3] {
+      - Static methods [4] {
         Method [ <internal:pthreads> static public method getCurrentThreadId ] {
 
           - Parameters [0] {
@@ -266,6 +278,13 @@ Extension [ <persistent> extension #118 pthreads version 2.0.7 ] {
           - Parameters [2] {
             Parameter #0 [ <required> $block ]
             Parameter #1 [ <optional> $args ]
+          }
+        }
+
+        Method [ <internal:pthreads, inherits Threaded> static public method extend ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $class ]
           }
         }
       }
@@ -429,7 +448,7 @@ Extension [ <persistent> extension #118 pthreads version 2.0.7 ] {
       - Static properties [0] {
       }
 
-      - Static methods [3] {
+      - Static methods [4] {
         Method [ <internal:pthreads, inherits Thread> static public method getCurrentThreadId ] {
 
           - Parameters [0] {
@@ -447,6 +466,13 @@ Extension [ <persistent> extension #118 pthreads version 2.0.7 ] {
           - Parameters [2] {
             Parameter #0 [ <required> $block ]
             Parameter #1 [ <optional> $args ]
+          }
+        }
+
+        Method [ <internal:pthreads, inherits Threaded> static public method extend ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $class ]
           }
         }
       }
@@ -749,6 +775,138 @@ Extension [ <persistent> extension #118 pthreads version 2.0.7 ] {
 
       - Methods [1] {
         Method [ <internal:pthreads, ctor> final public method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:pthreads> <iterateable> class Collectable extends Threaded implements Countable, Traversable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:pthreads, inherits Threaded> static public method extend ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $class ]
+          }
+        }
+      }
+
+      - Properties [1] {
+        Property [ <default> protected $garbage ]
+      }
+
+      - Methods [17] {
+        Method [ <internal:pthreads> public method isGarbage ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:pthreads> public method setGarbage ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:pthreads, inherits Threaded> public method run ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:pthreads, inherits Threaded> public method wait ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $timeout ]
+          }
+        }
+
+        Method [ <internal:pthreads, inherits Threaded> public method notify ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:pthreads, inherits Threaded> public method isRunning ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:pthreads, inherits Threaded> public method isWaiting ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:pthreads, inherits Threaded> public method isTerminated ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:pthreads, inherits Threaded> public method getTerminationInfo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:pthreads, inherits Threaded> public method synchronized ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $function ]
+          }
+        }
+
+        Method [ <internal:pthreads, inherits Threaded> public method lock ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:pthreads, inherits Threaded> public method unlock ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:pthreads, inherits Threaded> public method merge ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $from ]
+            Parameter #1 [ <optional> $overwrite ]
+          }
+        }
+
+        Method [ <internal:pthreads, inherits Threaded> public method shift ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:pthreads, inherits Threaded> public method chunk ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $size ]
+            Parameter #1 [ <optional> $preserve ]
+          }
+        }
+
+        Method [ <internal:pthreads, inherits Threaded> public method pop ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:pthreads, inherits Threaded, prototype Countable> public method count ] {
 
           - Parameters [0] {
           }
