@@ -1,25 +1,38 @@
-Name:           php-channel-horde
+# spec file for php-channel-horde
+#
+# Copyright (c) 2012-2014 Nick Bebout, Remi Collet
+#
+# License: MIT
+# https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
+#
+# Please, preserve the changelog entries
+#
+%{?scl:         %scl_package        php-channel-horde}
+%{!?__pear:     %global __pear      %{_bindir}/pear}
+%global pear_channel pear.horde.org
+
+Name:           %{?scl_prefix}php-channel-horde
 Version:        1.0
-Release:        1%{?dist}
-Summary:        Adds pear.horde.org channel to PEAR
+Release:        2%{?dist}
+Summary:        Adds %{pear_channel} channel to PEAR
 
 Group:          Development/Languages
 License:        Public Domain
-URL:            http://pear.horde.org/
-Source0:        http://pear.horde.org/channel.xml
+URL:            http://www.horde.org/
+Source0:        http://%{pear_channel}/channel.xml
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  php-pear >= 1:1.4.9-1.2
+BuildRequires:  %{?scl_prefix}php-pear
 
-Requires:       php-pear(PEAR)
-Requires(post): /usr/bin/pear
-Requires(postun): /usr/bin/pear
+Requires:       %{?scl_prefix}php-pear(PEAR)
+Requires(post): %{__pear}
+Requires(postun): %{__pear}
 
-Provides:       php-channel(pear.horde.org)
+Provides:       %{?scl_prefix}php-channel(%{pear_channel})
 
 %description
-This package adds the pear.horde.org channel which allows PEAR packages
+This package adds the %{pear_channel} channel which allows PEAR packages
 from this channel to be installed.
 
 
@@ -32,35 +45,38 @@ from this channel to be installed.
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{SOURCE0} $RPM_BUILD_ROOT%{pear_xmldir}/pear.horde.org.xml
+rm -rf %{buildroot}
+install -Dpm 644 %{SOURCE0} %{buildroot}%{pear_xmldir}/%{name}.xml
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
 if [ $1 -eq  1 ] ; then
-   %{__pear} channel-add %{pear_xmldir}/pear.horde.org.xml > /dev/null || :
+   %{__pear} channel-add %{pear_xmldir}/%{name}.xml > /dev/null || :
 else
-   %{__pear} channel-update %{pear_xmldir}/pear.horde.org.xml > /dev/null ||:
+   %{__pear} channel-update %{pear_xmldir}/%{name}.xml > /dev/null ||:
 fi
 
 
 %postun
 if [ $1 -eq 0 ] ; then
-   %{__pear} channel-delete pear.horde.org > /dev/null || :
+   %{__pear} channel-delete %{pear_channel} > /dev/null || :
 fi
 
 
 %files
 %defattr(-,root,root,-)
-%{pear_xmldir}/pear.horde.org.xml
+%{pear_xmldir}/%{name}.xml
+
 
 %changelog
-* Mon Feb 20 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.0-1
+* Mon Sep 15 2014 Remi Collet <remi@fedoraproject.org> - 1.0-2
+- allow SCL build
+
+* Mon Feb 20 2012 Remi Collet <remi@fedoraproject.org> - 1.0-1
 - backport for remi repo
 
 * Sat Jan 28 2012 Nick Bebout <nb@fedoraproject.org> - 1.0-1
