@@ -67,6 +67,8 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %description
 A compatible Threading API for PHP5.3+
 
+Documentation: http://php.net/pthreads
+
 This extension is only available for PHP in ZTS mode.
 
 Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
