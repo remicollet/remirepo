@@ -9,7 +9,7 @@
 
 Name:      librabbitmq
 Summary:   Client library for AMQP
-Version:   0.5.1
+Version:   0.5.2
 Release:   1%{?dist}
 License:   MIT
 Group:     System Environment/Libraries
@@ -134,6 +134,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Sep 15 2014 Remi Collet <remi@fedoraproject.org> - 0.5.2-1
+- update to 0.5.2
+
 * Wed Aug 13 2014 Remi Collet <remi@fedoraproject.org> - 0.5.1-1
 - update to 0.5.1
 - fix license handling
