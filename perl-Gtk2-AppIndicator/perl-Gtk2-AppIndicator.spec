@@ -9,9 +9,10 @@
 
 Name:           perl-Gtk2-AppIndicator
 Version:        0.15
-Release:        3%{?dist}
+Release:        2%{?dist}
 Summary:        Perl extension for libappindicator
-License:        Artistic
+# From Copyright: Distributed under the same license as perl.
+License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Gtk2-AppIndicator/
 Source0:        http://www.cpan.org/modules/by-module/Gtk2/Gtk2-AppIndicator-%{version}.tar.gz
@@ -69,9 +70,6 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \; -print
 
 
 %changelog
-* Mon Sep 15 2014 Remi Collet <remi@fedoraproject.org> 0.15-3
-- License is Artistic
-
 * Sun Sep  7 2014 Remi Collet <remi@fedoraproject.org> 0.15-2
 - fix BR and cleaup from review #1138980
 
