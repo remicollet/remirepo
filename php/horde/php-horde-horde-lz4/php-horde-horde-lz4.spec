@@ -29,7 +29,6 @@ Group:          Development/Languages
 URL:            http://www.horde.org
 Source0:        http://%{pecl_channel}/get/%{pecl_name}-%{version}.tgz
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel
 BuildRequires:  php-pear
 BuildRequires:  php-channel(%{pecl_channel})
@@ -109,8 +108,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-
 make -C NTS install-modules INSTALL_ROOT=%{buildroot}
 
 # install config file
@@ -167,12 +164,7 @@ cd ../ZTS
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
