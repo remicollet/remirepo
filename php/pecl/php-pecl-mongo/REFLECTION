@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #166 mongo version 1.5.5 ] {
+Extension [ <persistent> extension #173 mongo version 1.5.6 ] {
 
   - Dependencies {
     Dependency [ openssl (Optional) ]
@@ -76,7 +76,7 @@ Extension [ <persistent> extension #166 mongo version 1.5.5 ] {
       - Constants [8] {
         Constant [ string DEFAULT_HOST ] { localhost }
         Constant [ integer DEFAULT_PORT ] { 27017 }
-        Constant [ string VERSION ] { 1.5.5 }
+        Constant [ string VERSION ] { 1.5.6 }
         Constant [ string RP_PRIMARY ] { primary }
         Constant [ string RP_PRIMARY_PREFERRED ] { primaryPreferred }
         Constant [ string RP_SECONDARY ] { secondary }
@@ -212,7 +212,7 @@ Extension [ <persistent> extension #166 mongo version 1.5.5 ] {
       - Constants [8] {
         Constant [ string DEFAULT_HOST ] { localhost }
         Constant [ integer DEFAULT_PORT ] { 27017 }
-        Constant [ string VERSION ] { 1.5.5 }
+        Constant [ string VERSION ] { 1.5.6 }
         Constant [ string RP_PRIMARY ] { primary }
         Constant [ string RP_PRIMARY_PREFERRED ] { primaryPreferred }
         Constant [ string RP_SECONDARY ] { secondary }
