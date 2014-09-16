@@ -28,14 +28,12 @@
 
 Summary:        Horde LZ4 Compression Extension
 Name:           %{?scl_prefix}php-horde-horde-lz4
-Version:        1.0.6
+Version:        1.0.7
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
 URL:            http://www.horde.org
 Source0:        http://%{pecl_channel}/get/%{pecl_name}-%{version}.tgz
-
-Patch0:         %{pecl_name}-systemlib.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -94,12 +92,8 @@ mv %{pecl_name}-%{version} NTS
 
 cd NTS
 # Use system library
-%patch0 -p0 -b .systemlib
-rm lz4.? lz4hc.?
-sed -e '/LICENSE.lz4/d' -i ../package.xml
-
-# Fix the version
-sed -e '/HORDE_LZ4_EXT_VERSION/s/1.0.4/%{version}/' -i horde_lz4.h
+rm -r lib
+sed -e '/name="lib/d' -i ../package.xml
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define HORDE_LZ4_EXT_VERSION/{s/.* "//;s/".*$//;p}' horde_lz4.h)
@@ -217,5 +211,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 16 2014 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
+- Update to 1.0.7
+- https://github.com/horde/horde/pull/103 is merged
+
 * Mon Sep 15 2014 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
 - initial package, version 1.0.6
