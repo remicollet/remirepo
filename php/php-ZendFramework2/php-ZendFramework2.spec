@@ -4,7 +4,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:      php-ZendFramework2
-Version:   2.3.2
+Version:   2.3.3
 Release:   1%{?dist}
 Summary:   Zend Framework 2
 
@@ -12,9 +12,10 @@ Group:     Development/Libraries
 License:   BSD
 URL:       http://framework.zend.com
 Source0:   https://packages.zendframework.com/releases/ZendFramework-%{version}/ZendFramework-%{version}.tgz
-# git clone https://github.com/zendframework/zf2.git
-# cd zf2 ; git checkout release-2.3.2
-# tar czf ../ZendFramework-tests-2.3.2.tgz tests
+# git clone https://github.com/zendframework/zf2.git ; cf zf2
+# OR cd /worl/GIT/zf2; git pull
+# git checkout release-2.3.3
+# tar czf ../ZendFramework-tests-2.3.3.tgz tests
 Source1:   ZendFramework-tests-%{version}.tgz
 
 # Patch needed for GLPI
@@ -1887,6 +1888,12 @@ rm    ZendTest/Session/SaveHandler/MongoDBTest.php
 rm    ZendTest/Math/RandTest.php
 # Strangly fail, lack of date.timezone
 rm    ZendTest/Session/SessionManagerTest.php
+# TODO
+rm    ZendTest/Db/Adapter/Platform/SqliteTest.php
+%if 0%{?rhel} == 5
+rm    ZendTest/Feed/PubSubHubbub/Model/SubscriptionTest.php
+rm    ZendTest/Session/SaveHandler/DbTableGatewayTest.php
+%endif
 
 RET=0
 for dir in ZendTest/[A-Z]*
@@ -2526,6 +2533,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Wed Sep 17 2014 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
+- Update to 2.3.3
+
 * Wed Aug 13 2014 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
 - Update to 2.3.2
 - tests from github
