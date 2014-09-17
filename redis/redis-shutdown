@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Wrapper to close properly redis and sentinel
-test x"REDIS_DEBUG" != x && set -x
+test x"$REDIS_DEBUG" != x && set -x
 
 REDIS_CLI=/usr/bin/redis-cli
 
