@@ -162,12 +162,12 @@ Summary:        GNU FreeFonts mono-spaced for tcpdf
 Group:          Development/Libraries
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 BuildRequires:  gnu-free-mono-fonts
-Requires:       %{name} = %{version}-%{release}
 Requires:       gnu-free-mono-fonts
 %else
 BuildRequires:  freefont
 Requires:       freefont
 %endif
+Requires:       %{name} = %{version}-%{release}
 
 %description gnu-free-mono-fonts
 This package allow to use system GNU FreeFonts mono-spaced font faces in TCPDF.
@@ -177,12 +177,12 @@ Summary:        GNU FreeFonts sans-serif for tcpdf
 Group:          Development/Libraries
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 BuildRequires:  gnu-free-sans-fonts
-Requires:       %{name} = %{version}-%{release}
 Requires:       gnu-free-sans-fonts
 %else
 BuildRequires:  freefont
 Requires:       freefont
 %endif
+Requires:       %{name} = %{version}-%{release}
 # previous metapackage
 Obsoletes:      php-tcpdf-gnu-free-fonts < 6.0.051
 Provides:       php-tcpdf-gnu-free-fonts = %{version}-%{release}
@@ -195,12 +195,12 @@ Summary:        GNU FreeFonts serif for tcpdf
 Group:          Development/Libraries
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 BuildRequires:  gnu-free-serif-fonts
-Requires:       %{name} = %{version}-%{release}
 Requires:       gnu-free-serif-fonts
 %else
 BuildRequires:  freefont
 Requires:       freefont
 %endif
+Requires:       %{name} = %{version}-%{release}
 
 %description gnu-free-serif-fonts
 This package allow to use system GNU FreeFont serif font faces in TCPDF.
