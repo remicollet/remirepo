@@ -58,12 +58,14 @@ function loadFiles($verb) {
                 $ver = $reg[1];
             } else if (preg_match('/^%global[[:space:]]*pear_name[[:space:]]*([_a-zA-Z]*)/', $buf, $reg)) {
                 $name = $reg[1];
+            } else if (preg_match('/^%global[[:space:]]*pecl_name[[:space:]]*([_a-zA-Z0-9]*)/', $buf, $reg)) {
+                $name = $reg[1];
             } else if (preg_match('/^Provides:[[:space:]]*php-pear\(%{pear_channel}\/(.*)\)/', $buf, $reg)) {
                 if (!$name) $name = $reg[1];
             } else if (preg_match('/^BuildRequires:[[:space:]]*php-pear\(%{pear_channel}\/(.*)\)/', $buf, $reg)) {
                 $breq[] = $reg[1];
-            } else if (preg_match('/^Requires:[[:space:]]*php-pear\(%{pear_channel}\/(.*)\)/', $buf, $reg)) {
-                $req[] = $reg[1];
+            } else if (preg_match('/^Requires:[[:space:]]*php-(pear|pecl)\(%{pear_channel}\/(.*)\)/', $buf, $reg)) {
+                $req[] = $reg[2];
             }
         }
         if ($ver && $name) {
@@ -95,7 +97,7 @@ function loadFiles($verb) {
             or $xml = @simplexml_load_file("$file/package.xml")
             or die("*** Can't load $file/package-$ver.xml or $file/package.xml\n");
         if ($xml->name != $name || $xml->version->release != $ver) {
-            die("*** Bad pakage.xml\n");
+            die("*** Bad pakage.xml!\n");
         }
 
         if (isset($xml->dependencies->required->package)) {

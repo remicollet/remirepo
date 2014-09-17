@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.25.0
+Version:        2.25.1
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -126,14 +126,10 @@ done | tee ../%{pear_name}.lang
 
 
 %check
-export LANG=fr_FR.UTF8
-
 src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
-phpunit \
-    -d date.timezone=Europe/Paris \
-    .
+phpunit -d date.timezone=UTC .
 
 
 %post
@@ -161,6 +157,9 @@ fi
 
 
 %changelog
+* Wed Sep 17 2014 Remi Collet <remi@fedoraproject.org> - 2.25.1-1
+- Update to 2.25.1
+
 * Thu Sep 04 2014 Remi Collet <remi@fedoraproject.org> - 2.25.0-1
 - Update to 2.25.0
 - add dependency on php-intl
