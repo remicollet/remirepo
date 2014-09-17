@@ -84,7 +84,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.32
+Version: 5.4.33
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -139,7 +139,8 @@ Patch46: php-5.4.9-fixheader.patch
 Patch47: php-5.4.9-phpinfo.patch
 
 # Upstream fixes
-Patch100: php-bug67873.patch
+# Backported from 5.5.18 for https://bugs.php.net/65641
+Patch100: php-5.4.33-bug65641.patch
 
 # Security fixes
 
@@ -831,11 +832,10 @@ rm -f ext/json/utf8_to_utf16.*
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
 
-%patch100 -p1 -b .wddx
-
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
+%patch100 -p1 -b .bug65641
 
 # security patches
 
@@ -1699,6 +1699,12 @@ fi
 
 
 %changelog
+* Wed Sep 17 2014 Remi Collet <remi@fedoraproject.org> 5.4.33-1
+- Update to 5.4.33
+  http://www.php.net/releases/5_4_33.php
+- fpm: fix script_name with mod_proxy_fcgi / proxypass
+  add upstream patch for https://bugs.php.net/65641
+
 * Thu Aug 21 2014 Remi Collet <remi@fedoraproject.org> 5.4.32-1
 - Update to 5.4.32
   http://www.php.net/releases/5_4_32.php

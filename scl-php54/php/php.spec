@@ -101,12 +101,12 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver RC1
+#global rcver RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.4.33
-Release: 0.1.RC1%{?dist}
+Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -153,6 +153,8 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
+# Backported from 5.5.18 for https://bugs.php.net/65641
+Patch100: php-5.4.33-bug65641.patch
 
 # Security fixes (200+)
 
@@ -766,6 +768,7 @@ support for using the enchant library to PHP.
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
+%patch100 -p1 -b .bug65641
 
 # security patches
 
@@ -1534,6 +1537,12 @@ fi
 
 
 %changelog
+* Wed Sep 17 2014 Remi Collet <remi@fedoraproject.org> 5.4.33-1
+- Update to 5.4.33
+  http://www.php.net/releases/5_4_33.php
+- fpm: fix script_name with mod_proxy_fcgi / proxypass
+  add upstream patch for https://bugs.php.net/65641
+
 * Fri Sep  5 2014 Remi Collet <rcollet@redhat.com> - 5.4.33-0.1.RC1
 - update to 5.4.33RC1
 - add system libraries to default include_path
