@@ -3,7 +3,7 @@
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.12.8
+Version:         1.12.9
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -478,10 +478,12 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
 
+%{!?_licensedir:%global license %%doc}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE.txt DEVELOPMENT_README.md INSTALL.md README.md README-GIT.md
+%license LICENSE.txt
+%doc DEVELOPMENT_README.md INSTALL.md README.md README-GIT.md
 %doc README.fedora
 %{_bindir}/zf
 # we list all files explicitly to find out what's new in future releases more
@@ -639,45 +641,45 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %files demos
 %defattr(-,root,root,-)
 %{_datadir}/php/Zend/demos
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files extras
 %defattr(-,root,root,-)
 %{_datadir}/php/ZendX
 %exclude %{_datadir}/php/ZendX/Db
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files full
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files Auth-Adapter-Ldap
 %defattr(-,root,root,-)
 %{_datadir}/php/Zend/Auth/Adapter/Ldap.php
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files Cache-Backend-Apc
 %defattr(-,root,root,-)
 %{_datadir}/php/Zend/Cache/Backend/Apc.php
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files Cache-Backend-Memcached
 %defattr(-,root,root,-)
 %{_datadir}/php/Zend/Cache/Backend/Memcached.php
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files Cache-Backend-Libmemcached
 %{_datadir}/php/Zend/Cache/Backend/Libmemcached.php
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files Cache-Backend-Sqlite
 %defattr(-,root,root,-)
 %{_datadir}/php/Zend/Cache/Backend/Sqlite.php
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files Captcha
 %defattr(-,root,root,-)
 %{_datadir}/php/Zend/Captcha
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files Db-Adapter-Mysqli
 %defattr(-,root,root,-)
@@ -685,7 +687,7 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %{_datadir}/php/Zend/Db/Adapter/Mysqli
 %{_datadir}/php/Zend/Db/Statement/Mysqli.php
 %{_datadir}/php/Zend/Db/Statement/Mysqli
-%doc LICENSE.txt
+%license LICENSE.txt
 
 # php-ibm_db2 not available for Fedora
 # %files Db-Adapter-Db2
@@ -694,7 +696,7 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 # %{_datadir}/php/Zend/Db/Adapter/Db2
 # %{_datadir}/php/Zend/Db/Statement/Db2.php
 # %{_datadir}/php/Zend/Db/Statement/Db2
-# %doc LICENSE.txt
+# %license LICENSE.txt
 
 %files Db-Adapter-Firebird
 %defattr(-,root,root,-)
@@ -702,7 +704,7 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %{_datadir}/php/ZendX/Db/Adapter/Firebird
 %{_datadir}/php/ZendX/Db/Statement/Firebird.php
 %{_datadir}/php/ZendX/Db/Statement/Firebird
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files Db-Adapter-Oracle
 %defattr(-,root,root,-)
@@ -710,7 +712,7 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %{_datadir}/php/Zend/Db/Adapter/Oracle
 %{_datadir}/php/Zend/Db/Statement/Oracle.php
 %{_datadir}/php/Zend/Db/Statement/Oracle
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files Db-Adapter-Pdo
 %{_datadir}/php/Zend/Db/Adapter/Pdo
@@ -724,64 +726,64 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %exclude %{_datadir}/php/Zend/Db/Adapter/Pdo/Mysql.php
 %exclude %{_datadir}/php/Zend/Db/Adapter/Pdo/Oci.php
 %exclude %{_datadir}/php/Zend/Db/Adapter/Pdo/Pgsql.php
-%doc LICENSE.txt
+%license LICENSE.txt
 
 # php-pecl-PDO_IBM not available for Fedora
 # %files Db-Adapter-Pdo-Ibm
 # %{_datadir}/php/Zend/Db/Adapter/Pdo/Ibm.php
 # %{_datadir}/php/Zend/Db/Adapter/Pdo/Ibm
 # %{_datadir}/php/Zend/Db/Statement/Pdo/Ibm.php
-# %doc LICENSE.txt
+# %license LICENSE.txt
 
 %files Db-Adapter-Pdo-Mssql
 %{_datadir}/php/Zend/Db/Adapter/Pdo/Mssql.php
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files Db-Adapter-Pdo-Mysql
 %{_datadir}/php/Zend/Db/Adapter/Pdo/Mysql.php
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files Db-Adapter-Pdo-Oci
 %{_datadir}/php/Zend/Db/Adapter/Pdo/Oci.php
 %{_datadir}/php/Zend/Db/Statement/Pdo/Oci.php
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files Db-Adapter-Pdo-Pgsql
 %{_datadir}/php/Zend/Db/Adapter/Pdo/Pgsql.php
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files Dojo
 %defattr(-,root,root,-)
 %{_datadir}/php/Zend/Dojo.php
 %{_datadir}/php/Zend/Dojo
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files Feed
 %defattr(-,root,root,-)
 %{_datadir}/php/Zend/Feed.php
 %{_datadir}/php/Zend/Feed
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files Ldap
 %defattr(-,root,root,-)
 %{_datadir}/php/Zend/Ldap.php
 %{_datadir}/php/Zend/Ldap
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files Pdf
 %defattr(-,root,root,-)
 %{_datadir}/php/Zend/Pdf.php
 %{_datadir}/php/Zend/Pdf
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files Search-Lucene
 %defattr(-,root,root,-)
 %{_datadir}/php/Zend/Search
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files Serializer-Adapter-Igbinary
 %{_datadir}/php/Zend/Serializer/Adapter/Igbinary.php
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files Services
 %defattr(-,root,root,-)
@@ -813,15 +815,19 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %{_datadir}/php/Zend/Service/WindowsAzure
 %{_datadir}/php/Zend/Service/Yahoo.php
 %{_datadir}/php/Zend/Service/Yahoo
-%doc LICENSE.txt
+%license LICENSE.txt
 
 %files Soap
 %defattr(-,root,root,-)
 %{_datadir}/php/Zend/Soap
-%doc LICENSE.txt
+%license LICENSE.txt
 
 
 %changelog
+* Wed Sep 17 2014 Remi Collet <RPMS@FamilleCollet.com> - 1.12.9-1
+- update to 1.12.9
+- fix License handling
+
 * Wed Aug 27 2014 Remi Collet <RPMS@FamilleCollet.com> - 1.12.8-1
 - update to 1.12.8
 
