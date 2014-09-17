@@ -125,11 +125,11 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.5.16
+Version: 5.5.17
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}.2
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -190,7 +190,7 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch100: php-bug67865.patch
+Patch100: php-bug65641.patch
 
 # Security fixes (200+)
 
@@ -942,7 +942,7 @@ rm -rf ext/json
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch100 -p1 -b .bug67865
+%patch100 -p1 -b .bug65641
 
 # security patches
 
@@ -1946,6 +1946,12 @@ fi
 
 
 %changelog
+* Wed Sep 17 2014 Remi Collet <remi@fedoraproject.org> 5.5.17-1
+- Update to 5.5.17
+  http://www.php.net/releases/5_5_17.php
+- fpm: fix script_name with mod_proxy_fcgi / proxypass
+  add upstream patch for https://bugs.php.net/65641
+
 * Wed Sep  3 2014 Remi Collet <remi@fedoraproject.org> 5.5.16-1.2
 - ensure gd-last 2.1.0-3, with libvpx support, is used
 
