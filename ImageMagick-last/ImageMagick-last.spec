@@ -24,7 +24,7 @@
 
 Name:           ImageMagick-last
 Version:        %{VER}.%{Patchlevel}
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        An X application for displaying and manipulating images
 Group:          Applications/Multimedia
 License:        ImageMagick
@@ -384,6 +384,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Sep 17 2014 Remi Collet <RPMS@FamilleCollet.com> - 6.8.9.7-3
+- revert change in coder/pdf.c which cause a regression
+  with old ghostcript 8.70
+
 * Wed Aug 27 2014 Remi Collet <RPMS@FamilleCollet.com> - 6.8.9.7-2
 - revert change in coder/ps.c which cause a regression
   with old ghostcript 8.70
