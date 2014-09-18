@@ -17,7 +17,7 @@
 
 %global ext_name     xcache
 #global svnrev       1496
-%global prever       rc1
+#global prever       rc1
 %global with_zts     0%{?__ztsphp:1}
 
 %if "%{php_version}" < "5.6"
@@ -30,7 +30,7 @@ Summary:       Fast, stable PHP opcode cacher
 Name:          %{?scl_prefix}php-xcache
 Epoch:         1
 Version:       3.2.0
-Release:       0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       BSD
 Group:         Development/Languages
 URL:           http://xcache.lighttpd.net/
@@ -119,7 +119,7 @@ This requires to configure, in XCache configuration file (xcache.ini):
 %setup -q -c 
 
 # rename source folder
-mv %{version}%{?prever:-%{prever}} nts
+mv xcache-%{version}%{?prever:-%{prever}} nts
 
 %if 0%{?scl:1}
 sed -e 's:%{_root_datadir}:%{_datadir}:' \
@@ -134,6 +134,9 @@ cd nts
 %patch0 -p1
 %endif
 %patch1 -p1
+
+# Fix version
+sed -e 's/3.2.1/%{version}/' -i xcache.h
 
 # Sanity check, really often broken
 extver=$(sed -n '/define XCACHE_VERSION/{s/.* "//;s/".*$//;p}' xcache.h)
@@ -257,6 +260,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 18 2014 Remi Collet <remi@fedoraproject.org> - 1:3.2.0-1
+- Update to 3.2.0
+
 * Tue Sep  9 2014 Remi Collet <remi@fedoraproject.org> - 1:3.2.0-0.1.rc1
 - Update to 3.2.0-rc1
 

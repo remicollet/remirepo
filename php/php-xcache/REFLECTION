@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #155 XCache version 3.2.0-rc1 ] {
+Extension [ <persistent> extension #157 XCache version 3.2.0 ] {
 
   - Dependencies {
     Dependency [ standard (Required) ]
@@ -219,7 +219,7 @@ Extension [ <persistent> extension #155 XCache version 3.2.0-rc1 ] {
     Constant [ integer XC_OPSPEC_ASSIGN ] { 24 }
     Constant [ integer XC_OPSPEC_FETCHTYPE ] { 25 }
     Constant [ integer XC_SIZEOF_TEMP_VARIABLE ] { 32 }
-    Constant [ string XCACHE_VERSION ] { 3.2.0-rc1 }
+    Constant [ string XCACHE_VERSION ] { 3.2.0 }
     Constant [ string XCACHE_MODULES ] { cacher optimizer coverager }
   }
 
@@ -251,7 +251,7 @@ Extension [ <persistent> extension #155 XCache version 3.2.0-rc1 ] {
   }
 }
 
-Extension [ <persistent> extension #181 XCache Cacher version 3.2.0-rc1 ] {
+Extension [ <persistent> extension #184 XCache Cacher version 3.2.0 ] {
 
   - INI {
     Entry [ xcache.shm_scheme <SYSTEM> ]
@@ -356,7 +356,7 @@ Extension [ <persistent> extension #181 XCache Cacher version 3.2.0-rc1 ] {
   }
 }
 
-Extension [ <persistent> extension #182 XCache Coverager version 3.2.0-rc1 ] {
+Extension [ <persistent> extension #185 XCache Coverager version 3.2.0 ] {
 
   - INI {
     Entry [ xcache.coverager <PERDIR,SYSTEM> ]
@@ -382,7 +382,7 @@ Extension [ <persistent> extension #182 XCache Coverager version 3.2.0-rc1 ] {
   }
 }
 
-Extension [ <persistent> extension #180 XCache Optimizer version 3.2.0-rc1 ] {
+Extension [ <persistent> extension #183 XCache Optimizer version 3.2.0 ] {
 
   - INI {
     Entry [ xcache.optimizer <ALL> ]
