@@ -21,19 +21,20 @@
 %global withwebp 0
 %endif
 
+%if 0%{?fedora} < 15 && 0%{?rhel} < 7
+%global with_gslib 0
+%else
+%global with_gslib 1
+%endif
 
 Name:           ImageMagick-last
 Version:        %{VER}.%{Patchlevel}
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        An X application for displaying and manipulating images
 Group:          Applications/Multimedia
 License:        ImageMagick
 Url:            http://www.imagemagick.org/
 Source0:        ftp://ftp.ImageMagick.org/pub/ImageMagick/ImageMagick-%{VER}-%{Patchlevel}.tar.bz2
-
-# revert change in coder/ps.c which causes
-# a regression with ghostscript 8.70
-Patch0:         ImageMagick-gs870.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  bzip2-devel, freetype-devel, libjpeg-devel, libpng-devel
@@ -85,7 +86,7 @@ ImageMagick-last includes the command line programs for creating animated or
 transparent .gifs, creating composite images, creating thumbnail images,
 and more.
 
-ImageMagick-latest conflicts with ImageMagick official RPM and so can not
+ImageMagick-last conflicts with ImageMagick official RPM and so can not
 be installed together.
 
 
@@ -211,10 +212,6 @@ however.
 %prep
 %setup -q -n ImageMagick-%{VER}-%{Patchlevel}
 
-%if 0%{?fedora} < 15 && 0%{?rhel} < 7
-%patch0 -p1 -b .gs870
-%endif
-
 sed -i 's/libltdl.la/libltdl.so/g' configure
 iconv -f ISO-8859-1 -t UTF-8 README.txt > README.txt.tmp
 touch -r README.txt README.txt.tmp
@@ -232,7 +229,11 @@ cp -p Magick++/demo/*.cpp Magick++/demo/*.miff Magick++/examples
            --with-x \
            --with-threads \
            --with-magick_plus_plus \
+%if %{with_gslib}
            --with-gslib \
+%else
+           --with-gslib=no \
+%endif
            --with-wmf \
 %if %{withlcms2}
            --with-lcms2 \
@@ -384,6 +385,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Sep 19 2014 Remi Collet <RPMS@FamilleCollet.com> - 6.8.9.7-4
+- don't use libgs with old ghostscript
+
 * Wed Sep 17 2014 Remi Collet <RPMS@FamilleCollet.com> - 6.8.9.7-3
 - revert change in coder/pdf.c which cause a regression
   with old ghostcript 8.70
