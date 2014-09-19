@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Core
-Version:        2.14.0
+Version:        2.14.1
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -270,6 +270,9 @@ fi
 
 
 %changelog
+* Fri Sep 19 2014 Remi Collet <remi@fedoraproject.org> - 2.14.1-1
+- Update to 2.14.1
+
 * Tue Sep 09 2014 Remi Collet <remi@fedoraproject.org> - 2.14.0-1
 - Update to 2.14.0
 - add mandatory dependency on Horde_HashTable
