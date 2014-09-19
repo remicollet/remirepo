@@ -1,7 +1,6 @@
 {
     "fabpot\/goutte": "php-goutte",
     "jms\/parser-lib": "php-JMSParser",
-    "justinrainbow\/json-schema": "php-JsonSchema",
     "kriswallsmith\/assetic": "php-Assetic",
     "michelf\/php-markdown": "php-markdown",
     "sabberworm\/php-css-parser": "php-PHP-CSS-Parser",
