@@ -135,9 +135,6 @@ cd nts
 %endif
 %patch1 -p1
 
-# Fix version
-sed -e 's/3.2.1/%{version}/' -i xcache.h
-
 # Sanity check, really often broken
 extver=$(sed -n '/define XCACHE_VERSION/{s/.* "//;s/".*$//;p}' xcache.h)
 if test "x${extver}" != "x%{version}%{?svnrev:-dev}%{?prever:-%{prever}}"; then
