@@ -1,6 +1,6 @@
 diff -up ./bin/phpreflect.json.dist.rpm ./bin/phpreflect.json.dist
---- ./bin/phpreflect.json.dist.rpm	2014-08-22 08:04:25.256132414 +0200
-+++ ./bin/phpreflect.json.dist	2014-08-22 08:04:29.413148972 +0200
+--- ./bin/phpreflect.json.dist.rpm	2014-09-19 13:52:26.000000000 +0200
++++ ./bin/phpreflect.json.dist	2014-09-19 16:08:31.695874693 +0200
 @@ -9,6 +9,19 @@
          {
              "name": "Analyser",
@@ -22,8 +22,8 @@ diff -up ./bin/phpreflect.json.dist.rpm ./bin/phpreflect.json.dist
      ],
      "analysers" : [
 diff -up ./bin/phpreflect.rpm ./bin/phpreflect
---- ./bin/phpreflect.rpm	2014-08-21 19:09:40.000000000 +0200
-+++ ./bin/phpreflect	2014-08-22 08:04:07.852063131 +0200
+--- ./bin/phpreflect.rpm	2014-09-19 13:52:26.000000000 +0200
++++ ./bin/phpreflect	2014-09-19 16:12:13.853757847 +0200
 @@ -1,11 +1,11 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
@@ -38,11 +38,12 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
  
      if (!getenv("REFLECT")) {
          $home  = defined('PHP_WINDOWS_VERSION_BUILD') ? 'USERPROFILE' : 'HOME';
-@@ -22,7 +22,26 @@ if (\Phar::running()) {
+@@ -22,8 +22,27 @@ if (\Phar::running()) {
          }
      }
  }
--require_once $vendorDir . '/autoload.php';
+-$loader = require_once $vendorDir . '/autoload.php';
+-$loader->setUseIncludePath(true);
 +require_once $vendorDir . '/PhpParser/Autoloader.php';
 +PhpParser\Autoloader::register();
 +
@@ -62,13 +63,14 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
 +    'Seld\\JsonLint'                      => $vendorDir,
 +    'Bartlett'                            => $vendorDir,
 +));
++$loader->useIncludePath(true);
 +$loader->register();
  
  if (PHP_SAPI !== 'cli') {
      return;
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
---- ./tests/bootstrap.php.rpm	2014-08-21 19:09:40.000000000 +0200
-+++ ./tests/bootstrap.php	2014-08-22 08:04:07.852063131 +0200
+--- ./tests/bootstrap.php.rpm	2014-09-19 13:52:26.000000000 +0200
++++ ./tests/bootstrap.php	2014-09-19 16:08:31.695874693 +0200
 @@ -1,6 +1,19 @@
  <?php
  

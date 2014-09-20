@@ -6,13 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    d29fddd3c9732d2faa74eae0c3ddfdfdef551489
+%global gh_commit    5f2e0a7e08e377c6924ffb5d24bc41d800a393f2
 #global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     llaville
 %global gh_project   php-reflect
 
 Name:           php-bartlett-PHP-Reflect
-Version:        2.3.0
+Version:        2.4.0
 %global specrel 1
 Release:        %{?gh_short:0.%{specrel}.git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
@@ -47,7 +47,7 @@ BuildRequires:  php-composer(seld/jsonlint)            >= 1.1
 #        "ext-json": "*",
 #        "ext-date": "*",
 #        "phpunit/php-timer": ">=1.0.0",
-#        "nikic/php-parser": "1.0.0beta1",
+#        "nikic/php-parser": "~1.0",
 #        "symfony/event-dispatcher": "~2.5",
 #        "symfony/finder": "~2.5",
 #        "symfony/console": "~2.5"
@@ -60,7 +60,8 @@ Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-tokenizer
 Requires:       php-composer(phpunit/php-timer)        >= 1.0.0
-Requires:       php-composer(nikic/php-parser)         >= 1.0.0
+Requires:       php-composer(nikic/php-parser)         >= 1.0
+Requires:       php-composer(nikic/php-parser)         <  2
 Requires:       php-composer(symfony/event-dispatcher) >= 2.5
 Requires:       php-composer(symfony/event-dispatcher) <  3
 Requires:       php-composer(symfony/finder)           >= 2.5
@@ -139,6 +140,9 @@ fi
 
 
 %changelog
+* Fri Sep 19 2014 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
+- Update to 2.4.0
+
 * Fri Aug 22 2014 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
 - Update to 2.3.0
 - add dependency on seld/jsonlint
