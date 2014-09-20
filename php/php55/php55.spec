@@ -129,7 +129,7 @@ Version: 5.5.17
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -191,6 +191,8 @@ Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
 Patch100: php-bug65641.patch
+# Revert to fix regression
+Patch101: php-5.5.17-openssl.patch
 
 # Security fixes (200+)
 
@@ -943,6 +945,7 @@ rm -rf ext/json
 
 # upstream patches
 %patch100 -p1 -b .bug65641
+%patch101 -p1 -R -b .revert
 
 # security patches
 
@@ -1946,6 +1949,10 @@ fi
 
 
 %changelog
+* Sat Sep 20 2014 Remi Collet <remi@fedoraproject.org> 5.5.17-2
+- openssl: fix regression introduce in changes for upstream
+  bug #65137 and #41631, revert to 5.5.16 behavior
+
 * Wed Sep 17 2014 Remi Collet <remi@fedoraproject.org> 5.5.17-1
 - Update to 5.5.17
   http://www.php.net/releases/5_5_17.php
