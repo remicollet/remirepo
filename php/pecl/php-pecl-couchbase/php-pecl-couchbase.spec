@@ -27,7 +27,7 @@
 Summary:       Couchbase Server PHP extension
 Name:          %{?scl_prefix}php-pecl-couchbase
 Version:       1.2.2
-Release:       3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           pecl.php.net/package/couchbase
@@ -52,6 +52,7 @@ Requires(postun): %{__pecl}
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 Requires:      %{?scl_prefix}php-pecl-igbinary%{?_isa}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:      %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
@@ -84,6 +85,14 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %description
 The PHP client library provides fast access to documents stored
 in a Couchbase Server.
+
+This package provides API version 1.
+%{?scl_prefix}php-pecl-couchbase2 provides API version 2.
+
+Documentation:
+http://docs.couchbase.com/couchbase-sdk-php-1.2/index.html
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
 
 
 %prep
@@ -190,6 +199,8 @@ fi
 
 
 %files
+%defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -204,6 +215,10 @@ fi
 
 
 %changelog
+* Sat Sep 20 2014 Remi Collet <remi@fedoraproject.org> - 1.2.2-4
+- rebuild with new libcouchbase
+- improve description (API v1 /v2)
+
 * Sat Sep  6 2014 Remi Collet <remi@fedoraproject.org> - 1.2.2-3
 - test build with system fastlz
 
