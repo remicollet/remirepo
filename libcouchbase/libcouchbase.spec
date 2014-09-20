@@ -1,5 +1,5 @@
 %global gh_owner    couchbase
-%global gh_commit   c7dd97ab67b1c66c6c44b8576b4a35ba825a3e8e
+%global gh_commit   bd3a20f9e18a69dca199134956fd4ad3e1b80ca8
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 
 # Tests require some need which are downloaded during make
@@ -12,23 +12,24 @@
 %endif
 
 Name:          libcouchbase
-Version:       2.3.1
+Version:       2.4.1
 Release:       1%{?dist}
 Summary:       Couchbase client library
 Group:         System Environment/Libraries
 License:       ASL 2.0
 URL:           http://www.couchbase.com/communities/c/getting-started
-#Source0:      http://packages.couchbase.com/clients/c/%{name}-%{version}.tar.gz
-Source0:       https://github.com/%{gh_owner}/%{name}/archive/%{gh_commit}/%{name}-%{version}-%{gh_short}.tar.gz
+Source0:       http://packages.couchbase.com/clients/c/%{name}-%{version}.tar.gz
+#Source0:      https://github.com/%{gh_owner}/%{name}/archive/%{gh_commit}/%{name}-%{version}-%{gh_short}.tar.gz
 
 %if %{with_tests}
 # grep DOWNLOAD Makefile.am
 Source10:      http://googletest.googlecode.com/files/gtest-1.7.0-rc1.zip
-Source11:      http://files.couchbase.com/maven2/org/couchbase/mock/CouchbaseMock/0.7-SNAPSHOT/CouchbaseMock-0.7-20140129.023144-1.jar
+Source11:      http://files.couchbase.com/maven2/org/couchbase/mock/CouchbaseMock/0.8-SNAPSHOT/CouchbaseMock-0.8-20140621.030439-1.jar
 %endif
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libtool
+BuildRequires: openssl-devel
 BuildRequires: cyrus-sasl-devel
 %if "%{?vendor}" == "Remi Collet"
 # ensure we use latest version (libevent-last)
@@ -74,12 +75,14 @@ a Couchbase Server.
 
 
 %prep
-%setup -qn %{name}-%{gh_commit}
+#%setup -qn %{name}-%{gh_commit}
+%setup -q
 
-cat <<EOF | tee m4/version.m4
-m4_define([VERSION_NUMBER], [%{version}])
-m4_define([GIT_CHANGESET],[%{gh_commit}])
-EOF
+#config/gensrclist.pl
+#cat <<EOF | tee m4/version.m4
+#m4_define([VERSION_NUMBER], [%{version}])
+#m4_define([GIT_CHANGESET],[%{gh_commit}])
+#EOF
 
 %if %{with_tests}
 cp %{SOURCE10} gtest-1.7.0.zip
@@ -89,10 +92,6 @@ cp %{SOURCE11} tests/CouchbaseMock.jar
 
 %build
 autoreconf -i --force
-
-# Hack for manpage layout
-sed -e '/manpage_layout=/s/=.*/=bsd/' \
-    -i configure
 
 %{configure} \
 %if ! %{with_tests}
@@ -113,7 +112,8 @@ rm -f %{buildroot}%{_libdir}/*.la
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE RELEASE_NOTES.markdown
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
 %{_libdir}/%{name}.so.*
 # Backends
 %{_libdir}/%{name}_libevent.so
@@ -121,17 +121,18 @@ rm -f %{buildroot}%{_libdir}/*.la
 
 %files devel
 %defattr(-,root,root,-)
+%doc RELEASE_NOTES.markdown
 %{_includedir}/%{name}
-%{_mandir}/man3/libcouch*
-%{_mandir}/man3/lcb*
-%{_mandir}/man5/lcb*
+#{_mandir}/man3/libcouch*
+#{_mandir}/man3/lcb*
+#{_mandir}/man5/lcb*
 %{_libdir}/%{name}.so
 
 %files tools
 %defattr(-,root,root,-)
 %{_bindir}/cbc*
 %{_mandir}/man1/cbc*
-%{_mandir}/man5/cbc*
+%{_mandir}/man4/cbc*
 
 %check
 %if %{with_tests}
@@ -142,6 +143,9 @@ make check
 
 
 %changelog
+* Sat Sep 20 2014 Remi Collet <remi@feoraproject.org> - 2.4.1-1
+- update to 2.4.1
+
 * Mon May 12 2014 Remi Collet <remi@feoraproject.org> - 2.3.1-1
 - update to 2.3.1
 - always use libevent 2
