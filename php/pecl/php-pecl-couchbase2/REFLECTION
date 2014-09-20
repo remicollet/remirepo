@@ -1,0 +1,229 @@
+Extension [ <persistent> extension #16 couchbase version 2.0.0 ] {
+
+  - Constants [57] {
+    Constant [ integer COUCHBASE_PERSISTTO_MASTER ] { 1 }
+    Constant [ integer COUCHBASE_PERSISTTO_ONE ] { 1 }
+    Constant [ integer COUCHBASE_PERSISTTO_TWO ] { 2 }
+    Constant [ integer COUCHBASE_PERSISTTO_THREE ] { 4 }
+    Constant [ integer COUCHBASE_REPLICATETO_ONE ] { 16 }
+    Constant [ integer COUCHBASE_REPLICATETO_TWO ] { 32 }
+    Constant [ integer COUCHBASE_REPLICATETO_THREE ] { 64 }
+    Constant [ integer COUCHBASE_CNTL_OP_TIMEOUT ] { 0 }
+    Constant [ integer COUCHBASE_CNTL_VIEW_TIMEOUT ] { 1 }
+    Constant [ integer COUCHBASE_CNTL_DURABILITY_INTERVAL ] { 14 }
+    Constant [ integer COUCHBASE_CNTL_DURABILITY_TIMEOUT ] { 13 }
+    Constant [ integer COUCHBASE_CNTL_HTTP_TIMEOUT ] { 15 }
+    Constant [ integer COUCHBASE_CNTL_CONFIGURATION_TIMEOUT ] { 18 }
+    Constant [ integer COUCHBASE_CNTL_CONFDELAY_THRESH ] { 25 }
+    Constant [ integer COUCHBASE_CNTL_CONFIG_NODE_TIMEOUT ] { 27 }
+    Constant [ integer COUCHBASE_CNTL_HTCONFIG_IDLE_TIMEOUT ] { 28 }
+    Constant [ integer COUCHBASE_SUCCESS ] { 0 }
+    Constant [ integer COUCHBASE_AUTH_CONTINUE ] { 1 }
+    Constant [ integer COUCHBASE_AUTH_ERROR ] { 2 }
+    Constant [ integer COUCHBASE_DELTA_BADVAL ] { 3 }
+    Constant [ integer COUCHBASE_E2BIG ] { 4 }
+    Constant [ integer COUCHBASE_EBUSY ] { 5 }
+    Constant [ integer COUCHBASE_ENOMEM ] { 8 }
+    Constant [ integer COUCHBASE_ERANGE ] { 9 }
+    Constant [ integer COUCHBASE_ERROR ] { 10 }
+    Constant [ integer COUCHBASE_ETMPFAIL ] { 11 }
+    Constant [ integer COUCHBASE_EINVAL ] { 7 }
+    Constant [ integer COUCHBASE_CLIENT_ETMPFAIL ] { 27 }
+    Constant [ integer COUCHBASE_KEY_EEXISTS ] { 12 }
+    Constant [ integer COUCHBASE_KEY_ENOENT ] { 13 }
+    Constant [ integer COUCHBASE_DLOPEN_FAILED ] { 14 }
+    Constant [ integer COUCHBASE_DLSYM_FAILED ] { 15 }
+    Constant [ integer COUCHBASE_NETWORK_ERROR ] { 16 }
+    Constant [ integer COUCHBASE_NOT_MY_VBUCKET ] { 17 }
+    Constant [ integer COUCHBASE_NOT_STORED ] { 18 }
+    Constant [ integer COUCHBASE_NOT_SUPPORTED ] { 19 }
+    Constant [ integer COUCHBASE_UNKNOWN_COMMAND ] { 20 }
+    Constant [ integer COUCHBASE_UNKNOWN_HOST ] { 21 }
+    Constant [ integer COUCHBASE_PROTOCOL_ERROR ] { 22 }
+    Constant [ integer COUCHBASE_ETIMEDOUT ] { 23 }
+    Constant [ integer COUCHBASE_BUCKET_ENOENT ] { 25 }
+    Constant [ integer COUCHBASE_CLIENT_ENOMEM ] { 26 }
+    Constant [ integer COUCHBASE_CONNECT_ERROR ] { 24 }
+    Constant [ integer COUCHBASE_EBADHANDLE ] { 28 }
+    Constant [ integer COUCHBASE_SERVER_BUG ] { 29 }
+    Constant [ integer COUCHBASE_PLUGIN_VERSION_MISMATCH ] { 30 }
+    Constant [ integer COUCHBASE_INVALID_HOST_FORMAT ] { 31 }
+    Constant [ integer COUCHBASE_INVALID_CHAR ] { 32 }
+    Constant [ integer COUCHBASE_DURABILITY_ETOOMANY ] { 33 }
+    Constant [ integer COUCHBASE_DUPLICATE_COMMANDS ] { 34 }
+    Constant [ integer COUCHBASE_EINTERNAL ] { 6 }
+    Constant [ integer COUCHBASE_NO_MATCHING_SERVER ] { 35 }
+    Constant [ integer COUCHBASE_BAD_ENVIRONMENT ] { 36 }
+    Constant [ integer COUCHBASE_VALUE_F_JSON ] { 1 }
+    Constant [ integer COUCHBASE_TMPFAIL ] { 11 }
+    Constant [ integer COUCHBASE_KEYALREADYEXISTS ] { 12 }
+    Constant [ integer COUCHBASE_KEYNOTFOUND ] { 13 }
+  }
+
+  - Classes [4] {
+    Class [ <internal:couchbase> class CouchbaseException extends Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> class _CouchbaseCluster ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [3] {
+        Method [ <internal:couchbase, ctor> public method __construct ] {
+        }
+
+        Method [ <internal:couchbase> public method connect ] {
+        }
+
+        Method [ <internal:couchbase> public method http_request ] {
+        }
+      }
+    }
+
+    Class [ <internal:couchbase> class CouchbaseMetaDoc ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> public $error ]
+        Property [ <default> public $value ]
+        Property [ <default> public $flags ]
+        Property [ <default> public $cas ]
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:couchbase> class _CouchbaseBucket ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [15] {
+        Method [ <internal:couchbase, ctor> public method __construct ] {
+        }
+
+        Method [ <internal:couchbase> public method insert ] {
+        }
+
+        Method [ <internal:couchbase> public method upsert ] {
+        }
+
+        Method [ <internal:couchbase> public method replace ] {
+        }
+
+        Method [ <internal:couchbase> public method remove ] {
+        }
+
+        Method [ <internal:couchbase> public method get ] {
+        }
+
+        Method [ <internal:couchbase> public method getFromReplica ] {
+        }
+
+        Method [ <internal:couchbase> public method counter ] {
+        }
+
+        Method [ <internal:couchbase> public method flush ] {
+        }
+
+        Method [ <internal:couchbase> public method unlock ] {
+        }
+
+        Method [ <internal:couchbase> public method http_request ] {
+        }
+
+        Method [ <internal:couchbase> public method durability ] {
+        }
+
+        Method [ <internal:couchbase> public method setTranscoder ] {
+        }
+
+        Method [ <internal:couchbase> public method setOption ] {
+        }
+
+        Method [ <internal:couchbase> public method getOption ] {
+        }
+      }
+    }
+  }
+}
+
