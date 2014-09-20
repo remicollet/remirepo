@@ -10,7 +10,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             redis
-Version:          2.8.16
+Version:          2.8.17
 Release:          1%{?dist}
 Summary:          A persistent key-value database
 
@@ -60,6 +60,9 @@ also lists, sets, and ordered sets. All this data types can be manipulated with
 atomic operations to push/pop elements, add/remove elements, perform server side
 union, intersection, difference between sets, and so forth. Redis supports
 different kind of sorting abilities.
+
+Documentation: http://redis.io/documentation
+
 
 %prep
 %setup -q -n %{name}-%{version}%{?prever:-%{prever}}
@@ -215,6 +218,10 @@ fi
 
 
 %changelog
+* Sat Sep 20 2014 Remi Collet <remi@fedoraproject.org> - 2.8.17-1
+- Redis 2.8.17 - Release date: 19 Sep 2014
+  upgrade urgency: HIGH for Redis Sentinel, LOW for Redis Server.
+
 * Wed Sep 17 2014 Remi Collet <remi@fedoraproject.org> - 2.8.16-1
 - Redis 2.8.16 - Release date: 16 Sep 2014
   upgrade urgency: HIGH for Redis, LOW for Sentinel.
