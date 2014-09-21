@@ -10,6 +10,7 @@
 
 name="redis-server"
 exec="/usr/bin/$name"
+shut="/usr/bin/redis-shutdown"
 pidfile="/var/run/redis/redis.pid"
 REDIS_CONFIG="/etc/redis.conf"
 
@@ -30,8 +31,16 @@ start() {
 
 stop() {
     echo -n $"Stopping $name: "
-    killproc -p $pidfile $name
+    [ -x $shut ] && $shut
     retval=$?
+    if [ -f $pidfile ]
+    then
+        # shutdown haven't work, try old way
+        killproc -p $pidfile $name
+        retval=$?
+    else
+        success "$name shutdown"
+    fi
     echo
     [ $retval -eq 0 ] && rm -f $lockfile
     return $retval

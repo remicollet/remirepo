@@ -6,7 +6,7 @@ test x"$REDIS_DEBUG" != x && set -x
 REDIS_CLI=/usr/bin/redis-cli
 
 # Retrieve service name
-SERVICE_NAME="$2"
+SERVICE_NAME="$1"
 if [ -z "$SERVICE_NAME" ]; then
    SERVICE_NAME=redis
 fi

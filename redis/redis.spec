@@ -11,7 +11,7 @@
 
 Name:             redis
 Version:          2.8.17
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -218,6 +218,10 @@ fi
 
 
 %changelog
+* Sun Sep 21 2014 Remi Collet <remi@fedoraproject.org> - 2.8.17-2
+- fix sentinel service unit file for systemd
+- also use redis-shutdown in init scripts
+
 * Sat Sep 20 2014 Remi Collet <remi@fedoraproject.org> - 2.8.17-1
 - Redis 2.8.17 - Release date: 19 Sep 2014
   upgrade urgency: HIGH for Redis Sentinel, LOW for Redis Server.
