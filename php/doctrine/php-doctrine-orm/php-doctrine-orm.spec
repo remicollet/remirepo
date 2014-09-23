@@ -12,8 +12,8 @@
 
 %global github_owner     doctrine
 %global github_name      doctrine2
-%global github_version   2.4.4
-%global github_commit    fc19c3b53dcd00e6584db40669fdd699c4671f97
+%global github_version   2.4.5
+%global github_commit    c0d3cdbdfbf873871167050ab077e49b1ad02ab0
 
 %global composer_vendor  doctrine
 %global composer_project orm
@@ -145,6 +145,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 23 2014 Remi Collet <remi@fedoraproject.org> 2.4.5-1
+- Update to 2.4.5
+
 * Sat Sep 13 2014 Remi Collet <remi@fedoraproject.org> 2.4.4-1
 - Update to 2.4.4
 - backport upstream patch to use doctrine/instantiator
