@@ -9,10 +9,12 @@
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Mime_Viewer
 %global pear_channel pear.horde.org
+# To use system js
+%global with_sysjs   0
 
 Name:           php-horde-Horde-Mime-Viewer
 Version:        2.0.7
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde MIME Viewer Library
 
 Group:          Development/Libraries
@@ -31,7 +33,11 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+%if %{with_sysjs}
 Requires:       syntaxhighlighter
+%else
+Provides:       horde-syntaxhighlighter
+%endif
 Requires:       php(language) >= 5.3.0
 Requires:       php-date
 Requires:       php-dom
@@ -75,7 +81,9 @@ cd %{pear_name}-%{version}
 # Remove checksum for .mo, as we regenerate them
 sed -e '/%{pear_name}.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+%if %{with_sysjs}
     -e '/syntaxhighlighter/d' \
+%endif
     ../package.xml >%{name}.xml
 
 
@@ -133,9 +141,16 @@ fi
 %{pear_testdir}/%{pear_name}
 %dir %{pear_datadir}/%{pear_name}
 %dir %{pear_datadir}/%{pear_name}/locale
+%if ! %{with_sysjs}
+%{pear_hordedir}/js/syntaxhighlighter
+%endif
 
 
 %changelog
+* Tue Sep 23 2014 Remi Collet <remi@fedoraproject.org> - 2.0.7-2
+- don't use system syntaxhighlighter as this breaks horde
+  and its cache system
+
 * Thu May 22 2014 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
 - Update to 2.0.7
 

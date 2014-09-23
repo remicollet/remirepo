@@ -9,11 +9,12 @@
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    horde
 %global pear_channel pear.horde.org
-%global sysckeditor  0
+# To use system js
+%global with_sysjs   0
 
 Name:           php-horde-horde
 Version:        5.2.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Application Framework
 
 Group:          Development/Libraries
@@ -21,7 +22,7 @@ License:        LGPLv2
 URL:            http://www.horde.org/apps/horde
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 Source2:        horde.conf
-
+Source3:        horde-logrotate
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
@@ -35,12 +36,16 @@ Requires(postun): %{__pear}
 # Web stuff
 Requires:       mod_php
 Requires:       httpd
+Requires:       %{_sysconfdir}/logrotate.d
+%if %{with_sysjs}
 Requires:       prototype-httpd
 Requires:       scriptaculous-httpd
 Requires:       syntaxhighlighter-httpd
-%if %{sysckeditor}
 Requires:       ckeditor
 %else
+Requires:       horde-prototype
+Requires:       horde-scriptaculous
+Requires:       horde-syntaxhighlighter
 Requires:       horde-ckeditor
 %endif
 # PHP stuff, from package.xml
@@ -160,7 +165,7 @@ cd %{pear_name}-%{version}
 
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
-sed -e '/%{pear_name}.po/d' \
+sed -e '/%{pear_name}\.po/d' \
     -e '/htaccess/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
@@ -194,13 +199,44 @@ mkdir -p %{buildroot}%{_sysconfdir}
 mv %{buildroot}%{pear_hordedir}/config \
    %{buildroot}%{_sysconfdir}/horde
 ln -s %{_sysconfdir}/horde %{buildroot}%{pear_hordedir}/config
-cp %{buildroot}%{_sysconfdir}/horde/conf.php.dist \
-   %{buildroot}%{_sysconfdir}/horde/conf.php
 
 install -Dpm 0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
-%if ! %{sysckeditor}
-sed -e '/ckeditor/d'      -i %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
+%if ! %{with_sysjs}
+sed -e '\:horde/js:d' \
+    -e '\:Javascript:d' \
+    -i %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 %endif
+
+# Log
+install -dm 770 %{buildroot}%{_localstatedir}/log/horde
+cat <<EOF | tee -a %{buildroot}%{_sysconfdir}/horde/conf.php.dist
+\$conf['log']['name'] = '/var/log/horde/horde.log';
+\$conf['log']['params']['append'] = true;
+\$conf['log']['params']['format'] = 'default';
+\$conf['log']['type'] = 'file';
+\$conf['log']['enabled'] = true;
+EOF
+# Cache
+install -dm 770 %{buildroot}%{_localstatedir}/lib/horde/cache
+cat <<EOF | tee -a %{buildroot}%{_sysconfdir}/horde/conf.php.dist
+\$conf['cache']['default_lifetime'] = 86400;
+\$conf['cache']['params']['dir'] = '/var/lib/horde/cache';
+\$conf['cache']['params']['sub'] = 0;
+\$conf['cache']['driver'] = 'File';
+\$conf['cache']['use_memorycache'] = '';
+EOF
+# Static
+mv %{buildroot}%{pear_hordedir}/static \
+   %{buildroot}%{_localstatedir}/lib/horde/static
+ln -s %{_localstatedir}/lib/horde/static \
+      %{buildroot}%{pear_hordedir}/static
+
+# Logrotate
+install -Dm 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/logrotate.d/horde
+
+# Configuration
+cp %{buildroot}%{_sysconfdir}/horde/conf.php.dist \
+   %{buildroot}%{_sysconfdir}/horde/conf.php
 
 # Locales
 for loc in locale/{??,??_??}
@@ -209,6 +245,17 @@ do
     test -d %{buildroot}%{pear_hordedir}/$loc \
          && echo "%%lang(${lang%_*}) %{pear_hordedir}/$loc"
 done | tee ../%{pear_name}.lang
+
+
+%pre
+if [ -d %{pear_hordedir}/static -a ! -L %{pear_hordedir}/static ]
+then
+  save=%{pear_hordedir}/static.rpmsave
+  while [ -e $save ]
+  do  save=${save}_
+  done
+  mv %{pear_hordedir}/static $save
+fi
 
 
 %clean
@@ -230,6 +277,7 @@ fi
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
+%config(noreplace) %{_sysconfdir}/logrotate.d/horde
 %attr(0770,apache,apache) %dir %{_sysconfdir}/horde
 %attr(0770,apache,apache) %dir %{_sysconfdir}/horde/registry.d
 %attr(0640,apache,apache) %config %{_sysconfdir}/horde/*.dist
@@ -253,9 +301,22 @@ fi
 %{pear_hordedir}/js/plupload
 %{pear_hordedir}/js/*.js
 %{pear_datadir}/%{pear_name}
+%attr(750,apache,root) %dir %{_localstatedir}/log/horde
+%attr(750,apache,root) %dir %{_localstatedir}/lib/horde
+%attr(750,apache,root) %dir %{_localstatedir}/lib/horde/cache
+%attr(750,apache,root) %dir %{_localstatedir}/lib/horde/static
+%{_localstatedir}/lib/horde/static/README
 
 
 %changelog
+* Tue Sep 23 2014 Remi Collet <remi@fedoraproject.org> - 5.2.1-2
+- don't use system javascript libraries as this breaks horde
+  and its cache system
+- use /var/log/horde for logging
+- use /var/lib/horde/cache for caching
+- use /var/lib/horde/static for js and css cache
+- fix regex filter, fix missing horde-power*.png
+
 * Mon Aug 04 2014 Remi Collet <remi@fedoraproject.org> - 5.2.1-1
 - Update to 5.2.1
 

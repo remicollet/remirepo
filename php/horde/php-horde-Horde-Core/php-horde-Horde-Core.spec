@@ -9,10 +9,12 @@
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Core
 %global pear_channel pear.horde.org
+# To use system js
+%global with_sysjs   0
 
 Name:           php-horde-Horde-Core
 Version:        2.14.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Core Framework libraries
 
 Group:          Development/Libraries
@@ -35,8 +37,13 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+%if %{with_sysjs}
 Requires:       prototype
 Requires:       scriptaculous
+%else
+Provides:       horde-prototype
+Provides:       horde-scriptaculous
+%endif
 Requires:       php(language) >= 5.3.0
 Requires:       php-date
 Requires:       php-dom
@@ -180,9 +187,11 @@ cd %{pear_name}-%{version}
 # Don't install .po and .pot files
 # Don't install prototype, scriptaculous, use system one
 # Remove checksum for .mo, as we regenerate them
-sed -e '/%{pear_name}.po/d' \
+sed -e '/%{pear_name}\.po/d' \
+%if %{with_sysjs}
     -e '/js\/prototype.js/d' \
     -e '/js\/scriptaculous/d' \
+%endif
     -e '/LICENSE/s/role="horde"/role="doc"/' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
@@ -267,9 +276,16 @@ fi
 %{pear_hordedir}/js/jquery.mobile
 %{pear_hordedir}/js/map
 %{pear_hordedir}/js/*js
+%if ! %{with_sysjs}
+%{pear_hordedir}/js/scriptaculous
+%endif
 
 
 %changelog
+* Tue Sep 23 2014 Remi Collet <remi@fedoraproject.org> - 2.14.1-2
+- don't use system prototype and scriptaculous as
+  this breaks horde and its cache system
+
 * Fri Sep 19 2014 Remi Collet <remi@fedoraproject.org> - 2.14.1-1
 - Update to 2.14.1
 
