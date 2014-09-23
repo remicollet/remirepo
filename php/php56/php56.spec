@@ -99,6 +99,12 @@
 %else
 %global with_httpd2410 0
 %endif
+# nginx 1.6 with nginx-filesystem
+%if 0%{?fedora} >= 21
+%global with_nginx     1
+%else
+%global with_nginx     0
+%endif
 
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 %global with_dtrace 1
@@ -127,7 +133,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.1
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}.2
 %endif
@@ -158,6 +164,8 @@ Source9: php.modconf
 Source10: php.ztsmodconf
 Source11: strip.sh
 Source12: php.conf2
+Source13: nginx-fpm.conf
+Source14: nginx-php.conf
 # Configuration files for some extensions
 Source50: opcache.ini
 Source51: opcache-default.blacklist
@@ -207,6 +215,10 @@ BuildRequires: httpd-devel >= 2.0.46-1, pam-devel
 %if %{with_httpd2410}
 # to ensure we are using httpd with filesystem feature (see #1081453)
 BuildRequires: httpd-filesystem
+%endif
+%if %{with_nginx}
+# to ensure we are using nginx with filesystem feature (see #1142298)
+BuildRequires: nginx-filesystem
 %endif
 BuildRequires: libstdc++-devel, openssl-devel
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
@@ -333,6 +345,10 @@ Requires(pre): httpd-filesystem
 Requires: httpd-filesystem >= 2.4.10
 # php engine for Apache httpd webserver
 Provides: php(httpd)
+%endif
+%if %{with_nginx}
+# for /etc/nginx ownership
+Requires: nginx-filesystem
 %endif
 Obsoletes: php53-fpm, php53u-fpm, php54-fpm, php54w-fpm, php55u-fpm, php55w-fpm, php56u-fpm, php56w-fpm
 
@@ -1539,6 +1555,11 @@ sed -i -e 's:/run:/var/run:' $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/php-fpm
 install -m 755 -d $RPM_BUILD_ROOT%{_initrddir}
 install -m 755 %{SOURCE99} $RPM_BUILD_ROOT%{_initrddir}/php-fpm
 %endif
+%if %{with_nginx}
+# Nginx configuration
+install -D -m 644 %{SOURCE13} $RPM_BUILD_ROOT%{_sysconfdir}/nginx/conf.d/php-fpm.conf
+install -D -m 644 %{SOURCE14} $RPM_BUILD_ROOT%{_sysconfdir}/nginx/default.d/php.conf
+%endif
 
 # Fix the link
 (cd $RPM_BUILD_ROOT%{_bindir}; ln -sfn phar.phar phar)
@@ -1830,6 +1851,10 @@ fi
 %config(noreplace) %{_sysconfdir}/php-fpm.d/www.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/php-fpm
 %config(noreplace) %{_sysconfdir}/sysconfig/php-fpm
+%if %{with_nginx}
+%config(noreplace) %{_sysconfdir}/nginx/conf.d/php-fpm.conf
+%config(noreplace) %{_sysconfdir}/nginx/default.d/php.conf
+%endif
 %if %{with_systemd}
 %{_prefix}/lib/tmpfiles.d/php-fpm.conf
 %{_unitdir}/php-fpm.service
@@ -1917,6 +1942,9 @@ fi
 
 
 %changelog
+* Tue Sep 24 2014 Remi Collet <rcollet@redhat.com> 5.6.1-0.2.RC1
+- provides nginx configuration (see #1142298)
+
 * Fri Sep 12 2014 Remi Collet <rcollet@redhat.com> 5.6.1-0.1.RC1
 - php 5.6.1RC1
 
