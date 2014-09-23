@@ -14,7 +14,7 @@
 
 Name:           php-horde-horde
 Version:        5.2.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Horde Application Framework
 
 Group:          Development/Libraries
@@ -247,7 +247,7 @@ do
 done | tee ../%{pear_name}.lang
 
 
-%pre
+%pretrans
 if [ -d %{pear_hordedir}/static -a ! -L %{pear_hordedir}/static ]
 then
   save=%{pear_hordedir}/static.rpmsave
@@ -309,6 +309,10 @@ fi
 
 
 %changelog
+* Tue Sep 23 2014 Remi Collet <remi@fedoraproject.org> - 5.2.1-3
+- fix replacement of /usr/share/horde/static directory
+  by a link to /var/lib/horde/static
+
 * Tue Sep 23 2014 Remi Collet <remi@fedoraproject.org> - 5.2.1-2
 - don't use system javascript libraries as this breaks horde
   and its cache system
