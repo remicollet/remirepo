@@ -11,8 +11,8 @@
 
 %global github_owner     doctrine
 %global github_name      cache
-%global github_version   1.3.0
-%global github_commit    e16d7adf45664a50fa86f515b6d5e7f670130449
+%global github_version   1.3.1
+%global github_commit    cf483685798a72c93bf4206e3dd6358ea07d64e7
 
 %global composer_vendor  doctrine
 %global composer_project cache
@@ -27,7 +27,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       4%{?dist}
+Release:       1%{?dist}
 Summary:       Doctrine Cache
 
 Group:         Development/Libraries
@@ -135,6 +135,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 23 2014 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
+- update to 1.3.1
+
 * Fri Jun 20 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.0-4
 - Added php-composer(%%{composer_vendor}/%%{composer_project}) virtual provide
 - Removed %%{summary_base}
