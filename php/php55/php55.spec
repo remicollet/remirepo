@@ -129,7 +129,7 @@ Version: 5.5.17
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 3%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1949,6 +1949,9 @@ fi
 
 
 %changelog
+* Wed Sep 24 2014 Remi Collet <remi@fedoraproject.org> 5.5.17-3
+- rebuild (fedora, x86_64)
+
 * Sat Sep 20 2014 Remi Collet <remi@fedoraproject.org> 5.5.17-2
 - openssl: fix regression introduce in changes for upstream
   bug #65137 and #41631, revert to 5.5.16 behavior
