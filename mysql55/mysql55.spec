@@ -10,7 +10,7 @@
 #endif
 
 Name: mysql
-Version: 5.5.39
+Version: 5.5.40
 Release: 1%{?dist}
 
 Summary: MySQL client programs and shared libraries
@@ -452,7 +452,7 @@ touch $RPM_BUILD_ROOT/var/log/mysqld.log
 mkdir -p $RPM_BUILD_ROOT/var/run/mysqld
 install -m 0755 -d $RPM_BUILD_ROOT/var/lib/mysql
 
-mkdir -p $RPM_BUILD_ROOT/etc
+mkdir -p $RPM_BUILD_ROOT/etc/my.cnf.d
 install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT/etc/my.cnf
 %if %{with_systemd}
 sed -i -e '/user=mysql/d' $RPM_BUILD_ROOT/etc/my.cnf
@@ -687,6 +687,7 @@ fi
 %doc README COPYING README.mysql-license
 # although the default my.cnf contains only server settings, we put it in the
 # libs package because it can be used for client settings too.
+%dir /etc/my.cnf.d
 %config(noreplace) /etc/my.cnf
 %dir %{_libdir}/mysql
 %{_libdir}/mysql/libmysqlclient.so.18*
@@ -844,6 +845,11 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Wed Sep 24 2014 Remi Collet <RPMS@FamilleCollet.com> - 5.5.40-1
+- update to MySQL 5.5.40 Community Server GA
+  http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-40.html
+- add /etc/my.cnf.d for split configuration files
+
 * Sat Aug  2 2014 Remi Collet <RPMS@FamilleCollet.com> - 5.5.39-1
 - update to MySQL 5.5.39 Community Server GA
   http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-39.html
