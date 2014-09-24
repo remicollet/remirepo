@@ -6,13 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    fca41fa03aec12bacf1c281a4fa6b832960f2fb4
-#global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_commit    ded22dc1480ecf1151db5aa90a17d15f324b53b9
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     llaville
 %global gh_project   php-compat-info
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        3.3.0
+Version:        3.4.0
 %global specrel 1
 Release:        %{?gh_short:0.%{specrel}.git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
@@ -30,8 +30,7 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.0
 # to run test suite
 BuildRequires:  %{_bindir}/phpunit
-# 2.2 is enough for test (2.3 required for cache)
-BuildRequires:  php-composer(bartlett/php-reflect) >= 2.2
+BuildRequires:  php-composer(bartlett/php-reflect) >= 2.4
 
 # From composer.json, "require"
 #        "php": ">=5.3.0",
@@ -40,14 +39,14 @@ BuildRequires:  php-composer(bartlett/php-reflect) >= 2.2
 #        "ext-spl": "*",
 #        "ext-json": "*",
 #        "symfony/console": "~2.5",
-#         "bartlett/php-reflect": "~2.3",
+#         "bartlett/php-reflect": "~2.4",
 #         "seld/jsonlint": "~1.1"
 Requires:       php(language) >= 5.3.0
 Requires:       php-json
 Requires:       php-libxml
 Requires:       php-pcre
 Requires:       php-spl
-Requires:       php-composer(bartlett/php-reflect) >= 2.3
+Requires:       php-composer(bartlett/php-reflect) >= 2.4
 Requires:       php-composer(bartlett/php-reflect) <  3
 Requires:       php-composer(symfony/console)      >= 2.5
 Requires:       php-composer(symfony/console)      <  3
@@ -131,6 +130,9 @@ fi
 
 
 %changelog
+* Wed Sep 24 2014 Remi Collet <remi@fedoraproject.org> - 3.4.0-0.1.ded22dc
+- Test build of upcoming 3.4.0
+
 * Fri Aug 22 2014 Remi Collet <remi@fedoraproject.org> - 3.3.0-1
 - Update to 3.2.0
 - add dependency on seld/jsonlint
