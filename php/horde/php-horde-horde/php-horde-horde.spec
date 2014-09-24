@@ -23,6 +23,7 @@ URL:            http://www.horde.org/apps/horde
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 Source2:        horde.conf
 Source3:        horde-logrotate
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext

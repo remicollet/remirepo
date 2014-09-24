@@ -85,6 +85,7 @@ sed -e '/%{pear_name}.po/d' \
     -e '/syntaxhighlighter/d' \
 %endif
     ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
