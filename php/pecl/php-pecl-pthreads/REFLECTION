@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #122 pthreads version 2.0.8 ] {
+Extension [ <persistent> extension #124 pthreads version 2.0.9 ] {
 
   - Constants [10] {
     Constant [ integer PTHREADS_INHERIT_ALL ] { 1118481 }
@@ -22,11 +22,20 @@ Extension [ <persistent> extension #122 pthreads version 2.0.8 ] {
       - Static properties [0] {
       }
 
-      - Static methods [1] {
+      - Static methods [2] {
         Method [ <internal:pthreads> static public method extend ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $class ]
+          }
+        }
+
+        Method [ <internal:pthreads> static public method from ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> Closure $run ]
+            Parameter #1 [ <optional> Closure or NULL $construct ]
+            Parameter #2 [ <optional> $args ]
           }
         }
       }
@@ -141,11 +150,20 @@ Extension [ <persistent> extension #122 pthreads version 2.0.8 ] {
       - Static properties [0] {
       }
 
-      - Static methods [1] {
+      - Static methods [2] {
         Method [ <internal:pthreads> static public method extend ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $class ]
+          }
+        }
+
+        Method [ <internal:pthreads> static public method from ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> Closure $run ]
+            Parameter #1 [ <optional> Closure or NULL $construct ]
+            Parameter #2 [ <optional> $args ]
           }
         }
       }
@@ -260,7 +278,7 @@ Extension [ <persistent> extension #122 pthreads version 2.0.8 ] {
       - Static properties [0] {
       }
 
-      - Static methods [4] {
+      - Static methods [5] {
         Method [ <internal:pthreads> static public method getCurrentThreadId ] {
 
           - Parameters [0] {
@@ -285,6 +303,15 @@ Extension [ <persistent> extension #122 pthreads version 2.0.8 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $class ]
+          }
+        }
+
+        Method [ <internal:pthreads, inherits Threaded> static public method from ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> Closure $run ]
+            Parameter #1 [ <optional> Closure or NULL $construct ]
+            Parameter #2 [ <optional> $args ]
           }
         }
       }
@@ -448,7 +475,7 @@ Extension [ <persistent> extension #122 pthreads version 2.0.8 ] {
       - Static properties [0] {
       }
 
-      - Static methods [4] {
+      - Static methods [5] {
         Method [ <internal:pthreads, inherits Thread> static public method getCurrentThreadId ] {
 
           - Parameters [0] {
@@ -473,6 +500,15 @@ Extension [ <persistent> extension #122 pthreads version 2.0.8 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $class ]
+          }
+        }
+
+        Method [ <internal:pthreads, inherits Threaded> static public method from ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> Closure $run ]
+            Parameter #1 [ <optional> Closure or NULL $construct ]
+            Parameter #2 [ <optional> $args ]
           }
         }
       }
@@ -790,11 +826,20 @@ Extension [ <persistent> extension #122 pthreads version 2.0.8 ] {
       - Static properties [0] {
       }
 
-      - Static methods [1] {
+      - Static methods [2] {
         Method [ <internal:pthreads, inherits Threaded> static public method extend ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $class ]
+          }
+        }
+
+        Method [ <internal:pthreads, inherits Threaded> static public method from ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> Closure $run ]
+            Parameter #1 [ <optional> Closure or NULL $construct ]
+            Parameter #2 [ <optional> $args ]
           }
         }
       }
