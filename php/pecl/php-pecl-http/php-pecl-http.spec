@@ -27,7 +27,7 @@
 %global with_tests %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           %{?scl_prefix}php-pecl-http
-Version:        2.1.1
+Version:        2.1.2
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
@@ -38,6 +38,8 @@ Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 
 # From http://www.php.net/manual/en/http.configuration.php
 Source1:        %{proj_name}.ini
+
+Patch0:         %{proj_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel >= 5.3.0
@@ -172,6 +174,7 @@ These are the files needed to compile programs using HTTP extension.
 
 mv %{proj_name}-%{version}%{?prever} NTS
 cd NTS
+%patch0 -p1 -b .upstream
 
 extver=$(sed -n '/#define PHP_PECL_HTTP_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -305,6 +308,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{proj_name}
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
@@ -326,6 +330,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 25 2014 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
+- Update to 2.1.2
+
 * Tue Sep 09 2014 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - Update to 2.1.1
 

@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #168 http version 2.1.1 ] {
+Extension [ <persistent> extension #167 http version 2.1.2 ] {
 
   - Dependencies {
     Dependency [ raphf (Required) ]
@@ -15,7 +15,7 @@ Extension [ <persistent> extension #168 http version 2.1.1 ] {
     }
   }
 
-  - Constants [25] {
+  - Constants [26] {
     Constant [ integer http\Client\Curl\HTTP_VERSION_1_0 ] { 1 }
     Constant [ integer http\Client\Curl\HTTP_VERSION_1_1 ] { 2 }
     Constant [ integer http\Client\Curl\HTTP_VERSION_ANY ] { 0 }
@@ -40,6 +40,7 @@ Extension [ <persistent> extension #168 http version 2.1.1 ] {
     Constant [ integer http\Client\Curl\PROXY_HTTP_1_0 ] { 1 }
     Constant [ integer http\Client\Curl\POSTREDIR_301 ] { 1 }
     Constant [ integer http\Client\Curl\POSTREDIR_302 ] { 2 }
+    Constant [ integer http\Client\Curl\POSTREDIR_303 ] { 4 }
     Constant [ integer http\Client\Curl\POSTREDIR_ALL ] { 7 }
   }
 
