@@ -41,7 +41,7 @@ BuildArch:     noarch
 # For tests
 BuildRequires: php(language)       >= %{php_min_ver}
 BuildRequires: php-phpunit-PHPUnit >= %{phpunit_min_ver}
-# For tests: phpcompatinfo (computed from v1.3.0)
+# For tests: phpcompatinfo (computed from version 1.3.1)
 BuildRequires: php-date
 BuildRequires: php-hash
 BuildRequires: php-pcre
@@ -50,7 +50,7 @@ BuildRequires: php-spl
 %endif
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from git commit v1.3.0)
+# phpcompatinfo (computed from version 1.3.1)
 Requires:      php-date
 Requires:      php-hash
 Requires:      php-pcre
@@ -96,16 +96,15 @@ cp -rp lib/* %{buildroot}/%{_datadir}/php/
 
 %check
 %if %{with_tests}
-# Create tests' init
-cat > tests/Doctrine/Tests/TestInit.php <<'TESTINIT'
+# Create tests' bootstrap
+cat > bootstrap.php <<'BOOTSTRAP'
 <?php
-namespace Doctrine\Tests;
 
 spl_autoload_register(function ($class) {
     $src = str_replace('\\', '/', str_replace('_', '/', $class)).'.php';
     @include_once $src;
 });
-TESTINIT
+BOOTSTRAP
 
 # Create PHPUnit config w/ colors turned off
 sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
@@ -116,7 +115,10 @@ rm -f \
     tests/Doctrine/Tests/Common/Cache/MongoDBCacheTest.php \
     tests/Doctrine/Tests/Common/Cache/RiakCacheTest.php
 
-%{_bindir}/phpunit --include-path ./lib:./tests -d date.timezone="UTC"
+%{_bindir}/phpunit \
+    --bootstrap bootstrap.php \
+    --include-path %{buildroot}/%{_datadir}/php:./tests \
+    -d date.timezone="UTC"
 %else
 : Tests skipped
 %endif
@@ -128,13 +130,20 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE *.md composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *.md composer.json
 %dir %{_datadir}/php/Doctrine
 %dir %{_datadir}/php/Doctrine/Common
      %{_datadir}/php/Doctrine/Common/Cache
 
 
 %changelog
+* Wed Sep 24 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.1-1
+- Updated to 1.3.1 (BZ #1142986)
+- Tests update
+- %%license usage
+
 * Tue Sep 23 2014 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
 - update to 1.3.1
 
