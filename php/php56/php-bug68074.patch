@@ -1,0 +1,60 @@
+From 0d776ef87b7b0c1e970c424cc5dcdf4cd6f500ac Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Wed, 24 Sep 2014 10:34:55 +0200
+Subject: [PATCH] Fix bug #68074 Allow to use system cipher list instead of
+ hardcoded value
+
+---
+ ext/openssl/config0.m4 | 6 ++++++
+ ext/openssl/xp_ssl.c   | 9 ++++++---
+ 2 files changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/ext/openssl/config0.m4 b/ext/openssl/config0.m4
+index a97114f..701e488 100644
+--- a/ext/openssl/config0.m4
++++ b/ext/openssl/config0.m4
+@@ -8,6 +8,9 @@ PHP_ARG_WITH(openssl, for OpenSSL support,
+ PHP_ARG_WITH(kerberos, for Kerberos support,
+ [  --with-kerberos[=DIR]     OPENSSL: Include Kerberos support], no, no)
+ 
++PHP_ARG_WITH(system-ciphers, whether to use system default cipher list instead of hardcoded value,
++[  --with-system-ciphers   OPENSSL: Use system default cipher list instead of hardcoded value], no, no)
++
+ if test "$PHP_OPENSSL" != "no"; then
+   PHP_NEW_EXTENSION(openssl, openssl.c xp_ssl.c, $ext_shared)
+   PHP_SUBST(OPENSSL_SHARED_LIBADD)
+@@ -25,4 +28,7 @@ if test "$PHP_OPENSSL" != "no"; then
+   ], [
+     AC_MSG_ERROR([OpenSSL check failed. Please check config.log for more information.])
+   ])
++  if test "$PHP_SYSTEM_CIPHERS" != "no"; then
++    AC_DEFINE(USE_OPENSSL_SYSTEM_CIPHERS,1,[ Use system default cipher list instead of hardcoded value ])
++  fi
+ fi
+diff --git a/ext/openssl/xp_ssl.c b/ext/openssl/xp_ssl.c
+index de9e991..2f81dc7 100644
+--- a/ext/openssl/xp_ssl.c
++++ b/ext/openssl/xp_ssl.c
+@@ -1476,13 +1476,16 @@ int php_openssl_setup_crypto(php_stream *stream,
+ 	}
+ 
+ 	GET_VER_OPT_STRING("ciphers", cipherlist);
++#ifndef USE_OPENSSL_SYSTEM_CIPHERS
+ 	if (!cipherlist) {
+ 		cipherlist = OPENSSL_DEFAULT_STREAM_CIPHERS;
+ 	}
+-	if (SSL_CTX_set_cipher_list(sslsock->ctx, cipherlist) != 1) {
+-		return FAILURE;
++#endif
++	if (cipherlist) {
++		if (SSL_CTX_set_cipher_list(sslsock->ctx, cipherlist) != 1) {
++			return FAILURE;
++		}
+ 	}
+-
+ 	if (FAILURE == set_local_cert(sslsock->ctx, stream TSRMLS_CC)) {
+ 		return FAILURE;
+ 	}
+-- 
+2.1.0
+
