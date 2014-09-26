@@ -2,7 +2,7 @@
 %global pear_name     PHP_CodeSniffer
 
 Name:           php-pear-PHP-CodeSniffer
-Version:        1.5.4
+Version:        1.5.5
 Release:        1%{?dist}
 Summary:        PHP coding standards enforcement tool
 
@@ -15,7 +15,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear
 # to run test suite
-BuildRequires:  php-pear(pear.phpunit.de/PHPUnit) >= 3.5.0
+BuildRequires:  php-phpunit-PHPUnit >= 3.5.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -40,6 +40,7 @@ Requires:       php-xmlwriter
 Requires:       php-zip
 
 Provides:       php-pear(%{pear_name}) = %{version}
+Provides:       php-composer(squizlabs/php_codesniffer) = %{version}
 Provides:       phpcs = %{version}
 Obsoletes:      phpcs < %{version}
 
@@ -107,6 +108,10 @@ fi
 
 
 %changelog
+* Fri Sep 26 2014 Remi Collet <remi@fedoraproject.org> - 1.5.5-1
+- Update to 1.5.5 (stable)
+- provide php-composer(squizlabs/php_codesniffer)
+
 * Mon Aug 11 2014 Remi Collet <remi@fedoraproject.org> - 1.5.4-1
 - Update to 1.5.4 (stable)
 
