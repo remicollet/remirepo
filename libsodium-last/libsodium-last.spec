@@ -10,6 +10,7 @@ Name:           %{libname}-last
 Version:        1.0.0
 Release:        1%{?dist}
 Summary:        The Sodium crypto library
+Group:          System Environment/Libraries
 License:        ISC
 URL:            http://libsodium.org/
 Source0:        http://download.libsodium.org/libsodium/releases/%{libname}-%{version}.tar.gz
@@ -36,7 +37,8 @@ This package can be installed beside system %{libname}.
 
 %package        devel
 Summary:        Development files for %{name}
-Requires:       %{name}%{?_isa}     = %{version}-%{release}
+Group:          Development/Libraries
+Requires:       %{name}%{?_isa}          = %{version}-%{release}
 %if "%{libname}" != "%{name}"
 Conflicts:      %{libname}-devel         < %{version}
 Provides:       %{libname}-devel         = %{version}-%{release}
@@ -60,7 +62,8 @@ make %{_smp_mflags}
 
 
 %install
-%make_install
+rm -rf %{buildroot}
+make install DESTDIR=%{buildroot}
 
 rm -f %{buildroot}%{_libdir}/%{libname}.la
 
@@ -69,17 +72,23 @@ rm -f %{buildroot}%{_libdir}/%{libname}.la
 make check
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
 
 %files
+%defattr (-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %{_libdir}/%{libname}.so.13*
 
 %files devel
+%defattr (-,root,root,-)
 %doc AUTHORS ChangeLog README.markdown THANKS
 %doc test/default/*.{c,h}
 %{_includedir}/sodium.h
