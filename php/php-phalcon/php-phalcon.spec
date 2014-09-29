@@ -8,7 +8,8 @@
 #
 %{?scl:          %scl_package             php-phalcon}
 %{!?scl:         %global pkg_name         %{name}}
-%global gh_commit    777fc83e7ed9932c006c54ce76a2975dc97aeac0
+%{!?__php:       %global __php            %{_bindir}/php}
+%global gh_commit    9ce2bb076d6134794b3224e214a578d3a7ee0bf4
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phalcon
 %global gh_project   cphalcon
@@ -24,8 +25,8 @@
 %endif
 
 Name:           %{?scl_prefix}php-phalcon
-Version:        1.3.2
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.3.3
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Phalcon Framework
 
 Group:          Development/Libraries
@@ -34,12 +35,6 @@ URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        %{gh_project}-%{version}-strip.tar.bz2
 # Script to generate the stripped archive
 Source1:        strip.sh
-
-Patch1:         https://github.com/phalcon/cphalcon/pull/2772.patch
-Patch2:         https://github.com/phalcon/cphalcon/pull/2774.patch
-Patch3:         https://github.com/phalcon/cphalcon/pull/2775.patch
-Patch4:         https://github.com/vpg/cphalcon/commit/d9ded2ae91afbf9a4b1f515c18c4a99760b2df5c.patch
-Patch5:         https://github.com/phalcon/cphalcon/pull/2793.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 5.3
@@ -66,6 +61,7 @@ Requires:      %{?scl_prefix}php-spl%{?_isa}
 %endif
 Requires:      %{?scl_prefix}php-pdo%{?_isa}
 Requires:      %{?scl_prefix}php-pecl(igbinary)%{?_isa}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 # Don't provides php-composer(phalcon/cphalcon), not registered on packagist
 
@@ -90,24 +86,12 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-%patch1 -p1 -b .2772
-%patch2 -p1 -b .2774
-chmod 644 ext/assets/filters/*.2774
-%patch3 -p1 -b .2775
-%patch4 -p1 -b .build
-%patch5 -p1 -b .2793
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PHALCON_VERSION/{s/.* "//;s/".*$//;p}' ext/php_phalcon.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
    exit 1
 fi
-
-# Generate the optimized sources
-cd build
-php gen-build.php
-cd ..
 
 # Create configuration file
 cat << 'EOF' | tee %{ini_name}
@@ -125,18 +109,6 @@ extension=%{ext_name}.so
 ;phalcon.register_psr3_classes=0
 EOF
 
-# Use the optimized sources, is available
-if [ -d build/%{?__isa_bits}bits ]; then
-  mv build/%{__isa_bits}bits build/NTS
-else
-  mv build/safe build/NTS
-fi
-
-%if %{with_zts}
-# Duplicate source tree for NTS / ZTS build
-cp -r build/NTS build/ZTS
-%endif
-
 
 %build
 peclconf() {
@@ -146,12 +118,44 @@ peclconf() {
   --with-libdir=%{_lib} \
   --with-php-config=$1
 }
+
+: Generate the SAFE sources
+pushd build
+%{__php} gen-build.php
+popd
+
+: Build SAFE extension, needed to regenerate sources
+pushd build/safe
+%{_bindir}/phpize
+peclconf %{_bindir}/php-config
+make %{?_smp_mflags}
+popd
+
+: Generate optimized sources
+pushd build
+%{__php} -d extension=safe/modules/phalcon.so gen-build.php
+popd
+
+# Use the optimized sources, is available
+if [ -d build/%{?__isa_bits}bits ]; then
+  mv build/%{__isa_bits}bits build/NTS
+else
+  mv build/safe build/NTS
+fi
+
+%if %{with_zts}
+: Duplicate source tree for NTS / ZTS build
+cp -r build/NTS build/ZTS
+%endif
+
+: Build NTS extension
 cd build/NTS
 %{_bindir}/phpize
 peclconf %{_bindir}/php-config
 make %{?_smp_mflags}
 
 %if %{with_zts}
+: Build ZTS extension
 cd ../ZTS
 %{_bindir}/zts-phpize
 peclconf %{_bindir}/zts-php-config
@@ -230,6 +234,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Sep 29 2014 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
+- update to 1.3.3
+- drop all patches merged upstream
+
 * Sun Sep  7 2014 Remi Collet <remi@fedoraproject.org> - 1.3.2-2
 - use striped archive, without non-free sources
 - generate and use optimized sources

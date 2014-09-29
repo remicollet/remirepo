@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #171 phalcon version 1.3.2 ] {
+Extension [ <persistent> extension #172 phalcon version 1.3.3 ] {
 
   - Dependencies {
     Dependency [ spl (Required) ]
@@ -51,7 +51,7 @@ Extension [ <persistent> extension #171 phalcon version 1.3.2 ] {
     }
   }
 
-  - Classes [320] {
+  - Classes [322] {
     Class [ <internal:phalcon> class Phalcon\Exception extends Exception ] {
 
       - Constants [0] {
@@ -5058,7 +5058,7 @@ Extension [ <persistent> extension #171 phalcon version 1.3.2 ] {
       - Properties [0] {
       }
 
-      - Methods [15] {
+      - Methods [17] {
         Method [ <internal:phalcon> abstract public method setId ] {
 
           - Parameters [1] {
@@ -5128,6 +5128,12 @@ Extension [ <persistent> extension #171 phalcon version 1.3.2 ] {
         }
 
         Method [ <internal:phalcon> abstract public method save ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method create ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method update ] {
         }
 
         Method [ <internal:phalcon> abstract public method delete ] {
@@ -5218,6 +5224,53 @@ Extension [ <persistent> extension #171 phalcon version 1.3.2 ] {
             Parameter #0 [ <required> $eventName ]
             Parameter #1 [ <required> $model ]
           }
+        }
+      }
+    }
+
+    Interface [ <internal:phalcon> interface Phalcon\Mvc\Collection\MessageInterface ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:phalcon> abstract public method setType ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $type ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getType ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method setMessage ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $message ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getMessage ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method setField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getField ] {
         }
       }
     }
@@ -5598,7 +5651,7 @@ Extension [ <persistent> extension #171 phalcon version 1.3.2 ] {
       - Properties [0] {
       }
 
-      - Methods [25] {
+      - Methods [26] {
         Method [ <internal:phalcon> abstract public method setTransaction ] {
 
           - Parameters [1] {
@@ -5738,6 +5791,9 @@ Extension [ <persistent> extension #171 phalcon version 1.3.2 ] {
             Parameter #0 [ <required> $alias ]
             Parameter #1 [ <optional> $arguments ]
           }
+        }
+
+        Method [ <internal:phalcon> abstract public method reset ] {
         }
       }
     }
@@ -28560,7 +28616,7 @@ Extension [ <persistent> extension #171 phalcon version 1.3.2 ] {
         Property [ <default> protected $_snapshot ]
       }
 
-      - Methods [73] {
+      - Methods [74] {
         Method [ <internal:phalcon, ctor> final public method __construct ] {
 
           - Parameters [2] {
@@ -28969,6 +29025,9 @@ Extension [ <persistent> extension #171 phalcon version 1.3.2 ] {
           - Parameters [1] {
             Parameter #0 [ <optional> $columns ]
           }
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\ModelInterface> public method reset ] {
         }
       }
     }
@@ -29412,14 +29471,14 @@ Extension [ <persistent> extension #171 phalcon version 1.3.2 ] {
       - Properties [7] {
         Property [ <default> public $_id ]
         Property [ <default> protected $_dependencyInjector ]
-        Property [ <default> protected $_modelsManager ]
+        Property [ <default> protected $_collectionManager ]
         Property [ <default> protected $_source ]
         Property [ <default> protected $_operationMade ]
         Property [ <default> protected $_connection ]
         Property [ <default> protected $_errorMessages ]
       }
 
-      - Methods [32] {
+      - Methods [34] {
         Method [ <internal:phalcon, ctor> final public method __construct ] {
 
           - Parameters [1] {
@@ -29463,7 +29522,7 @@ Extension [ <persistent> extension #171 phalcon version 1.3.2 ] {
           }
         }
 
-        Method [ <internal:phalcon> public method getModelsManager ] {
+        Method [ <internal:phalcon> public method getCollectionManager ] {
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Mvc\CollectionInterface> public method getReservedAttributes ] {
@@ -29549,6 +29608,12 @@ Extension [ <persistent> extension #171 phalcon version 1.3.2 ] {
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Mvc\CollectionInterface> public method save ] {
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\CollectionInterface> public method create ] {
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\CollectionInterface> public method update ] {
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Mvc\CollectionInterface> public method delete ] {
@@ -29803,6 +29868,99 @@ Extension [ <persistent> extension #171 phalcon version 1.3.2 ] {
           - Parameters [2] {
             Parameter #0 [ <required> $eventName ]
             Parameter #1 [ <required> $model ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:phalcon> class Phalcon\Mvc\Collection\Message implements Phalcon\Mvc\Collection\MessageInterface ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:phalcon> static public method __set_state ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> array $properties ]
+          }
+        }
+      }
+
+      - Properties [5] {
+        Property [ <default> protected $_type ]
+        Property [ <default> protected $_message ]
+        Property [ <default> protected $_field ]
+        Property [ <default> protected $_collection ]
+        Property [ <default> protected $_code ]
+      }
+
+      - Methods [12] {
+        Method [ <internal:phalcon, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $message ]
+            Parameter #1 [ <optional> $field ]
+            Parameter #2 [ <optional> $type ]
+          }
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\Collection\MessageInterface> public method setType ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $type ]
+          }
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\Collection\MessageInterface> public method getType ] {
+        }
+
+        Method [ <internal:phalcon> public method setCode ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $code ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method getCode ] {
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\Collection\MessageInterface> public method setMessage ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $message ]
+          }
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\Collection\MessageInterface> public method getMessage ] {
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\Collection\MessageInterface> public method setField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\Collection\MessageInterface> public method getField ] {
+        }
+
+        Method [ <internal:phalcon> public method setCollection ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $collection ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method getCollection ] {
+        }
+
+        Method [ <internal:phalcon> public method __toString ] {
+
+          - Parameters [0] {
           }
         }
       }
