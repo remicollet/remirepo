@@ -8,7 +8,7 @@
 #
 
 Name:      ssdeep
-Version:   2.11
+Version:   2.11.1
 Release:   1%{?dist}
 Summary:   Compute context triggered piecewise hashes
 Group:     Development/Tools
@@ -55,9 +55,6 @@ that use libfuzzy.
 %setup -q
 
 %patch0 -p1 -b .old
-
-# we only want the shared library
-sed -e 's/-static//' -i Makefile.*
 
 # avoid autotools being re-run
 touch -r aclocal.m4 configure configure.ac
@@ -107,6 +104,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Sep 29 2014 Remi Collet <remi@fedoraproject.org> - 2.11.1-1
+- update to 2.11.1 (no change)
+
 * Fri Sep 12 2014 Remi Collet <remi@fedoraproject.org> - 2.11-1
 - update to 2.11
 
