@@ -11,8 +11,8 @@
 
 %global github_owner     doctrine
 %global github_name      annotations
-%global github_version   1.2.0
-%global github_commit    d9b1a37e9351ddde1f19f09a02e3d6ee92e82efd
+%global github_version   1.2.1
+%global github_commit    6a6bec0670bb6e71a263b08bc1b98ea242928633
 
 %global composer_vendor  doctrine
 %global composer_project annotations
@@ -123,11 +123,16 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE *.md composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *.md composer.json
 %{_datadir}/php/Doctrine/Common/Annotations
 
 
 %changelog
+* Mon Sep 29 2014 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- update to 1.2.1
+
 * Tue Jul 15 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.0-1
 - Updated to 1.2.0 (BZ #1116887)
 
