@@ -99,13 +99,15 @@ rm -rf %{buildroot}
 
 %files libs
 %defattr(-,root,root,-)
-%doc COPYING
+%{!?_licensedir:%global license %%doc}
+%license COPYING
 %{_libdir}/libfuzzy.so.2*
 
 
 %changelog
 * Mon Sep 29 2014 Remi Collet <remi@fedoraproject.org> - 2.11.1-1
 - update to 2.11.1 (no change)
+- fix license handling
 
 * Fri Sep 12 2014 Remi Collet <remi@fedoraproject.org> - 2.11-1
 - update to 2.11
