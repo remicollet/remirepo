@@ -13,8 +13,8 @@
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.5.4
-%global github_commit    3a369dddea56596df91977d8c2083e70784852f2
+%global github_version   2.5.5
+%global github_commit    2aef97bbc95d0c4ae63537cca81bd6d984427d81
 
 %global composer_vendor  symfony
 %global composer_project symfony
@@ -49,7 +49,7 @@
 # "psr/log": "~1.0" (composer.json)
 %global psrlog_min_ver 1.0
 %global psrlog_max_ver 2.0
-# "swiftmailer/swiftmailer": ">=4.2.0,<5.1-dev" (src/Symfony/Bridge/Swiftmailer/composer.json)
+# "swiftmailer/swiftmailer": ">=4.2.0,<6.0-dev" (src/Symfony/Bridge/Swiftmailer/composer.json)
 #     NOTE: Max version ignored on purpose
 %global swift_min_ver 4.2.0
 # "symfony/icu": "~1.0" (composer.json)
@@ -1547,6 +1547,14 @@ if (file_exists('%{_datadir}/php/password_compat/password.php')) {
 return $loader;
 AUTOLOADER
 
+# Hack PHPUnit Autoloader (use current symfony instead of system one)
+if [ -d /usr/share/php/PHPUnit ]; then
+  mkdir PHPUnit
+  sed -e '/Symfony/s:\$vendorDir:"./src/":' \
+      -e 's:path = dirname(__FILE__):path = "/usr/share/php/PHPUnit":' \
+      /usr/share/php/PHPUnit/Autoload.php >PHPUnit/Autoload.php
+fi
+
 # Create PHPUnit config w/ colors turned off
 sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
@@ -1579,14 +1587,6 @@ sed -e 's/function testConstructorHandlesFormAttribute/function SKIP_testConstru
     -i src/Symfony/Component/DomCrawler/Tests/FormTest.php
 rm -f src/Symfony/Component/HttpFoundation/Tests/Session/Storage/Handler/NativeFileSessionHandlerTest.php
 %endif
-sed -e 's/function testParseReferences/function SKIP_testParseReferences/' \
-    -e 's/function testParseMapReferenceInSequence/function SKIP_testParseMapReferenceInSequence/' \
-    -i src/Symfony/Component/Yaml/Tests/InlineTest.php
-sed -e 's/function testSpecifications/function SKIP_testSpecifications/' \
-    -e 's/function testReferenceResolvingInInlineStrings/function SKIP_testReferenceResolvingInInlineStrings/' \
-    -i src/Symfony/Component/Yaml/Tests/ParserTest.php
-sed 's/function testSpecifications/function SKIP_testSpecifications/' \
-    -i src/Symfony/Component/Yaml/Tests/DumperTest.php
 %if 0%{?rhel} == 5
 rm src/Symfony/Component/DomCrawler/Tests/CrawlerTest.php
 %endif
@@ -2204,6 +2204,11 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Mon Sep 29 2014 Remi Collet <remi@fedoraproject.org> - 2.5.5-1
+- update to 2.5.5
+- hack PHPUnit autoloader to not use old system symfony
+- don't skip any Yaml test
+
 * Wed Sep 03 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.5.4-1
 - Updated to 2.5.4 (CVE-2014-6072, CVE-2014-5245, CVE-2014-4931, CVE-2014-6061,
   CVE-2014-5244, BZ #1138285)
