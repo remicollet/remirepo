@@ -20,7 +20,7 @@
 
 Summary:        Threading API
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        2.0.9
+Version:        2.0.10
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -167,6 +167,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct 01 2014 Remi Collet <remi@fedoraproject.org> - 2.0.10-1
+- Update to 2.0.10 (stable)
+
 * Wed Sep 24 2014 Remi Collet <remi@fedoraproject.org> - 2.0.9-1
 - Update to 2.0.9 (stable)
 

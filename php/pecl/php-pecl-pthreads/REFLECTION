@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #124 pthreads version 2.0.9 ] {
+Extension [ <persistent> extension #125 pthreads version 2.0.10 ] {
 
   - Constants [10] {
     Constant [ integer PTHREADS_INHERIT_ALL ] { 1118481 }
