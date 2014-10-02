@@ -13,8 +13,8 @@
 %global with_sysjs   0
 
 Name:           php-horde-Horde-Core
-Version:        2.14.1
-Release:        2%{?dist}
+Version:        2.14.2
+Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
 Group:          Development/Libraries
@@ -282,6 +282,9 @@ fi
 
 
 %changelog
+* Thu Oct 02 2014 Remi Collet <remi@fedoraproject.org> - 2.14.2-1
+- Update to 2.14.2
+
 * Tue Sep 23 2014 Remi Collet <remi@fedoraproject.org> - 2.14.1-2
 - don't use system prototype and scriptaculous as
   this breaks horde and its cache system
