@@ -12,7 +12,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Mail-Autoconfig
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}
 Summary:        Horde Mail Autoconfiguration
 
@@ -42,7 +42,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Http) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Http) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) >= 2.20.1
 Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.1.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Smtp) >= 1.1.0
 Requires:       php-pear(%{pear_channel}/Horde_Smtp) <  2.0.0
@@ -124,5 +124,8 @@ fi
 
 
 %changelog
+* Thu Oct 02 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1
+
 * Tue Jul  8 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - Initial package
