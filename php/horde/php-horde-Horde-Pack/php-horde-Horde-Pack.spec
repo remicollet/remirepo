@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Pack
-Version:        1.0.3
+Version:        1.0.4
 Release:        1%{?dist}
 Summary:        Horde Pack Utility
 
@@ -31,7 +31,7 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Compress_Fast) >= 1.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 BuildRequires:  php-json
-BuildRequires:  php-pecl(igbinary)
+BuildRequires:  php-pecl(igbinary) >= 1.2.0
 # msgpack not available on all arch
 
 Requires(post): %{__pear}
@@ -127,6 +127,9 @@ fi
 
 
 %changelog
+* Thu Oct 02 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- Update to 1.0.4
+
 * Sat Aug 30 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - Update to 1.0.3
 
