@@ -6,19 +6,23 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    1e091702a5a38e6b4c1ba9ca816e3dd343df2e2d
+%global bootstrap    0
+%global gh_commit    5843509fed39dee4b356a306401e9dd1a931fec7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   diff
 %global php_home     %{_datadir}/php/SebastianBergmann
 %global pear_name    Diff
 %global pear_channel pear.phpunit.de
-# Circular dependency with phpunit
+%if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%else
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 Name:           php-phpunit-diff
-Version:        1.1.0
-Release:        6%{?dist}
+Version:        1.2.0
+Release:        1%{?dist}
 Summary:        Diff implementation
 
 Group:          Development/Libraries
@@ -29,8 +33,9 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
-BuildRequires:  %{_bindir}/phpunit
+BuildRequires:  php-phpunit-PHPUnit >= 4.2
 %endif
 
 # from composer.json
@@ -57,7 +62,9 @@ Diff implementation.
 
 
 %build
-# Empty build section, most likely nothing required.
+phpab \
+  --output   src/autoload.php \
+  src
 
 
 %install
@@ -93,6 +100,11 @@ fi
 
 
 %changelog
+* Fri Oct  3 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- update to 1.2.0
+- run test suite during build
+- generate autoload.php for compatibility
+
 * Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-6
 - composer dependencies
 
