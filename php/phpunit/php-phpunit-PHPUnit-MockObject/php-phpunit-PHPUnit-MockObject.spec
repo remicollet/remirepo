@@ -6,8 +6,8 @@
 #
 # Please, preserve the changelog entries
 #
-%global bootstrap    0
-%global gh_commit    b241b18d87a47093f20fae8b0ba40379b00bd53a
+%global bootstrap    1
+%global gh_commit    c63d2367247365f688544f0d500af90a11a44c65
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit-mock-objects
@@ -21,8 +21,8 @@
 %endif
 
 Name:           php-phpunit-PHPUnit-MockObject
-Version:        2.2.1
-Release:        1%{?dist}
+Version:        2.3.0
+Release:        0%{?dist}
 Summary:        Mock Object library for PHPUnit
 
 Group:          Development/Libraries
@@ -37,24 +37,23 @@ Source1:        Autoload.php.in
 Patch0:         %{gh_project}-rpm.patch
 
 # Upstream patches
-Patch1:         %{gh_project}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
-BuildRequires:  php-pear-PHPUnit >= 4.2.0
+BuildRequires:  php-pear-PHPUnit >= 4.3.0
 %endif
 
 # From composer.json
 #        "php": ">=5.3.3",
-#        "phpunit/php-text-template": "~1.2",
+#        "doctrine/instantiator": "~1.0,>=1.0.1",
 #        "ocramius/instantiator": "~1.0"
 Requires:       php(language) >= 5.3.3
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
-Requires:       php-composer(ocramius/instantiator) >= 1.0
-Requires:       php-composer(ocramius/instantiator) <  2
+Requires:       php-composer(doctrine/instantiator) >= 1.0.1
+Requires:       php-composer(doctrine/instantiator) <  2
 # From phpcompatinfo report for version 2.2.0
 Requires:       php-pcre
 Requires:       php-reflection
@@ -72,7 +71,6 @@ Mock Object library for PHPUnit
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1
-%patch1 -p1
 
 find . -name \*.orig -exec rm {} \; -print
 
@@ -132,8 +130,11 @@ fi
 
 
 %changelog
+* Fri Oct  3 2014 Remi Collet <remi@fedoraproject.org> - 2.3.0-0
+- bootstrap build
+
 * Sun Sep  7 2014 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
-- update to 2.2.0
+- update to 2.2.1
 - enable test suite
 
 * Mon Aug 11 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
