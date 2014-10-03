@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c28a790620fe30b049bb693be1ef9cd4e0fe906c
+%global gh_commit    6913ac6c2f71ce18ff09b605df2fa37a6d789fd9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,7 +17,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.2.6
+Version:        4.3.0
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -40,7 +40,7 @@ BuildRequires:  php-composer(phpunit/php-file-iterator) >= 1.3.1
 BuildRequires:  php-composer(phpunit/php-text-template) >= 1.2
 BuildRequires:  php-composer(phpunit/php-code-coverage) >= 2.0
 BuildRequires:  php-composer(phpunit/php-timer) >= 1.0.2
-BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 2.2
+BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 2.3
 BuildRequires:  php-composer(sebastian/comparator) >= 1.0
 BuildRequires:  php-composer(sebastian/diff) >= 1.1
 BuildRequires:  php-composer(sebastian/environment) >= 1.0
@@ -77,7 +77,7 @@ Requires:       php-composer(phpunit/php-code-coverage) >= 2.0
 Requires:       php-composer(phpunit/php-code-coverage) <  3
 Requires:       php-composer(phpunit/php-timer) >= 1.0.2
 Requires:       php-composer(phpunit/php-timer) <  1.1
-Requires:       php-composer(phpunit/phpunit-mock-objects) >= 2.2
+Requires:       php-composer(phpunit/phpunit-mock-objects) >= 2.3
 Requires:       php-composer(phpunit/phpunit-mock-objects) <  3
 Requires:       php-composer(sebastian/comparator) >= 1.0
 Requires:       php-composer(sebastian/comparator) <  2
@@ -101,10 +101,8 @@ Requires:       php-spl
 Requires:       php-composer(phpunit/php-invoker) >= 1.1
 Requires:       php-composer(phpunit/php-invoker) <  2
 # For our autoload patch
-Requires:       php-composer(ocramius/instantiator) >= 1.0
-Requires:       php-composer(ocramius/instantiator) <  2
-Requires:       php-composer(ocramius/lazy-map) >= 1.0.0
-Requires:       php-composer(ocramius/lazy-map) <  1.1
+Requires:       php-composer(doctrine/instantiator) >= 1.0.1
+Requires:       php-composer(doctrine/instantiator) <  2
 Requires:       php-composer(symfony/class-loader) >= 2.0
 Requires:       php-composer(symfony/class-loader) <  3
 # From phpcompatinfo report for version 4.0.18
@@ -199,6 +197,12 @@ fi
 
 
 %changelog
+* Fri Oct  3 2014 Remi Collet <remi@fedoraproject.org> - 4.3.0-1
+- Update to 4.3.0
+- drop dependencies on ocramius/instantiator and ocramius/lazy-map
+- add dependency on doctrine/instantiator
+- raise dependency on phpunit/phpunit-mock-objects >= 2.3
+
 * Sun Sep 14 2014 Remi Collet <remi@fedoraproject.org> - 4.2.6-1
 - Update to 4.2.6 (no change)
 

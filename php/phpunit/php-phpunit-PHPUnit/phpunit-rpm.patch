@@ -1,6 +1,6 @@
 diff -up ./phpunit.rpm ./phpunit
---- ./phpunit.rpm	2014-09-14 11:31:24.000000000 +0200
-+++ ./phpunit	2014-09-14 15:48:32.804943481 +0200
+--- ./phpunit.rpm	2014-10-03 07:17:00.000000000 +0200
++++ ./phpunit	2014-10-03 11:09:31.304175626 +0200
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
@@ -11,7 +11,7 @@ diff -up ./phpunit.rpm ./phpunit
   * POSSIBILITY OF SUCH DAMAGE.
   */
 
--foreach (array(__DIR__ . '/../../autoload.php', __DIR__ . '/vendor/autoload.php') as $file) {
+-foreach (array(__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php') as $file) {
 -    if (file_exists($file)) {
 -        define('PHPUNIT_COMPOSER_INSTALL', $file);
 -        break;

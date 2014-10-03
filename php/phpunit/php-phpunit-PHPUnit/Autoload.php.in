@@ -22,8 +22,7 @@ $loader = new UniversalClassLoader();
 $loader->registerNamespaces(array(
     'Symfony\\Component\\Yaml'            => $vendorDir,
     'Symfony\\Component\\ClassLoader'     => $vendorDir,
-    'LazyMap'                             => $vendorDir,
-    'Instantiator'                        => $vendorDir,
+    'Doctrine\\Instantiator'              => $vendorDir,
 ));
 $loader->register();
 
