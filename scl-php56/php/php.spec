@@ -126,8 +126,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.6.0
-Release: 1%{?dist}.1
+Version: 5.6.1
+Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -177,6 +177,7 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
+Patch100: php-bug68074.patch
 
 # Security fixes (200+)
 
@@ -852,6 +853,7 @@ support for using the enchant library to PHP.
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
+%patch100 -p1 -b .bug68074
 
 # security patches
 
@@ -1044,6 +1046,7 @@ ln -sf ../configure
     --without-gdbm \
     --with-jpeg-dir=%{_root_prefix} \
     --with-openssl \
+    --with-system-ciphers \
 %if %{with_libpcre}
     --with-pcre-regex=%{_root_prefix} \
 %endif
@@ -1715,6 +1718,13 @@ fi
 
 
 %changelog
+* Fri Oct  3 2014 Remi Collet <remi@fedoraproject.org> 5.6.1-1
+- Update to PHP 5.6.1
+  http://php.net/releases/5_6_1.php
+- use default system cipher list by Fedora policy
+  http://fedoraproject.org/wiki/Changes/CryptoPolicy
+- add system php library to default include_path
+
 * Fri Aug 29 2014 Remi Collet <remi@fedoraproject.org> 5.6.0-1.1
 - enable libvpx on EL 6 (with libvpx 1.3.0)
 - add php56-phpdbg command in base system

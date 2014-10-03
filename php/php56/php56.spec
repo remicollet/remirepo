@@ -135,7 +135,7 @@ Version: 5.6.1
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 0.3%{?dist}
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1945,6 +1945,10 @@ fi
 
 
 %changelog
+* Fri Oct  3 2014 Remi Collet <remi@fedoraproject.org> 5.6.1-1
+- Update to PHP 5.6.1
+  http://php.net/releases/5_6_1.php
+
 * Fri Sep 26 2014 Remi Collet <rcollet@redhat.com> 5.6.1-0
 - test build for upcoming 5.6.1
 - use default system cipher list by Fedora policy
