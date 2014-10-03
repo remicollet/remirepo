@@ -47,8 +47,8 @@ BuildRequires:  php-pear-PHPUnit >= 4.3.0
 
 # From composer.json
 #        "php": ">=5.3.3",
+#        "phpunit/php-text-template": "~1.2",
 #        "doctrine/instantiator": "~1.0,>=1.0.1",
-#        "ocramius/instantiator": "~1.0"
 Requires:       php(language) >= 5.3.3
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
