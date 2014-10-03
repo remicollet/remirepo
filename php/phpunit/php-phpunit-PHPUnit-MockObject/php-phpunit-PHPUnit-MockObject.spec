@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global bootstrap    1
+%global bootstrap    0
 %global gh_commit    c63d2367247365f688544f0d500af90a11a44c65
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -22,7 +22,7 @@
 
 Name:           php-phpunit-PHPUnit-MockObject
 Version:        2.3.0
-Release:        0%{?dist}
+Release:        1%{?dist}
 Summary:        Mock Object library for PHPUnit
 
 Group:          Development/Libraries
@@ -130,6 +130,11 @@ fi
 
 
 %changelog
+* Fri Oct  3 2014 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
+- update to 2.3.0 for PHPUnit 4.3.0
+- drop dependency on ocramius/instantiator
+- add depencency on doctrine/instantiator
+
 * Fri Oct  3 2014 Remi Collet <remi@fedoraproject.org> - 2.3.0-0
 - bootstrap build
 
