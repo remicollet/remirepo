@@ -90,13 +90,15 @@ if [ -x %{_bindir}/pear ]; then
       %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
+
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README.md composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README.md composer.json
 
 %dir %{php_home}
 %{php_home}/%{pear_name}
-
 
 
 %changelog
@@ -104,6 +106,7 @@ fi
 - update to 1.2.0
 - run test suite during build
 - generate autoload.php for compatibility
+- fix license handling
 
 * Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-6
 - composer dependencies
