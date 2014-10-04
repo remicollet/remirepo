@@ -11,10 +11,19 @@
 #
 #global prever rc3
 %{!?_pkgdocdir: %global _pkgdocdir %{_datadir}/doc/%{name}-%{version}}
+%if 0%{?fedora} >= 21
+# nginx 1.6 with nginx-filesystem
+%global with_nginx     1
+# httpd 2.4 with httpd-filesystem
+%global with_httpd     1
+%else
+%global with_nginx     0
+%global with_httpd     0
+%endif
 
 Name: phpMyAdmin
 Version: 4.2.9.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -22,12 +31,20 @@ License: GPLv2+
 URL: http://www.phpmyadmin.net/
 Source0: http://downloads.sourceforge.net/sourceforge/phpmyadmin/%{name}-%{version}%{?prever:-%prever}-all-languages.tar.bz2
 Source2: phpMyAdmin.htaccess
+Source3: phpMyAdmin.nginx
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: unzip
 
 Requires:  webserver
+%if %{with_nginx}
+Requires:  nginx-filesystem
+%endif
+%if %{with_httpd}
+Requires:  httpd-filesystem
+Requires:  php(httpd)
+%endif
 Requires:  php(language) >= 5.3.0
 Requires:  php-bcmath
 Requires:  php-bz2
@@ -62,6 +79,7 @@ Requires:  php-phpseclib-crypt-aes
 
 Provides:  phpmyadmin = %{version}-%{release}
 Obsoletes: phpMyAdmin3
+Obsoletes: phpMyAdmin4
 
 
 %description
@@ -123,15 +141,18 @@ rm -r js/openlayers/src
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/%{_datadir}/%{name}
-mkdir -p %{buildroot}/%{_sysconfdir}/httpd/conf.d/
-mkdir -p %{buildroot}/%{_sysconfdir}/%{name}
 cp -ad ./* %{buildroot}/%{_datadir}/%{name}
-cp %{SOURCE2} %{buildroot}/%{_sysconfdir}/httpd/conf.d/phpMyAdmin.conf
-cp CONFIG %{buildroot}/%{_sysconfdir}/%{name}/config.inc.php
+install -Dpm 0640 CONFIG %{buildroot}/%{_sysconfdir}/%{name}/config.inc.php
+# Apache
+install -Dpm 0644 %{SOURCE2} %{buildroot}/%{_sysconfdir}/httpd/conf.d/phpMyAdmin.conf
+# Nginx
+%if %{with_nginx}
+install -Dpm 0644 %{SOURCE3} %{buildroot}/%{_sysconfdir}/nginx/default.d/phpMyAdmin.conf
+%endif
 
 rm -f %{buildroot}/%{_datadir}/%{name}/config.sample.inc.php
 rm -f %{buildroot}/%{_datadir}/%{name}/*txt
-rm -f %{buildroot}/%{_datadir}/%{name}/[CIRLT]*
+rm -f %{buildroot}/%{_datadir}/%{name}/[CDLR]*
 rm -f %{buildroot}/%{_datadir}/%{name}/libraries/.htaccess
 rm -f %{buildroot}/%{_datadir}/%{name}/setup/lib/.htaccess
 rm -f %{buildroot}/%{_datadir}/%{name}/setup/frames/.htaccess
@@ -145,6 +166,10 @@ mv -f config.sample.inc.php examples/
 mkdir -p %{buildroot}/%{_localstatedir}/lib/%{name}/{upload,save,config}
 rm -rf %{buildroot}%{_datadir}/%{name}/libraries/php-gettext
 rm -rf %{buildroot}%{_datadir}/%{name}/libraries/tcpdf
+
+mv js/jquery/MIT-LICENSE.txt   LICENSE-jquery
+mv js/canvg/MIT-LICENSE.txt    LICENSE-canvg
+mv js/codemirror/LICENSE       LICENSE-codemirror
 
 
 %clean
@@ -172,19 +197,25 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license LICENSE
-%doc ChangeLog README CONTRIBUTING.md
+%license LICENSE*
+%doc ChangeLog README CONTRIBUTING.md DCO
 %doc doc/html/ examples/
 %{_datadir}/%{name}
 %attr(0750,root,apache) %dir %{_sysconfdir}/%{name}
 %config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.inc.php
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
+%if %{with_nginx}
+%config(noreplace) %{_sysconfdir}/nginx/default.d/%{name}.conf
+%endif
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/upload
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/save
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/config
 
 
 %changelog
+* Sat Oct  4 2014 Remi Collet <rpms@famillecollet.com> 4.2.9.1-2
+- provide nginx configuration (Fedora >= 21)
+
 * Wed Oct  1 2014 Remi Collet <rpms@famillecollet.com> 4.2.9.1-1
 - update to 4.2.9.1 (Wed, 1 Oct 2014, security)
 - fix for PMASA-2014-11
