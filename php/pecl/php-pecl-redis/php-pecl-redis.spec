@@ -25,7 +25,7 @@
 Summary:       Extension for communicating with the Redis key-value store
 Name:          %{?scl_prefix}php-pecl-redis
 Version:       2.2.5
-Release:       4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/redis
@@ -35,6 +35,8 @@ Source1:       https://github.com/nicolasff/phpredis/archive/%{version}.tar.gz
 
 # https://github.com/nicolasff/phpredis/pull/447
 Patch0:        %{pecl_name}-php56.patch
+# https://github.com/nicolasff/phpredis/pull/517
+Patch1:        %{pecl_name}-igbinary.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
@@ -96,6 +98,7 @@ mv phpredis-%{version}/tests nts/tests
 
 cd nts
 %patch0 -p1 -b .php56
+%patch1 -p1 -b .igbinary
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_REDIS_VERSION/{s/.* "//;s/".*$//;p}' php_redis.h)
@@ -263,6 +266,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct  3 2014 Remi Collet <rcollet@redhat.com> - 2.2.5-4.1
+- test build for segfault with igbinary
+  https://github.com/nicolasff/phpredis/issues/341
+
 * Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 2.2.5-4
 - improve SCL build
 
