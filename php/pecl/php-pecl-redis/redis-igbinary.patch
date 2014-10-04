@@ -1,4 +1,4 @@
-From aecfbfd650d6b504193d48f82a4a170ce3ce4cd6 Mon Sep 17 00:00:00 2001
+From 0c4ddd90a6cfb0660cb59fd4521b40d289d6067c Mon Sep 17 00:00:00 2001
 From: Remi Collet <fedora@famillecollet.com>
 Date: Fri, 3 Oct 2014 19:19:33 +0200
 Subject: [PATCH] Fix segfault with igbinary, fix #341
