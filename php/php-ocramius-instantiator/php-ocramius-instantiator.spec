@@ -9,7 +9,7 @@
 
 # bootstrap needed when rebuilding PHPUnit for new major version
 %global bootstrap    0
-%global gh_commit    e24a12178906ff2e7471b8aaf3a0eb789b59f881
+%global gh_commit    51bbc28391ff3c16fb6fd8bf8e10b5f9bb944bed
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     Ocramius
 %global gh_project   Instantiator
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-ocramius-instantiator
-Version:        1.1.3
+Version:        1.1.4
 Release:        1%{?dist}
 Summary:        Instantiate objects in PHP without invoking their constructors
 
@@ -80,16 +80,20 @@ cp -pr src/* %{buildroot}%{_datadir}/php
     --output autoload.php \
     src tests %{_datadir}/php/LazyMap
 
-if [ -d /usr/share/php/PHPUnit ]; then
-# Hack PHPUnit 4.x autoloader to not use system Instantiator
-mkdir PHPUnit
-sed -e '/Instantiator/d' \
+if [ -d /usr/share/php/PHPUnit ] \
+   && ! grep -q Doctrine /usr/share/php/PHPUnit/Autoload.php
+then
+  # Hack PHPUnit 4.2 autoloader to not use system Instantiator
+  mkdir PHPUnit
+  sed -e '/Instantiator/d' \
     -e 's:dirname(__FILE__):"/usr/share/php/PHPUnit":' \
     /usr/share/php/PHPUnit/Autoload.php \
     >PHPUnit/Autoload.php
 fi
 
-sed -e 's/colors="true"//' phpunit.xml.dist >phpunit.xml
+sed -e 's/colors="true"//' \
+    -e '/log/d' \
+    phpunit.xml.dist >phpunit.xml
 
 : Run test suite
 %{_bindir}/phpunit \
@@ -113,6 +117,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct  5 2014 Remi Collet <remi@fedoraproject.org> - 1.1.4-1
+- update to 1.1.4
+
 * Mon Aug 25 2014 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
 - update to 1.1.3
 
