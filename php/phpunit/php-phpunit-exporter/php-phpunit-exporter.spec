@@ -6,19 +6,23 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    1f9a98e6f5dfe0524cb8c6166f7c82f3e9ae1529
+%global bootstrap    0
+%global gh_commit    c7d59948d6e82818e1bdff7cadb6c34710eb7dc0
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   exporter
 %global php_home     %{_datadir}/php/SebastianBergmann/
 %global pear_name    Exporter
 %global pear_channel pear.phpunit.de
-# Circular dependency with phpunit
+%if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%else
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 Name:           php-phpunit-exporter
-Version:        1.0.1
-Release:        4%{?dist}
+Version:        1.0.2
+Release:        1%{?dist}
 Summary:        Export PHP variables for visualization
 
 Group:          Development/Libraries
@@ -74,6 +78,16 @@ cp -pr src %{buildroot}%{php_home}/%{pear_name}
 
 %if %{with_tests}
 %check
+if [ -d /usr/share/php/PHPUnit ]
+then
+  # Hack PHPUnit 4 autoloader to not use system library
+  mkdir PHPUnit
+  sed -e 's:SebastianBergmann/Exporter:src:' \
+    -e 's:dirname(__FILE__):"/usr/share/php/PHPUnit":' \
+    /usr/share/php/PHPUnit/Autoload.php \
+    >PHPUnit/Autoload.php
+fi
+
 phpunit \
   --bootstrap src/autoload.php \
   -d date.timezone=UTC
@@ -102,6 +116,10 @@ fi
 
 
 %changelog
+* Sun Oct  5 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- update to 1.0.2
+- enable test suite
+
 * Fri Jul 18 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-4
 - add composer dependencies
 
