@@ -9,7 +9,7 @@
 
 # bootstrap needed when rebuilding PHPUnit for new major version
 %global bootstrap    0
-%global gh_commit    26404e0c90565b614ee76b988b9bc8790d77f590
+%global gh_commit    8806c41c178ad4a2e87294b851d730779555d252
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     doctrine
 %global gh_project   instantiator
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-doctrine-instantiator
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}
 Summary:        Instantiate objects in PHP without invoking their constructors
 
@@ -77,16 +77,20 @@ cp -pr src/* %{buildroot}%{_datadir}/php
     --output autoload.php \
     src tests
 
-#if [ -d /usr/share/php/PHPUnit ]; then
-# Hack PHPUnit 4.x autoloader to not use system Instantiator
-#mkdir PHPUnit
-#sed -e '/Doctrine\\\\Instantiator/d' \
-#    -e 's:dirname(__FILE__):"/usr/share/php/PHPUnit":' \
-#    /usr/share/php/PHPUnit/Autoload.php \
-#    >PHPUnit/Autoload.php
-#fi
+if [ -d /usr/share/php/PHPUnit ] \
+   && grep -q Doctrine /usr/share/php/PHPUnit/Autoload.php
+then
+  # Hack PHPUnit >= 4.3 autoloader to not use system Instantiator
+  mkdir PHPUnit
+  sed -e '/Doctrine\\\\Instantiator/d' \
+    -e 's:dirname(__FILE__):"/usr/share/php/PHPUnit":' \
+    /usr/share/php/PHPUnit/Autoload.php \
+    >PHPUnit/Autoload.php
+fi
 
-sed -e 's/colors="true"//' phpunit.xml.dist >phpunit.xml
+sed -e 's/colors="true"//' \
+    -e '/log/d' \
+    phpunit.xml.dist >phpunit.xml
 
 : Run test suite
 %{_bindir}/phpunit \
@@ -111,5 +115,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct  5 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- update to 1.0.3
+
 * Mon Aug 25 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - initial package, version 1.0.2
