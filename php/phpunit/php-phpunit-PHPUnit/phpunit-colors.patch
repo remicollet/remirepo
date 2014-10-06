@@ -1,0 +1,42 @@
+From 591efd8fad55a526f021cad9c6cbcd9081df8969 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Mon, 6 Oct 2014 10:54:54 +0200
+Subject: [PATCH] only enable colors when output to a terminal (not to a file)
+
+---
+ src/TextUI/Command.php     | 7 +++++--
+ src/Util/Configuration.php | 3 +++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/src/TextUI/Command.php b/src/TextUI/Command.php
+index 929ca36..42b08b6 100644
+--- a/src/TextUI/Command.php
++++ b/src/TextUI/Command.php
+@@ -278,8 +278,11 @@ protected function handleArguments(array $argv)
+ 
+         foreach ($this->options[0] as $option) {
+             switch ($option[0]) {
+-                case '--colors': {
+-                    $this->arguments['colors'] = true;
++                case '--colors':
++                    if (function_exists("posix_isatty") && !posix_isatty(STDOUT)) {
++                        $this->arguments['colors'] = false;
++                    } else {
++                        $this->arguments['colors'] = true;
+                     }
+                 break;
+ 
+diff --git a/src/Util/Configuration.php b/src/Util/Configuration.php
+index 9ddcfb8..0fcc5fb 100644
+--- a/src/Util/Configuration.php
++++ b/src/Util/Configuration.php
+@@ -582,6 +582,9 @@ public function getPHPUnitConfiguration()
+             $result['colors'] = $this->getBoolean(
+                 (string) $root->getAttribute('colors'), false
+             );
++            if ($result['colors'] && function_exists("posix_isatty") && !posix_isatty(STDOUT)) {
++                $result['colors'] = false;
++            }
+         }
+ 
+         /**
