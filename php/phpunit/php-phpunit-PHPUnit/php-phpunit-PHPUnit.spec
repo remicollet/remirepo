@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    6913ac6c2f71ce18ff09b605df2fa37a6d789fd9
+%global gh_commit    06005259429c156c02596add91f6a59c7dc3d4af
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,8 +17,8 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.3.0
-Release:        2%{?dist}
+Version:        4.3.1
+Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries
@@ -200,6 +200,9 @@ fi
 
 
 %changelog
+* Mon Oct  6 2014 Remi Collet <remi@fedoraproject.org> - 4.3.1-1
+- Update to 4.3.1 (no change)
+
 * Mon Oct  6 2014 Remi Collet <remi@fedoraproject.org> - 4.3.0-2
 - only enable colors when output to a terminal (from 4.4)
 - open https://github.com/sebastianbergmann/phpunit/pull/1458
