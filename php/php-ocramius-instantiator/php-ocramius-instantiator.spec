@@ -21,7 +21,7 @@
 
 Name:           php-ocramius-instantiator
 Version:        1.1.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Instantiate objects in PHP without invoking their constructors
 
 Group:          Development/Libraries
@@ -80,21 +80,6 @@ cp -pr src/* %{buildroot}%{_datadir}/php
     --output autoload.php \
     src tests %{_datadir}/php/LazyMap
 
-if [ -d /usr/share/php/PHPUnit ] \
-   && ! grep -q Doctrine /usr/share/php/PHPUnit/Autoload.php
-then
-  # Hack PHPUnit 4.2 autoloader to not use system Instantiator
-  mkdir PHPUnit
-  sed -e '/Instantiator/d' \
-    -e 's:dirname(__FILE__):"/usr/share/php/PHPUnit":' \
-    /usr/share/php/PHPUnit/Autoload.php \
-    >PHPUnit/Autoload.php
-fi
-
-sed -e 's/colors="true"//' \
-    -e '/log/d' \
-    phpunit.xml.dist >phpunit.xml
-
 : Run test suite
 %{_bindir}/phpunit \
     --bootstrap autoload.php \
@@ -117,6 +102,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct  6 2014 Remi Collet <remi@fedoraproject.org> - 1.1.4-2
+- cleanup and test build
+
 * Sun Oct  5 2014 Remi Collet <remi@fedoraproject.org> - 1.1.4-1
 - update to 1.1.4
 
