@@ -27,7 +27,8 @@ Release: 2%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
-License: GPLv2+
+# MIT (js/jquery/, js/canvg/, js/codemirror/), GPLv2+ (the rest)
+License:	GPLv2+ and MIT
 URL: http://www.phpmyadmin.net/
 Source0: http://downloads.sourceforge.net/sourceforge/phpmyadmin/%{name}-%{version}%{?prever:-%prever}-all-languages.tar.bz2
 Source2: phpMyAdmin.htaccess
