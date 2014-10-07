@@ -12,8 +12,8 @@
 
 %global github_owner     doctrine
 %global github_name      doctrine2
-%global github_version   2.4.5
-%global github_commit    c0d3cdbdfbf873871167050ab077e49b1ad02ab0
+%global github_version   2.4.6
+%global github_commit    bebacf79d8d4dae9168f0f9bc6811e6c2cb6a4d9
 
 %global composer_vendor  doctrine
 %global composer_project orm
@@ -145,6 +145,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct  7 2014 Remi Collet <remi@fedoraproject.org> 2.4.6-1
+- Update to 2.4.6
+
 * Tue Sep 23 2014 Remi Collet <remi@fedoraproject.org> 2.4.5-1
 - Update to 2.4.5
 
