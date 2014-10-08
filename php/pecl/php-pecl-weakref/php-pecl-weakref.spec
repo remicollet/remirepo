@@ -15,7 +15,7 @@
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  Weakref
 %global  ext_name  weakref
-%global versuf     -beta
+#global versuf     -beta
 %if "%{php_version}" < "5.6"
 %global ini_name   %{ext_name}.ini
 %else
@@ -24,8 +24,8 @@
 
 Summary:        Implementation of weak references
 Name:           %{?scl_prefix}php-pecl-weakref
-Version:        0.2.4
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        0.2.5
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -41,6 +41,7 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-%{ext_name} = %{version}
 Provides:       %{?scl_prefix}php-%{ext_name}%{?_isa} = %{version}
@@ -73,6 +74,8 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %description
 A weak reference provides a gateway to an object without preventing
 that object from being collected by the garbage collector (GC).
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
 
 
 %prep
@@ -138,7 +141,7 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
+# Documentation
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -174,6 +177,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -187,6 +191,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct 08 2014 Remi Collet <remi@fedoraproject.org> - 0.2.5-1
+- Update to 0.2.5
+
 * Tue Aug 26 2014 Remi Collet <rcollet@redhat.com> - 0.2.4-2
 - improve SCL build
 

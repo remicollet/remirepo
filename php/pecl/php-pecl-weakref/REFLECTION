@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #141 Weakref version 0.2.4-beta ] {
+Extension [ <persistent> extension #152 Weakref version 0.2.5 ] {
 
   - Classes [2] {
     Class [ <internal:Weakref> final class WeakRef ] {
