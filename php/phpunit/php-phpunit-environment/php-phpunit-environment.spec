@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    10c7467da0622f7848cc5cadc0828c3359254df4
+%global gh_commit    6288ebbf6fa3ed2b2ff2d69c356fbaaf4f0971a7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   environment
@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-phpunit-environment
-Version:        1.0.1
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        Handle HHVM/PHP environments
 
@@ -75,6 +75,10 @@ then
     >PHPUnit/Autoload.php
 fi
 
+# Ignore this test which requires a tty
+# https://github.com/sebastianbergmann/environment/issues/5
+rm -f tests/ConsoleTest.php
+
 phpunit \
   --bootstrap src/autoload.php \
   -d date.timezone=UTC
@@ -93,6 +97,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct  8 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- update to 1.1.0
+
 * Sun Oct  5 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - update to 1.0.1
 - enable test suite
