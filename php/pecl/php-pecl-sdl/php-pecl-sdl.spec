@@ -17,14 +17,12 @@
 
 Summary:       Simple DirectMedia Layer for PHP
 Name:          %{?scl_prefix}php-pecl-sdl
-Version:       0.9.2
+Version:       0.9.3
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/sdl
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-Patch0:           %{pecl_name}-nts.patch
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires:    %{?scl_prefix}php-devel > 5.2.0
@@ -39,22 +37,26 @@ Requires:         %{__php}
 %if %{with_zts}
 Requires:         %{__ztsphp}
 %endif
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:         %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:         %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:         %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:         %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:     php54-pecl-%{pecl_name}
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name}
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -71,14 +73,15 @@ using the complete SDL library API.
 
 Use the "phpsdl" command to launch a SDL application.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+
 
 %prep
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
 
-pushd NTS
-%patch0 -p2 -b .nts
-popd
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
 
 cat << 'EOF' | tee phpsdl
 #!/bin/sh
@@ -129,11 +132,8 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -Dpm 755 zts-phpsdl %{buildroot}%{_bindir}/zts-phpsdl
 %endif
 
-# Test & Documentation
+# Documentation
 cd NTS
-for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -169,8 +169,8 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
 %{_bindir}/phpsdl
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
@@ -182,6 +182,10 @@ fi
 
 
 %changelog
+* Wed Oct 08 2014 Remi Collet <remi@fedoraproject.org> - 0.9.3-1
+- Update to 0.9.3
+- don't install/register tests
+
 * Tue Dec 03 2013 Remi Collet <remi@fedoraproject.org> - 0.9.2-1
 - Update to 0.9.2 (beta)
 - adapt for SCL
