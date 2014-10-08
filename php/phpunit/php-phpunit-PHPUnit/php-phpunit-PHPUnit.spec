@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-PHPUnit
 Version:        4.3.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries
@@ -45,7 +45,7 @@ BuildRequires:  php-composer(phpunit/php-timer) >= 1.0.2
 BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 2.3
 BuildRequires:  php-composer(sebastian/comparator) >= 1.0
 BuildRequires:  php-composer(sebastian/diff) >= 1.1
-BuildRequires:  php-composer(sebastian/environment) >= 1.0
+BuildRequires:  php-composer(sebastian/environment) >= 1.1
 BuildRequires:  php-composer(sebastian/exporter) >= 1.0
 BuildRequires:  php-composer(sebastian/version) >= 1.0
 BuildRequires:  php-composer(symfony/yaml) >= 2.0
@@ -62,7 +62,7 @@ BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 #        "symfony/yaml": "~2.0",
 #        "sebastian/comparator": "~1.0",
 #        "sebastian/diff": "~1.1",
-#        "sebastian/environment": "~1.0",
+#        "sebastian/environment": "~1.1",
 #        "sebastian/exporter": "~1.0",
 #        "sebastian/version": "~1.0",
 #        "ext-dom": "*",
@@ -85,7 +85,7 @@ Requires:       php-composer(sebastian/comparator) >= 1.0
 Requires:       php-composer(sebastian/comparator) <  2
 Requires:       php-composer(sebastian/diff) >= 1.1
 Requires:       php-composer(sebastian/diff) <  2
-Requires:       php-composer(sebastian/environment) >= 1.0
+Requires:       php-composer(sebastian/environment) >= 1.1
 Requires:       php-composer(sebastian/environment) <  2
 Requires:       php-composer(sebastian/exporter) >= 1.0
 Requires:       php-composer(sebastian/exporter) <  2
@@ -200,6 +200,10 @@ fi
 
 
 %changelog
+* Wed Oct  8 2014 Remi Collet <remi@fedoraproject.org> - 4.3.1-2
+- new upstream patch for "no colors" patch
+- raise dependency on sebastian/environment >= 1.1
+
 * Mon Oct  6 2014 Remi Collet <remi@fedoraproject.org> - 4.3.1-1
 - Update to 4.3.1 (no change)
 
