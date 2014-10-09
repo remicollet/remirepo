@@ -1,4 +1,15 @@
-%{!?__pear: %global __pear %{_bindir}/pear}
+# spec file for php-pear-PHP-CodeSniffer
+#
+# Copyright (c) 2013-2014 Remi Collet
+# Copyright (c) 2009-2013 Christof Damian
+# Copyright (c) 2006-2009 Konstantin Ryabitsev
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name     PHP_CodeSniffer
 
 Name:           php-pear-PHP-CodeSniffer
@@ -10,6 +21,8 @@ Group:          Development/Tools
 License:        BSD
 URL:            http://pear.php.net/package/PHP_CodeSniffer
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
+# https://github.com/squizlabs/PHP_CodeSniffer/issues/273
+Source1:        PHP_CodeSniffer-licence.txt
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -23,33 +36,32 @@ Requires(postun): %{__pear}
 Requires:       php-pear(PEAR)
 # From package.xml - optional
 Requires:       php-pear(pear.phpunit.de/PHP_Timer) >= 1.0.0
-# From phpcompatinfo report for version 1.4.8
+# From phpcompatinfo report for version 1.5.5
 Requires:       php-ctype
 Requires:       php-date
 Requires:       php-dom
-Requires:       php-gettext
 Requires:       php-iconv
-Requires:       php-json
 Requires:       php-pcre
-Requires:       php-pdo
-Requires:       php-soap
 Requires:       php-reflection
+Requires:       php-simplexml
 Requires:       php-spl
 Requires:       php-tokenizer
 Requires:       php-xmlwriter
-Requires:       php-zip
 
 Provides:       php-pear(%{pear_name}) = %{version}
 Provides:       php-composer(squizlabs/php_codesniffer) = %{version}
 Provides:       phpcs = %{version}
 Obsoletes:      phpcs < %{version}
 
+
 %description
 PHP_CodeSniffer provides functionality to verify that code conforms to
 certain standards, such as PEAR, or user-defined.
 
+
 %prep
 %setup -q -c
+
 sed -e '/phpcs-svn-pre-commit/s/role="script"/role="doc"/' \
     package.xml >%{pear_name}-%{version}/%{pear_name}.xml
 
@@ -64,7 +76,6 @@ cd %{pear_name}-%{version}
 
 %{__pear} install --nodeps --packagingroot %{buildroot} %{pear_name}.xml
 
-
 # Clean up unnecessary files
 rm -rf %{buildroot}%{pear_metadir}/.??*
 
@@ -72,11 +83,13 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{pear_name}.xml %{buildroot}%{pear_xmldir}
 
+install -pm 644 %{SOURCE1} %{buildroot}%{pear_docdir}/%{pear_name}/LICENSE
+
 
 %check
 cd %{pear_name}-%{version}/tests
 
-# Version 1.5.0 : Tests: 215, Assertions: 57, Skipped: 3.
+# Version 1.5.5 : 216, Assertions: 57, Skipped: 4.
 %{_bindir}/phpunit \
   -d date.timezone=UTC \
   --verbose \
@@ -85,6 +98,7 @@ cd %{pear_name}-%{version}/tests
 
 %clean
 rm -rf %{buildroot}
+
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
