@@ -1,6 +1,6 @@
 Name:           php-Smarty
 Summary:        Template/Presentation Framework for PHP
-Version:        3.1.19
+Version:        3.1.20
 Release:        1%{?dist}
 
 Source0:        http://www.smarty.net/files/Smarty-%{version}.tar.gz
@@ -60,8 +60,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Oct 10 2014 Remi Collet <remi@fedoraproject.org> - 3.1.20-1
+- update to 3.1.20
+
 * Thu Jul 31 2014 Remi Collet <remi@fedoraproject.org> - 3.1.19-1
-- backport 3.1.14 for remi repo
+- backport 3.1.19 for remi repo
 - fix license handling
 
 * Wed Jul 30 2014 Johan Cwiklinski <johan AT x-tnd DOT be> - 3.1.19-1
