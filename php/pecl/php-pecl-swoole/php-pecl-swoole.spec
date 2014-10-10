@@ -23,7 +23,7 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.7.5
+Version:        1.7.6
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -122,9 +122,7 @@ cat << 'EOF' | tee %{ini_name}
 extension=%{pecl_name}.so
 
 ; Configuration
-;swoole.task_worker_num = 0
-;swoole.task_ipc_mode = 0
-;swoole.task_auto_start = 0
+;swoole.aio_thread_num = 2
 ;swoole.message_queue_key = 0
 ;swoole.unixsock_buffer_size = 8388608
 EOF
@@ -176,7 +174,7 @@ make -C ZTS \
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
+# Documentation
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -232,6 +230,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 10 2014 Remi Collet <remi@fedoraproject.org> - 1.7.6-1
+- Update to 1.7.6
+
 * Wed Sep 10 2014 Remi Collet <remi@fedoraproject.org> - 1.7.5-1
 - Update to 1.7.5
 

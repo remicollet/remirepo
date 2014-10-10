@@ -1,14 +1,8 @@
-Extension [ <persistent> extension #146 swoole version 1.7.5 ] {
+Extension [ <persistent> extension #144 swoole version 1.7.6 ] {
 
   - INI {
-    Entry [ swoole.task_worker_num <ALL> ]
-      Current = '0'
-    }
-    Entry [ swoole.task_ipc_mode <ALL> ]
-      Current = '0'
-    }
-    Entry [ swoole.task_auto_start <ALL> ]
-      Current = '0'
+    Entry [ swoole.aio_thread_num <ALL> ]
+      Current = '2'
     }
     Entry [ swoole.message_queue_key <ALL> ]
       Current = '0'
@@ -48,7 +42,7 @@ Extension [ <persistent> extension #146 swoole version 1.7.5 ] {
     Constant [ integer SWOOLE_SSL ] { 512 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.7.5 }
+    Constant [ string SWOOLE_VERSION ] { 1.7.6 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_GCC ] { 1 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 2 }
