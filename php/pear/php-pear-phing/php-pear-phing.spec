@@ -1,46 +1,57 @@
-%{!?__pear: %global __pear %{_bindir}/pear}
+# spec file for php-pear-phing
+#
+# Copyright (c) 2013-2014 Remi Collet
+# Copyright (c) 2010-2013 Christof Damian
+# Copyright (c) 2007-2010 Alexander Kahl
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    phing
 %global pear_channel pear.phing.info
 
-Summary:	A project build system based on Apache Ant
-Name:		php-pear-phing
-Version:	2.7.0
-Release:	1%{?dist}
+Summary:       A project build system based on Apache Ant
+Name:          php-pear-phing
+Version:       2.8.2
+Release:       1%{?dist}
 
-License:	LGPLv2
-Group:		Development/Tools
+License:       LGPLv2
+Group:         Development/Tools
+URL:           http://phing.info/trac/
 
 # remove non-free stuff
 # pear download phing/phing
 # ./strip.sh %{version}
-Source0:	%{pear_name}-%{version}-strip.tgz
-Source1:	strip.sh
+Source0:       %{pear_name}-%{version}-strip.tgz
+Source1:       strip.sh
 
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-URL:		http://phing.info/trac/
-
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:	noarch
+BuildRequires: php(language) >= 5.2.0
+BuildRequires: php-pear(PEAR) >= 1.8.0
+BuildRequires: php-channel(%{pear_channel})
+BuildRequires: dos2unix
 
-BuildRequires:	php(language) >= 5.2.0
-BuildRequires:	php-pear(PEAR) >= 1.8.0
-BuildRequires:	php-channel(%{pear_channel})
-BuildRequires:	dos2unix
-
-Requires:	php(language) >= 5.2.0
-Requires:	php-cli
-Requires:	php-pear(PEAR) >= 1.8.0
-Requires:	php-channel(%{pear_channel})
-
-# Optional
-Requires:	php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
-Requires:	php-pear(pear.phpunit.de/PHP_CodeCoverage) >= 1.1.0
-Requires:	php-pear(pear.phpunit.de/phpcpd) >= 1.3.3
-Requires:	php-pear(pear.phpunit.de/phploc) >= 1.6.4
-Requires:	php-pear(Archive_Tar) >= 1.3.0
-Requires:	php-pear(HTTP_Request2) >= 2.1.1
-Requires:	php-pear(PHP_CodeSniffer) >= 1.5.0
-Requires:	php-pear(pear.pdepend.org/PHP_Depend) >= 0.10.0
-Requires:	php-pear(pear.phpmd.org/PHP_PMD) >= 1.1.0
+Requires(post): %{__pear}
+Requires(postun): %{__pear}
+Requires:      php-cli
+# From package.xml, Required
+Requires:      php(language) >= 5.2.0
+Requires:      php-pear(PEAR) >= 1.8.0
+Requires:      php-channel(%{pear_channel})
+# From package.xml, Optional
+Requires:      php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
+Requires:      php-pear(pear.phpunit.de/PHP_CodeCoverage) >= 1.1.0
+Requires:      php-pear(pear.phpunit.de/phpcpd) >= 1.3.3
+Requires:      php-pear(pear.phpunit.de/phploc) >= 1.6.4
+Requires:      php-pear(Archive_Tar) >= 1.3.0
+Requires:      php-pear(HTTP_Request2) >= 2.1.1
+Requires:      php-pear(PHP_CodeSniffer) >= 1.5.0
+Requires:      php-pear(pear.pdepend.org/PHP_Depend) >= 0.10.0
+Requires:      php-pear(pear.phpmd.org/PHP_PMD) >= 1.1.0
 # TODO
 # pear.phing.info/phingdocs >= 2.4.13
 # VersionControl_SVN >= 0.4.0
@@ -49,11 +60,8 @@ Requires:	php-pear(pear.phpmd.org/PHP_PMD) >= 1.1.0
 # Services_Amazon_S3 >= 0.3.1
 # pear.phpdoc.org/phpDocumentor >= 2.0.0a10
 
-
-Requires(post):	%{__pear}
-Requires(postun): %{__pear}
-
-Provides:	php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:      php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:      php-composer(phing/phing) = %{version}
 
 
 %description
@@ -71,7 +79,7 @@ PEAR packages, and much more.
 %prep
 %setup -qc
 cd %{pear_name}-%{version}
-mv ../package.xml %{pear_name}.xml
+mv ../package.xml %{name}.xml
 
 
 %build
@@ -80,22 +88,22 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot %{buildroot} %{pear_name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 rm -rf %{buildroot}%{pear_metadir}/.??*
 
 mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{pear_name}.xml %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %post
 %{__pear} install --nodeps --soft --force --register-only \
-	%{pear_xmldir}/%{pear_name}.xml >/dev/null || :
+    %{pear_xmldir}/%{name}.xml >/dev/null || :
 
 %postun
 if [ $1 -eq 0 ] ; then
-	%{__pear} uninstall --nodeps --ignore-errors --register-only \
-		%{pear_channel}/%{pear_name} >/dev/null || :
+    %{__pear} uninstall --nodeps --ignore-errors --register-only \
+        %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
@@ -106,10 +114,13 @@ fi
 %{pear_datadir}/%{pear_name}
 %{pear_phpdir}/%{pear_name}
 %{pear_phpdir}/%{pear_name}.php
-%{pear_xmldir}/%{pear_name}.xml
+%{pear_xmldir}/%{name}.xml
 
 
 %changelog
+* Fri Oct 10 2014 Remi Collet <remi@fedoraproject.org> - 2.8.2-1
+- Update to 2.8.2
+
 * Mon Sep 16 2013 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
 - Update to 2.6.1
 
