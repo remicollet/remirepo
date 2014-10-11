@@ -22,8 +22,8 @@
 %endif
 
 Name: phpMyAdmin
-Version: 4.2.9.1
-Release: 2%{?dist}
+Version: 4.2.10
+Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -214,6 +214,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Sat Oct 11 2014 Remi Collet <rpms@famillecollet.com> 4.2.10-1
+- update to 4.2.10 (Sat, 11 Oct 2014, bugfix)
+
 * Sat Oct  4 2014 Remi Collet <rpms@famillecollet.com> 4.2.9.1-2
 - provide nginx configuration (Fedora >= 21)
 
