@@ -12,8 +12,8 @@
 
 %global github_owner     fabpot
 %global github_name      Twig
-%global github_version   1.16.0
-%global github_commit    8ce37115802e257a984a82d38254884085060024
+%global github_version   1.16.1
+%global github_commit    7c4c01dcf578523cfcddf383641a4f12790270ec
 
 # Lib
 %global composer_vendor  twig
@@ -47,7 +47,7 @@
 
 Name:          %{?scl_prefix}php-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:       The flexible, fast, and secure template engine for PHP
 
 Group:         Development/Libraries
@@ -90,6 +90,7 @@ Requires:      %{?scl_prefix}php-spl
 # Ext
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api)      = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 # Lib
 ## Composer
@@ -147,6 +148,8 @@ Obsoletes:     php56w-%{extname} <= %{version}
 * Flexible: Twig is powered by a flexible lexer and parser. This allows the
   developer to define its own custom tags and filters, and create its own
   DSL.
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
 
 
 %prep
@@ -230,9 +233,6 @@ sed 's/function testGetAttributeWithTemplateAsObject/function SKIP_testGetAttrib
     -i test/Twig/Tests/TemplateTest.php
 %endif
 
-## Create PHPUnit config with colors turned off
-sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
-
 : Test suite without extension
 %{__phpunit} --include-path ./lib -d date.timezone="UTC"
 
@@ -267,6 +267,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 11 2014 Remi Collet <remi@fedoraproject.org> - 1.16.1-1
+- Update to 1.16.1
+
 * Thu Aug 28 2014 Remi Collet <remi@fedoraproject.org> - 1.16.0-2
 - allow SCL build
 - add backport stuff for EL-5
