@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Service-Weather
-Version:        2.1.3
+Version:        2.1.4
 Release:        1%{?dist}
 Summary:        Horde Weather Provider
 
@@ -110,10 +110,8 @@ done | tee ../%{pear_name}.lang
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
-    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 
@@ -145,7 +143,11 @@ fi
 %{pear_testdir}/%{pear_name}
 %{pear_hordedir}/themes
 
+
 %changelog
+* Sun Oct 12 2014 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
+- Update to 2.1.4
+
 * Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
 - Update to 2.1.3
 
