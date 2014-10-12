@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-Horde-Core
-Version:        2.14.2
+Version:        2.15.0
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -192,7 +192,6 @@ sed -e '/%{pear_name}\.po/d' \
     -e '/js\/prototype.js/d' \
     -e '/js\/scriptaculous/d' \
 %endif
-    -e '/LICENSE/s/role="horde"/role="doc"/' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 touch -r ../package.xml %{name}.xml
@@ -282,6 +281,9 @@ fi
 
 
 %changelog
+* Sun Oct 12 2014 Remi Collet <remi@fedoraproject.org> - 2.15.0-1
+- Update to 2.15.0
+
 * Thu Oct 02 2014 Remi Collet <remi@fedoraproject.org> - 2.14.2-1
 - Update to 2.14.2
 
