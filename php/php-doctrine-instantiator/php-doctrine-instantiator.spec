@@ -9,7 +9,7 @@
 
 # bootstrap needed when rebuilding PHPUnit for new major version
 %global bootstrap    0
-%global gh_commit    8806c41c178ad4a2e87294b851d730779555d252
+%global gh_commit    f976e5de371104877ebc89bd8fecb0019ed9c119
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     doctrine
 %global gh_project   instantiator
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-doctrine-instantiator
-Version:        1.0.3
+Version:        1.0.4
 Release:        1%{?dist}
 Summary:        Instantiate objects in PHP without invoking their constructors
 
@@ -115,6 +115,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 13 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- update to 1.0.4 (no change)
+
 * Sun Oct  5 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - update to 1.0.3
 
