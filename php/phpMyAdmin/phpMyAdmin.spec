@@ -54,7 +54,6 @@ Requires:  php-curl
 Requires:  php-date
 Requires:  php-filter
 Requires:  php-gd
-Requires:  php-gmp
 Requires:  php-hash
 Requires:  php-iconv
 Requires:  php-json
@@ -77,6 +76,7 @@ Requires:  php-php-gettext
 Requires:  php-tcpdf
 Requires:  php-tcpdf-dejavu-sans-fonts
 Requires:  php-phpseclib-crypt-aes
+# optional and ignored php-gmp (as bcmath is enough)
 
 Provides:  phpmyadmin = %{version}-%{release}
 Obsoletes: phpMyAdmin3
