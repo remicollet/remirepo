@@ -88,7 +88,7 @@ Version: 5.4.33
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 3%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1009,7 +1009,6 @@ ln -sf ../configure
 	--with-t1lib=%{_prefix} \
 	--without-gdbm \
 	--with-gettext \
-	--with-gmp \
 	--with-iconv \
 	--with-jpeg-dir=%{_prefix} \
 	--with-openssl \
@@ -1049,6 +1048,7 @@ build --libdir=%{_libdir}/php \
       --enable-mbstring=shared \
       --enable-mbregex \
       --with-gd=shared \
+      --with-gmp=shared \
       --enable-bcmath=shared \
       --enable-dba=shared --with-db4=%{_prefix} \
                           --with-gdbm=%{_prefix} \
@@ -1169,6 +1169,7 @@ build --includedir=%{_includedir}/php-zts \
       --enable-mbstring=shared \
       --enable-mbregex \
       --with-gd=shared \
+      --with-gmp=shared \
       --enable-bcmath=shared \
       --enable-dba=shared --with-db4=%{_prefix} \
                           --with-gdbm=%{_prefix} \
@@ -1396,6 +1397,7 @@ install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
     mysqlnd mysqlnd_mysql mysqlnd_mysqli pdo_mysqlnd \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
+    gmp \
     pdo pdo_mysql pdo_pgsql pdo_odbc pdo_sqlite json %{zipmod} \
     %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} interbase pdo_firebird \
 %if 0%{?fedora} >= 11  || 0%{?rhel} >= 6
@@ -1453,7 +1455,7 @@ cat files.sqlite3 >> files.pdo
 %endif
 
 # Package json, zip, curl, phar and fileinfo in -common.
-cat files.json files.curl files.phar files.fileinfo > files.common
+cat files.json files.curl files.phar files.fileinfo files.gmp > files.common
 %if %{with_zip}
 cat files.zip >> files.common
 %endif
@@ -1702,6 +1704,9 @@ fi
 
 
 %changelog
+* Wed Oct 15 2014 Remi Collet <remi@fedoraproject.org> 5.4.33-3
+- build gmp as shared, so can be disabled by user
+
 * Sat Sep 20 2014 Remi Collet <remi@fedoraproject.org> 5.4.33-2
 - openssl: fix regression introduce in changes for upstream
   bug #65137 and #41631, revert to 5.4.32 behavior
