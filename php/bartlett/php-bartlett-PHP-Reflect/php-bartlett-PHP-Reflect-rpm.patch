@@ -1,6 +1,6 @@
 diff -up ./bin/phpreflect.json.dist.rpm ./bin/phpreflect.json.dist
---- ./bin/phpreflect.json.dist.rpm	2014-09-19 13:52:26.000000000 +0200
-+++ ./bin/phpreflect.json.dist	2014-09-19 16:08:31.695874693 +0200
+--- ./bin/phpreflect.json.dist.rpm	2014-10-16 14:13:07.000000000 +0200
++++ ./bin/phpreflect.json.dist	2014-10-16 16:49:30.538850254 +0200
 @@ -9,6 +9,19 @@
          {
              "name": "Analyser",
@@ -22,9 +22,9 @@ diff -up ./bin/phpreflect.json.dist.rpm ./bin/phpreflect.json.dist
      ],
      "analysers" : [
 diff -up ./bin/phpreflect.rpm ./bin/phpreflect
---- ./bin/phpreflect.rpm	2014-09-19 13:52:26.000000000 +0200
-+++ ./bin/phpreflect	2014-09-19 16:12:13.853757847 +0200
-@@ -1,11 +1,11 @@
+--- ./bin/phpreflect.rpm	2014-10-16 14:13:07.000000000 +0200
++++ ./bin/phpreflect	2014-10-16 16:50:40.458190967 +0200
+@@ -1,15 +1,11 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
  <?php
@@ -34,11 +34,15 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
  } else {
      $baseDir   = dirname(__DIR__);
 -    $vendorDir = $baseDir . '/vendor';
+-
+-    if (!file_exists($vendorDir . '/autoload.php')) {
+-        $vendorDir = dirname(dirname($baseDir));
+-    }
 +    $vendorDir = '/usr/share/php';
  
      if (!getenv("REFLECT")) {
          $home  = defined('PHP_WINDOWS_VERSION_BUILD') ? 'USERPROFILE' : 'HOME';
-@@ -22,8 +22,27 @@ if (\Phar::running()) {
+@@ -26,8 +22,28 @@ if (\Phar::running()) {
          }
      }
  }
@@ -50,6 +54,7 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
 +require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
 +
 +require_once $vendorDir . '/PHP/Timer.php';
++require_once $vendorDir . '/SebastianBergmann/Version/Version.php';
 +
 +use Symfony\Component\ClassLoader\UniversalClassLoader;
 +
@@ -69,8 +74,8 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
  if (PHP_SAPI !== 'cli') {
      return;
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
---- ./tests/bootstrap.php.rpm	2014-09-19 13:52:26.000000000 +0200
-+++ ./tests/bootstrap.php	2014-09-19 16:08:31.695874693 +0200
+--- ./tests/bootstrap.php.rpm	2014-10-16 14:13:07.000000000 +0200
++++ ./tests/bootstrap.php	2014-10-16 16:49:30.538850254 +0200
 @@ -1,6 +1,19 @@
  <?php
  

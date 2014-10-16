@@ -6,13 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5f2e0a7e08e377c6924ffb5d24bc41d800a393f2
+%global gh_commit    0e2a467f0b6f0c19ee61263bce97fb387408c6e3
 #global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     llaville
 %global gh_project   php-reflect
 
 Name:           php-bartlett-PHP-Reflect
-Version:        2.4.0
+Version:        2.5.0
 %global specrel 1
 Release:        %{?gh_short:0.%{specrel}.git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
@@ -31,8 +31,9 @@ BuildArch:      noarch
 BuildRequires:  php(language)               >= 5.3
 # to run test suite
 BuildRequires:  %{_bindir}/phpunit
+Requires:       php-composer(sebastian/version)        >= 1.0
 BuildRequires:  php-composer(phpunit/php-timer)        >= 1.0
-BuildRequires:  php-composer(nikic/php-parser)         >= 1.0.0
+BuildRequires:  php-composer(nikic/php-parser)         >= 1.0
 BuildRequires:  php-composer(symfony/class-loader)     >= 2.5
 BuildRequires:  php-composer(symfony/event-dispatcher) >= 2.5
 BuildRequires:  php-composer(symfony/finder)           >= 2.5
@@ -46,7 +47,8 @@ BuildRequires:  php-composer(seld/jsonlint)            >= 1.1
 #        "ext-spl": "*",
 #        "ext-json": "*",
 #        "ext-date": "*",
-#        "phpunit/php-timer": ">=1.0.0",
+#        "sebastian/version": "~1.0",
+#        "phpunit/php-timer": "~1.0",
 #        "nikic/php-parser": "~1.0",
 #        "symfony/event-dispatcher": "~2.5",
 #        "symfony/finder": "~2.5",
@@ -59,7 +61,10 @@ Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-tokenizer
-Requires:       php-composer(phpunit/php-timer)        >= 1.0.0
+Requires:       php-composer(sebastian/version)        >= 1.0
+Requires:       php-composer(sebastian/version)        <  2
+Requires:       php-composer(phpunit/php-timer)        >= 1.0
+Requires:       php-composer(phpunit/php-timer)        <  2
 Requires:       php-composer(nikic/php-parser)         >= 1.0
 Requires:       php-composer(nikic/php-parser)         <  2
 Requires:       php-composer(symfony/event-dispatcher) >= 2.5
@@ -142,6 +147,7 @@ fi
 %changelog
 * Fri Sep 19 2014 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
 - Update to 2.4.0
+- add dependency on sebastian/version
 
 * Fri Aug 22 2014 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
 - Update to 2.3.0
