@@ -131,7 +131,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.6.1
+Version: 5.6.2
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -1945,6 +1945,10 @@ fi
 
 
 %changelog
+* Thu Oct 16 2014 Remi Collet <remi@fedoraproject.org> 5.6.1-1
+- Update to PHP 5.6.2
+  http://php.net/releases/5_6_2.php
+
 * Fri Oct  3 2014 Remi Collet <remi@fedoraproject.org> 5.6.1-1
 - Update to PHP 5.6.1
   http://php.net/releases/5_6_1.php
