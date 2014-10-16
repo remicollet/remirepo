@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    06005259429c156c02596add91f6a59c7dc3d4af
+%global gh_commit    02dd047049564f98f796789ec4207ee8f99bc3d4
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,8 +17,8 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.3.1
-Release:        2%{?dist}
+Version:        4.3.2
+Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries
@@ -200,6 +200,9 @@ fi
 
 
 %changelog
+* Thu Oct 16 2014 Remi Collet <remi@fedoraproject.org> - 4.3.2-1
+- Update to 4.3.2
+
 * Wed Oct  8 2014 Remi Collet <remi@fedoraproject.org> - 4.3.1-2
 - new upstream patch for "no colors" patch
 - raise dependency on sebastian/environment >= 1.1
