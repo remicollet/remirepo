@@ -6,13 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    4f9def9b616c3af1bb577c188b66f3039e8dd333
+%global gh_commit    f537b51e9ca93213a458a1f2ac8d3cc9a4cb0054
 #global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     llaville
 %global gh_project   php-compat-info
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        3.4.0
+Version:        3.5.0
 %global specrel 1
 Release:        %{?gh_short:0.%{specrel}.git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
@@ -30,7 +30,7 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.0
 # to run test suite
 BuildRequires:  %{_bindir}/phpunit
-BuildRequires:  php-composer(bartlett/php-reflect) >= 2.4
+BuildRequires:  php-composer(bartlett/php-reflect) >= 2.5
 
 # From composer.json, "require"
 #        "php": ">=5.3.0",
@@ -39,19 +39,21 @@ BuildRequires:  php-composer(bartlett/php-reflect) >= 2.4
 #        "ext-spl": "*",
 #        "ext-json": "*",
 #        "symfony/console": "~2.5",
-#         "bartlett/php-reflect": "~2.4",
-#         "seld/jsonlint": "~1.1"
+#        "bartlett/php-reflect": "~2.5",
+#        "seld/jsonlint": "~1.1"
 Requires:       php(language) >= 5.3.0
 Requires:       php-json
 Requires:       php-libxml
 Requires:       php-pcre
 Requires:       php-spl
-Requires:       php-composer(bartlett/php-reflect) >= 2.4
+Requires:       php-composer(bartlett/php-reflect) >= 2.5
 Requires:       php-composer(bartlett/php-reflect) <  3
 Requires:       php-composer(symfony/console)      >= 2.5
 Requires:       php-composer(symfony/console)      <  3
 Requires:       php-composer(seld/jsonlint)        >= 1.1
 Requires:       php-composer(seld/jsonlint)        <  2
+Requires:       php-composer(sebastian/version)    >= 1.0
+Requires:       php-composer(sebastian/version)    <  2
 # From composer.json, "suggest"
 #        "doctrine/cache": "Allow caching results, since bartlett/php-reflect 2.2"
 Requires:       php-composer(doctrine/cache)
@@ -130,8 +132,14 @@ fi
 
 
 %changelog
+* Thu Oct 16 2014 Remi Collet <remi@fedoraproject.org> - 3.5.0-1
+- Update to 3.5.0
+- add dependency on sebastian/version
+- raise dependency on bartlett/php-reflect 2.5
+
 * Thu Sep 25 2014 Remi Collet <remi@fedoraproject.org> - 3.4.0-1
 - Update to 3.4.0
+- raise dependency on bartlett/php-reflect 2.4
 
 * Wed Sep 24 2014 Remi Collet <remi@fedoraproject.org> - 3.4.0-0.1.ded22dc
 - Test build of upcoming 3.4.0

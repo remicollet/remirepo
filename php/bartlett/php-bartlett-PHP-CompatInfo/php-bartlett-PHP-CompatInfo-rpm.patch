@@ -30,7 +30,7 @@ diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
  <?php
  ini_set('memory_limit', -1);
  
-@@ -23,7 +23,26 @@ if (\Phar::running()) {
+@@ -23,7 +23,27 @@ if (\Phar::running()) {
          }
      }
  }
@@ -40,6 +40,7 @@ diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
 +PhpParser\Autoloader::register();
 +
 +require_once $vendorDir . '/PHP/Timer.php';
++require_once $vendorDir . '/SebastianBergmann/Version/Version.php';
 +
 +require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
 +use Symfony\Component\ClassLoader\UniversalClassLoader;
@@ -61,7 +62,7 @@ diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 --- ./tests/bootstrap.php.rpm	2014-08-21 21:09:22.000000000 +0200
 +++ ./tests/bootstrap.php	2014-08-22 08:30:12.203270207 +0200
-@@ -1,8 +1,29 @@
+@@ -1,8 +1,30 @@
  <?php
  
  $baseDir   = dirname(__DIR__);
@@ -73,6 +74,7 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 +PhpParser\Autoloader::register();
  
 +require_once $vendorDir . '/PHP/Timer.php';
++require_once $vendorDir . '/SebastianBergmann/Version/Version.php';
 +
 +require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
 +use Symfony\Component\ClassLoader\UniversalClassLoader;
