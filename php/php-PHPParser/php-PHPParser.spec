@@ -1,7 +1,6 @@
 %global github_owner    nikic
 %global github_name     PHP-Parser
-%global github_version  1.0.0
-%global github_commit   2b96ab8edccd5a0d0e7a826a7dc53c421ae64f94
+%global github_commit   b9a60372f26356feb85b4b9ca50a395a5f0d7f34
 
 %global oldlib_name     PHPParser
 %global newlib_name     PhpParser
@@ -9,14 +8,14 @@
 %global php_min_ver     5.3
 
 Name:          php-%{oldlib_name}
-Version:       1.0.0
+Version:       1.0.1
 Release:       1%{?dist}
 Summary:       A PHP parser written in PHP
 
 Group:         Development/Libraries
 License:       BSD
 URL:           https://github.com/%{github_owner}/%{github_name}
-Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+Source0:       %{url}/archive/%{github_commit}/%{name}-%{version}-%{github_commit}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -80,6 +79,9 @@ ln -s ../%{newlib_name}/Autoloader.php \
 
 
 %changelog
+* Thu Oct 16 2014 Remi Collet <remi@fedoraproject.org> 1.0.1-1
+- Update to 1.0.1
+
 * Fri Sep 12 2014 Remi Collet <remi@fedoraproject.org> 1.0.0-1
 - Update to 1.0.0
 
