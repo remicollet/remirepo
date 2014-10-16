@@ -105,8 +105,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.4.33
-Release: 2%{?dist}
+Version: 5.4.34
+Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -155,8 +155,6 @@ Patch91: php-5.3.7-oci8conf.patch
 # Upstream fixes (100+)
 # Backported from 5.5.18 for https://bugs.php.net/65641
 Patch100: php-5.4.33-bug65641.patch
-# Revert to fix regression
-Patch101: php-5.4.33-openssl.patch
 
 # Security fixes (200+)
 
@@ -771,7 +769,6 @@ support for using the enchant library to PHP.
 
 # upstream patches
 %patch100 -p1 -b .bug65641
-%patch101 -p1 -R -b .revert
 
 # security patches
 
@@ -925,7 +922,6 @@ ln -sf ../configure
 %endif
     --without-gdbm \
     --with-gettext \
-    --with-gmp \
     --with-iconv \
     --with-jpeg-dir=%{_root_prefix} \
     --with-openssl \
@@ -965,6 +961,7 @@ build --libdir=%{_libdir}/php \
       --enable-mbstring=shared \
       --enable-mbregex \
       --with-gd=shared \
+      --with-gmp=shared \
       --enable-bcmath=shared \
       --enable-dba=shared --with-db4=%{_root_prefix} \
       --with-xmlrpc=shared \
@@ -1220,6 +1217,7 @@ for mod in pgsql odbc ldap snmp xmlrpc \
 %endif
     mysqlnd mysqlnd_mysql mysqlnd_mysqli pdo_mysqlnd \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
+    gmp \
     pdo pdo_pgsql pdo_odbc pdo_sqlite json \
 %if %{with_sqlite3}
     sqlite3 \
@@ -1295,7 +1293,7 @@ cat files.sqlite3 >> files.pdo
 %endif
 
 # Package json, zip, curl, phar and fileinfo in -common.
-cat files.json files.curl files.phar files.fileinfo > files.common
+cat files.json files.curl files.phar files.fileinfo files.gmp > files.common
 %if %{with_zip}
 cat files.zip >> files.common
 %endif
@@ -1540,6 +1538,11 @@ fi
 
 
 %changelog
+* Thu Oct 16 2014 Remi Collet <remi@fedoraproject.org> 5.4.34-1
+- Update to 5.4.34
+  http://www.php.net/releases/5_4_34.php
+- build gmp as shared, so can be disabled by user
+
 * Sat Sep 20 2014 Remi Collet <remi@fedoraproject.org> 5.4.33-2
 - openssl: fix regression introduce in changes for upstream
   bug #65137 and #41631, revert to 5.4.32 behavior
