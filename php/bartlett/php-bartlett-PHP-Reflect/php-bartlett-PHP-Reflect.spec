@@ -145,9 +145,12 @@ fi
 
 
 %changelog
+* Thu Oct 16 2014 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
+- Update to 2.5.0
+- add dependency on sebastian/version
+
 * Fri Sep 19 2014 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
 - Update to 2.4.0
-- add dependency on sebastian/version
 
 * Fri Aug 22 2014 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
 - Update to 2.3.0
