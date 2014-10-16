@@ -126,8 +126,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.5.17
-Release: 2%{?dist}
+Version: 5.5.18
+Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -177,9 +177,6 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch100: php-bug65641.patch
-# Revert to fix regression
-Patch101: php-5.5.17-openssl.patch
 
 # Security fixes (200+)
 
@@ -842,8 +839,6 @@ support for using the enchant library to PHP.
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch100 -p1 -b .bug65641
-%patch101 -p1 -R -b .revert
 
 # security patches
 
@@ -1690,6 +1685,10 @@ fi
 
 
 %changelog
+* Thu Oct 16 2014 Remi Collet <remi@fedoraproject.org> 5.5.18-1
+- Update to 5.5.18
+  http://www.php.net/releases/5_5_18.php
+
 * Sat Sep 20 2014 Remi Collet <remi@fedoraproject.org> 5.5.17-2
 - openssl: fix regression introduce in changes for upstream
   bug #65137 and #41631, revert to 5.5.16 behavior

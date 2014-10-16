@@ -125,11 +125,11 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.5.17
+Version: 5.5.18
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 3%{?dist}
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -190,9 +190,6 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch100: php-bug65641.patch
-# Revert to fix regression
-Patch101: php-5.5.17-openssl.patch
 
 # Security fixes (200+)
 
@@ -944,8 +941,6 @@ rm -rf ext/json
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch100 -p1 -b .bug65641
-%patch101 -p1 -R -b .revert
 
 # security patches
 
@@ -1949,6 +1944,10 @@ fi
 
 
 %changelog
+* Thu Oct 16 2014 Remi Collet <remi@fedoraproject.org> 5.5.18-1
+- Update to 5.5.18
+  http://www.php.net/releases/5_5_18.php
+
 * Wed Sep 24 2014 Remi Collet <remi@fedoraproject.org> 5.5.17-3
 - rebuild (fedora, x86_64)
 
