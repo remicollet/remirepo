@@ -13,8 +13,8 @@
 
 Name:          %{?scl_prefix}php-ioncube-loader
 Summary:       Loader for ionCube Encoded Files
-Version:       4.6.1
-Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:       4.6.2
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       Distribuable
 Group:         Development/Languages
 
@@ -28,6 +28,7 @@ BuildRequires: %{?scl_prefix}php-devel
 # ABI check
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -50,6 +51,8 @@ Obsoletes:     php55w-ioncube-loader <= %{version}
 
 %description
 Loader for ionCube Encoded Files.
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
 
 
 %prep
@@ -116,7 +119,9 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc ioncube/*txt
+%{!?_licensedir:%global license %%doc}
+%license ioncube/LICENSE.txt
+%doc     ioncube/README.txt
 
 %config(noreplace) %{php_inidir}/%{extname}.ini
 %{php_extdir}/%{extname}.so
@@ -128,6 +133,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct  2 2014 Remi Collet <RPMS@famillecollet.com> - 4.6.2-1
+- update to 4.6.2 (Oct 14, 2014)
+
 * Mon Sep  1 2014 Remi Collet <RPMS@famillecollet.com> - 4.6.1-2
 - allow SCL build
 - make ZTS optional
