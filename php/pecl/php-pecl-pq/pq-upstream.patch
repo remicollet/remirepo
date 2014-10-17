@@ -1,0 +1,124 @@
+From ab8bb315a8ff53835175250191facedf8119f6d3 Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Fri, 17 Oct 2014 10:27:05 +0200
+Subject: [PATCH 1/2] get rid of remaining HAVE_JSON, use
+ PHP_PQ_HAVE_PHP_JSON_H everywhere
+
+---
+ src/php_pq_params.c | 4 ++--
+ src/php_pqres.c     | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/php_pq_params.c b/src/php_pq_params.c
+index 0cc370d..9554ef7 100644
+--- a/src/php_pq_params.c
++++ b/src/php_pq_params.c
+@@ -88,7 +88,7 @@ static zval *object_param_to_string(php_pq_params_t *p, zval *zobj, Oid type TSR
+ 	smart_str str = {0};
+ 
+ 	switch (type) {
+-#if HAVE_JSON && defined(PHP_PQ_OID_JSON)
++#if PHP_PQ_HAVE_PHP_JSON_H && defined(PHP_PQ_OID_JSON)
+ #	ifdef PHP_PQ_OID_JSONB
+ 	case PHP_PQ_OID_JSONB:
+ #	endif
+@@ -227,7 +227,7 @@ static zval *array_param_to_string(php_pq_params_t *p, zval *zarr, Oid type TSRM
+ 	struct apply_to_param_from_array_arg arg = {NULL};
+ 
+ 	switch (type) {
+-#if HAVE_JSON && defined(PHP_PQ_OID_JSON)
++#if PHP_PQ_HAVE_PHP_JSON_H && defined(PHP_PQ_OID_JSON)
+ #	ifdef PHP_PQ_OID_JSONB
+ 	case PHP_PQ_OID_JSONB:
+ #	endif
+diff --git a/src/php_pqres.c b/src/php_pqres.c
+index 2853275..ae8774d 100644
+--- a/src/php_pqres.c
++++ b/src/php_pqres.c
+@@ -176,7 +176,7 @@ zval *php_pqres_typed_zval(php_pqres_t *res, char *val, size_t len, Oid typ TSRM
+ 		php_pqdt_from_string(val, len, "Y-m-d H:i:s.uO", zv TSRMLS_CC);
+ 		break;
+ 
+-#if HAVE_JSON && defined(PHP_PQ_OID_JSON)
++#if PHP_PQ_HAVE_PHP_JSON_H && defined(PHP_PQ_OID_JSON)
+ #	ifdef PHP_PQ_OID_JSONB
+ 	case PHP_PQ_OID_JSONB:
+ #	endif
+@@ -1225,7 +1225,7 @@ PHP_MINIT_FUNCTION(pqres)
+ 	zend_declare_class_constant_long(php_pqres_class_entry, ZEND_STRL("CONV_SCALAR"), PHP_PQRES_CONV_SCALAR TSRMLS_CC);
+ 	zend_declare_class_constant_long(php_pqres_class_entry, ZEND_STRL("CONV_ARRAY"), PHP_PQRES_CONV_ARRAY TSRMLS_CC);
+ 	zend_declare_class_constant_long(php_pqres_class_entry, ZEND_STRL("CONV_DATETIME"), PHP_PQRES_CONV_DATETIME TSRMLS_CC);
+-#if HAVE_JSON
++#if PHP_PQ_HAVE_PHP_JSON_H
+ 	zend_declare_class_constant_long(php_pqres_class_entry, ZEND_STRL("CONV_JSON"), PHP_PQRES_CONV_JSON TSRMLS_CC);
+ #endif
+ 	zend_declare_class_constant_long(php_pqres_class_entry, ZEND_STRL("CONV_ALL"), PHP_PQRES_CONV_ALL TSRMLS_CC);
+-- 
+1.8.3.1
+
+From 88bae9c9d9ee4d59febca3762d95546fe6e89663 Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Fri, 17 Oct 2014 11:01:43 +0200
+Subject: [PATCH 2/2] fix check for PG constant
+
+---
+ config.m4       | 16 +++++++++++-----
+ src/php_pqres.c |  4 ++--
+ 2 files changed, 13 insertions(+), 7 deletions(-)
+
+diff --git a/config.m4 b/config.m4
+index 63dfd22..4e08f67 100644
+--- a/config.m4
++++ b/config.m4
+@@ -27,15 +27,21 @@ if test "$PHP_PQ" != "no"; then
+ 		AC_CHECK_PROG(EGREP, egrep, egrep)
+ 	])
+ 	
+-	for PQ_DEF in PGRES_SINGLE_TUPLE PGRES_COPY_BOTH; do
+-		AC_MSG_CHECKING(for $PQ_DEF)
+-		if $EGREP -q $PQ_DEF $PQ_DIR/include/libpq-fe.h; then
+-			AC_DEFINE([$PQ_DEF], [1], [Have $PQ_DEF])
++	dnl
++	dnl PQ_CHECK_CONST(name)
++	dnl
++	AC_DEFUN([PQ_CHECK_CONST], [
++		AC_MSG_CHECKING(for $1)
++		if $EGREP -q $1 $PQ_DIR/include/libpq-fe.h; then
++			AC_DEFINE(HAVE_$1, 1, [Have $1])
+ 			AC_MSG_RESULT(yep)
+ 		else
+ 			AC_MSG_RESULT(nope)
+ 		fi
+-	done 
++	])
++
++	PQ_CHECK_CONST(PGRES_SINGLE_TUPLE)
++	PQ_CHECK_CONST(PGRES_COPY_BOTH)
+ 
+ 	
+ 	dnl
+diff --git a/src/php_pqres.c b/src/php_pqres.c
+index ae8774d..9dda107 100644
+--- a/src/php_pqres.c
++++ b/src/php_pqres.c
+@@ -82,7 +82,7 @@ static STATUS php_pqres_iterator_valid(zend_object_iterator *i TSRMLS_DC)
+ 
+ 	switch (PQresultStatus(obj->intern->res)) {
+ 	case PGRES_TUPLES_OK:
+-#if HAVE_PGRES_SINGLE_TUPLE
++#ifdef HAVE_PGRES_SINGLE_TUPLE
+ 	case PGRES_SINGLE_TUPLE:
+ #endif
+ 		if (PQntuples(obj->intern->res) <= iter->index) {
+@@ -1211,7 +1211,7 @@ PHP_MINIT_FUNCTION(pqres)
+ #ifdef HAVE_PGRES_COPY_BOTH
+ 	zend_declare_class_constant_long(php_pqres_class_entry, ZEND_STRL("COPY_BOTH"), PGRES_COPY_BOTH TSRMLS_CC);
+ #endif
+-#if HAVE_PGRES_SINGLE_TUPLE
++#ifdef HAVE_PGRES_SINGLE_TUPLE
+ 	zend_declare_class_constant_long(php_pqres_class_entry, ZEND_STRL("SINGLE_TUPLE"), PGRES_SINGLE_TUPLE TSRMLS_CC);
+ #endif
+ 
+-- 
+1.8.3.1
+

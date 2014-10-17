@@ -25,15 +25,18 @@
 
 Summary:        PostgreSQL client library (libpq) binding
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.5.1
+Version:        0.5.2
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
+# Upstream patches
+Patch0:         %{pecl_name}-upstream.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  postgresql-devel
+BuildRequires:  postgresql-devel > 9
 BuildRequires:  %{?scl_prefix}php-devel > 5.2
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-json
@@ -97,6 +100,8 @@ mv %{pecl_name}-%{version} NTS
 sed -e '/role="test"/d' -i package.xml
 
 cd NTS
+%patch0 -p1 -b .upstream
+
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PQ_VERSION/{s/.* "//;s/".*$//;p}' php_pq.h)
 if test "x${extver}" != "x%{version}"; then
@@ -224,5 +229,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 17 2014 Remi Collet <remi@fedoraproject.org> - 0.5.2-1
+- Update to 0.5.2
+
 * Thu Oct 16 2014 Remi Collet <remi@fedoraproject.org> - 0.5.1-1
 - initial package, version 0.5.1 (beta)
