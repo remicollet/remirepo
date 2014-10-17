@@ -12,8 +12,8 @@
 
 %global github_owner     fabpot
 %global github_name      Twig
-%global github_version   1.16.1
-%global github_commit    7c4c01dcf578523cfcddf383641a4f12790270ec
+%global github_version   1.16.2
+%global github_commit    42f758d9fe2146d1f0470604fc05ee43580873fc
 
 # Lib
 %global composer_vendor  twig
@@ -155,10 +155,6 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-# Licenses
-mv LICENSE LICENSE-lib
-mv ext/twig/LICENSE LICENSE-ext
-
 # Ext
 ## NTS
 mv ext/%{ext_name} ext/NTS
@@ -251,7 +247,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license LICENSE*
+%license LICENSE
 %doc CHANGELOG README.rst composer.json
 # Lib
 %{_datadir}/php/Twig
@@ -267,6 +263,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 17 2014 Remi Collet <remi@fedoraproject.org> - 1.16.2-1
+- Update to 1.16.2
+
 * Sat Oct 11 2014 Remi Collet <remi@fedoraproject.org> - 1.16.1-1
 - Update to 1.16.1
 
