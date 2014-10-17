@@ -106,6 +106,10 @@ install -D -p -m 644 bin/phpcompatinfo.1         %{buildroot}%{_mandir}/man1/php
 # Not ready (local build with php 5.6 and xcache 4.0-dev)
 rm tests/Reference/Extension/XcacheExtensionTest.php
 
+# fix timeout for koji
+sed -s 's/colors="false"/timeoutForSmallTests="10" colors="true"/' \
+     phpunit.xml.dist >phpunit.xml
+
 %{_bindir}/phpunit \
     -d date.timezone=UTC \
     -d memory_limit=-1 \
