@@ -27,15 +27,15 @@
 %endif
 
 Name:           glpi
-Version:        0.84.7
-Release:        2%{?dist}
+Version:        0.84.8
+Release:        1%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
 Group:          Applications/Internet
 License:        GPLv2+ and GPLv3+
 URL:            http://www.glpi-project.org/
-Source0:        https://forge.indepnet.net/attachments/download/1811/glpi-0.84.7.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1873/glpi-0.84.8.tar.gz
 
 Source1:        glpi-httpd.conf
 Source2:        glpi-config_path.php
@@ -309,6 +309,10 @@ fi
 
 
 %changelog
+* Fri Oct 17 2014 Remi Collet <remi@fedoraproject.org> - 0.84.8-1
+- update to 0.84.8
+  https://forge.indepnet.net/versions/1072
+
 * Sun Oct  5 2014 Remi Collet <remi@fedoraproject.org> - 0.84.7-2
 - provide nginx configuration (Fedora >= 21)
 - rely on system SELinux policy (Fedora >= 20, EPEL-7)
