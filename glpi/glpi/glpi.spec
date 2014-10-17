@@ -7,13 +7,28 @@
 # Please, preserve the changelog entries
 #
 
+%if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # See https://bugzilla.redhat.com/1033025
 # selinux-policy : Please include policy for GLPI
 %global useselinux 1
+%else
+# System policy includes GLPI rules
+%global useselinux 0
+%endif
+
+%if 0%{?fedora} >= 21
+# nginx 1.6 with nginx-filesystem
+%global with_nginx     1
+# httpd 2.4 with httpd-filesystem
+%global with_httpd     1
+%else
+%global with_nginx     0
+%global with_httpd     0
+%endif
 
 Name:           glpi
 Version:        0.84.7
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
@@ -25,6 +40,7 @@ Source0:        https://forge.indepnet.net/attachments/download/1811/glpi-0.84.7
 Source1:        glpi-httpd.conf
 Source2:        glpi-config_path.php
 Source3:        glpi-logrotate
+Source4:        glpi-nginx.conf
 
 # Switch all internal cron tasks to system
 Patch0:         glpi-0.84-cron.patch
@@ -33,7 +49,18 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
 
+%if %{with_nginx}
+Requires:       nginx-filesystem
+%endif
+%if %{with_httpd}
+Requires:       httpd-filesystem
+%endif
+%if %{with_httpd} || %{with_nginx}
+Requires:       webserver
+Requires:       php(httpd)
+%else
 Requires:       httpd, mod_php
+%endif
 Requires:       php(language) >= 5.3
 Requires:       php-date
 Requires:       php-gd
@@ -161,8 +188,12 @@ done
 find %{buildroot}/%{_datadir}/%{name} -type f -exec chmod 644 {} \; 
 
 # ===== apache =====
-mkdir -p %{buildroot}/%{_sysconfdir}/httpd/conf.d/
-install --mode 644 %{SOURCE1} %{buildroot}/%{_sysconfdir}/httpd/conf.d/glpi.conf
+install -Dpm 0644 %{SOURCE1} %{buildroot}/%{_sysconfdir}/httpd/conf.d/glpi.conf
+
+# ===== Nginx =====
+%if %{with_nginx}
+install -Dpm 0644 %{SOURCE4} %{buildroot}/%{_sysconfdir}/nginx/default.d/glpi.conf
+%endif
 
 # ===== config =====
 cp -ar config %{buildroot}/%{_datadir}/%{name}/config
@@ -178,12 +209,10 @@ cp -ar files %{buildroot}/%{_localstatedir}/lib/%{name}/files
 mkdir -p %{buildroot}%{_localstatedir}/log
 mv %{buildroot}/%{_localstatedir}/lib/%{name}/files/_log %{buildroot}%{_localstatedir}/log/%{name}
 
-mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
-install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
+install -Dpm 0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 
 # ====== Cron =====
-mkdir -p %{buildroot}%{_sysconfdir}/cron.d
-install -m 644 cron %{buildroot}%{_sysconfdir}/cron.d/%{name}
+install -Dpm 0644 cron %{buildroot}%{_sysconfdir}/cron.d/%{name}
 
 # cleanup
 find %{buildroot} -name remove.txt -exec rm -f {} \; -print
@@ -252,6 +281,9 @@ fi
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/glpi.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
 %config(noreplace) %{_sysconfdir}/cron.d/%{name}
+%if %{with_nginx}
+%config(noreplace) %{_sysconfdir}/nginx/default.d/glpi.conf
+%endif
 
 # This folder can contain private information (sessions, docs, ...)
 %dir %_localstatedir/lib/%{name}
@@ -277,6 +309,10 @@ fi
 
 
 %changelog
+* Sun Oct  5 2014 Remi Collet <remi@fedoraproject.org> - 0.84.7-2
+- provide nginx configuration (Fedora >= 21)
+- rely on system SELinux policy (Fedora >= 20, EPEL-7)
+
 * Fri Jul 11 2014 Remi Collet <remi@fedoraproject.org> - 0.84.7-1
 - update to 0.84.7
   https://forge.indepnet.net/versions/1068
