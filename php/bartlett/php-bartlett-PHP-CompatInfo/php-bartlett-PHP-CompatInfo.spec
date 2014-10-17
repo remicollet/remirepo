@@ -40,6 +40,8 @@ BuildRequires:  php-composer(bartlett/php-reflect) >= 2.5
 #        "ext-json": "*",
 #        "symfony/console": "~2.5",
 #        "bartlett/php-reflect": "~2.5",
+# From phpreflect (implicit dep.)
+#        "sebastian/version": "~1.0",
 #        "seld/jsonlint": "~1.1"
 Requires:       php(language) >= 5.3.0
 Requires:       php-json
