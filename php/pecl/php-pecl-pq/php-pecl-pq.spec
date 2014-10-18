@@ -13,8 +13,13 @@
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  pq
-# Test suite disabled, as require a postgresql server
+%if %{?runselftest}%{!?runselftest:1}
+# Build using "--without tests" to disable tests
+%global with_tests %{?_without_tests:0}%{!?_without_tests:1}
+%else
+# Build using "--with tests" to enable tests
 %global with_tests %{?_with_tests:1}%{!?_with_tests:0}
+%endif
 %if "%{php_version}" < "5.6"
 # After raph, json
 %global ini_name   z-%{pecl_name}.ini
@@ -26,7 +31,7 @@
 Summary:        PostgreSQL client library (libpq) binding
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        0.5.2
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -264,6 +269,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 18 2014 Remi Collet <remi@fedoraproject.org> - 0.5.2-2
+- launch a postgresql server for test
+- enable upstream test suite during build
+
 * Fri Oct 17 2014 Remi Collet <remi@fedoraproject.org> - 0.5.2-1
 - Update to 0.5.2
 
