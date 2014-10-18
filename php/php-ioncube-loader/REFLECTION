@@ -1,0 +1,69 @@
+Extension [ <persistent> extension #180 ionCube Loader version <no_version> ] {
+
+  - INI {
+    Entry [ phpd <ALL> ]
+      Current = '1'
+    }
+    Entry [ phpd.t <ALL> ]
+      Current = '1'
+    }
+  }
+
+  - Constants [14] {
+    Constant [ integer ION_CORRUPT_FILE ] { 1 }
+    Constant [ integer ION_EXPIRED_FILE ] { 2 }
+    Constant [ integer ION_NO_PERMISSIONS ] { 3 }
+    Constant [ integer ION_CLOCK_SKEW ] { 4 }
+    Constant [ integer ION_UNTRUSTED_EXTENSION ] { 5 }
+    Constant [ integer ION_LICENSE_NOT_FOUND ] { 6 }
+    Constant [ integer ION_LICENSE_CORRUPT ] { 7 }
+    Constant [ integer ION_LICENSE_EXPIRED ] { 8 }
+    Constant [ integer ION_LICENSE_PROPERTY_INVALID ] { 9 }
+    Constant [ integer ION_LICENSE_HEADER_INVALID ] { 10 }
+    Constant [ integer ION_LICENSE_SERVER_INVALID ] { 11 }
+    Constant [ integer ION_UNAUTH_INCLUDING_FILE ] { 12 }
+    Constant [ integer ION_UNAUTH_INCLUDED_FILE ] { 13 }
+    Constant [ integer ION_UNAUTH_APPEND_PREPEND_FILE ] { 14 }
+  }
+
+  - Functions {
+    Function [ <internal:ionCube Loader> function ioncube_file_is_encoded ] {
+    }
+    Function [ <internal:ionCube Loader> function ioncube_file_info ] {
+    }
+    Function [ <internal:ionCube Loader> function ioncube_file_properties ] {
+    }
+    Function [ <internal:ionCube Loader> function ioncube_file_not_permissioned ] {
+    }
+    Function [ <internal:ionCube Loader> function ioncube_license_properties ] {
+    }
+    Function [ <internal:ionCube Loader> function ioncube_licensed_servers ] {
+    }
+    Function [ <internal:ionCube Loader> function ioncube_server_data ] {
+    }
+    Function [ <internal:ionCube Loader> function _dyuweyrj4 ] {
+    }
+    Function [ <internal:ionCube Loader> function _dyuweyrj4r ] {
+    }
+    Function [ <internal:ionCube Loader> function ioncube_check_license_properties ] {
+    }
+    Function [ <internal:ionCube Loader> function ioncube_license_matches_server ] {
+    }
+    Function [ <internal:ionCube Loader> function ioncube_license_has_expired ] {
+    }
+    Function [ <internal:ionCube Loader> function ioncube_read_file ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $param0 ]
+        Parameter #1 [ <required> &$param1 ]
+      }
+    }
+    Function [ <internal:ionCube Loader> function ioncube_write_file ] {
+    }
+    Function [ <internal:ionCube Loader> function ioncube_loader_version ] {
+    }
+    Function [ <internal:ionCube Loader> function ioncube_loader_iversion ] {
+    }
+  }
+}
+

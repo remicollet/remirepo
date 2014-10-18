@@ -10,10 +10,16 @@
 %global extname       ioncube_loader
 %global debug_package %{nil}
 %global with_zts      0%{?__ztsphp:1}
+%if "%{php_version}" < "5.6"
+%global ininame       %{extname}.ini
+%else
+# [ionCube Loader] The Loader must appear as the first entry in the php.ini
+%global ininame       01-%{extname}.ini
+%endif
 
 Name:          %{?scl_prefix}php-ioncube-loader
 Summary:       Loader for ionCube Encoded Files
-Version:       4.6.2
+Version:       4.7.0
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       Distribuable
 Group:         Development/Languages
@@ -21,6 +27,7 @@ Group:         Development/Languages
 URL:           http://www.ioncube.com
 Source0:       http://downloads2.ioncube.com/loader_downloads/%{extname}s_lin_x86.tar.bz2
 Source1:       http://downloads2.ioncube.com/loader_downloads/%{extname}s_lin_x86-64.tar.bz2
+Source2:       LICENSE.txt
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
@@ -32,13 +39,17 @@ Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-ioncube-loader  <= %{version}
+Obsoletes:      php53-ioncube-loader <= %{version}
 Obsoletes:     php53u-ioncube-loader <= %{version}
-Obsoletes:     php54-ioncube-loader  <= %{version}
+Obsoletes:      php54-ioncube-loader <= %{version}
 Obsoletes:     php54w-ioncube-loader <= %{version}
 %if "%{php_version}" > "5.5"
 Obsoletes:     php55u-ioncube-loader <= %{version}
 Obsoletes:     php55w-ioncube-loader <= %{version}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-ioncube-loader <= %{version}
+Obsoletes:     php56w-ioncube-loader <= %{version}
 %endif
 %endif
 
@@ -52,7 +63,7 @@ Obsoletes:     php55w-ioncube-loader <= %{version}
 %description
 Loader for ionCube Encoded Files.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -n -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
 
 
 %prep
@@ -65,6 +76,9 @@ tar xvf %{SOURCE0}
 %endif
 
 # Drop in the bit of configuration
+# Sometime file is missing
+[ -f ioncube/LICENSE.txt ] || cp %{SOURCE2} ioncube
+
 cat > %{extname}.nts << 'EOF'
 ; Enable %{extname} extension module
 zend_extension = %{php_extdir}/%{extname}.so
@@ -92,11 +106,11 @@ if [ ! -f ioncube/%{extname}_lin_${ver}.so ]; then
 fi
 
 install -D -pm 755 ioncube/%{extname}_lin_${ver}.so    %{buildroot}%{php_extdir}/%{extname}.so
-install -D -m 644  %{extname}.nts                      %{buildroot}%{php_inidir}/%{extname}.ini
+install -D -m 644  %{extname}.nts                      %{buildroot}%{php_inidir}/%{ininame}
 
 %if %{with_zts}
 install -D -pm 755 ioncube/%{extname}_lin_${ver}_ts.so %{buildroot}%{php_ztsextdir}/%{extname}.so
-install -D -m 644  %{extname}.zts                      %{buildroot}%{php_ztsinidir}/%{extname}.ini
+install -D -m 644  %{extname}.zts                      %{buildroot}%{php_ztsinidir}/%{ininame}
 %endif
 
 
@@ -121,19 +135,22 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license ioncube/LICENSE.txt
-%doc     ioncube/README.txt
+#doc     ioncube/README.txt
 
-%config(noreplace) %{php_inidir}/%{extname}.ini
+%config(noreplace) %{php_inidir}/%{ininame}
 %{php_extdir}/%{extname}.so
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{extname}.ini
+%config(noreplace) %{php_ztsinidir}/%{ininame}
 %{php_ztsextdir}/%{extname}.so
 %endif
 
 
 %changelog
-* Thu Oct  2 2014 Remi Collet <RPMS@famillecollet.com> - 4.6.2-1
+* Sat Oct 18 2014 Remi Collet <RPMS@famillecollet.com> - 4.7.0-1
+- update to 4.6.2 (Oct 17, 2014) with PHP 5.6 support
+
+* Thu Oct 16 2014 Remi Collet <RPMS@famillecollet.com> - 4.6.2-1
 - update to 4.6.2 (Oct 14, 2014)
 
 * Mon Sep  1 2014 Remi Collet <RPMS@famillecollet.com> - 4.6.1-2
