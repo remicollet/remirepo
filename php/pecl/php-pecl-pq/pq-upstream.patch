@@ -122,3 +122,54 @@ index ae8774d..9dda107 100644
 -- 
 1.8.3.1
 
+From 5a5758352bbc42cbe57f32859de831de2ea08a86 Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Sat, 18 Oct 2014 15:15:08 +0200
+Subject: [PATCH] allow INT8 / TID on 32 bits
+
+---
+ src/php_pqres.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
+
+diff --git a/src/php_pqres.c b/src/php_pqres.c
+index 9dda107..75a6081 100644
+--- a/src/php_pqres.c
++++ b/src/php_pqres.c
+@@ -126,10 +126,9 @@ zval *php_pqres_typed_zval(php_pqres_t *res, char *val, size_t len, Oid typ TSRM
+ 		}
+ 		ZVAL_BOOL(zv, *val == 't');
+ 		break;
+-#if SIZEOF_LONG >= 8
++
+ 	case PHP_PQ_OID_INT8:
+ 	case PHP_PQ_OID_TID:
+-#endif
+ 	case PHP_PQ_OID_INT4:
+ 	case PHP_PQ_OID_INT2:
+ 	case PHP_PQ_OID_XID:
+@@ -137,7 +136,21 @@ zval *php_pqres_typed_zval(php_pqres_t *res, char *val, size_t len, Oid typ TSRM
+ 		if (!(res->auto_convert & PHP_PQRES_CONV_INT)) {
+ 			goto noconversion;
+ 		}
+-		ZVAL_LONG(zv, zend_atol(val, len));
++		{
++			long lval;
++			double dval;
++
++			switch (is_numeric_string(val, len, &lval, &dval, 0)) {
++				case IS_LONG:
++					ZVAL_LONG(zv, lval);
++					break;
++				case IS_DOUBLE:
++					ZVAL_DOUBLE(zv, dval);
++					break;
++				default:
++					goto noconversion;
++			}
++		}
+ 		break;
+ 
+ 	case PHP_PQ_OID_FLOAT4:
+-- 
+2.1.0
+
