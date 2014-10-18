@@ -1,9 +1,14 @@
+%global gh_commit    1441f32fce8494a0b153551fe2b659f5ce8e7eed
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     uwetews
+%global gh_project   smarty3-dist
+
 Name:           php-Smarty
 Summary:        Template/Presentation Framework for PHP
-Version:        3.1.20
+Version:        3.1.21
 Release:        1%{?dist}
 
-Source0:        http://www.smarty.net/files/Smarty-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 URL:            http://www.smarty.net
 License:        LGPLv2+
 Group:          Development/Libraries
@@ -11,11 +16,14 @@ Group:          Development/Libraries
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
+# From composer.json
 Requires:       php(language) >= 5.2.0
+# From phpcompatinfo report for 3.1.21
+Requires:       php-ctype
 Requires:       php-date
 Requires:       php-mbstring
 Requires:       php-pcre
-Requires:       php-tokenizer
+Requires:       php-spl
 
 Provides:       php-composer(smarty/smarty) = %{version}
 
@@ -32,7 +40,7 @@ high-performance, scalability, security and future growth.
 
 
 %prep
-%setup -qn Smarty-%{version}
+%setup -qn %{gh_project}-%{gh_commit}
 
 
 %build
@@ -54,12 +62,19 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license COPYING.lib
-%doc demo README change_log.txt SMARTY*.txt
+# https://github.com/uwetews/smarty3-dist/issues/1
+#license COPYING.lib
+%doc README change_log.txt SMARTY*.txt
+%doc INHERITANCE_RELEASE_NOTES.txt
+%doc composer.json
 %{_datadir}/php/Smarty
 
 
 %changelog
+* Sat Oct 18 2014 Remi Collet <remi@fedoraproject.org> - 3.1.21-1
+- update to 3.1.21
+- sources from github
+
 * Fri Oct 10 2014 Remi Collet <remi@fedoraproject.org> - 3.1.20-1
 - update to 3.1.20
 
