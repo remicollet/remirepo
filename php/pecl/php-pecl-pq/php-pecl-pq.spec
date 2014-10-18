@@ -41,6 +41,10 @@ BuildRequires:  %{?scl_prefix}php-devel > 5.2
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-json
 BuildRequires:  %{?scl_prefix}php-pecl-raphf-devel
+%if %{with_tests}
+BuildRequires:  postgresql-server
+BuildRequires:  postgresql-contrib
+%endif
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -172,7 +176,6 @@ fi
 
 
 %check
-cd NTS
 OPT="-n"
 [ -f %{php_extdir}/json.so ]  && OPT="$OPT -d extension=json.so"
 [ -f %{php_extdir}/raphf.so ] && OPT="$OPT -d extension=raphf.so"
@@ -182,30 +185,62 @@ OPT="-n"
     --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+%if %{with_zts}
+: Minimal load test for ZTS extension
+%{__ztsphp} $OPT \
+    --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
+    --modules | grep %{pecl_name}
+%endif
+
 %if %{with_tests}
+RET=0
+
+: Running a server
+DATABASE=$PWD/data
+%ifarch x86_64
+PORT=5440
+%else
+PORT=5436
+%endif
+pg_ctl initdb -D $DATABASE
+cat <<EOF >>$DATABASE/postgresql.conf
+unix_socket_directories = '$DATABASE'
+port = $PORT
+EOF
+pg_ctl -D $DATABASE -l $DATABASE/log -w -t 200  start
+createdb -h localhost -p $PORT rpmtest
+
+cd NTS
+sed -e "/PQ_DSN/s/\"host.*\"/'host=localhost port=$PORT dbname=rpmtest'/" \
+    -i tests/_setup.inc
+
 : Upstream test suite  for NTS extension
 TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="$OPT -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__php} -n run-tests.php --show-diff
-%endif
+%{__php} -n run-tests.php --show-diff || RET=1
 
 %if %{with_zts}
 cd ../ZTS
-: Minimal load test for ZTS extension
-%{__ztsphp} $OPT \
-    --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
-    --modules | grep %{pecl_name}
+sed -e "/PQ_DSN/s/\"host.*\"/'host=localhost port=$PORT dbname=rpmtest'/" \
+    -i tests/_setup.inc
 
-%if %{with_tests}
 : Upstream test suite  for ZTS extension
 TEST_PHP_EXECUTABLE=%{_bindir}/zts-php \
 TEST_PHP_ARGS="$OPT -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/zts-php -n run-tests.php --show-diff
+%{_bindir}/zts-php -n run-tests.php --show-diff || RET=1
 %endif
+
+cd ..
+: Cleanup
+psql -h localhost -p $PORT -c "SELECT version()" rpmtest
+pg_ctl -D $DATABASE -w stop
+rm -rf $DATABASE
+
+exit $RET
 %endif
 
 
