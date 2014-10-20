@@ -13,8 +13,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   2.6.16
-%global github_commit    36434f2cd96ea78844478d897fb568a1866bce5a
+%global github_version   2.7.1
+%global github_commit    937a39ca3cee98d31a7410a17db24e0496c41494
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -24,9 +24,18 @@
 
 # "php": ">=5.3.3"
 %global php_min_ver      5.3.3
-# "guzzle/guzzle": ">=3.7.0,<=3.9.9"
-%global guzzle_min_ver   3.7.0
-%global guzzle_max_ver   3.9.9
+# "guzzle/guzzle": "~3.7"
+%global guzzle_min_ver   3.7
+%global guzzle_max_ver   4.0
+# "doctrine/cache": "~1.0"
+%global cache_min_ver    1.0
+%global cache_max_ver    2.0
+# "monolog/monolog": "~1.4"
+%global monolog_min_ver  1.4
+%global monolog_max_ver  2.0
+# "symfony/yaml": "~2.1"
+%global yaml_min_ver     2.1
+%global yaml_max_ver     3.0
 
 Name:      php-aws-sdk
 Version:   %{github_version}
@@ -46,40 +55,58 @@ Requires:  php(language)     >= %{php_min_ver}
 Requires:  php-guzzle-Guzzle >= %{guzzle_min_ver}
 Requires:  php-guzzle-Guzzle <  %{guzzle_max_ver}
 # composer.json: optional
-Requires:  php-composer(doctrine/cache)
-Requires:  php-composer(monolog/monolog)
 Requires:  php-openssl
-Requires:  php-symfony-yaml
-# phpcompatinfo (computed from version 2.6.15)
+# phpcompatinfo (computed from version 2.7.1)
 Requires:  php-curl
 Requires:  php-date
 Requires:  php-hash
 Requires:  php-json
-Requires:  php-openssl
 Requires:  php-pcre
 Requires:  php-reflection
 Requires:  php-session
 Requires:  php-simplexml
 Requires:  php-spl
 
+# Optional package version checks
+Conflicts: php-composer(doctrine/cache)  <  %{cache_min_ver}
+Conflicts: php-composer(doctrine/cache)  >= %{cache_max_ver}
+Conflicts: php-composer(monolog/monolog) <  %{monolog_min_ver}
+Conflicts: php-composer(monolog/monolog) >= %{monolog_max_ver}
+Conflicts: php-symfony-yaml              <  %{yaml_min_ver}
+Conflicts: php-symfony-yaml              >= %{yaml_max_ver}
+
 # Composer
 Provides:  php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 # PEAR
 Provides:  php-pear(%{pear_channel}/%{pear_name}) = %{version}
+
+# This pkg was the only one in this channel so the channel is no longer needed
+Obsoletes: php-channel-aws
 
 %description
 Amazon Web Services SDK for PHP enables developers to build solutions for
 Amazon Simple Storage Service (Amazon S3), Amazon Elastic Compute Cloud
 (Amazon EC2), Amazon SimpleDB, and more.
 
+Optional:
+* APC (php-pecl-apcu):
+      Allows service description opcode caching, request and response caching,
+      and credentials caching
+* Doctrine Cache (php-doctrine-cache):
+      Adds support for caching of credentials and responses
+* Monolog (php-Monolog):
+      Adds support for logging HTTP requests and responses
+* Symfony YAML (php-symfony-yaml):
+      Eases the ability to write manifests for creating jobs in AWS
+      Import/Export
+
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-# Fix rpmlint issues:
+# Fix rpmlint issue:
 #     W: spurious-executable-perm /usr/share/doc/php-aws-sdk/composer.json
-#     E: script-without-shebang /usr/share/php/Aws/DynamoDb/Model/BatchRequest/WriteRequestBatchTransfer.php
-chmod a-x composer.json src/Aws/DynamoDb/Model/BatchRequest/WriteRequestBatchTransfer.php
+chmod a-x composer.json
 
 
 %build
@@ -87,9 +114,9 @@ chmod a-x composer.json src/Aws/DynamoDb/Model/BatchRequest/WriteRequestBatchTra
 
 
 %install
-mkdir -pm 0755 %{buildroot}%{_datadir}/php/AWSSDKforPHP/
+mkdir -pm 0755 %{buildroot}%{_datadir}/php/AWSSDKforPHP
 cp -pr src/* %{buildroot}%{_datadir}/php/
-# compat with old pear package
+# Compat direcory structure with old PEAR pkg
 ln -s ../Aws %{buildroot}%{_datadir}/php/AWSSDKforPHP/Aws
 
 
@@ -116,8 +143,19 @@ fi
 
 
 %changelog
+* Mon Oct 20 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.7.1-1
+- Updated to 2.7.1 (BZ #1151012)
+- Doctrine Cache, Monolog, and Symfony YAML are now optional
+
+* Tue Sep 23 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.6.16-1
+- Updated to 2.6.16 (BZ #1142985)
+
 * Fri Sep 12 2014 Remi Collet <remi@fedoraproject.org> - 2.6.15-1
 - Update to 2.6.15
+
+* Sun Aug 17 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.6.15-2
+- Obsolete php-channel-aws
+- Compat direcory structure with old PEAR pkg
 
 * Sat Aug 16 2014 Remi Collet <remi@fedoraproject.org> - 2.6.15-1
 - update to 2.6.15
