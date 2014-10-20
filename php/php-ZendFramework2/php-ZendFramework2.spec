@@ -1,3 +1,15 @@
+#
+# RPM spec file for php-ZendFramework2
+#
+# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+#                         Remi Collet <remi@fedoraproject.org>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global composer_vendor  zendframework
 #global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
@@ -5,7 +17,7 @@
 
 Name:      php-ZendFramework2
 Version:   2.3.3
-Release:   1%{?dist}
+Release:   2%{?dist}
 Summary:   Zend Framework 2
 
 Group:     Development/Libraries
@@ -31,7 +43,7 @@ BuildArch: noarch
 %if %{with_tests}
 # PHPUnit + autoloader
 BuildRequires: %{_bindir}/phpunit
-BuildRequires: php-composer(symfony/class-loader) >= 2.0
+BuildRequires: php-symfony-classloader >= 2.0
 # required by components
 BuildRequires: php(language) >= 5.3.23
 BuildRequires: php-bcmath
@@ -1051,7 +1063,8 @@ Requires: %{name}-common         = %{version}-%{release}
 Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
 Requires: php-composer(ircmaxell/random-lib)
 Requires: php-bcmath
-Requires: php-gmp
+# php-gmp causes issues (see BZ #1152440)
+#Requires: php-gmp
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-mcrypt
 Requires: php-openssl
@@ -1066,6 +1079,8 @@ supported functionalities are:
 
 * Zend\Math\Rand: A random number generator
 * Zend\Math\BigInteger: A library to manage big integers
+
+Optional: php-gmp
 
 # ------------------------------------------------------------------------------
 
@@ -1832,6 +1847,9 @@ If the XML document uses ENTITY the library throw an Exception.
 
 %patch0 -p0
 
+# php-ZendFramework2-I18n.noarch: E: backup-file-in-package /usr/share/php/Zend/I18n/Translator/Loader/Gettext.php.orig
+rm -f library/Zend/I18n/Translator/Loader/Gettext.php.orig
+
 
 %build
 # Empty build section, nothing required
@@ -1856,9 +1874,7 @@ cd tests
 # Create autoloader
 cat > _autoload.php <<'AUTOLOADER'
 <?php
-if (!class_exists('Symfony\\Component\\ClassLoader\\UniversalClassLoader', false)) {
-    require_once __DIR__.'/../src/Symfony/Component/ClassLoader/UniversalClassLoader.php';
-}
+require_once 'Symfony/Component/ClassLoader/UniversalClassLoader.php';
 
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 $loader = new UniversalClassLoader();
@@ -1880,6 +1896,8 @@ rm    ZendTest/Console/RequestTest.php
 rm -r ZendTest/Debug
 rm    ZendTest/File/Transfer/Adapter/HttpTest.php
 rm    ZendTest/Form/View/Helper/FormDateTimeSelectTest.php
+# This test requires internet conectivity
+rm    ZendTest/Version/VersionTest.php
 # Date format with microsecond in PHP 5.6
 rm    ZendTest/Ldap/Converter/ConverterTest.php
 # Need mongodb server
@@ -1888,7 +1906,7 @@ rm    ZendTest/Session/SaveHandler/MongoDBTest.php
 rm    ZendTest/Math/RandTest.php
 # Strangly fail, lack of date.timezone
 rm    ZendTest/Session/SessionManagerTest.php
-# TODO
+# Need investigation
 rm    ZendTest/Db/Adapter/Platform/SqliteTest.php
 %if 0%{?rhel} == 5
 rm    ZendTest/Feed/PubSubHubbub/Model/SubscriptionTest.php
@@ -2533,6 +2551,10 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Fri Oct 17 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.3.3-2
+- Drop php-gmp dependency from Math component (BZ #1152440)
+- Fix tests' autoloader
+
 * Wed Sep 17 2014 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
 - Update to 2.3.3
 
