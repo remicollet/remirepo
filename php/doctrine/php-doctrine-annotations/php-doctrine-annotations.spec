@@ -42,14 +42,14 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 %if %{with_tests}
-# For tests
+# composer.json
 BuildRequires: php(language)                >= %{php_min_ver}
 BuildRequires: php-composer(doctrine/cache) >= %{cache_min_ver}
 BuildRequires: php-composer(doctrine/cache) <  %{cache_max_ver}
 BuildRequires: php-composer(doctrine/lexer) >= %{lexer_min_ver}
 BuildRequires: php-composer(doctrine/lexer) <  %{lexer_max_ver}
 BuildRequires: php-phpunit-PHPUnit
-# For tests: phpcompatinfo (computed from version 1.2.0)
+# phpcompatinfo (computed from version 1.2.1)
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-json
@@ -59,10 +59,11 @@ BuildRequires: php-spl
 BuildRequires: php-tokenizer
 %endif
 
+# composer.json
 Requires:      php(language)                >= %{php_min_ver}
 Requires:      php-composer(doctrine/lexer) >= %{lexer_min_ver}
 Requires:      php-composer(doctrine/lexer) <  %{lexer_max_ver}
-# phpcompatinfo (computed from version 1.2.0)
+# phpcompatinfo (computed from version 1.2.1)
 Requires:      php-ctype
 Requires:      php-date
 Requires:      php-json
@@ -108,10 +109,9 @@ spl_autoload_register(function ($class) {
 });
 AUTOLOAD
 
-# Create PHPUnit config w/ colors turned off
-sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
-
-%{_bindir}/phpunit --include-path ./lib -d date.timezone="UTC"
+%{_bindir}/phpunit \
+    --include-path %{buildroot}/%{_datadir}/php \
+    -d date.timezone="UTC"
 %else
 : Tests skipped
 %endif
@@ -130,8 +130,15 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct 19 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.1-1
+- Updated to 1.2.1 (BZ #1146910)
+- %%license usage
+
 * Mon Sep 29 2014 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - update to 1.2.1
+
+* Thu Jul 17 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.0-2
+- Removed skipping of test (php-phpunit-PHPUnit-MockObject patched to fix issue)
 
 * Tue Jul 15 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.0-1
 - Updated to 1.2.0 (BZ #1116887)
