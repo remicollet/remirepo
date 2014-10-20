@@ -31,6 +31,11 @@
 %global symfony_min_ver     2.1
 %global symfony_max_ver     3.0
 
+%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
+
+# Build using "--without tests" to disable tests
+%global with_tests %{?_without_tests:0}%{!?_without_tests:1}
+
 Name:      php-%{composer_vendor}-%{composer_project}
 Version:   %{github_version}
 Release:   1%{?dist}
@@ -39,37 +44,61 @@ Summary:   Doctrine Object-Relational-Mapper (ORM)
 Group:     Development/Libraries
 License:   MIT
 URL:       http://www.doctrine-project.org/projects/orm.html
-Source0:   https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+
+# Run "php-doctrine-orm-get-source.sh" to create source
+Source0:   %{name}-%{version}-%{github_commit}.tar.gz
+Source1:   %{name}-get-source.sh
+
 # Update bin script:
 # 1) Add she-bang
 # 2) Auto-load using Doctrine\Common\ClassLoader
 Patch0:    %{name}-bin.patch
 
-# Upstream fix for latest PHP
-Patch1:    %{name}-upstream.patch
-Requires:  php-composer(doctrine/instantiator) >= 1.0.2
-
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
+%if %{with_tests}
+BuildRequires: php-phpunit-PHPUnit
+# composer.json
+BuildRequires: php(language)                      >= %{php_min_ver}
+BuildRequires: php-composer(doctrine/collections) >= %{collections_min_ver}
+BuildRequires: php-composer(doctrine/collections) <  %{collections_max_ver}
+BuildRequires: php-composer(doctrine/dbal)        >= %{dbal_min_ver}
+BuildRequires: php-composer(doctrine/dbal)        <  %{dbal_max_ver}
+BuildRequires: php-symfony-console                >= %{symfony_min_ver}
+BuildRequires: php-symfony-console                <  %{symfony_max_ver}
+BuildRequires: php-symfony-yaml                   >= %{symfony_min_ver}
+BuildRequires: php-symfony-yaml                   <  %{symfony_max_ver}
+# phpcompatinfo (computed from version 2.4.6)
+BuildRequires: php-ctype
+BuildRequires: php-date
+BuildRequires: php-dom
+BuildRequires: php-pcre
+BuildRequires: php-pdo
+BuildRequires: php-reflection
+BuildRequires: php-simplexml
+BuildRequires: php-spl
+BuildRequires: php-tokenizer
+%endif
 
-Requires:  php(language)                      >= %{php_min_ver}
-Requires:  php-composer(doctrine/collections) >= %{collections_min_ver}
-Requires:  php-composer(doctrine/collections) <  %{collections_max_ver}
-Requires:  php-composer(doctrine/dbal)        >= %{dbal_min_ver}
-Requires:  php-composer(doctrine/dbal)        <  %{dbal_max_ver}
-Requires:  php-symfony-console                >= %{symfony_min_ver}
-Requires:  php-symfony-console                <  %{symfony_max_ver}
-Requires:  php-symfony-yaml                   >= %{symfony_min_ver}
-Requires:  php-symfony-yaml                   <  %{symfony_max_ver}
-# phpcompatinfo (computed from v2.4.2)
-Requires:  php-ctype
-Requires:  php-dom
-Requires:  php-pcre
-Requires:  php-pdo
-Requires:  php-reflection
-Requires:  php-simplexml
-Requires:  php-spl
-Requires:  php-tokenizer
+# composer.json
+Requires:      php(language)                      >= %{php_min_ver}
+Requires:      php-composer(doctrine/collections) >= %{collections_min_ver}
+Requires:      php-composer(doctrine/collections) <  %{collections_max_ver}
+Requires:      php-composer(doctrine/dbal)        >= %{dbal_min_ver}
+Requires:      php-composer(doctrine/dbal)        <  %{dbal_max_ver}
+Requires:      php-symfony-console                >= %{symfony_min_ver}
+Requires:      php-symfony-console                <  %{symfony_max_ver}
+Requires:      php-symfony-yaml                   >= %{symfony_min_ver}
+Requires:      php-symfony-yaml                   <  %{symfony_max_ver}
+# phpcompatinfo (computed from version 2.4.6)
+Requires:      php-ctype
+Requires:      php-dom
+Requires:      php-pcre
+Requires:      php-pdo
+Requires:      php-reflection
+Requires:      php-simplexml
+Requires:      php-spl
+Requires:      php-tokenizer
 
 # Composer
 Provides:  php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -100,16 +129,10 @@ Optional caches (see Doctrine\ORM\Tools\Setup::createConfiguration()):
 # Patch bin script
 %patch0 -p1
 
-# For PHP 5.5.13+
-%patch1 -p1
-
 # Remove empty file
 rm -f lib/Doctrine/ORM/README.markdown
 
-# Clenup backup files
-find . -name \*.orig -exec rm {} \;
-
-# Remove unnecessary executable bit
+# Remove unnecessary executable bits
 chmod a-x lib/Doctrine/ORM/Tools/Pagination/Paginator.php
 
 
@@ -128,7 +151,29 @@ install -pm 0755 bin/doctrine.php %{buildroot}/%{_bindir}/doctrine
 
 
 %check
-# No upstream tests provided in source
+%if %{with_tests}
+# Rewrite "tests/Doctrine/Tests/TestInit.php"
+mv tests/Doctrine/Tests/TestInit.php tests/Doctrine/Tests/TestInit.php.dist
+cat > tests/Doctrine/Tests/TestInit.php <<'TEST_INIT'
+<?php
+
+spl_autoload_register(function ($class) {
+    $src = str_replace('\\', '/', $class).'.php';
+    @include_once $src;
+});
+TEST_INIT
+
+# Weird el6 error
+# TODO: Investigate and submit upstream patch
+%if 0%{?el6}
+sed 's#$this->_em->clear();#if (isset($this->_em)) { $this->_em->clear(); }#' \
+    -i tests/Doctrine/Tests/OrmFunctionalTestCase.php
+%endif
+
+%{__phpunit} --include-path ./lib:./tests -d date.timezone="UTC"
+%else
+: Tests skipped
+%endif
 
 
 %clean
@@ -145,6 +190,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 14 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.4.6-1
+- Updated to 2.4.6 (BZ #1108129)
+- Manual git clone source instead of GitHub archive URL (to include tests)
+- Removed Patch1 (%%{name}-upstream.patch)
+- Added tests
+
 * Tue Oct  7 2014 Remi Collet <remi@fedoraproject.org> 2.4.6-1
 - Update to 2.4.6
 
