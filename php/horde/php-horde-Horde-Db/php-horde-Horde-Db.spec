@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Db
-Version:        2.1.4
+Version:        2.1.5
 Release:        1%{?dist}
 Summary:        Horde Database Libraries
 
@@ -85,10 +85,8 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
-    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 
@@ -115,6 +113,9 @@ fi
 
 
 %changelog
+* Sat Oct 25 2014 Remi Collet <remi@fedoraproject.org> - 2.1.5-1
+- Update to 2.1.5
+
 * Thu Oct 02 2014 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
 - Update to 2.1.4
 
