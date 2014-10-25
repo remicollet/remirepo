@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Alarm
-Version:        2.2.1
+Version:        2.2.2
 Release:        1%{?dist}
 Summary:        Horde Alarm Libraries
 
@@ -76,6 +76,7 @@ sed -e '/%{pear_name}.po/d' \
     -e '/Horde_Other.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -138,6 +139,9 @@ fi
 
 
 %changelog
+* Sat Oct 25 2014 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
+- Update to 2.2.2 (locale update only)
+
 * Thu May 22 2014 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - Update to 2.2.1
 
