@@ -13,8 +13,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   2.7.1
-%global github_commit    937a39ca3cee98d31a7410a17db24e0496c41494
+%global github_version   2.7.2
+%global github_commit    21115c088549520a8b268557601987c12d835f4b
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -143,6 +143,9 @@ fi
 
 
 %changelog
+* Sat Oct 25 2014 Remi Collet <remi@fedoraproject.org> - 2.7.2-1
+- Update to 2.7.2
+
 * Mon Oct 20 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.7.1-1
 - Updated to 2.7.1 (BZ #1151012)
 - Doctrine Cache, Monolog, and Symfony YAML are now optional
