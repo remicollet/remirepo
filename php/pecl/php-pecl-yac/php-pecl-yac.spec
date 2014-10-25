@@ -21,16 +21,13 @@
 
 Summary:        Lockless user data cache
 Name:           php-pecl-%{pecl_name}
-Version:        0.9.1
-Release:        3%{?dist}
+Version:        0.9.2
+Release:        1%{?dist}
 
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/laruence/yac/pull/42
-Patch0:         %{pecl_name}-fastlz.patch
 
 BuildRequires:  php-devel > 5.2
 BuildRequires:  php-pear
@@ -74,8 +71,6 @@ mv %{pecl_name}-%{version} NTS
 sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd NTS
-%patch0 -p1 -b .pr42
-
 # drop bundled fastlz to ensure it is not used
 sed -e '\:name="compressor/fastlz:d' -i ../package.xml
 rm -r compressor/fastlz
@@ -212,6 +207,9 @@ fi
 
 
 %changelog
+* Sat Oct 25 2014 Remi Collet <remi@fedoraproject.org> - 0.9.2-1
+- Update to 0.9.2
+
 * Sat Sep  6 2014 Remi Collet <remi@fedoraproject.org> - 0.9.1-3
 - cleanup for review
 - build with system fastlz

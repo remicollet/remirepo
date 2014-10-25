@@ -23,16 +23,13 @@
 
 Summary:        Lockless user data cache
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.9.1
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        0.9.2
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/laruence/yac/pull/42
-Patch0:         %{pecl_name}-fastlz.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.2
@@ -45,6 +42,7 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 # Package have be renamed
 Obsoletes:      %{?scl_prefix}php-%{pecl_name} < %{version}
@@ -86,6 +84,8 @@ chance you will get a wrong data(depends on how many key slots are
 allocated and how many keys are stored), so you'd better make sure
 that your product is not very sensitive to that.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+
 
 %prep
 %setup -qc
@@ -95,8 +95,6 @@ mv %{pecl_name}-%{version} NTS
 sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd NTS
-%patch0 -p1 -b .pr42
-
 %if %{with_fastlz}
 sed -e '\:name="compressor/fastlz:d' -i ../package.xml
 rm -r compressor/fastlz
@@ -242,6 +240,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 25 2014 Remi Collet <remi@fedoraproject.org> - 0.9.2-1
+- Update to 0.9.2
+
 * Sat Sep  6 2014 Remi Collet <remi@fedoraproject.org> - 0.9.1-3
 - test build with system fastlz
 - don't install the tests
