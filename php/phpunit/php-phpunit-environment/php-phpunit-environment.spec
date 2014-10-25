@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    6288ebbf6fa3ed2b2ff2d69c356fbaaf4f0971a7
+%global gh_commit    0d9bf79554d2a999da194a60416c15cf461eb67d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   environment
@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-phpunit-environment
-Version:        1.1.0
+Version:        1.2.0
 Release:        1%{?dist}
 Summary:        Handle HHVM/PHP environments
 
@@ -27,6 +27,8 @@ Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+
+Patch0:         %{gh_project}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -50,6 +52,8 @@ has runtime-specific (PHP / HHVM) execution paths.
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+
+%patch0 -p1
 
 
 %build
@@ -97,6 +101,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 25 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- update to 1.2.0
+
 * Wed Oct  8 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - update to 1.1.0
 
