@@ -30,15 +30,12 @@
 
 Summary:        PostgreSQL client library (libpq) binding
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.5.2
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        0.5.5
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# Upstream patches
-Patch0:         %{pecl_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  postgresql-devel > 9
@@ -109,8 +106,6 @@ mv %{pecl_name}-%{version} NTS
 sed -e '/role="test"/d' -i package.xml
 
 cd NTS
-%patch0 -p1 -b .upstream
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PQ_VERSION/{s/.* "//;s/".*$//;p}' php_pq.h)
 if test "x${extver}" != "x%{version}"; then
@@ -269,6 +264,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 25 2014 Remi Collet <remi@fedoraproject.org> - 0.5.5-1
+- Update to 0.5.5
+
 * Sat Oct 18 2014 Remi Collet <remi@fedoraproject.org> - 0.5.2-2
 - launch a postgresql server for test
 - enable upstream test suite during build

@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #172 pq version 0.5.2 ] {
+Extension [ <persistent> extension #172 pq version 0.5.5 ] {
 
   - Dependencies {
     Dependency [ raphf (Required) ]
@@ -811,7 +811,7 @@ Extension [ <persistent> extension #172 pq version 0.5.2 ] {
 
     Class [ <internal:pq> class pq\Types ] {
 
-      - Constants [152] {
+      - Constants [156] {
         Constant [ integer BOOL ] { 16 }
         Constant [ integer BYTEA ] { 17 }
         Constant [ integer CHAR ] { 18 }
@@ -924,6 +924,8 @@ Extension [ <persistent> extension #172 pq version 0.5.2 ] {
         Constant [ integer REGTYPEARRAY ] { 2211 }
         Constant [ integer UUID ] { 2950 }
         Constant [ integer UUIDARRAY ] { 2951 }
+        Constant [ integer PG_LSN ] { 3220 }
+        Constant [ integer PG_LSNARRAY ] { 3221 }
         Constant [ integer TSVECTOR ] { 3614 }
         Constant [ integer GTSVECTOR ] { 3642 }
         Constant [ integer TSQUERY ] { 3615 }
@@ -934,6 +936,8 @@ Extension [ <persistent> extension #172 pq version 0.5.2 ] {
         Constant [ integer TSQUERYARRAY ] { 3645 }
         Constant [ integer REGCONFIGARRAY ] { 3735 }
         Constant [ integer REGDICTIONARYARRAY ] { 3770 }
+        Constant [ integer JSONB ] { 3802 }
+        Constant [ integer JSONBARRAY ] { 3807 }
         Constant [ integer TXID_SNAPSHOT ] { 2970 }
         Constant [ integer TXID_SNAPSHOTARRAY ] { 2949 }
         Constant [ integer INT4RANGE ] { 3904 }
