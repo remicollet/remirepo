@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5a0bc4dcbb7340c0a9a9bc3507854a67c564edc4
+%global gh_commit    23e4e0310f037aae873cc81b8658dbbb82878f71
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,7 +17,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.3.3
+Version:        4.3.4
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -38,7 +38,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  %{_bindir}/phpab
-BuildRequires:  php-composer(phpunit/php-file-iterator) >= 1.3.1
+BuildRequires:  php-composer(phpunit/php-file-iterator) >= 1.3.2
 BuildRequires:  php-composer(phpunit/php-text-template) >= 1.2
 BuildRequires:  php-composer(phpunit/php-code-coverage) >= 2.0
 BuildRequires:  php-composer(phpunit/php-timer) >= 1.0.2
@@ -54,7 +54,7 @@ BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 
 # From composer.json
 #        "php": ">=5.3.3",
-#        "phpunit/php-file-iterator": "~1.3.1",
+#        "phpunit/php-file-iterator": "~1.3.2",
 #        "phpunit/php-text-template": "~1.2",
 #        "phpunit/php-code-coverage": "~2.0",
 #        "phpunit/php-timer": "~1.0.2",
@@ -71,7 +71,7 @@ BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 #        "ext-reflection": "*",
 #        "ext-spl": "*"
 Requires:       php(language) >= 5.3.3
-Requires:       php-composer(phpunit/php-file-iterator) >= 1.3.1
+Requires:       php-composer(phpunit/php-file-iterator) >= 1.3.2
 Requires:       php-composer(phpunit/php-file-iterator) <  1.4
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
@@ -142,6 +142,10 @@ for the creation, execution and analysis of Unit Tests.
 %patch0 -p0 -b .rpm
 %patch1 -p1
 
+# https://github.com/sebastianbergmann/phpunit/pull/1481
+chmod -x src/Util/Blacklist.php \
+         src/Framework/TestCase.php
+
 
 %build
 %{_bindir}/php -d date.timezone=UTC \
@@ -200,6 +204,10 @@ fi
 
 
 %changelog
+* Sat Oct 25 2014 Remi Collet <remi@fedoraproject.org> - 4.3.4-1
+- Update to 4.3.4
+- raise dependency on phpunit/php-file-iterator >= 1.3.2
+
 * Fri Oct 17 2014 Remi Collet <remi@fedoraproject.org> - 4.3.3-1
 - Update to 4.3.3
 
