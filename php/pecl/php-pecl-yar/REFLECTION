@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #162 yar version 1.2.3 ] {
+Extension [ <persistent> extension #176 yar version 1.2.4 ] {
 
   - Dependencies {
     Dependency [ json (Required) ]
@@ -33,7 +33,7 @@ Extension [ <persistent> extension #162 yar version 1.2.3 ] {
   }
 
   - Constants [18] {
-    Constant [ string PHP_YAR_VERSION ] { 1.2.3 }
+    Constant [ string YAR_VERSION ] { 1.2.4 }
     Constant [ integer YAR_OPT_PACKAGER ] { 1 }
     Constant [ integer YAR_OPT_PERSISTENT ] { 2 }
     Constant [ integer YAR_OPT_TIMEOUT ] { 4 }
@@ -158,7 +158,7 @@ Extension [ <persistent> extension #162 yar version 1.2.3 ] {
         Property [ protected static $_start ]
       }
 
-      - Static methods [2] {
+      - Static methods [3] {
         Method [ <internal:yar> static public method call ] {
 
           - Parameters [4] {
@@ -175,6 +175,9 @@ Extension [ <persistent> extension #162 yar version 1.2.3 ] {
             Parameter #0 [ <optional> $callback ]
             Parameter #1 [ <optional> $error_callback ]
           }
+        }
+
+        Method [ <internal:yar> static public method reset ] {
         }
       }
 

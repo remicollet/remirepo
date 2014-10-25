@@ -23,8 +23,8 @@
 
 Summary:        Light, concurrent RPC framework
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.2.3
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.2.4
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -49,6 +49,7 @@ Requires:       %{?scl_prefix}php-curl%{?_isa}
 Requires:       %{?scl_prefix}php-json%{?_isa}
 %endif
 Requires:       %{?scl_prefix}php-pecl(msgpack)%{?_isa}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
@@ -82,10 +83,15 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 Yar (Yet another RPC framework) is a light, concurrent RPC framework,
 supports multi package protocols (json, msgpack).
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+
 
 %prep
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
+
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package2.xml
 
 cd NTS
 
@@ -168,11 +174,8 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 install -Dpm 644 NTS/tools/yar_debug.inc %{buildroot}%{pear_phpdir}/yar_debug.inc
 install -Dpm 755 NTS/tools/yar_debug.php %{buildroot}%{_bindir}/yar_debug
 
-# Test & Documentation
+# Documentation
 cd NTS
-for i in $(grep 'role="test"' ../package2.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
 for i in $(grep 'role="doc"' ../package2.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -214,7 +217,6 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
@@ -228,6 +230,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 25 2014 Remi Collet <remi@fedoraproject.org> - 1.2.4-1
+- Update to 1.2.4
+- dont install test suite
+
 * Tue Aug 26 2014 Remi Collet <rcollet@redhat.com> - 1.2.3-3
 - improve SCL build
 
