@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #148 yaf version 2.3.2 ] {
+Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
 
   - Dependencies {
     Dependency [ spl (Required) ]
@@ -43,7 +43,7 @@ Extension [ <persistent> extension #148 yaf version 2.3.2 ] {
   }
 
   - Constants [12] {
-    Constant [ string PHP_YAF_VERSION ] { 2.3.2 }
+    Constant [ string YAF_VERSION ] { 2.3.3 }
     Constant [ string YAF_ENVIRON ] { product }
     Constant [ integer YAF_ERR_STARTUP_FAILED ] { 512 }
     Constant [ integer YAF_ERR_ROUTE_FAILED ] { 513 }
@@ -2242,7 +2242,7 @@ Extension [ <persistent> extension #148 yaf version 2.3.2 ] {
         Method [ <internal:yaf> abstract public method assemble ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> array $mvc ]
+            Parameter #0 [ <required> array $info ]
             Parameter #1 [ <optional> array or NULL $query ]
           }
         }
@@ -2281,7 +2281,7 @@ Extension [ <persistent> extension #148 yaf version 2.3.2 ] {
         Method [ <internal:yaf, prototype Yaf_Route_Interface> public method assemble ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> array $mvc ]
+            Parameter #0 [ <required> array $info ]
             Parameter #1 [ <optional> array or NULL $query ]
           }
         }
@@ -2325,7 +2325,7 @@ Extension [ <persistent> extension #148 yaf version 2.3.2 ] {
         Method [ <internal:yaf, prototype Yaf_Route_Interface> public method assemble ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> array $mvc ]
+            Parameter #0 [ <required> array $info ]
             Parameter #1 [ <optional> array or NULL $query ]
           }
         }
@@ -2365,7 +2365,7 @@ Extension [ <persistent> extension #148 yaf version 2.3.2 ] {
         Method [ <internal:yaf, prototype Yaf_Route_Interface> public method assemble ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> array $mvc ]
+            Parameter #0 [ <required> array $info ]
             Parameter #1 [ <optional> array or NULL $query ]
           }
         }
@@ -2383,11 +2383,10 @@ Extension [ <persistent> extension #148 yaf version 2.3.2 ] {
       - Static methods [0] {
       }
 
-      - Properties [4] {
+      - Properties [3] {
         Property [ <default> protected $_route ]
         Property [ <default> protected $_default ]
         Property [ <default> protected $_verify ]
-        Property [ <default> protected $_reverse ]
       }
 
       - Methods [3] {
@@ -2410,7 +2409,7 @@ Extension [ <persistent> extension #148 yaf version 2.3.2 ] {
         Method [ <internal:yaf, overwrites Yaf_Route_Interface, prototype Yaf_Route_Interface> public method assemble ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> array $mvc ]
+            Parameter #0 [ <required> array $info ]
             Parameter #1 [ <optional> array or NULL $query ]
           }
         }
@@ -2458,7 +2457,7 @@ Extension [ <persistent> extension #148 yaf version 2.3.2 ] {
         Method [ <internal:yaf, overwrites Yaf_Route_Interface, prototype Yaf_Route_Interface> public method assemble ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> array $mvc ]
+            Parameter #0 [ <required> array $info ]
             Parameter #1 [ <optional> array or NULL $query ]
           }
         }
@@ -2500,7 +2499,7 @@ Extension [ <persistent> extension #148 yaf version 2.3.2 ] {
         Method [ <internal:yaf, prototype Yaf_Route_Interface> public method assemble ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> array $mvc ]
+            Parameter #0 [ <required> array $info ]
             Parameter #1 [ <optional> array or NULL $query ]
           }
         }

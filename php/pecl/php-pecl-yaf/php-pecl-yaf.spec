@@ -21,15 +21,13 @@
 
 Summary:       Yet Another Framework
 Name:          %{?scl_prefix}php-pecl-yaf
-Version:       2.3.2
-Release:       4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:       2.3.3
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaf
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:       %{pecl_name}.ini
-
-Patch0:        %{pecl_name}-git.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel >= 5.2.0
@@ -40,6 +38,7 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:      %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
@@ -73,14 +72,17 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 The Yet Another Framework (Yaf) extension is a PHP framework that is used
 to develop web applications. 
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+
 
 %prep
 %setup -q -c 
 mv %{pecl_name}-%{version} NTS
 
-cd NTS
-%patch0 -p1 -b .upstream
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
 
+cd NTS
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_YAF_VERSION/{s/.*\t"//;s/".*$//;p}' php_yaf.h )
 if test "x${extver}" != "x%{version}"; then
@@ -124,10 +126,7 @@ install -D -m 644 %{SOURCE1} %{buildroot}%{php_ztsinidir}/%{ini_name}
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
-# Test & Documentation
-for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
+# Documentation
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -180,7 +179,6 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
 
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
@@ -193,6 +191,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 25 2014 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
+- Update to 2.3.3
+
 * Tue Aug 26 2014 Remi Collet <rcollet@redhat.com> - 2.3.2-4
 - improve SCL build
 
