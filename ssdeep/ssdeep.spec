@@ -8,7 +8,7 @@
 #
 
 Name:      ssdeep
-Version:   2.11.1
+Version:   2.12
 Release:   1%{?dist}
 Summary:   Compute context triggered piecewise hashes
 Group:     Development/Tools
@@ -95,6 +95,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc FILEFORMAT NEWS README TODO
 %{_includedir}/fuzzy.h
+%{_includedir}/edit_dist.h
 %{_libdir}/libfuzzy.so
 
 %files libs
@@ -105,6 +106,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct 26 2014 Remi Collet <remi@fedoraproject.org> - 2.12-1
+- update to 2.12
+
 * Mon Sep 29 2014 Remi Collet <remi@fedoraproject.org> - 2.11.1-1
 - update to 2.11.1 (no change)
 - fix license handling
