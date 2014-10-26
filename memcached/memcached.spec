@@ -13,7 +13,7 @@
 %{!?runselftest: %global runselftest 1}
 
 Name:           memcached
-Version:        1.4.20
+Version:        1.4.21
 Release:        1%{?dist}
 Epoch:          0
 Summary:        High Performance, Distributed Memory Object Cache
@@ -94,7 +94,7 @@ export LDFLAGS="-Wl,-z,relro,-z,now"
    --enable-sasl
 %endif
 
-sed -i 's/-Werror/ /' Makefile
+sed -i 's/-Werror / /' Makefile
 make %{?_smp_mflags}
 
 %check
@@ -233,7 +233,9 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS ChangeLog COPYING NEWS README.md doc/CONTRIBUTORS doc/*.txt
+%{!?_licensedir:%global license %%doc}
+%license COPYING
+%doc AUTHORS ChangeLog NEWS README.md doc/CONTRIBUTORS doc/*.txt
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
 %{_bindir}/memcached-tool
 %{_bindir}/memcached
@@ -251,7 +253,12 @@ fi
 %defattr(-,root,root,0755)
 %{_includedir}/memcached/*
 
+
 %changelog
+* Sun Oct 26 2014 Remi Collet <rpms@famillecollet.com> - 0:1.4.21-1
+- Update to 1.4.21
+- fix license handling
+
 * Mon May 12 2014 Remi Collet <rpms@famillecollet.com> - 0:1.4.20-1
 - Update to 1.4.20
 
