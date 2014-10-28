@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-History
-Version:        2.3.1
+Version:        2.3.2
 Release:        1%{?dist}
 Summary:        API for tracking the history of an object
 
@@ -82,10 +82,8 @@ rm -rf %{buildroot}
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit \
-    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 
@@ -112,6 +110,9 @@ fi
 
 
 %changelog
+* Tue Oct 28 2014 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
+- Update to 2.3.2
+
 * Thu May 22 2014 Remi Collet <remi@fedoraproject.org> - 2.3.1-1
 - Update to 2.3.1
 
