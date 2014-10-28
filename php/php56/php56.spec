@@ -127,13 +127,13 @@
 %endif
 
 #global snapdate      201405061030
-#global rcver         RC1
+%global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.6.2
+Version: 5.6.3
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -197,15 +197,12 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch100: php-bug68074.patch
 
 # Security fixes (200+)
 
 # Fixes for tests (300+)
 # Revert changes for pcre < 8.34
 Patch301: php-5.6.0-oldpcre.patch
-# see https://bugzilla.redhat.com/971416
-Patch302: php-5.6.0-noNO.patch
 
 # WIP
 
@@ -955,7 +952,6 @@ rm -rf ext/json
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch100 -p1 -b .bug68074
 
 # security patches
 
@@ -966,7 +962,6 @@ rm -rf ext/json
 %patch301 -p1 -b .pcre834
 %endif
 %endif
-%patch302 -p0 -b .971416
 
 # WIP patch
 
@@ -1183,6 +1178,7 @@ build --libdir=%{_libdir}/php \
       --enable-pcntl \
       --enable-opcache \
       --enable-phpdbg \
+      --disable-phpdbg-webhelper \
       --with-imap=shared --with-imap-ssl \
       --enable-mbstring=shared \
       --enable-mbregex \
@@ -1945,6 +1941,11 @@ fi
 
 
 %changelog
+* Tue Oct 28 2014 Remi Collet <rcollet@redhat.com> 5.6.3-0.1.RC1
+- php 5.6.3RC1
+- disable opcache.fast_shutdown in default config
+- disable phpdbg_webhelper new extension for now
+
 * Thu Oct 16 2014 Remi Collet <remi@fedoraproject.org> 5.6.1-1
 - Update to PHP 5.6.2
   http://php.net/releases/5_6_2.php
