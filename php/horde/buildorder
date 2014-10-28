@@ -18,7 +18,7 @@ Build order
 	* Horde_Browser             2.0.7        R: Horde_Exception, Horde_Util
 	* Horde_Cli                 2.0.5       I: Horde_Test R: Horde_Support, Horde_Translation
 	* Horde_Log                 2.1.0       I: Horde_Test R: Horde_Constraint, Horde_Exception, Horde_Cli, Horde_Scribe
-	* Horde_Test                2.4.4        R: Horde_Support, Horde_Util, Horde_Cli, Horde_Log
+	* Horde_Test                2.4.5        R: Horde_Support, Horde_Util, Horde_Cli, Horde_Log
 	* Horde_Text_Diff           2.1.0      BR: Horde_Test  R: Horde_Exception, Horde_Util
 	* Horde_Text_Flowed         2.0.1      BR: Horde_Test  R: Horde_Util
 	* Horde_Url                 2.2.3      BR: Horde_Test  R: Horde_Exception
@@ -44,7 +44,7 @@ Build order
 	* Horde_Notification        2.0.1      BR: Horde_Test I: Horde_Alarm R: Horde_Exception, Horde_Util, Horde_Alarm
 	* Horde_Oauth               2.0.1        R: Horde_Exception, Horde_Http
 	* Horde_Pack                1.0.4      BR: Horde_Test, Horde_Compress_Fast, Horde_Exception  R: Horde_Compress_Fast, Horde_Exception
-	  Horde_Pdf                 2.0.3      BR: Horde_Test  R: Horde_Exception
+	* Horde_Pdf                 2.0.3      BR: Horde_Test  R: Horde_Exception
 	* Horde_Routes              2.0.2      BR: Horde_Test  R: Horde_Exception, Horde_Util
 	* Horde_Secret              2.0.3      BR: Horde_Test, Horde_Crypt_Blowfish  R: Horde_Exception, Horde_Support, Horde_Crypt_Blowfish
 	* Horde_Serialize           2.0.2      BR: Horde_Test I: Horde_Imap_Client, Horde_Mime R: Horde_Exception, Horde_Util
