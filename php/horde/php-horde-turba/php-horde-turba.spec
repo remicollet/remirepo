@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-turba
-Version:        4.2.2
+Version:        4.2.3
 Release:        1%{?dist}
 Summary:        A web based address book
 
@@ -175,7 +175,6 @@ rm -rf %{buildroot}
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/Turba
 # disable as this test use Horde_ActiveSync (non-free)
 sed -e 's/function testDuplicateDetectionFromAsWithNoEmail/function SKIP_testDuplicateDetectionFromAsWithNoEmail/' \
@@ -185,7 +184,6 @@ sed -e 's/function testDuplicateDetectionFromAsWithNoEmail/function SKIP_testDup
 rm  Unit/ExportTest.php
 
 phpunit\
-    --include-path=$src/lib \
     -d date.timezone=UTC \
     .
 
@@ -232,6 +230,9 @@ fi
 
 
 %changelog
+* Wed Oct 29 2014 Remi Collet <remi@fedoraproject.org> - 4.2.3-1
+- Update to 4.2.3
+
 * Sat Sep 06 2014 Remi Collet <remi@fedoraproject.org> - 4.2.2-1
 - Update to 4.2.2
 - raise dep on Horde_Util 2.5.0
