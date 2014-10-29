@@ -13,8 +13,8 @@
 %global with_sysjs   0
 
 Name:           php-horde-horde
-Version:        5.2.1
-Release:        3%{?dist}
+Version:        5.2.2
+Release:        1%{?dist}
 Summary:        Horde Application Framework
 
 Group:          Development/Libraries
@@ -310,6 +310,9 @@ fi
 
 
 %changelog
+* Wed Oct 29 2014 Remi Collet <remi@fedoraproject.org> - 5.2.2-1
+- Update to 5.2.2
+
 * Tue Sep 23 2014 Remi Collet <remi@fedoraproject.org> - 5.2.1-3
 - fix replacement of /usr/share/horde/static directory
   by a link to /var/lib/horde/static
