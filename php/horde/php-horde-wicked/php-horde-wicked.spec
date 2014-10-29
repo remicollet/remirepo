@@ -10,13 +10,12 @@
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    wicked
 %global pear_channel pear.horde.org
-# disable as not ready - Need Framework 5.2
-# Unit/RstTest.php is broken, all others ignored
+# all tests are ignored
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-wicked
-Version:        2.0.1
-Release:        2%{?dist}
+Version:        2.0.2
+Release:        1%{?dist}
 Summary:        Wiki application
 
 Group:          Development/Libraries
@@ -180,10 +179,8 @@ sed -e 's:#!/usr/bin/env php:#!%{_bindir}/php:' \
 
 %check
 %if %{with_tests}
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/Wicked
-phpunit\
-    --include-path=$src/lib \
+phpunit \
     -d date.timezone=UTC \
     .
 %endif
@@ -229,6 +226,9 @@ fi
 
 
 %changelog
+* Wed Oct 29 2014 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
+
 * Sat May 17 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
 - fix from review #1087769
 - explicitly requires httpd + mod_php
