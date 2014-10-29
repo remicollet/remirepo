@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-kronolith
-Version:        4.2.2
+Version:        4.2.3
 Release:        1%{?dist}
 Summary:        A web based calendar
 
@@ -204,7 +204,6 @@ done | tee ../%{pear_name}.lang
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/Kronolith
 
 # Timezone issue (need investigation)
@@ -212,8 +211,7 @@ rm Integration/ToIcalendarTest.php
 rm Integration/FromIcalendarTest.php
 
 phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
+    -d date.timezone=Europe/Paris \
     .
 
 
@@ -260,6 +258,9 @@ fi
 
 
 %changelog
+* Wed Oct 29 2014 Remi Collet <remi@fedoraproject.org> - 4.2.3-1
+- Update to 4.2.3
+
 * Sat Sep 06 2014 Remi Collet <remi@fedoraproject.org> - 4.2.2-1
 - Update to 4.2.2
 
