@@ -133,7 +133,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.3
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.3.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.4.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -169,7 +169,6 @@ Source14: nginx-php.conf
 # Configuration files for some extensions
 Source50: opcache.ini
 Source51: opcache-default.blacklist
-Source52: phpdbg_webhelper.ini
 Source99: php-fpm.init
 
 # Build fixes
@@ -305,7 +304,6 @@ executing PHP scripts, /usr/bin/php, and the CGI interface.
 Group: Development/Languages
 Summary: The interactive PHP debugger
 Requires: php-common%{?_isa} = %{version}-%{release}
-Provides: php-phpdbg_webhelper, php-phpdbg_webhelper%{?_isa}
 Obsoletes: php56u-dbg, php56w-dbg
 
 %description dbg
@@ -1066,7 +1064,6 @@ echo "d /run/php-fpm 755 root root" >php-fpm.tmpfiles
 
 # Some extensions have their own configuration file
 cp %{SOURCE50} 10-opcache.ini
-cp %{SOURCE52} 20-phpdbg_webhelper.ini
 
 # Regenerated bison files
 # to force, rm Zend/zend_{language,ini}_parser.[ch]
@@ -1184,7 +1181,6 @@ build --libdir=%{_libdir}/php \
       --enable-pcntl \
       --enable-opcache \
       --enable-phpdbg \
-      --enable-phpdbg-webhelper=shared \
       --with-imap=shared --with-imap-ssl \
       --enable-mbstring=shared \
       --enable-mbregex \
@@ -1627,9 +1623,6 @@ EOF
 EOF
 done
 
-# This extension is NTS only, for use with phpdbg
-cp -p 20-phpdbg_webhelper.ini $RPM_BUILD_ROOT%{_sysconfdir}/php.d/20-phpdbg_webhelper.ini
-
 # The dom, xsl and xml* modules are all packaged in php-xml
 cat files.dom files.xsl files.xml{reader,writer} files.wddx \
     files.simplexml >> files.xml
@@ -1845,8 +1838,6 @@ fi
 %{_bindir}/phpdbg
 %{_mandir}/man1/phpdbg.1*
 %doc sapi/phpdbg/{README.md,CREDITS}
-%attr(755,root,root) %{_libdir}/php/modules/phpdbg_webhelper.so
-%config(noreplace) %attr(644,root,root) %{_sysconfdir}/php.d/20-phpdbg_webhelper.ini
 
 %files fpm
 %defattr(-,root,root)
@@ -1952,6 +1943,9 @@ fi
 
 
 %changelog
+* Thu Oct 30 2014 Remi Collet <rcollet@redhat.com> 5.6.3-0.4.RC1
+- php 5.6.3RC1 (refreshed, phpdbg changes reverted)
+
 * Thu Oct 30 2014 Remi Collet <rcollet@redhat.com> 5.6.3-0.3.RC1
 - new version of systzdata patch, fix case sensitivity
 - ignore Factory in date tests
