@@ -133,7 +133,7 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.3
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.2.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.3.%{?snapdate}%{?rcver}%{?dist}
 %else
 Release: 1%{?dist}
 %endif
@@ -173,10 +173,10 @@ Source52: phpdbg_webhelper.ini
 Source99: php-fpm.init
 
 # Build fixes
-Patch5: php-5.2.0-includedir.patch
+Patch5: php-5.6.3-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
-Patch8: php-5.4.7-libdb.patch
+Patch8: php-5.6.3-libdb.patch
 
 # Fixes for extension modules
 # https://bugs.php.net/63171 no odbc call during timeout
@@ -184,24 +184,26 @@ Patch21: php-5.4.7-odbctimer.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
-Patch42: php-5.3.1-systzdata-v11.patch
+Patch42: php-5.6.3-systzdata-v11.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
 # Use -lldap_r for OpenLDAP
-Patch45: php-5.4.8-ldap_r.patch
+Patch45: php-5.6.3-ldap_r.patch
 # Make php_config.h constant across builds
-Patch46: php-5.4.9-fixheader.patch
+Patch46: php-5.6.3-fixheader.patch
 # drop "Configure command" from phpinfo output
-Patch47: php-5.4.9-phpinfo.patch
+Patch47: php-5.6.3-phpinfo.patch
 
 # RC Patch
-Patch91: php-5.3.7-oci8conf.patch
+Patch91: php-5.6.3-oci8conf.patch
 
 # Upstream fixes (100+)
 
 # Security fixes (200+)
 
 # Fixes for tests (300+)
+# Factory is droped from system tzdata
+Patch300: php-5.6.3-datetests.patch
 # Revert changes for pcre < 8.34
 Patch301: php-5.6.0-oldpcre.patch
 
@@ -958,6 +960,7 @@ rm -rf ext/json
 # security patches
 
 # Fixes for tests
+%patch300 -p1 -b .datetests
 %if %{with_libpcre}
 %if 0%{?fedora} < 21
 # Only apply when system libpcre < 8.34
@@ -1949,6 +1952,10 @@ fi
 
 
 %changelog
+* Thu Oct 30 2014 Remi Collet <rcollet@redhat.com> 5.6.3-0.3.RC1
+- new version of systzdata patch, fix case sensitivity
+- ignore Factory in date tests
+
 * Wed Oct 29 2014 Remi Collet <rcollet@redhat.com> 5.6.3-0.2.RC1
 - php 5.6.3RC1 (refreshed)
 - enable phpdbg_webhelper new extension (in php-dbg)

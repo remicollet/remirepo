@@ -2,7 +2,8 @@ Add support for use of the system timezone database, rather
 than embedding a copy.  Discussed upstream but was not desired.
 
 History:
-r11: dont display version in phpinfo
+r11: use canonical names to avoid more case sensitivity issues
+     round lat/long from zone.tab towards zero per builtin db
 r10: make timezone case insensitive
 r9: fix another compile error without --with-system-tzdata configured (Michael Heimpold)
 r8: fix compile error without --with-system-tzdata configured
@@ -18,6 +19,8 @@ r3: fix a crash if /usr/share/zoneinfo doesn't exist (Raphael Geissert)
 r2: add filesystem trawl to set up name alias index
 r1: initial revision
 
+diff --git a/ext/date/lib/parse_tz.c b/ext/date/lib/parse_tz.c
+index 5d2aec9..671b398 100644
 --- a/ext/date/lib/parse_tz.c
 +++ b/ext/date/lib/parse_tz.c
 @@ -20,6 +20,16 @@
@@ -68,7 +71,7 @@ r1: initial revision
  	/* read BC flag */
  	tz->bc = (**tzf == '\1');
  	*tzf += 1;
-@@ -256,7 +276,405 @@
+@@ -256,7 +276,418 @@ void timelib_dump_tzinfo(timelib_tzinfo *tz)
  	}
  }
  
@@ -166,7 +169,7 @@ r1: initial revision
 +    /* Round to five decimal place, not because it's a good idea,
 +     * but, because the builtin data uses rounded data, so, match
 +     * that. */
-+    *result = round(v * sign * 100000.0) / 100000.0;
++    *result = trunc(v * sign * 100000.0) / 100000.0;
 +
 +    return p;
 +}
@@ -294,7 +297,7 @@ r1: initial revision
 +{
 +        const timelib_tzdb_index_entry *alpha = first, *beta = second;
 +
-+        return strcmp(alpha->id, beta->id);
++        return strcasecmp(alpha->id, beta->id);
 +}
 +
 +
@@ -432,6 +435,26 @@ r1: initial revision
 +	return S_ISREG(st->st_mode) && st->st_size > 20;
 +}
 +
++/* To allow timezone names to be used case-insensitively, find the
++ * canonical name for this timezone, if possible. */
++static const char *canonical_tzname(const char *timezone)
++{
++    if (timezonedb_system) {
++        timelib_tzdb_index_entry *ent, lookup;
++        
++        lookup.id = (char *)timezone;
++        
++        ent = bsearch(&lookup, timezonedb_system->index,
++                      timezonedb_system->index_size, sizeof lookup,
++                      sysdbcmp);
++        if (ent) {
++            return ent->id;
++        }
++    }
++
++    return timezone;
++}
++
 +/* Return the mmap()ed tzfile if found, else NULL.  On success, the
 + * length of the mapped data is placed in *length. */
 +static char *map_tzfile(const char *timezone, size_t *length)
@@ -445,14 +468,7 @@ r1: initial revision
 +		return NULL;
 +	}
 +
-+    if (system_location_table) {
-+        const struct location_info *li;
-+        if ((li = find_zone_info(system_location_table, timezone)) != NULL) {
-+            /* Use the stored name to avoid case issue */
-+            timezone = li->name;
-+        }
-+    }
-+	snprintf(fname, sizeof fname, ZONEINFO_PREFIX "/%s", timezone);
++	snprintf(fname, sizeof fname, ZONEINFO_PREFIX "/%s", canonical_tzname(timezone));
 +	
 +	fd = open(fname, O_RDONLY);
 +	if (fd == -1) {
@@ -475,7 +491,7 @@ r1: initial revision
  {
  	int left = 0, right = tzdb->index_size - 1;
  #ifdef HAVE_SETLOCALE
-@@ -295,36 +713,135 @@
+@@ -295,36 +726,135 @@ static int seek_to_tz_position(const unsigned char **tzf, char *timezone, const
  	return 0;
  }
  
@@ -557,7 +573,7 @@ r1: initial revision
 +                }
 +            }
 +            
-+            snprintf(fname, sizeof fname, ZONEINFO_PREFIX "/%s", timezone);
++            snprintf(fname, sizeof fname, ZONEINFO_PREFIX "/%s", canonical_tzname(timezone));
 +            
 +            return stat(fname, &st) == 0 && is_valid_tzfile(&st);
 +        }
@@ -614,6 +630,8 @@ r1: initial revision
  	} else {
  		tmp = NULL;
  	}
+diff --git a/ext/date/lib/timelib.m4 b/ext/date/lib/timelib.m4
+index c725572..4c837c7 100644
 --- a/ext/date/lib/timelib.m4
 +++ b/ext/date/lib/timelib.m4
 @@ -78,3 +78,17 @@ stdlib.h
@@ -634,18 +652,4 @@ r1: initial revision
 +   fi
 +fi
 +
---- a/ext/date/php_date.c.old	2014-07-25 16:21:32.562376600 +0200
-+++ b/ext/date/php_date.c	2014-07-25 16:21:42.731424669 +0200
-@@ -887,8 +887,12 @@
- 	
- 	php_info_print_table_start();
- 	php_info_print_table_row(2, "date/time support", "enabled");
-+#ifdef HAVE_SYSTEM_TZDATA
-+	php_info_print_table_row(2, "Timezone Database", "system");
-+#else
- 	php_info_print_table_row(2, "\"Olson\" Timezone Database Version", tzdb->version);
- 	php_info_print_table_row(2, "Timezone Database", php_date_global_timezone_db_enabled ? "external" : "internal");
-+#endif
- 	php_info_print_table_row(2, "Default timezone", guess_timezone(tzdb TSRMLS_CC));
- 	php_info_print_table_end();
- 
+

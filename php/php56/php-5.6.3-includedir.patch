@@ -1,6 +1,6 @@
 --- php-5.2.0/configure.in.includedir
 +++ php-5.2.0/configure.in
-@@ -1101,7 +1101,7 @@
+@@ -1242,7 +1242,7 @@
  EXPANDED_DATADIR=$datadir
  EXPANDED_PHP_CONFIG_FILE_PATH=`eval echo "$PHP_CONFIG_FILE_PATH"`
  EXPANDED_PHP_CONFIG_FILE_SCAN_DIR=`eval echo "$PHP_CONFIG_FILE_SCAN_DIR"`
