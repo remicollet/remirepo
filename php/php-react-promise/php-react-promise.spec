@@ -36,6 +36,7 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 %if %{with_tests}
 BuildRequires: php-phpunit-PHPUnit
@@ -68,6 +69,7 @@ A lightweight implementation of CommonJS Promises/A [1] for PHP.
 
 
 %install
+rm -rf %{buildroot}
 mkdir -pm 0755 %{buildroot}%{phpdir}/React/Promise
 cp -rp src/* %{buildroot}%{phpdir}/React/Promise/
 
@@ -92,9 +94,6 @@ spl_autoload_register(function ($class) {
 require_once '%{buildroot}%{phpdir}/React/Promise/functions.php';
 BOOTSTRAP
 
-# Create PHPUnit config with colors turned off
-sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
-
 %{__phpunit} \
     --bootstrap ./bootstrap.php \
     --include-path %{buildroot}%{phpdir}:./tests \
@@ -104,7 +103,12 @@ sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md composer.json
@@ -113,6 +117,9 @@ sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 
 %changelog
+* Fri Oct 31 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- backport 2.1.0 for remi repo.
+
 * Mon Oct 27 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.1.0-1
 - Updated to 2.1.0
 
