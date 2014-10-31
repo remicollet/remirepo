@@ -1,0 +1,100 @@
+From 27b7641d815e4279763e7716295f6169d1e3d5b7 Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Fri, 31 Oct 2014 13:12:43 +0100
+Subject: [PATCH] Fix build with PHP < 5.4 (and min version set to 5.3)
+
+Tested against 5.3.3 (RHEL-6)
+---
+ bitset.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/bitset.c b/bitset.c
+index 890a115..ba6fc34 100644
+--- a/bitset.c
++++ b/bitset.c
+@@ -31,6 +31,14 @@
+ #include "php_bitset.h"
+ #include <limits.h>
+ 
++/* For PHP < 5.3.7 */
++#ifndef PHP_FE_END
++#define PHP_FE_END { NULL, NULL, NULL }
++#endif
++#ifndef ZEND_MOD_END
++#define ZEND_MOD_END { NULL, NULL, NULL }
++#endif
++
+ #define BITSET_DEPRECATED_MESSAGE "The bitset_* functions are deprecated and will be removed in 3.0. Please update to the BitSet class API"
+ 
+ zend_class_entry *bitset_class_entry = NULL;
+@@ -963,7 +971,16 @@ static php_bitset_object *php_bitset_objects_new(zend_class_entry *ce TSRMLS_DC)
+ 	intern->bitset_val = 0;
+ 
+ 	zend_object_std_init(&intern->zo, ce TSRMLS_CC);
++#if PHP_MAJOR_VERSION == 5 && PHP_MINOR_VERSION < 4
++	{
++	zval *tmp;
++
++	zend_hash_copy(intern->zo.properties, &ce->default_properties,
++	    (copy_ctor_func_t) zval_add_ref, (void *) &tmp, sizeof(zval *));
++	}
++#else
+ 	object_properties_init(&intern->zo, ce);
++#endif
+ 
+ 	return intern;
+ }
+-- 
+2.1.0
+
+From 95ee02568e29dc2e51bb09a3397fdc2e101366ea Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Fri, 31 Oct 2014 13:16:46 +0100
+Subject: [PATCH] fix warning: variable 'previous_bit' set but not used
+ [-Wunused-but-set-variable]
+
+---
+ bitset.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/bitset.c b/bitset.c
+index ba6fc34..d858be4 100644
+--- a/bitset.c
++++ b/bitset.c
+@@ -606,7 +606,7 @@ PHP_METHOD(BitSet, orOp)
+ PHP_METHOD(BitSet, previousClearBit)
+ {
+ 	php_bitset_object *intern;
+-	long start_bit = 0, previous_bit = 0;
++	long start_bit = 0;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &start_bit) == FAILURE) {
+ 		return;
+@@ -623,7 +623,6 @@ PHP_METHOD(BitSet, previousClearBit)
+ 
+ 	while (start_bit >= 0) {
+ 		if (!(intern->bitset_val[start_bit / CHAR_BIT] &  (1 << (start_bit % CHAR_BIT)))) {
+-			previous_bit = start_bit;
+ 			break;
+ 		}
+ 
+@@ -643,7 +642,7 @@ PHP_METHOD(BitSet, previousClearBit)
+ PHP_METHOD(BitSet, previousSetBit)
+ {
+ 	php_bitset_object *intern;
+-	long start_bit = 0, previous_bit = 0;
++	long start_bit = 0;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &start_bit) == FAILURE) {
+ 		return;
+@@ -660,7 +659,6 @@ PHP_METHOD(BitSet, previousSetBit)
+ 
+ 	while (start_bit >= 0) {
+ 		if (intern->bitset_val[start_bit / CHAR_BIT] & (1 << (start_bit % CHAR_BIT))) {
+-			previous_bit = start_bit;
+ 			break;
+ 		}
+ 
+-- 
+2.1.0
+
