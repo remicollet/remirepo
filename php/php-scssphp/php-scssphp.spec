@@ -10,19 +10,22 @@
 # Please preserve changelog entries
 #
 
-%global github_owner    leafo
-%global github_name     scssphp
-%global github_version  0.0.15
-%global github_commit   85348dde6f193fe390aff76b21d816415ffef93b
+%global github_owner     leafo
+%global github_name      scssphp
+%global github_version   0.1.1
+%global github_commit    8c08da585537e97efd528c7d278463d2b9396371
+
+%global composer_vendor  leafo
+%global composer_project scssphp
 
 # "php": ">=5.3.0"
-%global php_min_ver     5.3.0
-# "phpunit/phpunit": "3.7.*"
-#     NOTE: Max version ignored
-%global phpunit_min_ver 3.7.0
+%global php_min_ver      5.3.0
 
 # Build using "--without tests" to disable tests
-%global with_tests      %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests       %{?_without_tests:0}%{!?_without_tests:1}
+
+%{!?phpdir:     %global phpdir     %{_datadir}/php}
+%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
 
 Name:          php-%{github_name}
 Version:       %{github_version}
@@ -33,15 +36,16 @@ Group:         Development/Libraries
 License:       MIT or GPLv3
 URL:           http://leafo.net/%{github_name}
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+Patch0:        %{name}-pre-0-1-0-compat.patch
+Patch1:        %{name}-bin.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
-BuildRequires: help2man
 %if %{with_tests}
-# For tests: composer.json
+# composer.json
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-phpunit-PHPUnit >= %{phpunit_min_ver}
-# For tests: phpcompatinfo (computed from version 0.0.15)
+BuildRequires: php-phpunit-PHPUnit
+# phpcompatinfo (computed from version 0.1.1)
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-pcre
@@ -49,12 +53,12 @@ BuildRequires: php-pcre
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 0.0.15)
+# phpcompatinfo (computed from version 0.1.1)
 Requires:      php-ctype
 Requires:      php-date
 Requires:      php-pcre
 
-Provides:      php-composer(leafo/scssphp) = %{version}
+Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 
 %description
@@ -73,14 +77,11 @@ the SCSS syntax.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-# Create man page for bin
-# Required here b/c path to include file is changed in next command
-help2man --no-info ./pscss > pscss.1
+# Lib pre-0.1.0 compat
+%patch0 -p1
 
-# Update bin she-bang and require
-sed -e 's#/usr/bin/env php#%{_bindir}/php#' \
-    -e 's#scss.inc.php#%{_datadir}/php/%{github_name}/scss.inc.php#' \
-    -i pscss
+# Bin
+%patch1 -p1
 
 
 %build
@@ -88,22 +89,26 @@ sed -e 's#/usr/bin/env php#%{_bindir}/php#' \
 
 
 %install
-mkdir -p %{buildroot}%{_datadir}/php/%{github_name}
-install -pm 0644 scss.inc.php %{buildroot}%{_datadir}/php/%{github_name}/
+# Lib
+mkdir -pm 0755 %{buildroot}%{phpdir}/Leafo/ScssPhp
+cp -pr src/* %{buildroot}%{phpdir}/Leafo/ScssPhp/
 
-mkdir -p %{buildroot}%{_bindir}
-install -pm 0755 pscss %{buildroot}%{_bindir}/
+# Lib pre-0.1.0 compat
+mkdir -pm 0755 %{buildroot}%{phpdir}/%{github_name}
+cp -p classmap.php %{buildroot}%{phpdir}/%{github_name}/scss.inc.php
 
-mkdir -p %{buildroot}%{_mandir}/man1
-install -pm 0644 pscss.1 %{buildroot}%{_mandir}/man1/
+# Bin
+mkdir -pm 0755 %{buildroot}%{_bindir}
+install -pm 0755 bin/pscss %{buildroot}%{_bindir}/
 
 
 %check
 %if %{with_tests}
-# Create PHPUnit config w/ colors turned off
-sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
-%{_bindir}/phpunit tests
+%{__phpunit} \
+    --bootstrap %{buildroot}%{phpdir}/%{github_name}/scss.inc.php \
+    --include-path %{buildroot}%{phpdir} \
+    -d date.timezone="UTC"
 %else
 : Tests skipped
 %endif
@@ -111,13 +116,20 @@ sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 %files
 %defattr(-,root,root,-)
-%doc *.md composer.json
-%doc %{_mandir}/man1/pscss.1*
-%{_datadir}/php/%{github_name}
+%{!?_licensedir:%global license %%doc}
+%license LICENSE.md
+%doc README.md composer.json
+%{phpdir}/%{github_name}/scss.inc.php
+%{phpdir}/Leafo/ScssPhp
 %{_bindir}/pscss
 
 
 %changelog
+* Thu Oct 30 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.1.1-1
+- Updated to 0.1.1 (BZ #1126612)
+- Removed man page
+- %%license usage
+
 * Tue Aug 19 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.0.15-1
 - Updated to 0.0.15 (BZ #1126612)
 
