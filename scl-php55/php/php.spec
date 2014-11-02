@@ -1693,7 +1693,7 @@ fi
 - update to 5.5.19RC1
 - new version of systzdata patch, fix case sensitivity
 - disable opcache.fast_shutdown in default config
-- add php56-cgi command in base system
+- add php55-cgi command in base system
 
 * Thu Oct 16 2014 Remi Collet <remi@fedoraproject.org> 5.5.18-1
 - Update to 5.5.18

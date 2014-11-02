@@ -106,7 +106,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.4.34
-Release: 1%{?dist}
+Release: 2%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -139,7 +139,7 @@ Patch21: php-5.4.7-odbctimer.patch
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
 Patch41: php-5.4.0-easter.patch
-Patch42: php-5.3.1-systzdata-v10.patch
+Patch42: php-5.3.34-systzdata-v11.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
 # Use -lldap_r for OpenLDAP
@@ -1204,6 +1204,7 @@ install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 %if 0%{?scl:1}
 install -m 755 -d $RPM_BUILD_ROOT%{_root_bindir}
 ln -s %{_bindir}/php       $RPM_BUILD_ROOT%{_root_bindir}/%{scl}
+ln -s %{_bindir}/php-cgi   $RPM_BUILD_ROOT%{_root_bindir}/%{scl}-cgi
 ln -s %{_bindir}/phar.phar $RPM_BUILD_ROOT%{_root_bindir}/%{scl_prefix}phar
 %if %{with_lsws}
 ln -s %{_bindir}/lsphp     $RPM_BUILD_ROOT%{_root_bindir}/ls%{scl}
@@ -1438,6 +1439,7 @@ fi
 %doc sapi/cgi/README* sapi/cli/README
 %if 0%{?scl:1}
 %{_root_bindir}/%{scl}
+%{_root_bindir}/%{scl}-cgi
 %{_root_bindir}/%{scl_prefix}phar
 %endif
 
@@ -1538,6 +1540,10 @@ fi
 
 
 %changelog
+* Sun Nov  2 2014 Remi Collet <remi@fedoraproject.org> 5.4.34-2
+- new version of systzdata patch, fix case sensitivity
+- add php54-cgi command in base system
+
 * Thu Oct 16 2014 Remi Collet <remi@fedoraproject.org> 5.4.34-1
 - Update to 5.4.34
   http://www.php.net/releases/5_4_34.php
