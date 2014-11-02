@@ -139,7 +139,7 @@ Patch21: php-5.4.7-odbctimer.patch
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
 Patch41: php-5.4.0-easter.patch
-Patch42: php-5.3.34-systzdata-v11.patch
+Patch42: php-5.4.34-systzdata-v11.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
 # Use -lldap_r for OpenLDAP
