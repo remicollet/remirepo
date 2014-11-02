@@ -120,12 +120,11 @@
 %global db_devel  libdb-devel
 %endif
 
-#global snapdate      201308300430
-#global rcver         RC1
+%global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.5.18
+Version: 5.5.19
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -174,7 +173,7 @@ Patch21: php-5.4.7-odbctimer.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
-Patch42: php-5.3.1-systzdata-v10.patch
+Patch42: php-5.5.19-systzdata-v11.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
 # Use system libzip instead of bundled one
@@ -1944,6 +1943,11 @@ fi
 
 
 %changelog
+* Sun Nov 2 2014 Remi Collet <remi@fedoraproject.org> 5.5.19-0.1.RC1
+- update to 5.5.19RC1
+- new version of systzdata patch, fix case sensitivity
+- disable opcache.fast_shutdown in default config
+
 * Thu Oct 16 2014 Remi Collet <remi@fedoraproject.org> 5.5.18-1
 - Update to 5.5.18
   http://www.php.net/releases/5_5_18.php
