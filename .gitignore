@@ -23,5 +23,7 @@
 */*/*/x86_64
 *.xpi
 *~
+*/*/clog
+*/*/*/clog
 package*.xml
 composer*.json
