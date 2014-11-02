@@ -73,7 +73,7 @@
  /* {{{ arginfo */
  ZEND_BEGIN_ARG_INFO_EX(arginfo_dba_popen, 0, 0, 2)
  	ZEND_ARG_INFO(0, path)
-@@ -522,6 +526,10 @@
+@@ -535,6 +539,10 @@
  
  	php_info_print_table_start();
   	php_info_print_table_row(2, "DBA support", "enabled");

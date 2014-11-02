@@ -124,10 +124,11 @@
 %global db_devel  libdb-devel
 %endif
 
+%global rcver RC1
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.6.2
-Release: 1%{?dist}
+Version: 5.6.3
+Release: 0.1.RC1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -153,9 +154,9 @@ Source50: opcache.ini
 Source51: opcache-default.blacklist
 
 # Build fixes
-Patch5: php-5.2.0-includedir.patch
+Patch5: php-5.6.3-includedir.patch
 Patch7: php-5.3.0-recode.patch
-Patch8: php-5.4.7-libdb.patch
+Patch8: php-5.6.3-libdb.patch
 
 # Fixes for extension modules
 # https://bugs.php.net/63171 no odbc call during timeout
@@ -163,29 +164,28 @@ Patch21: php-5.4.7-odbctimer.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
-Patch42: php-5.3.1-systzdata-v10.patch
+Patch42: php-5.6.3-systzdata-v11.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
 # Use -lldap_r for OpenLDAP
-Patch45: php-5.4.8-ldap_r.patch
+Patch45: php-5.6.3-ldap_r.patch
 # Make php_config.h constant across builds
-Patch46: php-5.4.9-fixheader.patch
+Patch46: php-5.6.3-fixheader.patch
 # drop "Configure command" from phpinfo output
-Patch47: php-5.4.9-phpinfo.patch
+Patch47: php-5.6.3-phpinfo.patch
 
 # RC Patch
-Patch91: php-5.3.7-oci8conf.patch
+Patch91: php-5.6.3-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch100: php-bug68074.patch
 
 # Security fixes (200+)
 
 # Fixes for tests (300+)
+# Factory is droped from system tzdata
+Patch300: php-5.6.3-datetests.patch
 # Revert changes for pcre < 8.34
 Patch301: php-5.6.0-oldpcre.patch
-# see https://bugzilla.redhat.com/971416
-Patch302: php-5.6.0-noNO.patch
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -853,18 +853,17 @@ support for using the enchant library to PHP.
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch100 -p1 -b .bug68074
 
 # security patches
 
 # Fixes for tests
+%patch300 -p1 -b .datetests
 %if %{with_libpcre}
 %if 0%{?fedora} < 21
 # Only apply when system libpcre < 8.34
 %patch301 -p1 -b .pcre834
 %endif
 %endif
-%patch302 -p0 -b .971416
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1343,6 +1342,7 @@ install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 %if 0%{?scl:1}
 install -m 755 -d $RPM_BUILD_ROOT%{_root_bindir}
 ln -s %{_bindir}/php       $RPM_BUILD_ROOT%{_root_bindir}/%{scl}
+ln -s %{_bindir}/php-cgi   $RPM_BUILD_ROOT%{_root_bindir}/%{scl}-cgi
 ln -s %{_bindir}/phar.phar $RPM_BUILD_ROOT%{_root_bindir}/%{scl_prefix}phar
 ln -s %{_bindir}/phpdbg    $RPM_BUILD_ROOT%{_root_bindir}/%{scl_prefix}phpdbg
 %if %{with_lsws}
@@ -1603,6 +1603,7 @@ fi
 %doc sapi/cgi/README* sapi/cli/README
 %if 0%{?scl:1}
 %{_root_bindir}/%{scl}
+%{_root_bindir}/%{scl}-cgi
 %{_root_bindir}/%{scl_prefix}phar
 %endif
 
@@ -1718,7 +1719,14 @@ fi
 
 
 %changelog
-* Thu Oct 16 2014 Remi Collet <remi@fedoraproject.org> 5.6.1-1
+* Sun Nov  2 2014 Remi Collet <remi@fedoraproject.org> 5.6.3-0.1.RC1
+- update to 5.6.3RC1
+- new version of systzdata patch, fix case sensitivity
+- ignore Factory in date tests
+- disable opcache.fast_shutdown in default config
+- add php56-cgi command in base system
+
+* Thu Oct 16 2014 Remi Collet <remi@fedoraproject.org> 5.6.2-1
 - Update to PHP 5.6.2
   http://php.net/releases/5_6_2.php
 

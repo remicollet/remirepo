@@ -3,7 +3,7 @@ Use -lldap_r by default.
 
 --- php-5.4.8/ext/ldap/config.m4.ldap_r
 +++ php-5.4.8/ext/ldap/config.m4
-@@ -95,7 +95,10 @@ if test "$PHP_LDAP" != "no"; then
+@@ -117,7 +117,10 @@ if test "$PHP_LDAP" != "no"; then
      LDAP_PTHREAD=
    fi
  
