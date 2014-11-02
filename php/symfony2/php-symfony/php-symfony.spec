@@ -13,8 +13,8 @@
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.5.5
-%global github_commit    2aef97bbc95d0c4ae63537cca81bd6d984427d81
+%global github_version   2.5.6
+%global github_commit    1a1b1e528935f15dd76169f8b1dc3ef97f0d6210
 
 %global composer_vendor  symfony
 %global composer_project symfony
@@ -52,15 +52,9 @@
 # "swiftmailer/swiftmailer": ">=4.2.0,<6.0-dev" (src/Symfony/Bridge/Swiftmailer/composer.json)
 #     NOTE: Max version ignored on purpose
 %global swift_min_ver 4.2.0
-# "symfony/icu": "~1.0" (composer.json)
-%global symfony_icu_min_ver 1.0
-%global symfony_icu_max_ver 2.0
 # "twig/twig": "~1.12" (composer.json)
 %global twig_min_ver 1.12
 %global twig_max_ver 2.0
-
-%global symfony_dir  %{_datadir}/php/Symfony
-%global pear_channel pear.symfony.com
 
 %if %{?runselftest}%{!?runselftest:1}
 # Build using "--without tests" to disable tests
@@ -69,9 +63,15 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 %endif
 
+%{!?phpdir:     %global phpdir     %{_datadir}/php}
+%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
+
+%global symfony_dir  %{phpdir}/Symfony
+%global pear_channel pear.symfony.com
+
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -91,8 +91,6 @@ BuildArch:     noarch
 %if %{with_tests}
 # For tests
 BuildRequires: php(language)                        >= %{php_min_ver}
-BuildRequires: php-composer(%{composer_vendor}/icu) >= %{symfony_icu_min_ver}
-BuildRequires: php-composer(%{composer_vendor}/icu) <  %{symfony_icu_max_ver}
 BuildRequires: php-composer(doctrine/annotations)   >= %{doctrine_annotations_min_ver}
 BuildRequires: php-composer(doctrine/annotations)   <  %{doctrine_annotations_max_ver}
 BuildRequires: php-composer(doctrine/cache)         >= %{doctrine_cache_min_ver}
@@ -109,9 +107,9 @@ BuildRequires: php-composer(monolog/monolog)        >= %{monolog_min_ver}
 BuildRequires: php-composer(monolog/monolog)        <  %{monolog_max_ver}
 BuildRequires: php-composer(psr/log)                >= %{psrlog_min_ver}
 BuildRequires: php-composer(psr/log)                <  %{psrlog_max_ver}
+BuildRequires: php-composer(twig/twig)              >= %{twig_min_ver}
+BuildRequires: php-composer(twig/twig)              <  %{twig_max_ver}
 BuildRequires: php-phpunit-PHPUnit
-BuildRequires: php-twig-Twig                        >= %{twig_min_ver}
-BuildRequires: php-twig-Twig                        <  %{twig_max_ver}
 %if "%{php_version}" < "5.5"
 BuildRequires: php-password-compat                  >= %{password_compat_min_ver}
 BuildRequires: php-password-compat                  <  %{password_compat_max_ver}
@@ -119,7 +117,7 @@ BuildRequires: php-password-compat                  <  %{password_compat_max_ver
 ## TODO: "egulias/email-validator"
 ## TODO: "propel/propel1"
 ## TODO: "ocramius/proxy-manager"
-# For tests: phpcompatinfo (computed from version 2.5.2)
+# For tests: phpcompatinfo (computed from version 2.5.6)
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-dom
@@ -170,6 +168,7 @@ Requires:      php-composer(%{composer_vendor}/debug)                = %{version
 Requires:      php-composer(%{composer_vendor}/dependency-injection) = %{version}
 Requires:      php-composer(%{composer_vendor}/dom-crawler)          = %{version}
 Requires:      php-composer(%{composer_vendor}/event-dispatcher)     = %{version}
+Requires:      php-composer(%{composer_vendor}/expression-language)  = %{version}
 Requires:      php-composer(%{composer_vendor}/filesystem)           = %{version}
 Requires:      php-composer(%{composer_vendor}/finder)               = %{version}
 Requires:      php-composer(%{composer_vendor}/form)                 = %{version}
@@ -228,7 +227,7 @@ Requires: php-composer(doctrine/dbal)                >= %{doctrine_dbal_min_ver}
 Requires: php-composer(doctrine/dbal)                <  %{doctrine_dbal_max_ver}
 Requires: php-composer(doctrine/orm)                 >= %{doctrine_orm_min_ver}
 Requires: php-composer(doctrine/orm)                 <  %{doctrine_orm_max_ver}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires: php-date
 Requires: php-hash
 Requires: php-json
@@ -267,7 +266,7 @@ Requires: php-composer(monolog/monolog) <  %{monolog_max_ver}
 Requires: php-composer(%{composer_vendor}/console)          = %{version}
 Requires: php-composer(%{composer_vendor}/event-dispatcher) = %{version}
 Requires: php-composer(%{composer_vendor}/http-kernel)      = %{version}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires: php-pcre
 
 # Composer
@@ -332,7 +331,7 @@ Group:    Development/Libraries
 Requires: php-swift-Swift >= %{swift_min_ver}
 # composer.json: optional
 Requires: php-composer(%{composer_vendor}/http-kernel) = %{version}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 # <none>
 
 # Composer
@@ -359,20 +358,20 @@ Summary:  Symfony Twig Bridge
 Group:    Development/Libraries
 
 # composer.json
-Requires: php-composer(%{composer_vendor}/security-csrf)       = %{version}
-Requires: php-twig-Twig >= %{twig_min_ver}
-Requires: php-twig-Twig <  %{twig_max_ver}
+Requires: php-composer(%{composer_vendor}/security-csrf)       =  %{version}
+Requires: php-composer(twig/twig)                              >= %{twig_min_ver}
+Requires: php-composer(twig/twig)                              <  %{twig_max_ver}
 # composer.json: optional
-Requires: php-composer(%{composer_vendor}/expression-language) = %{version}
-Requires: php-composer(%{composer_vendor}/form)                = %{version}
-Requires: php-composer(%{composer_vendor}/http-kernel)         = %{version}
-Requires: php-composer(%{composer_vendor}/routing)             = %{version}
-Requires: php-composer(%{composer_vendor}/security)            = %{version}
-Requires: php-composer(%{composer_vendor}/stopwatch)           = %{version}
-Requires: php-composer(%{composer_vendor}/templating)          = %{version}
-Requires: php-composer(%{composer_vendor}/translation)         = %{version}
-Requires: php-composer(%{composer_vendor}/yaml)                = %{version}
-# phpcompatinfo (computed from version 2.5.4)
+Requires: php-composer(%{composer_vendor}/expression-language) =  %{version}
+Requires: php-composer(%{composer_vendor}/form)                =  %{version}
+Requires: php-composer(%{composer_vendor}/http-kernel)         =  %{version}
+Requires: php-composer(%{composer_vendor}/routing)             =  %{version}
+Requires: php-composer(%{composer_vendor}/security)            =  %{version}
+Requires: php-composer(%{composer_vendor}/stopwatch)           =  %{version}
+Requires: php-composer(%{composer_vendor}/templating)          =  %{version}
+Requires: php-composer(%{composer_vendor}/translation)         =  %{version}
+Requires: php-composer(%{composer_vendor}/yaml)                =  %{version}
+# phpcompatinfo (computed from version 2.5.6)
 Requires: php-json
 Requires: php-pcre
 Requires: php-spl
@@ -418,7 +417,7 @@ Requires: php-composer(%{composer_vendor}/form)                 =  %{version}
 Requires: php-composer(%{composer_vendor}/validator)            =  %{version}
 Requires: php-composer(%{composer_vendor}/yaml)                 =  %{version}
 Requires: php-composer(doctrine/cache)
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires: php-dom
 Requires: php-fileinfo
 Requires: php-filter
@@ -455,7 +454,7 @@ Group:    Development/Libraries
 # composer.json
 Requires: php-composer(%{composer_vendor}/http-kernel) = %{version}
 Requires: php-composer(%{composer_vendor}/security)    = %{version}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires: php-pcre
 Requires: php-spl
 
@@ -479,7 +478,7 @@ Group:    Development/Libraries
 Requires: php-composer(%{composer_vendor}/http-foundation) = %{version}
 Requires: php-composer(%{composer_vendor}/http-kernel)     = %{version}
 Requires: php-composer(%{composer_vendor}/twig-bridge)     = %{version}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires: php-ctype
 Requires: php-json
 Requires: php-pcre
@@ -509,7 +508,7 @@ Group:    Development/Libraries
 Requires: php-composer(%{composer_vendor}/http-kernel) = %{version}
 Requires: php-composer(%{composer_vendor}/routing)     = %{version}
 Requires: php-composer(%{composer_vendor}/twig-bridge) = %{version}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires: php-pcre
 Requires: php-spl
 
@@ -536,7 +535,7 @@ Group:     Development/Libraries
 Requires:  php-composer(%{composer_vendor}/dom-crawler) = %{version}
 # composer.json: optional
 Requires:  php-composer(%{composer_vendor}/process)     = %{version}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-date
 Requires:  php-pcre
 Requires:  php-spl
@@ -566,7 +565,7 @@ URL:       http://symfony.com/doc/current/components/class_loader/index.html
 Group:     Development/Libraries
 
 Requires:  %{name}-common = %{version}-%{release}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-hash
 Requires:  php-pcre
 Requires:  php-reflection
@@ -616,7 +615,7 @@ Group:     Development/Libraries
 
 # composer.json
 Requires:  php-composer(%{composer_vendor}/filesystem) = %{version}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-ctype
 Requires:  php-dom
 Requires:  php-json
@@ -649,7 +648,7 @@ Group:     Development/Libraries
 Requires:  php-composer(%{composer_vendor}/event-dispatcher) = %{version}
 Requires:  php-composer(psr/log) >= %{psrlog_min_ver}
 Requires:  php-composer(psr/log) <  %{psrlog_max_ver}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-date
 Requires:  php-dom
 Requires:  php-json
@@ -686,7 +685,7 @@ URL:       http://symfony.com/doc/current/components/css_selector.html
 Group:     Development/Libraries
 
 Requires:  %{name}-common = %{version}-%{release}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-pcre
 
 # Composer
@@ -713,7 +712,7 @@ Group:    Development/Libraries
 # composer.json: optional
 Requires: php-composer(%{composer_vendor}/http-foundation) = %{version}
 Requires: php-composer(%{composer_vendor}/http-kernel)     = %{version}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires: php-pcre
 Requires: php-reflection
 Requires: php-spl
@@ -744,7 +743,7 @@ Group:     Development/Libraries
 Requires:  php-composer(%{composer_vendor}/config) = %{version}
 #Requires:  php-composer(%%{composer_vendor}/proxy-manager-bridge) = %%{version}
 Requires:  php-composer(%{composer_vendor}/yaml)   = %{version}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-dom
 Requires:  php-hash
 Requires:  php-pcre
@@ -776,7 +775,7 @@ Group:     Development/Libraries
 
 # composer.json: optional
 Requires:  php-composer(%{composer_vendor}/css-selector) = %{version}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-dom
 Requires:  php-libxml
 Requires:  php-mbstring
@@ -807,7 +806,7 @@ Group:     Development/Libraries
 # composer.json: optional
 Requires:  php-composer(%{composer_vendor}/dependency-injection) = %{version}
 Requires:  php-composer(%{composer_vendor}/http-kernel)          = %{version}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-pcre
 Requires:  php-reflection
 Requires:  php-spl
@@ -838,7 +837,7 @@ URL:       http://symfony.com/doc/current/components/expression_language/index.h
 Group:     Development/Libraries
 
 Requires:  %{name}-common = %{version}-%{release}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-ctype
 Requires:  php-pcre
 Requires:  php-spl
@@ -865,7 +864,7 @@ URL:       http://symfony.com/doc/current/components/filesystem.html
 Group:     Development/Libraries
 
 Requires:  %{name}-common = %{version}-%{release}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-ctype
 Requires:  php-spl
 
@@ -889,7 +888,7 @@ URL:       http://symfony.com/doc/current/components/finder.html
 Group:     Development/Libraries
 
 Requires:  %{name}-common = %{version}-%{release}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-date
 Requires:  php-pcre
 Requires:  php-spl
@@ -923,7 +922,7 @@ Requires:  php-composer(%{composer_vendor}/framework-bundle) = %{version}
 Requires:  php-composer(%{composer_vendor}/security-csrf)    = %{version}
 Requires:  php-composer(%{composer_vendor}/twig-bridge)      = %{version}
 Requires:  php-composer(%{composer_vendor}/validator)        = %{version}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-ctype
 Requires:  php-date
 Requires:  php-hash
@@ -955,7 +954,7 @@ URL:       http://symfony.com/doc/current/components/http_foundation/index.html
 Group:     Development/Libraries
 
 Requires:  %{name}-common = %{version}-%{release}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-date
 Requires:  php-fileinfo
 Requires:  php-filter
@@ -1014,7 +1013,7 @@ Requires:  php-composer(%{composer_vendor}/config)               = %{version}
 Requires:  php-composer(%{composer_vendor}/console)              = %{version}
 Requires:  php-composer(%{composer_vendor}/dependency-injection) = %{version}
 Requires:  php-composer(%{composer_vendor}/finder)               = %{version}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-date
 Requires:  php-hash
 Requires:  php-json
@@ -1061,13 +1060,12 @@ URL:       http://symfony.com/doc/current/components/intl.html
 Group:     Development/Libraries
 
 Requires:  %{name}-common = %{version}-%{release}
-# composer.json
-Requires:  php-composer(%{composer_vendor}/icu) >= %{symfony_icu_min_ver}
-Requires:  php-composer(%{composer_vendor}/icu) <  %{symfony_icu_max_ver}
 # composer.json: optional
 Requires:  php-intl
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
+Requires:  php-ctype
 Requires:  php-date
+Requires:  php-json
 Requires:  php-pcre
 Requires:  php-reflection
 Requires:  php-simplexml
@@ -1097,7 +1095,7 @@ Group:     Development/Libraries
 
 # composer.json
 Requires:  php-composer(%{composer_vendor}/intl) = %{version}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-intl
 
 # Composer
@@ -1124,7 +1122,7 @@ URL:       http://symfony.com/doc/current/components/options_resolver.html
 Group:     Development/Libraries
 
 Requires:  %{name}-common = %{version}-%{release}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-reflection
 Requires:  php-spl
 
@@ -1151,7 +1149,7 @@ URL:       http://symfony.com/doc/current/components/process.html
 Group:     Development/Libraries
 
 Requires:  %{name}-common = %{version}-%{release}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-pcntl
 Requires:  php-pcre
 Requires:  php-spl
@@ -1176,7 +1174,7 @@ URL:       http://symfony.com/doc/current/components/property_access/introductio
 Group:     Development/Libraries
 
 Requires:  %{name}-common = %{version}-%{release}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-ctype
 Requires:  php-pcre
 Requires:  php-reflection
@@ -1210,7 +1208,7 @@ Requires:  php-composer(%{composer_vendor}/expression-language) =  %{version}
 Requires:  php-composer(%{composer_vendor}/yaml)                =  %{version}
 Requires:  php-composer(doctrine/annotations)                   >= %{doctrine_annotations_min_ver}
 Requires:  php-composer(doctrine/annotations)                   <  %{doctrine_annotations_max_ver}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-dom
 Requires:  php-pcre
 Requires:  php-reflection
@@ -1252,7 +1250,7 @@ Requires:  php-composer(doctrine/dbal) <  %{doctrine_dbal_max_ver}
 Requires:  php-password-compat >= %{password_compat_min_ver}
 Requires:  php-password-compat <  %{password_compat_max_ver}
 %endif
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-ctype
 Requires:  php-date
 Requires:  php-hash
@@ -1297,7 +1295,7 @@ URL:       http://symfony.com/doc/current/components/serializer.html
 Group:     Development/Libraries
 
 Requires:  %{name}-common = %{version}-%{release}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-ctype
 Requires:  php-dom
 Requires:  php-json
@@ -1327,7 +1325,7 @@ URL:      http://symfony.com/doc/current/components/stopwatch.html
 Group:    Development/Libraries
 
 Requires: %{name}-common = %{version}-%{release}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires: php-spl
 
 # Composer
@@ -1353,7 +1351,7 @@ Requires:  %{name}-common        =  %{version}-%{release}
 # composer.json: optional
 Requires:  php-composer(psr/log) >= %{psrlog_min_ver}
 Requires:  php-composer(psr/log) <  %{psrlog_max_ver}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-ctype
 Requires:  php-hash
 Requires:  php-iconv
@@ -1387,7 +1385,7 @@ Group:     Development/Libraries
 # composer.json: optional
 Requires:  php-composer(%{composer_vendor}/config) = %{version}
 Requires:  php-composer(%{composer_vendor}/yaml)   = %{version}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-dom
 Requires:  php-iconv
 Requires:  php-intl
@@ -1431,7 +1429,7 @@ Requires:  php-composer(doctrine/annotations) <  %{doctrine_annotations_max_ver}
 Requires:  php-composer(doctrine/cache)       >= %{doctrine_cache_min_ver}
 Requires:  php-composer(doctrine/cache)       <  %{doctrine_cache_max_ver}
 ## TODO: "egulias/email-validator"
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-ctype
 Requires:  php-date
 Requires:  php-filter
@@ -1467,7 +1465,7 @@ URL:       http://symfony.com/doc/current/components/yaml/index.html
 Group:     Development/Libraries
 
 Requires:  %{name}-common = %{version}-%{release}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.6)
 Requires:  php-ctype
 Requires:  php-date
 Requires:  php-json
@@ -1540,19 +1538,19 @@ if (version_compare(PHP_VERSION, '5.4.0', '<')) {
     require __DIR__.'/../src/Symfony/Component/HttpFoundation/Resources/stubs/SessionHandlerInterface.php';
 }
 
-if (file_exists('%{_datadir}/php/password_compat/password.php')) {
-    require '%{_datadir}/php/password_compat/password.php';
+if (file_exists('%{phpdir}/password_compat/password.php')) {
+    require '%{phpdir}/password_compat/password.php';
 }
 
 return $loader;
 AUTOLOADER
 
 # Hack PHPUnit Autoloader (use current symfony instead of system one)
-if [ -d /usr/share/php/PHPUnit ]; then
+if [ -d %{phpdir}/PHPUnit ]; then
   mkdir PHPUnit
   sed -e '/Symfony/s:\$vendorDir:"./src/":' \
-      -e 's:path = dirname(__FILE__):path = "/usr/share/php/PHPUnit":' \
-      /usr/share/php/PHPUnit/Autoload.php >PHPUnit/Autoload.php
+      -e 's:path = dirname(__FILE__):path = "%{phpdir}/PHPUnit":' \
+      %{phpdir}/PHPUnit/Autoload.php > PHPUnit/Autoload.php
 fi
 
 # Create PHPUnit config w/ colors turned off
@@ -1595,9 +1593,9 @@ rm src/Symfony/Component/DomCrawler/Tests/CrawlerTest.php
 RET=0
 for PKG in src/Symfony/*/*; do
     echo -e "\n>>>>>>>>>>>>>>>>>>>>>>> ${PKG}\n"
-    %{_bindir}/phpunit \
+    %{__phpunit} \
         --include-path ./src \
-        --exclude-group tty,benchmark \
+        --exclude-group tty,benchmark,intl-data \
         -d date.timezone="UTC" \
         $PKG || RET=1
 done
@@ -2204,6 +2202,14 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Sun Nov 02 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.5.6-2
+- Exclude "intl-data" test group instead of removing test files
+
+* Sun Nov 02 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.5.6-1
+- Updated to 2.5.6 (BZ #1157502)
+- "php-twig-Twig" dependency updated to "php-composer(twig/twig)"
+- Obsoleted php-symfony-icu (data now in intl component)
+
 * Mon Sep 29 2014 Remi Collet <remi@fedoraproject.org> - 2.5.5-1
 - update to 2.5.5
 - hack PHPUnit autoloader to not use old system symfony
