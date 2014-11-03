@@ -34,7 +34,7 @@ BuildRequires:  php(language) >= 5.3.2
 BuildRequires:  php-pear(PEAR)
 BuildRequires:  php-channel(%{pear_channel})
 %if %{with_tests}
-BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
+BuildRequires:  php-phpunit-PHPUnit
 BuildRequires:  redis > 2.6
 %endif
 
