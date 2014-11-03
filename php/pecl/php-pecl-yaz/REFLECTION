@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #163 yaz version 1.1.8 ] {
+Extension [ <persistent> extension #163 yaz version 1.1.9 ] {
 
   - INI {
     Entry [ yaz.max_links <ALL> ]
@@ -86,16 +86,6 @@ Extension [ <persistent> extension #163 yaz version 1.1.8 ] {
         Parameter #1 [ <required> $param1 ]
         Parameter #2 [ <required> &$param2 ]
       }
-    }
-    Function [ <internal:yaz> function yaz_cql_parse ] {
-
-      - Parameters [3] {
-        Parameter #0 [ <required> $param0 ]
-        Parameter #1 [ <required> $param1 ]
-        Parameter #2 [ <required> &$param2 ]
-      }
-    }
-    Function [ <internal:yaz> function yaz_cql_conf ] {
     }
     Function [ <internal:yaz> function yaz_database ] {
     }

@@ -18,10 +18,12 @@
 %else
 %global ini_name   40-%{pecl_name}.ini
 %endif
+# Test suite requires internet access
+%global with_tests %{?_with_tests:1}%{!?_with_tests:0}
 
 Summary:        Z39.50/SRU client
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.1.8
+Version:        1.1.9
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -32,6 +34,10 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  libyaz-devel >= 3.0.2
+%if 0%{?rhel} == 6
+# https://bugzilla.redhat.com/1159905
+BuildRequires:  tcp_wrappers-devel
+%endif
 
 
 Requires(post): %{__pecl}
@@ -82,6 +88,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %prep
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
+
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd NTS
 # Sanity check, really often broken
@@ -166,12 +175,30 @@ cd NTS
     --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+%if %{with_tests}
+: Upstream test suite  for NTS extension
+TEST_PHP_EXECUTABLE=%{__php} \
+TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{__php} -n run-tests.php --show-diff
+%endif
+
 %if %{with_zts}
 cd ../ZTS
 : Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
     --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
+
+%if %{with_tests}
+: Upstream test suite  for ZTS extension
+TEST_PHP_EXECUTABLE=%{_bindir}/zts-php \
+TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{_bindir}/zts-php -n run-tests.php --show-diff
+%endif
 %endif
 
 
@@ -195,5 +222,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 03 2014 Remi Collet <remi@fedoraproject.org> - 1.1.9-1
+- Update to 1.1.9 (stable)
+- allow to run upstream test when build --with tests
+
 * Fri Oct 31 2014 Remi Collet <remi@fedoraproject.org> - 1.1.8-1
 - initial package, version 1.1.8 (stable)
