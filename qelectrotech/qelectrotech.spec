@@ -1,6 +1,6 @@
-%global svnrel 3371
-%global rdate  20140128
-%global upver  0.4
+#global svnrel 3371
+%global rdate  20141102
+%global upver  0.4b
 
 Name:        qelectrotech
 
@@ -22,10 +22,10 @@ Summary(ru): Редактор электрических схем
 # So use %.2f with upstream acknowledgment
 # Remember to check rdate and upver macro on each update
 Version:     0.40
-%if %{?svnrel}
+%if 0%{?svnrel}
 Release:     0.1.svn%{svnrel}%{?dist}
 %else
-Release:     1%{?dist}
+Release:     0.2.beta%{?dist}
 %endif
 
 Group:       Applications/Engineering
@@ -229,6 +229,9 @@ fi
 
 
 %changelog
+* Mon Nov  3 2014 Remi Collet <remi@fedoraproject.org> - 0.40-0.2.beta
+- Update to 0.4b
+
 * Sun Oct 12 2014 Remi Collet <remi@fedoraproject.org> - 0.40-0.1.svn3371
 - Update to 0.4 snapshot revision 3371
 
