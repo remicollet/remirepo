@@ -17,7 +17,7 @@
 %endif
 
 Name:           php-nrk-Predis
-Version:        0.8.6
+Version:        1.0.0
 Release:        1%{?dist}
 Summary:        PHP client library for Redis
 
@@ -25,6 +25,8 @@ Group:          Development/Libraries
 License:        MIT
 URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+
+Patch0:         %{pear_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -60,7 +62,12 @@ Flexible and feature-complete PHP client library for Redis.
 %setup -q -c
 
 cd %{pear_name}-%{version}
-cp ../package.xml %{name}.xml
+%patch0 -p1 -b .upstream
+
+sed -e '/StringPreciseSetExpireTest.php/s/md5sum=.*name=/name=/' \
+    -e '/StringSetExpireTest.php/s/md5sum=.*name=/name=/' \
+    ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -89,7 +96,7 @@ pidfile=$PWD/run/redis/redis.pid
 mkdir -p {run,log,lib}/redis
 sed -e "s:/var:$PWD:" \
     /etc/redis.conf >redis.conf
-%{_sbindir}/redis-server \
+%{_bindir}/redis-server \
     ./redis.conf \
     --daemonize yes \
     --pidfile $pidfile
@@ -135,6 +142,10 @@ fi
 
 
 %changelog
+* Mon Nov 03 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- Update to 1.0.0
+- upstream patch for tests
+
 * Wed Jul 16 2014 Remi Collet <remi@fedoraproject.org> - 0.8.6-1
 - Update to 0.8.6
 - provides php-composer(predis/predis)
