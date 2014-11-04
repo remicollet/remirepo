@@ -38,7 +38,7 @@
 
 Name:      php-%{composer_vendor}-%{composer_project}
 Version:   %{github_version}
-Release:   1%{?dist}
+Release:   2%{?dist}
 Summary:   Doctrine Object-Relational-Mapper (ORM)
 
 Group:     Development/Libraries
@@ -170,7 +170,7 @@ sed 's#$this->_em->clear();#if (isset($this->_em)) { $this->_em->clear(); }#' \
     -i tests/Doctrine/Tests/OrmFunctionalTestCase.php
 %endif
 
-%{__phpunit} --include-path ./lib:./tests -d date.timezone="UTC"
+%{__phpunit} --include-path ./lib:./tests -d date.timezone="UTC" -d memory_limit="512M"
 %else
 : Tests skipped
 %endif
@@ -190,6 +190,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 03 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.4.6-2
+- Ensure 512M of memory (instead of default 128M) so mock x86_64
+  builds pass (BZ #1159650)
+
 * Tue Oct 14 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.4.6-1
 - Updated to 2.4.6 (BZ #1108129)
 - Manual git clone source instead of GitHub archive URL (to include tests)
