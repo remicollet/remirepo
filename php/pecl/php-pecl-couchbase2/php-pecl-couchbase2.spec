@@ -25,14 +25,12 @@
 
 Summary:       Couchbase Server PHP extension
 Name:          %{?scl_prefix}php-pecl-couchbase2
-Version:       2.0.0
+Version:       2.0.1
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           pecl.php.net/package/couchbase
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?svnrev:-dev}.tgz
-# http://www.couchbase.com/issues/browse/PCBC-292
-Source1:       https://github.com/couchbaselabs/php-couchbase/blob/master/LICENSE
 
 BuildRequires: %{?scl_prefix}php-devel >= 5.3.0
 BuildRequires: %{?scl_prefix}php-pear
@@ -99,8 +97,6 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-cp %{SOURCE1} .
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_COUCHBASE_VERSION/{s/.* "//;s/".*$//;p}' php_couchbase.h)
 if test "x${extver}" != "x%{version}"; then
@@ -157,7 +153,7 @@ install -D -m 644 package2.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # Test & Documentation
 cd NTS
-for i in LICENSE $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -203,6 +199,9 @@ fi
 
 
 %changelog
+* Wed Nov 05 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1
+
 * Sat Sep 20 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - rename to php-pecl-couchbase2 for new API
 - update to 2.0.0

@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #16 couchbase version 2.0.0 ] {
+Extension [ <persistent> extension #16 couchbase version 2.0.1 ] {
 
   - Constants [57] {
     Constant [ integer COUCHBASE_PERSISTTO_MASTER ] { 1 }
@@ -177,7 +177,7 @@ Extension [ <persistent> extension #16 couchbase version 2.0.0 ] {
       - Properties [0] {
       }
 
-      - Methods [15] {
+      - Methods [17] {
         Method [ <internal:couchbase, ctor> public method __construct ] {
         }
 
@@ -188,6 +188,12 @@ Extension [ <persistent> extension #16 couchbase version 2.0.0 ] {
         }
 
         Method [ <internal:couchbase> public method replace ] {
+        }
+
+        Method [ <internal:couchbase> public method append ] {
+        }
+
+        Method [ <internal:couchbase> public method prepend ] {
         }
 
         Method [ <internal:couchbase> public method remove ] {
