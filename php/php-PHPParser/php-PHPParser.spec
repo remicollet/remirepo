@@ -1,38 +1,41 @@
 %global github_owner    nikic
 %global github_name     PHP-Parser
-%global github_commit   b9a60372f26356feb85b4b9ca50a395a5f0d7f34
+%global github_version  1.0.2
+%global github_commit   a8ffc6fcfcbae268656c8acf1298e378ac1ee5f1
 
-%global oldlib_name     PHPParser
-%global newlib_name     PhpParser
+%global lib_name        PhpParser
+%global lib_name_old    PHPParser
 
 %global php_min_ver     5.3
 
-Name:          php-%{oldlib_name}
-Version:       1.0.1
+Name:          php-%{lib_name_old}
+Version:       %{github_version}
 Release:       1%{?dist}
 Summary:       A PHP parser written in PHP
 
 Group:         Development/Libraries
 License:       BSD
 URL:           https://github.com/%{github_owner}/%{github_name}
-Source0:       %{url}/archive/%{github_commit}/%{name}-%{version}-%{github_commit}.tar.gz
+Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: %{_bindir}/phpunit
-# For tests: phpcompatinfo
+# For tests: phpcompatinfo (computed from version 1.0.2)
 BuildRequires: php-ctype
 BuildRequires: php-filter
 BuildRequires: php-pcre
 BuildRequires: php-spl
 BuildRequires: php-tokenizer
+BuildRequires: php-xmlreader
+BuildRequires: php-xmlwriter
 
-# From composer.json
+# composer.json
 Requires:      php(language) >= %{php_min_ver}
 Requires:      php-tokenizer
-# phpcompatinfo requires (for 1.0.0)
+# phpcompatinfo (computed from version 1.0.2)
 Requires:      php-filter
 Requires:      php-pcre
 Requires:      php-spl
@@ -57,12 +60,13 @@ A PHP parser written in PHP to simplify static analysis and code manipulation.
 
 
 %install
-mkdir -p -m 755 %{buildroot}%{_datadir}/php/%{oldlib_name}
-cp -rp lib/%{newlib_name} %{buildroot}%{_datadir}/php/
+mkdir -p -m 755 %{buildroot}%{_datadir}/php
+cp -rp lib/%{lib_name} %{buildroot}%{_datadir}/php/
 
-# For compat with old version (wihtout namespace
-ln -s ../%{newlib_name}/Autoloader.php \
-   %{buildroot}%{_datadir}/php/%{oldlib_name}/Autoloader.php
+# Compat with old version (< 1.0.0)
+mkdir -p -m 755 %{buildroot}%{_datadir}/php/%{lib_name_old}
+ln -s ../%{lib_name}/Autoloader.php \
+    %{buildroot}%{_datadir}/php/%{lib_name_old}/Autoloader.php
 
 
 %check
@@ -74,11 +78,14 @@ ln -s ../%{newlib_name}/Autoloader.php \
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md doc grammar composer.json
-%{_datadir}/php/%{oldlib_name}
-%{_datadir}/php/%{newlib_name}
+%{_datadir}/php/%{lib_name_old}
+%{_datadir}/php/%{lib_name}
 
 
 %changelog
+* Wed Nov  5 2014 Remi Collet <remi@fedoraproject.org> 1.0.2-1
+- Update to 1.0.2
+
 * Thu Oct 16 2014 Remi Collet <remi@fedoraproject.org> 1.0.1-1
 - Update to 1.0.1
 
