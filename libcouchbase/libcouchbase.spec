@@ -12,7 +12,7 @@
 %endif
 
 Name:          libcouchbase
-Version:       2.4.1
+Version:       2.4.3
 Release:       1%{?dist}
 Summary:       Couchbase client library
 Group:         System Environment/Libraries
@@ -143,6 +143,9 @@ make check
 
 
 %changelog
+* Wed Nov  5 2014 Remi Collet <remi@feoraproject.org> - 2.4.3-1
+- update to 2.4.3
+
 * Sat Sep 20 2014 Remi Collet <remi@feoraproject.org> - 2.4.1-1
 - update to 2.4.1
 
