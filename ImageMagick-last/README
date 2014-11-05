@@ -18,7 +18,7 @@ ImageMagick: (in F16)
 	libMagickCore.so.4
 	libMagickWand.so.4
 
-ImageMagick: (in F17-F19)
+ImageMagick: (in F17-F19, EL7)
 	libMagickCore.so.5
 	libMagickWand.so.5
 

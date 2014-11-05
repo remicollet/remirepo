@@ -1,5 +1,5 @@
 %global VER        6.8.9
-%global Patchlevel 7
+%global Patchlevel 10
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -29,7 +29,7 @@
 
 Name:           ImageMagick-last
 Version:        %{VER}.%{Patchlevel}
-Release:        4%{?dist}
+Release:        1%{?dist}
 Summary:        An X application for displaying and manipulating images
 Group:          Applications/Multimedia
 License:        ImageMagick
@@ -385,6 +385,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov  5 2014 Remi Collet <RPMS@FamilleCollet.com> - 6.8.9.10-1
+- update to 6.8.9-10
+
 * Fri Sep 19 2014 Remi Collet <RPMS@FamilleCollet.com> - 6.8.9.7-4
 - don't use libgs with old ghostscript
 
