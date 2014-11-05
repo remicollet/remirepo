@@ -13,17 +13,14 @@
 %global with_sysjs   0
 
 Name:           php-horde-Horde-Core
-Version:        2.15.0
-Release:        2%{?dist}
+Version:        2.16.0
+Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
 Group:          Development/Libraries
 License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-
-# Upstream patch
-Patch0:         %{pear_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -187,8 +184,6 @@ Framework.
 %setup -q -c
 cd %{pear_name}-%{version}
 
-%patch0 -p3 -b .upstream
-
 # Don't install .po and .pot files
 # Don't install prototype, scriptaculous, use system one
 # Remove checksum for .mo, as we regenerate them
@@ -197,7 +192,6 @@ sed -e '/%{pear_name}\.po/d' \
     -e '/js\/prototype.js/d' \
     -e '/js\/scriptaculous/d' \
 %endif
-    -e '/View.php/s/md5sum=.*name=/name=/' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 touch -r ../package.xml %{name}.xml
@@ -287,6 +281,9 @@ fi
 
 
 %changelog
+* Wed Nov 05 2014 Remi Collet <remi@fedoraproject.org> - 2.16.0-1
+- Update to 2.16.0
+
 * Thu Oct 30 2014 Remi Collet <remi@fedoraproject.org> - 2.15.0-2
 - add upstream patch to avoid error on front page from
   an unconfigured block
