@@ -30,6 +30,7 @@ URL:       https://github.com/%{github_owner}/%{github_name}
 Source0:   %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
 BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # phpcompatinfo (computed from version 0.4.0)
 Requires:  php(language) >= 5.3.0
@@ -59,6 +60,7 @@ chmod a-x README.md composer.json LICENSE
 
 
 %install
+rm -rf %{buildroot}
 mkdir -pm 0755 %{buildroot}%{phpdir}/Psr/Http/Message
 cp -rp src/* %{buildroot}%{phpdir}/Psr/Http/Message/
 
@@ -67,7 +69,12 @@ cp -rp src/* %{buildroot}%{phpdir}/Psr/Http/Message/
 # No tests provided by upstream
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc README.md composer.json
@@ -77,5 +84,8 @@ cp -rp src/* %{buildroot}%{phpdir}/Psr/Http/Message/
 
 
 %changelog
+* Thu Nov  6 2014 Remi Collet <remi@fedoraproject.org> - 0.4.0-1
+- backport for remi repository
+
 * Thu Oct 30 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.4.0-1
 - Initial package
