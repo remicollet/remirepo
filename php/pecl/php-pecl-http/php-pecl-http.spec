@@ -27,7 +27,7 @@
 %global with_tests %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           %{?scl_prefix}php-pecl-http
-Version:        2.1.3
+Version:        2.1.4
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
@@ -327,6 +327,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 06 2014 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
+- Update to 2.1.4
+
 * Thu Oct 16 2014 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
 - Update to 2.1.3, no change, only our patch merged
 
