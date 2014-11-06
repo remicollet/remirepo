@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Alarm
-Version:        2.2.2
+Version:        2.2.3
 Release:        1%{?dist}
 Summary:        Horde Alarm Libraries
 
@@ -30,6 +30,7 @@ BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Db) >= 2.2.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -42,10 +43,10 @@ Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 # Optional
-Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Db) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) <  3.0.0
@@ -139,6 +140,11 @@ fi
 
 
 %changelog
+* Thu Nov 06 2014 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
+- Update to 2.2.3
+- raise dependencies:
+  Horde_Translation >= 2.2.0 and Horde_Db >= 2.2.0
+
 * Sat Oct 25 2014 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
 - Update to 2.2.2 (locale update only)
 
