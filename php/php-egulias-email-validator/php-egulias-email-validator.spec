@@ -39,6 +39,7 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:     noarch
 %if %{with_tests}
 BuildRequires: php-phpunit-PHPUnit
@@ -81,6 +82,7 @@ sed -i 's/\r$//' README.md
 
 
 %install
+rm -rf %{buildroot}
 mkdir -pm 0755 %{buildroot}%{phpdir}
 cp -rp src/* %{buildroot}%{phpdir}/
 
@@ -98,16 +100,18 @@ spl_autoload_register(function ($class) {
 });
 AUTOLOAD
 
-# Create PHPUnit config with colors turned off
-sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
-
 %{__phpunit} --include-path %{buildroot}%{phpdir} -d date.timezone="UTC"
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc README.md composer.json
@@ -116,6 +120,9 @@ sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 
 %changelog
+* Thu Nov  6 2014 Remi Collet <remi@fedoraproject.org> - 1.2.4-1
+- backport for remi repository
+
 * Mon Nov 03 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.4-1
 - Updated to 1.2.4
 
