@@ -39,6 +39,7 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:     noarch
 %if %{with_tests}
 # composer.json
@@ -78,6 +79,7 @@ when combined with Reflection.
 
 
 %install
+rm -rf %{buildroot}
 mkdir -pm 0755 %{buildroot}%{phpdir}
 cp -rp src/* %{buildroot}%{phpdir}/
 
@@ -94,9 +96,6 @@ spl_autoload_register(function ($class) {
 });
 AUTOLOAD
 
-# Create PHPUnit config with colors turned off
-sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
-
 %{__phpunit} \
     --bootstrap autoload.php \
     --include-path %{buildroot}%{phpdir}:./tests \
@@ -106,7 +105,12 @@ sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md composer.json
@@ -114,6 +118,9 @@ sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 
 %changelog
+* Thu Nov  6 2014 Remi Collet <remi@fedoraproject.org> - 0.3.0-2
+- backport for remi repository
+
 * Wed Nov 05 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.3.0-2
 - Silenced include in autoloader
 - Removed debug from %%check
