@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-Horde-Core
-Version:        2.16.0
+Version:        2.16.1
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -130,7 +130,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Token) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Token) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Filter) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Filter) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.1.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) <  3.0.0
@@ -281,6 +281,10 @@ fi
 
 
 %changelog
+* Thu Nov 06 2014 Remi Collet <remi@fedoraproject.org> - 2.16.1-1
+- Update to 2.16.1
+- raise dependency on Horde_Translation >= 2.2.0
+
 * Wed Nov 05 2014 Remi Collet <remi@fedoraproject.org> - 2.16.0-1
 - Update to 2.16.0
 
