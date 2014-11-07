@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 
-%if 0%{?fedora} < 20 && 0%{?rhel} < 7
+%if 0%{?fedora} < 20
 # See https://bugzilla.redhat.com/1033025
 # selinux-policy : Please include policy for GLPI
 %global useselinux 1
@@ -28,7 +28,7 @@
 
 Name:           glpi
 Version:        0.84.8
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
@@ -245,8 +245,7 @@ rm -rf %{buildroot}
 semanage fcontext -a -s system_u -t httpd_sys_rw_content_t -r s0 "%{_sysconfdir}/%{name}(/.*)?"
 semanage fcontext -a -s system_u -t httpd_sys_content_t    -r s0 "%{_datadir}/%{name}(/.*)?"
 semanage fcontext -a -s system_u -t httpd_log_t            -r s0 "%{_localstatedir}/log/%{name}(/.*)?"
-# keep httpd_sys_rw_content_t (httpd_var_lib_t prevent dir creation)
-semanage fcontext -a -s system_u -t httpd_sys_rw_content_t -r s0 "%{_localstatedir}/lib/%{name}(/.*)?"
+semanage fcontext -a -s system_u -t httpd_var_lib_t        -r s0 "%{_localstatedir}/lib/%{name}(/.*)?"
 # files created by app
 restorecon -R %{_sysconfdir}/%{name}
 restorecon -R %{_datadir}/%{name}
@@ -309,6 +308,11 @@ fi
 
 
 %changelog
+* Fri Nov  7 2014 Remi Collet <remi@fedoraproject.org> - 0.84.8-2
+- use httpd_var_lib_t selinux context for /var/lib/glpi
+- don't rely on system selinux policy in EPEL-7
+- fix apache configuration when mod_php not enabled
+
 * Fri Oct 17 2014 Remi Collet <remi@fedoraproject.org> - 0.84.8-1
 - update to 0.84.8
   https://forge.indepnet.net/versions/1072
