@@ -28,6 +28,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
+BuildRequires:  php(language) > 5.3
 BuildRequires:  php-iconv
 BuildRequires:  php-intl
 BuildRequires:  php-spl
@@ -35,9 +36,11 @@ BuildRequires:  php-phpunit-PHPUnit
 %endif
 BuildRequires:  php-theseer-autoload
 
-# From phpcompatinfo
+# From documentation
+Requires:       php(language) > 5.3
 Requires:       php-iconv
 Requires:       php-intl
+# From phpcompatinfo
 Requires:       php-spl
 
 Provides:       php-composer(znerol/php-stringprep) = %{version}
