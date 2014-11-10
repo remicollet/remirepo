@@ -2,7 +2,7 @@
 %global pear_name Crypt_Twofish
 
 Name:           php-phpseclib-crypt-twofish
-Version:        0.3.8
+Version:        0.3.9
 Release:        1%{?dist}
 Summary:        Pure-PHP implementation of Twofish
 
@@ -76,6 +76,9 @@ fi
 
 
 %changelog
+* Mon Nov 10 2014 Remi Collet <remi@fedoraproject.org> - 0.3.9-1
+- Update to 0.3.9 (no change)
+
 * Sat Sep 13 2014 Remi Collet <remi@fedoraproject.org> - 0.3.8-1
 - Update to 0.3.8 (no change)
 
