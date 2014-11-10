@@ -11,8 +11,8 @@
 
 %global github_owner     egulias
 %global github_name      EmailValidator
-%global github_version   1.2.4
-%global github_commit    5c3a79217cbb98c975d7d23f12749e6f0be5cace
+%global github_version   1.2.5
+%global github_commit    518f80a0ff7c1a35780e7702f4262c8c6f2b807f
 
 %global composer_vendor  egulias
 %global composer_project email-validator
@@ -47,7 +47,7 @@ BuildRequires: php-phpunit-PHPUnit
 BuildRequires: php(language)                >= %{php_min_ver}
 BuildRequires: php-composer(doctrine/lexer) >= %{doctrine_lexer_min_ver}
 BuildRequires: php-composer(doctrine/lexer) <  %{doctrine_lexer_max_ver}
-# phpcompatinfo (computed from version 1.2.4)
+# phpcompatinfo (computed from version 1.2.5)
 BuildRequires: php-filter
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -58,7 +58,7 @@ BuildRequires: php-spl
 Requires:      php(language)                >= %{php_min_ver}
 Requires:      php-composer(doctrine/lexer) >= %{doctrine_lexer_min_ver}
 Requires:      php-composer(doctrine/lexer) <  %{doctrine_lexer_max_ver}
-# phpcompatinfo (computed from version 1.2.4)
+# phpcompatinfo (computed from version 1.2.5)
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
@@ -120,6 +120,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov 09 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.5-1
+- Updated to 1.2.5
+
 * Thu Nov  6 2014 Remi Collet <remi@fedoraproject.org> - 1.2.4-1
 - backport for remi repository
 
