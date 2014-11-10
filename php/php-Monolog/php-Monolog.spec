@@ -11,8 +11,8 @@
 
 %global github_owner    Seldaek
 %global github_name     monolog
-%global github_version  1.10.0
-%global github_commit   25b16e801979098cb2f120e697bfce454b18bf23
+%global github_version  1.11.0
+%global github_commit   ec3961874c43840e96da3a8a1ed20d8c73d7e5aa
 
 %global lib_name        Monolog
 
@@ -34,6 +34,9 @@
 # Build using "--without tests" to disable tests
 %global with_tests      %{?_without_tests:0}%{!?_without_tests:1}
 
+%{!?phpdir:     %global phpdir     %{_datadir}/php}
+%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
+
 Name:      php-%{lib_name}
 Version:   %{github_version}
 Release:   1%{?dist}
@@ -47,12 +50,12 @@ Source0:   %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_co
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 %if %{with_tests}
-# For tests: composer.json
+# composer.json
 BuildRequires: php(language)         >= %{php_min_ver}
 BuildRequires: php-composer(psr/log) >= %{psrlog_min_ver}
 BuildRequires: php-composer(psr/log) <  %{psrlog_max_ver}
 BuildRequires: php-phpunit-PHPUnit   >= %{phpunit_min_ver}
-# For tests: phpcompatinfo (computed from version 1.10.0)
+# phpcompatinfo (computed from version 1.11.0)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -72,7 +75,7 @@ Requires:      php-swift-Swift
 Requires:      php(language)         >= %{php_min_ver}
 Requires:      php-composer(psr/log) >= %{psrlog_min_ver}
 Requires:      php-composer(psr/log) <  %{psrlog_max_ver}
-# phpcompatinfo (computed from version 1.10.0)
+# phpcompatinfo (computed from version 1.11.0)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-filter
@@ -85,7 +88,9 @@ Requires:      php-sockets
 Requires:      php-spl
 Requires:      php-xml
 
+# Composer
 Provides:      php-composer(monolog/monolog) = %{version}
+Provides:      php-composer(psr/log-implementation) = 1.0.0
 
 # Removed sub-packages
 Obsoletes:     %{name}-amqp   < %{version}-%{release}
@@ -114,7 +119,7 @@ at a later time.
 
 Optional:
 * php-aws-sdk (>= %{aws_min_ver}, < %{aws_max_ver})
-      Allow sending log messages to AWS DynamoDB
+      Allow sending log messages to AWS services like DynamoDB
 * php-pecl-amqp
       Allow sending log messages to an AMQP server (1.0+ required)
 * php-pecl-mongo
@@ -131,6 +136,8 @@ Optional:
       Allow sending log messages to Rollbar
 * https://github.com/ruflin/Elastica
       Allow sending log messages to an Elastic Search server
+* https://github.com/videlalvaro/php-amqplib
+      Allow sending log messages to an AMQP server using php-amqplib
 
 [1] https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md
 
@@ -144,8 +151,8 @@ Optional:
 
 
 %install
-mkdir -pm 0755 %{buildroot}%{_datadir}/php
-cp -pr ./src/* %{buildroot}%{_datadir}/php/
+mkdir -pm 0755 %{buildroot}%{phpdir}
+cp -pr ./src/* %{buildroot}%{phpdir}/
 
 
 %check
@@ -165,20 +172,26 @@ rm -f tests/Monolog/Handler/MongoDBHandlerTest.php
 # Remove GitProcessorTest because it requires a git repo
 rm -f tests/Monolog/Processor/GitProcessorTest.php
 
-# Create PHPUnit config w/ colors turned off
-sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
-
-%{_bindir}/phpunit --include-path="./src:./tests" -d date.timezone="UTC"
+%{__phpunit} \
+    --include-path="%{buildroot}%{phpdir}:./tests" \
+    -d date.timezone="UTC"
 %endif
 
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE *.mdown doc composer.json
-%{_datadir}/php/%{lib_name}
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *.mdown doc composer.json
+%{phpdir}/%{lib_name}
 
 
 %changelog
+* Sun Nov  9 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.11.0-1
+- Updated to 1.11.0 (BZ #1148336)
+- Added php-composer(psr/log-implementation) virtual provide
+- %%license usage
+
 * Sun Jun  8 2014 Remi Collet <RPMS@famillecollet.com> 1.10.0-1
 - backport 1.10.0 for remi repo
 
