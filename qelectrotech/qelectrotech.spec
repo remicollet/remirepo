@@ -1,6 +1,6 @@
 #global svnrel 3371
-%global rdate  20141102
-%global upver  0.4b
+%global rdate  20141110
+%global upver  0.4rc1
 
 Name:        qelectrotech
 
@@ -25,7 +25,7 @@ Version:     0.40
 %if 0%{?svnrel}
 Release:     0.1.svn%{svnrel}%{?dist}
 %else
-Release:     0.2.beta%{?dist}
+Release:     0.3.rc1%{?dist}
 %endif
 
 Group:       Applications/Engineering
@@ -229,6 +229,9 @@ fi
 
 
 %changelog
+* Mon Nov 10 2014 Remi Collet <remi@fedoraproject.org> - 0.40-0.3.rc1
+- Update to 0.4b
+
 * Mon Nov  3 2014 Remi Collet <remi@fedoraproject.org> - 0.40-0.2.beta
 - Update to 0.4b
 
