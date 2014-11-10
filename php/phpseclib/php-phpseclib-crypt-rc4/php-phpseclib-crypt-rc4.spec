@@ -2,7 +2,7 @@
 %global pear_name Crypt_RC4
 
 Name:           php-phpseclib-crypt-rc4
-Version:        0.3.8
+Version:        0.3.9
 Release:        1%{?dist}
 Summary:        Pure-PHP implementation of RC4
 
@@ -75,6 +75,9 @@ fi
 
 
 %changelog
+* Mon Nov 10 2014 Remi Collet <remi@fedoraproject.org> - 0.3.9-1
+- Update to 0.3.9 (no change)
+
 * Sat Sep 13 2014 Remi Collet <remi@fedoraproject.org> - 0.3.8-1
 - Update to 0.3.8 (no change)
 
