@@ -11,8 +11,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.25.2
-Release:        2%{?dist}
+Version:        2.25.3
+Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
 Group:          Development/Libraries
@@ -56,7 +56,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.4.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.1.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
@@ -159,6 +159,10 @@ fi
 
 
 %changelog
+* Tue Nov 11 2014 Remi Collet <remi@fedoraproject.org> - 2.25.3-1
+- Update to 2.25.3
+- raise dependency on Horde_Translation >= 2.2.0
+
 * Sun Nov  9 2014 Remi Collet <remi@fedoraproject.org> - 2.25.2-2
 - add optional dependency on Horde_Stringprep
 
