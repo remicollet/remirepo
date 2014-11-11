@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    23e4e0310f037aae873cc81b8658dbbb82878f71
+%global gh_commit    2dab9d593997db4abcf58d0daf798eb4e9cecfe1
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,7 +17,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.3.4
+Version:        4.3.5
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -178,8 +178,7 @@ sed -e 's:PHPUnit/Autoload:src/Autoload:' \
 
 ./phpunit  \
   --include-path=%{buildroot}%{php_home} \
-  --testsuite=small \
-  -d date.timezone=UTC
+  --testsuite=small
 
 
 %clean
@@ -204,6 +203,10 @@ fi
 
 
 %changelog
+* Tue Nov 11 2014 Remi Collet <remi@fedoraproject.org> - 4.3.5-1
+- Update to 4.3.5
+- define date.timezone in phpunit command to avoid warning
+
 * Sat Oct 25 2014 Remi Collet <remi@fedoraproject.org> - 4.3.4-1
 - Update to 4.3.4
 - raise dependency on phpunit/php-file-iterator >= 1.3.2

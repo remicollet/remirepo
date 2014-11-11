@@ -7,7 +7,7 @@ diff -up ./phpunit.rpm ./phpunit
  <?php
  /* PHPUnit
   *
-@@ -35,22 +35,7 @@
+@@ -35,22 +35,10 @@
   * POSSIBILITY OF SUCH DAMAGE.
   */
 
@@ -16,7 +16,9 @@ diff -up ./phpunit.rpm ./phpunit
 -        define('PHPUNIT_COMPOSER_INSTALL', $file);
 -        break;
 -    }
--}
++if (!ini_get('date.timezone')) {
++     ini_set('date.timezone', 'UTC');
+ }
 -
 -unset($file);
 -
