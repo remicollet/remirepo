@@ -1,0 +1,24 @@
+From 70fb142b56fe010f1a2b52cf2a7a79059e17043c Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Wed, 12 Nov 2014 14:26:54 +0100
+Subject: [PATCH] define date.timezone to avoid warning (in buildystem)
+
+---
+ phpab.php | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/phpab.php b/phpab.php
+index 393e304..791e227 100755
+--- a/phpab.php
++++ b/phpab.php
+@@ -44,6 +44,10 @@
+ 
+ define('PHPAB_VERSION', '%development%');
+ 
++if (!ini_get('date.timezone')) {
++     ini_set('date.timezone', 'UTC');
++}
++
+ require 'TheSeer/DirectoryScanner/autoload.php';
+ require 'ezc/Base/base.php';
+ 

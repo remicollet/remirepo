@@ -12,13 +12,16 @@
 
 Name:           php-theseer-autoload
 Version:        1.16.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A tool and library to generate autoload code
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/theseer/Autoload
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+
+# https://github.com/theseer/Autoload/pull/52
+Patch0:         %{pear_name}-timezone.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -59,7 +62,11 @@ the option of creating static require lists as well as phar archives.
 %setup -q -c
 
 cd %{pear_name}-%{version}
-mv ../package.xml %{name}.xml
+%patch0 -p1 -b .tz
+# Drop checksum for patched file
+sed -e '/phpab.php/s/md5sum="[^"]*"//' \
+    ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -89,10 +96,7 @@ require 'TheSeer/DirectoryScanner/autoload.php';
 require 'TheSeer/Autoload/autoload.php';
 EOF
 
-phpunit \
-  --include-path=%{buildroot}%{pear_phpdir} \
-  -d date.timezone=UTC
-
+phpunit --include-path=%{buildroot}%{pear_phpdir}
 
 
 %clean
@@ -121,6 +125,9 @@ fi
 
 
 %changelog
+* Wed Nov 12 2014 Remi Collet <remi@fedoraproject.org> - 1.16.0-2
+- define date.timezone in phpab command to avoid warning
+
 * Tue Sep 02 2014 Remi Collet <remi@fedoraproject.org> - 1.16.0-1
 - Update to 1.16.0
 
