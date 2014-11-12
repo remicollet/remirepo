@@ -142,9 +142,9 @@ for the creation, execution and analysis of Unit Tests.
 %patch0 -p0 -b .rpm
 %patch1 -p1
 
-# https://github.com/sebastianbergmann/phpunit/pull/1481
+# https://github.com/sebastianbergmann/phpunit/pull/1500
 chmod -x src/Util/Blacklist.php \
-         src/Framework/TestCase.php
+         src/Util/GlobalState.php
 
 
 %build
