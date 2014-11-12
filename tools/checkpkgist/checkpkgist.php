@@ -32,6 +32,10 @@
 
 require_once 'Cache/Lite.php';
 
+if (!ini_get('date.timezone')) {
+     ini_set('date.timezone', 'Europe/Paris');
+}
+
 define ('VERSION', '1.0.0-dev');
 
 class PkgClient {
