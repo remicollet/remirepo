@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #171 mongo version 1.5.8 ] {
+Extension [ <persistent> extension #171 mongo version 1.6.0RC1 ] {
 
   - Dependencies {
     Dependency [ openssl (Optional) ]
@@ -34,12 +34,13 @@ Extension [ <persistent> extension #171 mongo version 1.5.8 ] {
     }
   }
 
-  - Constants [26] {
+  - Constants [27] {
     Constant [ integer MONGO_STREAMS ] { 1 }
     Constant [ integer MONGO_SUPPORTS_STREAMS ] { 1 }
     Constant [ integer MONGO_SUPPORTS_SSL ] { 1 }
     Constant [ integer MONGO_SUPPORTS_AUTH_MECHANISM_MONGODB_CR ] { 1 }
     Constant [ integer MONGO_SUPPORTS_AUTH_MECHANISM_MONGODB_X509 ] { 1 }
+    Constant [ integer MONGO_SUPPORTS_AUTH_MECHANISM_SCRAM_SHA1 ] { 1 }
     Constant [ integer MONGO_SUPPORTS_AUTH_MECHANISM_GSSAPI ] { 1 }
     Constant [ integer MONGO_SUPPORTS_AUTH_MECHANISM_PLAIN ] { 1 }
     Constant [ integer MONGO_STREAM_NOTIFY_TYPE_IO_INIT ] { 100 }
@@ -76,7 +77,7 @@ Extension [ <persistent> extension #171 mongo version 1.5.8 ] {
       - Constants [8] {
         Constant [ string DEFAULT_HOST ] { localhost }
         Constant [ integer DEFAULT_PORT ] { 27017 }
-        Constant [ string VERSION ] { 1.5.8 }
+        Constant [ string VERSION ] { 1.6.0RC1 }
         Constant [ string RP_PRIMARY ] { primary }
         Constant [ string RP_PRIMARY_PREFERRED ] { primaryPreferred }
         Constant [ string RP_SECONDARY ] { secondary }
@@ -212,7 +213,7 @@ Extension [ <persistent> extension #171 mongo version 1.5.8 ] {
       - Constants [8] {
         Constant [ string DEFAULT_HOST ] { localhost }
         Constant [ integer DEFAULT_PORT ] { 27017 }
-        Constant [ string VERSION ] { 1.5.8 }
+        Constant [ string VERSION ] { 1.6.0RC1 }
         Constant [ string RP_PRIMARY ] { primary }
         Constant [ string RP_PRIMARY_PREFERRED ] { primaryPreferred }
         Constant [ string RP_SECONDARY ] { secondary }
@@ -827,7 +828,7 @@ Extension [ <persistent> extension #171 mongo version 1.5.8 ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $query_AS_array_of_fields_OR_object ]
-            Parameter #1 [ <optional> $limit ]
+            Parameter #1 [ <optional> $options_OR_limit ]
             Parameter #2 [ <optional> $skip ]
           }
         }
@@ -1118,7 +1119,7 @@ Extension [ <persistent> extension #171 mongo version 1.5.8 ] {
         Method [ <internal:mongo> public method timeout ] {
         }
 
-        Method [ <internal, deprecated:mongo> protected method doQuery ] {
+        Method [ <internal, deprecated:mongo> final protected method doQuery ] {
 
           - Parameters [0] {
           }
@@ -1482,7 +1483,7 @@ Extension [ <persistent> extension #171 mongo version 1.5.8 ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $query_AS_array_of_fields_OR_object ]
-            Parameter #1 [ <optional> $limit ]
+            Parameter #1 [ <optional> $options_OR_limit ]
             Parameter #2 [ <optional> $skip ]
           }
         }
@@ -1753,7 +1754,7 @@ Extension [ <persistent> extension #171 mongo version 1.5.8 ] {
         Method [ <internal:mongo, inherits MongoCursor> public method timeout ] {
         }
 
-        Method [ <internal, deprecated:mongo, inherits MongoCursor> protected method doQuery ] {
+        Method [ <internal, deprecated:mongo, inherits MongoCursor> final protected method doQuery ] {
 
           - Parameters [0] {
           }
@@ -2130,7 +2131,9 @@ Extension [ <persistent> extension #171 mongo version 1.5.8 ] {
       - Static properties [0] {
       }
 
-      - Static methods [0] {
+      - Static methods [1] {
+        Method [ <internal:mongo> static public method __set_state ] {
+        }
       }
 
       - Properties [2] {
@@ -2138,11 +2141,14 @@ Extension [ <persistent> extension #171 mongo version 1.5.8 ] {
         Property [ <default> public $usec ]
       }
 
-      - Methods [2] {
+      - Methods [3] {
         Method [ <internal:mongo, ctor> public method __construct ] {
         }
 
         Method [ <internal:mongo> public method __toString ] {
+        }
+
+        Method [ <internal:mongo> public method toDateTime ] {
         }
       }
     }
