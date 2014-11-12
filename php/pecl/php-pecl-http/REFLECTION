@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #169 http version 2.1.4 ] {
+Extension [ <persistent> extension #169 http version 2.2.0RC1 ] {
 
   - Dependencies {
     Dependency [ raphf (Required) ]
@@ -44,7 +44,7 @@ Extension [ <persistent> extension #169 http version 2.1.4 ] {
     Constant [ integer http\Client\Curl\POSTREDIR_ALL ] { 7 }
   }
 
-  - Classes [27] {
+  - Classes [28] {
     Interface [ <internal:http> interface http\Exception ] {
 
       - Constants [0] {
@@ -1385,6 +1385,61 @@ Extension [ <persistent> extension #169 http version 2.1.4 ] {
       }
     }
 
+    Class [ <internal:http> class http\Message\Parser ] {
+
+      - Constants [14] {
+        Constant [ integer CLEANUP ] { 1 }
+        Constant [ integer DUMB_BODIES ] { 2 }
+        Constant [ integer EMPTY_REDIRECTS ] { 4 }
+        Constant [ integer GREEDY ] { 8 }
+        Constant [ integer STATE_FAILURE ] { -1 }
+        Constant [ integer STATE_START ] { 0 }
+        Constant [ integer STATE_HEADER ] { 1 }
+        Constant [ integer STATE_HEADER_DONE ] { 2 }
+        Constant [ integer STATE_BODY ] { 3 }
+        Constant [ integer STATE_BODY_DUMB ] { 4 }
+        Constant [ integer STATE_BODY_LENGTH ] { 5 }
+        Constant [ integer STATE_BODY_CHUNKED ] { 6 }
+        Constant [ integer STATE_BODY_DONE ] { 7 }
+        Constant [ integer STATE_DONE ] { 8 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [3] {
+        Method [ <internal:http> public method getState ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:http> public method parse ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $data ]
+            Parameter #1 [ <required> $flags ]
+            Parameter #2 [ <required> &$message ]
+          }
+        }
+
+        Method [ <internal:http> public method stream ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $stream ]
+            Parameter #1 [ <required> $flags ]
+            Parameter #2 [ <required> &$message ]
+          }
+        }
+      }
+    }
+
     Class [ <internal:http> class http\Message\Body implements Serializable ] {
 
       - Constants [0] {
@@ -2602,7 +2657,7 @@ Extension [ <persistent> extension #169 http version 2.1.4 ] {
 
     Class [ <internal:http> class http\Url ] {
 
-      - Constants [13] {
+      - Constants [17] {
         Constant [ integer REPLACE ] { 0 }
         Constant [ integer JOIN_PATH ] { 1 }
         Constant [ integer JOIN_QUERY ] { 2 }
@@ -2616,6 +2671,10 @@ Extension [ <persistent> extension #169 http version 2.1.4 ] {
         Constant [ integer STRIP_ALL ] { 492 }
         Constant [ integer FROM_ENV ] { 4096 }
         Constant [ integer SANITIZE_PATH ] { 8192 }
+        Constant [ integer PARSE_MBLOC ] { 65536 }
+        Constant [ integer PARSE_MBUTF8 ] { 131072 }
+        Constant [ integer PARSE_TOIDN ] { 1048576 }
+        Constant [ integer PARSE_TOPCT ] { 2097152 }
       }
 
       - Static properties [0] {
@@ -2803,7 +2862,7 @@ Extension [ <persistent> extension #169 http version 2.1.4 ] {
       - Static methods [0] {
       }
 
-      - Properties [12] {
+      - Properties [13] {
         Property [ <default> protected $type ]
         Property [ <default> protected $body ]
         Property [ <default> protected $requestMethod ]
@@ -2815,10 +2874,11 @@ Extension [ <persistent> extension #169 http version 2.1.4 ] {
         Property [ <default> protected $parentMessage ]
         Property [ <default> protected $query ]
         Property [ <default> protected $form ]
+        Property [ <default> protected $cookie ]
         Property [ <default> protected $files ]
       }
 
-      - Methods [45] {
+      - Methods [46] {
         Method [ <internal:http, overwrites http\Message, ctor> public method __construct ] {
 
           - Parameters [0] {
@@ -2836,6 +2896,16 @@ Extension [ <persistent> extension #169 http version 2.1.4 ] {
         }
 
         Method [ <internal:http> public method getQuery ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <optional> $name ]
+            Parameter #1 [ <optional> $type ]
+            Parameter #2 [ <optional> $defval ]
+            Parameter #3 [ <optional> $delete ]
+          }
+        }
+
+        Method [ <internal:http> public method getCookie ] {
 
           - Parameters [4] {
             Parameter #0 [ <optional> $name ]
@@ -3144,7 +3214,7 @@ Extension [ <persistent> extension #169 http version 2.1.4 ] {
       - Static methods [0] {
       }
 
-      - Properties [18] {
+      - Properties [19] {
         Property [ <default> protected $type ]
         Property [ <default> protected $body ]
         Property [ <default> protected $requestMethod ]
@@ -3155,6 +3225,7 @@ Extension [ <persistent> extension #169 http version 2.1.4 ] {
         Property [ <default> protected $headers ]
         Property [ <default> protected $parentMessage ]
         Property [ <default> protected $request ]
+        Property [ <default> protected $cookies ]
         Property [ <default> protected $contentType ]
         Property [ <default> protected $contentDisposition ]
         Property [ <default> protected $contentEncoding ]
@@ -3165,7 +3236,7 @@ Extension [ <persistent> extension #169 http version 2.1.4 ] {
         Property [ <default> protected $throttleChunk ]
       }
 
-      - Methods [54] {
+      - Methods [55] {
         Method [ <internal:http, overwrites http\Message, ctor> public method __construct ] {
 
           - Parameters [0] {
@@ -3184,6 +3255,13 @@ Extension [ <persistent> extension #169 http version 2.1.4 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> http\Message or NULL $env_request ]
+          }
+        }
+
+        Method [ <internal:http> public method setCookie ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $cookie ]
           }
         }
 
