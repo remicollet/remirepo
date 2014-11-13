@@ -6,13 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    f537b51e9ca93213a458a1f2ac8d3cc9a4cb0054
+%global gh_commit    b29ff9ce621c07b1d511a0a37b1a34a3be7ed95e
 #global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     llaville
 %global gh_project   php-compat-info
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        3.5.0
+Version:        3.6.0
 %global specrel 1
 Release:        %{?gh_short:0.%{specrel}.git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
@@ -30,7 +30,7 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.0
 # to run test suite
 BuildRequires:  %{_bindir}/phpunit
-BuildRequires:  php-composer(bartlett/php-reflect) >= 2.5
+BuildRequires:  php-composer(bartlett/php-reflect) >= 2.6
 
 # From composer.json, "require"
 #        "php": ">=5.3.0",
@@ -40,22 +40,15 @@ BuildRequires:  php-composer(bartlett/php-reflect) >= 2.5
 #        "ext-json": "*",
 #        "symfony/console": "~2.5",
 #        "bartlett/php-reflect": "~2.5",
-# From phpreflect (implicit dep.)
-#        "sebastian/version": "~1.0",
-#        "seld/jsonlint": "~1.1"
 Requires:       php(language) >= 5.3.0
 Requires:       php-json
 Requires:       php-libxml
 Requires:       php-pcre
 Requires:       php-spl
-Requires:       php-composer(bartlett/php-reflect) >= 2.5
+Requires:       php-composer(bartlett/php-reflect) >= 2.6
 Requires:       php-composer(bartlett/php-reflect) <  3
 Requires:       php-composer(symfony/console)      >= 2.5
 Requires:       php-composer(symfony/console)      <  3
-Requires:       php-composer(seld/jsonlint)        >= 1.1
-Requires:       php-composer(seld/jsonlint)        <  2
-Requires:       php-composer(sebastian/version)    >= 1.0
-Requires:       php-composer(sebastian/version)    <  2
 # From composer.json, "suggest"
 #        "doctrine/cache": "Allow caching results, since bartlett/php-reflect 2.2"
 Requires:       php-composer(doctrine/cache)
@@ -65,6 +58,9 @@ Requires:       php-composer(nikic/php-parser)
 Requires:       php-composer(symfony/class-loader)
 Requires:       php-composer(symfony/event-dispatcher)
 Requires:       php-composer(symfony/finder)
+Requires:       php-composer(seld/jsonlint)
+Requires:       php-composer(sebastian/version)
+Requires:       php-composer(justinrainbow/json-schema)
 
 Provides:       phpcompatinfo = %{version}
 Provides:       php-composer(bartlett/php-compatinfo) = %{version}
@@ -80,7 +76,8 @@ Documentation: http://php5.laurent-laville.org/compatinfo/manual/current/en/
 
 
 %prep
-%setup -q -n %{gh_project}-%{gh_commit}
+#setup -q -n %{gh_project}-%{gh_commit}
+%setup -q -n %{gh_project}-%{version}
 
 %patch0 -p1 -b .rpm
 
@@ -103,15 +100,7 @@ install -D -p -m 644 bin/phpcompatinfo.1         %{buildroot}%{_mandir}/man1/php
 
 
 %check
-# Not ready (local build with php 5.6 and xcache 4.0-dev)
-rm tests/Reference/Extension/XcacheExtensionTest.php
-
-# fix timeout for koji
-sed -s 's/colors="false"/timeoutForSmallTests="10" colors="true"/' \
-     phpunit.xml.dist >phpunit.xml
-
 %{_bindir}/phpunit \
-    -d date.timezone=UTC \
     -d memory_limit=-1 \
 %if 0%{?rhel} < 6 && 0%{?fedora} < 8
     || exit 0
@@ -138,6 +127,11 @@ fi
 
 
 %changelog
+* Thu Nov 13 2014 Remi Collet <remi@fedoraproject.org> - 3.6.0-1
+- Update to 3.6.0
+- add dependency on justinrainbow/json-schema
+- raise dependency on bartlett/php-reflect 2.6
+
 * Thu Oct 16 2014 Remi Collet <remi@fedoraproject.org> - 3.5.0-1
 - Update to 3.5.0
 - add dependency on sebastian/version

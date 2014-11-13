@@ -22,19 +22,20 @@ diff -up ./bin/phpcompatinfo.json.dist.rpm ./bin/phpcompatinfo.json.dist
      ],
      "analysers" : [
 diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
---- ./bin/phpcompatinfo.rpm	2014-08-21 21:09:22.000000000 +0200
-+++ ./bin/phpcompatinfo	2014-08-22 08:28:20.750827392 +0200
+--- ./bin/phpcompatinfo.rpm	2014-11-13 15:57:07.000000000 +0100
++++ ./bin/phpcompatinfo	2014-11-13 17:57:48.174914678 +0100
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
  <?php
  ini_set('memory_limit', -1);
- 
-@@ -23,7 +23,27 @@ if (\Phar::running()) {
+
+@@ -27,8 +27,28 @@ if (\Phar::running()) {
          }
      }
  }
--require_once $vendorDir . '/autoload.php';
+-$loader = require_once $vendorDir . '/autoload.php';
+-$loader->setUseIncludePath(true);
 +$vendorDir = '/usr/share/php';
 +require_once $vendorDir . '/PhpParser/Autoloader.php';
 +PhpParser\Autoloader::register();
@@ -53,10 +54,11 @@ diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
 +    'Symfony\\Component\\Console'         => $vendorDir,
 +    'Symfony\\Component\\ClassLoader'     => $vendorDir,
 +    'Seld\\JsonLint'                      => $vendorDir,
++    'JsonSchema'                          => $vendorDir,
 +    'Bartlett'                            => $vendorDir,
 +));
 +$loader->register();
- 
+
  if (PHP_SAPI !== 'cli') {
      return;
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
