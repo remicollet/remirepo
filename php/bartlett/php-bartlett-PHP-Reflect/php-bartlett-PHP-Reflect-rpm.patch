@@ -42,7 +42,7 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
  
      if (!getenv("REFLECT")) {
          $home  = defined('PHP_WINDOWS_VERSION_BUILD') ? 'USERPROFILE' : 'HOME';
-@@ -26,8 +22,28 @@ if (\Phar::running()) {
+@@ -26,8 +22,29 @@ if (\Phar::running()) {
          }
      }
  }
@@ -66,6 +66,7 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
 +    'Symfony\\Component\\ClassLoader'     => $vendorDir,
 +    'Doctrine\\Common\\Cache'             => $vendorDir,
 +    'Seld\\JsonLint'                      => $vendorDir,
++    'JsonSchema'                          => $vendorDir,
 +    'Bartlett'                            => $vendorDir,
 +));
 +$loader->useIncludePath(true);
@@ -98,3 +99,15 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 +));
 +$loader->useIncludePath(true);
 +$loader->register();
+diff -up ./tests/EnvironmentTest.php.prev ./tests/EnvironmentTest.php
+--- ./tests/EnvironmentTest.php.prev	2014-11-13 17:38:59.895447844 +0100
++++ ./tests/EnvironmentTest.php	2014-11-13 17:39:02.138456731 +0100
+@@ -168,6 +168,8 @@ class EnvironmentTest extends \PHPUnit_F
+             ),
+         );
+ 
++        unset($var['plugins'][1]); // Cache added by our patch
++
+         $this->assertEquals(
+             $config,
+             $var,
