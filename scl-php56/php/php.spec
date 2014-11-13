@@ -124,11 +124,12 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver RC1
+#global rcver RC1
+
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.6.3
-Release: 0.1.RC1%{?dist}
+Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1719,6 +1720,10 @@ fi
 
 
 %changelog
+* Thu Nov 13 2014 Remi Collet <remi@fedoraproject.org> 5.6.3-1
+- Update to PHP 5.6.3
+  http://php.net/releases/5_6_3.php
+
 * Sun Nov  2 2014 Remi Collet <remi@fedoraproject.org> 5.6.3-0.1.RC1
 - update to 5.6.3RC1
 - new version of systzdata patch, fix case sensitivity

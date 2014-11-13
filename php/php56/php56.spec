@@ -127,7 +127,7 @@
 %endif
 
 #global snapdate      201405061030
-%global rcver         RC1
+#global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -197,6 +197,7 @@ Patch47: php-5.6.3-phpinfo.patch
 Patch91: php-5.6.3-oci8conf.patch
 
 # Upstream fixes (100+)
+Patch100: php-gmp41.patch
 
 # Security fixes (200+)
 
@@ -954,6 +955,7 @@ rm -rf ext/json
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
+%patch100 -p1 -b .gmp41
 
 # security patches
 
@@ -1943,6 +1945,11 @@ fi
 
 
 %changelog
+* Thu Nov 13 2014 Remi Collet <remi@fedoraproject.org> 5.6.3-1
+- Update to PHP 5.6.3
+  http://php.net/releases/5_6_3.php
+- add upstream patch for EL-5 and gmp 4.1
+
 * Thu Oct 30 2014 Remi Collet <rcollet@redhat.com> 5.6.3-0.4.RC1
 - php 5.6.3RC1 (refreshed, phpdbg changes reverted)
 
