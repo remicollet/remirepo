@@ -120,7 +120,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver         RC1
+#global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -1943,7 +1943,11 @@ fi
 
 
 %changelog
-* Sun Nov 2 2014 Remi Collet <remi@fedoraproject.org> 5.5.19-0.1.RC1
+* Thu Nov 13 2014 Remi Collet <remi@fedoraproject.org> 5.5.19-1
+- Update to 5.5.19
+  http://www.php.net/releases/5_5_19.php
+
+* Sun Nov  2 2014 Remi Collet <remi@fedoraproject.org> 5.5.19-0.1.RC1
 - update to 5.5.19RC1
 - new version of systzdata patch, fix case sensitivity
 - disable opcache.fast_shutdown in default config
