@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #85 event version 1.10.3 ] {
+Extension [ <persistent> extension #180 event version 1.11.0 ] {
 
   - Dependencies {
     Dependency [ sockets (Required) ]
@@ -164,7 +164,7 @@ Extension [ <persistent> extension #85 event version 1.10.3 ] {
       - Properties [0] {
       }
 
-      - Methods [12] {
+      - Methods [13] {
         Method [ <internal:event, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -237,6 +237,12 @@ Extension [ <persistent> extension #85 event version 1.10.3 ] {
         }
 
         Method [ <internal:event> public method reInit ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:event> public method free ] {
 
           - Parameters [0] {
           }
@@ -344,7 +350,7 @@ Extension [ <persistent> extension #85 event version 1.10.3 ] {
         Property [ <default> public $output ]
       }
 
-      - Methods [20] {
+      - Methods [25] {
         Method [ <internal:event, ctor> public method __construct ] {
 
           - Parameters [6] {
@@ -358,6 +364,12 @@ Extension [ <persistent> extension #85 event version 1.10.3 ] {
         }
 
         Method [ <internal:event> public method free ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:event> public method close ] {
 
           - Parameters [0] {
           }
@@ -487,6 +499,30 @@ Extension [ <persistent> extension #85 event version 1.10.3 ] {
         }
 
         Method [ <internal:event> public method sslRenegotiate ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:event> public method sslGetCipherInfo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:event> public method sslGetCipherName ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:event> public method sslGetCipherVersion ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:event> public method sslGetProtocol ] {
 
           - Parameters [0] {
           }
@@ -1314,7 +1350,7 @@ Extension [ <persistent> extension #85 event version 1.10.3 ] {
 
     Class [ <internal:event> final class EventSslContext ] {
 
-      - Constants [17] {
+      - Constants [27] {
         Constant [ integer SSLv2_CLIENT_METHOD ] { 1 }
         Constant [ integer SSLv3_CLIENT_METHOD ] { 2 }
         Constant [ integer SSLv23_CLIENT_METHOD ] { 3 }
@@ -1323,6 +1359,10 @@ Extension [ <persistent> extension #85 event version 1.10.3 ] {
         Constant [ integer SSLv3_SERVER_METHOD ] { 6 }
         Constant [ integer SSLv23_SERVER_METHOD ] { 7 }
         Constant [ integer TLS_SERVER_METHOD ] { 8 }
+        Constant [ integer TLSv11_CLIENT_METHOD ] { 9 }
+        Constant [ integer TLSv11_SERVER_METHOD ] { 10 }
+        Constant [ integer TLSv12_CLIENT_METHOD ] { 11 }
+        Constant [ integer TLSv12_SERVER_METHOD ] { 12 }
         Constant [ integer OPT_LOCAL_CERT ] { 1 }
         Constant [ integer OPT_LOCAL_PK ] { 2 }
         Constant [ integer OPT_PASSPHRASE ] { 3 }
@@ -1332,6 +1372,12 @@ Extension [ <persistent> extension #85 event version 1.10.3 ] {
         Constant [ integer OPT_VERIFY_PEER ] { 7 }
         Constant [ integer OPT_VERIFY_DEPTH ] { 8 }
         Constant [ integer OPT_CIPHERS ] { 9 }
+        Constant [ integer OPT_NO_SSLv2 ] { 10 }
+        Constant [ integer OPT_NO_SSLv3 ] { 11 }
+        Constant [ integer OPT_NO_TLSv1 ] { 12 }
+        Constant [ integer OPT_NO_TLSv1_1 ] { 13 }
+        Constant [ integer OPT_NO_TLSv1_2 ] { 14 }
+        Constant [ integer OPT_CIPHER_SERVER_PREFERENCE ] { 15 }
       }
 
       - Static properties [0] {
