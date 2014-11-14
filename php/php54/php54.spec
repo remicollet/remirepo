@@ -81,8 +81,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.34
-Release: 2%{?dist}
+Version: 5.4.35
+Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -134,8 +134,6 @@ Patch47: php-5.4.9-phpinfo.patch
 # Upstream fixes
 # Backported from 5.5.18 for https://bugs.php.net/65641
 Patch100: php-5.4.33-bug65641.patch
-# Backported from 5.5.19 for https://bugs.php.net/63595
-Patch101: php-5.4.34-bug63595.patch
 
 # Security fixes
 
@@ -831,7 +829,6 @@ rm -f ext/json/utf8_to_utf16.*
 
 # upstream patches
 %patch100 -p1 -b .bug65641
-%patch101 -p1 -b .bug63595
 
 # security patches
 
@@ -1697,6 +1694,10 @@ fi
 
 
 %changelog
+* Fri Nov 14 2014 Remi Collet <remi@fedoraproject.org> 5.4.35-1
+- Update to 5.4.35
+  http://www.php.net/releases/5_4_35.php
+
 * Sun Nov  2 2014 Remi Collet <remi@fedoraproject.org> 5.4.34-2
 - new version of systzdata patch, fix case sensitivity
 - gmp: fix memory management conflict with other libraries
