@@ -25,15 +25,12 @@
 
 Summary:       Provides interface to libevent library
 Name:          %{?scl_prefix}php-pecl-%{pecl_name}
-Version:       1.11.0
+Version:       1.11.1
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/event
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://bitbucket.org/osmanov/pecl-event/pull-request/10
-Patch0:        %{pecl_name}-openssl.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel > 5.4
@@ -110,7 +107,6 @@ sed -e 's/role="test"/role="src"/' -i package.xml
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-%patch0 -p1 -b .openssl
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_EVENT_VERSION/{s/.* "//;s/".*$//;p}' php_event.h)
@@ -251,6 +247,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 14 2014 Remi Collet <remi@fedoraproject.org> - 1.11.1-1
+- Update to 1.11.1 (stable)
+- no change, only our patch merged upstream
+
 * Thu Nov 13 2014 Remi Collet <remi@fedoraproject.org> - 1.11.0-1
 - Update to 1.11.0 (stable)
 - don't provide test suite
