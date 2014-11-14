@@ -21,8 +21,8 @@
 
 Summary:        Dump the internal representation of PHP scripts
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.12.0
-Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        0.13.0
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -39,6 +39,7 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
@@ -71,6 +72,8 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %description
 The Vulcan Logic Disassembler hooks into the Zend Engine and
 dumps all the opcodes (execution units) of a script.
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
 
 
 %prep
@@ -138,7 +141,7 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
+# Documentation
 cd NTS
 for i in LICENSE  $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
@@ -187,6 +190,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 14 2014 Remi Collet <remi@fedoraproject.org> - 0.13.0-1
+- Update to 0.13.0 (beta)
+
 * Tue Aug 26 2014 Remi Collet <rcollet@redhat.com> - 0.12.0-6
 - improve SCL build
 
