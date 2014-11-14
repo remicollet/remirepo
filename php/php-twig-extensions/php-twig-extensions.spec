@@ -40,6 +40,7 @@ License:       MIT
 URL:           http://twig.sensiolabs.org/doc/extensions/index.html
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 %if %{with_tests}
 BuildRequires: php-phpunit-PHPUnit
@@ -84,6 +85,7 @@ Common additional features for Twig that do not directly belong in core Twig.
 
 
 %install
+rm -rf %{buildroot}
 mkdir -pm 0755 %{buildroot}%{phpdir}
 cp -rp lib/* %{buildroot}%{phpdir}/
 
@@ -106,7 +108,12 @@ AUTOLOAD
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc README.rst composer.json doc
@@ -114,6 +121,9 @@ AUTOLOAD
 
 
 %changelog
+* Fri Nov 14 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-2
+- backport for remi repo, add EL-5 stuff
+
 * Thu Nov 13 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.0-2
 - Conditional %%{?dist}
 - Removed color turn off and default timezone for phpunit
