@@ -1,17 +1,35 @@
-%global php_min_ver 5.3.3
+#
+# RPM spec file for php-EasyRdf
+#
+# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+#
+
+%global composer_vendor  easyrdf
+%global composer_project easyrdf
+
+# ">=5.2.8"
+%global php_min_ver 5.2.8
 
 %if 0%{?fedora} > 9 || 0%{?rhel} > 5
-%global with_test 1
+# Build using "--without tests" to disable tests
+%global with_tests %{?_without_tests:0}%{!?_without_tests:1}
 %else
 # need raptor 1.4.17
-%global with_test 0
+%global with_tests 0
 %endif
+
+%{!?phpdir:     %global phpdir     %{_datadir}/php}
+%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
 
 # TODO see for php-redland not yet available in remirepo
 
 Name:          php-EasyRdf
 Version:       0.8.0
-Release:       1%{?dist}
+Release:       3%{?dist}
 Summary:       A PHP library designed to make it easy to consume and produce RDF
 
 Group:         Development/Libraries
@@ -21,14 +39,14 @@ Source0:       %{url}/downloads/easyrdf-%{version}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
-# For tests
-BuildRequires: php(language) >= %{php_min_ver}
-%if %{with_test}
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
+%if %{with_tests}
 BuildRequires: graphviz
 # provided by raptor or raptor2
 BuildRequires: %{_bindir}/rapper
-# For tests: phpcompatinfo (computed from 0.8.0)
+# compose.json
+BuildRequires: php(language) >= %{php_min_ver}
+BuildRequires: php-phpunit-PHPUnit
+# phpcompatinfo (computed from version 0.8.0)
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-dom
@@ -44,7 +62,7 @@ BuildRequires: php-xml
 %endif
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo requires (computed from 0.8.0)
+# phpcompatinfo requires (computed from version 0.8.0)
 Requires:      php-ctype
 Requires:      php-date
 Requires:      php-dom
@@ -56,6 +74,8 @@ Requires:      php-pcre
 Requires:      php-simplexml
 Requires:      php-spl
 Requires:      php-xml
+
+Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 Obsoletes:     %{name}-test
 
@@ -90,7 +110,7 @@ Group:   Documentation
 
 
 %prep
-%setup -q -n easyrdf-%{version}
+%setup -qn easyrdf-%{version}
 
 
 %build
@@ -98,12 +118,12 @@ Group:   Documentation
 
 
 %install
-mkdir -p -m 755 %{buildroot}%{_datadir}/php
-cp -rp lib/* %{buildroot}%{_datadir}/php/
+mkdir -p -m 0755 %{buildroot}%{phpdir}
+cp -rp lib/* %{buildroot}%{phpdir}/
 
 
 %check
-%if %{with_test}
+%if %{with_tests}
 : Temporarily skipping tests that sometimes cause timeout exceptions
 sed -e 's/testSerialiseSvg/SKIP_testSerialiseSvg/' \
     -e 's/testSerialiseGif/SKIP_testSerialiseGif/' \
@@ -113,18 +133,7 @@ sed -e 's/testSerialiseSvg/SKIP_testSerialiseSvg/' \
 # Create PHPUnit config
 cat > phpunit.xml <<'PHPUNIT'
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit
-    backupGlobals="false"
-    backupStaticAttributes="false"
-    colors="false"
-    convertErrorsToExceptions="true"
-    convertNoticesToExceptions="true"
-    convertWarningsToExceptions="true"
-    processIsolation="false"
-    stopOnFailure="false"
-    strict="true"
-    syntaxCheck="false"
-    verbose="false">
+<phpunit>
     <testsuites>
       <testsuite name="EasyRdf Library">
         <directory suffix="Test.php">./test/EasyRdf/</directory>
@@ -133,17 +142,19 @@ cat > phpunit.xml <<'PHPUNIT'
 </phpunit>
 PHPUNIT
 
-phpunit -d date.timezone="UTC"
+%{__phpunit}
 %else
-: test suite disabled
+: Tests skipped
 %endif
 
 
 %files
 %defattr(-,root,root,-)
-%doc *.md composer.json
-%{_datadir}/php/EasyRdf.php
-%{_datadir}/php/EasyRdf
+%{!?_licensedir:%global license %%doc}
+%license LICENSE.md
+%doc README.md CHANGELOG.md composer.json doap.rdf
+%{phpdir}/EasyRdf.php
+%{phpdir}/EasyRdf
 
 %files doc
 %defattr(-,root,root,-)
@@ -151,6 +162,12 @@ phpunit -d date.timezone="UTC"
 
 
 %changelog
+* Thu Nov 13 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.8.0-3
+- Added php-composer(easyrdf/easyrdf) virtual provide
+- Added option to build without tests ("--without tests")
+- Reduce PHP min version from 5.3.3 to 5.2.8 (per composer.json)
+- %%license usage
+
 * Fri Jan  3 2014 Remi Collet <remi@fedoraproject.org> - 0.8.0-1
 - backport 0.8.0 for remi repo.
 
