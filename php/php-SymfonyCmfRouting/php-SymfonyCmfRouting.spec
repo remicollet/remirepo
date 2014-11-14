@@ -9,10 +9,13 @@
 # Please preserve changelog entries
 #
 
-%global github_owner    symfony-cmf
-%global github_name     Routing
-%global github_version  1.2.0
-%global github_commit   c67258b875eef3cb08009bf1428499d0f01ce5e7
+%global github_owner     symfony-cmf
+%global github_name      Routing
+%global github_version   1.3.0
+%global github_commit    8e87981d72c6930a27585dcd3119f3199f6cb2a6
+
+%global composer_vendor  symfony-cmf
+%global composer_project routing
 
 # "php": ">=5.3.3"
 %global php_min_ver     5.3.3
@@ -57,7 +60,7 @@ BuildRequires: php-symfony-httpkernel          >= %{symfony_min_ver}
 BuildRequires: php-symfony-httpkernel          <  %{symfony_max_ver}
 BuildRequires: php-symfony-routing             >= %{symfony_min_ver}
 BuildRequires: php-symfony-routing             <  %{symfony_max_ver}
-# phpcompatinfo (computed from version 1.2.0)
+# phpcompatinfo (computed from version 1.3.0)
 BuildRequires: php-pcre
 BuildRequires: php-spl
 %endif
@@ -78,7 +81,7 @@ Requires:      php-pcre
 Requires:      php-spl
 
 # Composer
-Provides:      php-composer(symfony-cmf/routing) = %{version}
+Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 %description
 The Symfony CMF Routing component extends the Symfony2 core routing component.
@@ -112,12 +115,12 @@ cat > vendor/autoload.php <<'AUTOLOAD'
 <?php
 
 spl_autoload_register(function ($class) {
-    $src = str_replace(array('\\', '_'), '/', $class).'.php';
+    $src = str_replace('\\', '/', $class).'.php';
     @include_once $src;
 });
 AUTOLOAD
 
-%{__phpunit} --include-path %{buildroot}%{phpdir} -d date.timezone="UTC"
+%{__phpunit} --include-path %{buildroot}%{phpdir}
 %else
 : Tests skipped
 %endif
@@ -139,6 +142,9 @@ AUTOLOAD
 
 
 %changelog
+* Thu Nov 13 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.0-1
+- Updated to 1.3.0 (BZ #1096125)
+
 * Mon Oct 20 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.0-1
 - Updated to 1.2.0 (BZ #1096125)
 - Enabled tests by default
