@@ -135,7 +135,7 @@ Version: 5.6.3
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.4.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -198,6 +198,7 @@ Patch91: php-5.6.3-oci8conf.patch
 
 # Upstream fixes (100+)
 Patch100: php-gmp41.patch
+Patch101: php-bug68423.patch
 
 # Security fixes (200+)
 
@@ -956,6 +957,7 @@ rm -rf ext/json
 
 # upstream patches
 %patch100 -p1 -b .gmp41
+%patch101 -p1 -b .bug68423
 
 # security patches
 
@@ -1945,6 +1947,9 @@ fi
 
 
 %changelog
+* Fri Nov 14 2014 Remi Collet <remi@fedoraproject.org> 5.6.3-2
+- add upstream patch for https://bugs.php.net/68423
+
 * Thu Nov 13 2014 Remi Collet <remi@fedoraproject.org> 5.6.3-1
 - Update to PHP 5.6.3
   http://php.net/releases/5_6_3.php
