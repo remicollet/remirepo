@@ -9,7 +9,7 @@
 %{?scl:          %scl_package             php-phalcon}
 %{!?scl:         %global pkg_name         %{name}}
 %{!?__php:       %global __php            %{_bindir}/php}
-%global gh_commit    9ce2bb076d6134794b3224e214a578d3a7ee0bf4
+%global gh_commit    33e85f551c253ddff58e594e2bace5c2e55f12ef
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phalcon
 %global gh_project   cphalcon
@@ -25,7 +25,7 @@
 %endif
 
 Name:           %{?scl_prefix}php-phalcon
-Version:        1.3.3
+Version:        1.3.4
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Phalcon Framework
 
@@ -234,6 +234,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Nov 15 2014 Remi Collet <remi@fedoraproject.org> - 1.3.4-1
+- update to 1.3.4
+
 * Mon Sep 29 2014 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
 - update to 1.3.3
 - drop all patches merged upstream
