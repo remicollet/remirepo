@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #166 xdebug version 2.2.5 ] {
+Extension [ <persistent> extension #185 xdebug version 2.2.6 ] {
 
   - INI {
     Entry [ xdebug.auto_trace <ALL> ]
