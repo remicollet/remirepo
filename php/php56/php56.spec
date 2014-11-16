@@ -135,7 +135,7 @@ Version: 5.6.3
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.4.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 3%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -197,8 +197,10 @@ Patch47: php-5.6.3-phpinfo.patch
 Patch91: php-5.6.3-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch100: php-gmp41.patch
+Patch100: php-bug68419.patch
 Patch101: php-bug68423.patch
+Patch102: php-bug68421.patch
+Patch103: php-bug68420.patch
 
 # Security fixes (200+)
 
@@ -956,8 +958,10 @@ rm -rf ext/json
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch100 -p1 -b .gmp41
+%patch100 -p1 -b .bug68419
 %patch101 -p1 -b .bug68423
+%patch102 -p1 -b .bug68421
+%patch103 -p1 -b .bug68420
 
 # security patches
 
@@ -1947,13 +1951,19 @@ fi
 
 
 %changelog
-* Fri Nov 14 2014 Remi Collet <remi@fedoraproject.org> 5.6.3-2
-- add upstream patch for https://bugs.php.net/68423
+* Sun Nov 16 2014 Remi Collet <remi@fedoraproject.org> 5.6.3-3
+- FPM: add upstream patch for https://bugs.php.net/68421
+  access.format=R doesn't log ipv6 address
+- FPM: add upstream patch for https://bugs.php.net/68420
+  listen=9000 listens to ipv6 localhost instead of all addresses
+- FPM: add upstream patch for https://bugs.php.net/68423
+  will no longer load all pools
 
 * Thu Nov 13 2014 Remi Collet <remi@fedoraproject.org> 5.6.3-1
 - Update to PHP 5.6.3
   http://php.net/releases/5_6_3.php
-- add upstream patch for EL-5 and gmp 4.1
+- GMP: add upstream patch for https://bugs.php.net/68419
+  Fix build with libgmp < 4.2
 
 * Thu Oct 30 2014 Remi Collet <rcollet@redhat.com> 5.6.3-0.4.RC1
 - php 5.6.3RC1 (refreshed, phpdbg changes reverted)
