@@ -10,7 +10,7 @@
 #global svnrelease   322
 
 Name:           glpi-webservices
-Version:        1.4.2
+Version:        1.4.3
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -28,7 +28,7 @@ URL:            https://forge.indepnet.net/projects/webservices
 # tar czf glpi-webservices-1.3.0-322.tar.gz webservices
 Source0:        glpi-%{pluginname}-%{version}-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/1725/glpi_webservices-1.4.2.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1907/glpi-webservices-1.4.3.tar.gz
 %endif
 
 
@@ -104,6 +104,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 17 2014 Remi Collet <Fedora@FamilleCollet.com> - 1.4.3-1
+- version 1.4.3
+  https://forge.indepnet.net/versions/1040
+
 * Mon Apr  7 2014 Remi Collet <Fedora@FamilleCollet.com> - 1.4.2-1
 - version 1.4.2
   https://forge.indepnet.net/projects/webservices/versions/1031
