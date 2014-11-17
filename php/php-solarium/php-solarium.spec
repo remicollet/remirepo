@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    f602c2020d1b57e7a3aa0c75088222ce31438aba
+%global gh_commit    a9d8a52ba9fd8add04b2294fad997a004c1f2fab
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     basdenooijer
 %global gh_project   solarium
@@ -14,7 +14,7 @@
 
 Name:           php-%{gh_project}
 Summary:        Solarium PHP Solr client library
-Version:        3.2.0
+Version:        3.3.0
 Release:        1%{?dist}
 
 URL:            http://www.solarium-project.org/
@@ -94,8 +94,7 @@ cp -pr library/Solarium %{buildroot}%{_datadir}/php/Solarium
 %if %{with_tests}
 : Run upstream test suite against installed library
 phpunit \
-  --include-path=%{buildroot}%{_datadir}/php:./tests \
-  -d date.timezone=UTC
+  --include-path=%{buildroot}%{_datadir}/php:./tests
 %else
 : Skip upstream test suite
 %endif
@@ -108,6 +107,9 @@ phpunit \
 
 
 %changelog
+* Mon Nov 17 2014 Remi Collet <remi@fedoraproject.org> - 3.3.0-1
+- update to 3.3.0
+
 * Sun Apr  6 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-1
 - update to 3.2.0
 
