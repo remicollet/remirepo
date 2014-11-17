@@ -9,7 +9,7 @@
 %global pluginname   behaviors
 
 Name:           glpi-behaviors
-Version:        0.84.2
+Version:        0.84.3
 Release:        1%{?dist}
 Summary:        Plugin to add optional behaviors to GLPI
 Summary(fr):    Extension ajoutant des comportements optionnels à GLPI
@@ -18,7 +18,7 @@ Group:          Applications/Internet
 License:        AGPLv3+
 URL:            https://forge.indepnet.net/projects/behaviors
 
-Source0:        https://forge.indepnet.net/attachments/download/1843/glpi-behaviors-0.84.2.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1904/glpi-behaviors-0.84.3.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -84,6 +84,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 17 2014 Remi Collet <remi@fedoraproject.org> - 0.84.3-1
+- version 0.84.3
+  https://forge.indepnet.net/versions/1100
+
 * Mon Sep  8 2014 Remi Collet <remi@fedoraproject.org> - 0.84.2-1
 - version 0.84.2 for GLPI 0.84
   https://forge.indepnet.net/versions/1021
