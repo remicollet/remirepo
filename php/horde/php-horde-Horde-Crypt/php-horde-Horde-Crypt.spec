@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Crypt
-Version:        2.5.0
+Version:        2.5.1
 Release:        1%{?dist}
 Summary:        Horde Cryptography API
 
@@ -53,7 +53,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.5.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) <  3.0.0
@@ -108,16 +108,12 @@ done | tee ../%{pear_name}.lang
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
 # Reported version differs (only "Version: GnuPG v1")
 sed -e '/GnuPG v/s/%d.%d.%d (%s)/%s/' -i PgpTest.php
 
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %post
@@ -143,6 +139,10 @@ fi
 
 
 %changelog
+* Tue Nov 18 2014 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
+- Update to 2.5.1
+- raise dependency on Horde_Translation 2.2.0
+
 * Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
 - Update to 2.5.0
 
