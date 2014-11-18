@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Stringprep
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}
 Summary:        Preparation of Internationalized Strings ("stringprep")
 
@@ -99,5 +99,8 @@ fi
 
 
 %changelog
+* Tue Nov 18 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1
+
 * Sun Nov  9 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - Initial package, version 1.0.0
