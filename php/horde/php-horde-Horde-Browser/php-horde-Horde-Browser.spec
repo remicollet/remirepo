@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Browser
-Version:        2.0.7
+Version:        2.0.8
 Release:        1%{?dist}
 Summary:        Horde Browser API
 
@@ -35,6 +35,8 @@ Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 
@@ -56,6 +58,7 @@ sed -e '/%{pear_name}.po/d' \
     -e '/Horde_Other.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -110,6 +113,10 @@ fi
 
 
 %changelog
+* Tue Nov 18 2014 Remi Collet <remi@fedoraproject.org> - 2.0.8-1
+- Update to 2.0.8
+- add dependency on Horde_Translation
+
 * Sat May 03 2014 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
 - Update to 2.0.7
 
