@@ -12,8 +12,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Test
-Version:        2.4.5
-Release:        2%{?dist}
+Version:        2.4.6
+Release:        1%{?dist}
 Summary:        Horde testing base classes
 
 Group:          Development/Libraries
@@ -23,7 +23,6 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 # Use unbundled PHPUnit
 Patch0:         %{pear_name}-rpm.patch
-Patch1:         %{pear_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -67,14 +66,12 @@ Horde-specific PHPUnit base classes.
 
 cd %{pear_name}-%{version}
 %patch0 -p1 -b .rpm
-%patch1 -p3 -b .upstream
 
 # Don't install bundled PHPUnit
 # Don't check md5sum for patched files
 sed -e '/bundle\/vendor/d' \
     -e '/Autoload.php/s/md5sum="[^"]*"//' \
     -e '/AllTests.php/s/md5sum="[^"]*"//' \
-    -e '/Registry.php/s/md5sum="[^"]*"//' \
    ../package.xml >%{name}.xml
 touch -r ../package.xml %{name}.xml
 
@@ -115,6 +112,9 @@ fi
 
 
 %changelog
+* Tue Nov 18 2014 Remi Collet <remi@fedoraproject.org> - 2.4.6-1
+- Update to 2.4.6
+
 * Mon Nov 10 2014 Remi Collet <remi@fedoraproject.org> - 2.4.5-2
 - add upstream patch to fix test failure in turba
   and kronolith, thanks to Koschei
