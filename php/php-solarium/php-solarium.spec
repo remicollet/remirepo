@@ -15,7 +15,7 @@
 Name:           php-%{gh_project}
 Summary:        Solarium PHP Solr client library
 Version:        3.3.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 URL:            http://www.solarium-project.org/
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
@@ -42,6 +42,8 @@ Requires:       php-date
 Requires:       php-json
 Requires:       php-pcre
 Requires:       php-spl
+
+Provides:       php-composer(solarium/solarium) = %{version}
 
 
 %description
@@ -102,11 +104,17 @@ phpunit \
 
 %files
 %defattr(-,root,root,-)
-%doc composer.json COPYING README.md examples
+%{!?_licensedir:%global license %%doc}
+%license COPYING
+%doc composer.json README.md examples
 %{_datadir}/php/Solarium
 
 
 %changelog
+* Tue Nov 18 2014 Remi Collet <remi@fedoraproject.org> - 3.3.0-2
+- provide php-composer(solarium/solarium)
+- fix license handling
+
 * Mon Nov 17 2014 Remi Collet <remi@fedoraproject.org> - 3.3.0-1
 - update to 3.3.0
 
