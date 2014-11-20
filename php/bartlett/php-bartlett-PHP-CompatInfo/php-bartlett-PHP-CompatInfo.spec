@@ -6,13 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b29ff9ce621c07b1d511a0a37b1a34a3be7ed95e
+%global gh_commit    d47fb5a0798c60dac81a3f9f1643fd73c73787d3
 #global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     llaville
 %global gh_project   php-compat-info
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        3.6.0
+Version:        3.6.1
 %global specrel 1
 Release:        %{?gh_short:0.%{specrel}.git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
@@ -76,8 +76,8 @@ Documentation: http://php5.laurent-laville.org/compatinfo/manual/current/en/
 
 
 %prep
-#setup -q -n %{gh_project}-%{gh_commit}
-%setup -q -n %{gh_project}-%{version}
+%setup -q -n %{gh_project}-%{gh_commit}
+#setup -q -n %{gh_project}-%{version}
 
 %patch0 -p1 -b .rpm
 
@@ -127,6 +127,9 @@ fi
 
 
 %changelog
+* Thu Nov 20 2014 Remi Collet <remi@fedoraproject.org> - 3.6.1-1
+- Update to 3.6.1
+
 * Thu Nov 13 2014 Remi Collet <remi@fedoraproject.org> - 3.6.0-1
 - Update to 3.6.0
 - add dependency on justinrainbow/json-schema
