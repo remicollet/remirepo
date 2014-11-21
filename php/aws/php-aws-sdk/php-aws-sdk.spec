@@ -13,8 +13,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   2.7.5
-%global github_commit    a514b00acb75af5470057c5cc4a90cb01b935eb8
+%global github_version   2.7.6
+%global github_commit    26df03201f01d81dc6e7f903285b3f4bdaaca7d4
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -137,12 +137,15 @@ fi
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE.md
-%doc CHANGELOG.md README.md UPGRADING.md composer.json
+%doc NOTICE.md composer.json
 %{_datadir}/php/Aws
 %{_datadir}/php/AWSSDKforPHP
 
 
 %changelog
+* Fri Nov 21 2014 Remi Collet <remi@fedoraproject.org> - 2.7.6-1
+- Update to 2.7.6
+
 * Fri Nov 14 2014 Remi Collet <remi@fedoraproject.org> - 2.7.5-1
 - Update to 2.7.5
 
