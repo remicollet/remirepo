@@ -22,7 +22,7 @@
 
 Summary:        A termbox wrapper for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.1.1
+Version:        0.1.2
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        ASL 2.0
 Group:          Development/Languages
@@ -211,11 +211,14 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 21 2014 Remi Collet <remi@fedoraproject.org> - 0.1.2-1
+- Update to 0.1.2 (beta)
+
 * Sun Sep 14 2014 Remi Collet <remi@fedoraproject.org> - 0.1.1-1
-- Update to 0.1.1
+- Update to 0.1.1 (beta)
 
 * Sat Sep 13 2014 Remi Collet <remi@fedoraproject.org> - 0.1.0-2
 - add various upstream patches
 
 * Fri Sep 12 2014 Remi Collet <rcollet@redhat.com> - 0.1.0-1
-- initial package
+- initial package, version 0.1.0 (beta)
