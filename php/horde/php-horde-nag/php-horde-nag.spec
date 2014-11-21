@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-nag
-Version:        4.2.2
+Version:        4.2.3
 Release:        1%{?dist}
 Summary:        A web based task list manager
 
@@ -168,10 +168,7 @@ done | tee ../%{pear_name}.lang
 
 %check
 cd %{pear_name}-%{version}/test/Nag
-
-phpunit \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %post
@@ -216,6 +213,9 @@ fi
 
 
 %changelog
+* Fri Nov 21 2014 Remi Collet <remi@fedoraproject.org> - 4.2.3-1
+- Update to 4.2.3
+
 * Wed Oct 29 2014 Remi Collet <remi@fedoraproject.org> - 4.2.2-1
 - Update to 4.2.2
 
