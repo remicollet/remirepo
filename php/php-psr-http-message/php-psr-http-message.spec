@@ -11,8 +11,8 @@
 
 %global github_owner     php-fig
 %global github_name      http-message
-%global github_version   0.4.0
-%global github_commit    05f67fe3f44fa213b543160452cfc202304a7e06
+%global github_version   0.5.1
+%global github_commit    18619eee10ecf266bafe048e5a2922fa20938498
 
 %global composer_vendor  psr
 %global composer_project http-message
@@ -32,7 +32,7 @@ Source0:   %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_co
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
-# phpcompatinfo (computed from version 0.4.0)
+# phpcompatinfo (computed from version 0.5.1)
 Requires:  php(language) >= 5.3.0
 
 # Composer
@@ -84,6 +84,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 20 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.5.1-1
+- Updated to 0.5.1 (BZ #1163322)
+
 * Thu Nov  6 2014 Remi Collet <remi@fedoraproject.org> - 0.4.0-1
 - backport for remi repository
 
