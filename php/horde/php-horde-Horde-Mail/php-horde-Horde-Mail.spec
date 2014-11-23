@@ -15,7 +15,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Mail
-Version:        2.4.0
+Version:        2.5.0
 Release:        1%{?dist}
 Summary:        Horde Mail Library
 
@@ -46,6 +46,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 # From package.xml, optional
 Requires:       php-pear(Net_SMTP) >= 1.6.0
 Requires:       php-pear(Net_DNS2)
@@ -76,7 +78,12 @@ things like message redirection pursuant to RFC 5322 [3.6.6]).
 %setup -q -c
 
 cd %{pear_name}-%{version}
-cp ../package.xml %{name}.xml
+# Don't install .po and .pot files
+# Remove checksum for .mo, as we regenerate them
+sed -e '/%{pear_name}\.po/d' \
+    -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+    ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -98,12 +105,8 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 %if %{with_tests}
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -129,6 +132,10 @@ fi
 
 
 %changelog
+* Sun Nov 23 2014 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
+- Update to 2.5.0
+- add dependency on Horde_Translation
+
 * Mon Aug 04 2014 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
 - Update to 2.4.0
 
