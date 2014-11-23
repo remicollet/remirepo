@@ -15,7 +15,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Mime
-Version:        2.4.5
+Version:        2.5.0
 Release:        1%{?dist}
 Summary:        Horde MIME Library
 
@@ -49,7 +49,9 @@ Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.1.1
+Requires:       php-pear(%{pear_channel}/Horde_ListHeaders) >= 1.2.0
+Requires:       php-pear(%{pear_channel}/Horde_ListHeaders) <  2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.5.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.3.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) <  2.0.0
@@ -59,7 +61,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.1.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Flowed) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Text_Flowed) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
@@ -85,9 +87,8 @@ cd %{pear_name}-%{version}
 
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
-sed -e '/%{pear_name}.po/d' \
-    -e '/Horde_Other.po/d' \
-    -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+sed -e '/%{pear_name}\.po/d' \
+    -e '/%{pear_name}\.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 touch -r ../package.xml %{name}.xml
 
@@ -123,12 +124,8 @@ done | tee ../%{pear_name}.lang
 
 %check
 %if %{with_tests}
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -158,6 +155,12 @@ fi
 
 
 %changelog
+* Sun Nov 23 2014 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
+- Update to 2.5.0
+- add dependency on Horde_ListHeaders
+- raise dependency on Horde_Mail >= 2.5.0
+- raise dependency on Horde_Translation >= 2.2.0
+
 * Thu Aug 28 2014 Remi Collet <remi@fedoraproject.org> - 2.4.5-1
 - Update to 2.4.5
 
