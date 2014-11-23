@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.25.3
+Version:        2.25.4
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -29,7 +29,7 @@ BuildRequires:  gettext
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.2.7
 BuildRequires:  php-pear(%{pear_channel}/Horde_Stream) >= 1.4.0
-BuildRequires:  php-pear(%{pear_channel}/Horde_Mime) >= 2.3.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Mime) >= 2.5.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Pack) >= 1.0.0
 
@@ -46,7 +46,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.3.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.5.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Secret) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Secret) <  3.0.0
@@ -92,8 +92,8 @@ cd %{pear_name}-%{version}
 
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
-sed -e '/%{pear_name}.po/d' \
-    -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+sed -e '/%{pear_name}\.po/d' \
+    -e '/%{pear_name}\.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 touch -r ../package.xml %{name}.xml
 
@@ -128,10 +128,8 @@ done | tee ../%{pear_name}.lang
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-
-phpunit -d date.timezone=UTC .
+phpunit .
 
 
 %post
@@ -159,6 +157,10 @@ fi
 
 
 %changelog
+* Sun Nov 23 2014 Remi Collet <remi@fedoraproject.org> - 2.25.4-1
+- Update to 2.25.4
+- raise dependency on Horde_Mime >= 2.5.0
+
 * Tue Nov 11 2014 Remi Collet <remi@fedoraproject.org> - 2.25.3-1
 - Update to 2.25.3
 - raise dependency on Horde_Translation >= 2.2.0
