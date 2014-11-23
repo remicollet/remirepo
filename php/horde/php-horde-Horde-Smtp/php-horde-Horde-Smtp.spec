@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Smtp
-Version:        1.6.0
+Version:        1.7.0
 Release:        1%{?dist}
 Summary:        Horde SMTP Client
 
@@ -40,7 +40,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.1.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 # From phpcompatinfo report
 Requires:       php-date
@@ -68,8 +68,8 @@ e-mail messages..
 cd %{pear_name}-%{version}
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
-sed -e '/%{pear_name}.po/d' \
-    -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+sed -e '/%{pear_name}\.po/d' \
+    -e '/%{pear_name}\.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 touch -r ../package.xml %{name}.xml
 
@@ -105,13 +105,8 @@ done | tee ../%{pear_name}.lang
 
 
 %check
-# All tests skipped for now (need a SMTP server configured)
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %clean
@@ -141,6 +136,10 @@ fi
 
 
 %changelog
+* Sun Nov 23 2014 Remi Collet <remi@fedoraproject.org> - 1.7.0-1
+- Update to 1.7.0
+- raise dependency on Horde_Translation >= 2.2.0
+
 * Mon Aug 04 2014 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
 - Update to 1.6.0
 
