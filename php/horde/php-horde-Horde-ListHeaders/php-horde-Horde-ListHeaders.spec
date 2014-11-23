@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-ListHeaders
-Version:        1.1.5
+Version:        1.2.0
 Release:        1%{?dist}
 Summary:        Horde List Headers Parsing Library
 
@@ -34,11 +34,12 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-common >= 5.3.0
 Requires:       php-pear(PEAR) >= 1.7.0
+Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
-Requires:       php-channel(%{pear_channel})
+# Optional and implicitly requires Horde_Mime
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -54,8 +55,8 @@ in RFC 2369 & RFC 2919.
 cd %{pear_name}-%{version}
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
-sed -e '/%{pear_name}.po/d' \
-    -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+sed -e '/%{pear_name}\.po/d' \
+    -e '/%{pear_name}\.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 touch -r ../package.xml %{name}.xml
 
@@ -94,12 +95,8 @@ rm -rf %{buildroot}
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %post
@@ -125,6 +122,10 @@ fi
 
 
 %changelog
+* Sun Nov 23 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- Update to 1.2.0
+- raise dependency on Horde_Translation >= 2.2.0
+
 * Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 1.1.5-1
 - Update to 1.1.5
 
