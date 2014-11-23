@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-Horde-Core
-Version:        2.16.1
+Version:        2.17.0
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -102,7 +102,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Log) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Log) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_LoginTasks) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_LoginTasks) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.4.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.5.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime_Viewer) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime_Viewer) <  3.0.0
@@ -192,7 +192,7 @@ sed -e '/%{pear_name}\.po/d' \
     -e '/js\/prototype.js/d' \
     -e '/js\/scriptaculous/d' \
 %endif
-    -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+    -e '/%{pear_name}\.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 touch -r ../package.xml %{name}.xml
 
@@ -234,8 +234,7 @@ rm -rf %{buildroot}
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-
-phpunit -d date.timezone=UTC .
+phpunit .
 
 
 %post
@@ -281,6 +280,10 @@ fi
 
 
 %changelog
+* Sun Nov 23 2014 Remi Collet <remi@fedoraproject.org> - 2.17.0-1
+- Update to 2.17.0
+- raise dependency on Horde_Mime >= 2.5.0
+
 * Thu Nov 06 2014 Remi Collet <remi@fedoraproject.org> - 2.16.1-1
 - Update to 2.16.1
 - raise dependency on Horde_Translation >= 2.2.0
