@@ -25,7 +25,7 @@
 Summary:        Strict scalar parameter type hint
 Name:           %{?scl_prefix}php-pecl-strict
 Version:        0.3.0
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -42,9 +42,6 @@ Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
-
-# cause segfault on startup
-Conflicts:      %{?scl_prefix}php-ioncube-loader
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
@@ -229,6 +226,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 24 2014 Remi Collet <remi@fedoraproject.org> - 0.3.0-3
+- drop conflicts with ionCube Loader
+
 * Mon Nov 24 2014 Remi Collet <remi@fedoraproject.org> - 0.3.0-2
 - load as zend_extension
 
