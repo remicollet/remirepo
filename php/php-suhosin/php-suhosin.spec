@@ -8,6 +8,10 @@
 #
 # Please, preserve the changelog entries
 #
+%global gh_commit    0fa87e1ab1697cb3b39e3a5663f97dc15cf8d98f
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     stefanesser
+%global gh_project   suhosin
 %{?scl:          %scl_package         php-suhosin}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
@@ -22,20 +26,25 @@
 %endif
 
 Name:           %{?scl_prefix}php-suhosin
-Version:        0.9.36
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        0.9.37
+Release:        0.1.%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Suhosin is an advanced protection system for PHP installations
 
 Group:          Development/Languages
 License:        PHP
 URL:            http://www.hardened-php.net/suhosin/
+%if 0%{?gh_commit:1}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+%else
 Source0:        http://download.suhosin.org/suhosin-%{version}.tgz
+%endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -65,15 +74,21 @@ Suhosin is an advanced protection system for PHP installations. It was designed
 to protect servers and users from known and unknown flaws in PHP applications
 and the PHP core.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+
 
 %prep
 %setup -q -c
+%if 0%{?gh_commit:1}
+mv %{ext_name}-%{gh_commit} NTS
+%else
 mv %{ext_name}-%{version} NTS
+%endif
 
 # Check extension version
 ver=$(sed -n '/SUHOSIN_EXT_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_suhosin.h)
-if test "$ver" != "%{version}%{?prever}"; then
-   : Error: Upstream SUHOSIN_EXT_VERSION version is ${ver}, expecting %{version}%{?prever}.
+if test "$ver" != "%{version}%{?gh_commit:-dev}"; then
+   : Error: Upstream SUHOSIN_EXT_VERSION version is ${ver}, expecting %{version}%{?gh_commit:-dev}.
    exit 1
 fi
 
@@ -103,10 +118,12 @@ rm -rf %{buildroot}
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install configuration
+sed -e 's/\;\(extension=suhosin.so\)/\1/' -i NTS/%{ext_name}.ini
 install -Dpm 644 NTS/%{ext_name}.ini %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with_zts}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
+sed -e 's/\;\(extension=suhosin.so\)/\1/' -i ZTS/%{ext_name}.ini
 install -Dpm 644 ZTS/%{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
@@ -153,7 +170,9 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc NTS/{Changelog,CREDITS,LICENSE}
+%{!?_licensedir:%global license %%doc}
+%license NTS/LICENSE
+%doc NTS/{Changelog,CREDITS}
 
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{ext_name}.so
@@ -165,11 +184,15 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 24 2014 Remi Collet <remi@fedoraproject.org> - 0.9.37-0.1.0fa87e1
+- update to 0.9.37RC1
+- fix license handling
+
 * Tue Aug 26 2014 Remi Collet <rcollet@redhat.com> - 0.9.36-2
 - improve SCL build
 
 * Wed Jun 11 2014 Remi Collet <remi@fedoraproject.org> - 0.9.36-1
-- update to 0.9.35
+- update to 0.9.36
 
 * Thu Apr 17 2014 Remi Collet <remi@fedoraproject.org> - 0.9.35-2
 - add numerical prefix to extension configuration file (php 5.6)
