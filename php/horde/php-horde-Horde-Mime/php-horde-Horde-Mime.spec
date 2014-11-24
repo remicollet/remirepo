@@ -15,7 +15,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Mime
-Version:        2.5.0
+Version:        2.5.1
 Release:        1%{?dist}
 Summary:        Horde MIME Library
 
@@ -155,6 +155,9 @@ fi
 
 
 %changelog
+* Mon Nov 24 2014 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
+- Update to 2.5.1
+
 * Sun Nov 23 2014 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
 - Update to 2.5.0
 - add dependency on Horde_ListHeaders
