@@ -25,7 +25,7 @@
 Summary:        Strict scalar parameter type hint
 Name:           %{?scl_prefix}php-pecl-strict
 Version:        0.3.0
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -97,16 +97,29 @@ if test "x${extver}" != "x%{version}%{?versuf}"; then
 fi
 cd ..
 
+# Create configuration file
+cat << 'EOF' | tee NTS/%{ini_name}
+; Enable %{pecl_name} extension module
+%if "%{php_version}" > "5.5"
+zend_extension=%{pecl_name}.so
+%else
+zend_extension=%{php_ztsextdir}/%{pecl_name}.so
+%endif
+EOF
+
 %if %{with_zts}
 # Duplicate source tree for NTS / ZTS build
 cp -pr NTS ZTS
-%endif
 
-# Create configuration file
-cat << 'EOF' | tee %{ini_name}
+cat << 'EOF' | tee ZTS/%{ini_name}
 ; Enable %{pecl_name} extension module
-extension=%{pecl_name}.so
+%if "%{php_version}" > "5.5"
+zend_extension=%{pecl_name}.so
+%else
+zend_extension=%{php_ztsextdir}/%{pecl_name}.so
+%endif
 EOF
+%endif
 
 
 %build
@@ -135,7 +148,7 @@ rm -rf %{buildroot}
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
-install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
+install -D -m 644 NTS/%{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -143,7 +156,7 @@ install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 %if %{with_zts}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
 
-install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
+install -D -m 644 ZTS/%{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Documentation
@@ -216,6 +229,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 24 2014 Remi Collet <remi@fedoraproject.org> - 0.3.0-2
+- load as zend_extension
+
 * Wed Nov 19 2014 Remi Collet <remi@fedoraproject.org> - 0.3.0-1
 - Update to 0.3.0 (beta)
 
