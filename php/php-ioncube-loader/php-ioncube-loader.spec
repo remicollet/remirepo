@@ -19,7 +19,7 @@
 
 Name:          %{?scl_prefix}php-ioncube-loader
 Summary:       Loader for ionCube Encoded Files
-Version:       4.7.1
+Version:       4.7.2
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       Distribuable
 Group:         Development/Languages
@@ -147,6 +147,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 24 2014 Remi Collet <RPMS@famillecollet.com> - 4.7.2-1
+- update to 4.7.2 (Nov 24, 2014)
+
 * Fri Oct 31 2014 Remi Collet <RPMS@famillecollet.com> - 4.7.1-1
 - update to 4.7.1 (Oct 31, 2014)
 
