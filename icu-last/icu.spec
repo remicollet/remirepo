@@ -1,6 +1,6 @@
 Name:      icu
 Version:   50.1.2
-Release:   10%{?dist}
+Release:   11%{?dist}
 Summary:   International Components for Unicode
 Group:     Development/Tools
 License:   MIT and UCD and Public Domain
@@ -11,7 +11,7 @@ Source0:   http://download.icu-project.org/files/icu4c/50.1.2/icu4c-50_1_2-src.t
 Source1:   http://download.icu-project.org/files/icu4c/51.1/icu-51-layout-fix-10107.tgz
 Source2:   icu-config.sh
 BuildRequires: doxygen, autoconf, python
-Requires: lib%{name}%{?_isa} = %{version}-%{release}
+Requires: lib%{name} = %{version}-%{release}
 
 Patch1: icu.8198.revert.icu5431.patch
 Patch2: icu.8800.freeserif.crash.patch
@@ -21,6 +21,7 @@ Patch5: gennorm2-man.patch
 Patch6: icuinfo-man.patch
 Patch7: icu.10143.memory.leak.crash.patch
 Patch8: icu.10318.CVE-2013-2924_changeset_34076.patch
+Patch9: icu.rhbz1074549.CVE-2013-5907.patch
 
 %description
 Tools and utilities for developing with icu.
@@ -44,7 +45,7 @@ customize the supplied services.
 %package  -n lib%{name}-devel
 Summary:  Development files for International Components for Unicode
 Group:    Development/Libraries
-Requires: lib%{name}%{?_isa} = %{version}-%{release}
+Requires: lib%{name} = %{version}-%{release}
 Requires: pkgconfig
 
 %description -n lib%{name}-devel
@@ -72,6 +73,7 @@ BuildArch: noarch
 %patch6 -p1 -b .icuinfo-man.patch
 %patch7 -p1 -b .icu10143.memory.leak.crash.patch
 %patch8 -p1 -b .icu10318.CVE-2013-2924_changeset_34076.patch
+%patch9 -p1 -b .icurhbz1074549.CVE-2013-5907.patch
 
 %build
 cd source
@@ -179,14 +181,17 @@ make %{?_smp_mflags} -C source check
 %doc source/__docs/%{name}/html/*
 
 %changelog
-* Wed Oct 09 2013 Eike Rathke <erack@redhat.com> - 50.1.2-10
-- Resolves: rhbz#1015594 CVE-2013-2924 use-after-free
+* Tue Mar 11 2014 Eike Rathke <erack@redhat.com> - 50.1.2-11
+- Resolves: rhbz#1074549 Layout Engine LookupProcessor insufficient input checks
 
-* Fri Oct 04 2013 Eike Rathke <erack@redhat.com> - 50.1.2-9
-- added %{?_isa} to Requires for multi-arch systems
+* Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 50.1.2-10
+- Mass rebuild 2014-01-24
 
-* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 50.1.2-8
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 50.1.2-9
+- Mass rebuild 2013-12-27
+
+* Wed Oct 16 2013 Eike Rathke <erack@redhat.com> - 50.1.2-8
+- Resolves: rhbz#1015593 CVE-2013-2924 use-after-free
 
 * Mon Jul 22 2013 Eike Rathke <erack@redhat.com> - 50.1.2-7
 - Resolves: rhbz#986814 install icu-config.sh from source2
