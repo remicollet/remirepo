@@ -1,0 +1,26 @@
+--- phpab.php.rpm	2014-11-25 11:32:11.000000000 +0100
++++ phpab.php	2014-11-25 14:40:59.288514790 +0100
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env php
++#!/usr/bin/php
+ <?php
+ /**
+  * Copyright (c) 2009-2014 Arne Blankerts <arne@blankerts.de>
+@@ -42,12 +42,15 @@
+  *   4 - Lint Error
+  */
+ 
+-define('PHPAB_VERSION', '%development%');
++define('PHPAB_VERSION', '@VERSION@');
+ 
+ if (!ini_get('date.timezone')) {
+      ini_set('date.timezone', 'UTC');
+ }
+-require __DIR__ . '/src/autoload.php';
++require 'TheSeer/DirectoryScanner/autoload.php';
++require 'TheSeer/Autoload/autoload.php';
++require 'ezc/Base/base.php';
++spl_autoload_register(array('\ezcBase','autoload'));
+ 
+ $factory = new \TheSeer\Autoload\Factory();
+ $factory->getCLI()->run();

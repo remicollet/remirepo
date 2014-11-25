@@ -6,44 +6,42 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pear:       %global __pear       %{_bindir}/pear}
-%global pear_name     Autoload
-%global pear_channel  pear.netpirates.net
+%global gh_commit    31b01130e76eea8333e07dc8c918a2fd131f6752
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     theseer
+%global gh_project   Autoload
+%global php_home     %{_datadir}/php/TheSeer
+%global pear_name    Autoload
+%global pear_channel pear.netpirates.net
 
 Name:           php-theseer-autoload
-Version:        1.16.0
-Release:        2%{?dist}
+Version:        1.16.1
+Release:        1%{?dist}
 Summary:        A tool and library to generate autoload code
 
 Group:          Development/Libraries
 License:        BSD
-URL:            https://github.com/theseer/Autoload
-Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+URL:            https://github.com/%{gh_owner}/%{gh_project}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
-# https://github.com/theseer/Autoload/pull/52
-Patch0:         %{pear_name}-timezone.patch
+# Autoload stuff - die composer !
+Patch0:         %{gh_project}-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.1
-BuildRequires:  php-pear(PEAR)
-BuildRequires:  php-channel(%{pear_channel})
 # For tests
-BuildRequires:  php-pear(%{pear_channel}/DirectoryScanner) >= 1.3.0
+BuildRequires:  php-composer(theseer/directoryscanner) >= 1.3.0
 BuildRequires:  %{_bindir}/phpunit
 
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
-# From package.xml
+# From composer.json
 Requires:       php(language) >= 5.3.1
+Requires:       php-composer(theseer/directoryscanner) >= 1.3.0
+Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
+# From phpcompatinfo report for version 1.16.0
 Requires:       php-openssl
 Requires:       php-phar
 Requires:       php-tokenizer
-Requires:       php-pear(PEAR)
-Requires:       php-channel(%{pear_channel})
-Requires:       php-pear(%{pear_channel}/DirectoryScanner) >= 1.3.0
-Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
-# From phpcompatinfo report for version 1.16.0
 Requires:       php-date
 Requires:       php-json
 Requires:       php-spl
@@ -59,37 +57,28 @@ the option of creating static require lists as well as phar archives.
 
 
 %prep
-%setup -q -c
+%setup -q -n %{gh_project}-%{gh_commit}
 
-cd %{pear_name}-%{version}
-%patch0 -p1 -b .tz
-# Drop checksum for patched file
-sed -e '/phpab.php/s/md5sum="[^"]*"//' \
-    ../package.xml >%{name}.xml
-touch -r ../package.xml %{name}.xml
+%patch0 -p0 -b .rpm
+# autoload only for this package
+sed -e '\:../vendor/:d'          -i src/autoload.php
+# set version
+sed -e 's/@VERSION@/%{version}/' -i phpab.php
 
 
 %build
-cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
 
 
 %install
-rm -rf %{buildroot}
+rm -rf     %{buildroot}
+mkdir -p   %{buildroot}%{php_home}
+cp -pr src %{buildroot}%{php_home}/%{gh_project}
 
-cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
-
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
-
-# Install XML package description
-mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+install -Dpm 0755 phpab.php %{buildroot}%{_bindir}/phpab
 
 
 %check
-cd %{pear_name}-%{version}
 cat <<EOF | tee tests/init.php
 <?php
 require 'TheSeer/DirectoryScanner/autoload.php';
@@ -104,27 +93,26 @@ rm -rf %{buildroot}
 
 
 %post
-%{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-%postun
-if [ $1 -eq 0 ] ; then
-    %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        %{pear_channel}/%{pear_name} >/dev/null || :
+if [ -x %{_bindir}/pear ]; then
+  %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
 %files
 %defattr(-,root,root,-)
-%doc %{pear_docdir}/%{pear_name}
-%doc %{pear_testdir}/%{pear_name}
-%{pear_xmldir}/%{name}.xml
-
-%{pear_phpdir}/TheSeer/%{pear_name}
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README.md composer.json
+%{php_home}/%{gh_project}
 %{_bindir}/phpab
 
 
 %changelog
+* Tue Nov 25 2014 Remi Collet <remi@fedoraproject.org> - 1.16.1-1
+- Update to 1.16.1
+- switch from pear to github sources
+
 * Wed Nov 12 2014 Remi Collet <remi@fedoraproject.org> - 1.16.0-2
 - define date.timezone in phpab command to avoid warning
 
