@@ -6,37 +6,38 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear:       %global __pear       %{_bindir}/pear}
-%global pear_name     DirectoryScanner
-%global pear_channel  pear.netpirates.net
+%global gh_commit    419ead3de1270affce003a4ecf629fe9fe429439
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     theseer
+%global gh_project   DirectoryScanner
+%global php_home     %{_datadir}/php/TheSeer
+%global pear_name    DirectoryScanner
+%global pear_channel pear.netpirates.net
 
 Name:           php-theseer-directoryscanner
 Version:        1.3.0
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        A recursive directory scanner and filter
 
 Group:          Development/Libraries
 # https://github.com/theseer/DirectoryScanner/issues/3
 License:        BSD
-URL:            https://github.com/theseer/DirectoryScanner
-Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+URL:            https://github.com/%{gh_owner}/%{gh_project}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.1
-BuildRequires:  php-pear(PEAR)
-BuildRequires:  php-channel(%{pear_channel})
+# Notice : circular dep, will require bootstrap in the future
+BuildRequires:  %{_bindir}/phpab
+BuildRequires:  %{_bindir}/phpunit
 
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
-# From package.xml
+# From composer.json
 Requires:       php(language) >= 5.3.1
 Requires:       php-fileinfo
 Requires:       php-spl
-Requires:       php-pear(PEAR)
-Requires:       php-channel(%{pear_channel})
 
+Provides:       php-composer(theseer/directoryscanner) = %{version}
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 
@@ -45,29 +46,21 @@ A recursive directory scanner and filter.
 
 
 %prep
-%setup -q -c
-
-cd %{pear_name}-%{version}
-mv ../package.xml %{name}.xml
+%setup -q -n %{gh_project}-%{gh_commit}
 
 
 %build
-cd %{pear_name}-%{version}
-# Empty build section, most likely nothing required.
+phpab --output src/autoload.php src
 
 
 %install
-rm -rf %{buildroot}
+rm -rf     %{buildroot}
+mkdir -p   %{buildroot}%{php_home}
+cp -pr src %{buildroot}%{php_home}/%{gh_project}
 
-cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
-
-# Install XML package description
-mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+%check
+phpunit --bootstrap %{buildroot}%{php_home}/%{gh_project}/autoload.php
 
 
 %clean
@@ -75,23 +68,23 @@ rm -rf %{buildroot}
 
 
 %post
-%{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-%postun
-if [ $1 -eq 0 ] ; then
-    %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        %{pear_channel}/%{pear_name} >/dev/null || :
+if [ -x %{_bindir}/pear ]; then
+  %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
 %files
 %defattr(-,root,root,-)
-%{pear_xmldir}/%{name}.xml
-%dir %{pear_phpdir}/TheSeer
-%{pear_phpdir}/TheSeer/%{pear_name}
+%doc composer.json
+%dir %{php_home}
+%{php_home}/%{gh_project}
 
 
 %changelog
+* Tue Nov 25 2014 Remi Collet <remi@fedoraproject.org> - 1.3.0-3
+- switch from pear to github sources
+- enable test suite
+
 * Sun Apr  6 2014 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - initial package, version 1.3.0
