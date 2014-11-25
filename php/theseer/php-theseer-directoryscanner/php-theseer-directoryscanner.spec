@@ -20,7 +20,6 @@ Release:        1%{?dist}
 Summary:        A recursive directory scanner and filter
 
 Group:          Development/Libraries
-# https://github.com/theseer/DirectoryScanner/issues/3
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
