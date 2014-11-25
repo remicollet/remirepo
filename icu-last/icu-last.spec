@@ -12,7 +12,7 @@
 
 Name:      icu-last
 Version:   50.1.2
-Release:   10%{?dist}
+Release:   11%{?dist}
 Summary:   International Components for Unicode
 Group:     Development/Tools
 License:   MIT and UCD and Public Domain
@@ -37,6 +37,7 @@ Patch5: gennorm2-man.patch
 Patch6: icuinfo-man.patch
 Patch7: icu.10143.memory.leak.crash.patch
 Patch8: icu.10318.CVE-2013-2924_changeset_34076.patch
+Patch9: icu.rhbz1074549.CVE-2013-5907.patch
 
 %description
 Tools and utilities for developing with icu.
@@ -98,6 +99,7 @@ Provides:  lib%{srcname}-doc = %{version}-%{release}
 %endif
 %patch7 -p1 -b .icu10143.memory.leak.crash.patch
 %patch8 -p1 -b .icu10318.CVE-2013-2924_changeset_34076.patch
+%patch9 -p1 -b .icurhbz1074549.CVE-2013-5907.patch
 
 %build
 cd source
@@ -219,6 +221,12 @@ make %{?_smp_mflags} -C source check
 %doc source/__docs/%{srcname}/html/*
 
 %changelog
+* Tue Nov 25 2014 Remi Collet <rpms@famillecollet.com>- 50.1.2-11
+- backport RHEL-7 changes
+
+* Tue Mar 11 2014 Eike Rathke <erack@redhat.com> - 50.1.2-11
+- Resolves: rhbz#1074549 Layout Engine LookupProcessor insufficient input checks
+
 * Sun Oct 27 2013 Remi Collet <rpms@famillecollet.com>- 50.1.2-10
 - rename to icu-last
 
