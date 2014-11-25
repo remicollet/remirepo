@@ -8,14 +8,18 @@
 # Please, preserve the changelog entries
 #
 %{!?__pear:       %global __pear       %{_bindir}/pear}
+%global bootstrap    0
 %global pear_name    Horde_Mime
 %global pear_channel pear.horde.org
-
+%if %{bootstrap}
 # Can run test because of circular dependency with Horde_Mail
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%else
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 Name:           php-horde-Horde-Mime
-Version:        2.5.1
+Version:        2.5.2
 Release:        1%{?dist}
 Summary:        Horde MIME Library
 
@@ -36,6 +40,7 @@ BuildRequires:  gettext
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Support) >= 2.1.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Mail) >= 2.5.0
 %endif
 
 Requires(post): %{__pear}
@@ -155,6 +160,10 @@ fi
 
 
 %changelog
+* Tue Nov 25 2014 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
+- Update to 2.5.2
+- enable test suite
+
 * Mon Nov 24 2014 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
 - Update to 2.5.1
 
