@@ -13,13 +13,15 @@
 
 Name:           php-horde-Horde-Icalendar
 Version:        2.0.9
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        iCalendar API
 
 Group:          Development/Libraries
 License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+
+Patch0:         %{pear_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -45,8 +47,6 @@ Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
@@ -65,10 +65,13 @@ An API for dealing with iCalendar data.
 %setup -q -c
 cd %{pear_name}-%{version}
 
+%patch0 -p3 -b .upstream
+
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
 sed -e '/%{pear_name}.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+    -e 's/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 
 
@@ -131,6 +134,10 @@ fi
 
 
 %changelog
+* Tue Nov 25 2014 Remi Collet <remi@fedoraproject.org> - 2.0.9-2
+- add upstream patch (thanks Koschei)
+- drop dependency on Horde_Mime
+
 * Wed Jun 04 2014 Remi Collet <remi@fedoraproject.org> - 2.0.9-1
 - Update to 2.0.9
 
