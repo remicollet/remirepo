@@ -12,16 +12,14 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Icalendar
-Version:        2.0.9
-Release:        2%{?dist}
+Version:        2.0.10
+Release:        1%{?dist}
 Summary:        iCalendar API
 
 Group:          Development/Libraries
 License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-
-Patch0:         %{pear_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -65,14 +63,12 @@ An API for dealing with iCalendar data.
 %setup -q -c
 cd %{pear_name}-%{version}
 
-%patch0 -p3 -b .upstream
-
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
 sed -e '/%{pear_name}.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
-    -e 's/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -105,10 +101,7 @@ done | tee ../%{pear_name}.lang
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=%{buildroot}%{pear_phpdir} \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %post
@@ -134,6 +127,9 @@ fi
 
 
 %changelog
+* Tue Nov 25 2014 Remi Collet <remi@fedoraproject.org> - 2.0.10-1
+- Update to 2.0.10
+
 * Tue Nov 25 2014 Remi Collet <remi@fedoraproject.org> - 2.0.9-2
 - add upstream patch (thanks Koschei)
 - drop dependency on Horde_Mime
