@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-Horde-Core
-Version:        2.17.0
+Version:        2.17.1
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -280,6 +280,9 @@ fi
 
 
 %changelog
+* Tue Nov 25 2014 Remi Collet <remi@fedoraproject.org> - 2.17.1-1
+- Update to 2.17.1
+
 * Sun Nov 23 2014 Remi Collet <remi@fedoraproject.org> - 2.17.0-1
 - Update to 2.17.0
 - raise dependency on Horde_Mime >= 2.5.0
