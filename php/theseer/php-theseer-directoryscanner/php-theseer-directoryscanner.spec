@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    419ead3de1270affce003a4ecf629fe9fe429439
+%global gh_commit    b1406a99f5e4b1761c84d9e98127c03871bb7b0e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     theseer
 %global gh_project   DirectoryScanner
@@ -15,8 +15,8 @@
 %global pear_channel pear.netpirates.net
 
 Name:           php-theseer-directoryscanner
-Version:        1.3.0
-Release:        3%{?dist}
+Version:        1.3.1
+Release:        1%{?dist}
 Summary:        A recursive directory scanner and filter
 
 Group:          Development/Libraries
@@ -28,8 +28,6 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.1
-# Notice : circular dep, will require bootstrap in the future
-BuildRequires:  %{_bindir}/phpab
 BuildRequires:  %{_bindir}/phpunit
 
 # From composer.json
@@ -51,7 +49,7 @@ A recursive directory scanner and filter.
 
 
 %build
-phpab --output src/autoload.php src
+# Empty build section, most likely nothing required.
 
 
 %install
@@ -77,12 +75,17 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
 %doc composer.json
 %dir %{php_home}
 %{php_home}/%{gh_project}
 
 
 %changelog
+* Tue Nov 25 2014 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
+- update to 1.3.1
+
 * Tue Nov 25 2014 Remi Collet <remi@fedoraproject.org> - 1.3.0-3
 - switch from pear to github sources
 - enable test suite
