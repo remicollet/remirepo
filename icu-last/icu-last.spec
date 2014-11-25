@@ -38,6 +38,8 @@ Patch6: icuinfo-man.patch
 Patch7: icu.10143.memory.leak.crash.patch
 Patch8: icu.10318.CVE-2013-2924_changeset_34076.patch
 Patch9: icu.rhbz1074549.CVE-2013-5907.patch
+# Patch6 from fedora rawhide spec
+Patch10: icu-testtwodigityear.patch
 
 %description
 Tools and utilities for developing with icu.
@@ -100,6 +102,7 @@ Provides:  lib%{srcname}-doc = %{version}-%{release}
 %patch7 -p1 -b .icu10143.memory.leak.crash.patch
 %patch8 -p1 -b .icu10318.CVE-2013-2924_changeset_34076.patch
 %patch9 -p1 -b .icurhbz1074549.CVE-2013-5907.patch
+%patch10 -p1 -b .icu-testtwodigityear.patch
 
 %build
 cd source
