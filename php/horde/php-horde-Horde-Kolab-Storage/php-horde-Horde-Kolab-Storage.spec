@@ -12,13 +12,15 @@
 
 Name:           php-horde-Horde-Kolab-Storage
 Version:        2.1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A package for handling Kolab data stored on an IMAP server
 
 Group:          Development/Libraries
 License:        LGPLv2
 URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+
+Patch0:         %{pear_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -77,11 +79,14 @@ to deal with this type of data storage effectively.
 %setup -q -c
 cd %{pear_name}-%{version}
 
+%patch0 -p3 -b .upstream
+
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
 sed -e '/%{pear_name}.po/d' \
     -e '/Horde_Other.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+    -e '/test/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 touch -r ../package.xml %{name}.xml
 
@@ -163,6 +168,9 @@ fi
 
 
 %changelog
+* Tue Nov 25 2014 Remi Collet <remi@fedoraproject.org> - 2.1.1-2
+- add suptream patch for test (thanks Koschei)
+
 * Sat Aug 30 2014 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - Update to 2.1.1
 
