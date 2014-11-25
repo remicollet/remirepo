@@ -38,13 +38,14 @@ BuildRequires:  %{_bindir}/phpunit
 Requires:       php(language) >= 5.3.1
 Requires:       php-composer(theseer/directoryscanner) >= 1.3.0
 Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
-# From phpcompatinfo report for version 1.16.0
-Requires:       php-openssl
-Requires:       php-phar
-Requires:       php-tokenizer
+# From phpcompatinfo report for version 1.16.1
 Requires:       php-date
 Requires:       php-json
+Requires:       php-openssl
+Requires:       php-phar
 Requires:       php-spl
+Requires:       php-tokenizer
+# Optional xdebug
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Provides:       php-composer(theseer/autoload) = %{version}
@@ -85,7 +86,7 @@ require 'TheSeer/DirectoryScanner/autoload.php';
 require 'TheSeer/Autoload/autoload.php';
 EOF
 
-phpunit --include-path=%{buildroot}%{pear_phpdir}
+phpunit --include-path=%{buildroot}%{_datadir}/php
 
 
 %clean

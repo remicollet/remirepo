@@ -34,6 +34,7 @@ BuildRequires:  %{_bindir}/phpunit
 
 # From composer.json
 Requires:       php(language) >= 5.3.1
+# From phpcompatinfo report for 1.3.0
 Requires:       php-fileinfo
 Requires:       php-spl
 
