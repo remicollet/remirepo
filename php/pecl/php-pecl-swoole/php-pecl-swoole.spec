@@ -23,15 +23,12 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.7.7
+Version:        1.7.8
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/swoole/swoole-src/pull/134
-Patch0:         134.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -105,7 +102,6 @@ mv %{pecl_name}-%{version} NTS
 sed -e '/examples/s/role="src"/role="doc"/' -i package.xml
 
 cd NTS
-%patch0 -p1 -b .pr134
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_SWOOLE_VERSION/{s/.* "//;s/".*$//;p}' php_swoole.h)
@@ -127,6 +123,7 @@ extension=%{pecl_name}.so
 
 ; Configuration
 ;swoole.aio_thread_num = 2
+;swoole.display_errors = 2
 ;swoole.message_queue_key = 0
 ;swoole.unixsock_buffer_size = 8388608
 EOF
@@ -234,6 +231,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 26 2014 Remi Collet <remi@fedoraproject.org> - 1.7.8-1
+- Update to 1.7.8 (stable)
+
 * Tue Oct 28 2014 Remi Collet <remi@fedoraproject.org> - 1.7.7-1
 - Update to 1.7.7 (stable)
 

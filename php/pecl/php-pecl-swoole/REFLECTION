@@ -1,7 +1,10 @@
-Extension [ <persistent> extension #145 swoole version 1.7.7 ] {
+Extension [ <persistent> extension #147 swoole version 1.7.8 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
+      Current = '2'
+    }
+    Entry [ swoole.display_errors <ALL> ]
       Current = '2'
     }
     Entry [ swoole.message_queue_key <ALL> ]
@@ -12,7 +15,7 @@ Extension [ <persistent> extension #145 swoole version 1.7.7 ] {
     }
   }
 
-  - Constants [33] {
+  - Constants [35] {
     Constant [ integer SWOOLE_BASE ] { 4 }
     Constant [ integer SWOOLE_THREAD ] { 2 }
     Constant [ integer SWOOLE_PROCESS ] { 3 }
@@ -23,6 +26,8 @@ Extension [ <persistent> extension #145 swoole version 1.7.7 ] {
     Constant [ integer SWOOLE_SOCK_TCP6 ] { 3 }
     Constant [ integer SWOOLE_SOCK_UDP ] { 2 }
     Constant [ integer SWOOLE_SOCK_UDP6 ] { 4 }
+    Constant [ integer SWOOLE_SOCK_UNIX_DGRAM ] { 5 }
+    Constant [ integer SWOOLE_SOCK_UNIX_STREAM ] { 6 }
     Constant [ integer SWOOLE_TCP ] { 1 }
     Constant [ integer SWOOLE_TCP6 ] { 3 }
     Constant [ integer SWOOLE_UDP ] { 2 }
@@ -42,7 +47,7 @@ Extension [ <persistent> extension #145 swoole version 1.7.7 ] {
     Constant [ integer SWOOLE_SSL ] { 512 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.7.7 }
+    Constant [ string SWOOLE_VERSION ] { 1.7.8 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_GCC ] { 1 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 2 }
@@ -183,6 +188,14 @@ Extension [ <persistent> extension #145 swoole version 1.7.7 ] {
         Parameter #1 [ <required> $from_id ]
       }
     }
+    Function [ <internal:swoole> function swoole_bind_uid ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> swoole_server $zobject ]
+        Parameter #1 [ <required> $fd ]
+        Parameter #2 [ <optional> $uid ]
+      }
+    }
     Function [ <internal:swoole> function swoole_connection_info ] {
 
       - Parameters [3] {
@@ -280,7 +293,7 @@ Extension [ <persistent> extension #145 swoole version 1.7.7 ] {
       - Properties [0] {
       }
 
-      - Methods [23] {
+      - Methods [24] {
         Method [ <internal:swoole, ctor> public method __construct ] {
 
           - Parameters [4] {
@@ -417,6 +430,14 @@ Extension [ <persistent> extension #145 swoole version 1.7.7 ] {
           - Parameters [2] {
             Parameter #0 [ <required> $ha_name ]
             Parameter #1 [ <required> $cb ]
+          }
+        }
+
+        Method [ <internal:swoole> public method bind_uid ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $fd ]
+            Parameter #1 [ <required> $uid ]
           }
         }
 
@@ -746,7 +767,7 @@ Extension [ <persistent> extension #145 swoole version 1.7.7 ] {
       - Properties [0] {
       }
 
-      - Methods [23] {
+      - Methods [24] {
         Method [ <internal:swoole, overwrites swoole_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
@@ -883,6 +904,14 @@ Extension [ <persistent> extension #145 swoole version 1.7.7 ] {
           }
         }
 
+        Method [ <internal:swoole, inherits swoole_server> public method bind_uid ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $fd ]
+            Parameter #1 [ <required> $uid ]
+          }
+        }
+
         Method [ <internal:swoole, inherits swoole_server> public method connection_info ] {
 
           - Parameters [2] {
@@ -921,8 +950,11 @@ Extension [ <persistent> extension #145 swoole version 1.7.7 ] {
       - Properties [0] {
       }
 
-      - Methods [5] {
+      - Methods [6] {
         Method [ <internal:swoole> public method cookie ] {
+        }
+
+        Method [ <internal:swoole> public method rawcookie ] {
         }
 
         Method [ <internal:swoole> public method status ] {
@@ -953,7 +985,9 @@ Extension [ <persistent> extension #145 swoole version 1.7.7 ] {
       - Properties [0] {
       }
 
-      - Methods [0] {
+      - Methods [1] {
+        Method [ <internal:swoole> public method rawcontent ] {
+        }
       }
     }
   }
