@@ -13,7 +13,7 @@
 %global gh_project   fDOMDocument
 %global php_home     %{_datadir}/php/TheSeer
 %global pear_name    fDOMDocument
-%global channel      pear.netpirates.net
+%global pear_channel pear.netpirates.net
 
 Name:           php-theseer-fDOMDocument
 Version:        1.6.0
@@ -44,7 +44,7 @@ Requires:       php-libxml
 Requires:       php-pcre
 Requires:       php-spl
 
-Provides:       php-pear(%{channel}/%{pear_name})  = %{version}
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Provides:       php-composer(theseer/fdomdocument) = %{version}
 
 
