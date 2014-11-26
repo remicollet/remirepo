@@ -37,6 +37,8 @@
 %global yaml_min_ver     2.1
 %global yaml_max_ver     3.0
 
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
+
 Name:      php-aws-sdk
 Version:   %{github_version}
 Release:   1%{?dist}
@@ -56,7 +58,7 @@ Requires:  php-guzzle-Guzzle >= %{guzzle_min_ver}
 Requires:  php-guzzle-Guzzle <  %{guzzle_max_ver}
 # composer.json: optional
 Requires:  php-openssl
-# phpcompatinfo (computed from version 2.7.1)
+# phpcompatinfo (computed from version 2.7.6)
 Requires:  php-curl
 Requires:  php-date
 Requires:  php-hash
@@ -104,8 +106,7 @@ Optional:
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-# Fix rpmlint issue:
-#     W: spurious-executable-perm /usr/share/doc/php-aws-sdk/composer.json
+# W: spurious-executable-perm /usr/share/doc/php-aws-sdk/composer.json
 chmod a-x composer.json
 
 
@@ -114,10 +115,10 @@ chmod a-x composer.json
 
 
 %install
-mkdir -pm 0755 %{buildroot}%{_datadir}/php/AWSSDKforPHP
-cp -pr src/* %{buildroot}%{_datadir}/php/
-# Compat direcory structure with old PEAR pkg
-ln -s ../Aws %{buildroot}%{_datadir}/php/AWSSDKforPHP/Aws
+mkdir -pm 0755 %{buildroot}%{phpdir}/AWSSDKforPHP
+cp -pr src/* %{buildroot}%{phpdir}/
+# Compat directory structure with old PEAR pkg
+ln -s ../Aws %{buildroot}%{phpdir}/AWSSDKforPHP/Aws
 
 
 %check
@@ -137,12 +138,15 @@ fi
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE.md
-%doc NOTICE.md composer.json
-%{_datadir}/php/Aws
-%{_datadir}/php/AWSSDKforPHP
+%doc composer.json
+%{phpdir}/Aws
+%{phpdir}/AWSSDKforPHP
 
 
 %changelog
+* Tue Nov 25 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.7.6-1
+- Updated to 2.7.6 (BZ #1164158)
+
 * Fri Nov 21 2014 Remi Collet <remi@fedoraproject.org> - 2.7.6-1
 - Update to 2.7.6
 
