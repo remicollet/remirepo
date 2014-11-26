@@ -7,39 +7,40 @@
 # Please, preserve the changelog entries
 #
 
-%{!?__pear: %global __pear %{_bindir}/pear}
-%global pear_name fDOMDocument
-%global channel   pear.netpirates.net
+%global gh_commit    d08cf070350f884c63fc9078d27893c2ab6c7cef
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     theseer
+%global gh_project   fDOMDocument
+%global php_home     %{_datadir}/php/TheSeer
+%global pear_name    fDOMDocument
+%global channel      pear.netpirates.net
 
 Name:           php-theseer-fDOMDocument
 Version:        1.6.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An Extension to PHP standard DOM
 
 Group:          Development/Libraries
 License:        BSD
-URL:            https://github.com/theseer/fDOMDocument
-Source0:        http://%{channel}/get/%{pear_name}-%{version}.tgz
+URL:            https://github.com/%{gh_owner}/%{gh_project}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  php-pear(PEAR) >= 1.9.1
-BuildRequires:  php-channel(%{channel})
 # For test
-BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
+BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php-dom
 BuildRequires:  php-libxml
 
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
-# From from package.xml, required
+# From composer.json, requires
+#        "php": ">=5.3.3",
+#        "ext-dom": "*",
+#        "lib-libxml": "*"
 Requires:       php(language) >= 5.3.3
 Requires:       php-dom
 Requires:       php-libxml
-Requires:       php-pear(PEAR) >= 1.9.1
-Requires:       php-channel(%{channel})
-# From phpcompatinfo report for version 1.5.0
+# From phpcompatinfo report for version 1.6.0
 Requires:       php-pcre
 Requires:       php-spl
 
@@ -53,36 +54,21 @@ and exceptions by default
 
 
 %prep
-%setup -q -c
-
-# Package.xml is V2
-mv package.xml %{pear_name}-%{version}/%{name}.xml
+%setup -q -n %{gh_project}-%{gh_commit}
 
 
 %build
-cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
 
 
 %install
-rm -rf %{buildroot}
-cd %{pear_name}-%{version}
-
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
-
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
-
-# Install XML package description
-mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+rm -rf     %{buildroot}
+mkdir -p   %{buildroot}%{php_home}
+cp -pr src %{buildroot}%{php_home}/%{gh_project}
 
 
 %check
-cd %{pear_name}-%{version}
-sed -e s:src/autoload:TheSeer/fDOMDocument/autoload: \
-    phpunit.xml.dist >phpunit.xml
-phpunit -d date.timezone=UTC
+phpunit
 
 
 %clean
@@ -90,27 +76,24 @@ rm -rf %{buildroot}
 
 
 %post
-%{__pear} install --nodeps --soft --force --register-only \
-  %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-
-%postun
-if [ $1 -eq 0 ] ; then
-  %{__pear} uninstall --nodeps --ignore-errors --register-only \
-    %{channel}/%{pear_name} >/dev/null || :
+if [ -x %{_bindir}/pear ]; then
+  %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      %{pear_channel}/%{pear_name} >/dev/null || :
 fi
 
 
 %files
 %defattr(-,root,root,-)
-%doc %{pear_docdir}/%{pear_name}
-%{pear_xmldir}/%{name}.xml
-%dir %{pear_phpdir}/TheSeer
-%{pear_phpdir}/TheSeer/%{pear_name}
-%{pear_testdir}/%{pear_name}
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README.md composer.json
+%{php_home}/%{gh_project}
 
 
 %changelog
+* Wed Nov 26 2014 Remi Collet <remi@fedoraproject.org> - 1.6.0-2
+- switch from pear to github sources
+
 * Sun Sep 14 2014 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
 - Update to 1.6.0
 - provide php-composer(theseer/fdomdocument)
@@ -137,4 +120,3 @@ fi
 * Thu Oct 11 2012 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
 - Version 1.3.1 (stable) - API 1.3.0 (stable)
 - Initial packaging
-
