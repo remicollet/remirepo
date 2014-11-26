@@ -15,7 +15,7 @@
 
 Summary:       A project build system based on Apache Ant
 Name:          php-pear-phing
-Version:       2.8.2
+Version:       2.9.0
 Release:       1%{?dist}
 
 License:       LGPLv2
@@ -47,13 +47,13 @@ Requires:      php-pear(pear.phpunit.de/PHPUnit) >= 3.6.0
 Requires:      php-pear(pear.phpunit.de/PHP_CodeCoverage) >= 1.1.0
 Requires:      php-pear(pear.phpunit.de/phpcpd) >= 1.3.3
 Requires:      php-pear(pear.phpunit.de/phploc) >= 1.6.4
-Requires:      php-pear(Archive_Tar) >= 1.3.0
+Requires:      php-pear(Archive_Tar) >= 1.3.8
 Requires:      php-pear(HTTP_Request2) >= 2.1.1
 Requires:      php-pear(PHP_CodeSniffer) >= 1.5.0
 Requires:      php-pear(pear.pdepend.org/PHP_Depend) >= 0.10.0
 Requires:      php-pear(pear.phpmd.org/PHP_PMD) >= 1.1.0
 # TODO
-# pear.phing.info/phingdocs >= 2.4.13
+# pear.phing.info/phingdocs >= 2.9.0
 # VersionControl_SVN >= 0.4.0
 # VersionControl_Git >= 0.4.3
 # PEAR_PackageFileManager >= 1.5.2
@@ -118,6 +118,9 @@ fi
 
 
 %changelog
+* Wed Nov 26 2014 Remi Collet <remi@fedoraproject.org> - 2.9.0-1
+- Update to 2.9.0 (stable)
+
 * Fri Oct 10 2014 Remi Collet <remi@fedoraproject.org> - 2.8.2-1
 - Update to 2.8.2
 
