@@ -10,7 +10,7 @@
 Summary:       Package that installs PHP 5.6
 Name:          %scl_name
 Version:       2.0
-Release:       1%{?dist}
+Release:       2%{?dist}
 Group:         Development/Languages
 License:       GPLv2+
 
@@ -71,6 +71,7 @@ packages depending on %scl Software Collection.
 
 cat <<EOF | tee enable
 export PATH=%{_bindir}:%{_sbindir}\${PATH:+:\${PATH}}
+export LD_LIBRARY_PATH=%{_libdir}\${LD_LIBRARY_PATH:+:\${LD_LIBRARY_PATH}}
 export MANPATH=%{_mandir}:\${MANPATH}
 EOF
 
@@ -145,6 +146,9 @@ fi
 
 
 %changelog
+* Wed Nov 26 2014 Remi Collet <remi@fedoraproject.org> 2.0-2
+- add LD_LIBRARY_PATH in enable script for embedded
+
 * Mon Sep  8 2014 Remi Collet <remi@fedoraproject.org> 2.0-1
 - provides php56-runtime(remi)
 - add _sclreq macro
