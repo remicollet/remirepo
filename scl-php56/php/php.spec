@@ -127,12 +127,12 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver RC1
+%global rcver RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.6.3
-Release: 3%{?dist}
+Version: 5.6.4
+Release: 0.1.RC1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -183,9 +183,6 @@ Patch47: php-5.6.3-phpinfo.patch
 Patch91: php-5.6.3-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch101: php-bug68423.patch
-Patch102: php-bug68421.patch
-Patch103: php-bug68420.patch
 
 # Security fixes (200+)
 
@@ -872,9 +869,6 @@ support for using the enchant library to PHP.
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch101 -p1 -b .bug68423
-%patch102 -p1 -b .bug68421
-%patch103 -p1 -b .bug68420
 
 # security patches
 
@@ -1761,6 +1755,9 @@ fi
 
 
 %changelog
+* Thu Nov 27 2014 Remi Collet <remi@fedoraproject.org> 5.6.4-0.1.RC1
+- update to 5.6.4RC1
+
 * Wed Nov 26 2014 Remi Collet <remi@fedoraproject.org> 5.6.3-3
 - add embedded sub package
 - filter all libraries to avoid provides

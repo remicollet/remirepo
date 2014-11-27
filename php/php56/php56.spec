@@ -127,15 +127,15 @@
 %endif
 
 #global snapdate      201405061030
-#global rcver         RC1
+%global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.6.3
+Version: 5.6.4
 %if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.4.%{?snapdate}%{?rcver}%{?dist}
+Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 3%{?dist}
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -197,10 +197,6 @@ Patch47: php-5.6.3-phpinfo.patch
 Patch91: php-5.6.3-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch100: php-bug68419.patch
-Patch101: php-bug68423.patch
-Patch102: php-bug68421.patch
-Patch103: php-bug68420.patch
 
 # Security fixes (200+)
 
@@ -958,10 +954,6 @@ rm -rf ext/json
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch100 -p1 -b .bug68419
-%patch101 -p1 -b .bug68423
-%patch102 -p1 -b .bug68421
-%patch103 -p1 -b .bug68420
 
 # security patches
 
@@ -1951,6 +1943,9 @@ fi
 
 
 %changelog
+* Thu Nov 27 2014 Remi Collet <rcollet@redhat.com> 5.6.4-0.1.RC1
+- php 5.6.4RC1
+
 * Sun Nov 16 2014 Remi Collet <remi@fedoraproject.org> 5.6.3-3
 - FPM: add upstream patch for https://bugs.php.net/68421
   access.format=R doesn't log ipv6 address
