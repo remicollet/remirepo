@@ -7,20 +7,18 @@
 # Please, preserve the changelog entries
 #
 
-%global gh_commit    0dd9b681e8a5e43857551a970f180438f1bf3bc4
+%global gh_commit    a9246376c713156e55c080782d4104bb07d4b899
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     theseer
 %global gh_project   fXSL
 %global php_home     %{_datadir}/php/TheSeer
 
 Name:           php-theseer-fxsl
-Version:        1.1.0
+Version:        1.1.1
 Release:        1%{?dist}
 Summary:        An XSL wrapper / extension to the PHP XSLTProcessor
 
 Group:          Development/Libraries
-# https://github.com/theseer/fXSL/issues/5
-# License fully include in files headers
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
@@ -85,12 +83,16 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-#license LICENSE
+%license LICENSE
 %doc readme.markdown composer.json sample
 %{php_home}/%{gh_project}
 
 
 %changelog
+* Fri Nov 28 2014 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- update to 1.1.1 (no change)
+- add upstream LICENSE file
+
 * Thu Nov 27 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - Initial packaging, version 1.1.0
 - open https://github.com/theseer/fXSL/issues/5 - License
