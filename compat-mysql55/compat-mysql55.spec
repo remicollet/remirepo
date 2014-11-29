@@ -5,7 +5,7 @@
 %endif
 
 Name: compat-mysql55
-Version: 5.5.38
+Version: 5.5.41
 Release: 1%{?dist}
 Summary: MySQL shared libraries
 Group: Applications/Databases
@@ -224,6 +224,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Nov 29 2014 Remi Collet <RPMS@FamilleCollet.com> - 5.5.41-1
+- update to 5.5.41
+
 * Mon Jun  2 2014 Remi Collet <RPMS@FamilleCollet.com> - 5.5.38-1
 - update to 5.5.38
 
