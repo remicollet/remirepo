@@ -10,7 +10,7 @@
 #endif
 
 Name: mysql
-Version: 5.5.40
+Version: 5.5.41
 Release: 1%{?dist}
 
 Summary: MySQL client programs and shared libraries
@@ -556,7 +556,7 @@ echo -e "\nWARNING : This MySQL RPM is not an official Fedora / Red Hat build an
 echo -e "overrides the official one. Don't file bugs on Fedora Project nor Red Hat."
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
-%if %{?fedora}%{!?fedora:99} <= 16
+%if %{?fedora}%{!?fedora:99} <= 18
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -845,6 +845,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Sat Nov 29 2014 Remi Collet <RPMS@FamilleCollet.com> - 5.5.41-1
+- update to MySQL 5.5.41 Community Server GA
+  http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-41.html
+
 * Wed Sep 24 2014 Remi Collet <RPMS@FamilleCollet.com> - 5.5.40-1
 - update to MySQL 5.5.40 Community Server GA
   http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-40.html
