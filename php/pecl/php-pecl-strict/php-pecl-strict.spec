@@ -24,8 +24,8 @@
 
 Summary:        Strict scalar parameter type hint
 Name:           %{?scl_prefix}php-pecl-strict
-Version:        0.3.0
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        0.4.0
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -226,6 +226,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 01 2014 Remi Collet <remi@fedoraproject.org> - 0.4.0-1
+- Update to 0.4.0
+
 * Mon Nov 24 2014 Remi Collet <remi@fedoraproject.org> - 0.3.0-3
 - drop conflicts with ionCube Loader
 
