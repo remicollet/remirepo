@@ -9,7 +9,7 @@
 %global pluginname   reports
 
 Name:           glpi-reports
-Version:        1.7.2
+Version:        1.7.3
 Release:        1%{?dist}
 Summary:        GLPI Plugin providing additional reports
 Summary(fr):    Extension GLPI fournissant des rapports supplémentaires
@@ -18,7 +18,7 @@ Group:          Applications/Internet
 License:        GPLv2+
 URL:            https://forge.indepnet.net/projects/reports
 
-Source0:        https://forge.indepnet.net/attachments/download/1665/glpi_reports-1.7.2.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1920/glpi_reports-1.7.3.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -101,6 +101,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec  1 2014 Remi Collet <remi@fedoraproject.org> - 1.7.3-1
+- version 1.7.3
+  https://forge.indepnet.net/versions/1093
+
 * Wed Feb 12 2014 Remi Collet <remi@fedoraproject.org> - 1.7.2-1
 - version 1.7.2
   https://forge.indepnet.net/projects/reports/versions/702
