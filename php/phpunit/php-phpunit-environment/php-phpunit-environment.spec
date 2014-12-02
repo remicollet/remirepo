@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    0d9bf79554d2a999da194a60416c15cf461eb67d
+%global gh_commit    6e6c71d918088c251b181ba8b3088af4ac336dd7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   environment
@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-phpunit-environment
-Version:        1.2.0
+Version:        1.2.1
 Release:        1%{?dist}
 Summary:        Handle HHVM/PHP environments
 
@@ -27,8 +27,6 @@ Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
-
-Patch0:         %{gh_project}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -52,8 +50,6 @@ has runtime-specific (PHP / HHVM) execution paths.
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
-
-%patch0 -p1
 
 
 %build
@@ -79,13 +75,7 @@ then
     >PHPUnit/Autoload.php
 fi
 
-# Ignore this test which requires a tty
-# https://github.com/sebastianbergmann/environment/issues/5
-rm -f tests/ConsoleTest.php
-
-phpunit \
-  --bootstrap src/autoload.php \
-  -d date.timezone=UTC
+phpunit --bootstrap src/autoload.php
 %endif
 
 
@@ -101,6 +91,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec  2 2014 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- update to 1.2.1
+
 * Sat Oct 25 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - update to 1.2.0
 
