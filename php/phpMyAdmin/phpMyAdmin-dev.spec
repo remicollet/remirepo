@@ -9,7 +9,7 @@
 #
 # Please, preserve the changelog entries
 #
-#global prever rc3
+%global prever rc1
 %{!?_pkgdocdir: %global _pkgdocdir %{_datadir}/doc/%{name}-%{version}}
 %if 0%{?fedora} >= 21
 # nginx 1.6 with nginx-filesystem
@@ -22,8 +22,8 @@
 %endif
 
 Name: phpMyAdmin
-Version: 4.2.13
-Release: 1%{?dist}
+Version: 4.3.0
+Release: 0.1.%{prever}%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -76,6 +76,7 @@ Requires:  php-php-gettext
 Requires:  php-tcpdf
 Requires:  php-tcpdf-dejavu-sans-fonts
 Requires:  php-phpseclib-crypt-aes
+Requires:  php-phpseclib-crypt-random
 # optional and ignored php-gmp (as bcmath is enough)
 
 Provides:  phpmyadmin = %{version}-%{release}
@@ -159,10 +160,9 @@ rm -f %{buildroot}/%{_datadir}/%{name}/setup/lib/.htaccess
 rm -f %{buildroot}/%{_datadir}/%{name}/setup/frames/.htaccess
 rm -rf %{buildroot}/%{_datadir}/%{name}/contrib
 # documentation
-rm -rf    %{buildroot}%{_datadir}/%{name}/{doc,examples}/
+rm -rf    %{buildroot}%{_datadir}/%{name}/doc/
 mkdir -p  %{buildroot}%{_datadir}/%{name}/doc/
 ln -s %{_pkgdocdir}/html  %{buildroot}%{_datadir}/%{name}/doc/html
-mv -f config.sample.inc.php examples/
 
 mkdir -p %{buildroot}/%{_localstatedir}/lib/%{name}/{upload,save,config}
 rm -rf %{buildroot}%{_datadir}/%{name}/libraries/php-gettext
@@ -199,8 +199,8 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE*
-%doc ChangeLog README CONTRIBUTING.md DCO
-%doc doc/html/ examples/
+%doc ChangeLog README CONTRIBUTING.md DCO config.sample.inc.php
+%doc doc/html/
 %{_datadir}/%{name}
 %attr(0750,root,apache) %dir %{_sysconfdir}/%{name}
 %config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.inc.php
@@ -214,6 +214,10 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Tue Dec  2 2014 Remi Collet <rpms@famillecollet.com> 4.3.0-0.1.rc1
+- update to 4.3.0-rc1
+- examples are now required at runtime
+
 * Sun Nov 30 2014 Remi Collet <rpms@famillecollet.com> 4.2.12-1
 - update to 4.2.13 (Sun, 30 Nov 2014, bugfix)
 
