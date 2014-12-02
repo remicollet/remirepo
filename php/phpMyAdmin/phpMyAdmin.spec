@@ -214,7 +214,7 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
-* Sun Nov 30 2014 Remi Collet <rpms@famillecollet.com> 4.2.12-1
+* Sun Nov 30 2014 Remi Collet <rpms@famillecollet.com> 4.2.13-1
 - update to 4.2.13 (Sun, 30 Nov 2014, bugfix)
 
 * Thu Nov 20 2014 Remi Collet <rpms@famillecollet.com> 4.2.12-1
