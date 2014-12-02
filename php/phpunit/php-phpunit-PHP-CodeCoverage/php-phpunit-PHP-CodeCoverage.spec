@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    53603b3c995f5aab6b59c8e08c3a663d2cc810b7
+%global gh_commit    7ce9da20f96964bb7a4033f53834df13328dbeab
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-code-coverage
@@ -22,8 +22,8 @@
 %endif
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        2.0.11
-Release:        2%{?dist}
+Version:        2.0.12
+Release:        1%{?dist}
 Summary:        PHP code coverage information
 
 Group:          Development/Libraries
@@ -109,9 +109,7 @@ cp -pr PHP %{buildroot}%{php_home}/PHP
 %check
 sed -e '/log/d' phpunit.xml.dist >phpunit.xml
 
-phpunit \
-  -d date.timezone=UTC \
-  --bootstrap PHP/CodeCoverage/Autoload.php
+phpunit --bootstrap PHP/CodeCoverage/Autoload.php
 %endif
 
 
@@ -136,6 +134,9 @@ fi
 
 
 %changelog
+* Tue Dec  2 2014 Remi Collet <remi@fedoraproject.org> - 2.0.12-1
+- update to 2.0.12
+
 * Thu Sep  4 2014 Remi Collet <remi@fedoraproject.org> - 2.0.11-2
 - add BR on php-pecl-xdebug (thanks to Koschei)
 
