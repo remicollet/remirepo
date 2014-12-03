@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-turba
-Version:        4.2.3
+Version:        4.2.4
 Release:        1%{?dist}
 Summary:        A web based address book
 
@@ -180,12 +180,7 @@ cd %{pear_name}-%{version}/test/Turba
 sed -e 's/function testDuplicateDetectionFromAsWithNoEmail/function SKIP_testDuplicateDetectionFromAsWithNoEmail/' \
     -i Unit/Driver/Base.php
 
-# TODO need investigation
-rm  Unit/ExportTest.php
-
-phpunit\
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %post
@@ -230,6 +225,9 @@ fi
 
 
 %changelog
+* Wed Dec 03 2014 Remi Collet <remi@fedoraproject.org> - 4.2.4-1
+- Update to 4.2.4
+
 * Wed Oct 29 2014 Remi Collet <remi@fedoraproject.org> - 4.2.3-1
 - Update to 4.2.3
 
