@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Memcache
-Version:        2.0.6
+Version:        2.0.7
 Release:        1%{?dist}
 Summary:        Horde Memcache API
 
@@ -87,6 +87,9 @@ fi
 
 
 %changelog
+* Wed Dec 03 2014 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
+- Update to 2.0.7
+
 * Wed Jun 04 2014 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
 - Update to 2.0.6
 
