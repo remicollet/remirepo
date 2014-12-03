@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #16 suhosin version 0.9.37-dev ] {
+Extension [ <persistent> extension #181 suhosin version 0.9.37 ] {
 
   - INI {
     Entry [ suhosin.log.syslog <PERDIR,SYSTEM> ]

@@ -8,8 +8,8 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0fa87e1ab1697cb3b39e3a5663f97dc15cf8d98f
-%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+#global gh_commit    f0683bf1d9d77e5532e637778107e20826b8d1af
+#global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     stefanesser
 %global gh_project   suhosin
 %{?scl:          %scl_package         php-suhosin}
@@ -27,7 +27,7 @@
 
 Name:           %{?scl_prefix}php-suhosin
 Version:        0.9.37
-Release:        0.1.%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Suhosin is an advanced protection system for PHP installations
 
 Group:          Development/Languages
@@ -84,6 +84,9 @@ mv %{ext_name}-%{gh_commit} NTS
 %else
 mv %{ext_name}-%{version} NTS
 %endif
+
+# Fix version
+sed -e '/SUHOSIN_EXT_VERSION/s/0.9.37-dev/%{version}/' -i NTS/php_suhosin.h
 
 # Check extension version
 ver=$(sed -n '/SUHOSIN_EXT_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_suhosin.h)
@@ -151,7 +154,7 @@ rm tests/session/session_recursive_crash.phpt
 %endif
 %if "%{php_version}" < "5.5"
 rm tests/executor/function_blacklist_printf.phpt
-rm tests/executor/function_whilelist_call_user_func.phpt
+rm tests/executor/function_whitelist_call_user_func.phpt
 %endif
 rm tests/filter/suhosin_upload_disallow_binary_on.phpt
 
@@ -184,6 +187,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec  3 2014 Remi Collet <remi@fedoraproject.org> - 0.9.37-1
+- update to 0.9.37
+
 * Mon Nov 24 2014 Remi Collet <remi@fedoraproject.org> - 0.9.37-0.1.0fa87e1
 - update to 0.9.37RC1
 - fix license handling
