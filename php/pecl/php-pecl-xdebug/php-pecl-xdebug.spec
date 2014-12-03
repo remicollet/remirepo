@@ -30,12 +30,16 @@
 Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.2.6
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 %if 0%{?gitver:1}
 Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{commit}/%{pecl_name}-%{version}-%{gitver}.tar.gz
 %else
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
+
+# http://bugs.xdebug.org/view.php?id=1087
+# https://www.couchbase.com/issues/browse/PCBC-294
+Patch0:         %{pecl_name}-upstream.patch
 
 # The Xdebug License, version 1.01
 # (Based on "The PHP License", version 3.0)
@@ -115,6 +119,7 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 %endif
 
 cd NTS
+%patch0 -p1 -b .upstream
 
 # Check extension version
 ver=$(sed -n '/XDEBUG_VERSION/{s/.* "//;s/".*$//;p}' php_xdebug.h)
@@ -254,6 +259,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec  3 2014 Remi Collet <remi@fedoraproject.org> - 2.2.6-2
+- add upstream patch for couchbase compatibility
+  see http://bugs.xdebug.org/view.php?id=1087
+
 * Sun Nov 16 2014 Remi Collet <remi@fedoraproject.org> - 2.2.6-1
 - Update to 2.2.6 (stable)
 

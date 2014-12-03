@@ -1,0 +1,48 @@
+From a55460a63144ba32d3817c1e70a091a579c44478 Mon Sep 17 00:00:00 2001
+From: Derick Rethans <github@derickrethans.nl>
+Date: Sun, 23 Nov 2014 17:53:30 +0000
+Subject: [PATCH] Fixed bug #1087: zend_execute_script or zend_eval_string in
+ RINIT segfaults.
+
+---
+ xdebug.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/xdebug.c b/xdebug.c
+index 8bd4f61..1b3517c 100644
+--- a/xdebug.c
++++ b/xdebug.c
+@@ -1588,7 +1588,9 @@ void xdebug_execute_internal(zend_execute_data *current_execute_data, struct _ze
+ 		}
+ 	}
+ 
+-	xdebug_llist_remove(XG(stack), XDEBUG_LLIST_TAIL(XG(stack)), xdebug_stack_element_dtor);
++	if (XG(stack)) {
++		xdebug_llist_remove(XG(stack), XDEBUG_LLIST_TAIL(XG(stack)), xdebug_stack_element_dtor);
++	}
+ 	XG(level)--;
+ }
+ 
+From dcb38d5053e9df32506aeabc8eb09d8370e5641f Mon Sep 17 00:00:00 2001
+From: Derick Rethans <github@derickrethans.nl>
+Date: Sun, 23 Nov 2014 22:51:43 +0000
+Subject: [PATCH] Fixed segfaults with ZTS on PHP 5.6
+
+Find through Travis, it's already being useful!
+---
+ xdebug.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/xdebug.c b/xdebug.c
+index 1b3517c..b8c9d5a 100644
+--- a/xdebug.c
++++ b/xdebug.c
+@@ -314,6 +314,8 @@ static void php_xdebug_init_globals (zend_xdebug_globals *xg TSRMLS_DC)
+ 	xg->output_is_tty        = OUTPUT_NOT_CHECKED;
+ 	xg->stdout_mode          = 0;
+ 	xg->in_at                = 0;
++	xg->active_execute_data  = NULL;
++	xg->active_op_array      = NULL;
+ 
+ 	xdebug_llist_init(&xg->server, xdebug_superglobals_dump_dtor);
+ 	xdebug_llist_init(&xg->get, xdebug_superglobals_dump_dtor);
