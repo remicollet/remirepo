@@ -9,7 +9,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global prever rc1
+%global prever rc2
 %{!?_pkgdocdir: %global _pkgdocdir %{_datadir}/doc/%{name}-%{version}}
 %if 0%{?fedora} >= 21
 # nginx 1.6 with nginx-filesystem
@@ -214,6 +214,12 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Wed Dec  3 2014 Remi Collet <rpms@famillecollet.com> 4.3.0-0.2.rc2
+- update to 4.3.0-rc2
+
+* Wed Dec  3 2014 Remi Collet <rpms@famillecollet.com> 4.2.13.1-1
+- update to 4.2.13 (Wed, 3 Dec 2014, security)
+
 * Tue Dec  2 2014 Remi Collet <rpms@famillecollet.com> 4.3.0-0.1.rc1
 - update to 4.3.0-rc1
 - examples are now required at runtime
