@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #16 couchbase version 2.0.1 ] {
+Extension [ <persistent> extension #169 couchbase version 2.0.2 ] {
 
   - Constants [57] {
     Constant [ integer COUCHBASE_PERSISTTO_MASTER ] { 1 }
@@ -80,7 +80,7 @@ Extension [ <persistent> extension #16 couchbase version 2.0.1 ] {
       }
 
       - Methods [9] {
-        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+        Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $message ]
@@ -115,6 +115,28 @@ Extension [ <persistent> extension #16 couchbase version 2.0.1 ] {
       }
     }
 
+    Class [ <internal:couchbase> class CouchbaseMetaDoc ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> public $error ]
+        Property [ <default> public $value ]
+        Property [ <default> public $flags ]
+        Property [ <default> public $cas ]
+      }
+
+      - Methods [0] {
+      }
+    }
+
     Class [ <internal:couchbase> class _CouchbaseCluster ] {
 
       - Constants [0] {
@@ -138,28 +160,6 @@ Extension [ <persistent> extension #16 couchbase version 2.0.1 ] {
 
         Method [ <internal:couchbase> public method http_request ] {
         }
-      }
-    }
-
-    Class [ <internal:couchbase> class CouchbaseMetaDoc ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [4] {
-        Property [ <default> public $error ]
-        Property [ <default> public $value ]
-        Property [ <default> public $flags ]
-        Property [ <default> public $cas ]
-      }
-
-      - Methods [0] {
       }
     }
 

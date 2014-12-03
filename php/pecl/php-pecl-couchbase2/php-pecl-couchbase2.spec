@@ -25,7 +25,7 @@
 
 Summary:       Couchbase Server PHP extension
 Name:          %{?scl_prefix}php-pecl-couchbase2
-Version:       2.0.1
+Version:       2.0.2
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
@@ -35,6 +35,8 @@ Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?svnrev:-dev}.tg
 BuildRequires: %{?scl_prefix}php-devel >= 5.3.0
 BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: libcouchbase-devel
+# to ensure compatibility with XDebug
+BuildRequires: %{?scl_prefix}php-pecl-xdebug
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -52,8 +54,6 @@ Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 # Only 1 version can be installed
 Conflicts:     %{?scl_prefix}php-pecl-couchbase < 2
-# http://www.couchbase.com/issues/browse/PCBC-294
-Conflicts:     %{?scl_prefix}php-pecl-xdebug
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -162,12 +162,14 @@ done
 : minimal NTS load test
 %{__php} -n \
    -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
+   -d zend_extension=%{php_extdir}/xdebug.so \
    -m | grep %{pecl_name}
 
 %if %{with_zts}
 : minimal ZTS load test
 %{__ztsphp} -n \
    -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
+   -d zend_extension=%{php_ztsextdir}/xdebug.so \
    -m | grep %{pecl_name}
 %endif
 
@@ -199,6 +201,9 @@ fi
 
 
 %changelog
+* Wed Dec 03 2014 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
+
 * Wed Nov 05 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Update to 2.0.1
 
