@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-horde
-Version:        5.2.2
+Version:        5.2.3
 Release:        1%{?dist}
 Summary:        Horde Application Framework
 
@@ -310,6 +310,9 @@ fi
 
 
 %changelog
+* Wed Dec 03 2014 Remi Collet <remi@fedoraproject.org> - 5.2.3-1
+- Update to 5.2.3
+
 * Wed Oct 29 2014 Remi Collet <remi@fedoraproject.org> - 5.2.2-1
 - Update to 5.2.2
 
