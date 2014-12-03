@@ -16,7 +16,7 @@
 %global with_zts  0%{?__ztsphp:1}
 
 %if "%{php_version}" < "5.6"
-# After igbinary
+# After igbinary (and XDebug for 5.4)
 %global ini_name  z-%{pecl_name}.ini
 %else
 # After 40-igbinary and 40-json
@@ -160,16 +160,14 @@ done
 
 %check
 : minimal NTS load test
-%{__php} -n \
+%{__php} \
    -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
-   -d zend_extension=%{php_extdir}/xdebug.so \
    -m | grep %{pecl_name}
 
 %if %{with_zts}
 : minimal ZTS load test
 %{__ztsphp} -n \
    -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
-   -d zend_extension=%{php_ztsextdir}/xdebug.so \
    -m | grep %{pecl_name}
 %endif
 
