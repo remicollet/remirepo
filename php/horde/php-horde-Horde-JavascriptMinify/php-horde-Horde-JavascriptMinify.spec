@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-JavascriptMinify
-Version:        1.1.0
+Version:        1.1.1
 Release:        1%{?dist}
 Summary:        Javascript Minification
 
@@ -97,5 +97,8 @@ fi
 
 
 %changelog
+* Wed Dec 03 2014 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- Update to 1.1.1
+
 * Tue Jul  8 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - Initial package, version 1.0.0
