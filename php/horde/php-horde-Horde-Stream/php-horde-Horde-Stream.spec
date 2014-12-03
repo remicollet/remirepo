@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Stream
-Version:        1.6.1
+Version:        1.6.2
 Release:        1%{?dist}
 Summary:        Horde stream handler
 
@@ -77,12 +77,8 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit\
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %post
@@ -106,6 +102,9 @@ fi
 
 
 %changelog
+* Wed Dec 03 2014 Remi Collet <remi@fedoraproject.org> - 1.6.2-1
+- Update to 1.6.2
+
 * Wed Feb 12 2014 Remi Collet <remi@fedoraproject.org> - 1.6.1-1
 - Update to 1.6.1
 - add optional dependencies, Horde_Stream_Wrapper, Horde_Util
