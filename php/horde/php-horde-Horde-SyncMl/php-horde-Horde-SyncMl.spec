@@ -14,7 +14,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-SyncMl
-Version:        2.0.4
+Version:        2.0.5
 Release:        1%{?dist}
 Summary:        Horde_SyncMl provides an API for processing SyncML requests
 
@@ -50,7 +50,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Util) >= 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Xml_Wbxml) >= 2.0.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Xml_Wbxml) >= 3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
 Conflicts:      php-pear(%{pear_channel}/Horde_Translation) >= 3.0.0
 # Optional
 Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
@@ -114,13 +114,8 @@ done
 
 %check
 %if %{with_tests}
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -150,6 +145,10 @@ fi
 
 
 %changelog
+* Wed Dec 03 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- Update to 2.0.5
+- raise dependency on Horde_Translation >= 2.2.0
+
 * Fri Jul 25 2014 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4
 
