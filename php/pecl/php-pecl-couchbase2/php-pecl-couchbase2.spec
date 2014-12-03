@@ -166,7 +166,7 @@ done
 
 %if %{with_zts}
 : minimal ZTS load test
-%{__ztsphp} -n \
+%{__ztsphp} \
    -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
    -m | grep %{pecl_name}
 %endif
