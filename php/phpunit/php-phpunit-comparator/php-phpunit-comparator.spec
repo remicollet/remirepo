@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    e54a01c0da1b87db3c5a3c4c5277ddf331da4aef
+%global gh_commit    c484a80f97573ab934e37826dba0135a3301b26a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   comparator
@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-phpunit-comparator
-Version:        1.0.1
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        Compare PHP values for equality
 
@@ -72,23 +72,16 @@ mkdir -p   %{buildroot}%{php_home}
 cp -pr src %{buildroot}%{php_home}/Comparator
 
 
-%if %{with_tests}
 %check
+%if %{with_tests}
 sed -e 's/vendor/src/' -i tests/bootstrap.php
-
-if [ -d /usr/share/php/PHPUnit ]
-then
-  # Hack PHPUnit 4 autoloader to not use system library
-  mkdir PHPUnit
-  sed -e 's:SebastianBergmann/Comparator:src:' \
-    -e 's:dirname(__FILE__):"/usr/share/php/PHPUnit":' \
-    /usr/share/php/PHPUnit/Autoload.php \
-    >PHPUnit/Autoload.php
-fi
+sed -e '/log/d' phpunit.xml.dist >phpunit.xml
 
 phpunit \
-  --bootstrap tests/bootstrap.php \
-  -d date.timezone=UTC
+  --include-path %{_datadir}/php \
+  --bootstrap tests/bootstrap.php
+%else
+: bootstrap build with test suite disabled
 %endif
 
 
@@ -106,6 +99,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec  4 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- update to 1.1.0
+
 * Sun Oct  5 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - update to 1.0.1
 - enable test suite
