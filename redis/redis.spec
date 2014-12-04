@@ -10,8 +10,8 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             redis
-Version:          2.8.17
-Release:          2%{?dist}
+Version:          2.8.18
+Release:          1%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -26,9 +26,9 @@ Source5:          %{name}-sentinel.init
 Source6:          %{name}-sentinel.service
 Source7:          %{name}-shutdown
 # Update configuration for Fedora
-Patch0:           %{name}-2.8.15-conf.patch
-Patch1:           %{name}-deps-PIC.patch
-Patch2:           %{name}-deps-unbundle-jemalloc.patch
+Patch0:           0001-redis-2.8.18-redis-conf.patch
+Patch1:           0002-redis-2.8.18-deps-library-fPIC-performance-tuning.patch
+Patch2:           0003-redis-2.8.11-use-system-jemalloc.patch
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if !0%{?el5}
@@ -218,6 +218,10 @@ fi
 
 
 %changelog
+* Thu Dec  4 2014 Remi Collet <remi@fedoraproject.org> - 2.8.18-1
+- Redis 2.8.18 - Release date: 4 Dec 2014
+  upgrade urgency: LOW for both Redis and Sentinel.
+
 * Sun Sep 21 2014 Remi Collet <remi@fedoraproject.org> - 2.8.17-2
 - fix sentinel service unit file for systemd
 - also use redis-shutdown in init scripts

@@ -1,6 +1,6 @@
-diff -up redis-2.8.15/redis.conf.rpmconf redis-2.8.15/redis.conf
---- redis-2.8.15/redis.conf.rpmconf	2014-09-12 16:16:58.000000000 +0200
-+++ redis-2.8.15/redis.conf	2014-09-12 17:46:45.918482580 +0200
+diff -up redis-2.8.18/redis.conf.rpmconf redis-2.8.18/redis.conf
+--- redis-2.8.18/redis.conf.rpmconf	2014-12-04 11:36:52.000000000 +0100
++++ redis-2.8.18/redis.conf	2014-12-04 19:39:55.101325437 +0100
 @@ -62,6 +62,7 @@ tcp-backlog 511
  #
  # bind 192.168.1.100 10.0.0.1
@@ -20,16 +20,16 @@ diff -up redis-2.8.15/redis.conf.rpmconf redis-2.8.15/redis.conf
  # and optionally update the other syslog parameters to suit your needs.
 @@ -184,7 +185,7 @@ dbfilename dump.rdb
  # The Append Only File will also be created inside this directory.
- # 
+ #
  # Note that you must specify a directory here, not a file name.
 -dir ./
 +dir /var/lib/redis/
  
  ################################# REPLICATION #################################
  
-diff -up redis-2.8.15/sentinel.conf.rpmconf redis-2.8.15/sentinel.conf
---- redis-2.8.15/sentinel.conf.rpmconf	2014-09-12 17:46:45.918482580 +0200
-+++ redis-2.8.15/sentinel.conf	2014-09-12 17:47:39.512717702 +0200
+diff -up redis-2.8.18/sentinel.conf.rpmconf redis-2.8.18/sentinel.conf
+--- redis-2.8.18/sentinel.conf.rpmconf	2014-12-04 11:36:52.000000000 +0100
++++ redis-2.8.18/sentinel.conf	2014-12-04 19:39:21.949190312 +0100
 @@ -4,6 +4,11 @@
  # The port that this sentinel instance will run on
  port 26379
