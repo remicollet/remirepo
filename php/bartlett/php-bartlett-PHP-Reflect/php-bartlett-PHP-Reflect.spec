@@ -6,13 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    191ca7c7e44a36a0cd1dfaf42c4af77d0a9974cc
+%global gh_commit    f21f4d332b264973f0be83ccdb4c4e1d8704b9bb
 #global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     llaville
 %global gh_project   php-reflect
 
 Name:           php-bartlett-PHP-Reflect
-Version:        2.6.0
+Version:        2.6.1
 %global specrel 1
 Release:        %{?gh_short:0.%{specrel}.git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
@@ -98,8 +98,8 @@ Documentation: http://php5.laurent-laville.org/reflect/manual/current/en/
 
 
 %prep
-#setup -q -n %{gh_project}-%{gh_commit}
-%setup -q -n %{gh_project}-%{version}
+%setup -q -n %{gh_project}-%{gh_commit}
+#setup -q -n %{gh_project}-%{version}
 
 %patch0 -p1 -b .rpm
 
@@ -149,6 +149,9 @@ fi
 
 
 %changelog
+* Thu Dec  4 2014 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
+- Update to 2.6.1
+
 * Thu Nov 13 2014 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
 - Update to 2.6.0
 - add dependency on justinrainbow/json-schema
