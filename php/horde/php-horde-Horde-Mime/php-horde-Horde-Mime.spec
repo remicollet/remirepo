@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-horde-Horde-Mime
-Version:        2.5.2
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        Horde MIME Library
 
@@ -136,7 +136,7 @@ rm MdnTest.php
 
 phpunit .
 %else
-: Test disabled, missing '--with tests' option.
+: bootstrap build with test suite disabled
 %endif
 
 
@@ -164,6 +164,9 @@ fi
 
 
 %changelog
+* Fri Dec 05 2014 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- Update to 2.6.0
+
 * Tue Nov 25 2014 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - Update to 2.5.2
 - enable test suite
