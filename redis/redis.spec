@@ -29,6 +29,8 @@ Source7:          %{name}-shutdown
 Patch0:           0001-redis-2.8.18-redis-conf.patch
 Patch1:           0002-redis-2.8.18-deps-library-fPIC-performance-tuning.patch
 Patch2:           0003-redis-2.8.11-use-system-jemalloc.patch
+# For old RHEL-5
+Patch9:           redis-2.8.18-el5.patch
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if !0%{?el5}
@@ -71,11 +73,9 @@ Documentation: http://redis.io/documentation
 %patch2 -p1 -b .jem
 
 %if 0%{?rhel} == 5
-%ifarch i386
-# Fix undefined reference to __sync_add_and_fetch_4
-sed -e '/HAVE_ATOMIC/d' -i ./src/config.h
+%patch9 -p1 -b .el5
 %endif
-%endif
+
 
 %build
 rm -rvf deps/jemalloc
@@ -221,6 +221,7 @@ fi
 * Thu Dec  4 2014 Remi Collet <remi@fedoraproject.org> - 2.8.18-1
 - Redis 2.8.18 - Release date: 4 Dec 2014
   upgrade urgency: LOW for both Redis and Sentinel.
+- fix isfinite missing on EL-5
 
 * Sun Sep 21 2014 Remi Collet <remi@fedoraproject.org> - 2.8.17-2
 - fix sentinel service unit file for systemd

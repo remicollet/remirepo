@@ -1,0 +1,25 @@
+diff -up redis-2.8.18/deps/lua/src/lua_cmsgpack.c.el5 redis-2.8.18/deps/lua/src/lua_cmsgpack.c
+--- redis-2.8.18/deps/lua/src/lua_cmsgpack.c.el5	2014-12-05 06:42:14.000000000 +0100
++++ redis-2.8.18/deps/lua/src/lua_cmsgpack.c	2014-12-05 06:59:31.000000000 +0100
+@@ -18,7 +18,7 @@
+     #define LUACMSGPACK_MAX_NESTING  16 /* Max tables nesting. */
+ #endif
+ 
+-#if (_XOPEN_SOURCE >= 600 || _ISOC99_SOURCE || _POSIX_C_SOURCE >= 200112L)
++#if 0
+     #define IS_FINITE(x) isfinite(x)
+ #else
+     #define IS_FINITE(x) ((x) == (x) && (x) + 1 > (x))
+diff -up redis-2.8.18/src/config.h.el5 redis-2.8.18/src/config.h
+--- redis-2.8.18/src/config.h.el5	2014-12-05 06:39:29.000000000 +0100
++++ redis-2.8.18/src/config.h	2014-12-05 07:09:53.000000000 +0100
+@@ -191,7 +191,7 @@ void setproctitle(const char *fmt, ...);
+ #if defined(__clang__)
+ #define HAVE_ATOMIC
+ #endif
+-#if (defined(__GLIBC__) && defined(__GLIBC_PREREQ))
++#if (defined(__GLIBC__) && defined(__GLIBC_PREREQ)) && defined(__x86_64__)
+ #if (GNUC_VERSION >= 40100 && __GLIBC_PREREQ(2, 6))
+ #define HAVE_ATOMIC
+ #endif
+diff -up redis-2.8.18/src/rdb.c.el5 redis-2.8.18/src/rdb.c
