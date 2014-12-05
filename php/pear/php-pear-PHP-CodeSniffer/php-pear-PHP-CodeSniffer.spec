@@ -88,7 +88,7 @@ install -pm 644 %{pear_name}.xml %{buildroot}%{pear_xmldir}
 %check
 cd %{pear_name}-%{version}/tests
 
-# Version 1.5.5 : 216, Assertions: 57, Skipped: 4.
+# Version 2.0.0: 221, Assertions: 69, Skipped: 4.
 %{_bindir}/phpunit AllTests.php
 
 
