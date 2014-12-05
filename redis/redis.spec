@@ -11,7 +11,7 @@
 
 Name:             redis
 Version:          2.8.18
-Release:          1%{?dist}
+Release:          1%{?dist}.1
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -72,9 +72,7 @@ Documentation: http://redis.io/documentation
 %patch1 -p1 -b .pic
 %patch2 -p1 -b .jem
 
-%if 0%{?rhel} == 5
-%patch9 -p1 -b .el5
-%endif
+%patch9 -p1 -b .upstream
 
 
 %build
@@ -218,6 +216,9 @@ fi
 
 
 %changelog
+* Thu Dec  4 2014 Remi Collet <remi@fedoraproject.org> - 2.8.18-1.1
+- EL-5 rebuild with upstream patch
+
 * Thu Dec  4 2014 Remi Collet <remi@fedoraproject.org> - 2.8.18-1
 - Redis 2.8.18 - Release date: 4 Dec 2014
   upgrade urgency: LOW for both Redis and Sentinel.
