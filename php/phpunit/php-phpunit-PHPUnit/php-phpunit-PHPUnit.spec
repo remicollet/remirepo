@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    2dab9d593997db4abcf58d0daf798eb4e9cecfe1
+%global gh_commit    bbe7bcb83b6ec1a9eaabbe1b70d4795027c53ee0
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,7 +17,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.3.5
+Version:        4.4.0
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -31,8 +31,6 @@ Source1:        Autoload.php.in
 
 # Fix command for autoload
 Patch0:         %{gh_project}-rpm.patch
-# https://github.com/sebastianbergmann/phpunit/pull/1458
-Patch1:         %{gh_project}-colors.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -47,6 +45,7 @@ BuildRequires:  php-composer(sebastian/comparator) >= 1.0
 BuildRequires:  php-composer(sebastian/diff) >= 1.1
 BuildRequires:  php-composer(sebastian/environment) >= 1.1
 BuildRequires:  php-composer(sebastian/exporter) >= 1.0
+BuildRequires:  php-composer(sebastian/global-state) >= 1.0
 BuildRequires:  php-composer(sebastian/version) >= 1.0
 BuildRequires:  php-composer(symfony/yaml) >= 2.0
 BuildRequires:  php-composer(symfony/class-loader) >= 2.0
@@ -64,6 +63,7 @@ BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 #        "sebastian/diff": "~1.1",
 #        "sebastian/environment": "~1.1",
 #        "sebastian/exporter": "~1.0",
+#        "sebastian/global-state": "~1.0",
 #        "sebastian/version": "~1.0",
 #        "ext-dom": "*",
 #        "ext-json": "*",
@@ -89,6 +89,8 @@ Requires:       php-composer(sebastian/environment) >= 1.1
 Requires:       php-composer(sebastian/environment) <  2
 Requires:       php-composer(sebastian/exporter) >= 1.0
 Requires:       php-composer(sebastian/exporter) <  2
+Requires:       php-composer(sebastian/global-state) >= 1.0
+Requires:       php-composer(sebastian/global-state) <  2
 Requires:       php-composer(sebastian/version) >= 1.0
 Requires:       php-composer(sebastian/version) <  2
 Requires:       php-composer(symfony/yaml) >= 2.0
@@ -140,11 +142,6 @@ for the creation, execution and analysis of Unit Tests.
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p0 -b .rpm
-%patch1 -p1
-
-# https://github.com/sebastianbergmann/phpunit/pull/1500
-chmod -x src/Util/Blacklist.php \
-         src/Util/GlobalState.php
 
 
 %build
@@ -203,6 +200,10 @@ fi
 
 
 %changelog
+* Fri Dec  5 2014 Remi Collet <remi@fedoraproject.org> - 4.4.0-1
+- Update to 4.4.0
+- add dependency on sebastian/global-state
+
 * Tue Nov 11 2014 Remi Collet <remi@fedoraproject.org> - 4.3.5-1
 - Update to 4.3.5
 - define date.timezone in phpunit command to avoid warning

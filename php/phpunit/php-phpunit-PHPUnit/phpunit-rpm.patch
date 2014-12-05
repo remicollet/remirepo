@@ -1,41 +1,41 @@
 diff -up ./phpunit.rpm ./phpunit
---- ./phpunit.rpm	2014-10-03 07:17:00.000000000 +0200
-+++ ./phpunit	2014-10-03 11:09:31.304175626 +0200
+--- ./phpunit.rpm	2014-12-05 07:49:03.000000000 +0100
++++ ./phpunit	2014-12-05 09:19:29.774284886 +0100
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
  <?php
  /* PHPUnit
   *
-@@ -35,22 +35,10 @@
-  * POSSIBILITY OF SUCH DAMAGE.
-  */
-
+@@ -39,24 +39,7 @@ if (!ini_get('date.timezone')) {
+      ini_set('date.timezone', 'UTC');
+ }
+ 
 -foreach (array(__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php') as $file) {
 -    if (file_exists($file)) {
 -        define('PHPUNIT_COMPOSER_INSTALL', $file);
 -        break;
 -    }
-+if (!ini_get('date.timezone')) {
-+     ini_set('date.timezone', 'UTC');
- }
+-}
 -
 -unset($file);
 -
 -if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
--    echo 'You need to set up the project dependencies using the following commands:' . PHP_EOL .
+-    fwrite(STDERR,
+-        'You need to set up the project dependencies using the following commands:' . PHP_EOL .
 -        'wget http://getcomposer.org/composer.phar' . PHP_EOL .
--        'php composer.phar install' . PHP_EOL;
+-        'php composer.phar install' . PHP_EOL
+-    );
 -    die(1);
 -}
 -
 +define ('PHPUNIT_COMPOSER_INSTALL', stream_resolve_include_path('PHPUnit/Autoload.php'));
  require PHPUNIT_COMPOSER_INSTALL;
-
+ 
  PHPUnit_TextUI_Command::main();
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
---- ./tests/bootstrap.php.rpm	2014-08-17 17:36:46.325953778 +0200
-+++ ./tests/bootstrap.php	2014-08-17 17:37:54.634043416 +0200
+--- ./tests/bootstrap.php.rpm	2014-12-05 07:49:03.000000000 +0100
++++ ./tests/bootstrap.php	2014-12-05 09:18:19.614014475 +0100
 @@ -1,5 +1,8 @@
  <?php
 -require __DIR__ . '/../vendor/autoload.php';

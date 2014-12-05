@@ -13,6 +13,7 @@ require_once 'SebastianBergmann/Environment/autoload.php';
 require_once 'SebastianBergmann/Exporter/autoload.php';
 require_once 'SebastianBergmann/Version/autoload.php';
 require_once 'SebastianBergmann/Comparator/autoload.php';
+require_once 'SebastianBergmann/GlobalState/autoload.php';
 
 $vendorDir = '/usr/share/php';
 require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
