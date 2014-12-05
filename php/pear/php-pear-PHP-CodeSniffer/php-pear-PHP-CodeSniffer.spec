@@ -13,7 +13,7 @@
 %global pear_name     PHP_CodeSniffer
 
 Name:           php-pear-PHP-CodeSniffer
-Version:        1.5.5
+Version:        2.0.0
 Release:        1%{?dist}
 Summary:        PHP coding standards enforcement tool
 
@@ -21,8 +21,8 @@ Group:          Development/Tools
 License:        BSD
 URL:            http://pear.php.net/package/PHP_CodeSniffer
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
-# https://github.com/squizlabs/PHP_CodeSniffer/issues/273
-Source1:        PHP_CodeSniffer-licence.txt
+
+Patch0:         %{pear_name}-role.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -34,16 +34,14 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 # From package.xml
 Requires:       php-pear(PEAR)
-# From package.xml - optional
-Requires:       php-pear(pear.phpunit.de/PHP_Timer) >= 1.0.0
-# From phpcompatinfo report for version 1.5.5
+# From phpcompatinfo report for version 2.0.0
 Requires:       php-ctype
 Requires:       php-date
 Requires:       php-dom
 Requires:       php-iconv
 Requires:       php-pcre
 Requires:       php-reflection
-Requires:       php-simplexml
+Requires:       php-soap
 Requires:       php-spl
 Requires:       php-tokenizer
 Requires:       php-xmlwriter
@@ -62,8 +60,11 @@ certain standards, such as PEAR, or user-defined.
 %prep
 %setup -q -c
 
-sed -e '/phpcs-svn-pre-commit/s/role="script"/role="doc"/' \
-    package.xml >%{pear_name}-%{version}/%{pear_name}.xml
+# install scripts/phpcs-svn-pre-commit properly
+%patch0 -p0 -b .old
+
+cd %{pear_name}-%{version}
+mv ../package.xml %{pear_name}.xml
 
 
 %build
@@ -83,17 +84,12 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{pear_name}.xml %{buildroot}%{pear_xmldir}
 
-install -pm 644 %{SOURCE1} %{buildroot}%{pear_docdir}/%{pear_name}/LICENSE
-
 
 %check
 cd %{pear_name}-%{version}/tests
 
 # Version 1.5.5 : 216, Assertions: 57, Skipped: 4.
-%{_bindir}/phpunit \
-  -d date.timezone=UTC \
-  --verbose \
-  AllTests.php
+%{_bindir}/phpunit AllTests.php
 
 
 %clean
@@ -118,10 +114,16 @@ fi
 %{pear_testdir}/%{pear_name}
 %{pear_datadir}/%{pear_name}
 %{pear_phpdir}/PHP
+%{_bindir}/phpcbf
 %{_bindir}/phpcs
+%{_bindir}/phpcs-svn-pre-commit
 
 
 %changelog
+* Fri Dec 05 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0
+- add phpcbf and phpcs-svn-pre-commit commands
+
 * Fri Sep 26 2014 Remi Collet <remi@fedoraproject.org> - 1.5.5-1
 - Update to 1.5.5 (stable)
 - provide php-composer(squizlabs/php_codesniffer)
