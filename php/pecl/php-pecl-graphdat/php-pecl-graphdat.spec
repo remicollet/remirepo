@@ -135,6 +135,11 @@ EOF
 
 
 %build
+%ifarch i386 i686
+CFLAGS=$(echo %{optflags} | sed -e "s|i386|i686|g")
+export CFLAGS
+%endif
+
 cd NTS
 %{_bindir}/phpize
 %configure \
