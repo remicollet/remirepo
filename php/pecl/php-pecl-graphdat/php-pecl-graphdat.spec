@@ -26,16 +26,13 @@
 
 Summary:       Troubleshoot application and server performance
 Name:          %{?scl_prefix}php-pecl-graphdat
-Version:       1.0.3
+Version:       1.0.4
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # https://github.com/alphashack/graphdat-sdk-php/issues/6
 License:       ASL 2.0
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/%{pecl_name}
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/alphashack/graphdat-sdk-php/pull/5
-Patch0:        %{pecl_name}-pr5.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
@@ -102,7 +99,6 @@ sed -e 's/role="test"/role="src"/' \
 
 mv %{pecl_name}-%{version} NTS
 cd NTS
-%patch0 -p1 -b .pr5
 
 %if %{with_msgpack}
 # use system library
@@ -226,6 +222,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Dec 06 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- Update to 1.0.4
+
 * Fri Sep 19 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - initial package, version 1.0.3 (stable)
 - open https://github.com/alphashack/graphdat-sdk-php/pull/5
