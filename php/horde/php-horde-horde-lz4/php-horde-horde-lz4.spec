@@ -6,6 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
+%{?scl:         %scl_package        php-horde-horde-lz4}
 %{!?php_inidir: %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:     %global __pecl      %{_bindir}/pecl}
 %{!?__php:      %global __php       %{_bindir}/php}
@@ -18,20 +19,26 @@
 %else
 %global ini_name     40-%{pecl_name}.ini
 %endif
+%if 0%{?scl:1}
+# PHPUnit not available in SCL
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%else
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 Summary:        Horde LZ4 Compression Extension
-Name:           php-horde-horde-lz4
+Name:           %{?scl_prefix}php-horde-horde-lz4
 Version:        1.0.7
-Release:        1%{?dist}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
 URL:            http://www.horde.org
 Source0:        http://%{pecl_channel}/get/%{pecl_name}-%{version}.tgz
 
-BuildRequires:  php-devel
-BuildRequires:  php-pear
-BuildRequires:  php-channel(%{pecl_channel})
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  %{?scl_prefix}php-channel(%{pecl_channel})
 BuildRequires:  lz4-devel
 %if %{with_tests}
 BuildRequires:  %{_bindir}/phpunit
@@ -39,14 +46,31 @@ BuildRequires:  %{_bindir}/phpunit
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
-Requires:       php-channel(%{pecl_channel})
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php-channel(%{pecl_channel})
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_channel}/%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_channel}/%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_channel}/%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_channel}/%{pecl_name})%{?_isa} = %{version}
+
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+%endif
+%endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
@@ -58,6 +82,8 @@ Provides:       php-pecl(%{pecl_channel}/%{pecl_name})%{?_isa} = %{version}
 %description
 PHP extension that implements the LZ4 compression algorithm,
 an extremely fast lossless compression algorithm.
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
 
 
 %prep
@@ -108,6 +134,8 @@ make %{?_smp_mflags}
 
 
 %install
+rm -rf %{buildroot}
+
 make -C NTS install-modules INSTALL_ROOT=%{buildroot}
 
 # install config file
@@ -164,7 +192,12 @@ cd ../ZTS
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
