@@ -7,7 +7,6 @@
 # Please, preserve the changelog entries
 #
 %{!?__pear:       %global __pear       %{_bindir}/pear}
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %global pear_name    passwd
 %global pear_channel pear.horde.org
 # disabled as not ready
@@ -167,7 +166,7 @@ fi
 %attr(0770,apache,apache) %dir %{_sysconfdir}/horde/%{pear_name}
 %attr(0640,apache,apache) %config %{_sysconfdir}/horde/%{pear_name}/*.dist
 %attr(0660,apache,apache) %config(noreplace) %{_sysconfdir}/horde/%{pear_name}/*.php
-%attr(0660,apache,apache) %config %{_sysconfdir}/horde/%{pear_name}/*.xml
+%attr(0640,apache,apache) %config %{_sysconfdir}/horde/%{pear_name}/*.xml
 %{pear_xmldir}/%{name}.xml
 %dir %{pear_hordedir}/%{pear_name}
 %{pear_hordedir}/%{pear_name}/*.php
