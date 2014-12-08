@@ -24,7 +24,7 @@
 
 Summary:        Strict scalar parameter type hint
 Name:           %{?scl_prefix}php-pecl-strict
-Version:        0.4.0
+Version:        0.4.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -226,6 +226,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 08 2014 Remi Collet <remi@fedoraproject.org> - 0.4.1-1
+- Update to 0.4.1
+
 * Mon Dec 01 2014 Remi Collet <remi@fedoraproject.org> - 0.4.0-1
 - Update to 0.4.0
 
