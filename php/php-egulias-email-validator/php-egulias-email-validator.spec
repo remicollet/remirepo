@@ -11,8 +11,8 @@
 
 %global github_owner     egulias
 %global github_name      EmailValidator
-%global github_version   1.2.5
-%global github_commit    518f80a0ff7c1a35780e7702f4262c8c6f2b807f
+%global github_version   1.2.6
+%global github_commit    7a64ea18af01a114e8241a397097b266af5411ee
 
 %global composer_vendor  egulias
 %global composer_project email-validator
@@ -47,7 +47,7 @@ BuildRequires: php-phpunit-PHPUnit
 BuildRequires: php(language)                >= %{php_min_ver}
 BuildRequires: php-composer(doctrine/lexer) >= %{doctrine_lexer_min_ver}
 BuildRequires: php-composer(doctrine/lexer) <  %{doctrine_lexer_max_ver}
-# phpcompatinfo (computed from version 1.2.5)
+# phpcompatinfo (computed from version 1.2.6)
 BuildRequires: php-filter
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -58,7 +58,7 @@ BuildRequires: php-spl
 Requires:      php(language)                >= %{php_min_ver}
 Requires:      php-composer(doctrine/lexer) >= %{doctrine_lexer_min_ver}
 Requires:      php-composer(doctrine/lexer) <  %{doctrine_lexer_max_ver}
-# phpcompatinfo (computed from version 1.2.5)
+# phpcompatinfo (computed from version 1.2.6)
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
@@ -100,7 +100,14 @@ spl_autoload_register(function ($class) {
 });
 AUTOLOAD
 
-%{__phpunit} --include-path %{buildroot}%{phpdir} -d date.timezone="UTC"
+# Skip testValidEmailsWithWarningsCheck and testInvalidEmailsWithDnsCheckAndStrictMode
+# because Koji does not have network access so assertEquals(expected_warnings, actual_warnings)
+# fails because EmailValidator::DNSWARN_NO_RECORD is not an expected warning
+sed -e 's/function testValidEmailsWithWarningsCheck/function SKIP_testValidEmailsWithWarningsCheck/' \
+    -e 's/function testInvalidEmailsWithDnsCheckAndStrictMode/function SKIP_testInvalidEmailsWithDnsCheckAndStrictMode/' \
+    -i tests/egulias/Tests/EmailValidator/EmailValidatorTest.php
+
+%{__phpunit} --include-path %{buildroot}%{phpdir}
 %else
 : Tests skipped
 %endif
@@ -120,6 +127,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 07 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.6-1
+- Updated to 1.2.6 (BZ #1171051)
+
 * Sun Nov 09 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.5-1
 - Updated to 1.2.5
 
