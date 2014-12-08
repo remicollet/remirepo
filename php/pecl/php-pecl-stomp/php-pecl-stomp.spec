@@ -6,10 +6,11 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package        php-pecl-stomp}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
+%{?scl:          %scl_package         php-pecl-stomp}
+%{!?scl:         %global _root_prefix %{_prefix}}
+%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
+%{!?__php:       %global __php        %{_bindir}/php}
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  stomp
@@ -24,7 +25,7 @@
 Summary:        Stomp client extension
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.6
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -35,6 +36,7 @@ Source1:        http://www.php.net/license/3_01.txt
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  openssl-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -116,6 +118,8 @@ EOF
 peclbuild() {
 %configure \
     --enable-stomp \
+    --with-openssl-dir=%{_root_prefix} \
+    --with-libdir=%{_lib} \
     --with-php-config=$1
 
 make %{?_smp_mflags}
@@ -201,8 +205,9 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Mon Dec 08 2014 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
+* Mon Dec 08 2014 Remi Collet <remi@fedoraproject.org> - 1.0.6-2
 - Update to 1.0.6 (stable)
+- enable openssl support
 
 * Fri Oct 10 2014 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
 - initial package, version 1.0.5 (stable)
