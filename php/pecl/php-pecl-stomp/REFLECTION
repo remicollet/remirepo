@@ -1,8 +1,14 @@
-Extension [ <persistent> extension #143 Stomp version 1.0.5 ] {
+Extension [ <persistent> extension #145 Stomp version 1.0.6 ] {
 
   - INI {
     Entry [ stomp.default_broker <ALL> ]
       Current = 'tcp://localhost:61613'
+    }
+    Entry [ stomp.default_username <ALL> ]
+      Current = ''
+    }
+    Entry [ stomp.default_password <ALL> ]
+      Current = ''
     }
     Entry [ stomp.default_read_timeout_sec <ALL> ]
       Current = '2'
@@ -120,6 +126,14 @@ Extension [ <persistent> extension #143 Stomp version 1.0.5 ] {
         Parameter #2 [ <optional> array or NULL $headers ]
       }
     }
+    Function [ <internal:Stomp> function stomp_nack ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $link ]
+        Parameter #1 [ <required> $msg ]
+        Parameter #2 [ <optional> array or NULL $headers ]
+      }
+    }
     Function [ <internal:Stomp> function stomp_error ] {
 
       - Parameters [1] {
@@ -157,7 +171,7 @@ Extension [ <persistent> extension #143 Stomp version 1.0.5 ] {
       - Properties [0] {
       }
 
-      - Methods [15] {
+      - Methods [16] {
         Method [ <internal:Stomp, ctor> public method __construct ] {
 
           - Parameters [4] {
@@ -243,6 +257,14 @@ Extension [ <persistent> extension #143 Stomp version 1.0.5 ] {
         }
 
         Method [ <internal:Stomp> public method ack ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $msg ]
+            Parameter #1 [ <optional> array or NULL $headers ]
+          }
+        }
+
+        Method [ <internal:Stomp> public method nack ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $msg ]

@@ -23,7 +23,7 @@
 
 Summary:        Stomp client extension
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.0.5
+Version:        1.0.6
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -76,6 +76,7 @@ Stomp compliant Message Brokers through easy object oriented
 and procedural interfaces.
 
 Documentation: http://php.net/stomp
+
 Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
 
 
@@ -102,6 +103,8 @@ extension=%{pecl_name}.so
 
 ; See http://php.net/manual/en/stomp.configuration.php
 ;stomp.default_broker = "tcp://localhost:61613"
+;stomp.default_username = ''
+;stomp.default_password = ''
 ;stomp.default_read_timeout_sec = 2
 ;stomp.default_read_timeout_usec = 0
 ;stomp.default_connection_timeout_sec = 2
@@ -198,5 +201,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 08 2014 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
+- Update to 1.0.6 (stable)
+
 * Fri Oct 10 2014 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
 - initial package, version 1.0.5 (stable)
