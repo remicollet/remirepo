@@ -12,9 +12,9 @@
 %global github_owner     doctrine
 %global github_name      lexer
 %global github_version   1.0
-%global github_commit    f12a5f74e5f4a9e3f558f3288504e121edfad891
+%global github_commit    83893c552fd2045dd78aef794c31e694c37c0b8c
 # Additional commits after v1.0 tag
-%global github_release   .20131220git%(c=%{github_commit}; echo ${c:0:7})
+%global github_release   .20140909git%(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  doctrine
 %global composer_project lexer
@@ -24,7 +24,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       4%{?github_release}%{?dist}
+Release:       5%{?github_release}%{?dist}
 Summary:       Base library for a lexer that can be used in top-down, recursive descent parsers
 
 Group:         Development/Libraries
@@ -36,7 +36,7 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from v1.0 git commit f12a5f74e5f4a9e3f558f3288504e121edfad891)
+# phpcompatinfo (computed from version 1.0 git commit 83893c552fd2045dd78aef794c31e694c37c0b8c)
 Requires:      php-pcre
 Requires:      php-reflection
 
@@ -81,6 +81,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 07 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0-5.20140909git83893c5
+- Updated to latest snapshot (required for php-egulias-email-validator 1.2.6)
+
 * Fri Jun 20 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0-4.20131220gitf12a5f7
 - Added php-composer(%%{composer_vendor}/%%{composer_project}) virtual provide
 
