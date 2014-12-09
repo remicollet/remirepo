@@ -29,8 +29,8 @@
 
 Summary:        Provides interface to libev library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.2.12
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        0.2.13
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -81,6 +81,8 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %description
 The ev extension provides interface to libev library - high performance
 full-featured event loop written in C.
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
 
 
 %prep
@@ -208,6 +210,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -221,6 +224,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec 09 2014 Remi Collet <remi@fedoraproject.org> - 0.2.13-1
+- Update to 0.2.13 (stable, no change)
+
 * Tue Sep 09 2014 Remi Collet <remi@fedoraproject.org> - 0.2.12-1
 - Update to 0.2.12 (no change, only our patch merged)
 - enable posix during build as some tests need it
