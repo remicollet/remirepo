@@ -11,7 +11,7 @@
 
 Name:           php-tcpdf
 Summary:        PHP class for generating PDF documents and barcodes
-Version:        6.0.099
+Version:        6.1.1
 Release:        1%{?dist}
 
 URL:            http://www.tcpdf.org
@@ -322,6 +322,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 10 2014 Remi Collet <remi@fedoraproject.org> - 6.1.1-1
+- update to 6.1.1
+
 * Thu Nov 27 2014 Remi Collet <remi@fedoraproject.org> - 6.0.099-1
 - update to 6.0.099
 
