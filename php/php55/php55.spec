@@ -124,11 +124,11 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.5.19
+Version: 5.5.20
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -189,9 +189,6 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch101: php-bug68423.patch
-Patch102: php-bug68421.patch
-Patch103: php-bug68420.patch
 
 # Security fixes (200+)
 
@@ -943,9 +940,6 @@ rm -rf ext/json
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch101 -p1 -b .bug68423
-%patch102 -p1 -b .bug68421
-%patch103 -p1 -b .bug68420
 
 # security patches
 
@@ -1949,6 +1943,10 @@ fi
 
 
 %changelog
+* Wed Dec 10 2014 Remi Collet <remi@fedoraproject.org> 5.5.20-1
+- Update to 5.5.20
+  http://www.php.net/releases/5_5_20.php
+
 * Sun Nov 16 2014 Remi Collet <remi@fedoraproject.org> 5.5.19-2
 - FPM: add upstream patch for https://bugs.php.net/68421
   access.format=R doesn't log ipv6 address
