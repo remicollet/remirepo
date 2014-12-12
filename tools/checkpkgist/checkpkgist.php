@@ -196,6 +196,9 @@ printf(" %-40s %15s %15s %15s\n", "Name", "Version", "Upstream", "Date");
 
 $tmp = array();
 for ($i=1 ; $i<$_SERVER['argc'] ; $i++) {
+	if (is_dir($_SERVER['argv'][$i])) {
+		$_SERVER['argv'][$i] = basename(realpath($_SERVER['argv'][$i]));
+	}
 	$k = array_search($_SERVER['argv'][$i], $pkgs);
 	if ($k) {
 		$tmp[$k] = $pkgs[$k];
