@@ -6,13 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    d47fb5a0798c60dac81a3f9f1643fd73c73787d3
+%global gh_commit    61cf1cc061437274ba2bb4ec2e541e243935ee32
 #global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     llaville
 %global gh_project   php-compat-info
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        3.6.1
+Version:        3.7.0
 %global specrel 1
 Release:        %{?gh_short:0.%{specrel}.git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
@@ -127,6 +127,9 @@ fi
 
 
 %changelog
+* Fri Dec 12 2014 Remi Collet <remi@fedoraproject.org> - 3.7.0-1
+- Update to 3.7.0
+
 * Thu Nov 20 2014 Remi Collet <remi@fedoraproject.org> - 3.6.1-1
 - Update to 3.6.1
 
