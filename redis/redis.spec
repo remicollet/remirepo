@@ -5,13 +5,19 @@
 %else
 %global with_systemd 0
 %endif
+# systemd >= 204 with additional service config
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
+%global with_systemdmax 1
+%else
+%global with_systemdmax 0
+%endif
 
 # Tests fail in mock, not in local build.
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             redis
 Version:          2.8.18
-Release:          1%{?dist}.1
+Release:          2%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -25,6 +31,8 @@ Source4:          %{name}.tmpfiles
 Source5:          %{name}-sentinel.init
 Source6:          %{name}-sentinel.service
 Source7:          %{name}-shutdown
+Source8:          %{name}-limit
+
 # Update configuration for Fedora
 Patch0:           0001-redis-2.8.18-redis-conf.patch
 Patch1:           0002-redis-2.8.18-deps-library-fPIC-performance-tuning.patch
@@ -111,9 +119,11 @@ install -p -D -m 644 %{SOURCE3} %{buildroot}%{_unitdir}/%{name}.service
 install -p -D -m 644 %{SOURCE6} %{buildroot}%{_unitdir}/%{name}-sentinel.service
 # Install systemd tmpfiles config, _tmpfilesdir only defined in fedora >= 18
 install -p -D -m 644 %{SOURCE4} %{buildroot}%{_prefix}/lib/tmpfiles.d/%{name}.conf
+%if %{with_systemdmax}
+# this folder requires systemd >= 204
+install -p -D -m 644 %{SOURCE8} %{buildroot}%{_sysconfdir}/systemd/system/%{name}.service.d/limit.conf
+%endif
 %else
-sed -e '/^daemonize/s/no/yes/' \
-    -i %{buildroot}%{_sysconfdir}/%{name}.conf
 install -p -D -m 755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
 install -p -D -m 755 %{SOURCE5} %{buildroot}%{_initrddir}/%{name}-sentinel
 %endif
@@ -209,6 +219,10 @@ fi
 %{_prefix}/lib/tmpfiles.d/%{name}.conf
 %{_unitdir}/%{name}.service
 %{_unitdir}/%{name}-sentinel.service
+%if %{with_systemdmax}
+%dir %{_sysconfdir}/systemd/system/%{name}.service.d
+%config(noreplace) %{_sysconfdir}/systemd/system/%{name}.service.d/limit.conf
+%endif
 %else
 %{_initrddir}/%{name}
 %{_initrddir}/%{name}-sentinel
@@ -216,6 +230,9 @@ fi
 
 
 %changelog
+* Sat Dec 13 2014 Remi Collet <remi@fedoraproject.org> - 2.8.18-2
+- provides /etc/systemd/system/redis.service.d/limit.conf
+
 * Thu Dec  4 2014 Remi Collet <remi@fedoraproject.org> - 2.8.18-1.1
 - EL-5 rebuild with upstream patch
 
