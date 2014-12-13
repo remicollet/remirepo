@@ -122,6 +122,7 @@ install -p -D -m 644 %{SOURCE4} %{buildroot}%{_prefix}/lib/tmpfiles.d/%{name}.co
 %if %{with_systemdmax}
 # this folder requires systemd >= 204
 install -p -D -m 644 %{SOURCE8} %{buildroot}%{_sysconfdir}/systemd/system/%{name}.service.d/limit.conf
+install -p -D -m 644 %{SOURCE8} %{buildroot}%{_sysconfdir}/systemd/system/%{name}-sentinel.service.d/limit.conf
 %endif
 %else
 install -p -D -m 755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
@@ -222,6 +223,8 @@ fi
 %if %{with_systemdmax}
 %dir %{_sysconfdir}/systemd/system/%{name}.service.d
 %config(noreplace) %{_sysconfdir}/systemd/system/%{name}.service.d/limit.conf
+%dir %{_sysconfdir}/systemd/system/%{name}-sentinel.service.d
+%config(noreplace) %{_sysconfdir}/systemd/system/%{name}-sentinel.service.d/limit.conf
 %endif
 %else
 %{_initrddir}/%{name}
@@ -232,6 +235,7 @@ fi
 %changelog
 * Sat Dec 13 2014 Remi Collet <remi@fedoraproject.org> - 2.8.18-2
 - provides /etc/systemd/system/redis.service.d/limit.conf
+  and /etc/systemd/system/redis-sentinel.service.d/limit.conf
 
 * Thu Dec  4 2014 Remi Collet <remi@fedoraproject.org> - 2.8.18-1.1
 - EL-5 rebuild with upstream patch

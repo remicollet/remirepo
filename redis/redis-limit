@@ -1,6 +1,6 @@
 # If you need to change max open file limit
-# for example, when you change maxclient in redis.conf
-# you can change the LimitNOFILE above value
+# for example, when you change maxclient in configuration
+# you can change the LimitNOFILE value below
 # see "man systemd.exec" for information
 
 [Service]
