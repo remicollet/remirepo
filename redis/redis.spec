@@ -31,7 +31,8 @@ Source4:          %{name}.tmpfiles
 Source5:          %{name}-sentinel.init
 Source6:          %{name}-sentinel.service
 Source7:          %{name}-shutdown
-Source8:          %{name}-limit
+Source8:          %{name}-limit-systemd
+Source9:          %{name}-limit-init
 
 # Update configuration for Fedora
 Patch0:           0001-redis-2.8.18-redis-conf.patch
@@ -127,6 +128,7 @@ install -p -D -m 644 %{SOURCE8} %{buildroot}%{_sysconfdir}/systemd/system/%{name
 %else
 install -p -D -m 755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
 install -p -D -m 755 %{SOURCE5} %{buildroot}%{_initrddir}/%{name}-sentinel
+install -p -D -m 644 %{SOURCE9} %{buildroot}%{_sysconfdir}/security/limits.d/95-%{name}.conf
 %endif
 
 # Fix non-standard-executable-perm error
@@ -229,6 +231,7 @@ fi
 %else
 %{_initrddir}/%{name}
 %{_initrddir}/%{name}-sentinel
+%config(noreplace) %{_sysconfdir}/security/limits.d/95-%{name}.conf
 %endif
 
 
@@ -236,6 +239,7 @@ fi
 * Sat Dec 13 2014 Remi Collet <remi@fedoraproject.org> - 2.8.18-2
 - provides /etc/systemd/system/redis.service.d/limit.conf
   and /etc/systemd/system/redis-sentinel.service.d/limit.conf
+  or /etc/security/limits.d/95-redis.conf
 
 * Thu Dec  4 2014 Remi Collet <remi@fedoraproject.org> - 2.8.18-1.1
 - EL-5 rebuild with upstream patch
