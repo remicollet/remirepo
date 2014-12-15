@@ -63,7 +63,7 @@
 %global with_imap      1
 %global with_interbase 1
 %global with_mcrypt    1
-%global with_mssql     1
+%global with_freetds   1
 %global with_tidy      1
 %global with_sqlite3   1
 %global with_enchant   1
@@ -687,7 +687,7 @@ The %{?scl_prefix}php-tidy package contains a dynamic shared object that will ad
 support for using the tidy library to PHP.
 %endif
 
-%if %{with_mssql}
+%if %{with_freetds}
 %package mssql
 Summary: MSSQL database module for PHP
 Group: Development/Languages
@@ -696,10 +696,11 @@ License: PHP
 Requires: %{?scl_prefix}php-pdo%{?_isa} = %{version}-%{release}
 BuildRequires: freetds-devel
 Provides: %{?scl_prefix}php-pdo_dblib, %{?scl_prefix}php-pdo_dblib%{?_isa}
+Provides: %{?scl_prefix}php-sybase_ct, %{?scl_prefix}php-sybase_ct%{?_isa}
 
 %description mssql
 The %{?scl_prefix}php-mssql package contains a dynamic shared object that will
-add MSSQL database support to PHP.  It uses the TDS (Tabular
+add MSSQL and Sybase database support to PHP.  It uses the TDS (Tabular
 DataStream) protocol through the freetds library, hence any
 database server which supports TDS can be accessed.
 %endif
@@ -759,7 +760,7 @@ support for using the enchant library to PHP.
 
 
 %prep
-: Building %{name}-%{version}-%{release} with systemd=%{with_systemd} imap=%{with_imap} interbase=%{with_interbase} mcrypt=%{with_mcrypt} mssql=%{with_mssql} sqlite3=%{with_sqlite3} tidy=%{with_tidy} zip=%{with_zip}
+: Building %{name}-%{version}-%{release} with systemd=%{with_systemd} imap=%{with_imap} interbase=%{with_interbase} mcrypt=%{with_mcrypt} freetds=%{with_freetds} sqlite3=%{with_sqlite3} tidy=%{with_tidy} zip=%{with_zip}
 
 %setup -q -n php-%{version}%{?rcver}
 
@@ -1027,9 +1028,10 @@ build --libdir=%{_libdir}/php \
 %if %{with_tidy}
       --with-tidy=shared,%{_root_prefix} \
 %endif
-%if %{with_mssql}
+%if %{with_freetds}
       --with-mssql=shared,%{_root_prefix} \
       --with-pdo-dblib=shared,%{_root_prefix} \
+      --with-sybase-ct=shared,%{_root_prefix} \
 %endif
       --enable-sysvmsg=shared --enable-sysvshm=shared --enable-sysvsem=shared \
       --enable-posix=shared \
@@ -1270,8 +1272,8 @@ for mod in pgsql odbc ldap snmp xmlrpc \
 %if %{with_tidy}
     tidy \
 %endif
-%if %{with_mssql}
-    pdo_dblib mssql \
+%if %{with_freetds}
+    pdo_dblib mssql sybase_ct \
 %endif
 %if %{with_recode}
     recode \
@@ -1302,8 +1304,9 @@ cat files.mysqlnd_mysql \
     >> files.mysqlnd
 
 # Split out the PDO modules
-%if %{with_mssql}
+%if %{with_freetds}
 cat files.pdo_dblib >> files.mssql
+cat files.sybase_ct >> files.mssql
 %endif
 cat files.pdo_pgsql >> files.pgsql
 cat files.pdo_odbc >> files.odbc
@@ -1554,7 +1557,7 @@ fi
 %if %{with_tidy}
 %files tidy -f files.tidy
 %endif
-%if %{with_mssql}
+%if %{with_freetds}
 %files mssql -f files.mssql
 %endif
 %files pspell -f files.pspell
@@ -1579,6 +1582,7 @@ fi
 * Mon Dec 15 2014 Remi Collet <remi@fedoraproject.org> 5.4.35-2
 - add embedded sub package
 - filter all libraries to avoid provides
+- add sybase_ct extension
 
 * Fri Nov 14 2014 Remi Collet <remi@fedoraproject.org> 5.4.35-1
 - Update to 5.4.35
