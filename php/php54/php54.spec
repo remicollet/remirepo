@@ -82,7 +82,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.4.35
-Release: 1%{?dist}
+Release: 2%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -714,11 +714,12 @@ License: PHP
 Requires: php-pdo%{?_isa} = %{version}-%{release}
 BuildRequires: freetds-devel
 Provides: php-pdo_dblib, php-pdo_dblib%{?_isa}
+Provides: php-sybase_ct, php-sybase_ct%{?_isa}
 Obsoletes: php53-mssql, php53u-mssql, php54-mssql, php54w-mssql
 
 %description mssql
 The php-mssql package contains a dynamic shared object that will
-add MSSQL database support to PHP.  It uses the TDS (Tabular
+add MSSQL and Sybase database support to PHP.  It uses the TDS (Tabular
 DataStream) protocol through the freetds library, hence any
 database server which supports TDS can be accessed.
 
@@ -1090,6 +1091,7 @@ build --libdir=%{_libdir}/php \
       --with-mcrypt=shared,%{_prefix} \
       --with-tidy=shared,%{_prefix} \
       --with-mssql=shared,%{_prefix} \
+      --with-sybase-ct=shared,%{_prefix} \
       --enable-sysvmsg=shared --enable-sysvshm=shared --enable-sysvsem=shared \
       --enable-posix=shared \
       --with-unixODBC=shared,%{_prefix} \
@@ -1212,6 +1214,7 @@ build --includedir=%{_includedir}/php-zts \
       --with-mcrypt=shared,%{_prefix} \
       --with-tidy=shared,%{_prefix} \
       --with-mssql=shared,%{_prefix} \
+      --with-sybase-ct=shared,%{_prefix} \
       --enable-sysvmsg=shared --enable-sysvshm=shared --enable-sysvsem=shared \
       --enable-posix=shared \
       --with-unixODBC=shared,%{_prefix} \
@@ -1394,7 +1397,7 @@ for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
     sqlite3 \
 %endif
     enchant phar fileinfo intl \
-    mcrypt tidy pdo_dblib mssql pspell curl wddx \
+    mcrypt tidy pdo_dblib mssql sybase_ct pspell curl wddx \
     posix sysvshm sysvsem sysvmsg recode; do
     cat > $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${mod}.ini <<EOF
 ; Enable ${mod} extension module
@@ -1426,6 +1429,7 @@ cat files.mysqlnd_mysql \
 
 # Split out the PDO modules
 cat files.pdo_dblib >> files.mssql
+cat files.sybase_ct >> files.mssql
 cat files.pdo_mysql >> files.mysql
 cat files.pdo_pgsql >> files.pgsql
 cat files.pdo_odbc >> files.odbc
@@ -1694,6 +1698,9 @@ fi
 
 
 %changelog
+* Mon Dec 15 2014 Remi Collet <remi@fedoraproject.org> 5.4.35-2
+- add sybase_ct extension
+
 * Fri Nov 14 2014 Remi Collet <remi@fedoraproject.org> 5.4.35-1
 - Update to 5.4.35
   http://www.php.net/releases/5_4_35.php
