@@ -13,8 +13,8 @@
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.5.7
-%global github_commit    dd4254fc39a702af22cd886a6790769541469da1
+%global github_version   2.5.8
+%global github_commit    00da57005c9c76773670f4d958dd95e9f4ae72f6
 
 %global composer_vendor  symfony
 %global composer_project symfony
@@ -43,9 +43,9 @@
 # "egulias/email-validator": "~1.2"
 %global email_validator_min_ver 1.2
 %global email_validator_max_ver 2.0
-# "ircmaxell/password-compat": "1.0.*" (composer.json)
-%global password_compat_min_ver 1.0.0
-%global password_compat_max_ver 1.1.0
+# "ircmaxell/password-compat": "~1.0" (composer.json)
+%global password_compat_min_ver 1.0
+%global password_compat_max_ver 2.0
 # "monolog/monolog": "~1.3" (composer.json)
 %global monolog_min_ver 1.3
 %global monolog_max_ver 2.0
@@ -1565,6 +1565,14 @@ sed 's/function testNonSeekableStream/function SKIP_testNonSeekableStream/' \
 sed 's/function testCopyForOriginUrlsAndExistingLocalFileDefaultsToNotCopy/function SKIP_testCopyForOriginUrlsAndExistingLocalFileDefaultsToNotCopy/' \
     -i src/Symfony/Component/Filesystem/Tests/FilesystemTest.php
 
+# SKip test that requires a tty
+sed 's/function testCanCheckIfTerminalIsInteractive/function SKIP_testCanCheckIfTerminalIsInteractive/' \
+    -i src/Symfony/Component/Console/Tests/ApplicationTest.php
+sed 's/function testTTYCommand/function SKIP_testTTYCommand/' \
+    -i src/Symfony/Component/Process/Tests/AbstractProcessTest.php
+sed 's/function testTTYCommandExitCode/function SKIP_testTTYCommandExitCode/' \
+    -i src/Symfony/Component/Process/Tests/SigchildDisabledProcessTest.php
+
 # Skip tests that have intermittent failures
 sed 's/function testCheckTimeoutOnStartedProcess/function SKIP_testCheckTimeoutOnStartedProcess/' \
     -i src/Symfony/Component/Process/Tests/AbstractProcessTest.php \
@@ -1573,10 +1581,9 @@ sed 's/function testCheckTimeoutOnStartedProcess/function SKIP_testCheckTimeoutO
 # Temporarily skip tests that are known to fail
 sed 's/function testClassNotFound/ function SKIP_testClassNotFound/' \
     -i src/Symfony/Component/Debug/Tests/FatalErrorHandler/ClassNotFoundFatalErrorHandlerTest.php
-sed 's/function testTTYCommand/function SKIP_testTTYCommand/' \
-    -i src/Symfony/Component/Process/Tests/AbstractProcessTest.php
-sed 's/function testTTYCommandExitCode/function SKIP_testTTYCommandExitCode/' \
-    -i src/Symfony/Component/Process/Tests/SigchildDisabledProcessTest.php
+sed 's/function testDumpRelativeDir/function SKIP_testDumpRelativeDir/' \
+    -i src/Symfony/Component/DependencyInjection/Tests/Dumper/PhpDumperTest.php
+
 %if 0%{?rhel}
 sed 's/function testForm/function SKIP_testForm/' \
     -i src/Symfony/Component/DomCrawler/Tests/CrawlerTest.php
@@ -2107,6 +2114,7 @@ exit $RET
 %exclude %{symfony_dir}/Component/Security/composer.json
 %exclude %{symfony_dir}/Component/Security/phpunit.*
 %exclude %{symfony_dir}/Component/Security/Tests
+%exclude %{symfony_dir}/Component/Security/*/Tests
 
 # ------------------------------------------------------------------------------
 
@@ -2201,6 +2209,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Mon Dec 15 2014 Remi Collet <remi@fedoraproject.org> - 2.5.8-1
+- Update to 2.5.8
+
 * Thu Nov 20 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.5.7-1
 - Updated to 2.5.7 (BZ #1166396)
 - Added php-composer(egulias/email-validator) dependency
