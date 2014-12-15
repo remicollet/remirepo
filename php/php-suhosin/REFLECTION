@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #181 suhosin version 0.9.37 ] {
+Extension [ <persistent> extension #144 suhosin version 0.9.37.1 ] {
 
   - INI {
     Entry [ suhosin.log.syslog <PERDIR,SYSTEM> ]
@@ -134,7 +134,7 @@ Extension [ <persistent> extension #181 suhosin version 0.9.37 ] {
       Current = ''
     }
     Entry [ suhosin.request.array_index_blacklist <PERDIR,SYSTEM> ]
-      Current = ''"+-<>;()'
+      Current = ''"+<>;()'
     }
     Entry [ suhosin.request.disallow_nul <PERDIR,SYSTEM> ]
       Current = '1'

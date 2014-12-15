@@ -26,7 +26,7 @@
 %endif
 
 Name:           %{?scl_prefix}php-suhosin
-Version:        0.9.37
+Version:        0.9.37.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Suhosin is an advanced protection system for PHP installations
 
@@ -36,7 +36,7 @@ URL:            http://www.hardened-php.net/suhosin/
 %if 0%{?gh_commit:1}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 %else
-Source0:        http://download.suhosin.org/suhosin-%{version}.tgz
+Source0:        http://download.suhosin.org/suhosin-%{version}.tar.gz
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -84,9 +84,6 @@ mv %{ext_name}-%{gh_commit} NTS
 %else
 mv %{ext_name}-%{version} NTS
 %endif
-
-# Fix version
-sed -e '/SUHOSIN_EXT_VERSION/s/0.9.37-dev/%{version}/' -i NTS/php_suhosin.h
 
 # Check extension version
 ver=$(sed -n '/SUHOSIN_EXT_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_suhosin.h)
@@ -187,6 +184,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 15 2014 Remi Collet <remi@fedoraproject.org> - 0.9.37.1-1
+- update to 0.9.37.1
+
 * Wed Dec  3 2014 Remi Collet <remi@fedoraproject.org> - 0.9.37-1
 - update to 0.9.37
 
