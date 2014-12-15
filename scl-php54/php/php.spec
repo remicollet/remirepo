@@ -21,6 +21,9 @@
 # Adds -z now to the linker flags
 %global _hardened_build 1
 
+# version used for php embedded library soname
+%global embed_version 5.4
+
 # Ugly hack. Harcoded values to avoid relocation.
 %global _httpd_mmn         %(cat %{_root_includedir}/httpd/.mmn 2>/dev/null || echo 0)
 %global _httpd_confdir     %{_root_sysconfdir}/httpd/conf.d
@@ -106,7 +109,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.4.35
-Release: 1%{?dist}
+Release: 2%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -129,6 +132,7 @@ Source11: php-fpm.init
 
 # Build fixes
 Patch5: php-5.2.0-includedir.patch
+Patch6: php-5.4.35-embed.patch
 Patch7: php-5.3.0-recode.patch
 Patch8: php-5.4.7-libdb.patch
 
@@ -195,12 +199,9 @@ Requires(pre): httpd
 %endif
 
 
-%if 0%{?fedora} < 20 && 0%{?rhel} < 7
-# Don't provides extensions, which are not shared library, as .so
-%{?filter_provides_in: %filter_provides_in %{_libdir}/php/modules/.*\.so$}
-%{?filter_provides_in: %filter_provides_in %{_httpd_moddir}/.*\.so$}
+# Don't provides extensions, or shared libraries (embedded)
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-%endif
 
 
 %description
@@ -276,6 +277,19 @@ Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
 The %{?scl_prefix}php-litespeed package provides the %{_bindir}/lsphp command
 used by the LiteSpeed Web Server (LSAPI enabled PHP).
 %endif
+
+
+%package embedded
+Summary: PHP library for embedding in applications
+Group: System Environment/Libraries
+Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
+# doing a real -devel package for just the .so symlink is a bit overkill
+Provides: %{?scl_prefix}php-embedded-devel = %{version}-%{release}
+Provides: %{?scl_prefix}php-embedded-devel%{?_isa} = %{version}-%{release}
+
+%description embedded
+The %{?scl_prefix}php-embedded package contains a library which can be embedded
+into applications to provide PHP scripting language support.
 
 
 %package common
@@ -750,6 +764,7 @@ support for using the enchant library to PHP.
 %setup -q -n php-%{version}%{?rcver}
 
 %patch5 -p1 -b .includedir
+%patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
 %patch8 -p1 -b .libdb
 
@@ -791,7 +806,9 @@ cp ext/bcmath/libbcmath/COPYING.LIB libbcmath_COPYING
 # Multiple builds for multiple SAPIs
 mkdir \
     build-fpm \
-    build-cgi build-apache
+    build-apache \
+    build-embedded \
+    build-cgi
 
 # ----- Manage known as failed test -------
 # php_egg_logo_guid() removed by patch41
@@ -1061,6 +1078,16 @@ build --enable-fpm \
 popd
 
 
+# Build for inclusion as embedded script language into applications,
+# /usr/lib[64]/libphp5.so
+pushd build-embedded
+build --enable-embed \
+      --without-mysql \
+      --disable-pdo \
+      ${without_shared}
+popd
+
+
 %check
 %if %runselftest
 cd build-apache
@@ -1086,6 +1113,10 @@ unset NO_INTERACTION REPORT_EXIT_STATUS MALLOC_CHECK_
 
 %install
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
+
+# Install the version for embedded script language in applications + php_embed.h
+make -C build-embedded install-sapi install-headers \
+     INSTALL_ROOT=$RPM_BUILD_ROOT
 
 # Install the php-fpm binary
 make -C build-fpm install-fpm \
@@ -1480,6 +1511,11 @@ fi
 %endif
 %endif
 
+%files embedded
+%defattr(-,root,root,-)
+%{_libdir}/libphp5.so
+%{_libdir}/libphp5-%{embed_version}.so
+
 %files devel
 %defattr(-,root,root)
 %{_bindir}/php-config
@@ -1540,6 +1576,10 @@ fi
 
 
 %changelog
+* Mon Dec 15 2014 Remi Collet <remi@fedoraproject.org> 5.4.35-2
+- add embedded sub package
+- filter all libraries to avoid provides
+
 * Fri Nov 14 2014 Remi Collet <remi@fedoraproject.org> 5.4.35-1
 - Update to 5.4.35
   http://www.php.net/releases/5_4_35.php
