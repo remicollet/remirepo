@@ -16,8 +16,8 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             redis
-Version:          2.8.18
-Release:          2%{?dist}
+Version:          2.8.19
+Release:          1%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -38,8 +38,6 @@ Source9:          %{name}-limit-init
 Patch0:           0001-redis-2.8.18-redis-conf.patch
 Patch1:           0002-redis-2.8.18-deps-library-fPIC-performance-tuning.patch
 Patch2:           0003-redis-2.8.11-use-system-jemalloc.patch
-# For old RHEL-5
-Patch9:           redis-2.8.18-el5.patch
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if !0%{?el5}
@@ -80,8 +78,6 @@ Documentation: http://redis.io/documentation
 %patch0 -p1 -b .rpmconf
 %patch1 -p1 -b .pic
 %patch2 -p1 -b .jem
-
-%patch9 -p1 -b .upstream
 
 
 %build
@@ -136,7 +132,7 @@ chmod 755 %{buildroot}%{_bindir}/%{name}-*
 
 # create redis-sentinel command as described on
 # http://redis.io/topics/sentinel
-ln -s %{name}-server %{buildroot}%{_bindir}/%{name}-sentinel
+ln -sf %{name}-server %{buildroot}%{_bindir}/%{name}-sentinel
 
 # Install redis-shutdown
 install -pDm755 %{SOURCE7} %{buildroot}%{_bindir}/%{name}-shutdown
@@ -236,6 +232,10 @@ fi
 
 
 %changelog
+* Wed Dec 17 2014 Remi Collet <remi@fedoraproject.org> - 2.8.19-1
+- Redis 2.8.19 - Release date: 16 Dec 2014
+  upgrade urgency: LOW for both Redis and Sentinel.
+
 * Sat Dec 13 2014 Remi Collet <remi@fedoraproject.org> - 2.8.18-2
 - provides /etc/systemd/system/redis.service.d/limit.conf
   and /etc/systemd/system/redis-sentinel.service.d/limit.conf
