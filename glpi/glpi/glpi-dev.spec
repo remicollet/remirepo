@@ -27,23 +27,23 @@
 %endif
 
 Name:           glpi
-Version:        0.84.8
-Release:        2%{?dist}
+Version:        0.85.1
+Release:        1%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
 Group:          Applications/Internet
 License:        GPLv2+ and GPLv3+
 URL:            http://www.glpi-project.org/
-Source0:        https://forge.indepnet.net/attachments/download/1873/glpi-0.84.8.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1928/glpi-0.85.1.tar.gz
 
 Source1:        glpi-httpd.conf
-Source2:        glpi-config_path.php
+Source2:        glpi-0.85-config_path.php
 Source3:        glpi-logrotate
 Source4:        glpi-nginx.conf
 
 # Switch all internal cron tasks to system
-Patch0:         glpi-0.84-cron.patch
+Patch0:         glpi-0.85-cron.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -73,8 +73,8 @@ Requires:       php-mysqli
 Requires:       php-pcre
 Requires:       php-session
 Requires:       php-xml
-Requires:       php-pear(Cache_Lite) >= 1.7.4
 Requires:       php-PHPMailer
+Requires:       php-tcpdf
 Requires:       php-pear-CAS >= 1.2.0
 Requires:       php-htmLawed
 Requires:       php-simplepie
@@ -124,7 +124,7 @@ techniciens grâce à une maintenance plus cohérente.
 %prep
 %setup -q -n glpi
 
-%patch0 -p0
+%patch0 -p0 -b rpm
 
 find . -name \*.orig -exec rm {} \; -print
 
@@ -132,12 +132,12 @@ find . -name \*.orig -exec rm {} \; -print
 find lib -name \*.swf -exec rm {} \; -print
 
 # Use system lib
-rm -rf lib/cache_lite
 rm -rf lib/phpmailer
 rm -rf lib/phpcas
 rm -rf lib/htmlawed
 rm -rf lib/Zend
 rm -rf lib/simplepie
+rm -rf lib/tcpdf
 rm -rf lib/ezcomponents
 
 %if 0%{?fedora} < 9 && 0%{?rhel} < 6
@@ -149,7 +149,6 @@ cp  %{SOURCE2}  config/config_path.php
 %endif
 
 mv lib/tiny_mce/license.txt LICENSE.tiny_mce
-mv lib/extjs/gpl-3.0.txt    LICENSE.extjs
 mv lib/icalcreator/lgpl.txt LICENSE.icalcreator
 rm scripts/glpi_cron_*.sh
 
@@ -161,7 +160,7 @@ done
 
 cat >cron <<EOF
 # GLPI core
-# Run cron from to execute task even when no user connected
+# Run cron to execute task even when no user connected
 */3 * * * * apache %{_bindir}/php %{_datadir}/%{name}/front/cron.php
 EOF
 
@@ -308,6 +307,13 @@ fi
 
 
 %changelog
+* Wed Dec 17 2014 Remi Collet <remi@fedoraproject.org> - 0.85.1-1
+- update to 0.85.1
+  0.85   https://forge.indepnet.net/versions/539
+  0.85.1 https://forge.indepnet.net/versions/1071
+- drop dependency on pear/Cache_Lite
+- add dependency on php-tcpdf
+
 * Fri Nov  7 2014 Remi Collet <remi@fedoraproject.org> - 0.84.8-2
 - use httpd_var_lib_t selinux context for /var/lib/glpi
 - don't rely on system selinux policy in EPEL-7
