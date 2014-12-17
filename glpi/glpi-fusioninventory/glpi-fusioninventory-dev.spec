@@ -7,14 +7,15 @@
 # Please, preserve the changelog entries
 #
 %global pluginname    fusioninventory
-%global glpi_version  0.84.0
-%global plug_version  3.5
+%global glpi_version  0.85.0
+%global glpi_max      0.86
+%global plug_version  1.0
 
 Name:           glpi-fusioninventory
 # New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
 Epoch:          1
 Version:        %{glpi_version}.%{plug_version}
-Release:        1%{?dist}
+Release:        0.1.BETA1%{?dist}
 Summary:        FusionInventory Server embedded as a GLPI plugin
 Summary(fr):    Serveur FusionInventory en extension pour GLPI
 
@@ -22,7 +23,7 @@ Group:          Applications/Internet
 License:        AGPLv3+
 URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-glpi
 
-Source0:        http://forge.fusioninventory.org/attachments/download/1665/fusioninventory-for-glpi_0.84+3.5.tar.gz
+Source0:        http://forge.fusioninventory.org/attachments/download/1709/fusioninventory-for-glpi_0.85+1.0-BETA1.tar.gz
 Source1:        %{name}-httpd.conf
 
 
@@ -43,8 +44,7 @@ Requires:       php-spl
 Requires:       php-zip
 Requires:       php-zlib
 Requires:       glpi >= %{glpi_version}
-Requires:       glpi <  0.85
-Requires:       glpi-reports
+Requires:       glpi <  %{glpi_max}
 
 
 %description
@@ -68,6 +68,7 @@ done
 # Create link to LICENSE for standard doc folder
 ln -s %{_datadir}/glpi/plugins/%{pluginname}/LICENSE LICENSE
 mv %{pluginname}/README.asciidoc docs/
+mv %{pluginname}/PICTURES .
 
 # .htaccess replaced by a httpd config file
 rm %{pluginname}/install/mysql/.htaccess \
@@ -109,7 +110,7 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 # fusioninventory
 %{!?_licensedir:%global license %%doc}
-%license LICENSE
+%license LICENSE PICTURES
 %doc docs/*
 %dir %{_datadir}/glpi/plugins/%{pluginname}
 %dir %{_datadir}/glpi/plugins/%{pluginname}/locales
@@ -122,15 +123,19 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/%{pluginname}/css
 %{_datadir}/glpi/plugins/%{pluginname}/front
 %{_datadir}/glpi/plugins/%{pluginname}/inc
+%{_datadir}/glpi/plugins/%{pluginname}/js
 %{_datadir}/glpi/plugins/%{pluginname}/lib
 %{_datadir}/glpi/plugins/%{pluginname}/install
 %{_datadir}/glpi/plugins/%{pluginname}/pics
 %{_datadir}/glpi/plugins/%{pluginname}/report
 %{_datadir}/glpi/plugins/%{pluginname}/scripts
-%{_datadir}/glpi/plugins/%{pluginname}/snmpmodels
 
 
 %changelog
+* Wed Dec 17 2014 Remi Collet <remi@fedoraproject.org> - 1:0.85.0.1.0-0.1.BETA1
+- update to 0.85+1.0-BETA1 for GLPI 0.85
+  http://forge.fusioninventory.org/versions/97
+
 * Mon Oct 27 2014 Remi Collet <remi@fedoraproject.org> - 1:0.84.0.3.5-1
 - update to 0.84+3.5 for GLPI 0.84
   http://forge.fusioninventory.org/versions/204
