@@ -1727,8 +1727,11 @@ fi
 
 
 %changelog
-* Mon Dec 15 2014 Remi Collet <remi@fedoraproject.org> 5.5.20-2
-- add sybase_ct extension
+* Wed Dec 17 2014 Remi Collet <remi@fedoraproject.org> 5.5.20-2
+- Update to 5.5.20
+  http://www.php.net/releases/5_5_20.php
+- add sybase_ct extension (in mssql sub-package)
+- xmlrpc requires xml
 
 * Wed Dec 10 2014 Remi Collet <remi@fedoraproject.org> 5.5.20-1
 - Update to 5.5.20
