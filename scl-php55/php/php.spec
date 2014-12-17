@@ -649,7 +649,7 @@ Group: Development/Languages
 # All files licensed under PHP version 3.01, except
 # libXMLRPC is licensed under BSD
 License: PHP and BSD
-Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
+Requires: %{?scl_prefix}php-xml%{?_isa} = %{version}-%{release}
 
 %description xmlrpc
 The %{?scl_prefix}php-xmlrpc package contains a dynamic shared object that will add
