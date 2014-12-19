@@ -1,8 +1,8 @@
-%global date 20140511
+%global date 20141218
 
 Name:      php-getid3
-Version:   1.9.8
-Release:   2%{?dist}
+Version:   1.9.9
+Release:   1%{?dist}
 Epoch:     1
 License:   LGPLv3+
 Summary:   The PHP media file parser
@@ -37,7 +37,8 @@ AAC, VQF, FLAC, MusePack, Real, QuickTime, Monkey's Audio, MIDI and more).
 
 
 %prep
-%setup -q -c
+%setup -q -n getID3-%{version}
+
 for i in ./*.txt licenses/*.txt demos/*.php; do
       iconv -f iso-8859-1 -t utf-8 < "$i" > "${i}_"
       touch -r "$i" "${i}_"
@@ -64,12 +65,15 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc changelog.txt dependencies.txt readme.txt structure.txt demos
 %doc composer.json
-%{?_licensedir:%license licenses/*}
-%{!?_licensedir:%doc licenses}
+%{?_licensedir:%license licenses license.txt}
+%{!?_licensedir:%doc    licenses license.txt}
 %{_datadir}/php/getid3
 
 
 %changelog
+* Fri Dec 19 2014 Remi Collet <remi@fedoraproject.org> - 1:1.9.9-1
+- new release 1.9.9
+
 * Thu Aug 21 2014 Remi Collet <remi@fedoraproject.org> - 1:1.9.8-2
 - fix minimal PHP version
 - add explicit dependencies for all php extensions
