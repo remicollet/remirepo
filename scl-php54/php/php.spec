@@ -108,8 +108,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.4.35
-Release: 2%{?dist}
+Version: 5.4.36
+Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1579,7 +1579,9 @@ fi
 
 
 %changelog
-* Mon Dec 15 2014 Remi Collet <remi@fedoraproject.org> 5.4.35-2
+* Fri Dec 19 2014 Remi Collet <remi@fedoraproject.org> 5.4.36-1
+- Update to 5.4.36
+  http://www.php.net/releases/5_4_36.php
 - add embedded sub package
 - filter all libraries to avoid provides
 - add sybase_ct extension

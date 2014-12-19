@@ -81,8 +81,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.35
-Release: 2%{?dist}
+Version: 5.4.36
+Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -672,7 +672,10 @@ Summary: A database abstraction layer module for PHP applications
 Group: Development/Languages
 # All files licensed under PHP version 3.01
 License: PHP
-BuildRequires: %{db_devel}, gdbm-devel, tokyocabinet-devel
+BuildRequires: %{db_devel}, gdbm-devel
+%if 0%{?rhel} != 5
+BuildRequires: tokyocabinet-devel
+%endif
 Requires: php-common%{?_isa} = %{version}-%{release}
 Obsoletes: php53-dba, php53u-dba, php54-dba, php54w-dba
 
@@ -1043,7 +1046,9 @@ build --libdir=%{_libdir}/php \
       --enable-bcmath=shared \
       --enable-dba=shared --with-db4=%{_prefix} \
                           --with-gdbm=%{_prefix} \
+%if 0%{?rhel} != 5
                           --with-tcadb=%{_prefix} \
+%endif
       --with-xmlrpc=shared \
       --with-ldap=shared --with-ldap-sasl \
       --enable-mysqlnd=shared \
@@ -1165,7 +1170,9 @@ build --includedir=%{_includedir}/php-zts \
       --enable-bcmath=shared \
       --enable-dba=shared --with-db4=%{_prefix} \
                           --with-gdbm=%{_prefix} \
+%if 0%{?rhel} != 5
                           --with-tcadb=%{_prefix} \
+%endif
       --with-xmlrpc=shared \
       --with-ldap=shared --with-ldap-sasl \
       --enable-mysqlnd=shared \
@@ -1698,8 +1705,11 @@ fi
 
 
 %changelog
-* Mon Dec 15 2014 Remi Collet <remi@fedoraproject.org> 5.4.35-2
+* Fri Dec 19 2014 Remi Collet <remi@fedoraproject.org> 5.4.36-1
+- Update to 5.4.36
+  http://www.php.net/releases/5_4_36.php
 - add sybase_ct extension
+- drop tokyocabinet support from dba (EL-5)
 
 * Fri Nov 14 2014 Remi Collet <remi@fedoraproject.org> 5.4.35-1
 - Update to 5.4.35
