@@ -12,7 +12,7 @@
 
 Name:           libssh2
 Version:        1.4.3
-Release:        8%{?dist}
+Release:        8%{?dist}.1
 Summary:        A library implementing the SSH2 protocol
 Group:          System Environment/Libraries
 License:        BSD
@@ -49,6 +49,7 @@ SECSH-DHGEX(04), and SECSH-NUMBERS(10).
 Summary:        Development files for libssh2
 Group:          Development/Libraries
 Requires:       %{name} = %{version}-%{release}
+Requires:       openssl-devel
 Requires:       pkgconfig
 
 %description    devel
@@ -157,6 +158,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/libssh2.pc
 
 %changelog
+* Sat Dec 20 2014 Remi Collet <RPMS@FamilleCollet.com> 1.4.3-8.1
+- libssh2-devel requires openssl-devel
+
 * Sat Dec 20 2014 Remi Collet <RPMS@FamilleCollet.com> 1.4.3-8
 - sync with 1.4.3-8 from RHEL-7
 - ABI is compatible according to ABI compliance checker

@@ -36,9 +36,6 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  libssh2-devel >= 1.2
 BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
-# needed to use pkg-config (for buildver)
-BuildRequires:  openssl-devel
-BuildRequires:  pkgconfig
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
