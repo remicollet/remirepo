@@ -1,0 +1,223 @@
+From 6e0d757f24a45252c4cae9ea09732eda2562c767 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Tue, 9 Apr 2013 11:42:09 +0200
+Subject: [PATCH 3/3] sftp: Add support for fsync (OpenSSH extension).
+
+The new libssh2_sftp_fsync API causes data and metadata in the
+currently open file to be committed to disk at the server.
+
+This is an OpenSSH extension to the SFTP protocol.  See:
+
+https://bugzilla.mindrot.org/show_bug.cgi?id=1798
+---
+ docs/Makefile.am          |  1 +
+ docs/libssh2_sftp_fsync.3 | 39 +++++++++++++++++++
+ include/libssh2_sftp.h    |  1 +
+ src/sftp.c                | 97 +++++++++++++++++++++++++++++++++++++++++++++++
+ src/sftp.h                |  5 +++
+ 5 files changed, 143 insertions(+)
+ create mode 100644 docs/libssh2_sftp_fsync.3
+
+diff --git a/docs/Makefile.am b/docs/Makefile.am
+index e4cf487..e6ab394 100644
+--- a/docs/Makefile.am
++++ b/docs/Makefile.am
+@@ -120,6 +120,7 @@ dist_man_MANS = \
+ 	libssh2_sftp_fstat.3 \
+ 	libssh2_sftp_fstat_ex.3 \
+ 	libssh2_sftp_fstatvfs.3 \
++	libssh2_sftp_fsync.3 \
+ 	libssh2_sftp_get_channel.3 \
+ 	libssh2_sftp_init.3 \
+ 	libssh2_sftp_last_error.3 \
+diff --git a/docs/libssh2_sftp_fsync.3 b/docs/libssh2_sftp_fsync.3
+new file mode 100644
+index 0000000..646760a
+--- /dev/null
++++ b/docs/libssh2_sftp_fsync.3
+@@ -0,0 +1,39 @@
++.TH libssh2_sftp_fsync 3 "8 Apr 2013" "libssh2 1.4.4" "libssh2 manual"
++.SH NAME
++libssh2_sftp_fsync - synchronize file to disk
++.SH SYNOPSIS
++.nf
++#include <libssh2.h>
++#include <libssh2_sftp.h>
++
++int
++libssh2_sftp_fsync(LIBSSH2_SFTP_HANDLE *handle)
++.fi
++.SH DESCRIPTION
++This function causes the remote server to synchronize the file
++data and metadata to disk (like fsync(2)).
++
++For this to work requires fsync@openssh.com support on the server.
++
++\fIhandle\fP - SFTP File Handle as returned by
++.BR libssh2_sftp_open_ex(3)
++
++.SH RETURN VALUE
++Returns 0 on success or negative on failure. If used in non-blocking mode, it
++returns LIBSSH2_ERROR_EAGAIN when it would otherwise block. While
++LIBSSH2_ERROR_EAGAIN is a negative number, it isn't really a failure per se.
++.SH ERRORS
++\fILIBSSH2_ERROR_ALLOC\fP -  An internal memory allocation call failed.
++
++\fILIBSSH2_ERROR_SOCKET_SEND\fP - Unable to send data on socket.
++
++\fILIBSSH2_ERROR_SFTP_PROTOCOL\fP - An invalid SFTP protocol response
++was received on the socket, or an SFTP operation caused an errorcode
++to be returned by the server.  In particular, this can be returned if
++the SSH server does not support the fsync operation: the SFTP subcode
++\fILIBSSH2_FX_OP_UNSUPPORTED\fP will be returned in this case.
++
++.SH AVAILABILITY
++Added in libssh2 1.4.4 and OpenSSH 6.3.
++.SH SEE ALSO
++.BR fsync(2)
+diff --git a/include/libssh2_sftp.h b/include/libssh2_sftp.h
+index 74884fb..677faf2 100644
+--- a/include/libssh2_sftp.h
++++ b/include/libssh2_sftp.h
+@@ -247,6 +247,7 @@ LIBSSH2_API int libssh2_sftp_readdir_ex(LIBSSH2_SFTP_HANDLE *handle, \
+ 
+ LIBSSH2_API ssize_t libssh2_sftp_write(LIBSSH2_SFTP_HANDLE *handle,
+                                        const char *buffer, size_t count);
++LIBSSH2_API int libssh2_sftp_fsync(LIBSSH2_SFTP_HANDLE *handle);
+ 
+ LIBSSH2_API int libssh2_sftp_close_handle(LIBSSH2_SFTP_HANDLE *handle);
+ #define libssh2_sftp_close(handle) libssh2_sftp_close_handle(handle)
+diff --git a/src/sftp.c b/src/sftp.c
+index 65fa77a..01017fd 100644
+--- a/src/sftp.c
++++ b/src/sftp.c
+@@ -986,6 +986,10 @@ sftp_shutdown(LIBSSH2_SFTP *sftp)
+         LIBSSH2_FREE(session, sftp->symlink_packet);
+         sftp->symlink_packet = NULL;
+     }
++    if (sftp->fsync_packet) {
++        LIBSSH2_FREE(session, sftp->fsync_packet);
++        sftp->fsync_packet = NULL;
++    }
+ 
+     sftp_packet_flush(sftp);
+ 
+@@ -2014,6 +2018,99 @@ libssh2_sftp_write(LIBSSH2_SFTP_HANDLE *hnd, const char *buffer,
+ 
+ }
+ 
++static int sftp_fsync(LIBSSH2_SFTP_HANDLE *handle)
++{
++    LIBSSH2_SFTP *sftp = handle->sftp;
++    LIBSSH2_CHANNEL *channel = sftp->channel;
++    LIBSSH2_SESSION *session = channel->session;
++    /* 34 = packet_len(4) + packet_type(1) + request_id(4) +
++       string_len(4) + strlen("fsync@openssh.com")(17) + handle_len(4) */
++    uint32_t packet_len = handle->handle_len + 34;
++    size_t data_len;
++    unsigned char *packet, *s, *data;
++    ssize_t rc;
++    uint32_t retcode;
++
++    if (sftp->fsync_state == libssh2_NB_state_idle) {
++        _libssh2_debug(session, LIBSSH2_TRACE_SFTP,
++                       "Issuing fsync command");
++        s = packet = LIBSSH2_ALLOC(session, packet_len);
++        if (!packet) {
++            return _libssh2_error(session, LIBSSH2_ERROR_ALLOC,
++                                  "Unable to allocate memory for FXP_EXTENDED "
++                                  "packet");
++        }
++
++        _libssh2_store_u32(&s, packet_len - 4);
++        *(s++) = SSH_FXP_EXTENDED;
++        sftp->fsync_request_id = sftp->request_id++;
++        _libssh2_store_u32(&s, sftp->fsync_request_id);
++        _libssh2_store_str(&s, "fsync@openssh.com", 17);
++        _libssh2_store_str(&s, handle->handle, handle->handle_len);
++
++        sftp->fsync_state = libssh2_NB_state_created;
++    } else {
++        packet = sftp->fsync_packet;
++    }
++
++    if (sftp->fsync_state == libssh2_NB_state_created) {
++        rc = _libssh2_channel_write(channel, 0, packet, packet_len);
++        if (rc == LIBSSH2_ERROR_EAGAIN ||
++            (0 <= rc && rc < (ssize_t)packet_len)) {
++            sftp->fsync_packet = packet;
++            return LIBSSH2_ERROR_EAGAIN;
++        }
++
++        LIBSSH2_FREE(session, packet);
++        sftp->fsync_packet = NULL;
++
++        if (rc < 0) {
++            sftp->fsync_state = libssh2_NB_state_idle;
++            return _libssh2_error(session, LIBSSH2_ERROR_SOCKET_SEND,
++                                  "_libssh2_channel_write() failed");
++        }
++        sftp->fsync_state = libssh2_NB_state_sent;
++    }
++
++    rc = sftp_packet_require(sftp, SSH_FXP_STATUS,
++                             sftp->fsync_request_id, &data, &data_len);
++    if (rc == LIBSSH2_ERROR_EAGAIN) {
++        return rc;
++    } else if (rc) {
++        sftp->fsync_state = libssh2_NB_state_idle;
++        return _libssh2_error(session, rc,
++                              "Error waiting for FXP EXTENDED REPLY");
++    }
++
++    sftp->fsync_state = libssh2_NB_state_idle;
++
++    retcode = _libssh2_ntohu32(data + 5);
++    LIBSSH2_FREE(session, data);
++
++    if (retcode != LIBSSH2_FX_OK) {
++        sftp->last_errno = retcode;
++        return _libssh2_error(session, LIBSSH2_ERROR_SFTP_PROTOCOL,
++                              "fsync failed");
++    }
++
++    return 0;
++}
++
++/* libssh2_sftp_fsync
++ * Commit data on the handle to disk.
++ */
++LIBSSH2_API int
++libssh2_sftp_fsync(LIBSSH2_SFTP_HANDLE *hnd)
++{
++    int rc;
++    if(!hnd)
++        return LIBSSH2_ERROR_BAD_USE;
++    BLOCK_ADJUST(rc, hnd->sftp->channel->session,
++                 sftp_fsync(hnd));
++    return rc;
++}
++
++
+ /*
+  * sftp_fstat
+  *
+diff --git a/src/sftp.h b/src/sftp.h
+index 55bdb46..63e8139 100644
+--- a/src/sftp.h
++++ b/src/sftp.h
+@@ -175,6 +175,11 @@ struct _LIBSSH2_SFTP
+     /* State variable used in sftp_write() */
+     libssh2_nonblocking_states write_state;
+ 
++    /* State variables used in sftp_fsync() */
++    libssh2_nonblocking_states fsync_state;
++    unsigned char *fsync_packet;
++    uint32_t fsync_request_id;
++
+     /* State variables used in libssh2_sftp_readdir() */
+     libssh2_nonblocking_states readdir_state;
+     unsigned char *readdir_packet;
+-- 
+1.8.1.4
+

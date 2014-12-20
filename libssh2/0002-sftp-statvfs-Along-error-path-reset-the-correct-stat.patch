@@ -1,0 +1,26 @@
+From a12f3ffab579b514eeb7fdfaca0ade271961cdb4 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Mon, 8 Apr 2013 17:30:10 +0100
+Subject: [PATCH 2/3] sftp: statvfs: Along error path, reset the correct
+ 'state' variable.
+
+---
+ src/sftp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/sftp.c b/src/sftp.c
+index 3760025..65fa77a 100644
+--- a/src/sftp.c
++++ b/src/sftp.c
+@@ -2752,7 +2752,7 @@ static int sftp_statvfs(LIBSSH2_SFTP *sftp, const char *path,
+                               "Error waiting for FXP EXTENDED REPLY");
+     } else if (data_len < 93) {
+         LIBSSH2_FREE(session, data);
+-        sftp->fstatvfs_state = libssh2_NB_state_idle;
++        sftp->statvfs_state = libssh2_NB_state_idle;
+         return _libssh2_error(session, LIBSSH2_ERROR_SFTP_PROTOCOL,
+                               "SFTP Protocol Error: short response");
+     }
+-- 
+1.8.1.4
+

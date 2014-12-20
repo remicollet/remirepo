@@ -1,0 +1,69 @@
+From 9e56b84c41efcaf3349f82a93c3dc854e172e5c4 Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Fri, 9 Aug 2013 16:22:08 +0200
+Subject: [PATCH 4/5] partially revert "window_size: explicit adjustments only"
+
+This partially reverts commit 03ca9020756a4e16f0294e5b35e9826ee6af2364
+in order to fix extreme slowdown when uploading to localhost via SFTP.
+
+I was able to repeat the issue on RHEL-7 on localhost only.  It did not
+occur when uploading via network and it did not occur on a RHEL-6 box
+with the same version of libssh2.
+
+The problem was that sftp_read() used a read-ahead logic to figure out
+the window_size, but sftp_packet_read() called indirectly from
+sftp_write() did not use any read-ahead logic.
+---
+ src/channel.c |   29 +++++++++++++++++++++++++++++
+ 1 files changed, 29 insertions(+), 0 deletions(-)
+
+diff --git a/src/channel.c b/src/channel.c
+index 4f41e1f..d4ffdce 100644
+--- a/src/channel.c
++++ b/src/channel.c
+@@ -1759,6 +1759,15 @@ ssize_t _libssh2_channel_read(LIBSSH2_CHANNEL *channel, int stream_id,
+         channel->read_state = libssh2_NB_state_created;
+     }
+ 
++    /*
++     * =============================== NOTE ===============================
++     * I know this is very ugly and not a really good use of "goto", but
++     * this case statement would be even uglier to do it any other way
++     */
++    if (channel->read_state == libssh2_NB_state_jump1) {
++        goto channel_read_window_adjust;
++    }
++
+     rc = 1; /* set to >0 to let the while loop start */
+ 
+     /* Process all pending incoming packets in all states in order to "even
+@@ -1867,6 +1876,26 @@ ssize_t _libssh2_channel_read(LIBSSH2_CHANNEL *channel, int stream_id,
+            more off the network again */
+         channel->read_state = libssh2_NB_state_created;
+ 
++    if(channel->remote.window_size < (LIBSSH2_CHANNEL_WINDOW_DEFAULT*30)) {
++        /* the window is getting too narrow, expand it! */
++
++      channel_read_window_adjust:
++        channel->read_state = libssh2_NB_state_jump1;
++        /* the actual window adjusting may not finish so we need to deal with
++           this special state here */
++        rc = _libssh2_channel_receive_window_adjust(channel,
++                                                    (LIBSSH2_CHANNEL_WINDOW_DEFAULT*60), 0, NULL);
++        if (rc)
++            return rc;
++
++        _libssh2_debug(session, LIBSSH2_TRACE_CONN,
++                       "channel_read() filled %d adjusted %d",
++                       bytes_read, buflen);
++        /* continue in 'created' state to drain the already read packages
++           first before starting to empty the socket further */
++        channel->read_state = libssh2_NB_state_created;
++    }
++
+     return bytes_read;
+ }
+ 
+-- 
+1.7.1
+

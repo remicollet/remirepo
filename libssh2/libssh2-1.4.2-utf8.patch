@@ -1,0 +1,14 @@
+ NEWS      |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+--- libssh2/NEWS
++++ libssh2/NEWS
+@@ -3552,7 +3552,7 @@ Simon Josefsson (16 Nov 2009)
+ - support arcfour128 cipher per RFC 4345
+ 
+ Daniel Stenberg (21 Oct 2009)
+-- [Cristian Rodríguez brought this change]
++- [Cristian RodrÃ­guez brought this change]
+ 
+   add support for GCC visibility features
+ 

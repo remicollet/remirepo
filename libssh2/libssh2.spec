@@ -1,19 +1,43 @@
-Name:           libssh2
-Version:        1.2.7
-Release:        1%{?dist}
-Summary:        A library implementing the SSH2 protocol
+# Fedora 10 onwards support noarch subpackages; by using one, we can
+# put the arch-independent docs in a common subpackage and save lots
+# of space on the mirrors
+%if 0%{?fedora} > 9 || 0%{?rhel} > 5
+%global noarch_docs_package 1
+%else
+%global noarch_docs_package 0
+%endif
 
+# Define %%{__isa_bits} for old releases
+%{!?__isa_bits: %global __isa_bits %((echo '#include <bits/wordsize.h>'; echo __WORDSIZE) | cpp - | grep -Ex '32|64')}
+
+Name:           libssh2
+Version:        1.4.3
+Release:        8%{?dist}
+Summary:        A library implementing the SSH2 protocol
 Group:          System Environment/Libraries
 License:        BSD
-URL:            http://www.libssh2.org
+URL:            http://www.libssh2.org/
 Source0:        http://libssh2.org/download/libssh2-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
+Patch0:         libssh2-1.4.2-utf8.patch
+Patch1:         0001-sftp-seek-Don-t-flush-buffers-on-same-offset.patch
+Patch2:         0002-sftp-statvfs-Along-error-path-reset-the-correct-stat.patch
+Patch3:         0003-sftp-Add-support-for-fsync-OpenSSH-extension.patch
+Patch4:         0004-partially-revert-window_size-explicit-adjustments-on.patch
+Patch5:         0005-channel.c-fix-a-use-after-free.patch
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildRequires:  openssl-devel
 BuildRequires:  zlib-devel
+BuildRequires:  /usr/bin/man
 
-# tests
+# Test suite requirements - we run the OpenSSH server and try to connect to it
 BuildRequires:  openssh-server
+# We use matchpathcon to get the correct SELinux context for the ssh server
+# initialization script so that it can transition correctly in an SELinux
+# environment; matchpathcon is only available from FC-4 and moved from the
+# libselinux to libselinux-utils package in F-10
+%if (0%{?fedora} >= 4 || 0%{?rhel} >= 5) && !(0%{?fedora} >=17 || 0%{?rhel} >=7)
+BuildRequires:  /usr/sbin/matchpathcon selinux-policy-targeted
+%endif
 
 %description
 libssh2 is a library implementing the SSH2 protocol as defined by
@@ -21,93 +45,123 @@ Internet Drafts: SECSH-TRANS(22), SECSH-USERAUTH(25),
 SECSH-CONNECTION(23), SECSH-ARCH(20), SECSH-FILEXFER(06)*,
 SECSH-DHGEX(04), and SECSH-NUMBERS(10).
 
-
 %package        devel
-Summary:        Development files for %{name}
+Summary:        Development files for libssh2
 Group:          Development/Libraries
 Requires:       %{name} = %{version}-%{release}
 Requires:       pkgconfig
 
 %description    devel
-The %{name}-devel package contains libraries and header files for
-developing applications that use %{name}.
+The libssh2-devel package contains libraries and header files for
+developing applications that use libssh2.
 
 %package        docs
-Summary:        Documentation for %{name}
+Summary:        Documentation for libssh2
 Group:          Development/Libraries
 Requires:       %{name} = %{version}-%{release}
+%if %{noarch_docs_package}
+BuildArch:      noarch
+%endif
 
 %description    docs
-The %{name}-docs package contains man pages and examples for
-developing applications that use %{name}.
-
+The libssh2-docs package contains man pages and examples for
+developing applications that use libssh2.
 
 %prep
 %setup -q
 
-# make sure things are UTF-8...
-for i in ChangeLog NEWS ; do
-    iconv --from=ISO-8859-1 --to=UTF-8 $i > new
-    mv new $i
-done
+# Replace hard wired port number in the test suite to avoid collisions
+# between 32-bit and 64-bit builds running on a single build-host
+sed -i s/4711/47%{?__isa_bits}/ tests/ssh2.{c,sh}
 
-# make it possible to launch OpenSSH server for testing purposes
-chcon -t initrc_exec_t tests/ssh2.sh || :
-chcon -Rt etc_t tests/etc || :
-chcon -t sshd_key_t tests/etc/{host,user} || :
+# Make sure things are UTF-8...
+%patch0 -p1
+
+# Three upstream patches required for qemu ssh block driver.
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+
+# http://thread.gmane.org/gmane.network.ssh.libssh2.devel/6428
+%patch4 -p1
+
+# https://trac.libssh2.org/ticket/268
+%patch5 -p1
+
+# Make sshd transition appropriately if building in an SELinux environment
+%if !(0%{?fedora} >= 17 || 0%{?rhel} >= 7)
+chcon $(/usr/sbin/matchpathcon -n /etc/rc.d/init.d/sshd) tests/ssh2.sh || :
+chcon -R $(/usr/sbin/matchpathcon -n /etc) tests/etc || :
+chcon $(/usr/sbin/matchpathcon -n /etc/ssh/ssh_host_key) tests/etc/{host,user} || :
+%endif
 
 %build
 %configure --disable-static --enable-shared
-
 make %{?_smp_mflags}
 
+# Avoid polluting libssh2.pc with linker options (#947813)
+sed -i -e 's|[[:space:]]-Wl,[^[:space:]]*||' libssh2.pc
 
 %install
 rm -rf %{buildroot}
-
 make install DESTDIR=%{buildroot} INSTALL="install -p"
-find %{buildroot} -name '*.la' -exec rm -f {} +
+find %{buildroot} -name '*.la' -exec rm -f {} \;
 
 # clean things up a bit for packaging
-( cd example && make clean )
-find example/ -type d -name .deps -exec rm -rf {} +
-find example/ -type f '(' -name '*.am' -o -name '*.in' ')' -exec rm -v {} +
+make -C example clean
+rm -rf example/.deps
+find example/ -type f '(' -name '*.am' -o -name '*.in' ')' -exec rm -v {} \;
 
-# avoid multilib conflict on libssh2-docs
-mv -v example/Makefile example/Makefile.%{_arch}
+# avoid multilib conflict on libssh2-devel
+mv -v example example.%{_arch}
 
 %check
-# sshd/loopback test fails under local build, with selinux enforcing 
-%{?_without_sshd_tests:echo "Skipping sshd tests" ; echo "exit 0" > tests/ssh2.sh }
-(cd tests && make check)
+# The SSH test will fail if we don't have /dev/tty, as is the case in some
+# versions of mock (#672713)
+if [ ! -c /dev/tty ]; then
+	echo Skipping SSH test due to missing /dev/tty
+	echo "exit 0" > tests/ssh2.sh
+fi
+# Apparently it fails in the sparc and arm buildsystems too
+%ifarch %{sparc} %{arm}
+echo Skipping SSH test on sparc/arm
+echo "exit 0" > tests/ssh2.sh
+%endif
+make -C tests check
 
 %clean
 rm -rf %{buildroot}
-
 
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
-
 %files
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING README NEWS
-%{_libdir}/*.so.*
+%{_libdir}/libssh2.so.1
+%{_libdir}/libssh2.so.1.*
 
 %files docs
 %defattr(-,root,root,-)
-%doc COPYING HACKING example/
-%{_mandir}/man?/*
+%doc HACKING
+%{_mandir}/man3/libssh2_*.3*
 
 %files devel
 %defattr(-,root,root,-)
-%doc COPYING
-%{_includedir}/*
-%{_libdir}/*.so
-%{_libdir}/pkgconfig/*
+%doc example.%{_arch}/
+%{_includedir}/libssh2.h
+%{_includedir}/libssh2_publickey.h
+%{_includedir}/libssh2_sftp.h
+%{_libdir}/libssh2.so
+%{_libdir}/pkgconfig/libssh2.pc
 
 %changelog
+* Sat Dec 20 2014 Remi Collet <RPMS@FamilleCollet.com> 1.4.3-8
+- sync with 1.4.3-8 from RHEL-7
+- ABI is compatible according to ABI compliance checker
+  http://upstream.rosalinux.ru/versions/libssh2.html
+
 * Sun Jul 24 2011 Remi Collet <RPMS@FamilleCollet.com> 1.2.7-1
 - rebuild for remi repo (EL-5)
 

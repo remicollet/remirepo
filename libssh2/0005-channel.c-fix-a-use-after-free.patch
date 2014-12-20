@@ -1,0 +1,26 @@
+From 96e1078fced70e39e4163857ad8345ae9d24573f Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Wed, 14 Aug 2013 17:37:00 +0200
+Subject: [PATCH 5/5] channel.c: fix a use after free
+
+Bug: https://trac.libssh2.org/ticket/268
+---
+ src/channel.c |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
+
+diff --git a/src/channel.c b/src/channel.c
+index d4ffdce..9f2c241 100644
+--- a/src/channel.c
++++ b/src/channel.c
+@@ -670,8 +670,6 @@ int _libssh2_channel_forward_cancel(LIBSSH2_LISTENER *listener)
+ 
+     LIBSSH2_FREE(session, listener);
+ 
+-    listener->chanFwdCncl_state = libssh2_NB_state_idle;
+-
+     return 0;
+ }
+ 
+-- 
+1.7.1
+
