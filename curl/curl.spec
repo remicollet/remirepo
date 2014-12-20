@@ -1,63 +1,77 @@
+# Define %%{__isa_bits} for old releases
+%{!?__isa_bits: %global __isa_bits %((echo '#include <bits/wordsize.h>'; echo __WORDSIZE) | cpp - | grep -Ex '32|64')}
+
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: curl
-Version: 7.27.0
-Release: 11%{?dist}
+Version: 7.29.0
+Release: 19%{?dist}
 License: MIT
 Group: Applications/Internet
-Source: http://curl.haxx.se/download/%{name}-%{version}.tar.bz2
+Source: http://curl.haxx.se/download/%{name}-%{version}.tar.lzma
 Source2: curlbuild.h
-Source3: hide_selinux.c
 
-# eliminate unnecessary inotify events on upload via file protocol (#844385)
-Patch1: 0001-curl-7.27.0-1f8518c5.patch
+# fix a SIGSEGV when closing an unused multi handle (#914411)
+Patch1: 0001-curl-7.29.0-da3fc1ee.patch
 
-# do not crash if MD5 fingerprint is not provided by libssh2
-Patch2: 0002-curl-7.27.0-f05e5136.patch
+# switch SSL socket into non-blocking mode after handshake
+Patch2: 0002-curl-7.29.0-9d0af301.patch
 
-# fix a syntax error in curl-config (#871317)
-Patch3: 0003-curl-7.27.0-382429e7.patch
-
-# do not print misleading NSS error codes
-Patch4: 0004-curl-7.27.0-52b6eda4.patch
-
-# update the links to cipher-suites supported by NSS
-Patch5: 0005-curl-7.27.0-f208bf5a.patch
-
-# prevent NSS from crashing on client auth hook failure
-Patch6: 0006-curl-7.27.0-68d2830e.patch
-
-# clear session cache if a client cert from file is used
-Patch7: 0007-curl-7.27.0-b36f1d26.patch
-
-# fix error messages for CURLE_SSL_{CACERT,CRL}_BADFILE
-Patch8: 0008-curl-7.27.0-26613d78.patch
-
-# fix buffer overflow when negotiating SASL DIGEST-MD5 auth (CVE-2013-0249)
-Patch9: 0009-curl-7.27.0-f206d6c0.patch
+# do not ignore poll() failures other than EINTR
+Patch3: 0003-curl-7.29.0-491e026c.patch
 
 # curl_global_init() now accepts the CURL_GLOBAL_ACK_EINTR flag
-Patch10: 0010-curl-7.27.0-57ccdfa8.patch
+Patch4: 0004-curl-7.29.0-57ccdfa8.patch
 
 # fix cookie tailmatching to prevent cross-domain leakage (CVE-2013-1944)
-Patch11: 0011-curl-7.27.0-2eb8dcf2.patch
+Patch5: 0005-curl-7.29.0-2eb8dcf2.patch
 
 # show proper host name on failed resolve (#957173)
-Patch12: 0012-curl-7.27.0-25e577b3.patch
+Patch6: 0006-curl-7.29.0-25e577b3.patch
 
 # prevent an artificial timeout event due to stale speed-check data (#906031)
-Patch13: 0013-curl-7.27.0-b37b5233.patch
-
-# switch SSL socket into non-blocking mode after handshake (#960765)
-Patch14: 0014-curl-7.27.0-9d0af301.patch
+Patch7: 0007-curl-7.29.0-b37b5233.patch
 
 # fix heap-based buffer overflow in curl_easy_unescape() (CVE-2013-2174)
-Patch15: 0015-curl-7.27.0-192c4f78.patch
+Patch8: 0008-curl-7.29.0-192c4f78.patch
+
+# mention all option listed in 'curl --help' in curl.1 man page
+Patch9: 0009-curl-7.29.0-3a0e931f.patch
+
+# FTP: when EPSV gets a 229 but fails to connect, retry with PASV (#1002815)
+Patch10: 0010-curl-7.29.0-7cc00d9a.patch
+
+# avoid a busy-loop in curl_easy_perform()
+Patch11: 0011-curl-7.29.0-0feeab78.patch
+
+# avoid delay if FTP is aborted in CURLOPT_HEADERFUNCTION callback (#1005686)
+Patch12: 0012-curl-7.29.0-c639d725.patch
+
+# allow to use ECC ciphers if NSS implements them (#1058776)
+Patch13: 0013-curl-7.29.0-665c160f.patch
+
+# re-use of wrong HTTP NTLM connection in libcurl (CVE-2014-0015)
+Patch14: 0014-curl-7.29.0-8ae35102.patch
+
+# allow to use TLS > 1.0 if built against recent NSS (#1036789)
+Patch15: 0015-curl-7.29.0-7fc9325a.patch
+
+# use proxy name in error message when proxy is used (#1042831)
+Patch16: 0016-curl-7.29.0-1cf71bd7.patch
+
+# refresh expired cookie in test172 from upstream test-suite (#1063693)
+Patch17: 0017-curl-7.29.0-ffb8a21d.patch
+
+# fix documentation of curl's options --tlsv1.[0-2] (#1066364)
+Patch18: 0018-curl-7.29.0-03c28820.patch
+
+# fix connection re-use when using different log-in credentials (CVE-2014-0138)
+Patch19: 0018-curl-7.29.0-517b06d6.patch
 
 # patch making libcurl multilib ready
-Patch101: 0101-curl-7.27.0-multilib.patch
+Patch101: 0101-curl-7.29.0-multilib.patch
 
 # prevent configure script from discarding -g in CFLAGS (#496778)
-Patch102: 0102-curl-7.27.0-debug.patch
+Patch102: 0102-curl-7.29.0-debug.patch
 
 # use localhost6 instead of ip6-localhost in the curl test-suite
 Patch104: 0104-curl-7.19.7-localhost6.patch
@@ -65,20 +79,26 @@ Patch104: 0104-curl-7.19.7-localhost6.patch
 # disable valgrind for certain test-cases (libssh2 problem)
 Patch106: 0106-curl-7.21.0-libssh2-valgrind.patch
 
+# http://thread.gmane.org/gmane.comp.web.curl.library/40551/focus=40561
+Patch105: 0105-curl-7.32.0-scp-upload.patch
+
 # work around valgrind bug (#678518)
 Patch107: 0107-curl-7.21.4-libidn-valgrind.patch
 
 # Fix character encoding of docs, which are of mixed encoding originally so
 # a simple iconv can't fix them
-Patch108: 0108-curl-7.27.0-utf8.patch
+Patch108: 0108-curl-7.29.0-utf8.patch
+
+# For old openssl in EL-5
+Patch201: 0201-curl-7.29.0-openssl.patch
 
 Provides: webclient
 URL: http://curl.haxx.se/
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildRequires: groff
 BuildRequires: krb5-devel
 BuildRequires: libidn-devel
-BuildRequires: libssh2-devel >= 1.2.0
+BuildRequires: libssh2-devel
 BuildRequires: openssl-devel
 BuildRequires: openldap-devel >= %{openldap_version}
 BuildRequires: openssh-clients
@@ -87,8 +107,23 @@ BuildRequires: pkgconfig
 BuildRequires: stunnel
 BuildRequires: zlib-devel
 
-# valgrind is not available on s390(x), sparc or arm5
-%ifnarch s390 s390x %{sparc} %{arm} ppc
+# perl modules used in the test suite
+BuildRequires: perl(Cwd)
+BuildRequires: perl(Digest::MD5)
+BuildRequires: perl(Exporter)
+BuildRequires: perl(File::Basename)
+BuildRequires: perl(File::Copy)
+BuildRequires: perl(File::Spec)
+BuildRequires: perl(IPC::Open2)
+BuildRequires: perl(MIME::Base64)
+BuildRequires: perl(strict)
+BuildRequires: perl(Time::Local)
+BuildRequires: perl(Time::HiRes)
+BuildRequires: perl(warnings)
+BuildRequires: perl(vars)
+
+# require valgrind to boost test coverage on i386 and x86_64
+%ifarch %{ix86} x86_64
 BuildRequires: valgrind
 %endif
 
@@ -165,6 +200,11 @@ documentation of the library, too.
 %patch13 -p1
 %patch14 -p1
 %patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch105 -p1
+%patch19 -p1
 
 # Fedora patches
 %patch101 -p1
@@ -174,12 +214,13 @@ documentation of the library, too.
 %patch107 -p1
 %patch108 -p1
 
+# For EL-5 with old openssl
+%patch201 -p1
+
 # replace hard wired port numbers in the test suite
-%ifarch x86_64
-sed -i s/899\\\([0-9]\\\)/649\\1/ tests/data/test*
-%else
-sed -i s/899\\\([0-9]\\\)/329\\1/ tests/data/test*
-%endif
+cd tests/data/
+sed -i s/899\\\([0-9]\\\)/%{?__isa_bits}9\\1/ test*
+cd -
 
 # disable test 1112 (#565305)
 printf "1112\n" >> tests/data/DISABLED
@@ -188,7 +229,6 @@ printf "1112\n" >> tests/data/DISABLED
 %ifarch ppc64
 echo "1319" >> tests/data/DISABLED
 %endif
-
 
 %build
 [ -x /usr/kerberos/bin/krb5-config ] && KRB5_PREFIX="=/usr/kerberos"
@@ -224,23 +264,9 @@ export LD_LIBRARY_PATH
 cd tests
 make %{?_smp_mflags}
 
-# make it possible to start a testing OpenSSH server with SELinux
-# in the enforcing mode (#521087)
-gcc -o hide_selinux.so -fPIC -shared %{SOURCE3}
-LD_PRELOAD="`readlink -f ./hide_selinux.so`:$LD_PRELOAD"
-export LD_PRELOAD
-
-# Ignore this tests for now (use !xxx)
-DISABLED=
-
 # use different port range for 32bit and 64bit build, thus make it possible
 # to run both in parallel on the same machine
-%ifarch x86_64
-./runtests.pl -a -b6490 -p -v $DISABLED
-%else
-./runtests.pl -a -b3290 -p -v $DISABLED
-%endif
-
+./runtests.pl -a -b%{?__isa_bits}90 -p -v
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -256,7 +282,7 @@ install -m 644 docs/libcurl/libcurl.m4 $RPM_BUILD_ROOT%{_datadir}/aclocal
 rm -f ${RPM_BUILD_ROOT}%{_mandir}/man1/mk-ca-bundle.1
 
 # Make libcurl-devel multilib-ready (bug #488922)
-%ifarch x86_64
+%if 0%{?__isa_bits} == 64
 %define _curlbuild_h curlbuild-64.h
 %else
 %define _curlbuild_h curlbuild-32.h
@@ -299,6 +325,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/libcurl.m4
 
 %changelog
+* Sat Dec 20 2014 Remi Collet <RPMS@FamilleCollet.com> - 7.29.0-19
+- sync with 7.29.0-19 from RHEL-7:
+
 * Mon Jun 24 2013 Remi Collet <RPMS@FamilleCollet.com> - 7.27.0-11
 - sync with 7.27.0-11 from F18:
   fix heap-based buffer overflow in curl_easy_unescape() (CVE-2013-2174)

@@ -1,0 +1,42 @@
+From 2e973be50f75d0a85dcb995f7823f00b1fc85c2f Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Mon, 7 Oct 2013 16:07:50 +0200
+Subject: [PATCH] ssh: improve the logic for detecting blocking direction
+
+This fixes a regression introduced by commit 0feeab78 limiting the speed
+of SCP upload to 16384 B/s on a fast connection (such as localhost).
+
+[upstream commit d015f4ccac627852869cb45e31ccdc9fbd97dc47]
+---
+ lib/ssh.c |    8 +++++---
+ 1 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/lib/ssh.c b/lib/ssh.c
+index 422357b..93c65c3 100644
+--- a/lib/ssh.c
++++ b/lib/ssh.c
+@@ -2287,6 +2287,10 @@ static CURLcode ssh_statemach_act(struct connectdata *conn, bool *block)
+         sshc->actualcode = result;
+       }
+       else {
++        /* store this original bitmask setup to use later on if we can't
++           figure out a "real" bitmask */
++        sshc->orig_waitfor = data->req.keepon;
++
+         /* we want to use the _sending_ function even when the socket turns
+            out readable as the underlying libssh2 scp send function will deal
+            with both accordingly */
+@@ -2603,9 +2607,7 @@ static void ssh_block2waitfor(struct connectdata *conn, bool block)
+ {
+   struct ssh_conn *sshc = &conn->proto.sshc;
+   int dir;
+-  if(!block)
+-    conn->waitfor = 0;
+-  else if((dir = libssh2_session_block_directions(sshc->ssh_session))) {
++  if(block && (dir = libssh2_session_block_directions(sshc->ssh_session))) {
+     /* translate the libssh2 define bits into our own bit defines */
+     conn->waitfor = ((dir&LIBSSH2_SESSION_BLOCK_INBOUND)?KEEP_RECV:0) |
+       ((dir&LIBSSH2_SESSION_BLOCK_OUTBOUND)?KEEP_SEND:0);
+-- 
+1.7.1
+

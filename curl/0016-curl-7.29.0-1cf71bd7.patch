@@ -1,0 +1,27 @@
+From cf8b6a21f1e9af984cfef417e83ca06b64565215 Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Mon, 20 Jan 2014 20:24:05 +0100
+Subject: [PATCH] Curl_is_connected: use proxy name in error message when proxy is used
+
+Backport of upstream commit 1cf71bd76e4a330e5b7824014c2605e4bfe1a0a5.
+---
+ lib/connect.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/lib/connect.c b/lib/connect.c
+index 0afb1ee..ba9ab92 100644
+--- a/lib/connect.c
++++ b/lib/connect.c
+@@ -758,7 +758,8 @@ CURLcode Curl_is_connected(struct connectdata *conn,
+     error = SOCKERRNO;
+     data->state.os_errno = error;
+     failf(data, "Failed connect to %s:%ld; %s",
+-          conn->host.name, conn->port, Curl_strerror(conn, error));
++          conn->bits.proxy?conn->proxy.name:conn->host.name,
++          conn->port, Curl_strerror(conn, error));
+   }
+ 
+   return code;
+-- 
+1.7.1
+

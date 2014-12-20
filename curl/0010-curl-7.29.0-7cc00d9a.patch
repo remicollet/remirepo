@@ -1,0 +1,395 @@
+From 3f411052825386a95d039435eb139a63859c3c73 Mon Sep 17 00:00:00 2001
+From: Daniel Stenberg <daniel@haxx.se>
+Date: Mon, 5 Aug 2013 23:49:53 +0200
+Subject: [PATCH] FTP: when EPSV gets a 229 but fails to connect, retry with PASV
+
+This is a regression as this logic used to work. It isn't clear when it
+broke, but I'm assuming in 7.28.0 when we went all-multi internally.
+
+This likely never worked with the multi interface. As the failed
+connection is detected once the multi state has reached DO_MORE, the
+Curl_do_more() function was now expanded somewhat so that the
+ftp_do_more() function can request to go "back" to the previous state
+when it makes another attempt - using PASV.
+
+Added test case 1233 to verify this fix. It has the little issue that it
+assumes no service is listening/accepting connections on port 1...
+
+Reported-by: byte_bucket in the #curl IRC channel
+
+[upstream commit 7cc00d9a832c42a330888aa5c11a2abad1bd5ac0]
+
+Signed-off-by: Kamil Dudka <kdudka@redhat.com>
+---
+ lib/ftp.c              |   64 ++++++++++++++++++++++++++++-------------------
+ lib/multi.c            |   11 ++++++--
+ lib/url.c              |   10 ++++---
+ lib/url.h              |    4 +-
+ lib/urldata.h          |    2 +-
+ tests/data/Makefile.am |    2 +-
+ tests/data/test1233    |   46 ++++++++++++++++++++++++++++++++++
+ 7 files changed, 102 insertions(+), 37 deletions(-)
+ create mode 100644 tests/data/test1233
+
+diff --git a/lib/ftp.c b/lib/ftp.c
+index 469b887..4501116 100644
+--- a/lib/ftp.c
++++ b/lib/ftp.c
+@@ -136,7 +136,7 @@ static CURLcode ftp_done(struct connectdata *conn,
+                          CURLcode, bool premature);
+ static CURLcode ftp_connect(struct connectdata *conn, bool *done);
+ static CURLcode ftp_disconnect(struct connectdata *conn, bool dead_connection);
+-static CURLcode ftp_do_more(struct connectdata *conn, bool *completed);
++static CURLcode ftp_do_more(struct connectdata *conn, int *completed);
+ static CURLcode ftp_multi_statemach(struct connectdata *conn, bool *done);
+ static int ftp_getsock(struct connectdata *conn, curl_socket_t *socks,
+                        int numsocks);
+@@ -1794,15 +1794,15 @@ static CURLcode ftp_state_quote(struct connectdata *conn,
+ static CURLcode ftp_epsv_disable(struct connectdata *conn)
+ {
+   CURLcode result = CURLE_OK;
+-  infof(conn->data, "got positive EPSV response, but can't connect. "
+-        "Disabling EPSV\n");
++  infof(conn->data, "Failed EPSV attempt. Disabling EPSV\n");
+   /* disable it for next transfer */
+   conn->bits.ftp_use_epsv = FALSE;
+   conn->data->state.errorbuf = FALSE; /* allow error message to get
+                                          rewritten */
+   PPSENDF(&conn->proto.ftpc.pp, "PASV", NULL);
+   conn->proto.ftpc.count1++;
+-  /* remain in the FTP_PASV state */
++  /* remain in/go to the FTP_PASV state */
++  state(conn, FTP_PASV);
+   return result;
+ }
+ 
+@@ -1931,15 +1931,7 @@ static CURLcode ftp_state_pasv_resp(struct connectdata *conn,
+   }
+   else if(ftpc->count1 == 0) {
+     /* EPSV failed, move on to PASV */
+-
+-    /* disable it for next transfer */
+-    conn->bits.ftp_use_epsv = FALSE;
+-    infof(data, "disabling EPSV usage\n");
+-
+-    PPSENDF(&ftpc->pp, "PASV", NULL);
+-    ftpc->count1++;
+-    /* remain in the FTP_PASV state */
+-    return result;
++    return ftp_epsv_disable(conn);
+   }
+   else {
+     failf(data, "Bad PASV/EPSV response: %03d", ftpcode);
+@@ -2018,14 +2010,17 @@ static CURLcode ftp_state_pasv_resp(struct connectdata *conn,
+   case CURLPROXY_SOCKS5_HOSTNAME:
+     result = Curl_SOCKS5(conn->proxyuser, conn->proxypasswd, newhost, newport,
+                          SECONDARYSOCKET, conn);
++    connected = TRUE;
+     break;
+   case CURLPROXY_SOCKS4:
+     result = Curl_SOCKS4(conn->proxyuser, newhost, newport,
+                          SECONDARYSOCKET, conn, FALSE);
++    connected = TRUE;
+     break;
+   case CURLPROXY_SOCKS4A:
+     result = Curl_SOCKS4(conn->proxyuser, newhost, newport,
+                          SECONDARYSOCKET, conn, TRUE);
++    connected = TRUE;
+     break;
+   case CURLPROXY_HTTP:
+   case CURLPROXY_HTTP_1_0:
+@@ -2077,8 +2072,7 @@ static CURLcode ftp_state_pasv_resp(struct connectdata *conn,
+     }
+   }
+ 
+-  conn->bits.tcpconnect[SECONDARYSOCKET] = TRUE;
+-
++  conn->bits.tcpconnect[SECONDARYSOCKET] = connected;
+   conn->bits.do_more = TRUE;
+   state(conn, FTP_STOP); /* this phase is completed */
+ 
+@@ -3664,20 +3658,23 @@ static CURLcode ftp_range(struct connectdata *conn)
+  *
+  * This function shall be called when the second FTP (data) connection is
+  * connected.
++ *
++ * 'complete' can return 0 for incomplete, 1 for done and -1 for go back
++ * (which basically is only for when PASV is being sent to retry a failed
++ * EPSV).
+  */
+ 
+-static CURLcode ftp_do_more(struct connectdata *conn, bool *complete)
++static CURLcode ftp_do_more(struct connectdata *conn, int *completep)
+ {
+   struct SessionHandle *data=conn->data;
+   struct ftp_conn *ftpc = &conn->proto.ftpc;
+   CURLcode result = CURLE_OK;
+   bool connected = FALSE;
++  bool complete = FALSE;
+ 
+   /* the ftp struct is inited in ftp_connect() */
+   struct FTP *ftp = data->state.proto.ftp;
+ 
+-  *complete = FALSE;
+-
+   /* if the second connection isn't done yet, wait for it */
+   if(!conn->bits.tcpconnect[SECONDARYSOCKET]) {
+     if(conn->tunnel_state[SECONDARYSOCKET] == TUNNEL_CONNECT) {
+@@ -3694,14 +3691,22 @@ static CURLcode ftp_do_more(struct connectdata *conn, bool *complete)
+     if(connected) {
+       DEBUGF(infof(data, "DO-MORE connected phase starts\n"));
+     }
+-    else
++    else {
++      if(result && (ftpc->count1 == 0)) {
++        *completep = -1; /* go back to DOING please */
++        /* this is a EPSV connect failing, try PASV instead */
++        return ftp_epsv_disable(conn);
++      }
+       return result;
++    }
+   }
+ 
+   if(ftpc->state) {
+     /* already in a state so skip the intial commands.
+        They are only done to kickstart the do_more state */
+-    result = ftp_multi_statemach(conn, complete);
++    result = ftp_multi_statemach(conn, &complete);
++
++    *completep = (int)complete;
+ 
+     /* if we got an error or if we don't wait for a data connection return
+        immediately */
+@@ -3712,7 +3717,7 @@ static CURLcode ftp_do_more(struct connectdata *conn, bool *complete)
+       /* if we reach the end of the FTP state machine here, *complete will be
+          TRUE but so is ftpc->wait_data_conn, which says we need to wait for
+          the data connection and therefore we're not actually complete */
+-      *complete = FALSE;
++      *completep = 0;
+   }
+ 
+   if(ftp->transfer <= FTPTRANSFER_INFO) {
+@@ -3735,6 +3740,9 @@ static CURLcode ftp_do_more(struct connectdata *conn, bool *complete)
+ 
+         if(result)
+           return result;
++
++        *completep = 1; /* this state is now complete when the server has
++                           connected back to us */
+       }
+     }
+     else if(data->set.upload) {
+@@ -3742,7 +3750,8 @@ static CURLcode ftp_do_more(struct connectdata *conn, bool *complete)
+       if(result)
+         return result;
+ 
+-      result = ftp_multi_statemach(conn, complete);
++      result = ftp_multi_statemach(conn, &complete);
++      *completep = (int)complete;
+     }
+     else {
+       /* download */
+@@ -3770,7 +3779,8 @@ static CURLcode ftp_do_more(struct connectdata *conn, bool *complete)
+           return result;
+       }
+ 
+-      result = ftp_multi_statemach(conn, complete);
++      result = ftp_multi_statemach(conn, &complete);
++      *completep = (int)complete;
+     }
+     return result;
+   }
+@@ -3782,7 +3792,7 @@ static CURLcode ftp_do_more(struct connectdata *conn, bool *complete)
+ 
+   if(!ftpc->wait_data_conn) {
+     /* no waiting for the data connection so this is now complete */
+-    *complete = TRUE;
++    *completep = 1;
+     DEBUGF(infof(data, "DO-MORE phase ends with %d\n", (int)result));
+   }
+ 
+@@ -3825,7 +3835,9 @@ CURLcode ftp_perform(struct connectdata *conn,
+   /* run the state-machine */
+   result = ftp_multi_statemach(conn, dophase_done);
+ 
+-  *connected = conn->bits.tcpconnect[FIRSTSOCKET];
++  *connected = conn->bits.tcpconnect[SECONDARYSOCKET];
++
++  infof(conn->data, "ftp_perform ends with SECONDARY: %d\n", *connected);
+ 
+   if(*dophase_done)
+     DEBUGF(infof(conn->data, "DO phase is complete1\n"));
+@@ -4445,7 +4457,7 @@ static CURLcode ftp_dophase_done(struct connectdata *conn,
+   struct ftp_conn *ftpc = &conn->proto.ftpc;
+ 
+   if(connected) {
+-    bool completed;
++    int completed;
+     CURLcode result = ftp_do_more(conn, &completed);
+ 
+     if(result) {
+diff --git a/lib/multi.c b/lib/multi.c
+index 706df23..9a8e68e 100644
+--- a/lib/multi.c
++++ b/lib/multi.c
+@@ -906,6 +906,7 @@ static CURLMcode multi_runsingle(struct Curl_multi *multi,
+   struct SingleRequest *k;
+   struct SessionHandle *data;
+   long timeout_ms;
++  int control;
+ 
+   if(!GOOD_EASY_HANDLE(easy->easy_handle))
+     return CURLM_BAD_EASY_HANDLE;
+@@ -1323,13 +1324,17 @@ static CURLMcode multi_runsingle(struct Curl_multi *multi,
+       /*
+        * When we are connected, DO MORE and then go DO_DONE
+        */
+-      easy->result = Curl_do_more(easy->easy_conn, &dophase_done);
++      easy->result = Curl_do_more(easy->easy_conn, &control);
+ 
+       /* No need to remove this handle from the send pipeline here since that
+          is done in Curl_done() */
+       if(CURLE_OK == easy->result) {
+-        if(dophase_done) {
+-          multistate(easy, CURLM_STATE_DO_DONE);
++        if(control) {
++          /* if positive, advance to DO_DONE
++             if negative, go back to DOING */
++          multistate(easy, control==1?
++                     CURLM_STATE_DO_DONE:
++                     CURLM_STATE_DOING);
+           result = CURLM_CALL_MULTI_PERFORM;
+         }
+         else
+diff --git a/lib/url.c b/lib/url.c
+index b269027..52f7e27 100644
+--- a/lib/url.c
++++ b/lib/url.c
+@@ -5394,18 +5394,20 @@ CURLcode Curl_do(struct connectdata **connp, bool *done)
+  *
+  * TODO: A future libcurl should be able to work away this state.
+  *
++ * 'complete' can return 0 for incomplete, 1 for done and -1 for go back to
++ * DOING state there's more work to do!
+  */
+ 
+-CURLcode Curl_do_more(struct connectdata *conn, bool *completed)
++CURLcode Curl_do_more(struct connectdata *conn, int *complete)
+ {
+   CURLcode result=CURLE_OK;
+ 
+-  *completed = FALSE;
++  *complete = 0;
+ 
+   if(conn->handler->do_more)
+-    result = conn->handler->do_more(conn, completed);
++    result = conn->handler->do_more(conn, complete);
+ 
+-  if(!result && *completed)
++  if(!result && (*complete == 1))
+     /* do_complete must be called after the protocol-specific DO function */
+     do_complete(conn);
+ 
+diff --git a/lib/url.h b/lib/url.h
+index a026e90..c0d9c38 100644
+--- a/lib/url.h
++++ b/lib/url.h
+@@ -7,7 +7,7 @@
+  *                            | (__| |_| |  _ <| |___
+  *                             \___|\___/|_| \_\_____|
+  *
+- * Copyright (C) 1998 - 2011, Daniel Stenberg, <daniel@haxx.se>, et al.
++ * Copyright (C) 1998 - 2013, Daniel Stenberg, <daniel@haxx.se>, et al.
+  *
+  * This software is licensed as described in the file COPYING, which
+  * you should have received as part of this distribution. The terms
+@@ -37,7 +37,7 @@ CURLcode Curl_close(struct SessionHandle *data); /* opposite of curl_open() */
+ CURLcode Curl_connect(struct SessionHandle *, struct connectdata **,
+                       bool *async, bool *protocol_connect);
+ CURLcode Curl_do(struct connectdata **, bool *done);
+-CURLcode Curl_do_more(struct connectdata *, bool *completed);
++CURLcode Curl_do_more(struct connectdata *, int *completed);
+ CURLcode Curl_done(struct connectdata **, CURLcode, bool premature);
+ CURLcode Curl_disconnect(struct connectdata *, bool dead_connection);
+ CURLcode Curl_protocol_connect(struct connectdata *conn, bool *done);
+diff --git a/lib/urldata.h b/lib/urldata.h
+index 7a275da..2be467b 100644
+--- a/lib/urldata.h
++++ b/lib/urldata.h
+@@ -550,7 +550,7 @@ struct Curl_async {
+ /* These function pointer types are here only to allow easier typecasting
+    within the source when we need to cast between data pointers (such as NULL)
+    and function pointers. */
+-typedef CURLcode (*Curl_do_more_func)(struct connectdata *, bool *);
++typedef CURLcode (*Curl_do_more_func)(struct connectdata *, int *);
+ typedef CURLcode (*Curl_done_func)(struct connectdata *, CURLcode, bool);
+ 
+ 
+diff --git a/tests/data/Makefile.am b/tests/data/Makefile.am
+index 3e8dae0..3f6a047 100644
+--- a/tests/data/Makefile.am
++++ b/tests/data/Makefile.am
+@@ -78,7 +78,7 @@ test1118 test1119 test1120 test1121 test1122 test1123 test1124 test1125	\
+ test1126 test1127 test1128 test1129 test1130 test1131 test1132 test1133 \
+ test1200 test1201 test1202 test1203 test1204 test1205 test1206 test1207 \
+ test1208 test1209 test1210 test1211 test1216 test1218 \
+-test1220 test1221 test1222 test1223 \
++test1220 test1221 test1222 test1223 test1233 \
+ test1300 test1301 test1302 test1303 test1304 test1305	\
+ test1306 test1307 test1308 test1309 test1310 test1311 test1312 test1313 \
+ test1314 test1315 test1316 test1317 test1318 test1319 test1320 test1321 \
+diff --git a/tests/data/test1233 b/tests/data/test1233
+new file mode 100644
+index 0000000..caf0527
+--- /dev/null
++++ b/tests/data/test1233
+@@ -0,0 +1,46 @@
++<testcase>
++<info>
++<keywords>
++FTP
++</keywords>
++</info>
++
++# Server-side
++<reply>
++<servercmd>
++# Assuming there's nothing listening on port 1
++REPLY EPSV 229 Entering Passiv Mode (|||1|)
++</servercmd>
++<data>
++here are some bytes
++</data>
++</reply>
++
++# Client-side
++<client>
++<server>
++ftp
++</server>
++ <name>
++FTP failing to connect to EPSV port, switching to PASV
++ </name>
++ <command>
++ftp://%HOSTIP:%FTPPORT/1233
++</command>
++</client>
++
++# Verify data after the test has been "shot"
++<verify>
++<protocol>
++USER anonymous
++PASS ftp@example.com
++PWD
++EPSV
++PASV
++TYPE I
++SIZE 1233
++RETR 1233
++QUIT
++</protocol>
++</verify>
++</testcase>
+-- 
+1.7.1
+

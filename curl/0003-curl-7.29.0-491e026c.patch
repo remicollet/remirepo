@@ -1,0 +1,39 @@
+From a2e6eadf6a72f7587eb9bc1ad52383e4c5507b12 Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Mon, 11 Mar 2013 16:57:25 +0100
+Subject: [PATCH 1/2] easy: do not ignore poll() failures other than EINTR
+
+[upstream commit 491e026ccda0e60975fa6e2e9cf3ccca37e18f7b]
+---
+ lib/easy.c |   12 ++++++++++--
+ 1 files changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/lib/easy.c b/lib/easy.c
+index c27deff..2e747bb 100644
+--- a/lib/easy.c
++++ b/lib/easy.c
+@@ -441,11 +441,19 @@ CURLcode curl_easy_perform(CURL *easy)
+ 
+   while(!done && !mcode) {
+     int still_running;
++    int ret;
+ 
+-    mcode = curl_multi_wait(multi, NULL, 0, 1000, NULL);
++    mcode = curl_multi_wait(multi, NULL, 0, 1000, &ret);
++
++    if(mcode == CURLM_OK) {
++      if(ret == -1) {
++        /* poll() failed not on EINTR, indicate a network problem */
++        code = CURLE_RECV_ERROR;
++        break;
++      }
+ 
+-    if(mcode == CURLM_OK)
+       mcode = curl_multi_perform(multi, &still_running);
++    }
+ 
+     /* only read 'still_running' if curl_multi_perform() return OK */
+     if((mcode == CURLM_OK) && !still_running) {
+-- 
+1.7.1
+

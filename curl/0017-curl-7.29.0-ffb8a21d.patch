@@ -1,0 +1,36 @@
+From 93b06606d7ee483567770deda967985e8377debb Mon Sep 17 00:00:00 2001
+From: Steve Holme <steve_holme@hotmail.com>
+Date: Sun, 2 Feb 2014 11:01:10 +0000
+Subject: [PATCH] tests: Fixed test172 cookie expiry
+
+The test contains a cookie jar file where one of the cookies has an
+expiry date of 1391252187 -- Sat, 1 Feb 2014 10:56:27 GMT which has
+now expired. Updated to Wed, 14 Oct 2037 16:36:33 GMT as per test
+179.
+
+Reported-by: Adam Sampson
+Bug: http://curl.haxx.se/bug/view.cgi?id=1330
+
+[upstream commit ffb8a21d85bde8b626e5dc52ce25f0447ee49f89]
+
+Signed-off-by: Kamil Dudka <kdudka@redhat.com>
+---
+ tests/data/test172 |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/tests/data/test172 b/tests/data/test172
+index b3efae9..3d53418 100644
+--- a/tests/data/test172
++++ b/tests/data/test172
+@@ -36,7 +36,7 @@ http://%HOSTIP:%HTTPPORT/we/want/172 -b log/jar172.txt -b "tool=curl; name=fool"
+ 
+ .%HOSTIP	TRUE	/silly/	FALSE	0	ismatch	this
+ .%HOSTIP	TRUE	/	FALSE	0	partmatch	present
+-%HOSTIP	FALSE	/we/want/	FALSE	1391252187	nodomain	value
++%HOSTIP	FALSE	/we/want/	FALSE	2139150993	nodomain	value
+ </file>
+ </client>
+ 
+-- 
+1.7.1
+

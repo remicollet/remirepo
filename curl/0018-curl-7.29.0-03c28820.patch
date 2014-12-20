@@ -1,0 +1,67 @@
+From fbbbf6a3daa7949cfb0fbd9731a80649ce717e6d Mon Sep 17 00:00:00 2001
+From: Daniel Stenberg <daniel@haxx.se>
+Date: Fri, 7 Feb 2014 20:28:53 +0100
+Subject: [PATCH 1/2] --help: add missing --tlsv1.x options
+
+[upstream commit 67d14ab98f8b819ee6f5e6a4a2770d311c6bf13b]
+
+Signed-off-by: Kamil Dudka <kdudka@redhat.com>
+---
+ src/tool_help.c |    5 ++++-
+ 1 files changed, 4 insertions(+), 1 deletions(-)
+
+diff --git a/src/tool_help.c b/src/tool_help.c
+index 124f640..f7cd618 100644
+--- a/src/tool_help.c
++++ b/src/tool_help.c
+@@ -199,7 +199,10 @@ static const char *const helptext[] = {
+   " -t, --telnet-option OPT=VAL  Set telnet option",
+   "     --tftp-blksize VALUE  Set TFTP BLKSIZE option (must be >512)",
+   " -z, --time-cond TIME  Transfer based on a time condition",
+-  " -1, --tlsv1         Use TLSv1 (SSL)",
++  " -1, --tlsv1         Use => TLSv1 (SSL)",
++  "     --tlsv1.0       Use TLSv1.0 (SSL)",
++  "     --tlsv1.1       Use TLSv1.1 (SSL)",
++  "     --tlsv1.2       Use TLSv1.2 (SSL)",
+   "     --trace FILE    Write a debug trace to the given file",
+   "     --trace-ascii FILE  Like --trace but without the hex output",
+   "     --trace-time    Add time stamps to trace/verbose output",
+-- 
+1.7.1
+
+
+From cc28ee70fcc2222646eef4f2b2ab3cc207c6112a Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Mon, 17 Feb 2014 16:55:10 +0100
+Subject: [PATCH 2/2] curl.1: update the description of --tlsv1
+
+... and mention the --tlsv1.[0-2] options in the --tslv1 entry
+
+Reported-by: Hubert Kario
+
+[upstream commit 03c288202ed159a2a9e953f59e58f69a86eda79b]
+
+Signed-off-by: Kamil Dudka <kdudka@redhat.com>
+---
+ docs/curl.1 |    5 ++++-
+ 1 files changed, 4 insertions(+), 1 deletions(-)
+
+diff --git a/docs/curl.1 b/docs/curl.1
+index 53b378c..7f3571b 100644
+--- a/docs/curl.1
++++ b/docs/curl.1
+@@ -117,7 +117,10 @@ more informational, meter.
+ internally preferred: HTTP 1.1.
+ .IP "-1, --tlsv1"
+ (SSL)
+-Forces curl to use TLS version 1 when negotiating with a remote TLS server.
++Forces curl to use TLS version 1.x when negotiating with a remote TLS server.
++You can use options \fI--tlsv1.0\fP, \fI--tlsv1.1\fP, and \fI--tlsv1.2\fP to
++control the TLS version more precisely (if the SSL backend in use supports such
++a level of control).
+ .IP "-2, --sslv2"
+ (SSL)
+ Forces curl to use SSL version 2 when negotiating with a remote SSL server.
+-- 
+1.7.1
+

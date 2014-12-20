@@ -1,7 +1,7 @@
-From 461a96d26c08fcd27fc0ab2c94574461a85782bf Mon Sep 17 00:00:00 2001
+From 74d01a8e4d48eedc526cffaf6a6bc782b139e068 Mon Sep 17 00:00:00 2001
 From: Kim Vandry <vandry@users.sf.net>
 Date: Mon, 18 Feb 2013 21:36:34 +0100
-Subject: [PATCH] Curl_resolver_is_resolved: show proper host name on failed resolve
+Subject: [PATCH 1/2] Curl_resolver_is_resolved: show proper host name on failed resolve
 
 [upstream commit 25e577b33d00afb6630cf2cac98d6baa319e9aef]
 
@@ -11,10 +11,10 @@ Signed-off-by: Kamil Dudka <kdudka@redhat.com>
  1 files changed, 20 insertions(+), 15 deletions(-)
 
 diff --git a/lib/asyn-thread.c b/lib/asyn-thread.c
-index b027144..5552810 100644
+index 7a8294d..c392b21 100644
 --- a/lib/asyn-thread.c
 +++ b/lib/asyn-thread.c
-@@ -436,8 +436,19 @@ static const char *gai_strerror(int ecode)
+@@ -430,8 +430,19 @@ static const char *gai_strerror(int ecode)
   * error
   */
  
@@ -35,7 +35,7 @@ index b027144..5552810 100644
    failf(conn->data, "Could not resolve %s: %s; %s", host_or_proxy,
          conn->async.hostname,
  #ifdef HAVE_GAI_STRERROR
-@@ -448,6 +459,7 @@ static void resolver_error(struct connectdata *conn, const char *host_or_proxy)
+@@ -442,6 +453,7 @@ static void resolver_error(struct connectdata *conn, const char *host_or_proxy)
          Curl_strerror(conn, conn->async.status)
  #endif
      );
@@ -43,7 +43,7 @@ index b027144..5552810 100644
  }
  
  /*
-@@ -479,17 +491,9 @@ CURLcode Curl_resolver_wait_resolv(struct connectdata *conn,
+@@ -473,17 +485,9 @@ CURLcode Curl_resolver_wait_resolv(struct connectdata *conn,
    if(entry)
      *entry = conn->async.dns;
  
@@ -64,7 +64,7 @@ index b027144..5552810 100644
  
    destroy_async_data(&conn->async);
  
-@@ -524,12 +528,13 @@ CURLcode Curl_resolver_is_resolved(struct connectdata *conn,
+@@ -518,12 +522,13 @@ CURLcode Curl_resolver_is_resolved(struct connectdata *conn,
  
    if(done) {
      getaddrinfo_complete(conn);

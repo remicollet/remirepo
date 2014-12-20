@@ -1,0 +1,47 @@
+From 8d25353ae1661ce50fe564e733f3ef45004f4bdf Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Tue, 5 Mar 2013 17:51:01 +0100
+Subject: [PATCH] nss: fix misplaced code enabling non-blocking socket mode
+
+The option needs to be set on the SSL socket.  Setting it on the model
+takes no effect.  Note that the non-blocking mode is still not enabled
+for the handshake because the code is not yet ready for that.
+
+[upstream commit 9d0af3018c5db25f5adda216dbcad6056b4a3107]
+---
+ lib/nss.c |   12 ++++++------
+ 1 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/lib/nss.c b/lib/nss.c
+index 8a2cb09..a2c5c63 100644
+--- a/lib/nss.c
++++ b/lib/nss.c
+@@ -1237,12 +1237,6 @@ CURLcode Curl_nss_connect(struct connectdata *conn, int sockindex)
+     goto error;
+   model = SSL_ImportFD(NULL, model);
+ 
+-  /* make the socket nonblocking */
+-  sock_opt.option = PR_SockOpt_Nonblocking;
+-  sock_opt.value.non_blocking = PR_TRUE;
+-  if(PR_SetSocketOption(model, &sock_opt) != PR_SUCCESS)
+-    goto error;
+-
+   if(SSL_OptionSet(model, SSL_SECURITY, PR_TRUE) != SECSuccess)
+     goto error;
+   if(SSL_OptionSet(model, SSL_HANDSHAKE_AS_SERVER, PR_FALSE) != SECSuccess)
+@@ -1415,6 +1409,12 @@ CURLcode Curl_nss_connect(struct connectdata *conn, int sockindex)
+     goto error;
+   }
+ 
++  /* switch the SSL socket into non-blocking mode */
++  sock_opt.option = PR_SockOpt_Nonblocking;
++  sock_opt.value.non_blocking = PR_TRUE;
++  if(PR_SetSocketOption(connssl->handle, &sock_opt) != PR_SUCCESS)
++    goto error;
++
+   connssl->state = ssl_connection_complete;
+   conn->recv[sockindex] = nss_recv;
+   conn->send[sockindex] = nss_send;
+-- 
+1.7.1
+

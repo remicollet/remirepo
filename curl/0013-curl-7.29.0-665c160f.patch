@@ -1,0 +1,86 @@
+From 311a22b801693bf8b748169f35bde7bef744da8c Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Wed, 29 Jan 2014 12:55:36 +0100
+Subject: [PATCH 1/2] nss: do not fail if NSS does not implement a cipher
+
+... that the user does not ask for
+
+[upstream commit e15e73b741a2ddc88d166d2cec86d2bebb5d349e]
+---
+ lib/nss.c |    9 +++++----
+ 1 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/lib/nss.c b/lib/nss.c
+index a2c5c63..c4ffe7b 100644
+--- a/lib/nss.c
++++ b/lib/nss.c
+@@ -192,14 +192,13 @@ static SECStatus set_ciphers(struct SessionHandle *data, PRFileDesc * model,
+   PRBool cipher_state[NUM_OF_CIPHERS];
+   PRBool found;
+   char *cipher;
+-  SECStatus rv;
+ 
+   /* First disable all ciphers. This uses a different max value in case
+    * NSS adds more ciphers later we don't want them available by
+    * accident
+    */
+   for(i=0; i<SSL_NumImplementedCiphers; i++) {
+-    SSL_CipherPrefSet(model, SSL_ImplementedCiphers[i], SSL_NOT_ALLOWED);
++    SSL_CipherPrefSet(model, SSL_ImplementedCiphers[i], PR_FALSE);
+   }
+ 
+   /* Set every entry in our list to false */
+@@ -239,8 +238,10 @@ static SECStatus set_ciphers(struct SessionHandle *data, PRFileDesc * model,
+ 
+   /* Finally actually enable the selected ciphers */
+   for(i=0; i<NUM_OF_CIPHERS; i++) {
+-    rv = SSL_CipherPrefSet(model, cipherlist[i].num, cipher_state[i]);
+-    if(rv != SECSuccess) {
++    if(!cipher_state[i])
++      continue;
++
++    if(SSL_CipherPrefSet(model, cipherlist[i].num, PR_TRUE) != SECSuccess) {
+       failf(data, "cipher-suite not supported by NSS: %s", cipherlist[i].name);
+       return SECFailure;
+     }
+-- 
+1.7.1
+
+
+From 9fe38c72787ba6658456a30477d48fe7960947ed Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Wed, 29 Jan 2014 13:03:46 +0100
+Subject: [PATCH 2/2] nss: do not use the NSS_ENABLE_ECC define
+
+It is not provided by NSS public headers.
+
+Bug: https://bugzilla.redhat.com/1058776
+
+[upstream commit 665c160f0a4635565b44704ca281d2a03e715d6d]
+---
+ lib/nss.c |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
+
+diff --git a/lib/nss.c b/lib/nss.c
+index c4ffe7b..111982f 100644
+--- a/lib/nss.c
++++ b/lib/nss.c
+@@ -126,7 +126,6 @@ static const cipher_s cipherlist[] = {
+   /* AES ciphers. */
+   {"rsa_aes_128_sha",            TLS_RSA_WITH_AES_128_CBC_SHA},
+   {"rsa_aes_256_sha",            TLS_RSA_WITH_AES_256_CBC_SHA},
+-#ifdef NSS_ENABLE_ECC
+   /* ECC ciphers. */
+   {"ecdh_ecdsa_null_sha",        TLS_ECDH_ECDSA_WITH_NULL_SHA},
+   {"ecdh_ecdsa_rc4_128_sha",     TLS_ECDH_ECDSA_WITH_RC4_128_SHA},
+@@ -153,7 +152,6 @@ static const cipher_s cipherlist[] = {
+   {"ecdh_anon_3des_sha",         TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA},
+   {"ecdh_anon_aes_128_sha",      TLS_ECDH_anon_WITH_AES_128_CBC_SHA},
+   {"ecdh_anon_aes_256_sha",      TLS_ECDH_anon_WITH_AES_256_CBC_SHA},
+-#endif
+ };
+ 
+ /* following ciphers are new in NSS 3.4 and not enabled by default, therefore
+-- 
+1.7.1
+

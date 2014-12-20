@@ -1,0 +1,519 @@
+From 9b675516d5fb09a455d1f7b7aa98e253361bedf3 Mon Sep 17 00:00:00 2001
+From: Daniel Stenberg <daniel@haxx.se>
+Date: Fri, 8 Feb 2013 13:48:56 +0100
+Subject: [PATCH 1/2] DONE: consider callback-aborted transfers premature
+
+This bug report properly identified that when doing SMTP and aborting
+the transfer with a callback, it must be considered aborted prematurely
+by the code to avoid QUIT etc to be attempted as that would cause a
+hang.
+
+The new test case 1507 verifies this behavior.
+
+Reported by: Patricia Muscalu
+Bug: http://curl.haxx.se/bug/view.cgi?id=1184
+
+[upstream commit 72688317adcedb9508fd2189e6c6d3945e06a004]
+
+Signed-off-by: Kamil Dudka <kdudka@redhat.com>
+---
+ lib/url.c                  |    7 ++
+ tests/data/Makefile.am     |    3 +-
+ tests/data/Makefile.in     |    3 +-
+ tests/data/test1507        |   51 +++++++++++++
+ tests/libtest/Makefile.in  |   82 +++++++++++++++++++++-
+ tests/libtest/Makefile.inc |    6 ++-
+ tests/libtest/lib1507.c    |  167 ++++++++++++++++++++++++++++++++++++++++++++
+ 7 files changed, 313 insertions(+), 6 deletions(-)
+ create mode 100644 tests/data/test1507
+ create mode 100644 tests/libtest/lib1507.c
+
+diff --git a/lib/url.c b/lib/url.c
+index 52f7e27..a6375a2 100644
+--- a/lib/url.c
++++ b/lib/url.c
+@@ -5222,6 +5222,13 @@ CURLcode Curl_done(struct connectdata **connp,
+     conn->dns_entry = NULL;
+   }
+ 
++  if(status == CURLE_ABORTED_BY_CALLBACK)
++    /* When we're aborted due to a callback return code it basically have to
++       be counted as premature as there is trouble ahead if we don't. We have
++       many callbacks and protocols work differently, we could potentially do
++       this more fine-grained in the future. */
++    premature = TRUE;
++
+   /* this calls the protocol-specific function pointer previously set */
+   if(conn->handler->done)
+     result = conn->handler->done(conn, status, premature);
+diff --git a/tests/data/Makefile.am b/tests/data/Makefile.am
+index 3f6a047..805955c 100644
+--- a/tests/data/Makefile.am
++++ b/tests/data/Makefile.am
+@@ -93,7 +93,8 @@ test1379 test1380 test1381 test1382 test1383 test1384 test1385 test1386 \
+ test1387 test1388 test1389 test1390 test1391 test1392 test1393 \
+ test1400 test1401 test1402 test1403 test1404 test1405 test1406 test1407 \
+ test1408 test1409 test1410 test1411 test1412 test1413 \
+-test1500 test1501 test1502 test1503 test1504 test1505 test1506 test1508 \
++test1500 test1501 test1502 test1503 test1504 test1505 test1506 test1507 \
++test1508 \
+ test2000 test2001 test2002 test2003 test2004 test2005 test2006 test2007 \
+ test2008 test2009 test2010 test2011 test2012 test2013 test2014 test2015 \
+ test2016 test2017 test2018 test2019 test2020 test2021 test2022 \
+diff --git a/tests/data/Makefile.in b/tests/data/Makefile.in
+index 71c9422..1e6d679 100644
+--- a/tests/data/Makefile.in
++++ b/tests/data/Makefile.in
+@@ -357,7 +357,8 @@ test1379 test1380 test1381 test1382 test1383 test1384 test1385 test1386 \
+ test1387 test1388 test1389 test1390 test1391 test1392 test1393 \
+ test1400 test1401 test1402 test1403 test1404 test1405 test1406 test1407 \
+ test1408 test1409 test1410 test1411 test1412 test1413 \
+-test1500 test1501 test1502 test1503 test1504 test1505 test1506 test1508 \
++test1500 test1501 test1502 test1503 test1504 test1505 test1506 test1507 \
++test1508 \
+ test2000 test2001 test2002 test2003 test2004 test2005 test2006 test2007 \
+ test2008 test2009 test2010 test2011 test2012 test2013 test2014 test2015 \
+ test2016 test2017 test2018 test2019 test2020 test2021 test2022 \
+diff --git a/tests/data/test1507 b/tests/data/test1507
+new file mode 100644
+index 0000000..b66e71d
+--- /dev/null
++++ b/tests/data/test1507
+@@ -0,0 +1,51 @@
++<testcase>
++<info>
++<keywords>
++SMTP
++multi
++</keywords>
++</info>
++
++#
++# Server-side
++<reply>
++</reply>
++
++#
++# Client-side
++<client>
++<server>
++smtp
++</server>
++<tool>
++lib1507
++</tool>
++
++# based on bug report #1184
++ <name>
++SMTP with multi interface and CURLE_ABORTED_BY_CALLBACK
++ </name>
++<stdin>
++From: different
++To: another
++
++body
++</stdin>
++ <command>
++smtp://%HOSTIP:%SMTPPORT/user
++</command>
++</client>
++
++#
++# Verify data after the test has been "shot"
++<verify>
++<protocol>
++EHLO user
++MAIL FROM:<1507-realuser@example.com>
++RCPT TO:<1507-recipient@example.com>
++DATA
++</protocol>
++<upload>
++</upload>
++</verify>
++</testcase>
+diff --git a/tests/libtest/Makefile.in b/tests/libtest/Makefile.in
+index 7683c09..e6826c0 100644
+--- a/tests/libtest/Makefile.in
++++ b/tests/libtest/Makefile.in
+@@ -85,7 +85,8 @@ noinst_PROGRAMS = chkhostname$(EXEEXT) libauthretry$(EXEEXT) \
+ 	lib591$(EXEEXT) lib597$(EXEEXT) lib598$(EXEEXT) \
+ 	lib599$(EXEEXT) lib1500$(EXEEXT) lib1501$(EXEEXT) \
+ 	lib1502$(EXEEXT) lib1503$(EXEEXT) lib1504$(EXEEXT) \
+-	lib1505$(EXEEXT) lib1506$(EXEEXT) lib1508$(EXEEXT)
++	lib1505$(EXEEXT) lib1506$(EXEEXT) lib1507$(EXEEXT) \
++	lib1508$(EXEEXT)
+ subdir = tests/libtest
+ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
+ am__aclocal_m4_deps = $(top_srcdir)/m4/curl-compilers.m4 \
+@@ -173,6 +174,13 @@ am_lib1506_OBJECTS = lib1506-lib1506.$(OBJEXT) $(am__objects_18) \
+ 	$(am__objects_19) $(am__objects_20)
+ lib1506_OBJECTS = $(am_lib1506_OBJECTS)
+ lib1506_DEPENDENCIES = $(am__DEPENDENCIES_1)
++am__objects_154 = lib1507-first.$(OBJEXT)
++am__objects_155 = lib1507-testutil.$(OBJEXT)
++am__objects_156 = lib1507-warnless.$(OBJEXT)
++am_lib1507_OBJECTS = lib1507-lib1507.$(OBJEXT) $(am__objects_154) \
++	$(am__objects_155) $(am__objects_156)
++lib1507_OBJECTS = $(am_lib1507_OBJECTS)
++lib1507_DEPENDENCIES = $(am__DEPENDENCIES_1)
+ am__objects_151 = lib1508-first.$(OBJEXT)
+ am__objects_152 = lib1508-testutil.$(OBJEXT)
+ am__objects_153 = lib1508-warnless.$(OBJEXT)
+@@ -639,7 +647,8 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+ SOURCES = $(libhostname_la_SOURCES) $(chkhostname_SOURCES) \
+ 	$(lib1500_SOURCES) $(lib1501_SOURCES) $(lib1502_SOURCES) \
+ 	$(lib1503_SOURCES) $(lib1504_SOURCES) $(lib1505_SOURCES) \
+-	$(lib1506_SOURCES) $(lib1508_SOURCES) $(lib500_SOURCES) $(lib501_SOURCES) \
++	$(lib1506_SOURCES) $(lib1507_SOURCES) $(lib1508_SOURCES) \
++	$(lib500_SOURCES) $(lib501_SOURCES) \
+ 	$(lib502_SOURCES) $(lib503_SOURCES) $(lib504_SOURCES) \
+ 	$(lib505_SOURCES) $(lib506_SOURCES) $(lib507_SOURCES) \
+ 	$(lib508_SOURCES) $(lib510_SOURCES) $(lib511_SOURCES) \
+@@ -669,7 +678,8 @@ SOURCES = $(libhostname_la_SOURCES) $(chkhostname_SOURCES) \
+ DIST_SOURCES = $(libhostname_la_SOURCES) $(chkhostname_SOURCES) \
+ 	$(lib1500_SOURCES) $(lib1501_SOURCES) $(lib1502_SOURCES) \
+ 	$(lib1503_SOURCES) $(lib1504_SOURCES) $(lib1505_SOURCES) \
+-	$(lib1506_SOURCES) $(lib1508_SOURCES) $(lib500_SOURCES) $(lib501_SOURCES)  \
++	$(lib1506_SOURCES) $(lib1507_SOURCES) $(lib1508_SOURCES) \
++	$(lib500_SOURCES) $(lib501_SOURCES)  \
+ 	$(lib502_SOURCES) $(lib503_SOURCES) $(lib504_SOURCES) \
+ 	$(lib505_SOURCES) $(lib506_SOURCES) $(lib507_SOURCES) \
+ 	$(lib508_SOURCES) $(lib510_SOURCES) $(lib511_SOURCES) \
+@@ -1162,6 +1172,9 @@ lib1505_CPPFLAGS = $(AM_CPPFLAGS) -DLIB1505
+ lib1506_SOURCES = lib1506.c $(SUPPORTFILES) $(TESTUTIL) $(WARNLESS)
+ lib1506_LDADD = $(TESTUTIL_LIBS)
+ lib1506_CPPFLAGS = $(AM_CPPFLAGS) -DLIB1506
++lib1507_SOURCES = lib1507.c $(SUPPORTFILES) $(TESTUTIL) $(WARNLESS)
++lib1507_LDADD = $(TESTUTIL_LIBS)
++lib1507_CPPFLAGS = $(AM_CPPFLAGS) -DLIB1507
+ lib1508_SOURCES = lib1508.c $(SUPPORTFILES) $(TESTUTIL) $(WARNLESS)
+ lib1508_LDADD = $(TESTUTIL_LIBS)
+ lib1508_CPPFLAGS = $(AM_CPPFLAGS) -DLIB1508
+@@ -1263,6 +1276,9 @@ lib1505$(EXEEXT): $(lib1505_OBJECTS) $(lib1505_DEPENDENCIES) $(EXTRA_lib1505_DEP
+ lib1506$(EXEEXT): $(lib1506_OBJECTS) $(lib1506_DEPENDENCIES) $(EXTRA_lib1506_DEPENDENCIES) 
+ 	@rm -f lib1506$(EXEEXT)
+ 	$(LINK) $(lib1506_OBJECTS) $(lib1506_LDADD) $(LIBS)
++lib1507$(EXEEXT): $(lib1507_OBJECTS) $(lib1507_DEPENDENCIES) $(EXTRA_lib1507_DEPENDENCIES) 
++	@rm -f lib1507$(EXEEXT)
++	$(LINK) $(lib1507_OBJECTS) $(lib1507_LDADD) $(LIBS)
+ lib1508$(EXEEXT): $(lib1508_OBJECTS) $(lib1508_DEPENDENCIES) $(EXTRA_lib1508_DEPENDENCIES) 
+ 	@rm -f lib1508$(EXEEXT)
+ 	$(LINK) $(lib1508_OBJECTS) $(lib1508_LDADD) $(LIBS)
+@@ -1533,6 +1549,10 @@ distclean-compile:
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lib1506-lib1506.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lib1506-testutil.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lib1506-warnless.Po@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lib1507-first.Po@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lib1507-lib1507.Po@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lib1507-testutil.Po@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lib1507-warnless.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lib1508-first.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lib1508-lib1508.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lib1508-testutil.Po@am__quote@
+@@ -2180,6 +2200,62 @@ lib1506-warnless.obj: ../../lib/warnless.c
+ @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+ @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lib1506_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o lib1506-warnless.obj `if test -f '../../lib/warnless.c'; then $(CYGPATH_W) '../../lib/warnless.c'; else $(CYGPATH_W) '$(srcdir)/../../lib/warnless.c'; fi`
+ 
++lib1507-lib1507.o: lib1507.c
++@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lib1507_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT lib1507-lib1507.o -MD -MP -MF $(DEPDIR)/lib1507-lib1507.Tpo -c -o lib1507-lib1507.o `test -f 'lib1507.c' || echo '$(srcdir)/'`lib1507.c
++@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/lib1507-lib1507.Tpo $(DEPDIR)/lib1507-lib1507.Po
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='lib1507.c' object='lib1507-lib1507.o' libtool=no @AMDEPBACKSLASH@
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
++@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lib1507_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o lib1507-lib1507.o `test -f 'lib1507.c' || echo '$(srcdir)/'`lib1507.c
++
++lib1507-lib1507.obj: lib1507.c
++@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lib1507_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT lib1507-lib1507.obj -MD -MP -MF $(DEPDIR)/lib1507-lib1507.Tpo -c -o lib1507-lib1507.obj `if test -f 'lib1507.c'; then $(CYGPATH_W) 'lib1507.c'; else $(CYGPATH_W) '$(srcdir)/lib1507.c'; fi`
++@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/lib1507-lib1507.Tpo $(DEPDIR)/lib1507-lib1507.Po
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='lib1507.c' object='lib1507-lib1507.obj' libtool=no @AMDEPBACKSLASH@
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
++@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lib1507_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o lib1507-lib1507.obj `if test -f 'lib1507.c'; then $(CYGPATH_W) 'lib1507.c'; else $(CYGPATH_W) '$(srcdir)/lib1507.c'; fi`
++
++lib1507-first.o: first.c
++@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lib1507_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT lib1507-first.o -MD -MP -MF $(DEPDIR)/lib1507-first.Tpo -c -o lib1507-first.o `test -f 'first.c' || echo '$(srcdir)/'`first.c
++@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/lib1507-first.Tpo $(DEPDIR)/lib1507-first.Po
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='first.c' object='lib1507-first.o' libtool=no @AMDEPBACKSLASH@
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
++@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lib1507_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o lib1507-first.o `test -f 'first.c' || echo '$(srcdir)/'`first.c
++
++lib1507-first.obj: first.c
++@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lib1507_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT lib1507-first.obj -MD -MP -MF $(DEPDIR)/lib1507-first.Tpo -c -o lib1507-first.obj `if test -f 'first.c'; then $(CYGPATH_W) 'first.c'; else $(CYGPATH_W) '$(srcdir)/first.c'; fi`
++@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/lib1507-first.Tpo $(DEPDIR)/lib1507-first.Po
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='first.c' object='lib1507-first.obj' libtool=no @AMDEPBACKSLASH@
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
++@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lib1507_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o lib1507-first.obj `if test -f 'first.c'; then $(CYGPATH_W) 'first.c'; else $(CYGPATH_W) '$(srcdir)/first.c'; fi`
++
++lib1507-testutil.o: testutil.c
++@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lib1507_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT lib1507-testutil.o -MD -MP -MF $(DEPDIR)/lib1507-testutil.Tpo -c -o lib1507-testutil.o `test -f 'testutil.c' || echo '$(srcdir)/'`testutil.c
++@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/lib1507-testutil.Tpo $(DEPDIR)/lib1507-testutil.Po
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='testutil.c' object='lib1507-testutil.o' libtool=no @AMDEPBACKSLASH@
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
++@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lib1507_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o lib1507-testutil.o `test -f 'testutil.c' || echo '$(srcdir)/'`testutil.c
++
++lib1507-testutil.obj: testutil.c
++@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lib1507_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT lib1507-testutil.obj -MD -MP -MF $(DEPDIR)/lib1507-testutil.Tpo -c -o lib1507-testutil.obj `if test -f 'testutil.c'; then $(CYGPATH_W) 'testutil.c'; else $(CYGPATH_W) '$(srcdir)/testutil.c'; fi`
++@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/lib1507-testutil.Tpo $(DEPDIR)/lib1507-testutil.Po
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='testutil.c' object='lib1507-testutil.obj' libtool=no @AMDEPBACKSLASH@
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
++@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lib1507_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o lib1507-testutil.obj `if test -f 'testutil.c'; then $(CYGPATH_W) 'testutil.c'; else $(CYGPATH_W) '$(srcdir)/testutil.c'; fi`
++
++lib1507-warnless.o: ../../lib/warnless.c
++@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lib1507_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT lib1507-warnless.o -MD -MP -MF $(DEPDIR)/lib1507-warnless.Tpo -c -o lib1507-warnless.o `test -f '../../lib/warnless.c' || echo '$(srcdir)/'`../../lib/warnless.c
++@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/lib1507-warnless.Tpo $(DEPDIR)/lib1507-warnless.Po
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../../lib/warnless.c' object='lib1507-warnless.o' libtool=no @AMDEPBACKSLASH@
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
++@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lib1507_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o lib1507-warnless.o `test -f '../../lib/warnless.c' || echo '$(srcdir)/'`../../lib/warnless.c
++
++lib1507-warnless.obj: ../../lib/warnless.c
++@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lib1507_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT lib1507-warnless.obj -MD -MP -MF $(DEPDIR)/lib1507-warnless.Tpo -c -o lib1507-warnless.obj `if test -f '../../lib/warnless.c'; then $(CYGPATH_W) '../../lib/warnless.c'; else $(CYGPATH_W) '$(srcdir)/../../lib/warnless.c'; fi`
++@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/lib1507-warnless.Tpo $(DEPDIR)/lib1507-warnless.Po
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../../lib/warnless.c' object='lib1507-warnless.obj' libtool=no @AMDEPBACKSLASH@
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
++@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lib1507_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o lib1507-warnless.obj `if test -f '../../lib/warnless.c'; then $(CYGPATH_W) '../../lib/warnless.c'; else $(CYGPATH_W) '$(srcdir)/../../lib/warnless.c'; fi`
++
+ lib1508-lib1508.o: lib1508.c
+ @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lib1508_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT lib1508-lib1508.o -MD -MP -MF $(DEPDIR)/lib1508-lib1508.Tpo -c -o lib1508-lib1508.o `test -f 'lib1508.c' || echo '$(srcdir)/'`lib1508.c
+ @am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/lib1508-lib1508.Tpo $(DEPDIR)/lib1508-lib1508.Po
+diff --git a/tests/libtest/Makefile.inc b/tests/libtest/Makefile.inc
+index 8bf2be4..5e377d3 100644
+--- a/tests/libtest/Makefile.inc
++++ b/tests/libtest/Makefile.inc
+@@ -23,7 +23,7 @@ noinst_PROGRAMS = chkhostname libauthretry libntlmconnect \
+                 lib582 lib583        lib585 lib586 lib587               \
+   lib590 lib591                                    lib597 lib598 lib599 \
+   \
+-  lib1500 lib1501 lib1502 lib1503 lib1504 lib1505 lib1506 lib1508
++  lib1500 lib1501 lib1502 lib1503 lib1504 lib1505 lib1506 lib1507 lib1508
+ 
+ chkhostname_SOURCES = chkhostname.c ../../lib/curl_gethostname.c
+ chkhostname_LDADD = @CURL_NETWORK_LIBS@
+@@ -313,6 +313,10 @@ lib1506_SOURCES = lib1506.c $(SUPPORTFILES) $(TESTUTIL) $(WARNLESS)
+ lib1506_LDADD = $(TESTUTIL_LIBS)
+ lib1506_CPPFLAGS = $(AM_CPPFLAGS) -DLIB1506
+ 
++lib1507_SOURCES = lib1507.c $(SUPPORTFILES) $(TESTUTIL) $(WARNLESS)
++lib1507_LDADD = $(TESTUTIL_LIBS)
++lib1507_CPPFLAGS = $(AM_CPPFLAGS) -DLIB1507
++
+ lib1508_SOURCES = lib1508.c $(SUPPORTFILES) $(TESTUTIL) $(WARNLESS)
+ lib1508_LDADD = $(TESTUTIL_LIBS)
+ lib1508_CPPFLAGS = $(AM_CPPFLAGS) -DLIB1508
+diff --git a/tests/libtest/lib1507.c b/tests/libtest/lib1507.c
+new file mode 100644
+index 0000000..7c4e6ed
+--- /dev/null
++++ b/tests/libtest/lib1507.c
+@@ -0,0 +1,167 @@
++/***************************************************************************
++ *                                  _   _ ____  _
++ *  Project                     ___| | | |  _ \| |
++ *                             / __| | | | |_) | |
++ *                            | (__| |_| |  _ <| |___
++ *                             \___|\___/|_| \_\_____|
++ *
++ * Copyright (C) 1998 - 2013, Daniel Stenberg, <daniel@haxx.se>, et al.
++ *
++ * This software is licensed as described in the file COPYING, which
++ * you should have received as part of this distribution. The terms
++ * are also available at http://curl.haxx.se/docs/copyright.html.
++ *
++ * You may opt to use, copy, modify, merge, publish, distribute and/or sell
++ * copies of the Software, and permit persons to whom the Software is
++ * furnished to do so, under the terms of the COPYING file.
++ *
++ * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
++ * KIND, either express or implied.
++ *
++ ***************************************************************************/
++#include "test.h"
++
++#include "testutil.h"
++#include "warnless.h"
++#include "memdebug.h"
++
++/*
++ * This is the list of basic details you need to tweak to get things right.
++ */
++#define USERNAME "user@example.com"
++#define PASSWORD "123qwerty"
++#define RECIPIENT "<1507-recipient@example.com>"
++#define MAILFROM "<1507-realuser@example.com>"
++
++#define MULTI_PERFORM_HANG_TIMEOUT 60 * 1000
++
++static size_t read_callback(void *ptr, size_t size, size_t nmemb, void *userp)
++{
++  (void)ptr;
++  (void)size;
++  (void)nmemb;
++  (void)userp;
++  return CURL_READFUNC_ABORT;
++}
++
++static struct timeval tvnow(void)
++{
++  /*
++  ** time() returns the value of time in seconds since the Epoch.
++  */
++  struct timeval now;
++  now.tv_sec = (long)time(NULL);
++  now.tv_usec = 0;
++  return now;
++}
++
++static long tvdiff(struct timeval newer, struct timeval older)
++{
++  return (newer.tv_sec-older.tv_sec)*1000+
++    (newer.tv_usec-older.tv_usec)/1000;
++}
++
++int test(char *URL)
++{
++   CURL *curl;
++   CURLM *mcurl;
++   int still_running = 1;
++   struct timeval mp_start;
++   struct curl_slist* rcpt_list = NULL;
++
++   curl_global_init(CURL_GLOBAL_DEFAULT);
++
++   curl = curl_easy_init();
++   if(!curl)
++     return 1;
++
++   mcurl = curl_multi_init();
++   if(!mcurl)
++     return 2;
++
++   rcpt_list = curl_slist_append(rcpt_list, RECIPIENT);
++   /* more addresses can be added here
++      rcpt_list = curl_slist_append(rcpt_list, "<others@example.com>");
++   */
++
++   curl_easy_setopt(curl, CURLOPT_URL, URL);
++#if 0
++   curl_easy_setopt(curl, CURLOPT_USERNAME, USERNAME);
++   curl_easy_setopt(curl, CURLOPT_PASSWORD, PASSWORD);
++#endif
++   curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_callback);
++   curl_easy_setopt(curl, CURLOPT_MAIL_FROM, MAILFROM);
++   curl_easy_setopt(curl, CURLOPT_MAIL_RCPT, rcpt_list);
++   curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
++   curl_multi_add_handle(mcurl, curl);
++
++   mp_start = tvnow();
++
++  /* we start some action by calling perform right away */
++  curl_multi_perform(mcurl, &still_running);
++
++  while(still_running) {
++    struct timeval timeout;
++    int rc; /* select() return code */
++
++    fd_set fdread;
++    fd_set fdwrite;
++    fd_set fdexcep;
++    int maxfd = -1;
++
++    long curl_timeo = -1;
++
++    FD_ZERO(&fdread);
++    FD_ZERO(&fdwrite);
++    FD_ZERO(&fdexcep);
++
++    /* set a suitable timeout to play around with */
++    timeout.tv_sec = 1;
++    timeout.tv_usec = 0;
++
++    curl_multi_timeout(mcurl, &curl_timeo);
++    if(curl_timeo >= 0) {
++      timeout.tv_sec = curl_timeo / 1000;
++      if(timeout.tv_sec > 1)
++        timeout.tv_sec = 1;
++      else
++        timeout.tv_usec = (curl_timeo % 1000) * 1000;
++    }
++
++    /* get file descriptors from the transfers */
++    curl_multi_fdset(mcurl, &fdread, &fdwrite, &fdexcep, &maxfd);
++
++    /* In a real-world program you OF COURSE check the return code of the
++       function calls.  On success, the value of maxfd is guaranteed to be
++       greater or equal than -1.  We call select(maxfd + 1, ...), specially in
++       case of (maxfd == -1), we call select(0, ...), which is basically equal
++       to sleep. */
++
++    rc = select(maxfd+1, &fdread, &fdwrite, &fdexcep, &timeout);
++
++    if (tvdiff(tvnow(), mp_start) > MULTI_PERFORM_HANG_TIMEOUT) {
++      fprintf(stderr, "ABORTING TEST, since it seems "
++              "that it would have run forever.\n");
++      break;
++    }
++
++    switch(rc) {
++    case -1:
++      /* select error */
++      break;
++    case 0: /* timeout */
++    default: /* action */
++      curl_multi_perform(mcurl, &still_running);
++      break;
++    }
++  }
++
++  curl_slist_free_all(rcpt_list);
++  curl_multi_remove_handle(mcurl, curl);
++  curl_multi_cleanup(mcurl);
++  curl_easy_cleanup(curl);
++  curl_global_cleanup();
++  return 0;
++}
++
++
+-- 
+1.7.1
+
+
+From 55004df420d1e520d84fded41a4d16f36acee119 Mon Sep 17 00:00:00 2001
+From: Kamil Dudka <kdudka@redhat.com>
+Date: Mon, 9 Sep 2013 13:10:53 +0200
+Subject: [PATCH 2/2] url: handle abortion by read/write callbacks, too
+
+Otherwise, the FTP protocol would unnecessarily hang 60 seconds if
+aborted in the CURLOPT_HEADERFUNCTION callback.
+
+Reported by: Tomas Mlcoch
+Bug: https://bugzilla.redhat.com/1005686
+
+[upstream commit c639d725a37c91fb49bb3a689cb2596fad3a0645]
+---
+ lib/url.c |    8 +++++++-
+ 1 files changed, 7 insertions(+), 1 deletions(-)
+
+diff --git a/lib/url.c b/lib/url.c
+index a6375a2..bddbd91 100644
+--- a/lib/url.c
++++ b/lib/url.c
+@@ -5222,12 +5222,18 @@ CURLcode Curl_done(struct connectdata **connp,
+     conn->dns_entry = NULL;
+   }
+ 
+-  if(status == CURLE_ABORTED_BY_CALLBACK)
++  switch(status) {
++  case CURLE_ABORTED_BY_CALLBACK:
++  case CURLE_READ_ERROR:
++  case CURLE_WRITE_ERROR:
+     /* When we're aborted due to a callback return code it basically have to
+        be counted as premature as there is trouble ahead if we don't. We have
+        many callbacks and protocols work differently, we could potentially do
+        this more fine-grained in the future. */
+     premature = TRUE;
++  default:
++    break;
++  }
+ 
+   /* this calls the protocol-specific function pointer previously set */
+   if(conn->handler->done)
+-- 
+1.7.1
+
