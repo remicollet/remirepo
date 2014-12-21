@@ -2,7 +2,7 @@
 %global _logdir /var/log  
 Name: roundcubemail
 Version:  1.0.4
-Release:  1%{?dist}
+Release:  2%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
 Group: Applications/System
@@ -19,7 +19,7 @@ Group: Applications/System
 # http://www.tinymce.com/
 License: GPLv3+ with exceptions and GPLv3+ and GPLv2 and LGPLv2+ and CC-BY-SA and (MIT or GPLv2)
 URL: http://www.roundcube.net
-Source0: http://downloads.sourceforge.net/roundcubemail/roundcubemail-%{version}-dep.tar.gz
+Source0: https://downloads.sourceforge.net/roundcubemail/roundcubemail-%{version}-dep.tar.gz
 Source1: roundcubemail.conf
 Source2: roundcubemail.logrotate
 Source4: roundcubemail-README.rpm
@@ -45,8 +45,9 @@ Requires: php-intl
 Requires: php-json
 Requires: php-ldap
 Requires: php-mbstring
+# For 1.1, switch this to openssl, upstream now uses it in preference to
+# mcrypt if available - adamw 2014-12
 Requires: php-mcrypt
-Requires: php-mysql
 Requires: php-pcre
 Requires: php-posix
 Requires: php-pdo
@@ -65,6 +66,24 @@ Requires: php-pear(Net_IDNA2)       >= 0.1.1
 # not available php-pear(Crypt_GPG) >= 1.2.0
 # mailcap for /etc/mime.types
 Requires: mailcap
+
+# Optional deps
+# Spell check
+#Suggests: php-enchant
+# Caching
+#Suggests: php-apc
+#Suggests: php-memcache
+# EXIF images
+Requires: php-exif
+# Upload progress (shock!)
+#Suggests: php-uploadprogress
+# ZIP download plugin
+Requires: php-zip
+
+# Gearman support
+#Optional: php-gearman
+# PAM password support
+#Optional: php-pam
 
 
 %description
@@ -100,6 +119,11 @@ find . -type f -name '*.swf' | xargs rm -f
 
 # drop file from patch
 find . -type f -name '*.orig' | xargs rm -f
+
+# Wipe bbcode plugin from bundled TinyMCE to make doubleplus sure we cannot
+# be vulnerable to CVE-2012-4230, unaddressed upstream
+echo "CVE-2012-4230: removing tinymce bbcode plugin, check path if this fails."
+test -d program/js/*mce/plugins/bbcode && rm -rf program/js/*mce/plugins/bbcode || exit 1
 
 
 %build
@@ -176,6 +200,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 21 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-2
+- sync with rawhide (drop tinymce bbcode plugin)
+
+* Sat Dec 20 2014 Adam Williamson <awilliam@redhat.com> - 1.0.4-2
+- drop tinymce bbcode plugin for safety (CVE-2012-4230)
+
 * Fri Dec 19 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
 - Update to 1.0.4 (service release, security)
 

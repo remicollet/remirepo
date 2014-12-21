@@ -10,6 +10,14 @@ Notice
 As those directories are not served by the web server,
 there is no need to protect them.
 
+Databases
+
+Roundcube supports various database providers, including SQLite, MySQL and
+PostgreSQL. The package depends only on php-pdo, which provides SQLite
+support. However, the default configuration is for a MySQL database, for
+performance reasons. To use the MySQL database, ensure php-mysql is
+installed. If you want to use another database, adjust the configuration
+file, and ensure the appropriate PDO plugin is installed. If necessary.
 
 
 The installer is available at http://localhost/roundcubemail/installer
