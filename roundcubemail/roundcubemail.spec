@@ -1,8 +1,15 @@
+%if 0%{?fedora} >= 21
+# support for apache / nginx / php-fpm
+%global with_phpfpm 1
+%else
+%global with_phpfpm 0
+%endif
+
 %define roundcubedir %{_datadir}/roundcubemail
 %global _logdir /var/log  
 Name: roundcubemail
 Version:  1.0.4
-Release:  2%{?dist}
+Release:  3%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
 Group: Applications/System
@@ -20,7 +27,8 @@ Group: Applications/System
 License: GPLv3+ with exceptions and GPLv3+ and GPLv2 and LGPLv2+ and CC-BY-SA and (MIT or GPLv2)
 URL: http://www.roundcube.net
 Source0: https://downloads.sourceforge.net/roundcubemail/roundcubemail-%{version}-dep.tar.gz
-Source1: roundcubemail.conf
+Source1: roundcubemail.httpd
+Source3: roundcubemail.nginx
 Source2: roundcubemail.logrotate
 Source4: roundcubemail-README.rpm
 # Elegantly handle removal of moxieplayer Flash binary in tinymce
@@ -32,8 +40,15 @@ Patch1: roundcubemail-1.0.3-confpath.patch
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root%(%{__id_u} -n)
+%if %{with_phpfpm}
+Requires:  webserver
+Requires:  nginx-filesystem
+Requires:  httpd-filesystem
+Requires:  php(httpd)
+%else
 Requires: httpd
 Requires: mod_php
+%endif
 Requires: php-curl
 Requires: php-date
 Requires: php-dom
@@ -135,8 +150,13 @@ rm -rf %{buildroot}
 install -d %{buildroot}%{roundcubedir}
 cp -pr * %{buildroot}%{roundcubedir}
 
-mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d
-cp -pr %SOURCE1 %{buildroot}%{_sysconfdir}/httpd/conf.d
+# Apache with mod_php or php-fpm
+install -Dpm 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
+
+%if %{with_phpfpm}
+# Nginx with php-fpm
+install -Dpm 0644 %{SOURCE3} %{buildroot}/%{_sysconfdir}/nginx/default.d/%{name}.conf
+%endif
 
 mkdir -p %{buildroot}%{_sysconfdir}/roundcubemail
 mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
@@ -193,15 +213,18 @@ rm -rf %{buildroot}
 %attr(0640,root,apache) %{_sysconfdir}/%{name}/mimetypes.php
 %attr(0640,root,apache) %{_sysconfdir}/%{name}/defaults.inc.php
 %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.inc.php.sample
-%config(noreplace) %{_sysconfdir}/httpd/conf.d/roundcubemail.conf
+%config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
+%if %{with_phpfpm}
+%config(noreplace) %{_sysconfdir}/nginx/default.d/%{name}.conf
+%endif
 %attr(0775,root,apache) %dir /var/log/roundcubemail
 %attr(0775,root,apache) %dir /var/lib/roundcubemail
 %config(noreplace) %{_sysconfdir}/logrotate.d/roundcubemail
 
 
 %changelog
-* Sun Dec 21 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-2
-- sync with rawhide (drop tinymce bbcode plugin)
+* Sun Dec 21 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-3
+- provide Nginx configuration
 
 * Sat Dec 20 2014 Adam Williamson <awilliam@redhat.com> - 1.0.4-2
 - drop tinymce bbcode plugin for safety (CVE-2012-4230)
