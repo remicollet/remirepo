@@ -109,7 +109,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.4.36
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -152,6 +152,8 @@ Patch45: php-5.4.8-ldap_r.patch
 Patch46: php-5.4.9-fixheader.patch
 # drop "Configure command" from phpinfo output
 Patch47: php-5.4.9-phpinfo.patch
+# Allow multiple paths in ini_scan_dir
+Patch48: php-5.4.16-iniscan.patch
 
 # RC Patch
 Patch91: php-5.3.7-oci8conf.patch
@@ -780,6 +782,7 @@ support for using the enchant library to PHP.
 %endif
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
+%patch48 -p1 -b .iniscan
 
 %patch91 -p1 -b .remi-oci8
 
@@ -1579,6 +1582,10 @@ fi
 
 
 %changelog
+* Mon Dec 22 2014 Remi Collet <remi@fedoraproject.org> 5.4.36-1.1
+- allow multiple paths in ini_scan_dir, backported from 5.5
+  and applied in RHSCL packages
+
 * Fri Dec 19 2014 Remi Collet <remi@fedoraproject.org> 5.4.36-1
 - Update to 5.4.36
   http://www.php.net/releases/5_4_36.php
