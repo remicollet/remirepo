@@ -7,7 +7,7 @@ diff -up install/install.php.rpm install/install.php
        $DB->queryOrDie($query, "4203");
 +
 +      // RPM provides a good system cron
-+      Config::setConfigurationValues('core', array('cron_limit' => '3'));
++      Config::setConfigurationValues('core', array('cron_limit' => '6'));
 +      $query = "UPDATE `glpi_crontasks` SET `mode`=2 WHERE `name`!='watcher' AND (`allowmode` & 2)";
 +      $DB->queryOrDie($query, "4203");
     }
