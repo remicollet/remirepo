@@ -1,7 +1,7 @@
 %global github_owner   google
 %global github_name    google-api-php-client
-%global github_version 1.0.3
-%global github_commit  2b3b475e3ee52e92fc7b649138ef4f9da3d4f9b9
+%global github_version 1.0.6
+%global github_commit  a41a9dc0662e36420030eaab802dbb1f85459479
 %global github_release .beta
 
 # "php": ">=5.2.1"
@@ -9,18 +9,13 @@
 
 Name:          php-google-apiclient
 Version:       %{github_version}
-Release:       0.2%{?github_release}%{?dist}
+Release:       0.3%{?github_release}%{?dist}
 Summary:       Client library for Google APIs
 
 Group:         Development/Libraries
 License:       ASL 2.0
 URL:           https://developers.google.com/api-client-library/php/
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
-
-# Explicitly set '&' as separator value for http_build_query
-# https://github.com/google/google-api-php-client/commit/c6949531d2399f81a5e15caf256f156dd68e00e9
-# (Note: Backported from source control master branch for OwnCloud)
-Patch0:        https://github.com/%{github_owner}/%{github_name}/commit/c6949531d2399f81a5e15caf256f156dd68e00e9.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -42,6 +37,8 @@ Requires:      php-json
 Requires:      php-openssl
 Requires:      php-reflection
 Requires:      php-spl
+
+Provides:      php-composer(google/apiclient) = %{version}
 
 %description
 Google APIs Client Library for PHP provides access to many Google APIs.
@@ -69,13 +66,11 @@ Requires: %{name} = %{version}-%{release}
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-# Apply patch
-%patch0 -p1
-
-# Remove bundled CA cert
+# Replace bundled CA cert trust list with our systemwide one. This location
+# should work for EL6/7 and all supported Fedoras.
 rm -f src/Google/IO/cacerts.pem
-sed "s#dirname(__FILE__)\s*.\s*'/cacerts.pem'#'%{_sysconfdir}/pki/tls/cert.pem'#" \
-    -i src/Google/IO/Stream.php
+sed "s#dirname(__FILE__)\s*.\s*'/cacerts.pem'#'%{_sysconfdir}/pki/tls/certs/ca-bundle.crt'#" \
+    -i src/Google/IO/Stream.php src/Google/IO/Curl.php
 
 # Update examples' include path
 sed -i 's#../src#%{_datadir}/php#' examples/*.php
@@ -109,11 +104,11 @@ sed 's/function testMissingFieldsAreNull/function SKIP_testMissingFieldsAreNull/
     -i tests/youtube/YouTubeTest.php
 
 cd tests
-%{_bindir}/phpunit -d date.timezone="UTC" .
+%{_bindir}/phpunit .
 
 # Ensure unbundled CA cert is referenced
-grep '%{_sysconfdir}/pki/tls/cert.pem' --quiet \
-    %{buildroot}%{_datadir}/php/Google/IO/Stream.php
+grep '%{_sysconfdir}/pki/tls/certs/ca-bundle.crt' --quiet \
+    %{buildroot}%{_datadir}/php/Google/IO/{Curl,Stream}.php
 
 
 %clean
@@ -122,7 +117,9 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE *.md composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *.md composer.json
 %{_datadir}/php/Google
 
 %files examples
@@ -131,6 +128,19 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 22 2014 Remi Collet <remi@fedoraproject.org> 1.0.6-0.3.beta
+- backport for remi repo
+
+* Sat Dec 20 2014 Adam Williamson <awilliam@redhat.com> - 1.0.6-0.3.beta
+- use new %license directory
+- add Packagist/Composer provide
+
+* Fri Nov 07 2014 Adam Williamson <awilliam@redhat.com> - 1.0.6-0.2.beta
+- apply CA trust store path substitution to Curl as well as Stream
+
+* Fri Nov 07 2014 Adam Williamson <awilliam@redhat.com> - 1.0.6-0.1.beta
+- new upstream release 1.0.6-beta
+
 * Fri Feb 21 2014 Remi Collet <remi@fedoraproject.org> 1.0.3-0.2.beta
 - backport for remi repo
 
