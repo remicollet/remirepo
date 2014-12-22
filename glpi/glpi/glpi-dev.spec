@@ -161,7 +161,7 @@ done
 cat >cron <<EOF
 # GLPI core
 # Run cron to execute task even when no user connected
-*/2 * * * * apache %{_bindir}/php %{_datadir}/%{name}/front/cron.php
+* * * * * apache %{_bindir}/php %{_datadir}/%{name}/front/cron.php
 EOF
 
 
