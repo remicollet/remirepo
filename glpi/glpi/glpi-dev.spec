@@ -28,7 +28,7 @@
 
 Name:           glpi
 Version:        0.85.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
@@ -124,7 +124,7 @@ techniciens grâce à une maintenance plus cohérente.
 %prep
 %setup -q -n glpi
 
-%patch0 -p0 -b rpm
+%patch0 -p0
 
 find . -name \*.orig -exec rm {} \; -print
 
@@ -307,6 +307,10 @@ fi
 
 
 %changelog
+* Mon Dec 22 2014 Remi Collet <remi@fedoraproject.org> - 0.85.1-2
+- increase system cron frequency and limit
+- cleanup patched files
+
 * Wed Dec 17 2014 Remi Collet <remi@fedoraproject.org> - 0.85.1-1
 - update to 0.85.1
   0.85   https://forge.indepnet.net/versions/539
