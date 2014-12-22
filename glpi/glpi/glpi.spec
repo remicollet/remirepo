@@ -28,7 +28,7 @@
 
 Name:           glpi
 Version:        0.84.8
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
@@ -44,6 +44,8 @@ Source4:        glpi-nginx.conf
 
 # Switch all internal cron tasks to system
 Patch0:         glpi-0.84-cron.patch
+# Upstream security patch
+Patch1:         glpi-0.84-CVE-2014-9258.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -125,6 +127,7 @@ techniciens grâce à une maintenance plus cohérente.
 %setup -q -n glpi
 
 %patch0 -p0
+%patch1 -p2
 
 find . -name \*.orig -exec rm {} \; -print
 
@@ -308,6 +311,9 @@ fi
 
 
 %changelog
+* Mon Dec 22 2014 Remi Collet <remi@fedoraproject.org> - 0.84.8-3
+- fix SQL Injection CVE-2014-9258
+
 * Fri Nov  7 2014 Remi Collet <remi@fedoraproject.org> - 0.84.8-2
 - use httpd_var_lib_t selinux context for /var/lib/glpi
 - don't rely on system selinux policy in EPEL-7

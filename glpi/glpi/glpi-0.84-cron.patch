@@ -18,7 +18,7 @@ diff -up install/install.php.orig install/install.php
 diff -up install/update.php.orig install/update.php
 --- install/update.php.orig	2013-09-12 21:17:15.000000000 +0200
 +++ install/update.php	2013-09-29 17:07:53.124390070 +0200
-@@ -776,6 +776,10 @@ function updateDbUpTo031() {
+@@ -790,6 +790,10 @@ function updateDbUpTo031() {
     $plugin = new Plugin();
     $plugin->unactivateAll();
  
