@@ -258,7 +258,7 @@ Provides: %{?scl_prefix}php-readline, %{?scl_prefix}php-readline%{?_isa}
 
 %description cli
 The %{?scl_prefix}php-cli package contains the command-line interface
-executing PHP scripts, /usr/bin/php, and the CGI interface.
+executing PHP scripts, %{_bindir}/php, and the CGI interface.
 
 
 %package dbg
