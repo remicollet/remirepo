@@ -15,7 +15,7 @@ Name:           glpi-fusioninventory
 # New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
 Epoch:          1
 Version:        %{glpi_version}.%{plug_version}
-Release:        0.1.BETA1%{?dist}
+Release:        1%{?dist}
 Summary:        FusionInventory Server embedded as a GLPI plugin
 Summary(fr):    Serveur FusionInventory en extension pour GLPI
 
@@ -23,7 +23,7 @@ Group:          Applications/Internet
 License:        AGPLv3+
 URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-glpi
 
-Source0:        http://forge.fusioninventory.org/attachments/download/1709/fusioninventory-for-glpi_0.85+1.0-BETA1.tar.gz
+Source0:        http://forge.fusioninventory.org/attachments/download/1719/fusioninventory-for-glpi_0.85+1.0.tar.gz
 Source1:        %{name}-httpd.conf
 
 
@@ -132,6 +132,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec 23 2014 Remi Collet <remi@fedoraproject.org> - 1:0.85.0.1.0-1
+- update to 0.85+1.0 for GLPI 0.85
+  http://forge.fusioninventory.org/versions/97
+
 * Wed Dec 17 2014 Remi Collet <remi@fedoraproject.org> - 1:0.85.0.1.0-0.1.BETA1
 - update to 0.85+1.0-BETA1 for GLPI 0.85
   http://forge.fusioninventory.org/versions/97
