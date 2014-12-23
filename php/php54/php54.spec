@@ -82,7 +82,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.4.36
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -673,9 +673,7 @@ Group: Development/Languages
 # All files licensed under PHP version 3.01
 License: PHP
 BuildRequires: %{db_devel}, gdbm-devel
-%if 0%{?rhel} != 5
 BuildRequires: tokyocabinet-devel
-%endif
 Requires: php-common%{?_isa} = %{version}-%{release}
 Obsoletes: php53-dba, php53u-dba, php54-dba, php54w-dba
 
@@ -1046,9 +1044,7 @@ build --libdir=%{_libdir}/php \
       --enable-bcmath=shared \
       --enable-dba=shared --with-db4=%{_prefix} \
                           --with-gdbm=%{_prefix} \
-%if 0%{?rhel} != 5
                           --with-tcadb=%{_prefix} \
-%endif
       --with-xmlrpc=shared \
       --with-ldap=shared --with-ldap-sasl \
       --enable-mysqlnd=shared \
@@ -1170,9 +1166,7 @@ build --includedir=%{_includedir}/php-zts \
       --enable-bcmath=shared \
       --enable-dba=shared --with-db4=%{_prefix} \
                           --with-gdbm=%{_prefix} \
-%if 0%{?rhel} != 5
                           --with-tcadb=%{_prefix} \
-%endif
       --with-xmlrpc=shared \
       --with-ldap=shared --with-ldap-sasl \
       --enable-mysqlnd=shared \
@@ -1705,6 +1699,9 @@ fi
 
 
 %changelog
+* Tue Dec 23 2014 Remi Collet <remi@fedoraproject.org> 5.4.36-1.1
+- add back tokyocabinet support from dba (EL-5)
+
 * Fri Dec 19 2014 Remi Collet <remi@fedoraproject.org> 5.4.36-1
 - Update to 5.4.36
   http://www.php.net/releases/5_4_36.php
