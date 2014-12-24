@@ -27,7 +27,7 @@ Summary:      A ZIP archive management extension
 Summary(fr):  Une extension de gestion des ZIP
 Name:         %{?scl_prefix}php-pecl-zip
 Version:      1.12.4
-Release:      2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 %if %{with_libzip}
 License:      PHP
 %else
@@ -47,10 +47,9 @@ BuildRequires: pkgconfig(libzip) >= 0.11.1
 BuildRequires: zlib-devel
 BuildRequires: %{?scl_prefix}php-pear
 
-Requires(post): %{_bindir}/pecl
-Requires(postun): %{_bindir}/pecl
 Requires:     %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:     %{?scl_prefix}php(api) = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
@@ -59,17 +58,17 @@ Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:      php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:      php54-pecl-%{pecl_name}
-Obsoletes:     php54w-pecl-%{pecl_name}
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}
-Obsoletes:     php55w-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name}
-Obsoletes:     php56w-pecl-%{pecl_name}
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -83,8 +82,12 @@ Obsoletes:     php56w-pecl-%{pecl_name}
 %description
 Zip is an extension to create and read zip files.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+
 %description -l fr
 Zip est une extension pour créer et lire les archives au format ZIP.
+
+Paquet construit pour PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: en Software Collection}.
 
 
 %prep 
@@ -199,12 +202,12 @@ TEST_PHP_EXECUTABLE=%{_bindir}/zts-php \
 rm -rf %{buildroot}
 
 
-%post
+%triggerin -- php-pear
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
 
 
-%postun
-if [ $1 -eq 0 ] ; then
+%triggerun -- php-pear
+if [ $1 -eq 0 -o $2 -eq 0 ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -225,6 +228,9 @@ fi
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.12.1-3
+- new scriptlets
+
 * Sun Aug 24 2014 Remi Collet <rcollet@redhat.com> 1.12.1-2
 - allow SCL build
 
