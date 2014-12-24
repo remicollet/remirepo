@@ -21,7 +21,7 @@
 # php-pecl-http exists and is version 2
 Name:           %{?scl_prefix}php-pecl-http1
 Version:        1.7.6
-Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -71,6 +71,7 @@ Requires:       %{?scl_prefix}php-date%{?_isa}
 Requires:       %{?scl_prefix}php-pcre%{?_isa}
 %endif
 Requires:       %{?scl_prefix}php-xmlrpc%{?_isa}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 # From upstream documentation
 Conflicts:      %{?scl_prefix}php-pecl-event
@@ -263,6 +264,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.7.6-5.1
+- Fedora 21 SCL mass rebuild
+
 * Mon Sep  1 2014 Remi Collet <remi@fedoraproject.org> - 1.7.6-5
 - improve SCL build
 

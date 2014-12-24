@@ -20,7 +20,7 @@
 Name:          %{?scl_prefix}php-ioncube-loader
 Summary:       Loader for ionCube Encoded Files
 Version:       4.7.3
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:       Distribuable
 Group:         Development/Languages
 
@@ -147,6 +147,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> 4.7.3-1.1
+- Fedora 21 SCL mass rebuild
+
 * Wed Dec 17 2014 Remi Collet <RPMS@famillecollet.com> - 4.7.3-1
 - update to 4.7.3 (Dec 15, 2014)
 

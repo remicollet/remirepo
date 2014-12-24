@@ -23,7 +23,7 @@
 Summary:        BITSET library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        2.0.1
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -208,5 +208,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-1.1
+- Fedora 21 SCL mass rebuild
+
 * Fri Oct 31 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - initial package, version 2.0.1 (beta)

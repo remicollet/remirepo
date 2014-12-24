@@ -30,9 +30,8 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?scl_prefix}php-pecl-memcached
 Version:      2.2.0
-Release:      5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
-# memcached is PHP, FastLZ is MIT
-License:      PHP and MIT
+Release:      5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
@@ -87,6 +86,7 @@ Requires:     %{?scl_prefix}php(api) = %{php_core_api}
 %ifnarch ppc64
 Requires:     %{?scl_prefix}php-pecl-msgpack%{?_isa}
 %endif
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:     %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
@@ -319,6 +319,9 @@ exit $ret
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-5.1
+- Fedora 21 SCL mass rebuild
+
 * Fri Aug 29 2014 Remi Collet <rcollet@redhat.com> - 2.2.0-5
 - test build with system fastlz
 

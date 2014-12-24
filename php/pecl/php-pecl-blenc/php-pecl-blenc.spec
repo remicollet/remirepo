@@ -25,7 +25,7 @@
 Summary:        BLowfish ENCryption for PHP Scripts
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.1.4
-Release:        0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.3.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 # blenc is PHP, bf_algo.c is LGPL
 License:        PHP and LGPL
@@ -46,6 +46,7 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
@@ -247,6 +248,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.1.4-0.3.b
+- Fedora 21 SCL mass rebuild
+
 * Tue Aug 26 2014 Remi Collet <rcollet@redhat.com> - 1.1.4-0.2.b
 - improve SCL build
 

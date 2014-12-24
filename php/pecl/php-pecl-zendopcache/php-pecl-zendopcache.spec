@@ -15,7 +15,7 @@
 
 Name:          %{?scl_prefix}php-pecl-%{pecl_name}
 Version:       7.0.3
-Release:       2%{?dist}
+Release:       2%{?dist}.1
 Summary:       The Zend OPcache
 
 Group:         Development/Libraries
@@ -40,6 +40,7 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:      %{?scl_prefix}php-pecl(%{plug_name}) = %{version}%{?prever}
 Provides:      %{?scl_prefix}php-pecl(%{plug_name})%{?_isa} = %{version}%{?prever}
@@ -191,6 +192,9 @@ fi
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 7.0.3-2.1
+- Fedora 21 SCL mass rebuild
+
 * Sun Aug 31 2014 Remi Collet <rcollet@redhat.com> - 7.0.3-2
 - allow SCL build
 - make ZTS build optional

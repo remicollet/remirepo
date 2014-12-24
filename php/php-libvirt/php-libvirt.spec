@@ -13,7 +13,7 @@
 
 Name:		%{?scl_prefix}php-libvirt
 Version:	0.4.8
-Release:	2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:	2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 Summary:	PHP language binding for Libvirt
 
 Group:		Development/Libraries
@@ -31,6 +31,7 @@ BuildRequires:	xhtml1-dtds
 Requires:	libvirt >= %{req_libvirt_version}
 Requires:	%{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:	%{?scl_prefix}php(api) = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
@@ -113,6 +114,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 0.4.8-2.1
+- Fedora 21 SCL mass rebuild
+
 * Wed Apr 16 2014 Remi Collet <remi@fedoraproject.org> - 0.4.8-2
 - add numerical prefix to extension configuration file
 

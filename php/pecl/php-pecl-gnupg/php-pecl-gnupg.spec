@@ -22,7 +22,7 @@
 Summary:      Wrapper around the gpgme library
 Name:         %{?scl_prefix}php-pecl-gnupg
 Version:      1.3.3
-Release:      5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 
 License:      BSD
 Group:        Development/Languages
@@ -46,6 +46,7 @@ Requires:     %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:     %{?scl_prefix}php(api) = %{php_core_api}
 # We force use of /usr/bin/gpg as gpg2 is unusable in non-interactive mode
 Requires:     gnupg
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:     %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
@@ -234,6 +235,9 @@ NO_INTERACTION=1 \
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.3.3-5.1
+- Fedora 21 SCL mass rebuild
+
 * Tue Aug 26 2014 Remi Collet <rcollet@redhat.com> - 1.3.3-5
 - improve SCL build
 

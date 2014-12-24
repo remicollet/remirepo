@@ -37,7 +37,7 @@
 
 Name:           %{?scl_prefix}php-pecl-gearman
 Version:        %{extver}
-Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 Summary:        PHP wrapper to libgearman
 
 Group:          Development/Tools
@@ -202,6 +202,9 @@ fi
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-6.1
+- Fedora 21 SCL mass rebuild
+
 * Tue Sep  9 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-6
 - don't install tests
 - fix license handling

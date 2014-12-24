@@ -29,7 +29,7 @@
 Summary:        Horde LZ4 Compression Extension
 Name:           %{?scl_prefix}php-horde-horde-lz4
 Version:        1.0.7
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:        MIT
 Group:          Development/Languages
 URL:            http://www.horde.org
@@ -211,6 +211,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> 1.0.7-1.1
+- Fedora 21 SCL mass rebuild
+
 * Tue Sep 16 2014 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
 - Update to 1.0.7
 - https://github.com/horde/horde/pull/103 is merged

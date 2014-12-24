@@ -27,7 +27,7 @@
 Summary:      A replication and load balancing plugin for mysqlnd
 Name:         %{?scl_prefix}php-pecl-mysqlnd-ms
 Version:      1.6.0
-Release:      4.svn%{svnrev}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      5.svn%{svnrev}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 License:      PHP
 Group:        Development/Languages
@@ -60,6 +60,7 @@ Requires:     %{?scl_prefix}php-mysqlnd%{?_isa}
 Requires:     %{?scl_prefix}php-json%{?_isa}
 Requires:     %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:     %{?scl_prefix}php(api) = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:     %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
@@ -244,6 +245,9 @@ cd ../ZTS
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.6.0-5.svn333506
+- Fedora 21 SCL mass rebuild
+
 * Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 1.6.0-4.svn333506
 - improve SCL build
 

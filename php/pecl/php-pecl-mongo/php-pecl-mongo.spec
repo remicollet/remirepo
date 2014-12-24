@@ -22,7 +22,7 @@
 Summary:      PHP MongoDB database driver
 Name:         %{?scl_prefix}php-pecl-mongo
 Version:      1.5.8
-Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:      ASL 2.0
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -219,6 +219,9 @@ rm -rf data
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.5.8-1.1
+- Fedora 21 SCL mass rebuild
+
 * Wed Nov 12 2014 Remi Collet <remi@fedoraproject.org> - 1.5.8-1
 - Update to 1.5.8 (stable)
 

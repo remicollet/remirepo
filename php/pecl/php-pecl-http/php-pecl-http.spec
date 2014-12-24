@@ -28,7 +28,7 @@
 
 Name:           %{?scl_prefix}php-pecl-http
 Version:        2.1.4
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -327,6 +327,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 2.1.4-1.1
+- Fedora 21 SCL mass rebuild
+
 * Thu Nov 06 2014 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
 - Update to 2.1.4
 

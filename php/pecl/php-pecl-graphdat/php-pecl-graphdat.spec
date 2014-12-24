@@ -27,7 +27,7 @@
 Summary:       Troubleshoot application and server performance
 Name:          %{?scl_prefix}php-pecl-graphdat
 Version:       1.0.4
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 # https://github.com/alphashack/graphdat-sdk-php/issues/6
 License:       ASL 2.0
 Group:         Development/Languages
@@ -227,6 +227,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-1.1
+- Fedora 21 SCL mass rebuild
+
 * Sat Dec 06 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
 - Update to 1.0.4
 
