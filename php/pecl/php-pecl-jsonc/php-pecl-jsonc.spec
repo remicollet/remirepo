@@ -242,12 +242,20 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
-%triggerin -- php-pear
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
-%triggerun -- php-pear
-if [ $1 -eq 0 -o $2 -eq 0 ] ; then
+%postun
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{proj_name} >/dev/null || :
 fi
 
