@@ -6,7 +6,8 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl: %scl_package php-pecl-zip}
+%{?scl:     %scl_package       php-pecl-zip}
+%{!?__pecl: %global __pecl     %{_bindir}/pecl}
 
 %global with_zts       0%{?__ztsphp:1}
 %global pecl_name      zip
@@ -201,13 +202,20 @@ TEST_PHP_EXECUTABLE=%{_bindir}/zts-php \
 %clean
 rm -rf %{buildroot}
 
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
-%triggerin -- php-pear
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
-
-%triggerun -- php-pear
-if [ $1 -eq 0 -o $2 -eq 0 ] ; then
+%postun
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
