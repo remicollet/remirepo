@@ -22,7 +22,7 @@
 Summary:       Yet Another Framework
 Name:          %{?scl_prefix}php-pecl-yaf
 Version:       2.3.3
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaf
@@ -191,6 +191,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 2.3.3-1.1
+- Fedora 21 SCL mass rebuild
+
 * Sat Oct 25 2014 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
 - Update to 2.3.3
 

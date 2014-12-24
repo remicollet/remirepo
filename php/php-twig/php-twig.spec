@@ -47,7 +47,7 @@
 
 Name:          %{?scl_prefix}php-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 Summary:       The flexible, fast, and secure template engine for PHP
 
 Group:         Development/Libraries
@@ -263,6 +263,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.16.2-1.1
+- Fedora 21 SCL mass rebuild
+
 * Fri Oct 17 2014 Remi Collet <remi@fedoraproject.org> - 1.16.2-1
 - Update to 1.16.2
 

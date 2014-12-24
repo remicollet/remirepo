@@ -22,7 +22,7 @@
 Summary:        Scrypt hashing function
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.2
-Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -46,6 +46,7 @@ Requires:       %{?scl_prefix}php-common%{?_isa}
 %else
 Requires:       %{?scl_prefix}php-hash%{?_isa}
 %endif
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
@@ -217,6 +218,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.2-5.1
+- Fedora 21 SCL mass rebuild
+
 * Tue Aug 26 2014 Remi Collet <rcollet@redhat.com> - 1.2-5
 - improve SCL build
 

@@ -21,7 +21,7 @@
 
 Name:           %{?scl_prefix}php-pecl-ssh2
 Version:        0.12
-Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 Summary:        Bindings for the libssh2 library
 
 %global buildver %(pkg-config --silence-errors --modversion libssh2  2>/dev/null || echo 65536)
@@ -195,6 +195,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 0.12-5.1
+- Fedora 21 SCL mass rebuild
+
 * Sat Dec 20 2014 Remi Collet <remi@fedoraproject.org> - 0.12-5
 - rebuild for new libssh2 in EL-5
 - ensure dependency on libssh2 used at buildtime

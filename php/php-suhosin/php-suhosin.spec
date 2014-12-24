@@ -27,7 +27,7 @@
 
 Name:           %{?scl_prefix}php-suhosin
 Version:        0.9.37.1
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 Summary:        Suhosin is an advanced protection system for PHP installations
 
 Group:          Development/Languages
@@ -184,6 +184,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 0.9.37.1-1.1
+- Fedora 21 SCL mass rebuild
+
 * Mon Dec 15 2014 Remi Collet <remi@fedoraproject.org> - 0.9.37.1-1
 - update to 0.9.37.1
 

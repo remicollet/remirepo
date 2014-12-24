@@ -22,7 +22,7 @@
 Summary:       Universally Unique Identifier extension for PHP
 Name:          %{?scl_prefix}php-pecl-uuid
 Version:       1.0.3
-Release:       10%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       10%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:       LGPLv2+
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/uuid
@@ -50,6 +50,8 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
+
 # both provides same extension, with different API
 Conflicts:     %{?scl_prefix}uuid-php
 
@@ -207,6 +209,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-10.1
+- Fedora 21 SCL mass rebuild
+
 * Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 1.0.3-10
 - improve SCL build
 

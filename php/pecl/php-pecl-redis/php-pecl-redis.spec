@@ -25,7 +25,7 @@
 Summary:       Extension for communicating with the Redis key-value store
 Name:          %{?scl_prefix}php-pecl-redis
 Version:       2.2.5
-Release:       5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/redis
@@ -271,6 +271,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 2.2.5-5.1
+- Fedora 21 SCL mass rebuild
+
 * Fri Oct  3 2014 Remi Collet <rcollet@redhat.com> - 2.2.5-5
 - fix segfault with igbinary serializer
   https://github.com/nicolasff/phpredis/issues/341

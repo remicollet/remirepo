@@ -28,7 +28,7 @@
 Summary:       Fast, stable PHP opcode cacher
 Name:          %{?scl_prefix}php-xcache
 Version:       3.1.1
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:       BSD
 Group:         Development/Languages
 URL:           http://xcache.lighttpd.net/
@@ -255,6 +255,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 3.1.1-1.1
+- Fedora 21 SCL mass rebuild
+
 * Tue Sep  9 2014 Remi Collet <remi@fedoraproject.org> - 3.1.1-1
 - version 3.1.1
 

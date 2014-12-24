@@ -22,7 +22,7 @@
 Summary:        PHP extension for interfacing with Apache ZooKeeper
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        0.2.2
-Release:        4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://github.com/andreiz/php-zookeeper
@@ -31,7 +31,11 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
+%if 0%{?fedora} >= 21
+BuildRequires:  zookeeper-devel
+%else
 BuildRequires:  zookeeper-lib-devel
+%endif
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -198,6 +202,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 0.2.2-5
+- F21 have zookeeper-devel instead of zookeeper-lib-devel
+
 * Tue Aug 26 2014 Remi Collet <rcollet@redhat.com> - 0.2.2-4
 - allow SCL build
 

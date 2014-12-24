@@ -25,7 +25,7 @@
 Summary:        Implementation of weak references
 Name:           %{?scl_prefix}php-pecl-weakref
 Version:        0.2.6
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -191,6 +191,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 0.2.6-1.1
+- Fedora 21 SCL mass rebuild
+
 * Thu Nov 13 2014 Remi Collet <remi@fedoraproject.org> - 0.2.6-1
 - Update to 0.2.6
 

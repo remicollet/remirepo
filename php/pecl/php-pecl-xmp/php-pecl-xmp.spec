@@ -23,7 +23,7 @@
 Summary:        Bindings for the libxmp library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        4.2.0
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:        ASL 2.0
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -206,5 +206,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 4.2.0-1.1
+- Fedora 21 SCL mass rebuild
+
 * Fri Sep 12 2014 Remi Collet <rcollet@redhat.com> - 4.2.0-1
 - initial package

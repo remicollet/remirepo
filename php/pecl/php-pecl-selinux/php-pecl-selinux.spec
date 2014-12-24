@@ -24,7 +24,7 @@
 Summary:        SELinux binding for PHP scripting language
 Name:           %{?scl_prefix}php-pecl-selinux
 Version:        0.3.1
-Release:        16%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        16%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -40,6 +40,7 @@ Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires:       libselinux >= 2.0.80
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
@@ -175,6 +176,9 @@ fi
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 0.3.1-16.1
+- Fedora 21 SCL mass rebuild
+
 * Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 0.3.1-16
 - improve SCL build
 

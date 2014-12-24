@@ -23,7 +23,7 @@
 Summary:        ZeroMQ messaging
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.1.2
-Release:        4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -44,6 +44,7 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 # Version 1.0.7 is the first pecl release
 # Fedora/EPEL still provides php-zmq, not php-pecl-zmq
@@ -208,6 +209,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-4.1
+- Fedora 21 SCL mass rebuild
+
 * Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 1.1.2-4
 - improve SCL build
 

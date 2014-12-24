@@ -26,7 +26,7 @@
 
 Name:           %{?scl_prefix}php-phalcon
 Version:        1.3.4
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 Summary:        Phalcon Framework
 
 Group:          Development/Libraries
@@ -234,6 +234,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.3.4-1.1
+- Fedora 21 SCL mass rebuild
+
 * Sat Nov 15 2014 Remi Collet <remi@fedoraproject.org> - 1.3.4-1
 - update to 1.3.4
 

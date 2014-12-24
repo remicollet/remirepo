@@ -24,7 +24,7 @@
 Summary:        Light, concurrent RPC framework
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.2.4
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -230,6 +230,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.2.4-1.1
+- Fedora 21 SCL mass rebuild
+
 * Sat Oct 25 2014 Remi Collet <remi@fedoraproject.org> - 1.2.4-1
 - Update to 1.2.4
 - dont install test suite

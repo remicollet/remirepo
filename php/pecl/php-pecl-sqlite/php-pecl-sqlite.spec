@@ -29,7 +29,7 @@
 Summary:        Extension for the SQLite V2 Embeddable SQL Database Engine
 Name:           %{?scl_prefix}php-pecl-sqlite
 Version:        2.0.0
-Release:        0.7.svn%{svnver}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.8.svn%{svnver}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Group:          Development/Languages
 License:        PHP
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -52,6 +52,7 @@ Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires:       %{?scl_prefix}php-pdo%{?_isa}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{extver}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{extver}
@@ -260,6 +261,9 @@ fi
 
 
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.8.svn332053
+- Fedora 21 SCL mass rebuild
+
 * Tue Aug 26 2014 Remi Collet <rcollet@redhat.com> - 2.0.0-0.7.svn332053
 - improve SCL build
 
