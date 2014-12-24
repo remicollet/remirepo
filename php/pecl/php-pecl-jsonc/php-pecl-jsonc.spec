@@ -6,10 +6,12 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pecl:      %{expand: %%global __pecl      %{_bindir}/pecl}}
+%{?scl:     %scl_package       php-pecl-jsonc}
+%{!?__pecl: %global __pecl     %{_bindir}/pecl}
 
 %global pecl_name  json
 %global proj_name  jsonc
+%global with_zts   0%{?__ztsphp:1}
 
 %if "%{php_version}" > "5.5"
 %global ext_name     json
@@ -31,9 +33,9 @@
 
 
 Summary:       Support for JSON serialization
-Name:          php-pecl-%{proj_name}
+Name:          %{?scl_prefix}php-pecl-%{proj_name}
 Version:       1.3.6
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/%{proj_name}
@@ -42,40 +44,43 @@ Source0:       http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 Patch0:        %{proj_name}-el5-32.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: php-devel >= 5.4
-BuildRequires: php-pear
+BuildRequires: %{?scl_prefix}php-devel >= 5.4
+BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: pcre-devel
 %if %{with_libjson}
 BuildRequires: json-c-devel >= 0.11
 BuildRequires: json-c-devel <  0.12
+%else
+Provides:      bundled(libjson-c) = 0.11
 %endif
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
-Requires:      php(zend-abi) = %{php_zend_api}
-Requires:      php(api) = %{php_core_api}
+Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:      %{?scl_prefix}php(api) = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:      php-%{pecl_name} = %{version}
-Provides:      php-%{pecl_name}%{?_isa} = %{version}
-Provides:      php-pecl(%{pecl_name}) = %{version}
-Provides:      php-pecl(%{pecl_name})%{?_isa} = %{version}
-Provides:      php-pecl(%{proj_name}) = %{version}
-Provides:      php-pecl(%{proj_name})%{?_isa} = %{version}
-Obsoletes:     php-pecl-json < 1.3.1-2
-Provides:      php-pecl-json = %{version}-%{release}
-Provides:      php-pecl-json%{?_isa} = %{version}-%{release}
+Provides:      %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{proj_name}) = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{proj_name})%{?_isa} = %{version}
+Obsoletes:     %{?scl_prefix}php-pecl-json < 1.3.1-2
+Provides:      %{?scl_prefix}php-pecl-json = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-json%{?_isa} = %{version}-%{release}
 
-%if "%{?vendor}" == "Remi Collet"
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php54-pecl-%{proj_name}
-Obsoletes:     php54w-pecl-%{proj_name}
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{proj_name}
-Obsoletes:     php55w-pecl-%{proj_name}
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{proj_name}
-Obsoletes:     php56w-pecl-%{proj_name}
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -93,17 +98,19 @@ serialization to PHP.
 This is a dropin alternative to standard PHP JSON extension which
 use the json-c library parser.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+
 
 %package devel
 Summary:       JSON developer files (header)
 Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
-Requires:      php-devel%{?_isa}
+Requires:      %{?scl_prefix}php-devel%{?_isa}
 
 %description devel
 These are the files needed to compile programs using JSON serializer.
 
-%if 0%{?rhel} == 5 && "%{php_version}" > "5.5"
+%if 0%{?rhel} == 5 && "%{php_version}" > "5.5" && 0%{!?scl:1}
 %package -n php-json
 Summary:       Meta package fo json extension
 Group:         Development/Libraries
@@ -143,8 +150,10 @@ extension = %{pecl_name}.so
 %endif
 EOF
 
+%if %{with_zts}
 # duplicate for ZTS build
 cp -pr %{proj_name}-%{version} %{proj_name}-zts
+%endif
 
 
 %build
@@ -160,6 +169,7 @@ cd %{proj_name}-%{version}
   --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
+%if %{with_zts}
 cd ../%{proj_name}-zts
 %{_bindir}/zts-phpize
 %configure \
@@ -171,6 +181,7 @@ cd ../%{proj_name}-zts
 %endif
   --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
+%endif
 
 
 %install
@@ -180,10 +191,12 @@ make -C %{proj_name}-%{version} \
      install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
+%if %{with_zts}
 # Install the ZTS stuff
 make -C %{proj_name}-zts \
      install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
+%endif
 
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
@@ -205,10 +218,12 @@ cd %{proj_name}-%{version}
     --define extension=%{buildroot}%{php_extdir}/%{ext_name}.so \
     -m | grep %{pecl_name}
 
+%if %{with_zts}
 : Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
     --define extension=%{buildroot}%{php_ztsextdir}/%{ext_name}.so \
     -m | grep %{pecl_name}
+%endif
 
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{ext_name}.so" \
@@ -216,6 +231,7 @@ NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php
 
+%if %{with_zts}
 cd ../%{proj_name}-zts
 
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
@@ -223,14 +239,15 @@ TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{ext_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php
+%endif
 
 
-%post
+%triggerin -- php-pear
 %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
 
 
-%postun
-if [ $1 -eq 0 ] ; then
+%triggerun -- php-pear
+if [ $1 -eq 0 -o $2 -eq 0 ] ; then
     %{pecl_uninstall} %{proj_name} >/dev/null || :
 fi
 
@@ -242,20 +259,28 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
-%config(noreplace) %{php_inidir}/%{ini_name}
-%config(noreplace) %{php_ztsinidir}/%{ini_name}
-%{php_extdir}/%{ext_name}.so
-%{php_ztsextdir}/%{ext_name}.so
 %{pecl_xmldir}/%{name}.xml
+
+%config(noreplace) %{php_inidir}/%{ini_name}
+%{php_extdir}/%{ext_name}.so
+
+%if %{with_zts}
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
+%{php_ztsextdir}/%{ext_name}.so
+%endif
 
 
 %files devel
 %defattr(-,root,root,-)
-%{php_incldir}/ext/json
-%{php_ztsincldir}/ext/json
 %doc %{pecl_testdir}/%{pecl_name}
 
-%if 0%{?rhel} == 5 && "%{php_version}" > "5.5"
+%{php_incldir}/ext/json
+
+%if %{with_zts}
+%{php_ztsincldir}/ext/json
+%endif
+
+%if 0%{?rhel} == 5 && "%{php_version}" > "5.5" && 0%{!?scl:1}
 %files -n php-json
 %defattr(-,root,root,-)
 %endif
@@ -264,6 +289,9 @@ rm -rf %{buildroot}
 # Note to remi : remember to always build in remi-php55(56) first
 #
 %changelog
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.3.6-2
+- new scriptlets
+
 * Fri Aug  1 2014 Remi Collet <remi@fedoraproject.org> - 1.3.6-1
 - release 1.3.6 (stable, bugfix)
 
