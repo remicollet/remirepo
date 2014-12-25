@@ -1,4 +1,4 @@
-#global prever    rc2
+%global prever    dev
 #global commit    725ba9de4005144d137d2a7a70f760068fc3d306
 #global short     %(c=%{commit}; echo ${c:0:7})
 
@@ -11,9 +11,13 @@
 %endif
 
 Summary:       A graphics library for quick creation of PNG or JPEG images
+%if 0%{?fedora} >= 20
+Name:          gd
+%else
 Name:          gd-last
-Version:       2.1.0
-Release:       3%{?prever}%{?short}%{?dist}
+%endif
+Version:       2.1.1
+Release:       0.1%{?prever}%{?short}%{?dist}
 Group:         System Environment/Libraries
 License:       MIT
 URL:           http://libgd.bitbucket.org/
@@ -60,8 +64,10 @@ browsers. Note that gd is not a paint program.
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Summary:        Utility programs that use libgd
 Group:          Applications/Multimedia
+%if "%{name}" == "gd-last"
 Conflicts:      gd-progs < %{version}
 Provides:       gd-progs = %{version}-%{release}
+%endif
 
 %description progs
 The gd-progs package includes utility programs supplied with gd, a
@@ -84,8 +90,10 @@ Requires: libX11-devel%{?_isa}
 Requires: libXpm-devel%{?_isa}
 Requires: zlib-devel%{?_isa}
 
+%if "%{name}" == "gd-last"
 Conflicts: gd-devel < %{version}
 Provides:  gd-devel = %{version}-%{release}
+%endif
 
 
 %description devel
@@ -95,7 +103,7 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 %prep
 %setup -q -n libgd-%{version}%{?prever:-%{prever}}
 %patch1 -p1 -b .mlib
-%patch2 -p1 -b .cve-20142-497
+#patch2 -p1 -b .cve-20142-497
 
 # https://bitbucket.org/libgd/gd-libgd/issue/77
 sed -e '/GD_VERSION_STRING/s/-alpha//' \
@@ -179,6 +187,9 @@ make check
 
 
 %changelog
+* Thu Dec 25 2014 Remi Collet <remi@fedoraproject.org> - 2.1.1-0.1
+- test build of 2.1.1-dev
+
 * Fri Aug 29 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-3
 - enable libvpx on EL 6 (with libvpx 1.3.0)
 - add patch for CVE-2014-2497
