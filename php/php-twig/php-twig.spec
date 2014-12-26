@@ -12,8 +12,8 @@
 
 %global github_owner     fabpot
 %global github_name      Twig
-%global github_version   1.16.2
-%global github_commit    42f758d9fe2146d1f0470604fc05ee43580873fc
+%global github_version   1.16.3
+%global github_commit    6dc11a1e8ecfc30e2c68aaeb218148409d8e68af
 
 # Lib
 %global composer_vendor  twig
@@ -47,7 +47,7 @@
 
 Name:          %{?scl_prefix}php-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:       The flexible, fast, and secure template engine for PHP
 
 Group:         Development/Libraries
@@ -230,11 +230,11 @@ sed 's/function testGetAttributeWithTemplateAsObject/function SKIP_testGetAttrib
 %endif
 
 : Test suite without extension
-%{__phpunit} --include-path ./lib -d date.timezone="UTC"
+%{__phpunit} --include-path ./lib
 
 : Test suite with extension
 %{__php} --define extension=ext/NTS/modules/%{ext_name}.so \
-    %{__phpunit} --include-path ./lib -d date.timezone="UTC"
+    %{__phpunit} --include-path ./lib
 %else
 : Tests skipped
 %endif
@@ -263,6 +263,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec 26 2014 Remi Collet <remi@fedoraproject.org> - 1.16.3-1
+- Update to 1.16.3
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.16.2-1.1
 - Fedora 21 SCL mass rebuild
 
