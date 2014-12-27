@@ -1,6 +1,6 @@
 #global svnrel 3371
-%global rdate  20141110
-%global upver  0.4rc1
+%global rdate  20141227
+%global upver  0.4rc2
 
 Name:        qelectrotech
 
@@ -25,7 +25,7 @@ Version:     0.40
 %if 0%{?svnrel}
 Release:     0.1.svn%{svnrel}%{?dist}
 %else
-Release:     0.3.rc1%{?dist}
+Release:     0.4.rc2%{?dist}
 %endif
 
 Group:       Applications/Engineering
@@ -43,7 +43,7 @@ Source0:    http://download.tuxfamily.org/qet/tags/%{rdate}/qelectrotech-%{upver
 %endif
 
 BuildRequires:    desktop-file-utils
-BuildRequires:    qt4-devel >= 4.6.0
+BuildRequires:    qt4-devel >= 4.8
 Requires:         qelectrotech-symbols = %{version}-%{release}
 Requires:         electronics-menu
 
@@ -229,8 +229,11 @@ fi
 
 
 %changelog
+* Sat Dec 27 2014 Remi Collet <remi@fedoraproject.org> - 0.40-0.4.rc2
+- Update to 0.4rc1
+
 * Mon Nov 10 2014 Remi Collet <remi@fedoraproject.org> - 0.40-0.3.rc1
-- Update to 0.4b
+- Update to 0.4rc1
 
 * Mon Nov  3 2014 Remi Collet <remi@fedoraproject.org> - 0.40-0.2.beta
 - Update to 0.4b
