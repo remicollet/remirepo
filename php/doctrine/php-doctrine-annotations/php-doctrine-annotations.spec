@@ -11,8 +11,8 @@
 
 %global github_owner     doctrine
 %global github_name      annotations
-%global github_version   1.2.1
-%global github_commit    6a6bec0670bb6e71a263b08bc1b98ea242928633
+%global github_version   1.2.3
+%global github_commit    eeda578cbe24a170331a1cfdf78be723412df7a4
 
 %global composer_vendor  doctrine
 %global composer_project annotations
@@ -37,7 +37,10 @@ Summary:       PHP docblock annotations parser library
 Group:         Development/Libraries
 License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
-Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+
+# Run "php-doctrine-annotations-get-source.sh" to create source
+Source0:       %{name}-%{version}-%{github_commit}.tar.gz
+Source1:       %{name}-get-source.sh
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -49,7 +52,7 @@ BuildRequires: php-composer(doctrine/cache) <  %{cache_max_ver}
 BuildRequires: php-composer(doctrine/lexer) >= %{lexer_min_ver}
 BuildRequires: php-composer(doctrine/lexer) <  %{lexer_max_ver}
 BuildRequires: php-phpunit-PHPUnit
-# phpcompatinfo (computed from version 1.2.1)
+# phpcompatinfo (computed from version 1.2.3)
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-json
@@ -63,7 +66,7 @@ BuildRequires: php-tokenizer
 Requires:      php(language)                >= %{php_min_ver}
 Requires:      php-composer(doctrine/lexer) >= %{lexer_min_ver}
 Requires:      php-composer(doctrine/lexer) <  %{lexer_max_ver}
-# phpcompatinfo (computed from version 1.2.1)
+# phpcompatinfo (computed from version 1.2.3)
 Requires:      php-ctype
 Requires:      php-date
 Requires:      php-json
@@ -109,9 +112,7 @@ spl_autoload_register(function ($class) {
 });
 AUTOLOAD
 
-%{_bindir}/phpunit \
-    --include-path %{buildroot}/%{_datadir}/php \
-    -d date.timezone="UTC"
+%{_bindir}/phpunit --include-path %{buildroot}/%{_datadir}/php
 %else
 : Tests skipped
 %endif
@@ -130,6 +131,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 28 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.3-1
+- Updated to 1.2.3 (BZ #1176942)
+
 * Sun Oct 19 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.1-1
 - Updated to 1.2.1 (BZ #1146910)
 - %%license usage
