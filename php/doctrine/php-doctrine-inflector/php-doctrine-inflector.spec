@@ -11,10 +11,8 @@
 
 %global github_owner     doctrine
 %global github_name      inflector
-%global github_version   1.0
-%global github_commit    a81c334f2764b09e2f13a55cfd8fe3233946f728
-# Additional commits after v1.0 tag
-%global github_release   .20131221git%(c=%{github_commit}; echo ${c:0:7})
+%global github_version   1.0.1
+%global github_commit    0bcb2e79d8571787f18b7eb036ed3d004908e604
 
 %global composer_vendor  doctrine
 %global composer_project inflector
@@ -27,7 +25,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       4%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}
 Summary:       Common string manipulations with regard to casing and singular/plural rules
 
 Group:         Development/Libraries
@@ -41,13 +39,13 @@ BuildArch:     noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-phpunit-PHPUnit
-# For tests: phpcompatinfo (computed from v1.0 git commit a81c334f2764b09e2f13a55cfd8fe3233946f728)
+# For tests: phpcompatinfo (computed from version 1.0.1)
 BuildRequires: php-pcre
 BuildRequires: php-spl
 %endif
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from v1.0 git commit a81c334f2764b09e2f13a55cfd8fe3233946f728)
+# phpcompatinfo (computed from version 1.0.1)
 Requires:      php-pcre
 
 # Composer
@@ -74,10 +72,7 @@ cp -rp lib/* %{buildroot}/%{_datadir}/php/
 
 %check
 %if %{with_tests}
-# Create PHPUnit config w/ colors turned off
-sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
-
-%{_bindir}/phpunit --include-path ./lib:./tests -d date.timezone="UTC"
+%{_bindir}/phpunit
 %else
 : Tests skipped
 %endif
@@ -89,13 +84,21 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE *.md composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *.md composer.json
 %dir %{_datadir}/php/Doctrine
 %dir %{_datadir}/php/Doctrine/Common
      %{_datadir}/php/Doctrine/Common/Inflector
 
 
 %changelog
+* Sun Dec 28 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.1-2
+- %%license usage
+
+* Sun Dec 28 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.1-1
+- Updated to 1.0.1 (BZ #1176943)
+
 * Fri Jun 20 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0-4.20131221gita81c334
 - Added php-composer(%%{composer_vendor}/%%{composer_project}) virtual provide
 - Added option to build without tests ("--without tests")
