@@ -1,6 +1,6 @@
 diff -up ./phpunit.rpm ./phpunit
---- ./phpunit.rpm	2014-12-05 07:49:03.000000000 +0100
-+++ ./phpunit	2014-12-05 09:19:29.774284886 +0100
+--- ./phpunit.rpm	2014-12-28 08:57:05.000000000 +0100
++++ ./phpunit	2014-12-28 09:30:07.294714996 +0100
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
@@ -8,7 +8,7 @@ diff -up ./phpunit.rpm ./phpunit
  /* PHPUnit
   *
 @@ -39,24 +39,7 @@ if (!ini_get('date.timezone')) {
-      ini_set('date.timezone', 'UTC');
+     ini_set('date.timezone', 'UTC');
  }
  
 -foreach (array(__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php') as $file) {
@@ -34,15 +34,16 @@ diff -up ./phpunit.rpm ./phpunit
  
  PHPUnit_TextUI_Command::main();
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
---- ./tests/bootstrap.php.rpm	2014-12-05 07:49:03.000000000 +0100
-+++ ./tests/bootstrap.php	2014-12-05 09:18:19.614014475 +0100
-@@ -1,5 +1,8 @@
+--- ./tests/bootstrap.php.rpm	2014-12-28 09:28:16.402309771 +0100
++++ ./tests/bootstrap.php	2014-12-28 09:28:45.638416606 +0100
+@@ -1,6 +1,9 @@
  <?php
+ // Needed for isolated tests
 -require __DIR__ . '/../vendor/autoload.php';
 +require __DIR__ . '/../src/Framework/Assert/Functions.php';
 +require __DIR__ . '/_files/CoveredFunction.php';
 +require __DIR__ . '/../src/Autoload.php';
 +require __DIR__ . '/autoload.php';
  
- if (!ini_get('date.timezone') && !defined('HHVM_VERSION')) {
-     echo PHP_EOL . 'Error: PHPUnit\'s test suite requires the "date.timezone" runtime configuration to be set. Please check your php.ini.' . PHP_EOL;
+ ini_set('precision', 14);
+ ini_set('serialize_precision', 14);
