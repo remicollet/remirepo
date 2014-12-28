@@ -1,21 +1,24 @@
 %global github_owner   google
 %global github_name    google-api-php-client
-%global github_version 1.0.6
-%global github_commit  a41a9dc0662e36420030eaab802dbb1f85459479
-%global github_release .beta
+%global github_version 1.1.2
+%global github_commit  9c35bbbbaf04a5236d763560dab1e2f6e672a724
 
 # "php": ">=5.2.1"
 %global php_min_ver    5.2.1
 
 Name:          php-google-apiclient
 Version:       %{github_version}
-Release:       0.3%{?github_release}%{?dist}
+Release:       1%{?dist}
 Summary:       Client library for Google APIs
 
 Group:         Development/Libraries
 License:       ASL 2.0
 URL:           https://developers.google.com/api-client-library/php/
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+
+# Submitted upstream: https://github.com/google/google-api-php-client/pull/437
+# Relocate the autoloader added in 1.1, or else we can't sensibly package it
+Patch0:        0001-relocate-autoloader-to-src-Google-backport-from-mast.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -65,6 +68,7 @@ Requires: %{name} = %{version}-%{release}
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
+%patch0 -p1
 
 # Replace bundled CA cert trust list with our systemwide one. This location
 # should work for EL6/7 and all supported Fedoras.
@@ -88,22 +92,11 @@ cp -rp src/* %{buildroot}%{_datadir}/php/
 
 
 %check
-# Turn off PHPUnit colors
-sed 's/colors="true"/colors="false"/' -i tests/phpunit.xml
-
 # Skip tests requiring network access
 sed -e 's/function testBatchRequest/function SKIP_testBatchRequest/' \
     -e 's/function testInvalidBatchRequest/function SKIP_testInvalidBatchRequest/' \
     -i tests/general/ApiBatchRequestTest.php
-sed 's/function testPageSpeed/function SKIP_testPageSpeed/' \
-    -i tests/pagespeed/PageSpeedTest.php
-sed -e 's/function testGetPerson/function SKIP_testGetPerson/' \
-    -e 's/function testListActivities/function SKIP_testListActivities/' \
-    -i tests/plus/PlusTest.php
-sed 's/function testMissingFieldsAreNull/function SKIP_testMissingFieldsAreNull/' \
-    -i tests/youtube/YouTubeTest.php
 
-cd tests
 %{_bindir}/phpunit .
 
 # Ensure unbundled CA cert is referenced
@@ -128,8 +121,9 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Mon Dec 22 2014 Remi Collet <remi@fedoraproject.org> 1.0.6-0.3.beta
-- backport for remi repo
+* Sat Dec 20 2014 Adam Williamson <awilliam@redhat.com> - 1.1.2-1
+- new upstream release 1.1.2
+- relocate autoloader to make it work with systemwide installation
 
 * Sat Dec 20 2014 Adam Williamson <awilliam@redhat.com> - 1.0.6-0.3.beta
 - use new %license directory
