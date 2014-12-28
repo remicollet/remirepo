@@ -22,6 +22,7 @@ URL:           https://github.com/%{github_owner}/%{github_name}
 # https://fedoraproject.org/wiki/Packaging:SourceURL#Github
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{github_name}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
@@ -45,6 +46,7 @@ Convenience wrapper around ini_get().
 
 
 %install
+rm -rf %{buildroot}
 # use PSR-0 layout relative to _datadir/php
 mkdir -p %{buildroot}%{_datadir}/php/%{psr4_prefix}
 cp -pr src/* %{buildroot}%{_datadir}/php/%{psr4_prefix}
@@ -58,7 +60,12 @@ cp -pr src/* %{buildroot}%{_datadir}/php/%{psr4_prefix}
 %{_bindir}/phpunit --bootstrap bootstrap.php
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md composer.json
@@ -66,5 +73,8 @@ cp -pr src/* %{buildroot}%{_datadir}/php/%{psr4_prefix}
 
 
 %changelog
+* Sun Dec 28 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- add backport stuff for remi repo
+
 * Fri Dec 12 2014 Adam Williamson <awilliam@redhat.com> - 1.0.1-1
 - initial package
