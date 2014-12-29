@@ -15,7 +15,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Util
-Version:        2.5.1
+Version:        2.5.2
 Release:        1%{?dist}
 Summary:        Horde Utility Libraries
 
@@ -88,12 +88,8 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 %if %{with_tests}
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -125,6 +121,9 @@ fi
 
 
 %changelog
+* Mon Dec 29 2014 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
+- Update to 2.5.2
+
 * Sat Aug 16 2014 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
 - Update to 2.5.1
 
