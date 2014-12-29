@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-horde-Horde-Mime
-Version:        2.6.0
+Version:        2.6.1
 Release:        1%{?dist}
 Summary:        Horde MIME Library
 
@@ -164,6 +164,9 @@ fi
 
 
 %changelog
+* Mon Dec 29 2014 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
+- Update to 2.6.1
+
 * Fri Dec 05 2014 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
 - Update to 2.6.0
 
