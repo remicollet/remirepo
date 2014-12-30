@@ -1,7 +1,7 @@
 %global github_owner   kriswallsmith
 %global github_name    assetic
-%global github_version 1.1.2
-%global github_commit  735cffd3982c6e8cdebe292d5db39d077f65890f
+%global github_version 1.2.1
+%global github_commit  b20efe38845d20458702f97f3ff625d80805897b
 
 Name:          php-Assetic
 Version:       %{github_version}
@@ -35,6 +35,8 @@ Requires:      php-pear(pear.twig-project.org/Twig) <  2.0
 Requires:      php-lessphp
 Requires:      php-scssphp
 
+Provides:      php-composer(%{github_owner}/%{github_name}) = %{version}
+
 %description
 Assetic is an asset management framework for PHP.
 
@@ -51,17 +53,19 @@ Optional packages:
 # Move functions file
 mv src/functions.php src/Assetic/
 
-# Remove executable bit
-chmod a-x CHANGELOG-1.1.md
-
 
 %build
 # Empty build section, nothing to build
 
 
 %install
+rm -rf %{buildroot}
 mkdir -p -m 755 %{buildroot}%{_datadir}/php
 cp -rp src/Assetic %{buildroot}%{_datadir}/php/
+
+
+%clean
+rm -rf %{buildroot}
 
 
 %check
@@ -72,11 +76,16 @@ cp -rp src/Assetic %{buildroot}%{_datadir}/php/
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE *.md composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *.md composer.json
 %{_datadir}/php/Assetic
 
 
 %changelog
+* Mon Dec 29 2014 Adam Williamson <awilliam@redhat.com> - 1.2.1-1
+- new release 1.2.1
+
 * Tue Aug 20 2013 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - backport 1.1.2 for remi repo.
 
