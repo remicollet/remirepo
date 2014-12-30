@@ -8,14 +8,17 @@
 # Please, preserve the changelog entries
 #
 %{!?__pear:       %global __pear       %{_bindir}/pear}
+%global bootstrap    0
 %global pear_name    Horde_Http
 %global pear_channel pear.horde.org
-
-# Can run test because of circular dependency with Horde_Test
+%if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%else
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 Name:           php-horde-Horde-Http
-Version:        2.1.1
+Version:        2.1.2
 Release:        1%{?dist}
 Summary:        Horde HTTP libraries
 
@@ -84,12 +87,8 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 %if %{with_tests}
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -116,6 +115,10 @@ fi
 
 
 %changelog
+* Tue Dec 30 2014 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
+- Update to 2.1.2
+- enable test suite
+
 * Sat May 03 2014 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - Update to 2.1.1
 
