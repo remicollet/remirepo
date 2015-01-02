@@ -55,16 +55,16 @@ mocketc=/home/rpmbuild/SPECS/remirepo/tools/mock
 #alias mockfc16xd="             mock --configdir=$mocketc -r fc16xd             rebuild "
 
 alias mockfc17i="setarch i686  mock --configdir=$mocketc -r fc17i  --arch i686 rebuild "
-alias mockfc17it="setarch i686 mock --configdir=$mocketc -r fc17it --arch i686 rebuild "
+#lias mockfc17it="setarch i686 mock --configdir=$mocketc -r fc17it --arch i686 rebuild "
 alias mockfc17x="              mock --configdir=$mocketc -r fc17x              rebuild "
-alias mockfc17xt="             mock --configdir=$mocketc -r fc17xt             rebuild "
-alias mockfc17xd="             mock --configdir=$mocketc -r fc17xd             rebuild "
+#lias mockfc17xt="             mock --configdir=$mocketc -r fc17xt             rebuild "
+#lias mockfc17xd="             mock --configdir=$mocketc -r fc17xd             rebuild "
 
 alias mockfc18i="setarch i686  mock --configdir=$mocketc -r fc18i  --arch i686 rebuild "
-alias mockfc18it="setarch i686 mock --configdir=$mocketc -r fc18it --arch i686 rebuild "
+#lias mockfc18it="setarch i686 mock --configdir=$mocketc -r fc18it --arch i686 rebuild "
 alias mockfc18x="              mock --configdir=$mocketc -r fc18x              rebuild "
-alias mockfc18xt="             mock --configdir=$mocketc -r fc18xt             rebuild "
-alias mockfc18xd="             mock --configdir=$mocketc -r fc18xd             rebuild "
+#lias mockfc18xt="             mock --configdir=$mocketc -r fc18xt             rebuild "
+#lias mockfc18xd="             mock --configdir=$mocketc -r fc18xd             rebuild "
 
 alias mockfc19i="  setarch i686  mock --configdir=$mocketc -r fc19i   --arch i686 rebuild "
 alias mockfc19i56="setarch i686  mock --configdir=$mocketc -r fc19i56 --arch i686 rebuild "
@@ -72,7 +72,7 @@ alias mockfc19x="                mock --configdir=$mocketc -r fc19x             
 alias mockfc19x56="              mock --configdir=$mocketc -r fc19x56             rebuild "
 alias mockfc19xscl54="           mock --configdir=$mocketc -r fc19xscl54          rebuild "
 alias mockfc19xscl56="           mock --configdir=$mocketc -r fc19xscl56          rebuild "
-alias mockfc19xd="               mock --configdir=$mocketc -r fc19xd              rebuild "
+#lias mockfc19xd="               mock --configdir=$mocketc -r fc19xd              rebuild "
 
 alias mockfc20i="  setarch i686  mock --configdir=$mocketc -r fc20i   --arch i686 rebuild "
 alias mockfc20i56="setarch i686  mock --configdir=$mocketc -r fc20i56 --arch i686 rebuild "
