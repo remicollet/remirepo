@@ -1,6 +1,6 @@
 # spec file for php-pecl-gearman
 #
-# Copyright (c) 2011-2014 Remi Collet
+# Copyright (c) 2011-2015 Remi Collet
 # Copyright (c) 2011 Paul Whalen
 #
 # License: MIT

@@ -1,6 +1,6 @@
 # spec file for php-pecl-sphinx
 #
-# Copyright (c) 2011-2014 Remi Collet
+# Copyright (c) 2011-2015 Remi Collet
 # Copyright (c) 2009-2011 Andrew Colin Kissa
 #
 # License: MIT

@@ -1,6 +1,6 @@
 # spec file for php-pear-PHP-CodeSniffer
 #
-# Copyright (c) 2013-2014 Remi Collet
+# Copyright (c) 2013-2015 Remi Collet
 # Copyright (c) 2009-2013 Christof Damian
 # Copyright (c) 2006-2009 Konstantin Ryabitsev
 #

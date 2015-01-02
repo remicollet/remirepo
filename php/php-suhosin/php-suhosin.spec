@@ -1,6 +1,6 @@
 # spec file for php-suhosin
 #
-# Copyright (c) 2008-2014 Remi Collet
+# Copyright (c) 2008-2015 Remi Collet
 # Copyright (c) 2007-2009 Bart Vanbrabant
 #
 # License: MIT

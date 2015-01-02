@@ -1,6 +1,6 @@
 # spec file for php-pecl-runkit
 #
-# Copyright (c) 2012-2014 Remi Collet
+# Copyright (c) 2012-2015 Remi Collet
 # Copyright (c) 2008-2012 Pavel Alexeev
 #
 # License: MIT

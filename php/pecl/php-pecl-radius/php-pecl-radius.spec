@@ -1,6 +1,6 @@
 # spec file for php-pecl-radius
 #
-# Copyright (c) 2009-2014 Remi Collet
+# Copyright (c) 2009-2015 Remi Collet
 # Copyright (c) 2006-2009 Christopher Stone
 #
 # License: MIT

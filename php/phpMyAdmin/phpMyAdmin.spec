@@ -1,6 +1,6 @@
 # spec file for phpMyAdmin
 #
-# Copyright (c) 2008-2014 Remi Collet
+# Copyright (c) 2008-2015 Remi Collet
 # Copyright (c) 2007-2009 Robert Scheck
 # Copyright (c) 2006-2007 Mike McGrath
 #

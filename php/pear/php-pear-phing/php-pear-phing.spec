@@ -1,6 +1,6 @@
 # spec file for php-pear-phing
 #
-# Copyright (c) 2013-2014 Remi Collet
+# Copyright (c) 2013-2015 Remi Collet
 # Copyright (c) 2010-2013 Christof Damian
 # Copyright (c) 2007-2010 Alexander Kahl
 #

@@ -1,6 +1,6 @@
 # spec file for php-pecl-solr
 #
-# Copyright (c) 2011-2014 Remi Collet
+# Copyright (c) 2011-2015 Remi Collet
 # Copyright (c) 2010 Johan Cwiklinski
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/3.0/

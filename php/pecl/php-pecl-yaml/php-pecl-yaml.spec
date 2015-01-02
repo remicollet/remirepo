@@ -1,6 +1,6 @@
 # spec file for php-pecl-yaml
 #
-# Copyright (c) 2012-2014 Remi Collet
+# Copyright (c) 2012-2015 Remi Collet
 # Copyright (c) 2011-2012 Theodore Lee
 # Copyright (c) 2011 Thomas Morse
 #

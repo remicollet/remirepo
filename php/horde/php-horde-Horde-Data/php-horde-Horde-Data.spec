@@ -1,6 +1,6 @@
 # spec file for php-horde-Horde-Data
 #
-# Copyright (c) 2012-2014 Nick Bebout, Remi Collet
+# Copyright (c) 2012-2015 Nick Bebout, Remi Collet
 #
 # License: MIT
 # https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
