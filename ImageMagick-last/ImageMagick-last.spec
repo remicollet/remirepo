@@ -1,5 +1,5 @@
-%global VER        6.8.9
-%global Patchlevel 10
+%global VER        6.9.0
+%global Patchlevel 2
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -27,7 +27,12 @@
 %global with_gslib 1
 %endif
 
-Name:           ImageMagick-last
+%global libname ImageMagick
+%if 0%{?fedora} >= 20
+Name:           %{libname}
+%else
+Name:           %{libname}-last
+%endif
 Version:        %{VER}.%{Patchlevel}
 Release:        1%{?dist}
 Summary:        An X application for displaying and manipulating images
@@ -65,9 +70,11 @@ BuildRequires:  libwebp-devel
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 
 Obsoletes:      ImageMagick2-tools
+%if "%{name}" != "%{libname}"
 # This could be improved in the future
 # https://bugzilla.redhat.com/849065
-Conflicts:      ImageMagick
+Conflicts:      %{libname}
+%endif
 
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/ImageMagick-%{VER}/modules-Q16/.*\.so$}
@@ -86,9 +93,10 @@ ImageMagick-last includes the command line programs for creating animated or
 transparent .gifs, creating composite images, creating thumbnail images,
 and more.
 
+%if "%{name}" != "%{libname}"
 ImageMagick-last conflicts with ImageMagick official RPM and so can not
 be installed together.
-
+%endif
 
 
 %package devel
@@ -112,7 +120,10 @@ Requires: libwebp-devel%{?_isa}
 %endif
 Requires: jasper-devel%{?_isa}
 Requires: pkgconfig
-Provides: ImageMagick-devel = %{version}-%{release}
+%if "%{name}" != "%{libname}"
+Provides: %{libname}-devel         = %{version}-%{release}
+Provides: %{libname}-devel%{?_isa} = %{version}-%{release}
+%endif
 
 %description devel
 ImageMagick-last-devel contains the library links and header files you'll
@@ -216,7 +227,7 @@ sed -i 's/libltdl.la/libltdl.so/g' configure
 iconv -f ISO-8859-1 -t UTF-8 README.txt > README.txt.tmp
 touch -r README.txt README.txt.tmp
 mv README.txt.tmp README.txt
-# for %doc
+# for %%doc
 mkdir Magick++/examples
 cp -p Magick++/demo/*.cpp Magick++/demo/*.miff Magick++/examples
 
@@ -249,9 +260,11 @@ cp -p Magick++/demo/*.cpp Magick++/demo/*.miff Magick++/examples
            --with-perl-options="INSTALLDIRS=vendor %{?perl_prefix} CC='%__cc -L$PWD/magick/.libs' LDDLFLAGS='-shared -L$PWD/magick/.libs'" \
            --without-dps \
            --without-included-ltdl --with-ltdl-include=%{_includedir} \
-           --with-ltdl-lib=%{_libdir} \
+%if "%{name}" != "%{libname}"
            --datadir=%{_datadir}/%{name} \
-           --sysconfdir=%{_sysconfdir}/%{name}
+           --sysconfdir=%{_sysconfdir}/%{name} \
+%endif
+           --with-ltdl-lib=%{_libdir}
 
 # Disable rpath
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
@@ -309,7 +322,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %{_bindir}/[a-z]*
 %{_mandir}/man[145]/[a-z]*
-%{_mandir}/man1/ImageMagick.*
+%{_mandir}/man1/%{libname}.*
 
 %files libs
 %defattr(-,root,root,-)
@@ -318,11 +331,17 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libMagickCore%{?libsuffixe}.so.2*
 %{_libdir}/libMagickWand%{?libsuffixe}.so.2*
 %{_libdir}/ImageMagick-%{VER}
-%{_datadir}/%{name}
+%if "%{name}" != "%{libname}"
+%dir %{_datadir}/%{name}
+%{_datadir}/%{name}/%{libname}%{?incsuffixe}
+%{_sysconfdir}/%{name}
+%else
+%{_datadir}/%{name}%{?incsuffixe}
+%{_sysconfdir}/%{name}%{?incsuffixe}
+%endif
 %if %{withdjvu}
 %exclude %{_libdir}/ImageMagick-%{VER}/modules-Q16/coders/djvu.*
 %endif
-%{_sysconfdir}/%{name}
 
 
 %files devel
@@ -357,7 +376,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files doc
 %defattr(-,root,root,-)
-%doc %{_datadir}/%{name}/doc/ImageMagick%{?incsuffixe}
+%if "%{name}" != "%{libname}"
+%doc %{_datadir}/%{name}/doc/%{libname}%{?incsuffixe}
+%else
+%doc %{_datadir}/doc/%{name}%{?incsuffixe}
+%endif
 
 %files c++
 %defattr(-,root,root,-)
@@ -385,6 +408,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jan  2 2015 Remi Collet <RPMS@FamilleCollet.com> - 6.9.0.2-1
+- update to 6.9.0-2
+
 * Wed Nov  5 2014 Remi Collet <RPMS@FamilleCollet.com> - 6.8.9.10-1
 - update to 6.8.9-10
 
