@@ -1,6 +1,6 @@
 # spec file for php-nrk-Predis
 #
-# Copyright (c) 2013-2014 Remi Collet
+# Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/3.0/
 #
@@ -17,7 +17,7 @@
 %endif
 
 Name:           php-nrk-Predis
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}
 Summary:        PHP client library for Redis
 
@@ -25,8 +25,6 @@ Group:          Development/Libraries
 License:        MIT
 URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-
-Patch0:         %{pear_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -62,12 +60,7 @@ Flexible and feature-complete PHP client library for Redis.
 %setup -q -c
 
 cd %{pear_name}-%{version}
-%patch0 -p1 -b .upstream
-
-sed -e '/StringPreciseSetExpireTest.php/s/md5sum=.*name=/name=/' \
-    -e '/StringSetExpireTest.php/s/md5sum=.*name=/name=/' \
-    ../package.xml >%{name}.xml
-touch -r ../package.xml %{name}.xml
+mv ../package.xml %{name}.xml
 
 
 %build
@@ -86,6 +79,11 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+
+# Relocate PATH so test suite can be run from install dir
+sed -e 's:tests/::' \
+    %{buildroot}%{pear_testdir}/%{pear_name}/phpunit.xml.dist \
+  > %{buildroot}%{pear_testdir}/%{pear_name}/phpunit.xml
 
 
 %check
@@ -142,6 +140,9 @@ fi
 
 
 %changelog
+* Fri Jan 02 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1
+
 * Mon Nov 03 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - Update to 1.0.0
 - upstream patch for tests
