@@ -8,7 +8,7 @@
 
 Name:          php-google-apiclient
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Client library for Google APIs
 
 Group:         Development/Libraries
@@ -18,13 +18,14 @@ Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{githu
 
 # Submitted upstream: https://github.com/google/google-api-php-client/pull/437
 # Relocate the autoloader added in 1.1, or else we can't sensibly package it
-Patch0:        0001-relocate-autoloader-to-src-Google-backport-from-mast.patch
+# Rediffed against 1.1.2 (files have been moved/added upstream since)
+Patch0:        php-google-apiclient-1.1.2-move_autoloader.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
+BuildRequires: %{_bindir}/phpunit
 # For tests: phpcompatinfo (computed from 1.0.3-beta)
 BuildRequires: php-date
 BuildRequires: php-json
@@ -121,6 +122,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan 02 2015 Adam Williamson <awilliam@redhat.com> - 1.1.2-2
+- update autoloader relocation patch to match latest upstream submission
+
 * Sat Dec 20 2014 Adam Williamson <awilliam@redhat.com> - 1.1.2-1
 - new upstream release 1.1.2
 - relocate autoloader to make it work with systemwide installation
