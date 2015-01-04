@@ -1,7 +1,7 @@
 #
 # RPM spec file for php-Monolog
 #
-# Copyright (c) 2012-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2012-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -11,16 +11,13 @@
 
 %global github_owner    Seldaek
 %global github_name     monolog
-%global github_version  1.11.0
-%global github_commit   ec3961874c43840e96da3a8a1ed20d8c73d7e5aa
+%global github_version  1.12.0
+%global github_commit   1fbe8c2641f2b163addf49cc5e18f144bec6b19f
 
 %global lib_name        Monolog
 
 # "php": ">=5.3.0"
 %global php_min_ver     5.3.0
-# "phpunit/phpunit": "~3.7.0"
-#     Note: Max version ignored on purpose
-%global phpunit_min_ver 3.7.0
 # "psr/log": "~1.0"
 %global psrlog_min_ver  1.0
 %global psrlog_max_ver  2.0
@@ -54,8 +51,8 @@ BuildArch:     noarch
 BuildRequires: php(language)         >= %{php_min_ver}
 BuildRequires: php-composer(psr/log) >= %{psrlog_min_ver}
 BuildRequires: php-composer(psr/log) <  %{psrlog_max_ver}
-BuildRequires: php-phpunit-PHPUnit   >= %{phpunit_min_ver}
-# phpcompatinfo (computed from version 1.11.0)
+BuildRequires: %{__phpunit}
+# phpcompatinfo (computed from version 1.12.0)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -75,7 +72,7 @@ Requires:      php-swift-Swift
 Requires:      php(language)         >= %{php_min_ver}
 Requires:      php-composer(psr/log) >= %{psrlog_min_ver}
 Requires:      php-composer(psr/log) <  %{psrlog_max_ver}
-# phpcompatinfo (computed from version 1.11.0)
+# phpcompatinfo (computed from version 1.12.0)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-filter
@@ -151,6 +148,7 @@ Optional:
 
 
 %install
+rm -rf %{buildroot}
 mkdir -pm 0755 %{buildroot}%{phpdir}
 cp -pr ./src/* %{buildroot}%{phpdir}/
 
@@ -172,10 +170,14 @@ rm -f tests/Monolog/Handler/MongoDBHandlerTest.php
 # Remove GitProcessorTest because it requires a git repo
 rm -f tests/Monolog/Processor/GitProcessorTest.php
 
-%{__phpunit} \
-    --include-path="%{buildroot}%{phpdir}:./tests" \
-    -d date.timezone="UTC"
+%{__phpunit} --include-path="%{buildroot}%{phpdir}:./tests"
+%else
+: Tests skipped
 %endif
+
+
+%clean
+rm -rf %{buildroot}
 
 
 %files
@@ -187,6 +189,9 @@ rm -f tests/Monolog/Processor/GitProcessorTest.php
 
 
 %changelog
+* Sun Jan 04 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.12.0-1
+- Updated to 1.12.0 (BZ #1178410)
+
 * Sun Nov  9 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.11.0-1
 - Updated to 1.11.0 (BZ #1148336)
 - Added php-composer(psr/log-implementation) virtual provide
