@@ -12,8 +12,8 @@
 
 %global github_owner     rackspace
 %global github_name      php-opencloud
-%global github_version   1.11.0
-%global github_commit    ed22aa68966ee8a6c26779453cf90b5e5b96a922
+%global github_version   1.12.1
+%global github_commit    23105f00eb648c10cc360cbc04231018117b0302
 
 %global composer_vendor  rackspace
 %global composer_project php-opencloud
@@ -35,7 +35,7 @@
 
 Name:          php-opencloud
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       PHP SDK for OpenStack/Rackspace APIs
 Group:         Development/Libraries
 
@@ -53,7 +53,7 @@ BuildRequires: php-composer(psr/log) >= %{psr_log_min_ver}
 BuildRequires: php-composer(psr/log) <  %{psr_log_max_ver}
 BuildRequires: php-guzzle-Guzzle     >= %{guzzle_min_ver}
 BuildRequires: php-guzzle-Guzzle     <  %{guzzle_max_ver}
-# phpcompatinfo (computed from version 1.11.0)
+# phpcompatinfo (computed from version 1.12.1)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-hash
@@ -69,14 +69,15 @@ Requires:      php-composer(psr/log) >= %{psr_log_min_ver}
 Requires:      php-composer(psr/log) <  %{psr_log_max_ver}
 Requires:      php-guzzle-Guzzle     >= %{guzzle_min_ver}
 Requires:      php-guzzle-Guzzle     <  %{guzzle_max_ver}
-# phpcompatinfo (computed from version 1.11.0)
+# phpcompatinfo (computed from version 1.12.1)
 Requires:      php-date
 Requires:      php-hash
 Requires:      php-json
 Requires:      php-pcre
 Requires:      php-spl
 
-# Obsoletes:      php-cloudfiles
+# Composer
+Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 
 %description
@@ -100,14 +101,6 @@ Documentation for PHP SDK for OpenStack/Rackspace APIs.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-# Fix version
-# https://github.com/rackspace/php-opencloud/pull/445
-sed 's/1.10.0/%{github_version}/' -i lib/OpenCloud/Version.php
-
-# W: spurious-executable-perm
-# https://github.com/rackspace/php-opencloud/pull/446
-find docs -type f -name '*.md' -exec chmod a-x "{}" \;
-
 
 %build
 # Empty build section, nothing required
@@ -115,7 +108,7 @@ find docs -type f -name '*.md' -exec chmod a-x "{}" \;
 
 %install
 rm -rf %{buildroot}
-mkdir -pm 0755 %{buildroot}%{phpdir}
+mkdir -p %{buildroot}%{phpdir}
 cp -rp lib/OpenCloud %{buildroot}%{phpdir}/
 
 
@@ -136,12 +129,10 @@ spl_autoload_register(function ($class) {
 });
 AUTOLOAD
 
-# Create PHPUnit config with colors turned off and no coverage-clover logging
-sed -e 's/colors="true"/colors="false"/' phpunit.xml.dist \
-    -e '/coverage-clover/d' \
-    > phpunit.xml
+# Create PHPUnit config with no coverage-clover logging
+sed -e '/coverage-clover/d' phpunit.xml.dist > phpunit.xml
 
-%{__phpunit} --include-path %{buildroot}%{phpdir}:./tests -d date.timezone="UTC"
+%{__phpunit} --include-path %{buildroot}%{phpdir}:./tests
 %else
 : Tests skipped
 %endif
@@ -159,6 +150,13 @@ sed -e 's/colors="true"/colors="false"/' phpunit.xml.dist \
 
 
 %changelog
+* Fri Jan 02 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.12.1-1
+- Updated to 1.12.1 (BZ #1172637)
+- Added php-composer(rackspace/php-opencloud) virtual provide
+
+* Sat Nov 22 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.11.0-3
+- Removed obsolete of php-cloudfiles
+
 * Sun Nov 02 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.11.0-2
 - No BuildRequires unless with tests
 
