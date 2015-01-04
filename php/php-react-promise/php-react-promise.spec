@@ -1,7 +1,7 @@
 #
 # RPM spec file for php-react-promise
 #
-# Copyright (c) 2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -11,8 +11,8 @@
 
 %global github_owner     reactphp
 %global github_name      promise
-%global github_version   2.1.0
-%global github_commit    937b04f1b0ee8f6d180e75a0830aac778ca4bcd6
+%global github_version   2.2.0
+%global github_commit    365fcee430dfa4ace1fbc75737ca60ceea7eeeef
 
 %global composer_vendor  react
 %global composer_project promise
@@ -39,16 +39,20 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 %if %{with_tests}
-BuildRequires: php-phpunit-PHPUnit
+BuildRequires: %{__phpunit}
 # composer.json
 BuildRequires: php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 2.1.0)
+# phpcompatinfo (computed from version 2.2.0)
+BuildRequires: php-json
+BuildRequires: php-reflection
 BuildRequires: php-spl
 %endif
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 2.1.0)
+# phpcompatinfo (computed from version 2.2.0)
+Requires:      php-json
+Requires:      php-reflection
 Requires:      php-spl
 
 # Composer
@@ -96,8 +100,7 @@ BOOTSTRAP
 
 %{__phpunit} \
     --bootstrap ./bootstrap.php \
-    --include-path %{buildroot}%{phpdir}:./tests \
-    -d date.timezone="UTC"
+    --include-path %{buildroot}%{phpdir}:./tests
 %else
 : Tests skipped
 %endif
@@ -117,6 +120,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan 04 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.2.0-1
+- Updated to 2.2.0 (BZ #1178411)
+
 * Fri Oct 31 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - backport 2.1.0 for remi repo.
 
