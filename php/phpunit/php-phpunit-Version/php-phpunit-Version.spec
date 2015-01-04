@@ -6,18 +6,16 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b6e1f0cf6b9e1ec409a0d3e2f2a5fb0998e36b43
+%global gh_commit    a77d9123f8e809db3fbdea15038c27a95da4058b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   version
 %global php_home     %{_datadir}/php/SebastianBergmann/
-%global pear_name    Version
-%global pear_channel pear.phpunit.de
 %global with_tests   %{?_without_tests:0}%{!?_withou_tests:1}
 
 Name:           php-phpunit-Version
-Version:        1.0.3
-Release:        3%{?dist}
+Version:        1.0.4
+Release:        1%{?dist}
 Summary:        Managing the version number of Git-hosted PHP projects
 
 Group:          Development/Libraries
@@ -37,10 +35,6 @@ Requires:       php-spl
 Requires:       git
 
 Provides:       php-composer(sebastian/version) = %{version}
-
-# For compatibility, to drop when no more required
-# Currently used by phpcpd and phploc
-Provides:       php-pear(%{pear_channel}/Version) = %{version}
 
 
 %description
@@ -65,6 +59,7 @@ cp -pr src %{buildroot}%{php_home}/Version
 
 %if %{with_tests}
 %check
+# For now: No tests executed!
 cd build
 phpunit
 %endif
@@ -75,24 +70,28 @@ rm -rf %{buildroot}
 
 
 %post
-%{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-%postun
-if [ $1 -eq 0 ] ; then
-    %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        %{pear_channel}/%{pear_name} >/dev/null || :
+if [ -x %{_bindir}/pear ]; then
+   %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      pear.phpunit.de/Version >/dev/null || :
 fi
 
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE ChangeLog.md README.md composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc ChangeLog.md README.md composer.json
 %dir %{php_home}
 %{php_home}/Version
 
 
 %changelog
+* Sun Jan  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- Update to 1.0.4
+- fix scriptlet
+- drop pear compatibility provides
+- fix license usage
+
 * Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-3
 - composer dependencies
 
