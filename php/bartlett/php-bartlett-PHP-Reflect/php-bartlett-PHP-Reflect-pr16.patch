@@ -1,0 +1,23 @@
+From 9ab5673d110729d23197f2b68bb0685fa8696640 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Mon, 5 Jan 2015 14:58:42 +0100
+Subject: [PATCH] fix failed tests because of file order
+
+---
+ tests/PhpFeature/V504Test.php | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tests/PhpFeature/V504Test.php b/tests/PhpFeature/V504Test.php
+index 14a23b8..ad39ff8 100644
+--- a/tests/PhpFeature/V504Test.php
++++ b/tests/PhpFeature/V504Test.php
+@@ -52,7 +52,8 @@ public static function setUpBeforeClass()
+         $finder->files()
+             ->name('gh15.php')
+             ->name('php504ArrayFeatures.php')
+-            ->in(self::$fixtures);
++            ->in(self::$fixtures)
++            ->sortByName()
+         ;
+ 
+         $pm = new ProviderManager;

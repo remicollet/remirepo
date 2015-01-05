@@ -6,13 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    f21f4d332b264973f0be83ccdb4c4e1d8704b9bb
+%global gh_commit    6b059b7106c74e9db5d7dd84c2995eb6fe678331
 #global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     llaville
 %global gh_project   php-reflect
 
 Name:           php-bartlett-PHP-Reflect
-Version:        2.6.1
+Version:        2.6.2
 %global specrel 1
 Release:        %{?gh_short:0.%{specrel}.git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
@@ -25,6 +25,9 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 # Autoloader for RPM - die composer !
 # Enable cache plugin
 Patch0:         %{name}-rpm.patch
+
+# https://github.com/llaville/php-reflect/pull/16
+Patch1:         %{name}-pr16.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -102,6 +105,7 @@ Documentation: http://php5.laurent-laville.org/reflect/manual/current/en/
 #setup -q -n %{gh_project}-%{version}
 
 %patch0 -p1 -b .rpm
+%patch1 -p1 -b .pr16
 
 sed -e 's/@package_version@/%{version}/' \
     -i $(find src -name \*.php)
@@ -149,6 +153,9 @@ fi
 
 
 %changelog
+* Mon Jan  5 2015 Remi Collet <remi@fedoraproject.org> - 2.6.2-1
+- Update to 2.6.2
+
 * Thu Dec  4 2014 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
 - Update to 2.6.1
 
