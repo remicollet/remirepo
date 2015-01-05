@@ -12,8 +12,8 @@
 
 %global github_owner   Seldaek
 %global github_name    jsonlint
-%global github_version 1.3.0
-%global github_commit  a7bc2ec9520ad15382292591b617c43bdb1fec35
+%global github_version 1.3.1
+%global github_commit  863ae85c6d3ef60ca49cb12bd051c4a0648c40c4
 
 # "php": ">=5.3.0"
 %global php_min_ver    5.3.0
@@ -40,12 +40,12 @@ BuildArch:     noarch
 # For tests: composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-phpunit-PHPUnit
-# For tests: phpcompatinfo (computed from version 1.3.0)
+# For tests: phpcompatinfo (computed from version 1.3.1)
 BuildRequires: php-pcre
 %endif
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.3.0)
+# phpcompatinfo (computed from version 1.3.1)
 Requires:      php-pcre
 
 Provides:      php-composer(seld/jsonlint) = %{version}
@@ -89,9 +89,6 @@ spl_autoload_register(function ($class) {
 });
 AUTOLOAD
 
-# Create PHPUnit config w/ colors turned off
-sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
-
 %{_bindir}/phpunit --bootstrap=./autoload.php --include-path %{buildroot}%{_datadir}/php .
 %else
 : Tests skipped
@@ -109,6 +106,9 @@ sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 
 %changelog
+* Mon Jan  5 2015 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
+- Updated to 1.3.1
+
 * Thu Sep 11 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.0-1
 - Updated to 1.3.0 (BZ #1138911)
 
