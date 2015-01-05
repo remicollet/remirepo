@@ -155,6 +155,7 @@ fi
 %changelog
 * Mon Jan  5 2015 Remi Collet <remi@fedoraproject.org> - 2.6.2-1
 - Update to 2.6.2
+- open https://github.com/llaville/php-reflect/pull/16
 
 * Thu Dec  4 2014 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
 - Update to 2.6.1
