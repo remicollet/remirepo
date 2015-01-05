@@ -1,7 +1,7 @@
 #
 # RPM spec file for php-jsonlint
 #
-# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #                         Remi Collet <remi@fedoraproject.org>
 #
 # License: MIT
@@ -89,7 +89,7 @@ spl_autoload_register(function ($class) {
 });
 AUTOLOAD
 
-%{_bindir}/phpunit --bootstrap=./autoload.php --include-path %{buildroot}%{_datadir}/php .
+%{_bindir}/phpunit --bootstrap ./autoload.php --include-path %{buildroot}%{_datadir}/php .
 %else
 : Tests skipped
 %endif
