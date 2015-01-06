@@ -1,7 +1,7 @@
 #
 # RPM spec file for php-doctrine-lexer
 #
-# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -11,10 +11,8 @@
 
 %global github_owner     doctrine
 %global github_name      lexer
-%global github_version   1.0
+%global github_version   1.0.1
 %global github_commit    83893c552fd2045dd78aef794c31e694c37c0b8c
-# Additional commits after v1.0 tag
-%global github_release   .20140909git%(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  doctrine
 %global composer_project lexer
@@ -24,7 +22,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       5%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       Base library for a lexer that can be used in top-down, recursive descent parsers
 
 Group:         Development/Libraries
@@ -36,7 +34,7 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.0 git commit 83893c552fd2045dd78aef794c31e694c37c0b8c)
+# phpcompatinfo (computed from version 1.0.1)
 Requires:      php-pcre
 Requires:      php-reflection
 
@@ -74,13 +72,19 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE *.md composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *.md composer.json
 %dir %{_datadir}/php/Doctrine
 %dir %{_datadir}/php/Doctrine/Common
      %{_datadir}/php/Doctrine/Common/Lexer
 
 
 %changelog
+* Mon Jan 05 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.1-1
+- Updated to 1.0.1 (same commit but tagged version instead of snapshot; BZ #1178808)
+- %%license usage
+
 * Sun Dec 07 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0-5.20140909git83893c5
 - Updated to latest snapshot (required for php-egulias-email-validator 1.2.6)
 
