@@ -6,16 +6,15 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    51f79686ba79f6b0ab7e847788980567b59540ce
-%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150105
+%global gh_commit    6b059b7106c74e9db5d7dd84c2995eb6fe678331
+#global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     llaville
 %global gh_project   php-reflect
 
 Name:           php-bartlett-PHP-Reflect
-Version:        3.0.0
+Version:        2.6.2
 %global specrel 1
-Release:        %{?gh_short:0.%{specrel}.%{?gh_date}git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
+Release:        %{?gh_short:0.%{specrel}.git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
 Group:          Development/Libraries
@@ -27,24 +26,23 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 # Enable cache plugin
 Patch0:         %{name}-rpm.patch
 
+# https://github.com/llaville/php-reflect/pull/16
+Patch1:         %{name}-pr16.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3
-BuildRequires:  php-pdo_sqlite
+BuildRequires:  php(language)               >= 5.3
 # to run test suite
 BuildRequires:  %{_bindir}/phpunit
-Requires:       php-composer(sebastian/version)                 >= 1.0
-BuildRequires:  php-composer(nikic/php-parser)                  >= 1.0
-BuildRequires:  php-composer(doctrine/collections)              >= 1.2
-BuildRequires:  php-composer(symfony/class-loader)              >= 2.5
-BuildRequires:  php-composer(symfony/event-dispatcher)          >= 2.5
-BuildRequires:  php-composer(symfony/finder)                    >= 2.5
-BuildRequires:  php-composer(symfony/console)                   >= 2.5
-BuildRequires:  php-composer(symfony/stopwatch)                 >= 2.5
-BuildRequires:  php-composer(symfony/dependency-injection)      >= 2.5
-BuildRequires:  php-composer(phpdocumentor/reflection-docblock) >= 2.0
-BuildRequires:  php-composer(seld/jsonlint)                     >= 1.1
-BuildRequires:  php-composer(justinrainbow/json-schema)         >= 1.3
+Requires:       php-composer(sebastian/version)        >= 1.0
+BuildRequires:  php-composer(phpunit/php-timer)        >= 1.0
+BuildRequires:  php-composer(nikic/php-parser)         >= 1.0
+BuildRequires:  php-composer(symfony/class-loader)     >= 2.5
+BuildRequires:  php-composer(symfony/event-dispatcher) >= 2.5
+BuildRequires:  php-composer(symfony/finder)           >= 2.5
+BuildRequires:  php-composer(symfony/console)          >= 2.5
+BuildRequires:  php-composer(seld/jsonlint)            >= 1.1
+BuildRequires:  php-composer(justinrainbow/json-schema) >= 1.3
 
 # From composer.json, "require"
 #        "php": ">=5.3.0",
@@ -53,49 +51,37 @@ BuildRequires:  php-composer(justinrainbow/json-schema)         >= 1.3
 #        "ext-spl": "*",
 #        "ext-json": "*",
 #        "ext-date": "*",
-#        "ext-reflection": "*",
-#        "ext-pdo_sqlite": "*",
 #        "sebastian/version": "~1.0",
+#        "phpunit/php-timer": "~1.0",
 #        "nikic/php-parser": "~1.0",
-#        "doctrine/collections": "~1.2",
 #        "symfony/event-dispatcher": "~2.5",
 #        "symfony/finder": "~2.5",
 #        "symfony/console": "~2.5"
-#        "symfony/stopwatch": "~2.5",
-#        "symfony/dependency-injection": "~2.5",
-#        "phpdocumentor/reflection-docblock": "~2.0",
 #        "justinrainbow/json-schema": "~1.3",
 #        "seld/jsonlint": "~1.1"
-Requires:       php(language) >= 5.3
+Requires:       php(language)               >= 5.3
 Requires:       php-date
 Requires:       php-json
 Requires:       php-pcre
-Requires:       php-pdo_sqlite
 Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-tokenizer
-Requires:       php-composer(sebastian/version)                 >= 1.0
-Requires:       php-composer(sebastian/version)                 <  2
-Requires:       php-composer(nikic/php-parser)                  >= 1.0
-Requires:       php-composer(nikic/php-parser)                  <  2
-Requires:       php-composer(doctrine/collections)              >= 1.2
-Requires:       php-composer(doctrine/collections)              <  2
-Requires:       php-composer(symfony/event-dispatcher)          >= 2.5
-Requires:       php-composer(symfony/event-dispatcher)          <  3
-Requires:       php-composer(symfony/finder)                    >= 2.5
-Requires:       php-composer(symfony/finder)                    <  3
-Requires:       php-composer(symfony/console)                   >= 2.5
-Requires:       php-composer(symfony/console)                   <  3
-Requires:       php-composer(symfony/stopwatch)                 >= 2.5
-Requires:       php-composer(symfony/stopwatch)                 <  3
-Requires:       php-composer(symfony/dependency-injection)      >= 2.5
-Requires:       php-composer(symfony/dependency-injection)      <  3
-Requires:       php-composer(phpdocumentor/reflection-docblock) >= 2.0
-Requires:       php-composer(phpdocumentor/reflection-docblock) <  3
-Requires:       php-composer(seld/jsonlint)                     >= 1.1
-Requires:       php-composer(seld/jsonlint)                     <  2
-Requires:       php-composer(justinrainbow/json-schema)         >= 1.3
-Requires:       php-composer(justinrainbow/json-schema)         <  2
+Requires:       php-composer(sebastian/version)        >= 1.0
+Requires:       php-composer(sebastian/version)        <  2
+Requires:       php-composer(phpunit/php-timer)        >= 1.0
+Requires:       php-composer(phpunit/php-timer)        <  2
+Requires:       php-composer(nikic/php-parser)         >= 1.0
+Requires:       php-composer(nikic/php-parser)         <  2
+Requires:       php-composer(symfony/event-dispatcher) >= 2.5
+Requires:       php-composer(symfony/event-dispatcher) <  3
+Requires:       php-composer(symfony/finder)           >= 2.5
+Requires:       php-composer(symfony/finder)           <  3
+Requires:       php-composer(symfony/console)          >= 2.5
+Requires:       php-composer(symfony/console)          <  3
+Requires:       php-composer(seld/jsonlint)            >= 1.1
+Requires:       php-composer(seld/jsonlint)            <  2
+Requires:       php-composer(justinrainbow/json-schema) >= 1.3
+Requires:       php-composer(justinrainbow/json-schema) <  2
 # From composer.json, "suggest"
 #        "doctrine/cache": "Allow caching results"
 Requires:       php-composer(doctrine/cache)
@@ -116,8 +102,10 @@ Documentation: http://php5.laurent-laville.org/reflect/manual/current/en/
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+#setup -q -n %{gh_project}-%{version}
 
 %patch0 -p1 -b .rpm
+%patch1 -p1 -b .pr16
 
 sed -e 's/@package_version@/%{version}/' \
     -i $(find src -name \*.php)
@@ -165,13 +153,6 @@ fi
 
 
 %changelog
-* Tue Jan  6 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.1.20150105git51f7968
-- update to 3.0.0 alpha2
-- drop dependency on phpunit/php-timer
-- add dependencies on php-pdo_sqlite, doctrine/collections,
-  symfony/stopwatch, symfony/dependency-injection
-  and phpdocumentor/reflection-docblock
-
 * Mon Jan  5 2015 Remi Collet <remi@fedoraproject.org> - 2.6.2-1
 - Update to 2.6.2
 - open https://github.com/llaville/php-reflect/pull/16
