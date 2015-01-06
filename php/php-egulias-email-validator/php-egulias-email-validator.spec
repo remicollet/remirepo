@@ -1,7 +1,7 @@
 #
 # RPM spec file for php-egulias-email-validator
 #
-# Copyright (c) 2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -11,8 +11,8 @@
 
 %global github_owner     egulias
 %global github_name      EmailValidator
-%global github_version   1.2.6
-%global github_commit    7a64ea18af01a114e8241a397097b266af5411ee
+%global github_version   1.2.7
+%global github_commit    af9417f765623429c9d2a200f0159537e08d1ef3
 
 %global composer_vendor  egulias
 %global composer_project email-validator
@@ -47,7 +47,7 @@ BuildRequires: php-phpunit-PHPUnit
 BuildRequires: php(language)                >= %{php_min_ver}
 BuildRequires: php-composer(doctrine/lexer) >= %{doctrine_lexer_min_ver}
 BuildRequires: php-composer(doctrine/lexer) <  %{doctrine_lexer_max_ver}
-# phpcompatinfo (computed from version 1.2.6)
+# phpcompatinfo (computed from version 1.2.7)
 BuildRequires: php-filter
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -58,7 +58,7 @@ BuildRequires: php-spl
 Requires:      php(language)                >= %{php_min_ver}
 Requires:      php-composer(doctrine/lexer) >= %{doctrine_lexer_min_ver}
 Requires:      php-composer(doctrine/lexer) <  %{doctrine_lexer_max_ver}
-# phpcompatinfo (computed from version 1.2.6)
+# phpcompatinfo (computed from version 1.2.7)
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
@@ -127,6 +127,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan 05 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.7-1
+- Updated to 1.2.7 (BZ #1178809)
+
 * Sun Dec 07 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.6-1
 - Updated to 1.2.6 (BZ #1171051)
 
