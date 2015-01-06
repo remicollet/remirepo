@@ -25,7 +25,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 # Autoloader for RPM - die composer !
 # Enable cache plugin
-Patch0:         %{name}-rpm.patch
+Patch0:         %{name}-3.0.0-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
