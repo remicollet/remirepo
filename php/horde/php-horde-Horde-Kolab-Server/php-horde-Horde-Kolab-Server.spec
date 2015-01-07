@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Kolab-Server
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        A package for manipulating the Kolab user database
 
@@ -25,7 +25,7 @@ BuildArch:      noarch
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
-BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.4.0
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit_Story)
 
 Requires(post): %{__pear}
@@ -104,5 +104,9 @@ fi
 
 
 %changelog
+* Wed Jan 07 2015 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
+- raise dependency on Horde_Test 2.4.0
+
 * Thu Mar 28 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - initial package
