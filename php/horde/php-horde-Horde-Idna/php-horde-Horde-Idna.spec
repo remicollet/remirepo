@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Idna
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}
 Summary:        IDNA backend normalization package
 
@@ -54,7 +54,7 @@ Domain Names in Applications) support.
 %setup -q -c
 cd %{pear_name}-%{version}
 
-%patch0 -p0 -b .rpm
+%patch0 -p1 -b .rpm
 
 # don't install bundled library
 # don't check checksum of patched file
@@ -106,5 +106,8 @@ fi
 
 
 %changelog
+* Wed Jan 07 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1
+
 * Wed Jan  7 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - New Package
