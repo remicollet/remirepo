@@ -25,8 +25,8 @@
 
 Summary:       Couchbase Server PHP extension
 Name:          %{?scl_prefix}php-pecl-couchbase2
-Version:       2.0.2
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Version:       2.0.3
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           pecl.php.net/package/couchbase
@@ -199,6 +199,9 @@ fi
 
 
 %changelog
+* Wed Jan 07 2015 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 2.0.2-1.1
 - Fedora 21 SCL mass rebuild
 
