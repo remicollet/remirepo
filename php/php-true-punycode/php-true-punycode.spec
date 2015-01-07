@@ -35,8 +35,6 @@ BuildRequires:  %{_bindir}/phpunit
 #      "ext-mbstring": "*"
 Requires:       php(language) >= 5.3.3
 Requires:       php-mbstring
-# From phpcompatinfo report for version 1.0.1
-Requires:       php-spl
 
 Provides:       php-composer(true/punycode) = %{version}
 
