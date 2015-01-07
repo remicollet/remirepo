@@ -15,7 +15,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Mail
-Version:        2.5.0
+Version:        2.5.1
 Release:        1%{?dist}
 Summary:        Horde Mail Library
 
@@ -44,6 +44,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Idna) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Idna) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
@@ -132,6 +134,10 @@ fi
 
 
 %changelog
+* Wed Jan 07 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
+- Update to 2.5.1
+- add required dependency on Horde_Idna
+
 * Sun Nov 23 2014 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
 - Update to 2.5.0
 - add dependency on Horde_Translation
