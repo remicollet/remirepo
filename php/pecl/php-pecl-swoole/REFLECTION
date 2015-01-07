@@ -1,11 +1,11 @@
-Extension [ <persistent> extension #147 swoole version 1.7.8 ] {
+Extension [ <persistent> extension #146 swoole version 1.7.9 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
       Current = '2'
     }
     Entry [ swoole.display_errors <ALL> ]
-      Current = '2'
+      Current = 'On'
     }
     Entry [ swoole.message_queue_key <ALL> ]
       Current = '0'
@@ -15,7 +15,7 @@ Extension [ <persistent> extension #147 swoole version 1.7.8 ] {
     }
   }
 
-  - Constants [35] {
+  - Constants [41] {
     Constant [ integer SWOOLE_BASE ] { 4 }
     Constant [ integer SWOOLE_THREAD ] { 2 }
     Constant [ integer SWOOLE_PROCESS ] { 3 }
@@ -47,10 +47,16 @@ Extension [ <persistent> extension #147 swoole version 1.7.8 ] {
     Constant [ integer SWOOLE_SSL ] { 512 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.7.8 }
+    Constant [ string SWOOLE_VERSION ] { 1.7.9 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_GCC ] { 1 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 2 }
+    Constant [ integer WEBSOCKET_OPCODE_TEXT ] { 1 }
+    Constant [ integer WEBSOCKET_OPCODE_BINARY ] { 2 }
+    Constant [ integer HTTP_GLOBAL_GET ] { 1 }
+    Constant [ integer HTTP_GLOBAL_POST ] { 2 }
+    Constant [ integer HTTP_GLOBAL_COOKIE ] { 4 }
+    Constant [ integer HTTP_GLOBAL_ALL ] { 31 }
   }
 
   - Functions {
@@ -188,14 +194,6 @@ Extension [ <persistent> extension #147 swoole version 1.7.8 ] {
         Parameter #1 [ <required> $from_id ]
       }
     }
-    Function [ <internal:swoole> function swoole_bind_uid ] {
-
-      - Parameters [3] {
-        Parameter #0 [ <required> swoole_server $zobject ]
-        Parameter #1 [ <required> $fd ]
-        Parameter #2 [ <optional> $uid ]
-      }
-    }
     Function [ <internal:swoole> function swoole_connection_info ] {
 
       - Parameters [3] {
@@ -235,6 +233,13 @@ Extension [ <persistent> extension #147 swoole version 1.7.8 ] {
     Function [ <internal:swoole> function swoole_event_wait ] {
 
       - Parameters [0] {
+      }
+    }
+    Function [ <internal:swoole> function swoole_event_write ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $fd ]
+        Parameter #1 [ <required> $data ]
       }
     }
     Function [ <internal:swoole> function swoole_timer_add ] {
@@ -278,7 +283,7 @@ Extension [ <persistent> extension #147 swoole version 1.7.8 ] {
     }
   }
 
-  - Classes [9] {
+  - Classes [10] {
     Class [ <internal:swoole> class swoole_server ] {
 
       - Constants [0] {
@@ -293,7 +298,7 @@ Extension [ <persistent> extension #147 swoole version 1.7.8 ] {
       - Properties [0] {
       }
 
-      - Methods [24] {
+      - Methods [26] {
         Method [ <internal:swoole, ctor> public method __construct ] {
 
           - Parameters [4] {
@@ -433,14 +438,6 @@ Extension [ <persistent> extension #147 swoole version 1.7.8 ] {
           }
         }
 
-        Method [ <internal:swoole> public method bind_uid ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $fd ]
-            Parameter #1 [ <required> $uid ]
-          }
-        }
-
         Method [ <internal:swoole> public method connection_info ] {
 
           - Parameters [2] {
@@ -460,7 +457,21 @@ Extension [ <persistent> extension #147 swoole version 1.7.8 ] {
         Method [ <internal:swoole> public method after ] {
         }
 
+        Method [ <internal:swoole> public method sendmessage ] {
+        }
+
+        Method [ <internal:swoole> public method addprocess ] {
+        }
+
         Method [ <internal:swoole> public method stats ] {
+        }
+
+        Method [ <internal:swoole> public method bind ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $fd ]
+            Parameter #1 [ <required> $uid ]
+          }
         }
       }
     }
@@ -508,8 +519,11 @@ Extension [ <persistent> extension #147 swoole version 1.7.8 ] {
       - Static properties [0] {
       }
 
-      - Static methods [3] {
+      - Static methods [4] {
         Method [ <internal:swoole> static public method wait ] {
+        }
+
+        Method [ <internal:swoole> static public method signal ] {
         }
 
         Method [ <internal:swoole> static public method kill ] {
@@ -522,7 +536,7 @@ Extension [ <persistent> extension #147 swoole version 1.7.8 ] {
       - Properties [0] {
       }
 
-      - Methods [9] {
+      - Methods [11] {
         Method [ <internal:swoole, ctor> public method __construct ] {
         }
 
@@ -533,6 +547,9 @@ Extension [ <persistent> extension #147 swoole version 1.7.8 ] {
         }
 
         Method [ <internal:swoole> public method write ] {
+        }
+
+        Method [ <internal:swoole> public method close ] {
         }
 
         Method [ <internal:swoole> public method read ] {
@@ -548,6 +565,9 @@ Extension [ <persistent> extension #147 swoole version 1.7.8 ] {
         }
 
         Method [ <internal:swoole> public method exec ] {
+        }
+
+        Method [ <internal:swoole> public method name ] {
         }
       }
     }
@@ -764,16 +784,20 @@ Extension [ <persistent> extension #147 swoole version 1.7.8 ] {
       - Static methods [0] {
       }
 
-      - Properties [0] {
+      - Properties [1] {
+        Property [ <default> private $global ]
       }
 
-      - Methods [24] {
+      - Methods [27] {
         Method [ <internal:swoole, overwrites swoole_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $ha_name ]
             Parameter #1 [ <required> $cb ]
           }
+        }
+
+        Method [ <internal:swoole> public method setGlobal ] {
         }
 
         Method [ <internal:swoole, overwrites swoole_server, prototype swoole_server> public method start ] {
@@ -904,14 +928,6 @@ Extension [ <persistent> extension #147 swoole version 1.7.8 ] {
           }
         }
 
-        Method [ <internal:swoole, inherits swoole_server> public method bind_uid ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $fd ]
-            Parameter #1 [ <required> $uid ]
-          }
-        }
-
         Method [ <internal:swoole, inherits swoole_server> public method connection_info ] {
 
           - Parameters [2] {
@@ -931,7 +947,21 @@ Extension [ <persistent> extension #147 swoole version 1.7.8 ] {
         Method [ <internal:swoole, inherits swoole_server> public method after ] {
         }
 
+        Method [ <internal:swoole, inherits swoole_server> public method sendmessage ] {
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method addprocess ] {
+        }
+
         Method [ <internal:swoole, inherits swoole_server> public method stats ] {
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method bind ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $fd ]
+            Parameter #1 [ <required> $uid ]
+          }
         }
       }
     }
@@ -950,7 +980,7 @@ Extension [ <persistent> extension #147 swoole version 1.7.8 ] {
       - Properties [0] {
       }
 
-      - Methods [6] {
+      - Methods [5] {
         Method [ <internal:swoole> public method cookie ] {
         }
 
@@ -964,9 +994,6 @@ Extension [ <persistent> extension #147 swoole version 1.7.8 ] {
         }
 
         Method [ <internal:swoole> public method end ] {
-        }
-
-        Method [ <internal:swoole> public method message ] {
         }
       }
     }
@@ -987,6 +1014,26 @@ Extension [ <persistent> extension #147 swoole version 1.7.8 ] {
 
       - Methods [1] {
         Method [ <internal:swoole> public method rawcontent ] {
+        }
+      }
+    }
+
+    Class [ <internal:swoole> class swoole_http_wsresponse ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:swoole> public method message ] {
         }
       }
     }

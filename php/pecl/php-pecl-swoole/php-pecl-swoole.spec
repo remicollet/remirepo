@@ -23,8 +23,8 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.7.8
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Version:        1.7.9
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -231,6 +231,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 07 2015 Remi Collet <remi@fedoraproject.org> - 1.7.9-1
+- Update to 1.7.9
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.7.8-1.1
 - Fedora 21 SCL mass rebuild
 
