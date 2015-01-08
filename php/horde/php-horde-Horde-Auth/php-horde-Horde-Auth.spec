@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Auth
-Version:        2.1.5
+Version:        2.1.6
 Release:        1%{?dist}
 Summary:        Horde Authentication API
 
@@ -63,9 +63,12 @@ Requires:       php-pear(%{pear_channel}/Horde_Ldap) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Ldap) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Lock) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Lock) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 # optional and not required for circular dep: Horde_Kolab_Session
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-auth) = %{version}
 
 
 %description
@@ -116,10 +119,7 @@ done | tee ../%{pear_name}.lang
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:)
-phpunit\
-    --include-path=%{buildroot}%{pear_phpdir} \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %post
@@ -146,6 +146,11 @@ fi
 
 
 %changelog
+* Thu Jan 08 2015 Remi Collet <remi@fedoraproject.org> - 2.1.6-1
+- Update to 2.1.6
+- add provides php-composer(horde/horde-auth)
+- add dependency on Horde_Translation 2.2.0
+
 * Tue Jun 17 2014 Remi Collet <remi@fedoraproject.org> - 2.1.5-1
 - Update to 2.1.5
 
