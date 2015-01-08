@@ -127,12 +127,12 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver RC1
+%global rcver RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.5.20
-Release: 2%{?dist}
+Version: 5.5.21
+Release: 0.1.RC1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1727,6 +1727,9 @@ fi
 
 
 %changelog
+* Thu Jan  8 2015 Remi Collet <remi@fedoraproject.org> 5.5.21-0.1.RC1
+- update to 5.5.21RC1
+
 * Wed Dec 17 2014 Remi Collet <remi@fedoraproject.org> 5.5.20-2
 - Update to 5.5.20
   http://www.php.net/releases/5_5_20.php
