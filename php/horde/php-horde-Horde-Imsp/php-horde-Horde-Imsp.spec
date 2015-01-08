@@ -6,12 +6,12 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Imsp
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imsp
-Version:        2.0.5
+Version:        2.0.6
 Release:        1%{?dist}
 Summary:        IMSP API
 
@@ -35,10 +35,11 @@ Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
-Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-imsp) = %{version}
 
 
 %description
@@ -55,6 +56,7 @@ sed -e '/%{pear_name}.po/d' \
     -e '/Horde_Other.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -113,6 +115,11 @@ fi
 
 
 %changelog
+* Thu Jan 08 2015 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
+- Update to 2.0.6
+- add provides php-composer(horde/horde-imsp)
+- raise dependency on Horde_Translation 2.2.0
+
 * Thu Jun 13 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5
 
