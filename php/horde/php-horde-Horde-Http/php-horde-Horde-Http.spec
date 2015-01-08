@@ -18,7 +18,7 @@
 %endif
 
 Name:           php-horde-Horde-Http
-Version:        2.1.2
+Version:        2.1.3
 Release:        1%{?dist}
 Summary:        Horde HTTP libraries
 
@@ -35,6 +35,7 @@ BuildRequires:  php-channel(%{pear_channel})
 %if %{with_tests}
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+BuildRequires:  php-pecl(http) > 2
 %endif
 
 Requires(post): %{__pear}
@@ -53,6 +54,7 @@ Requires:       php-curl
 # php-pecl-http v1 or v2 optional
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-http) = %{version}
 
 
 %description
@@ -115,6 +117,10 @@ fi
 
 
 %changelog
+* Thu Jan 08 2015 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
+- Update to 2.1.3
+- add provides php-composer(horde/horde-http)
+
 * Tue Dec 30 2014 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
 - Update to 2.1.2
 - enable test suite
