@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Kolab-Format
+# spec file for php-horde-Horde-Date-Parser
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Date-Parser
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        Horde Date Parser
 
@@ -43,6 +43,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
 Requires:       php-channel(%{pear_channel})
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-date-parser) = %{version}
 
 
 %description
@@ -75,12 +76,8 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit\
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %post
@@ -104,6 +101,10 @@ fi
 
 
 %changelog
+* Thu Jan 08 2015 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
+- add provides php-composer(horde/horde-date-parser)
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2
 
