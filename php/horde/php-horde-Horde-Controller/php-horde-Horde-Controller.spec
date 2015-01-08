@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Controller
-Version:        2.0.1
+Version:        2.0.2
 Release:        1%{?dist}
 Summary:        Horde Controller libraries
 
@@ -46,14 +46,14 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-controller) = %{version}
 
 
 %description
 This package provides the controller part of an MVC system for Horde.
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cd %{pear_name}-%{version}
 cp ../package.xml %{name}.xml
@@ -76,12 +76,8 @@ mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %post
@@ -105,6 +101,10 @@ fi
 
 
 %changelog
+* Thu Jan 08 2015 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
+- add provides php-composer(horde/horde-controller)
+
 * Mon Nov 19 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.0.1-1
 - Update to 2.0.1 for remi repo
 
