@@ -11,8 +11,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Compress-Fast
-Version:        1.0.3
-Release:        2%{?dist}
+Version:        1.1.0
+Release:        1%{?dist}
 Summary:        Fast Compression Library
 
 Group:          Development/Libraries
@@ -40,6 +40,7 @@ Requires:       php-pecl(LZF)
 Requires:       php-pecl(%{pear_channel}/horde_lz4)
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-compress-fast) = %{version}
 
 
 %description
@@ -73,12 +74,8 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %clean
@@ -105,6 +102,10 @@ fi
 
 
 %changelog
+* Thu Jan 08 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- Update to 1.1.0
+- add provides php-composer(horde/horde-compress-fast)
+
 * Tue Sep 16 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-2
 - add optional dependency on horde_lz4
 
