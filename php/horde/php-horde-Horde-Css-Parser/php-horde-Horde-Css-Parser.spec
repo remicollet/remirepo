@@ -11,9 +11,8 @@
 %global pear_name    Horde_Css_Parser
 %global pear_channel pear.horde.org
 
-
 Name:           php-horde-Horde-Css-Parser
-Version:        1.0.4
+Version:        1.0.5
 Release:        1%{?dist}
 Summary:        Horde CSS Parser
 
@@ -22,6 +21,10 @@ License:        LGPLv2
 URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
+# Sabberworm/CSS is PSR-0 compliant
+# Default Horde autoloader will find it
+Patch0:         %{pear_name}-rpm.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.0
@@ -29,6 +32,7 @@ BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+BuildRequires:  php-PHP-CSS-Parser >= 5.0.8
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -43,6 +47,7 @@ Requires:       php-iconv
 Requires:       php-pcre
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-css-parser) = %{version}
 
 
 %description
@@ -54,11 +59,13 @@ Horde framework.
 %setup -q -c
 
 cd %{pear_name}-%{version}
-mv ../package.xml %{name}.xml
+%patch0 -p1 -b .rpm
 
-sed -e '/Sabberworm\/CSS/d' \
+sed -e '/bundle/d' \
     -e '/EXPAT_LICENSE/d' \
-    -i %{name}.xml
+    -e '/Parser.php/s/md5sum="[^"]*"//' \
+    ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -80,12 +87,8 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %clean
@@ -113,6 +116,10 @@ fi
 
 
 %changelog
+* Thu Jan 08 2015 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
+- Update to 1.0.5
+- add provides php-composer(horde/horde-css-parser)
+
 * Thu Feb 20 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
 - Update to 1.0.4
 
