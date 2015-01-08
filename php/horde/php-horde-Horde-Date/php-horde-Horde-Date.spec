@@ -8,14 +8,17 @@
 # Please, preserve the changelog entries
 #
 %{!?__pear:       %global __pear       %{_bindir}/pear}
+%global bootstrap    0
 %global pear_name    Horde_Date
 %global pear_channel pear.horde.org
-
-# Can run test because of circular dependency with Horde_Test
+%if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%else
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 Name:           php-horde-Horde-Date
-Version:        2.0.12
+Version:        2.0.13
 Release:        1%{?dist}
 Summary:        Horde Date package
 
@@ -33,6 +36,7 @@ BuildRequires:  gettext
 %if %{with_tests}
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Icalendar) >= 2.0.0
 %endif
 
 Requires(post): %{__pear}
@@ -45,7 +49,7 @@ Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Nls) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Nls) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
@@ -54,6 +58,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optional and omited to avoid circular dependency: Horde_Icalendar
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-date) = %{version}
 
 
 %description
@@ -104,12 +109,8 @@ done | tee ../%{pear_name}.lang
 
 %check
 %if %{with_tests}
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -137,6 +138,12 @@ fi
 
 
 %changelog
+* Thu Jan 08 2015 Remi Collet <remi@fedoraproject.org> - 2.0.13-1
+- Update to 2.0.13
+- add provides php-composer(horde/horde-date)
+- raise dependency on Horde_Translation 2.2.0
+- enable test suite
+
 * Mon Aug 04 2014 Remi Collet <remi@fedoraproject.org> - 2.0.12-1
 - Update to 2.0.12
 
