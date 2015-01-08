@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-Horde-Core
-Version:        2.18.1
+Version:        2.18.2
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -173,6 +173,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Vfs) <  3.0.0
 # PEAR: Text_LanguageDetect
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-core) = %{version}
 
 
 %description
@@ -280,6 +281,10 @@ fi
 
 
 %changelog
+* Thu Jan 08 2015 Remi Collet <remi@fedoraproject.org> - 2.18.2-1
+- Update to 2.18.2
+- add provides php-composer(horde/horde-core)
+
 * Tue Jan 06 2015 Remi Collet <remi@fedoraproject.org> - 2.18.1-1
 - Update to 2.18.1
 
