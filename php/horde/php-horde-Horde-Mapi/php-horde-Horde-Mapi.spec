@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Mapi
-Version:        1.0.3
+Version:        1.0.4
 Release:        1%{?dist}
 Summary:        MAPI utility library
 
@@ -47,6 +47,7 @@ Requires:       php-bcmath
 Requires:       php-date
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-mapi) = %{version}
 
 
 %description
@@ -80,12 +81,8 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %clean
@@ -113,6 +110,10 @@ fi
 
 
 %changelog
+* Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- Update to 1.0.4
+- add provides php-composer(horde/horde-mapi)
+
 * Fri Jun 27 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - Update to 1.0.3
 
