@@ -14,7 +14,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Vfs
-Version:        2.2.0
+Version:        2.2.1
 Release:        1%{?dist}
 Summary:        Virtual File System API
 
@@ -45,7 +45,7 @@ Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
@@ -63,6 +63,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Perms) <  3.0.0
 # Optional and implicitly required: Horde_Db, Horde_Mime
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-vfs) = %{version}
 
 
 %description
@@ -125,16 +126,12 @@ done | tee ../%{pear_name}.lang
 
 %check
 %if %{with_tests}
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 # Failed asserting that file "/tmp/vfsfiletest/.horde/foo/高&执&行&力&的&打&造.txt" exists.
 sed -e 's/testDeleteUnusalFileNames/SKIP_testDeleteUnusalFileNames/' \
     -i FileTest.php
 
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 %else
 : Test disabled
 %endif
@@ -165,6 +162,11 @@ fi
 
 
 %changelog
+* Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
+- Update to 2.2.1
+- add provides php-composer(horde/horde-vfs)
+- raise dependency on Horde_Translation 2.2.0
+
 * Tue Mar 04 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - Update to 2.2.0
 - raise dependency on Horde_Db >= 2.1.0
