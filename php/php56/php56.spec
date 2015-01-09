@@ -127,11 +127,11 @@
 %endif
 
 #global snapdate      201405061030
-#global rcver         RC1
+%global rcver         RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.6.4
+Version: 5.6.5
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -317,6 +317,7 @@ Summary: PHP FastCGI Process Manager
 # Zend is licensed under Zend
 # TSRM and fpm are licensed under BSD
 License: PHP and Zend and BSD
+BuildRequires: libacl-devel
 Requires: php-common%{?_isa} = %{version}-%{release}
 Requires(pre): /usr/sbin/useradd
 %if %{with_systemdfull}
@@ -1296,6 +1297,7 @@ build --enable-fpm \
 %if %{with_systemdfull}
       --with-fpm-systemd \
 %endif
+      --with-fpm-acl \
       --libdir=%{_libdir}/php \
       --without-mysql \
       --disable-pdo \
@@ -1947,6 +1949,10 @@ fi
 
 
 %changelog
+* Fri Jan  9 2015 Remi Collet <remi@fedoraproject.org> 5.6.5-0.1.RC1
+- update to 5.6.5RC1
+- FPM: enable ACL for Unix Domain Socket
+
 * Wed Dec 17 2014 Remi Collet <remi@fedoraproject.org> 5.6.4-2
 - Update to 5.6.4
   http://www.php.net/releases/5_6_4.php
