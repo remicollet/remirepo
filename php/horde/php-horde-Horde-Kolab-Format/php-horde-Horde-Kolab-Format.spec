@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Kolab-Format
-Version:        2.0.5
+Version:        2.0.6
 Release:        1%{?dist}
 Summary:        A package for reading/writing Kolab data formats
 
@@ -46,6 +46,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-kolab-format) = %{version}
 
 
 %description
@@ -77,18 +78,13 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
-
 # fix for unit consistency in sources tree 
 # waiting for upstream explanation on this issue
 sed -e '/VERSION =/s/%{version}/@version@/' \
-    -i $src/lib/Horde/Kolab/Format.php
+    -i %{pear_name}-%{version}/lib/Horde/Kolab/Format.php
 
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %clean
@@ -117,6 +113,10 @@ fi
 
 
 %changelog
+* Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
+- Update to 2.0.6
+- add provides php-composer(horde/horde-kolab-format)
+
 * Wed Nov 20 2013 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5
 
