@@ -7,13 +7,12 @@
 # Please, preserve the changelog entries
 #
 %{!?__pear:       %global __pear       %{_bindir}/pear}
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %global pear_name    Horde_Pdf
 %global pear_channel pear.horde.org
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Pdf
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}
 Summary:        Horde PDF library
 
@@ -45,6 +44,7 @@ Requires:       php-date
 Requires:       php-zlib
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-pdf) = %{version}
 
 
 %description
@@ -79,9 +79,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %check
 %if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    -d date.timezone=UTC \
-    .
+phpunit .
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -111,5 +109,9 @@ fi
 
 
 %changelog
+* Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+- add provides php-composer(horde/horde-pdf)
+
 * Sun Sep 14 2014 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - initial package
