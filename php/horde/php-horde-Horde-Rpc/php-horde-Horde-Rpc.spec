@@ -14,7 +14,7 @@
 # so, don't run it during rpmbuild
 
 Name:           php-horde-Horde-Rpc
-Version:        2.1.1
+Version:        2.1.2
 Release:        1%{?dist}
 Summary:        Horde RPC API
 
@@ -53,7 +53,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Serialize) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Serialize) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
@@ -67,6 +67,7 @@ Requires:       php-pear(%{pear_channel}/Horde_SyncMl) <  3.0.0
 # Optional and implicitly requires: Horde_Http, Horde_Lock
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-rpc) = %{version}
 
 
 %description
@@ -83,6 +84,7 @@ cd %{pear_name}-%{version}
 sed -e '/%{pear_name}.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -138,6 +140,11 @@ fi
 
 
 %changelog
+* Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
+- Update to 2.1.2
+- add provides php-composer(horde/horde-rpc)
+- raise dependency on Horde_Translation 2.2.0
+
 * Tue Oct 15 2013 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - Update to 2.1.1
 
