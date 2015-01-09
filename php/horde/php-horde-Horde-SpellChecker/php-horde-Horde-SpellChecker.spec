@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-SpellChecker
-Version:        2.1.1
+Version:        2.1.2
 Release:        1%{?dist}
 Summary:        Spellcheck API
 
@@ -43,6 +43,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-spellchecker) = %{version}
 
 
 %description
@@ -75,12 +76,8 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-   -d date.timezone=UTC \
-   .
+phpunit .
 
 
 %clean
@@ -108,6 +105,10 @@ fi
 
 
 %changelog
+* Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
+- Update to 2.1.2
+- add provides php-composer(horde/horde-spellchecker)
+
 * Tue Oct 15 2013 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - Update to 2.1.1
 
