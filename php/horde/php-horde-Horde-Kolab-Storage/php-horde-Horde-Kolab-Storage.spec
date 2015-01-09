@@ -11,16 +11,14 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Kolab-Storage
-Version:        2.1.1
-Release:        2%{?dist}
+Version:        2.1.2
+Release:        1%{?dist}
 Summary:        A package for handling Kolab data stored on an IMAP server
 
 Group:          Development/Libraries
 License:        LGPLv2
 URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-
-Patch0:         %{pear_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -52,7 +50,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Kolab_Format) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Kolab_Format) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
@@ -68,6 +66,7 @@ Requires:       php-pear(HTTP_Request)
 Requires:       php-pear(Net_IMAP) >= 1.1.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-kolab-storage) = %{version}
 
 
 %description
@@ -79,14 +78,11 @@ to deal with this type of data storage effectively.
 %setup -q -c
 cd %{pear_name}-%{version}
 
-%patch0 -p3 -b .upstream
-
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
 sed -e '/%{pear_name}.po/d' \
     -e '/Horde_Other.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
-    -e '/test/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 touch -r ../package.xml %{name}.xml
 
@@ -123,7 +119,6 @@ done | tee ../%{pear_name}.lang
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
 # Retrieve version of Horde_Kolab_Format
@@ -135,10 +130,7 @@ sed -e "s/Horde_Kolab_Format_Xml-@version@/Horde_Kolab_Format_Xml-${VER}/" \
     -i ComponentTest/Data/Object/Message/ModifiedTest.php \
        ComponentTest/Data/Object/Message/NewTest.php
 
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %clean
@@ -168,6 +160,11 @@ fi
 
 
 %changelog
+* Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
+- Update to 2.1.2
+- add provides php-composer(horde/horde-kolab-storage)
+- raise dependency on Horde_Translation 2.2.0
+
 * Tue Nov 25 2014 Remi Collet <remi@fedoraproject.org> - 2.1.1-2
 - add suptream patch for test (thanks Koschei)
 
