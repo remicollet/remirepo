@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Service-Weather
-Version:        2.1.4
+Version:        2.1.5
 Release:        1%{?dist}
 Summary:        Horde Weather Provider
 
@@ -49,6 +49,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Http) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Http) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) <  3.0.0
 # Not documented, detected by phpci
@@ -56,6 +58,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Serialize) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Serialize) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-service-weather) = %{version}
 
 
 %description
@@ -111,9 +114,7 @@ done | tee ../%{pear_name}.lang
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %clean
@@ -145,6 +146,11 @@ fi
 
 
 %changelog
+* Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.1.5-1
+- Update to 2.1.5
+- add dependency on Horde_Translation 2.2.0
+- add provides php-composer(horde/horde-service-weather)
+
 * Sun Oct 12 2014 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
 - Update to 2.1.4
 
