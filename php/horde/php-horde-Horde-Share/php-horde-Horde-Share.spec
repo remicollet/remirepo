@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Share
-Version:        2.0.5
+Version:        2.0.6
 Release:        1%{?dist}
 Summary:        Horde Shared Permissions System
 
@@ -48,7 +48,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.1.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Url) <  3.0.0
@@ -59,6 +59,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Kolab_Storage) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Kolab_Storage) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-share) = %{version}
 
 %description
 Horde_Share provides an interface to all shared resources a user
@@ -109,12 +110,8 @@ done | tee ../%{pear_name}.lang
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %post
@@ -139,6 +136,11 @@ fi
 
 
 %changelog
+* Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
+- Update to 2.0.6
+- add provides php-composer(horde/horde-share)
+- raise dependency on Horde_Translation 2.2.0
+
 * Tue Mar 04 2014 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5
 
