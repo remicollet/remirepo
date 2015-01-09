@@ -43,8 +43,7 @@ Provides:       php-composer(horde/horde-stream-filter) = %{version}
 A collection of various stream filters.
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cd %{pear_name}-%{version}
 cp ../package.xml %{name}.xml
