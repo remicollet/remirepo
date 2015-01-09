@@ -12,8 +12,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Xml-Wbxml
-Version:        2.0.1
-Release:        3%{?dist}
+Version:        2.0.2
+Release:        1%{?dist}
 Summary:        Provides an API for encoding and decoding WBXML documents
 
 Group:          Development/Libraries
@@ -43,6 +43,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-xml-wbxml) = %{version}
 
 
 %description
@@ -76,12 +77,8 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %clean
@@ -110,6 +107,10 @@ fi
 
 
 %changelog
+* Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
+- add provides php-composer(horde/horde-xml-wbxml)
+
 * Sun Feb 10 2013 Remi Collet <remi@fedoraproject.org> - 2.0.1-3
 - missing requires, from review #908357
 

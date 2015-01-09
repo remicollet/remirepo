@@ -39,7 +39,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
-Provides:       php-composer(horde/horde-vfs) = %{version}
+Provides:       php-composer(horde/horde-xml-element) = %{version}
 
 
 %description
@@ -112,7 +112,7 @@ fi
 %changelog
 * Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2
-- add provides php-composer(horde/horde-vfs)
+- add provides php-composer(horde/horde-xml-element)
 
 * Wed Feb  6 2013 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
 - cleanups for review
