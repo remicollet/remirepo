@@ -6,13 +6,12 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Itip
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Itip
-Version:        2.0.6
+Version:        2.0.7
 Release:        1%{?dist}
 Summary:        iTip invitation response handling
 
@@ -40,13 +39,16 @@ Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Icalendar) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Icalendar) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.5.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 # Optional
 Requires:       php-pear(%{pear_channel}/Horde_Prefs) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Prefs) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-itip) = %{version}
 
 
 %description
@@ -95,12 +97,8 @@ done | tee ../%{pear_name}.lang
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %post
@@ -126,6 +124,12 @@ fi
 
 
 %changelog
+* Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
+- Update to 2.0.7
+- add provides php-composer(horde/horde-itip)
+- add dependency on Horde_Translation 2.2.0
+- raise dependency on Horde_Mime 2.5.0
+
 * Thu May 22 2014 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
 - Update to 2.0.6
 
