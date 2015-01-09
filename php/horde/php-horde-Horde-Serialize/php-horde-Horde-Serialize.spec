@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Serialize
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        Data Encapulation API
 
@@ -45,6 +45,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optional and skipped for build order: Horde_Imap_Client, Horde_Mime
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-serialize) = %{version}
 
 
 %description
@@ -52,8 +53,7 @@ The Horde_Serialize library provides various methods of encapsulating data.
 
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cd %{pear_name}-%{version}
 cp ../package.xml %{name}.xml
@@ -77,17 +77,13 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
 # Because of jsonc
 sed -e 's/function testJsonInvalidUTF8Input/function SKIP_testJsonInvalidUTF8Input/' \
     -i JsonTest.php
 
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %post
@@ -111,6 +107,10 @@ fi
 
 
 %changelog
+* Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
+- add provides php-composer(horde/horde-serialize)
+
 * Wed Mar 06 2013 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2
 

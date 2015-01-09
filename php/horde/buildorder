@@ -49,7 +49,7 @@ Build order
 	* Horde_Pdf                 2.0.3      BR: Horde_Test  R: Horde_Exception
 	* Horde_Routes              2.0.3      BR: Horde_Test  R: Horde_Exception, Horde_Util
 	* Horde_Secret              2.0.4      BR: Horde_Test, Horde_Crypt_Blowfish  R: Horde_Exception, Horde_Support, Horde_Crypt_Blowfish
-	* Horde_Serialize           2.0.2      BR: Horde_Test I: Horde_Imap_Client, Horde_Mime R: Horde_Exception, Horde_Util
+	* Horde_Serialize           2.0.3      BR: Horde_Test I: Horde_Imap_Client, Horde_Mime R: Horde_Exception, Horde_Util
 	* Horde_Service_Gravatar    1.0.0      BR: Horde_Test, Horde_Http, Horde_Url  R: Horde_Http, Horde_Url
 	* Horde_Service_Weather     2.1.4      BR: Horde_Role, Horde_Date, Horde_Http, Horde_Serialize, Horde_Test, Horde_Url  R: Horde_Role, Horde_Date, Horde_Exception, Horde_Http, Horde_Url, Horde_Serialize
 	* Horde_SpellChecker        2.1.1      BR: Horde_Test  R: Horde_Exception, Horde_Util
