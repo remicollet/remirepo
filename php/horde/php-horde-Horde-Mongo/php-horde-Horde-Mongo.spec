@@ -6,13 +6,12 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Mongo
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Mongo
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}
 Summary:        Horde Mongo Configuration
 
@@ -36,6 +35,8 @@ Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-mongo) = %{version}
+
 
 %description
 Provides an API to ensure that the PECL Mongo extension can be used
@@ -90,6 +91,10 @@ fi
 
 
 %changelog
+* Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3
+- add provides php-composer(horde/horde-mongo)
+
 * Wed Oct 16 2013 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Update to 1.0.2
 
