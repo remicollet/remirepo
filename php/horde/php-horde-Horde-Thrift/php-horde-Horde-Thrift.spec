@@ -1,11 +1,19 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# spec file for php-horde-Horde-Thrift
+#
+# Copyright (c) 2012-2015 Nick Bebout, Remi Collet
+#
+# License: MIT
+# https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Thrift
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Thrift
-Version:        2.0.1
-Release:        2%{?dist}
+Version:        2.0.2
+Release:        1%{?dist}
 Summary:        Thrift
 
 Group:          Development/Libraries
@@ -16,13 +24,13 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-common >= 5.3.0
+BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php-common >= 5.3.0
+Requires:       php(language) >= 5.3.0
 Requires:       php-date
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
@@ -30,6 +38,8 @@ Requires:       php-channel(%{pear_channel})
 # Optional: APC
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-thrift) = %{version}
+
 
 %description
 Packaged version of the PHP Thrift client
@@ -82,6 +92,10 @@ fi
 
 
 %changelog
+* Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2
+- add provides php-composer(horde/horde-thrift)
+
 * Thu Dec 20 2012 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
 - own /usr/share/pear/Horde
 
