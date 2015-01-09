@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Text-Filter
-Version:        2.2.1
+Version:        2.2.2
 Release:        1%{?dist}
 Summary:        Horde Text Filter API
 
@@ -52,6 +52,7 @@ Requires:       php-pcre
 # Optional but non-free: Horde_Text_Filter_Jsmin
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-text-filter) = %{version}
 
 
 %description
@@ -101,7 +102,6 @@ done | tee ../%{pear_name}.lang
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
 %if 0%{?rhel} == 5
@@ -115,10 +115,7 @@ sed -e 's/testBug9567/SKIP_testBug9567/' \
 sed -e 's/testXss/SKIP_testXss/' \
     -i XssTest.php
 
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %clean
@@ -148,6 +145,10 @@ fi
 
 
 %changelog
+* Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
+- Update to 2.2.2
+- add provides php-composer(horde/horde-text-filter)
+
 * Sat May 03 2014 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - Update to 2.2.1
 
