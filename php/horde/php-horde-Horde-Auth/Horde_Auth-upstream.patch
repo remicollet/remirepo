@@ -1,0 +1,11 @@
+--- test/Horde/Auth/TestCase.php	2015-01-08 17:43:19.000000000 +0100
++++ test/Horde/Auth/TestCase.php	2015-01-09 10:22:51.375634006 +0100
+@@ -21,7 +21,7 @@
+         return array(
+             array('aprmd5', '$apr1$11CBbKXP$AvvMGBjr81bC/NSMZIxrG.', '11CBbKXP'),
+             array('crypt', '8e3IWstJmsmxs', '8e'),
+-            array('crypt-blowfish', '*0OayF9ttbxIs', '*0OayF9ttbxIs'),
++            array('crypt-blowfish', '$2lXRrxYRR396', '$2lXRrxYRR396'),
+             array('crypt-des', '45MibW6/G3XEY', '45'),
+             array('crypt-md5', '$1$537a3a0e$CWyLVJdQKfxbKPBv/Efzm0', '$1$537a3a0e$'),
+             array('md5-base64', 'OFj2IjCsPJFfMAxmQxLGPw==', ''),
