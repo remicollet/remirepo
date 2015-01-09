@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Timezone
-Version:        1.0.8
+Version:        1.0.9
 Release:        1%{?dist}
 Summary:        Timezone library
 
@@ -44,6 +44,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) < 3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-timezone) = %{version}
 
 
 %description
@@ -77,9 +78,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %post
@@ -103,6 +102,10 @@ fi
 
 
 %changelog
+* Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 1.0.9-1
+- Update to 1.0.9
+- add provides php-composer(horde/horde-timezone)
+
 * Tue Oct 07 2014 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
 - Update to 1.0.8
 
