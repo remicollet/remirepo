@@ -30,6 +30,7 @@ BuildRequires:  gettext
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Text_Flowed) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Idna) >= 1.0.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -39,6 +40,8 @@ Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Idna) >= 1.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Idna) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optional
@@ -148,6 +151,7 @@ fi
 * Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
 - Update to 2.2.2
 - add provides php-composer(horde/horde-text-filter)
+- add dependency on Horde_Idna
 
 * Sat May 03 2014 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - Update to 2.2.1
