@@ -12,7 +12,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Mail-Autoconfig
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        Horde Mail Autoconfiguration
 
@@ -50,6 +50,7 @@ Requires:       php-pear(Net_DNS2) >= 1.3.0
 Requires:       php-simplexml
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-mail-autoconfig) = %{version}
 
 
 %description
@@ -84,16 +85,12 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 %if %{with_tests}
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
 # ignore this broken test for now
 rm AutoconfigTest.php
 
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -124,6 +121,10 @@ fi
 
 
 %changelog
+* Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- Update to 1.0.2
+- add provides php-composer(horde/horde-mail-autoconfig)
+
 * Thu Oct 02 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1
 
