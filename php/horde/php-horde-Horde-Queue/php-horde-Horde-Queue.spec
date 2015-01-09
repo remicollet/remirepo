@@ -6,12 +6,12 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Queue
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Queue
-Version:        1.1.1
+Version:        1.1.2
 Release:        1%{?dist}
 Summary:        Horde Queue
 
@@ -34,6 +34,7 @@ Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-queue) = %{version}
 
 
 %description
@@ -88,6 +89,10 @@ fi
 
 
 %changelog
+* Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
+- Update to 1.1.2
+- add provides php-composer(horde/horde-queue)
+
 * Sun Sep 08 2013 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - Update to 1.1.1
 
