@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Date
+# spec file for php-horde-Horde-Nls
 #
 # Copyright (c) 2012-2015 Nick Bebout, Remi Collet
 #
@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Nls
-Version:        2.0.4
+Version:        2.0.5
 Release:        1%{?dist}
 Summary:        Native Language Support (NLS)
 
@@ -37,13 +37,14 @@ Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 # Optional
 Requires:       php-pecl(geoip)
 Requires:       php-pear(Net_DNS2)
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-nls) = %{version}
 
 
 %description
@@ -113,6 +114,11 @@ fi
 
 
 %changelog
+* Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- Update to 2.0.5
+- add provides php-composer(horde/horde-nls)
+- raise dependency on Horde_Translation 2.2.0
+
 * Thu May 22 2014 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4
 
