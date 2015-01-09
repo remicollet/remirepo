@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Text-Diff
-Version:        2.1.0
+Version:        2.1.1
 Release:        1%{?dist}
 Summary:        Engine for performing and rendering text diffs
 
@@ -42,6 +42,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optional but not yet available : php-pecl-xdiff
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-text-diff) = %{version}
 
 
 %description
@@ -74,12 +75,8 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %clean
@@ -108,6 +105,10 @@ fi
 
 
 %changelog
+* Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
+- Update to 2.1.1
+- add provides php-composer(horde/horde-text-diff)
+
 * Tue Jun 17 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0
 
