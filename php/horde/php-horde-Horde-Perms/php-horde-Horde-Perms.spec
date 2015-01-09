@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Perms
-Version:        2.1.2
+Version:        2.1.3
 Release:        1%{?dist}
 Summary:        Horde Permissions System
 
@@ -45,13 +45,14 @@ Requires:       php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Group) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 # Optional
 Requires:       php-pear(%{pear_channel}/Horde_Tree) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Tree) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-perms) = %{version}
 
 
 %description
@@ -100,12 +101,8 @@ done | tee ../%{pear_name}.lang
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %post
@@ -132,6 +129,11 @@ fi
 
 
 %changelog
+* Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
+- Update to 2.1.3
+- add provides php-composer(horde/horde-perms)
+- raise dependency on Horde_Translation 2.2.0
+
 * Tue Nov 05 2013 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
 - Update to 2.1.2
 
