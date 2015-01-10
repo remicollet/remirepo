@@ -40,6 +40,7 @@ Provides:       php-composer(horde/horde-queue) = %{version}
 %description
 Queue layer with various storage backends and runners
 
+
 %prep
 %setup -q -c
 cd %{pear_name}-%{version}

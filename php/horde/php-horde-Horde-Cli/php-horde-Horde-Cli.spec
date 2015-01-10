@@ -8,7 +8,6 @@
 # Please, preserve the changelog entries
 #
 %{!?__pear:       %global __pear       %{_bindir}/pear}
-
 %global pear_name    Horde_Cli
 %global pear_channel pear.horde.org
 

@@ -52,8 +52,7 @@ A programmatic way of building constraints that evaluate to true or false.
 
 
 %prep
-%setup -q -c -T
-tar xif %{SOURCE0}
+%setup -q -c
 
 cd %{pear_name}-%{version}
 mv ../package.xml %{name}.xml
@@ -100,6 +99,7 @@ fi
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
+%dir %{pear_phpdir}/Horde
 %{pear_phpdir}/Horde/Constraint
 %{pear_phpdir}/Horde/Constraint.php
 %{pear_testdir}/Horde_Constraint

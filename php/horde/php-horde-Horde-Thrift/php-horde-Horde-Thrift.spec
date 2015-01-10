@@ -44,7 +44,7 @@ Provides:       php-composer(horde/horde-thrift) = %{version}
 %description
 Packaged version of the PHP Thrift client
 
-Optional extension : php-pecl-apc
+Optional extension : php-pecl-apcu
 
 
 %prep

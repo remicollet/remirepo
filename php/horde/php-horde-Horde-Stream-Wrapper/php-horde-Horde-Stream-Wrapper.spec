@@ -17,7 +17,6 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 %endif
 
-
 Name:           php-horde-Horde-Stream-Wrapper
 Version:        2.1.1
 Release:        1%{?dist}
