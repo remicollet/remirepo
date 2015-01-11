@@ -67,7 +67,6 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit .
 

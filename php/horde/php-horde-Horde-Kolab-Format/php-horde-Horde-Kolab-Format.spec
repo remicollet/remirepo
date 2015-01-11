@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Kolab_Format
 %global pear_channel pear.horde.org
 

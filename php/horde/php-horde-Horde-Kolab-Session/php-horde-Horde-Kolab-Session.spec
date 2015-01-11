@@ -37,7 +37,7 @@ Requires:       php(language) >= 5.3.0
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Exception) < 3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 # Optional
 Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) <  3.0.0
