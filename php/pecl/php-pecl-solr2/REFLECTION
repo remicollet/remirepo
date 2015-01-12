@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #169 solr version 2.0.0 ] {
+Extension [ <persistent> extension #176 solr version 2.1.0 ] {
 
   - Dependencies {
     Dependency [ libxml (Required) ]
@@ -7,9 +7,9 @@ Extension [ <persistent> extension #169 solr version 2.0.0 ] {
 
   - Constants [4] {
     Constant [ integer SOLR_MAJOR_VERSION ] { 2 }
-    Constant [ integer SOLR_MINOR_VERSION ] { 0 }
+    Constant [ integer SOLR_MINOR_VERSION ] { 1 }
     Constant [ integer SOLR_PATCH_VERSION ] { 0 }
-    Constant [ string SOLR_EXTENSION_VERSION ] { 2.0.0 }
+    Constant [ string SOLR_EXTENSION_VERSION ] { 2.1.0 }
   }
 
   - Functions {
@@ -20,7 +20,7 @@ Extension [ <persistent> extension #169 solr version 2.0.0 ] {
     }
   }
 
-  - Classes [19] {
+  - Classes [20] {
     Class [ <internal:solr> final class SolrObject implements ArrayAccess ] {
 
       - Constants [0] {
@@ -2051,6 +2051,1360 @@ Extension [ <persistent> extension #169 solr version 2.0.0 ] {
       }
     }
 
+    Class [ <internal:solr> class SolrDisMaxQuery extends SolrQuery implements Serializable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [1] {
+        Property [ <default> protected $_hashtable_index ]
+      }
+
+      - Methods [194] {
+        Method [ <internal:solr, overwrites SolrQuery, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $q ]
+          }
+        }
+
+        Method [ <internal:solr> public method setQueryAlt ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $q ]
+          }
+        }
+
+        Method [ <internal:solr> public method addQueryField ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $field ]
+            Parameter #1 [ <optional> $boost ]
+          }
+        }
+
+        Method [ <internal:solr> public method removeQueryField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:solr> public method addPhraseField ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $field ]
+            Parameter #1 [ <required> $boost ]
+            Parameter #2 [ <optional> $slop ]
+          }
+        }
+
+        Method [ <internal:solr> public method removePhraseField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:solr> public method setPhraseFields ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fields ]
+          }
+        }
+
+        Method [ <internal:solr> public method setPhraseSlop ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $slop ]
+          }
+        }
+
+        Method [ <internal:solr> public method setQueryPhraseSlop ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $slop ]
+          }
+        }
+
+        Method [ <internal:solr> public method setBoostQuery ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $q ]
+          }
+        }
+
+        Method [ <internal:solr> public method addBoostQuery ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $field ]
+            Parameter #1 [ <required> $value ]
+            Parameter #2 [ <optional> $boost ]
+          }
+        }
+
+        Method [ <internal:solr> public method removeBoostQuery ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:solr> public method setBoostFunction ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $function ]
+          }
+        }
+
+        Method [ <internal:solr> public method setMinimumMatch ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr> public method setTieBreaker ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $tieBreaker ]
+          }
+        }
+
+        Method [ <internal:solr> public method useDisMaxQueryParser ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method useEDisMaxQueryParser ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method setBigramPhraseFields ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fields ]
+          }
+        }
+
+        Method [ <internal:solr> public method addBigramPhraseField ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $field ]
+            Parameter #1 [ <required> $boost ]
+            Parameter #2 [ <optional> $slop ]
+          }
+        }
+
+        Method [ <internal:solr> public method removeBigramPhraseField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:solr> public method setBigramPhraseSlop ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $slop ]
+          }
+        }
+
+        Method [ <internal:solr> public method setTrigramPhraseFields ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fields ]
+          }
+        }
+
+        Method [ <internal:solr> public method addTrigramPhraseField ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $field ]
+            Parameter #1 [ <required> $boost ]
+            Parameter #2 [ <optional> $slop ]
+          }
+        }
+
+        Method [ <internal:solr> public method removeTrigramPhraseField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:solr> public method setTrigramPhraseSlop ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $slop ]
+          }
+        }
+
+        Method [ <internal:solr> public method addUserField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:solr> public method removeUserField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:solr> public method setUserFields ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fields ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery, prototype SolrModifiableParams, dtor> public method __destruct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setQuery ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $q ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getQuery ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setStart ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $start ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getStart ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setRows ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $rows ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getRows ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &addField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &removeField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getFields ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &addSortField ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $field ]
+            Parameter #1 [ <optional> $order ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &removeSortField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getSortFields ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &addFilterQuery ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fq ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &removeFilterQuery ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fq ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getFilterQueries ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setShowDebugInfo ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $flag ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setExplainOther ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $flag ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setTimeAllowed ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $timeAllowed ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getTimeAllowed ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setOmitHeader ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $flag ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setEchoHandler ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $flag ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setEchoParams ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $type ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setFacet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getFacet ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &addFacetField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &removeFacetField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getFacetFields ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &addFacetQuery ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &removeFacetQuery ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getFacetQueries ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setFacetPrefix ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getFacetPrefix ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setFacetSort ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getFacetSort ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setFacetLimit ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getFacetLimit ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setFacetOffset ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getFacetOffset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setFacetMinCount ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getFacetMinCount ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setFacetMissing ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getFacetMissing ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setFacetMethod ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getFacetMethod ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setFacetEnumCacheMinDefaultFrequency ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &addFacetDateField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &removeFacetDateField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getFacetDateFields ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setFacetDateStart ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getFacetDateStart ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setFacetDateEnd ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getFacetDateEnd ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setFacetDateGap ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getFacetDateGap ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setFacetDateHardEnd ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getFacetDateHardEnd ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &addFacetDateOther ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &removeFacetDateOther ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getFacetDateOther ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setHighlight ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getHighlight ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &addHighlightField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &removeHighlightField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getHighlightFields ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setHighlightSnippets ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getHighlightSnippets ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setHighlightFragsize ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getHighlightFragsize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setHighlightMergeContiguous ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getHighlightMergeContiguous ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setHighlightRequireFieldMatch ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getHighlightRequireFieldMatch ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setHighlightMaxAnalyzedChars ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getHighlightMaxAnalyzedChars ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setHighlightAlternateField ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getHighlightAlternateField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setHighlightMaxAlternateFieldLength ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getHighlightMaxAlternateFieldLength ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setHighlightFormatter ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getHighlightFormatter ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setHighlightSimplePre ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getHighlightSimplePre ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setHighlightSimplePost ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getHighlightSimplePost ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setHighlightFragmenter ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getHighlightFragmenter ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setHighlightUsePhraseHighlighter ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getHighlightUsePhraseHighlighter ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setHighlightHighlightMultiTerm ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getHighlightHighlightMultiTerm ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setHighlightRegexSlop ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getHighlightRegexSlop ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setHighlightRegexPattern ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getHighlightRegexPattern ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setHighlightRegexMaxAnalyzedChars ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getHighlightRegexMaxAnalyzedChars ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setStats ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getStats ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &addStatsField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &removeStatsField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getStatsFields ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &addStatsFacet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &removeStatsFacet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getStatsFacets ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setMlt ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getMlt ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setMltCount ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getMltCount ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &addMltField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &removeMltField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getMltFields ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &addMltQueryField ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $field ]
+            Parameter #1 [ <required> $boost ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &removeMltQueryField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getMltQueryFields ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setMltMinTermFrequency ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getMltMinTermFrequency ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setMltMinDocFrequency ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getMltMinDocFrequency ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setMltMinWordLength ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getMltMinWordLength ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setMltMaxWordLength ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getMltMaxWordLength ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setMltMaxNumTokens ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getMltMaxNumTokens ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setMltMaxNumQueryTerms ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getMltMaxNumQueryTerms ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setMltBoost ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getMltBoost ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setTerms ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getTerms ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setTermsField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getTermsField ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setTermsLowerBound ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getTermsLowerBound ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setTermsUpperBound ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getTermsUpperBound ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setTermsIncludeLowerBound ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getTermsIncludeLowerBound ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setTermsIncludeUpperBound ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getTermsIncludeUpperBound ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setTermsMinCount ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getTermsMinCount ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setTermsMaxCount ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getTermsMaxCount ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setTermsPrefix ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getTermsPrefix ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setTermsLimit ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getTermsLimit ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setTermsReturnRaw ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getTermsReturnRaw ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setTermsSort ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getTermsSort ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrParams> public method &setParam ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrParams> public method &addParam ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrParams> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrParams> public method toString ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $url_encode ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrParams> public method getParams ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrParams> public method getParam ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $param_name ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrParams> public method getPreparedParams ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrParams> public method __clone ] {
+        }
+
+        Method [ <internal:solr, inherits SolrParams, prototype Serializable> public method serialize ] {
+        }
+
+        Method [ <internal:solr, inherits SolrParams, prototype Serializable> public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serialized ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrParams> public method &add ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrParams> public method &set ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrParams> public method get ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $param_name ]
+          }
+        }
+      }
+    }
+
     Class [ <internal:solr> abstract class SolrResponse ] {
 
       - Constants [2] {
@@ -2078,7 +3432,7 @@ Extension [ <persistent> extension #169 solr version 2.0.0 ] {
         Property [ <default> protected $http_digested_response ]
       }
 
-      - Methods [11] {
+      - Methods [12] {
         Method [ <internal:solr> public method getHttpStatus ] {
 
           - Parameters [0] {
@@ -2145,6 +3499,12 @@ Extension [ <persistent> extension #169 solr version 2.0.0 ] {
           - Parameters [0] {
           }
         }
+
+        Method [ <internal:solr> public method getArrayResponse ] {
+
+          - Parameters [0] {
+          }
+        }
       }
     }
 
@@ -2175,7 +3535,7 @@ Extension [ <persistent> extension #169 solr version 2.0.0 ] {
         Property [ <default> protected $http_digested_response ]
       }
 
-      - Methods [13] {
+      - Methods [14] {
         Method [ <internal:solr, ctor> public method __construct ] {
 
           - Parameters [0] {
@@ -2250,6 +3610,12 @@ Extension [ <persistent> extension #169 solr version 2.0.0 ] {
         }
 
         Method [ <internal:solr, inherits SolrResponse> public method getResponse ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrResponse> public method getArrayResponse ] {
 
           - Parameters [0] {
           }
@@ -2284,7 +3650,7 @@ Extension [ <persistent> extension #169 solr version 2.0.0 ] {
         Property [ <default> protected $http_digested_response ]
       }
 
-      - Methods [13] {
+      - Methods [14] {
         Method [ <internal:solr, ctor> public method __construct ] {
 
           - Parameters [0] {
@@ -2363,6 +3729,12 @@ Extension [ <persistent> extension #169 solr version 2.0.0 ] {
           - Parameters [0] {
           }
         }
+
+        Method [ <internal:solr, inherits SolrResponse> public method getArrayResponse ] {
+
+          - Parameters [0] {
+          }
+        }
       }
     }
 
@@ -2393,7 +3765,7 @@ Extension [ <persistent> extension #169 solr version 2.0.0 ] {
         Property [ <default> protected $http_digested_response ]
       }
 
-      - Methods [13] {
+      - Methods [14] {
         Method [ <internal:solr, ctor> public method __construct ] {
 
           - Parameters [0] {
@@ -2472,6 +3844,12 @@ Extension [ <persistent> extension #169 solr version 2.0.0 ] {
             Parameter #0 [ <optional> $parser_mode ]
           }
         }
+
+        Method [ <internal:solr, inherits SolrResponse> public method getArrayResponse ] {
+
+          - Parameters [0] {
+          }
+        }
       }
     }
 
@@ -2502,7 +3880,7 @@ Extension [ <persistent> extension #169 solr version 2.0.0 ] {
         Property [ <default> protected $http_digested_response ]
       }
 
-      - Methods [13] {
+      - Methods [14] {
         Method [ <internal:solr, ctor> public method __construct ] {
 
           - Parameters [0] {
@@ -2577,6 +3955,12 @@ Extension [ <persistent> extension #169 solr version 2.0.0 ] {
         }
 
         Method [ <internal:solr, inherits SolrResponse> public method getResponse ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrResponse> public method getArrayResponse ] {
 
           - Parameters [0] {
           }

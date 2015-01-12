@@ -26,8 +26,8 @@
 Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
 Name:           %{?scl_prefix}php-pecl-solr2
-Version:        2.0.0
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Version:        2.1.0
+Release:        0.1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
@@ -41,6 +41,7 @@ BuildRequires:  %{?scl_prefix}php-curl
 BuildRequires:  %{?scl_prefix}php-json
 BuildRequires:  curl-devel
 BuildRequires:  libxml2-devel
+BuildRequires:  pcre-devel
 
 Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
@@ -108,14 +109,18 @@ Please consult the documentation for more details on features.
 Warning: PECL Solr 2 is not compatible with Solr Server < 4.0
 PECL Solr 1 is available in php-pecl-solr package.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+
 
 %prep
 %setup -c -q
 
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
+
 mv %{pecl_name}-%{version}%{?prever} NTS
 
 cd NTS
-
 # Check version
 extver=$(sed -n '/#define PHP_SOLR_VERSION /{s/.* "//;s/".*$//;p}' php_solr_version.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -167,10 +172,7 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 
-# Test & Documentation
-for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
+# Documentation
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -198,6 +200,8 @@ cd NTS
    -m | grep %{pecl_name}
 
 : Upstream test suite for NTS extension
+sed -e '/SOLR_SERVER_CONFIGURED/s/true/false/' -i tests/test.config.inc
+
 TEST_PHP_ARGS="-n -d extension=curl.so -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
 REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
@@ -216,6 +220,8 @@ cd ../ZTS
    -m | grep %{pecl_name}
 
 : Upstream test suite for ZTS extension
+sed -e '/SOLR_SERVER_CONFIGURED/s/true/false/' -i tests/test.config.inc
+
 TEST_PHP_ARGS="-n -d extension=curl.so -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
 REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
@@ -231,7 +237,6 @@ rm -rf %{buildroot}
 %files
 %defattr(-, root, root, -)
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -244,6 +249,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan 11 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.1
+- test build of upcomming 2.1.0
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 2.0.0-2.1
 - Fedora 21 SCL mass rebuild
 
