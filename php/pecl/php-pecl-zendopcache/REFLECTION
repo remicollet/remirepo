@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #165 Zend OPcache version 7.0.4-devFE ] {
+Extension [ <persistent> extension #69 Zend OPcache version 7.0.4FE ] {
 
   - INI {
     Entry [ opcache.enable <ALL> ]
@@ -50,7 +50,7 @@ Extension [ <persistent> extension #165 Zend OPcache version 7.0.4-devFE ] {
       Current = ''
     }
     Entry [ opcache.blacklist_filename <SYSTEM> ]
-      Current = '/etc/php.d/opcache*.blacklist'
+      Current = '/opt/remi/php54/root/etc/php.d/opcache*.blacklist'
     }
     Entry [ opcache.max_file_size <SYSTEM> ]
       Current = '0'
@@ -65,7 +65,7 @@ Extension [ <persistent> extension #165 Zend OPcache version 7.0.4-devFE ] {
       Current = '1'
     }
     Entry [ opcache.fast_shutdown <SYSTEM> ]
-      Current = '1'
+      Current = '0'
     }
     Entry [ opcache.optimization_level <SYSTEM> ]
       Current = '0xFFFFFFFF'
