@@ -6,30 +6,34 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit  4c4ab985e372113dbfd0a8192fbd8629bface9bb
+# 6.0.0 + 5 commits, 1 for php 5.3 fix (needed in EPEL-6)
+%global gh_commit  eb29754d1f82288911ca38dc52d62e307275288d
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   sabberworm
 %global gh_project PHP-CSS-Parser
 
 Name:           php-%{gh_project}
 Summary:        A Parser for CSS Files
-Version:        5.1.2
-Release:        1%{?dist}
+Version:        6.0.0
+Release:        1.20141009git%{gh_short}%{?dist}
 License:        MIT
 Group:          Development/Libraries
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?gh_short:-%{gh_short}}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 # For tests
-BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
+BuildRequires:  %{_bindir}/phpunit
 
+# From phpcompatinfo for version 6.0.0
 Requires:       php-iconv
 Requires:       php-mbstring
 Requires:       php-pcre
 Requires:       php-spl
+
+Provides:       php-composer(sabberworm/php-css-parser) = %{version}
 
 
 %description
@@ -64,6 +68,10 @@ phpunit --bootstrap bootstrap.php .
 
 
 %changelog
+* Tue Jan 13 2015 Remi Collet <remi@fedoraproject.org> - 6.0.0-1.20141009giteb29754
+- update to 6.0.0 + fix for PHP 5.3
+- add provides php-composer(sabberworm/php-css-parser)
+
 * Mon Apr 28 2014 Remi Collet <remi@fedoraproject.org> - 5.1.2-1
 - update to 5.1.2
 
