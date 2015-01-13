@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-JavascriptMinify
-Version:        1.1.1
+Version:        1.1.2
 Release:        1%{?dist}
 Summary:        Javascript Minification
 
@@ -42,6 +42,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-json
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-javascriptminify) = %{version}
 
 
 %description
@@ -97,6 +98,10 @@ fi
 
 
 %changelog
+* Tue Jan 13 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
+- Update to 1.1.2
+- add provides php-composer(horde/horde-javascriptminify)
+
 * Wed Dec 03 2014 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - Update to 1.1.1
 
