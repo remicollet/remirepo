@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Test
-Version:        2.4.7
+Version:        2.4.8
 Release:        1%{?dist}
 Summary:        Horde testing base classes
 
@@ -55,6 +55,7 @@ Requires:       php-spl
 Requires:       php-phpunit-PHPUnit >= 3.5.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-test) = %{version}
 
 
 %description
@@ -112,6 +113,10 @@ fi
 
 
 %changelog
+* Tue Jan 13 2015 Remi Collet <remi@fedoraproject.org> - 2.4.8-1
+- Update to 2.4.8 (no change)
+- add provides php-composer(horde/horde-test)
+
 * Mon Dec 29 2014 Remi Collet <remi@fedoraproject.org> - 2.4.7-1
 - Update to 2.4.7
 

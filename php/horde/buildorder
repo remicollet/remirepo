@@ -20,7 +20,7 @@ Build order
 	* Horde_Browser             2.0.8        R: Horde_Exception, Horde_Translation, Horde_Util
 	* Horde_Cli                 2.0.6       I: Horde_Test R: Horde_Support, Horde_Translation
 	* Horde_Log                 2.1.1       I: Horde_Test R: Horde_Constraint, Horde_Exception, Horde_Cli, Horde_Scribe
-	* Horde_Test                2.4.7        R: Horde_Support, Horde_Util, Horde_Cli, Horde_Log
+	* Horde_Test                2.4.8        R: Horde_Support, Horde_Util, Horde_Cli, Horde_Log
 	* Horde_Text_Diff           2.1.1      BR: Horde_Test  R: Horde_Exception, Horde_Util
 	* Horde_Text_Flowed         2.0.2      BR: Horde_Test  R: Horde_Util
 	* Horde_Url                 2.2.4      BR: Horde_Test  R: Horde_Exception
@@ -38,7 +38,7 @@ Build order
 	* Horde_Http                2.1.3      BR: Horde_Test  R: Horde_Exception, Horde_Support
 	* Horde_Image               2.1.0      BR: Horde_Test  R: Horde_Exception, Horde_Support, Horde_Translation, Horde_Util
 	* Horde_Injector            2.0.4      BR: Horde_Test  R: Horde_Exception
-	* Horde_JavascriptMinify    1.1.1        R: Horde_Exception, Horde_Log, Horde_Util
+	* Horde_JavascriptMinify    1.1.2        R: Horde_Exception, Horde_Log, Horde_Util
 	* Horde_Kolab_Format        2.0.6      BR: Horde_Test  R: Horde_Exception, Horde_Support
 	* Horde_Ldap                2.2.0      BR: Horde_Test  R: Horde_Exception, Horde_Util
 	* Horde_LoginTasks          2.0.4      BR: Horde_Test, Horde_Date  R: Horde_Translation, Horde_Date
