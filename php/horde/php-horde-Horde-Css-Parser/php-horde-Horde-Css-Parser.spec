@@ -12,7 +12,7 @@
 
 Name:           php-horde-Horde-Css-Parser
 Version:        1.0.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde CSS Parser
 
 Group:          Development/Libraries
@@ -31,7 +31,7 @@ BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
-BuildRequires:  php-PHP-CSS-Parser >= 5.0.8
+BuildRequires:  php-composer(sabberworm/php-css-parser) >= 6
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -40,7 +40,8 @@ Requires:       php(language) >= 5.3.0
 Requires:       php-mbstring
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
-Requires:       php-PHP-CSS-Parser >= 5.0.8
+# Unbundled library
+Requires:       php-composer(sabberworm/php-css-parser) >= 6
 # From phpcompatinfo report for 1.0.2
 Requires:       php-iconv
 Requires:       php-pcre
@@ -115,6 +116,9 @@ fi
 
 
 %changelog
+* Tue Jan 13 2015 Remi Collet <remi@fedoraproject.org> - 1.0.6-2
+- raise dependency on sabberworm/php-css-parser >= 6
+
 * Tue Jan 13 2015 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
 - Update to 1.0.6 (no change)
 
