@@ -1,4 +1,4 @@
-%global prever    dev
+#global prever    dev
 #global commit    725ba9de4005144d137d2a7a70f760068fc3d306
 #global short     %(c=%{commit}; echo ${c:0:7})
 
@@ -17,7 +17,7 @@ Name:          gd
 Name:          gd-last
 %endif
 Version:       2.1.1
-Release:       0.1%{?prever}%{?short}%{?dist}
+Release:       1%{?prever}%{?short}%{?dist}
 Group:         System Environment/Libraries
 License:       MIT
 URL:           http://libgd.bitbucket.org/
@@ -169,7 +169,8 @@ make check
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING
+%{!?_licensedir:%global license %%doc}
+%license COPYING
 %{_libdir}/*.so.*
 
 %files progs
@@ -187,6 +188,9 @@ make check
 
 
 %changelog
+* Wed Jan 14 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
+- update to 2.1.1 final
+
 * Thu Dec 25 2014 Remi Collet <remi@fedoraproject.org> - 2.1.1-0.1
 - test build of 2.1.1-dev
 
