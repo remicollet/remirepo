@@ -1,8 +1,8 @@
 #
 # RPM spec file for php-twig
 #
-# Copyright (c) 2014 Shawn Iwinski <shawn.iwinski@gmail.com>
-#                    Remi Collet <remi@fedoraproject.org>
+# Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+#                         Remi Collet <remi@fedoraproject.org>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,8 +12,8 @@
 
 %global github_owner     fabpot
 %global github_name      Twig
-%global github_version   1.16.3
-%global github_commit    6dc11a1e8ecfc30e2c68aaeb218148409d8e68af
+%global github_version   1.17.0
+%global github_commit    2493970fa4d587eca73f77e6d8bd48a8bdd4c608
 
 # Lib
 %global composer_vendor  twig
@@ -59,8 +59,8 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel >= %{php_min_ver}
 %if %{with_tests}
 # For tests
-BuildRequires: %{?scl_prefix}php-phpunit-PHPUnit
-# For tests: phpcompatinfo (computed from version 1.16.0)
+BuildRequires: %{_bindir}/phpunit
+# For tests: phpcompatinfo (computed from version 1.17.0)
 BuildRequires: %{?scl_prefix}php-ctype
 BuildRequires: %{?scl_prefix}php-date
 BuildRequires: %{?scl_prefix}php-dom
@@ -76,7 +76,7 @@ BuildRequires: %{?scl_prefix}php-spl
 # Lib
 ## composer.json
 Requires:      %{?scl_prefix}php(language) >= %{php_min_ver}
-## phpcompatinfo (computed from version 1.16.0)
+## phpcompatinfo (computed from version 1.17.0)
 Requires:      %{?scl_prefix}php-ctype
 Requires:      %{?scl_prefix}php-date
 Requires:      %{?scl_prefix}php-dom
@@ -263,6 +263,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 14 2015 Remi Collet <remi@fedoraproject.org> - 1.17.0-1
+- Update to 1.17.0
+
 * Fri Dec 26 2014 Remi Collet <remi@fedoraproject.org> - 1.16.3-1
 - Update to 1.16.3
 
