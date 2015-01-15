@@ -122,7 +122,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
-Requires:       php-pear(phpseclib/File_ASN1)
+Requires:       php-pear(phpseclib.sourceforge.net/File_ASN1)
 # From package.xml, optional
 Requires:       php-pear(%{pear_channel}/Horde_Service_Gravatar) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Service_Gravatar) <  2.0.0
