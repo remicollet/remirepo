@@ -8,7 +8,6 @@
     "phpunit\/phpunit-story": "php-phpunit-PHPUnit-Story",
     "sebastian\/phpcpd": "php-phpunit-phpcpd",
     "sebastian\/phpdcd": "php-phpunit-phpdcd",
-    "ircmaxell\/password-compat": "php-password-compat",
     "jasig\/phpcas": "php-pear-CAS",
     "theseer\/fxsl": "php-theseer-fxsl"
 }
