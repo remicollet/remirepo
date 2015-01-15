@@ -3,7 +3,7 @@
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.12.9
+Version:         1.12.10
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -47,6 +47,8 @@ Obsoletes: %{name}-tests < 1.9.6-2
 # Gdata moved back into the main package
 Provides:  %{name}-Gdata = %{version}-%{release}
 Obsoletes: %{name}-Gdata < 1.12.0-1
+# Dropped in 1.2.10
+Obsoletes: %{name}-demos < 1.12.10
 
 %description
 Extending the art & spirit of PHP, Zend Framework is based on simplicity,
@@ -57,14 +59,14 @@ available APIs from leading vendors like Google, Amazon, Yahoo!, Flickr, as
 well as API providers and catalogers like StrikeIron and ProgrammableWeb.
 
 
-%package demos
-Summary:  Demos for the Zend Framework
-Group:    Development/Libraries
-Requires: %{name} = %{version}-%{release}
-
-%description demos
-This package includes Zend Framework demos for the Feeds, Gdata, Mail, OpenId,
-Pdf, Search-Lucene and Services sub packages.
+# %package demos
+# Summary:  Demos for the Zend Framework
+# Group:    Development/Libraries
+# Requires: %{name} = %{version}-%{release}
+#
+# %description demos
+# This package includes Zend Framework demos for the Feeds, Gdata, Mail, OpenId,
+# Pdf, Search-Lucene and Services sub packages.
 
 
 %package extras
@@ -461,7 +463,7 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/php
 rm -f library/Zend/.Version.php.un~
 
 cp -pr library/Zend $RPM_BUILD_ROOT%{_datadir}/php
-cp -pr demos/Zend $RPM_BUILD_ROOT%{_datadir}/php/Zend/demos
+#cp -pr demos/Zend $RPM_BUILD_ROOT%{_datadir}/php/Zend/demos
 
 # ZendX
 cd extras
@@ -638,10 +640,10 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %{_datadir}/php/Zend/Xml
 %{_datadir}/php/Zend/XmlRpc
 
-%files demos
-%defattr(-,root,root,-)
-%{_datadir}/php/Zend/demos
-%license LICENSE.txt
+# %files demos
+# %defattr(-,root,root,-)
+# %{_datadir}/php/Zend/demos
+# %license LICENSE.txt
 
 %files extras
 %defattr(-,root,root,-)
@@ -824,6 +826,10 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 
 
 %changelog
+* Thu Jan 15 2015 Remi Collet <RPMS@FamilleCollet.com> - 1.12.10-1
+- update to 1.12.10
+- drop demos subpackage
+
 * Wed Sep 17 2014 Remi Collet <RPMS@FamilleCollet.com> - 1.12.9-1
 - update to 1.12.9
 - fix License handling
