@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-imp
-Version:        6.2.4
+Version:        6.2.5
 Release:        1%{?dist}
 Summary:        A web based webmail system
 
@@ -122,6 +122,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Vfs) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Vfs) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_View) <  3.0.0
+Requires:       php-pear(phpseclib/File_ASN1)
 # From package.xml, optional
 Requires:       php-pear(%{pear_channel}/Horde_Service_Gravatar) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Service_Gravatar) <  2.0.0
@@ -135,6 +136,7 @@ Requires:       php-pcre
 Requires:       php-spl
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/imp) = %{version}
 Obsoletes:      imp < 5
 Provides:       imp = %{version}
 
@@ -255,6 +257,11 @@ fi
 
 
 %changelog
+* Thu Jan 15 2015 Remi Collet <remi@fedoraproject.org> - 6.2.5-1
+- Update to 6.2.5
+- add dependency on phpseclib/File_ASN1
+- add provides php-composer(horde/imp)
+
 * Wed Dec 03 2014 Remi Collet <remi@fedoraproject.org> - 6.2.4-1
 - Update to 6.2.4
 - raide dependency: Horde_Core >= 2.17.0
