@@ -68,6 +68,11 @@ class PkgClient {
 function run($name, $rpm) {
 	global $quiet, $verb, $client;
 
+	list($owner, $library) = explode('/', $name, 2);
+	if ($owner == 'horde') {
+		return;
+	}
+
 	if (!$quiet) {
 		printf(" %-40s\r", $rpm);
 	}
