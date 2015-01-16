@@ -71,7 +71,7 @@ BuildRequires: php-xmlreader
 BuildRequires: php-xmlwriter
 BuildRequires: php-zip
 BuildRequires: php-zlib
-#BuildRequires: php-composer(ircmaxell/random-lib)
+BuildRequires: php-composer(ircmaxell/random-lib)
 BuildRequires: php-composer(mikey179/vfsStream) >= 1.2
 %endif
 
@@ -1877,8 +1877,8 @@ $loader = new UniversalClassLoader();
 $loader->registerNamespace('Zend',             __DIR__.'/../library');
 $loader->registerNamespace('ZendTest',         __DIR__);
 $loader->registerNamespace('org\\bovigo\\vfs', '/usr/share/php');
-//$loader->registerNamespace('RandomLib',      '/usr/share/php');
-//$loader->registerNamespace('SecurityLib',    '/usr/share/php');
+$loader->registerNamespace('RandomLib',      '/usr/share/php');
+$loader->registerNamespace('SecurityLib',    '/usr/share/php');
 $loader->useIncludePath(true);
 $loader->register();
 AUTOLOADER
@@ -1898,8 +1898,6 @@ rm    ZendTest/Version/VersionTest.php
 rm    ZendTest/Ldap/Converter/ConverterTest.php
 # Need mongodb server
 rm    ZendTest/Session/SaveHandler/MongoDBTest.php
-# Need ircmaxell/random-lib
-rm    ZendTest/Math/RandTest.php
 # Strangly fail, lack of date.timezone
 rm    ZendTest/Session/SessionManagerTest.php
 # Need investigation
@@ -1911,9 +1909,7 @@ rm    ZendTest/Session/SaveHandler/DbTableGatewayTest.php
 
 RET=0
 for dir in ZendTest/[A-Z]*
-do phpunit \
-     -d date.timezone="UTC" \
-     $dir || RET=1
+do phpunit $dir || RET=1
 done
 exit $RET
 %endif
