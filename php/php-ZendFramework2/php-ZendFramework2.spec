@@ -1057,6 +1057,7 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.math.introduction
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json (optional)
+#     ircmaxell/random-lib
 Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
 Requires: php-composer(ircmaxell/random-lib)
 Requires: php-bcmath
