@@ -6,14 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0eaad991c1756842f26dfbcbc6effcabb5003d0a
+%global gh_commit    13efa4368bb2ac88bb3b1459b487d907de4dbf7c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     ircmaxell
 %global gh_project   RandomLib
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-ircmaxell-random-lib
-Version:        1.0.0
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        A Library For Generating Secure Random Numbers
 
@@ -44,12 +44,11 @@ BuildRequires:  php-composer(mikey179/vfsStream) >= 1.1
 #      "ircmaxell/security-lib": "1.0.*@dev",
 Requires:       php(language) >= 5.3.2
 Requires:       php-composer(ircmaxell/security-lib) >= 1.0
-# From phpcompatinfo report for version 1.0.0
+# From phpcompatinfo report for version 1.1.0
 Requires:       php-hash
 Requires:       php-openssl
 Requires:       php-posix
 Requires:       php-spl
-# optional php-bcmath or php-gmp
 
 Provides:       php-composer(ircmaxell/random-lib) = %{version}
 
@@ -62,6 +61,8 @@ This library is useful in security contexts.
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+
+chmod -x lib/RandomLib/Generator.php
 
 
 %build
@@ -77,7 +78,6 @@ cp -pr lib/* %{buildroot}%{_datadir}/php
 %check
 %if %{with_tests}
 : Generate autoloader
-%{_bindir}/php -d date.timezone=UTC \
 %{_bindir}/phpab \
     --basedir $PWD \
     --output autoload.php \
@@ -87,8 +87,7 @@ cp -pr lib/* %{buildroot}%{_datadir}/php
 
 : Run test suite
 %{_bindir}/phpunit \
-    --bootstrap autoload.php \
-    -d date.timezone=UTC
+    --bootstrap autoload.php
 %else
 : Test suite disabled
 %endif
@@ -108,5 +107,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan 16 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- update to 1.1.0
+
 * Wed Aug 13 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package
