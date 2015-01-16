@@ -1,7 +1,7 @@
 #
 # RPM spec file for php-ZendFramework2
 #
-# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #                         Remi Collet <remi@fedoraproject.org>
 #
 # License: MIT
@@ -16,8 +16,8 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:      php-ZendFramework2
-Version:   2.3.3
-Release:   2%{?dist}
+Version:   2.3.4
+Release:   1%{?dist}
 Summary:   Zend Framework 2
 
 Group:     Development/Libraries
@@ -25,18 +25,10 @@ License:   BSD
 URL:       http://framework.zend.com
 Source0:   https://packages.zendframework.com/releases/ZendFramework-%{version}/ZendFramework-%{version}.tgz
 # git clone https://github.com/zendframework/zf2.git ; cf zf2
-# OR cd /worl/GIT/zf2; git pull
-# git checkout release-2.3.3
-# tar czf ../ZendFramework-tests-2.3.3.tgz tests
+# OR cd /work/GIT/zf2; git pull
+# git checkout release-2.3.4
+# tar czf ../ZendFramework-tests-2.3.4.tgz tests
 Source1:   ZendFramework-tests-%{version}.tgz
-
-# Patch needed for GLPI
-# https://bugzilla.redhat.com/1014478
-#
-# ZF-11974: Zend_Translate, Plural - unable to get translation of terms when
-# singular = plural (ex: software)
-# http://framework.zend.com/issues/browse/ZF-11974
-Patch0:    %{name}-glpi.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -255,8 +247,8 @@ Requires: %{name}-common         = %{version}-%{release}
 Requires: php-composer(%{composer_vendor}/zend-eventmanager)     = %{version}
 Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
 Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
-# composer.json (optional)
 Requires: php-composer(%{composer_vendor}/zend-serializer)       = %{version}
+# composer.json (optional)
 Requires: php-composer(%{composer_vendor}/zend-session)          = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
@@ -391,6 +383,9 @@ URL:      http://framework.zend.com/manual/2.3/en/modules/zend.console.introduct
 Requires: %{name}-common = %{version}-%{release}
 # composer.json
 Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
+# composer.json (optional)
+Requires: php-composer(%{composer_vendor}/zend-validator)        = %{version}
+Requires: php-composer(%{composer_vendor}/zend-filter)           = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-pcre
 Requires: php-reflection
@@ -472,10 +467,11 @@ Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.3/en/index.html#zend-db
 
 Requires: %{name}-common         = %{version}-%{release}
+# composer.json
+Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
 Requires: php-composer(%{composer_vendor}/zend-eventmanager)     = %{version}
 Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
-Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-pcre
@@ -895,6 +891,7 @@ Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
 Requires: php-composer(%{composer_vendor}/zend-http)             = %{version}
 Requires: php-composer(%{composer_vendor}/zend-server)           = %{version}
+Requires: php-composer(%{composer_vendor}/zendxml)               = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-json
 Requires: php-mbstring
@@ -1144,7 +1141,6 @@ Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 Requires: php-composer(%{composer_vendor}/zend-config)           = %{version}
 Requires: php-composer(%{composer_vendor}/zend-console)          = %{version}
 Requires: php-composer(%{composer_vendor}/zend-loader)           = %{version}
-Requires: php-composer(%{composer_vendor}/zend-mvc)              = %{version}
 Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-spl
@@ -1290,6 +1286,8 @@ Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.3/en/modules/zend.permissions.acl.intro.html
 
 Requires: %{name}-common = %{version}-%{release}
+# composer.json (optional)
+Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-spl
 
@@ -1459,11 +1457,11 @@ URL:      http://framework.zend.com/manual/2.3/en/index.html#zend-session
 
 Requires: %{name}-common         = %{version}-%{release}
 # composer.json
+Requires: php-composer(%{composer_vendor}/zend-eventmanager)     = %{version}
 Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
 Requires: php-composer(%{composer_vendor}/zend-cache)            = %{version}
 Requires: php-composer(%{composer_vendor}/zend-db)               = %{version}
-Requires: php-composer(%{composer_vendor}/zend-eventmanager)     = %{version}
 Requires: php-composer(%{composer_vendor}/zend-http)             = %{version}
 Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
 Requires: php-composer(%{composer_vendor}/zend-validator)        = %{version}
@@ -1525,6 +1523,7 @@ Requires: %{name}-common         = %{version}-%{release}
 Requires: php-composer(%{composer_vendor}/zend-eventmanager)     = %{version}
 Requires: php-composer(%{composer_vendor}/zend-serializer)       = %{version}
 Requires: php-composer(%{composer_vendor}/zend-servicemanager)   = %{version}
+Requires: php-composer(%{composer_vendor}/zend-filter)           = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-iconv
@@ -1788,6 +1787,8 @@ Requires: php-composer(%{composer_vendor}/zend-math)             = %{version}
 Requires: php-composer(%{composer_vendor}/zend-server)           = %{version}
 Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 Requires: php-composer(%{composer_vendor}/zendxml)               = %{version}
+# composer.json (optional)
+Requires: php-composer(%{composer_vendor}/zend-cache)            = %{version}
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-date
 Requires: php-dom
@@ -1844,11 +1845,6 @@ If the XML document uses ENTITY the library throw an Exception.
 
 %prep
 %setup -q -n ZendFramework-%{version} -a 1
-
-%patch0 -p0
-
-# php-ZendFramework2-I18n.noarch: E: backup-file-in-package /usr/share/php/Zend/I18n/Translator/Loader/Gettext.php.orig
-rm -f library/Zend/I18n/Translator/Loader/Gettext.php.orig
 
 
 %build
@@ -2551,6 +2547,10 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Fri Jan 16 2015 Remi Collet <remi@fedoraproject.org> - 2.3.4-1
+- Update to 2.3.4
+- drop GLPI patch, fixed upstream
+
 * Fri Oct 17 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.3.3-2
 - Drop php-gmp dependency from Math component (BZ #1152440)
 - Fix tests' autoloader
