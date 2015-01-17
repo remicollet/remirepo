@@ -1,29 +1,7 @@
 diff -up ./bin/phpreflect.json.dist.rpm ./bin/phpreflect.json.dist
---- ./bin/phpreflect.json.dist.rpm	2015-01-05 17:32:31.000000000 +0100
-+++ ./bin/phpreflect.json.dist	2015-01-06 17:26:55.756023189 +0100
-@@ -9,6 +9,19 @@
-         {
-             "name": "Analyser",
-             "class": "Bartlett\\Reflect\\Plugin\\Analyser\\AnalyserPlugin"
-+        },
-+        {
-+            "name": "Cache",
-+            "class": "Bartlett\\Reflect\\Plugin\\Cache\\CachePlugin",
-+            "options": {
-+                "adapter": "DoctrineCacheAdapter",
-+                "backend": {
-+                    "class": "Doctrine\\Common\\Cache\\FilesystemCache",
-+                    "args": [
-+                        "%{HOME}/.cache/phpreflect"
-+                    ]
-+                }
-+            }
-         }
-     ],
-     "analysers" : [
 diff -up ./bin/phpreflect.rpm ./bin/phpreflect
---- ./bin/phpreflect.rpm	2015-01-06 17:26:55.757023193 +0100
-+++ ./bin/phpreflect	2015-01-06 17:39:21.867932297 +0100
+--- ./bin/phpreflect.rpm	2015-01-15 17:38:39.000000000 +0100
++++ ./bin/phpreflect	2015-01-16 11:26:45.900540580 +0100
 @@ -1,23 +1,35 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
@@ -42,8 +20,7 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
 +    $vendorDir = '/usr/share/php';
  
      if (!getenv("BARTLETTRC")) {
--        putenv("BARTLETTRC=" . strtolower($appName) . '.json');
-+        putenv("BARTLETTRC=" . strtolower($appName) . '.json');
+         putenv("BARTLETTRC=" . strtolower($appName) . '.json');
      }
  }
 -$loader = require_once $vendorDir . '/autoload.php';
@@ -71,9 +48,9 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
  if (PHP_SAPI !== 'cli') {
      return;
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
---- ./tests/bootstrap.php.rpm	2015-01-06 17:26:55.757023193 +0100
-+++ ./tests/bootstrap.php	2015-01-06 17:44:46.957205474 +0100
-@@ -1,12 +1,21 @@
+--- ./tests/bootstrap.php.rpm	2015-01-16 11:32:46.045016105 +0100
++++ ./tests/bootstrap.php	2015-01-16 11:32:49.152028834 +0100
+@@ -1,16 +1,31 @@
  <?php
  
  $baseDir   = dirname(__DIR__);
@@ -83,10 +60,15 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 -$loader = require_once $vendorDir . '/autoload.php';
 -$loader->addClassMap(
 -    array(
--        'Bartlett\Tests\Reflect\Model\GenericModelTest'
--            => __DIR__ . '/Model/GenericModelTest.php',
++$tab = array(
+         'Bartlett\Tests\Reflect\Analyser\FooAnalyser'
+             => __DIR__ . '/Analyser/FooAnalyser.php',
+         'Bartlett\Tests\Reflect\Analyser\BarAnalyser'
+             => __DIR__ . '/Analyser/BarAnalyser.php',
+         'Bartlett\Tests\Reflect\Model\GenericModelTest'
+             => __DIR__ . '/Model/GenericModelTest.php',
 -    )
--);
+ );
 +require_once $vendorDir . '/PhpParser/Autoloader.php';
 +PhpParser\Autoloader::register();
 +
@@ -102,5 +84,6 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 +$loader->useIncludePath(true);
 +$loader->register();
 +
-+require_once __DIR__ . '/Model/GenericModelTest.php';
-diff -up ./tests/EnvironmentTest.php.rpm ./tests/EnvironmentTest.php
++foreach ($tab as $class => $file) {
++    require_once $file;
++}
