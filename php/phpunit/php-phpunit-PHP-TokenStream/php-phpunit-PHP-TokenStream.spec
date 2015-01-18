@@ -1,5 +1,5 @@
 %global bootstrap    0
-%global gh_commit    f8d5d08c56de5cfd592b3340424a81733259a876
+%global gh_commit    db32c18eba00b121c145575fcbcd4d4d24e6db74
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-token-stream
@@ -13,7 +13,7 @@
 %endif
 
 Name:           php-phpunit-PHP-TokenStream
-Version:        1.3.0
+Version:        1.4.0
 Release:        1%{?dist}
 Summary:        Wrapper around PHP tokenizer extension
 
@@ -81,7 +81,6 @@ sed -e 's:vendor/autoload.php:PHP/Token/Stream/Autoload.php:' \
 # Run tests
 phpunit  \
    --bootstrap tests/bootstrap.php \
-   -d date.timezone=UTC \
    tests
 %endif
 
@@ -106,6 +105,9 @@ fi
 
 
 %changelog
+* Sun Jan 18 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
+- Update to 1.3.0
+
 * Sun Aug 31 2014 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - Update to 1.3.0
 - enable tests during build
