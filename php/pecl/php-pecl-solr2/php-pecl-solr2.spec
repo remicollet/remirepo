@@ -256,7 +256,7 @@ rm -rf %{buildroot}
 
 %changelog
 * Sun Jan 18 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
-- update to 2.0.0
+- update to 2.1.0
 - drop runtime dependency on pear, new scriptlets
 
 * Sun Jan 11 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-0.1
