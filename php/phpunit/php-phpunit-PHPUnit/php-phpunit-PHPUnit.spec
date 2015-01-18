@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    6a5e49a86ce5e33b8d0657abe145057fc513543a
+%global gh_commit    e90575c2bb86290d57a262862dab1da125431576
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,7 +17,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.4.1
+Version:        4.4.2
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -200,6 +200,9 @@ fi
 
 
 %changelog
+* Sun Jan 18 2015 Remi Collet <remi@fedoraproject.org> - 4.4.2-1
+- Update to 4.4.2
+
 * Sun Dec 28 2014 Remi Collet <remi@fedoraproject.org> - 4.4.1-1
 - Update to 4.4.1
 
