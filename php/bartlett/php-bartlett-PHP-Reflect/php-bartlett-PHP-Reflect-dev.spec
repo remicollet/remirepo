@@ -6,15 +6,15 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0189a641c73503d2f23d5f412d9f2b29f2315d79
+%global gh_commit    398cdae6f281153cae534a345abdf555f8fd3efd
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150115
+%global gh_date      20150118
 %global gh_owner     llaville
 %global gh_project   php-reflect
 
 Name:           php-bartlett-PHP-Reflect
 Version:        3.0.0
-%global specrel 2
+%global specrel 3
 Release:        %{?gh_short:0.%{specrel}.%{?gh_date}git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -165,7 +165,10 @@ fi
 
 
 %changelog
-* Fri Jan 16 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.1.20150115git0189a64
+* Mon Jan 19 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.3.20150118git398cdae
+- new 3.0 snapshot
+
+* Fri Jan 16 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.2.20150115git0189a64
 - update to 3.0.0 alpha3
 
 * Tue Jan  6 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.1.20150105git51f7968
