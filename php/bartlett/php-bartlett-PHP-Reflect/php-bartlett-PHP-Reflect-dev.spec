@@ -14,7 +14,7 @@
 
 Name:           php-bartlett-PHP-Reflect
 Version:        3.0.0
-%global specrel 3
+%global specrel 4
 Release:        %{?gh_short:0.%{specrel}.%{?gh_date}git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -26,6 +26,8 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 # Autoloader for RPM - die composer !
 # Enable cache plugin
 Patch0:         %{name}-3.0.0-rpm.patch
+
+Patch1:         %{name}-3.0.0-pr17.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -118,6 +120,7 @@ Documentation: http://php5.laurent-laville.org/reflect/manual/current/en/
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
+%patch1 -p1
 
 sed -e 's/@package_version@/%{version}/' \
     -i $(find src -name \*.php)
@@ -165,6 +168,9 @@ fi
 
 
 %changelog
+* Tue Jan 20 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.4.20150118git398cdae
+- fix composer only code (pr #17)
+
 * Mon Jan 19 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.3.20150118git398cdae
 - new 3.0 snapshot
 
