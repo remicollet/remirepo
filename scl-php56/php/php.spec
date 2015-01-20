@@ -132,7 +132,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.6.5
-Release: 0.1.RC1%{?dist}
+Release: 0.2.RC1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1341,11 +1341,12 @@ mv $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf.default .
 install -m 755 -d $RPM_BUILD_ROOT%{_unitdir}
 install -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{_unitdir}/%{?scl_prefix}php-fpm.service
 sed -e 's:/run:%{_localstatedir}/run:' \
-    -e 's:/etc:%{_sysconfdir}:' \
+    -e 's:/etc/sysconfig:%{_sysconfdir}/sysconfig:' \
+    -e 's:php-fpm.service:%{?scl_prefix}php-fpm.service:' \
     -e 's:/usr/sbin:%{_sbindir}:' \
     -i $RPM_BUILD_ROOT%{_unitdir}/%{?scl_prefix}php-fpm.service
 # this folder requires systemd >= 204
-install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/systemd/system/%{?scl_prefix}php-fpm.service.d
+install -m 755 -d $RPM_BUILD_ROOT%{_root_sysconfdir}/systemd/system/%{?scl_prefix}php-fpm.service.d
 %else
 # Service
 install -m 755 -d $RPM_BUILD_ROOT%{_root_initddir}
@@ -1365,9 +1366,13 @@ install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_root_sysconfdir}/logrotate.d/%{?scl_
 sed -e 's:/run:%{_localstatedir}/run:' \
     -e 's:/var/log:%{_localstatedir}/log:' \
     -i $RPM_BUILD_ROOT%{_root_sysconfdir}/logrotate.d/%{?scl_prefix}php-fpm
+
 # Environment file
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
 install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
+sed -e 's:php-fpm.service:%{?scl_prefix}php-fpm.service:' \
+    -i $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
+
 
 # Fix the link
 (cd $RPM_BUILD_ROOT%{_bindir}; ln -sfn phar.phar phar)
@@ -1668,7 +1673,7 @@ fi
 # %{_prefix}/lib/tmpfiles.d/php-fpm.conf
 %if %{with_systemd}
 %{_unitdir}/%{?scl_prefix}php-fpm.service
-%dir %{_sysconfdir}/systemd/system/%{?scl_prefix}php-fpm.service.d
+%dir %{_root_sysconfdir}/systemd/system/%{?scl_prefix}php-fpm.service.d
 %else
 %{_root_initddir}/%{?scl_prefix}php-fpm
 %endif
@@ -1760,6 +1765,9 @@ fi
 
 
 %changelog
+* Tue Jan 20 2015 Remi Collet <rcollet@redhat.com> 5.6.5-0.2.RC1
+- fix php-fpm.service.d location
+
 * Fri Jan  9 2015 Remi Collet <remi@fedoraproject.org> 5.6.5-0.1.RC1
 - update to 5.6.5RC1
 - add base system path in default include path
