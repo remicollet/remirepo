@@ -4,6 +4,7 @@ RPMDEFINES := --define "_sourcedir $(SRCDIR)" \
               --define "_rpmdir $(SRCDIR)"
 
 SRCDEFINES := --define "dist .remi" \
+              --define "fedora 1" \
               --define "nophptag 1" \
               --define "_source_filedigest_algorithm 1" \
               --define "_binary_filedigest_algorithm 1"
