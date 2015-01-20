@@ -14,7 +14,7 @@
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        4.0.0
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_short:0.%{specrel}.%{?gh_date}git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -25,6 +25,9 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 # Autoloader for RPM - die composer !
 Patch0:         %{name}-4.0.0-rpm.patch
+
+# https://github.com/llaville/php-compat-info/pull/163
+Patch1:         %{name}-4.0.0-pr163.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -86,16 +89,17 @@ Documentation: http://php5.laurent-laville.org/compatinfo/manual/current/en/
 #setup -q -n %{gh_project}-%{version}
 
 %patch0 -p1 -b .rpm
+%patch1 -p1
 
 sed -e 's/@package_version@/%{version}/' \
     -i $(find src -name \*.php)
 
-#rm data/compatinfo.sqlite
+mv data/compatinfo.sqlite data/compatinfo.sqlite.upstream
 
 
 %build
 : Generate the references database
-#{_bindir}/php data/handleDB.php db:init
+%{_bindir}/php data/handleDB.php db:init
 
 
 %install
@@ -106,12 +110,14 @@ cp -pr src/Bartlett %{buildroot}%{_datadir}/php/Bartlett
 install -D -p -m 755 bin/phpcompatinfo           %{buildroot}%{_bindir}/phpcompatinfo
 install -D -p -m 644 bin/phpcompatinfo.json.dist %{buildroot}%{_sysconfdir}/phpcompatinfo.json
 install -D -p -m 644 bin/phpcompatinfo.1         %{buildroot}%{_mandir}/man1/phpcompatinfo.1
+install -D -p -m 644 data/compatinfo.sqlite      %{buildroot}%{_datadir}/%{name}/compatinfo.sqlite
 
 
 %check
 %{_bindir}/phpunit \
+    --include-path src \
     -d memory_limit=-1 \
-%if 0%{?rhel} < 6 && 0%{?fedora} < 8
+%if 0%{?fedora} < 21
     || exit 0
 %endif
 
@@ -131,11 +137,15 @@ fi
 %config(noreplace) %{_sysconfdir}/phpcompatinfo.json
 %{_bindir}/phpcompatinfo
 %{_datadir}/php/Bartlett/CompatInfo
-%{_datadir}/php/Bartlett/CompatInfo.php
 %{_mandir}/man1/phpcompatinfo.1*
+%{_datadir}/%{name}/compatinfo.sqlite
 
 
 %changelog
+* Tue Jan 20 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.2.20150116gitd900ea4
+- add patch for DB path (pr #163)
+- take care of test suite results only in f21 for now
+
 * Mon Jan 19 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.1.20150116gitd900ea4
 - 4.0.0 snapshot
 

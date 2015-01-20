@@ -8,12 +8,14 @@ diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
  <?php
  ini_set('memory_limit', -1);
  $appName = 'phpCompatInfo';
-@@ -17,8 +17,26 @@ if (\Phar::running()) {
+@@ -17,8 +17,28 @@ if (\Phar::running()) {
          putenv("BARTLETTRC=" . strtolower($appName) . '.json');
      }
  }
 -$loader = require_once $vendorDir . '/autoload.php';
 -$loader->setUseIncludePath(true);
++
++putenv('BARTLETT_COMPATINFO_DB=/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite');
 +
 +$vendorDir = '/usr/share/php';
 +require_once $vendorDir . '/PhpParser/Autoloader.php';
@@ -76,7 +78,7 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 diff -up ./data/handleDB.php.rpm ./data/handleDB.php
 --- ./data/handleDB.php.rpm	2015-01-19 14:17:57.871354474 +0100
 +++ ./data/handleDB.php	2015-01-19 14:20:42.213040384 +0100
-@@ -11,7 +11,21 @@
+@@ -11,7 +11,18 @@
   * @since    Release 4.0.0alpha3
   */
  
@@ -88,10 +90,7 @@ diff -up ./data/handleDB.php.rpm ./data/handleDB.php
 +
 +$loader = new UniversalClassLoader();
 +$loader->registerNamespaces(array(
-+    'Doctrine\\Common'                    => $vendorDir,
 +    'Symfony\\Component'                  => $vendorDir,
-+    'Bartlett\\Reflect'                   => $vendorDir,
-+    'Bartlett'                            => $baseDir . '/src',
 + ));
 +
 +$loader->register();
