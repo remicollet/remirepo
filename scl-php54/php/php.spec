@@ -108,8 +108,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.4.36
-Release: 1%{?dist}.2
+Version: 5.4.37
+Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1586,6 +1586,10 @@ fi
 
 
 %changelog
+* Wed Jan 21 2015 Remi Collet <rcollet@redhat.com> 5.4.37-1
+- Update to 5.4.37
+  http://www.php.net/releases/5_4_37.php
+
 * Tue Jan 20 2015 Remi Collet <rcollet@redhat.com> 5.4.36-1.2
 - fix php-fpm.service.d location
 

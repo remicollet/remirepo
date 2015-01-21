@@ -81,8 +81,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.36
-Release: 1%{?dist}.1
+Version: 5.4.37
+Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1699,6 +1699,10 @@ fi
 
 
 %changelog
+* Wed Jan 21 2015 Remi Collet <remi@fedoraproject.org> 5.4.37-1
+- Update to 5.4.37
+  http://www.php.net/releases/5_4_37.php
+
 * Tue Dec 23 2014 Remi Collet <remi@fedoraproject.org> 5.4.36-1.1
 - add back tokyocabinet support from dba (EL-5)
 
