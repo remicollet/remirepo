@@ -27,15 +27,15 @@
 %endif
 
 Name:           glpi
-Version:        0.85.1
-Release:        2%{?dist}
+Version:        0.85.2
+Release:        1%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
 Group:          Applications/Internet
 License:        GPLv2+ and GPLv3+
 URL:            http://www.glpi-project.org/
-Source0:        https://forge.indepnet.net/attachments/download/1928/glpi-0.85.1.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1954/glpi-0.85.2.tar.gz
 
 Source1:        glpi-httpd.conf
 Source2:        glpi-0.85-config_path.php
@@ -307,6 +307,10 @@ fi
 
 
 %changelog
+* Wed Jan 21 2015 Remi Collet <remi@fedoraproject.org> - 0.85.2-1
+- update to 0.85.2
+  https://forge.indepnet.net/versions/1110
+
 * Mon Dec 22 2014 Remi Collet <remi@fedoraproject.org> - 0.85.1-2
 - increase system cron frequency and limit
 - cleanup patched files
