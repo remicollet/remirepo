@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-horde-Horde-Mime
-Version:        2.6.1
+Version:        2.7.0
 Release:        1%{?dist}
 Summary:        Horde MIME Library
 
@@ -79,6 +79,7 @@ Requires:       php-intl
 Requires:       php-pear(Net_DNS2)
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-mime) = %{version}
 
 
 %description
@@ -164,6 +165,10 @@ fi
 
 
 %changelog
+* Wed Jan 21 2015 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
+- Update to 2.7.0
+- add provides php-composer(horde/horde-mime)
+
 * Mon Dec 29 2014 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
 - Update to 2.6.1
 
