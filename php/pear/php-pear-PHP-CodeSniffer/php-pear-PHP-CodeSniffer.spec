@@ -13,7 +13,7 @@
 %global pear_name     PHP_CodeSniffer
 
 Name:           php-pear-PHP-CodeSniffer
-Version:        2.1.0
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        PHP coding standards enforcement tool
 
@@ -88,7 +88,7 @@ install -pm 644 %{pear_name}.xml %{buildroot}%{pear_xmldir}
 %check
 cd %{pear_name}-%{version}/tests
 
-# Version 2.0.0: 221, Assertions: 69, Skipped: 4.
+# Version 2.2.0: Tests: 219, Assertions: 69, Skipped: 4.
 %{_bindir}/phpunit AllTests.php
 
 
@@ -120,6 +120,9 @@ fi
 
 
 %changelog
+* Thu Jan 22 2015 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+
 * Thu Dec 18 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0 (stable)
 
