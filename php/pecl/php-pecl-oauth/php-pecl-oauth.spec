@@ -13,7 +13,7 @@
 
 Name:           %{?scl_prefix}php-pecl-oauth
 Version:        1.2.3
-Release:        7%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:        8%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        PHP OAuth consumer extension
 Group:          Development/Languages
 License:        BSD
@@ -40,17 +40,17 @@ Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:     php54-pecl-%{pecl_name}
-Obsoletes:     php54w-pecl-%{pecl_name}
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}
-Obsoletes:     php55w-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name}
-Obsoletes:     php56w-pecl-%{pecl_name}
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -65,6 +65,9 @@ Obsoletes:     php56w-pecl-%{pecl_name}
 OAuth is an authorization protocol built on top of HTTP which allows 
 applications to securely access data without having to store
 user names and passwords.
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+
 
 %prep
 %setup -q -c
@@ -119,7 +122,7 @@ make install -C ZTS INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
+# Documentation
 cd NTS
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
@@ -130,13 +133,21 @@ done
 rm -rf %{buildroot}
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ]; then
-%{pecl_uninstall} %{pecl_name} >/dev/null || :
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
+    %{pecl_uninstall} %{proj_name} >/dev/null || :
 fi
 
 
@@ -168,6 +179,10 @@ fi
 
 
 %changelog
+* Thu Jan 22 2015 Remi Collet <remi@fedoraproject.org> - 1.2.3-8
+- bump release
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.2.3-7.1
 - Fedora 21 SCL mass rebuild
 
