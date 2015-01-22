@@ -29,17 +29,13 @@
 
 Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
-Version:        2.2.6
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Version:        2.2.7
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 %if 0%{?gitver:1}
 Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{commit}/%{pecl_name}-%{version}-%{gitver}.tar.gz
 %else
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
-
-# http://bugs.xdebug.org/view.php?id=1087
-# https://www.couchbase.com/issues/browse/PCBC-294
-Patch0:         %{pecl_name}-upstream.patch
 
 # The Xdebug License, version 1.01
 # (Based on "The PHP License", version 3.0)
@@ -119,8 +115,6 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 %endif
 
 cd NTS
-%patch0 -p1 -b .upstream
-
 # Check extension version
 ver=$(sed -n '/XDEBUG_VERSION/{s/.* "//;s/".*$//;p}' php_xdebug.h)
 if test "$ver" != "%{version}%{?prever}"; then
@@ -228,13 +222,21 @@ done
 %endif
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
-    %{pecl_uninstall} %{pecl_name} >/dev/null || :
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
+    %{pecl_uninstall} %{proj_name} >/dev/null || :
 fi
 
 
@@ -259,6 +261,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 22 2015 Remi Collet <remi@fedoraproject.org> - 2.2.7-1
+- Update to 2.2.7
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 2.2.6-3.1
 - Fedora 21 SCL mass rebuild
 
