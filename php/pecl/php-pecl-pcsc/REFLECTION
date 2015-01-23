@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #112 PC/SC version 0.3 ] {
+Extension [ <persistent> extension #120 PC/SC version 0.3.1 ] {
 
   - Constants [74] {
     Constant [ integer SCARD_E_BAD_SEEK ] { 2148532265 }
