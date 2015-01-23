@@ -13,7 +13,7 @@
 
 Name:           %{?scl_prefix}php-pecl-oauth
 Version:        1.2.3
-Release:        8%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        9%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        PHP OAuth consumer extension
 Group:          Development/Languages
 License:        BSD
@@ -147,7 +147,7 @@ fi
 
 %postun
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
-    %{pecl_uninstall} %{proj_name} >/dev/null || :
+    %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
 
@@ -179,6 +179,9 @@ fi
 
 
 %changelog
+* Fri Jan 23 2015 Remi Collet <remi@fedoraproject.org> - 1.2.3-9
+- fix %%postun scriplet
+
 * Thu Jan 22 2015 Remi Collet <remi@fedoraproject.org> - 1.2.3-8
 - bump release
 - drop runtime dependency on pear, new scriptlets
