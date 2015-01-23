@@ -30,7 +30,7 @@
 Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.2.7
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 %if 0%{?gitver:1}
 Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{commit}/%{pecl_name}-%{version}-%{gitver}.tar.gz
 %else
@@ -236,7 +236,7 @@ fi
 
 %postun
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
-    %{pecl_uninstall} %{proj_name} >/dev/null || :
+    %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
 
@@ -261,6 +261,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan 23 2015 Remi Collet <remi@fedoraproject.org> - 2.2.7-2
+- fix %%postun scriplet
+
 * Thu Jan 22 2015 Remi Collet <remi@fedoraproject.org> - 2.2.7-1
 - Update to 2.2.7
 - drop runtime dependency on pear, new scriptlets
