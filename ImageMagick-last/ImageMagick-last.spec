@@ -1,5 +1,5 @@
 %global VER        6.9.0
-%global Patchlevel 2
+%global Patchlevel 4
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -28,7 +28,7 @@
 %endif
 
 %global libname ImageMagick
-%if 0%{?fedora} >= 20
+%if 0%{?fedora} > 20
 Name:           %{libname}
 %else
 Name:           %{libname}-last
@@ -408,6 +408,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jan 23 2015 Remi Collet <RPMS@FamilleCollet.com> - 6.9.0.4-1
+- update to 6.9.0-4
+
 * Fri Jan  2 2015 Remi Collet <RPMS@FamilleCollet.com> - 6.9.0.2-1
 - update to 6.9.0-2
 
