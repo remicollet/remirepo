@@ -22,7 +22,7 @@
 %endif
 
 Name: phpMyAdmin
-Version: 4.3.7
+Version: 4.3.8
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -214,6 +214,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Sat Jan 24 2015 Remi Collet <rpms@famillecollet.com> 4.3.8-1
+- update to 4.3.8 (Sat, 24 Jan 2015, bugfix)
+
 * Thu Jan 15 2015 Remi Collet <rpms@famillecollet.com> 4.3.7-1
 - update to 4.3.7 (Wed, 15 Jan 2015, bugfix)
 
