@@ -49,8 +49,6 @@ BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  libedit-devel
 BuildRequires:  libtool
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
