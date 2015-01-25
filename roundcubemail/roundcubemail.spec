@@ -8,8 +8,8 @@
 %define roundcubedir %{_datadir}/roundcubemail
 %global _logdir /var/log  
 Name: roundcubemail
-Version:  1.0.4
-Release:  3%{?dist}
+Version:  1.0.5
+Release:  1%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
 Group: Applications/System
@@ -223,6 +223,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan 25 2015 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
+- Update to 1.0.5 (security update)
+
 * Sun Dec 21 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-3
 - provide Nginx configuration
 
