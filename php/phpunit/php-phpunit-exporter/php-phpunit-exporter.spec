@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    c7d59948d6e82818e1bdff7cadb6c34710eb7dc0
+%global gh_commit    35ab8d385eef068186c83e23ae83c96b0288b3ee
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   exporter
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-phpunit-exporter
-Version:        1.0.2
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        Export PHP variables for visualization
 
@@ -36,11 +36,15 @@ BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
 BuildRequires:  %{_bindir}/phpunit
+BuildRequires:  php-composer(sebastian/recursion-context) >= 1.0
 %endif
 
 # from composer.json
-#    "php": ">=5.3.3"
+#         "php": ">=5.3.3"
+#         "sebastian/recursion-context": "~1.0"
 Requires:       php(language) >= 5.3.3
+Requires:       php-composer(sebastian/recursion-context) >= 1.0
+Requires:       php-composer(sebastian/recursion-context) <  2
 # from phpcompatinfo report for version 1.0.0
 Requires:       php-hash
 Requires:       php-pcre
@@ -69,28 +73,22 @@ Provides the functionality to export PHP variables for visualization.
 # Generate the Autoloader (which was part of the Pear package)
 phpab --output src/autoload.php src
 
+# Add dependency
+echo "require_once 'SebastianBergmann/RecursionContext/autoload.php';" \
+    >> src/autoload.php
+
 
 %install
 rm -rf     %{buildroot}
 mkdir -p   %{buildroot}%{php_home}
-cp -pr src %{buildroot}%{php_home}/%{pear_name}
+cp -pr src %{buildroot}%{php_home}/Exporter
 
 
 %if %{with_tests}
 %check
-if [ -d /usr/share/php/PHPUnit ]
-then
-  # Hack PHPUnit 4 autoloader to not use system library
-  mkdir PHPUnit
-  sed -e 's:SebastianBergmann/Exporter:src:' \
-    -e 's:dirname(__FILE__):"/usr/share/php/PHPUnit":' \
-    /usr/share/php/PHPUnit/Autoload.php \
-    >PHPUnit/Autoload.php
-fi
-
 phpunit \
-  --bootstrap src/autoload.php \
-  -d date.timezone=UTC
+  --include-path %{buildroot}%{_datadir}/php \
+  --bootstrap %{buildroot}%{php_home}/Exporter/autoload.php
 %endif
 
 
@@ -110,12 +108,14 @@ fi
 %doc README.md composer.json
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-
-%dir %{php_home}
-%{php_home}/%{pear_name}
+%{php_home}/Exporter
 
 
 %changelog
+* Sat Jan 24 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- update to 1.1.0
+- add dependency on sebastian/recursion-context
+
 * Sun Oct  5 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - update to 1.0.2
 - enable test suite
