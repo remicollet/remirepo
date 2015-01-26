@@ -12,8 +12,8 @@
 
 %global github_owner     fabpot
 %global github_name      Twig
-%global github_version   1.17.0
-%global github_commit    2493970fa4d587eca73f77e6d8bd48a8bdd4c608
+%global github_version   1.18.0
+%global github_commit    4cf7464348e7f9893a93f7096a90b73722be99cf
 
 # Lib
 %global composer_vendor  twig
@@ -114,17 +114,17 @@ Obsoletes:     %{?scl_prefix}php-channel-twig
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-%{extname}  <= %{version}
-Obsoletes:     php53u-%{extname} <= %{version}
-Obsoletes:     php54-%{extname}  <= %{version}
-Obsoletes:     php54w-%{extname} <= %{version}
+Obsoletes:      php53-%{ext_name} <= %{version}
+Obsoletes:     php53u-%{ext_name} <= %{version}
+Obsoletes:      php54-%{ext_name} <= %{version}
+Obsoletes:     php54w-%{ext_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-%{extname} <= %{version}
-Obsoletes:     php55w-%{extname} <= %{version}
+Obsoletes:     php55u-%{ext_name} <= %{version}
+Obsoletes:     php55w-%{ext_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-%{extname} <= %{version}
-Obsoletes:     php56w-%{extname} <= %{version}
+Obsoletes:     php56u-%{ext_name} <= %{version}
+Obsoletes:     php56w-%{ext_name} <= %{version}
 %endif
 %endif
 
@@ -263,6 +263,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan 26 2015 Remi Collet <remi@fedoraproject.org> - 1.18.0-1
+- Update to 1.18.0
+
 * Wed Jan 14 2015 Remi Collet <remi@fedoraproject.org> - 1.17.0-1
 - Update to 1.17.0
 
