@@ -202,6 +202,7 @@ Requires(pre): httpd
 
 
 # Don't provides extensions, or shared libraries (embedded)
+%{?filter_from_requires: %filter_from_requires /libphp5.*so/d}
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 
