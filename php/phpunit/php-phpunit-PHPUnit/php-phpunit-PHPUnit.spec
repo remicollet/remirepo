@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    2047ae17f6e8cfd10fbde0b4535c97eb22d99cbe
+%global gh_commit    2e8580deebb7d1ac92ac878595e6bffe01069c2a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,8 +17,8 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.4.4
-Release:        2%{?dist}
+Version:        4.4.5
+Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries
@@ -52,7 +52,7 @@ BuildRequires:  php-composer(symfony/yaml) >= 2.0
 BuildRequires:  php-composer(symfony/class-loader) >= 2.0
 BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 
-# From composer.json (but https://github.com/sebastianbergmann/phpunit/issues/1592)
+# From composer.json
 #        "php": ">=5.3.3",
 #        "phpunit/php-file-iterator": "~1.3.2",
 #        "phpunit/php-text-template": "~1.2",
@@ -63,7 +63,8 @@ BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 #        "sebastian/comparator": "~1.0",
 #        "sebastian/diff": "~1.1",
 #        "sebastian/environment": "~1.1",
-#        "sebastian/exporter": "~1.0",
+#        "sebastian/exporter": "~1.1",
+#        "sebastian/recursion-context": "~1.0",
 #        "sebastian/global-state": "~1.0",
 #        "sebastian/version": "~1.0",
 #        "ext-dom": "*",
@@ -203,6 +204,9 @@ fi
 
 
 %changelog
+* Tue Jan 27 2015 Remi Collet <remi@fedoraproject.org> - 4.4.5-1
+- Update to 4.4.5 (no change)
+
 * Tue Jan 27 2015 Remi Collet <remi@fedoraproject.org> - 4.4.4-2
 - add dependency on sebastian/recursion-context
 
