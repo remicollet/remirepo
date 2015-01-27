@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #169 http version 2.2.0RC1 ] {
+Extension [ <persistent> extension #168 http version 2.2.0 ] {
 
   - Dependencies {
     Dependency [ raphf (Required) ]
@@ -15,11 +15,14 @@ Extension [ <persistent> extension #169 http version 2.2.0RC1 ] {
     }
   }
 
-  - Constants [26] {
+  - Constants [29] {
     Constant [ integer http\Client\Curl\HTTP_VERSION_1_0 ] { 1 }
     Constant [ integer http\Client\Curl\HTTP_VERSION_1_1 ] { 2 }
     Constant [ integer http\Client\Curl\HTTP_VERSION_ANY ] { 0 }
     Constant [ integer http\Client\Curl\SSL_VERSION_TLSv1 ] { 1 }
+    Constant [ integer http\Client\Curl\SSL_VERSION_TLSv1_0 ] { 4 }
+    Constant [ integer http\Client\Curl\SSL_VERSION_TLSv1_1 ] { 5 }
+    Constant [ integer http\Client\Curl\SSL_VERSION_TLSv1_2 ] { 6 }
     Constant [ integer http\Client\Curl\SSL_VERSION_SSLv2 ] { 2 }
     Constant [ integer http\Client\Curl\SSL_VERSION_SSLv3 ] { 3 }
     Constant [ integer http\Client\Curl\SSL_VERSION_ANY ] { 0 }

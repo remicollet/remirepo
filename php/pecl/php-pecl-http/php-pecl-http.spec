@@ -26,10 +26,10 @@
 %endif
 %global with_tests %{?_without_tests:0}%{!?_without_tests:1}
 
-%global prever RC1
+#global prever RC1
 Name:           %{?scl_prefix}php-pecl-http
 Version:        2.2.0
-Release:        0.3.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -50,6 +50,7 @@ BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  pcre-devel
 BuildRequires:  zlib-devel >= 1.2.0.4
 BuildRequires:  curl-devel >= 7.18.2
+BuildRequires:  libidn-devel
 BuildRequires:  %{?scl_prefix}php-pecl-propro-devel
 BuildRequires:  %{?scl_prefix}php-pecl-raphf-devel
 
@@ -196,6 +197,7 @@ peclconf() {
   --with-http \
   --with-http-zlib-dir=%{_root_prefix} \
   --with-http-libcurl-dir=%{_root_prefix} \
+  --with-http-libidn-dir=%{_root_prefix} \
   --with-http-libevent-dir=%{_event_prefix} \
   --with-libdir=%{_lib} \
   --with-php-config=$1
@@ -290,12 +292,20 @@ NO_INTERACTION=1 \
 %endif
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{proj_name} >/dev/null || :
 fi
 
@@ -328,6 +338,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 27 2015 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0 (stable)
+- add dependency on libidn
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.3.RC1
 - Fedora 21 SCL mass rebuild
 
