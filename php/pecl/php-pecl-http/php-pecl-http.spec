@@ -26,9 +26,10 @@
 %endif
 %global with_tests %{?_without_tests:0}%{!?_without_tests:1}
 
+%global prever RC1
 Name:           %{?scl_prefix}php-pecl-http
-Version:        2.1.4
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Version:        2.2.0
+Release:        0.3.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -327,8 +328,14 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 2.1.4-1.1
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.3.RC1
 - Fedora 21 SCL mass rebuild
+
+* Wed Nov 12 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.2.RC1
+- update to 2.2.0RC1 (beta)
+
+* Fri Nov 07 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.1
+- test build of 2.2.0dev
 
 * Thu Nov 06 2014 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
 - Update to 2.1.4
