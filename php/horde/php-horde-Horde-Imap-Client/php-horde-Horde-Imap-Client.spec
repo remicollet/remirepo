@@ -11,16 +11,14 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.26.0
-Release:        2%{?dist}
+Version:        2.26.1
+Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
 Group:          Development/Libraries
 License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-
-Patch0:         %{pear_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -92,13 +90,10 @@ drivers.
 %setup -q -c
 cd %{pear_name}-%{version}
 
-%patch0 -p3 -b .upstream
-
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
 sed -e '/%{pear_name}\.po/d' \
     -e '/%{pear_name}\.mo/s/md5sum=.*name=/name=/' \
-    -e '/Quote.php/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 touch -r ../package.xml %{name}.xml
 
@@ -162,6 +157,9 @@ fi
 
 
 %changelog
+* Tue Jan 27 2015 Remi Collet <remi@fedoraproject.org> - 2.26.1-1
+- Update to 2.26.1
+
 * Tue Jan 13 2015 Remi Collet <remi@fedoraproject.org> - 2.26.0-2
 - add upstream for stream change in php
 
