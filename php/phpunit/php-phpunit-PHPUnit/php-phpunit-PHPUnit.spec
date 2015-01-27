@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-PHPUnit
 Version:        4.4.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries
@@ -44,14 +44,15 @@ BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 2.3
 BuildRequires:  php-composer(sebastian/comparator) >= 1.0
 BuildRequires:  php-composer(sebastian/diff) >= 1.1
 BuildRequires:  php-composer(sebastian/environment) >= 1.1
-BuildRequires:  php-composer(sebastian/exporter) >= 1.0
+BuildRequires:  php-composer(sebastian/exporter) >= 1.1
+BuildRequires:  php-composer(sebastian/recursion-context) >= 1.0
 BuildRequires:  php-composer(sebastian/global-state) >= 1.0
 BuildRequires:  php-composer(sebastian/version) >= 1.0
 BuildRequires:  php-composer(symfony/yaml) >= 2.0
 BuildRequires:  php-composer(symfony/class-loader) >= 2.0
 BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 
-# From composer.json
+# From composer.json (but https://github.com/sebastianbergmann/phpunit/issues/1592)
 #        "php": ">=5.3.3",
 #        "phpunit/php-file-iterator": "~1.3.2",
 #        "phpunit/php-text-template": "~1.2",
@@ -87,8 +88,10 @@ Requires:       php-composer(sebastian/diff) >= 1.1
 Requires:       php-composer(sebastian/diff) <  2
 Requires:       php-composer(sebastian/environment) >= 1.1
 Requires:       php-composer(sebastian/environment) <  2
-Requires:       php-composer(sebastian/exporter) >= 1.0
+Requires:       php-composer(sebastian/exporter) >= 1.1
 Requires:       php-composer(sebastian/exporter) <  2
+Requires:       php-composer(sebastian/recursion-context) >= 1.0
+Requires:       php-composer(sebastian/recursion-context) < 2
 Requires:       php-composer(sebastian/global-state) >= 1.0
 Requires:       php-composer(sebastian/global-state) <  2
 Requires:       php-composer(sebastian/version) >= 1.0
@@ -200,6 +203,9 @@ fi
 
 
 %changelog
+* Tue Jan 27 2015 Remi Collet <remi@fedoraproject.org> - 4.4.4-2
+- add dependency on sebastian/recursion-context
+
 * Sun Jan 25 2015 Remi Collet <remi@fedoraproject.org> - 4.4.4-1
 - Update to 4.4.4
 
