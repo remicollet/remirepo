@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #171 mongo version 1.6.0RC3 ] {
+Extension [ <persistent> extension #170 mongo version 1.6.0 ] {
 
   - Dependencies {
     Dependency [ openssl (Optional) ]
@@ -77,7 +77,7 @@ Extension [ <persistent> extension #171 mongo version 1.6.0RC3 ] {
       - Constants [8] {
         Constant [ string DEFAULT_HOST ] { localhost }
         Constant [ integer DEFAULT_PORT ] { 27017 }
-        Constant [ string VERSION ] { 1.6.0RC3 }
+        Constant [ string VERSION ] { 1.6.0 }
         Constant [ string RP_PRIMARY ] { primary }
         Constant [ string RP_PRIMARY_PREFERRED ] { primaryPreferred }
         Constant [ string RP_SECONDARY ] { secondary }
@@ -213,7 +213,7 @@ Extension [ <persistent> extension #171 mongo version 1.6.0RC3 ] {
       - Constants [8] {
         Constant [ string DEFAULT_HOST ] { localhost }
         Constant [ integer DEFAULT_PORT ] { 27017 }
-        Constant [ string VERSION ] { 1.6.0RC3 }
+        Constant [ string VERSION ] { 1.6.0 }
         Constant [ string RP_PRIMARY ] { primary }
         Constant [ string RP_PRIMARY_PREFERRED ] { primaryPreferred }
         Constant [ string RP_SECONDARY ] { secondary }
@@ -921,7 +921,7 @@ Extension [ <persistent> extension #171 mongo version 1.6.0RC3 ] {
       - Properties [0] {
       }
 
-      - Methods [9] {
+      - Methods [11] {
         Method [ <internal:mongo> abstract public method batchSize ] {
 
           - Parameters [1] {
@@ -945,6 +945,20 @@ Extension [ <persistent> extension #171 mongo version 1.6.0RC3 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $timeoutMS ]
+          }
+        }
+
+        Method [ <internal:mongo> abstract public method getReadPreference ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongo> abstract public method setReadPreference ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $read_preference ]
+            Parameter #1 [ <optional> array $tags ]
           }
         }
 
@@ -1116,13 +1130,13 @@ Extension [ <persistent> extension #171 mongo version 1.6.0RC3 ] {
           }
         }
 
-        Method [ <internal:mongo> public method getReadPreference ] {
+        Method [ <internal:mongo, prototype MongoCursorInterface> public method getReadPreference ] {
 
           - Parameters [0] {
           }
         }
 
-        Method [ <internal:mongo> public method setReadPreference ] {
+        Method [ <internal:mongo, prototype MongoCursorInterface> public method setReadPreference ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $read_preference ]
@@ -1130,16 +1144,16 @@ Extension [ <persistent> extension #171 mongo version 1.6.0RC3 ] {
           }
         }
 
+        Method [ <internal, deprecated:mongo> final protected method doQuery ] {
+
+          - Parameters [0] {
+          }
+        }
+
         Method [ <internal:mongo, prototype MongoCursorInterface> public method timeout ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $timeoutMS ]
-          }
-        }
-
-        Method [ <internal, deprecated:mongo> final protected method doQuery ] {
-
-          - Parameters [0] {
           }
         }
 
@@ -1222,7 +1236,7 @@ Extension [ <persistent> extension #171 mongo version 1.6.0RC3 ] {
       - Properties [0] {
       }
 
-      - Methods [10] {
+      - Methods [12] {
         Method [ <internal:mongo, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -1255,6 +1269,20 @@ Extension [ <persistent> extension #171 mongo version 1.6.0RC3 ] {
         Method [ <internal:mongo, prototype MongoCursorInterface> public method dead ] {
 
           - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongo, prototype MongoCursorInterface> public method getReadPreference ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongo, prototype MongoCursorInterface> public method setReadPreference ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $read_preference ]
+            Parameter #1 [ <optional> array $tags ]
           }
         }
 
@@ -1762,13 +1790,13 @@ Extension [ <persistent> extension #171 mongo version 1.6.0RC3 ] {
           }
         }
 
-        Method [ <internal:mongo, inherits MongoCursor> public method getReadPreference ] {
+        Method [ <internal:mongo, inherits MongoCursor, prototype MongoCursorInterface> public method getReadPreference ] {
 
           - Parameters [0] {
           }
         }
 
-        Method [ <internal:mongo, inherits MongoCursor> public method setReadPreference ] {
+        Method [ <internal:mongo, inherits MongoCursor, prototype MongoCursorInterface> public method setReadPreference ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $read_preference ]
@@ -1776,16 +1804,16 @@ Extension [ <persistent> extension #171 mongo version 1.6.0RC3 ] {
           }
         }
 
+        Method [ <internal, deprecated:mongo, inherits MongoCursor> final protected method doQuery ] {
+
+          - Parameters [0] {
+          }
+        }
+
         Method [ <internal:mongo, inherits MongoCursor, prototype MongoCursorInterface> public method timeout ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $timeoutMS ]
-          }
-        }
-
-        Method [ <internal, deprecated:mongo, inherits MongoCursor> final protected method doQuery ] {
-
-          - Parameters [0] {
           }
         }
 

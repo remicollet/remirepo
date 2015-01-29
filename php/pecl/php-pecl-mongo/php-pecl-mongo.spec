@@ -5,8 +5,8 @@
 
 %global pecl_name   mongo
 %global with_zts    0%{?__ztsphp:1}
-#global prever      RC2
-%global gh_commit   a3335ff08327b2c429ad5a2b712ed54b42e90d36
+#global prever      RC3
+%global gh_commit   edcd0f11cfc0f08179ca7628a01be0ccf194a4b2
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    mongodb
 %global gh_project  mongo-php-driver
@@ -21,8 +21,8 @@
 
 Summary:      PHP MongoDB database driver
 Name:         %{?scl_prefix}php-pecl-mongo
-Version:      1.5.8
-Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Version:      1.6.0
+Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      ASL 2.0
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -41,8 +41,6 @@ BuildRequires: mongodb
 BuildRequires: mongodb-server
 %endif
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:     %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:     %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
@@ -149,13 +147,21 @@ done
 rm -rf %{buildroot}
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ "$1" -eq "0" ]; then
-   %{pecl_uninstall} %{pecl_name} >/dev/null || :
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
+    %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
 
@@ -219,8 +225,21 @@ rm -rf data
 
 
 %changelog
-* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.5.8-1.1
+* Thu Jan 29 2015 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
+- update to 1.6.0 (stable)
+- drop runtime dependency on pear, new scriptlets
+
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.6.0-0.4.RC3
 - Fedora 21 SCL mass rebuild
+
+* Fri Dec 19 2014 Remi Collet <remi@fedoraproject.org> - 1.6.0-0.3.RC3
+- Update to 1.6.0RC3 (beta)
+
+* Wed Nov 19 2014 Remi Collet <remi@fedoraproject.org> - 1.6.0-0.2.RC2
+- Update to 1.6.0RC2 (beta)
+
+* Wed Nov 12 2014 Remi Collet <remi@fedoraproject.org> - 1.6.0-0.1.RC1
+- Update to 1.6.0RC1 (beta)
 
 * Wed Nov 12 2014 Remi Collet <remi@fedoraproject.org> - 1.5.8-1
 - Update to 1.5.8 (stable)
