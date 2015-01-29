@@ -11,8 +11,8 @@
 
 %global github_owner     php-fig
 %global github_name      http-message
-%global github_version   0.6.0
-%global github_commit    70d7c442866f109cbda7f9dea8938e47fc3cc20c
+%global github_version   0.8.0
+%global github_commit    3e35e0ade470539fc29e8c1667691bc81d21c222
 
 %global composer_vendor  psr
 %global composer_project http-message
@@ -85,6 +85,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 29 2015 Remi Collet <remi@fedoraproject.org> - 0.8.0-1
+- Updated to 0.8.0
+
 * Tue Jan 27 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.6.0-1
 - Updated to 0.6.0 (BZ #1183600)
 
