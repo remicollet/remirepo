@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    35ab8d385eef068186c83e23ae83c96b0288b3ee
+%global gh_commit    84839970d05254c73cde183a721c7af13aede943
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   exporter
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-phpunit-exporter
-Version:        1.1.0
+Version:        1.2.0
 Release:        1%{?dist}
 Summary:        Export PHP variables for visualization
 
@@ -112,6 +112,9 @@ fi
 
 
 %changelog
+* Fri Jan 30 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- update to 1.2.0
+
 * Sat Jan 24 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - update to 1.1.0
 - add dependency on sebastian/recursion-context
