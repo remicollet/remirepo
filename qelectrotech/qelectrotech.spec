@@ -1,6 +1,14 @@
-#global svnrel 3371
+# spec file for qelectrotech
+#
+# Copyright (c) 2009-2015 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/3.0/
+#
+# Please, preserve the changelog entries
+#
+%global svnrel 3658
 %global rdate  20141227
-%global upver  0.4rc2
+%global upver  0.4
 
 Name:        qelectrotech
 
@@ -23,7 +31,7 @@ Summary(ru): Редактор электрических схем
 # Remember to check rdate and upver macro on each update
 Version:     0.40
 %if 0%{?svnrel}
-Release:     0.1.svn%{svnrel}%{?dist}
+Release:     0.5.svn%{svnrel}%{?dist}
 %else
 Release:     0.4.rc2%{?dist}
 %endif
@@ -229,6 +237,9 @@ fi
 
 
 %changelog
+* Fri Jan 30 2015 Remi Collet <remi@fedoraproject.org> - 0.40-0.5.svn3658
+- Update to 0.4 snapshot revision 3658
+
 * Sat Dec 27 2014 Remi Collet <remi@fedoraproject.org> - 0.40-0.4.rc2
 - Update to 0.4rc1
 
