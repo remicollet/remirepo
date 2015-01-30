@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    c484a80f97573ab934e37826dba0135a3301b26a
+%global gh_commit    1dd8869519a225f7f2b9eb663e225298fade819e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   comparator
@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-phpunit-comparator
-Version:        1.1.0
+Version:        1.1.1
 Release:        1%{?dist}
 Summary:        Compare PHP values for equality
 
@@ -38,12 +38,12 @@ BuildRequires:  %{_bindir}/phpunit
 
 # from composer.json
 #        "php": ">=5.3.3",
-#        "sebastian/diff": "~1.1",
-#        "sebastian/exporter": "~1.0"
+#        "sebastian/diff": "~1.2",
+#        "sebastian/exporter": "~1.2"
 Requires:       php(language) >= 5.3.3
-Requires:       php-composer(sebastian/diff)  >= 1.1
+Requires:       php-composer(sebastian/diff)  >= 1.2
 Requires:       php-composer(sebastian/diff)  <  2
-Requires:       php-composer(sebastian/exporter) >= 1.0
+Requires:       php-composer(sebastian/exporter) >= 1.2
 Requires:       php-composer(sebastian/exporter) <  2
 # from phpcompatinfo report for version 1.0.0
 Requires:       php-date
@@ -99,6 +99,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan 30 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- update to 1.1.1
+- raise dependency on sebastian/diff >= 1.2
+- raise dependency on sebastian/exporter >= 1.2
+
 * Thu Dec  4 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - update to 1.1.0
 
