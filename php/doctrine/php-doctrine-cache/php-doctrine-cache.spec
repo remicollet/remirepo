@@ -48,6 +48,9 @@ BuildRequires: php-hash
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
+%if 0%{?rhel} != 5
+BuildRequires: php-sqlite3
+%endif
 %endif
 
 Requires:      php(language) >= %{php_min_ver}
@@ -56,6 +59,9 @@ Requires:      php-date
 Requires:      php-hash
 Requires:      php-pcre
 Requires:      php-spl
+%if 0%{?rhel} != 5
+Requires:      php-sqlite3
+%endif
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -109,6 +115,9 @@ BOOTSTRAP
 
 # Skip tests requiring a server to connect to
 rm -f \
+%if 0%{?rhel} == 5
+    tests/Doctrine/Tests/Common/Cache/SQLite3CacheTest.php \
+%endif
     tests/Doctrine/Tests/Common/Cache/CouchbaseCacheTest.php \
     tests/Doctrine/Tests/Common/Cache/MongoDBCacheTest.php \
     tests/Doctrine/Tests/Common/Cache/PredisCacheTest.php \
