@@ -24,8 +24,8 @@
 
 Summary:        XML diff and merge
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.9.2
-Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Version:        1.1.0
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -39,8 +39,6 @@ BuildRequires:  %{?scl_prefix}php-libxml
 BuildRequires:  diffmark-devel
 BuildRequires:  libxml2-devel
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %if "%{php_version}" < "5.4"
@@ -60,17 +58,17 @@ Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:     php54-pecl-%{pecl_name}
-Obsoletes:     php54w-pecl-%{pecl_name}
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}
-Obsoletes:     php55w-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name}
-Obsoletes:     php56w-pecl-%{pecl_name}
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -109,6 +107,9 @@ sed -e '/name="diffmark/d' \
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
+# http://svn.php.net/viewvc?view=revision&revision=335853
+sed -e 's:/PHP_LIBDIR:/$PHP_LIBDIR:' -i config.m4
+
 # drop bundled library to ensure it is not used
 rm -rf diffmark
 
@@ -178,12 +179,20 @@ do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
 done
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -226,6 +235,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -247,6 +257,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 02 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- Update to 1.1.0 (stable)
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 0.9.2-5.1
 - Fedora 21 SCL mass rebuild
 
