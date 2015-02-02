@@ -1,7 +1,7 @@
 #
 # RPM spec file for php-doctrine-cache
 #
-# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -11,19 +11,20 @@
 
 %global github_owner     doctrine
 %global github_name      cache
-%global github_version   1.3.1
-%global github_commit    cf483685798a72c93bf4206e3dd6358ea07d64e7
+%global github_version   1.4.0
+%global github_commit    2346085d2b027b233ae1d5de59b07440b9f288c8
 
 %global composer_vendor  doctrine
 %global composer_project cache
 
 # "php": ">=5.3.2"
 %global php_min_ver      5.3.2
-# "phpunit/phpunit": ">=3.7"
-%global phpunit_min_ver  3.7
 
 # Build using "--without tests" to disable tests
 %global with_tests       %{?_without_tests:0}%{!?_without_tests:1}
+
+%{!?phpdir:     %global phpdir     %{_datadir}/php}
+%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
@@ -39,9 +40,9 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 %if %{with_tests}
 # For tests
-BuildRequires: php(language)       >= %{php_min_ver}
-BuildRequires: php-phpunit-PHPUnit >= %{phpunit_min_ver}
-# For tests: phpcompatinfo (computed from version 1.3.1)
+BuildRequires: php(language) >= %{php_min_ver}
+BuildRequires: %{_bindir}/phpunit
+# For tests: phpcompatinfo (computed from version 1.4.0)
 BuildRequires: php-date
 BuildRequires: php-hash
 BuildRequires: php-pcre
@@ -50,7 +51,7 @@ BuildRequires: php-spl
 %endif
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.3.1)
+# phpcompatinfo (computed from version 1.4.0)
 Requires:      php-date
 Requires:      php-hash
 Requires:      php-pcre
@@ -90,8 +91,8 @@ find . -name '*ZendDataCache*' -delete
 
 %install
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/%{_datadir}/php
-cp -rp lib/* %{buildroot}/%{_datadir}/php/
+mkdir -p %{buildroot}/%{phpdir}
+cp -rp lib/* %{buildroot}/%{phpdir}/
 
 
 %check
@@ -106,19 +107,16 @@ spl_autoload_register(function ($class) {
 });
 BOOTSTRAP
 
-# Create PHPUnit config w/ colors turned off
-sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
-
 # Skip tests requiring a server to connect to
 rm -f \
     tests/Doctrine/Tests/Common/Cache/CouchbaseCacheTest.php \
     tests/Doctrine/Tests/Common/Cache/MongoDBCacheTest.php \
+    tests/Doctrine/Tests/Common/Cache/PredisCacheTest.php \
     tests/Doctrine/Tests/Common/Cache/RiakCacheTest.php
 
-%{_bindir}/phpunit \
+%{__phpunit} \
     --bootstrap bootstrap.php \
-    --include-path %{buildroot}/%{_datadir}/php:./tests \
-    -d date.timezone="UTC"
+    --include-path %{buildroot}/%{phpdir}:./tests
 %else
 : Tests skipped
 %endif
@@ -132,13 +130,17 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc *.md composer.json
+%doc *.md
+%doc composer.json
 %dir %{_datadir}/php/Doctrine
 %dir %{_datadir}/php/Doctrine/Common
      %{_datadir}/php/Doctrine/Common/Cache
 
 
 %changelog
+* Fri Jan 30 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.4.0-1
+- Updated to 1.4.0 (BZ #1183598)
+
 * Wed Sep 24 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.1-1
 - Updated to 1.3.1 (BZ #1142986)
 - Tests update
