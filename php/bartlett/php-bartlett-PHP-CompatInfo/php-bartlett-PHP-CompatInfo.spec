@@ -6,13 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    bbf5bf1cbc1c7ea481f315a084e5d341c24e283a
+%global gh_commit    e84e2b60281f1f97b886208d6d06efa4d7701236
 #global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     llaville
 %global gh_project   php-compat-info
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        3.7.2
+Version:        3.7.3
 %global specrel 1
 Release:        %{?gh_short:0.%{specrel}.git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
@@ -39,7 +39,7 @@ BuildRequires:  php-composer(bartlett/php-reflect) >= 2.6.2
 #        "ext-spl": "*",
 #        "ext-json": "*",
 #        "symfony/console": "~2.5",
-#        "bartlett/php-reflect": "~2.6",
+#        "bartlett/php-reflect": "^2.6.2",
 Requires:       php(language) >= 5.3.0
 Requires:       php-json
 Requires:       php-libxml
@@ -127,6 +127,9 @@ fi
 
 
 %changelog
+* Mon Feb  2 2015 Remi Collet <remi@fedoraproject.org> - 3.7.3-1
+- Update to 3.7.3
+
 * Mon Jan  5 2015 Remi Collet <remi@fedoraproject.org> - 3.7.2-1
 - Update to 3.7.2
 - open https://github.com/llaville/php-compat-info/pull/157
