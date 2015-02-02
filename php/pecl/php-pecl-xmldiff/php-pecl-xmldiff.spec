@@ -24,7 +24,7 @@
 
 Summary:        XML diff and merge
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.1.0
+Version:        1.1.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -107,9 +107,6 @@ sed -e '/name="diffmark/d' \
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-# http://svn.php.net/viewvc?view=revision&revision=335853
-sed -e 's:/PHP_LIBDIR:/$PHP_LIBDIR:' -i config.m4
-
 # drop bundled library to ensure it is not used
 rm -rf diffmark
 
@@ -257,6 +254,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 02 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- Update to 1.1.1 (stable)
+
 * Mon Feb 02 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - Update to 1.1.0 (stable)
 - drop runtime dependency on pear, new scriptlets

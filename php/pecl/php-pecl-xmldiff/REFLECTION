@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #156 xmldiff version 1.1.0 ] {
+Extension [ <persistent> extension #156 xmldiff version 1.1.1 ] {
 
   - Dependencies {
     Dependency [ dom (Required) ]
