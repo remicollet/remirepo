@@ -14,14 +14,16 @@
 
 Name:           php-phpdocumentor-reflection-docblock
 Version:        2.0.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        DocBlock parser
 
 Group:          Development/Libraries
-# https://github.com/phpDocumentor/ReflectionDocBlock/issues/40
 License:        MIT
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+
+# https://github.com/phpDocumentor/ReflectionDocBlock/issues/40
+Source1:        https://raw.githubusercontent.com/phpDocumentor/ReflectionDocBlock/master/LICENSE
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -52,6 +54,8 @@ DocBlocks or otherwise retrieve information that is embedded in a DocBlock.
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+
+cp %{SOURCE1} LICENSE
 
 
 %build
@@ -85,13 +89,16 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-#license LICENSE
+%license LICENSE
 %doc *.md
 %doc composer.json
 %{_datadir}/php/phpDocumentor
 
 
 %changelog
+* Tue Feb  3 2015 Remi Collet <remi@fedoraproject.org> - 2.0.3-2
+- add LICENSE from upstream repository
+
 * Fri Dec 19 2014 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - initial package
 - open https://github.com/phpDocumentor/ReflectionDocBlock/issues/40
