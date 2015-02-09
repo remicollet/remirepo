@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -28,7 +28,7 @@
 
 #global prever RC1
 Name:           %{?scl_prefix}php-pecl-http
-Version:        2.2.0
+Version:        2.2.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
@@ -74,8 +74,6 @@ BuildRequires: libevent-devel > 1.4
 %endif
 %endif
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %if "%{php_version}" < "5.4"
@@ -338,6 +336,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 09 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
+- Update to 2.2.1 (stable)
+
 * Tue Jan 27 2015 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - Update to 2.2.0 (stable)
 - add dependency on libidn
