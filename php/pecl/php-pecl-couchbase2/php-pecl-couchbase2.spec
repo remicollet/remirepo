@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -25,7 +25,7 @@
 
 Summary:       Couchbase Server PHP extension
 Name:          %{?scl_prefix}php-pecl-couchbase2
-Version:       2.0.3
+Version:       2.0.4
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
@@ -38,8 +38,6 @@ BuildRequires: libcouchbase-devel
 # to ensure compatibility with XDebug
 BuildRequires: %{?scl_prefix}php-pecl-xdebug
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 # used in embded php code
@@ -172,12 +170,19 @@ done
 %endif
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -199,6 +204,10 @@ fi
 
 
 %changelog
+* Mon Feb 09 2015 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4 (stable)
+- drop runtime dependency on pear, new scriptlet
+
 * Wed Jan 07 2015 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3
 
