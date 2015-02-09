@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -21,7 +21,7 @@
 
 Summary:        High resolution timing
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.5.0
+Version:        0.5.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -210,8 +210,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 09 2015 Remi Collet <remi@fedoraproject.org> - 0.5.1-1
+- Update to 0.5.1 (stable)
+
 * Mon Feb 02 2015 Remi Collet <remi@fedoraproject.org> - 0.5.0-1
-- Update to 0.5.0
+- Update to 0.5.0 (stable)
 - don't install test suite
 - drop runtime dependency on pear, new scriptlets
 
