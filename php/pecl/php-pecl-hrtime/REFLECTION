@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #96 hrtime version 0.5.0 ] {
+Extension [ <persistent> extension #96 hrtime version 0.5.1 ] {
 
   - Classes [3] {
     Class [ <internal:hrtime> class HRTime\PerformanceCounter ] {
