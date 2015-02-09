@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -24,7 +24,7 @@
 
 Summary:        XML diff and merge
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.1.1
+Version:        1.1.2
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -101,7 +101,6 @@ These are the files needed to compile programs using %{name}.
 %setup -q -c
 
 sed -e '/name="diffmark/d' \
-    -e '/testdata/s/role="data"/role="test"/' \
     -i package.xml
 
 mv %{pecl_name}-%{version} NTS
@@ -254,6 +253,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 09 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
+- Update to 1.1.2 (stable)
+
 * Mon Feb 02 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - Update to 1.1.1 (stable)
 
