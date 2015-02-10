@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-kronolith
-Version:        4.2.4
+Version:        4.2.5
 Release:        1%{?dist}
 Summary:        A web based calendar
 
@@ -124,6 +124,7 @@ Requires:       php-spl
 Requires:       php-xmlwriter
 
 Provides:       php-pear(%{pear_channel}/kronolith) = %{version}
+Provides:       php-composer(horde/kronolith) = %{version}
 Obsoletes:      kronolith < 4
 Provides:       kronolith  = %{version}
 
@@ -256,6 +257,10 @@ fi
 
 
 %changelog
+* Tue Feb 10 2015 Remi Collet <remi@fedoraproject.org> - 4.2.5-1
+- Update to 4.2.5
+- add provides php-composer(horde/kronolith)
+
 * Wed Dec 03 2014 Remi Collet <remi@fedoraproject.org> - 4.2.4-1
 - Update to 4.2.4
 
