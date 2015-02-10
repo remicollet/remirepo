@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -12,7 +12,7 @@
 %global pear_channel phpseclib.sourceforge.net
 
 Name:           php-phpseclib-file-asn1
-Version:        0.3.9
+Version:        0.3.10
 Release:        1%{?dist}
 Summary:        Pure-PHP ASN1 parser
 
@@ -87,5 +87,8 @@ fi
 
 
 %changelog
+* Tue Feb 10 2015 Remi Collet <remi@fedoraproject.org> - 0.3.10-1
+- Update to 0.3.10
+
 * Thu Jan 15 2015 Remi Collet <remi@fedoraproject.org> - 0.3.9-1
 - Initial packaging, version 0.3.9
