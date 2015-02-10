@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-imp
-Version:        6.2.6
+Version:        6.2.7
 Release:        1%{?dist}
 Summary:        A web based webmail system
 
@@ -257,6 +257,9 @@ fi
 
 
 %changelog
+* Tue Feb 10 2015 Remi Collet <remi@fedoraproject.org> - 6.2.7-1
+- Update to 6.2.7
+
 * Tue Jan 20 2015 Remi Collet <remi@fedoraproject.org> - 6.2.6-1
 - Update to 6.2.6
 - phpseclib/File_ASN1 is optional
