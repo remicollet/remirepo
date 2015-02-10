@@ -22,7 +22,7 @@
 %endif
 
 Name: phpMyAdmin
-Version: 4.3.8
+Version: 4.3.9
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -59,7 +59,6 @@ Requires:  php-iconv
 Requires:  php-json
 Requires:  php-libxml
 Requires:  php-mbstring
-Requires:  php-mcrypt
 Requires:  php-mysqli
 Requires:  php-openssl
 Requires:  php-pcre
@@ -208,12 +207,16 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 %if %{with_nginx}
 %config(noreplace) %{_sysconfdir}/nginx/default.d/%{name}.conf
 %endif
+%dir %{_localstatedir}/lib/%{name}/
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/upload
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/save
 %dir %attr(0750,apache,apache) %{_localstatedir}/lib/%{name}/config
 
 
 %changelog
+* Tue Feb 10 2015 Remi Collet <rpms@famillecollet.com> 4.3.9-1
+- update to 4.3.9 (Thu, 5 Feb 2015, bugfix)
+
 * Sat Jan 24 2015 Remi Collet <rpms@famillecollet.com> 4.3.8-1
 - update to 4.3.8 (Sat, 24 Jan 2015, bugfix)
 
