@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-nag
-Version:        4.2.3
+Version:        4.2.4
 Release:        1%{?dist}
 Summary:        A web based task list manager
 
@@ -98,6 +98,7 @@ Requires:       php-session
 Requires:       php-spl
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/nag) = %{version}
 
 
 %description
@@ -213,6 +214,10 @@ fi
 
 
 %changelog
+* Tue Feb 10 2015 Remi Collet <remi@fedoraproject.org> - 4.2.4-1
+- Update to 4.2.4
+- add provides php-composer(horde/nag)
+
 * Fri Nov 21 2014 Remi Collet <remi@fedoraproject.org> - 4.2.3-1
 - Update to 4.2.3
 
