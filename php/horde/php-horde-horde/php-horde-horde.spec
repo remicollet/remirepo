@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-horde
-Version:        5.2.3
+Version:        5.2.4
 Release:        1%{?dist}
 Summary:        Horde Application Framework
 
@@ -147,6 +147,7 @@ Requires:       php-soap
 Requires:       php-spl
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde) = %{version}
 Obsoletes:      horde < 5
 Provides:       horde = %{version}
 
@@ -310,6 +311,10 @@ fi
 
 
 %changelog
+* Tue Feb 10 2015 Remi Collet <remi@fedoraproject.org> - 5.2.4-1
+- Update to 5.2.4
+- provides php-composer(horde/horde)
+
 * Wed Dec 03 2014 Remi Collet <remi@fedoraproject.org> - 5.2.3-1
 - Update to 5.2.3
 
