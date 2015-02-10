@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -13,7 +13,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-mnemo
-Version:        4.2.3
+Version:        4.2.4
 Release:        1%{?dist}
 Summary:        A web based notes manager
 
@@ -85,6 +85,7 @@ Requires:       php-pcre
 Requires:       php-spl
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/mnemo) = %{version}
 
 
 %description
@@ -203,6 +204,10 @@ fi
 
 
 %changelog
+* Tue Feb 10 2015 Remi Collet <remi@fedoraproject.org> - 4.2.4-1
+- Update to 4.2.4
+- add provides php-composer(horde/mnemo)
+
 * Wed Dec 03 2014 Remi Collet <remi@fedoraproject.org> - 4.2.3-1
 - Update to 4.2.3
 
