@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-ingo
-Version:        3.2.3
+Version:        3.2.4
 Release:        1%{?dist}
 Summary:        An email filter rules manager
 
@@ -79,6 +79,7 @@ Requires:       php-pcre
 Requires:       php-spl
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/ingo) = %{version}
 Obsoletes:      ingo < 3
 Provides:       ingo = %{version}
 
@@ -194,6 +195,10 @@ fi
 
 
 %changelog
+* Tue Feb 10 2015 Remi Collet <remi@fedoraproject.org> - 3.2.4-1
+- Update to 3.2.4
+- add provides php-composer(horde/ingo)
+
 * Wed Dec 03 2014 Remi Collet <remi@fedoraproject.org> - 3.2.3-1
 - Update to 3.2.3
 
