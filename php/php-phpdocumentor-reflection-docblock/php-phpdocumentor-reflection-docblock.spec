@@ -2,28 +2,25 @@
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    38743b677965c48a637097b2746a281264ae2347
+%global gh_commit    d68dbdc53dc358a816f00b300704702b2eaff7b8
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpDocumentor
 %global gh_project   ReflectionDocBlock
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpdocumentor-reflection-docblock
-Version:        2.0.3
-Release:        2%{?dist}
+Version:        2.0.4
+Release:        1%{?dist}
 Summary:        DocBlock parser
 
 Group:          Development/Libraries
 License:        MIT
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
-
-# https://github.com/phpDocumentor/ReflectionDocBlock/issues/40
-Source1:        https://raw.githubusercontent.com/phpDocumentor/ReflectionDocBlock/master/LICENSE
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -55,8 +52,6 @@ DocBlocks or otherwise retrieve information that is embedded in a DocBlock.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-cp %{SOURCE1} LICENSE
-
 
 %build
 phpab \
@@ -73,9 +68,6 @@ cp -pr src/* %{buildroot}%{_datadir}/php
 
 %check
 %if %{with_tests}
-# Upstream issue (reported by Travis)
-rm tests/phpDocumentor/Reflection/DocBlock/Tag/MethodTagTest.php
-
 phpunit --bootstrap %{buildroot}%{_datadir}/php/phpDocumentor/Reflection/DocBlock/autoload.php
 %else
 : Test suite disabled
@@ -96,6 +88,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb 11 2015 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- update to 2.0.4
+- LICENSE is in upstream archive
+
 * Tue Feb  3 2015 Remi Collet <remi@fedoraproject.org> - 2.0.3-2
 - add LICENSE from upstream repository
 
