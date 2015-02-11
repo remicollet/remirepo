@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Alarm
-Version:        2.2.3
+Version:        2.2.4
 Release:        1%{?dist}
 Summary:        Horde Alarm Libraries
 
@@ -59,6 +59,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Prefs) <  3.0.0
 # Horde_Log, Horde_Mime optional and implicitly required
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-alarm) = %{version}
 
 
 %description
@@ -140,6 +141,10 @@ fi
 
 
 %changelog
+* Wed Feb 11 2015 Remi Collet <remi@fedoraproject.org> - 2.2.4-1
+- Update to 2.2.4
+- add provides php-composer(horde/horde-alarm)
+
 * Thu Nov 06 2014 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
 - Update to 2.2.3
 - raise dependencies:
