@@ -13,7 +13,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Image
-Version:        2.1.0
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        Horde Image API
 
@@ -30,6 +30,7 @@ BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 %if %{with_tests}
 # To run unit tests
+BuildRequires:  php-pear(%{pear_channel}/Horde_Stream) >= 1.6.2
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 %endif
 
@@ -42,12 +43,13 @@ Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
-Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.6.2
+Requires:       php-pear(%{pear_channel}/Horde_Stream) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
@@ -56,6 +58,9 @@ Requires:       php-gd
 Requires:       php-json
 Requires:       php-zlib
 Requires:       php-pear(XML_SVG)
+
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-image) = %{version}
 
 
 %description
@@ -149,6 +154,12 @@ fi
 
 
 %changelog
+* Wed Feb 11 2015 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+- add povides php-composer(horde/horde-image)
+- add dependency on Horde_Stream
+- raise dependency on Horde_Translation 2.2.0
+
 * Tue Jun 17 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0
 
