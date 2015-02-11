@@ -15,7 +15,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Util
-Version:        2.5.2
+Version:        2.5.3
 Release:        1%{?dist}
 Summary:        Horde Utility Libraries
 
@@ -57,6 +57,7 @@ Requires:       php-spl
 # Optional: Horde_Imap_Client not required to reduce build tree
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-util) = %{version}
 
 
 %description
@@ -121,6 +122,10 @@ fi
 
 
 %changelog
+* Wed Feb 11 2015 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
+- Update to 2.5.3
+- add provides php-composer(horde/horde-util)
+
 * Mon Dec 29 2014 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - Update to 2.5.2
 
