@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Prefs
-Version:        2.7.1
+Version:        2.7.2
 Release:        1%{?dist}
 Summary:        Horde Preferences API
 
@@ -68,6 +68,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Imsp) <  3.0.0
 # Optional and implicitly required: Horde_Mongo
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-prefs) = %{version}
 
 
 %description
@@ -149,6 +150,10 @@ fi
 
 
 %changelog
+* Wed Feb 11 2015 Remi Collet <remi@fedoraproject.org> - 2.7.2-1
+- Update to 2.7.2
+- add provides php-composer(horde/horde-prefs)
+
 * Mon Dec 29 2014 Remi Collet <remi@fedoraproject.org> - 2.7.1-1
 - Update to 2.7.1
 - raise dependency on Horde_Translation >= 2.2.0
