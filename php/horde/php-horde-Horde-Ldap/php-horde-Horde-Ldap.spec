@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Ldap
-Version:        2.2.0
+Version:        2.3.0
 Release:        1%{?dist}
 Summary:        Horde LDAP libraries
 
@@ -42,6 +42,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-ldap) = %{version}
 
 
 %description
@@ -102,6 +103,10 @@ fi
 
 
 %changelog
+* Wed Feb 11 2015 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
+- Update to 2.3.0
+- add provides php-composer(horde/horde-ldap)
+
 * Tue Jun 17 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - Update to 2.2.0
 
