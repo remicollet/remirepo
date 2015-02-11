@@ -18,7 +18,7 @@
 %endif
 
 Name:           php-horde-Horde-Stream-Wrapper
-Version:        2.1.1
+Version:        2.1.2
 Release:        1%{?dist}
 Summary:        Horde Stream wrappers
 
@@ -104,6 +104,9 @@ fi
 
 
 %changelog
+* Wed Feb 11 2015 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
+- Update to 2.1.2
+
 * Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - Update to 2.1.1
 - add provides php-composer(horde/horde-stream-wrapper)

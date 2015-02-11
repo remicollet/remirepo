@@ -3,7 +3,7 @@ Build order
 	* Horde_Mongo               1.0.3        
 	* Horde_Queue               1.1.2        
 	* Horde_Role                1.0.1        
-	* Horde_Stream_Wrapper      2.1.1       I: Horde_Test 
+	* Horde_Stream_Wrapper      2.1.2       I: Horde_Test 
 	  Horde_Stringprep          1.0.1        
 	* Horde_Thrift              2.0.2        
 	* Horde_Translation         2.2.0       I: Horde_Test 
