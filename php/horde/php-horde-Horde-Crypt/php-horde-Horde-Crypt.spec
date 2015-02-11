@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Crypt
-Version:        2.5.2
+Version:        2.5.3
 Release:        1%{?dist}
 Summary:        Horde Cryptography API
 
@@ -28,8 +28,10 @@ BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
 # To run unit tests
+BuildRequires:  php-pear(%{pear_channel}/Horde_Http) >= 2.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Stream) >= 1.5.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
 # rhel >= 6 have gnupg2 which provides this
 BuildRequires:  %{_bindir}/gpg
 
@@ -61,6 +63,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-crypt) = %{version}
 
 
 %description
@@ -139,6 +142,10 @@ fi
 
 
 %changelog
+* Wed Feb 11 2015 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
+- Update to 2.5.3
+- add provides php-composer(horde/horde-crypt)
+
 * Mon Dec 29 2014 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - Update to 2.5.2
 
