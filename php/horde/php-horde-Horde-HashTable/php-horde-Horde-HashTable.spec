@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-HashTable
-Version:        1.2.1
+Version:        1.2.2
 Release:        1%{?dist}
 Summary:        Horde Hash Table Interface
 
@@ -107,6 +107,9 @@ fi
 
 
 %changelog
+* Wed Feb 11 2015 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
+- Update to 1.2.2
+
 * Thu Jan 08 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - Update to 1.2.1
 - add provides php-composer(horde/horde-hashtable)
