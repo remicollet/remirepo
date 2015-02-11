@@ -14,7 +14,7 @@
 # so, don't run it during rpmbuild
 
 Name:           php-horde-Horde-Rpc
-Version:        2.1.2
+Version:        2.1.3
 Release:        1%{?dist}
 Summary:        Horde RPC API
 
@@ -140,6 +140,9 @@ fi
 
 
 %changelog
+* Wed Feb 11 2015 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
+- Update to 2.1.3
+
 * Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
 - Update to 2.1.2
 - add provides php-composer(horde/horde-rpc)
