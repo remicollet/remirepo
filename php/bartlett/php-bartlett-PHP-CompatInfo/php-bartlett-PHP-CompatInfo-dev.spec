@@ -6,15 +6,15 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    d900ea4b174dd302b36ce0709f46b79d2da27e00
+%global gh_commit    6cd2777f2c9f035810f51e8ade838c0698cf5874
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150116
+%global gh_date      20150204
 %global gh_owner     llaville
 %global gh_project   php-compat-info
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        4.0.0
-%global specrel 2
+%global specrel 3
 Release:        %{?gh_short:0.%{specrel}.%{?gh_date}git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -24,10 +24,8 @@ URL:            http://php5.laurent-laville.org/compatinfo/
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?gh_short:-%{gh_short}}.tar.gz
 
 # Autoloader for RPM - die composer !
+# and sqlite database path
 Patch0:         %{name}-4.0.0-rpm.patch
-
-# https://github.com/llaville/php-compat-info/pull/163
-Patch1:         %{name}-4.0.0-pr163.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -38,11 +36,12 @@ BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php-composer(bartlett/php-reflect) >= 3.0.0
 
 # From composer.json, "require"
-#        "php": ">=5.3.0",
+#        "php": ">=5.3.2",
 #        "ext-libxml": "*",
 #        "ext-pcre": "*",
 #        "ext-spl": "*",
 #        "ext-json": "*",
+#        "ext-pdo_sqlite": "*",
 #        "symfony/console": "~2.5",
 #        "bartlett/php-reflect": "3.0.*@dev",
 Requires:       php(language) >= 5.3.0
@@ -89,7 +88,6 @@ Documentation: http://php5.laurent-laville.org/compatinfo/manual/current/en/
 #setup -q -n %{gh_project}-%{version}
 
 %patch0 -p1 -b .rpm
-%patch1 -p1
 
 sed -e 's/@package_version@/%{version}/' \
     -i $(find src -name \*.php)
@@ -142,6 +140,9 @@ fi
 
 
 %changelog
+* Wed Feb  4 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.3.20150204git6cd2777
+- update to 4.0.0beta1
+
 * Tue Jan 20 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.2.20150116gitd900ea4
 - add patch for DB path (pr #163)
 - take care of test suite results only in f21 for now

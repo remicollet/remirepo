@@ -1,7 +1,6 @@
-diff -up ./bin/phpcompatinfo.json.dist.rpm ./bin/phpcompatinfo.json.dist
 diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
---- ./bin/phpcompatinfo.rpm	2015-01-19 14:09:01.286113786 +0100
-+++ ./bin/phpcompatinfo	2015-01-19 14:11:55.099839603 +0100
+--- ./bin/phpcompatinfo.rpm	2015-02-04 11:23:57.000000000 +0100
++++ ./bin/phpcompatinfo	2015-02-04 15:14:33.341279703 +0100
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
@@ -39,9 +38,46 @@ diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
  
  if (PHP_SAPI !== 'cli') {
      return;
+diff -up ./data/handleDB.php.rpm ./data/handleDB.php
+--- ./data/handleDB.php.rpm	2015-02-04 15:11:49.584033737 +0100
++++ ./data/handleDB.php	2015-02-04 15:14:04.995064027 +0100
+@@ -11,7 +11,18 @@
+  * @since    Release 4.0.0alpha3
+  */
+ 
+-require_once dirname(__DIR__) . '/vendor/autoload.php';
++$baseDir   = dirname(__DIR__);
++$vendorDir = '/usr/share/php';
++require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
++use Symfony\Component\ClassLoader\UniversalClassLoader;
++
++$loader = new UniversalClassLoader();
++$loader->registerNamespaces(array(
++    'Symfony\\Component'                  => $vendorDir,
++ ));
++
++$loader->register();
++
+ require_once __DIR__ . '/ReferenceCollection.php';
+ 
+ use Bartlett\CompatInfo\Reference\ExtensionFactory;
+diff -up ./src/Bartlett/CompatInfo/Environment.php.rpm ./src/Bartlett/CompatInfo/Environment.php
+--- ./src/Bartlett/CompatInfo/Environment.php.rpm	2015-02-04 15:15:02.113498620 +0100
++++ ./src/Bartlett/CompatInfo/Environment.php	2015-02-04 15:16:30.986169085 +0100
+@@ -22,6 +22,10 @@ class Environment
+      */
+     public static function initRefDb()
+     {
++        if ($database = getenv('BARTLETT_COMPATINFO_DB')) {
++            return new \PDO('sqlite:' . $database);
++        }
++
+         $database = 'compatinfo.sqlite';
+         $tempDir  = sys_get_temp_dir() . '/bartlett';
+ 
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
---- ./tests/bootstrap.php.rpm	2015-01-16 17:51:57.000000000 +0100
-+++ ./tests/bootstrap.php	2015-01-19 14:13:45.494300591 +0100
+--- ./tests/bootstrap.php.rpm	2015-02-04 11:23:57.000000000 +0100
++++ ./tests/bootstrap.php	2015-02-04 15:11:49.584033737 +0100
 @@ -1,8 +1,30 @@
  <?php
  
@@ -75,26 +111,3 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 +# Class not catched by autoloader
 +require $vendorDir . '/Bartlett/Reflect.php';
  require __DIR__ . '/Reference/GenericTest.php';
-diff -up ./data/handleDB.php.rpm ./data/handleDB.php
---- ./data/handleDB.php.rpm	2015-01-19 14:17:57.871354474 +0100
-+++ ./data/handleDB.php	2015-01-19 14:20:42.213040384 +0100
-@@ -11,7 +11,18 @@
-  * @since    Release 4.0.0alpha3
-  */
- 
--require_once dirname(__DIR__) . '/vendor/autoload.php';
-+$baseDir   = dirname(__DIR__);
-+$vendorDir = '/usr/share/php';
-+require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
-+use Symfony\Component\ClassLoader\UniversalClassLoader;
-+
-+$loader = new UniversalClassLoader();
-+$loader->registerNamespaces(array(
-+    'Symfony\\Component'                  => $vendorDir,
-+ ));
-+
-+$loader->register();
-+
- require_once __DIR__ . '/ReferenceCollection.php';
- 
- use Symfony\Component\Console\Helper\ProgressBar;
