@@ -1,7 +1,6 @@
-diff -up ./bin/phpreflect.json.dist.rpm ./bin/phpreflect.json.dist
 diff -up ./bin/phpreflect.rpm ./bin/phpreflect
---- ./bin/phpreflect.rpm	2015-01-15 17:38:39.000000000 +0100
-+++ ./bin/phpreflect	2015-01-16 11:26:45.900540580 +0100
+--- ./bin/phpreflect.rpm	2015-02-03 11:38:30.000000000 +0100
++++ ./bin/phpreflect	2015-02-04 14:45:45.995075976 +0100
 @@ -1,23 +1,35 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
@@ -48,9 +47,9 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
  if (PHP_SAPI !== 'cli') {
      return;
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
---- ./tests/bootstrap.php.rpm	2015-01-16 11:32:46.045016105 +0100
-+++ ./tests/bootstrap.php	2015-01-16 11:32:49.152028834 +0100
-@@ -1,16 +1,31 @@
+--- ./tests/bootstrap.php.rpm	2015-02-03 11:38:30.000000000 +0100
++++ ./tests/bootstrap.php	2015-02-04 14:45:45.995075976 +0100
+@@ -1,11 +1,9 @@
  <?php
  
  $baseDir   = dirname(__DIR__);
@@ -64,9 +63,10 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
          'Bartlett\Tests\Reflect\Analyser\FooAnalyser'
              => __DIR__ . '/Analyser/FooAnalyser.php',
          'Bartlett\Tests\Reflect\Analyser\BarAnalyser'
-             => __DIR__ . '/Analyser/BarAnalyser.php',
-         'Bartlett\Tests\Reflect\Model\GenericModelTest'
+@@ -14,5 +12,23 @@ $loader->addClassMap(
              => __DIR__ . '/Model/GenericModelTest.php',
+         'Bartlett\Tests\Reflect\Environment\YourLogger'
+             => __DIR__ . '/Environment/YourLogger.php',
 -    )
  );
 +require_once $vendorDir . '/PhpParser/Autoloader.php';
@@ -80,6 +80,7 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 +$loader->registerNamespaces(array(
 +    'Bartlett\\Tests\\Reflect'            => $baseDir . '/tests',
 +    'Bartlett'                            => $baseDir . '/src',
++    'Monolog'                             => $vendorDir,
 +));
 +$loader->useIncludePath(true);
 +$loader->register();
@@ -87,3 +88,14 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 +foreach ($tab as $class => $file) {
 +    require_once $file;
 +}
+diff -up ./tests/Environment/YourLogger.php.rpm ./tests/Environment/YourLogger.php
+--- ./tests/Environment/YourLogger.php.rpm	2015-02-03 11:38:30.000000000 +0100
++++ ./tests/Environment/YourLogger.php	2015-02-04 14:48:07.609164546 +0100
+@@ -14,6 +14,7 @@ class YourLogger extends Logger
+         if (!file_exists($tempDir)) {
+             mkdir($tempDir, 0755, true);
+         }
++        date_default_timezone_set('UTC');
+         $filename = sprintf('phpreflect-%s.log', date('Ymd'));
+ 
+         $stream = new RotatingFileHandler("$tempDir/$filename", 30);

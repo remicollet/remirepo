@@ -6,15 +6,15 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    398cdae6f281153cae534a345abdf555f8fd3efd
+%global gh_commit    b4b807b76a98c3dabcada0337e078157aa502e37
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150118
+%global gh_date      20150203
 %global gh_owner     llaville
 %global gh_project   php-reflect
 
 Name:           php-bartlett-PHP-Reflect
 Version:        3.0.0
-%global specrel 4
+%global specrel 5
 Release:        %{?gh_short:0.%{specrel}.%{?gh_date}git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -27,12 +27,9 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 # Enable cache plugin
 Patch0:         %{name}-3.0.0-rpm.patch
 
-Patch1:         %{name}-3.0.0-pr17.patch
-
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3
-BuildRequires:  php-pdo_sqlite
 # to run test suite
 BuildRequires:  %{_bindir}/phpunit
 Requires:       php-composer(sebastian/version)                 >= 1.0
@@ -47,16 +44,16 @@ BuildRequires:  php-composer(symfony/dependency-injection)      >= 2.5
 BuildRequires:  php-composer(phpdocumentor/reflection-docblock) >= 2.0
 BuildRequires:  php-composer(seld/jsonlint)                     >= 1.1
 BuildRequires:  php-composer(justinrainbow/json-schema)         >= 1.3
+BuildRequires:  php-composer(monolog/monolog)                   >= 1.10
 
 # From composer.json, "require"
-#        "php": ">=5.3.0",
+#        "php": ">=5.3.2",
 #        "ext-tokenizer": "*",
 #        "ext-pcre": "*",
 #        "ext-spl": "*",
 #        "ext-json": "*",
 #        "ext-date": "*",
 #        "ext-reflection": "*",
-#        "ext-pdo_sqlite": "*",
 #        "sebastian/version": "~1.0",
 #        "nikic/php-parser": "~1.0",
 #        "doctrine/collections": "~1.2",
@@ -68,7 +65,7 @@ BuildRequires:  php-composer(justinrainbow/json-schema)         >= 1.3
 #        "phpdocumentor/reflection-docblock": "~2.0",
 #        "justinrainbow/json-schema": "~1.3",
 #        "seld/jsonlint": "~1.1"
-Requires:       php(language) >= 5.3
+Requires:       php(language) >= 5.3.2
 Requires:       php-date
 Requires:       php-json
 Requires:       php-pcre
@@ -120,7 +117,6 @@ Documentation: http://php5.laurent-laville.org/reflect/manual/current/en/
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
-%patch1 -p1
 
 sed -e 's/@package_version@/%{version}/' \
     -i $(find src -name \*.php)
@@ -141,7 +137,8 @@ install -D -p -m 644 bin/phpreflect.1         %{buildroot}%{_mandir}/man1/phpref
 
 
 %check
-# Version 2.0.0 : OK (155 tests, 156 assertions)
+# Version 3.0.0beta1 : OK, but incomplete or skipped tests!
+# Tests: 123, Assertions: 124, Incomplete: 3.
 %{_bindir}/phpunit
 
 
@@ -168,6 +165,9 @@ fi
 
 
 %changelog
+* Wed Feb 04 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.5.20150203gitb4b807b
+- update to 3.0.0 beta1
+
 * Tue Jan 20 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.4.20150118git398cdae
 - fix composer only code (pr #17)
 
