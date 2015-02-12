@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -19,8 +19,8 @@
 
 Name:          %{?scl_prefix}php-ioncube-loader
 Summary:       Loader for ionCube Encoded Files
-Version:       4.7.3
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Version:       4.7.4
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       Distribuable
 Group:         Development/Languages
 
@@ -147,6 +147,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb 12 2015 Remi Collet <RPMS@famillecollet.com> - 4.7.4-1
+- update to 4.7.4 (Feb 10, 2015)
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> 4.7.3-1.1
 - Fedora 21 SCL mass rebuild
 
