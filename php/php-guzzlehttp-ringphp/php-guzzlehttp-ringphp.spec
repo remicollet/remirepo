@@ -26,8 +26,13 @@
 %global promise_min_ver  2.0
 %global promise_max_ver  3.0
 
+%if 0%{?rhel} == 5
+# no nodejs available in RHEL-5
+%global with_tests %{?_with_tests:1}%{!?_with_tests:0}
+%else
 # Build using "--without tests" to disable tests
 %global with_tests %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 %{!?phpdir:     %global phpdir     %{_datadir}/php}
 %{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
