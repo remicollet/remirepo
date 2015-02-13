@@ -1,7 +1,7 @@
 #
 # RPM spec file for php-guzzlehttp-streams
 #
-# Copyright (c) 2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -11,8 +11,8 @@
 
 %global github_owner     guzzle
 %global github_name      streams
-%global github_version   1.5.1
-%global github_commit    fb0d1ee29987c2bdc59867bffaade6fc88c2675f
+%global github_version   3.0.0
+%global github_commit    47aaa48e27dae43d39fc1cea0ccf0d84ac1a2ba5
 
 %global composer_vendor  guzzlehttp
 %global composer_project streams
@@ -23,9 +23,12 @@
 # Build using "--without tests" to disable tests
 %global with_tests       %{?_without_tests:0}%{!?_without_tests:1}
 
+%{!?phpdir:     %global phpdir     %{_datadir}/php}
+%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
+
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       Provides a simple abstraction over streams of data
 
 Group:         Development/Libraries
@@ -33,20 +36,26 @@ License:       MIT
 URL:           http://docs.guzzlephp.org/en/guzzle4/streams.html
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+# Test suite start failing with upcoming 5.5.21RC1 / 5.6.5RC1
+# https://github.com/guzzle/streams/issues/29
+# https://github.com/guzzle/streams/commit/ad4c07ea55d02789a65ae75f6e4a9ee2cb9dab3f.patch
+Patch0:        %{name}-ad4c07ea55d02789a65ae75f6e4a9ee2cb9dab3f.patch
+
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 %if %{with_tests}
-# For tests: composer.json
+# composer.json
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-phpunit-PHPUnit
-# For tests: phpcompatinfo (computed from version 1.5.1)
+BuildRequires: %{__phpunit}
+# phpcompatinfo (computed from version 3.0.0)
 BuildRequires: php-hash
 BuildRequires: php-spl
+BuildRequires: php-zlib
 %endif
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.5.1)
+# phpcompatinfo (computed from version 3.0.0)
 Requires:      php-hash
 Requires:      php-spl
 
@@ -59,14 +68,16 @@ Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+%patch0 -p1 -b .ad4c07ea55d02789a65ae75f6e4a9ee2cb9dab3f
+
 
 %build
 # Empty build section, nothing required
 
 
 %install
-mkdir -pm 0755 %{buildroot}%{_datadir}/php/GuzzleHttp/Stream
-cp -pr src/* %{buildroot}%{_datadir}/php/GuzzleHttp/Stream/
+mkdir -p  %{buildroot}%{phpdir}/GuzzleHttp/Stream
+cp -pr src/* %{buildroot}%{phpdir}/GuzzleHttp/Stream/
 
 
 %check
@@ -76,18 +87,13 @@ mkdir vendor
 cat > vendor/autoload.php <<'AUTOLOAD'
 <?php
 
-require_once __DIR__ . '/../src/functions.php';
-
 spl_autoload_register(function ($class) {
     $src = str_replace(array('\\', '_'), '/', $class).'.php';
     @include_once $src;
 });
 AUTOLOAD
 
-# Create PHPUnit config w/ colors turned off
-sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
-
-%{_bindir}/phpunit --include-path="%{buildroot}%{_datadir}/php" -d date.timezone="UTC"
+%{__phpunit} --include-path="%{buildroot}%{phpdir}"
 %else
 : Tests skipped
 %endif
@@ -97,12 +103,20 @@ sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc README.rst composer.json
-%dir %{_datadir}/php/GuzzleHttp
-     %{_datadir}/php/GuzzleHttp/Stream
+%doc *.rst
+%doc composer.json
+%dir %{phpdir}/GuzzleHttp
+     %{phpdir}/GuzzleHttp/Stream
 
 
 %changelog
+* Sun Feb 08 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.0.0-1
+- Updated to 3.0.0 (BZ #1131103)
+
+* Thu Jan 22 2015 Remi Collet <remi@fedoraproject.org> - 1.5.1-3
+- add upstream patch for test suite against latest PHP
+  see https://github.com/guzzle/streams/issues/29, thank Koschei
+
 * Tue Aug 26 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.5.1-2
 - Updated URL and description per upstream
 - Fix test suite when previous version installed
