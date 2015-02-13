@@ -21,7 +21,7 @@
 
 Name:           php-doctrine-instantiator
 Version:        1.0.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Instantiate objects in PHP without invoking their constructors
 
 Group:          Development/Libraries
@@ -31,13 +31,13 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
 BuildRequires:  php(language) >= 5.3
 BuildRequires:  php-phar
 BuildRequires:  php-pdo
 BuildRequires:  php-reflection
-BuildRequires:  php-phpunit-PHPUnit
-BuildRequires:  php-theseer-autoload
+BuildRequires:  %{_bindir}/phpunit
 %endif
 
 # From composer.json
@@ -59,7 +59,10 @@ instantiating PHP classes.
 
 
 %build
-# Nothing
+: Generate a simple autoloader
+%{_bindir}/phpab \
+    --output src/Doctrine/Instantiator/autoload.php \
+    src/Doctrine/Instantiator
 
 
 %install
@@ -71,7 +74,6 @@ cp -pr src/* %{buildroot}%{_datadir}/php
 %check
 %if %{with_tests}
 : Generate autoloader
-%{_bindir}/php -d date.timezone=UTC \
 %{_bindir}/phpab \
     --basedir $PWD \
     --output autoload.php \
@@ -88,14 +90,11 @@ then
     >PHPUnit/Autoload.php
 fi
 
-sed -e 's/colors="true"//' \
-    -e '/log/d' \
-    phpunit.xml.dist >phpunit.xml
+sed -e '/log/d' phpunit.xml.dist >phpunit.xml
 
 : Run test suite
 %{_bindir}/phpunit \
-    --bootstrap autoload.php \
-    -d date.timezone=UTC
+    --bootstrap autoload.php
 %else
 : Test suite disabled
 %endif
@@ -115,6 +114,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 13 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-2
+- add autoloader
+
 * Mon Oct 13 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
 - update to 1.0.4 (no change)
 
