@@ -42,6 +42,7 @@ License:       MIT
 URL:           http://ringphp.readthedocs.org
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 %if %{with_tests}
 BuildRequires: nodejs
@@ -97,6 +98,7 @@ clients and servers for both blocking and non-blocking requests.
 
 
 %install
+rm -rf %{buildroot}
 mkdir -pm 0755 %{buildroot}%{phpdir}/GuzzleHttp/Ring
 cp -rp src/* %{buildroot}%{phpdir}/GuzzleHttp/Ring/
 
@@ -128,7 +130,12 @@ AUTOLOAD
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.rst *.md composer.json
@@ -136,6 +143,9 @@ AUTOLOAD
 
 
 %changelog
+* Fri Feb 13 2015 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
+- backport for remi repository
+
 * Sun Dec 28 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.5-1
 - Updated to 1.0.5
 
