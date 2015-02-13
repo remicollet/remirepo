@@ -1,7 +1,7 @@
 #
 # RPM spec file for php-guzzlehttp-guzzle
 #
-# Copyright (c) 2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -9,36 +9,25 @@
 # Please preserve changelog entries
 #
 
-%if 0%{?rhel} == 5
-%global with_cacert 0
-%else
-%global with_cacert 1
-%endif
-
 %global github_owner     guzzle
 %global github_name      guzzle
-%global github_version   4.1.8
-%global github_commit    e196b8f44f9492a11261ea8f7b9724613a198daf
+%global github_version   5.1.0
+%global github_commit    f1085bb4e023766a66b7b051914ec73bdf7202b5
 
 %global composer_vendor  guzzlehttp
 %global composer_project guzzle
 
 # "php": ">=5.4.0"
 %global php_min_ver      5.4.0
-# "guzzlehttp/streams": "~1.4"
-%global streams_min_ver  1.4
-%global streams_max_ver  2.0
+# "guzzlehttp/ringphp": "~1.0"
+%global ring_min_ver     1.0
+%global ring_max_ver     2.0
 # "psr/log": "~1.0"
 %global psr_log_min_ver  1.0
 %global psr_log_max_ver  2.0
 
-%if 0%{?fedora} < 18 && 0%{?rhel} < 6
-# Missing nodejs
-%global with_tests 0
-%else
-# Build using "--without tests" to disable tests
-%global with_tests       %{?_without_tests:0}%{!?_without_tests:1}
-%endif
+%{!?phpdir:     %global phpdir     %{_datadir}/php}
+%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
@@ -52,41 +41,17 @@ Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
-%if %{with_tests}
-# For tests
-BuildRequires: nodejs
-# For tests: composer.json
-BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-composer(guzzlehttp/streams) >= %{streams_min_ver}
-BuildRequires: php-composer(guzzlehttp/streams) <  %{streams_max_ver}
-BuildRequires: php-composer(psr/log) >= %{psr_log_min_ver}
-BuildRequires: php-composer(psr/log) <  %{psr_log_max_ver}
-BuildRequires: php-phpunit-PHPUnit
-BuildRequires: php-curl
-BuildRequires: php-json
-# For tests: phpcompatinfo (computed from version 4.1.8)
-BuildRequires: php-date
-BuildRequires: php-filter
-BuildRequires: php-libxml
-BuildRequires: php-pcre
-BuildRequires: php-reflection
-BuildRequires: php-simplexml
-BuildRequires: php-spl
-%endif
 
-%if %{with_cacert}
 Requires:      ca-certificates
-%endif
 # composer.json
-Requires:      php(language) >= %{php_min_ver}
-Requires:      php-composer(guzzlehttp/streams) >= %{streams_min_ver}
-Requires:      php-composer(guzzlehttp/streams) <  %{streams_max_ver}
-Requires:      php-json
-# composer.json: optional
+Requires:      php(language)                    >= %{php_min_ver}
+Requires:      php-composer(guzzlehttp/ringphp) >= %{ring_min_ver}
+Requires:      php-composer(guzzlehttp/ringphp) <  %{ring_max_ver}
+# phpcompatinfo (computed from version 5.1.0)
 Requires:      php-curl
-# phpcompatinfo (computed from version 4.1.8)
 Requires:      php-date
 Requires:      php-filter
+Requires:      php-json
 Requires:      php-libxml
 Requires:      php-pcre
 Requires:      php-simplexml
@@ -113,17 +78,6 @@ the pain out of consuming web services.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-%if %{with_cacert}
-# Remove bundled cert
-rm -f src/cacert.pem
-sed "s#__DIR__ . '/cacert.pem'#'%{_sysconfdir}/pki/tls/cert.pem'#" \
-    -i src/Client.php
-sed "s#cacert.pem#%{_sysconfdir}/pki/tls/cert.pem#" \
-    -i tests/ClientTest.php
-sed "s#__DIR__ . '/../../src/cacert.pem'#'%{_sysconfdir}/pki/tls/cert.pem'#" \
-    -i tests/Adapter/StreamAdapterTest.php
-%endif
-
 
 %build
 # Empty build section, nothing required
@@ -131,40 +85,13 @@ sed "s#__DIR__ . '/../../src/cacert.pem'#'%{_sysconfdir}/pki/tls/cert.pem'#" \
 
 %install
 rm -rf %{buildroot}
-mkdir -pm 0755 %{buildroot}%{_datadir}/php/GuzzleHttp
-cp -pr src/* %{buildroot}%{_datadir}/php/GuzzleHttp/
+mkdir -p %{buildroot}%{phpdir}/GuzzleHttp
+cp -pr src/* %{buildroot}%{phpdir}/GuzzleHttp/
 
 
 %check
-%if %{with_tests}
-# Ensure no bundled cert
-for DIR in src tests
-do
-    find $DIR | grep 'cacert.pem' && exit 1
-    grep -r 'cacert.pem' $DIR && exit 1
-done
-
-# Create autoloader
-mkdir vendor
-cat > vendor/autoload.php <<'AUTOLOAD'
-<?php
-
-spl_autoload_register(function ($class) {
-    $src = str_replace(array('\\', '_'), '/', $class).'.php';
-    @include_once $src;
-});
-
-require_once '%{_datadir}/php/GuzzleHttp/Stream/functions.php';
-require_once __DIR__ . '/../src/functions.php';
-AUTOLOAD
-
-# Create PHPUnit config w/ colors turned off
-sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
-
-%{_bindir}/phpunit --include-path="%{buildroot}%{_datadir}/php" -d date.timezone="UTC"
-%else
-: Tests skipped
-%endif
+# Cannot run tests because RingPHP package does not provide tests
+# (tests/bootstrap.php requires GuzzleHttp\Tests\Ring\Client\Server)
 
 
 %clean
@@ -175,11 +102,18 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc *.md composer.json
-%{_datadir}/php/GuzzleHttp/*
+%doc *.md
+%doc composer.json
+%{phpdir}/GuzzleHttp/*
 
 
 %changelog
+* Sun Feb 08 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 5.1.0-1
+- Updated to 5.1.0 (BZ #1140134)
+- CA cert no longer bundled (see
+  https://github.com/guzzle/guzzle/blob/5.1.0/docs/clients.rst#verify)
+- No tests because dependency package does not provide required test file
+
 * Sat Aug 23 2014 Remi Collet <remi@fedoraproject.org> - 4.1.8-1
 - backport for remi repository
 
