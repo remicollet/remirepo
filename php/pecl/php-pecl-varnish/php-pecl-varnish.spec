@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -22,12 +22,17 @@
 
 Summary:        Varnish Cache bindings
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.1.1
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.2.0
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+# http://svn.php.net/viewvc?view=revision&revision=335941
+# http://svn.php.net/viewvc?view=revision&revision=335942
+# http://svn.php.net/viewvc?view=revision&revision=335943
+Patch0:         %{pecl_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -39,8 +44,6 @@ BuildRequires:  varnish-libs-devel > 3
 BuildRequires:  varnish
 %endif
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires:       %{?scl_prefix}php-hash%{?_isa}
@@ -72,6 +75,7 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %{?filter_setup}
 %endif
 
+
 %description
 Varnish Cache is an open source, state of the art web application accelerator.
 
@@ -83,7 +87,11 @@ through TCP socket or shared memory.
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
 
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
+
 cd NTS
+%patch0 -p3 -b .upstream
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_VARNISH_VERSION/{s/.* "//;s/".*$//;p}' php_varnish.h)
@@ -142,21 +150,26 @@ make -C ZTS \
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
-for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
+# Documentation
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -214,7 +227,7 @@ TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__php} -n run-tests.php || ret=1
+%{__php} -n run-tests.php --show-diff || ret=1
 
 %if %{with_zts}
 cd ../ZTS
@@ -229,7 +242,7 @@ TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__ztsphp} -n run-tests.php || ret=1
+%{__ztsphp} -n run-tests.php --show-diff || ret=1
 %endif
 
 : Stop the test server
@@ -249,8 +262,9 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
+%{?_licensedir:%license NTS/LICENSE}
 %{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 
@@ -261,6 +275,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Feb 14 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- Update to 1.2.0
+- don't install test suite
+- drop runtime dependency on pear, new scriptlets
+- add upstream build patches
+
 * Tue Aug 26 2014 Remi Collet <rcollet@redhat.com> - 1.1.1-3
 - allow SCL build
 

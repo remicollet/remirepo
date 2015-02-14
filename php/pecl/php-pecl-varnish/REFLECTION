@@ -1,0 +1,287 @@
+Extension [ <persistent> extension #153 varnish version 1.2.0 ] {
+
+  - Dependencies {
+    Dependency [ hash (Required) ]
+  }
+
+  - Constants [19] {
+    Constant [ integer VARNISH_STATUS_SYNTAX ] { 100 }
+    Constant [ integer VARNISH_STATUS_UNKNOWN ] { 101 }
+    Constant [ integer VARNISH_STATUS_UNIMPL ] { 102 }
+    Constant [ integer VARNISH_STATUS_TOOFEW ] { 104 }
+    Constant [ integer VARNISH_STATUS_TOOMANY ] { 105 }
+    Constant [ integer VARNISH_STATUS_PARAM ] { 106 }
+    Constant [ integer VARNISH_STATUS_AUTH ] { 107 }
+    Constant [ integer VARNISH_STATUS_OK ] { 200 }
+    Constant [ integer VARNISH_STATUS_CANT ] { 300 }
+    Constant [ integer VARNISH_STATUS_COMMS ] { 400 }
+    Constant [ integer VARNISH_STATUS_CLOSE ] { 500 }
+    Constant [ string VARNISH_CONFIG_IDENT ] { ident }
+    Constant [ string VARNISH_CONFIG_HOST ] { host }
+    Constant [ string VARNISH_CONFIG_PORT ] { port }
+    Constant [ string VARNISH_CONFIG_TIMEOUT ] { timeout }
+    Constant [ string VARNISH_CONFIG_SECRET ] { secret }
+    Constant [ string VARNISH_CONFIG_COMPAT ] { compat }
+    Constant [ integer VARNISH_COMPAT_2 ] { 2 }
+    Constant [ integer VARNISH_COMPAT_3 ] { 3 }
+  }
+
+  - Classes [4] {
+    Class [ <internal:varnish> class VarnishAdmin ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [21] {
+        Method [ <internal:varnish, ctor> public method __construct ] {
+        }
+
+        Method [ <internal:varnish> public method connect ] {
+        }
+
+        Method [ <internal:varnish> public method auth ] {
+        }
+
+        Method [ <internal:varnish> public method getParams ] {
+        }
+
+        Method [ <internal:varnish> public method setParam ] {
+        }
+
+        Method [ <internal:varnish> public method stop ] {
+        }
+
+        Method [ <internal:varnish> public method start ] {
+        }
+
+        Method [ <internal:varnish> public method banUrl ] {
+        }
+
+        Method [ <internal:varnish> public method ban ] {
+        }
+
+        Method [ <internal:varnish> public method isRunning ] {
+        }
+
+        Method [ <internal:varnish> public method getPanic ] {
+        }
+
+        Method [ <internal:varnish> public method clearPanic ] {
+        }
+
+        Method [ <internal:varnish> public method setHost ] {
+        }
+
+        Method [ <internal:varnish> public method setIdent ] {
+        }
+
+        Method [ <internal:varnish> public method setTimeout ] {
+        }
+
+        Method [ <internal:varnish> public method setPort ] {
+        }
+
+        Method [ <internal:varnish> public method setSecret ] {
+        }
+
+        Method [ <internal:varnish> public method setCompat ] {
+        }
+
+        Method [ <internal:varnish> public method getVclList ] {
+        }
+
+        Method [ <internal:varnish> public method vclUse ] {
+        }
+
+        Method [ <internal:varnish> public method disconnect ] {
+        }
+      }
+    }
+
+    Class [ <internal:varnish> class VarnishStat ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:varnish, ctor> public method __construct ] {
+        }
+      }
+    }
+
+    Class [ <internal:varnish> class VarnishLog ] {
+
+      - Constants [82] {
+        Constant [ integer TAG_Debug ] { 1 }
+        Constant [ integer TAG_Error ] { 2 }
+        Constant [ integer TAG_CLI ] { 3 }
+        Constant [ integer TAG_SessOpen ] { 4 }
+        Constant [ integer TAG_SessClose ] { 5 }
+        Constant [ integer TAG_BackendOpen ] { 6 }
+        Constant [ integer TAG_BackendReuse ] { 7 }
+        Constant [ integer TAG_BackendClose ] { 8 }
+        Constant [ integer TAG_HttpGarbage ] { 9 }
+        Constant [ integer TAG_Backend ] { 10 }
+        Constant [ integer TAG_Length ] { 11 }
+        Constant [ integer TAG_FetchError ] { 12 }
+        Constant [ integer TAG_ReqMethod ] { 13 }
+        Constant [ integer TAG_ReqURL ] { 14 }
+        Constant [ integer TAG_ReqProtocol ] { 15 }
+        Constant [ integer TAG_ReqStatus ] { 16 }
+        Constant [ integer TAG_ReqReason ] { 17 }
+        Constant [ integer TAG_ReqHeader ] { 18 }
+        Constant [ integer TAG_ReqUnset ] { 19 }
+        Constant [ integer TAG_ReqLost ] { 20 }
+        Constant [ integer TAG_RespMethod ] { 21 }
+        Constant [ integer TAG_RespURL ] { 22 }
+        Constant [ integer TAG_RespProtocol ] { 23 }
+        Constant [ integer TAG_RespStatus ] { 24 }
+        Constant [ integer TAG_RespReason ] { 25 }
+        Constant [ integer TAG_RespHeader ] { 26 }
+        Constant [ integer TAG_RespUnset ] { 27 }
+        Constant [ integer TAG_RespLost ] { 28 }
+        Constant [ integer TAG_BereqMethod ] { 29 }
+        Constant [ integer TAG_BereqURL ] { 30 }
+        Constant [ integer TAG_BereqProtocol ] { 31 }
+        Constant [ integer TAG_BereqStatus ] { 32 }
+        Constant [ integer TAG_BereqReason ] { 33 }
+        Constant [ integer TAG_BereqHeader ] { 34 }
+        Constant [ integer TAG_BereqUnset ] { 35 }
+        Constant [ integer TAG_BereqLost ] { 36 }
+        Constant [ integer TAG_BerespMethod ] { 37 }
+        Constant [ integer TAG_BerespURL ] { 38 }
+        Constant [ integer TAG_BerespProtocol ] { 39 }
+        Constant [ integer TAG_BerespStatus ] { 40 }
+        Constant [ integer TAG_BerespReason ] { 41 }
+        Constant [ integer TAG_BerespHeader ] { 42 }
+        Constant [ integer TAG_BerespUnset ] { 43 }
+        Constant [ integer TAG_BerespLost ] { 44 }
+        Constant [ integer TAG_ObjMethod ] { 45 }
+        Constant [ integer TAG_ObjURL ] { 46 }
+        Constant [ integer TAG_ObjProtocol ] { 47 }
+        Constant [ integer TAG_ObjStatus ] { 48 }
+        Constant [ integer TAG_ObjReason ] { 49 }
+        Constant [ integer TAG_ObjHeader ] { 50 }
+        Constant [ integer TAG_ObjUnset ] { 51 }
+        Constant [ integer TAG_ObjLost ] { 52 }
+        Constant [ integer TAG_BogoHeader ] { 53 }
+        Constant [ integer TAG_LostHeader ] { 54 }
+        Constant [ integer TAG_TTL ] { 55 }
+        Constant [ integer TAG_Fetch_Body ] { 56 }
+        Constant [ integer TAG_VCL_acl ] { 57 }
+        Constant [ integer TAG_VCL_call ] { 58 }
+        Constant [ integer TAG_VCL_trace ] { 59 }
+        Constant [ integer TAG_VCL_return ] { 60 }
+        Constant [ integer TAG_ReqStart ] { 61 }
+        Constant [ integer TAG_Hit ] { 62 }
+        Constant [ integer TAG_HitPass ] { 63 }
+        Constant [ integer TAG_ExpBan ] { 64 }
+        Constant [ integer TAG_ExpKill ] { 65 }
+        Constant [ integer TAG_WorkThread ] { 66 }
+        Constant [ integer TAG_ESI_xmlerror ] { 67 }
+        Constant [ integer TAG_Hash ] { 68 }
+        Constant [ integer TAG_Backend_health ] { 69 }
+        Constant [ integer TAG_VCL_Log ] { 70 }
+        Constant [ integer TAG_VCL_Error ] { 71 }
+        Constant [ integer TAG_Gzip ] { 72 }
+        Constant [ integer TAG_Link ] { 73 }
+        Constant [ integer TAG_Begin ] { 74 }
+        Constant [ integer TAG_End ] { 75 }
+        Constant [ integer TAG_VSL ] { 76 }
+        Constant [ integer TAG_Storage ] { 77 }
+        Constant [ integer TAG_Timestamp ] { 78 }
+        Constant [ integer TAG_ReqAcct ] { 79 }
+        Constant [ integer TAG_ESI_BodyBytes ] { 80 }
+        Constant [ integer TAG_PipeAcct ] { 81 }
+        Constant [ integer TAG_BereqAcct ] { 82 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:varnish, ctor> public method __construct ] {
+        }
+      }
+    }
+
+    Class [ <internal:varnish> class VarnishException extends Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+  }
+}
+
