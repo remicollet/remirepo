@@ -23,7 +23,7 @@
 Summary:        Gender Extension
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.1.0
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # Code is BSD, nam_dict.txt is GFDL
 License:        BSD and GFDL
 Group:          Development/Languages
