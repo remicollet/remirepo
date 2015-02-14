@@ -22,17 +22,12 @@
 
 Summary:        Varnish Cache bindings
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.2.0
+Version:        1.2.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# http://svn.php.net/viewvc?view=revision&revision=335941
-# http://svn.php.net/viewvc?view=revision&revision=335942
-# http://svn.php.net/viewvc?view=revision&revision=335943
-Patch0:         %{pecl_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -91,7 +86,6 @@ mv %{pecl_name}-%{version} NTS
 sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd NTS
-%patch0 -p3 -b .upstream
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_VARNISH_VERSION/{s/.* "//;s/".*$//;p}' php_varnish.h)
@@ -275,6 +269,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Feb 14 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- Update to 1.2.1
+
 * Sat Feb 14 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - Update to 1.2.0
 - don't install test suite

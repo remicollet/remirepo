@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #153 varnish version 1.2.0 ] {
+Extension [ <persistent> extension #153 varnish version 1.2.1 ] {
 
   - Dependencies {
     Dependency [ hash (Required) ]
