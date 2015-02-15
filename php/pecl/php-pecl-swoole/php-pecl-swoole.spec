@@ -23,7 +23,7 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.7.9
+Version:        1.7.10
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -37,8 +37,6 @@ BuildRequires:  %{?scl_prefix}php-sockets
 BuildRequires:  %{?scl_prefix}php-mysqli
 BuildRequires:  pcre-devel
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %if "%{php_version}" < "5.4"
@@ -181,12 +179,23 @@ do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
 
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
+
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -231,6 +240,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 15 2015 Remi Collet <remi@fedoraproject.org> - 1.7.10-1
+- Update to 1.7.10
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Jan 07 2015 Remi Collet <remi@fedoraproject.org> - 1.7.9-1
 - Update to 1.7.9
 
