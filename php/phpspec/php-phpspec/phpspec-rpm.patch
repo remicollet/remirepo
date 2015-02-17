@@ -1,0 +1,34 @@
+diff -up bin/phpspec.rpm bin/phpspec
+--- bin/phpspec.rpm	2015-01-09 14:21:45.000000000 +0100
++++ bin/phpspec	2015-02-17 15:18:53.913872436 +0100
+@@ -1,26 +1,13 @@
+-#!/usr/bin/env php
++#!/usr/bin/php
+ <?php
+ 
+ define('PHPSPEC_VERSION', '2.1.1');
+ 
+-if (is_file($autoload = getcwd() . '/vendor/autoload.php')) {
+-    require $autoload;
+-} elseif (is_file($autoload = getcwd() . '/../../autoload.php')) {
+-    require $autoload;
++if (!ini_get('date.timezone')) {
++    ini_set('date.timezone', 'UTC');
+ }
+ 
+-if (is_file($autoload = __DIR__ . '/../vendor/autoload.php')) {
+-    require($autoload);
+-} elseif (is_file($autoload = __DIR__ . '/../../../autoload.php')) {
+-    require($autoload);
+-} else {
+-    fwrite(STDERR,
+-        'You must set up the project dependencies, run the following commands:' . PHP_EOL .
+-        'curl -s http://getcomposer.org/installer | php' . PHP_EOL .
+-        'php composer.phar install' . PHP_EOL
+-    );
+-    exit(1);
+-}
++require_once 'PhpSpec/autoload.php';
+ 
+ $app = new PhpSpec\Console\Application(PHPSPEC_VERSION);
+ $app->run();
