@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global bootstrap     1
+%global bootstrap    1
 %global gh_commit    9ca52329bcdd1500de24427542577ebf3fc2f1c9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpspec
@@ -83,7 +83,10 @@ cp -pr src/* %{buildroot}%{_datadir}/php
 
 %check
 %if %{with_tests}
-%{_bindir}/phpspec run --format pretty --verbose --no-ansi
+%{_bindir}/php \
+  -d include_path=.:%{buildroot}%{_datadir}/php:/usr/share/php \
+  %{_bindir}/phpspec \
+  run --format pretty --verbose --no-ansi
 %else
 : Test suite disabled
 %endif
