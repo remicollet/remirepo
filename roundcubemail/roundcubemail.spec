@@ -8,7 +8,7 @@
 %define roundcubedir %{_datadir}/roundcubemail
 %global _logdir /var/log  
 Name: roundcubemail
-Version:  1.0.5
+Version:  1.1.0
 Release:  1%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
@@ -26,17 +26,17 @@ Group: Applications/System
 # http://www.tinymce.com/
 License: GPLv3+ with exceptions and GPLv3+ and GPLv2 and LGPLv2+ and CC-BY-SA and (MIT or GPLv2)
 URL: http://www.roundcube.net
-Source0: https://downloads.sourceforge.net/roundcubemail/roundcubemail-%{version}-dep.tar.gz
+Source0: https://downloads.sourceforge.net/roundcubemail/roundcubemail-%{version}.tar.gz
 Source1: roundcubemail.httpd
 Source3: roundcubemail.nginx
 Source2: roundcubemail.logrotate
 Source4: roundcubemail-README.rpm
 # Elegantly handle removal of moxieplayer Flash binary in tinymce
 # media plugin (see "Drop precompiled flash" in %%prep)
-Patch0: roundcubemail-0.9.3-no_swf.patch
+Patch0: roundcubemail-1.1.0-no_swf.patch
 
 # Non-upstreamable: Adjusts config path to Fedora policy
-Patch1: roundcubemail-1.0.3-confpath.patch
+Patch1: roundcubemail-1.1.0-confpath.patch
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root%(%{__id_u} -n)
@@ -79,6 +79,7 @@ Requires: php-pear(Net_Sieve)       >= 1.3.2
 Requires: php-pear(Mail_mimeDecode) >= 1.5.5
 Requires: php-pear(Net_IDNA2)       >= 0.1.1
 # not available php-pear(Crypt_GPG) >= 1.2.0
+# Net_LDAP2, Net_LDAP3
 # mailcap for /etc/mime.types
 Requires: mailcap
 
@@ -113,7 +114,7 @@ CSS 2.
 
 
 %prep
-%setup -q -n roundcubemail-%{version}-dep
+%setup -q -n roundcubemail-%{version}
 %patch0 -p1
 %patch1 -p1
 
@@ -139,6 +140,22 @@ find . -type f -name '*.orig' | xargs rm -f
 # be vulnerable to CVE-2012-4230, unaddressed upstream
 echo "CVE-2012-4230: removing tinymce bbcode plugin, check path if this fails."
 test -d program/js/*mce/plugins/bbcode && rm -rf program/js/*mce/plugins/bbcode || exit 1
+
+# Create simple autoloader for PEAR
+mkdir vendor
+cat << EOF | tee vendor/autoload.php
+<?php
+spl_autoload_register(
+	function (\$class) {
+		if (strpos(\$class, '.') === false) {
+			\$file = str_replace('_', '/', \$class).'.php';
+			if (\$path = stream_resolve_include_path(\$file)) {
+				require_once(\$path);
+			}
+		}
+	}
+);
+EOF
 
 
 %build
@@ -181,6 +198,7 @@ mv %{buildroot}%{roundcubedir}/config/* %{buildroot}%{_sysconfdir}/roundcubemail
 # clean up the buildroot
 rm -rf %{buildroot}%{roundcubedir}/{config,logs,temp}
 rm -rf %{buildroot}%{roundcubedir}/{CHANGELOG,INSTALL,LICENSE,README,UPGRADING}
+rm     %{buildroot}%{roundcubedir}/{composer.json-dist,Dockerfile}
 
 
 %pre
@@ -202,6 +220,7 @@ rm -rf %{buildroot}
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc CHANGELOG INSTALL README.md UPGRADING README.rpm
+%doc composer.json-dist
 %{roundcubedir}
 %dir %{_sysconfdir}/%{name}
 # OLD config files from previous version
@@ -223,6 +242,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 16 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- update to 1.1.0
+
 * Sun Jan 25 2015 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
 - Update to 1.0.5 (security update)
 
