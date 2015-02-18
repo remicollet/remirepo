@@ -1451,6 +1451,7 @@ fi
 unset NO_INTERACTION REPORT_EXIT_STATUS MALLOC_CHECK_
 %endif
 
+
 %install
 %if %{with_zts}
 # Install the extensions for the ZTS version
