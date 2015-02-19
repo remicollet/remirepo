@@ -131,7 +131,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.5.21
+Version: 5.5.22
 Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1732,6 +1732,10 @@ fi
 
 
 %changelog
+* Wed Feb 18 2015 Remi Collet <remi@fedoraproject.org> 5.5.22-1
+- Update to 5.5.22
+  http://www.php.net/releases/5_5_22.php
+
 * Wed Jan 21 2015 Remi Collet <remi@fedoraproject.org> 5.5.21-1
 - Update to 5.5.21
   http://www.php.net/releases/5_5_21.php
