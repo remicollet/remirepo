@@ -135,7 +135,7 @@ Version: 5.6.6
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1950,6 +1950,9 @@ fi
 
 
 %changelog
+* Fri Feb 20 2015 Remi Collet <remi@fedoraproject.org> 5.6.6-1.1
+- rebuild for new tokyocabinet in EL-5
+
 * Thu Feb 19 2015 Remi Collet <remi@fedoraproject.org> 5.6.6-1
 - Update to 5.6.6
   http://www.php.net/releases/5_6_6.php
