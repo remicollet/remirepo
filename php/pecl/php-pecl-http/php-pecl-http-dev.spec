@@ -245,6 +245,7 @@ done
 %check
 %if 0%{?fedora} == 20
 # ignore failed tests (timeout) with curl 7.32
+# see https://bugzilla.redhat.com/show_bug.cgi?id=1194603
 rm ?TS/tests/client{006,007,008,018,021}.phpt
 %endif
 
