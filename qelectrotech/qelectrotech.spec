@@ -6,8 +6,8 @@
 #
 # Please, preserve the changelog entries
 #
-%global svnrel 3658
-%global rdate  20141227
+#global svnrel 3658
+%global rdate  20150220
 %global upver  0.4
 
 Name:        qelectrotech
@@ -33,7 +33,7 @@ Version:     0.40
 %if 0%{?svnrel}
 Release:     0.5.svn%{svnrel}%{?dist}
 %else
-Release:     0.4.rc2%{?dist}
+Release:     1%{?dist}
 %endif
 
 Group:       Applications/Engineering
@@ -237,6 +237,9 @@ fi
 
 
 %changelog
+* Fri Feb 20 2015 Remi Collet <remi@fedoraproject.org> - 0.40-1
+- Version 0.4 finale
+
 * Fri Jan 30 2015 Remi Collet <remi@fedoraproject.org> - 0.40-0.5.svn3658
 - Update to 0.4 snapshot revision 3658
 
