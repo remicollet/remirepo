@@ -245,14 +245,14 @@ done
 %check
 %if 0%{?fedora} == 20
 # ignore failed tests (timeout) with curl 7.32
-# rm ?TS/tests/client{006,007,008,018,021}.phpt
+rm ?TS/tests/client{006,007,008,018,021}.phpt
 %endif
 
 %if "%{php_version}" < "5.4"
 # Known failed test with 5.3.3 (need investigations)
 export REPORT_EXIT_STATUS=0
 %else
-export REPORT_EXIT_STATUS=0
+export REPORT_EXIT_STATUS=1
 %endif
 
 # Shared needed extensions
