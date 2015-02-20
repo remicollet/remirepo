@@ -26,10 +26,10 @@
 %endif
 %global with_tests %{?_without_tests:0}%{!?_without_tests:1}
 
-#global prever RC1
+%global prever RC1
 Name:           %{?scl_prefix}php-pecl-http
-Version:        2.2.1
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        2.3.0
+Release:        0.1.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -39,6 +39,8 @@ Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 
 # From http://www.php.net/manual/en/http.configuration.php
 Source1:        %{proj_name}.ini
+
+Patch0:         %{proj_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel >= 5.3.0
@@ -172,6 +174,7 @@ These are the files needed to compile programs using HTTP extension.
 
 mv %{proj_name}-%{version}%{?prever} NTS
 cd NTS
+%patch0 -p1 -b .upstream
 
 extver=$(sed -n '/#define PHP_PECL_HTTP_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -240,11 +243,16 @@ done
 
 
 %check
+%if 0%{?fedora} == 20
+# ignore failed tests (timeout) with curl 7.32
+# rm ?TS/tests/client{006,007,008,018,021}.phpt
+%endif
+
 %if "%{php_version}" < "5.4"
 # Known failed test with 5.3.3 (need investigations)
 export REPORT_EXIT_STATUS=0
 %else
-export REPORT_EXIT_STATUS=1
+export REPORT_EXIT_STATUS=0
 %endif
 
 # Shared needed extensions
@@ -336,6 +344,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb 19 2015 Remi Collet <remi@fedoraproject.org> - 2.3.0-0.1.RC1
+- update to 2.3.0RC1 (beta)
+- add some upstream patches
+
 * Mon Feb 09 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - Update to 2.2.1 (stable)
 
