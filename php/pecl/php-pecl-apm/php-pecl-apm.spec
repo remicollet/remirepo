@@ -65,6 +65,7 @@ Requires(post): %{__pecl}
 Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php-json%{?_isa}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
@@ -127,6 +128,12 @@ Requires:      php(httpd)
 Requires:      httpd
 Requires:      mod_php
 %endif
+# From phpcompatinfo report
+Requires:      %{?scl_prefix}php-date
+Requires:      %{?scl_prefix}php-json
+Requires:      %{?scl_prefix}php-pcre
+Requires:      %{?scl_prefix}php-pdo
+
 
 %description -n %{?scl_prefix}apm-web
 This package provides the APM web application, with Apache%{?with_phpfpm: and Nginx}
