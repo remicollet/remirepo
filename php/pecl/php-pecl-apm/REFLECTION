@@ -1,0 +1,39 @@
+Extension [ <persistent> extension #170 apm version 0.1.0 ] {
+
+  - INI {
+    Entry [ apm.enabled <ALL> ]
+      Current = '0'
+    }
+    Entry [ apm.application_id <ALL> ]
+      Current = 'My application'
+    }
+    Entry [ apm.event_enabled <ALL> ]
+      Current = '1'
+    }
+    Entry [ apm.store_stacktrace <ALL> ]
+      Current = '1'
+    }
+    Entry [ apm.store_ip <ALL> ]
+      Current = '1'
+    }
+    Entry [ apm.store_cookies <ALL> ]
+      Current = '1'
+    }
+    Entry [ apm.store_post <ALL> ]
+      Current = '1'
+    }
+    Entry [ apm.stats_duration_threshold <ALL> ]
+      Current = '100'
+    }
+    Entry [ apm.stats_user_cpu_threshold <ALL> ]
+      Current = '100'
+    }
+    Entry [ apm.stats_sys_cpu_threshold <ALL> ]
+      Current = '10'
+    }
+    Entry [ apm.dump_max_depth <ALL> ]
+      Current = '4'
+    }
+  }
+}
+
