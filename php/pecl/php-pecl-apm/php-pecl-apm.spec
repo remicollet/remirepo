@@ -40,7 +40,7 @@
 Name:           %{?scl_prefix}php-pecl-apm
 Summary:        Alternative PHP Monitor
 Version:        2.0.0
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 
 # Webserver configuration files
@@ -109,16 +109,17 @@ them to one of his drivers:
 * MariaDB/MySQL drivers are storing those in a database.
 %endif
 
+The optional %{?scl_prefix}apm-web package provides the web application.
+
 Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
 
 
 %package -n %{?scl_prefix}apm-web
-Summary:       APM web application
+Summary:       Alternative PHP Monitor web application
 Group:         Applications/Internet
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 BuildArch:     noarch
 %endif
-Requires:      %{name} = %{version}-%{release}
 %if %{with_phpfpm}
 Requires:      webserver
 Requires:      nginx-filesystem
@@ -136,8 +137,11 @@ Requires:      %{?scl_prefix}php-pdo
 
 
 %description -n %{?scl_prefix}apm-web
-This package provides the APM web application, with Apache%{?with_phpfpm: and Nginx}
-configuration, available on http://localhost/%{?scl_prefix}apm-web/
+This package provides the APM (Alternative PHP Monitor) web
+application, with Apache%{?with_phpfpm: and Nginx} configuration,
+available on http://localhost/%{?scl_prefix}apm-web/
+
+The optional %{?scl_prefix}php-pecl-apm package provides the extension.
 
 
 %prep
@@ -163,7 +167,7 @@ if test "x${extver}" != "x%{version}"; then
 fi
 
 : Fix configuration path
-sed -e 's:"config/db.php":"%{_sysconfdir}/pear/APM/config/db.php":' \
+sed -e 's:"config/db.php":"%{_sysconfdir}/apm-web/db.php":' \
     -i web/model/repository.php
 : Disable the ext
 sed -e 's/; apm.enabled="1"/apm.enabled="0"/' \
@@ -247,7 +251,7 @@ install -Dpm 0644 %{name}.nginx \
 
 # Application config
 install -D -m 644 -p config/db.php \
-         %{buildroot}%{_sysconfdir}/pear/APM/config/db.php
+         %{buildroot}%{_sysconfdir}/apm-web/db.php
 
 cd NTS
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
@@ -316,10 +320,11 @@ fi
 
 %files -n %{?scl_prefix}apm-web
 %defattr(-,root,root,-)
+%{!?_licensedir:%global license %%doc}
+%license NTS/LICENSE
 # Need to restrict access, as it contains a clear password
-%attr(550,apache,root) %dir %{_sysconfdir}/pear/APM
-%attr(550,apache,root) %dir %{_sysconfdir}/pear/APM/config
-%attr(550,apache,root) %config(noreplace) %{_sysconfdir}/pear/APM/config/db.php
+%attr(750,root,apache) %dir %{_sysconfdir}/apm-web
+%attr(640,root,apache) %config(noreplace) %{_sysconfdir}/apm-web/db.php
 %{_datadir}/%{?scl_prefix}apm-web
 %config(noreplace) %{_root_sysconfdir}/httpd/conf.d/%{?scl_prefix}apm-web.conf
 %if %{with_phpfpm}
@@ -328,6 +333,12 @@ fi
 
 
 %changelog
+* Sat Feb 21 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
+- add missing dependencies
+- drop dependency between extension and webapp
+- move configuration to /etc/apm-web
+- fix permission of configuration file
+
 * Sat Feb 21 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - initial package, version 2.0.0
 - open upstream bugs:
