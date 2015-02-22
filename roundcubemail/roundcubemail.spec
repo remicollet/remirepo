@@ -9,7 +9,7 @@
 %global _logdir /var/log  
 Name: roundcubemail
 Version:  1.1.0
-Release:  1%{?dist}
+Release:  2%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
 Group: Applications/System
@@ -72,14 +72,31 @@ Requires: php-simplexml
 Requires: php-sockets
 Requires: php-spl
 Requires: php-xml
+# From composer.json, require
+#        "php": ">=5.3.7",
+#        "roundcube/plugin-installer": ">=0.1.5",
+#        "pear/mail_mime": ">=1.8.9",
+#        "pear/mail_mime-decode": ">=1.5.5",
+#        "pear/net_smtp": "dev-master",
+#        "pear-pear.php.net/auth_sasl": ">=1.0.6",
+#        "pear-pear.php.net/net_idna2": ">=0.1.1",
+#        "pear-pear.php.net/net_sieve": ">=1.3.2",
+#        "patchwork/utf8": "1.2.x"
+#   not available and optional patchwork/utf8
+#   not available and doesn't make sense roundcube/plugin-installer
 Requires: php-pear(Auth_SASL)       >= 1.0.6
 Requires: php-pear(Mail_Mime)       >= 1.8.1
 Requires: php-pear(Net_SMTP)
 Requires: php-pear(Net_Sieve)       >= 1.3.2
 Requires: php-pear(Mail_mimeDecode) >= 1.5.5
 Requires: php-pear(Net_IDNA2)       >= 0.1.1
-# not available php-pear(Crypt_GPG) >= 1.2.0
-# Net_LDAP2, Net_LDAP3
+# From composer.json, require-dev
+#        "pear-pear.php.net/crypt_gpg": "*",
+#        "phpunit/phpunit": "*"
+#   not available (but only for dev) php-pear(Crypt_GPG) >= 1.2.0
+# From composer.json, suggest
+Requires: php-pear(Net_LDAP2)       >= 2.0.12
+Requires: php-composer(kolab/Net_LDAP3)
 # mailcap for /etc/mime.types
 Requires: mailcap
 
@@ -242,6 +259,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 22 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-2
+- add optional dependencies for LDAP management on
+  Net_LDAP2 and Net_LDAP3
+
 * Mon Feb 16 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - update to 1.1.0
 
