@@ -5,7 +5,7 @@
 %global peardir %{_datadir}/pear
 %global metadir %{_localstatedir}/lib/pear
 
-%global getoptver 1.3.1
+%global getoptver 1.4.0
 %global arctarver 1.3.13
 # https://pear.php.net/bugs/bug.php?id=19367
 # Structures_Graph 1.0.4 - incorrect FSF address
@@ -23,12 +23,11 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.9.5
-Release: 4%{?dist}.1
+Release: 5%{?dist}
 Epoch: 1
-# PEAR, Archive_Tar, XML_Util are BSD
-# Console_Getopt is PHP
+# PEAR, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv2+
-License: BSD and PHP and LGPLv2+
+License: BSD and LGPLv2+
 Group: Development/Languages
 URL: http://pear.php.net/package/PEAR
 Source0: http://download.pear.php.net/package/PEAR-%{version}%{?pearprever}.tgz
@@ -59,7 +58,7 @@ Patch1: php-pear-metadata.patch
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: %{?scl_prefix}php-cli >= 5.1.0-1
+BuildRequires: %{?scl_prefix}php-cli >= 5.4.0
 BuildRequires: %{?scl_prefix}php-xml
 BuildRequires: gnupg
 %if %{with_tests}
@@ -89,7 +88,7 @@ Obsoletes: php56w-pear <= %{version}
 %endif
 
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}}
-Requires:  %{?scl_prefix}php-cli
+Requires:  %{?scl_prefix}php-cli > 5.4
 # phpci detected extension
 # PEAR (date, spl always builtin):
 Requires:  %{?scl_prefix}php-ftp
@@ -365,6 +364,10 @@ fi
 
 
 %changelog
+* Sun Feb 22 2015 Remi Collet <remi@fedoraproject.org> 1:1.9.5-5
+- update Console_Getopt to 1.4.0
+- raise php minimum version to 5.4
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> 1:1.9.5-4.1
 - Fedora 21 SCL mass rebuild
 - cleanup registry after removal
