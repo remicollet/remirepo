@@ -1,6 +1,6 @@
 diff -up ./bin/phpreflect.rpm ./bin/phpreflect
---- ./bin/phpreflect.rpm	2015-02-03 11:38:30.000000000 +0100
-+++ ./bin/phpreflect	2015-02-04 14:45:45.995075976 +0100
+--- ./bin/phpreflect.rpm	2015-02-19 18:51:08.000000000 +0100
++++ ./bin/phpreflect	2015-02-22 11:32:38.272052909 +0100
 @@ -1,23 +1,35 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
@@ -46,9 +46,28 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
  
  if (PHP_SAPI !== 'cli') {
      return;
+@@ -28,5 +40,5 @@ use Bartlett\Reflect\Console\Application
+ 
+ Environment::setScanDir();
+ 
+-$application = new Application($appName, '3.0');
++$application = new Application($appName, '@package_version@');
+ $application->run();
+diff -up ./src/Bartlett/Reflect/Console/Application.php.rpm ./src/Bartlett/Reflect/Console/Application.php
+--- ./src/Bartlett/Reflect/Console/Application.php.rpm	2015-02-22 11:33:12.102190255 +0100
++++ ./src/Bartlett/Reflect/Console/Application.php	2015-02-22 11:33:24.298239771 +0100
+@@ -82,7 +82,7 @@ class Application extends BaseApplicatio
+             $jsonFile =  './' . getenv("BARTLETTRC");
+         }
+ 
+-        parent::__construct($appName, '@package_version@');
++        parent::__construct($appName, $appVersion);
+         $this->release = $appVersion;
+ 
+         $defaultAnalyser = (strcasecmp($appName, 'phpcompatinfo') === 0)
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
---- ./tests/bootstrap.php.rpm	2015-02-03 11:38:30.000000000 +0100
-+++ ./tests/bootstrap.php	2015-02-04 14:45:45.995075976 +0100
+--- ./tests/bootstrap.php.rpm	2015-02-19 18:51:08.000000000 +0100
++++ ./tests/bootstrap.php	2015-02-22 11:31:52.226865970 +0100
 @@ -1,11 +1,9 @@
  <?php
  
@@ -89,8 +108,8 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 +    require_once $file;
 +}
 diff -up ./tests/Environment/YourLogger.php.rpm ./tests/Environment/YourLogger.php
---- ./tests/Environment/YourLogger.php.rpm	2015-02-03 11:38:30.000000000 +0100
-+++ ./tests/Environment/YourLogger.php	2015-02-04 14:48:07.609164546 +0100
+--- ./tests/Environment/YourLogger.php.rpm	2015-02-19 18:51:08.000000000 +0100
++++ ./tests/Environment/YourLogger.php	2015-02-22 11:31:52.226865970 +0100
 @@ -14,6 +14,7 @@ class YourLogger extends Logger
          if (!file_exists($tempDir)) {
              mkdir($tempDir, 0755, true);

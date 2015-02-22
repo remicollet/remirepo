@@ -11,10 +11,11 @@
 %global gh_date      20150219
 %global gh_owner     llaville
 %global gh_project   php-reflect
+%global prever       beta2
 
 Name:           php-bartlett-PHP-Reflect
 Version:        3.0.0
-%global specrel 6
+%global specrel 7
 Release:        %{?gh_short:0.%{specrel}.%{?gh_date}git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -118,8 +119,8 @@ Documentation: http://php5.laurent-laville.org/reflect/manual/current/en/
 
 %patch0 -p1 -b .rpm
 
-sed -e 's/@package_version@/%{version}/' \
-    -i $(find src -name \*.php)
+sed -e 's/@package_version@/%{version}%{?prever}/' \
+    -i $(find src -name \*.php) bin/phpreflect
 
 
 %build
@@ -165,6 +166,9 @@ fi
 
 
 %changelog
+* Sun Feb 22 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.7.20150219gite7f804e
+- fix reported version
+
 * Sun Feb 22 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.6.20150219gite7f804e
 - update to 3.0.0 beta2
 
