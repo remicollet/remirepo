@@ -1,13 +1,13 @@
 diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
---- ./bin/phpcompatinfo.rpm	2015-02-04 11:23:57.000000000 +0100
-+++ ./bin/phpcompatinfo	2015-02-04 15:14:33.341279703 +0100
+--- ./bin/phpcompatinfo.rpm	2015-02-20 10:59:04.000000000 +0100
++++ ./bin/phpcompatinfo	2015-02-22 09:37:46.130869824 +0100
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
  <?php
- ini_set('memory_limit', -1);
  $appName = 'phpCompatInfo';
-@@ -17,8 +17,28 @@ if (\Phar::running()) {
+ 
+@@ -16,8 +16,28 @@ if (\Phar::running()) {
          putenv("BARTLETTRC=" . strtolower($appName) . '.json');
      }
  }
@@ -39,8 +39,8 @@ diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
  if (PHP_SAPI !== 'cli') {
      return;
 diff -up ./data/handleDB.php.rpm ./data/handleDB.php
---- ./data/handleDB.php.rpm	2015-02-04 15:11:49.584033737 +0100
-+++ ./data/handleDB.php	2015-02-04 15:14:04.995064027 +0100
+--- ./data/handleDB.php.rpm	2015-02-20 10:59:04.000000000 +0100
++++ ./data/handleDB.php	2015-02-22 09:36:34.008567158 +0100
 @@ -11,7 +11,18 @@
   * @since    Release 4.0.0alpha3
   */
@@ -62,9 +62,9 @@ diff -up ./data/handleDB.php.rpm ./data/handleDB.php
  
  use Bartlett\CompatInfo\Reference\ExtensionFactory;
 diff -up ./src/Bartlett/CompatInfo/Environment.php.rpm ./src/Bartlett/CompatInfo/Environment.php
---- ./src/Bartlett/CompatInfo/Environment.php.rpm	2015-02-04 15:15:02.113498620 +0100
-+++ ./src/Bartlett/CompatInfo/Environment.php	2015-02-04 15:16:30.986169085 +0100
-@@ -22,6 +22,10 @@ class Environment
+--- ./src/Bartlett/CompatInfo/Environment.php.rpm	2015-02-20 10:59:04.000000000 +0100
++++ ./src/Bartlett/CompatInfo/Environment.php	2015-02-22 09:36:34.008567158 +0100
+@@ -34,6 +34,10 @@ class Environment
       */
      public static function initRefDb()
      {
@@ -76,8 +76,8 @@ diff -up ./src/Bartlett/CompatInfo/Environment.php.rpm ./src/Bartlett/CompatInfo
          $tempDir  = sys_get_temp_dir() . '/bartlett';
  
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
---- ./tests/bootstrap.php.rpm	2015-02-04 11:23:57.000000000 +0100
-+++ ./tests/bootstrap.php	2015-02-04 15:11:49.584033737 +0100
+--- ./tests/bootstrap.php.rpm	2015-02-20 10:59:04.000000000 +0100
++++ ./tests/bootstrap.php	2015-02-22 09:36:34.008567158 +0100
 @@ -1,8 +1,30 @@
  <?php
  

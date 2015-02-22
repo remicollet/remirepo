@@ -6,15 +6,15 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    6cd2777f2c9f035810f51e8ade838c0698cf5874
+%global gh_commit    442d25d486511e4a8e2ed15d1841529ae12e76e7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150204
+%global gh_date      20150220
 %global gh_owner     llaville
 %global gh_project   php-compat-info
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        4.0.0
-%global specrel 3
+%global specrel 4
 Release:        %{?gh_short:0.%{specrel}.%{?gh_date}git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -92,8 +92,6 @@ Documentation: http://php5.laurent-laville.org/compatinfo/manual/current/en/
 sed -e 's/@package_version@/%{version}/' \
     -i $(find src -name \*.php)
 
-mv data/compatinfo.sqlite data/compatinfo.sqlite.upstream
-
 
 %build
 : Generate the references database
@@ -140,6 +138,9 @@ fi
 
 
 %changelog
+* Sun Feb 22 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.4.20150220git442d25d
+- update to 4.0.0beta2
+
 * Wed Feb  4 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.3.20150204git6cd2777
 - update to 4.0.0beta1
 
