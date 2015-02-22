@@ -11,10 +11,11 @@
 %global gh_date      20150220
 %global gh_owner     llaville
 %global gh_project   php-compat-info
+%global prever       beta2
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        4.0.0
-%global specrel 4
+%global specrel 5
 Release:        %{?gh_short:0.%{specrel}.%{?gh_date}git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -89,8 +90,8 @@ Documentation: http://php5.laurent-laville.org/compatinfo/manual/current/en/
 
 %patch0 -p1 -b .rpm
 
-sed -e 's/@package_version@/%{version}/' \
-    -i $(find src -name \*.php)
+sed -e 's/@package_version@/%{version}%{?prever}/' \
+    -i $(find src -name \*.php) bin/phpcompatinfo
 
 
 %build
@@ -138,6 +139,9 @@ fi
 
 
 %changelog
+* Sun Feb 22 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.5.20150220git442d25d
+- fix reported version
+
 * Sun Feb 22 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.4.20150220git442d25d
 - update to 4.0.0beta2
 

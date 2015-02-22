@@ -1,6 +1,6 @@
 diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
 --- ./bin/phpcompatinfo.rpm	2015-02-20 10:59:04.000000000 +0100
-+++ ./bin/phpcompatinfo	2015-02-22 09:37:46.130869824 +0100
++++ ./bin/phpcompatinfo	2015-02-22 11:42:38.671479626 +0100
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
@@ -38,9 +38,16 @@ diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
  
  if (PHP_SAPI !== 'cli') {
      return;
+@@ -28,5 +48,5 @@ use Bartlett\CompatInfo\Console\Applicat
+ 
+ Environment::setScanDir();
+ 
+-$application = new Application($appName, '4.0');
++$application = new Application($appName, '@package_version@');
+ $application->run();
 diff -up ./data/handleDB.php.rpm ./data/handleDB.php
 --- ./data/handleDB.php.rpm	2015-02-20 10:59:04.000000000 +0100
-+++ ./data/handleDB.php	2015-02-22 09:36:34.008567158 +0100
++++ ./data/handleDB.php	2015-02-22 11:42:15.277385330 +0100
 @@ -11,7 +11,18 @@
   * @since    Release 4.0.0alpha3
   */
@@ -63,7 +70,7 @@ diff -up ./data/handleDB.php.rpm ./data/handleDB.php
  use Bartlett\CompatInfo\Reference\ExtensionFactory;
 diff -up ./src/Bartlett/CompatInfo/Environment.php.rpm ./src/Bartlett/CompatInfo/Environment.php
 --- ./src/Bartlett/CompatInfo/Environment.php.rpm	2015-02-20 10:59:04.000000000 +0100
-+++ ./src/Bartlett/CompatInfo/Environment.php	2015-02-22 09:36:34.008567158 +0100
++++ ./src/Bartlett/CompatInfo/Environment.php	2015-02-22 11:42:15.277385330 +0100
 @@ -34,6 +34,10 @@ class Environment
       */
      public static function initRefDb()
@@ -77,7 +84,7 @@ diff -up ./src/Bartlett/CompatInfo/Environment.php.rpm ./src/Bartlett/CompatInfo
  
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 --- ./tests/bootstrap.php.rpm	2015-02-20 10:59:04.000000000 +0100
-+++ ./tests/bootstrap.php	2015-02-22 09:36:34.008567158 +0100
++++ ./tests/bootstrap.php	2015-02-22 11:42:15.277385330 +0100
 @@ -1,8 +1,30 @@
  <?php
  
