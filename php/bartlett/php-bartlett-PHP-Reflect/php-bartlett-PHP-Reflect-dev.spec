@@ -15,7 +15,7 @@
 
 Name:           php-bartlett-PHP-Reflect
 Version:        3.0.0
-%global specrel 7
+%global specrel 8
 Release:        %{?gh_short:0.%{specrel}.%{?gh_date}git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -27,6 +27,9 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 # Autoloader for RPM - die composer !
 # Enable cache plugin
 Patch0:         %{name}-3.0.0-rpm.patch
+
+# https://github.com/llaville/php-compat-info/issues/152#issuecomment-75601446
+Patch1:         %{name}-3.0.0-fix.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -118,6 +121,7 @@ Documentation: http://php5.laurent-laville.org/reflect/manual/current/en/
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
+%patch1 -p0 -b .fix
 
 sed -e 's/@package_version@/%{version}%{?prever}/' \
     -i $(find src -name \*.php) bin/phpreflect
@@ -166,6 +170,9 @@ fi
 
 
 %changelog
+* Mon Feb 23 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.8.20150219gite7f804e
+- fix output
+
 * Sun Feb 22 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.7.20150219gite7f804e
 - fix reported version
 

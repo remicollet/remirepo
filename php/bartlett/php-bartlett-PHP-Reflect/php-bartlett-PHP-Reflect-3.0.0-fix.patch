@@ -1,0 +1,18 @@
+diff -up src/Bartlett/Reflect/Output/Analyser.php.orig src/Bartlett/Reflect/Output/Analyser.php
+--- src/Bartlett/Reflect/Output/Analyser.php.orig	2015-02-23 19:34:38.068134005 +0100
++++ src/Bartlett/Reflect/Output/Analyser.php	2015-02-23 19:35:15.053282071 +0100
+@@ -95,12 +95,12 @@ class Analyser extends OutputFormatter
+                 continue;
+             }
+             $baseNamespace = str_replace(
+-                'Analyser\\' . basename($analyserName),
++                'Analyser\\' . basename(str_replace('\\', '/', $analyserName)),
+                 '',
+                 $analyserName
+             );
+             $outputFormatter = $baseNamespace . 'Console\Formatter\\' .
+-                substr(basename($analyserName), 0, -8) . 'OutputFormatter';
++                substr(basename(str_replace('\\', '/', $analyserName)), 0, -8) . 'OutputFormatter';
+ 
+             if (class_exists($outputFormatter)) {
+                 $obj = new $outputFormatter();
