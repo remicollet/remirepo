@@ -29,8 +29,8 @@
 
 Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
-Version:        2.2.7
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        2.3.0
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 %if 0%{?gitver:1}
 Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{commit}/%{pecl_name}-%{version}-%{gitver}.tar.gz
 %else
@@ -44,8 +44,8 @@ Group:          Development/Languages
 URL:            http://xdebug.org/
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-pear
-BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-pear  > 1.9.1
+BuildRequires:  %{?scl_prefix}php-devel > 5.4
 BuildRequires:  libedit-devel
 BuildRequires:  libtool
 
@@ -259,6 +259,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 23 2015 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
+- Update to 2.3.0
+- raise minimum php version to 5.4
+
 * Fri Jan 23 2015 Remi Collet <remi@fedoraproject.org> - 2.2.7-2
 - fix %%postun scriplet
 
