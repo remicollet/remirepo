@@ -9,16 +9,17 @@
 
 Name:           php-kolab-net-ldap3
 Version:        1.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Advanced functionality for accessing LDAP directories
 
 Group:          Development/Libraries
-# GPL doesn't require LICENSE file... but
-# https://issues.kolab.org/show_bug.cgi?id=4695
-# composer.json state GPLv3, file header GPLv3+
 License:        GPLv3+
 URL:            http://git.kolab.org/pear/Net_LDAP3/
 Source0:        http://git.kolab.org/pear/Net_LDAP3/snapshot/pear-Net-LDAP3-%{version}.tar.gz
+
+# Upstream patch for license clarification
+# https://issues.kolab.org/show_bug.cgi?id=4695
+Patch0:         php-kolab-net-ldap3-license.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -44,6 +45,8 @@ for accessing LDAP directories.
 %prep
 %setup -q -n pear-Net-LDAP3-%{version}
 
+%patch0 -p1
+
 
 %build
 # Nothing to build
@@ -61,10 +64,15 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
 %doc composer.json
 %{_datadir}/php/Net
 
 
 %changelog
+* Tue Feb 24 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-2
+- add upstream patch for License clarification
+
 * Sun Feb 22 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - initial package, version 1.0.2
