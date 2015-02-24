@@ -26,6 +26,7 @@ URL:            https://github.com/%{github_owner}/%{github_name}
 # https://fedoraproject.org/wiki/Packaging:SourceURL#Github
 Source0:        https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{github_name}-%{github_commit}.tar.gz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
 Requires:       php(language) >= %{php_min_ver}
@@ -50,8 +51,13 @@ shorter notation if available. The minification is configurable.
 
 
 %install
+rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_datadir}/php/%{packagist_owner}/%{packagist_name}
 cp -pr src/ %{buildroot}%{_datadir}/php/%{packagist_owner}/%{packagist_name}
+
+
+%clean
+rm -rf %{buildroot}
 
 
 %check
@@ -59,11 +65,15 @@ cp -pr src/ %{buildroot}%{_datadir}/php/%{packagist_owner}/%{packagist_name}
 
 
 %files
+%defattr(-,root,root,-)
 %doc README composer.json
 %{_datadir}/php/%{packagist_owner}
 
 
 %changelog
+* Tue Feb 24 2015 Remi Collet <remi@fedoraproject.org> - 3.0.2-2.20141229git8883d28
+- add backport stuff for remi repo
+
 * Mon Feb 23 2015 Adam Williamson <awilliam@redhat.com> - 3.0.2-2.20141229git8883d28
 - change layout to match upstream's (with the /src sub-directory)
 
