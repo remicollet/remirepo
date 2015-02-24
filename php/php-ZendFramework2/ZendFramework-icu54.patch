@@ -1,0 +1,24 @@
+From 04333cd50b2a2c3f230d543472734f0b96ca5685 Mon Sep 17 00:00:00 2001
+From: Mark Garrett <mark@moderndeveloperllc.com>
+Date: Tue, 17 Feb 2015 09:58:07 -0600
+Subject: [PATCH] Fix for #7219 - Validation failure fr-CH in
+ testValidationFailures due to change in CLDR 26. Just removed that one
+ instance that is actually valid now.
+
+---
+ tests/ZendTest/I18n/Validator/FloatTest.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/ZendTest/I18n/Validator/FloatTest.php b/tests/ZendTest/I18n/Validator/FloatTest.php
+index 0073c30..ec27528 100644
+--- a/tests/ZendTest/I18n/Validator/FloatTest.php
++++ b/tests/ZendTest/I18n/Validator/FloatTest.php
+@@ -166,7 +166,7 @@ public function validationFailureProvider()
+             'ar'    => array('10.1', '66notflot.6'),
+             'ru'    => array('10.1', '66notflot.6', '2,000.00', '2 00'),
+             'en'    => array('10,1', '66notflot.6', '2.000,00', '2 000', '2,00'),
+-            'fr-CH' => array('10,1', '66notflot.6', '2,000.00', '2 000', "2'00")
++            'fr-CH' => array('10,1', '66notflot.6', '2,000.00', "2'00")
+         );
+ 
+         //Loop locales and examples for a more thorough set of "true" test data

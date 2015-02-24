@@ -16,7 +16,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:      php-ZendFramework2
-Version:   2.3.4
+Version:   2.3.5
 Release:   1%{?dist}
 Summary:   Zend Framework 2
 
@@ -26,9 +26,12 @@ URL:       http://framework.zend.com
 Source0:   https://packages.zendframework.com/releases/ZendFramework-%{version}/ZendFramework-%{version}.tgz
 # git clone https://github.com/zendframework/zf2.git ; cf zf2
 # OR cd /work/GIT/zf2; git pull
-# git checkout release-2.3.4
-# tar czf ../ZendFramework-tests-2.3.4.tgz tests
+# git checkout release-2.3.5
+# tar czf ../ZendFramework-tests-2.3.5.tgz tests
 Source1:   ZendFramework-tests-%{version}.tgz
+
+# See https://github.com/zendframework/zf2/issues/7219
+Patch0:    ZendFramework-icu54.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -1847,6 +1850,8 @@ If the XML document uses ENTITY the library throw an Exception.
 %prep
 %setup -q -n ZendFramework-%{version} -a 1
 
+%patch0 -p1
+
 
 %build
 # Empty build section, nothing required
@@ -2544,6 +2549,10 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Tue Feb 24 2015 Remi Collet <remi@fedoraproject.org> - 2.3.5-1
+- Update to 2.3.5
+- add patch for icu 54, FTBFS detected by Koschei
+
 * Fri Jan 16 2015 Remi Collet <remi@fedoraproject.org> - 2.3.4-1
 - Update to 2.3.4
 - drop GLPI patch, fixed upstream
