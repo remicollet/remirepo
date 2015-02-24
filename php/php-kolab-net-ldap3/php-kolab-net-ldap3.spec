@@ -13,7 +13,9 @@ Release:        1%{?dist}
 Summary:        Advanced functionality for accessing LDAP directories
 
 Group:          Development/Libraries
-# GPL doesn't require LICENSE file... and no bug tracker found...
+# GPL doesn't require LICENSE file... but
+# https://issues.kolab.org/show_bug.cgi?id=4695
+# composer.json state GPLv3, file header GPLv3+
 License:        GPLv3+
 URL:            http://git.kolab.org/pear/Net_LDAP3/
 Source0:        http://git.kolab.org/pear/Net_LDAP3/snapshot/pear-Net-LDAP3-%{version}.tar.gz
