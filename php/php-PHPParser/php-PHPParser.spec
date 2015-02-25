@@ -18,10 +18,9 @@ Group:         Development/Libraries
 License:       BSD
 URL:           https://github.com/%{github_owner}/%{github_name}
 # Upstream tarball don't provide test suite
-# git clone https://github.com/nikic/PHP-Parser.git
-# cd PHP-Parser; git checkout ac05ef6f95bf8361549604b6031c115f92f39528; cd ..
-# tar czf php-PHPParser-1.1.0-ac05ef6.tgz --exclude .git PHP-Parser
+# Use mksrc.sh to generate a git snapshot tarball
 Source0:       %{name}-%{github_version}-%{github_short}.tgz
+Source1:       mksrc.sh
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -57,7 +56,7 @@ A PHP parser written in PHP to simplify static analysis and code manipulation.
 
 
 %prep
-%setup -q -n %{github_name}
+%setup -q -n %{github_name}-%{github_short}
 
 
 %build
