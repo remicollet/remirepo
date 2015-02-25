@@ -11,7 +11,7 @@
 
 Name:          php-%{lib_name_old}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       A PHP parser written in PHP
 
 Group:         Development/Libraries
@@ -20,7 +20,10 @@ URL:           https://github.com/%{github_owner}/%{github_name}
 # Upstream tarball don't provide test suite
 # Use mksrc.sh to generate a git snapshot tarball
 Source0:       %{name}-%{github_version}-%{github_short}.tgz
-Source1:       mksrc.sh
+Source1:       makesrc.sh
+
+# Patch for distribution
+Patch0:        %{name}-command.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -58,6 +61,8 @@ A PHP parser written in PHP to simplify static analysis and code manipulation.
 %prep
 %setup -q -n %{github_name}-%{github_short}
 
+%patch0 -p0 -b .rpm
+
 
 %build
 # Empty build section, nothing to build
@@ -72,6 +77,8 @@ mkdir -p -m 755 %{buildroot}%{_datadir}/php/%{lib_name_old}
 ln -s ../%{lib_name}/Autoloader.php \
     %{buildroot}%{_datadir}/php/%{lib_name_old}/Autoloader.php
 
+install -Dpm 755 bin/php-parse.php %{buildroot}%{_bindir}/php-parse
+
 
 %check
 %{_bindir}/phpunit
@@ -82,11 +89,15 @@ ln -s ../%{lib_name}/Autoloader.php \
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md doc grammar composer.json
+%{_bindir}/php-parse
 %{_datadir}/php/%{lib_name_old}
 %{_datadir}/php/%{lib_name}
 
 
 %changelog
+* Wed Feb 25 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-2
+- provide the php-parse command
+
 * Wed Feb 25 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - update to 1.1.0
 - use git snapshot as upstream tarball don't provide the test suite

@@ -1,0 +1,13 @@
+diff -up bin/php-parse.php.rpm bin/php-parse.php
+--- bin/php-parse.php.rpm	2015-02-25 17:52:01.000000000 +0100
++++ bin/php-parse.php	2015-02-25 17:52:55.000000000 +0100
+@@ -1,6 +1,8 @@
++#!/usr/bin/php
+ <?php
+ 
+-require __DIR__ . '/../lib/bootstrap.php';
++require 'PhpParser/Autoloader.php';
++PhpParser\Autoloader::register();
+ 
+ ini_set('xdebug.max_nesting_level', 2000);
+ 
