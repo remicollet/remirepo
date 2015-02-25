@@ -11,17 +11,17 @@
 
 %global github_owner     Ocramius
 %global github_name      CodeGenerationUtils
-%global github_version   0.3.0
-%global github_commit    5d9c4e3ae36010fef22b3393b3734c84106d1d5c
+%global github_version   0.3.1
+%global github_commit    d27db31c975001710beb4025768dcbd39e286a56
 
 %global composer_vendor  ocramius
 %global composer_project code-generator-utils
 
 # "php": ">=5.3.3"
 %global php_min_ver 5.3.3
-# "nikic/php-parser": "1.0.*"
-%global php_parser_min_ver 1.0.0
-%global php_parser_max_ver 1.1.0
+# "nikic/php-parser": "~1.0"
+%global php_parser_min_ver 1.0
+%global php_parser_max_ver 2
 
 # Build using "--without tests" to disable tests
 %global with_tests  %{?_without_tests:0}%{!?_without_tests:1}
@@ -31,7 +31,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       A set of code generator utilities built on top of PHP-Parsers
 
 Group:         Development/Libraries
@@ -118,6 +118,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb 25 2015 Remi Collet <remi@fedoraproject.org> - 0.3.1-1
+- update to 0.3.1
+
 * Thu Nov  6 2014 Remi Collet <remi@fedoraproject.org> - 0.3.0-2
 - backport for remi repository
 
