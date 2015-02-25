@@ -1,7 +1,8 @@
 %global github_owner    nikic
 %global github_name     PHP-Parser
-%global github_version  1.0.2
-%global github_commit   a8ffc6fcfcbae268656c8acf1298e378ac1ee5f1
+%global github_version  1.1.0
+%global github_commit   ac05ef6f95bf8361549604b6031c115f92f39528
+%global github_short    %(c=%{github_commit}; echo ${c:0:7})
 
 %global lib_name        PhpParser
 %global lib_name_old    PHPParser
@@ -16,14 +17,18 @@ Summary:       A PHP parser written in PHP
 Group:         Development/Libraries
 License:       BSD
 URL:           https://github.com/%{github_owner}/%{github_name}
-Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+# Upstream tarball don't provide test suite
+# git clone https://github.com/nikic/PHP-Parser.git
+# cd PHP-Parser; git checkout ac05ef6f95bf8361549604b6031c115f92f39528; cd ..
+# tar czf php-PHPParser-1.1.0-ac05ef6.tgz --exclude .git PHP-Parser
+Source0:       %{name}-%{github_version}-%{github_short}.tgz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: %{_bindir}/phpunit
-# For tests: phpcompatinfo (computed from version 1.0.2)
+# For tests: phpcompatinfo (computed from version 1.1.0)
 BuildRequires: php-ctype
 BuildRequires: php-filter
 BuildRequires: php-pcre
@@ -35,7 +40,7 @@ BuildRequires: php-xmlwriter
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
 Requires:      php-tokenizer
-# phpcompatinfo (computed from version 1.0.2)
+# phpcompatinfo (computed from version 1.1.0)
 Requires:      php-filter
 Requires:      php-pcre
 Requires:      php-spl
@@ -52,7 +57,7 @@ A PHP parser written in PHP to simplify static analysis and code manipulation.
 
 
 %prep
-%setup -q -n %{github_name}-%{github_commit}
+%setup -q -n %{github_name}
 
 
 %build
@@ -83,6 +88,10 @@ ln -s ../%{lib_name}/Autoloader.php \
 
 
 %changelog
+* Wed Feb 25 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- update to 1.1.0
+- use git snapshot as upstream tarball don't provide the test suite
+
 * Wed Nov  5 2014 Remi Collet <remi@fedoraproject.org> 1.0.2-1
 - Update to 1.0.2
 

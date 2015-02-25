@@ -1,7 +1,7 @@
 #
 # RPM spec file for php-ocramius-generated-hydrator
 #
-# Copyright (c) 2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -11,8 +11,8 @@
 
 %global github_owner     Ocramius
 %global github_name      GeneratedHydrator
-%global github_version   1.1.0
-%global github_commit    6842b76141dc3a57f822f2e287d699135e7b3c57
+%global github_version   1.1.1
+%global github_commit    2c29e3aaa002991609f555a6c0ecea3427825a17
 
 %global composer_vendor  ocramius
 %global composer_project generated-hydrator
@@ -20,9 +20,9 @@
 # "php": "~5.4"
 #     NOTE: Max version ignored on purpose
 %global php_min_ver 5.4
-# "nikic/php-parser": "1.0.*"
-%global php_parser_min_ver 1.0.0
-%global php_parser_max_ver 1.1.0
+# "nikic/php-parser": "~1.0"
+%global php_parser_min_ver 1.0
+%global php_parser_max_ver 2
 # "ocramius/code-generator-utils": "0.3.*"
 %global ocramius_cgu_min_ver 0.3.0
 %global ocramius_cgu_max_ver 0.4.0
@@ -135,6 +135,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb 25 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- update to 1.1.1
+
 * Sat Nov 29 2014 Remi Collet <rpms@famillecollet.com> - 1.1.0-1
 - backport for remi repo
 
