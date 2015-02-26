@@ -69,7 +69,7 @@ function run($name, $rpm) {
 	global $quiet, $verb, $client;
 
 	list($owner, $library) = explode('/', $name, 2);
-	if ($owner == 'horde') {
+	if (in_array($owner, ['horde', 'kolab'])) {
 		return;
 	}
 
