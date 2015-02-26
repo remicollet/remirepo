@@ -110,13 +110,9 @@ spl_autoload_register(function ($class) {
 });
 AUTOLOAD
 
-# Create PHPUnit config with colors turned off
-sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
-
 %{__phpunit} \
     --bootstrap autoload.php \
-    --include-path %{buildroot}%{phpdir}:./tests \
-    -d date.timezone="UTC"
+    --include-path %{buildroot}%{phpdir}:./tests
 %else
 : Tests skipped
 %endif
@@ -136,7 +132,8 @@ rm -rf %{buildroot}
 
 %changelog
 * Wed Feb 25 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
-- update to 1.1.1
+- update to 1.1.1 (no change)
+- raise nikic/php-parser max version
 
 * Sat Nov 29 2014 Remi Collet <rpms@famillecollet.com> - 1.1.0-1
 - backport for remi repo

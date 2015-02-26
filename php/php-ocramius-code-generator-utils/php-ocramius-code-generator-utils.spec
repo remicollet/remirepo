@@ -98,8 +98,7 @@ AUTOLOAD
 
 %{__phpunit} \
     --bootstrap autoload.php \
-    --include-path %{buildroot}%{phpdir}:./tests \
-    -d date.timezone="UTC"
+    --include-path %{buildroot}%{phpdir}:./tests
 %else
 : Tests skipped
 %endif
@@ -119,7 +118,8 @@ rm -rf %{buildroot}
 
 %changelog
 * Wed Feb 25 2015 Remi Collet <remi@fedoraproject.org> - 0.3.1-1
-- update to 0.3.1
+- update to 0.3.1 (no change)
+- raise nikic/php-parser max version
 
 * Thu Nov  6 2014 Remi Collet <remi@fedoraproject.org> - 0.3.0-2
 - backport for remi repository

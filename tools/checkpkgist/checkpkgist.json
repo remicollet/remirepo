@@ -1,8 +1,5 @@
 {
     "phpspec\/phpspec": "php-phpspec",
-    "phpspec\/prophecy": "php-phpspec-prophecy",
-    "phpspec\/php-diff": "php-phpspec-php-diff",
-    "phpdocumentor\/reflection-docblock": "php-phpdocumentor-reflection-docblock",
     "fabpot\/goutte": "php-goutte",
     "jms\/parser-lib": "php-JMSParser",
     "michelf\/php-markdown": "php-markdown",
