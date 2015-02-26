@@ -6,16 +6,16 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    e7f804ee1dbe5cdc419f0bb26a56afd4f68e329f
+%global gh_commit    aab371c7fa4c1f7ba4d944ea3a3e49fbeae5ddc4
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150219
+%global gh_date      20150226
 %global gh_owner     llaville
 %global gh_project   php-reflect
 %global prever       beta2
 
 Name:           php-bartlett-PHP-Reflect
 Version:        3.0.0
-%global specrel 8
+%global specrel 9
 Release:        %{?gh_short:0.%{specrel}.%{?gh_date}git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -27,9 +27,6 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 # Autoloader for RPM - die composer !
 # Enable cache plugin
 Patch0:         %{name}-3.0.0-rpm.patch
-
-# https://github.com/llaville/php-compat-info/issues/152#issuecomment-75601446
-Patch1:         %{name}-3.0.0-fix.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -121,7 +118,6 @@ Documentation: http://php5.laurent-laville.org/reflect/manual/current/en/
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
-%patch1 -p0 -b .fix
 
 sed -e 's/@package_version@/%{version}%{?prever}/' \
     -i $(find src -name \*.php) bin/phpreflect
@@ -142,6 +138,9 @@ install -D -p -m 644 bin/phpreflect.1         %{buildroot}%{_mandir}/man1/phpref
 
 
 %check
+# Required when bartlett/php-compatinfo installed (local build)
+export BARTLETT_COMPATINFO_DB=%{_datadir}/php-bartlett-PHP-CompatInfo/compatinfo.sqlite
+
 # Version 3.0.0beta1 : OK, but incomplete or skipped tests!
 # Tests: 123, Assertions: 124, Incomplete: 3.
 %{_bindir}/phpunit
@@ -170,6 +169,9 @@ fi
 
 
 %changelog
+* Thu Feb 26 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.9.20150226gitaab371c
+- update to 3.0.0 beta3
+
 * Mon Feb 23 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.8.20150219gite7f804e
 - fix output
 
