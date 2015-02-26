@@ -1,3 +1,14 @@
+#
+# RPM spec file for php-PHPParser
+#
+# Copyright (c) 2012-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
 %global github_owner    nikic
 %global github_name     PHP-Parser
 %global github_version  1.1.0
