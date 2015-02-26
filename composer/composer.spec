@@ -21,7 +21,7 @@ Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
 License:        MIT
-URL:            https://github.com/%{gh_owner}/%{gh_project}
+URL:            https://getcomposer.org/
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 Source1:        %{name}-autoload.php
 Source2:        %{name}-bootstrap.php
