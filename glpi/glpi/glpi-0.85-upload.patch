@@ -1,0 +1,24 @@
+diff -up ./front/fileupload.php.old ./front/fileupload.php
+--- ./front/fileupload.php.old	2015-02-27 10:03:26.350805386 +0100
++++ ./front/fileupload.php	2015-02-27 10:04:09.149972196 +0100
+@@ -66,7 +66,7 @@ $errors =  array(
+         'min_height'          => __('Image requires a minimum height')
+     );
+ 
+-$upload_handler = new UploadHandler(array('upload_dir'        => GLPI_ROOT.'/files/_tmp/',
++$upload_handler = new UploadHandler(array('upload_dir'        => GLPI_TMP_DIR.'/',
+                                           'param_name'        => $_GET['name'],
+                                           'orient_image'      => false,
+                                           'image_versions'    => array()),
+diff -up ./inc/html.class.php.old ./inc/html.class.php
+--- ./inc/html.class.php.old	2015-02-27 10:03:34.849838511 +0100
++++ ./inc/html.class.php	2015-02-27 10:04:27.798044878 +0100
+@@ -5118,7 +5118,7 @@ class Html {
+          && is_array($p['values']['filename']) && count($p['values']['filename'])) {
+          foreach ($p['values']['filename'] as $key => $name) {
+             if (isset($p['values']['tag'][$key])) {
+-               $file = GLPI_ROOT.'/files/_tmp/'.$p['values']['filename'][$key];
++               $file = GLPI_TMP_DIR.'/'.$p['values']['filename'][$key];
+                if (file_exists($file)) {
+                   $display = sprintf('%1$s %2$s', $p['values']['filename'][$key],
+                                                   Toolbox::getSize(filesize($file)));
