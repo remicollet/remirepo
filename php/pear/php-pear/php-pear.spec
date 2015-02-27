@@ -10,7 +10,7 @@
 # https://pear.php.net/bugs/bug.php?id=19367
 # Structures_Graph 1.0.4 - incorrect FSF address
 %global structver 1.1.0
-%global xmlutil   1.2.3
+%global xmlutil   1.3.0
 
 # Tests are only run with rpmbuild --with tests
 # Can't be run in mock / koji because PEAR is the first package
@@ -23,7 +23,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.9.5
-Release: 7%{?dist}
+Release: 8%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -88,7 +88,7 @@ Obsoletes: php56w-pear <= %{version}
 %endif
 
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}}
-# Structures_Graph requires 5.3
+# Structures_Graph and XML_Util require 5.3
 # Console_Getopt requires 5.4
 Requires:  %{?scl_prefix}php(language) > 5.4
 Requires:  %{?scl_prefix}php-cli
@@ -367,6 +367,9 @@ fi
 
 
 %changelog
+* Fri Feb 27 2015 Remi Collet <remi@fedoraproject.org> 1:1.9.5-8
+- update XML_Util to 1.3.0
+
 * Fri Feb 27 2015 Remi Collet <remi@fedoraproject.org> 1:1.9.5-7
 - update Structures_Graph to 1.1.0
 
