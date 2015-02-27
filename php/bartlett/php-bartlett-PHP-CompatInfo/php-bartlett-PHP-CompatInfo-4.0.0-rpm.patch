@@ -118,3 +118,15 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 +# Class not catched by autoloader
 +require $vendorDir . '/Bartlett/Reflect.php';
  require __DIR__ . '/Reference/GenericTest.php';
+diff -up src/Bartlett/CompatInfo/Console/Application.php.rpm src/Bartlett/CompatInfo/Console/Application.php
+--- ./src/Bartlett/CompatInfo/Console/Application.php.rpm	2015-02-27 12:43:50.156932510 +0100
++++ ./src/Bartlett/CompatInfo/Console/Application.php	2015-02-27 13:05:29.032971712 +0100
+@@ -57,7 +57,7 @@ class Application extends BaseApplicatio
+             $this->getVersion(),
+             $v['build.string']
+         );
+-        if (extension_loaded('xdebug')) {
++        if (extension_loaded('xdebug') && defined("STDOUT") && function_exists("posix_isatty") && posix_isatty(STDOUT)) {
+             $version .= PHP_EOL . PHP_EOL .
+                 '<warning>You are encouraged to unload xdebug extension to speed up execution.</warning>';
+         }

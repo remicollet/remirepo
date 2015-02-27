@@ -68,7 +68,7 @@ devbuild:
 	time rpmbuild $(RPMDEFINES) -bb $(NAME)-dev.spec
 
 devbuildmini:
-	time rpmbuild $(RPMDEFINES) --define "runselftest 0" -bb $(NAME)-dev.spec
+	time rpmbuild $(RPMDEFINES) --define "runselftest 0" --without tests -bb $(NAME)-dev.spec
 
 devbuildtest:
 	time rpmbuild $(RPMDEFINES) --with tests -bb $(NAME)-dev.spec

@@ -12,10 +12,11 @@
 %global gh_owner     llaville
 %global gh_project   php-compat-info
 %global prever       beta2
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        4.0.0
-%global specrel 6
+%global specrel 7
 Release:        %{?gh_short:0.%{specrel}.%{?gh_date}git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -23,6 +24,8 @@ Group:          Development/Libraries
 License:        BSD
 URL:            http://php5.laurent-laville.org/compatinfo/
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?gh_short:-%{gh_short}}.tar.gz
+# Script for fedora-review
+Source1:        fedora-review-check
 
 # Autoloader for RPM - die composer !
 # and sqlite database path
@@ -32,9 +35,11 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pdo_sqlite
+BuildRequires:  php-composer(bartlett/php-reflect) >= 3.0.0
+%if %{with_tests}
 # to run test suite
 BuildRequires:  %{_bindir}/phpunit
-BuildRequires:  php-composer(bartlett/php-reflect) >= 3.0.0
+%endif
 
 # From composer.json, "require"
 #        "php": ">=5.3.2",
@@ -90,6 +95,10 @@ Documentation: http://php5.laurent-laville.org/compatinfo/manual/current/en/
 
 %patch0 -p1 -b .rpm
 
+# Cleanup patched files
+find src -name \*rpm -delete -print
+
+# Set package version
 sed -e 's/@package_version@/%{version}%{?prever}/' \
     -i $(find src -name \*.php) bin/phpcompatinfo
 
@@ -109,13 +118,17 @@ install -D -p -m 644 bin/phpcompatinfo.json.dist %{buildroot}%{_sysconfdir}/phpc
 install -D -p -m 644 bin/phpcompatinfo.1         %{buildroot}%{_mandir}/man1/phpcompatinfo.1
 install -D -p -m 644 data/compatinfo.sqlite      %{buildroot}%{_datadir}/%{name}/compatinfo.sqlite
 
+install -D -p -m 755 %{SOURCE1}                  %{buildroot}%{_datadir}/%{name}/fedora-review-check
 
+
+%if %{with_tests}
 %check
 %{_bindir}/phpunit \
     --include-path src \
     -d memory_limit=-1 \
 %if 0%{?fedora} < 21
     || exit 0
+%endif
 %endif
 
 
@@ -135,10 +148,15 @@ fi
 %{_bindir}/phpcompatinfo
 %{_datadir}/php/Bartlett/CompatInfo
 %{_mandir}/man1/phpcompatinfo.1*
-%{_datadir}/%{name}/compatinfo.sqlite
+%{_datadir}/%{name}
 
 
 %changelog
+* Fri Feb 27 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.7.20150227git4966955
+- don't display xdebug message when not on a tty
+- add fedora-review-check script
+- handle --without tests option to skip test suite during build
+
 * Fri Feb 27 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.6.20150227git4966955
 - update to 4.0.0beta3
 
