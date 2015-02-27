@@ -9,7 +9,7 @@
 %global arctarver 1.3.14
 # https://pear.php.net/bugs/bug.php?id=19367
 # Structures_Graph 1.0.4 - incorrect FSF address
-%global structver 1.0.4
+%global structver 1.1.0
 %global xmlutil   1.2.3
 
 # Tests are only run with rpmbuild --with tests
@@ -23,11 +23,11 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.9.5
-Release: 6%{?dist}
+Release: 7%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util, Console_Getopt are BSD
-# Structures_Graph is LGPLv2+
-License: BSD and LGPLv2+
+# Structures_Graph is LGPLv3+
+License: BSD and LGPLv3+
 Group: Development/Languages
 URL: http://pear.php.net/package/PEAR
 Source0: http://download.pear.php.net/package/PEAR-%{version}%{?pearprever}.tgz
@@ -88,7 +88,10 @@ Obsoletes: php56w-pear <= %{version}
 %endif
 
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}}
-Requires:  %{?scl_prefix}php-cli > 5.4
+# Structures_Graph requires 5.3
+# Console_Getopt requires 5.4
+Requires:  %{?scl_prefix}php(language) > 5.4
+Requires:  %{?scl_prefix}php-cli
 # phpci detected extension
 # PEAR (date, spl always builtin):
 Requires:  %{?scl_prefix}php-ftp
@@ -364,6 +367,9 @@ fi
 
 
 %changelog
+* Fri Feb 27 2015 Remi Collet <remi@fedoraproject.org> 1:1.9.5-7
+- update Structures_Graph to 1.1.0
+
 * Thu Feb 26 2015 Remi Collet <remi@fedoraproject.org> 1:1.9.5-6
 - update Archive_Tar to 1.3.14
 
