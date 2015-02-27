@@ -6,16 +6,16 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    442d25d486511e4a8e2ed15d1841529ae12e76e7
+%global gh_commit    4966955ae3f662aa96fe292079759d287b51c29c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150220
+%global gh_date      20150227
 %global gh_owner     llaville
 %global gh_project   php-compat-info
 %global prever       beta2
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        4.0.0
-%global specrel 5
+%global specrel 6
 Release:        %{?gh_short:0.%{specrel}.%{?gh_date}git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -139,6 +139,9 @@ fi
 
 
 %changelog
+* Fri Feb 27 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.6.20150227git4966955
+- update to 4.0.0beta3
+
 * Sun Feb 22 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.5.20150220git442d25d
 - fix reported version
 
