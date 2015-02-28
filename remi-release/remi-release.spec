@@ -77,6 +77,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 27 2015 Remi Collet <RPMS@FamilleCollet.com> - 22-1.fc22.remi
+- Fedora release 22
+
 * Sun Aug 31 2014 Remi Collet <RPMS@FamilleCollet.com> - 21-1.fc21.remi
 - Fedora release 21
 - drop dependency on yum, as dnf exists
