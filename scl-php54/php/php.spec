@@ -109,7 +109,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.4.38
-Release: 1%{?dist}
+Release: 2%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -161,6 +161,8 @@ Patch91: php-5.3.7-oci8conf.patch
 # Upstream fixes (100+)
 # Backported from 5.5.18 for https://bugs.php.net/65641
 Patch100: php-5.4.33-bug65641.patch
+# Backported from 5.5.16 for https://bugs.php.net/67635
+Patch101: php-5.4.38-systemd.patch
 
 # Security fixes (200+)
 
@@ -789,6 +791,7 @@ support for using the enchant library to PHP.
 
 # upstream patches
 %patch100 -p1 -b .bug65641
+%patch101 -p1 -b .bug65635
 
 # security patches
 
@@ -1587,6 +1590,10 @@ fi
 
 
 %changelog
+* Sat Feb 28 2015 Remi Collet <remi@fedoraproject.org> 5.4.38-2
+- fix fedora 22 build with recent systemd
+  add patch fix from https://bugs.php.net/67635
+
 * Wed Feb 18 2015 Remi Collet <remi@fedoraproject.org> 5.4.38-1
 - Update to 5.4.38
   http://www.php.net/releases/5_4_38.php
