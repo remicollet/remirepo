@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -22,7 +22,7 @@
 Summary:        Set of specific strongly-typed classes for sets and hashing
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -30,6 +30,7 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 # https://github.com/derickr/quickhash/pull/4
 Patch0:         %{pecl_name}-pr4.patch
+Patch1:         %{pecl_name}-pr5.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -84,6 +85,7 @@ mv %{pecl_name}-%{version} NTS
 
 cd NTS
 %patch0 -p1
+%patch1 -p1
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_QUICKHASH_VERSION/{s/.* "//;s/".*$//;p}' php_quickhash.h)
@@ -208,6 +210,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Feb 28 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-6
+- add patch for GCC 5 build
+- open https://github.com/derickr/quickhash/pull/5
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-5.1
 - Fedora 21 SCL mass rebuild
 
