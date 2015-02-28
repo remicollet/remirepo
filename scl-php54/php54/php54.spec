@@ -2,6 +2,12 @@
 %global scl_name_version 54
 %global scl              %{scl_name_base}%{scl_name_version}
 %global macrosdir        %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_root_sysconfdir}/rpm; echo $d)
+%if 0%{?fedora} >= 20
+# Requires scl-utils v2
+%global with_modules     1
+%else
+%global with_modules     0
+%endif
 %scl_package %scl
 
 # do not produce empty debuginfo package
@@ -10,7 +16,7 @@
 Summary:       Package that installs PHP 5.4
 Name:          %scl_name
 Version:       2.0
-Release:       2%{?dist}
+Release:       3%{?dist}
 Group:         Development/Languages
 License:       GPLv2+
 
@@ -23,6 +29,9 @@ BuildRequires: scl-utils-build
 BuildRequires: help2man
 # Temporary work-around
 BuildRequires: iso-codes
+%if %{with_modules}
+BuildRequires: environment-modules
+%endif
 
 Requires:      %{?scl_prefix}php-common%{?_isa} >= 5.4.32
 Requires:      %{?scl_prefix}php-cli%{?_isa}
@@ -75,6 +84,10 @@ export LD_LIBRARY_PATH=%{_libdir}\${LD_LIBRARY_PATH:+:\${LD_LIBRARY_PATH}}
 export MANPATH=%{_mandir}:\${MANPATH}
 EOF
 
+%if %{with_modules}
+/usr/share/Modules/bin/createmodule.sh enable | tee envmod
+%endif
+
 # generate rpm macros file for depended collections
 cat << EOF | tee scldev
 %%scl_%{scl_name_base}         %{scl}
@@ -105,6 +118,7 @@ help2man -N --section 7 ./h2m_helper -o %{scl_name}.7
 
 %install
 install -D -m 644 enable %{buildroot}%{_scl_scripts}/enable
+install -D -m 644 envmod %{buildroot}%{_scl_scripts}/%{scl_name}
 install -D -m 644 scldev %{buildroot}%{macrosdir}/macros.%{scl_name_base}-scldevel
 install -D -m 644 %{scl_name}.7 %{buildroot}%{_mandir}/man7/%{scl_name}.7
 
@@ -146,6 +160,9 @@ fi
 
 
 %changelog
+* Sat Feb 28 2015 Remi Collet <remi@fedoraproject.org> 2.0-3
+- add environment module
+
 * Wed Nov 26 2014 Remi Collet <remi@fedoraproject.org> 2.0-2
 - add LD_LIBRARY_PATH in enable script for embedded
 
