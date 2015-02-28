@@ -24,7 +24,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?scl_prefix}php-pecl-memcache
 Version:      3.0.8
-Release:      5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:      7%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -33,6 +33,8 @@ Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 # Missing in official archive
 # http://svn.php.net/viewvc/pecl/memcache/branches/NON_BLOCKING_IO/tests/connect.inc?view=co
 Source3:      connect.inc
+
+Patch0: %{pecl_name}-gcc5.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel
@@ -92,6 +94,7 @@ Memcache can be used as a PHP session handler.
 
 mv %{pecl_name}-%{version} NTS
 pushd NTS
+%patch0 -p1 -b .gcc5
 
 # Chech version as upstream often forget to update this
 extver=$(sed -n '/#define PHP_MEMCACHE_VERSION/{s/.* "//;s/".*$//;p}' php_memcache.h)
@@ -257,6 +260,9 @@ fi
 
 
 %changelog
+* Tue Feb 10 2015 Remi Collet <rcollet@redhat.com> - 3.0.8-7
+- fix gcc 5 FTBFS
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 3.0.8-5.1
 - Fedora 21 SCL mass rebuild
 
