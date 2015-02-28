@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #182 ionCube Loader version <no_version> ] {
+Extension [ <persistent> extension #186 ionCube Loader version <no_version> ] {
 
   - INI {
     Entry [ phpd <ALL> ]
