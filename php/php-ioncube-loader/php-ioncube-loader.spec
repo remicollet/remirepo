@@ -17,6 +17,10 @@
 %global ininame       01-%{extname}.ini
 %endif
 
+# Open issues
+# http://forum.ioncube.com/viewtopic.php?t=4245 - Missing LICENSE file in tarball
+# http://forum.ioncube.com/viewtopic.php?t=4244 - No versio in Reflection
+
 Name:          %{?scl_prefix}php-ioncube-loader
 Summary:       Loader for ionCube Encoded Files
 Version:       4.7.5
@@ -77,6 +81,7 @@ tar xvf %{SOURCE0}
 
 # Drop in the bit of configuration
 # Sometime file is missing
+# http://forum.ioncube.com/viewtopic.php?t=4245
 [ -f ioncube/LICENSE.txt ] || cp %{SOURCE2} ioncube
 
 cat > %{extname}.nts << 'EOF'
