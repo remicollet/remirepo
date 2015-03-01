@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -10,7 +10,7 @@
 %global lockname     ocsinventoryng.lock
 
 Name:           glpi-ocsinventoryng
-Version:        1.0.3
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        Plugin to synchronize GLPI with OCS Inventory NG
 
@@ -18,15 +18,15 @@ Group:          Applications/Internet
 License:        GPLv2+
 URL:            https://forge.indepnet.net/projects/ocsinventoryng
 
-Source0:        https://forge.indepnet.net/attachments/download/1847/glpi-ocsinventoryng-1.0.3.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/1966/glpi-ocsinventoryng-1.1.0.tar.gz
 Source1:        %{name}-httpd.conf
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
 
-Requires:       glpi >= 0.84
-Requires:       glpi <  0.85
+Requires:       glpi >= 0.85
+Requires:       glpi <  0.86
 Requires:       crontabs
 Requires:       php-cli
 # phpcompatinfo for version 1.0.2
@@ -91,7 +91,7 @@ done
 
 
 %install
-rm -rf %{buildroot} 
+rm -rf %{buildroot}
 
 # Plugin
 mkdir -p %{buildroot}/%{_datadir}/glpi/plugins
@@ -116,7 +116,7 @@ touch %{buildroot}%{_localstatedir}/lib/glpi/files/_lock/%{lockname}
 
 
 %clean
-rm -rf %{buildroot} 
+rm -rf %{buildroot}
 
 
 %post
@@ -161,6 +161,10 @@ grep %{lockname} %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}/setup.php |
 
 
 %changelog
+* Sun Mar  1 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- Update to 1.1.0 for GLPI 0.85+
+  https://forge.indepnet.net/versions/1116
+
 * Mon Sep  8 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - Update to 1.0.3 for GLPI 0.84+
   https://forge.indepnet.net/versions/957
