@@ -342,7 +342,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Sun Mar  2 2015 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
+* Sun Mar  1 2015 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
 - Update to 2.3.0 (stable)
 
 * Thu Feb 19 2015 Remi Collet <remi@fedoraproject.org> - 2.3.0-0.1.RC1
