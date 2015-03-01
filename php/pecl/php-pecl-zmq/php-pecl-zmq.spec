@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -23,7 +23,7 @@
 Summary:        ZeroMQ messaging
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.1.2
-Release:        4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -32,16 +32,13 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.2
 BuildRequires:  %{?scl_prefix}php-pear
-%if 0%{?fedora} >= 17 || 0%{?rhel} >= 6
-BuildRequires:  zeromq3-devel
-%else
+%if 0%{?fedora} >= 22 || 0%{?rhel} == 5
 BuildRequires:  zeromq-devel >= 2.0.7
+%else
+BuildRequires:  zeromq3-devel
 %endif
-# needed on EL-5
 BuildRequires: pkgconfig
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
@@ -56,17 +53,17 @@ Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:     php54-pecl-%{pecl_name}
-Obsoletes:     php54w-pecl-%{pecl_name}
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}
-Obsoletes:     php55w-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name}
-Obsoletes:     php56w-pecl-%{pecl_name}
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -85,7 +82,18 @@ a fast message-based applications.
 %prep
 %setup -q -c
 
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
+
 mv %{pecl_name}-%{version} NTS
+
+if pkg-config libzmq --atleast-version=4
+then
+# fix new default of MAX_SOCKETS
+# Using current version, so this can be checked in next version and removed
+# if appropriate. (still not fixed in 1.1.2, maybe later)
+sed -i "s/int(1024)/int(1023)/g" NTS/tests/032-contextopt.phpt
+fi
 
 %if %{with_zts}
 # Duplicate source tree for NTS / ZTS build
@@ -138,21 +146,26 @@ make -C ZTS \
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
-for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
+# Documentation
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -170,7 +183,7 @@ export TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}
 export REPORT_EXIT_STATUS=1
 export NO_INTERACTION=1
 export TEST_PHP_EXECUTABLE=%{__php}
-%{__php} -n run-tests.php
+%{__php} -n run-tests.php --show-diff
 %endif
 
 %if %{with_zts}
@@ -184,7 +197,7 @@ cd ../ZTS
 : upstream test suite for ZTS extension
 export TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so"
 export TEST_PHP_EXECUTABLE=%{__ztsphp}
-%{__ztsphp} -n run-tests.php
+%{__ztsphp} -n run-tests.php --show-diff
 %endif
 %endif
 
@@ -196,7 +209,6 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -209,6 +221,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar  1 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-5
+- drop runtime dependency on pear, new scriplets
+- don't install test suite
+- build against zeromq 4 on F22
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-4.1
 - Fedora 21 SCL mass rebuild
 
