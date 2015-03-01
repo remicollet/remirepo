@@ -2,14 +2,14 @@
 #
 # Copyright (c) 2010-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
 %global pluginname    fusioninventory
 %global glpi_version  0.85.0
 %global glpi_max      0.86
-%global plug_version  1.0
+%global plug_version  1.1
 
 Name:           glpi-fusioninventory
 # New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
@@ -23,7 +23,7 @@ Group:          Applications/Internet
 License:        AGPLv3+
 URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-glpi
 
-Source0:        http://forge.fusioninventory.org/attachments/download/1719/fusioninventory-for-glpi_0.85+1.0.tar.gz
+Source0:        http://forge.fusioninventory.org/attachments/download/1755/fusioninventory-for-glpi_0.85+1.1.tar.gz
 Source1:        %{name}-httpd.conf
 
 
@@ -132,6 +132,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar  1 2015 Remi Collet <remi@fedoraproject.org> - 1:0.85.0.1.1-1
+- update to 0.85+1.1 for GLPI 0.85
+  http://forge.fusioninventory.org/versions/208
+
 * Tue Dec 23 2014 Remi Collet <remi@fedoraproject.org> - 1:0.85.0.1.0-1
 - update to 0.85+1.0 for GLPI 0.85
   http://forge.fusioninventory.org/versions/97
