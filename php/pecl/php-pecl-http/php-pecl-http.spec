@@ -28,7 +28,7 @@
 
 #global prever RC1
 Name:           %{?scl_prefix}php-pecl-http
-Version:        2.2.1
+Version:        2.3.0
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
@@ -240,6 +240,12 @@ done
 
 
 %check
+%if 0%{?fedora} == 20
+# ignore failed tests (timeout) with curl 7.32
+# see https://bugzilla.redhat.com/show_bug.cgi?id=1194603
+rm ?TS/tests/client{006,007,008,018,021}.phpt
+%endif
+
 %if "%{php_version}" < "5.4"
 # Known failed test with 5.3.3 (need investigations)
 export REPORT_EXIT_STATUS=0
@@ -336,6 +342,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar  2 2015 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
+- Update to 2.3.0 (stable)
+
+* Thu Feb 19 2015 Remi Collet <remi@fedoraproject.org> - 2.3.0-0.1.RC1
+- update to 2.3.0RC1 (beta)
+- add some upstream patches
+
 * Mon Feb 09 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - Update to 2.2.1 (stable)
 
