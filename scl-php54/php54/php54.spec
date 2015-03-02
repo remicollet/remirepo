@@ -16,7 +16,7 @@
 Summary:       Package that installs PHP 5.4
 Name:          %scl_name
 Version:       2.0
-Release:       3%{?dist}
+Release:       4%{?dist}
 Group:         Development/Languages
 License:       GPLv2+
 
@@ -33,9 +33,9 @@ BuildRequires: iso-codes
 BuildRequires: environment-modules
 %endif
 
-Requires:      %{?scl_prefix}php-common%{?_isa} >= 5.4.32
+Requires:      %{?scl_prefix}php-common%{?_isa} >= 5.4.38
 Requires:      %{?scl_prefix}php-cli%{?_isa}
-Requires:      %{?scl_prefix}php-pear           >= 1.9.5
+Requires:      %{?scl_prefix}php-pear           >= 1:1.9.5-8
 Requires:      %{?scl_name}-runtime%{?_isa}      = %{version}-%{release}
 
 %description
@@ -85,7 +85,16 @@ export MANPATH=%{_mandir}:\${MANPATH}
 EOF
 
 %if %{with_modules}
-/usr/share/Modules/bin/createmodule.sh enable | tee envmod
+# Broken: /usr/share/Modules/bin/createmodule.sh enable | tee envmod
+# See https://bugzilla.redhat.com/show_bug.cgi?id=1197321
+cat << EOF | tee envmod
+#%%Module1.0
+prepend-path    X_SCLS              %{scl}
+prepend-path    PATH                %{_bindir}
+prepend-path    LD_LIBRARY_PATH     %{_libdir}
+prepend-path    MANPATH             %{_mandir}
+prepend-path    PKG_CONFIG_PATH     %{_libdir}/pkgconfig
+EOF
 %endif
 
 # generate rpm macros file for depended collections
@@ -160,6 +169,10 @@ fi
 
 
 %changelog
+* Mon Mar  2 2015 Remi Collet <remi@fedoraproject.org> 2.0-4
+- static environement module file instead of
+  generated one, because of https://bugzilla.redhat.com/1197321
+
 * Sat Feb 28 2015 Remi Collet <remi@fedoraproject.org> 2.0-3
 - add environment module
 
