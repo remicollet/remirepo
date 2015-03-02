@@ -28,7 +28,7 @@
 
 #global prever RC1
 Name:           %{?scl_prefix}php-pecl-http
-Version:        2.3.0
+Version:        2.3.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
@@ -342,6 +342,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar  2 2015 Remi Collet <remi@fedoraproject.org> - 2.3.1-1
+- Update to 2.3.1 (stable)
+
 * Sun Mar  1 2015 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
 - Update to 2.3.0 (stable)
 
