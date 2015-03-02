@@ -2,6 +2,12 @@
 %global scl_name_version 56
 %global scl              %{scl_name_base}%{scl_name_version}
 %global macrosdir        %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_root_sysconfdir}/rpm; echo $d)
+%if 0%{?fedora} >= 20
+# Requires scl-utils v2
+%global with_modules     1
+%else
+%global with_modules     0
+%endif
 %scl_package %scl
 
 # do not produce empty debuginfo package
@@ -10,7 +16,7 @@
 Summary:       Package that installs PHP 5.6
 Name:          %scl_name
 Version:       2.0
-Release:       2%{?dist}
+Release:       3%{?dist}
 Group:         Development/Languages
 License:       GPLv2+
 
@@ -24,9 +30,9 @@ BuildRequires: help2man
 # Temporary work-around
 BuildRequires: iso-codes
 
-Requires:      %{?scl_prefix}php-common%{?_isa} >= 5.6.0
+Requires:      %{?scl_prefix}php-common%{?_isa} >= 5.6.6
 Requires:      %{?scl_prefix}php-cli%{?_isa}
-Requires:      %{?scl_prefix}php-pear           >= 1.9.5
+Requires:      %{?scl_prefix}php-pear           >= 1:1.9.5-8
 Requires:      %{?scl_name}-runtime%{?_isa}      = %{version}-%{release}
 
 %description
@@ -75,6 +81,19 @@ export LD_LIBRARY_PATH=%{_libdir}\${LD_LIBRARY_PATH:+:\${LD_LIBRARY_PATH}}
 export MANPATH=%{_mandir}:\${MANPATH}
 EOF
 
+%if %{with_modules}
+# Broken: /usr/share/Modules/bin/createmodule.sh enable | tee envmod
+# See https://bugzilla.redhat.com/show_bug.cgi?id=1197321
+cat << EOF | tee envmod
+#%%Module1.0
+prepend-path    X_SCLS              %{scl}
+prepend-path    PATH                %{_bindir}
+prepend-path    LD_LIBRARY_PATH     %{_libdir}
+prepend-path    MANPATH             %{_mandir}
+prepend-path    PKG_CONFIG_PATH     %{_libdir}/pkgconfig
+EOF
+%endif
+
 # generate rpm macros file for depended collections
 cat << EOF | tee scldev
 %%scl_%{scl_name_base}         %{scl}
@@ -105,6 +124,9 @@ help2man -N --section 7 ./h2m_helper -o %{scl_name}.7
 
 %install
 install -D -m 644 enable %{buildroot}%{_scl_scripts}/enable
+%if %{with_modules}
+install -D -m 644 envmod %{buildroot}%{_scl_scripts}/%{scl_name}
+%endif
 install -D -m 644 scldev %{buildroot}%{macrosdir}/macros.%{scl_name_base}-scldevel
 install -D -m 644 %{scl_name}.7 %{buildroot}%{_mandir}/man7/%{scl_name}.7
 
@@ -146,6 +168,9 @@ fi
 
 
 %changelog
+* Mon Mar  2 2015 Remi Collet <remi@fedoraproject.org> 2.0-3
+- add environement module file
+
 * Wed Nov 26 2014 Remi Collet <remi@fedoraproject.org> 2.0-2
 - add LD_LIBRARY_PATH in enable script for embedded
 

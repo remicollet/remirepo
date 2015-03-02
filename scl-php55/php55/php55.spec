@@ -124,7 +124,9 @@ help2man -N --section 7 ./h2m_helper -o %{scl_name}.7
 
 %install
 install -D -m 644 enable %{buildroot}%{_scl_scripts}/enable
+%if %{with_modules}
 install -D -m 644 envmod %{buildroot}%{_scl_scripts}/%{scl_name}
+%endif
 install -D -m 644 scldev %{buildroot}%{macrosdir}/macros.%{scl_name_base}-scldevel
 install -D -m 644 %{scl_name}.7 %{buildroot}%{_mandir}/man7/%{scl_name}.7
 
