@@ -8,14 +8,17 @@
 # Please, preserve the changelog entries
 #
 %{!?__pear:       %global __pear       %{_bindir}/pear}
+%global bootstrap    0
 %global pear_name    Horde_Util
 %global pear_channel pear.horde.org
-
-# Can run test because of circular dependency with Horde_Test
+%if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%else
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 Name:           php-horde-Horde-Util
-Version:        2.5.3
+Version:        2.5.4
 Release:        1%{?dist}
 Summary:        Horde Utility Libraries
 
@@ -89,8 +92,13 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 %if %{with_tests}
+export LANG=fr_FR.utf8
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+%if 0%{?rhel} == 5
+phpunit . || : Test suite result ignored
+%else
 phpunit .
+%endif
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -122,6 +130,10 @@ fi
 
 
 %changelog
+* Tue Mar 03 2015 Remi Collet <remi@fedoraproject.org> - 2.5.4-1
+- Update to 2.5.4
+- enable the test suite during build
+
 * Wed Feb 11 2015 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
 - Update to 2.5.3
 - add provides php-composer(horde/horde-util)
