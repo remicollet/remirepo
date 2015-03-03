@@ -24,7 +24,7 @@
 Name:          %{?scl_prefix}php-ioncube-loader
 Summary:       Loader for ionCube Encoded Files
 Version:       4.7.5
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       Distribuable
 Group:         Development/Languages
 
@@ -83,16 +83,25 @@ tar xvf %{SOURCE0}
 # Sometime file is missing
 # http://forum.ioncube.com/viewtopic.php?t=4245
 [ -f ioncube/LICENSE.txt ] || cp %{SOURCE2} ioncube
+sed -e 's/\r//' -i ioncube/LICENSE.txt
 
-cat > %{extname}.nts << 'EOF'
+cat << 'EOF' | tee %{extname}.nts
 ; Enable %{extname} extension module
+%if "%{php_version}" > "5.5"
+zend_extension = %{extname}.so
+%else
 zend_extension = %{php_extdir}/%{extname}.so
+%endif
 EOF
 
 %if %{with_zts}
-cat > %{extname}.zts << 'EOF'
+cat << 'EOF' | tee %{extname}.zts
 ; Enable %{extname} extension module
+%if "%{php_version}" > "5.5"
+zend_extension = %{extname}.so
+%else
 zend_extension = %{php_ztsextdir}/%{extname}.so
+%endif
 EOF
 %endif
 
@@ -140,7 +149,6 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license ioncube/LICENSE.txt
-#doc     ioncube/README.txt
 
 %config(noreplace) %{php_inidir}/%{ininame}
 %{php_extdir}/%{extname}.so
@@ -152,6 +160,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar  3 2015 Remi Collet <RPMS@famillecollet.com> - 4.7.5-2
+- LICENSE.txt and README.txt are back
+  http://forum.ioncube.com/viewtopic.php?t=4245
+- php 5.5+ don't need full extension path
+
 * Sat Feb 28 2015 Remi Collet <RPMS@famillecollet.com> - 4.7.5-1
 - update to 4.7.5 (Feb 27, 2015)
 
