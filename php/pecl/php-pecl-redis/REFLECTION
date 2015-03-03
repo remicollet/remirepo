@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #159 redis version 2.2.5 ] {
+Extension [ <persistent> extension #178 redis version 2.2.7 ] {
 
   - INI {
     Entry [ redis.arrays.names <ALL> ]
@@ -56,7 +56,7 @@ Extension [ <persistent> extension #159 redis version 2.2.5 ] {
       - Properties [0] {
       }
 
-      - Methods [194] {
+      - Methods [201] {
         Method [ <internal:redis, ctor> public method __construct ] {
         }
 
@@ -348,6 +348,9 @@ Extension [ <persistent> extension #159 redis version 2.2.5 ] {
         Method [ <internal:redis> public method zRevRangeByScore ] {
         }
 
+        Method [ <internal:redis> public method zRangeByLex ] {
+        }
+
         Method [ <internal:redis> public method zCount ] {
         }
 
@@ -471,6 +474,9 @@ Extension [ <persistent> extension #159 redis version 2.2.5 ] {
         Method [ <internal:redis> public method script ] {
         }
 
+        Method [ <internal:redis> public method debug ] {
+        }
+
         Method [ <internal:redis> public method dump ] {
         }
 
@@ -537,6 +543,15 @@ Extension [ <persistent> extension #159 redis version 2.2.5 ] {
           }
         }
 
+        Method [ <internal:redis> public method pfadd ] {
+        }
+
+        Method [ <internal:redis> public method pfcount ] {
+        }
+
+        Method [ <internal:redis> public method pfmerge ] {
+        }
+
         Method [ <internal:redis> public method getOption ] {
         }
 
@@ -547,6 +562,9 @@ Extension [ <persistent> extension #159 redis version 2.2.5 ] {
         }
 
         Method [ <internal:redis> public method slowlog ] {
+        }
+
+        Method [ <internal:redis> public method rawCommand ] {
         }
 
         Method [ <internal:redis> public method getHost ] {
@@ -571,6 +589,9 @@ Extension [ <persistent> extension #159 redis version 2.2.5 ] {
         }
 
         Method [ <internal:redis> public method isConnected ] {
+        }
+
+        Method [ <internal:redis> public method getMode ] {
         }
 
         Method [ <internal:redis> public method wait ] {
@@ -682,7 +703,7 @@ Extension [ <persistent> extension #159 redis version 2.2.5 ] {
       - Properties [0] {
       }
 
-      - Methods [25] {
+      - Methods [27] {
         Method [ <internal:redis, ctor> public method __construct ] {
         }
 
@@ -743,6 +764,12 @@ Extension [ <persistent> extension #159 redis version 2.2.5 ] {
         }
 
         Method [ <internal:redis> public method keys ] {
+        }
+
+        Method [ <internal:redis> public method save ] {
+        }
+
+        Method [ <internal:redis> public method bgsave ] {
         }
 
         Method [ <internal:redis> public method multi ] {

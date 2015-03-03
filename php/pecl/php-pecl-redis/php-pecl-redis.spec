@@ -24,19 +24,14 @@
 
 Summary:       Extension for communicating with the Redis key-value store
 Name:          %{?scl_prefix}php-pecl-redis
-Version:       2.2.5
-Release:       5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Version:       2.2.7
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/redis
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 # https://github.com/nicolasff/phpredis/issues/332 - missing tests
-Source1:       https://github.com/nicolasff/phpredis/archive/%{version}.tar.gz
-
-# https://github.com/nicolasff/phpredis/pull/447
-Patch0:        %{pecl_name}-php56.patch
-# https://github.com/nicolasff/phpredis/pull/517
-Patch1:        %{pecl_name}-igbinary.patch
+Source1:       https://github.com/phpredis/phpredis/archive/%{version}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
@@ -101,8 +96,6 @@ mv %{pecl_name}-%{version} NTS
 mv phpredis-%{version}/tests NTS/tests
 
 cd NTS
-%patch0 -p1 -b .php56
-%patch1 -p1 -b .igbinary
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_REDIS_VERSION/{s/.* "//;s/".*$//;p}' php_redis.h)
@@ -241,12 +234,20 @@ exit $ret
 %endif
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -271,6 +272,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar 03 2015 Remi Collet <remi@fedoraproject.org> - 2.2.7-1
+- Update to 2.2.7 (stable)
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 2.2.5-5.1
 - Fedora 21 SCL mass rebuild
 
