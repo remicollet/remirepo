@@ -6,10 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    45b1f356c24d87788a339f6a50d6d78bef464c47
+%global gh_commit    eadc167b121359986f542cc9cf976ecee3fcbf69
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20150227
+%global gh_date      20150302
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
@@ -85,6 +85,7 @@ Requires:       php-spl
 Requires:       php-tokenizer
 Requires:       php-xsl
 Requires:       php-zlib
+
 Provides:       php-composer(composer/composer) = %{version}
 
 
@@ -156,6 +157,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.20150302giteadc167
+- new snapshot
+
 * Sat Feb 28 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.20150227git45b1f35
 - new snapshot
 
