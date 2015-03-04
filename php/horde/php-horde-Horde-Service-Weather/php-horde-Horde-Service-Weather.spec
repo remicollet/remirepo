@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Service-Weather
-Version:        2.1.5
+Version:        2.1.6
 Release:        1%{?dist}
 Summary:        Horde Weather Provider
 
@@ -146,6 +146,9 @@ fi
 
 
 %changelog
+* Wed Mar 04 2015 Remi Collet <remi@fedoraproject.org> - 2.1.6-1
+- Update to 2.1.6
+
 * Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.1.5-1
 - Update to 2.1.5
 - add dependency on Horde_Translation 2.2.0
