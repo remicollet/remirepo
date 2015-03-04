@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-HashTable
-Version:        1.2.2
+Version:        1.2.3
 Release:        1%{?dist}
 Summary:        Horde Hash Table Interface
 
@@ -107,6 +107,9 @@ fi
 
 
 %changelog
+* Wed Mar 04 2015 Remi Collet <remi@fedoraproject.org> - 1.2.3-1
+- Update to 1.2.3
+
 * Wed Feb 11 2015 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
 - Update to 1.2.2
 
