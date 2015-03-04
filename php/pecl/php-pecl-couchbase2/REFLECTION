@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #167 couchbase version 2.0.4 ] {
+Extension [ <persistent> extension #171 couchbase version 2.0.5 ] {
 
   - Constants [57] {
     Constant [ integer COUCHBASE_PERSISTTO_MASTER ] { 1 }
