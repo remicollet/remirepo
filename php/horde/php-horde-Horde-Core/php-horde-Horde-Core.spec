@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-Horde-Core
-Version:        2.19.1
+Version:        2.19.2
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -281,6 +281,9 @@ fi
 
 
 %changelog
+* Wed Mar 04 2015 Remi Collet <remi@fedoraproject.org> - 2.19.2-1
+- Update to 2.19.2
+
 * Tue Mar 03 2015 Remi Collet <remi@fedoraproject.org> - 2.19.1-1
 - Update to 2.19.1
 
