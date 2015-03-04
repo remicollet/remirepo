@@ -1,0 +1,21 @@
+From c4221e8ddc0ab6b3f4f5e3ded80f4ef7501788f1 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Wed, 4 Mar 2015 07:44:15 +0100
+Subject: [PATCH] this test requires configuration
+
+---
+ framework/Http/test/Horde/Http/TestBase.php | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/framework/Http/test/Horde/Http/TestBase.php b/framework/Http/test/Horde/Http/TestBase.php
+index 14b3c92..29b3c37 100644
+--- a/framework/Http/test/Horde/Http/TestBase.php
++++ b/framework/Http/test/Horde/Http/TestBase.php
+@@ -38,6 +38,7 @@ public function setUp()
+ 
+     public function testRequest()
+     {
++        $this->_skipMissingConfig();
+         $client = new Horde_Http_Client(
+             array('request' => new self::$_requestClass())
+         );
