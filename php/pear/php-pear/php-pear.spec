@@ -6,7 +6,7 @@
 %global metadir %{_localstatedir}/lib/pear
 
 %global getoptver 1.4.0
-%global arctarver 1.3.14
+%global arctarver 1.3.15
 # https://pear.php.net/bugs/bug.php?id=19367
 # Structures_Graph 1.0.4 - incorrect FSF address
 %global structver 1.1.0
@@ -23,7 +23,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.9.5
-Release: 8%{?dist}
+Release: 9%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -70,6 +70,11 @@ Provides:  %{?scl_prefix}php-pear(Archive_Tar) = %{arctarver}
 Provides:  %{?scl_prefix}php-pear(PEAR) = %{version}
 Provides:  %{?scl_prefix}php-pear(Structures_Graph) = %{structver}
 Provides:  %{?scl_prefix}php-pear(XML_Util) = %{xmlutil}
+Provides:  %{?scl_prefix}php-composer(pear/console_getopt) = %{getoptver}
+Provides:  %{?scl_prefix}php-composer(pear/archive_tar) = %{arctarver}
+Provides:  %{?scl_prefix}php-composer(pear/pear-core-minimal) = %{version}
+Provides:  %{?scl_prefix}php-composer(pear/structures_graph) = %{structver}
+Provides:  %{?scl_prefix}php-composer(pear/xml_util) = %{xmlutil}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # From other third party
@@ -221,7 +226,7 @@ popd
 rm -rf $RPM_BUILD_ROOT/.depdb* $RPM_BUILD_ROOT/.lock $RPM_BUILD_ROOT/.channels $RPM_BUILD_ROOT/.filemap
 
 # Need for re-registrying XML_Util
-install -m 644 *.xml $RPM_BUILD_ROOT%{_localstatedir}/lib/pear/pkgxml
+install -pm 644 *.xml $RPM_BUILD_ROOT%{_localstatedir}/lib/pear/pkgxml
 
 # The man pages
 install -d $RPM_BUILD_ROOT%{_mandir}/man1
@@ -367,6 +372,10 @@ fi
 
 
 %changelog
+* Thu Mar  5 2015 Remi Collet <remi@fedoraproject.org> 1:1.9.5-9
+- update Archive_Tar to 1.3.15 (no change)
+- add composer provides
+
 * Fri Feb 27 2015 Remi Collet <remi@fedoraproject.org> 1:1.9.5-8
 - update XML_Util to 1.3.0
 
