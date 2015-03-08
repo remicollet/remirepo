@@ -132,7 +132,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.6.7
-Release: 1%{?dist}
+Release: 0.1.RC1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1309,13 +1309,13 @@ cat %{SOURCE10} >>$RPM_BUILD_ROOT%{_httpd_confdir}/%{name}.conf
 %endif
 %endif
 
-sed -e 's:/var/lib:%{_sharedstatedir}:' \
+sed -e 's:/var/lib:%{_localstatedir}/lib:' \
     -i $RPM_BUILD_ROOT%{_httpd_confdir}/%{name}.conf
 
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
-install -m 755 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php
-install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/session
-install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/wsdlcache
+install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php
+install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
+install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/wsdlcache
 
 %if %{with_lsws}
 install -m 755 build-apache/sapi/litespeed/php $RPM_BUILD_ROOT%{_bindir}/lsphp
@@ -1333,7 +1333,7 @@ sed -e 's:/run:%{_localstatedir}/run:' \
     -e 's:/etc:%{_sysconfdir}:' \
     -i $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf
 install -m 644 %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d/www.conf
-sed -e 's:/var/lib:%{_sharedstatedir}:' \
+sed -e 's:/var/lib:%{_localstatedir}/lib:' \
     -e 's:/var/log:%{_localstatedir}/log:' \
     -i $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d/www.conf
 mv $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf.default .
@@ -1610,8 +1610,8 @@ fi
 %dir %{_libdir}/httpd/modules
 %{_root_httpd_moddir}/lib%{name}5.so
 %endif
-%attr(0770,root,apache) %dir %{_sharedstatedir}/php/session
-%attr(0770,root,apache) %dir %{_sharedstatedir}/php/wsdlcache
+%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
+%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/wsdlcache
 %config(noreplace) %{_httpd_confdir}/%{name}.conf
 %if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
 %config(noreplace) %{_httpd_modconfdir}/10-%{name}.conf
@@ -1629,7 +1629,7 @@ fi
 %dir %{_sysconfdir}/php.d
 %dir %{_libdir}/php
 %dir %{_libdir}/php/modules
-%dir %{_sharedstatedir}/php
+%dir %{_localstatedir}/lib/php
 %dir %{_datadir}/php
 
 %files cli
@@ -1665,8 +1665,8 @@ fi
 %defattr(-,root,root)
 %doc php-fpm.conf.default
 %license fpm_LICENSE
-%attr(0770,root,apache) %dir %{_sharedstatedir}/php/session
-%attr(0770,root,apache) %dir %{_sharedstatedir}/php/wsdlcache
+%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
+%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/wsdlcache
 %if %{with_httpd2410}
 %config(noreplace) %{_httpd_confdir}/%{name}.conf
 %endif
