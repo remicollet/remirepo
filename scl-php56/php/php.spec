@@ -127,11 +127,11 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver RC1
+%global rcver RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.6.6
+Version: 5.6.7
 Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -183,6 +183,7 @@ Patch47: php-5.6.3-phpinfo.patch
 Patch91: php-5.6.3-oci8conf.patch
 
 # Upstream fixes (100+)
+Patch100: php-odbc.patch
 
 # Security fixes (200+)
 
@@ -869,6 +870,8 @@ support for using the enchant library to PHP.
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
 
+%patch100 -p1 -b .odbc
+
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
@@ -1306,13 +1309,13 @@ cat %{SOURCE10} >>$RPM_BUILD_ROOT%{_httpd_confdir}/%{name}.conf
 %endif
 %endif
 
-sed -e 's:/var/lib:%{_localstatedir}/lib:' \
+sed -e 's:/var/lib:%{_sharedstatedir}:' \
     -i $RPM_BUILD_ROOT%{_httpd_confdir}/%{name}.conf
 
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
-install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php
-install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
-install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/wsdlcache
+install -m 755 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php
+install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/session
+install -m 700 -d $RPM_BUILD_ROOT%{_sharedstatedir}/php/wsdlcache
 
 %if %{with_lsws}
 install -m 755 build-apache/sapi/litespeed/php $RPM_BUILD_ROOT%{_bindir}/lsphp
@@ -1330,7 +1333,7 @@ sed -e 's:/run:%{_localstatedir}/run:' \
     -e 's:/etc:%{_sysconfdir}:' \
     -i $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf
 install -m 644 %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d/www.conf
-sed -e 's:/var/lib:%{_localstatedir}/lib:' \
+sed -e 's:/var/lib:%{_sharedstatedir}:' \
     -e 's:/var/log:%{_localstatedir}/log:' \
     -i $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d/www.conf
 mv $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf.default .
@@ -1607,8 +1610,8 @@ fi
 %dir %{_libdir}/httpd/modules
 %{_root_httpd_moddir}/lib%{name}5.so
 %endif
-%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
-%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/wsdlcache
+%attr(0770,root,apache) %dir %{_sharedstatedir}/php/session
+%attr(0770,root,apache) %dir %{_sharedstatedir}/php/wsdlcache
 %config(noreplace) %{_httpd_confdir}/%{name}.conf
 %if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
 %config(noreplace) %{_httpd_modconfdir}/10-%{name}.conf
@@ -1626,7 +1629,7 @@ fi
 %dir %{_sysconfdir}/php.d
 %dir %{_libdir}/php
 %dir %{_libdir}/php/modules
-%dir %{_localstatedir}/lib/php
+%dir %{_sharedstatedir}/php
 %dir %{_datadir}/php
 
 %files cli
@@ -1662,8 +1665,8 @@ fi
 %defattr(-,root,root)
 %doc php-fpm.conf.default
 %license fpm_LICENSE
-%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
-%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/wsdlcache
+%attr(0770,root,apache) %dir %{_sharedstatedir}/php/session
+%attr(0770,root,apache) %dir %{_sharedstatedir}/php/wsdlcache
 %if %{with_httpd2410}
 %config(noreplace) %{_httpd_confdir}/%{name}.conf
 %endif
@@ -1766,6 +1769,9 @@ fi
 
 
 %changelog
+* Sun Mar  8 2015 Remi Collet <remi@fedoraproject.org> 5.6.7-0.1.RC1
+- update to 5.6.7RC1
+
 * Thu Feb 19 2015 Remi Collet <remi@fedoraproject.org> 5.6.6-1
 - Update to 5.6.6
   http://www.php.net/releases/5_6_6.php
