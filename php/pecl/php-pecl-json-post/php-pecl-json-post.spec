@@ -21,15 +21,16 @@
 # after 40-json.ini
 %global ini_name   50-%{pecl_name}.ini
 %endif
+%global prever     RC1
 
 Summary:        JSON POST handler
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        0%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -81,7 +82,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -q -c
-mv %{pecl_name}-%{version} NTS
+mv %{pecl_name}-%{version}%{?prever} NTS
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' -i package.xml
@@ -89,8 +90,8 @@ sed -e 's/role="test"/role="src"/' -i package.xml
 cd NTS
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_JSON_POST_VERSION/{s/.* "//;s/".*$//;p}' php_json_post.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}.
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
 cd ..
@@ -222,5 +223,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar 10 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.RC1
+- Update to 1.0.0RC1
+
 * Sat Feb 14 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package, for upcoming version 1.0.0
