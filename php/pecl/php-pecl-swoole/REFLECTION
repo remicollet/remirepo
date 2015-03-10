@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #147 swoole version 1.7.10 ] {
+Extension [ <persistent> extension #147 swoole version 1.7.11 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -48,7 +48,7 @@ Extension [ <persistent> extension #147 swoole version 1.7.10 ] {
     Constant [ integer SWOOLE_SSL ] { 512 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.7.10 }
+    Constant [ string SWOOLE_VERSION ] { 1.7.11 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_GCC ] { 1 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 2 }
@@ -732,6 +732,32 @@ Extension [ <persistent> extension #147 swoole version 1.7.10 ] {
           }
         }
 
+        Method [ <internal:swoole, prototype Countable> public method count ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $mode ]
+          }
+        }
+
+        Method [ <internal:swoole> public method del ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:swoole> public method lock ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:swoole> public method unlock ] {
+
+          - Parameters [0] {
+          }
+        }
+
         Method [ <internal:swoole, prototype Iterator> public method rewind ] {
 
           - Parameters [0] {
@@ -757,32 +783,6 @@ Extension [ <persistent> extension #147 swoole version 1.7.10 ] {
         }
 
         Method [ <internal:swoole, prototype Iterator> public method valid ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:swoole, prototype Countable> public method count ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <optional> $mode ]
-          }
-        }
-
-        Method [ <internal:swoole> public method del ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $key ]
-          }
-        }
-
-        Method [ <internal:swoole> public method lock ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:swoole> public method unlock ] {
 
           - Parameters [0] {
           }
@@ -814,7 +814,7 @@ Extension [ <persistent> extension #147 swoole version 1.7.10 ] {
           }
         }
 
-        Method [ <internal:swoole> public method setGlobal ] {
+        Method [ <internal:swoole> public method setglobal ] {
         }
 
         Method [ <internal:swoole, overwrites swoole_server, prototype swoole_server> public method start ] {
@@ -1009,7 +1009,7 @@ Extension [ <persistent> extension #147 swoole version 1.7.10 ] {
       - Properties [0] {
       }
 
-      - Methods [5] {
+      - Methods [6] {
         Method [ <internal:swoole> public method cookie ] {
         }
 
@@ -1020,6 +1020,9 @@ Extension [ <persistent> extension #147 swoole version 1.7.10 ] {
         }
 
         Method [ <internal:swoole> public method header ] {
+        }
+
+        Method [ <internal:swoole> public method write ] {
         }
 
         Method [ <internal:swoole> public method end ] {
@@ -1073,7 +1076,7 @@ Extension [ <persistent> extension #147 swoole version 1.7.10 ] {
         Method [ <internal:swoole> public method push ] {
         }
 
-        Method [ <internal:swoole, inherits swoole_http_server> public method setGlobal ] {
+        Method [ <internal:swoole, inherits swoole_http_server> public method setglobal ] {
         }
 
         Method [ <internal:swoole, inherits swoole_http_server, prototype swoole_server> public method start ] {

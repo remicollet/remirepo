@@ -23,7 +23,7 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.7.10
+Version:        1.7.11
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -240,6 +240,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar 10 2015 Remi Collet <remi@fedoraproject.org> - 1.7.11-1
+- Update to 1.7.11
+
 * Sun Feb 15 2015 Remi Collet <remi@fedoraproject.org> - 1.7.10-1
 - Update to 1.7.10
 - drop runtime dependency on pear, new scriptlets
