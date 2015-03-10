@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Socket-Client
-Version:        1.1.2
+Version:        2.0.0
 Release:        1%{?dist}
 Summary:        Horde Socket Client
 
@@ -37,6 +37,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-socket-client) = %{version}
 
 
 %description
@@ -90,6 +91,10 @@ fi
 
 
 %changelog
+* Tue Mar 10 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0
+- add Provides php-composer(horde/horde-socket-client)
+
 * Mon Jul 07 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - Update to 1.1.2
 
