@@ -24,7 +24,7 @@
 %global prever     RC1
 
 Summary:        JSON POST handler
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Name:           %{?scl_prefix}php-pecl-json-post
 Version:        1.0.0
 Release:        0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
@@ -39,7 +39,7 @@ BuildRequires:  %{?scl_prefix}php-pear
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
-Requires:       %{?scl_prefix}php-json%{?_isa} = %{php_core_api}
+Requires:       %{?scl_prefix}php-json%{?_isa}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
