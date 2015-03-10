@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-horde-Horde-Mime
-Version:        2.7.0
+Version:        2.8.0
 Release:        1%{?dist}
 Summary:        Horde MIME Library
 
@@ -165,6 +165,9 @@ fi
 
 
 %changelog
+* Tue Mar 10 2015 Remi Collet <remi@fedoraproject.org> - 2.8.0-1
+- Update to 2.8.0
+
 * Wed Jan 21 2015 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
 - Update to 2.7.0
 - add provides php-composer(horde/horde-mime)
