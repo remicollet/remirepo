@@ -9,9 +9,10 @@
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Imap_Client
 %global pear_channel pear.horde.org
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.26.1
+Version:        2.27.0
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -26,12 +27,14 @@ BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
+%if %{with_tests}
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.2.7
 BuildRequires:  php-pear(%{pear_channel}/Horde_Stream) >= 1.4.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Mime) >= 2.5.2
 BuildRequires:  php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Pack) >= 1.0.0
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -50,8 +53,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.5.2
 Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Secret) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Secret) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Socket_Client) >= 1.1.0
-Requires:       php-pear(%{pear_channel}/Horde_Socket_Client) <  2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Socket_Client) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Socket_Client) <  3
 Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.4.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Filter) >= 2.0.0
@@ -79,6 +82,7 @@ Requires:       php-spl
 #   Horde_Compress_Fast, Horde_HashTable, Horde_Mongo, mongo, Horde_Support
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-imap-client) = %{version}
 
 
 %description
@@ -128,8 +132,12 @@ done | tee ../%{pear_name}.lang
 
 
 %check
+%if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 phpunit .
+%else
+: bootstrap build with test suite disabled
+%endif
 
 
 %post
@@ -157,6 +165,11 @@ fi
 
 
 %changelog
+* Tue Mar 10 2015 Remi Collet <remi@fedoraproject.org> - 2.27.0-1
+- Update to 2.27.0
+- add provides php-composer(horde/horde-imap-client)
+- raise dependency on Horde_Socket_Client > 2
+
 * Tue Jan 27 2015 Remi Collet <remi@fedoraproject.org> - 2.26.1-1
 - Update to 2.26.1
 
