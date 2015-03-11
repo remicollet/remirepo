@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a99fbc102e982c1404041ef3e4d431562b29bcba
+%global gh_commit    572c35353fefcc8607d6fef0e362a9f3a5e84d96
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   git
@@ -16,8 +16,8 @@
 %global with_tests   %{?_without_tests:1}%{!?_without_tests:0}
 
 Name:           php-phpunit-git
-Version:        1.2.0
-Release:        7%{?dist}
+Version:        2.0.0
+Release:        1%{?dist}
 Summary:        Simple wrapper for Git
 
 Group:          Development/Libraries
@@ -28,6 +28,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  %{_bindir}/phpab
 
 Requires:       git
 # From composer.json
@@ -54,11 +55,10 @@ Simple PHP wrapper for Git.
 
 
 %build
-# If upstream drop autoload
-#phpab \
-#  --output src/autoload.php \
-#  src
-
+%{_bindir}/phpab \
+  --output src/autoload.php \
+  src
+cat src/autoload.php
 
 %install
 rm -rf     %{buildroot}
@@ -79,13 +79,18 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
 %doc README.md
 %dir %{php_home}
      %{php_home}/%{pear_name}
 
 
 %changelog
+* Wed Mar 11 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- update to 2.0.0
+- fix license handling
+
 * Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-7
 - composer dependencies
 
