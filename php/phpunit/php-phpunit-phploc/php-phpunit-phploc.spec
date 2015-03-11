@@ -1,4 +1,4 @@
-%global gh_commit    322ad07c112d5c6832abed4269d648cacff5959b
+%global gh_commit    0e7ead01180d93536dec14da10d038a62d9f509d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phploc
@@ -8,7 +8,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-phploc
-Version:        2.0.6
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        A tool for quickly measuring the size of a PHP project
 
@@ -25,34 +25,34 @@ Patch0:         %{gh_project}-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  php(language) >= 5.4
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
 BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php-composer(sebastian/finder-facade) >= 1.1
 BuildRequires:  php-composer(sebastian/finder-facade) <  2
-BuildRequires:  php-composer(sebastian/git) >= 1.0
-BuildRequires:  php-composer(sebastian/git) <  2
-BuildRequires:  php-composer(sebastian/version) >= 1.0
+BuildRequires:  php-composer(sebastian/git) >= 2.0
+BuildRequires:  php-composer(sebastian/git) <  3
+BuildRequires:  php-composer(sebastian/version) >= 1.0.3
 BuildRequires:  php-composer(sebastian/version) <  2
-BuildRequires:  php-symfony-console >= 2.2
+BuildRequires:  php-symfony-console >= 2.5
 BuildRequires:  php-symfony-console <  3
 %endif
 
 # From composer.json
 #      "php": ">=5.3.3",
 #      "sebastian/finder-facade": "~1.1",
-#      "sebastian/git": "~1.0",
-#      "sebastian/version": "~1.0",
-#      "symfony/console": "~2.2"
-Requires:       php(language) >= 5.3.3
+#      "sebastian/git": "~2.0",
+#      "sebastian/version": "~1.0.3",
+#      "symfony/console": "~2.5"
+Requires:       php(language) >= 5.4
 Requires:       php-composer(sebastian/finder-facade) >= 1.1
 Requires:       php-composer(sebastian/finder-facade) <  2
-Requires:       php-composer(sebastian/git) >= 1.0
-Requires:       php-composer(sebastian/git) <  2
-Requires:       php-composer(sebastian/version) >= 1.0
+Requires:       php-composer(sebastian/git) >= 2.0
+Requires:       php-composer(sebastian/git) <  3
+Requires:       php-composer(sebastian/version) >= 1.0.3
 Requires:       php-composer(sebastian/version) <  2
-Requires:       php-symfony-console >= 2.2
+Requires:       php-symfony-console >= 2.5
 Requires:       php-symfony-console <  3
 # From phpcompatinfo report for version 2.0.5
 Requires:       php-dom
@@ -123,6 +123,11 @@ fi
 
 
 %changelog
+* Wed Mar 11 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- update to 2.0.6
+- raise dependencies on sebastian/git 2.0, symfony/console 2.5
+- raise minimal PHP version to 5.4
+
 * Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
 - update to 2.0.6
 - composer dependencies

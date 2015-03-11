@@ -1,14 +1,14 @@
 diff -up ./phploc.rpm ./phploc
---- ./phploc.rpm	2014-05-03 18:50:56.000000000 +0200
-+++ ./phploc	2014-05-03 18:51:38.000000000 +0200
+--- ./phploc.rpm	2015-03-11 07:14:28.241134864 +0100
++++ ./phploc	2015-03-11 07:16:29.647622059 +0100
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
  <?php
- /**
-  * phploc
-@@ -42,23 +42,7 @@
-  * @since     File available since Release 1.0.0
+ /*
+  * This file is part of PHPLOC.
+@@ -9,23 +9,7 @@
+  * file that was distributed with this source code.
   */
  
 -$loaded = false;
