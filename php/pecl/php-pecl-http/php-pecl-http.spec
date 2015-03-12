@@ -24,11 +24,16 @@
 # after 40-json 20-iconv 40-propro 40-raphf
 %global ini_name  50-%{pecl_name}.ini
 %endif
+%ifarch %{arm}
+# Test suite disabled because of erratic results on slow ARM (timeout)
+%global with_tests %{?_with_tests:1}%{!?_with_tests:0}
+%else
 %global with_tests %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 #global prever RC1
 Name:           %{?scl_prefix}php-pecl-http
-Version:        2.3.1
+Version:        2.3.2
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
@@ -342,6 +347,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar 12 2015 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
+- Update to 2.3.2
+- disable test suite on slow ARM builder
+
 * Mon Mar  2 2015 Remi Collet <remi@fedoraproject.org> - 2.3.1-1
 - Update to 2.3.1 (stable)
 
