@@ -16,7 +16,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:      php-ZendFramework2
-Version:   2.3.5
+Version:   2.3.6
 Release:   1%{?dist}
 Summary:   Zend Framework 2
 
@@ -26,7 +26,7 @@ URL:       http://framework.zend.com
 Source0:   https://packages.zendframework.com/releases/ZendFramework-%{version}/ZendFramework-%{version}.tgz
 # git clone https://github.com/zendframework/zf2.git ; cf zf2
 # OR cd /work/GIT/zf2; git pull
-# git checkout release-2.3.5
+# git checkout release-2.3.6
 # tar czf ../ZendFramework-tests-2.3.5.tgz tests
 Source1:   ZendFramework-tests-%{version}.tgz
 
@@ -2549,6 +2549,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Thu Mar 12 2015 Remi Collet <remi@fedoraproject.org> - 2.3.6-1
+- Update to 2.3.6
+
 * Tue Feb 24 2015 Remi Collet <remi@fedoraproject.org> - 2.3.5-1
 - Update to 2.3.5
 - add patch for icu 54, FTBFS detected by Koschei
