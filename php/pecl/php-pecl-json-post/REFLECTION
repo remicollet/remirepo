@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #183 json_post version 1.0.0RC1 ] {
+Extension [ <persistent> extension #173 json_post version 1.0.0RC2 ] {
 
   - Dependencies {
     Dependency [ json (Required) ]

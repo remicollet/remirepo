@@ -21,12 +21,12 @@
 # after 40-json.ini
 %global ini_name   50-%{pecl_name}.ini
 %endif
-%global prever     RC1
+%global prever     RC2
 
 Summary:        JSON POST handler
 Name:           %{?scl_prefix}php-pecl-json-post
 Version:        1.0.0
-Release:        0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -223,6 +223,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar 12 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.RC2
+- Update to 1.0.0RC2
+
 * Tue Mar 10 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.RC1
 - Update to 1.0.0RC1
 
