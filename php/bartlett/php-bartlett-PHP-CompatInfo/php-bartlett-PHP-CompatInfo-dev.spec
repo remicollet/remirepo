@@ -6,24 +6,24 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    4966955ae3f662aa96fe292079759d287b51c29c
+%global gh_commit    a84830224d678e6aa4cb920a351e030c288f6982
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150227
+#global gh_date      20150303
 %global gh_owner     llaville
 %global gh_project   php-compat-info
-%global prever       beta2
+%global prever       RC1
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        4.0.0
-%global specrel 7
-Release:        %{?gh_short:0.%{specrel}.%{?gh_date}git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
+%global specrel 8
+Release:        %{?gh_short:0.%{specrel}.%{?gh_date:%{gh_date}git%{gh_short}}%{prever}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://php5.laurent-laville.org/compatinfo/
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?gh_short:-%{gh_short}}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}%{?gh_short:-%{gh_short}}.tar.gz
 # Script for fedora-review
 Source1:        fedora-review-check
 
@@ -152,6 +152,9 @@ fi
 
 
 %changelog
+* Thu Mar 12 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.8.RC1
+- update to 4.0.0 RC1
+
 * Fri Feb 27 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.7.20150227git4966955
 - don't display xdebug message when not on a tty
 - add fedora-review-check script
