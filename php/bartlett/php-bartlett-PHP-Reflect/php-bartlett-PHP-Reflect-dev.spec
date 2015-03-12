@@ -2,27 +2,27 @@
 #
 # Copyright (c) 2011-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    aab371c7fa4c1f7ba4d944ea3a3e49fbeae5ddc4
+%global gh_commit    e248bf46a4e1e4e21dd04acc522fb6bf0a3f8249
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150226
+#global gh_date      20150303
 %global gh_owner     llaville
 %global gh_project   php-reflect
-%global prever       beta2
+%global prever       RC1
 
 Name:           php-bartlett-PHP-Reflect
 Version:        3.0.0
-%global specrel 9
-Release:        %{?gh_short:0.%{specrel}.%{?gh_date}git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
+%global specrel 10
+Release:        %{?gh_short:0.%{specrel}.%{?gh_date:%{gh_date}git%{gh_short}}%{prever}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://php5.laurent-laville.org/reflect/
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?gh_short:-%{gh_short}}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}%{?gh_short:-%{gh_short}}.tar.gz
 
 # Autoloader for RPM - die composer !
 # Enable cache plugin
@@ -169,6 +169,9 @@ fi
 
 
 %changelog
+* Thu Mar 12 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.10.RC1
+- update to 3.0.0 RC1
+
 * Thu Feb 26 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.9.20150226gitaab371c
 - update to 3.0.0 beta3
 
