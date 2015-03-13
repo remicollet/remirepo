@@ -16,7 +16,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:      php-ZendFramework2
-Version:   2.3.6
+Version:   2.3.7
 Release:   1%{?dist}
 Summary:   Zend Framework 2
 
@@ -26,8 +26,8 @@ URL:       http://framework.zend.com
 Source0:   https://packages.zendframework.com/releases/ZendFramework-%{version}/ZendFramework-%{version}.tgz
 # git clone https://github.com/zendframework/zf2.git ; cf zf2
 # OR cd /work/GIT/zf2; git pull
-# git checkout release-2.3.6
-# tar czf ../ZendFramework-tests-2.3.5.tgz tests
+# git checkout release-2.3.7
+# tar czf ../ZendFramework-tests-2.3.7.tgz tests
 Source1:   ZendFramework-tests-%{version}.tgz
 
 # See https://github.com/zendframework/zf2/issues/7219
@@ -2549,6 +2549,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Fri Mar 13 2015 Remi Collet <remi@fedoraproject.org> - 2.3.7-1
+- Update to 2.3.7
+
 * Thu Mar 12 2015 Remi Collet <remi@fedoraproject.org> - 2.3.6-1
 - Update to 2.3.6
 
