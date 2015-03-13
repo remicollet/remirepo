@@ -124,7 +124,7 @@ fi
 
 %changelog
 * Wed Mar 11 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
-- update to 2.0.6
+- update to 2.1.0
 - raise dependencies on sebastian/git 2.0, symfony/console 2.5
 - raise minimal PHP version to 5.4
 
