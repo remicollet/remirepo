@@ -58,7 +58,7 @@ Simple PHP wrapper for Git.
 %{_bindir}/phpab \
   --output src/autoload.php \
   src
-cat src/autoload.php
+
 
 %install
 rm -rf     %{buildroot}
@@ -82,6 +82,7 @@ fi
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc README.md
+%doc composer.json
 %dir %{php_home}
      %{php_home}/%{pear_name}
 
