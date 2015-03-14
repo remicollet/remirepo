@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Compress
-Version:        2.1.0
+Version:        2.1.1
 Release:        1%{?dist}
 Summary:        Horde Compression API
 
@@ -57,7 +57,7 @@ Requires:       php-pcre
 # Optional and implicitly required Horde_Stream_Filter
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
-Provides:       php-composer(horde/horde-mime) = %{version}
+Provides:       php-composer(horde/horde-compress) = %{version}
 
 
 %description
@@ -130,6 +130,9 @@ fi
 
 
 %changelog
+* Sat Mar 14 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
+- Update to 2.1.1
+
 * Mon Feb 16 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0
 - add dependency on Horde_Mime
