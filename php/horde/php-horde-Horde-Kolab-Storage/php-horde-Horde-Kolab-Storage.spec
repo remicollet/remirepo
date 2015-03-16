@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -19,6 +19,8 @@ Group:          Development/Libraries
 License:        LGPLv2
 URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+
+Patch0:         %{pear_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -74,15 +76,19 @@ Storing user data in an IMAP account belonging to the user is one of the
 Kolab server core concepts. This package provides all the necessary means
 to deal with this type of data storage effectively.
 
+
 %prep
 %setup -q -c
 cd %{pear_name}-%{version}
+
+%patch0 -p3 -b .upstream
 
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
 sed -e '/%{pear_name}.po/d' \
     -e '/Horde_Other.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+    -e '/role="test"/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 touch -r ../package.xml %{name}.xml
 
@@ -160,6 +166,9 @@ fi
 
 
 %changelog
+* Mon Mar 16 2015 Remi Collet <remi@fedoraproject.org> - 2.1.2-2
+- add upstream patch for test suite, thanks Koschei
+
 * Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
 - Update to 2.1.2
 - add provides php-composer(horde/horde-kolab-storage)

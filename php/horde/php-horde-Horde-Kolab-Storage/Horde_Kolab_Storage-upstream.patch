@@ -1,0 +1,130 @@
+From 9ac03eb9986f297753bbd15fd4191f0fa3f44c5b Mon Sep 17 00:00:00 2001
+From: Michael M Slusarz <slusarz@horde.org>
+Date: Thu, 22 Jan 2015 02:58:15 -0700
+Subject: [PATCH] Fix tests
+
+These tests should really be fixed another way... since there is no need
+to be testing MIME formatting (since parameter order and case are
+never guaranteed).
+---
+ .../Storage/ComponentTest/Data/Object/Message/ModifiedTest.php      | 6 +++---
+ .../Kolab/Storage/ComponentTest/Data/Object/Message/NewTest.php     | 2 +-
+ .../Kolab_Storage/test/Horde/Kolab/Storage/Unit/ObjectTest.php      | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/framework/Kolab_Storage/test/Horde/Kolab/Storage/ComponentTest/Data/Object/Message/ModifiedTest.php b/framework/Kolab_Storage/test/Horde/Kolab/Storage/ComponentTest/Data/Object/Message/ModifiedTest.php
+index 8e92d22..0d74f0e 100644
+--- a/framework/Kolab_Storage/test/Horde/Kolab/Storage/ComponentTest/Data/Object/Message/ModifiedTest.php
++++ b/framework/Kolab_Storage/test/Horde/Kolab/Storage/ComponentTest/Data/Object/Message/ModifiedTest.php
+@@ -90,14 +90,14 @@ public function testStore()
+ User-Agent: Horde::Kolab::Storage v@version@
+ MIME-Version: 1.0
+ X-Kolab-Type: application/x-vnd.kolab.note
+-Content-Type: multipart/mixed; name="Kolab Groupware Data";
+- boundary=""
++Content-Type: multipart/mixed; boundary="";
++ name="Kolab Groupware Data"
+ Content-Disposition: attachment; filename="Kolab Groupware Data"
+ 
+ This message is in MIME format.
+ 
+ --=_
+-Content-Type: text/plain; name="Kolab Groupware Information"; charset=utf-8
++Content-Type: text/plain; charset=utf-8; name="Kolab Groupware Information"
+ Content-Disposition: inline; filename="Kolab Groupware Information"
+ 
+ This is a Kolab Groupware object. To view this object you will need an email
+diff --git a/framework/Kolab_Storage/test/Horde/Kolab/Storage/ComponentTest/Data/Object/Message/NewTest.php b/framework/Kolab_Storage/test/Horde/Kolab/Storage/ComponentTest/Data/Object/Message/NewTest.php
+index 77fed33..65bc135 100644
+--- a/framework/Kolab_Storage/test/Horde/Kolab/Storage/ComponentTest/Data/Object/Message/NewTest.php
++++ b/framework/Kolab_Storage/test/Horde/Kolab/Storage/ComponentTest/Data/Object/Message/NewTest.php
+@@ -96,7 +96,7 @@ public function testStore()
+ This message is in MIME format.
+ 
+ --=_
+-Content-Type: text/plain; name="Kolab Groupware Information"; charset=utf-8
++Content-Type: text/plain; charset=utf-8; name="Kolab Groupware Information"
+ Content-Disposition: inline; filename="Kolab Groupware Information"
+ 
+ This is a Kolab Groupware object. To view this object you will need an email client that understands the Kolab Groupware format. For a list of such email clients please visit http://www.kolab.org/content/kolab-clients
+diff --git a/framework/Kolab_Storage/test/Horde/Kolab/Storage/Unit/ObjectTest.php b/framework/Kolab_Storage/test/Horde/Kolab/Storage/Unit/ObjectTest.php
+index c388a71..3b82be8 100644
+--- a/framework/Kolab_Storage/test/Horde/Kolab/Storage/Unit/ObjectTest.php
++++ b/framework/Kolab_Storage/test/Horde/Kolab/Storage/Unit/ObjectTest.php
+@@ -573,7 +573,7 @@ public function testEnvelope()
+ 
+         $this->assertContains('Content-Disposition: attachment; filename="Kolab Groupware Data"', $driver->messages['INBOX'][0]);
+         $this->assertContains('Content-Type: multipart/mixed;', $driver->messages['INBOX'][0]);
+-        $this->assertContains('Content-Type: text/plain; name="Kolab Groupware Information"; charset=utf-8', $driver->messages['INBOX'][0]);
++        $this->assertContains('Content-Type: text/plain; charset=utf-8; name="Kolab Groupware Information"', $driver->messages['INBOX'][0]);
+         $this->assertContains('Content-Disposition: inline; filename="Kolab Groupware Information"', $driver->messages['INBOX'][0]);
+         $this->assertContains(
+             "This is a Kolab Groupware object. To view this object you will need an email client that understands the Kolab Groupware format. For a list of such email clients please visit http://www.kolab.org/content/kolab-clients",
+From 07b140ddcd32fc513b49caa0a857fe1a043809e9 Mon Sep 17 00:00:00 2001
+From: Michael M Slusarz <slusarz@horde.org>
+Date: Mon, 9 Feb 2015 23:12:57 -0700
+Subject: [PATCH] Fix unit tests
+
+---
+ .../Storage/ComponentTest/Data/Object/Message/ModifiedTest.php | 10 ++--------
+ .../Storage/ComponentTest/Data/Object/Message/NewTest.php      | 10 ++--------
+ 2 files changed, 4 insertions(+), 16 deletions(-)
+
+diff --git a/framework/Kolab_Storage/test/Horde/Kolab/Storage/ComponentTest/Data/Object/Message/ModifiedTest.php b/framework/Kolab_Storage/test/Horde/Kolab/Storage/ComponentTest/Data/Object/Message/ModifiedTest.php
+index 0d74f0e..e5390af 100644
+--- a/framework/Kolab_Storage/test/Horde/Kolab/Storage/ComponentTest/Data/Object/Message/ModifiedTest.php
++++ b/framework/Kolab_Storage/test/Horde/Kolab/Storage/ComponentTest/Data/Object/Message/ModifiedTest.php
+@@ -32,11 +32,6 @@ class Horde_Kolab_Storage_ComponentTest_Data_Object_Message_ModifiedTest
+ {
+     public function testStore()
+     {
+-        if (version_compare(PHP_VERSION, '5.5.0', '>=') &&
+-            version_compare(PHP_VERSION, '5.5.3', '<=')) {
+-            $this->markTestSkipped('PHP version with broken quoted-printable-encode');
+-        }
+-
+         $driver = new Horde_Kolab_Storage_Stub_Driver('user');
+         $driver->setMessage('INBOX', 1, file_get_contents(__DIR__ . '/../../../../fixtures/note.eml'));
+         $factory = new Horde_Kolab_Format_Factory();
+@@ -106,10 +101,9 @@ public function testStore()
+ --=_
+ Content-Type: application/x-vnd.kolab.note; name=kolab.xml
+ Content-Disposition: inline; x-kolab-type=xml; filename=kolab.xml
+-Content-Transfer-Encoding: quoted-printable
+ 
+-<?xml version=3D"1.0" encoding=3D"UTF-8"?>
+-<note version=3D"1.0">
++<?xml version="1.0" encoding="UTF-8"?>
++<note version="1.0">
+   <uid>ABC1234</uid>
+   <body/>
+   <categories/>
+diff --git a/framework/Kolab_Storage/test/Horde/Kolab/Storage/ComponentTest/Data/Object/Message/NewTest.php b/framework/Kolab_Storage/test/Horde/Kolab/Storage/ComponentTest/Data/Object/Message/NewTest.php
+index 65bc135..7359056 100644
+--- a/framework/Kolab_Storage/test/Horde/Kolab/Storage/ComponentTest/Data/Object/Message/NewTest.php
++++ b/framework/Kolab_Storage/test/Horde/Kolab/Storage/ComponentTest/Data/Object/Message/NewTest.php
+@@ -32,11 +32,6 @@ class Horde_Kolab_Storage_ComponentTest_Data_Object_Message_NewTest
+ {
+     public function testStore()
+     {
+-        if (version_compare(PHP_VERSION, '5.5.0', '>=') &&
+-            version_compare(PHP_VERSION, '5.5.3', '<=')) {
+-            $this->markTestSkipped('PHP version with broken quoted-printable-encode');
+-        }
+-
+         setlocale(LC_MESSAGES, 'C');
+         $factory = new Horde_Kolab_Format_Factory();
+         $writer = new Horde_Kolab_Storage_Object_Writer_Format(
+@@ -103,10 +98,9 @@ public function testStore()
+ --=_
+ Content-Type: application/x-vnd.kolab.note; name=kolab.xml
+ Content-Disposition: inline; x-kolab-type=xml; filename=kolab.xml
+-Content-Transfer-Encoding: quoted-printable
+ 
+-<?xml version=3D"1.0" encoding=3D"UTF-8"?>
+-<note version=3D"1.0">
++<?xml version="1.0" encoding="UTF-8"?>
++<note version="1.0">
+   <uid>ABC1234</uid>
+   <body></body>
+   <categories></categories>
