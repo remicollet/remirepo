@@ -1,8 +1,8 @@
-Extension [ <persistent> extension #183 apm version 0.1.0 ] {
+Extension [ <persistent> extension #171 apm version 2.0.2 ] {
 
   - INI {
     Entry [ apm.enabled <ALL> ]
-      Current = '1'
+      Current = ''
     }
     Entry [ apm.application_id <ALL> ]
       Current = 'My application'
@@ -35,7 +35,7 @@ Extension [ <persistent> extension #183 apm version 0.1.0 ] {
       Current = '4'
     }
     Entry [ apm.sqlite_enabled <PERDIR> ]
-      Current = '1'
+      Current = ''
     }
     Entry [ apm.sqlite_stats_enabled <ALL> ]
       Current = '0'
@@ -56,7 +56,7 @@ Extension [ <persistent> extension #183 apm version 0.1.0 ] {
       Current = '1'
     }
     Entry [ apm.mysql_enabled <PERDIR> ]
-      Current = '1'
+      Current = ''
     }
     Entry [ apm.mysql_stats_enabled <ALL> ]
       Current = '0'
@@ -86,7 +86,7 @@ Extension [ <persistent> extension #183 apm version 0.1.0 ] {
       Current = '1'
     }
     Entry [ apm.statsd_enabled <PERDIR> ]
-      Current = '1'
+      Current = ''
     }
     Entry [ apm.statsd_stats_enabled <ALL> ]
       Current = '1'
@@ -104,7 +104,7 @@ Extension [ <persistent> extension #183 apm version 0.1.0 ] {
       Current = 'apm'
     }
     Entry [ apm.socket_enabled <ALL> ]
-      Current = '1'
+      Current = ''
     }
     Entry [ apm.socket_stats_enabled <ALL> ]
       Current = '1'

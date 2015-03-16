@@ -1,0 +1,47 @@
+--- apm.ini.rpm	2015-03-16 09:05:02.000000000 +0100
++++ apm.ini	2015-03-16 09:07:05.000000000 +0100
+@@ -2,7 +2,7 @@
+ 
+ extension=apm.so
+ ; Whether the extension is globally active or not (overrides apm.event_enabled and apm.*_stats_enabled)
+-; apm.enabled="1"
++apm.enabled=Off
+ ; Application identifier, helps identifying which application is being monitored
+ ; apm.application_id="My application"
+ ; Enable the capture of events such as errors, notices, warnings,...
+@@ -26,7 +26,7 @@
+ 
+ ; SQLite configuration
+ ; Whether to enable the sqlite driver
+-; apm.sqlite_enabled=On
++apm.sqlite_enabled=Off
+ ; Whether to collect stats for the sqlite driver (ATTENTION: Has an impact on performance!)
+ ; apm.sqlite_stats_enabled=Off
+ ; Error reporting level specific to the sqlite driver
+@@ -46,7 +46,7 @@
+ 
+ ; MySQL configuration
+ ; Whether to enable the mysql driver
+-; apm.mysql_enabled=On
++apm.mysql_enabled=Off
+ ; Whether to collect stats for the mysql driver (ATTENTION: Has an impact on performance!)
+ ; apm.mysql_stats_enabled=Off
+ ; Error reporting level specific to the mysql driver
+@@ -68,7 +68,7 @@
+ 
+ ; StatsD configuration
+ ; Whether to enable the statsd driver
+-; apm.statsd_enabled=On
++apm.statsd_enabled=Off
+ ; Whether to collect stats for the StatsD driver
+ ; apm.statsd_stats_enabled=On
+ ; Host of the statsd server
+@@ -78,7 +78,7 @@
+ 
+ ; Socket configuration
+ ; Whether to enable the socket driver
+-; apm.socket_enabled=On
++apm.socket_enabled=Off
+ ; Whether to collect stats for the Socket driver
+ ; apm.socket_stats_enabled=On
+ ; Error reporting level specific to the socket driver

@@ -39,12 +39,17 @@
 Name:           %{?scl_prefix}php-pecl-apm
 Summary:        Alternative PHP Monitor
 Version:        2.0.2
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 
 # Webserver configuration files
 Source1:        %{pkg_name}.httpd
 Source2:        %{pkg_name}.nginx
+
+# Disable the extension and drivers by default
+Patch0:         %{proj_name}-config.patch
+# Upstream patches
+Patch1:         %{proj_name}-upstream.patch
 
 License:        PHP
 Group:          Development/Languages
@@ -120,6 +125,8 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{proj_name}-%{version} NTS
 
 cd NTS
+%patch0 -p0 -b .rpm
+%patch1 -p1 -b .upstream
 
 : Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APM_VERSION/{s/.* "//;s/".*$//;p}' php_apm.h)
@@ -127,10 +134,6 @@ if test "x${extver}" != "x%{version}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}.
    exit 1
 fi
-
-: Disable the ext
-sed -e 's/^extension=/; extension=/' \
-    -i apm.ini
 cd ..
 
 %if %{with_zts}
@@ -249,6 +252,10 @@ fi
 
 
 %changelog
+* Tue Mar 10 2015 Remi Collet <remi@fedoraproject.org> - 2.0.2-2
+- upstream patches
+- fix provided configuration
+
 * Tue Mar 10 2015 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2
 - drop sub package, apm-web is now a separate project
