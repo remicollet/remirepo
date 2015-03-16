@@ -42,10 +42,6 @@ Version:        2.0.2
 Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 
-# Webserver configuration files
-Source1:        %{pkg_name}.httpd
-Source2:        %{pkg_name}.nginx
-
 # Disable the extension and drivers by default
 Patch0:         %{proj_name}-config.patch
 # Upstream patches
