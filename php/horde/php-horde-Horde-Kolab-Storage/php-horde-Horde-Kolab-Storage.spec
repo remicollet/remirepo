@@ -12,7 +12,7 @@
 
 Name:           php-horde-Horde-Kolab-Storage
 Version:        2.1.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A package for handling Kolab data stored on an IMAP server
 
 Group:          Development/Libraries
