@@ -1,0 +1,68 @@
+From dc3c4073c2060d62a8578848c5d222a8b7608df1 Mon Sep 17 00:00:00 2001
+From: Nicolas Grekas <nicolas.grekas@gmail.com>
+Date: Mon, 16 Mar 2015 19:14:38 +0100
+Subject: [PATCH] Fix #15 when ";" is missing before else/while
+
+---
+ src/JSqueeze.php                      | 1 +
+ tests/uglifyjs/expected/if.js         | 3 ++-
+ tests/uglifyjs/expected/ifreturn.js   | 3 ++-
+ tests/uglifyjs/expected/issue10.js    | 3 ++-
+ tests/uglifyjs/expected/tchwork-15.js | 2 ++
+ tests/uglifyjs/test/tchwork-15.js     | 2 ++
+ 6 files changed, 11 insertions(+), 3 deletions(-)
+ create mode 100644 tests/uglifyjs/expected/tchwork-15.js
+ create mode 100644 tests/uglifyjs/test/tchwork-15.js
+
+diff --git a/src/JSqueeze.php b/src/JSqueeze.php
+index b85edeb..e6da80e 100644
+--- a/src/JSqueeze.php
++++ b/src/JSqueeze.php
+@@ -162,6 +162,7 @@ function squeeze($code, $singleLine = true, $keepImportantComments = true, $spec
+ 
+         $code = substr($tree[$key]['code'], 1);
+         $code = preg_replace("'\breturn !'", 'return!', $code);
++        $code = preg_replace("'\}(?=(else|while)[^\$.a-zA-Z0-9_])'", "}\r", $code);
+         $code = str_replace(array_keys($this->strings), array_values($this->strings), $code);
+ 
+         if ($singleLine) $code = strtr($code, "\n", ';');
+diff --git a/tests/uglifyjs/expected/if.js b/tests/uglifyjs/expected/if.js
+index c347e25..7f4fde1 100644
+--- a/tests/uglifyjs/expected/if.js
++++ b/tests/uglifyjs/expected/if.js
+@@ -1 +1,2 @@
+-;var a=1;if(a==1){a=2}else{a=17};
++;var a=1;if(a==1){a=2}
++else{a=17};
+diff --git a/tests/uglifyjs/expected/ifreturn.js b/tests/uglifyjs/expected/ifreturn.js
+index ec6b59d..1a85e9c 100644
+--- a/tests/uglifyjs/expected/ifreturn.js
++++ b/tests/uglifyjs/expected/ifreturn.js
+@@ -1 +1,2 @@
+-;function a(r){if(r==1){return 2}else{return 17};return 3};
++;function a(r){if(r==1){return 2}
++else{return 17};return 3};
+diff --git a/tests/uglifyjs/expected/issue10.js b/tests/uglifyjs/expected/issue10.js
+index afa9e0c..ec193b0 100644
+--- a/tests/uglifyjs/expected/issue10.js
++++ b/tests/uglifyjs/expected/issue10.js
+@@ -1 +1,2 @@
+-;function f(){var r;if(r='a'){return r}else{return r}};f();
++;function f(){var r;if(r='a'){return r}
++else{return r}};f();
+diff --git a/tests/uglifyjs/expected/tchwork-15.js b/tests/uglifyjs/expected/tchwork-15.js
+new file mode 100644
+index 0000000..59972e2
+--- /dev/null
++++ b/tests/uglifyjs/expected/tchwork-15.js
+@@ -0,0 +1,2 @@
++;if(foo)var bar=function(){}
++else baz;
+diff --git a/tests/uglifyjs/test/tchwork-15.js b/tests/uglifyjs/test/tchwork-15.js
+new file mode 100644
+index 0000000..cbe8c16
+--- /dev/null
++++ b/tests/uglifyjs/test/tchwork-15.js
+@@ -0,0 +1,2 @@
++if (foo) var bar = function() {}
++else baz;
