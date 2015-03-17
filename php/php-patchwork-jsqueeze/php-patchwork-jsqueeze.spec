@@ -25,6 +25,7 @@ Source0:        https://github.com/%{github_owner}/%{github_name}/archive/%{gith
 Patch0:         https://github.com/%{github_owner}/%{github_name}/commit/f3747ee91e3025b46e29b2128bbb83f63cbb7f2a.patch
 Patch1:         https://github.com/%{github_owner}/%{github_name}/dc3c4073c2060d62a8578848c5d222a8b7608df1.patch
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
@@ -59,6 +60,7 @@ UglifyJS.
 
 
 %install
+rm -rf %{buildroot}
 # use PSR-0 layout relative to _datadir/php
 mkdir -p %{buildroot}%{_datadir}/php/%{psr4_namespace}
 cp -pr src/* %{buildroot}%{_datadir}/php/%{psr4_namespace}
@@ -68,7 +70,12 @@ cp -pr src/* %{buildroot}%{_datadir}/php/%{psr4_namespace}
 %{_bindir}/phpunit
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE.ASL20 LICENSE.GPLv2
 %doc README.md composer.json
@@ -76,6 +83,9 @@ cp -pr src/* %{buildroot}%{_datadir}/php/%{psr4_namespace}
 
 
 %changelog
+* Tue Mar 17 2015 Remi Collet <remmi@fedoraproject.org> - 2.0.1-2
+- add backport stuff for #remirepo
+
 * Mon Mar 16 2015 Adam Williamson <awilliam@redhat.com> - 2.0.1-2
 - backport a couple of bugfixes from upstream
 
