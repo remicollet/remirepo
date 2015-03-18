@@ -21,12 +21,12 @@
 # after 40-json.ini
 %global ini_name   50-%{pecl_name}.ini
 %endif
-%global prever     RC2
+#global prever     RC2
 
 Summary:        JSON POST handler
 Name:           %{?scl_prefix}php-pecl-json-post
 Version:        1.0.0
-Release:        0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -46,6 +46,8 @@ Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+# Split off pecl/http
+Conflicts:      %{?scl_prefix}php-pecl(http) < 2.4
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -223,6 +225,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 18 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- Update to 1.0.0
+
 * Thu Mar 12 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.RC2
 - Update to 1.0.0RC2
 
