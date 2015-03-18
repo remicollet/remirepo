@@ -18,10 +18,10 @@
 %global pecl_name http
 %global with_zts  0%{?__ztsphp:1}
 %if "%{php_version}" < "5.6"
-# after json hash iconv propro raphf
+# after hash iconv propro raphf
 %global ini_name  z-%{pecl_name}.ini
 %else
-# after 40-json 20-iconv 40-propro 40-raphf
+# after 20-iconv 40-propro 40-raphf
 %global ini_name  50-%{pecl_name}.ini
 %endif
 %ifarch %{arm}
@@ -33,7 +33,7 @@
 
 #global prever RC1
 Name:           %{?scl_prefix}php-pecl-http
-Version:        2.3.2
+Version:        2.4.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
@@ -49,7 +49,6 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel >= 5.3.0
 BuildRequires:  %{?scl_prefix}php-hash
 BuildRequires:  %{?scl_prefix}php-iconv
-BuildRequires:  %{?scl_prefix}php-json
 BuildRequires:  %{?scl_prefix}php-spl
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  pcre-devel
@@ -88,7 +87,6 @@ Requires:       %{?scl_prefix}php-common%{?_isa}
 %else
 Requires:       %{?scl_prefix}php-hash%{?_isa}
 Requires:       %{?scl_prefix}php-iconv%{?_isa}
-Requires:       %{?scl_prefix}php-json%{?_isa}
 Requires:       %{?scl_prefix}php-spl%{?_isa}
 %endif
 Requires:       %{?scl_prefix}php-pecl(propro)%{?_isa}
@@ -99,6 +97,11 @@ Obsoletes:      %{?scl_prefix}php-pecl-http1 < 2
 %else
 # Can't install both versions of the same extension
 Conflicts:      %{?scl_prefix}php-pecl-http1
+%endif
+%if 0%{?fedora} < 22
+# new extensions split off this one.
+Requires:       %{?scl_prefix}php-pecl(json_post)%{?_isa}
+Requires:       %{?scl_prefix}php-pecl(apfd)%{?_isa}
 %endif
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
@@ -226,7 +229,7 @@ make -C NTS install INSTALL_ROOT=%{buildroot}
 # Install XML package description
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
-# install config file (z-http.ini to be loaded after json)
+# install config file
 install -Dpm644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with_zts}
@@ -260,7 +263,7 @@ export REPORT_EXIT_STATUS=1
 
 # Shared needed extensions
 modules=""
-for mod in json hash iconv propro raphf; do
+for mod in hash iconv propro raphf; do
   if [ -f %{php_extdir}/${mod}.so ]; then
     modules="$modules -d extension=${mod}.so"
   fi
@@ -347,6 +350,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 18 2015 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
+- Update to 2.4.1
+- add dependencies on pecl/json_post and pecl/apfd
+- drop dependency on json
+
 * Thu Mar 12 2015 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
 - Update to 2.3.2
 - disable test suite on slow ARM builder

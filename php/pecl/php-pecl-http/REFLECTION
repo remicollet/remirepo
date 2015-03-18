@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #172 http version 2.3.2 ] {
+Extension [ <persistent> extension #180 http version 2.4.1 ] {
 
   - Dependencies {
     Dependency [ raphf (Required) ]
@@ -6,7 +6,6 @@ Extension [ <persistent> extension #172 http version 2.3.2 ] {
     Dependency [ spl (Required) ]
     Dependency [ hash (Required) ]
     Dependency [ iconv (Required) ]
-    Dependency [ json (Required) ]
   }
 
   - INI {
