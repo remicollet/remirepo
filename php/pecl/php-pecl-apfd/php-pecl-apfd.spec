@@ -19,12 +19,12 @@
 %else
 %global ini_name   40-%{pecl_name}.ini
 %endif
-%global prever     RC1
+#global prever     RC1
 
 Summary:        Always Populate Form Data
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -42,6 +42,8 @@ Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+# Split off pecl/http
+Conflicts:      %{?scl_prefix}php-pecl(http) < 2.4
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -212,6 +214,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 18 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- Update to 1.0.0
+
 * Tue Mar 10 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.RC1
 - Update to 1.0.0RC1
 
