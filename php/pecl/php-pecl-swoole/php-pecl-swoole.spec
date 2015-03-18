@@ -23,7 +23,7 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.7.12
+Version:        1.7.13
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -97,7 +97,11 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
 
-sed -e '/examples/s/role="src"/role="doc"/' -i package.xml
+# Don't install/register tests, install examples as doc
+sed -e 's/role="test"/role="src"/' \
+    -e '/examples/s/role="src"/role="doc"/' \
+    -i package.xml
+
 
 cd NTS
 
@@ -179,9 +183,6 @@ do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
-# Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
-
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -240,6 +241,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 18 2015 Remi Collet <remi@fedoraproject.org> - 1.7.13-1
+- Update to 1.7.13
+
 * Thu Mar 12 2015 Remi Collet <remi@fedoraproject.org> - 1.7.12-1
 - Update to 1.7.12
 

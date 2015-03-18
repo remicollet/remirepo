@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #148 swoole version 1.7.12 ] {
+Extension [ <persistent> extension #153 swoole version 1.7.13 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -48,7 +48,7 @@ Extension [ <persistent> extension #148 swoole version 1.7.12 ] {
     Constant [ integer SWOOLE_SSL ] { 512 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.7.12 }
+    Constant [ string SWOOLE_VERSION ] { 1.7.13 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_GCC ] { 1 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 2 }
@@ -94,15 +94,6 @@ Extension [ <persistent> extension #148 swoole version 1.7.12 ] {
         Parameter #1 [ <required> $conn_fd ]
         Parameter #2 [ <required> $send_data ]
         Parameter #3 [ <optional> $from_id ]
-      }
-    }
-    Function [ <internal:swoole> function swoole_server_sendto ] {
-
-      - Parameters [4] {
-        Parameter #0 [ <required> swoole_server $zobject ]
-        Parameter #1 [ <required> $ip ]
-        Parameter #2 [ <required> $port ]
-        Parameter #3 [ <optional> $send_data ]
       }
     }
     Function [ <internal:swoole> function swoole_server_sendfile ] {
@@ -643,7 +634,7 @@ Extension [ <persistent> extension #148 swoole version 1.7.12 ] {
         Property [ <default> public $sock ]
       }
 
-      - Methods [8] {
+      - Methods [11] {
         Method [ <internal:swoole, ctor> public method __construct ] {
         }
 
@@ -659,7 +650,16 @@ Extension [ <persistent> extension #148 swoole version 1.7.12 ] {
         Method [ <internal:swoole> public method sendfile ] {
         }
 
+        Method [ <internal:swoole> public method sendto ] {
+        }
+
         Method [ <internal:swoole> public method isConnected ] {
+        }
+
+        Method [ <internal:swoole> public method getsockname ] {
+        }
+
+        Method [ <internal:swoole> public method getpeername ] {
         }
 
         Method [ <internal:swoole> public method close ] {
