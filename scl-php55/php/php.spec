@@ -127,12 +127,12 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver RC1
+#global rcver RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.5.23
-Release: 0.1.RC1%{?dist}
+Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -183,7 +183,6 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch100: php-odbc.patch
 
 # Security fixes (200+)
 
@@ -855,8 +854,6 @@ support for using the enchant library to PHP.
 %endif
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
-
-%patch100 -p1 -b .obbc
 
 %patch91 -p1 -b .remi-oci8
 
@@ -1735,6 +1732,10 @@ fi
 
 
 %changelog
+* Thu Mar 19 2015 Remi Collet <remi@fedoraproject.org> 5.5.23-1
+- Update to 5.5.23
+  http://www.php.net/releases/5_5_23.php
+
 * Sun Mar  8 2015 Remi Collet <remi@fedoraproject.org> 5.5.23-0.1.RC1
 - update to 5.5.23RC1
 
