@@ -6,10 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    eadc167b121359986f542cc9cf976ecee3fcbf69
+%global gh_commit    829199c0530ea131262c804924f921447c71d4e8
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20150302
+%global gh_date      20150316
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
@@ -106,7 +106,7 @@ rm src/bootstrap.php
 
 : fix reported version
 DATE=%{gh_date}
-DATE=${DATE:0:4}-${DATE:4:2}-${DATE:2:2}
+DATE=${DATE:0:4}-${DATE:4:2}-${DATE:6:2}
 sed -e '/VERSION/s/@package_version@/%{gh_commit}/' \
     -e '/BRANCH_ALIAS_VERSION/s/@package_branch_alias_version@/%{gh_branch}/' \
     -e "/RELEASE_DATE/s/@release_date@/$DATE/" \
@@ -157,6 +157,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.20150316git829199c
+- new snapshot
+
 * Wed Mar  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.20150302giteadc167
 - new snapshot
 
