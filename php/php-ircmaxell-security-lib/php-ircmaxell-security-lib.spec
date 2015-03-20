@@ -2,19 +2,19 @@
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    80934de3c482dcafb46b5756e59ebece082b6dc7
+%global gh_commit    f3db6de12c20c9bcd1aa3db4353a1bbe0e44e1b5
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     ircmaxell
 %global gh_project   SecurityLib
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-ircmaxell-security-lib
-Version:        1.0.0
-Release:        2%{?dist}
+Version:        1.1.0
+Release:        1%{?dist}
 Summary:        A Base Security Library
 
 Group:          Development/Libraries
@@ -100,12 +100,18 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
 %doc *.md
 %doc composer.json
 %{_datadir}/php/SecurityLib
 
 
 %changelog
+* Fri Mar 20 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- update to 1.1.0
+- add LICENSE file
+
 * Wed Aug 13 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
 - drop composer.json from library path
 
