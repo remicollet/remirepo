@@ -1,14 +1,14 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
-%global gh_commit   199b6ec87104b05e3013dfd5b90eafbbe4cf97dc
+%global gh_commit   c3ebe643fd1037b656ebcc149e3fd3d38938fe58
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    fruux
 %global gh_project  sabre-vobject
 %global pear_name   Sabre_VObject
 %global channelname pear.sabredav.org
-%global reldate     2014-05-16
+%global reldate     2015-01-21
 
 Name:           php-sabredav-Sabre_VObject
-Version:        2.1.4
+Version:        2.1.7
 Release:        1%{?dist}
 Summary:        An intuitive reader for iCalendar and vCard objects
 
@@ -107,6 +107,9 @@ fi
 
 
 %changelog
+* Fri Mar 06 2015 Adam Williamson <awilliam@redhat.com> - 2.1.7-1
+- update to 2.1.7
+
 * Thu May 22 2014 Remi Collet <RPMS@FamilleCollet.com> 2.1.4-1
 - update to 2.1.4
 - sources from github
