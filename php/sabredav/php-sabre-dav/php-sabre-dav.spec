@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0d064536ed3c7974e486b6ebb5b17ad7a974fe18
+%global gh_commit    78b0a55ae126666b49ec9ac88582d453b971967d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-dav
@@ -14,7 +14,7 @@
 
 Name:           php-%{gh_project}
 Summary:        WebDAV Framework for PHP
-Version:        1.8.10
+Version:        1.8.12
 Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
@@ -132,6 +132,9 @@ phpunit \
 
 
 %changelog
+* Fri Mar 06 2015 Adam Williamson <awilliam@redhat.com> - 1.8.12-1
+- update to 1.8.12 (bugfix release, no bc breaks)
+
 * Thu May 22 2014 Remi Collet <remi@fedoraproject.org> - 1.8.10-1
 - update to 1.8.10
 
