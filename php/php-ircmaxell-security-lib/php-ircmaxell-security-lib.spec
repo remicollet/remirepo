@@ -18,8 +18,6 @@ Release:        1%{?dist}
 Summary:        A Base Security Library
 
 Group:          Development/Libraries
-# See class headers
-# LICENSE file will be in next version
 License:        MIT
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
