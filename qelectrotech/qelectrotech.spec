@@ -6,9 +6,9 @@
 #
 # Please, preserve the changelog entries
 #
-#global svnrel 3658
+%global svnrel 3844
 %global rdate  20150220
-%global upver  0.4
+%global upver  0.5
 
 Name:        qelectrotech
 
@@ -29,9 +29,9 @@ Summary(ru): Редактор электрических схем
 # Upstream version is a float so 0.11 < 0.2 < 0.21 < 0.3
 # So use %.2f with upstream acknowledgment
 # Remember to check rdate and upver macro on each update
-Version:     0.40
+Version:     0.50
 %if 0%{?svnrel}
-Release:     0.5.svn%{svnrel}%{?dist}
+Release:     0.1.svn%{svnrel}%{?dist}
 %else
 Release:     1%{?dist}
 %endif
@@ -51,7 +51,8 @@ Source0:    http://download.tuxfamily.org/qet/tags/%{rdate}/qelectrotech-%{upver
 %endif
 
 BuildRequires:    desktop-file-utils
-BuildRequires:    qt4-devel >= 4.8
+BuildRequires:    qt5-qtbase-devel
+BuildRequires:    qt5-qtsvg-devel
 Requires:         qelectrotech-symbols = %{version}-%{release}
 Requires:         electronics-menu
 
@@ -158,7 +159,7 @@ sed -e s,/usr/local/,%{_prefix}/, \
     -e /QET_MIME/s,../,, \
     -i %{name}.pro
 
-qmake-qt4 %{name}.pro
+qmake-qt5 %{name}.pro
 
 
 %build
@@ -237,6 +238,10 @@ fi
 
 
 %changelog
+* Sun Mar 22 2015 Remi Collet <remi@fedoraproject.org> - 0.50-0.1.svn3844
+- Update to 0.5 snapshot revision 3844
+- swicth to Qt 5
+
 * Fri Feb 20 2015 Remi Collet <remi@fedoraproject.org> - 0.40-1
 - Version 0.4 finale
 
