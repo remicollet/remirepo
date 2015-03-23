@@ -17,7 +17,7 @@ Name:          gd
 Name:          gd-last
 %endif
 Version:       2.1.1
-Release:       1%{?prever}%{?short}%{?dist}
+Release:       2%{?prever}%{?short}%{?dist}
 Group:         System Environment/Libraries
 License:       MIT
 URL:           http://libgd.bitbucket.org/
@@ -30,9 +30,10 @@ Source1:       https://bitbucket.org/libgd/gd-libgd/downloads/libgd-%{version}-r
 %else
 Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/libgd-%{version}%{?prever:-%{prever}}.tar.xz
 %endif
+# Missing in official archive, need for autoreconf
+Source2:       getver.pl
 
 Patch1:        gd-2.1.0-multilib.patch
-Patch2:        gd-CVE-2014-2497.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: freetype-devel
@@ -49,6 +50,7 @@ BuildRequires: libXpm-devel
 BuildRequires: zlib-devel
 BuildRequires: pkgconfig
 BuildRequires: libtool
+BuildRequires: perl
 
 
 %description
@@ -100,19 +102,18 @@ Provides:  gd-devel = %{version}-%{release}
 The gd-devel package contains the development libraries and header
 files for gd, a graphics library for creating PNG and JPEG graphics.
 
+
 %prep
 %setup -q -n libgd-%{version}%{?prever:-%{prever}}
 %patch1 -p1 -b .mlib
-#patch2 -p1 -b .cve-20142-497
-
-# https://bitbucket.org/libgd/gd-libgd/issue/77
-sed -e '/GD_VERSION_STRING/s/-alpha//' \
-    -e '/GD_EXTRA_VERSION/s/alpha//' \
-    -i src/gd.h
-grep VERSION src/gd.h
 
 # Workaround for https://bugzilla.redhat.com/978415
 touch src/vpx_config.h
+
+# Workaround for missing file
+cp %{SOURCE2} config/getver.pl
+
+: $(perl config/getver.pl)
 
 # RHEL-5 auto* are too old
 %if 0%{?rhel} == 5
@@ -123,7 +124,8 @@ tar --extract --file - --keep-newer-files --strip-components 1
 %else
 : regenerate autotool stuff
 if [ -f configure ]; then
-   autoreconf -fi
+   libtoolize --copy --force
+   autoreconf -vif
 else
    ./bootstrap.sh
 fi
@@ -159,7 +161,11 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/libgd.a
 export XFAIL_TESTS="gdimagestringft/gdimagestringft_bbox"
 %endif
 
+: Upstream test suite
 make check
+
+: Check content of pkgconfig
+grep %{version} $RPM_BUILD_ROOT%{_libdir}/pkgconfig/gdlib.pc
 
 
 %post -p /sbin/ldconfig
@@ -188,6 +194,9 @@ make check
 
 
 %changelog
+* Mon Mar 23 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-2
+- fix version in gdlib.pc
+
 * Wed Jan 14 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - update to 2.1.1 final
 
