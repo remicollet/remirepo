@@ -21,7 +21,7 @@
 
 Summary:        XXTEA encryption algorithm extension for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.0.5
+Version:        1.0.6
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
@@ -82,7 +82,8 @@ mv %{pecl_name}-%{version} NTS
 sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd NTS
-chmod -x *.c *.h CREDITS *.md
+# https://github.com/xxtea/xxtea-pecl/pull/2
+sed -e '/XXTEA_VERSION/s/1.0.5/1.0.6/' -i php_xxtea.h
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define XXTEA_VERSION/{s/.* "//;s/".*$//;p}' php_xxtea.h)
@@ -218,6 +219,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 23 2015 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
+- Update to 1.0.6 (stable)
+- open https://github.com/xxtea/xxtea-pecl/pull/2 (version)
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
 - initial package, version 1.0.5 (stable)
-- oipen https://github.com/xxtea/xxtea-pecl/pull/1 (typo)
+- open https://github.com/xxtea/xxtea-pecl/pull/1 (typo)
