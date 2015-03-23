@@ -752,9 +752,11 @@ License: PHP and BSD
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: t1lib-devel
 %if %{with_libgd}
-BuildRequires: gd-devel >= 2.1.0
+BuildRequires: gd-devel >= 2.1.1
 %if 0%{?fedora} <= 19 && 0%{?rhel} <= 7
-Requires: gd-last%{?_isa} >= 2.1.0-3
+Requires: gd-last%{?_isa} >= 2.1.1
+%else
+Requires: gd%{?_isa} >= 2.1.1
 %endif
 %else
 # Required to build the bundled GD library
