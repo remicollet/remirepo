@@ -246,11 +246,11 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
-%config(noreplace) %{php_inidir}/%{ini_name}
 %{_bindir}/debugclient
-
-%{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
+
+%config(noreplace) %{php_inidir}/%{ini_name}
+%{php_extdir}/%{pecl_name}.so
 
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
