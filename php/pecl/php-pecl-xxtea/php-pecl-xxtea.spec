@@ -21,7 +21,7 @@
 
 Summary:        XXTEA encryption algorithm extension for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.0.8
+Version:        1.0.9
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
@@ -217,6 +217,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 23 2015 Remi Collet <remi@fedoraproject.org> - 1.0.9-1
+- Update to 1.0.9 (stable)
+
 * Mon Mar 23 2015 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
 - Update to 1.0.8 (stable)
 
