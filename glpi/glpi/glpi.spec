@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2007-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -28,7 +28,7 @@
 
 Name:           glpi
 Version:        0.84.8
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
@@ -46,6 +46,7 @@ Source4:        glpi-nginx.conf
 Patch0:         glpi-0.84-cron.patch
 # Upstream security patch
 Patch1:         glpi-0.84-CVE-2014-9258.patch
+Patch2:         glpi-0.84-bug5218.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -128,6 +129,7 @@ techniciens grâce à une maintenance plus cohérente.
 
 %patch0 -p0
 %patch1 -p2
+%patch2 -p2
 
 find . -name \*.orig -exec rm {} \; -print
 
@@ -311,6 +313,9 @@ fi
 
 
 %changelog
+* Tue Mar 24 2015 Remi Collet <remi@fedoraproject.org> - 0.84.8-4
+- add security fix https://forge.indepnet.net/issues/5218
+
 * Mon Dec 22 2014 Remi Collet <remi@fedoraproject.org> - 0.84.8-3
 - fix SQL Injection CVE-2014-9258
 
