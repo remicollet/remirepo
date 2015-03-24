@@ -11,8 +11,9 @@
 
 %global github_owner   justinrainbow
 %global github_name    json-schema
-%global github_version 1.3.7
-%global github_commit  87b54b460febed69726c781ab67462084e97a105
+%global github_version 1.4.0
+%global github_commit  680d026082c3aa234b2d8617c50e9c73999913ba
+%global github_short   %(c=%{github_commit}; echo ${c:0:7})
 
 # See https://github.com/justinrainbow/json-schema/pull/96
 %global php_min_ver    5.3.2
@@ -24,13 +25,13 @@
 
 Name:          php-%{lib_name}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       1%{?dist}
 Summary:       PHP implementation of JSON schema
 
 Group:         Development/Libraries
 License:       BSD
 URL:           https://github.com/%{github_owner}/%{github_name}
-Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_short}.tar.gz
 
 # PHP < 5.4.0 compatibility for "--dump-schema"
 # https://github.com/justinrainbow/json-schema/pull/109
@@ -42,7 +43,7 @@ BuildArch: noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-phpunit-PHPUnit
-# For tests: phpcompatinfo (computed from v1.3.7)
+# For tests: phpcompatinfo (computed from v1.4.0)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -53,7 +54,7 @@ BuildRequires: php-spl
 %endif
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from v1.3.7)
+# phpcompatinfo (computed from v1.4.0)
 Requires:      php-curl
 Requires:      php-filter
 Requires:      php-json
@@ -62,6 +63,7 @@ Requires:      php-pcre
 Requires:      php-spl
 
 Provides:      php-composer(justinrainbow/json-schema) = %{version}
+
 
 %description
 A PHP implementation for validating JSON structures against a given schema.
@@ -129,6 +131,9 @@ sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 
 %changelog
+* Tue Mar 24 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
+- Update to 1.4.0
+
 * Sat Aug 30 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.7-2
 - PHP < 5.4.0 compatibility patch instead of in-spec logic
 
