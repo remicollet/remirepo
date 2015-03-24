@@ -170,7 +170,7 @@ fi
 %doc composer.json README.*
 %config(noreplace) %{_sysconfdir}/phpreflect.json
 %{_bindir}/phpreflect
-%{_datadir}/php/Bartlett
+%{_datadir}/php/Bartlett/Reflect*
 %{_mandir}/man1/phpreflect.1*
 
 
