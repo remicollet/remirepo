@@ -1,7 +1,7 @@
 diff -up ./bin/phpreflect.rpm ./bin/phpreflect
 --- ./bin/phpreflect.rpm	2015-02-19 18:51:08.000000000 +0100
 +++ ./bin/phpreflect	2015-02-22 11:32:38.272052909 +0100
-@@ -1,23 +1,35 @@
+@@ -1,23 +1,37 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
  <?php
@@ -16,6 +16,8 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
 -    if (!file_exists($vendorDir . '/autoload.php')) {
 -        $vendorDir = dirname(dirname($baseDir));
 -    }
++    putenv('BARTLETT_COMPATINFO_DB=/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite');
++
 +    $vendorDir = '/usr/share/php';
  
      if (!getenv("BARTLETTRC")) {
@@ -82,7 +84,7 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
          'Bartlett\Tests\Reflect\Analyser\FooAnalyser'
              => __DIR__ . '/Analyser/FooAnalyser.php',
          'Bartlett\Tests\Reflect\Analyser\BarAnalyser'
-@@ -14,5 +12,23 @@ $loader->addClassMap(
+@@ -14,5 +12,24 @@ $loader->addClassMap(
              => __DIR__ . '/Model/GenericModelTest.php',
          'Bartlett\Tests\Reflect\Environment\YourLogger'
              => __DIR__ . '/Environment/YourLogger.php',
@@ -98,6 +100,7 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 +$loader = new UniversalClassLoader();
 +$loader->registerNamespaces(array(
 +    'Bartlett\\Tests\\Reflect'            => $baseDir . '/tests',
++    'Bartlett\\UmlWriter'                 => $vendorDir,
 +    'Bartlett'                            => $baseDir . '/src',
 +    'Monolog'                             => $vendorDir,
 +));

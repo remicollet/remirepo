@@ -6,16 +6,16 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    e248bf46a4e1e4e21dd04acc522fb6bf0a3f8249
+%global gh_commit    1a01f2a904ce437cdbc75f09b91471fa967d4300
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150303
 %global gh_owner     llaville
 %global gh_project   php-reflect
-%global prever       RC1
+%global prever       RC2
 
 Name:           php-bartlett-PHP-Reflect
 Version:        3.0.0
-%global specrel 10
+%global specrel 11
 Release:        %{?gh_short:0.%{specrel}.%{?gh_date:%{gh_date}git%{gh_short}}%{prever}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -46,6 +46,7 @@ BuildRequires:  php-composer(phpdocumentor/reflection-docblock) >= 2.0
 BuildRequires:  php-composer(seld/jsonlint)                     >= 1.1
 BuildRequires:  php-composer(justinrainbow/json-schema)         >= 1.3
 BuildRequires:  php-composer(monolog/monolog)                   >= 1.10
+BuildRequires:  php-composer(bartlett/umlwriter)
 
 # From composer.json, "require"
 #        "php": ">=5.3.2",
@@ -98,7 +99,12 @@ Requires:       php-composer(justinrainbow/json-schema)         >= 1.3
 Requires:       php-composer(justinrainbow/json-schema)         <  2
 # From composer.json, "suggest"
 #        "doctrine/cache": "Allow caching results"
+#        "psr/log": "Allow logging events with the LogPlugin",
+#        "monolog/monolog": "Allow logging events with the LogPlugin",
+#        "bartlett/phpunit-loggertestlistener": "Allow logging unit tests to your favorite PSR-3 logger interface",
+#        "bartlett/umlwriter": "Allow writing UML class diagrams (Graphviz or PlantUML)"
 Requires:       php-composer(doctrine/cache)
+Requires:       php-composer(bartlett/umlwriter)
 # For our patch
 Requires:       php-composer(symfony/class-loader)     >= 2.5
 Requires:       php-composer(symfony/class-loader)     <  3
@@ -141,9 +147,9 @@ install -D -p -m 644 bin/phpreflect.1         %{buildroot}%{_mandir}/man1/phpref
 # Required when bartlett/php-compatinfo installed (local build)
 export BARTLETT_COMPATINFO_DB=%{_datadir}/php-bartlett-PHP-CompatInfo/compatinfo.sqlite
 
-# Version 3.0.0beta1 : OK, but incomplete or skipped tests!
+# Version 3.0.0RC2 : OK, but incomplete, skipped, or risky tests!
 # Tests: 123, Assertions: 124, Incomplete: 3.
-%{_bindir}/phpunit
+%{_bindir}/phpunit -v
 
 
 %clean
@@ -169,6 +175,10 @@ fi
 
 
 %changelog
+* Tue Mar 24 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.11.RC2
+- update to 3.0.0 RC2
+- add dependency on bartlett/umlwriter
+
 * Thu Mar 12 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.10.RC1
 - update to 3.0.0 RC1
 
