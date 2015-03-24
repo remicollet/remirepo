@@ -8,6 +8,7 @@ License:        BSD
 URL:            http://atoum.org
 Source0:        https://github.com/%{name}/%{name}/archive/%{version}.tar.gz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
 BuildRequires:       php(language) >= 5.3.3
@@ -36,6 +37,12 @@ Requires:       php-pecl(Xdebug) >= 2.2.1
 Requires:       php-xml
 
 Provides: php-composer(atoum/atoum) = %{version}
+
+%if %{?runselftest}%{!?runselftest:1}
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%else
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%endif
 
 
 %description
@@ -79,6 +86,7 @@ sed -i bin/%{name} \
 
 
 %install
+rm -rf $RPM_BUILD_ROOT
 # create needed directories
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name}
 mkdir -p $RPM_BUILD_ROOT%{_bindir}
@@ -91,6 +99,7 @@ cp -pr tests $RPM_BUILD_ROOT%{_datadir}/%{name}
 
 
 %check
+%if %{with_tests}
 %if 0%{?fedora} >= 22
 # Temporary ignore this test, BC break in libxml, see
 # https://bugzilla.redhat.com/1199396  incorrect identification of duplicate ID
@@ -102,9 +111,17 @@ cd tests/units
 echo "date.timezone=UTC" >php.ini
 export PHPRC=$(pwd)/php.ini
 php runner.php --directories .
+%else
+: Tests skipped
+%endif
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license COPYING
 %doc ABOUT composer.json CREDITS.md FAQ.md README.md
@@ -114,6 +131,9 @@ php runner.php --directories .
 
 
 %changelog
+* Tue Mar 24 2015 Remi Collet <RPMS@famillecollet.com> - 2.0.1-1
+- add backport stuff
+
 * Sun Mar 22 2015 Johan Cwiklinski <johan AT x-tnd DOT be> - 2.0.1-1
 - Last upstream release
 
