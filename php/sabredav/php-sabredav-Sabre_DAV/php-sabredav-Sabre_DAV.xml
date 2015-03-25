@@ -58,6 +58,7 @@ New release. Read the ChangeLog and announcement for more details
    <file name="Sabre/DAV/Exception/Forbidden.php" role="php" />
    <file name="Sabre/DAV/Exception/InsufficientStorage.php" role="php" />
    <file name="Sabre/DAV/Exception/InvalidResourceType.php" role="php" />
+   <file name="Sabre/DAV/Exception/LengthRequired.php" role="php" />
    <file name="Sabre/DAV/Exception/LockTokenMatchesRequestUri.php" role="php" />
    <file name="Sabre/DAV/Exception/Locked.php" role="php" />
    <file name="Sabre/DAV/Exception/MethodNotAllowed.php" role="php" />
@@ -80,6 +81,7 @@ New release. Read the ChangeLog and announcement for more details
    <file name="Sabre/DAV/Locks/LockInfo.php" role="php" />
    <file name="Sabre/DAV/Locks/Plugin.php" role="php" />
    <file name="Sabre/DAV/Mount/Plugin.php" role="php" />
+   <file name="Sabre/DAV/PartialUpdate/IPatchSupport.php" role="php" />
    <file name="Sabre/DAV/Property/GetLastModified.php" role="php" />
    <file name="Sabre/DAV/Property/Href.php" role="php" />
    <file name="Sabre/DAV/Property/HrefList.php" role="php" />
@@ -115,11 +117,14 @@ New release. Read the ChangeLog and announcement for more details
    <file name="Sabre/DAV/UUIDUtil.php" role="php" />
    <file name="Sabre/DAV/Version.php" role="php" />
    <file name="Sabre/DAV/XMLUtil.php" role="php" />
+   <file name="Sabre/DAV/includes.php" role="php" />
    <file name="Sabre/DAV/PropertyInterface.php" role="php" />
    <file name="Sabre/DAV/PartialUpdate/Plugin.php" role="php" />
    <file name="Sabre/DAV/PartialUpdate/IFile.php" role="php" />
+   <file name="Sabre/DAV/Locks/Backend/Abstract.php" role="php" />
    <file name="Sabre/DAV/Exception/ServiceUnavailable.php" role="php" />
    <file name="Sabre/DAV/Exception/ReportNotSupported.php" role="php" />
+   <file name="Sabre/DAV/Auth/IBackend.php" role="php" />
    <file name="examples/sql/mysql.locks.sql" role="doc" />
    <file name="examples/sql/mysql.users.sql" role="doc" />
    <file name="examples/sql/pgsql.locks.sql" role="doc" />
@@ -133,9 +138,6 @@ New release. Read the ChangeLog and announcement for more details
    <file name="examples/simplefsserver.php" role="doc" />
    <file name="ChangeLog" role="doc" />
    <file name="LICENSE" role="doc" />
-   <file name="Sabre/DAV/includes.php" role="php" />
-   <file name="Sabre/DAV/Locks/Backend/Abstract.php" role="php" />
-   <file name="Sabre/DAV/Auth/IBackend.php" role="php" />
   </dir>
  </contents>
  <dependencies>
@@ -154,7 +156,7 @@ New release. Read the ChangeLog and announcement for more details
    <package>
     <name>Sabre_HTTP</name>
     <channel>pear.sabredav.org</channel>
-    <min>1.7.0</min>
+    <min>1.6.0</min>
    </package>
   </required>
  </dependencies>
