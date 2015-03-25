@@ -19,9 +19,6 @@
 %global opcachever  7.0.4-dev
 %global oci8ver     2.0.9
 
-# Use for first build of PHP (mostly to disable test suite)
-%global php_bootstrap   1
-
 # Adds -z now to the linker flags
 %global _hardened_build 1
 
@@ -55,11 +52,7 @@
 %global with_lsws     1
 
 # Regression tests take a long time, you can skip 'em with this
-%if %{php_bootstrap}
-%global runselftest 0
-%else
 %{!?runselftest: %global runselftest 1}
-%endif
 
 # Use the arch-specific mysql_config binary to avoid mismatch with the
 # arch detection heuristic used by bindir/mysql_config.
@@ -67,6 +60,7 @@
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
 #global with_oci8      %{?_with_oci8:1}%{!?_with_oci8:0}
+### TODO : create specific 20-oci8.ini configuration file ###
 %global with_oci8      0
 
 %global with_imap      1
@@ -1807,6 +1801,7 @@ fi
 * Wed Mar 25 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.2.20150325git23336d7
 - fix mod_php configuration
 - disable static json
+- sync php.ini with upstream php.ini-production
 
 * Wed Mar 25 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.1.20150325git23336d7
 - update for php 7.0.0
