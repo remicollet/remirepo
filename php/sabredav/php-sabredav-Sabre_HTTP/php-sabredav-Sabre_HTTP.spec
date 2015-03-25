@@ -1,21 +1,18 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name   Sabre_HTTP
 %global channelname pear.sabredav.org
-%global mainver     1.7.10
-%global reldate     2014-02-09
+%global mainver     1.7.13
 
 Name:           php-sabredav-Sabre_HTTP
 Epoch:          1
-Version:        1.7.10
+Version:        1.7.11
 Release:        1%{?dist}
 Summary:        HTTP component for the SabreDAV WebDAV framework for PHP
 
 Group:          Development/Libraries
 License:        BSD
-URL:            http://code.google.com/p/sabredav
-# https://github.com/fruux/sabre-dav/issues/336
-# Please update PEAR channel
-Source0:        http://sabredav.googlecode.com/files/SabreDAV-%{mainver}.zip
+URL:            http://sabre.io
+Source0:        https://github.com/fruux/sabre-dav/releases/download/%{mainver}/sabredav-%{mainver}.zip
 Source1:        %{name}.xml
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -38,9 +35,7 @@ Sabre_HTTP allows for a central interface to deal with Sabre.
 %prep
 %setup -q -n SabreDAV
 
-sed -e 's/@VERSION@/%{version}/' \
-    -e 's/@RELDATE@/%{reldate}/' \
-    %{SOURCE1} >%{name}.xml
+cp %{SOURCE1} .
 mv lib/Sabre Sabre
 
 # Check version
@@ -102,6 +97,9 @@ fi
 
 
 %changelog
+* Tue Oct 28 2014 Adam Williamson <awilliam@redhat.com> - 1.7.11-1
+- new release 1.7.11 (from Sabre 1.7.13 EOL)
+
 * Thu Feb 20 2014 Remi Collet <RPMS@FamilleCollet.com> 1:1.7.10-1
 - revert to 1.7
 

@@ -10,14 +10,14 @@ In addition Sabre_HTTP provides classes for Basic, Digest and Amazon AWS authent
  <lead>
   <name>Evert Pot</name>
   <user>Evert Pot</user>
-  <email>evert@rooftopsolutions.nl</email>
+  <email>me@evertpot.com</email>
   <active>true</active>
  </lead>
- <date>@RELDATE@</date>
+ <date>2014-07-28</date>
  <time>17:13:32</time>
  <version>
-  <release>@VERSION@</release>
-  <api>@VERSION@</api>
+  <release>1.7.11</release>
+  <api>1.7.11</api>
  </version>
  <stability>
   <release>stable</release>
@@ -36,10 +36,10 @@ New release. Read the ChangeLog and announcement for more details
    <file name="Sabre/HTTP/Request.php" role="php" />
    <file name="Sabre/HTTP/Response.php" role="php" />
    <file name="Sabre/HTTP/Util.php" role="php" />
-   <file name="Sabre/HTTP/Version.php" role="php" />
+   <file name="Sabre/HTTP/includes.php" role="php" />
    <file name="Sabre/HTTP/Version.php" role="php" />
    <file name="examples/basicauth.php" role="doc" />
-   <file name="Sabre/HTTP/includes.php" role="doc" />
+   <file name="examples/digestauth.php" role="doc" />
    <file name="ChangeLog" role="doc" />
    <file name="LICENSE" role="doc" />
   </dir>
