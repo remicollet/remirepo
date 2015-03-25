@@ -53,6 +53,7 @@
 
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %global runselftest 1}
+%global runselftest 0
 
 # Use the arch-specific mysql_config binary to avoid mismatch with the
 # arch detection heuristic used by bindir/mysql_config.
@@ -128,7 +129,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global gh_commit    23336d77a61eecb1130b7dedb2cdc40b4f0c8eea
+%global gh_commit    2fe6acd8f5827235774789cfc1c4e54a9eaa6c59
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_date      20150325
 %global gh_owner     php
@@ -139,7 +140,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 7.0.0
-Release: 0.2.%{gh_date}git%{gh_short}%{?dist}
+Release: 0.3.%{gh_date}git%{gh_short}%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1325,6 +1326,8 @@ install -m 644 php.gif $RPM_BUILD_ROOT%{_httpd_contentdir}/icons/%{name}.gif
 sed -e 's/libphp7/lib%{scl}/' %{SOURCE9} >modconf
 install -m 755 -d $RPM_BUILD_ROOT%{_root_httpd_moddir}
 ln -s %{_httpd_moddir}/libphp7.so      $RPM_BUILD_ROOT%{_root_httpd_moddir}/lib%{scl}.so
+%else
+cp %{SOURCE9} modconf
 %endif
 
 %if "%{_httpd_modconfdir}" == "%{_httpd_confdir}"
@@ -1798,6 +1801,9 @@ fi
 
 
 %changelog
+* Wed Mar 25 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.3.20150325git2fe6acd
+- rebuild
+
 * Wed Mar 25 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.2.20150325git23336d7
 - fix mod_php configuration
 - disable static json
