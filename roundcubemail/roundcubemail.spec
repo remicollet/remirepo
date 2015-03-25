@@ -9,7 +9,7 @@
 %global _logdir /var/log  
 Name: roundcubemail
 Version:  1.1.1
-Release:  1%{?dist}
+Release:  2%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
 Group: Applications/System
@@ -60,9 +60,7 @@ Requires: php-intl
 Requires: php-json
 Requires: php-ldap
 Requires: php-mbstring
-# For 1.1, switch this to openssl, upstream now uses it in preference to
-# mcrypt if available - adamw 2014-12
-Requires: php-mcrypt
+Requires: php-openssl
 Requires: php-pcre
 Requires: php-posix
 Requires: php-pdo
@@ -260,6 +258,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 25 2015 Robert Scheck <robert@fedoraproject.org> - 1.1.1-2
+- switch run-time requirement from php-mcrypt to php-openssl
+
 * Fri Mar 20 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - update to 1.1.1
 
