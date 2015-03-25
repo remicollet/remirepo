@@ -1,21 +1,19 @@
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name   Sabre_DAVACL
 %global channelname pear.sabredav.org
-%global mainver     1.7.10
-%global reldate     2014-02-09
+%global mainver     1.7.13
+%global reldate     2014-07-28
 
 Name:           php-sabredav-Sabre_DAVACL
 Epoch:          1
 Version:        1.7.9
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        RFC3744 implementation for SabreDAV
 
 Group:          Development/Libraries
 License:        BSD
-URL:            http://code.google.com/p/sabredav
-# https://github.com/fruux/sabre-dav/issues/336
-# Please update PEAR channel
-Source0:        http://sabredav.googlecode.com/files/SabreDAV-%{mainver}.zip
+URL:            http://sabre.io
+Source0:        https://github.com/fruux/sabre-dav/releases/download/%{mainver}/sabredav-%{mainver}.zip
 Source1:        %{name}.xml
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -108,6 +106,9 @@ fi
 
 
 %changelog
+* Tue Oct 28 2014 Adam Williamson <awilliam@redhat.com> - 1.7.9-2
+- new release 1.7.9 (from SabreDAV 1.7.13, EOL)
+
 * Thu Feb 20 2014 Remi Collet <RPMS@FamilleCollet.com> 1:1.7.9-1
 - revert to 1.7
 
