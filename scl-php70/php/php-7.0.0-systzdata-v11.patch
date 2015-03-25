@@ -8,7 +8,7 @@ r10: make timezone case insensitive
 r9: fix another compile error without --with-system-tzdata configured (Michael Heimpold)
 r8: fix compile error without --with-system-tzdata configured
 r7: improve check for valid timezone id to exclude directories
-r6: fix fd leak in r5, fix country code/BC flag use in 
+r6: fix fd leak in r5, fix country code/BC flag use in
     timezone_identifiers_list() using system db,
     fix use of PECL timezonedb to override system db,
 r5: reverts addition of "System/Localtime" fake tzname.
@@ -19,10 +19,9 @@ r3: fix a crash if /usr/share/zoneinfo doesn't exist (Raphael Geissert)
 r2: add filesystem trawl to set up name alias index
 r1: initial revision
 
-diff --git a/ext/date/lib/parse_tz.c b/ext/date/lib/parse_tz.c
-index 5d2aec9..671b398 100644
---- a/ext/date/lib/parse_tz.c
-+++ b/ext/date/lib/parse_tz.c
+diff -up php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/date/lib/parse_tz.c.systzdata php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/date/lib/parse_tz.c
+--- php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/date/lib/parse_tz.c.systzdata	2015-03-25 08:59:09.894376319 +0100
++++ php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/date/lib/parse_tz.c	2015-03-25 08:59:22.052426045 +0100
 @@ -20,6 +20,16 @@
  
  #include "timelib.h"
@@ -53,25 +52,19 @@ index 5d2aec9..671b398 100644
  
  #if (defined(__APPLE__) || defined(__APPLE_CC__)) && (defined(__BIG_ENDIAN__) || defined(__LITTLE_ENDIAN__))
  # if defined(__LITTLE_ENDIAN__)
-@@ -51,9 +66,14 @@
+@@ -51,6 +66,11 @@
  
  static void read_preamble(const unsigned char **tzf, timelib_tzinfo *tz)
  {
--	/* skip ID */
--	*tzf += 4;
--	
-+        if (memcmp(tzf, "TZif", 4) == 0) {
-+                *tzf += 20;
-+                return;
-+        }
-+        
-+        /* skip ID */
-+        *tzf += 4;
-+                
- 	/* read BC flag */
- 	tz->bc = (**tzf == '\1');
- 	*tzf += 1;
-@@ -256,7 +276,418 @@ void timelib_dump_tzinfo(timelib_tzinfo *tz)
++	if (memcmp(tzf, "TZif", 4) == 0) {
++		*tzf += 20;
++		return;
++	}
++
+ 	/* skip ID */
+ 	*tzf += 4;
+ 
+@@ -256,7 +276,418 @@ void timelib_dump_tzinfo(timelib_tzinfo
  	}
  }
  
@@ -491,7 +484,7 @@ index 5d2aec9..671b398 100644
  {
  	int left = 0, right = tzdb->index_size - 1;
  #ifdef HAVE_SETLOCALE
-@@ -295,36 +726,135 @@ static int seek_to_tz_position(const unsigned char **tzf, char *timezone, const
+@@ -295,36 +726,135 @@ static int seek_to_tz_position(const uns
  	return 0;
  }
  
@@ -630,10 +623,9 @@ index 5d2aec9..671b398 100644
  	} else {
  		tmp = NULL;
  	}
-diff --git a/ext/date/lib/timelib.m4 b/ext/date/lib/timelib.m4
-index c725572..4c837c7 100644
---- a/ext/date/lib/timelib.m4
-+++ b/ext/date/lib/timelib.m4
+diff -up php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/date/lib/timelib.m4.systzdata php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/date/lib/timelib.m4
+--- php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/date/lib/timelib.m4.systzdata	2015-03-25 07:01:04.000000000 +0100
++++ php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/date/lib/timelib.m4	2015-03-25 08:56:30.412724035 +0100
 @@ -78,3 +78,17 @@ stdlib.h
  
  dnl Check for strtoll, atoll
@@ -652,4 +644,3 @@ index c725572..4c837c7 100644
 +   fi
 +fi
 +
-
