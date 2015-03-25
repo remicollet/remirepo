@@ -12,6 +12,9 @@ case $1 in
 	;;
 esac
 case $dep in 
+scl70el*)	dep=${dep#scl70el}
+	type=enterprise
+	;;
 scl56el*)	dep=${dep#scl56el}
 	type=enterprise
 	;;
@@ -25,6 +28,9 @@ el*)	dep=${dep#el}
 	type=enterprise
 	;;
 fc*)	dep=${dep#fc}
+	type=fedora
+	;;
+scl70fc*)	dep=${dep#scl70fc}
 	type=fedora
 	;;
 scl56fc*)	dep=${dep#scl56fc}
