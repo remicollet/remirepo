@@ -145,7 +145,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 7.0.0
-Release: 0.1.%{gh_date}git%{gh_short}%{?dist}
+Release: 0.2.%{gh_date}git%{gh_short}%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1228,6 +1228,7 @@ popd
 without_shared="--without-gd \
       --disable-dom --disable-dba --without-unixODBC \
       --disable-opcache \
+      --disable-json \
       --disable-xmlreader --disable-xmlwriter \
       --without-sqlite3 --disable-phar --disable-fileinfo \
       --without-pspell --disable-wddx \
@@ -1319,8 +1320,6 @@ install -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/php.ini
 # For third-party packaging:
 install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/php
 
-sed -e 's/libphp7/lib%{name}/' %{SOURCE9} >modconf
-
 # install the DSO
 install -m 755 -d $RPM_BUILD_ROOT%{_httpd_moddir}
 install -m 755 build-apache/libs/libphp7.so $RPM_BUILD_ROOT%{_httpd_moddir}
@@ -1329,8 +1328,9 @@ install -m 755 build-apache/libs/libphp7.so $RPM_BUILD_ROOT%{_httpd_moddir}
 install -m 755 -d $RPM_BUILD_ROOT%{_httpd_contentdir}/icons
 install -m 644 php.gif $RPM_BUILD_ROOT%{_httpd_contentdir}/icons/%{name}.gif
 %if %{?scl:1}0
+sed -e 's/libphp7/lib%{scl}/' %{SOURCE9} >modconf
 install -m 755 -d $RPM_BUILD_ROOT%{_root_httpd_moddir}
-ln -s %{_httpd_moddir}/libphp7.so      $RPM_BUILD_ROOT%{_root_httpd_moddir}/lib%{name}.so
+ln -s %{_httpd_moddir}/libphp7.so      $RPM_BUILD_ROOT%{_root_httpd_moddir}/lib%{scl}.so
 %endif
 
 %if "%{_httpd_modconfdir}" == "%{_httpd_confdir}"
@@ -1639,7 +1639,7 @@ fi
 %if 0%{?scl:1}
 %dir %{_libdir}/httpd
 %dir %{_libdir}/httpd/modules
-%{_root_httpd_moddir}/lib%{name}.so
+%{_root_httpd_moddir}/lib%{scl}.so
 %endif
 %attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
 %attr(0770,root,apache) %dir %{_localstatedir}/lib/php/wsdlcache
@@ -1804,6 +1804,10 @@ fi
 
 
 %changelog
+* Wed Mar 25 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.2.20150325git23336d7
+- fix mod_php configuration
+- disable static json
+
 * Wed Mar 25 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.1.20150325git23336d7
 - update for php 7.0.0
 - ereg, mssql, mysql and sybase_ct extensions are removed
