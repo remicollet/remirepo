@@ -120,7 +120,13 @@
 %global with_httpd2410 0
 %endif
 
-%global with_zip     0
+%global with_zip       1
+%if 0%{?fedora} >= 20
+%global with_libzip    1
+%else
+%global with_libzip    0
+%endif
+
 
 %if 0%{?fedora} < 18 && 0%{?rhel} < 7
 %global db_devel  db4-devel
@@ -163,7 +169,6 @@ Source8: php-fpm.sysconfig
 Source9: php.modconf
 Source10: php.conf2
 Source11: php-fpm.init
-Source12: strip.sh
 # Configuration files for some extensions
 Source50: opcache.ini
 Source51: opcache-default.blacklist
@@ -385,16 +390,11 @@ Provides: %{?scl_prefix}php-sockets, %{?scl_prefix}php-sockets%{?_isa}
 Provides: %{?scl_prefix}php-spl, %{?scl_prefix}php-spl%{?_isa}
 Provides: %{?scl_prefix}php-standard = %{version}, %{?scl_prefix}php-standard%{?_isa} = %{version}
 Provides: %{?scl_prefix}php-tokenizer, %{?scl_prefix}php-tokenizer%{?_isa}
+# For user experience, those extensions were part of php-common
 %if ! %{php_bootstrap}
 Requires: %{?scl_prefix}php-pecl-jsonc%{?_isa}
 %endif
-%if %{with_zip}
-Provides: %{?scl_prefix}php-zip, %{?scl_prefix}php-zip%{?_isa}
-%else
-%if ! %{php_bootstrap}
-Requires: %{?scl_prefix}php-pecl-zip%{?_isa}
-%endif
-%endif
+Requires: %{?scl_prefix}php-zip%{?_isa}
 Provides: %{?scl_prefix}php-zlib, %{?scl_prefix}php-zlib%{?_isa}
 %{?scl:Requires: %{scl}-runtime}
 
@@ -858,6 +858,22 @@ The %{?scl_prefix}php-enchant package contains a dynamic shared object that will
 support for using the enchant library to PHP.
 %endif
 
+%if %{with_zip}
+%package zip
+Summary: ZIP archive management extension for PHP
+# All files licensed under PHP version 3.0.1
+License: PHP
+Group: System Environment/Libraries
+Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
+%if %{with_libzip}
+BuildRequires: pkgconfig(libzip) >= 0.11.1
+%endif
+
+%description zip
+The %{?scl_prefix}php-zip package provides an extension that will add
+support for ZIP archive management to PHP.
+%endif
+
 
 %prep
 : Building %{name}-%{version}-%{release} with systemd=%{with_systemd} imap=%{with_imap} interbase=%{with_interbase} mcrypt=%{with_mcrypt} freetds=%{with_freetds} sqlite3=%{with_sqlite3} tidy=%{with_tidy} zip=%{with_zip}
@@ -1169,6 +1185,9 @@ build --libdir=%{_libdir}/php \
 %endif
 %if %{with_zip}
       --enable-zip=shared \
+%if %{with_libzip}
+      --with-libzip \
+%endif
 %endif
       --without-readline \
       --with-libedit \
@@ -1501,14 +1520,11 @@ cat files.pdo_sqlite >> files.pdo
 cat files.sqlite3 >> files.pdo
 %endif
 
-# Package zip, curl, phar and fileinfo in -common.
+# Package curl, phar and fileinfo in -common.
 cat files.curl files.phar files.fileinfo \
     files.exif files.gettext files.iconv files.calendar \
     files.ftp files.bz2 files.ctype files.sockets \
     files.tokenizer > files.common
-%if %{with_zip}
-cat files.zip >> files.common
-%endif
 
 # The default Zend OPcache blacklist file
 install -m 644 opcache-default.blacklist $RPM_BUILD_ROOT%{_sysconfdir}/php.d/opcache-default.blacklist
@@ -1772,6 +1788,9 @@ fi
 %if %{with_oci8}
 %files oci8 -f files.oci8
 %endif
+%if %{with_zip}
+%files zip -f files.zip
+%endif
 
 
 %changelog
@@ -1779,7 +1798,8 @@ fi
 - update for php 7.0.0
 - ereg, mssql, mysql and sybase_ct extensions are removed
 - add pdo-dblib subpackage (instead of php-mssql)
-- disable oci8 extension, not adapted for 7.0
+- disable oci8 extension, not yet adapted for 7.0
+- add php-zip subpackage
 
 * Thu Mar 19 2015 Remi Collet <remi@fedoraproject.org> 5.6.7-1
 - Update to 5.6.7
