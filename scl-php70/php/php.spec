@@ -19,7 +19,7 @@
 %global opcachever  7.0.4-dev
 %global oci8ver     2.0.9
 
-# Use for first build of PHP (before pecl/zip and pecl/jsonc)
+# Use for first build of PHP (mostly to disable test suite)
 %global php_bootstrap   1
 
 # Adds -z now to the linker flags
@@ -390,13 +390,11 @@ Provides: %{?scl_prefix}php-sockets, %{?scl_prefix}php-sockets%{?_isa}
 Provides: %{?scl_prefix}php-spl, %{?scl_prefix}php-spl%{?_isa}
 Provides: %{?scl_prefix}php-standard = %{version}, %{?scl_prefix}php-standard%{?_isa} = %{version}
 Provides: %{?scl_prefix}php-tokenizer, %{?scl_prefix}php-tokenizer%{?_isa}
-# For user experience, those extensions were part of php-common
-%if ! %{php_bootstrap}
-Requires: %{?scl_prefix}php-pecl-jsonc%{?_isa}
-%endif
-Requires: %{?scl_prefix}php-zip%{?_isa}
 Provides: %{?scl_prefix}php-zlib, %{?scl_prefix}php-zlib%{?_isa}
 %{?scl:Requires: %{scl}-runtime}
+# For user experience, those extensions were part of php-common
+Requires: %{?scl_prefix}php-json%{?_isa}
+Requires: %{?scl_prefix}php-zip%{?_isa}
 
 %description common
 The %{?scl_prefix}php-common package contains files used by both
@@ -408,9 +406,6 @@ Summary: Files needed for building PHP extensions
 Requires: %{?scl_prefix}php-cli%{?_isa} = %{version}-%{release}, autoconf, automake
 %if %{with_libpcre}
 Requires: pcre-devel%{?_isa} >= 8.20
-%endif
-%if ! %{php_bootstrap}
-Requires: %{?scl_prefix}php-pecl-jsonc-devel%{?_isa}
 %endif
 
 %description devel
@@ -875,6 +870,18 @@ support for ZIP archive management to PHP.
 %endif
 
 
+%package json
+Summary: JavaScript Object Notation extension for PHP
+# All files licensed under PHP version 3.0.1
+License: PHP
+Group: System Environment/Libraries
+Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
+
+%description json
+The %{?scl_prefix}php-json package provides an extension that will add
+support for JavaScript Object Notation (JSON) to PHP.
+
+
 %prep
 : Building %{name}-%{version}-%{release} with systemd=%{with_systemd} imap=%{with_imap} interbase=%{with_interbase} mcrypt=%{with_mcrypt} freetds=%{with_freetds} sqlite3=%{with_sqlite3} tidy=%{with_tidy} zip=%{with_zip}
 %if 0%{?gh_date}
@@ -1183,6 +1190,7 @@ build --libdir=%{_libdir}/php \
 %else
       --without-sqlite3 \
 %endif
+      --enable-json=shared \
 %if %{with_zip}
       --enable-zip=shared \
 %if %{with_libzip}
@@ -1426,6 +1434,7 @@ ln -s %{_bindir}/lsphp     $RPM_BUILD_ROOT%{_root_bindir}/ls%{scl}
 # Generate files lists and stub .ini files for each subpackage
 for mod in pgsql odbc ldap snmp xmlrpc \
     mysqlnd mysqli pdo_mysql \
+    json \
 %if %{with_imap}
     imap \
 %endif
@@ -1791,6 +1800,7 @@ fi
 %if %{with_zip}
 %files zip -f files.zip
 %endif
+%files json -f files.json
 
 
 %changelog
@@ -1800,6 +1810,7 @@ fi
 - add pdo-dblib subpackage (instead of php-mssql)
 - disable oci8 extension, not yet adapted for 7.0
 - add php-zip subpackage
+- add php-json subpackage
 
 * Thu Mar 19 2015 Remi Collet <remi@fedoraproject.org> 5.6.7-1
 - Update to 5.6.7
