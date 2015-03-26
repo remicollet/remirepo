@@ -15,8 +15,8 @@
 
 Summary:       Package that installs PHP 5.6
 Name:          %scl_name
-Version:       2.0
-Release:       3%{?dist}
+Version:       2.1
+Release:       1%{?dist}
 Group:         Development/Languages
 License:       GPLv2+
 
@@ -30,14 +30,14 @@ BuildRequires: help2man
 # Temporary work-around
 BuildRequires: iso-codes
 
-Requires:      %{?scl_prefix}php-common%{?_isa} >= 5.6.6
+Requires:      %{?scl_prefix}php-common%{?_isa} >= 5.6.7
 Requires:      %{?scl_prefix}php-cli%{?_isa}
-Requires:      %{?scl_prefix}php-pear           >= 1:1.9.5-8
+Requires:      %{?scl_prefix}php-pear           >= 1:1.9.5-9
 Requires:      %{?scl_name}-runtime%{?_isa}      = %{version}-%{release}
 
 %description
 This is the main package for %scl Software Collection,
-that install PHP 5.5 language.
+that install PHP 5.6 language.
 
 
 %package runtime
@@ -130,6 +130,11 @@ install -D -m 644 envmod %{buildroot}%{_scl_scripts}/%{scl_name}
 install -D -m 644 scldev %{buildroot}%{macrosdir}/macros.%{scl_name_base}-scldevel
 install -D -m 644 %{scl_name}.7 %{buildroot}%{_mandir}/man7/%{scl_name}.7
 
+install -d -m 755 %{buildroot}%{_datadir}/licenses
+install -d -m 755 %{buildroot}%{_datadir}/doc/pecl
+install -d -m 755 %{buildroot}%{_datadir}/tests/pecl
+install -d -m 755 %{buildroot}%{_localstatedir}/lib/pear/pkgxml
+
 %scl_install
 
 # Add the scl_package_override macro
@@ -143,6 +148,8 @@ if [ "%{_root_sysconfdir}/rpm" != "%{macrosdir}" ]; then
 fi
 
 
+%{!?_licensedir:%global license %%doc}
+
 %files
 
 
@@ -152,9 +159,12 @@ fi
 %files runtime -f filesystem
 %endif
 %defattr(-,root,root)
-%doc README LICENSE
+%license LICENSE
+%doc README
 %scl_files
 %{_mandir}/man7/%{scl_name}.*
+%{?_licensedir:%{_datadir}/licenses}
+%{_datadir}/tests
 
 
 %files build
@@ -168,6 +178,10 @@ fi
 
 
 %changelog
+* Wed Mar 25 2015 Remi Collet <remi@fedoraproject.org> 2.1-1
+- fix licenses location
+- own directories for pecl packages
+
 * Mon Mar  2 2015 Remi Collet <remi@fedoraproject.org> 2.0-3
 - add environement module file
 
