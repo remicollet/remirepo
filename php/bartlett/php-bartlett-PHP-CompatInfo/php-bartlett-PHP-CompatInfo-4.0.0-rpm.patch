@@ -85,7 +85,7 @@ diff -up ./src/Bartlett/CompatInfo/Environment.php.rpm ./src/Bartlett/CompatInfo
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 --- ./tests/bootstrap.php.rpm	2015-02-20 10:59:04.000000000 +0100
 +++ ./tests/bootstrap.php	2015-02-22 11:42:15.277385330 +0100
-@@ -1,8 +1,30 @@
+@@ -1,8 +1,31 @@
  <?php
  
  $baseDir   = dirname(__DIR__);
@@ -109,6 +109,7 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 +    'Seld\\JsonLint'                      => $vendorDir,
 +    'JsonSchema'                          => $vendorDir,
 +    'Bartlett\\Reflect'                   => $vendorDir,
++    'Bartlett\\UmlWriter'                 => $vendorDir,
 +    'Bartlett\\Tests\\CompatInfo'         => $baseDir . '/tests',
 +    'Bartlett'                            => $baseDir . '/src',
 + ));
