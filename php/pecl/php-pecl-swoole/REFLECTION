@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #153 swoole version 1.7.13 ] {
+Extension [ <persistent> extension #153 swoole version 1.7.14 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -15,7 +15,7 @@ Extension [ <persistent> extension #153 swoole version 1.7.13 ] {
     }
   }
 
-  - Constants [42] {
+  - Constants [45] {
     Constant [ integer SWOOLE_BASE ] { 4 }
     Constant [ integer SWOOLE_THREAD ] { 2 }
     Constant [ integer SWOOLE_PROCESS ] { 3 }
@@ -48,7 +48,7 @@ Extension [ <persistent> extension #153 swoole version 1.7.13 ] {
     Constant [ integer SWOOLE_SSL ] { 512 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.7.13 }
+    Constant [ string SWOOLE_VERSION ] { 1.7.14 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_GCC ] { 1 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 2 }
@@ -58,6 +58,9 @@ Extension [ <persistent> extension #153 swoole version 1.7.13 ] {
     Constant [ integer HTTP_GLOBAL_ALL ] { 62 }
     Constant [ integer WEBSOCKET_OPCODE_TEXT ] { 1 }
     Constant [ integer WEBSOCKET_OPCODE_BINARY ] { 2 }
+    Constant [ integer WEBSOCKET_STATUS_CONNECTION ] { 1 }
+    Constant [ integer WEBSOCKET_STATUS_HANDSHAKE ] { 2 }
+    Constant [ integer WEBSOCKET_STATUS_FRAME ] { 3 }
   }
 
   - Functions {
@@ -251,6 +254,8 @@ Extension [ <persistent> extension #153 swoole version 1.7.13 ] {
     }
     Function [ <internal:swoole> function swoole_timer_after ] {
     }
+    Function [ <internal:swoole> function swoole_timer_tick ] {
+    }
     Function [ <internal:swoole> function swoole_timer_clear ] {
     }
     Function [ <internal:swoole> function swoole_async_set ] {
@@ -279,7 +284,7 @@ Extension [ <persistent> extension #153 swoole version 1.7.13 ] {
     }
   }
 
-  - Classes [10] {
+  - Classes [11] {
     Class [ <internal:swoole> class swoole_server ] {
 
       - Constants [0] {
@@ -294,7 +299,7 @@ Extension [ <persistent> extension #153 swoole version 1.7.13 ] {
       - Properties [0] {
       }
 
-      - Methods [28] {
+      - Methods [29] {
         Method [ <internal:swoole, ctor> public method __construct ] {
 
           - Parameters [4] {
@@ -462,7 +467,10 @@ Extension [ <persistent> extension #153 swoole version 1.7.13 ] {
         Method [ <internal:swoole> public method after ] {
         }
 
-        Method [ <internal:swoole> public method clearAfter ] {
+        Method [ <internal:swoole> public method tick ] {
+        }
+
+        Method [ <internal:swoole> public method clearTimer ] {
         }
 
         Method [ <internal:swoole> public method sendmessage ] {
@@ -805,7 +813,7 @@ Extension [ <persistent> extension #153 swoole version 1.7.13 ] {
         Property [ <default> private $global ]
       }
 
-      - Methods [29] {
+      - Methods [30] {
         Method [ <internal:swoole, overwrites swoole_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
@@ -973,7 +981,10 @@ Extension [ <persistent> extension #153 swoole version 1.7.13 ] {
         Method [ <internal:swoole, inherits swoole_server> public method after ] {
         }
 
-        Method [ <internal:swoole, inherits swoole_server> public method clearAfter ] {
+        Method [ <internal:swoole, inherits swoole_server> public method tick ] {
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method clearTimer ] {
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method sendmessage ] {
@@ -1009,7 +1020,7 @@ Extension [ <persistent> extension #153 swoole version 1.7.13 ] {
       - Properties [0] {
       }
 
-      - Methods [6] {
+      - Methods [7] {
         Method [ <internal:swoole> public method cookie ] {
         }
 
@@ -1017,6 +1028,9 @@ Extension [ <persistent> extension #153 swoole version 1.7.13 ] {
         }
 
         Method [ <internal:swoole> public method status ] {
+        }
+
+        Method [ <internal:swoole> public method gzip ] {
         }
 
         Method [ <internal:swoole> public method header ] {
@@ -1064,7 +1078,7 @@ Extension [ <persistent> extension #153 swoole version 1.7.13 ] {
       - Properties [0] {
       }
 
-      - Methods [30] {
+      - Methods [31] {
         Method [ <internal:swoole, overwrites swoole_http_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
@@ -1235,7 +1249,10 @@ Extension [ <persistent> extension #153 swoole version 1.7.13 ] {
         Method [ <internal:swoole, inherits swoole_server> public method after ] {
         }
 
-        Method [ <internal:swoole, inherits swoole_server> public method clearAfter ] {
+        Method [ <internal:swoole, inherits swoole_server> public method tick ] {
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method clearTimer ] {
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method sendmessage ] {
@@ -1254,6 +1271,24 @@ Extension [ <persistent> extension #153 swoole version 1.7.13 ] {
             Parameter #1 [ <required> $uid ]
           }
         }
+      }
+    }
+
+    Class [ <internal:swoole> class swoole_websocket_frame ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
       }
     }
   }
