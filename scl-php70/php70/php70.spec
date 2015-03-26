@@ -16,7 +16,7 @@
 Summary:       Package that installs PHP 7.0
 Name:          %scl_name
 Version:       1.0
-Release:       0.1%{?dist}
+Release:       0.2%{?dist}
 Group:         Development/Languages
 License:       GPLv2+
 
@@ -133,6 +133,11 @@ install -D -m 644 envmod %{buildroot}%{_scl_scripts}/%{scl_name}
 install -D -m 644 scldev %{buildroot}%{macrosdir}/macros.%{scl_name_base}-scldevel
 install -D -m 644 %{scl_name}.7 %{buildroot}%{_mandir}/man7/%{scl_name}.7
 
+install -d -m 755 %{buildroot}%{_datadir}/licenses
+install -d -m 755 %{buildroot}%{_datadir}/doc/pecl
+install -d -m 755 %{buildroot}%{_datadir}/tests/pecl
+install -d -m 755 %{buildroot}%{_localstatedir}/lib/pear/pkgxml
+
 %scl_install
 
 # Add the scl_package_override macro
@@ -146,6 +151,8 @@ if [ "%{_root_sysconfdir}/rpm" != "%{macrosdir}" ]; then
 fi
 
 
+%{!?_licensedir:%global license %%doc}
+
 %files
 
 
@@ -155,9 +162,12 @@ fi
 %files runtime -f filesystem
 %endif
 %defattr(-,root,root)
-%doc README LICENSE
+%license LICENSE
+%doc README
 %scl_files
 %{_mandir}/man7/%{scl_name}.*
+%{?_licensedir:%{_datadir}/licenses}
+%{_datadir}/tests
 
 
 %files build
@@ -171,5 +181,9 @@ fi
 
 
 %changelog
+* Wed Mar 25 2015 Remi Collet <remi@fedoraproject.org> 1.0-0.2
+- fix licenses location
+- own directories for pecl packages
+
 * Wed Mar 25 2015 Remi Collet <remi@fedoraproject.org> 1.0-0.1
 - initial packaging
