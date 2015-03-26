@@ -1336,7 +1336,7 @@ install -D -m 644 modconf $RPM_BUILD_ROOT%{_httpd_confdir}/%{name}.conf
 cat %{SOURCE1} >>$RPM_BUILD_ROOT%{_httpd_confdir}/%{name}.conf
 %else
 # Dual config file with httpd >= 2.4 (RHEL >= 7)
-install -D -m 644 modconf    $RPM_BUILD_ROOT%{_httpd_modconfdir}/10-%{name}.conf
+install -D -m 644 modconf    $RPM_BUILD_ROOT%{_httpd_modconfdir}/15-%{name}.conf
 install -D -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_httpd_confdir}/%{name}.conf
 %if %{with_httpd2410}
 cat %{SOURCE10} >>$RPM_BUILD_ROOT%{_httpd_confdir}/%{name}.conf
@@ -1642,7 +1642,7 @@ fi
 %attr(0770,root,apache) %dir %{_localstatedir}/lib/php/wsdlcache
 %config(noreplace) %{_httpd_confdir}/%{name}.conf
 %if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
-%config(noreplace) %{_httpd_modconfdir}/10-%{name}.conf
+%config(noreplace) %{_httpd_modconfdir}/15-%{name}.conf
 %endif
 %{_httpd_contentdir}/icons/%{name}.gif
 
@@ -1801,6 +1801,10 @@ fi
 
 
 %changelog
+* WIP
+- rename 10-php70-php.conf to 15-php70-php.conf to
+  ensure load order (after 10-rh-php56-php.conf)
+
 * Wed Mar 25 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.3.20150325git2fe6acd
 - rebuild
 
