@@ -344,7 +344,7 @@ else
 fi
 }
 
-# Build All distribution / version / 64bits for remi/scl-php56
+# Build All distribution / version / 64bits for remi/scl-php70
 mockscl70x()
 {
 quiet=""
@@ -356,13 +356,13 @@ fi
 if [ -f "$1" ]; then
   for i in 21 22 20
   do
-    echo -n "$(date +%X) scl56 fc$i "
-    mock $quiet --configdir=$mocketc -r fc${i}xscl56 rebuild $1 && echo " Ok." || echo " Error !"
+    echo -n "$(date +%X) scl70 fc$i "
+    mock $quiet --configdir=$mocketc -r fc${i}xscl70 rebuild $1 && echo " Ok." || echo " Error !"
   done
   for i in 7 6
   do
-    echo -n "$(date +%X) scl56 el$i  "
-    mock $quiet --configdir=$mocketc -r el${i}xscl56 rebuild $1 && echo " Ok." || echo " Error !"
+    echo -n "$(date +%X) scl70 el$i  "
+    mock $quiet --configdir=$mocketc -r el${i}xscl70 rebuild $1 && echo " Ok." || echo " Error !"
   done
   date +%X
 else
