@@ -72,6 +72,8 @@ Obsoletes:     php56w-pecl-%{pecl_name}
 %description
 A reusable split-off of pecl_http's property proxy API.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+
 
 %package devel
 Summary:       %{name} developer files (header)

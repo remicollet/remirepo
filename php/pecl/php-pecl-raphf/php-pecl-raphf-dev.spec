@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -23,10 +23,14 @@
 %global ini_name  40-%{pecl_name}.ini
 %endif
 
+# PHP 7 package from phpng branch
+# git clone git@git.php.net:/pecl/php/raphf.git
+# cd raphf; git checkout phpng; pecl package
+
 Summary:        Resource and persistent handles factory
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.0.4
-Release:        4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Version:        1.0.5
+Release:        0.1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -39,8 +43,6 @@ BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-pecl-http >= 2.0.0
 %endif
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
@@ -77,6 +79,8 @@ Obsoletes:     php56w-pecl-%{pecl_name}
 A reusable split-off of pecl_http's persistent handle and resource
 factory API.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+
 
 %package devel
 Summary:       %{name} developer files (header)
@@ -97,7 +101,7 @@ cd NTS
 extver=$(sed -n '/#define PHP_RAPHF_VERSION/{s/.* "//;s/".*$//;p}' php_raphf.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
-   exit 1
+   #exit 1
 fi
 cd ..
 
@@ -160,12 +164,14 @@ do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
-
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -237,6 +243,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar 26 2015 Remi Collet <remi@fedoraproject.org> - 1.0.5-0.1
+- git snapshot for PHP 7
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-4.1
 - Fedora 21 SCL mass rebuild
 
