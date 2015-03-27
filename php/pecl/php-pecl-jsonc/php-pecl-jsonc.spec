@@ -35,8 +35,15 @@
 Summary:       Support for JSON serialization
 Name:          %{?scl_prefix}php-pecl-%{proj_name}
 Version:       1.3.7
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+%if %{with_libjson}
 License:       PHP
+%else
+# PHP extension is PHP
+# jsonc-c is MIT
+# json-c/linkhask.c is Public Domain
+License:       PHP and MIT and Public Domain
+%endif
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/%{proj_name}
 Source0:       http://pecl.php.net/get/%{proj_name}-%{version}.tgz
@@ -52,6 +59,7 @@ BuildRequires: json-c-devel >= 0.11
 BuildRequires: json-c-devel <  0.12
 %else
 Provides:      bundled(libjson-c) = 0.11
+Provides:      bundled(bobjenkins-hash)
 %endif
 
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
@@ -124,7 +132,15 @@ Only used to be the best provider for php-json.
 
 %prep
 %setup -q -c 
+
 cd %{proj_name}-%{version}
+%if %{with_libjson}
+rm -rf json-c
+%else
+sed -e '/AUTHORS/s/role="src"/role="doc"/' \
+    -e '/COPYING/s/role="src"/role="doc"/' \
+    -i ../package.xml
+%endif
 
 %ifarch i386
 %if 0%{?rhel} == 5
@@ -266,6 +282,10 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license %{proj_name}-%{version}/LICENSE}
+%if ! %{with_libjson}
+%{?_licensedir:%license %{proj_name}-%{version}/json-c/COPYING}
+%endif
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -297,6 +317,11 @@ rm -rf %{buildroot}
 # Note to remi : remember to always build in remi-php55(56) first
 #
 %changelog
+* Fri Mar 27 2015 Remi Collet <remi@fedoraproject.org> - 1.3.7-2
+- fix license: PHP and MIT and Public Domain
+- fix missing license files
+- fix license handling
+
 * Wed Feb 18 2015 Remi Collet <remi@fedoraproject.org> - 1.3.7-1
 - release 1.3.7 (stable)
 
