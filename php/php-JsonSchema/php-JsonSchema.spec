@@ -11,8 +11,8 @@
 
 %global github_owner   justinrainbow
 %global github_name    json-schema
-%global github_version 1.4.0
-%global github_commit  680d026082c3aa234b2d8617c50e9c73999913ba
+%global github_version 1.4.1
+%global github_commit  2465fe486c864e30badaa4d005ebdf89dbc503f3
 %global github_short   %(c=%{github_commit}; echo ${c:0:7})
 
 # See https://github.com/justinrainbow/json-schema/pull/96
@@ -127,6 +127,9 @@ rm -rf tests/JsonSchema/Tests/Drafts
 
 
 %changelog
+* Fri Mar 27 2015 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
+- Update to 1.4.1
+
 * Tue Mar 24 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - Update to 1.4.0
 
