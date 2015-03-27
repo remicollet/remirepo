@@ -1,7 +1,7 @@
 #
 # RPM spec file for php-JsonSchema
 #
-# Copyright (c) 2012-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2012-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -109,13 +109,9 @@ AUTOLOAD
 # Remove empty tests
 rm -rf tests/JsonSchema/Tests/Drafts
 
-# Create PHPUnit config w/ colors turned off
-sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
-
 %{_bindir}/phpunit \
     --include-path="./src:./tests" \
-    --bootstrap="./autoload.php" \
-    -d date.timezone="UTC"
+    --bootstrap="./autoload.php"
 %else
 : Tests skipped
 %endif
