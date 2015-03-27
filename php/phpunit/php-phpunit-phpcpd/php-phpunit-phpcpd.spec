@@ -98,7 +98,6 @@ install -D -p -m 755 phpcpd %{buildroot}%{_bindir}/phpcpd
 %check
 phpunit \
    --bootstrap src/autoload.php \
-   -d date.timezone=UTC \
    tests
 %endif
 
