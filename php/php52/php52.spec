@@ -811,7 +811,7 @@ rm files.* macros.php
 
 
 %pre common
-echo -e "\nWARNING : This %{name}-* RPM are not official Fedora build and"
+echo -e "\nWARNING : This %{name}-* RPMs are not official Fedora build and"
 echo -e "overrides the official ones. Don't file bugs on Fedora Project.\n"
 echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
 
