@@ -13,8 +13,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   2.7.22
-%global github_commit    7c97f11ca46c47209e597ebab6e74e164cdf6216
+%global github_version   2.7.25
+%global github_commit    5942bb53e6629c482e8fbc3828967f6516e95c02
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -144,6 +144,9 @@ fi
 
 
 %changelog
+* Fri Mar 27 2015 Remi Collet <remi@fedoraproject.org> - 2.7.25-1
+- Update to 2.7.25
+
 * Sat Mar 14 2015 Remi Collet <remi@fedoraproject.org> - 2.7.22-1
 - Update to 2.7.22
 
