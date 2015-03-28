@@ -1,0 +1,151 @@
+--- pecl/uuid/trunk/php_uuid.h	2015/03/27 16:21:02	336224
++++ pecl/uuid/trunk/php_uuid.h	2015/03/28 06:45:58	336225
+@@ -197,6 +197,17 @@
+ 
+ #endif /* PHP_HAVE_UUID */
+ 
++#if PHP_MAJOR_VERSION < 7
++typedef long zend_long;
++typedef int  strsize;
++#define UUID_RETSTR(a)    RETURN_STRING(a,1)
++#define UUID_RETSTRL(a,l) RETURN_STRINGL(a,l,1)
++#else
++typedef size_t strsize;
++#define UUID_RETSTR(a)    RETURN_STRING(a)
++#define UUID_RETSTRL(a,l) RETURN_STRINGL(a,l)
++#endif
++
+ #endif /* PHP_UUID_H */
+ 
+ 
+--- pecl/uuid/trunk/uuid.c	2015/03/27 16:21:02	336224
++++ pecl/uuid/trunk/uuid.c	2015/03/28 06:45:58	336225
+@@ -152,7 +152,7 @@
+ PHP_FUNCTION(uuid_create)
+ {
+ 
+-	long uuid_type = 0;
++	zend_long uuid_type = 0;
+ 
+ 
+ 
+@@ -185,7 +185,7 @@
+ 
+ 		uuid_unparse(uuid, uuid_str);
+ 
+-		RETURN_STRING(uuid_str, 1);
++		UUID_RETSTR(uuid_str);
+ 	} while (0);
+ }
+ /* }}} uuid_create */
+@@ -197,7 +197,7 @@
+ {
+ 
+ 	const char * uuid = NULL;
+-	int uuid_len = 0;
++	strsize uuid_len = 0;
+ 
+ 
+ 
+@@ -219,9 +219,9 @@
+ {
+ 
+ 	const char * uuid1 = NULL;
+-	int uuid1_len = 0;
++	strsize uuid1_len = 0;
+ 	const char * uuid2 = NULL;
+-	int uuid2_len = 0;
++	strsize uuid2_len = 0;
+ 
+ 
+ 
+@@ -247,7 +247,7 @@
+ {
+ 
+ 	const char * uuid = NULL;
+-	int uuid_len = 0;
++	strsize uuid_len = 0;
+ 
+ 
+ 
+@@ -273,7 +273,7 @@
+ {
+ 
+ 	const char * uuid = NULL;
+-	int uuid_len = 0;
++	strsize uuid_len = 0;
+ 
+ 
+ 
+@@ -302,7 +302,7 @@
+ {
+ 
+ 	const char * uuid = NULL;
+-	int uuid_len = 0;
++	strsize uuid_len = 0;
+ 
+ 
+ 
+@@ -330,7 +330,7 @@
+ {
+ 
+ 	const char * uuid = NULL;
+-	int uuid_len = 0;
++	strsize uuid_len = 0;
+ 
+ 
+ 
+@@ -361,7 +361,7 @@
+ {
+ 
+ 	const char * uuid = NULL;
+-	int uuid_len = 0;
++	strsize uuid_len = 0;
+ 
+ 
+ 
+@@ -384,7 +384,7 @@
+ 				if(uuid[10] & 0x80)        RETURN_FALSE; // invalid MAC 
+ 		
+ 				uuid_unparse(u, uuid_str);
+-				RETURN_STRING((char *)(uuid_str + 24), 1);
++				UUID_RETSTR((char *)(uuid_str + 24));
+ 	} while (0);
+ }
+ /* }}} uuid_mac */
+@@ -396,7 +396,7 @@
+ {
+ 
+ 	const char * uuid = NULL;
+-	int uuid_len = 0;
++	strsize uuid_len = 0;
+ 
+ 
+ 
+@@ -411,7 +411,7 @@
+ 				RETURN_FALSE;
+ 			}
+ 		
+-			RETURN_STRINGL((char *)uuid_bin, sizeof(uuid_t), 1);
++			UUID_RETSTRL((char *)uuid_bin, sizeof(uuid_t));
+ 	} while (0);
+ }
+ /* }}} uuid_parse */
+@@ -423,7 +423,7 @@
+ {
+ 
+ 	const char * uuid = NULL;
+-	int uuid_len = 0;
++	strsize uuid_len = 0;
+ 
+ 
+ 
+@@ -440,7 +440,7 @@
+ 		
+ 			uuid_unparse((unsigned char *)uuid, uuid_txt);
+ 		
+-			RETURN_STRINGL(uuid_txt, 36, 1);
++			UUID_RETSTRL(uuid_txt, 36);
+ 	} while (0);
+ }
+ /* }}} uuid_unparse */
