@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #170 xxtea version 1.0.9 ] {
+Extension [ <persistent> extension #169 xxtea version 1.0.10 ] {
 
   - Functions {
     Function [ <internal:xxtea> function xxtea_encrypt ] {
