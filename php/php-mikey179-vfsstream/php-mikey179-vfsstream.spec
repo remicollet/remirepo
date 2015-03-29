@@ -2,25 +2,28 @@
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    61b12172292cf539685507aa65b076c1530e83c1
+%global gh_commit    4dc0d2f622412f561f5b242b19b98068bbbc883a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     mikey179
 %global gh_project   vfsStream
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-mikey179-vfsstream
-Version:        1.4.0
+Version:        1.5.0
 Release:        1%{?dist}
 Summary:        PHP stream wrapper for a virtual file system
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+#Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+# See https://github.com/mikey179/vfsStream/issues/108
+# run mksrc.sh to create the tarball from a git snapshot
+Source0:        %{name}-%{version}-%{gh_short}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -84,7 +87,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc CHANGELOG.md readme.md composer.json
+%doc CHANGELOG.md README.md composer.json
 
 %dir %{_datadir}/php/org
 %dir %{_datadir}/php/org/bovigo
@@ -92,6 +95,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 29 2015 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
+- update to 1.4.0
+- create source from git snapshot for test suite
+  see https://github.com/mikey179/vfsStream/issues/108
+
 * Sun Sep 14 2014 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - update to 1.4.0
 
