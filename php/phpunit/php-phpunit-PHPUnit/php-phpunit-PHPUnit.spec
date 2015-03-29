@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5b578d3865a9128b9c209b011fda6539ec06e7a5
+%global gh_commit    d6429b0995b24a2d9dfe5587ee3a7071c1161af4
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,7 +17,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.5.0
+Version:        4.5.1
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -38,7 +38,7 @@ BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  %{_bindir}/phpab
 BuildRequires:  php-composer(phpunit/php-file-iterator) >= 1.3.2
 BuildRequires:  php-composer(phpunit/php-text-template) >= 1.2
-BuildRequires:  php-composer(phpunit/php-code-coverage) >= 2.0
+BuildRequires:  php-composer(phpunit/php-code-coverage) >= 2.0.11
 BuildRequires:  php-composer(phpunit/php-timer) >= 1.0.2
 BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 2.3
 BuildRequires:  php-composer(phpspec/prophecy) >= 1.3.1
@@ -57,10 +57,10 @@ BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 #        "php": ">=5.3.3",
 #        "phpunit/php-file-iterator": "~1.3.2",
 #        "phpunit/php-text-template": "~1.2",
-#        "phpunit/php-code-coverage": "~2.0",
+#        "phpunit/php-code-coverage": "~2.0>=2.0.11",
 #        "phpunit/php-timer": "~1.0.2",
 #        "phpunit/phpunit-mock-objects": "~2.2",
-#        "phpspec/prophecy": "~1.3.1",
+#        "phpspec/prophecy": "~1.3,>=1.3.1",
 #        "symfony/yaml": "~2.0",
 #        "sebastian/comparator": "~1.0",
 #        "sebastian/diff": "~1.1",
@@ -79,14 +79,14 @@ Requires:       php-composer(phpunit/php-file-iterator) >= 1.3.2
 Requires:       php-composer(phpunit/php-file-iterator) <  1.4
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
-Requires:       php-composer(phpunit/php-code-coverage) >= 2.0
+Requires:       php-composer(phpunit/php-code-coverage) >= 2.0.11
 Requires:       php-composer(phpunit/php-code-coverage) <  3
 Requires:       php-composer(phpunit/php-timer) >= 1.0.2
 Requires:       php-composer(phpunit/php-timer) <  1.1
 Requires:       php-composer(phpunit/phpunit-mock-objects) >= 2.3
 Requires:       php-composer(phpunit/phpunit-mock-objects) <  3
 Requires:       php-composer(phpspec/prophecy) >= 1.3.1
-Requires:       php-composer(phpspec/prophecy) <  1.4
+Requires:       php-composer(phpspec/prophecy) <  2
 Requires:       php-composer(sebastian/comparator) >= 1.1
 Requires:       php-composer(sebastian/comparator) <  2
 Requires:       php-composer(sebastian/diff) >= 1.1
@@ -207,6 +207,9 @@ fi
 
 
 %changelog
+* Sun Mar 29 2015 Remi Collet <remi@fedoraproject.org> - 4.5.1-1
+- Update to 4.5.1
+
 * Fri Feb 13 2015 Remi Collet <remi@fedoraproject.org> - 4.5.0-1
 - Update to 4.5.0
 - add dependency on phpspec/prophecy
