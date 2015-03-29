@@ -2,11 +2,11 @@
 #
 # Copyright (c) 2010-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a5891b7a9c4f21587a51f9bc4e8f7042b741b480
+%global gh_commit    1507040c2541bdffd7fbd71fc792cecdea6a7c61
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   dbunit
@@ -16,8 +16,8 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-DbUnit
-Version:        1.3.1
-Release:        4%{?dist}
+Version:        1.3.2
+Release:        1%{?dist}
 Summary:        DbUnit port for PHP/PHPUnit
 
 Group:          Development/Libraries
@@ -34,11 +34,18 @@ BuildRequires:  php-pear-PHPUnit >= 3.7.0
 %endif
 
 # From composer.json
+#        "php": ">=5.3.3",
+#        "phpunit/phpunit": "~3.7|~4.0",
+#        "symfony/yaml": "~2.1",
+#        "ext-pdo": "*",
+#        "ext-simplexml": "*"
 Requires:       php(language) >= 5.3.3
 Requires:       php-pdo
 Requires:       php-simplexml
-Requires:       php-pear-PHPUnit >= 3.7.0
-Requires:       php-symfony-yaml >= 2.1.0
+Requires:       php-composer(phpunit/phpunit) >= 3.7
+Requires:       php-composer(phpunit/phpunit) <  5
+Requires:       php-composer(symfony/yaml)    >= 2.1
+Requires:       php-composer(symfony/yaml)    <  3
 # From phpcompatinfo report for version 1.3.0
 Requires:       php-libxml
 Requires:       php-reflection
@@ -108,6 +115,10 @@ fi
 
 
 %changelog
+* Sun Mar 29 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
+- update to 1.3.2
+- switch all dependencies to composer
+
 * Sun Jun 08 2014 Remi Collet <remi@fedoraproject.org> - 1.3.1-4
 - fix FTBFS, add BR php-pdo
 - add composer provides
