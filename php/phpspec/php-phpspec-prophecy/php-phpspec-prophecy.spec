@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    1
-%global gh_commit    9ca52329bcdd1500de24427542577ebf3fc2f1c9
+%global gh_commit    8724cd239f8ef4c046f55a3b18b4d91cc7f3e4c5
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpspec
 %global gh_project   prophecy
@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-phpspec-prophecy
-Version:        1.3.1
+Version:        1.4.0
 Release:        1%{?dist}
 Summary:        Highly opinionated mocking framework for PHP
 
@@ -37,9 +37,12 @@ BuildRequires:  %{_bindir}/phpspec
 
 # from composer.json, requires
 #        "phpdocumentor/reflection-docblock": "~2.0",
-#        "doctrine/instantiator":             "~1.0,>=1.0.2"
+#        "sebastian/comparator":              "~1.1",
+#        "doctrine/instantiator":             "^1.0.2"
 Requires:       php-composer(phpdocumentor/reflection-docblock) >= 2.0
 Requires:       php-composer(phpdocumentor/reflection-docblock) <  3
+Requires:       php-composer(sebastian/comparator)              >= 1.1
+Requires:       php-composer(sebastian/comparator)              <  2
 # use 1.0.4 to ensure we have the autoloader
 Requires:       php-composer(doctrine/instantiator)             >= 1.0.4
 Requires:       php-composer(doctrine/instantiator)             <  2
@@ -71,6 +74,7 @@ to be used inside any testing framework out there with minimal effort.
 cat <<EOF | tee -a src/Prophecy/autoload.php
 // Dependencies' autoloaders
 require_once 'Doctrine/Instantiator/autoload.php';
+require_once 'SebastianBergmann/Comparator/autoload.php';
 require_once 'phpDocumentor/Reflection/DocBlock/autoload.php';
 EOF
 
@@ -106,5 +110,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 29 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
+- update to 1.4.0
+
 * Fri Feb 13 2015 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
 - initial package
