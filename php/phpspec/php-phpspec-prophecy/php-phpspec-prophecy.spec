@@ -112,6 +112,7 @@ rm -rf %{buildroot}
 %changelog
 * Sun Mar 29 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - update to 1.4.0
+- add dependency on sebastian/comparator
 
 * Fri Feb 13 2015 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
 - initial package
