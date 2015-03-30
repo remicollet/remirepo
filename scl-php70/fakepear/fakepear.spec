@@ -6,7 +6,7 @@
 Summary: Fake pear package to allow build of pecl extension
 Name:    %{?scl_prefix}fakepear
 Version: 1.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2+
 Group:   Development/Languages
 URL:     http://pear.php.net/package/PEAR
@@ -54,5 +54,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Mar 30 2015 Remi Collet <remi@fedoraproject.org> 1.0-2
+- more fake macros
+
 * Wed Mar 25 2015 Remi Collet <remi@fedoraproject.org> 1.0-1
 - initial package

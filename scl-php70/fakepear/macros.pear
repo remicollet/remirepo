@@ -7,10 +7,10 @@
 #
 # Define PEAR directories used in php-pear-* spec files
 #
-%pear_phpdir  %(%{__pear} config-get php_dir  2> /dev/null || echo undefined)
-%pear_docdir  %(%{__pear} config-get doc_dir  2> /dev/null || echo undefined)
-%pear_testdir %(%{__pear} config-get test_dir 2> /dev/null || echo undefined)
-%pear_datadir %(%{__pear} config-get data_dir 2> /dev/null || echo undefined)
+%pear_phpdir  @DATADIR@/pear
+%pear_docdir  @DATADIR@/doc/pear
+%pear_testdir @DATADIR@/tests/pear
+%pear_datadir @DATADIR@/pear-data
 %pear_cfgdir  %(%{__pear} config-get cfg_dir  2> /dev/null || echo undefined)
 %pear_wwwdir  %(%{__pear} config-get www_dir  2> /dev/null || echo undefined)
 %@SCL@pear_metadir %(%{__pear} config-get metadata_dir 2> /dev/null || echo undefined)
