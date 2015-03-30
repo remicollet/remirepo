@@ -26,15 +26,12 @@
 
 Summary:       Extension to create and modify images using ImageMagick
 Name:          %{?scl_prefix}php-pecl-imagick
-Version:       3.2.0
-Release:       0.10.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:       3.3.0
+Release:       0.2.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
-
-# https://github.com/mkoppanen/imagick/pull/35
-Patch0:        %{pecl_name}-pr35.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
@@ -52,8 +49,6 @@ Requires:      ImageMagick-last-libs%{?_isa}  >= %{imbuildver}
 BuildRequires: ImageMagick-devel >= 6.2.4
 %endif
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
@@ -66,17 +61,18 @@ Conflicts:     %{?scl_prefix}php-pecl-gmagick
 
 # Other third party repo stuff
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
-Obsoletes:     php53-pecl-imagick
-Obsoletes:     php53u-pecl-imagick
-Obsoletes:     php54-pecl-imagick
-Obsoletes:     php54w-pecl-imagick
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-imagick
-Obsoletes:     php55w-pecl-imagick
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-imagick
-Obsoletes:     php56w-pecl-imagick
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -123,7 +119,6 @@ then : "Font files detected!"
 fi
 
 cd NTS
-%patch0 -p1 -b .pr35
 
 extver=$(sed -n '/#define PHP_IMAGICK_VERSION/{s/.* "//;s/".*$//;p}' php_imagick.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -137,6 +132,9 @@ cat > %{ini_name} << 'EOF'
 extension = %{pecl_name}.so
 
 ; Documentation: http://php.net/imagick
+
+; Don't check builtime and runtime versions of ImageMagick
+imagick.skip_version_check=1
 
 ; Fixes a drawing bug with locales that use ',' as float separators.
 ;imagick.locale_fix=0
@@ -191,12 +189,20 @@ do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -248,10 +254,13 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
+%{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
-%{pecl_xmldir}/%{name}.xml
+
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
@@ -261,12 +270,18 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc %{pecl_testdir}/%{pecl_name}
 %{php_incldir}/ext/%{pecl_name}
+
 %if %{with_zts}
 %{php_ztsincldir}/ext/%{pecl_name}
 %endif
 
 
 %changelog
+* Mon Mar 30 2015 Remi Collet <remi@fedoraproject.org> - 3.3.0-0.2.RC1
+- update to 3.3.0RC1
+- drop runtime dependency on pear, new scriptlets
+- set imagick.skip_version_check=1 in default configuration
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.10.RC1
 - Fedora 21 SCL mass rebuild
 

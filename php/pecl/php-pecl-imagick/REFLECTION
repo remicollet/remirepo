@@ -1,7 +1,14 @@
-Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
+Extension [ <persistent> extension #101 imagick version 3.3.0RC1 ] {
+
+  - Dependencies {
+    Dependency [ spl (Required) ]
+  }
 
   - INI {
     Entry [ imagick.locale_fix <ALL> ]
+      Current = '0'
+    }
+    Entry [ imagick.skip_version_check <ALL> ]
       Current = '0'
     }
     Entry [ imagick.progress_monitor <SYSTEM> ]
@@ -9,7 +16,7 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
     }
   }
 
-  - Classes [8] {
+  - Classes [10] {
     Class [ <internal:imagick> class ImagickException extends Exception ] {
 
       - Constants [0] {
@@ -226,9 +233,63 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
       }
     }
 
+    Class [ <internal:imagick> class ImagickKernelException extends Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
     Class [ <internal:imagick> <iterateable> class Imagick implements Iterator, Traversable, Countable ] {
 
-      - Constants [464] {
+      - Constants [541] {
         Constant [ integer COLOR_BLACK ] { 11 }
         Constant [ integer COLOR_BLUE ] { 12 }
         Constant [ integer COLOR_CYAN ] { 13 }
@@ -239,8 +300,8 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
         Constant [ integer COLOR_OPACITY ] { 18 }
         Constant [ integer COLOR_ALPHA ] { 19 }
         Constant [ integer COLOR_FUZZ ] { 20 }
-        Constant [ integer IMAGICK_EXTNUM ] { 30200 }
-        Constant [ string IMAGICK_EXTVER ] { 3.2.0RC1 }
+        Constant [ integer IMAGICK_EXTNUM ] { 30300 }
+        Constant [ string IMAGICK_EXTVER ] { 3.3.0RC1 }
         Constant [ integer QUANTUM_RANGE ] { 65535 }
         Constant [ integer USE_ZEND_MM ] { 0 }
         Constant [ integer COMPOSITE_DEFAULT ] { 40 }
@@ -446,6 +507,7 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
         Constant [ integer CHANNEL_INDEX ] { 32 }
         Constant [ integer CHANNEL_ALL ] { 134217727 }
         Constant [ integer CHANNEL_DEFAULT ] { 134217719 }
+        Constant [ integer CHANNEL_RGBA ] { 15 }
         Constant [ integer CHANNEL_TRUEALPHA ] { 64 }
         Constant [ integer CHANNEL_RGBS ] { 128 }
         Constant [ integer CHANNEL_SYNC ] { 256 }
@@ -607,6 +669,8 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
         Constant [ integer RESOURCETYPE_FILE ] { 3 }
         Constant [ integer RESOURCETYPE_MAP ] { 4 }
         Constant [ integer RESOURCETYPE_MEMORY ] { 5 }
+        Constant [ integer RESOURCETYPE_TIME ] { 7 }
+        Constant [ integer RESOURCETYPE_THROTTLE ] { 8 }
         Constant [ integer RESOURCETYPE_THREAD ] { 6 }
         Constant [ integer DISPOSE_UNRECOGNIZED ] { 0 }
         Constant [ integer DISPOSE_UNDEFINED ] { 0 }
@@ -691,14 +755,88 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
         Constant [ integer FUNCTION_UNDEFINED ] { 0 }
         Constant [ integer FUNCTION_POLYNOMIAL ] { 1 }
         Constant [ integer FUNCTION_SINUSOID ] { 2 }
+        Constant [ integer ALPHACHANNEL_BACKGROUND ] { 2 }
+        Constant [ integer FUNCTION_ARCSIN ] { 3 }
+        Constant [ integer FUNCTION_ARCTAN ] { 4 }
         Constant [ integer ALPHACHANNEL_FLATTEN ] { 11 }
         Constant [ integer ALPHACHANNEL_REMOVE ] { 12 }
+        Constant [ integer STATISTIC_GRADIENT ] { 1 }
+        Constant [ integer STATISTIC_MAXIMUM ] { 2 }
+        Constant [ integer STATISTIC_MEAN ] { 3 }
+        Constant [ integer STATISTIC_MEDIAN ] { 4 }
+        Constant [ integer STATISTIC_MINIMUM ] { 5 }
+        Constant [ integer STATISTIC_MODE ] { 6 }
+        Constant [ integer STATISTIC_NONPEAK ] { 7 }
+        Constant [ integer STATISTIC_STANDARD_DEVIATION ] { 8 }
+        Constant [ integer MORPHOLOGY_CONVOLVE ] { 1 }
+        Constant [ integer MORPHOLOGY_CORRELATE ] { 2 }
+        Constant [ integer MORPHOLOGY_ERODE ] { 3 }
+        Constant [ integer MORPHOLOGY_DILATE ] { 4 }
+        Constant [ integer MORPHOLOGY_ERODE_INTENSITY ] { 5 }
+        Constant [ integer MORPHOLOGY_DILATE_INTENSITY ] { 6 }
+        Constant [ integer MORPHOLOGY_DISTANCE ] { 7 }
+        Constant [ integer MORPHOLOGY_OPEN ] { 8 }
+        Constant [ integer MORPHOLOGY_CLOSE ] { 9 }
+        Constant [ integer MORPHOLOGY_OPEN_INTENSITY ] { 10 }
+        Constant [ integer MORPHOLOGY_CLOSE_INTENSITY ] { 11 }
+        Constant [ integer MORPHOLOGY_SMOOTH ] { 12 }
+        Constant [ integer MORPHOLOGY_EDGE_IN ] { 13 }
+        Constant [ integer MORPHOLOGY_EDGE_OUT ] { 14 }
+        Constant [ integer MORPHOLOGY_EDGE ] { 15 }
+        Constant [ integer MORPHOLOGY_TOP_HAT ] { 16 }
+        Constant [ integer MORPHOLOGY_BOTTOM_HAT ] { 17 }
+        Constant [ integer MORPHOLOGY_HIT_AND_MISS ] { 18 }
+        Constant [ integer MORPHOLOGY_THINNING ] { 19 }
+        Constant [ integer MORPHOLOGY_THICKEN ] { 20 }
+        Constant [ integer MORPHOLOGY_VORONOI ] { 21 }
+        Constant [ integer MORPHOLOGY_ITERATIVE ] { 22 }
+        Constant [ integer KERNEL_UNITY ] { 1 }
+        Constant [ integer KERNEL_GAUSSIAN ] { 2 }
+        Constant [ integer KERNEL_DIFFERENCE_OF_GAUSSIANS ] { 3 }
+        Constant [ integer KERNEL_LAPLACIAN_OF_GAUSSIANS ] { 4 }
+        Constant [ integer KERNEL_BLUR ] { 5 }
+        Constant [ integer KERNEL_COMET ] { 6 }
+        Constant [ integer KERNEL_LAPLACIAN ] { 7 }
+        Constant [ integer KERNEL_SOBEL ] { 8 }
+        Constant [ integer KERNEL_FREI_CHEN ] { 9 }
+        Constant [ integer KERNEL_ROBERTS ] { 10 }
+        Constant [ integer KERNEL_PREWITT ] { 11 }
+        Constant [ integer KERNEL_COMPASS ] { 12 }
+        Constant [ integer KERNEL_KIRSCH ] { 13 }
+        Constant [ integer KERNEL_DIAMOND ] { 14 }
+        Constant [ integer KERNEL_SQUARE ] { 15 }
+        Constant [ integer KERNEL_RECTANGLE ] { 16 }
+        Constant [ integer KERNEL_OCTAGON ] { 17 }
+        Constant [ integer KERNEL_DISK ] { 18 }
+        Constant [ integer KERNEL_PLUS ] { 19 }
+        Constant [ integer KERNEL_CROSS ] { 20 }
+        Constant [ integer KERNEL_RING ] { 21 }
+        Constant [ integer KERNEL_PEAKS ] { 22 }
+        Constant [ integer KERNEL_EDGES ] { 23 }
+        Constant [ integer KERNEL_CORNERS ] { 24 }
+        Constant [ integer KERNEL_DIAGONALS ] { 25 }
+        Constant [ integer KERNEL_LINE_ENDS ] { 26 }
+        Constant [ integer KERNEL_LINE_JUNCTIONS ] { 27 }
+        Constant [ integer KERNEL_RIDGES ] { 28 }
+        Constant [ integer KERNEL_CONVEX_HULL ] { 29 }
+        Constant [ integer KERNEL_THIN_SE ] { 30 }
+        Constant [ integer KERNEL_SKELETON ] { 31 }
+        Constant [ integer KERNEL_CHEBYSHEV ] { 32 }
+        Constant [ integer KERNEL_MANHATTAN ] { 33 }
+        Constant [ integer KERNEL_OCTAGONAL ] { 34 }
+        Constant [ integer KERNEL_EUCLIDEAN ] { 35 }
+        Constant [ integer KERNEL_USER_DEFINED ] { 36 }
+        Constant [ integer KERNEL_BINOMIAL ] { 37 }
+        Constant [ integer NORMALIZE_KERNEL_NONE ] { 0 }
+        Constant [ integer NORMALIZE_KERNEL_VALUE ] { 8192 }
+        Constant [ integer NORMALIZE_KERNEL_CORRELATE ] { 65536 }
+        Constant [ integer NORMALIZE_KERNEL_PERCENT ] { 4096 }
       }
 
       - Static properties [0] {
       }
 
-      - Static methods [12] {
+      - Static methods [16] {
         Method [ <internal:imagick> static public method queryformats ] {
 
           - Parameters [1] {
@@ -726,6 +864,12 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
         }
 
         Method [ <internal:imagick> static public method getpackagename ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:imagick> static public method getquantum ] {
 
           - Parameters [0] {
           }
@@ -776,12 +920,33 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
             Parameter #1 [ <required> $limit ]
           }
         }
+
+        Method [ <internal:imagick> static public method setregistry ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:imagick> static public method getregistry ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:imagick> static public method listregistry ] {
+
+          - Parameters [0] {
+          }
+        }
       }
 
       - Properties [0] {
       }
 
-      - Methods [327] {
+      - Methods [343] {
         Method [ <internal:imagick> public method optimizeimagelayers ] {
 
           - Parameters [0] {
@@ -1021,6 +1186,20 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
           - Parameters [2] {
             Parameter #0 [ <required> $name ]
             Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:imagick> public method deleteimageproperty ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:imagick> public method identifyformat ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $embedText ]
           }
         }
 
@@ -1480,7 +1659,8 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
 
         Method [ <internal:imagick, prototype Countable> public method count ] {
 
-          - Parameters [0] {
+          - Parameters [1] {
+            Parameter #0 [ <optional> $mode ]
           }
         }
 
@@ -1753,6 +1933,19 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
           }
         }
 
+        Method [ <internal:imagick> public method setimagecompression ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $COMPRESSION ]
+          }
+        }
+
+        Method [ <internal:imagick> public method getimagecompression ] {
+
+          - Parameters [0] {
+          }
+        }
+
         Method [ <internal:imagick> public method annotateimage ] {
 
           - Parameters [5] {
@@ -1979,13 +2172,6 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
           }
         }
 
-        Method [ <internal:imagick> public method setimagecompression ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $COMPRESSION ]
-          }
-        }
-
         Method [ <internal:imagick> public method setimagedelay ] {
 
           - Parameters [1] {
@@ -2035,6 +2221,13 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $filename ]
+          }
+        }
+
+        Method [ <internal:imagick> public method setprogressmonitor ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $callback ]
           }
         }
 
@@ -2402,6 +2595,13 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
           }
         }
 
+        Method [ <internal:imagick> public method forwardfouriertransformimage ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $magnitude ]
+          }
+        }
+
         Method [ <internal:imagick> public method frameimage ] {
 
           - Parameters [5] {
@@ -2705,6 +2905,14 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
           }
         }
 
+        Method [ <internal:imagick> public method inversefouriertransformimage ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $complement ]
+            Parameter #1 [ <required> $magnitude ]
+          }
+        }
+
         Method [ <internal:imagick> public method levelimage ] {
 
           - Parameters [4] {
@@ -2846,6 +3054,13 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
           }
         }
 
+        Method [ <internal:imagick> public method setimagebiasquantum ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $bias ]
+          }
+        }
+
         Method [ <internal:imagick> public method setimageblueprimary ] {
 
           - Parameters [2] {
@@ -2956,8 +3171,8 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
 
           - Parameters [4] {
             Parameter #0 [ <required> $sharpen ]
-            Parameter #1 [ <required> $alpha ]
-            Parameter #2 [ <required> $beta ]
+            Parameter #1 [ <required> $contrast ]
+            Parameter #2 [ <required> $midpoint ]
             Parameter #3 [ <optional> $CHANNEL ]
           }
         }
@@ -3204,6 +3419,82 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
         }
 
         Method [ <internal:imagick, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:imagick> public method brightnesscontrastimage ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $brightness ]
+            Parameter #1 [ <required> $contrast ]
+            Parameter #2 [ <optional> $CHANNEL ]
+          }
+        }
+
+        Method [ <internal:imagick> public method colormatriximage ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $color_matrix ]
+          }
+        }
+
+        Method [ <internal:imagick> public method selectiveblurimage ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $radius ]
+            Parameter #1 [ <required> $sigma ]
+            Parameter #2 [ <required> $threshold ]
+            Parameter #3 [ <required> $CHANNEL ]
+          }
+        }
+
+        Method [ <internal:imagick> public method statisticimage ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $type ]
+            Parameter #1 [ <required> $width ]
+            Parameter #2 [ <required> $height ]
+            Parameter #3 [ <optional> $CHANNEL ]
+          }
+        }
+
+        Method [ <internal:imagick> public method subimagematch ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> Imagick $Imagick ]
+            Parameter #1 [ <optional> &$offset ]
+            Parameter #2 [ <optional> &$similarity ]
+          }
+        }
+
+        Method [ <internal:imagick> public method morphology ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $morphologyMethod ]
+            Parameter #1 [ <required> $iterations ]
+            Parameter #2 [ <required> ImagickKernel $ImagickKernel ]
+            Parameter #3 [ <optional> $CHANNEL ]
+          }
+        }
+
+        Method [ <internal:imagick> public method filter ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> ImagickKernel $ImagickKernel ]
+            Parameter #1 [ <optional> $CHANNEL ]
+          }
+        }
+
+        Method [ <internal:imagick> public method setantialias ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $antialias ]
+          }
+        }
+
+        Method [ <internal:imagick> public method getantialias ] {
 
           - Parameters [0] {
           }
@@ -4300,7 +4591,7 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
       - Properties [0] {
       }
 
-      - Methods [19] {
+      - Methods [21] {
         Method [ <internal:imagick> public method gethsl ] {
 
           - Parameters [0] {
@@ -4391,6 +4682,14 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
           }
         }
 
+        Method [ <internal:imagick> public method ispixelsimilarquantum ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $color ]
+            Parameter #1 [ <optional> $fuzz ]
+          }
+        }
+
         Method [ <internal:imagick> public method ispixelsimilar ] {
 
           - Parameters [2] {
@@ -4403,6 +4702,12 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
 
           - Parameters [1] {
             Parameter #0 [ <optional> $normalized ]
+          }
+        }
+
+        Method [ <internal:imagick> public method getcolorquantum ] {
+
+          - Parameters [0] {
           }
         }
 
@@ -4426,6 +4731,69 @@ Extension [ <persistent> extension #92 imagick version 3.2.0RC1 ] {
         }
 
         Method [ <internal:imagick> public method clone ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:imagick> class ImagickKernel ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [2] {
+        Method [ <internal:imagick> static public method frommatrix ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $array ]
+            Parameter #1 [ <optional> $array ]
+          }
+        }
+
+        Method [ <internal:imagick> static public method frombuiltin ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $kerneltype ]
+            Parameter #1 [ <required> $paramstring ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:imagick> public method addkernel ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> ImagickKernel $ImagickKernel ]
+          }
+        }
+
+        Method [ <internal:imagick> public method getmatrix ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:imagick> public method separate ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:imagick> public method scale ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:imagick> public method addunitykernel ] {
 
           - Parameters [0] {
           }
