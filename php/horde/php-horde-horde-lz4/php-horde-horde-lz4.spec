@@ -29,26 +29,28 @@
 Summary:        Horde LZ4 Compression Extension
 Name:           %{?scl_prefix}php-horde-horde-lz4
 Version:        1.0.7
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
 URL:            http://www.horde.org
 Source0:        http://%{pecl_channel}/get/%{pecl_name}-%{version}.tgz
 
+# https://github.com/horde/horde/pull/132
+Patch0:         %{pecl_name}-php7.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
-BuildRequires:  %{?scl_prefix}php-channel(%{pecl_channel})
 BuildRequires:  lz4-devel
 %if %{with_tests}
 BuildRequires:  %{_bindir}/phpunit
 %endif
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+%if ! 0%{?scl:1}
 Requires:       %{?scl_prefix}php-channel(%{pecl_channel})
+%endif
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
@@ -88,12 +90,20 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -q -c
+
+# Don't install/register tests
+# Don't install bundled libz4
+sed -e 's/role="test"/role="src"/' \
+    -e '/name="lib/d' \
+    -i package.xml
+
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
 # Use system library
 rm -r lib
-sed -e '/name="lib/d' -i ../package.xml
+
+%patch0 -p3 -b .php7
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define HORDE_LZ4_EXT_VERSION/{s/.* "//;s/".*$//;p}' horde_lz4.h)
@@ -156,12 +166,20 @@ do install -Dpm 644 NTS/$i %{buildroot}%{pear_docdir}/%{pecl_name}/$i
 done
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_channel}/%{pecl_name} >/dev/null || :
 fi
 
@@ -211,6 +229,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 30 2015 Remi Collet <remi@fedoraproject.org> 1.0.7-2
+- add fix for PHP 7
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> 1.0.7-1.1
 - Fedora 21 SCL mass rebuild
 

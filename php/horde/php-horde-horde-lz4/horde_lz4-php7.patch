@@ -1,0 +1,57 @@
+From d2f0184e58d6d05569624bc52d2be76c65a9d297 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Mon, 30 Mar 2015 19:00:17 +0200
+Subject: [PATCH] Fix PHP 7 compatibility
+
+---
+ framework/lz4/horde_lz4.c | 6 +++---
+ framework/lz4/horde_lz4.h | 7 +++++++
+ 2 files changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/framework/lz4/horde_lz4.c b/framework/lz4/horde_lz4.c
+index 28ec47f..23625be 100644
+--- a/framework/lz4/horde_lz4.c
++++ b/framework/lz4/horde_lz4.c
+@@ -87,7 +87,7 @@ PHP_FUNCTION(horde_lz4_compress)
+         RETURN_FALSE;
+     }
+ 
+-    data_len = Z_STRLEN_P(data);
++    data_len = (int)Z_STRLEN_P(data);
+ 
+     output = (char *)emalloc(LZ4_compressBound(data_len) + header_offset);
+     if (!output) {
+@@ -107,7 +107,7 @@ PHP_FUNCTION(horde_lz4_compress)
+     if (output_len <= 0) {
+         RETVAL_FALSE;
+     } else {
+-        RETVAL_STRINGL(output, output_len + header_offset, 1);
++        HORDE_LZ4_RETSTRL(output, output_len + header_offset);
+     }
+ 
+     efree(output);
+@@ -155,7 +155,7 @@ PHP_FUNCTION(horde_lz4_uncompress)
+     if (output_len <= 0) {
+         RETVAL_FALSE;
+     } else {
+-        RETVAL_STRINGL(output, data_len, 1);
++        HORDE_LZ4_RETSTRL(output, data_len);
+     }
+ 
+     efree(output);
+diff --git a/framework/lz4/horde_lz4.h b/framework/lz4/horde_lz4.h
+index eb4e7a5..8ff3f7c 100644
+--- a/framework/lz4/horde_lz4.h
++++ b/framework/lz4/horde_lz4.h
+@@ -23,4 +23,11 @@ PHP_MINFO_FUNCTION(horde_lz4);
+ PHP_FUNCTION(horde_lz4_compress);
+ PHP_FUNCTION(horde_lz4_uncompress);
+ 
++#if PHP_MAJOR_VERSION < 7
++#define HORDE_LZ4_RETSTRL(a,l) RETURN_STRINGL(a,l,1)
++#else
++typedef size_t strsize;
++#define HORDE_LZ4_RETSTRL(a,l) RETURN_STRINGL(a,l)
++#endif
++
+ #endif  /* PHP_HORDE_LZ4_H */
