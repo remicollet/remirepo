@@ -129,9 +129,9 @@
 %global db_devel  libdb-devel
 %endif
 
-%global gh_commit    2fe6acd8f5827235774789cfc1c4e54a9eaa6c59
+%global gh_commit    463ca30c8c21c5add047a3649f30298535599dd3
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150325
+%global gh_date      20150331
 %global gh_owner     php
 %global gh_project   php-src
 #global rcver        RC1
@@ -140,7 +140,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 7.0.0
-Release: 0.3.%{gh_date}git%{gh_short}%{?dist}
+Release: 0.4.%{gh_date}git%{gh_short}%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1801,7 +1801,7 @@ fi
 
 
 %changelog
-* WIP
+* Tue Mar 31 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.4.20150331git463ca30
 - rename 10-php70-php.conf to 15-php70-php.conf to
   ensure load order (after 10-rh-php56-php.conf)
 
