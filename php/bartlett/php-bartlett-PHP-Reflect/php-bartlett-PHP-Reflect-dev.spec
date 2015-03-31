@@ -6,12 +6,18 @@
 #
 # Please, preserve the changelog entries
 #
+%global bootstrap    1
 %global gh_commit    2c88d1a80d38bc700ebeb1ff927b6a4ef64b430b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_date      20150330
 %global gh_owner     llaville
 %global gh_project   php-reflect
 #global prever       RC2
+%if %{bootstrap}
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%else
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 Name:           php-bartlett-PHP-Reflect
 Version:        3.0.0
@@ -31,6 +37,7 @@ Patch0:         %{name}-3.0.0-rpm.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3
+%if %{with_tests}
 # to run test suite
 BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php-composer(sebastian/version)                 >= 1.0
@@ -46,6 +53,8 @@ BuildRequires:  php-composer(phpdocumentor/reflection-docblock) >= 2.0
 BuildRequires:  php-composer(seld/jsonlint)                     >= 1.1
 BuildRequires:  php-composer(justinrainbow/json-schema)         >= 1.3
 BuildRequires:  php-composer(monolog/monolog)                   >= 1.10
+BuildRequires:  php-composer(bartlett/umlwriter)                >= 1.0
+%endif
 
 # From composer.json, "require": {
 #        "php": ">=5.3.2",
@@ -106,13 +115,16 @@ Requires:       php-composer(justinrainbow/json-schema)         <  2
 #        "bartlett/phpunit-loggertestlistener": "Allow logging unit tests to your favorite PSR-3 logger interface",
 #        "bartlett/umlwriter": "Allow writing UML class diagrams (Graphviz or PlantUML)"
 Requires:       php-composer(doctrine/cache)
+%if ! %{bootstrap}
 Requires:       php-composer(bartlett/umlwriter)       >= 1.0
 Requires:       php-composer(bartlett/umlwriter)       <  2
+%endif
 # For our patch
 Requires:       php-composer(symfony/class-loader)     >= 2.5
 Requires:       php-composer(symfony/class-loader)     <  3
 
 Obsoletes:      php-channel-bartlett <= 1.3
+
 Provides:       php-composer(bartlett/php-reflect) = %{version}
 
 
@@ -147,13 +159,16 @@ install -D -p -m 644 bin/phpreflect.1         %{buildroot}%{_mandir}/man1/phpref
 
 
 %check
+%if %{with_tests}
 # Required when bartlett/php-compatinfo installed (local build)
 export BARTLETT_COMPATINFO_DB=%{_datadir}/php-bartlett-PHP-CompatInfo/compatinfo.sqlite
 
 # Version 3.0.0RC2 : OK, but incomplete, skipped, or risky tests!
 # Tests: 123, Assertions: 124, Incomplete: 3.
 %{_bindir}/phpunit -v
-
+%else
+: Test suite disabled
+%endif
 
 %clean
 rm -rf %{buildroot}

@@ -60,8 +60,10 @@ Requires:       php-composer(sebastian/version)                 <  2
 #    "suggest": {
 #        "bartlett/php-reflect": "Reverse-engine, default solution",
 #        "andrewsville/php-token-reflection": "Reverse-engine, alternative solution"
+%if ! %{bootstrap}
 Requires:       php-composer(bartlett/php-reflect)              >= 3.0
 Requires:       php-composer(bartlett/php-reflect)              <  4
+%endif
 Requires:       php-composer(andrewsville/php-token-reflection) >= 1.4
 Requires:       php-composer(andrewsville/php-token-reflection) <  2
 # For our patch
