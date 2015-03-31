@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global bootstrap    0
+%global bootstrap    1
 %global gh_commit    48f1e73fd3716824830185342319e8217e87cc3e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150303
