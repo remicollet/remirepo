@@ -46,7 +46,6 @@ BuildRequires:  php-composer(phpdocumentor/reflection-docblock) >= 2.0
 BuildRequires:  php-composer(seld/jsonlint)                     >= 1.1
 BuildRequires:  php-composer(justinrainbow/json-schema)         >= 1.3
 BuildRequires:  php-composer(monolog/monolog)                   >= 1.10
-BuildRequires:  php-composer(bartlett/umlwriter)
 
 # From composer.json, "require": {
 #        "php": ">=5.3.2",
@@ -98,6 +97,7 @@ Requires:       php-composer(seld/jsonlint)                     <  2
 Requires:       php-composer(justinrainbow/json-schema)         >= 1.3
 Requires:       php-composer(justinrainbow/json-schema)         <  2
 #    "require-dev": {
+#        "monolog/monolog": "~1.10",
 #        "bartlett/umlwriter": "~1.0"
 #    "suggest": {
 #        "doctrine/cache": "Allow caching results"
