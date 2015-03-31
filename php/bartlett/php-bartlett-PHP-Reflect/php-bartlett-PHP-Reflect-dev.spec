@@ -6,17 +6,17 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    1a01f2a904ce437cdbc75f09b91471fa967d4300
+%global gh_commit    2c88d1a80d38bc700ebeb1ff927b6a4ef64b430b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-#global gh_date      20150303
+%global gh_date      20150330
 %global gh_owner     llaville
 %global gh_project   php-reflect
-%global prever       RC2
+#global prever       RC2
 
 Name:           php-bartlett-PHP-Reflect
 Version:        3.0.0
-%global specrel 11
-Release:        %{?gh_short:0.%{specrel}.%{?gh_date:%{gh_date}git%{gh_short}}%{prever}}%{!?gh_short:%{specrel}}%{?dist}
+%global specrel 12
+Release:        %{?gh_short:0.%{specrel}.%{?gh_date:%{gh_date}git%{gh_short}}%{?prever}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
 Group:          Development/Libraries
@@ -33,7 +33,7 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3
 # to run test suite
 BuildRequires:  %{_bindir}/phpunit
-Requires:       php-composer(sebastian/version)                 >= 1.0
+BuildRequires:  php-composer(sebastian/version)                 >= 1.0
 BuildRequires:  php-composer(nikic/php-parser)                  >= 1.0
 BuildRequires:  php-composer(doctrine/collections)              >= 1.2
 BuildRequires:  php-composer(symfony/class-loader)              >= 2.5
@@ -48,7 +48,7 @@ BuildRequires:  php-composer(justinrainbow/json-schema)         >= 1.3
 BuildRequires:  php-composer(monolog/monolog)                   >= 1.10
 BuildRequires:  php-composer(bartlett/umlwriter)
 
-# From composer.json, "require"
+# From composer.json, "require": {
 #        "php": ">=5.3.2",
 #        "ext-tokenizer": "*",
 #        "ext-pcre": "*",
@@ -57,7 +57,7 @@ BuildRequires:  php-composer(bartlett/umlwriter)
 #        "ext-date": "*",
 #        "ext-reflection": "*",
 #        "sebastian/version": "~1.0",
-#        "nikic/php-parser": "~1.0",
+#        "nikic/php-parser": "~1.1",
 #        "doctrine/collections": "~1.2",
 #        "symfony/event-dispatcher": "~2.5",
 #        "symfony/finder": "~2.5",
@@ -97,14 +97,17 @@ Requires:       php-composer(seld/jsonlint)                     >= 1.1
 Requires:       php-composer(seld/jsonlint)                     <  2
 Requires:       php-composer(justinrainbow/json-schema)         >= 1.3
 Requires:       php-composer(justinrainbow/json-schema)         <  2
-# From composer.json, "suggest"
+#    "require-dev": {
+#        "bartlett/umlwriter": "~1.0"
+#    "suggest": {
 #        "doctrine/cache": "Allow caching results"
 #        "psr/log": "Allow logging events with the LogPlugin",
 #        "monolog/monolog": "Allow logging events with the LogPlugin",
 #        "bartlett/phpunit-loggertestlistener": "Allow logging unit tests to your favorite PSR-3 logger interface",
 #        "bartlett/umlwriter": "Allow writing UML class diagrams (Graphviz or PlantUML)"
 Requires:       php-composer(doctrine/cache)
-Requires:       php-composer(bartlett/umlwriter)
+Requires:       php-composer(bartlett/umlwriter)       >= 1.0
+Requires:       php-composer(bartlett/umlwriter)       <  2
 # For our patch
 Requires:       php-composer(symfony/class-loader)     >= 2.5
 Requires:       php-composer(symfony/class-loader)     <  3
@@ -175,6 +178,9 @@ fi
 
 
 %changelog
+* Tue Mar 31 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.12.20150330git2c88d1a
+- pull latest upstream changes
+
 * Tue Mar 24 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.11.RC2
 - update to 3.0.0 RC2
 - add dependency on bartlett/umlwriter
