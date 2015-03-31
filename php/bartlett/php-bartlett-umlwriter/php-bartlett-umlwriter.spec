@@ -6,16 +6,22 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0fe1c3a19280e4cd9f136ff3347ae9d0110758ca
+%global bootstrap    0
+%global gh_commit    48f1e73fd3716824830185342319e8217e87cc3e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150303
 %global gh_owner     llaville
 %global gh_project   umlwriter
-%global prever       RC1
+%global prever       RC2
+%if %{bootstrap}
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%else
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 Name:           php-bartlett-umlwriter
 Version:        1.0.0
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_short:0.%{specrel}.%{?gh_date:%{gh_date}git%{gh_short}}%{?prever}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Create UML class diagrams from your PHP source
 
@@ -24,18 +30,42 @@ License:        BSD
 URL:            http://php5.laurent-laville.org/umlwriter/
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}%{?gh_short:-%{gh_short}}.tar.gz
 
+# Autoloader for RPM - die composer !
+Patch0:         %{name}-rpm.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.0
+%if %{with_tests}
+BuildRequires:  %{_bindir}/phpunit
+BuildRequires:  php-composer(symfony/console)                   >= 2.5
+BuildRequires:  php-composer(sebastian/version)                 >= 1.0
+BuildRequires:  php-composer(bartlett/php-reflect)              >= 3.0
+BuildRequires:  php-composer(andrewsville/php-token-reflection) >= 1.4
+%endif
 
 # From composer.json
 #    "require": {
 #        "php": ">=5.3.0"
-#    "suggest": {
-#        "bartlett/php-reflect": "Reverse-engine compatible solution 1",
-#        "andrewsville/php-token-reflection": "Reverse-engine compatible solution 2"
+#        "symfony/console": "~2.5",
+#        "sebastian/version": "~1.0"
 Requires:       php(language) >= 5.3.0
-# Notice, we do not require Reflect to avoid circular dependencies
+Requires:       php-composer(symfony/console)                   >= 2.5
+Requires:       php-composer(symfony/console)                   <  3
+Requires:       php-composer(sebastian/version)                 >= 1.0
+Requires:       php-composer(sebastian/version)                 <  2
+#    "require-dev": {
+#        "bartlett/php-reflect": "3.0.*@dev",
+#        "andrewsville/php-token-reflection": "~1.4"
+#    "suggest": {
+#        "bartlett/php-reflect": "Reverse-engine, default solution",
+#        "andrewsville/php-token-reflection": "Reverse-engine, alternative solution"
+Requires:       php-composer(bartlett/php-reflect)              >= 3.0
+Requires:       php-composer(bartlett/php-reflect)              <  4
+Requires:       php-composer(andrewsville/php-token-reflection) >= 1.4
+Requires:       php-composer(andrewsville/php-token-reflection) <  2
+# For our patch
+Requires:       php-composer(symfony/class-loader)
 
 Provides:       php-composer(bartlett/umlwriter) = %{version}
 
@@ -56,8 +86,10 @@ interface and trait definitions in your PHP project.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+%patch0 -p1 -b .rpm
+
 sed -e 's/@package_version@/%{version}%{?prever}/' \
-    -i $(find src -name \*.php)
+    -i $(find src -name \*.php) bin/umlwriter
 
 
 %build
@@ -69,6 +101,16 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_datadir}/php
 cp -pr src/Bartlett %{buildroot}%{_datadir}/php/Bartlett
 
+install -D -p -m 755 bin/umlwriter  %{buildroot}%{_bindir}/umlwriter
+
+
+%check
+%if %{with_tests}
+%{_bindir}/phpunit -v || : Results ignored for now, known upstream issue #1
+%else
+: Test suite disabled
+%endif
+
 
 %clean
 rm -rf %{buildroot}
@@ -79,10 +121,21 @@ rm -rf %{buildroot}
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc composer.json README.* examples
+%{_bindir}/umlwriter
 %dir %{_datadir}/php/Bartlett
      %{_datadir}/php/Bartlett/UmlWriter
 
 
 %changelog
+* Tue Mar 31 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.RC2
+- update to 1.0.0RC2
+- add umlwrite command
+- add dependencies on symfony/console, symfony/class-loader,
+  bartlett/php-reflect, sebastian/version
+  and andrewsville/php-token-reflection
+- run test suite during build, but ignore results for now
+- open https://github.com/llaville/umlwriter/issues/1 test suite issue
+- open https://github.com/llaville/umlwriter/issues/2 runtime issue
+
 * Tue Mar 24 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.RC1
 - Initial RPM package, version 1.0.0RC1

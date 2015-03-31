@@ -1,0 +1,89 @@
+diff -up ./bin/umlwriter.rpm ./bin/umlwriter
+--- ./bin/umlwriter.rpm	2015-03-31 11:24:18.000000000 +0200
++++ ./bin/umlwriter	2015-03-31 11:29:43.000000000 +0200
+@@ -1,24 +1,36 @@
+-#!/usr/bin/env php
++#!/usr/bin/php
+ <?php
+ $appName = 'umlWriter';
+ 
+-if (\Phar::running()) {
+-    $vendorDir = 'phar://' . strtolower($appName) . '.phar/vendor';
+-} else {
+-    $baseDir   = dirname(__DIR__);
+-    $vendorDir = $baseDir . '/vendor';
+-
+-    if (!file_exists($vendorDir . '/autoload.php')) {
+-        $vendorDir = dirname(dirname($baseDir));
+-    }
+-}
+-require_once $vendorDir . '/autoload.php';
++putenv('BARTLETT_COMPATINFO_DB=/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite');
+ 
+ if (PHP_SAPI !== 'cli') {
+     return;
+ }
+ 
++$vendorDir = '/usr/share/php';
++require_once $vendorDir . '/PhpParser/Autoloader.php';
++PhpParser\Autoloader::register();
++
++require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
++require_once $vendorDir . '/SebastianBergmann/Version/Version.php';
++
++use Symfony\Component\ClassLoader\UniversalClassLoader;
++
++$loader = new UniversalClassLoader();
++$loader->registerNamespaces(array(
++    'Symfony\\Component'                  => $vendorDir,
++    'Doctrine\\Common'                    => $vendorDir,
++    'phpDocumentor\\Reflection'           => $vendorDir,
++    'Seld\\JsonLint'                      => $vendorDir,
++    'JsonSchema'                          => $vendorDir,
++    'Bartlett'                            => $vendorDir,
++    'TokenReflection'                     => $vendorDir,
++));
++$loader->useIncludePath(true);
++$loader->register();
++
+ use Bartlett\UmlWriter\Console\Application;
+ 
+-$application = new Application($appName, '1.0');
++$application = new Application($appName, '@package_version@');
+ $application->run();
+diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
+--- ./tests/bootstrap.php.rpm	2015-03-31 09:46:46.000000000 +0200
++++ ./tests/bootstrap.php	2015-03-31 11:30:51.000000000 +0200
+@@ -1,6 +1,30 @@
+ <?php
+ 
+ $baseDir   = dirname(__DIR__);
+-$vendorDir = $baseDir . '/vendor';
++$vendorDir = '/usr/share/php';
++putenv('BARTLETT_COMPATINFO_DB=/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite');
+ 
+-require_once $vendorDir . '/autoload.php';
++require_once $vendorDir . '/PhpParser/Autoloader.php';
++PhpParser\Autoloader::register();
++require_once $vendorDir . '/SebastianBergmann/Version/Version.php';
++require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
++
++use Symfony\Component\ClassLoader\UniversalClassLoader;
++
++$loader = new UniversalClassLoader();
++$loader->registerNamespaces(array(
++    'Symfony\\Component'                  => $vendorDir,
++    'Doctrine\\Common'                    => $vendorDir,
++    'phpDocumentor\\Reflection'           => $vendorDir,
++    'Seld\\JsonLint'                      => $vendorDir,
++    'JsonSchema'                          => $vendorDir,
++    'Bartlett\\UmlWriter'                 => $baseDir . '/src',
++    'Bartlett\\Tests\\UmlWriter'          => $baseDir . '/tests',
++    'Bartlett'                            => $vendorDir,
++    'TokenReflection'                     => $vendorDir,
++));
++
++$loader->register();
++
++# Class not catched by autoloader
++require $vendorDir . '/Bartlett/Reflect.php';
