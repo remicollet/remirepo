@@ -33,7 +33,6 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 # Autoloader for RPM - die composer !
 Patch0:         %{name}-rpm.patch
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.0
 %if %{with_tests}
@@ -99,7 +98,6 @@ sed -e 's/@package_version@/%{version}%{?prever}/' \
 
 
 %install
-rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_datadir}/php
 cp -pr src/Bartlett %{buildroot}%{_datadir}/php/Bartlett
 
@@ -114,12 +112,7 @@ install -D -p -m 755 bin/umlwriter  %{buildroot}%{_bindir}/umlwriter
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc composer.json README.* examples
@@ -131,6 +124,7 @@ rm -rf %{buildroot}
 %changelog
 * Tue Mar 31 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.20150331gitdd58a0b
 - git snapshot, post 1.0.0RC2
+- cleanup EL-5 stuff
 
 * Tue Mar 31 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.RC2
 - update to 1.0.0RC2
