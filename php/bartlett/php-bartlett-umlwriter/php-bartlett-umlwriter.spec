@@ -7,12 +7,12 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    1
-%global gh_commit    48f1e73fd3716824830185342319e8217e87cc3e
+%global gh_commit    dd58a0b71894693250839ad7c7538a7510758a3b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-#global gh_date      20150303
+%global gh_date      20150331
 %global gh_owner     llaville
 %global gh_project   umlwriter
-%global prever       RC2
+#global prever       RC2
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 %else
@@ -21,7 +21,7 @@
 
 Name:           php-bartlett-umlwriter
 Version:        1.0.0
-%global specrel 2
+%global specrel 3
 Release:        %{?gh_short:0.%{specrel}.%{?gh_date:%{gh_date}git%{gh_short}}%{?prever}}%{!?gh_short:%{specrel}}%{?dist}
 Summary:        Create UML class diagrams from your PHP source
 
@@ -129,6 +129,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar 31 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.20150331gitdd58a0b
+- git snapshot, post 1.0.0RC2
+
 * Tue Mar 31 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.RC2
 - update to 1.0.0RC2
 - add umlwrite command
