@@ -381,12 +381,12 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in $(seq 22 -1 19)
+  for i in 21 22 20 19
   do
     echo -n "$(date +%X) scl56 fc$i "
     mock $quiet --configdir=$mocketc -r fc${i}xscl56 rebuild $1 && echo " Ok." || echo " Error !"
   done
-  for i in $(seq 7 -1 6)
+  for i in 7 6
   do
     echo -n "$(date +%X) scl56 el$i  "
     mock $quiet --configdir=$mocketc -r el${i}xscl56 rebuild $1 && echo " Ok." || echo " Error !"
@@ -407,12 +407,12 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in $(seq 22 -1 21)
+  for i in 21 22
   do
     echo -n "$(date +%X) scl55 fc$i "
     mock $quiet --configdir=$mocketc -r fc${i}xscl55 rebuild $1 && echo " Ok." || echo " Error !"
   done
-  for i in $(seq 7 -1 6)
+  for i in 7 6
   do
     echo -n "$(date +%X) scl55 el$i  "
     mock $quiet --configdir=$mocketc -r el${i}xscl55 rebuild $1 && echo " Ok." || echo " Error !"
@@ -433,12 +433,12 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in $(seq 22 -1 19)
+  for i in 21 22 20 19
   do
     echo -n "$(date +%X) scl54 fc$i "
     mock $quiet --configdir=$mocketc -r fc${i}xscl54 rebuild $1 && echo " Ok." || echo " Error !"
   done
-  for i in $(seq 7 -1 6)
+  for i in 7 6
   do
     echo -n "$(date +%X) scl54 el$i  "
     mock $quiet --configdir=$mocketc -r el${i}xscl54 rebuild $1 && echo " Ok." || echo " Error !"
