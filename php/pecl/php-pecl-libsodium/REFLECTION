@@ -1,126 +1,72 @@
-Extension [ <persistent> extension #105 libsodium version 0.1.1 ] {
+Extension [ <persistent> extension #114 libsodium version 0.1.2 ] {
 
   - Classes [1] {
     Class [ <internal:libsodium> class Sodium ] {
 
-      - Constants [25] {
-        Constant [ integer CRYPTO_SHORTHASH_BYTES ] { 8 }
-        Constant [ integer CRYPTO_SHORTHASH_KEYBYTES ] { 16 }
-        Constant [ integer CRYPTO_SECRETBOX_KEYBYTES ] { 32 }
-        Constant [ integer CRYPTO_SECRETBOX_NONCEBYTES ] { 24 }
+      - Constants [31] {
+        Constant [ integer CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES ] { 32 }
+        Constant [ integer CRYPTO_AEAD_CHACHA20POLY1305_NSECBYTES ] { 0 }
+        Constant [ integer CRYPTO_AEAD_CHACHA20POLY1305_NPUBBYTES ] { 8 }
+        Constant [ integer CRYPTO_AEAD_CHACHA20POLY1305_ABYTES ] { 16 }
+        Constant [ integer CRYPTO_BOX_SECRETKEYBYTES ] { 32 }
+        Constant [ integer CRYPTO_BOX_PUBLICKEYBYTES ] { 32 }
+        Constant [ integer CRYPTO_BOX_KEYPAIRBYTES ] { 64 }
+        Constant [ integer CRYPTO_BOX_NONCEBYTES ] { 24 }
         Constant [ integer CRYPTO_GENERICHASH_BYTES ] { 32 }
         Constant [ integer CRYPTO_GENERICHASH_BYTES_MIN ] { 16 }
         Constant [ integer CRYPTO_GENERICHASH_BYTES_MAX ] { 64 }
         Constant [ integer CRYPTO_GENERICHASH_KEYBYTES ] { 32 }
         Constant [ integer CRYPTO_GENERICHASH_KEYBYTES_MIN ] { 16 }
         Constant [ integer CRYPTO_GENERICHASH_KEYBYTES_MAX ] { 64 }
-        Constant [ integer CRYPTO_BOX_SECRETKEYBYTES ] { 32 }
-        Constant [ integer CRYPTO_BOX_PUBLICKEYBYTES ] { 32 }
-        Constant [ integer CRYPTO_BOX_KEYPAIRBYTES ] { 64 }
-        Constant [ integer CRYPTO_BOX_NONCEBYTES ] { 24 }
-        Constant [ integer CRYPTO_SIGN_BYTES ] { 64 }
-        Constant [ integer CRYPTO_SIGN_SEEDBYTES ] { 32 }
-        Constant [ integer CRYPTO_SIGN_PUBLICKEYBYTES ] { 32 }
-        Constant [ integer CRYPTO_SIGN_SECRETKEYBYTES ] { 64 }
-        Constant [ integer CRYPTO_SIGN_KEYPAIRBYTES ] { 96 }
         Constant [ integer CRYPTO_PWHASH_SCRYPTSALSA208SHA256_SALTBYTES ] { 32 }
         Constant [ string CRYPTO_PWHASH_SCRYPTSALSA208SHA256_STRPREFIX ] { $7$ }
         Constant [ integer CRYPTO_PWHASH_SCRYPTSALSA208SHA256_OPSLIMIT_INTERACTIVE ] { 524288 }
         Constant [ integer CRYPTO_PWHASH_SCRYPTSALSA208SHA256_MEMLIMIT_INTERACTIVE ] { 16777216 }
         Constant [ integer CRYPTO_PWHASH_SCRYPTSALSA208SHA256_OPSLIMIT_SENSITIVE ] { 33554432 }
         Constant [ integer CRYPTO_PWHASH_SCRYPTSALSA208SHA256_MEMLIMIT_SENSITIVE ] { 1073741824 }
+        Constant [ integer CRYPTO_SHORTHASH_BYTES ] { 8 }
+        Constant [ integer CRYPTO_SHORTHASH_KEYBYTES ] { 16 }
+        Constant [ integer CRYPTO_SECRETBOX_KEYBYTES ] { 32 }
+        Constant [ integer CRYPTO_SECRETBOX_NONCEBYTES ] { 24 }
+        Constant [ integer CRYPTO_SIGN_BYTES ] { 64 }
+        Constant [ integer CRYPTO_SIGN_SEEDBYTES ] { 32 }
+        Constant [ integer CRYPTO_SIGN_PUBLICKEYBYTES ] { 32 }
+        Constant [ integer CRYPTO_SIGN_SECRETKEYBYTES ] { 64 }
+        Constant [ integer CRYPTO_SIGN_KEYPAIRBYTES ] { 96 }
+        Constant [ integer CRYPTO_STREAM_NONCEBYTES ] { 24 }
+        Constant [ integer CRYPTO_STREAM_KEYBYTES ] { 32 }
       }
 
       - Static properties [0] {
       }
 
-      - Static methods [29] {
-        Method [ <internal:libsodium> static public method sodium_version_string ] {
+      - Static methods [37] {
+        Method [ <internal:libsodium> static public method crypto_aead_chacha20poly1305_decrypt ] {
 
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:libsodium> static public method sodium_library_version_major ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:libsodium> static public method sodium_library_version_minor ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:libsodium> static public method sodium_memzero ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> &$reference ]
-            Parameter #1 [ <required> $length ]
-          }
-        }
-
-        Method [ <internal:libsodium> static public method sodium_memcmp ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $string_1 ]
-            Parameter #1 [ <required> $string_2 ]
-          }
-        }
-
-        Method [ <internal:libsodium> static public method randombytes_buf ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $length ]
-          }
-        }
-
-        Method [ <internal:libsodium> static public method randombytes_random16 ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:libsodium> static public method randombytes_uniform ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $integer ]
-          }
-        }
-
-        Method [ <internal:libsodium> static public method crypto_shorthash ] {
-
-          - Parameters [2] {
+          - Parameters [4] {
             Parameter #0 [ <required> $string ]
-            Parameter #1 [ <required> $key ]
+            Parameter #1 [ <required> $ad ]
+            Parameter #2 [ <required> $nonce ]
+            Parameter #3 [ <required> $key ]
           }
         }
 
-        Method [ <internal:libsodium> static public method crypto_secretbox ] {
+        Method [ <internal:libsodium> static public method crypto_aead_chacha20poly1305_encrypt ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $string ]
+            Parameter #1 [ <required> $ad ]
+            Parameter #2 [ <required> $nonce ]
+            Parameter #3 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method crypto_box ] {
 
           - Parameters [3] {
             Parameter #0 [ <required> $string ]
             Parameter #1 [ <required> $nonce ]
             Parameter #2 [ <required> $key ]
-          }
-        }
-
-        Method [ <internal:libsodium> static public method crypto_secretbox_open ] {
-
-          - Parameters [3] {
-            Parameter #0 [ <required> $string ]
-            Parameter #1 [ <required> $nonce ]
-            Parameter #2 [ <required> $key ]
-          }
-        }
-
-        Method [ <internal:libsodium> static public method crypto_generichash ] {
-
-          - Parameters [3] {
-            Parameter #0 [ <required> $string ]
-            Parameter #1 [ <optional> $key ]
-            Parameter #2 [ <optional> $length ]
           }
         }
 
@@ -138,10 +84,12 @@ Extension [ <persistent> extension #105 libsodium version 0.1.1 ] {
           }
         }
 
-        Method [ <internal:libsodium> static public method crypto_box_secretkey ] {
+        Method [ <internal:libsodium> static public method crypto_box_open ] {
 
-          - Parameters [1] {
-            Parameter #0 [ <required> $key ]
+          - Parameters [3] {
+            Parameter #0 [ <required> $string ]
+            Parameter #1 [ <required> $nonce ]
+            Parameter #2 [ <required> $key ]
           }
         }
 
@@ -159,72 +107,19 @@ Extension [ <persistent> extension #105 libsodium version 0.1.1 ] {
           }
         }
 
-        Method [ <internal:libsodium> static public method crypto_box ] {
+        Method [ <internal:libsodium> static public method crypto_box_secretkey ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method crypto_generichash ] {
 
           - Parameters [3] {
             Parameter #0 [ <required> $string ]
-            Parameter #1 [ <required> $nonce ]
-            Parameter #2 [ <required> $key ]
-          }
-        }
-
-        Method [ <internal:libsodium> static public method crypto_box_open ] {
-
-          - Parameters [3] {
-            Parameter #0 [ <required> $string ]
-            Parameter #1 [ <required> $nonce ]
-            Parameter #2 [ <required> $key ]
-          }
-        }
-
-        Method [ <internal:libsodium> static public method crypto_sign_keypair ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:libsodium> static public method crypto_sign_seed_keypair ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $key ]
-          }
-        }
-
-        Method [ <internal:libsodium> static public method crypto_sign_keypair_from_secretkey_and_publickey ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $secret_key ]
-            Parameter #1 [ <required> $public_key ]
-          }
-        }
-
-        Method [ <internal:libsodium> static public method crypto_sign_secretkey ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $key ]
-          }
-        }
-
-        Method [ <internal:libsodium> static public method crypto_sign_publickey ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $key ]
-          }
-        }
-
-        Method [ <internal:libsodium> static public method crypto_sign ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $string ]
-            Parameter #1 [ <required> $key ]
-          }
-        }
-
-        Method [ <internal:libsodium> static public method crypto_sign_open ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $string ]
-            Parameter #1 [ <required> $key ]
+            Parameter #1 [ <optional> $key ]
+            Parameter #2 [ <optional> $length ]
           }
         }
 
@@ -253,6 +148,187 @@ Extension [ <persistent> extension #105 libsodium version 0.1.1 ] {
           - Parameters [2] {
             Parameter #0 [ <required> $hash ]
             Parameter #1 [ <required> $password ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method crypto_secretbox ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $string ]
+            Parameter #1 [ <required> $nonce ]
+            Parameter #2 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method crypto_secretbox_open ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $string ]
+            Parameter #1 [ <required> $nonce ]
+            Parameter #2 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method crypto_shorthash ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $string ]
+            Parameter #1 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method crypto_sign ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $string ]
+            Parameter #1 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method crypto_sign_detached ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $string ]
+            Parameter #1 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method crypto_sign_keypair ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:libsodium> static public method crypto_sign_keypair_from_secretkey_and_publickey ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $secret_key ]
+            Parameter #1 [ <required> $public_key ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method crypto_sign_open ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $string ]
+            Parameter #1 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method crypto_sign_publickey ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method crypto_sign_secretkey ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method crypto_sign_seed_keypair ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method crypto_sign_verify_detached ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $signature ]
+            Parameter #1 [ <required> $string ]
+            Parameter #2 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method crypto_stream ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $length ]
+            Parameter #1 [ <required> $nonce ]
+            Parameter #2 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method crypto_stream_xor ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $string ]
+            Parameter #1 [ <required> $nonce ]
+            Parameter #2 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method randombytes_buf ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $length ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method randombytes_random16 ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:libsodium> static public method randombytes_uniform ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $integer ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method sodium_bin2hex ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $string ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method sodium_hex2bin ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $string_1 ]
+            Parameter #1 [ <required> $string_2 ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method sodium_library_version_major ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:libsodium> static public method sodium_library_version_minor ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:libsodium> static public method sodium_memcmp ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $string_1 ]
+            Parameter #1 [ <required> $string_2 ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method sodium_memzero ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> &$reference ]
+            Parameter #1 [ <required> $length ]
+          }
+        }
+
+        Method [ <internal:libsodium> static public method sodium_version_string ] {
+
+          - Parameters [0] {
           }
         }
       }
