@@ -1,4 +1,13 @@
-%global gh_commit    acd690379117b042d1c8af1fafd61bde001bf6bb
+# spec file for php-phpunit-File-Iterator
+#
+# Copyright (c) 2009-2015 Christof Damian, Remi Collet
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
+%global gh_commit    a923bb15680d0089e2316f7a4af8f437046e96bb
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-file-iterator
@@ -9,8 +18,8 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-File-Iterator
-Version:        1.3.4
-Release:        5%{?dist}
+Version:        1.4.0
+Release:        1%{?dist}
 Summary:        FilterIterator implementation that filters files based on a list of suffixes
 
 Group:          Development/Libraries
@@ -21,6 +30,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  %{_bindir}/phpab
 
 # From composer.json
 #        "php": ">=5.3.3"
@@ -42,23 +52,21 @@ FilterIterator implementation that filters files based on a list of suffixes.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-rm File/Iterator/Autoload.php.in
-
 
 %build
-# Empty build section, most likely nothing required.
-
-# If upstream drop Autoload.php, command to generate it
-#phpab \
-#  --output   File/Iterator/Autoload.php \
-#  --template File/Iterator/Autoload.php.in \
-#  File
+%{_bindir}/phpab \
+   --output   src/Autoload.php \
+   src
 
 
 %install
 rm -rf      %{buildroot}
-mkdir -p    %{buildroot}%{php_home}
-cp -pr File %{buildroot}%{php_home}
+# Restore PSR-0 tree
+# see https://github.com/sebastianbergmann/php-file-iterator/issues/26
+mkdir -p    %{buildroot}%{php_home}/File
+cp -pr src  %{buildroot}%{php_home}/File/Iterator
+mv          %{buildroot}%{php_home}/File/Iterator/Iterator.php \
+            %{buildroot}%{php_home}/File/Iterator.php
 
 
 %clean
@@ -74,11 +82,17 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog.markdown README.markdown LICENSE composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc ChangeLog.md README.md composer.json
 %{php_home}/*
 
 
 %changelog
+* Thu Apr  2 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
+- Update to 1.4.0
+- fix license handling
+
 * Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> - 1.3.4-5
 - composer dependencies
 
