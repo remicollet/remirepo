@@ -2,12 +2,12 @@
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    c63d2367247365f688544f0d500af90a11a44c65
+%global gh_commit    74ffb87f527f24616f72460e54b595f508dccb5c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit-mock-objects
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-phpunit-PHPUnit-MockObject
-Version:        2.3.0
+Version:        2.3.1
 Release:        1%{?dist}
 Summary:        Mock Object library for PHPUnit
 
@@ -42,22 +42,26 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
-BuildRequires:  php-pear-PHPUnit >= 4.3.0
+# From composer.json, "require-dev": {
+#        "phpunit/phpunit": "~4.4"
+BuildRequires:  php-pear-PHPUnit >= 4.4.0
 %endif
 
-# From composer.json
+# From composer.json, "require": {
 #        "php": ">=5.3.3",
 #        "phpunit/php-text-template": "~1.2",
-#        "doctrine/instantiator": "~1.0,>=1.0.1",
+#        "doctrine/instantiator": "~1.0,>=1.0.2",
 Requires:       php(language) >= 5.3.3
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
-Requires:       php-composer(doctrine/instantiator) >= 1.0.1
+Requires:       php-composer(doctrine/instantiator) >= 1.0.2
 Requires:       php-composer(doctrine/instantiator) <  2
-# From phpcompatinfo report for version 2.2.0
+# From composer.json, "suggest": {
+#        "ext-soap": "*"
+Requires:       php-soap
+# From phpcompatinfo report for version 2.3.1
 Requires:       php-pcre
 Requires:       php-reflection
-Requires:       php-soap
 Requires:       php-spl
 
 Provides:       php-composer(phpunit/phpunit-mock-objects) = %{version}
@@ -104,7 +108,7 @@ require __DIR__ . '/_fixture/autoload.php';
 EOF
 
 # Run tests
-phpunit -d date.timezone=UTC
+phpunit
 %endif
 
 
@@ -130,6 +134,9 @@ fi
 
 
 %changelog
+* Thu Apr  2 2015 Remi Collet <remi@fedoraproject.org> - 2.3.1-1
+- update to 2.3.1
+
 * Fri Oct  3 2014 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
 - update to 2.3.0 for PHPUnit 4.3.0
 - drop dependency on ocramius/instantiator
