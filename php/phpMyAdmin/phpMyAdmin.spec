@@ -9,7 +9,7 @@
 #
 # Please, preserve the changelog entries
 #
-#global prever rc2
+#global prever rc1
 %{!?_pkgdocdir: %global _pkgdocdir %{_datadir}/doc/%{name}-%{version}}
 %if 0%{?fedora} >= 21
 # nginx 1.6 with nginx-filesystem
@@ -22,7 +22,7 @@
 %endif
 
 Name: phpMyAdmin
-Version: 4.3.13
+Version: 4.4.0
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -54,7 +54,6 @@ Requires:  php-curl
 Requires:  php-date
 Requires:  php-filter
 Requires:  php-gd
-Requires:  php-hash
 Requires:  php-iconv
 Requires:  php-json
 Requires:  php-libxml
@@ -66,8 +65,6 @@ Requires:  php-recode
 Requires:  php-session
 Requires:  php-simplexml
 Requires:  php-spl
-Requires:  php-tidy
-Requires:  php-xml
 Requires:  php-xmlwriter
 Requires:  php-zip
 Requires:  php-zlib
@@ -159,6 +156,7 @@ rm -f %{buildroot}/%{_datadir}/%{name}/setup/lib/.htaccess
 rm -f %{buildroot}/%{_datadir}/%{name}/setup/frames/.htaccess
 rm -rf %{buildroot}/%{_datadir}/%{name}/contrib
 # documentation
+rm -rf    %{buildroot}%{_datadir}/%{name}/examples/
 rm -rf    %{buildroot}%{_datadir}/%{name}/doc/
 mkdir -p  %{buildroot}%{_datadir}/%{name}/doc/
 ln -s %{_pkgdocdir}/html  %{buildroot}%{_datadir}/%{name}/doc/html
@@ -200,6 +198,7 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 %license LICENSE*
 %doc ChangeLog README CONTRIBUTING.md DCO config.sample.inc.php
 %doc doc/html/
+%doc examples/
 %{_datadir}/%{name}
 %attr(0750,root,apache) %dir %{_sysconfdir}/%{name}
 %config(noreplace) %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.inc.php
@@ -214,8 +213,15 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Thu Apr  2 2015 Remi Collet <rpms@famillecollet.com> 4.4.0-1
+- update to 4.4.0 (2015-04-01, new features)
+
 * Sun Mar 29 2015 Remi Collet <rpms@famillecollet.com> 4.3.13
 - update to 4.3.13 (2015-03-29, bugfix)
+
+* Thu Mar 26 2015 Remi Collet <rpms@famillecollet.com> 4.4.0-0.1.rc1
+- update to 4.4.0-rc1
+- move examples into package documentation
 
 * Sun Mar 15 2015 Remi Collet <rpms@famillecollet.com> 4.3.12
 - update to 4.3.12 (2015-03-14, bugfix)
