@@ -30,6 +30,7 @@ URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 Patch0:         %{pecl_name}-build.patch
+Patch1:         %{pecl_name}-php7.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if "%{?vendor}" == "Remi Collet"
@@ -89,6 +90,9 @@ sed -e '/role="test"/d' -i package.xml
 
 cd NTS
 %patch0 -p1 -b .fix
+%if "%{php_version}" > "7"
+%patch1 -p1 -b .php7
+%endif
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_LIBSODIUM_VERSION/{s/.* "//;s/".*$//;p}' php_libsodium.h)
@@ -224,7 +228,8 @@ rm -rf %{buildroot}
 * Thu Apr 02 2015 Remi Collet <remi@fedoraproject.org> - 0.1.2-1
 - Update to 0.1.2
 - drop runtime dependency on pear, new scriptlets
-- open https://github.com/jedisct1/libsodium-php/pull/22
+- open https://github.com/jedisct1/libsodium-php/pull/22 - build
+- open https://github.com/jedisct1/libsodium-php/pull/23 - php 7
 
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 0.1.1-1.1
 - Fedora 21 SCL mass rebuild
