@@ -1,0 +1,120 @@
+From 44d19b05f821012e670da4e5dc8f9d5a8507eed0 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 2 Apr 2015 10:25:02 +0200
+Subject: [PATCH] add workaround for old gcc
+
+---
+ include/hprose_reader.h | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/include/hprose_reader.h b/include/hprose_reader.h
+index 8492b06..bb8b95f 100644
+--- a/include/hprose_reader.h
++++ b/include/hprose_reader.h
+@@ -27,6 +27,15 @@
+ #include "hprose_class_manager.h"
+ #include "hprose_raw_reader.h"
+ 
++/* Workaround for old gcc. */
++#ifndef NAN
++#define NAN (0.0/0.0)
++#endif
++#ifndef INFINITY
++#define INFINITY (1.0/0.0)
++#endif
++
++
+ BEGIN_EXTERN_C()
+ 
+ zend_class_entry *get_hprose_reader_ce();
+From 744f56cec23c35496389408086c8f71983a8be66 Mon Sep 17 00:00:00 2001
+From: andot <mabingyao@gmail.com>
+Date: Thu, 2 Apr 2015 17:40:57 +0800
+Subject: [PATCH] Fixed Failed test in 32bits build #2
+
+---
+ .gitignore                | 2 ++
+ include/hprose.h          | 4 ++++
+ include/hprose_bytes_io.h | 9 +++------
+ include/hprose_writer.h   | 3 +++
+ 4 files changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/include/hprose.h b/include/hprose.h
+index 159a092..088c601 100644
+--- a/include/hprose.h
++++ b/include/hprose.h
+@@ -459,7 +459,11 @@ static zend_always_inline zend_bool php_assoc_array_get_long(zval *val, char *ke
+ 
+ static inline char *object_hash(zval *val) {
+     char *hash;
++#if (sizeof(intptr_t) == 4)
++    spprintf(&hash, 32, "%016x%016x", (intptr_t)Z_OBJ_HANDLE_P(val), (intptr_t)Z_OBJ_HT_P(val));
++#else
+     spprintf(&hash, 32, "%016lx%016lx", (intptr_t)Z_OBJ_HANDLE_P(val), (intptr_t)Z_OBJ_HT_P(val));
++#endif
+     return hash;
+ }
+ 
+diff --git a/include/hprose_bytes_io.h b/include/hprose_bytes_io.h
+index 8cb987b..8684a6e 100644
+--- a/include/hprose_bytes_io.h
++++ b/include/hprose_bytes_io.h
+@@ -13,7 +13,7 @@
+  *                                                        *
+  * hprose bytes io for pecl header file.                  *
+  *                                                        *
+- * LastModified: Mar 30, 2015                             *
++ * LastModified: Apr 2, 2015                              *
+  * Author: Ma Bingyao <andot@hprose.com>                  *
+  *                                                        *
+ \**********************************************************/
+@@ -68,11 +68,8 @@ static zend_always_inline void _hprose_bytes_io_grow(hprose_bytes_io *_this, int
+     if (_this->buf) {
+         size *= 2;
+         if (size > _this->cap) {
+-            char *buf = pemalloc(size, _this->persistent);
+-            memcpy(buf, _this->buf, _this->len);
+-            buf[_this->len] = 0;
+-            pefree(_this->buf, _this->persistent);
+-            _this->buf = buf;
++            _this->buf = perealloc(_this->buf, size, _this->persistent);
++            _this->buf[_this->len] = 0;
+             _this->cap = size;
+         }
+     }
+diff --git a/include/hprose_writer.h b/include/hprose_writer.h
+index 39a3625..4904457 100644
+--- a/include/hprose_writer.h
++++ b/include/hprose_writer.h
+@@ -270,6 +270,9 @@ static zend_always_inline void hprose_writer_write_double(hprose_writer *_this,
+     else if (isinf(d)) {
+         hprose_writer_write_infinity(_this, d > 0);
+     }
++    else if (floor(d) == d && d <= INT64_MAX && d >= INT64_MIN) {
++        hprose_writer_write_long(_this, (int64_t)d);
++    }
+     else {
+         hprose_bytes_io_putc(_this->stream, HPROSE_TAG_DOUBLE);
+         hprose_bytes_io_write_double(_this->stream, d);
+From 7db638cf1613f3becfbf6bb0c22983daf77920be Mon Sep 17 00:00:00 2001
+From: andot <mabingyao@gmail.com>
+Date: Thu, 2 Apr 2015 18:26:52 +0800
+Subject: [PATCH] Fixed missing binary operator before token "("
+
+---
+ include/hprose.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/hprose.h b/include/hprose.h
+index 088c601..c58519e 100644
+--- a/include/hprose.h
++++ b/include/hprose.h
+@@ -459,7 +459,7 @@ static zend_always_inline zend_bool php_assoc_array_get_long(zval *val, char *ke
+ 
+ static inline char *object_hash(zval *val) {
+     char *hash;
+-#if (sizeof(intptr_t) == 4)
++#if SIZEOF_LONG == 4
+     spprintf(&hash, 32, "%016x%016x", (intptr_t)Z_OBJ_HANDLE_P(val), (intptr_t)Z_OBJ_HT_P(val));
+ #else
+     spprintf(&hash, 32, "%016lx%016lx", (intptr_t)Z_OBJ_HANDLE_P(val), (intptr_t)Z_OBJ_HT_P(val));

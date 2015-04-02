@@ -23,11 +23,13 @@
 Summary:        Hprose for PHP.
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+Patch0:         %{pecl_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -90,6 +92,11 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
+file *.c *.h src/*.c include/*.h
+sed -e 's/\r//' -i *.c *.h src/*.c include/*.h
+
+%patch0 -p1 -b .upstream
+
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_HPROSE_VERSION/{s/.* "//;s/".*$//;p}' php_hprose.h)
 if test "x${extver}" != "x%{version}"; then
@@ -223,6 +230,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Feb 14 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- add upstream fix
+- open https://github.com/hprose/hprose-pecl/issues/4 - CR/LF
+
 * Sat Feb 14 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package, version 1.0.0 (stable)
 - open https://github.com/hprose/hprose-pecl/issues/1 - php 7
