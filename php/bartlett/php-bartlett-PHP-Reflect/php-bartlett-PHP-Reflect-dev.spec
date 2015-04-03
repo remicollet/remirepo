@@ -7,9 +7,9 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    7efd1d03583b32d8970100b5b8dc2dfd15b213e8
+%global gh_commit    5c26dbcc14b65b888d9eb507be5ed0a1bb8db68d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150331
+#global gh_date      20150331
 %global gh_owner     llaville
 %global gh_project   php-reflect
 #global prever       RC2
@@ -21,27 +21,26 @@
 
 Name:           php-bartlett-PHP-Reflect
 Version:        3.0.0
-%global specrel 13
-Release:        %{?gh_short:0.%{specrel}.%{?gh_date:%{gh_date}git%{gh_short}}%{?prever}}%{!?gh_short:%{specrel}}%{?dist}
+%global specrel 1
+Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://php5.laurent-laville.org/reflect/
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}%{?gh_short:-%{gh_short}}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
 
 # Autoloader for RPM - die composer !
 # Enable cache plugin
 Patch0:         %{name}-3.0.0-rpm.patch
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3
 %if %{with_tests}
 # to run test suite
 BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php-composer(sebastian/version)                 >= 1.0
-BuildRequires:  php-composer(nikic/php-parser)                  >= 1.0
+BuildRequires:  php-composer(nikic/php-parser)                  >= 1.1
 BuildRequires:  php-composer(doctrine/collections)              >= 1.2
 BuildRequires:  php-composer(symfony/class-loader)              >= 2.5
 BuildRequires:  php-composer(symfony/event-dispatcher)          >= 2.5
@@ -85,7 +84,7 @@ Requires:       php-spl
 Requires:       php-tokenizer
 Requires:       php-composer(sebastian/version)                 >= 1.0
 Requires:       php-composer(sebastian/version)                 <  2
-Requires:       php-composer(nikic/php-parser)                  >= 1.0
+Requires:       php-composer(nikic/php-parser)                  >= 1.1
 Requires:       php-composer(nikic/php-parser)                  <  2
 Requires:       php-composer(doctrine/collections)              >= 1.2
 Requires:       php-composer(doctrine/collections)              <  2
@@ -149,7 +148,6 @@ sed -e 's/@package_version@/%{version}%{?prever}/' \
 
 
 %install
-rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_datadir}/php
 cp -pr src/Bartlett %{buildroot}%{_datadir}/php/Bartlett
 
@@ -163,15 +161,12 @@ install -D -p -m 644 bin/phpreflect.1         %{buildroot}%{_mandir}/man1/phpref
 # Required when bartlett/php-compatinfo installed (local build)
 export BARTLETT_COMPATINFO_DB=%{_datadir}/php-bartlett-PHP-CompatInfo/compatinfo.sqlite
 
-# Version 3.0.0RC2 : OK, but incomplete, skipped, or risky tests!
-# Tests: 123, Assertions: 124, Incomplete: 3.
+# Version 3.0.0 : OK, but incomplete, skipped, or risky tests!
+# Tests: 122, Assertions: 123, Incomplete: 3.
 %{_bindir}/phpunit -v
 %else
 : Test suite disabled
 %endif
-
-%clean
-rm -rf %{buildroot}
 
 
 %post
@@ -182,7 +177,6 @@ fi
 
 
 %files
-%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc composer.json README.*
@@ -193,6 +187,10 @@ fi
 
 
 %changelog
+* Fri Apr  3 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- update to 3.0.0
+- cleanup EL-5 stuff
+
 * Tue Mar 31 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.13.20150331git7efd1d0
 - pull latest upstream changes
 
