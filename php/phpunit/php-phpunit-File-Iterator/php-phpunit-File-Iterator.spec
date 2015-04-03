@@ -52,21 +52,27 @@ FilterIterator implementation that filters files based on a list of suffixes.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+# Restore PSR-0 tree
+mkdir -p File/Iterator/
+mv src/* File/Iterator/
+mv       File/Iterator/Iterator.php File/Iterator.php
+
+
 
 %build
 %{_bindir}/phpab \
-   --output   src/Autoload.php \
-   src
+   --output   File/Iterator/Autoload.php \
+   --basedir  File/Iterator \
+   File
+cat File/Iterator/Autoload.php
 
 
 %install
 rm -rf      %{buildroot}
 # Restore PSR-0 tree
 # see https://github.com/sebastianbergmann/php-file-iterator/issues/26
-mkdir -p    %{buildroot}%{php_home}/File
-cp -pr src  %{buildroot}%{php_home}/File/Iterator
-mv          %{buildroot}%{php_home}/File/Iterator/Iterator.php \
-            %{buildroot}%{php_home}/File/Iterator.php
+mkdir -p    %{buildroot}%{php_home}
+cp -pr File %{buildroot}%{php_home}/File
 
 
 %clean
