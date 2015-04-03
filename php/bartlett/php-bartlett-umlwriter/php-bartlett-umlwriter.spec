@@ -7,9 +7,9 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    1
-%global gh_commit    dd58a0b71894693250839ad7c7538a7510758a3b
+%global gh_commit    c883bf1f80370397198c5eae0615173380fa6119
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150331
+#global gh_date      20150331
 %global gh_owner     llaville
 %global gh_project   umlwriter
 #global prever       RC2
@@ -21,14 +21,14 @@
 
 Name:           php-bartlett-umlwriter
 Version:        1.0.0
-%global specrel 3
-Release:        %{?gh_short:0.%{specrel}.%{?gh_date:%{gh_date}git%{gh_short}}%{?prever}}%{!?gh_short:%{specrel}}%{?dist}
+%global specrel 1
+Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Create UML class diagrams from your PHP source
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://php5.laurent-laville.org/umlwriter/
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}%{?gh_short:-%{gh_short}}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
 
 # Autoloader for RPM - die composer !
 Patch0:         %{name}-rpm.patch
@@ -106,7 +106,7 @@ install -D -p -m 755 bin/umlwriter  %{buildroot}%{_bindir}/umlwriter
 
 %check
 %if %{with_tests}
-%{_bindir}/phpunit -v || : Results ignored for now, known upstream issue #1
+%{_bindir}/phpunit -v
 %else
 : Test suite disabled
 %endif
@@ -122,6 +122,9 @@ install -D -p -m 755 bin/umlwriter  %{buildroot}%{_bindir}/umlwriter
 
 
 %changelog
+* Fri Apr  3 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- update to 1.0.0
+
 * Tue Mar 31 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.20150331gitdd58a0b
 - git snapshot, post 1.0.0RC2
 - cleanup EL-5 stuff
