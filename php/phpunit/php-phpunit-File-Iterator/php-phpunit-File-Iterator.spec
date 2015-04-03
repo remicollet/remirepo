@@ -53,10 +53,10 @@ FilterIterator implementation that filters files based on a list of suffixes.
 %setup -q -n %{gh_project}-%{gh_commit}
 
 # Restore PSR-0 tree
+# see https://github.com/sebastianbergmann/php-file-iterator/issues/26
 mkdir -p File/Iterator/
 mv src/* File/Iterator/
 mv       File/Iterator/Iterator.php File/Iterator.php
-
 
 
 %build
@@ -64,13 +64,10 @@ mv       File/Iterator/Iterator.php File/Iterator.php
    --output   File/Iterator/Autoload.php \
    --basedir  File/Iterator \
    File
-cat File/Iterator/Autoload.php
 
 
 %install
 rm -rf      %{buildroot}
-# Restore PSR-0 tree
-# see https://github.com/sebastianbergmann/php-file-iterator/issues/26
 mkdir -p    %{buildroot}%{php_home}
 cp -pr File %{buildroot}%{php_home}/File
 
@@ -91,7 +88,7 @@ fi
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc ChangeLog.md README.md composer.json
-%{php_home}/*
+%{php_home}/File
 
 
 %changelog
