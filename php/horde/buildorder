@@ -1,5 +1,6 @@
 Build order
 	* Horde_Constraint          2.0.2       I: Horde_Test 
+	* horde_lz4                 1.0.7        
 	* Horde_Mongo               1.0.3        
 	* Horde_Queue               1.1.2        
 	* Horde_Role                1.0.1        
@@ -8,7 +9,6 @@ Build order
 	* Horde_Thrift              2.0.2        
 	* Horde_Translation         2.2.0       I: Horde_Test 
 	* Horde_Util                2.5.4       I: Horde_Test, Horde_Imap_Client 
-	* horde_lz4                 1.0.7        
 	* Horde_Exception           2.0.5       I: Horde_Test R: Horde_Translation
 	* Horde_Idna                1.0.1        R: Horde_Exception
 	* Horde_Imsp                2.0.6        R: Horde_Translation
@@ -31,7 +31,6 @@ Build order
 	* Horde_Compress_Fast       1.1.0      BR: Horde_Test  R: Horde_Exception, horde_lz4
 	* Horde_Crypt_Blowfish      1.0.3      BR: Horde_Test  R: Horde_Exception, Horde_Support
 	* Horde_Css_Parser          1.0.6      BR: Horde_Test  
-	* Horde_CssMinify           1.0.2        R: Horde_Css_Parser, Horde_Exception, Horde_Log, Horde_Url
 	* Horde_Date                2.0.13     BR: Horde_Test I: Horde_Icalendar R: Horde_Nls, Horde_Translation, Horde_Exception, Horde_Util
 	* Horde_Date_Parser         2.0.3      BR: Horde_Test, Horde_Date  R: Horde_Date, Horde_Support
 	* Horde_HashTable           1.2.3      BR: Horde_Test I: Horde_Vfs R: Horde_Exception, Horde_Log, Horde_Memcache
@@ -55,11 +54,12 @@ Build order
 	* Horde_Stream              1.6.2      BR: Horde_Test  R: Horde_Exception, Horde_Stream_Wrapper, Horde_Util
 	* Horde_Stream_Filter       2.0.3      BR: Horde_Test  
 	* Horde_Template            2.0.2      BR: Horde_Test  
-	* Horde_Text_Filter         2.2.2      BR: Horde_Test, Horde_Text_Flowed, Horde_Idna  R: Horde_Exception, Horde_Idna, Horde_Util, Horde_Text_Flowed
+	* Horde_Text_Filter         2.3.0      BR: Horde_Test, Horde_Text_Flowed, Horde_Idna  R: Horde_Exception, Horde_Idna, Horde_Util, Horde_Text_Flowed
 	* Horde_Text_Filter_Csstidy 2.0.1      BR: Horde_Test  R: Horde_Text_Filter
 	* Horde_Tree                2.0.3        R: Horde_Exception, Horde_Url, Horde_Util
 	* Horde_Cache               2.5.0       I: Horde_Db R: Horde_Compress_Fast, Horde_Exception, Horde_Util, Horde_HashTable, Horde_Mongo
 	* Horde_Controller          2.0.2      BR: Horde_Test  R: Horde_Exception, Horde_Injector, Horde_Log, Horde_Support, Horde_Util
+	* Horde_CssMinify           1.0.2        R: Horde_Css_Parser, Horde_Exception, Horde_Log, Horde_Url
 	* Horde_Db                  2.2.2      BR: Horde_Test, Horde_Cache  R: Horde_Date, Horde_Exception, Horde_Support, Horde_Util, Horde_Autoloader, Horde_Cache
 	* Horde_Editor              2.0.4      BR: Horde_Role  R: Horde_Role, Horde_Browser, Horde_Exception, Horde_Serialize
 	* Horde_ElasticSearch       1.0.3        R: Horde_Exception, Horde_Http
