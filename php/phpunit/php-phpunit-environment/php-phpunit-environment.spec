@@ -2,16 +2,16 @@
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    6e6c71d918088c251b181ba8b3088af4ac336dd7
+%global gh_commit    5a8c7d31914337b69923db26c4221b81ff5a196e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   environment
-%global php_home     %{_datadir}/php/SebastianBergmann
+%global php_home     %{_datadir}/php
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 %else
@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-phpunit-environment
-Version:        1.2.1
+Version:        1.2.2
 Release:        1%{?dist}
 Summary:        Handle HHVM/PHP environments
 
@@ -33,10 +33,12 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
-BuildRequires:  %{_bindir}/phpunit
+# from composer.json, "require-dev": {
+#        "phpunit/phpunit": "~4.4"
+BuildRequires:  php-composer(phpunit/phpunit) >= 4.4
 %endif
 
-# from composer.json
+# from composer.json, "require": {
 #        "php": ">=5.3.3"
 Requires:       php(language) >= 5.3.3
 
@@ -51,31 +53,28 @@ has runtime-specific (PHP / HHVM) execution paths.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+# Restore PSR-0 tree
+mkdir  SebastianBergmann
+mv src SebastianBergmann/Environment
+
 
 %build
 # Generate the Autoloader
-phpab --output src/autoload.php src
+%{_bindir}/phpab \
+   --output SebastianBergmann/Environment/autoload.php \
+   SebastianBergmann/Environment
 
 
 %install
-rm -rf     %{buildroot}
-mkdir -p   %{buildroot}%{php_home}
-cp -pr src %{buildroot}%{php_home}/Environment
+rm -rf   %{buildroot}
+mkdir -p %{buildroot}%{php_home}/SebastianBergmann
+cp -pr                           SebastianBergmann/Environment \
+         %{buildroot}%{php_home}/SebastianBergmann/Environment
 
 
 %if %{with_tests}
 %check
-if [ -d /usr/share/php/PHPUnit ]
-then
-  # Hack PHPUnit 4 autoloader to not use system library
-  mkdir PHPUnit
-  sed -e 's:SebastianBergmann/Environment:src:' \
-    -e 's:dirname(__FILE__):"/usr/share/php/PHPUnit":' \
-    /usr/share/php/PHPUnit/Autoload.php \
-    >PHPUnit/Autoload.php
-fi
-
-phpunit --bootstrap src/autoload.php
+%{_bindir}/phpunit --bootstrap SebastianBergmann/Environment/autoload.php
 %endif
 
 
@@ -85,12 +84,18 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README.md composer.json
-%dir %{php_home}
-%{php_home}/Environment
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README.md composer.json
+%dir %{php_home}/SebastianBergmann
+     %{php_home}/SebastianBergmann/Environment
 
 
 %changelog
+* Fri Apr  3 2015 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
+- update to 1.2.2
+- fix license handling
+
 * Tue Dec  2 2014 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - update to 1.2.1
 
