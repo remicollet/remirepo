@@ -16,6 +16,7 @@ require_once 'SebastianBergmann/Comparator/autoload.php';
 require_once 'SebastianBergmann/GlobalState/autoload.php';
 require_once 'Doctrine/Instantiator/autoload.php';
 require_once 'Prophecy/autoload.php';
+require_once 'PHPUnit/Framework/Assert/Functions.php';
 
 $vendorDir = '/usr/share/php';
 require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';

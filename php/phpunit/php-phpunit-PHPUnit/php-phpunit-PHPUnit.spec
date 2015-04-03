@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    d6429b0995b24a2d9dfe5587ee3a7071c1161af4
+%global gh_commit    3797497862a4dedcd77c1615106c574ecdb3fad7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,7 +17,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.5.1
+Version:        4.6.0
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -55,15 +55,15 @@ BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 
 # From composer.json
 #        "php": ">=5.3.3",
-#        "phpunit/php-file-iterator": "~1.3.2",
+#        "phpunit/php-file-iterator": "~1.4",
 #        "phpunit/php-text-template": "~1.2",
 #        "phpunit/php-code-coverage": "~2.0>=2.0.11",
-#        "phpunit/php-timer": "~1.0.2",
+#        "phpunit/php-timer": "~1.0",
 #        "phpunit/phpunit-mock-objects": "~2.2",
 #        "phpspec/prophecy": "~1.3,>=1.3.1",
-#        "symfony/yaml": "~2.0",
+#        "symfony/yaml": "~2.1|~3.0",
 #        "sebastian/comparator": "~1.0",
-#        "sebastian/diff": "~1.1",
+#        "sebastian/diff": "~1.2",
 #        "sebastian/environment": "~1.1",
 #        "sebastian/exporter": "~1.1",
 #        "sebastian/recursion-context": "~1.0",
@@ -75,21 +75,21 @@ BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 #        "ext-reflection": "*",
 #        "ext-spl": "*"
 Requires:       php(language) >= 5.3.3
-Requires:       php-composer(phpunit/php-file-iterator) >= 1.3.2
-Requires:       php-composer(phpunit/php-file-iterator) <  1.4
+Requires:       php-composer(phpunit/php-file-iterator) >= 1.4
+Requires:       php-composer(phpunit/php-file-iterator) <  2
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
 Requires:       php-composer(phpunit/php-code-coverage) >= 2.0.11
 Requires:       php-composer(phpunit/php-code-coverage) <  3
-Requires:       php-composer(phpunit/php-timer) >= 1.0.2
-Requires:       php-composer(phpunit/php-timer) <  1.1
+Requires:       php-composer(phpunit/php-timer) >= 1.0
+Requires:       php-composer(phpunit/php-timer) <  2
 Requires:       php-composer(phpunit/phpunit-mock-objects) >= 2.3
 Requires:       php-composer(phpunit/phpunit-mock-objects) <  3
 Requires:       php-composer(phpspec/prophecy) >= 1.3.1
 Requires:       php-composer(phpspec/prophecy) <  2
 Requires:       php-composer(sebastian/comparator) >= 1.1
 Requires:       php-composer(sebastian/comparator) <  2
-Requires:       php-composer(sebastian/diff) >= 1.1
+Requires:       php-composer(sebastian/diff) >= 1.2
 Requires:       php-composer(sebastian/diff) <  2
 Requires:       php-composer(sebastian/environment) >= 1.2
 Requires:       php-composer(sebastian/environment) <  2
@@ -99,8 +99,8 @@ Requires:       php-composer(sebastian/global-state) >= 1.0
 Requires:       php-composer(sebastian/global-state) <  2
 Requires:       php-composer(sebastian/version) >= 1.0
 Requires:       php-composer(sebastian/version) <  2
-Requires:       php-composer(symfony/yaml) >= 2.0
-Requires:       php-composer(symfony/yaml) <  3
+Requires:       php-composer(symfony/yaml) >= 2.1
+Requires:       php-composer(symfony/yaml) <  4
 Requires:       php-dom
 Requires:       php-json
 Requires:       php-pcre
@@ -150,13 +150,16 @@ for the creation, execution and analysis of Unit Tests.
 
 %patch0 -p0 -b .rpm
 
+# Restore PSR-0 tree
+mv src PHPUnit
+
 
 %build
 %{_bindir}/php -d date.timezone=UTC \
 %{_bindir}/phpab \
-  --output   src/Autoload.php \
+  --output   PHPUnit/Autoload.php \
   --template %{SOURCE1} \
-  src
+  PHPUnit
 
 %{_bindir}/php -d date.timezone=UTC \
 %{_bindir}/phpab \
@@ -165,9 +168,9 @@ for the creation, execution and analysis of Unit Tests.
 
 
 %install
-rm -rf     %{buildroot}
-mkdir -p   %{buildroot}%{php_home}
-cp -pr src %{buildroot}%{php_home}/PHPUnit
+rm -rf         %{buildroot}
+mkdir -p       %{buildroot}%{php_home}
+cp -pr PHPUnit %{buildroot}%{php_home}/PHPUnit
 
 install -D -p -m 755 phpunit %{buildroot}%{_bindir}/phpunit
 
@@ -177,12 +180,7 @@ sed -e '/logging/d' \
     -e '/<log/d' \
     phpunit.xml.dist > phpunit.xml
 
-sed -e 's:PHPUnit/Autoload:src/Autoload:' \
-    -i phpunit
-
-./phpunit  \
-  --include-path=%{buildroot}%{php_home} \
-  --testsuite=small
+./phpunit --testsuite=small
 
 
 %clean
@@ -207,6 +205,10 @@ fi
 
 
 %changelog
+* Fri Apr  3 2015 Remi Collet <remi@fedoraproject.org> - 4.6.0-1
+- Update to 4.6.0
+- raise dependencies on file-iterator 1.4 and diff 1.2
+
 * Sun Mar 29 2015 Remi Collet <remi@fedoraproject.org> - 4.5.1-1
 - Update to 4.5.1
 
