@@ -53,7 +53,7 @@
 
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %global runselftest 1}
-%global runselftest 0
+#global runselftest 0
 
 # Use the arch-specific mysql_config binary to avoid mismatch with the
 # arch detection heuristic used by bindir/mysql_config.
@@ -129,9 +129,9 @@
 %global db_devel  libdb-devel
 %endif
 
-%global gh_commit    83a15801cc8619a1a83307e573bf1b63f0d4b53c
+%global gh_commit    adcf0c6052761350695da211b337edff12c6e63c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150402
+%global gh_date      20150403
 %global gh_owner     php
 %global gh_project   php-src
 #global rcver        RC1
@@ -1801,7 +1801,7 @@ fi
 
 
 %changelog
-* Tue Mar 31 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.5.20150402git83a1580
+* Fri Apr  3 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.5.20150403gitadcf0c6
 - new snapshot
 
 * Tue Mar 31 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.4.20150331git463ca30
