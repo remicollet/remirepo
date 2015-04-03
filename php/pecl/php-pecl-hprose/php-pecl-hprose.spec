@@ -20,16 +20,14 @@
 %global ini_name   40-%{pecl_name}.ini
 %endif
 
-Summary:        Hprose for PHP.
+Summary:        Hprose for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.0.0
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.1.0
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-Patch0:         %{pecl_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -92,11 +90,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-file *.c *.h src/*.c include/*.h
-sed -e 's/\r//' -i *.c *.h src/*.c include/*.h
-
-%patch0 -p1 -b .upstream
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_HPROSE_VERSION/{s/.* "//;s/".*$//;p}' php_hprose.h)
 if test "x${extver}" != "x%{version}"; then
@@ -121,16 +114,18 @@ EOF
 cd NTS
 %{_bindir}/phpize
 %configure \
-    --enable-hprose \
-    --with-php-config=%{_bindir}/php-config
+    --with-libdir=%{_lib} \
+    --with-php-config=%{_bindir}/php-config \
+    --enable-hprose
 make %{?_smp_mflags}
 
 %if %{with_zts}
 cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
-    --enable-hprose \
-    --with-php-config=%{_bindir}/zts-php-config
+    --with-libdir=%{_lib} \
+    --with-php-config=%{_bindir}/zts-php-config \
+    --enable-hprose
 make %{?_smp_mflags}
 %endif
 
@@ -177,6 +172,15 @@ fi
 
 
 %check
+%if "%{php_version}" > "7"
+# These tests strangly fail "only" in mock
+%if 0%{rhel} < 7 && 0%{?fedora} < 20
+[ "$(id -nu)" == "remi" ] || rm ?TS/tests/{class_manager,formatter,raw_reader,writer}.phpt
+%else
+[ "$(id -nu)" == "remi" ] || rm ?TS/tests/formatter.phpt
+%endif
+%endif
+
 cd NTS
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
@@ -230,11 +234,14 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Sat Feb 14 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+* Fri Apr  3 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- Update to 1.1.0
+
+* Thu Apr  2 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
 - add upstream fix
 - open https://github.com/hprose/hprose-pecl/issues/4 - CR/LF
 
-* Sat Feb 14 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+* Thu Apr  2 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package, version 1.0.0 (stable)
 - open https://github.com/hprose/hprose-pecl/issues/1 - php 7
 - open https://github.com/hprose/hprose-pecl/issues/2 - i386
