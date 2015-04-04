@@ -1,13 +1,36 @@
+diff -up ./bin/phpcompatinfo.json.dist.rpm ./bin/phpcompatinfo.json.dist
+--- ./bin/phpcompatinfo.json.dist.rpm	2015-04-04 15:32:17.536201524 +0200
++++ ./bin/phpcompatinfo.json.dist	2015-04-04 15:32:37.776282296 +0200
+@@ -6,6 +6,19 @@
+         }
+     ],
+     "plugins": [
++        {
++            "name": "Cache",
++            "class": "Bartlett\\Reflect\\Plugin\\CachePlugin",
++            "options": {
++                "adapter": "DoctrineCacheAdapter",
++                "backend": {
++                    "class": "Doctrine\\Common\\Cache\\FilesystemCache",
++                    "args": [
++                        "%{HOME}/.cache/php-reflect"
++                    ]
++                }
++            }
++        }
+     ],
+     "analysers" : [
+     ],
 diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
---- ./bin/phpcompatinfo.rpm	2015-02-20 10:59:04.000000000 +0100
-+++ ./bin/phpcompatinfo	2015-02-22 11:42:38.671479626 +0100
+--- ./bin/phpcompatinfo.rpm	2015-04-04 08:52:23.000000000 +0200
++++ ./bin/phpcompatinfo	2015-04-04 15:33:59.668609143 +0200
 @@ -1,4 +1,4 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
  <?php
  $appName = 'phpCompatInfo';
  
-@@ -16,8 +16,28 @@ if (\Phar::running()) {
+@@ -16,8 +16,30 @@ if (\Phar::running()) {
          putenv("BARTLETTRC=" . strtolower($appName) . '.json');
      }
  }
@@ -32,13 +55,15 @@ diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
 +    'phpDocumentor\\Reflection'           => $vendorDir,
 +    'Seld\\JsonLint'                      => $vendorDir,
 +    'JsonSchema'                          => $vendorDir,
++    'Psr\\Log'                            => $vendorDir,
++    'Monolog'                             => $vendorDir,
 +    'Bartlett'                            => $vendorDir,
 +));
 +$loader->register();
  
  if (PHP_SAPI !== 'cli') {
      return;
-@@ -28,5 +48,5 @@ use Bartlett\CompatInfo\Console\Applicat
+@@ -28,5 +50,5 @@ use Bartlett\CompatInfo\Console\Applicat
  
  Environment::setScanDir();
  
@@ -46,8 +71,8 @@ diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
 +$application = new Application($appName, '@package_version@');
  $application->run();
 diff -up ./data/handleDB.php.rpm ./data/handleDB.php
---- ./data/handleDB.php.rpm	2015-02-20 10:59:04.000000000 +0100
-+++ ./data/handleDB.php	2015-02-22 11:42:15.277385330 +0100
+--- ./data/handleDB.php.rpm	2015-04-04 08:52:23.000000000 +0200
++++ ./data/handleDB.php	2015-04-04 15:31:55.188112331 +0200
 @@ -11,7 +11,18 @@
   * @since    Release 4.0.0alpha3
   */
@@ -69,8 +94,8 @@ diff -up ./data/handleDB.php.rpm ./data/handleDB.php
  
  use Bartlett\CompatInfo\Reference\ExtensionFactory;
 diff -up ./src/Bartlett/CompatInfo/Environment.php.rpm ./src/Bartlett/CompatInfo/Environment.php
---- ./src/Bartlett/CompatInfo/Environment.php.rpm	2015-02-20 10:59:04.000000000 +0100
-+++ ./src/Bartlett/CompatInfo/Environment.php	2015-02-22 11:42:15.277385330 +0100
+--- ./src/Bartlett/CompatInfo/Environment.php.rpm	2015-04-04 08:52:23.000000000 +0200
++++ ./src/Bartlett/CompatInfo/Environment.php	2015-04-04 15:31:55.188112331 +0200
 @@ -34,6 +34,10 @@ class Environment
       */
      public static function initRefDb()
@@ -83,8 +108,8 @@ diff -up ./src/Bartlett/CompatInfo/Environment.php.rpm ./src/Bartlett/CompatInfo
          $tempDir  = sys_get_temp_dir() . '/bartlett';
  
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
---- ./tests/bootstrap.php.rpm	2015-02-20 10:59:04.000000000 +0100
-+++ ./tests/bootstrap.php	2015-02-22 11:42:15.277385330 +0100
+--- ./tests/bootstrap.php.rpm	2015-04-04 08:52:23.000000000 +0200
++++ ./tests/bootstrap.php	2015-04-04 15:31:55.188112331 +0200
 @@ -1,8 +1,31 @@
  <?php
  

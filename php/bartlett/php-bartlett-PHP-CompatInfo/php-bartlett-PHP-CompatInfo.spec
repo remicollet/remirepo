@@ -16,7 +16,7 @@
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        4.0.0
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -60,7 +60,18 @@ Requires:       php-composer(bartlett/php-reflect) >= 3.0.0
 Requires:       php-composer(bartlett/php-reflect) <  4
 Requires:       php-composer(symfony/console)      >= 2.5
 Requires:       php-composer(symfony/console)      <  3
+# From composer.json, "require-dev": {
+#        "doctrine/cache": "~1.3",
+#        "psr/log": "~1.0",
+#        "monolog/monolog": "~1.10",
+#        "bartlett/phpunit-loggertestlistener": "~1.1",
+#        "bartlett/umlwriter": "~1.0"
 # From composer.json, "suggest"
+#        "doctrine/cache": "Allow caching results, since bartlett/php-reflect 2.2",
+#        "psr/log": "Allow logging events with the LogPlugin",
+#        "monolog/monolog": "Allow logging events with the LogPlugin",
+#        "bartlett/phpunit-loggertestlistener": "Allow logging unit tests to your favorite PSR-3 logger interface",
+#        "bartlett/umlwriter": "Allow writing UML class diagrams (Graphviz or PlantUML)"
 #        "doctrine/cache": "Allow caching results, since bartlett/php-reflect 2.2"
 #        "bartlett/umlwriter": "Allow writing UML class diagrams (Graphviz or PlantUML)"
 Requires:       php-composer(doctrine/cache)
@@ -154,6 +165,9 @@ fi
 
 
 %changelog
+* Sat Apr  4 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-2
+- add cache plugin in default configuration
+
 * Sat Apr  4 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-1
 - update to 4.0.0
 
