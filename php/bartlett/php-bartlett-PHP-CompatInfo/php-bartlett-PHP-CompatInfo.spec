@@ -6,58 +6,74 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    e84e2b60281f1f97b886208d6d06efa4d7701236
-#global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_commit    0f0cdbcff50b4f7514a9da7be0c7b45a75084ebe
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+#global gh_date      20150303
 %global gh_owner     llaville
 %global gh_project   php-compat-info
+#global prever       RC2
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        3.7.3
+Version:        4.0.0
 %global specrel 1
-Release:        %{?gh_short:0.%{specrel}.git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
+Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://php5.laurent-laville.org/compatinfo/
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?gh_short:-%{gh_short}}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
+# Script for fedora-review
+Source1:        fedora-review-check
 
 # Autoloader for RPM - die composer !
-Patch0:         %{name}-rpm.patch
+# and sqlite database path
+Patch0:         %{name}-4.0.0-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.0
+BuildRequires:  php-pdo_sqlite
+BuildRequires:  php-composer(bartlett/php-reflect) >= 3.0.0
+%if %{with_tests}
 # to run test suite
 BuildRequires:  %{_bindir}/phpunit
-BuildRequires:  php-composer(bartlett/php-reflect) >= 2.6.2
+%endif
 
 # From composer.json, "require"
-#        "php": ">=5.3.0",
+#        "php": ">=5.3.2",
 #        "ext-libxml": "*",
 #        "ext-pcre": "*",
 #        "ext-spl": "*",
 #        "ext-json": "*",
+#        "ext-pdo_sqlite": "*",
 #        "symfony/console": "~2.5",
-#        "bartlett/php-reflect": "^2.6.2",
+#        "bartlett/php-reflect": "~3.0",
 Requires:       php(language) >= 5.3.0
 Requires:       php-json
 Requires:       php-libxml
 Requires:       php-pcre
+Requires:       php-pdo_sqlite
 Requires:       php-spl
-Requires:       php-composer(bartlett/php-reflect) >= 2.6.2
-Requires:       php-composer(bartlett/php-reflect) <  3
+Requires:       php-composer(bartlett/php-reflect) >= 3.0.0
+Requires:       php-composer(bartlett/php-reflect) <  4
 Requires:       php-composer(symfony/console)      >= 2.5
 Requires:       php-composer(symfony/console)      <  3
 # From composer.json, "suggest"
 #        "doctrine/cache": "Allow caching results, since bartlett/php-reflect 2.2"
+#        "bartlett/umlwriter": "Allow writing UML class diagrams (Graphviz or PlantUML)"
 Requires:       php-composer(doctrine/cache)
+Requires:       php-composer(bartlett/umlwriter)
 # Required by autoloader
-Requires:       php-composer(phpunit/php-timer)
 Requires:       php-composer(nikic/php-parser)
+BuildRequires:  php-composer(doctrine/collections)
 Requires:       php-composer(symfony/class-loader)
 Requires:       php-composer(symfony/event-dispatcher)
 Requires:       php-composer(symfony/finder)
+BuildRequires:  php-composer(symfony/stopwatch)
+BuildRequires:  php-composer(symfony/dependency-injection)
+BuildRequires:  php-composer(phpdocumentor/reflection-docblock)
 Requires:       php-composer(seld/jsonlint)
 Requires:       php-composer(sebastian/version)
 Requires:       php-composer(justinrainbow/json-schema)
@@ -81,12 +97,17 @@ Documentation: http://php5.laurent-laville.org/compatinfo/manual/current/en/
 
 %patch0 -p1 -b .rpm
 
-sed -e 's/@package_version@/%{version}/' \
-    -i $(find src -name \*.php)
+# Cleanup patched files
+find src -name \*rpm -delete -print
+
+# Set package version
+sed -e 's/@package_version@/%{version}%{?prever}/' \
+    -i $(find src -name \*.php) bin/phpcompatinfo
 
 
 %build
-# Nothing
+: Generate the references database
+%{_bindir}/php data/handleDB.php db:init
 
 
 %install
@@ -97,13 +118,19 @@ cp -pr src/Bartlett %{buildroot}%{_datadir}/php/Bartlett
 install -D -p -m 755 bin/phpcompatinfo           %{buildroot}%{_bindir}/phpcompatinfo
 install -D -p -m 644 bin/phpcompatinfo.json.dist %{buildroot}%{_sysconfdir}/phpcompatinfo.json
 install -D -p -m 644 bin/phpcompatinfo.1         %{buildroot}%{_mandir}/man1/phpcompatinfo.1
+install -D -p -m 644 data/compatinfo.sqlite      %{buildroot}%{_datadir}/%{name}/compatinfo.sqlite
+
+install -D -p -m 755 %{SOURCE1}                  %{buildroot}%{_datadir}/%{name}/fedora-review-check
 
 
+%if %{with_tests}
 %check
 %{_bindir}/phpunit \
+    --include-path src \
     -d memory_limit=-1 \
-%if 0%{?rhel} < 6 && 0%{?fedora} < 8
+%if 0%{?fedora} < 21
     || exit 0
+%endif
 %endif
 
 
@@ -122,13 +149,47 @@ fi
 %config(noreplace) %{_sysconfdir}/phpcompatinfo.json
 %{_bindir}/phpcompatinfo
 %{_datadir}/php/Bartlett/CompatInfo
-%{_datadir}/php/Bartlett/CompatInfo.php
 %{_mandir}/man1/phpcompatinfo.1*
+%{_datadir}/%{name}
 
 
 %changelog
+* Sat Apr  4 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-1
+- update to 4.0.0
+
+* Thu Mar 26 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.9.RC2
+- update to 4.0.0 RC2
+- add dependency on bartlett/umlwriter
+
+* Thu Mar 12 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.8.RC1
+- update to 4.0.0 RC1
+
+* Fri Feb 27 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.7.20150227git4966955
+- don't display xdebug message when not on a tty
+- add fedora-review-check script
+- handle --without tests option to skip test suite during build
+
+* Fri Feb 27 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.6.20150227git4966955
+- update to 4.0.0beta3
+
+* Sun Feb 22 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.5.20150220git442d25d
+- fix reported version
+
+* Sun Feb 22 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.4.20150220git442d25d
+- update to 4.0.0beta2
+
+* Wed Feb  4 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.3.20150204git6cd2777
+- update to 4.0.0beta1
+
 * Mon Feb  2 2015 Remi Collet <remi@fedoraproject.org> - 3.7.3-1
 - Update to 3.7.3
+
+* Tue Jan 20 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.2.20150116gitd900ea4
+- add patch for DB path (pr #163)
+- take care of test suite results only in f21 for now
+
+* Mon Jan 19 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.1.20150116gitd900ea4
+- 4.0.0 snapshot
 
 * Mon Jan  5 2015 Remi Collet <remi@fedoraproject.org> - 3.7.2-1
 - Update to 3.7.2
