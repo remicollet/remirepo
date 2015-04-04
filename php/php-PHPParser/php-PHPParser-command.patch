@@ -1,7 +1,8 @@
-diff -up bin/php-parse.php.rpm bin/php-parse.php
---- bin/php-parse.php.rpm	2015-02-25 17:52:01.000000000 +0100
-+++ bin/php-parse.php	2015-02-25 17:52:55.000000000 +0100
-@@ -1,6 +1,8 @@
+diff -up ./bin/php-parse.php.rpm ./bin/php-parse.php
+--- ./bin/php-parse.php.rpm	2015-04-04 14:49:15.704865853 +0200
++++ ./bin/php-parse.php	2015-04-04 14:50:15.625104006 +0200
+@@ -1,7 +1,8 @@
+-#!/usr/bin/env php
 +#!/usr/bin/php
  <?php
  
@@ -9,5 +10,5 @@ diff -up bin/php-parse.php.rpm bin/php-parse.php
 +require 'PhpParser/Autoloader.php';
 +PhpParser\Autoloader::register();
  
- ini_set('xdebug.max_nesting_level', 2000);
+ ini_set('xdebug.max_nesting_level', 3000);
  

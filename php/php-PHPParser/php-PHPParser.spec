@@ -11,8 +11,8 @@
 
 %global github_owner    nikic
 %global github_name     PHP-Parser
-%global github_version  1.1.0
-%global github_commit   ac05ef6f95bf8361549604b6031c115f92f39528
+%global github_version  1.2.2
+%global github_commit   08f97eb4efa029e2fafb6d8c98b71731bf0cf621
 %global github_short    %(c=%{github_commit}; echo ${c:0:7})
 
 %global lib_name        PhpParser
@@ -22,7 +22,7 @@
 
 Name:          php-%{lib_name_old}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       1%{?dist}
 Summary:       A PHP parser written in PHP
 
 Group:         Development/Libraries
@@ -106,6 +106,9 @@ install -Dpm 755 bin/php-parse.php %{buildroot}%{_bindir}/php-parse
 
 
 %changelog
+* Sat Apr  4 2015 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
+- update to 1.2.2
+
 * Wed Feb 25 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-2
 - provide the php-parse command
 
