@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #139 uuid version 1.0.3 ] {
+Extension [ <persistent> extension #75 uuid version 1.0.3 ] {
 
   - Constants [10] {
     Constant [ integer UUID_VARIANT_DCE ] { 1 }

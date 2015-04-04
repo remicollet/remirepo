@@ -18,32 +18,16 @@
 %else
 %global ini_name    40-%{pecl_name}.ini
 %endif
+%global prever      RC1
 
 Summary:       Universally Unique Identifier extension for PHP
 Name:          %{?scl_prefix}php-pecl-uuid
-Version:       1.0.3
-Release:       11%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:       1.0.4
+Release:       0.1.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       LGPLv2+
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/uuid
-Source:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-# https://bugs.php.net/63446 - Please Provides LICENSE file
-# http://svn.php.net/viewvc/pecl/uuid/trunk/LICENSE?view=co
-Source1:       %{pecl_name}-LICENSE
-
-# http://svn.php.net/viewvc?view=revision&revision=328255
-# Use preg_match to avoid "Function ereg() is deprecated" in test suite
-Patch0:        %{pecl_name}-ereg.patch
-# http://svn.php.net/viewvc?view=revision&revision=328259
-# Fix build warnings
-Patch1:        %{pecl_name}-build.patch
-# http://svn.php.net/viewvc?view=revision&revision=328261
-# http://svn.php.net/viewvc?view=revision&revision=336226
-# Improves phpinfo() output
-Patch2:        %{pecl_name}-info.patch
-# http://svn.php.net/viewvc?view=revision&revision=336225
-# http://svn.php.net/viewvc?view=revision&revision=336227
-Patch3:        %{pecl_name}-php7.patch
+Source:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
@@ -95,19 +79,13 @@ A wrapper around Universally Unique Identifier library (libuuid).
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' -i package.xml
 
-mv %{pecl_name}-%{version} NTS
+mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
-cp %{SOURCE1} LICENSE
-
-%patch0 -p3 -b .ereg
-%patch1 -p3 -b .build
-%patch2 -p3 -b .info
-%patch3 -p3 -b .php7
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_UUID_VERSION/{s/.* "//;s/".*$//;p}' php_uuid.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}.
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
 cd ..
@@ -129,13 +107,19 @@ export PHP_RPATH=no
 
 cd NTS
 %{_bindir}/phpize
-%configure --with-php-config=%{_bindir}/php-config
+%configure \
+    --with-php-config=%{_bindir}/php-config \
+    --with-libdir=%{_lib} \
+    --with-uuid
 make %{?_smp_mflags}
 
 %if %{with_zts}
 cd ../ZTS
 %{_bindir}/zts-phpize
-%configure --with-php-config=%{_bindir}/zts-php-config
+%configure \
+    --with-php-config=%{_bindir}/zts-php-config \
+    --with-libdir=%{_lib} \
+    --with-uuid
 make %{?_smp_mflags}
 %endif
 
@@ -220,6 +204,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Apr  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-0.1.RC1
+- update to 1.0.4RC1
+- drop upstream patches
+
 * Sat Mar 28 2015 Remi Collet <remi@fedoraproject.org> - 1.0.3-11
 - more upstream patches, fix for PHP 7
 - drop runtime dependency on pear, new scriptlets
