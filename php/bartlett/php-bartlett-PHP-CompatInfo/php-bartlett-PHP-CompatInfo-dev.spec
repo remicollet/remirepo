@@ -6,24 +6,24 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    fef744801667f1d901055f574a56c19fdba976ff
+%global gh_commit    0f0cdbcff50b4f7514a9da7be0c7b45a75084ebe
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150303
 %global gh_owner     llaville
 %global gh_project   php-compat-info
-%global prever       RC2
+#global prever       RC2
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        4.0.0
-%global specrel 9
-Release:        %{?gh_short:0.%{specrel}.%{?gh_date:%{gh_date}git%{gh_short}}%{prever}}%{!?gh_short:%{specrel}}%{?dist}
+%global specrel 1
+Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://php5.laurent-laville.org/compatinfo/
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}%{?gh_short:-%{gh_short}}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
 # Script for fedora-review
 Source1:        fedora-review-check
 
@@ -49,7 +49,7 @@ BuildRequires:  %{_bindir}/phpunit
 #        "ext-json": "*",
 #        "ext-pdo_sqlite": "*",
 #        "symfony/console": "~2.5",
-#        "bartlett/php-reflect": "3.0.*@dev",
+#        "bartlett/php-reflect": "~3.0",
 Requires:       php(language) >= 5.3.0
 Requires:       php-json
 Requires:       php-libxml
@@ -154,6 +154,9 @@ fi
 
 
 %changelog
+* Sat Apr  4 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-1
+- update to 4.0.0
+
 * Thu Mar 26 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.9.RC2
 - update to 4.0.0 RC2
 - add dependency on bartlett/umlwriter
