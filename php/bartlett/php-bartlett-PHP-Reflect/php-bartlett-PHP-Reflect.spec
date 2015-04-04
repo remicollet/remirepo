@@ -2,94 +2,128 @@
 #
 # Copyright (c) 2011-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    6b059b7106c74e9db5d7dd84c2995eb6fe678331
-#global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global bootstrap    0
+%global gh_commit    5c26dbcc14b65b888d9eb507be5ed0a1bb8db68d
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+#global gh_date      20150331
 %global gh_owner     llaville
 %global gh_project   php-reflect
+#global prever       RC2
+%if %{bootstrap}
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%else
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 Name:           php-bartlett-PHP-Reflect
-Version:        2.6.2
+Version:        3.0.0
 %global specrel 1
-Release:        %{?gh_short:0.%{specrel}.git%{gh_short}}%{!?gh_short:%{specrel}}%{?dist}
+Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://php5.laurent-laville.org/reflect/
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?gh_short:-%{gh_short}}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
 
 # Autoloader for RPM - die composer !
 # Enable cache plugin
-Patch0:         %{name}-rpm.patch
+Patch0:         %{name}-3.0.0-rpm.patch
 
-# https://github.com/llaville/php-reflect/pull/16
-Patch1:         %{name}-pr16.patch
-
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language)               >= 5.3
+BuildRequires:  php(language) >= 5.3
+%if %{with_tests}
 # to run test suite
 BuildRequires:  %{_bindir}/phpunit
-Requires:       php-composer(sebastian/version)        >= 1.0
-BuildRequires:  php-composer(phpunit/php-timer)        >= 1.0
-BuildRequires:  php-composer(nikic/php-parser)         >= 1.0
-BuildRequires:  php-composer(symfony/class-loader)     >= 2.5
-BuildRequires:  php-composer(symfony/event-dispatcher) >= 2.5
-BuildRequires:  php-composer(symfony/finder)           >= 2.5
-BuildRequires:  php-composer(symfony/console)          >= 2.5
-BuildRequires:  php-composer(seld/jsonlint)            >= 1.1
-BuildRequires:  php-composer(justinrainbow/json-schema) >= 1.3
+BuildRequires:  php-composer(sebastian/version)                 >= 1.0
+BuildRequires:  php-composer(nikic/php-parser)                  >= 1.1
+BuildRequires:  php-composer(doctrine/collections)              >= 1.2
+BuildRequires:  php-composer(symfony/class-loader)              >= 2.5
+BuildRequires:  php-composer(symfony/event-dispatcher)          >= 2.5
+BuildRequires:  php-composer(symfony/finder)                    >= 2.5
+BuildRequires:  php-composer(symfony/console)                   >= 2.5
+BuildRequires:  php-composer(symfony/stopwatch)                 >= 2.5
+BuildRequires:  php-composer(symfony/dependency-injection)      >= 2.5
+BuildRequires:  php-composer(phpdocumentor/reflection-docblock) >= 2.0
+BuildRequires:  php-composer(seld/jsonlint)                     >= 1.1
+BuildRequires:  php-composer(justinrainbow/json-schema)         >= 1.3
+BuildRequires:  php-composer(monolog/monolog)                   >= 1.10
+BuildRequires:  php-composer(bartlett/umlwriter)                >= 1.0
+%endif
 
-# From composer.json, "require"
-#        "php": ">=5.3.0",
+# From composer.json, "require": {
+#        "php": ">=5.3.2",
 #        "ext-tokenizer": "*",
 #        "ext-pcre": "*",
 #        "ext-spl": "*",
 #        "ext-json": "*",
 #        "ext-date": "*",
+#        "ext-reflection": "*",
 #        "sebastian/version": "~1.0",
-#        "phpunit/php-timer": "~1.0",
-#        "nikic/php-parser": "~1.0",
+#        "nikic/php-parser": "~1.1",
+#        "doctrine/collections": "~1.2",
 #        "symfony/event-dispatcher": "~2.5",
 #        "symfony/finder": "~2.5",
 #        "symfony/console": "~2.5"
+#        "symfony/stopwatch": "~2.5",
+#        "symfony/dependency-injection": "~2.5",
+#        "phpdocumentor/reflection-docblock": "~2.0",
 #        "justinrainbow/json-schema": "~1.3",
 #        "seld/jsonlint": "~1.1"
-Requires:       php(language)               >= 5.3
+Requires:       php(language) >= 5.3.2
 Requires:       php-date
 Requires:       php-json
 Requires:       php-pcre
+Requires:       php-pdo_sqlite
 Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-tokenizer
-Requires:       php-composer(sebastian/version)        >= 1.0
-Requires:       php-composer(sebastian/version)        <  2
-Requires:       php-composer(phpunit/php-timer)        >= 1.0
-Requires:       php-composer(phpunit/php-timer)        <  2
-Requires:       php-composer(nikic/php-parser)         >= 1.0
-Requires:       php-composer(nikic/php-parser)         <  2
-Requires:       php-composer(symfony/event-dispatcher) >= 2.5
-Requires:       php-composer(symfony/event-dispatcher) <  3
-Requires:       php-composer(symfony/finder)           >= 2.5
-Requires:       php-composer(symfony/finder)           <  3
-Requires:       php-composer(symfony/console)          >= 2.5
-Requires:       php-composer(symfony/console)          <  3
-Requires:       php-composer(seld/jsonlint)            >= 1.1
-Requires:       php-composer(seld/jsonlint)            <  2
-Requires:       php-composer(justinrainbow/json-schema) >= 1.3
-Requires:       php-composer(justinrainbow/json-schema) <  2
-# From composer.json, "suggest"
+Requires:       php-composer(sebastian/version)                 >= 1.0
+Requires:       php-composer(sebastian/version)                 <  2
+Requires:       php-composer(nikic/php-parser)                  >= 1.1
+Requires:       php-composer(nikic/php-parser)                  <  2
+Requires:       php-composer(doctrine/collections)              >= 1.2
+Requires:       php-composer(doctrine/collections)              <  2
+Requires:       php-composer(symfony/event-dispatcher)          >= 2.5
+Requires:       php-composer(symfony/event-dispatcher)          <  3
+Requires:       php-composer(symfony/finder)                    >= 2.5
+Requires:       php-composer(symfony/finder)                    <  3
+Requires:       php-composer(symfony/console)                   >= 2.5
+Requires:       php-composer(symfony/console)                   <  3
+Requires:       php-composer(symfony/stopwatch)                 >= 2.5
+Requires:       php-composer(symfony/stopwatch)                 <  3
+Requires:       php-composer(symfony/dependency-injection)      >= 2.5
+Requires:       php-composer(symfony/dependency-injection)      <  3
+Requires:       php-composer(phpdocumentor/reflection-docblock) >= 2.0
+Requires:       php-composer(phpdocumentor/reflection-docblock) <  3
+Requires:       php-composer(seld/jsonlint)                     >= 1.1
+Requires:       php-composer(seld/jsonlint)                     <  2
+Requires:       php-composer(justinrainbow/json-schema)         >= 1.3
+Requires:       php-composer(justinrainbow/json-schema)         <  2
+#    "require-dev": {
+#        "monolog/monolog": "~1.10",
+#        "bartlett/umlwriter": "~1.0"
+#    "suggest": {
 #        "doctrine/cache": "Allow caching results"
+#        "psr/log": "Allow logging events with the LogPlugin",
+#        "monolog/monolog": "Allow logging events with the LogPlugin",
+#        "bartlett/phpunit-loggertestlistener": "Allow logging unit tests to your favorite PSR-3 logger interface",
+#        "bartlett/umlwriter": "Allow writing UML class diagrams (Graphviz or PlantUML)"
 Requires:       php-composer(doctrine/cache)
+%if ! %{bootstrap}
+Requires:       php-composer(bartlett/umlwriter)       >= 1.0
+Requires:       php-composer(bartlett/umlwriter)       <  2
+%endif
 # For our patch
 Requires:       php-composer(symfony/class-loader)     >= 2.5
 Requires:       php-composer(symfony/class-loader)     <  3
 
 Obsoletes:      php-channel-bartlett <= 1.3
+
 Provides:       php-composer(bartlett/php-reflect) = %{version}
 
 
@@ -102,13 +136,11 @@ Documentation: http://php5.laurent-laville.org/reflect/manual/current/en/
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
-#setup -q -n %{gh_project}-%{version}
 
 %patch0 -p1 -b .rpm
-%patch1 -p1 -b .pr16
 
-sed -e 's/@package_version@/%{version}/' \
-    -i $(find src -name \*.php)
+sed -e 's/@package_version@/%{version}%{?prever}/' \
+    -i $(find src -name \*.php) bin/phpreflect
 
 
 %build
@@ -116,7 +148,6 @@ sed -e 's/@package_version@/%{version}/' \
 
 
 %install
-rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_datadir}/php
 cp -pr src/Bartlett %{buildroot}%{_datadir}/php/Bartlett
 
@@ -126,12 +157,16 @@ install -D -p -m 644 bin/phpreflect.1         %{buildroot}%{_mandir}/man1/phpref
 
 
 %check
-# Version 2.0.0 : OK (155 tests, 156 assertions)
-%{_bindir}/phpunit
+%if %{with_tests}
+# Required when bartlett/php-compatinfo installed (local build)
+export BARTLETT_COMPATINFO_DB=%{_datadir}/php-bartlett-PHP-CompatInfo/compatinfo.sqlite
 
-
-%clean
-rm -rf %{buildroot}
+# Version 3.0.0 : OK, but incomplete, skipped, or risky tests!
+# Tests: 122, Assertions: 123, Incomplete: 3.
+%{_bindir}/phpunit -v
+%else
+: Test suite disabled
+%endif
 
 
 %post
@@ -142,17 +177,64 @@ fi
 
 
 %files
-%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc composer.json README.*
 %config(noreplace) %{_sysconfdir}/phpreflect.json
 %{_bindir}/phpreflect
-%{_datadir}/php/Bartlett
+%{_datadir}/php/Bartlett/Reflect*
 %{_mandir}/man1/phpreflect.1*
 
 
 %changelog
+* Fri Apr  3 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- update to 3.0.0
+- cleanup EL-5 stuff
+
+* Tue Mar 31 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.13.20150331git7efd1d0
+- pull latest upstream changes
+
+* Tue Mar 31 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.12.20150330git2c88d1a
+- pull latest upstream changes
+
+* Tue Mar 24 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.11.RC2
+- update to 3.0.0 RC2
+- add dependency on bartlett/umlwriter
+
+* Thu Mar 12 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.10.RC1
+- update to 3.0.0 RC1
+
+* Thu Feb 26 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.9.20150226gitaab371c
+- update to 3.0.0 beta3
+
+* Mon Feb 23 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.8.20150219gite7f804e
+- fix output
+
+* Sun Feb 22 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.7.20150219gite7f804e
+- fix reported version
+
+* Sun Feb 22 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.6.20150219gite7f804e
+- update to 3.0.0 beta2
+
+* Wed Feb 04 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.5.20150203gitb4b807b
+- update to 3.0.0 beta1
+
+* Tue Jan 20 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.4.20150118git398cdae
+- fix composer only code (pr #17)
+
+* Mon Jan 19 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.3.20150118git398cdae
+- new 3.0 snapshot
+
+* Fri Jan 16 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.2.20150115git0189a64
+- update to 3.0.0 alpha3
+
+* Tue Jan  6 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.1.20150105git51f7968
+- update to 3.0.0 alpha2
+- drop dependency on phpunit/php-timer
+- add dependencies on php-pdo_sqlite, doctrine/collections,
+  symfony/stopwatch, symfony/dependency-injection
+  and phpdocumentor/reflection-docblock
+
 * Mon Jan  5 2015 Remi Collet <remi@fedoraproject.org> - 2.6.2-1
 - Update to 2.6.2
 - open https://github.com/llaville/php-reflect/pull/16
