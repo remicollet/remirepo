@@ -1,0 +1,127 @@
+--- pecl/lzf/trunk/filter.c	2015/04/04 06:53:08	336356
++++ pecl/lzf/trunk/filter.c	2015/04/04 08:08:12	336357
+@@ -1,5 +1,6 @@
+ #include "php.h"
+ #include "lzf.h"
++#include "php_lzf.h"
+ 
+ #define LZF_BLOCKSIZE	(1024 * 64 - 1)
+ 
+@@ -160,7 +161,7 @@
+ 	int flags TSRMLS_DC)
+ {
+ 	size_t consumed = 0;
+-	php_lzf_filter_state *inst = (php_lzf_filter_state *) thisfilter->abstract;
++	php_lzf_filter_state *inst = (php_lzf_filter_state *) Z_PTR(thisfilter->abstract);
+ 	php_stream_filter_status_t exit_status = PSFS_FEED_ME;
+ 	php_stream_bucket *bucket = NULL;
+ 
+@@ -208,8 +209,8 @@
+ {
+ 	assert(thisfilter->abstract != NULL);
+ 
+-	php_lzf_filter_state_dtor((php_lzf_filter_state *) thisfilter->abstract TSRMLS_CC);
+-	pefree(thisfilter->abstract, ((php_lzf_filter_state *) thisfilter->abstract)->persistent);
++	php_lzf_filter_state_dtor((php_lzf_filter_state *) Z_PTR(thisfilter->abstract) TSRMLS_CC);
++	pefree(Z_PTR(thisfilter->abstract), ((php_lzf_filter_state *) Z_PTR(thisfilter->abstract))->persistent);
+ }
+ 
+ static php_stream_filter_ops lzf_compress_ops = {
+--- pecl/lzf/trunk/lzf.c	2015/04/04 06:53:08	336356
++++ pecl/lzf/trunk/lzf.c	2015/04/04 08:08:12	336357
+@@ -41,7 +41,11 @@
+ 	PHP_FE(lzf_compress,		NULL)
+ 	PHP_FE(lzf_decompress,		NULL)
+ 	PHP_FE(lzf_optimized_for,	NULL)
++#ifdef PHP_FE_END
++	PHP_FE_END
++#else
+ 	{NULL, NULL, NULL}	/* Must be the last line in lzf_functions[] */
++#endif
+ };
+ /* }}} */
+ 
+@@ -75,6 +79,8 @@
+ {
+ 	php_stream_filter_register_factory("lzf.compress", &php_lzf_compress_filter_factory TSRMLS_CC);
+ 	php_stream_filter_register_factory("lzf.decompress", &php_lzf_decompress_filter_factory TSRMLS_CC);
++
++	return SUCCESS;
+ }
+ /* }}} */
+ 
+@@ -84,6 +90,8 @@
+ {
+ 	php_stream_filter_unregister_factory("lzf.compress" TSRMLS_CC);
+ 	php_stream_filter_unregister_factory("lzf.decompress" TSRMLS_CC);
++
++	return SUCCESS;
+ }
+ /* }}} */
+ 
+@@ -110,7 +118,7 @@
+ PHP_FUNCTION(lzf_compress)
+ {
+ 	char *retval, *arg = NULL;
+-	int arg_len, result;
++	strsize_t arg_len, result;
+ 
+ 	if (ZEND_NUM_ARGS() != 1 || zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &arg, &arg_len) == FAILURE) {
+ 		WRONG_PARAM_COUNT;
+@@ -127,10 +135,10 @@
+ 		RETURN_FALSE;
+ 	}
+ 
+-	retval = erealloc(retval, result + 1);
+ 	retval[result] = 0;
+ 
+-	RETURN_STRINGL(retval, result, 0);
++	_RETVAL_STRINGL(retval, result);
++	efree(retval);
+ }
+ /* }}} */
+ 
+@@ -139,7 +147,7 @@
+ PHP_FUNCTION(lzf_decompress)
+ {
+ 	char *arg = NULL;
+-	int arg_len, result, i = 1;
++	strsize_t arg_len, result, i = 1;
+ 	char *buffer;
+ 	size_t buffer_size = 1024;
+ 
+@@ -168,10 +176,10 @@
+ 		RETURN_FALSE;
+ 	}
+ 
+-	buffer = erealloc(buffer, result + 1);
+ 	buffer[result] = 0;
+ 
+-	RETURN_STRINGL(buffer, result, 0);
++	_RETVAL_STRINGL(buffer, result);
++	efree(buffer);
+ }
+ /* }}} */
+ 
+--- pecl/lzf/trunk/php_lzf.h	2015/04/04 06:53:08	336356
++++ pecl/lzf/trunk/php_lzf.h	2015/04/04 08:08:12	336357
+@@ -49,6 +49,19 @@
+ PHP_FUNCTION(lzf_decompress);
+ PHP_FUNCTION(lzf_optimized_for);
+ 
++#if PHP_MAJOR_VERSION < 7
++typedef long zend_long;
++typedef int strsize_t;
++#define _RETVAL_STRINGL(a,l)  RETVAL_STRINGL(a,l,1)
++#define Z_PTR(p) (p)
++#else
++typedef size_t strsize_t;
++#define TSRMLS_C
++#define TSRMLS_CC
++#define TSRMLS_DC
++#define _RETVAL_STRINGL(a,l)  RETVAL_STRINGL(a,l)
++#endif
++
+ #endif	/* PHP_LZF_H */
+ 
+ 

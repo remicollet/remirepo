@@ -14,7 +14,7 @@
 
 Name:           %{?scl_prefix}php-pecl-lzf
 Version:        1.6.2
-Release:        10%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:        11%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extension to handle LZF de/compression
 Group:          Development/Languages
 License:        PHP
@@ -28,6 +28,9 @@ Source1:        http://www.php.net/license/2_02.txt
 
 # remove bundled lzf libs
 Patch0:         php-lzf-rm-bundled-libs.patch
+# PHP 7 compatibility
+# http://svn.php.net/viewvc?view=revision&revision=336357
+Patch1:         php-lzf-php7.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -36,8 +39,6 @@ BuildRequires:  liblzf-devel
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-%{ext_name} = %{version}
@@ -47,17 +48,17 @@ Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:      php53-pecl-%{ext_name}
-Obsoletes:      php53u-pecl-%{ext_name}
-Obsoletes:      php54-pecl-%{ext_name}
-Obsoletes:      php54w-pecl-%{ext_name}
+Obsoletes:     php53-pecl-%{ext_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{ext_name} <= %{version}
+Obsoletes:     php54-pecl-%{ext_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{ext_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:      php55u-pecl-%{ext_name}
-Obsoletes:      php55w-pecl-%{ext_name}
+Obsoletes:     php55u-pecl-%{ext_name} <= %{version}
+Obsoletes:     php55w-pecl-%{ext_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:      php56u-pecl-%{ext_name}
-Obsoletes:      php56w-pecl-%{ext_name}
+Obsoletes:     php56u-pecl-%{ext_name} <= %{version}
+Obsoletes:     php56w-pecl-%{ext_name} <= %{version}
 %endif
 %endif
 
@@ -75,13 +76,19 @@ library
 LZF is a very fast compression algorithm, ideal for saving space with a 
 slight speed cost.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+
 
 %prep
 %setup -c -q
 
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
+
 mv %{pecl_name}-%{version} NTS
 cd NTS
 %patch0 -p1 -b liblzf
+%patch1 -p3 -b .php7
 rm -f lzf_c.c lzf_d.c lzf.h
 
 cp %{SOURCE1} LICENSE
@@ -134,12 +141,9 @@ make install -C ZTS INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
+# Documentation
 cd NTS
-for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
-for i in LICENSE $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -178,23 +182,37 @@ NO_INTERACTION=1 \
 rm -rf %{buildroot}
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
 
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
+
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ]  ; then
-   %{pecl_uninstall} %{pecl_name} >/dev/null || :
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
+    %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
 
 %files
 %defattr(-,root,root,-)
+%{!?_licensedir:%global license %%doc}
+%license NTS/LICENSE
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
+%{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{ext_name}.so
-%{pecl_xmldir}/%{name}.xml
+
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{ext_name}.so
@@ -202,6 +220,12 @@ fi
 
 
 %changelog
+* Sat Apr  4 2015 Remi Collet <remi@fedoraproject.org> - 1.6.2-11
+- add upstream fix for PHP 7
+- fix license handling
+- don't install/register tests
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.6.2-10.1
 - Fedora 21 SCL mass rebuild
 
