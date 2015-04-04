@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global svnrel 3844
+%global svnrel 3889
 %global rdate  20150220
 %global upver  0.5
 
@@ -238,6 +238,9 @@ fi
 
 
 %changelog
+* Sat Apr 04 2015 Remi Collet <remi@fedoraproject.org> - 0,50-0.1.svn3889
+- Update to 0.5 snapshot revision 3889
+
 * Sun Mar 22 2015 Remi Collet <remi@fedoraproject.org> - 0.50-0.1.svn3844
 - Update to 0.5 snapshot revision 3844
 - swicth to Qt 5
