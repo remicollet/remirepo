@@ -1,7 +1,30 @@
+diff -up ./bin/phpreflect.json.dist.rpm ./bin/phpreflect.json.dist
+--- ./bin/phpreflect.json.dist.rpm	2015-04-04 15:15:47.860245093 +0200
++++ ./bin/phpreflect.json.dist	2015-04-04 15:16:37.420443972 +0200
+@@ -6,6 +6,19 @@
+         }
+     ],
+     "plugins": [
++        {
++            "name": "Cache",
++            "class": "Bartlett\\Reflect\\Plugin\\CachePlugin",
++            "options": {
++                "adapter": "DoctrineCacheAdapter",
++                "backend": {
++                    "class": "Doctrine\\Common\\Cache\\FilesystemCache",
++                    "args": [
++                        "%{HOME}/.cache/php-reflect"
++                    ]
++                }
++            }
++        }
+     ],
+     "analysers": [
+     ],
 diff -up ./bin/phpreflect.rpm ./bin/phpreflect
---- ./bin/phpreflect.rpm	2015-02-19 18:51:08.000000000 +0100
-+++ ./bin/phpreflect	2015-02-22 11:32:38.272052909 +0100
-@@ -1,23 +1,37 @@
+--- ./bin/phpreflect.rpm	2015-04-03 08:47:14.000000000 +0200
++++ ./bin/phpreflect	2015-04-04 15:21:07.510527397 +0200
+@@ -1,23 +1,39 @@
 -#!/usr/bin/env php
 +#!/usr/bin/php
  <?php
@@ -12,12 +35,11 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
  } else {
 -    $baseDir   = dirname(__DIR__);
 -    $vendorDir = $baseDir . '/vendor';
--
++    putenv('BARTLETT_COMPATINFO_DB=/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite');
+ 
 -    if (!file_exists($vendorDir . '/autoload.php')) {
 -        $vendorDir = dirname(dirname($baseDir));
 -    }
-+    putenv('BARTLETT_COMPATINFO_DB=/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite');
-+
 +    $vendorDir = '/usr/share/php';
  
      if (!getenv("BARTLETTRC")) {
@@ -41,6 +63,8 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
 +    'phpDocumentor\\Reflection'           => $vendorDir,
 +    'Seld\\JsonLint'                      => $vendorDir,
 +    'JsonSchema'                          => $vendorDir,
++    'Psr\\Log'                            => $vendorDir,
++    'Monolog'                             => $vendorDir,
 +    'Bartlett'                            => $vendorDir,
 +));
 +$loader->useIncludePath(true);
@@ -48,7 +72,7 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
  
  if (PHP_SAPI !== 'cli') {
      return;
-@@ -28,5 +40,5 @@ use Bartlett\Reflect\Console\Application
+@@ -28,5 +44,5 @@ use Bartlett\Reflect\Console\Application
  
  Environment::setScanDir();
  
@@ -56,8 +80,8 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
 +$application = new Application($appName, '@package_version@');
  $application->run();
 diff -up ./src/Bartlett/Reflect/Console/Application.php.rpm ./src/Bartlett/Reflect/Console/Application.php
---- ./src/Bartlett/Reflect/Console/Application.php.rpm	2015-02-22 11:33:12.102190255 +0100
-+++ ./src/Bartlett/Reflect/Console/Application.php	2015-02-22 11:33:24.298239771 +0100
+--- ./src/Bartlett/Reflect/Console/Application.php.rpm	2015-04-03 08:47:14.000000000 +0200
++++ ./src/Bartlett/Reflect/Console/Application.php	2015-04-04 15:15:24.203150166 +0200
 @@ -82,7 +82,7 @@ class Application extends BaseApplicatio
              $jsonFile =  './' . getenv("BARTLETTRC");
          }
@@ -68,8 +92,8 @@ diff -up ./src/Bartlett/Reflect/Console/Application.php.rpm ./src/Bartlett/Refle
  
          $defaultAnalyser = (strcasecmp($appName, 'phpcompatinfo') === 0)
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
---- ./tests/bootstrap.php.rpm	2015-02-19 18:51:08.000000000 +0100
-+++ ./tests/bootstrap.php	2015-02-22 11:31:52.226865970 +0100
+--- ./tests/bootstrap.php.rpm	2015-04-03 08:47:14.000000000 +0200
++++ ./tests/bootstrap.php	2015-04-04 15:15:24.203150166 +0200
 @@ -1,11 +1,9 @@
  <?php
  
@@ -111,8 +135,8 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 +    require_once $file;
 +}
 diff -up ./tests/Environment/YourLogger.php.rpm ./tests/Environment/YourLogger.php
---- ./tests/Environment/YourLogger.php.rpm	2015-02-19 18:51:08.000000000 +0100
-+++ ./tests/Environment/YourLogger.php	2015-02-22 11:31:52.226865970 +0100
+--- ./tests/Environment/YourLogger.php.rpm	2015-04-03 08:47:14.000000000 +0200
++++ ./tests/Environment/YourLogger.php	2015-04-04 15:15:24.203150166 +0200
 @@ -14,6 +14,7 @@ class YourLogger extends Logger
          if (!file_exists($tempDir)) {
              mkdir($tempDir, 0755, true);

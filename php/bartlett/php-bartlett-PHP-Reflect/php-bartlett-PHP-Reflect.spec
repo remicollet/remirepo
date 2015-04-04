@@ -21,7 +21,7 @@
 
 Name:           php-bartlett-PHP-Reflect
 Version:        3.0.0
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -105,7 +105,10 @@ Requires:       php-composer(seld/jsonlint)                     <  2
 Requires:       php-composer(justinrainbow/json-schema)         >= 1.3
 Requires:       php-composer(justinrainbow/json-schema)         <  2
 #    "require-dev": {
+#        "doctrine/cache": "~1.3",
+#        "psr/log": "~1.0",
 #        "monolog/monolog": "~1.10",
+#        "bartlett/phpunit-loggertestlistener": "~1.1",
 #        "bartlett/umlwriter": "~1.0"
 #    "suggest": {
 #        "doctrine/cache": "Allow caching results"
@@ -113,7 +116,8 @@ Requires:       php-composer(justinrainbow/json-schema)         <  2
 #        "monolog/monolog": "Allow logging events with the LogPlugin",
 #        "bartlett/phpunit-loggertestlistener": "Allow logging unit tests to your favorite PSR-3 logger interface",
 #        "bartlett/umlwriter": "Allow writing UML class diagrams (Graphviz or PlantUML)"
-Requires:       php-composer(doctrine/cache)
+Requires:       php-composer(doctrine/cache)           >= 1.3
+Requires:       php-composer(psr/log)                  >= 1.0
 %if ! %{bootstrap}
 Requires:       php-composer(bartlett/umlwriter)       >= 1.0
 Requires:       php-composer(bartlett/umlwriter)       <  2
@@ -187,6 +191,9 @@ fi
 
 
 %changelog
+* Sat Apr  4 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-2
+- add cache plugin in default configuration
+
 * Fri Apr  3 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
 - update to 3.0.0
 - cleanup EL-5 stuff
