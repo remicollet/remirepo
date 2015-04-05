@@ -15,6 +15,7 @@
 
 %define pecl_name   selinux
 %global with_zts    0%{?__ztsphp:1}
+%global with_tests  %{?_without_tests:0}%{!?_without_tests:1}
 %if "%{php_version}" < "5.6"
 %global ini_name    %{pecl_name}.ini
 %else
@@ -24,19 +25,19 @@
 Summary:        SELinux binding for PHP scripting language
 Name:           %{?scl_prefix}php-pecl-selinux
 Version:        0.3.1
-Release:        16%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:        17%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-Source:         http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+#Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+# SVN snapshot
+Source0:        http://pecl.php.net/get/%{pecl_name}-0.4.2dev.tgz
 
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires:  %{?scl_prefix}php-devel >= 5.2.0
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  libselinux-devel >= 2.0.80
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires:       libselinux >= 2.0.80
@@ -49,17 +50,21 @@ Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:     php54-pecl-%{pecl_name}
-Obsoletes:     php54w-pecl-%{pecl_name}
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}
-Obsoletes:     php55w-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name}
-Obsoletes:     php56w-pecl-%{pecl_name}
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -78,9 +83,28 @@ The libselinux is a set of application program interfaces towards in-kernel
 SELinux, contains get/set security context, communicate security server,
 translate between raw and readable format and so on.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+
+
 %prep
 %setup -c -q
-mv %{pecl_name}-%{version} NTS
+mv %{pecl_name}-0.4.2dev NTS
+
+# Don't install/register tests
+# Keep version as 0.3.1 for now
+sed -e 's/role="test"/role="src"/' \
+    -e 's/0.4.2dev/0.3.1/' \
+    -i package.xml
+
+pushd NTS
+sed -e 's/"0.4.2dev"/"0.3.1"/' -i php_selinux.h
+
+extver=$(sed -n '/#define PHP_SELINUX_VERSION/{s/.* "//;s/".*$//;p}' php_selinux.h)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}.
+   exit 1
+fi
+popd
 
 # Drop in the bit of configuration
 cat > %{ini_name} << 'EOF'
@@ -136,33 +160,57 @@ done
 
 
 %check
-: simple module load test for the NTS extension
+cd NTS
+: Minimal load test for NTS extension
 %{__php} --no-php-ini \
     --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+%if %{with_tests}
+: Upstream test suite for NTS extension
+TEST_PHP_EXECUTABLE=%{__php} \
+TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=0 \
+%{__php} -n run-tests.php --show-diff
+: Ignore result as unreliable in mock
+%endif
+
 %if %{with_zts}
-: simple module load test for the ZTS extension
+cd ../ZTS
+: Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
     --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 %endif
 
 
+
 %clean
 rm -rf %{buildroot}
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
+
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -176,6 +224,10 @@ fi
 
 
 %changelog
+* Sun Apr  5 2015 Remi Collet <remi@fedoraproject.org> - 0.3.1-17
+- add upstream fix for PHP 7
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 0.3.1-16.1
 - Fedora 21 SCL mass rebuild
 
