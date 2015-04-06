@@ -1,0 +1,647 @@
+--- pecl/selinux/trunk/php_selinux.h	2015/04/05 09:35:15	336380
++++ pecl/selinux/trunk/php_selinux.h	2015/04/05 12:53:07	336381
+@@ -4,6 +4,9 @@
+ extern zend_module_entry		selinux_module_entry;
+ #define phpext_selinux_ptr		&selinux_module_entry
+ 
++#define PHP_SELINUX_VERSION "0.3.1"
++#define PHP_SELINUX_STATE   "devel"
++
+ PHP_RSHUTDOWN_FUNCTION(selinux);
+ 
+ /*
+--- pecl/selinux/trunk/selinux.c	2015/04/05 09:35:15	336380
++++ pecl/selinux/trunk/selinux.c	2015/04/05 12:53:07	336381
+@@ -316,7 +316,7 @@
+ 	NULL,			/* request_startup_func */
+ 	NULL,			/* request_shutdown_func */
+ 	NULL,			/* info_func */
+-	NO_VERSION_YET,
++	PHP_SELINUX_VERSION,
+ 	STANDARD_MODULE_PROPERTIES,
+ };
+ 
+--- pecl/selinux/trunk/php_selinux.h	2015/04/05 13:44:37	336386
++++ pecl/selinux/trunk/php_selinux.h	2015/04/05 13:46:35	336387
+@@ -105,4 +105,13 @@
+ PHP_FUNCTION(selinux_getpolicytype);
+ PHP_FUNCTION(selinux_policy_root);
+ 
++
++#if PHP_MAJOR_VERSION < 7
++#define _RETVAL_STRING(s)  RETVAL_STRING(s,1)
++#define _ADD_STRING(a,s)   add_next_index_string(a,s,1)
++#else
++#define _RETVAL_STRING(s)  RETVAL_STRING(s)
++#define _ADD_STRING(a,s)   add_next_index_string(a,s)
++#endif
++
+ #endif	/* PHP_SELINUX_H */
+--- pecl/selinux/trunk/selinux.c	2015/04/05 13:44:37	336386
++++ pecl/selinux/trunk/selinux.c	2015/04/05 13:46:35	336387
+@@ -1,8 +1,8 @@
+ /*
+  +----------------------------------------------------------------------+
+- | PHP Version 5                                                        |
++ | PHP Version 5, 7                                                     |
+  +----------------------------------------------------------------------+
+- | Copyright (c) 1997-2009 The PHP Group                                |
++ | Copyright (c) 1997-2015 The PHP Group                                |
+  +----------------------------------------------------------------------+
+  | This source file is subject to version 3.01 of the PHP license,      |
+  | that is bundled with this package in the file LICENSE, and is        |
+@@ -420,7 +420,7 @@
+ 
+ 	if (!context)
+ 		RETURN_EMPTY_STRING();
+-	RETVAL_STRING(context, 1);
++	_RETVAL_STRING(context);
+ 	freecon(context);
+ }
+ /* }}} */
+@@ -461,7 +461,7 @@
+ 
+ 	if (!context)
+ 		RETURN_EMPTY_STRING();
+-	RETVAL_STRING(context, 1);
++	_RETVAL_STRING(context);
+ 	freecon(context);
+ }
+ /* }}} */
+@@ -480,7 +480,7 @@
+ 
+ 	if (!context)
+ 		RETURN_EMPTY_STRING();
+-	RETVAL_STRING(context, 1);
++	_RETVAL_STRING(context);
+ 	freecon(context);
+ }
+ /* }}} */
+@@ -499,7 +499,7 @@
+ 
+ 	if (!context)
+ 		RETURN_EMPTY_STRING();
+-	RETVAL_STRING(context, 1);
++	_RETVAL_STRING(context);
+ 	freecon(context);
+ }
+ /* }}} */
+@@ -538,7 +538,7 @@
+ 
+ 	if (!context)
+ 		RETURN_EMPTY_STRING();
+-	RETVAL_STRING(context, 1);
++	_RETVAL_STRING(context);
+ 	freecon(context);
+ }
+ /* }}} */
+@@ -577,7 +577,7 @@
+ 
+ 	if (!context)
+ 		RETURN_EMPTY_STRING();
+-	RETVAL_STRING(context, 1);
++	_RETVAL_STRING(context);
+ 	freecon(context);
+ }
+ /* }}} */
+@@ -616,7 +616,7 @@
+ 
+ 	if (!context)
+ 		RETURN_EMPTY_STRING();
+-	RETVAL_STRING(context, 1);
++	_RETVAL_STRING(context);
+ 	freecon(context);
+ }
+ /* }}} */
+@@ -656,7 +656,7 @@
+ 	if (getfilecon(filename, &context) < 0)
+ 		RETURN_FALSE;
+ 
+-	RETVAL_STRING(context, 1);
++	_RETVAL_STRING(context);
+ 	freecon(context);
+ }
+ /* }}} */
+@@ -676,7 +676,7 @@
+ 	if (lgetfilecon(filename, &context) < 0)
+ 		RETURN_FALSE;
+ 
+-	RETVAL_STRING(context, 1);
++	_RETVAL_STRING(context);
+ 	freecon(context);
+ }
+ /* }}} */
+@@ -705,7 +705,7 @@
+ 	if (fgetfilecon(fdesc, &context) < 0)
+ 		RETURN_FALSE;
+ 
+-	RETVAL_STRING(context, 1);
++	_RETVAL_STRING(context);
+ 	freecon(context);
+ }
+ /* }}} */
+@@ -794,7 +794,7 @@
+ 		RETURN_FALSE;
+ 	if (getpeercon(sockfd, &context) < 0)
+ 		RETURN_FALSE;
+-	RETVAL_STRING(context, 1);
++	_RETVAL_STRING(context);
+ 	freecon(context);
+ }
+ /* }}} */
+@@ -808,8 +808,13 @@
+ 	security_class_t tclass;
+ 	access_vector_t perm;
+ 	struct av_decision avd;
+-	zval *allowed, *auditallow, *auditdeny;
+ 	int permissive = 0;
++#if PHP_MAJOR_VERSION < 7
++	zval *allowed, *auditallow, *auditdeny;
++#else
++	zval zallowed, zauditallow, zauditdeny;
++	zval *allowed=&zallowed, *auditallow=&zauditallow, *auditdeny=&zauditdeny;
++#endif
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss",
+ 				  &scontext, &scontext_len,
+@@ -825,9 +830,11 @@
+ 	if (avd.flags & SELINUX_AVD_FLAGS_PERMISSIVE)
+ 	    permissive = 1;
+ 
++#if PHP_MAJOR_VERSION < 7
+ 	MAKE_STD_ZVAL(allowed);
+ 	MAKE_STD_ZVAL(auditallow);
+ 	MAKE_STD_ZVAL(auditdeny);
++#endif
+ 	array_init(allowed);
+ 	array_init(auditallow);
+ 	array_init(auditdeny);
+@@ -879,7 +886,7 @@
+ 					 tclass, objname, &context) < 0)
+ 		RETURN_FALSE;
+ 
+-	RETVAL_STRING(context, 1);
++	_RETVAL_STRING(context);
+ 	freecon(context);
+ }
+ /* }}} */
+@@ -902,7 +909,7 @@
+ 	tclass = string_to_security_class(tclass_name);
+ 	if (security_compute_relabel(scontext, tcontext, tclass, &context) < 0)
+ 		RETURN_FALSE;
+-	RETVAL_STRING(context, 1);
++	_RETVAL_STRING(context);
+ 	freecon(context);
+ }
+ /* }}} */
+@@ -925,7 +932,7 @@
+ 	tclass = string_to_security_class(tclass_name);
+ 	if (security_compute_member(scontext, tcontext, tclass, &context) < 0)
+ 		RETURN_FALSE;
+-	RETVAL_STRING(context, 1);
++	_RETVAL_STRING(context);
+ 	freecon(context);
+ }
+ /* }}} */
+@@ -950,7 +957,7 @@
+ 	array_init(return_value);
+ 	for (i=0; contexts[i]; i++)
+ 	{
+-		add_next_index_string(return_value, contexts[i], 1);
++		_ADD_STRING(return_value, contexts[i]);
+ 	}
+ 	freeconary(contexts);
+ }
+@@ -971,7 +978,7 @@
+ 	if (security_get_initial_context(name, &context) < 0)
+ 		RETURN_FALSE;
+ 
+-	RETVAL_STRING(context, 1);
++	_RETVAL_STRING(context);
+ 	freecon(context);
+ }
+ /* }}} */
+@@ -1008,8 +1015,8 @@
+ 	if (security_canonicalize_context(context, &canonicalized) < 0)
+ 		RETURN_FALSE;
+ 
+-	RETVAL_STRING(canonicalized, 1);
+-        freecon(canonicalized);
++	_RETVAL_STRING(canonicalized);
++	freecon(canonicalized);
+ }
+ /* }}} */
+ 
+@@ -1028,7 +1035,7 @@
+ 
+ 	array_init(return_value);
+ 	for (i=0; i < length; i++) {
+-		add_next_index_string(return_value, bool_names[i], 1);
++		_ADD_STRING(return_value, bool_names[i]);
+ 		free(bool_names[i]);
+ 	}
+ 	free(bool_names);
+@@ -1114,7 +1121,7 @@
+ 
+ 	if (selinux_trans_to_raw_context(context, &raw_context) < 0 || !raw_context)
+ 		RETURN_FALSE;
+-	RETVAL_STRING(raw_context, 1);
++	_RETVAL_STRING(raw_context);
+ 	freecon(raw_context);
+ }
+ /* }}} */
+@@ -1133,7 +1140,7 @@
+ 
+ 	if (selinux_raw_to_trans_context(context, &trans_context) < 0)
+ 		RETURN_FALSE;
+-	RETVAL_STRING(trans_context, 1);
++	_RETVAL_STRING(trans_context);
+ 	freecon(trans_context);
+ }
+ /* }}} */
+@@ -1184,7 +1191,7 @@
+ 		RETURN_FALSE;
+ 	}
+ 	selabel_close(hnd);
+-	RETVAL_STRING(context, 1);
++	_RETVAL_STRING(context);
+ 	freecon(context);
+ }
+ 
+@@ -1224,7 +1231,7 @@
+ 		RETURN_FALSE;
+ 	}
+ 	selabel_close(hnd);
+-	RETVAL_STRING(context, 1);
++	_RETVAL_STRING(context);
+ 	freecon(context);
+ }
+ 
+@@ -1272,7 +1279,7 @@
+ 			RETURN_FALSE;
+ 		}
+ 		selabel_close(hnd);
+-		RETVAL_STRING(context, 1);
++		_RETVAL_STRING(context);
+ 		freecon(context);
+ 
+ 		return;
+@@ -1328,7 +1335,7 @@
+ 			RETURN_FALSE;
+ 		}
+ 		selabel_close(hnd);
+-		RETVAL_STRING(context, 1);
++		_RETVAL_STRING(context);
+ 		freecon(context);
+ 
+ 		return;
+@@ -1349,11 +1356,11 @@
+ 		RETURN_FALSE;
+ 
+ 	if (enforce > 0) {
+-		RETVAL_STRING("enforcing", 1);
++		_RETVAL_STRING("enforcing");
+ 	} else if (enforce < 0) {
+-		RETVAL_STRING("disabled", 1);
++		_RETVAL_STRING("disabled");
+ 	} else {
+-		RETVAL_STRING("permissive", 1);
++		_RETVAL_STRING("permissive");
+ 	}
+ }
+ /* }}} */
+@@ -1368,7 +1375,7 @@
+ 		ZEND_WRONG_PARAM_COUNT();
+ 	if (selinux_getpolicytype(&policytype) < 0)
+ 		RETURN_FALSE;
+-	RETVAL_STRING(policytype, 1);
++	_RETVAL_STRING(policytype);
+ 	free(policytype);
+ }
+ /* }}} */
+@@ -1385,6 +1392,6 @@
+ 	root = (char *) selinux_policy_root();
+ 	if (!root)
+ 		RETURN_FALSE;
+-	RETVAL_STRING(root, 1);
++	_RETVAL_STRING(root);
+ }
+ /* }}} */
+--- pecl/selinux/trunk/php_selinux.h	2015/04/05 13:46:35	336387
++++ pecl/selinux/trunk/php_selinux.h	2015/04/05 16:50:58	336388
+@@ -107,11 +107,16 @@
+ 
+ 
+ #if PHP_MAJOR_VERSION < 7
++typedef long   zend_long;
++typedef int    strsize_t;
+ #define _RETVAL_STRING(s)  RETVAL_STRING(s,1)
+ #define _ADD_STRING(a,s)   add_next_index_string(a,s,1)
++#define _STREAM_ZVAL(s,z)  php_stream_from_zval_no_verify(stream, &z);
+ #else
++typedef size_t strsize_t;
+ #define _RETVAL_STRING(s)  RETVAL_STRING(s)
+ #define _ADD_STRING(a,s)   add_next_index_string(a,s)
++#define _STREAM_ZVAL(s,z)  php_stream_from_zval_no_verify(stream, z);
+ #endif
+ 
+ #endif	/* PHP_SELINUX_H */
+--- pecl/selinux/trunk/selinux.c	2015/04/05 13:46:35	336387
++++ pecl/selinux/trunk/selinux.c	2015/04/05 16:50:58	336388
+@@ -365,7 +365,7 @@
+    Sets the state of SELinux enforcing/permissive mode */
+ PHP_FUNCTION(selinux_setenforce)
+ {
+-	long mode;
++	zend_long mode;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,
+                                   "l", &mode) == FAILURE)
+@@ -430,7 +430,7 @@
+ PHP_FUNCTION(selinux_setcon)
+ {
+ 	security_context_t context;
+-	int length;
++	strsize_t length;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
+ 				  &context, &length) == FAILURE)
+@@ -450,7 +450,7 @@
+ PHP_FUNCTION(selinux_getpidcon)
+ {
+ 	security_context_t context;
+-	long pid;
++	zend_long pid;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l",
+ 				  &pid) == FAILURE)
+@@ -509,7 +509,7 @@
+ PHP_FUNCTION(selinux_setexeccon)
+ {
+ 	security_context_t context;
+-	int length;
++	strsize_t length;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
+ 				  &context, &length) == FAILURE)
+@@ -548,7 +548,7 @@
+ PHP_FUNCTION(selinux_setfscreatecon)
+ {
+ 	char *context;
+-	int length;
++	strsize_t length;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
+ 				  &context, &length) == FAILURE)
+@@ -587,7 +587,7 @@
+ PHP_FUNCTION(selinux_setkeycreatecon)
+ {
+ 	char *context;
+-	int length;
++	strsize_t length;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
+ 				  &context, &length) == FAILURE)
+@@ -626,7 +626,7 @@
+ PHP_FUNCTION(selinux_setsockcreatecon)
+ {
+ 	security_context_t context;
+-	int length;
++	strsize_t length;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
+ 				  &context, &length) == FAILURE)
+@@ -647,7 +647,7 @@
+ {
+ 	security_context_t context;
+ 	char *filename;
+-	int length;
++	strsize_t length;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
+ 				  &filename, &length) == FAILURE)
+@@ -667,7 +667,7 @@
+ {
+ 	security_context_t context;
+ 	char *filename;
+-	int length;
++	strsize_t length;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
+ 				  &filename, &length) == FAILURE)
+@@ -693,7 +693,7 @@
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,
+ 				  "z", &z) == FAILURE)
+ 		return;
+-	php_stream_from_zval_no_verify(stream, &z);
++	_STREAM_ZVAL(stream, z);
+ 
+ 	if (!stream)
+ 		RETURN_FALSE;
+@@ -715,7 +715,7 @@
+ PHP_FUNCTION(selinux_setfilecon)
+ {
+ 	char *filename, *context;
+-	int filename_len, context_len;
++	strsize_t filename_len, context_len;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss",
+ 				  &filename, &filename_len,
+@@ -733,7 +733,7 @@
+ PHP_FUNCTION(selinux_lsetfilecon)
+ {
+ 	char *filename, *context;
+-	int filename_len, context_len;
++	strsize_t filename_len, context_len;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss",
+ 				  &filename, &filename_len,
+@@ -753,13 +753,14 @@
+ 	zval *z;
+ 	php_stream *stream;
+ 	security_context_t context;
+-	int fdesc, context_len;
++	int fdesc;
++	strsize_t context_len;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "zs",
+ 				  &z, &context, &context_len) == FAILURE)
+ 		return;
+ 
+-	php_stream_from_zval_no_verify(stream, &z);
++	_STREAM_ZVAL(stream, z);
+ 	if (!stream)
+ 		RETURN_FALSE;
+ 
+@@ -785,7 +786,7 @@
+ 				  "z", &z) == FAILURE)
+ 		return;
+ 
+-	php_stream_from_zval_no_verify(stream, &z);
++	_STREAM_ZVAL(stream, z);
+ 	if (!stream)
+ 		RETURN_FALSE;
+ 
+@@ -804,7 +805,7 @@
+ PHP_FUNCTION(selinux_compute_av)
+ {
+ 	char *scontext, *tcontext, *tclass_name;
+-	int scontext_len, tcontext_len, tclass_len;
++	strsize_t scontext_len, tcontext_len, tclass_len;
+ 	security_class_t tclass;
+ 	access_vector_t perm;
+ 	struct av_decision avd;
+@@ -870,7 +871,7 @@
+ PHP_FUNCTION(selinux_compute_create)
+ {
+ 	char *scontext, *tcontext, *tclass_name, *objname;
+-	int scontext_len, tcontext_len, tclass_len, objname_len;
++	strsize_t scontext_len, tcontext_len, tclass_len, objname_len;
+ 	security_context_t context;
+ 	security_class_t tclass;
+ 
+@@ -896,7 +897,7 @@
+ PHP_FUNCTION(selinux_compute_relabel)
+ {
+ 	char *scontext, *tcontext, *tclass_name;
+-	int scontext_len, tcontext_len, tclass_len;
++	strsize_t scontext_len, tcontext_len, tclass_len;
+ 	security_context_t context;
+ 	security_class_t tclass;
+ 
+@@ -919,7 +920,7 @@
+ PHP_FUNCTION(selinux_compute_member)
+ {
+ 	char *scontext, *tcontext, *tclass_name;
+-	int scontext_len, tcontext_len, tclass_len;
++	strsize_t scontext_len, tcontext_len, tclass_len;
+ 	security_context_t context;
+ 	security_class_t tclass;
+ 
+@@ -942,7 +943,7 @@
+ PHP_FUNCTION(selinux_compute_user)
+ {
+ 	char *scontext, *username;
+-	int scontext_len, username_len;
++	strsize_t scontext_len, username_len;
+ 	security_context_t *contexts;
+ 	int i;
+ 
+@@ -968,7 +969,7 @@
+ PHP_FUNCTION(selinux_get_initial_context)
+ {
+ 	char *name;
+-	int length;
++	strsize_t length;
+ 	security_context_t context;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,
+@@ -988,7 +989,7 @@
+ PHP_FUNCTION(selinux_check_context)
+ {
+ 	char *context;
+-	int length;
++	strsize_t length;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,
+ 				  "s", &context, &length) == FAILURE)
+@@ -1006,7 +1007,7 @@
+ {
+ 	security_context_t canonicalized;
+ 	char *context;
+-	int length;
++	strsize_t length;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,
+ 				  "s", &context, &length) == FAILURE)
+@@ -1047,7 +1048,7 @@
+ PHP_FUNCTION(selinux_get_boolean_pending)
+ {
+ 	char *bool_name;
+-	int length;
++	strsize_t length;
+ 	long value;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
+@@ -1064,7 +1065,7 @@
+ PHP_FUNCTION(selinux_get_boolean_active)
+ {
+ 	char *bool_name;
+-	int length;
++	strsize_t length;
+ 	long value;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
+@@ -1081,7 +1082,7 @@
+ PHP_FUNCTION(selinux_set_boolean)
+ {
+ 	char *bool_name;
+-	int length;
++	strsize_t length;
+ 	zend_bool new_value;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sb",
+@@ -1113,7 +1114,7 @@
+ {
+ 	security_context_t raw_context;
+ 	char *context;
+-	int length;
++	strsize_t length;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,
+ 				  "s", &context, &length) == FAILURE)
+@@ -1132,7 +1133,7 @@
+ {
+ 	security_context_t trans_context;
+ 	char *context;
+-	int length;
++	strsize_t length;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,
+ 				  "s", &context, &length) == FAILURE)
+@@ -1158,7 +1159,8 @@
+ 	char *specfile = NULL;
+ 	zend_bool validate = 0;
+ 	zend_bool baseonly = 0;
+-	int pathname_len, subset_len, specfile_len, mode;
++	strsize_t pathname_len, subset_len, specfile_len;
++	zend_long mode;
+ 	security_context_t context;
+ 	struct selabel_handle *hnd;
+ 	struct selinux_opt opts[4] = {
+@@ -1185,7 +1187,7 @@
+ 	if (!hnd)
+ 		RETURN_FALSE;
+ 
+-	if (selabel_lookup(hnd, &context, pathname, mode) < 0)
++	if (selabel_lookup(hnd, &context, pathname, (int)mode) < 0)
+ 	{
+ 		selabel_close(hnd);
+ 		RETURN_FALSE;
+@@ -1203,7 +1205,7 @@
+ 	char *device;
+ 	char *specfile = NULL;
+ 	zend_bool validate = 0;
+-	int device_len, specfile_len;
++	strsize_t device_len, specfile_len;
+ 	security_context_t context;
+ 	struct selabel_handle *hnd;
+ 	struct selinux_opt opts[2] = {
+@@ -1240,7 +1242,7 @@
+ PHP_FUNCTION(selinux_x_label_lookup)
+ {
+ 	char   *x_key, *x_type;
+-	int	x_key_len, x_type_len;
++	strsize_t	x_key_len, x_type_len;
+ 	int	i;
+ 	static struct {
+ 		char   *type;
+@@ -1293,7 +1295,7 @@
+ PHP_FUNCTION(selinux_db_label_lookup)
+ {
+ 	char   *db_key, *db_type;
+-	int	db_key_len, db_type_len;
++	strsize_t	db_key_len, db_type_len;
+ 	int	i;
+ 	static struct {
+ 		char   *type;
