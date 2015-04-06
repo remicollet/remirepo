@@ -14,7 +14,7 @@
 
 Name:           %{?scl_prefix}php-pecl-geoip
 Version:        1.1.0
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extension to map IP addresses to geographic places
 Group:          Development/Languages
 License:        PHP
@@ -23,6 +23,8 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 # http://svn.php.net/viewvc?view=revision&revision=333464
 Patch0:         geoip-build.patch
+# http://svn.php.net/viewvc?view=revision&revision=335948
+Patch1:         geoip-php7.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  GeoIP-devel
@@ -31,8 +33,6 @@ BuildRequires:  %{?scl_prefix}php-pear
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
@@ -42,17 +42,21 @@ Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:     php54-pecl-%{pecl_name}
-Obsoletes:     php54w-pecl-%{pecl_name}
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}
-Obsoletes:     php55w-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name}
-Obsoletes:     php56w-pecl-%{pecl_name}
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -69,14 +73,20 @@ City, State, Country, Longitude, Latitude, and other information as
 all, such as ISP and connection type. It makes use of Maxminds geoip
 database
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+
 
 %prep
 %setup -c -q
+
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
 
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
 %patch0 -p0 -b .svn
+%patch1 -p3 -b .svn
 
 extver=$(sed -n '/#define PHP_GEOIP_VERSION/{s/.* "//;s/".*$//;p}' php_geoip.h)
 if test "x${extver}" != "x%{version}"; then
@@ -125,10 +135,7 @@ install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 # install config file
 install -Dpm644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
-# Test & Documentation
-for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
+# Documentation
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -167,22 +174,33 @@ NO_INTERACTION=1 \
 rm  -rf %{buildroot}
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+   %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+   %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ]  ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
    %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
+
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
+%{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
-%{pecl_xmldir}/%{name}.xml
+
 %if %{with_zts}
 %{php_ztsextdir}/%{pecl_name}.so
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
@@ -190,6 +208,11 @@ fi
 
 
 %changelog
+* Mon Apr  6 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-4
+- add fix for PHP 7 compatibility
+- drop runtime dependency on pear, new scriptlets
+- don't install/register tests
+
 * Sat Feb 28 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-3
 - ignore 1 test on Fedora >= 22
 
