@@ -16,7 +16,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             redis
-Version:          2.8.19
+Version:          3.0.0
 Release:          1%{?dist}
 Summary:          A persistent key-value database
 
@@ -232,6 +232,9 @@ fi
 
 
 %changelog
+* Mon Apr  6 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- Redis 3.0.0 - Release date: 1 Apr 2015
+
 * Wed Dec 17 2014 Remi Collet <remi@fedoraproject.org> - 2.8.19-1
 - Redis 2.8.19 - Release date: 16 Dec 2014
   upgrade urgency: LOW for both Redis and Sentinel.
