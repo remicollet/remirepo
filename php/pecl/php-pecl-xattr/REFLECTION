@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #142 xattr version 1.2.0 ] {
+Extension [ <persistent> extension #86 xattr version 1.2.0 ] {
 
   - Constants [4] {
     Constant [ integer XATTR_ROOT ] { 2 }
@@ -9,14 +9,43 @@ Extension [ <persistent> extension #142 xattr version 1.2.0 ] {
 
   - Functions {
     Function [ <internal:xattr> function xattr_set ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $path ]
+        Parameter #1 [ <required> $name ]
+        Parameter #2 [ <required> $value ]
+        Parameter #3 [ <optional> $flags ]
+      }
     }
     Function [ <internal:xattr> function xattr_get ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $path ]
+        Parameter #1 [ <required> $name ]
+        Parameter #2 [ <optional> $flags ]
+      }
     }
     Function [ <internal:xattr> function xattr_remove ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $path ]
+        Parameter #1 [ <required> $name ]
+        Parameter #2 [ <optional> $flags ]
+      }
     }
     Function [ <internal:xattr> function xattr_list ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $path ]
+        Parameter #1 [ <optional> $flags ]
+      }
     }
     Function [ <internal:xattr> function xattr_supported ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $path ]
+        Parameter #1 [ <optional> $flags ]
+      }
     }
   }
 }

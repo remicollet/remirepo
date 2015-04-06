@@ -22,7 +22,7 @@
 Summary:        Extended attributes
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.2.0
-Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -30,15 +30,15 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 # https://bugs.php.net/65842 Please Provides LICENSE file
 # URL from xattr.c headers
-Source1:        http://www.php.net/license/3_0.txt
+Source1:        http://www.php.net/license/3_01.txt
+
+Patch0:         %{pecl_name}-php7.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  libattr-devel
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
@@ -62,6 +62,10 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -75,13 +79,21 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 This package allows to manipulate extended attributes on filesystems that
 support them. Requires libattr from Linux XFS project.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+
 
 %prep
 %setup -q -c
+
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
+
+
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
 cp %{SOURCE1} LICENSE
+%patch0 -p3 -b .php7
 
 # http://svn.php.net/viewvc?view=revision&revision=331704
 sed -e 's:/lib:/$PHP_LIBDIR:' -i config.m4
@@ -142,22 +154,27 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
+# Documentation
 cd NTS
-for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
 for i in LICENSE $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -182,9 +199,10 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 
@@ -195,6 +213,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Apr  6 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-6
+- add fix for PHP-7
+- drop runtime dependency on pear, new scriptlets
+- don't install/register tests
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-5.1
 - Fedora 21 SCL mass rebuild
 
