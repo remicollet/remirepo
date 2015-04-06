@@ -31,7 +31,7 @@ Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 #Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 # SVN snapshot
-Source0:        http://pecl.php.net/get/%{pecl_name}-0.4.2dev.tgz
+Source0:        http://pecl.php.net/get/%{pecl_name}-0.4.1dev.tgz
 
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires:  %{?scl_prefix}php-devel >= 5.2.0
@@ -88,16 +88,16 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -c -q
-mv %{pecl_name}-0.4.2dev NTS
+mv %{pecl_name}-0.4.1dev NTS
 
 # Don't install/register tests
 # Keep version as 0.3.1 for now
 sed -e 's/role="test"/role="src"/' \
-    -e 's/0.4.2dev/0.3.1/' \
+    -e 's/0.4.1dev/0.3.1/' \
     -i package.xml
 
 pushd NTS
-sed -e 's/"0.4.2dev"/"0.3.1"/' -i php_selinux.h
+sed -e 's/"0.4.1dev"/"0.3.1"/' -i php_selinux.h
 
 extver=$(sed -n '/#define PHP_SELINUX_VERSION/{s/.* "//;s/".*$//;p}' php_selinux.h)
 if test "x${extver}" != "x%{version}"; then
