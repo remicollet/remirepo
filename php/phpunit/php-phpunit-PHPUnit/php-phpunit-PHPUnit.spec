@@ -155,13 +155,11 @@ mv src PHPUnit
 
 
 %build
-%{_bindir}/php -d date.timezone=UTC \
 %{_bindir}/phpab \
   --output   PHPUnit/Autoload.php \
   --template %{SOURCE1} \
   PHPUnit
 
-%{_bindir}/php -d date.timezone=UTC \
 %{_bindir}/phpab \
   --output   tests/autoload.php \
   tests
