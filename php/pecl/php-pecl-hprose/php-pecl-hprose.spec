@@ -22,7 +22,7 @@
 
 Summary:        Hprose for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.1.0
+Version:        1.2.0
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
@@ -55,6 +55,10 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -174,11 +178,10 @@ fi
 %check
 %if "%{php_version}" > "7"
 # These tests strangly fail "only" in mock
-%if 0%{rhel} < 7 && 0%{?fedora} < 20
-[ "$(id -nu)" == "remi" ] || rm ?TS/tests/{class_manager,formatter,raw_reader,writer}.phpt
-%else
-[ "$(id -nu)" == "remi" ] || rm ?TS/tests/formatter.phpt
+%if 0%{?rhel} < 7 && 0%{?fedora} < 20
+[ "$(id -nu)" == "remi" ] || rm ?TS/tests/{class_manager,raw_reader,reader}.phpt
 %endif
+[ "$(id -nu)" == "remi" ] || rm ?TS/tests/formatter.phpt
 %endif
 
 cd NTS
@@ -234,6 +237,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Apr 07 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- Update to 1.2.0
+
 * Fri Apr  3 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - Update to 1.1.0
 
