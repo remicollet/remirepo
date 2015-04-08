@@ -1,5 +1,5 @@
-%global VER        6.9.0
-%global Patchlevel 4
+%global VER        6.9.1
+%global Patchlevel 1
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -386,7 +386,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc Magick++/AUTHORS Magick++/ChangeLog Magick++/NEWS Magick++/README
 %doc www/Magick++/COPYING
-%{_libdir}/libMagick++%{?libsuffixe}.so.5*
+%{_libdir}/libMagick++%{?libsuffixe}.so.6*
 
 %files c++-devel
 %defattr(-,root,root,-)
@@ -408,6 +408,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Apr  8 2015 Remi Collet <RPMS@FamilleCollet.com> - 6.9.1.1-1
+- update to 6.9.1-1
+
 * Fri Jan 23 2015 Remi Collet <RPMS@FamilleCollet.com> - 6.9.0.4-1
 - update to 6.9.0-4
 
