@@ -27,7 +27,7 @@ Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:       %{plug_name}.ini
 Source2:       %{plug_name}-default.blacklist
 
-Patch0:        %{name}-CVE-2015-1352.patch
+Patch0:        %{pecl_name}-CVE-2015-1352.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel >= 5.2.0
