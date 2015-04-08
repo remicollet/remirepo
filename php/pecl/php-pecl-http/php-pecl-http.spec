@@ -33,7 +33,7 @@
 
 #global prever RC1
 Name:           %{?scl_prefix}php-pecl-http
-Version:        2.4.2
+Version:        2.4.3
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
@@ -44,6 +44,14 @@ Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 
 # From http://www.php.net/manual/en/http.configuration.php
 Source1:        %{proj_name}.ini
+
+# http://git.php.net/?p=pecl/http/pecl_http.git;a=blob_plain;f=tests/helper/upload.inc;hb=HEAD
+# See http://git.php.net/?p=pecl/http/pecl_http.git;a=commit;h=5c5ee386409f5b6d697c483edc788d09f8c8aeb3
+Source2:        upload.inc
+# http://git.php.net/?p=pecl/http/pecl_http.git;a=blob_plain;f=tests/querystring003.phpt;hb=HEAD
+Source3:        querystring003.phpt
+# http://git.php.net/?p=pecl/http/pecl_http.git;a=blob_plain;f=tests/bug69313.phpt;hb=HEAD
+Source4:        bug69313.phpt
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel >= 5.3.0
@@ -126,6 +134,10 @@ Obsoletes:     php55w-pecl-http <= %{version}
 Obsoletes:     php56u-pecl-http <= %{version}
 Obsoletes:     php56w-pecl-http <= %{version}
 %endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-http <= %{version}
+Obsoletes:     php70w-pecl-http <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -180,6 +192,9 @@ These are the files needed to compile programs using HTTP extension.
 
 mv %{proj_name}-%{version}%{?prever} NTS
 cd NTS
+
+cp %{SOURCE2} tests/helper/
+cp %{SOURCE3} %{SOURCE4} tests/
 
 extver=$(sed -n '/#define PHP_PECL_HTTP_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -350,6 +365,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 08 2015 Remi Collet <remi@fedoraproject.org> - 2.4.3-1
+- Update to 2.4.3
+
 * Fri Apr 03 2015 Remi Collet <remi@fedoraproject.org> - 2.4.2-1
 - Update to 2.4.2
 
