@@ -1,5 +1,14 @@
+# spec file for php-phpunit-PHP-TokenStream
+#
+# Copyright (c) 2010-2015 Christof Damian, Remi Collet
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
 %global bootstrap    0
-%global gh_commit    db32c18eba00b121c145575fcbcd4d4d24e6db74
+%global gh_commit    eab81d02569310739373308137284e0158424330
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-token-stream
@@ -13,7 +22,7 @@
 %endif
 
 Name:           php-phpunit-PHP-TokenStream
-Version:        1.4.0
+Version:        1.4.1
 Release:        1%{?dist}
 Summary:        Wrapper around PHP tokenizer extension
 
@@ -105,6 +114,9 @@ fi
 
 
 %changelog
+* Wed Apr  8 2015 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
+- Update to 1.4.1
+
 * Sun Jan 18 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - Update to 1.3.0
 
