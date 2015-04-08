@@ -22,7 +22,7 @@
 
 Summary:        Hprose for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.2.0
+Version:        1.3.0
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
@@ -237,6 +237,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 08 2015 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- Update to 1.3.0
+
 * Tue Apr 07 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - Update to 1.2.0
 
