@@ -15,7 +15,7 @@
 
 Name:          %{?scl_prefix}php-pecl-%{pecl_name}
 Version:       7.0.4
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       The Zend OPcache
 
 Group:         Development/Libraries
@@ -27,12 +27,12 @@ Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:       %{plug_name}.ini
 Source2:       %{plug_name}-default.blacklist
 
+Patch0:        %{name}-CVE-2015-1352.patch
+
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel >= 5.2.0
 BuildRequires: %{?scl_prefix}php-pear
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
@@ -74,12 +74,16 @@ bytecode optimization patterns that make code execution faster.
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
 
+pushd NTS
+%patch0 -p1 -b .cve1352
+
 # Sanity check, really often broken
-extver=$(sed -n '/#define PHP_ZENDOPCACHE_VERSION/{s/.* "//;s/".*$//;p}' NTS/ZendAccelerator.h)
+extver=$(sed -n '/#define PHP_ZENDOPCACHE_VERSION/{s/.* "//;s/".*$//;p}' ZendAccelerator.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
    exit 1
 fi
+popd
 
 %if %{with_zts}
 # Duplicate source tree for NTS / ZTS build
@@ -168,12 +172,20 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -195,6 +207,10 @@ fi
 
 
 %changelog
+* Wed Apr  8 2015 Remi Collet <remi@fedoraproject.org> - 7.0.4-2
+- fix use after free in opcache CVE-2015-1351
+- drop runtime dependency on pear, new scriptlets
+
 * Mon Jan 12 2015 Remi Collet <remi@fedoraproject.org> - 7.0.4-1
 - Update to 7.0.4
 - disable opcache.fast_shutdown in default configuration
