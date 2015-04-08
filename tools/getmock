@@ -162,16 +162,16 @@ if [ $1 = devs -o $1 = dev ]; then
 fi
 
 if [ $1 = all ]; then
-	for i in $(seq 18 22)
+	for i in 18 19 20 21 22
 	do
 		getOneMock fc${i}i $opt
 	done
-	for i in $(seq 5 6)
+	for i in 5 6
 	do
 		getOneMock el${i}i $opt
 	done
 elif [ $1 = all55 ]; then
-	for n in $(seq 5 6)
+	for n in 5 6
 	do
 		getOneMock el${n}i php55
 		getOneMock el${n}x php55
@@ -180,12 +180,12 @@ elif [ $1 = all55 ]; then
 		getOneMock el${n}x php55
 
 elif [ $1 = all56 ]; then
-	for n in $(seq 19 20)
+	for n in 19 20
 	do
 		getOneMock fc${n}i php56
 		getOneMock fc${n}x php56
 	done
-	for n in $(seq 5 6)
+	for n in 5 6
 	do
 		getOneMock el${n}i php56
 		getOneMock el${n}x php56
@@ -194,7 +194,7 @@ elif [ $1 = all56 ]; then
 		getOneMock el${n}x php56
 
 elif [ $1 = all54 ]; then
-	for n in $(seq 5 6)
+	for n in 5 6
 	do
 		getOneMock el${n}i remi
 		getOneMock el${n}x remi
@@ -203,41 +203,41 @@ elif [ $1 = all54 ]; then
 		getOneMock el${n}x remi
 
 elif [ $1 = allx ]; then
-	for i in $(seq 18 22)
+	for i in 18 19 20 21 22
 	do
 		getOneMock fc${i}x $opt
 	done
-	for i in $(seq 5 7)
+	for i in 5 6 7
 	do
 		getOneMock el${i}x $opt
 	done
 
 elif [ $1 = scl54 ]; then
-	for i in $(seq 19 22)
+	for i in 19 20 21 22
 	do
 		getOneMock scl54fc${i}x $opt
 	done
-	for i in $(seq 6 7)
+	for i in 6 7
 	do
 		getOneMock scl54el${i}x $opt
 	done
 
 elif [ $1 = scl55 ]; then
-	for i in $(seq 21 22)
+	for i in 21 22
 	do
 		getOneMock scl55fc${i}x $opt
 	done
-	for i in $(seq 6 7)
+	for i in 6 7
 	do
 		getOneMock scl55el${i}x $opt
 	done
 
 elif [ $1 = scl56 ]; then
-	for i in $(seq 19 22)
+	for i in 19 20 21 22
 	do
 		getOneMock scl56fc${i}x $opt
 	done
-	for i in $(seq 6 7)
+	for i in 6 7
 	do
 		getOneMock scl56el${i}x $opt
 	done
