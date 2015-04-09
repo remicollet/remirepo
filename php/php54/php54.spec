@@ -82,7 +82,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.4.39
-Release: 1%{?dist}
+Release: 2%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -134,6 +134,8 @@ Patch47: php-5.4.9-phpinfo.patch
 # Upstream fixes
 # Backported from 5.5.18 for https://bugs.php.net/65641
 Patch100: php-5.4.33-bug65641.patch
+# Backported from 5.5.14 for https://bugs.php.net/50444
+Patch102: php-5.4.39-bug50444.patch
 
 # Security fixes
 
@@ -831,6 +833,7 @@ rm -f ext/json/utf8_to_utf16.*
 
 # upstream patches
 %patch100 -p1 -b .bug65641
+%patch102 -p1 -b .bug50444
 
 # security patches
 
@@ -1703,6 +1706,9 @@ fi
 
 
 %changelog
+* Thu Apr  9 2015 Remi Collet <remi@fedoraproject.org> 5.4.39-2
+- add patch from 5.5.14 for https://bugs.php.net/50444
+
 * Thu Mar 19 2015 Remi Collet <remi@fedoraproject.org> 5.4.39-1
 - Update to 5.4.39
   http://www.php.net/releases/5_4_39.php
