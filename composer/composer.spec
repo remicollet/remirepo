@@ -6,10 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c5cd184767001f34177da99e91f7a6dcf8ad27f6
+%global gh_commit    4d134ce8a2aacb9566fee8deb8c514248fd2a983
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20150324
+%global gh_date      20150408
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
@@ -43,13 +43,13 @@ BuildRequires:  %{_bindir}/phpunit
 
 # From composer.json, requires
 #        "php": ">=5.3.2",
-#        "justinrainbow/json-schema": "~1.4",
+#        "justinrainbow/json-schema": "~1.3",
 #        "seld/jsonlint": "~1.0",
 #        "symfony/console": "~2.5",
 #        "symfony/finder": "~2.2",
 #        "symfony/process": "~2.1"
 Requires:       php(language)                           >= 5.3.2
-Requires:       php-composer(justinrainbow/json-schema) >= 1.4
+Requires:       php-composer(justinrainbow/json-schema) >= 1.3
 Requires:       php-composer(justinrainbow/json-schema) <  2
 Requires:       php-composer(seld/jsonlint)             >= 1.0
 Requires:       php-composer(seld/jsonlint)             <  2
@@ -157,6 +157,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr  9 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.20150408git4d134ce
+- new snapshot
+- lower dependency on justinrainbow/json-schema ~1.3
+
 * Tue Mar 24 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.20150324gitc5cd184
 - new snapshot
 - raise dependency on justinrainbow/json-schema ~1.4
