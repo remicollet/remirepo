@@ -135,7 +135,7 @@ Version: 5.6.7
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}
+Release: 2%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -205,6 +205,8 @@ Patch91: php-5.6.3-oci8conf.patch
 Patch300: php-5.6.3-datetests.patch
 # Revert changes for pcre < 8.34
 Patch301: php-5.6.0-oldpcre.patch
+# Backported from 7.0
+Patch302: php-5.6.8-openssltests.patch
 
 # WIP
 
@@ -969,6 +971,7 @@ rm -rf ext/json
 %patch301 -p1 -b .pcre834
 %endif
 %endif
+%patch302 -p1 -b .sslv3
 
 # WIP patch
 
@@ -1952,6 +1955,9 @@ fi
 
 
 %changelog
+* Fri Apr 10 2015 Remi Collet <remi@fedoraproject.org> 5.6.7-2
+- add upstream patch to drop SSLv3 tests
+
 * Thu Mar 19 2015 Remi Collet <remi@fedoraproject.org> 5.6.7-1
 - Update to 5.6.7
   http://www.php.net/releases/5_6_7.php
