@@ -11,8 +11,8 @@
 
 %global github_owner     php-fig
 %global github_name      http-message
-%global github_version   0.8.0
-%global github_commit    3e35e0ade470539fc29e8c1667691bc81d21c222
+%global github_version   0.10.1
+%global github_commit    9723465b3e7c8ecb0436f066bfb8a13e1bac1789
 
 %global composer_vendor  psr
 %global composer_project http-message
@@ -32,7 +32,7 @@ Source0:   %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_co
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
-# phpcompatinfo (computed from version 0.6.0)
+# phpcompatinfo (computed from version 0.10.1)
 Requires:  php(language) >= 5.3.0
 
 # Composer
@@ -47,12 +47,6 @@ interface that describes a HTTP message. See the specification for more details.
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
-
-# W: spurious-executable-perm /usr/share/doc/php-psr-http-message/README.md
-# W: spurious-executable-perm /usr/share/doc/php-psr-http-message/composer.json
-# E: script-without-shebang /usr/share/licenses/php-psr-http-message/LICENSE
-# https://github.com/php-fig/http-message/pull/10
-chmod a-x README.md composer.json LICENSE
 
 
 %build
@@ -85,6 +79,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Apr 13 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.10.1-1
+- Updated to 0.10.1 (BZ #1187918)
+
+* Sun Apr 12 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.9.2-1
+- Updated to 0.9.2 (BZ #1187918)
+
 * Thu Jan 29 2015 Remi Collet <remi@fedoraproject.org> - 0.8.0-1
 - Updated to 0.8.0
 
