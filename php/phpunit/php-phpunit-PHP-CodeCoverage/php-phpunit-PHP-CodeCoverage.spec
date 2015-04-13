@@ -2,13 +2,13 @@
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
 
 %global bootstrap    0
-%global gh_commit    34cc484af1ca149188d0d9e91412191e398e0b67
+%global gh_commit    934fd03eb6840508231a7f73eb8940cf32c3b66c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-code-coverage
@@ -22,7 +22,7 @@
 %endif
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        2.0.15
+Version:        2.0.16
 Release:        1%{?dist}
 Summary:        PHP code coverage information
 
@@ -134,6 +134,9 @@ fi
 
 
 %changelog
+* Mon Apr 13 2015 Remi Collet <remi@fedoraproject.org> - 2.0.16-1
+- update to 2.0.16
+
 * Sun Jan 25 2015 Remi Collet <remi@fedoraproject.org> - 2.0.15-1
 - update to 2.0.15
 
