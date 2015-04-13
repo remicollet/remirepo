@@ -1,4 +1,13 @@
-%global gh_commit    0e7ead01180d93536dec14da10d038a62d9f509d
+# spec file for php-phpunit-phploc
+#
+# Copyright (c) 2009-2015 Guillaume Kulakowski, Christof Damian, Remi Collet
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
+%global gh_commit    a47a7c4758bdfb7cebbb1ccaa2c9df882b10db7f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phploc
@@ -8,7 +17,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-phploc
-Version:        2.1.0
+Version:        2.1.1
 Release:        1%{?dist}
 Summary:        A tool for quickly measuring the size of a PHP project
 
@@ -99,8 +108,7 @@ install -D -p -m 755 phploc %{buildroot}%{_bindir}/phploc
 %check
 phpunit \
    --bootstrap src/autoload.php \
-   -d date.timezone=UTC \
-   tests
+   --verbose tests
 %endif
 
 
@@ -123,6 +131,9 @@ fi
 
 
 %changelog
+* Mon Apr 13 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
+- update to 2.1.1
+
 * Wed Mar 11 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - update to 2.1.0
 - raise dependencies on sebastian/git 2.0, symfony/console 2.5
