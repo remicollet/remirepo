@@ -13,8 +13,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   2.7.25
-%global github_commit    5942bb53e6629c482e8fbc3828967f6516e95c02
+%global github_version   2.8.0
+%global github_commit    526a52732b11154aa937ec1e160668d7f7b83afc
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -58,8 +58,7 @@ Requires:  php-guzzle-Guzzle >= %{guzzle_min_ver}
 Requires:  php-guzzle-Guzzle <  %{guzzle_max_ver}
 # composer.json: optional
 Requires:  php-openssl
-# phpcompatinfo (computed from version 2.7.6)
-Requires:  php-curl
+# phpcompatinfo (computed from version 2.8.0)
 Requires:  php-date
 Requires:  php-hash
 Requires:  php-json
@@ -144,6 +143,9 @@ fi
 
 
 %changelog
+* Sun Apr 12 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.8.0-1
+- Updated to 2.8.0 (BZ #1192383)
+
 * Fri Mar 27 2015 Remi Collet <remi@fedoraproject.org> - 2.7.25-1
 - Update to 2.7.25
 
