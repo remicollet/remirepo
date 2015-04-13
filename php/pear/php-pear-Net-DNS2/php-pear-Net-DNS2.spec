@@ -11,7 +11,7 @@
 %global pear_name Net_DNS2
 
 Name:           php-pear-Net-DNS2
-Version:        1.4.0
+Version:        1.4.1
 Release:        1%{?dist}
 Summary:        PHP Resolver library used to communicate with a DNS server
 
@@ -64,6 +64,9 @@ The main features for this package include:
 
 %prep
 %setup -q -c
+# https://github.com/mikepultz/netdns2/issues/32
+sed -e '/README/s/role="data"/role="doc"/' -i package.xml
+
 cd %{pear_name}-%{version}
 mv ../package.xml %{name}.xml
 
@@ -100,7 +103,7 @@ else
   : Resolver test disabled
   suite=Net_DNS2_ParserTest.php
 fi
-phpunit -d include_path=..:. $suite
+phpunit --include-path=.. $suite
 
 
 %post
@@ -125,6 +128,9 @@ fi
 
 
 %changelog
+* Mon Apr 13 2015 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
+- Update to 1.4.1
+
 * Mon Dec 15 2014 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - Update to 1.4.0 (stable)
 - provide php-composer(pear/net_dns2)
