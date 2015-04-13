@@ -5,7 +5,7 @@
 %endif
 
 Name: compat-mysql55
-Version: 5.5.41
+Version: 5.5.43
 Release: 1%{?dist}
 Summary: MySQL shared libraries
 Group: Applications/Databases
@@ -29,7 +29,6 @@ Source8: libmysql.version
 Patch1: mysql-errno.patch
 Patch2: mysql-strmov.patch
 Patch3: mysql-install-test.patch
-Patch4: mysql-expired-certs.patch
 Patch5: mysql-stack-guard.patch
 Patch6: mysql-chain-certs.patch
 Patch7: mysql-versioning.patch
@@ -83,7 +82,6 @@ rm -f Docs/mysql.info
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
@@ -224,6 +222,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Apr 13 2015 Remi Collet <RPMS@FamilleCollet.com> - 5.5.43-1
+- update to 5.5.43
+
 * Sat Nov 29 2014 Remi Collet <RPMS@FamilleCollet.com> - 5.5.41-1
 - update to 5.5.41
 
