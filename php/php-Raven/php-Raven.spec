@@ -1,7 +1,7 @@
 #
 # RPM spec file for php-Raven
 #
-# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -16,8 +16,8 @@
 
 %global github_owner    getsentry
 %global github_name     raven-php
-%global github_version  0.10.0
-%global github_commit   8534b131f296597c163cbc408ac2d914f43a1a2c
+%global github_version  0.11.0
+%global github_commit   2b651d779cdbac8b6456b3b0f06c8c77e43f79dd
 
 %global lib_name        Raven
 
@@ -46,9 +46,11 @@ BuildArch:     noarch
 # For tests: composer.json
 BuildRequires: php(language)       >= %{php_min_ver}
 BuildRequires: php-phpunit-PHPUnit >= %{phpunit_min_ver}
-# For tests: phpcompatinfo (computed from version 0.10.0)
+# For tests: phpcompatinfo (computed from version 0.11.0)
 BuildRequires: php-curl
 BuildRequires: php-date
+BuildRequires: php-hash
+BuildRequires: php-json
 BuildRequires: php-mbstring
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -63,9 +65,11 @@ Requires:      ca-certificates
 %endif
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 0.10.0)
+# phpcompatinfo (computed from version 0.11.0)
 Requires:      php-curl
 Requires:      php-date
+Requires:      php-hash
+Requires:      php-json
 Requires:      php-mbstring
 Requires:      php-pcre
 Requires:      php-reflection
@@ -129,6 +133,9 @@ sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
 
 %changelog
+* Sun Apr 12 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.11.0-1
+- Updated to 0.11.0 (BZ #1205685)
+
 * Thu Sep 11 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.10.0-1
 - Updated to 0.10.0 (BZ #1138284)
 
