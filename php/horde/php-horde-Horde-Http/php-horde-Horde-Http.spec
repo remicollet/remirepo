@@ -18,7 +18,7 @@
 %endif
 
 Name:           php-horde-Horde-Http
-Version:        2.1.4
+Version:        2.1.5
 Release:        1%{?dist}
 Summary:        Horde HTTP libraries
 
@@ -26,9 +26,6 @@ Group:          Development/Libraries
 License:        BSD
 URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-
-# https://github.com/horde/horde/pull/125
-Patch0:         %{pear_name}-pr125.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -70,9 +67,7 @@ Optional dependency: php-pecl-http or php-pecl-http1
 %setup -q -c
 
 cd %{pear_name}-%{version}
-%patch0 -p3 -b .pr125
-sed -e '/TestBase.php/s/md5sum="[^"]*"//' \
-    ../package.xml > %{name}.xml
+mv ../package.xml %{name}.xml
 
 
 %build
@@ -122,6 +117,10 @@ fi
 
 
 %changelog
+* Tue Apr 14 2015 Remi Collet <remi@fedoraproject.org> - 2.1.5-1
+- Update to 2.1.5
+- drop patch, merged upstream
+
 * Wed Mar 04 2015 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
 - Update to 2.1.4
 - open https://github.com/horde/horde/pull/125
