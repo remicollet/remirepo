@@ -14,10 +14,12 @@ fi
 # Get the proper config file based on service name
 CONFIG_FILE="/etc/$SERVICE_NAME.conf"
 
-# Use awk to retrieve port from config file
+# Use awk to retrieve host, port from config file
+HOST=`awk '/^[[:blank:]]*bind/ { print $2 }' $CONFIG_FILE`
 PORT=`awk '/^[[:blank:]]*port/ { print $2 }' $CONFIG_FILE`
 
-# Just in case, use default port
+# Just in case, use default host, port
+HOST=${HOST:-127.0.0.1}
 if [ "$SERVICE_NAME" = redis ]; then
     PORT=${PORT:-6379}
 else
@@ -25,4 +27,4 @@ else
 fi
 
 # shutdown the service properly
-$REDIS_CLI -p $PORT shutdown
+$REDIS_CLI -h $HOST -p $PORT shutdown

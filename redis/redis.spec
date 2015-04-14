@@ -17,7 +17,7 @@
 
 Name:             redis
 Version:          3.0.0
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -63,12 +63,29 @@ Requires(postun): initscripts
 
 
 %description
-Redis is an advanced key-value store. It is similar to memcached but the data
-set is not volatile, and values can be strings, exactly like in memcached, but
-also lists, sets, and ordered sets. All this data types can be manipulated with
-atomic operations to push/pop elements, add/remove elements, perform server side
-union, intersection, difference between sets, and so forth. Redis supports
-different kind of sorting abilities.
+Redis is an advanced key-value store. It is often referred to as a data
+structure server since keys can contain strings, hashes, lists, sets and
+sorted sets.
+
+You can run atomic operations on these types, like appending to a string;
+incrementing the value in a hash; pushing to a list; computing set
+intersection, union and difference; or getting the member with highest
+ranking in a sorted set.
+
+In order to achieve its outstanding performance, Redis works with an
+in-memory dataset. Depending on your use case, you can persist it either
+by dumping the dataset to disk every once in a while, or by appending
+each command to a log.
+
+Redis also supports trivial-to-setup master-slave replication, with very
+fast non-blocking first synchronization, auto-reconnection on net split
+and so forth.
+
+Other features include Transactions, Pub/Sub, Lua scripting, Keys with a
+limited time-to-live, and configuration settings to make Redis behave like
+a cache.
+
+You can use Redis from most programming languages also.
 
 Documentation: http://redis.io/documentation
 
@@ -206,13 +223,13 @@ fi
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license COPYING
-%doc 00-RELEASENOTES BUGS CONTRIBUTING README
+%doc 00-RELEASENOTES BUGS CONTRIBUTING MANIFESTO README
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
 %attr(0644, redis, root) %config(noreplace) %{_sysconfdir}/%{name}.conf
 %attr(0644, redis, root) %config(noreplace) %{_sysconfdir}/%{name}-sentinel.conf
-%dir %attr(0755, redis, root) %{_localstatedir}/lib/%{name}
-%dir %attr(0755, redis, root) %{_localstatedir}/log/%{name}
-%dir %attr(0755, redis, root) %{_localstatedir}/run/%{name}
+%dir %attr(0755, redis, redis) %{_localstatedir}/lib/%{name}
+%dir %attr(0755, redis, redis) %{_localstatedir}/log/%{name}
+%dir %attr(0755, redis, redis) %{_localstatedir}/run/%{name}
 %{_bindir}/%{name}-*
 %if %{with_systemd}
 %{_prefix}/lib/tmpfiles.d/%{name}.conf
@@ -232,8 +249,16 @@ fi
 
 
 %changelog
+* Tue Apr 14 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-2
+- rebuild with new redis-shutdown from rawhide
+- improved description from rawhide
+- use redis/redis owner for directories under /var
+
 * Mon Apr  6 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
 - Redis 3.0.0 - Release date: 1 Apr 2015
+
+* Thu Mar 26 2015 Haïkel Guémar <hguemar@fedoraproject.org> - 2.8.19-2
+- Fix redis-shutdown on multiple NIC setup (RHBZ #1201237)
 
 * Wed Dec 17 2014 Remi Collet <remi@fedoraproject.org> - 2.8.19-1
 - Redis 2.8.19 - Release date: 16 Dec 2014
