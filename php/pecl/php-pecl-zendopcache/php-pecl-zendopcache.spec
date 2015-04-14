@@ -205,7 +205,7 @@ fi
 
 %changelog
 * Tue Apr 14 2015 Remi Collet <remi@fedoraproject.org> - 7.0.5-1
-- Update to 7.0.4
+- Update to 7.0.5
 
 * Wed Apr  8 2015 Remi Collet <remi@fedoraproject.org> - 7.0.4-2
 - fix use after free in opcache CVE-2015-1351
