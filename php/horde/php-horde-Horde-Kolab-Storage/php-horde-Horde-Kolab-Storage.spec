@@ -11,16 +11,14 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Kolab-Storage
-Version:        2.1.2
-Release:        2%{?dist}
+Version:        2.1.3
+Release:        1%{?dist}
 Summary:        A package for handling Kolab data stored on an IMAP server
 
 Group:          Development/Libraries
 License:        LGPLv2
 URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-
-Patch0:         %{pear_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -80,8 +78,6 @@ to deal with this type of data storage effectively.
 %prep
 %setup -q -c
 cd %{pear_name}-%{version}
-
-%patch0 -p3 -b .upstream
 
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
@@ -166,6 +162,9 @@ fi
 
 
 %changelog
+* Tue Apr 14 2015 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
+- Update to 2.1.3
+
 * Mon Mar 16 2015 Remi Collet <remi@fedoraproject.org> - 2.1.2-2
 - add upstream patch for test suite, thanks Koschei
 
