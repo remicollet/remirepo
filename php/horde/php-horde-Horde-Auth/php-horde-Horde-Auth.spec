@@ -12,17 +12,14 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Auth
-Version:        2.1.6
-Release:        1%{?dist}.1
+Version:        2.1.7
+Release:        1%{?dist}
 Summary:        Horde Authentication API
 
 Group:          Development/Libraries
 License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-
-# https://github.com/horde/horde/commit/00dc6c37f284d13c350af5a2e517047ac292e7e7
-Patch0:         %{pear_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -83,13 +80,11 @@ backends for the Horde authentication system.
 %setup -q -c
 
 cd %{pear_name}-%{version}
-%patch0 -p0 -b .upstream
 
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
 sed -e '/%{pear_name}.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
-    -e '/TestCase.php/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 touch -r ../package.xml %{name}.xml
 
@@ -151,6 +146,9 @@ fi
 
 
 %changelog
+* Tue Apr 14 2015 Remi Collet <remi@fedoraproject.org> - 2.1.7-1
+- Update to 2.1.7
+
 * Fri Jan  9 2015 Remi Collet <remi@fedoraproject.org> - 2.1.6-1.1
 - add upstream patch for blowfish test
 
