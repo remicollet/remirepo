@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-Horde-Mime-Viewer
-Version:        2.0.8
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Horde MIME Viewer Library
 
@@ -64,8 +64,11 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
+# Optional
+Requires:       php-pear(Net_DNS2)
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-mime-viewer) = %{version}
 
 
 %description
@@ -148,6 +151,11 @@ fi
 
 
 %changelog
+* Tue Apr 14 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+- add optional dependency on Net_DNS2
+- add provides php-composer(horde/horde-mime-viewer)
+
 * Tue Nov 18 2014 Remi Collet <remi@fedoraproject.org> - 2.0.8-1
 - Update to 2.0.8
 - raise dependency on Horde_Translation 2.2.0
