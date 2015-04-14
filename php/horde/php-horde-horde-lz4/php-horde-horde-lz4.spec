@@ -28,15 +28,12 @@
 
 Summary:        Horde LZ4 Compression Extension
 Name:           %{?scl_prefix}php-horde-horde-lz4
-Version:        1.0.7
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.0.8
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
 URL:            http://www.horde.org
 Source0:        http://%{pecl_channel}/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/horde/horde/pull/132
-Patch0:         %{pecl_name}-php7.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -102,8 +99,6 @@ mv %{pecl_name}-%{version} NTS
 cd NTS
 # Use system library
 rm -r lib
-
-%patch0 -p3 -b .php7
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define HORDE_LZ4_EXT_VERSION/{s/.* "//;s/".*$//;p}' horde_lz4.h)
@@ -229,6 +224,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Apr 14 2015 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
+- Update to 1.0.8
+
 * Mon Mar 30 2015 Remi Collet <remi@fedoraproject.org> 1.0.7-2
 - add fix for PHP 7
 - drop runtime dependency on pear, new scriptlets
