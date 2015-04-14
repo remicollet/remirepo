@@ -18,7 +18,7 @@
 %endif
 
 Name:           php-horde-Horde-Util
-Version:        2.5.4
+Version:        2.5.5
 Release:        1%{?dist}
 Summary:        Horde Utility Libraries
 
@@ -100,7 +100,7 @@ phpunit . || : Test suite result ignored
 phpunit .
 %endif
 %else
-: Test disabled, missing '--with tests' option.
+: Test disabled, bootstrap build
 %endif
 
 
@@ -130,6 +130,9 @@ fi
 
 
 %changelog
+* Tue Apr 14 2015 Remi Collet <remi@fedoraproject.org> - 2.5.5-1
+- Update to 2.5.5
+
 * Tue Mar 03 2015 Remi Collet <remi@fedoraproject.org> - 2.5.4-1
 - Update to 2.5.4
 - enable the test suite during build

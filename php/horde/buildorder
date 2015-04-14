@@ -1,6 +1,6 @@
 Build order
 	* Horde_Constraint          2.0.2       I: Horde_Test 
-	* horde_lz4                 1.0.7        
+	* horde_lz4                 1.0.8        
 	* Horde_Mongo               1.0.3        
 	* Horde_Queue               1.1.2        
 	* Horde_Role                1.0.1        
@@ -8,7 +8,7 @@ Build order
 	  Horde_Stringprep          1.0.1        
 	* Horde_Thrift              2.0.2        
 	* Horde_Translation         2.2.0       I: Horde_Test 
-	* Horde_Util                2.5.4       I: Horde_Test, Horde_Imap_Client 
+	* Horde_Util                2.5.5       I: Horde_Test, Horde_Imap_Client 
 	* Horde_Exception           2.0.5       I: Horde_Test R: Horde_Translation
 	* Horde_Idna                1.0.1        R: Horde_Exception
 	* Horde_Imsp                2.0.6        R: Horde_Translation
