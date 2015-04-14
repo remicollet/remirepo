@@ -13,7 +13,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Image
-Version:        2.2.0
+Version:        2.3.0
 Release:        1%{?dist}
 Summary:        Horde Image API
 
@@ -120,14 +120,10 @@ done | tee ../%{pear_name}.lang
 
 %check
 %if %{with_tests}
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+phpunit .
 %else
-: Test disabled, missing '--with tests' option.
+: Test disabled, bootstrap build
 %endif
 
 
@@ -154,6 +150,9 @@ fi
 
 
 %changelog
+* Tue Apr 14 2015 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
+- Update to 2.3.0
+
 * Wed Feb 11 2015 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - Update to 2.2.0
 - add povides php-composer(horde/horde-image)
