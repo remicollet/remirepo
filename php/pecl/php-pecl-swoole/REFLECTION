@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #153 swoole version 1.7.14 ] {
+Extension [ <persistent> extension #153 swoole version 1.7.15 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -15,7 +15,7 @@ Extension [ <persistent> extension #153 swoole version 1.7.14 ] {
     }
   }
 
-  - Constants [45] {
+  - Constants [44] {
     Constant [ integer SWOOLE_BASE ] { 4 }
     Constant [ integer SWOOLE_THREAD ] { 2 }
     Constant [ integer SWOOLE_PROCESS ] { 3 }
@@ -45,17 +45,16 @@ Extension [ <persistent> extension #153 swoole version 1.7.14 ] {
     Constant [ integer SWOOLE_SYNC ] { 2048 }
     Constant [ integer SWOOLE_ASYNC ] { 1024 }
     Constant [ integer SWOOLE_KEEP ] { 512 }
-    Constant [ integer SWOOLE_SSL ] { 512 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.7.14 }
+    Constant [ string SWOOLE_VERSION ] { 1.7.15 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_GCC ] { 1 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 2 }
     Constant [ integer HTTP_GLOBAL_GET ] { 2 }
     Constant [ integer HTTP_GLOBAL_POST ] { 4 }
     Constant [ integer HTTP_GLOBAL_COOKIE ] { 8 }
-    Constant [ integer HTTP_GLOBAL_ALL ] { 62 }
+    Constant [ integer HTTP_GLOBAL_ALL ] { 126 }
     Constant [ integer WEBSOCKET_OPCODE_TEXT ] { 1 }
     Constant [ integer WEBSOCKET_OPCODE_BINARY ] { 2 }
     Constant [ integer WEBSOCKET_STATUS_CONNECTION ] { 1 }
@@ -299,7 +298,7 @@ Extension [ <persistent> extension #153 swoole version 1.7.14 ] {
       - Properties [0] {
       }
 
-      - Methods [29] {
+      - Methods [30] {
         Method [ <internal:swoole, ctor> public method __construct ] {
 
           - Parameters [4] {
@@ -338,6 +337,14 @@ Extension [ <persistent> extension #153 swoole version 1.7.14 ] {
             Parameter #0 [ <required> $ip ]
             Parameter #1 [ <required> $port ]
             Parameter #2 [ <optional> $send_data ]
+          }
+        }
+
+        Method [ <internal:swoole> public method sendwait ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $conn_fd ]
+            Parameter #1 [ <required> $send_data ]
           }
         }
 
@@ -702,7 +709,7 @@ Extension [ <persistent> extension #153 swoole version 1.7.14 ] {
       - Properties [0] {
       }
 
-      - Methods [14] {
+      - Methods [16] {
         Method [ <internal:swoole, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -751,6 +758,24 @@ Extension [ <persistent> extension #153 swoole version 1.7.14 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:swoole> public method incr ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $column ]
+            Parameter #2 [ <optional> $incrby ]
+          }
+        }
+
+        Method [ <internal:swoole> public method decr ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $column ]
+            Parameter #2 [ <optional> $decrby ]
           }
         }
 
@@ -813,7 +838,7 @@ Extension [ <persistent> extension #153 swoole version 1.7.14 ] {
         Property [ <default> private $global ]
       }
 
-      - Methods [30] {
+      - Methods [31] {
         Method [ <internal:swoole, overwrites swoole_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
@@ -860,6 +885,14 @@ Extension [ <persistent> extension #153 swoole version 1.7.14 ] {
             Parameter #0 [ <required> $ip ]
             Parameter #1 [ <required> $port ]
             Parameter #2 [ <optional> $send_data ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method sendwait ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $conn_fd ]
+            Parameter #1 [ <required> $send_data ]
           }
         }
 
@@ -1078,16 +1111,32 @@ Extension [ <persistent> extension #153 swoole version 1.7.14 ] {
       - Properties [0] {
       }
 
-      - Methods [31] {
+      - Methods [32] {
         Method [ <internal:swoole, overwrites swoole_http_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> $ha_name ]
-            Parameter #1 [ <required> $cb ]
+            Parameter #0 [ <required> $event_name ]
+            Parameter #1 [ <required> $callback ]
           }
         }
 
         Method [ <internal:swoole> public method push ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $fd ]
+            Parameter #1 [ <required> $data ]
+            Parameter #2 [ <optional> $opcode ]
+            Parameter #3 [ <optional> $finish ]
+          }
+        }
+
+        Method [ <internal:swoole, overwrites swoole_server, prototype swoole_server> public method send ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $fd ]
+            Parameter #1 [ <required> $data ]
+            Parameter #2 [ <optional> $from_id ]
+          }
         }
 
         Method [ <internal:swoole, inherits swoole_http_server> public method setglobal ] {
@@ -1113,21 +1162,20 @@ Extension [ <persistent> extension #153 swoole version 1.7.14 ] {
           }
         }
 
-        Method [ <internal:swoole, inherits swoole_server> public method send ] {
-
-          - Parameters [3] {
-            Parameter #0 [ <required> $conn_fd ]
-            Parameter #1 [ <required> $send_data ]
-            Parameter #2 [ <optional> $from_id ]
-          }
-        }
-
         Method [ <internal:swoole, inherits swoole_server> public method sendto ] {
 
           - Parameters [3] {
             Parameter #0 [ <required> $ip ]
             Parameter #1 [ <required> $port ]
             Parameter #2 [ <optional> $send_data ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method sendwait ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $conn_fd ]
+            Parameter #1 [ <required> $send_data ]
           }
         }
 
