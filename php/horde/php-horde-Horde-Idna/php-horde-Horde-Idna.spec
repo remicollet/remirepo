@@ -8,11 +8,17 @@
 #
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
+%global bootstrap    0
 %global pear_name    Horde_Idna
 %global pear_channel pear.horde.org
+%if %{bootstrap}
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%else
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 Name:           php-horde-Horde-Idna
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        IDNA backend normalization package
 
@@ -29,18 +35,24 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
+%if %{with_tests}
+# To run unit tests
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+BuildRequires:  php-intl
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+# From package.xml
 Requires:       php(language) >= 5.3.0
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
-# optional, but not needed as true/punycode is prefered / mandatory:
-#   Net_IDNA, Net_IDNA2, mbstring
-# unbundled library:
-Requires:       php-composer(true/punycode) >= 1.0.1
+# optional
+Requires:       php-intl
+Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -53,15 +65,7 @@ Domain Names in Applications) support.
 %prep
 %setup -q -c
 cd %{pear_name}-%{version}
-
-%patch0 -p1 -b .rpm
-
-# don't install bundled library
-# don't check checksum of patched file
-sed -e '/bundle/d' \
-    -e '/Idna.php/s/md5sum="[^"]*"//' \
-    ../package.xml >%{name}.xml
-touch -r ../package.xml %{name}.xml
+mv ../package.xml %{name}.xml
 
 
 %build
@@ -80,6 +84,15 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+
+
+%check
+%if %{with_tests}
+cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+phpunit .
+%else
+: Test disabled, bootstrap build
+%endif
 
 
 %clean
@@ -103,9 +116,17 @@ fi
 %{pear_xmldir}/%{name}.xml
 %{pear_phpdir}/Horde/Idna/
 %{pear_phpdir}/Horde/Idna.php
+%{pear_testdir}/%{pear_name}
 
 
 %changelog
+* Tue Apr 14 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- Update to 1.0.2
+- add optional dependency on Horde_Util
+- drop dependency on true/punycode
+  (use php-intl, bundled Punycode is only a fallback)
+- run test suite during build
+
 * Wed Jan 07 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1
 

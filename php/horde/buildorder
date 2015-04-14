@@ -10,7 +10,6 @@ Build order
 	* Horde_Translation         2.2.0       I: Horde_Test 
 	* Horde_Util                2.5.5       I: Horde_Test, Horde_Imap_Client 
 	* Horde_Exception           2.0.5       I: Horde_Test R: Horde_Translation
-	* Horde_Idna                1.0.1        R: Horde_Exception
 	* Horde_Imsp                2.0.6        R: Horde_Translation
 	* Horde_Memcache            2.0.7        R: Horde_Exception
 	* Horde_Nls                 2.0.5        R: Horde_Util, Horde_Translation
@@ -35,6 +34,7 @@ Build order
 	* Horde_Date_Parser         2.0.3      BR: Horde_Test, Horde_Date  R: Horde_Date, Horde_Support
 	* Horde_HashTable           1.2.3      BR: Horde_Test I: Horde_Vfs R: Horde_Exception, Horde_Log, Horde_Memcache
 	* Horde_Http                2.1.4      BR: Horde_Test  R: Horde_Exception, Horde_Support
+	* Horde_Idna                1.0.2      BR: Horde_Test  R: Horde_Exception, Horde_Util
 	* Horde_Injector            2.0.4      BR: Horde_Test  R: Horde_Exception
 	* Horde_JavascriptMinify    1.1.2        R: Horde_Exception, Horde_Log, Horde_Util
 	* Horde_Kolab_Format        2.0.6      BR: Horde_Test  R: Horde_Exception, Horde_Support
