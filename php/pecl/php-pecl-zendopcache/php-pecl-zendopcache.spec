@@ -14,8 +14,8 @@
 %global plug_name  opcache
 
 Name:          %{?scl_prefix}php-pecl-%{pecl_name}
-Version:       7.0.4
-Release:       2%{?dist}
+Version:       7.0.5
+Release:       1%{?dist}
 Summary:       The Zend OPcache
 
 Group:         Development/Libraries
@@ -26,8 +26,6 @@ Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 # So "opcache" if before "xdebug"
 Source1:       %{plug_name}.ini
 Source2:       %{plug_name}-default.blacklist
-
-Patch0:        %{pecl_name}-CVE-2015-1352.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel >= 5.2.0
@@ -75,10 +73,9 @@ bytecode optimization patterns that make code execution faster.
 mv %{pecl_name}-%{version} NTS
 
 pushd NTS
-%patch0 -p1 -b .cve1352
 
 # Sanity check, really often broken
-extver=$(sed -n '/#define PHP_ZENDOPCACHE_VERSION/{s/.* "//;s/".*$//;p}' ZendAccelerator.h)
+extver=$(sed -n '/#define PHP_ZENDOPCACHE_VERSION/{s/.*"7/7/;s/".*$//;p}' ZendAccelerator.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
    exit 1
@@ -207,6 +204,9 @@ fi
 
 
 %changelog
+* Tue Apr 14 2015 Remi Collet <remi@fedoraproject.org> - 7.0.5-1
+- Update to 7.0.4
+
 * Wed Apr  8 2015 Remi Collet <remi@fedoraproject.org> - 7.0.4-2
 - fix use after free in opcache CVE-2015-1351
 - drop runtime dependency on pear, new scriptlets

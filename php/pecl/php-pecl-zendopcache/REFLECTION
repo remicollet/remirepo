@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #69 Zend OPcache version 7.0.4FE ] {
+Extension [ <persistent> extension #75 Zend OPcache version 7.0.5FE ] {
 
   - INI {
     Entry [ opcache.enable <ALL> ]
