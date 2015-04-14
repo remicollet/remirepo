@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Itip
-Version:        2.0.7
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        iTip invitation response handling
 
@@ -124,6 +124,9 @@ fi
 
 
 %changelog
+* Tue Apr 14 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+
 * Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
 - Update to 2.0.7
 - add provides php-composer(horde/horde-itip)
