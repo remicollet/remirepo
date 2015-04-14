@@ -3,7 +3,7 @@
 # Copyright (c) 2011-2015 Remi Collet
 # Copyright (c) 2010 Johan Cwiklinski
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
