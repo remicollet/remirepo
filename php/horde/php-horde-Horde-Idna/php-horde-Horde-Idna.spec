@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
-# http://creativecommons.org/licenses/by-sa/3.0/
+# http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
@@ -26,9 +26,6 @@ Group:          Development/Libraries
 License:        BSD
 URL:            http://www.horde.org/
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-
-# Use system true/punycode
-Patch0:         %{pear_name}-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -55,6 +52,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-idna) = %{version}
 
 
 %description
