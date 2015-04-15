@@ -30,8 +30,8 @@ Name:           %{libname}
 %global with_conflicts 0%{!?scl:1}
 %endif
 
-Version:        2.0.21
-Release:        4%{?dist}
+Version:        2.0.22
+Release:        1%{?dist}
 Summary:        Abstract asynchronous event notification library
 
 Group:          System Environment/Libraries
@@ -103,7 +103,7 @@ This package contains the development documentation for %{name}.
 %setup -q -n  %{libname}-%{version}-stable
 
 # 477685 -  libevent-devel multilib conflict
-%patch00 -p1
+#patch00 -p1
 %patch01 -p1 -b .nonettests
 
 
@@ -186,6 +186,9 @@ make check
 
 
 %changelog
+* Wed Apr 15 2015 Remi Collet <remi@fedoraproject.org> - 2.0.22-1
+- Update to 2.0.22
+
 * Sat May 10 2014 Remi Collet <remi@fedoraproject.org> - 2.0.21-4
 - merge changes from rawhide:
   - Add missing directory /usr/include/event2
