@@ -108,8 +108,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.4.39
-Release: 2%{?dist}
+Version: 5.4.40
+Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1593,6 +1593,10 @@ fi
 
 
 %changelog
+* Wed Apr 15 2015 Remi Collet <remi@fedoraproject.org> 5.4.40-1
+- Update to 5.4.40
+  http://www.php.net/releases/5_4_40.php
+
 * Thu Apr  9 2015 Remi Collet <remi@fedoraproject.org> 5.4.39-2
 - add patch from 5.5.14 for https://bugs.php.net/50444
 
