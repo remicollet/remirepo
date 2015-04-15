@@ -7,8 +7,14 @@
 # Please, preserve the changelog entries
 #
 %{!?__pear:       %global __pear       %{_bindir}/pear}
+%global bootstrap    0
 %global pear_name    Horde_Kolab_Storage
 %global pear_channel pear.horde.org
+%if %{bootstrap}
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%else
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 Name:           php-horde-Horde-Kolab-Storage
 Version:        2.1.3
@@ -26,12 +32,14 @@ BuildRequires:  gettext
 BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
+%if %{with_tests}
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_History) >= 2.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Imap_Client) >= 2.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Kolab_Format) >= 2.0.0
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -121,6 +129,7 @@ done | tee ../%{pear_name}.lang
 
 
 %check
+%if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
 # Retrieve version of Horde_Kolab_Format
@@ -133,6 +142,9 @@ sed -e "s/Horde_Kolab_Format_Xml-@version@/Horde_Kolab_Format_Xml-${VER}/" \
        ComponentTest/Data/Object/Message/NewTest.php
 
 phpunit .
+%else
+: Test disabled, bootstrap build
+%endif
 
 
 %clean
