@@ -22,14 +22,13 @@
 
 Summary:        Wrapper for the Sodium cryptographic library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.1.2
+Version:        0.1.3
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-Patch0:         %{pecl_name}-build.patch
 Patch1:         %{pecl_name}-php7.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -89,7 +88,6 @@ mv %{pecl_name}-%{version} NTS
 sed -e '/role="test"/d' -i package.xml
 
 cd NTS
-%patch0 -p1 -b .fix
 %if "%{php_version}" > "7"
 %patch1 -p1 -b .php7
 %endif
@@ -225,8 +223,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 15 2015 Remi Collet <remi@fedoraproject.org> - 0.1.3-1
+- Update to 0.1.3 (beta)
+
 * Thu Apr 02 2015 Remi Collet <remi@fedoraproject.org> - 0.1.2-1
-- Update to 0.1.2
+- Update to 0.1.2 (beta)
 - drop runtime dependency on pear, new scriptlets
 - open https://github.com/jedisct1/libsodium-php/pull/22 - build
 - open https://github.com/jedisct1/libsodium-php/pull/23 - php 7
