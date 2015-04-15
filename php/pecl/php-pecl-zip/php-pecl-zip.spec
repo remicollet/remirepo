@@ -27,8 +27,8 @@
 Summary:      A ZIP archive management extension
 Summary(fr):  Une extension de gestion des ZIP
 Name:         %{?scl_prefix}php-pecl-zip
-Version:      1.12.4
-Release:      3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:      1.12.5
+Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 %if %{with_libzip}
 License:      PHP
 %else
@@ -94,6 +94,9 @@ Paquet construit pour PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VE
 %prep 
 %setup -c -q
 
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
+
 cd %{pecl_name}-%{version}
 
 %if %{with_libzip}
@@ -155,11 +158,8 @@ make -C %{pecl_name}-zts install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
+# Documentation
 cd %{pecl_name}-%{version}
-for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -223,7 +223,6 @@ fi
 %files
 %defattr(-, root, root, -)
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -236,6 +235,10 @@ fi
 
 
 %changelog
+* Wed Apr 15 2015 Remi Collet <remi@fedoraproject.org> - 1.12.5-1
+- Update to 1.12.5
+- Don't install/register tests
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.12.1-3
 - new scriptlets
 
