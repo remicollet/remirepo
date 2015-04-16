@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    5c26dbcc14b65b888d9eb507be5ed0a1bb8db68d
+%global gh_commit    daa49a81e1ba8a7bea1af71e787285870dc3d2ba
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150331
 %global gh_owner     llaville
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-bartlett-PHP-Reflect
-Version:        3.0.0
-%global specrel 2
+Version:        3.0.1
+%global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -40,7 +40,7 @@ BuildRequires:  php(language) >= 5.3
 # to run test suite
 BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php-composer(sebastian/version)                 >= 1.0
-BuildRequires:  php-composer(nikic/php-parser)                  >= 1.1
+BuildRequires:  php-composer(nikic/php-parser)                  >= 1.2.2
 BuildRequires:  php-composer(doctrine/collections)              >= 1.2
 BuildRequires:  php-composer(symfony/class-loader)              >= 2.5
 BuildRequires:  php-composer(symfony/event-dispatcher)          >= 2.5
@@ -64,7 +64,7 @@ BuildRequires:  php-composer(bartlett/umlwriter)                >= 1.0
 #        "ext-date": "*",
 #        "ext-reflection": "*",
 #        "sebastian/version": "~1.0",
-#        "nikic/php-parser": "~1.1",
+#        "nikic/php-parser": "^1.2.2",
 #        "doctrine/collections": "~1.2",
 #        "symfony/event-dispatcher": "~2.5",
 #        "symfony/finder": "~2.5",
@@ -84,7 +84,7 @@ Requires:       php-spl
 Requires:       php-tokenizer
 Requires:       php-composer(sebastian/version)                 >= 1.0
 Requires:       php-composer(sebastian/version)                 <  2
-Requires:       php-composer(nikic/php-parser)                  >= 1.1
+Requires:       php-composer(nikic/php-parser)                  >= 1.2.2
 Requires:       php-composer(nikic/php-parser)                  <  2
 Requires:       php-composer(doctrine/collections)              >= 1.2
 Requires:       php-composer(doctrine/collections)              <  2
@@ -108,7 +108,7 @@ Requires:       php-composer(justinrainbow/json-schema)         <  2
 #        "doctrine/cache": "~1.3",
 #        "psr/log": "~1.0",
 #        "monolog/monolog": "~1.10",
-#        "bartlett/phpunit-loggertestlistener": "~1.1",
+#        "bartlett/phpunit-loggertestlistener": "~1.3",
 #        "bartlett/umlwriter": "~1.0"
 #    "suggest": {
 #        "doctrine/cache": "Allow caching results"
@@ -191,6 +191,10 @@ fi
 
 
 %changelog
+* Thu Apr 16 2015 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
+- update to 3.0.1
+- raise dependency on nikic/php-parser >= 1.2.2
+
 * Sat Apr  4 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-2
 - add cache plugin in default configuration
 
