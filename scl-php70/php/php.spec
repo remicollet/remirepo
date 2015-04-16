@@ -16,7 +16,7 @@
 %global zendver     20141001
 %global pdover      20150127
 # Extension version
-%global opcachever  7.0.4-dev
+%global opcachever  7.0.6-dev
 %global oci8ver     2.0.9
 
 # Adds -z now to the linker flags
@@ -129,18 +129,19 @@
 %global db_devel  libdb-devel
 %endif
 
-%global gh_commit    adcf0c6052761350695da211b337edff12c6e63c
+%global gh_commit    c77d97f356d07b109058b399c47b14c798845dc0
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150403
+%global gh_date      20150416
 %global gh_owner     php
 %global gh_project   php-src
 #global rcver        RC1
+%global rpmrel       5
 
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 7.0.0
-Release: 0.5.%{gh_date}git%{gh_short}%{?dist}
+Release: 0.%{rpmrel}.%{gh_date}git%{gh_short}%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -984,7 +985,7 @@ if test "$ver" != "%{oci8ver}"; then
    exit 1
 fi
 
-ver=$(sed -n '/#define PHP_ZENDOPCACHE_VERSION /{s/.* "//;s/".*$//;p}' ext/opcache/ZendAccelerator.h)
+ver=$(sed -n '/#define PHP_ZENDOPCACHE_VERSION /{s/.*\s"//;s/".*$//;p}' ext/opcache/ZendAccelerator.h)
 if test "$ver" != "%{opcachever}"; then
    : Error: Upstream OPCACHE version is now ${ver}, expecting %{opcachever}.
    : Update the opcachever macro and rebuild.
@@ -1801,6 +1802,9 @@ fi
 
 
 %changelog
+* Thu Apr 16 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.5.20150416gitc77d97f
+- new snapshot
+
 * Fri Apr  3 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.5.20150403gitadcf0c6
 - new snapshot
 
