@@ -131,11 +131,11 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.6.7
+Version: 5.6.8
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1955,6 +1955,10 @@ fi
 
 
 %changelog
+* Thu Apr 16 2015 Remi Collet <remi@fedoraproject.org> 5.6.8-1
+- Update to 5.6.8
+  http://www.php.net/releases/5_6_8.php
+
 * Fri Apr 10 2015 Remi Collet <remi@fedoraproject.org> 5.6.7-2
 - add upstream patch to drop SSLv3 tests
 
