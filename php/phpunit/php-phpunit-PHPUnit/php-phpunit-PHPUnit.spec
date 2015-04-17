@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-PHPUnit
 Version:        4.6.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries
@@ -75,6 +75,7 @@ BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 #        "ext-reflection": "*",
 #        "ext-spl": "*"
 Requires:       php(language) >= 5.3.3
+Requires:       php-cli
 Requires:       php-composer(phpunit/php-file-iterator) >= 1.4
 Requires:       php-composer(phpunit/php-file-iterator) <  2
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
@@ -203,6 +204,9 @@ fi
 
 
 %changelog
+* Fri Apr 17 2015 Remi Collet <remi@fedoraproject.org> - 4.6.4-2
+- keep upstream shebang with /usr/bin/env (for SCL)
+
 * Mon Apr 13 2015 Remi Collet <remi@fedoraproject.org> - 4.6.4-1
 - Update to 4.6.4
 

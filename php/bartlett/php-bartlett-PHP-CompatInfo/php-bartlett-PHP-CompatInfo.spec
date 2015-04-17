@@ -50,6 +50,7 @@ BuildRequires:  %{_bindir}/phpunit
 #        "symfony/console": "~2.5",
 #        "bartlett/php-reflect": "^3.0.1",
 Requires:       php(language) >= 5.3.0
+Requires:       php-cli
 Requires:       php-json
 Requires:       php-libxml
 Requires:       php-pcre

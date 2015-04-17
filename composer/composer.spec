@@ -49,6 +49,7 @@ BuildRequires:  %{_bindir}/phpunit
 #        "symfony/finder": "~2.2",
 #        "symfony/process": "~2.1"
 Requires:       php(language)                           >= 5.3.2
+Requires:       php-cli
 Requires:       php-composer(justinrainbow/json-schema) >= 1.4
 Requires:       php-composer(justinrainbow/json-schema) <  2
 Requires:       php-composer(seld/jsonlint)             >= 1.0
