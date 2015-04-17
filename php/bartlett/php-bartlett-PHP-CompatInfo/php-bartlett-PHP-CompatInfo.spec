@@ -31,7 +31,6 @@ Source1:        fedora-review-check
 # and sqlite database path
 Patch0:         %{name}-4.0.0-rpm.patch
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pdo_sqlite
@@ -122,7 +121,6 @@ sed -e 's/@package_version@/%{version}%{?prever}/' \
 
 
 %install
-rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_datadir}/php
 cp -pr src/Bartlett %{buildroot}%{_datadir}/php/Bartlett
 
@@ -153,7 +151,6 @@ fi
 
 
 %files
-%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc composer.json README.*
