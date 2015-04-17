@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0f0cdbcff50b4f7514a9da7be0c7b45a75084ebe
+%global gh_commit    6272b2a314ab79c9e5904e19139de3c6f1621109
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150303
 %global gh_owner     llaville
@@ -15,8 +15,8 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        4.0.0
-%global specrel 2
+Version:        4.1.0
+%global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -49,14 +49,14 @@ BuildRequires:  %{_bindir}/phpunit
 #        "ext-json": "*",
 #        "ext-pdo_sqlite": "*",
 #        "symfony/console": "~2.5",
-#        "bartlett/php-reflect": "~3.0",
+#        "bartlett/php-reflect": "^3.0.1",
 Requires:       php(language) >= 5.3.0
 Requires:       php-json
 Requires:       php-libxml
 Requires:       php-pcre
 Requires:       php-pdo_sqlite
 Requires:       php-spl
-Requires:       php-composer(bartlett/php-reflect) >= 3.0.0
+Requires:       php-composer(bartlett/php-reflect) >= 3.0.1
 Requires:       php-composer(bartlett/php-reflect) <  4
 Requires:       php-composer(symfony/console)      >= 2.5
 Requires:       php-composer(symfony/console)      <  3
@@ -165,6 +165,10 @@ fi
 
 
 %changelog
+* Fri Apr 17 2015 Remi Collet <remi@fedoraproject.org> - 4.1.0-1
+- update to 4.1.0
+- keep upstream shebang with /usr/bin/env (for SCL)
+
 * Sat Apr  4 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-2
 - add cache plugin in default configuration
 

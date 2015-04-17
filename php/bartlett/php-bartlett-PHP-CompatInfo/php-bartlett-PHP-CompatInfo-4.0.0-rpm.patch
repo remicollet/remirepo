@@ -24,12 +24,6 @@ diff -up ./bin/phpcompatinfo.json.dist.rpm ./bin/phpcompatinfo.json.dist
 diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
 --- ./bin/phpcompatinfo.rpm	2015-04-04 08:52:23.000000000 +0200
 +++ ./bin/phpcompatinfo	2015-04-04 15:33:59.668609143 +0200
-@@ -1,4 +1,4 @@
--#!/usr/bin/env php
-+#!/usr/bin/php
- <?php
- $appName = 'phpCompatInfo';
- 
 @@ -16,8 +16,30 @@ if (\Phar::running()) {
          putenv("BARTLETTRC=" . strtolower($appName) . '.json');
      }
@@ -67,7 +61,7 @@ diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
  
  Environment::setScanDir();
  
--$application = new Application($appName, '4.0');
+-$application = new Application($appName, '4.1');
 +$application = new Application($appName, '@package_version@');
  $application->run();
 diff -up ./data/handleDB.php.rpm ./data/handleDB.php
