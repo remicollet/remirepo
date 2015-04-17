@@ -982,9 +982,11 @@ mkdir build-cgi build-apache build-embedded \
 
 # ----- Manage known as failed test -------
 # affected by systzdata patch
-rm -f ext/date/tests/timezone_location_get.phpt
+rm ext/date/tests/timezone_location_get.phpt
+rm ext/date/tests/timezone_version_get.phpt
+rm ext/date/tests/timezone_version_get_basic1.phpt
 # fails sometime
-rm -f ext/sockets/tests/mcast_ipv?_recv.phpt
+rm ext/sockets/tests/mcast_ipv?_recv.phpt
 
 # Safety check for API version change.
 pver=$(sed -n '/#define PHP_VERSION /{s/.* "//;s/".*$//;p}' main/php_version.h)

@@ -923,6 +923,8 @@ mkdir \
 # ----- Manage known as failed test -------
 # affected by systzdata patch
 rm ext/date/tests/timezone_location_get.phpt
+rm ext/date/tests/timezone_version_get.phpt
+rm ext/date/tests/timezone_version_get_basic1.phpt
 # fails sometime
 rm ext/sockets/tests/mcast_ipv?_recv.phpt
 # cause stack exhausion
