@@ -27,15 +27,15 @@
 %endif
 
 Name:           glpi
-Version:        0.85.2
-Release:        2%{?dist}
+Version:        0.85.3
+Release:        1%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
 Group:          Applications/Internet
 License:        GPLv2+ and GPLv3+
 URL:            http://www.glpi-project.org/
-Source0:        https://forge.indepnet.net/attachments/download/1954/glpi-0.85.2.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/2006/glpi-0.85.3.tar.gz
 
 Source1:        glpi-httpd.conf
 Source2:        glpi-0.85-config_path.php
@@ -44,10 +44,6 @@ Source4:        glpi-nginx.conf
 
 # Switch all internal cron tasks to system
 Patch0:         glpi-0.85-cron.patch
-# See https://forge.indepnet.net/projects/glpi/repository/revisions/23370
-Patch1:         glpi-0.85-upload.patch
-# See https://forge.indepnet.net/projects/glpi/repository/revisions/23365
-Patch2:         glpi-0.85-bug5218.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -129,8 +125,6 @@ techniciens grâce à une maintenance plus cohérente.
 %setup -q -n glpi
 
 %patch0 -p0
-%patch1 -p1
-%patch2 -p1
 
 find . -name \*.orig -exec rm {} \; -print
 
@@ -313,6 +307,10 @@ fi
 
 
 %changelog
+* Fri Apr 17 2015 Remi Collet <remi@fedoraproject.org> - 0.85.3-1
+- update to 0.85.3
+  https://forge.indepnet.net/versions/1118
+
 * Fri Feb 27 2015 Remi Collet <remi@fedoraproject.org> - 0.85.2-2
 - add security fix https://forge.indepnet.net/issues/5218
 - add fix for temporary directory relocation
