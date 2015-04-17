@@ -3,7 +3,7 @@ diff -up ./bin/composer.rpm ./bin/composer
 +++ ./bin/composer	2015-02-26 10:25:16.012610034 +0100
 @@ -1,11 +1,11 @@
 -#!/usr/bin/env php
-+#!/usr/bin/php
++#!/usr/bin/env php
  <?php
  
  if (PHP_SAPI !== 'cli') {
@@ -27,18 +27,30 @@ diff -up ./src/Composer/Json/JsonFile.php.rpm ./src/Composer/Json/JsonFile.php
          $schemaData = json_decode(file_get_contents($schemaFile));
  
          if ($schema === self::LAX_SCHEMA) {
-diff -up ./src/Composer/Util/SpdxLicenseIdentifier.php.rpm ./src/Composer/Util/SpdxLicenseIdentifier.php
---- ./src/Composer/Util/SpdxLicenseIdentifier.php.rpm	2015-02-25 20:44:34.000000000 +0100
-+++ ./src/Composer/Util/SpdxLicenseIdentifier.php	2015-02-26 10:25:16.012610034 +0100
-@@ -61,7 +61,7 @@ class SpdxLicenseIdentifier
-      */
-     private function initIdentifiers()
+diff -up src/Composer/Util/SpdxLicense.php.old src/Composer/Util/SpdxLicense.php
+--- ./src/Composer/Util/SpdxLicense.php.old	2015-04-17 09:57:53.680999733 +0200
++++ ./src/Composer/Util/SpdxLicense.php	2015-04-17 09:59:50.397498276 +0200
+@@ -38,7 +38,7 @@ class SpdxLicense
+             return $this->licenses;
+         }
+
+-        $jsonFile = new JsonFile(__DIR__ . '/../../../res/spdx-licenses.json');
++        $jsonFile = new JsonFile((getenv('BUILDROOT')?:'') . '/usr/share/composer/res/spdx-licenses.json');
+         $this->licenses = $jsonFile->read();
+
+         return $this->licenses;
+diff -up src/Composer/Util/SpdxLicensesUpdater.php.old src/Composer/Util/SpdxLicensesUpdater.php
+--- ./src/Composer/Util/SpdxLicensesUpdater.php.old	2015-04-17 09:58:00.645029479 +0200
++++ ./src/Composer/Util/SpdxLicensesUpdater.php	2015-04-17 10:00:36.578695534 +0200
+@@ -28,7 +28,7 @@ class SpdxLicensesUpdater
      {
--        $jsonFile = new JsonFile(__DIR__ . '/../../../res/spdx-identifier.json');
-+        $jsonFile = new JsonFile((getenv('BUILDROOT')?:'') . '/usr/share/composer/res/spdx-identifier.json');
-         $this->identifiers = $jsonFile->read();
+         $json = json_encode($this->getLicenses(), true);
+         $prettyJson = JsonFormatter::format($json, true, true);
+-        file_put_contents(__DIR__ . '/../../../res/spdx-licenses.json', $prettyJson);
++        file_put_contents((getenv('BUILDROOT')?:'') . '/usr/share/composer/res/spdx-licenses.json', $prettyJson);
      }
- 
+
+     private function getLicenses()
 diff -up ./tests/Composer/Test/Json/JsonFileTest.php.rpm ./tests/Composer/Test/Json/JsonFileTest.php
 --- ./tests/Composer/Test/Json/JsonFileTest.php.rpm	2015-02-26 10:26:10.607821640 +0100
 +++ ./tests/Composer/Test/Json/JsonFileTest.php	2015-02-26 10:27:05.430034125 +0100
