@@ -193,10 +193,10 @@ Patch91: php-5.3.7-oci8conf.patch
 # Security fixes (200+)
 
 # Fixes for tests (300+)
+# Factory is droped from system tzdata + upstream patch for new zic
+Patch300: php-5.5.24-datetests.patch
 # Revert change for pcre 8.34
 Patch301: php-5.5.10-pcre834.patch
-# see https://bugzilla.redhat.com/971416
-Patch302: php-5.5.14-noNO.patch
 
 # WIP
 
@@ -947,13 +947,13 @@ rm -rf ext/json
 # security patches
 
 # Fixes for tests
+%patch300 -p1 -b .datetests
 %if %{with_libpcre}
 %if 0%{?fedora} < 21
 # Only apply when system libpcre < 8.34
 %patch301 -p1 -R -b .pcre84
 %endif
 %endif
-%patch302 -p0 -b .971416
 
 # WIP patch
 

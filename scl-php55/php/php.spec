@@ -192,6 +192,8 @@ Patch91: php-5.3.7-oci8conf.patch
 # Security fixes (200+)
 
 # Fixes for tests (300+)
+# Factory is droped from system tzdata + upstream patch for new zic
+Patch300: php-5.5.24-datetests.patch
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -872,6 +874,7 @@ support for using the enchant library to PHP.
 # security patches
 
 # Fixes for tests
+%patch300 -p1 -b .datetests
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
