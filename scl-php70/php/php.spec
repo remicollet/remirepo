@@ -129,9 +129,9 @@
 %global db_devel  libdb-devel
 %endif
 
-%global gh_commit    c77d97f356d07b109058b399c47b14c798845dc0
+%global gh_commit    1f0a6241b496220d6039aac425396fd177ad4be6
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150416
+%global gh_date      20150418
 %global gh_owner     php
 %global gh_project   php-src
 #global rcver        RC1
@@ -942,6 +942,8 @@ mkdir \
 # ----- Manage known as failed test -------
 # affected by systzdata patch
 rm ext/date/tests/timezone_location_get.phpt
+rm ext/date/tests/timezone_version_get.phpt
+rm ext/date/tests/timezone_version_get_basic1.phpt
 # fails sometime
 rm ext/sockets/tests/mcast_ipv?_recv.phpt
 # cause stack exhausion
@@ -1802,6 +1804,9 @@ fi
 
 
 %changelog
+* Sat Apr 18 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.5.20150418git1f0a624
+- new snapshot
+
 * Thu Apr 16 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.5.20150416gitc77d97f
 - new snapshot
 
