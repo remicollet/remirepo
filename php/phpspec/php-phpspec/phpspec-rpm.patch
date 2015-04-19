@@ -1,12 +1,6 @@
-diff -up bin/phpspec.rpm bin/phpspec
---- bin/phpspec.rpm	2015-01-09 14:21:45.000000000 +0100
-+++ bin/phpspec	2015-02-17 15:18:53.913872436 +0100
-@@ -1,26 +1,13 @@
--#!/usr/bin/env php
-+#!/usr/bin/php
- <?php
- 
- define('PHPSPEC_VERSION', '2.1.1');
+--- bin/phpspec.rpm	2015-04-19 06:39:34.900178171 +0200
++++ bin/phpspec	2015-04-19 06:41:59.521743839 +0200
+@@ -5,22 +5,9 @@
  
 -if (is_file($autoload = getcwd() . '/vendor/autoload.php')) {
 -    require $autoload;

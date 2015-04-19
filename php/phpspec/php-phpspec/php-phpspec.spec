@@ -6,15 +6,15 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    66a1df93099282b1514e9e001fcf6e9393f7783d
+%global gh_commit    9727d75919a00455433e867565bc022f0b985a39
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpspec
 %global gh_project   phpspec
 
 Name:           php-phpspec
-Version:        2.1.1
+Version:        2.2.0
 Release:        1%{?dist}
-Summary:        Specification-oriented BDD framework for PHP 5.3+
+Summary:        Specification-oriented BDD framework for PHP
 
 Group:          Development/Libraries
 License:        MIT
@@ -29,7 +29,7 @@ Patch0:         %{gh_project}-rpm.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  %{_bindir}/phpunit
-BuildRequires:  php-composer(phpspec/prophecy)         >= 1.1
+BuildRequires:  php-composer(phpspec/prophecy)         >= 1.4
 BuildRequires:  php-composer(phpspec/php-diff)         >= 1.0.0
 BuildRequires:  php-composer(sebastian/exporter)       >= 1.0
 BuildRequires:  php-composer(symfony/console)          >= 2.3.0
@@ -44,7 +44,7 @@ BuildRequires:  php-composer(symfony/filesystem)       >= 2.1
 
 # From composer.json, require
 #         "php":                      ">=5.3.3",
-#         "phpspec/prophecy":         "~1.1",
+#         "phpspec/prophecy":         "~1.4",
 #         "phpspec/php-diff":         "~1.0.0",
 #         "sebastian/exporter":       "~1.0",
 #         "symfony/console":          "~2.3",
@@ -52,9 +52,9 @@ BuildRequires:  php-composer(symfony/filesystem)       >= 2.1
 #         "symfony/finder":           "~2.1",
 #         "symfony/process":          "~2.1",
 #         "symfony/yaml":             "~2.1",
-#         "doctrine/instantiator":    "~1.0,>=1.0.1"
+#         "doctrine/instantiator":    "^1.0.1"
 Requires:       php(language) >= 5.3.3
-Requires:       php-composer(phpspec/prophecy)         >= 1.1
+Requires:       php-composer(phpspec/prophecy)         >= 1.4
 Requires:       php-composer(phpspec/prophecy)         <  2
 Requires:       php-composer(phpspec/php-diff)         >= 1.0.0
 Requires:       php-composer(phpspec/php-diff)         <  2
@@ -121,10 +121,15 @@ install -Dpm755 bin/phpspec %{buildroot}%{_bindir}/phpspec
 
 
 %check
+export LANG=en_GB.utf8
 %{_bindir}/php \
-  -d include_path=.:%{buildroot}%{_datadir}/php:/usr/share/php \
+  -d include_path=.:src:/usr/share/php \
   bin/phpspec \
   run --format pretty --verbose --no-ansi
+
+%{_bindir}/phpunit \
+  --verbose \
+  --bootstrap src/PhpSpec/autoload.php
 
 
 %clean
@@ -142,5 +147,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Apr 19 2015 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- update to 2.2.0
+- raise dependency on phpspec/prophecy 1.4
+
 * Tue Feb 17 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - initial package
