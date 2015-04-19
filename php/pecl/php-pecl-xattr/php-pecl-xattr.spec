@@ -21,18 +21,12 @@
 
 Summary:        Extended attributes
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.2.0
-Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.2.1
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://bugs.php.net/65842 Please Provides LICENSE file
-# URL from xattr.c headers
-Source1:        http://www.php.net/license/3_01.txt
-
-Patch0:         %{pecl_name}-php7.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -92,11 +86,6 @@ sed -e 's/role="test"/role="src"/' -i package.xml
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-cp %{SOURCE1} LICENSE
-%patch0 -p3 -b .php7
-
-# http://svn.php.net/viewvc?view=revision&revision=331704
-sed -e 's:/lib:/$PHP_LIBDIR:' -i config.m4
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_XATTR_VERSION/{s/.* "//;s/".*$//;p}' php_xattr.h)
@@ -156,7 +145,7 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 # Documentation
 cd NTS
-for i in LICENSE $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -180,16 +169,32 @@ fi
 
 
 %check
+cd NTS
 : Minimal load test for NTS extension
 %{_bindir}/php --no-php-ini \
-    --define extension=NTS/modules/%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+: Upstream test suite  for NTS extension
+TEST_PHP_EXECUTABLE=%{__php} \
+TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{__php} -n run-tests.php --show-diff
+
 %if %{with_zts}
+cd ../ZTS
 : Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
-    --define extension=ZTS/modules/%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
+
+: Upstream test suite  for ZTS extension
+TEST_PHP_EXECUTABLE=%{_bindir}/zts-php \
+TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{_bindir}/zts-php -n run-tests.php --show-diff
 %endif
 
 
@@ -213,6 +218,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Apr 19 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- update to 1.2.1
+- run upstream test suite during build
+
 * Mon Apr  6 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-6
 - add fix for PHP-7
 - drop runtime dependency on pear, new scriptlets

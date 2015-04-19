@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #86 xattr version 1.2.0 ] {
+Extension [ <persistent> extension #164 xattr version 1.2.1 ] {
 
   - Constants [4] {
     Constant [ integer XATTR_ROOT ] { 2 }
