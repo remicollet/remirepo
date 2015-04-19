@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #180 twig version 1.18.0 ] {
+Extension [ <persistent> extension #194 twig version 1.18.1 ] {
 
   - Functions {
     Function [ <internal:twig> function twig_template_get_attributes ] {

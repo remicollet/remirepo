@@ -12,8 +12,10 @@
 
 %global github_owner     fabpot
 %global github_name      Twig
-%global github_version   1.18.0
-%global github_commit    4cf7464348e7f9893a93f7096a90b73722be99cf
+%global github_version   1.18.1
+%global github_commit    9f70492f44398e276d1b81c1b43adfe6751c7b7f
+%global github_short     %(c=%{github_commit}; echo ${c:0:7})
+
 
 # Lib
 %global composer_vendor  twig
@@ -28,8 +30,8 @@
 %global ini_name 40-%{ext_name}.ini
 %endif
 
-# "php": ">=5.2.4"
-%global php_min_ver 5.2.4
+# "php": ">=5.2.7"
+%global php_min_ver 5.2.7
 
 %if 0%{?scl:1}
 # PHPUnit not available in SCL
@@ -53,7 +55,7 @@ Summary:       The flexible, fast, and secure template engine for PHP
 Group:         Development/Libraries
 License:       BSD
 URL:           http://twig.sensiolabs.org
-Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{pkg_name}-%{github_version}-%{github_commit}.tar.gz
+Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{pkg_name}-%{github_version}-%{github_short}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel >= %{php_min_ver}
@@ -125,6 +127,10 @@ Obsoletes:     php55w-%{ext_name} <= %{version}
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-%{ext_name} <= %{version}
 Obsoletes:     php56w-%{ext_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-%{ext_name} <= %{version}
+Obsoletes:     php70w-%{ext_name} <= %{version}
 %endif
 %endif
 
@@ -263,6 +269,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Apr 19 2015 Remi Collet <remi@fedoraproject.org> - 1.18.1-1
+- Update to 1.18.1
+
 * Mon Jan 26 2015 Remi Collet <remi@fedoraproject.org> - 1.18.0-1
 - Update to 1.18.0
 
