@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #73 amqp version 1.4.0 ] {
+Extension [ <persistent> extension #74 amqp version 1.6.0beta3 ] {
 
   - INI {
     Entry [ amqp.host <ALL> ]
@@ -36,7 +36,7 @@ Extension [ <persistent> extension #73 amqp version 1.4.0 ] {
     }
   }
 
-  - Constants [20] {
+  - Constants [21] {
     Constant [ integer AMQP_NOPARAM ] { 0 }
     Constant [ integer AMQP_DURABLE ] { 2 }
     Constant [ integer AMQP_PASSIVE ] { 4 }
@@ -57,6 +57,7 @@ Extension [ <persistent> extension #73 amqp version 1.4.0 ] {
     Constant [ string AMQP_EX_TYPE_TOPIC ] { topic }
     Constant [ string AMQP_EX_TYPE_HEADERS ] { headers }
     Constant [ integer AMQP_OS_SOCKET_TIMEOUT_ERRNO ] { 536870923 }
+    Constant [ integer PHP_AMQP_MAX_CHANNELS ] { 256 }
   }
 
   - Classes [10] {
@@ -74,7 +75,7 @@ Extension [ <persistent> extension #73 amqp version 1.4.0 ] {
       - Properties [0] {
       }
 
-      - Methods [23] {
+      - Methods [27] {
         Method [ <internal:amqp, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -113,6 +114,12 @@ Extension [ <persistent> extension #73 amqp version 1.4.0 ] {
         }
 
         Method [ <internal:amqp> public method reconnect ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method preconnect ] {
 
           - Parameters [0] {
           }
@@ -221,6 +228,24 @@ Extension [ <persistent> extension #73 amqp version 1.4.0 ] {
             Parameter #0 [ <required> $timeout ]
           }
         }
+
+        Method [ <internal:amqp> public method getUsedChannels ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method getMaxChannels ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method isPersistent ] {
+
+          - Parameters [0] {
+          }
+        }
       }
     }
 
@@ -238,7 +263,7 @@ Extension [ <persistent> extension #73 amqp version 1.4.0 ] {
       - Properties [0] {
       }
 
-      - Methods [12] {
+      - Methods [13] {
         Method [ <internal:amqp, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -313,6 +338,13 @@ Extension [ <persistent> extension #73 amqp version 1.4.0 ] {
         Method [ <internal:amqp> public method getConnection ] {
 
           - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method basicRecover ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $requeue ]
           }
         }
       }
@@ -512,7 +544,7 @@ Extension [ <persistent> extension #73 amqp version 1.4.0 ] {
       - Properties [0] {
       }
 
-      - Methods [18] {
+      - Methods [19] {
         Method [ <internal:amqp, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -594,6 +626,15 @@ Extension [ <persistent> extension #73 amqp version 1.4.0 ] {
         }
 
         Method [ <internal:amqp> public method bind ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $exchange_name ]
+            Parameter #1 [ <required> $routing_key ]
+            Parameter #2 [ <optional> $flags ]
+          }
+        }
+
+        Method [ <internal:amqp> public method unbind ] {
 
           - Parameters [3] {
             Parameter #0 [ <required> $exchange_name ]

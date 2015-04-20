@@ -20,11 +20,12 @@
 %else
 %global ini_name    40-%{pecl_name}.ini
 %endif
+%global prever      beta3
 
 Summary:       Communicate with any AMQP compliant server
 Name:          %{?scl_prefix}php-pecl-amqp
-Version:       1.4.0
-Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Version:       1.6.0
+Release:       0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
@@ -33,15 +34,14 @@ Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 5.2.0
 BuildRequires: %{?scl_prefix}php-pear
-BuildRequires: librabbitmq-devel >= 0.4.1
+# Upstream requires 0.5.2, set 0.6.0 to ensure "last" is used.
+BuildRequires: librabbitmq-devel >= 0.6.0
 %if %{with_tests}
 BuildRequires: rabbitmq-server
 %endif
 
 Requires:         %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:         %{?scl_prefix}php(api) = %{php_core_api}
-Requires(post):   %{__pecl}
-Requires(postun): %{__pecl}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:         %{?scl_prefix}php-%{pecl_name} = %{version}
@@ -51,17 +51,21 @@ Provides:         %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53w-pecl-%{pecl_name}
-Obsoletes:     php54-pecl-%{pecl_name}
-Obsoletes:     php54w-pecl-%{pecl_name}
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}
-Obsoletes:     php55w-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name}
-Obsoletes:     php56w-pecl-%{pecl_name}
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -81,8 +85,11 @@ from any queue.
 
 %prep
 %setup -q -c
-mv %{pecl_name}-%{version}%{?prever} NTS
 
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
+
+mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
 # Upstream often forget to change this
 extver=$(sed -n '/#define PHP_AMQP_VERSION/{s/.* "//;s/".*$//;p}' php_amqp.h)
@@ -165,11 +172,8 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -Dpm 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
+# Documentation
 cd NTS
-for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -232,12 +236,20 @@ exit $ret
 rm -rf %{buildroot}
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -245,10 +257,10 @@ fi
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
+%{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
-%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
@@ -257,6 +269,11 @@ fi
 
 
 %changelog
+* Mon Apr 20 2015 Remi Collet <remi@fedoraproject.org> - 1.6.0-0.1.beta3
+- update to 1.6.0beta3
+- drop runtime dependency on pear, new scriptlets
+- don't install/register tests
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.4.0-1.1
 - Fedora 21 SCL mass rebuild
 
