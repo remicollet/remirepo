@@ -1,11 +1,22 @@
-Extension [ <persistent> extension #102 lzf version 1.6.2 ] {
+Extension [ <persistent> extension #117 lzf version 1.6.3 ] {
 
   - Functions {
     Function [ <internal:lzf> function lzf_compress ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $string ]
+      }
     }
     Function [ <internal:lzf> function lzf_decompress ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $string ]
+      }
     }
     Function [ <internal:lzf> function lzf_optimized_for ] {
+
+      - Parameters [0] {
+      }
     }
   }
 }

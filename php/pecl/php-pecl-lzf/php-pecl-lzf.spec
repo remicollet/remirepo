@@ -13,24 +13,13 @@
 %endif
 
 Name:           %{?scl_prefix}php-pecl-lzf
-Version:        1.6.2
-Release:        11%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.6.3
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extension to handle LZF de/compression
 Group:          Development/Languages
 License:        PHP
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-
-# https://bugs.php.net/65860 - Please Provides LICENSE file
-# URL taken from lzf.c header
-Source1:        http://www.php.net/license/2_02.txt
-
-# remove bundled lzf libs
-Patch0:         php-lzf-rm-bundled-libs.patch
-# PHP 7 compatibility
-# http://svn.php.net/viewvc?view=revision&revision=336357
-Patch1:         php-lzf-php7.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -60,6 +49,10 @@ Obsoletes:     php55w-pecl-%{ext_name} <= %{version}
 Obsoletes:     php56u-pecl-%{ext_name} <= %{version}
 Obsoletes:     php56w-pecl-%{ext_name} <= %{version}
 %endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{ext_name} <= %{version}
+Obsoletes:     php70w-pecl-%{ext_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -83,15 +76,13 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %setup -c -q
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    -e '/name="lib/d' \
+    -i package.xml
 
 mv %{pecl_name}-%{version} NTS
 cd NTS
-%patch0 -p1 -b liblzf
-%patch1 -p3 -b .php7
-rm -f lzf_c.c lzf_d.c lzf.h
-
-cp %{SOURCE1} LICENSE
+rm -r lib/
 
 extver=$(sed -n '/#define PHP_LZF_VERSION/{s/.* "//;s/".*$//;p}' php_lzf.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -114,6 +105,8 @@ EOF
 cd NTS
 %{_bindir}/phpize
 %configure \
+    --enable-lzf \
+    --with-liblzf \
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
@@ -121,6 +114,8 @@ make %{?_smp_mflags}
 cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
+    --enable-lzf \
+    --with-liblzf \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 %endif
@@ -220,6 +215,9 @@ fi
 
 
 %changelog
+* Mon Apr 20 2015 Remi Collet <remi@fedoraproject.org> - 1.6.3-1
+- update to 1.6.3
+
 * Sat Apr  4 2015 Remi Collet <remi@fedoraproject.org> - 1.6.2-11
 - add upstream fix for PHP 7
 - fix license handling
