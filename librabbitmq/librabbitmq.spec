@@ -7,9 +7,18 @@
 # Please, preserve the changelog entries
 #
 
-Name:      librabbitmq
+# soname 4 since 0.6.0 (Fedora 23)
+# soname 1 up to 0.5.2
+%global libname librabbitmq
+%global soname  4
+
+%if 0%{?fedora} < 23
+Name:      %{libname}-last
+%else
+Name:      %{libname}
+%endif
 Summary:   Client library for AMQP
-Version:   0.5.2
+Version:   0.6.0
 Release:   1%{?dist}
 License:   MIT
 Group:     System Environment/Libraries
@@ -33,12 +42,19 @@ BuildRequires: xmlto
 %description
 This is a C-language AMQP client library for use with AMQP servers
 speaking protocol versions 0-9-1.
+%if "%{name}" != %{libname}
+This package is designed to be installed beside system %{libname}.
+%endif
 
 
 %package devel
 Summary:    Header files and development libraries for %{name}
 Group:      Development/Libraries
 Requires:   %{name}%{?_isa} = %{version}-%{release}
+%if "%{name}" != %{libname}
+Conflicts:  %{libname}-devel
+Provides:   %{libname}-devel = %{version}-%{release}
+%endif
 
 %description devel
 This package contains the header files and development libraries
@@ -49,6 +65,10 @@ for %{name}.
 Summary:    Example tools built using the librabbitmq package
 Group:      Development/Libraries
 Requires:   %{name}%{?_isa} = %{version}
+%if "%{name}" != %{libname}
+Conflicts:  %{libname}-tools
+Provides:   %{libname}-tools = %{version}-%{release}
+%endif
 
 %description tools
 This package contains example tools built using %{name}.
@@ -90,7 +110,7 @@ make %{_smp_mflags}
 %install
 make install  DESTDIR="%{buildroot}"
 
-rm %{buildroot}%{_libdir}/%{name}.la
+rm %{buildroot}%{_libdir}/%{libname}.la
 
 
 %check
@@ -115,16 +135,16 @@ rm -rf %{buildroot}
 %defattr (-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE-MIT
-%{_libdir}/%{name}.so.1*
+%{_libdir}/%{libname}.so.%{soname}*
 
 
 %files devel
 %defattr (-,root,root,-)
 %doc AUTHORS THANKS TODO *.md
 %doc Examples
-%{_libdir}/%{name}.so
+%{_libdir}/%{libname}.so
 %{_includedir}/amqp*
-%{_libdir}/pkgconfig/librabbitmq.pc
+%{_libdir}/pkgconfig/%{libname}.pc
 
 %files tools
 %defattr (-,root,root,-)
@@ -134,6 +154,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Apr 20 2015 Remi Collet <remi@fedoraproject.org> - 0.6.0-1
+- update to 0.6.0
+- soname changed to .4
+- rename to librabbitmq-last (except F23+)
+
 * Mon Sep 15 2014 Remi Collet <remi@fedoraproject.org> - 0.5.2-1
 - update to 0.5.2
 
