@@ -208,7 +208,7 @@ TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__php} -n run-tests.php || ret=1
+%{__php} -n run-tests.php --show-diff || ret=1
 popd
 
 %if %{with_zts}
@@ -218,7 +218,7 @@ TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__ztsphp} -n run-tests.php || ret=1
+%{__ztsphp} -n run-tests.php --show-diff || ret=1
 popd
 %endif
 
