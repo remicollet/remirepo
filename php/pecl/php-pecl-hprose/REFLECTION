@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #98 hprose version 1.4.1 ] {
+Extension [ <persistent> extension #98 hprose version 1.4.2 ] {
 
   - Functions {
     Function [ <internal:hprose> function hprose_serialize ] {
@@ -1000,7 +1000,13 @@ Extension [ <persistent> extension #98 hprose version 1.4.1 ] {
       - Static properties [0] {
       }
 
-      - Static methods [0] {
+      - Static methods [1] {
+        Method [ <internal:hprose> static public method getErrorTypeString ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $errno ]
+          }
+        }
       }
 
       - Properties [5] {
@@ -1011,15 +1017,8 @@ Extension [ <persistent> extension #98 hprose version 1.4.1 ] {
         Property [ <default> public $onSendError ]
       }
 
-      - Methods [23] {
-        Method [ <internal:hprose> protected method getErrorTypeString ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $errno ]
-          }
-        }
-
-        Method [ <internal:hprose> protected method sendError ] {
+      - Methods [22] {
+        Method [ <internal:hprose> public method sendError ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $error ]
