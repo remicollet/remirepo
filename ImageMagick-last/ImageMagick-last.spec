@@ -1,24 +1,36 @@
 %global VER        6.9.1
-%global Patchlevel 1
+%global Patchlevel 2
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
 %if 0%{?rhel} >= 6 || 0%{?fedora} >= 5
-%global withdjvu 1
+%global with_djvu 1
 %else
-%global withdjvu 0
+%global with_djvu 0
 %endif
 
 %if 0%{?rhel} >= 6 || 0%{?fedora} >= 14
-%global withlcms2 1
+%global with_lcms2 1
 %else
-%global withlcms2 0
+%global with_lcms2 0
 %endif
 
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 6
-%global withwebp 1
+%global with_webp 1
 %else
-%global withwebp 0
+%global with_webp 0
+%endif
+
+%if 0%{?fedora} >= 16 || 0%{?rhel} >= 7
+%global with_jbig 1
+%else
+%global with_jbig 0
+%endif
+
+%if 0%{?fedora} >= 21
+%global with_jp2 1
+%else
+%global with_jp2 0
 %endif
 
 %if 0%{?fedora} < 15 && 0%{?rhel} < 7
@@ -50,7 +62,7 @@ BuildRequires:  perl-devel
 BuildRequires:  perl
 %endif
 BuildRequires:  ghostscript-devel
-%if %{withdjvu}
+%if %{with_djvu}
 BuildRequires:  djvulibre-devel
 %endif
 BuildRequires:  libwmf-devel, jasper-devel, libtool-ltdl-devel
@@ -58,13 +70,19 @@ BuildRequires:  libX11-devel, libXext-devel, libXt-devel
 BuildRequires:  libxml2-devel, librsvg2-devel
 BuildRequires:  fftw-devel
 BuildRequires:  OpenEXR-devel
-%if %{withlcms2}
+%if %{with_lcms2}
 BuildRequires:  lcms2-devel
 %else
 BuildRequires:  lcms-devel
 %endif
-%if %{withwebp}
+%if %{with_webp}
 BuildRequires:  libwebp-devel
+%endif
+%if %{with_jbig}
+BuildRequires:  jbigkit-devel
+%endif
+%if %{with_jp2}
+BuildRequires:  openjpeg2-devel >= 2.1.0
 %endif
 
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
@@ -110,13 +128,19 @@ Requires: freetype-devel%{?_isa}
 Requires: libtiff-devel%{?_isa}
 Requires: libjpeg-devel%{?_isa}
 Requires: OpenEXR-devel%{?_isa}
-%if %{withlcms2}
+%if %{with_lcms2}
 Requires: lcms2-devel%{?_isa}
 %else
 Requires: lcms-devel%{?_isa}
 %endif
-%if %{withwebp}
+%if %{with_webp}
 Requires: libwebp-devel%{?_isa}
+%endif
+%if %{with_jbig}
+Requires: jbigkit-devel%{?_isa}
+%endif
+%if %{with_jp2}
+Requires: openjpeg2-devel%{?_isa}
 %endif
 Requires: jasper-devel%{?_isa}
 Requires: pkgconfig
@@ -149,7 +173,7 @@ for applications requiring this libraries.
 
 
 
-%if %{withdjvu}
+%if %{with_djvu}
 %package djvu
 Summary: DjVu plugin for ImageMagick
 Group: Applications/Multimedia
@@ -246,7 +270,7 @@ cp -p Magick++/demo/*.cpp Magick++/demo/*.miff Magick++/examples
            --with-gslib=no \
 %endif
            --with-wmf \
-%if %{withlcms2}
+%if %{with_lcms2}
            --with-lcms2 \
 %else
            --with-lcms \
@@ -254,8 +278,14 @@ cp -p Magick++/demo/*.cpp Magick++/demo/*.miff Magick++/examples
            --with-openexr \
            --with-rsvg \
            --with-xml \
-%if %{withwebp}
+%if %{with_webp}
            --with-webp \
+%endif
+%if %{with_jbig}
+           --with-jbig \
+%endif
+%if %{with_jp2}
+           --with-openjp2 \
 %endif
            --with-perl-options="INSTALLDIRS=vendor %{?perl_prefix} CC='%__cc -L$PWD/magick/.libs' LDDLFLAGS='-shared -L$PWD/magick/.libs'" \
            --without-dps \
@@ -339,7 +369,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/%{name}%{?incsuffixe}
 %{_sysconfdir}/%{name}%{?incsuffixe}
 %endif
-%if %{withdjvu}
+%if %{with_djvu}
 %exclude %{_libdir}/ImageMagick-%{VER}/modules-Q16/coders/djvu.*
 %endif
 
@@ -368,7 +398,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/Wand-config.*
 %{_mandir}/man1/MagickWand-config.*
 
-%if %{withdjvu}
+%if %{with_djvu}
 %files djvu
 %defattr(-,root,root,-)
 %{_libdir}/ImageMagick-%{VER}/modules-Q16/coders/djvu.*
@@ -408,6 +438,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Apr 21 2015 Remi Collet <RPMS@FamilleCollet.com> - 6.9.1.2-1
+- update to 6.9.1-2
+- add jbig support (fedora and EL-7)
+- add jp2 support (fedora 21+)
+
 * Wed Apr  8 2015 Remi Collet <RPMS@FamilleCollet.com> - 6.9.1.1-1
 - update to 6.9.1-1
 
