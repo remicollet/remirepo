@@ -30,12 +30,16 @@
 Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.3.2
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 %if 0%{?gitver:1}
 Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{commit}/%{pecl_name}-%{version}-%{gitver}.tar.gz
 %else
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
+
+# https://github.com/xdebug/xdebug/pull/172
+# https://bugzilla.redhat.com/1214111
+Patch0:         %{pecl_name}-pr172.patch
 
 # The Xdebug License, version 1.01
 # (Based on "The PHP License", version 3.0)
@@ -113,6 +117,8 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 %endif
 
 cd NTS
+%patch0 -p1 -b .pr172
+
 # Check extension version
 ver=$(sed -n '/XDEBUG_VERSION/{s/.* "//;s/".*$//;p}' php_xdebug.h)
 if test "$ver" != "%{version}%{?prever}"; then
@@ -259,6 +265,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 22 2015 Remi Collet <remi@fedoraproject.org> - 2.3.2-2
+- add patch for virtual_file_ex in 5.6 #1214111
+
 * Sun Mar 22 2015 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
 - Update to 2.3.2
 
