@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #180 couchbase version 2.0.6 ] {
+Extension [ <persistent> extension #181 couchbase version 2.0.7 ] {
 
   - Constants [57] {
     Constant [ integer COUCHBASE_PERSISTTO_MASTER ] { 1 }
@@ -205,10 +205,10 @@ Extension [ <persistent> extension #180 couchbase version 2.0.6 ] {
         Method [ <internal:couchbase> public method getFromReplica ] {
         }
 
-        Method [ <internal:couchbase> public method counter ] {
+        Method [ <internal:couchbase> public method touch ] {
         }
 
-        Method [ <internal:couchbase> public method flush ] {
+        Method [ <internal:couchbase> public method counter ] {
         }
 
         Method [ <internal:couchbase> public method unlock ] {
