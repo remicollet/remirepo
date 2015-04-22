@@ -1,5 +1,13 @@
+# spec file for libcouchbase
+#
+# Copyright (c) 2013-2015 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/4.0/
+#
+# Please, preserve the changelog entries
+#
 %global gh_owner    couchbase
-%global gh_commit   bd3a20f9e18a69dca199134956fd4ad3e1b80ca8
+%global gh_commit   6d032d3d01eedd6034b364db29b2e865d8f78511
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 
 # Tests require some need which are downloaded during make
@@ -12,7 +20,7 @@
 %endif
 
 Name:          libcouchbase
-Version:       2.4.3
+Version:       2.4.9
 Release:       1%{?dist}
 Summary:       Couchbase client library
 Group:         System Environment/Libraries
@@ -21,23 +29,18 @@ URL:           http://www.couchbase.com/communities/c/getting-started
 Source0:       http://packages.couchbase.com/clients/c/%{name}-%{version}.tar.gz
 #Source0:      https://github.com/%{gh_owner}/%{name}/archive/%{gh_commit}/%{name}-%{version}-%{gh_short}.tar.gz
 
-%if %{with_tests}
-# grep DOWNLOAD Makefile.am
-Source10:      http://googletest.googlecode.com/files/gtest-1.7.0-rc1.zip
-Source11:      http://files.couchbase.com/maven2/org/couchbase/mock/CouchbaseMock/0.8-SNAPSHOT/CouchbaseMock-0.8-20140621.030439-1.jar
-%endif
-
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libtool
 BuildRequires: openssl-devel
 BuildRequires: cyrus-sasl-devel
+BuildRequires: cmake >= 2.8.9
 %if "%{?vendor}" == "Remi Collet"
 # ensure we use latest version (libevent-last)
 BuildRequires: libevent-devel >= 2.0.20
 %else
 BuildRequires: libevent-devel >= 1.4
 %endif
-BuildRequires: libev-devel
+BuildRequires: libev-devel >= 3
 %if %{with_dtrace}
 BuildRequires: systemtap-sdt-devel >= 1.8
 %endif
@@ -75,30 +78,13 @@ a Couchbase Server.
 
 
 %prep
-#%setup -qn %{name}-%{gh_commit}
 %setup -q
-
-#config/gensrclist.pl
-#cat <<EOF | tee m4/version.m4
-#m4_define([VERSION_NUMBER], [%{version}])
-#m4_define([GIT_CHANGESET],[%{gh_commit}])
-#EOF
-
-%if %{with_tests}
-cp %{SOURCE10} gtest-1.7.0.zip
-cp %{SOURCE11} tests/CouchbaseMock.jar
-%endif
 
 
 %build
-autoreconf -i --force
-
-%{configure} \
-%if ! %{with_tests}
-    --disable-tests \
-    --disable-couchbasemock \
-%endif
-    --enable-system-libsasl
+%cmake \
+  -DLCB_NO_TESTS=1 \
+  -DLCB_BUILD_LIBUV=OFF
 
 make %{?_smp_mflags} V=1
 
@@ -127,6 +113,7 @@ rm -f %{buildroot}%{_libdir}/*.la
 #{_mandir}/man3/lcb*
 #{_mandir}/man5/lcb*
 %{_libdir}/%{name}.so
+%{_libdir}/pkgconfig/%{name}.pc
 
 %files tools
 %defattr(-,root,root,-)
@@ -143,6 +130,10 @@ make check
 
 
 %changelog
+* Wed Apr 22 2015 Remi Collet <remi@feoraproject.org> - 2.4.9-1
+- update to 2.4.9
+- switch to cmake
+
 * Wed Nov  5 2014 Remi Collet <remi@feoraproject.org> - 2.4.3-1
 - update to 2.4.3
 
