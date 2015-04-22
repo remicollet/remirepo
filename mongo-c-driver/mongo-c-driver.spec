@@ -9,12 +9,13 @@
 %global gh_owner     mongodb
 %global gh_project   mongo-c-driver
 #global prever       beta
+%ifarch x86_64
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%else
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%endif
 %global libname      libmongoc
 %global libver       1.0
-
-# Tests require a mongodb server
-%global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
@@ -27,10 +28,15 @@ Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{vers
 
 BuildRequires: python
 BuildRequires: pkgconfig(openssl)
-BuildRequires: pkgconfig(libsasl2)
 BuildRequires: pkgconfig(libbson-1.0)
+BuildRequires: cyrus-sasl-devel
 %if %{with_tests}
 BuildRequires: mongodb-server
+BuildRequires: openssl
+BuildRequires: perl
+%endif
+%if 0%{?fedora} > 21
+BuildRequires: libtool autoconf
 %endif
 
 
@@ -65,12 +71,19 @@ a MongoDB Server.
 %prep
 %setup -q
 
+%if 0%{?fedora} < 22
 # Ensure we are using system library
 rm -r src/libbson
+%endif
 
 
 %build
 export LIBS=-lpthread
+%if 0%{?fedora} > 21
+# Workaround https://jira.mongodb.org/browse/CDRIVER-624
+sed -e 's/&& __GNUC_MINOR__ >= 1//' -i ./build/autotools/CheckCompiler.m4
+autoreconf -fi
+%endif
 
 %configure \
   --enable-sasl \
@@ -137,3 +150,4 @@ exit $ret
 %changelog
 * Wed Apr 22 2015 Remi Collet <remi@fedoraproject.org> - 1.1.4-1
 - Initial package
+- open https://jira.mongodb.org/browse/CDRIVER-624 - gcc 5
