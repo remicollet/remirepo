@@ -8,33 +8,33 @@
 #
 %global gh_owner     mongodb
 %global gh_project   mongo-c-driver
-#global prever       beta
-%ifarch x86_64
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
-%else
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
-%endif
 %global libname      libmongoc
 %global libver       1.0
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.1.4
-Release:   1%{?dist}
+Release:   2%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
 
-BuildRequires: python
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libbson-1.0)
+%if 0%{?fedora} > 21 || 0%{?rhel} > 6
+BuildRequires: pkgconfig(libsasl2)
+%else
 BuildRequires: cyrus-sasl-devel
+%endif
 %if %{with_tests}
 BuildRequires: mongodb-server
 BuildRequires: openssl
 BuildRequires: perl
 %endif
+# From man pages
+BuildRequires: python
 %if 0%{?fedora} > 21
 BuildRequires: libtool autoconf
 %endif
@@ -71,23 +71,24 @@ a MongoDB Server.
 %prep
 %setup -q
 
-%if 0%{?fedora} < 22
-# Ensure we are using system library
-rm -r src/libbson
-%endif
-
-
-%build
-export LIBS=-lpthread
 %if 0%{?fedora} > 21
 # Workaround https://jira.mongodb.org/browse/CDRIVER-624
 sed -e 's/&& __GNUC_MINOR__ >= 1//' -i ./build/autotools/CheckCompiler.m4
 autoreconf -fi
 %endif
 
+# Ensure we are using system library
+# Done after autoreconf because of m4_include
+rm -r src/libbson
+
+
+%build
+export LIBS=-lpthread
+
 %configure \
   --enable-sasl \
   --enable-ssl \
+  --with-libbson=system \
   --enable-man-pages
 
 make %{_smp_mflags} V=1
@@ -97,7 +98,7 @@ make %{_smp_mflags} V=1
 make install DESTDIR=%{buildroot}
 
 rm    %{buildroot}%{_libdir}/*la
-rm -r %{buildroot}%{_datadir}/doc
+rm -r %{buildroot}%{_datadir}/doc/
 
 
 %check
@@ -148,6 +149,9 @@ exit $ret
 
 
 %changelog
+* Thu Apr 23 2015 Remi Collet <remi@fedoraproject.org> - 1.1.4-2
+- cleanup build dependencies and options
+
 * Wed Apr 22 2015 Remi Collet <remi@fedoraproject.org> - 1.1.4-1
 - Initial package
 - open https://jira.mongodb.org/browse/CDRIVER-624 - gcc 5
