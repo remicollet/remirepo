@@ -22,17 +22,21 @@
 Summary:        MongoDB driver for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        0.5.0
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+# See https://jira.mongodb.org/browse/PHPC-259
+Patch0:         %{pecl_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  cyrus-sasl-devel
 BuildRequires:  openssl-devel
+BuildRequires:  pkgconfig(libbson-1.0)
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
@@ -89,6 +93,7 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
+%patch0 -p1 -b .upstream
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define MONGODB_VERSION_S/{s/.* "//;s/".*$//;p}' php_phongo.h)
@@ -115,21 +120,26 @@ EOF
 
 %build
 peclbuild() {
-%configure \
-    --enable-mongodb \
-    --with-php-config=$1
+  %{_bindir}/${1}ize
 
-make %{?_smp_mflags}
+  # Ensure we use system library
+  # Need to be removed only after phpize because of m4_include
+  rm -r src/libbson
+
+  %configure \
+    --with-php-config=%{_bindir}/${1}-config \
+    --with-libbson \
+    --enable-mongodb
+
+  make %{?_smp_mflags}
 }
 
 cd NTS
-%{_bindir}/phpize
-peclbuild %{_bindir}/php-config
+peclbuild php
 
 %if %{with_zts}
 cd ../ZTS
-%{_bindir}/zts-phpize
-peclbuild %{_bindir}/zts-php-config
+peclbuild zts-php
 %endif
 
 
@@ -212,5 +222,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr 23 2015 Remi Collet <remi@fedoraproject.org> - 0.5.0-2
+- build with system libbson
+
 * Wed Apr 22 2015 Remi Collet <remi@fedoraproject.org> - 0.5.0-1
 - initial package, version 0.5.0 (alpha)
