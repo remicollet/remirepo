@@ -46,7 +46,7 @@ Name:           %{libname}
 Name:           %{libname}-last
 %endif
 Version:        %{VER}.%{Patchlevel}
-Release:        1%{?dist}
+Release:        1%{?dist}.1
 Summary:        An X application for displaying and manipulating images
 Group:          Applications/Multimedia
 License:        ImageMagick
@@ -438,6 +438,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Apr 23 2015 Remi Collet <RPMS@FamilleCollet.com> - 6.9.1.2-1.1
+- rebuild for new libwebp in EPEL-6
+
 * Tue Apr 21 2015 Remi Collet <RPMS@FamilleCollet.com> - 6.9.1.2-1
 - update to 6.9.1-2
 - add jbig support (fedora and EL-7)
