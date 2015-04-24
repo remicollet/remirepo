@@ -13,13 +13,13 @@
 %{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name  gmagick
-%global prever     RC2
+%global prever     RC3
 %global with_zts   0%{?__ztsphp:1}
 
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.1.7
-Release:        0.5.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.6.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -30,8 +30,6 @@ BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  GraphicsMagick-devel >= 1.2.6
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
@@ -46,17 +44,21 @@ Conflicts:      %{?scl_prefix}php-magickwand
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:     php54-pecl-%{pecl_name}
-Obsoletes:     php54w-pecl-%{pecl_name}
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}
-Obsoletes:     php55w-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name}
-Obsoletes:     php56w-pecl-%{pecl_name}
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -71,9 +73,14 @@ Obsoletes:     php56w-pecl-%{pecl_name}
 %{pecl_name} is a php extension to create, modify and obtain meta information
 of images using the GraphicsMagick API.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+
 
 %prep
 %setup -qc
+
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
 
 mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
@@ -84,12 +91,6 @@ if test "x${extver}" != "x%{version}%{?prever}"; then
    exit 1
 fi
 cd ..
-
-
-# Don't install any font (and test using it)
-sed -e '/\.ttf"/d' \
-    -e '/gmagickdraw-008-setfont_getfont.phpt/d' \
-    -i package.xml
 
 # Create configuration file
 cat >%{pecl_name}.ini << 'EOF'
@@ -133,10 +134,7 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 664 %{pecl_name}.ini %{buildroot}%{php_ztsinidir}/%{pecl_name}.ini
 %endif
 
-# Test & Documentation
-for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
+# Documentation
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -146,22 +144,25 @@ done
 rm -rf %{buildroot}
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml  >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+   %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+   %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ "$1" -eq "0" ]; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
    %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
-%check
-%if 0%{?fedora} < 15 && 0%{?rhel} < 5
-# Remove know to fail tests (GM font config issue)
-# https://bugzilla.redhat.com/783906
-rm -f ?TS/tests/gmagick-006-annotateimage.phpt
-%endif
 
+%check
 : simple module load test for NTS extension
 cd NTS
 %{__php} --no-php-ini \
@@ -172,18 +173,8 @@ cd NTS
 export TEST_PHP_EXECUTABLE=%{__php}
 export REPORT_EXIT_STATUS=1
 export NO_INTERACTION=1
-if ! %{__php} run-tests.php \
-    -n -q \
-    -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so
-then
-  for i in tests/*diff
-  do
-    echo "---- FAILURE in $i"
-    cat $i
-    echo -n "\n----"
-  done
-  exit 1
-fi
+export TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so"
+%{__php} -n run-tests.php --show-diff
 
 %if %{with_zts}
 : simple module load test for ZTS extension
@@ -194,16 +185,14 @@ cd ../ZTS
 
 : upstream test suite for ZTS extension
 export TEST_PHP_EXECUTABLE=%{__ztsphp}
-%{__ztsphp} run-tests.php \
-    -n -q \
-    -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so
+export TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so"
+%{__ztsphp} -n run-tests.php --show-diff
 %endif
 
 
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{pecl_name}.ini
@@ -216,6 +205,11 @@ export TEST_PHP_EXECUTABLE=%{__ztsphp}
 
 
 %changelog
+* Fri Apr 24 2015 Remi Collet <remi@fedoraproject.org> - 1.1.7-0.6.RC3
+- Update to 1.1.7RC3 (beta)
+- don't install/register tests
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.1.7-0.5.RC2
 - Fedora 21 SCL mass rebuild
 

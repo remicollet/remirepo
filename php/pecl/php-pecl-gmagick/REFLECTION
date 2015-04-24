@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #34 gmagick version 1.1.7RC2 ] {
+Extension [ <persistent> extension #25 gmagick version 1.1.7RC3 ] {
 
   - Classes [5] {
     Class [ <internal:gmagick> class GmagickException extends Exception ] {
@@ -370,7 +370,7 @@ Extension [ <persistent> extension #34 gmagick version 1.1.7RC2 ] {
       - Properties [0] {
       }
 
-      - Methods [161] {
+      - Methods [163] {
         Method [ <internal:gmagick, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -939,6 +939,12 @@ Extension [ <persistent> extension #34 gmagick version 1.1.7RC2 ] {
           }
         }
 
+        Method [ <internal:gmagick> public method getimagepage ] {
+
+          - Parameters [0] {
+          }
+        }
+
         Method [ <internal:gmagick> public method getimageprofile ] {
 
           - Parameters [0] {
@@ -1030,6 +1036,16 @@ Extension [ <persistent> extension #34 gmagick version 1.1.7RC2 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $IMGTYPE ]
+          }
+        }
+
+        Method [ <internal:gmagick> public method setimagepage ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $width ]
+            Parameter #1 [ <required> $height ]
+            Parameter #2 [ <required> $x ]
+            Parameter #3 [ <required> $y ]
           }
         }
 
