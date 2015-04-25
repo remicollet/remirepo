@@ -1,13 +1,13 @@
-Extension [ <persistent> extension #16 mongodb version 0.5.0 ] {
+Extension [ <persistent> extension #122 mongodb version 0.5.1 ] {
 
   - INI {
-    Entry [ mongodb.debug_log <ALL> ]
+    Entry [ mongodb.debug <ALL> ]
       Current = ''
     }
   }
 
   - Constants [2] {
-    Constant [ string MONGODB_VERSION ] { 0.5.0 }
+    Constant [ string MONGODB_VERSION ] { 0.5.1 }
     Constant [ string MONGODB_STABILITY ] { alpha }
   }
 
@@ -38,7 +38,7 @@ Extension [ <persistent> extension #16 mongodb version 0.5.0 ] {
     }
   }
 
-  - Classes [36] {
+  - Classes [37] {
     Class [ <internal:mongodb> final class MongoDB\Driver\Command ] {
 
       - Constants [0] {
@@ -709,6 +709,60 @@ Extension [ <persistent> extension #16 mongodb version 0.5.0 ] {
     }
 
     Class [ <internal:mongodb> class MongoDB\Driver\RuntimeException extends RuntimeException implements MongoDB\Driver\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> class MongoDB\Driver\UnexpectedValueException extends UnexpectedValueException implements MongoDB\Driver\Exception ] {
 
       - Constants [0] {
       }

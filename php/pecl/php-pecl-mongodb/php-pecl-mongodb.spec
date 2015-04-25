@@ -21,15 +21,12 @@
 
 Summary:        MongoDB driver for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.5.0
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        0.5.1
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# See https://jira.mongodb.org/browse/PHPC-259
-Patch0:         %{pecl_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -87,13 +84,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{pecl_name}-%{version} NTS
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' \
-    -e '/name="scripts/s/role="doc"/role="src"/' \
-    -e '/Vagrantfile/s/role="doc"/role="src"/' \
-    -i package.xml
+sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd NTS
-%patch0 -p1 -b .upstream
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define MONGODB_VERSION_S/{s/.* "//;s/".*$//;p}' php_phongo.h)
@@ -114,7 +107,7 @@ cat << 'EOF' | tee %{ini_name}
 extension=%{pecl_name}.so
 
 ; Configuration
-;mongodb.debug_log=''
+;mongodb.debug=''
 EOF
 
 
@@ -222,8 +215,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Apr 25 2015 Remi Collet <remi@fedoraproject.org> - 0.5.1-1
+- Update to 0.5.1 (alpha)
+
 * Thu Apr 23 2015 Remi Collet <remi@fedoraproject.org> - 0.5.0-2
 - build with system libbson
+- open https://jira.mongodb.org/browse/PHPC-259
 
 * Wed Apr 22 2015 Remi Collet <remi@fedoraproject.org> - 0.5.0-1
 - initial package, version 0.5.0 (alpha)
