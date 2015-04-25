@@ -22,8 +22,8 @@
 
 Summary:        Always Populate Form Data
 Name:           php-pecl-%{pecl_name}
-Version:        1.0.0
-Release:        2%{?dist}
+Version:        1.0.1
+Release:        1%{?dist}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -188,11 +188,14 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Apr 25 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1 (stable)
+
 * Wed Mar 18 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
 - cleanup SCL stuff for review
 
 * Wed Mar 18 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
-- Update to 1.0.0
+- Update to 1.0.0 (stable)
 
 * Tue Mar 10 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.RC1
 - Update to 1.0.0RC1
