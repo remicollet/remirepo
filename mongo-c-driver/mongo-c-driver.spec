@@ -15,11 +15,14 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.1.4
-Release:   2%{?dist}
+Release:   3%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
+
+# open https://jira.mongodb.org/browse/CDRIVER-624
+Patch0:    %{name}-upstream.patch
 
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libbson-1.0)
@@ -72,8 +75,7 @@ a MongoDB Server.
 %setup -q
 
 %if 0%{?fedora} > 21
-# Workaround https://jira.mongodb.org/browse/CDRIVER-624
-sed -e 's/&& __GNUC_MINOR__ >= 1//' -i ./build/autotools/CheckCompiler.m4
+%patch0 -p1 -b .upstream
 autoreconf -fi
 %endif
 
@@ -149,6 +151,9 @@ exit $ret
 
 
 %changelog
+* Sat Apr 25 2015 Remi Collet <remi@fedoraproject.org> - 1.1.4-3
+- test build for upstream patch
+
 * Thu Apr 23 2015 Remi Collet <remi@fedoraproject.org> - 1.1.4-2
 - cleanup build dependencies and options
 
