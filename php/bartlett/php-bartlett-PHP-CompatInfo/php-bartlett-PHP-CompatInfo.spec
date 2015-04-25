@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    6272b2a314ab79c9e5904e19139de3c6f1621109
+%global gh_commit    0ed258e3ed120704f40ec6461d5d61b6a5cd5971
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150303
 %global gh_owner     llaville
@@ -16,7 +16,7 @@
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        4.1.0
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -118,7 +118,7 @@ sed -e 's/@package_version@/%{version}%{?prever}/' \
 
 %build
 : Generate the references database
-%{_bindir}/php data/handleDB.php db:init
+%{_bindir}/php -d date.timezone=Europe/Paris data/handleDB.php db:init
 
 
 %install
@@ -163,6 +163,9 @@ fi
 
 
 %changelog
+* Fri Apr 24 2015 Remi Collet <remi@fedoraproject.org> - 4.1.0-2
+- test build from generictest branch
+
 * Fri Apr 17 2015 Remi Collet <remi@fedoraproject.org> - 4.1.0-1
 - update to 4.1.0
 - keep upstream shebang with /usr/bin/env (for SCL)
