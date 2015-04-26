@@ -1,7 +1,7 @@
 %global github_owner    tchwork
 %global github_name     jsqueeze
-%global github_version  2.0.1
-%global github_commit   70a8167daf0e2d5522d5d77a11e3a7d6753683ce
+%global github_version  2.0.2
+%global github_commit   2e581762884cfd035d9b148794ef2a4ab2c3b893
 %global packagist_owner patchwork
 %global packagist_name  jsqueeze
 %global psr4_namespace  Patchwork
@@ -11,7 +11,7 @@
 
 Name:           php-%{packagist_owner}-%{packagist_name}
 Version:        %{github_version}
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        Efficient JavaScript minification
 
 Group:          Development/Libraries
@@ -20,10 +20,6 @@ URL:            https://github.com/%{github_owner}/%{github_name}
 # Must use commit-based not tag-based github tarball:
 # https://fedoraproject.org/wiki/Packaging:SourceURL#Github
 Source0:        https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{github_name}-%{github_commit}.tar.gz
-
-# Backported bug fixes
-Patch0:         https://github.com/%{github_owner}/%{github_name}/commit/f3747ee91e3025b46e29b2128bbb83f63cbb7f2a.patch
-Patch1:         https://github.com/%{github_owner}/%{github_name}/dc3c4073c2060d62a8578848c5d222a8b7608df1.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -51,8 +47,6 @@ UglifyJS.
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
-%patch0 -p1
-%patch1 -p1
 
 
 %build
@@ -83,6 +77,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Apr 25 2015 Adam Williamson <awilliam@redhat.com> - 2.0.2-1
+- new release 2.0.2
+
 * Tue Mar 17 2015 Remi Collet <remmi@fedoraproject.org> - 2.0.1-2
 - add backport stuff for #remirepo
 
