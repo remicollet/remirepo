@@ -129,9 +129,9 @@
 %global db_devel  libdb-devel
 %endif
 
-%global gh_commit    1f0a6241b496220d6039aac425396fd177ad4be6
+%global gh_commit    1a4d3e4855619538eb1902b8513473e2cda76804
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150418
+%global gh_date      20150427
 %global gh_owner     php
 %global gh_project   php-src
 #global rcver        RC1
@@ -181,7 +181,7 @@ Patch21: php-7.0.0-odbctimer.patch
 
 # Functional changes
 Patch40: php-7.0.0-dlopen.patch
-Patch42: php-7.0.0-systzdata-v11.patch
+Patch42: php-7.0.0-systzdata-v12.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
 # Use -lldap_r for OpenLDAP
@@ -948,6 +948,7 @@ rm ext/date/tests/timezone_version_get_basic1.phpt
 rm ext/sockets/tests/mcast_ipv?_recv.phpt
 # cause stack exhausion
 rm Zend/tests/bug54268.phpt
+rm Zend/tests/bug68412.phpt
 
 # Safety check for API version change.
 pver=$(sed -n '/#define PHP_VERSION /{s/.* "//;s/".*$//;p}' main/php_version.h)
@@ -1804,6 +1805,10 @@ fi
 
 
 %changelog
+* Mon Apr 27 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.5.20150427git1a4d3e4
+- new snapshot
+- adapt system tzdata patch for upstream change for new zic
+
 * Sat Apr 18 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.5.20150418git1f0a624
 - new snapshot
 
