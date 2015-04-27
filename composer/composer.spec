@@ -6,10 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    921b3a0eba139820716f7aeefb553197c14656d8
+%global gh_commit    1cb427ff5c0b977468643a39436f3b0a356fc8eb
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20150415
+%global gh_date      20150426
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
@@ -158,6 +158,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Apr 27 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.20150426git1cb427f
+- new snapshot
+
 * Fri Apr 17 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.20150415git921b3a0
 - new snapshot
 - raise dependency on justinrainbow/json-schema ~1.4
