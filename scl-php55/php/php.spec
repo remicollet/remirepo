@@ -128,7 +128,7 @@
 %endif
 
 #global rcver  RC1
-%global rpmrel 1
+%global rpmrel 2
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
@@ -174,7 +174,8 @@ Patch21: php-5.4.7-odbctimer.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
-Patch42: php-5.5.19-systzdata-v11.patch
+Patch41: php-5.5.25-newzic.patch
+Patch42: php-5.5.25-systzdata-v12.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
 # Use -lldap_r for OpenLDAP
@@ -859,6 +860,7 @@ support for using the enchant library to PHP.
 %patch21 -p1 -b .odbctimer
 
 %patch40 -p1 -b .dlopen
+%patch41 -p1 -b .newzic
 %patch42 -p1 -b .systzdata
 %patch43 -p1 -b .headers
 %if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
@@ -1747,6 +1749,9 @@ fi
 
 
 %changelog
+* Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> 5.5.24-2
+- test build (new zic)
+
 * Wed Apr 15 2015 Remi Collet <remi@fedoraproject.org> 5.5.24-1
 - Update to 5.5.24
   http://www.php.net/releases/5_5_24.php

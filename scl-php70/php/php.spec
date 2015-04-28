@@ -129,9 +129,9 @@
 %global db_devel  libdb-devel
 %endif
 
-%global gh_commit    1a4d3e4855619538eb1902b8513473e2cda76804
+%global gh_commit    94f0b940f923e5f4f5a06283e8401ef34cd83fb0
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150427
+%global gh_date      20150428
 %global gh_owner     php
 %global gh_project   php-src
 #global rcver        RC1
@@ -1805,6 +1805,9 @@ fi
 
 
 %changelog
+* Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.5.20150428git94f0b94
+- new snapshot
+
 * Mon Apr 27 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.5.20150427git1a4d3e4
 - new snapshot
 - adapt system tzdata patch for upstream change for new zic
