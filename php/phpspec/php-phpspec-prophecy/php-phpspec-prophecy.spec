@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    1
-%global gh_commit    8724cd239f8ef4c046f55a3b18b4d91cc7f3e4c5
+%global gh_commit    3132b1f44c7bf2ec4c7eb2d3cb78fdeca760d373
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpspec
 %global gh_project   prophecy
@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-phpspec-prophecy
-Version:        1.4.0
+Version:        1.4.1
 Release:        1%{?dist}
 Summary:        Highly opinionated mocking framework for PHP
 
@@ -110,6 +110,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
+- update to 1.4.1
+
 * Sun Mar 29 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - update to 1.4.0
 - add dependency on sebastian/comparator
