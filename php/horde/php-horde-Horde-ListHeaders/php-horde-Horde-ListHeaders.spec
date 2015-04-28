@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-ListHeaders
-Version:        1.2.1
+Version:        1.2.2
 Release:        1%{?dist}
 Summary:        Horde List Headers Parsing Library
 
@@ -39,6 +39,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Mail) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mail) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optional and implicitly requires Horde_Mime
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -123,6 +125,10 @@ fi
 
 
 %changelog
+* Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
+- Update to 1.2.2
+- add dependency on Horde_Util
+
 * Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - Update to 1.2.1
 - add provides php-composer(horde/horde-listheaders)
