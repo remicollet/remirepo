@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Smtp
-Version:        1.9.0
+Version:        1.9.1
 Release:        1%{?dist}
 Summary:        Horde SMTP Client
 
@@ -53,6 +53,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Imap_Client) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Socket_Client) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Socket_Client) <  3
+Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Horde_Secret optional and implicitly required
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
@@ -137,6 +139,10 @@ fi
 
 
 %changelog
+* Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 1.9.1-1
+- Update to 1.9.1
+- add dependency on Horde_Util
+
 * Tue Mar 10 2015 Remi Collet <remi@fedoraproject.org> - 1.9.0-1
 - Update to 1.9.0
 - add Provides php-composer(horde/horde-smtp)
