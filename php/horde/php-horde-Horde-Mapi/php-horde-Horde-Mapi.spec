@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Mapi
-Version:        1.0.4
+Version:        1.0.5
 Release:        1%{?dist}
 Summary:        MAPI utility library
 
@@ -41,8 +41,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
-# From package.xml, optional
-Requires:       php-bcmath
+# Use phpseclib version instead of the one from pear
+Requires:       php-pear(phpseclib.sourceforge.net/Math_BigInteger)
 # From phpcompatinfo report for version 1.0.0
 Requires:       php-date
 
@@ -110,6 +110,11 @@ fi
 
 
 %changelog
+* Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
+- Update to 1.0.5
+- drop dependency on bcmath
+- add dependency on Math_BigInteger
+
 * Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
 - Update to 1.0.4
 - add provides php-composer(horde/horde-mapi)
