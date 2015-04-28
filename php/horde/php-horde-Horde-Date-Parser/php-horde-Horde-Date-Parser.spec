@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Date-Parser
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}
 Summary:        Horde Date Parser
 
@@ -36,11 +36,13 @@ Requires:       php-ereg
 Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
+Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
-Requires:       php-channel(%{pear_channel})
+Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Provides:       php-composer(horde/horde-date-parser) = %{version}
@@ -101,6 +103,10 @@ fi
 
 
 %changelog
+* Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+- add dependency on Horde_Util
+
 * Thu Jan 08 2015 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3
 - add provides php-composer(horde/horde-date-parser)
