@@ -8,14 +8,17 @@
 # Please, preserve the changelog entries
 #
 %{!?__pear:       %global __pear       %{_bindir}/pear}
+%global bootstrap    0
 %global pear_name    Horde_Autoloader
 %global pear_channel pear.horde.org
-
-# Can run test because of circular dependency with Horde_Test
+%if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%else
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 Name:           php-horde-Horde-Autoloader
-Version:        2.1.0
+Version:        2.1.1
 Release:        1%{?dist}
 Summary:        Horde Autoloader
 
@@ -46,6 +49,7 @@ Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-autoloader) = %{version}
 
 
 %description
@@ -59,6 +63,7 @@ cd %{pear_name}-%{version}
 %patch0 -p1 -b .fedora
 sed -e '/Default.php/s/md5sum=".*" name/name/' \
     ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -80,14 +85,10 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 %if %{with_tests}
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    -d include_path=$src/lib:.:%{pear_phpdir} \
-    -d date.timezone=UTC \
-    .
+phpunit .
 %else
-: Test disabled, missing '--with tests' option.
+: Test disabled, bootstrap build
 %endif
 
 
@@ -112,6 +113,11 @@ fi
 
 
 %changelog
+* Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
+- Update to 2.1.1
+- add provides php-composer(horde/horde-autoloader)
+- enable test during build
+
 * Tue Mar 04 2014 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0
 
