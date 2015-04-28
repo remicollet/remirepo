@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Perms
-Version:        2.1.3
+Version:        2.1.4
 Release:        1%{?dist}
 Summary:        Horde Permissions System
 
@@ -69,6 +69,7 @@ sed -e '/%{pear_name}.po/d' \
     -e '/Horde_Other.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -129,6 +130,9 @@ fi
 
 
 %changelog
+* Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
+- Update to 2.1.4
+
 * Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
 - Update to 2.1.3
 - add provides php-composer(horde/horde-perms)
