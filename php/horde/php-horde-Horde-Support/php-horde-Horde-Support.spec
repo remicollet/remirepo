@@ -18,7 +18,7 @@
 %endif
 
 Name:           php-horde-Horde-Support
-Version:        2.1.2
+Version:        2.1.3
 Release:        1%{?dist}
 Summary:        Horde support package
 
@@ -49,6 +49,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Wrapper) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream_Wrapper) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Provides:       php-composer(horde/horde-support) = %{version}
@@ -115,6 +117,10 @@ fi
 
 
 %changelog
+* Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
+- Update to 2.1.3
+- add dependency on Horde_Util
+
 * Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
 - Update to 2.1.2
 - add provides php-composer(horde/horde-support)
