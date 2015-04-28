@@ -18,7 +18,7 @@
 %endif
 
 Name:           php-horde-Horde-Log
-Version:        2.1.1
+Version:        2.1.2
 Release:        1%{?dist}
 Summary:        Horde Logging library
 
@@ -50,6 +50,8 @@ Requires:       php-pear(%{pear_channel}/Horde_Constraint) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Constraint) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optional
 Requires:       php-dom
 Requires:       php-pear(%{pear_channel}/Horde_Cli) >= 2.0.0
@@ -118,6 +120,10 @@ fi
 
 
 %changelog
+* Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
+- Update to 2.1.2
+- add dependency on Horde_Util
+
 * Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - Update to 2.1.1
 - add provides php-composer(horde/horde-log)
