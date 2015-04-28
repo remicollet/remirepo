@@ -12,7 +12,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Pdf
-Version:        2.0.4
+Version:        2.0.5
 Release:        1%{?dist}
 Summary:        Horde PDF library
 
@@ -38,6 +38,8 @@ Requires:       php(language) >= 5.3.0
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-channel(%{pear_channel})
 # From phpcompatinfo report for version 2.0.3
 Requires:       php-date
@@ -109,6 +111,10 @@ fi
 
 
 %changelog
+* Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- Update to 2.0.5
+- add dependency on Horde_Util
+
 * Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4
 - add provides php-composer(horde/horde-pdf)
