@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Controller
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        Horde Controller libraries
 
@@ -103,6 +103,9 @@ fi
 
 
 %changelog
+* Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
+
 * Thu Jan 08 2015 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2
 - add provides php-composer(horde/horde-controller)
