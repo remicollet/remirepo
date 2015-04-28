@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Kolab-Format
-Version:        2.0.6
+Version:        2.0.7
 Release:        1%{?dist}
 Summary:        A package for reading/writing Kolab data formats
 
@@ -41,6 +41,8 @@ Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optional
 Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
@@ -113,6 +115,10 @@ fi
 
 
 %changelog
+* Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
+- Update to 2.0.7
+- add dependency on Horde_Util
+
 * Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
 - Update to 2.0.6
 - add provides php-composer(horde/horde-kolab-format)
