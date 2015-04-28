@@ -1,4 +1,5 @@
-LICENCE AGREEMENT FOR THE IONCUBE PHP LOADER AND USE OF IONCUBE ENCODED FILES
+LICENCE AGREEMENT FOR THE IONCUBE PHP LOADER, PROVIDED TO ENABLE THE USE
+OF IONCUBE ENCODED FILES AND AS PART OF THE IONCUBE24 SERVICE (ioncube24.com)
 
 YOU SHOULD CAREFULLY READ THE FOLLOWING TERMS AND CONDITIONS BEFORE USING THE
 LOADER SOFTWARE. THE INSTALLATION AND/OR USE OR COPYING OF THE IONCUBE PHP
@@ -22,7 +23,7 @@ purpose of producing non-humanly readable encoded files from PHP scripts.
 ENCODED FILE shall mean a non-humanly readable file produced by the 
 Encoder and being derived from humanly readable PHP script source.
 
-PROVIDER shall mean ionCube Software LLP.
+PROVIDER shall mean ionCube Ltd.
 
 USER/YOU shall mean any entity who has downloaded or obtained through any
 other means a version of the Loader software.
@@ -239,4 +240,4 @@ This License Agreement and any issues relating thereto shall be construed and
 interpreted in accordance with the laws of England and subject to the
 exclusive jurisdiction of the English courts.
 
-Copyright (c) 2002-2015 ionCube Ltd.          Last revised 3-May-2013
+Copyright (c) 2002-2015 ionCube Ltd.          Last revised 23-April-2015

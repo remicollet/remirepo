@@ -22,9 +22,9 @@
 # http://forum.ioncube.com/viewtopic.php?t=4244 - No versio in Reflection
 
 Name:          %{?scl_prefix}php-ioncube-loader
-Summary:       Loader for ionCube Encoded Files
-Version:       4.7.5
-Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Summary:       Loader for ionCube Encoded Files with ionCube 24 support
+Version:       5.0.1
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       Distribuable
 Group:         Development/Languages
 
@@ -65,7 +65,7 @@ Obsoletes:     php56w-ioncube-loader <= %{version}
 
 
 %description
-Loader for ionCube Encoded Files.
+Loader for ionCube Encoded Files with ionCube 24 support.
 
 Package built for PHP %(%{__php} -n -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
 
@@ -83,26 +83,36 @@ tar xvf %{SOURCE0}
 # Sometime file is missing
 # http://forum.ioncube.com/viewtopic.php?t=4245
 [ -f ioncube/LICENSE.txt ] || cp %{SOURCE2} ioncube
-sed -e 's/\r//' -i ioncube/LICENSE.txt
+sed -e 's/\r//' -i ioncube/*.txt
 
 cat << 'EOF' | tee %{extname}.nts
 ; Enable %{extname} extension module
-%if "%{php_version}" > "5.5"
 zend_extension = %{extname}.so
-%else
-zend_extension = %{php_extdir}/%{extname}.so
-%endif
+
+; ionCube PHP Loader + Intrusion Protection from ioncube24.com configuration
+;ic24.enable = 0
+;ic24.sec.stop_on_error = 1
+;ic24.sec.approve_included_files = 0
+;ic24.sec.block_uploaded_files = 1
+;ic24.api_access_key = ''
+;ic24.api_check_ip = 1
+;ic24.sec.alert_action = '^E<96><H<F1><9C><F2>'
+;ic24.sec.exclusion_key = ''
+;ic24.cache_path = ''
+;ic24.home_dir = ''
+;ioncube.loader.encoded_paths = ''
+;phpd = 1
+;phpd.t = 1
 EOF
 
-%if %{with_zts}
-cat << 'EOF' | tee %{extname}.zts
-; Enable %{extname} extension module
-%if "%{php_version}" > "5.5"
-zend_extension = %{extname}.so
-%else
-zend_extension = %{php_ztsextdir}/%{extname}.so
-%endif
-EOF
+cp %{extname}.nts %{extname}.zts
+
+%if "%{php_version}" < "5.5"
+sed -e 's:%{extname}.so:%{php_ztsextdir}/%{extname}.so:' \
+    -i %{extname}.zts
+sed -e 's:%{extname}.so:%{php_extdir}/%{extname}.so:' \
+    -i %{extname}.nts
+diff %{extname}.nts %{extname}.zts || : ok
 %endif
 
 
@@ -149,6 +159,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license ioncube/LICENSE.txt
+%doc ioncube/{README,USER-GUIDE}.txt
 
 %config(noreplace) %{php_inidir}/%{ininame}
 %{php_extdir}/%{extname}.so
@@ -160,6 +171,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Apr 28 2015 Remi Collet <RPMS@famillecollet.com> - 5.0.1-1
+- update to 5.0.1 (Apr 27, 2015)
+
 * Tue Mar  3 2015 Remi Collet <RPMS@famillecollet.com> - 4.7.5-2
 - LICENSE.txt and README.txt are back
   http://forum.ioncube.com/viewtopic.php?t=4245
