@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Kolab-Server
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}
 Summary:        A package for manipulating the Kolab user database
 
@@ -32,14 +32,18 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-pcre
+Requires:       php-hash
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Auth) < 3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # optional and implicitly required: Horde_Date, Horde_Ldap
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-kolab-server) = %{version}
 
 
 %description
@@ -100,6 +104,11 @@ fi
 
 
 %changelog
+* Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+- add dependency on Horde_Util
+- add provides php-composer(horde/horde-kolab-server)
+
 * Wed Jan 07 2015 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3
 - raise dependency on Horde_Test 2.4.0
