@@ -18,7 +18,7 @@
 %endif
 
 Name:           php-horde-Horde-Idna
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}
 Summary:        IDNA backend normalization package
 
@@ -46,10 +46,10 @@ Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
-# optional
-Requires:       php-intl
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
+# optional
+Requires:       php-intl
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Provides:       php-composer(horde/horde-idna) = %{version}
@@ -118,6 +118,9 @@ fi
 
 
 %changelog
+* Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3
+
 * Tue Apr 14 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Update to 1.0.2
 - add optional dependency on Horde_Util
