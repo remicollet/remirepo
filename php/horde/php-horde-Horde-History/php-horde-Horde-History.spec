@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-History
-Version:        2.3.3
+Version:        2.3.4
 Release:        1%{?dist}
 Summary:        API for tracking the history of an object
 
@@ -45,6 +45,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
 #      Horde_HashTable, Horde_Mongo
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-history) = %{version}
 
 
 %description
@@ -108,6 +109,10 @@ fi
 
 
 %changelog
+* Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.3.4-1
+- Update to 2.3.4
+- add provides php-composer(horde/horde-history)
+
 * Tue Nov 18 2014 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
 - Update to 2.3.3
 
