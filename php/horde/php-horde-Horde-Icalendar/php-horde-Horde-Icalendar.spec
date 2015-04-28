@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Icalendar
-Version:        2.0.10
+Version:        2.0.11
 Release:        1%{?dist}
 Summary:        iCalendar API
 
@@ -53,6 +53,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-icalendar) = %{version}
 
 
 %description
@@ -127,6 +128,10 @@ fi
 
 
 %changelog
+* Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.0.11-1
+- Update to 2.0.11
+- add provides php-composer(horde/horde-icalendar)
+
 * Tue Nov 25 2014 Remi Collet <remi@fedoraproject.org> - 2.0.10-1
 - Update to 2.0.10
 
