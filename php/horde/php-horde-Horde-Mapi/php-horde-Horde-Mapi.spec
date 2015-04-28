@@ -30,6 +30,7 @@ BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-bcmath
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
+BuildRequires:  php-pear(phpseclib.sourceforge.net/Math_BigInteger)
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
