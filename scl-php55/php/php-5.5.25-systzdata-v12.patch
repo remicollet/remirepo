@@ -20,9 +20,9 @@ r3: fix a crash if /usr/share/zoneinfo doesn't exist (Raphael Geissert)
 r2: add filesystem trawl to set up name alias index
 r1: initial revision
 
-diff -up php-5.5.25/ext/date/lib/parse_tz.c.systzdata php-5.5.25/ext/date/lib/parse_tz.c
---- php-5.5.25/ext/date/lib/parse_tz.c.systzdata	2015-04-28 12:24:43.763230404 +0200
-+++ php-5.5.25/ext/date/lib/parse_tz.c	2015-04-28 12:29:11.179410687 +0200
+diff -up php-5.5.25RC1/ext/date/lib/parse_tz.c.systzdata php-5.5.25RC1/ext/date/lib/parse_tz.c
+--- php-5.5.25RC1/ext/date/lib/parse_tz.c.systzdata	2015-04-29 11:24:07.000000000 +0200
++++ php-5.5.25RC1/ext/date/lib/parse_tz.c	2015-04-29 14:21:29.069617493 +0200
 @@ -20,6 +20,16 @@
  
  #include "timelib.h"
@@ -574,8 +574,8 @@ diff -up php-5.5.25/ext/date/lib/parse_tz.c.systzdata php-5.5.25/ext/date/lib/pa
 +	return (inmem_seek_to_tz_position(&tzf, timezone, tzdb));
  }
  
- static void skip_2nd_header_and_data(const unsigned char **tzf, timelib_tzinfo *tz)
-@@ -361,23 +859,53 @@ static void skip_2nd_header_and_data(con
+ static void skip_64bit_preamble(const unsigned char **tzf, timelib_tzinfo *tz)
+@@ -374,24 +872,54 @@ static void read_64bit_header(const unsi
  timelib_tzinfo *timelib_parse_tzfile(char *timezone, const timelib_tzdb *tzdb)
  {
  	const unsigned char *tzf;
@@ -593,10 +593,13 @@ diff -up php-5.5.25/ext/date/lib/parse_tz.c.systzdata php-5.5.25/ext/date/lib/pa
  		read_transistions(&tzf, tmp);
  		read_types(&tzf, tmp);
 -		if (version == 2) {
--			skip_2nd_header_and_data(&tzf, tmp);
--			skip_transistions_64bit(&tzf, tmp);
--			skip_types_64bit(&tzf, tmp);
+-			skip_64bit_preamble(&tzf, tmp);
+-			read_64bit_header(&tzf, tmp);
+-			skip_64bit_transistions(&tzf, tmp);
+-			skip_64bit_types(&tzf, tmp);
 -			skip_posix_string(&tzf, tmp);
+-		}
+-		read_location(&tzf, tmp);
 +
 +#ifdef HAVE_SYSTEM_TZDATA
 +		if (memmap) {
@@ -624,21 +627,21 @@ diff -up php-5.5.25/ext/date/lib/parse_tz.c.systzdata php-5.5.25/ext/date/lib/pa
 +#endif
 +		{
 +			if (version == 2) {
-+				skip_2nd_header_and_data(&tzf, tmp);
-+				skip_transistions_64bit(&tzf, tmp);
-+				skip_types_64bit(&tzf, tmp);
++				skip_64bit_preamble(&tzf, tmp);
++				read_64bit_header(&tzf, tmp);
++				skip_64bit_transistions(&tzf, tmp);
++				skip_64bit_types(&tzf, tmp);
 +				skip_posix_string(&tzf, tmp);
 +			}
 +			/* PHP-style - use the embedded info. */
 +			read_location(&tzf, tmp);
- 		}
--		read_location(&tzf, tmp);
++ 		}
  	} else {
  		tmp = NULL;
  	}
-diff -up php-5.5.25/ext/date/lib/timelib.m4.systzdata php-5.5.25/ext/date/lib/timelib.m4
---- php-5.5.25/ext/date/lib/timelib.m4.systzdata	2015-04-15 12:43:00.000000000 +0200
-+++ php-5.5.25/ext/date/lib/timelib.m4	2015-04-28 12:24:43.765230413 +0200
+diff -up php-5.5.25RC1/ext/date/lib/timelib.m4.systzdata php-5.5.25RC1/ext/date/lib/timelib.m4
+--- php-5.5.25RC1/ext/date/lib/timelib.m4.systzdata	2015-04-29 11:24:07.000000000 +0200
++++ php-5.5.25RC1/ext/date/lib/timelib.m4	2015-04-29 14:16:11.211251692 +0200
 @@ -78,3 +78,17 @@ stdlib.h
  
  dnl Check for strtoll, atoll

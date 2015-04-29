@@ -127,12 +127,12 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver  RC1
-%global rpmrel 2
+%global rcver  RC1
+%global rpmrel 1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.5.24
+Version: 5.5.25
 %if 0%{?rcver:1}
 Release: 0.%{rpmrel}.%{rcver}%{?dist}
 %else
@@ -174,7 +174,6 @@ Patch21: php-5.4.7-odbctimer.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
-Patch41: php-5.5.25-newzic.patch
 Patch42: php-5.5.25-systzdata-v12.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
@@ -195,6 +194,8 @@ Patch91: php-5.3.7-oci8conf.patch
 # Fixes for tests (300+)
 # Factory is droped from system tzdata + upstream patch for new zic
 Patch300: php-5.5.24-datetests.patch
+# Revert changes for pcre < 8.34
+Patch301: php-5.5.25-oldpcre.patch
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -860,7 +861,6 @@ support for using the enchant library to PHP.
 %patch21 -p1 -b .odbctimer
 
 %patch40 -p1 -b .dlopen
-%patch41 -p1 -b .newzic
 %patch42 -p1 -b .systzdata
 %patch43 -p1 -b .headers
 %if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
@@ -877,6 +877,12 @@ support for using the enchant library to PHP.
 
 # Fixes for tests
 %patch300 -p1 -b .datetests
+%if %{with_libpcre}
+%if 0%{?fedora} < 21
+# Only apply when system libpcre < 8.34
+%patch301 -p1 -b .pcre834
+%endif
+%endif
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1749,6 +1755,9 @@ fi
 
 
 %changelog
+* Wed Apr 29 2015 Remi Collet <remi@fedoraproject.org> 5.5.25-0.1.RC1
+- update to 5.5.25RC1
+
 * Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> 5.5.24-2
 - test build (new zic)
 
