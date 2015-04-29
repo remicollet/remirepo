@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Db
-Version:        2.2.2
+Version:        2.2.3
 Release:        1%{?dist}
 Summary:        Horde Database Libraries
 
@@ -54,6 +54,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Cache) <  3.0.0
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-db) = %{version}
 
 
 %description
@@ -64,7 +65,7 @@ Horde database/SQL abstraction layer
 %setup -q -c
 
 cd %{pear_name}-%{version}
-cp -p ../package.xml %{name}.xml
+mv ../package.xml %{name}.xml
 
 
 %build
@@ -111,6 +112,10 @@ fi
 
 
 %changelog
+* Wed Apr 29 2015 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
+- Update to 2.2.3
+- add provides php-composer(horde/horde-db)
+
 * Tue Nov 18 2014 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
 - Update to 2.2.2
 
