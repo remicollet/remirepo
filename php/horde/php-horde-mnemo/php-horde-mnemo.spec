@@ -13,7 +13,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-mnemo
-Version:        4.2.5
+Version:        4.2.6
 Release:        1%{?dist}
 Summary:        A web based notes manager
 
@@ -204,6 +204,9 @@ fi
 
 
 %changelog
+* Wed Apr 29 2015 Remi Collet <remi@fedoraproject.org> - 4.2.6-1
+- Update to 4.2.6
+
 * Wed Feb 11 2015 Remi Collet <remi@fedoraproject.org> - 4.2.5-1
 - Update to 4.2.5
 
