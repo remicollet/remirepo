@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    163232991e652e6efed2f8470326fffa61e848e2
+%global gh_commit    1c54dd1d9a782d7c8715bb3604cde7b6e23c2614
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,8 +17,8 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.6.4
-Release:        2%{?dist}
+Version:        4.6.5
+Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries
@@ -204,6 +204,9 @@ fi
 
 
 %changelog
+* Wed Apr 29 2015 Remi Collet <remi@fedoraproject.org> - 4.6.5-1
+- Update to 4.6.5
+
 * Fri Apr 17 2015 Remi Collet <remi@fedoraproject.org> - 4.6.4-2
 - keep upstream shebang with /usr/bin/env (for SCL)
 
