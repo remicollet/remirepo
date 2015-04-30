@@ -127,12 +127,12 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver  RC1
-%global rpmrel 2
+%global rcver  RC1
+%global rpmrel 1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.6.8
+Version: 5.6.9
 %if 0%{?rcver:1}
 Release: 0.%{rpmrel}.%{rcver}%{?dist}
 %else
@@ -174,7 +174,6 @@ Patch21: php-5.4.7-odbctimer.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
-Patch41: php-5.6.9-newzic.patch
 Patch42: php-5.6.9-systzdata-v12.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
@@ -874,7 +873,6 @@ support for using the enchant library to PHP.
 %patch21 -p1 -b .odbctimer
 
 %patch40 -p1 -b .dlopen
-%patch41 -p1 -b .newzic
 %patch42 -p1 -b .systzdata
 %patch43 -p1 -b .headers
 %if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
@@ -1783,6 +1781,9 @@ fi
 
 
 %changelog
+* Thu Apr 30 2015 Remi Collet <remi@fedoraproject.org> 5.6.9-0.1.RC1
+- update to 5.6.9RC1
+
 * Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> 5.6.8-2
 - test build (new zic)
 
