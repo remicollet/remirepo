@@ -1,12 +1,12 @@
 %global		github_user	PHPMailer
 %global		github_app	PHPMailer
-%global		github_tag	b56c9b684923153112e5b72d23182b469aa44070
+%global		github_tag	07005ecbb80d11ec8c0f067bb37e8909cc7fcbb7
 
 %global		arch_name	%{github_app}-%{github_tag}
 
 Name:		php-PHPMailer
 Summary:	PHP email transport class with a lot of features
-Version:	5.2.9
+Version:	5.2.10
 Release:	1%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
@@ -21,7 +21,13 @@ Patch0:		%{github_app}-path.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Buildarch:	noarch
 
-Requires:	php-mbstring >= 5.1.0
+# From phpcompatinfo report for 5.2.10
+Requires:	php-date
+Requires:	php-filter
+Requires:	php-hash
+Requires:	php-mbstring
+Requires:	php-openssl
+Requires:	php-pcre
 
 Provides:	php-composer(phpmailer/phpmailer) = %{version}
 
@@ -123,6 +129,9 @@ rm -rf "${RPM_BUILD_ROOT}"
 
 
 %changelog
+* Mon May  4 2015 Remi Collet <remi@fedoraproject.org> - 5.2.10-1
+- update to 5.2.10
+
 * Fri Sep 26 2014 Remi Collet <remi@fedoraproject.org> - 5.2.9-1
 - update to 5.2.9
 
