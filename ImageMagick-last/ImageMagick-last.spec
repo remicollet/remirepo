@@ -9,11 +9,7 @@
 %global with_djvu 0
 %endif
 
-%if 0%{?rhel} >= 6 || 0%{?fedora} >= 14
 %global with_lcms2 1
-%else
-%global with_lcms2 0
-%endif
 
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 6
 %global with_webp 1
@@ -46,7 +42,7 @@ Name:           %{libname}
 Name:           %{libname}-last
 %endif
 Version:        %{VER}.%{Patchlevel}
-Release:        1%{?dist}.1
+Release:        1%{?dist}.2
 Summary:        An X application for displaying and manipulating images
 Group:          Applications/Multimedia
 License:        ImageMagick
@@ -438,6 +434,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon May  4 2015 Remi Collet <RPMS@FamilleCollet.com> - 6.9.1.2-1.2
+- rebuild with libcms2 in EL-5
+
 * Thu Apr 23 2015 Remi Collet <RPMS@FamilleCollet.com> - 6.9.1.2-1.1
 - rebuild for new libwebp in EPEL-6
 
