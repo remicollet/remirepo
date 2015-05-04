@@ -6,6 +6,8 @@
     "jms\/parser-lib": "php-JMSParser",
     "zendframework\/zendframework1": "php-ZendFramework",
     "sabre\/dav": "php-sabre-dav",
+    "seld\/cli-prompt": "php-seld-cli-prompt",
+    "seld/phar-utils": "php-seld-phar-utils",
     "phpunit\/phpunit-story": "php-phpunit-PHPUnit-Story",
     "sebastian\/phpcpd": "php-phpunit-phpcpd",
     "sebastian\/phpdcd": "php-phpunit-phpdcd",
