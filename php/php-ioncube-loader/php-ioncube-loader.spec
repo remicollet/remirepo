@@ -9,6 +9,7 @@
 %{?scl:          %scl_package             php-ioncube-loader}
 %global extname       ioncube_loader
 %global debug_package %{nil}
+%global __debug_install_post /bin/true
 %global with_zts      0%{?__ztsphp:1}
 %if "%{php_version}" < "5.6"
 %global ininame       %{extname}.ini
