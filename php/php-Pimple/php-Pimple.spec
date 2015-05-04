@@ -1,7 +1,10 @@
-%global github_owner   fabpot
-%global github_name    Pimple
-%global github_version 1.1.1
-%global github_commit  2019c145fe393923f3441b23f29bbdfaa5c58c4d
+%global github_owner        silexphp
+%global github_name         Pimple
+%global github_version      3.0.0
+%global github_commit       876bf0899d01feacd2a2e83f04641e51350099ef
+%global packagist_owner     pimple
+%global packagist_name      pimple
+%global namespace           %{github_name}
 
 %global php_min_ver    5.3.0
 
@@ -17,14 +20,18 @@ Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{githu
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# for tests
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
+BuildRequires: %{_bindir}/phpunit
+BuildRequires: %{_bindir}/phpab
 # phpcompatinfo (computed from v1.1.1)
 BuildRequires: php-spl
 
 Requires:      php(language) >= %{php_min_ver}
 # phpcompatinfo (computed from v1.1.1)
 Requires:      php-spl
+
+Provides:       php-composer(%{packagist_owner}/%{packagist_name}) = %{version}
 
 %description
 Pimple is a small dependency injection container for PHP that consists of
@@ -40,24 +47,31 @@ just one file and one class.
 
 
 %install
-mkdir -pm 0755 %{buildroot}%{_datadir}/php/%{github_name}
-cp -pr lib/* %{buildroot}%{_datadir}/php/%{github_name}/
+mkdir -pm 0755 %{buildroot}%{_datadir}/php
+cp -pr src/%{namespace} %{buildroot}%{_datadir}/php
+# clean out tests
+rm -r %{buildroot}%{_datadir}/php/%{namespace}/Tests
 
 
 %check
-# Create PHPUnit config w/ colors turned off
-sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
-
-%{_bindir}/phpunit --include-path="./lib:./tests"
+# roll our own loader to run tests (can't seem to get it to load the fixtures
+# with --include-path any more)
+%{_bindir}/phpab --output bootstrap.php --exclude *Test.php --basedir . src
+%{_bindir}/phpunit --bootstrap bootstrap.php
 
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README.rst composer.json
-%{_datadir}/php/%{github_name}
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README.rst composer.json
+%{_datadir}/php/%{namespace}
 
 
 %changelog
+* Tue Dec 30 2014 Adam Williamson <awilliam@redhat.com> - 3.0.0-1
+- new release 3.0.0 (changes layout, BC break)
+
 * Mon Feb 17 2014 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - backport 1.1.1 for remi repo
 
