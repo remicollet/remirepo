@@ -11,8 +11,8 @@
 
 %global github_owner    nikic
 %global github_name     PHP-Parser
-%global github_version  1.2.2
-%global github_commit   08f97eb4efa029e2fafb6d8c98b71731bf0cf621
+%global github_version  1.3.0
+%global github_commit   dff239267fd1befa1cd40430c9ed12591aa720ca
 %global github_short    %(c=%{github_commit}; echo ${c:0:7})
 
 %global lib_name        PhpParser
@@ -41,8 +41,7 @@ BuildArch:     noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: %{_bindir}/phpunit
-# For tests: phpcompatinfo (computed from version 1.1.0)
-BuildRequires: php-ctype
+# For tests: phpcompatinfo (computed from version 1.3.0)
 BuildRequires: php-filter
 BuildRequires: php-pcre
 BuildRequires: php-spl
@@ -53,7 +52,7 @@ BuildRequires: php-xmlwriter
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
 Requires:      php-tokenizer
-# phpcompatinfo (computed from version 1.1.0)
+# phpcompatinfo (computed from version 1.3.0)
 Requires:      php-filter
 Requires:      php-pcre
 Requires:      php-spl
@@ -106,6 +105,9 @@ install -Dpm 755 bin/php-parse.php %{buildroot}%{_bindir}/php-parse
 
 
 %changelog
+* Mon May  4 2015 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- update to 1.3.0
+
 * Sat Apr  4 2015 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
 - update to 1.2.2
 
