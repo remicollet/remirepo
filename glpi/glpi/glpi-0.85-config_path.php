@@ -11,12 +11,12 @@ define('GLPI_CACHE_DIR',      '/var/lib/glpi/files/_cache/');
 define('GLPI_CRON_DIR',       '/var/lib/glpi/files/_cron');
 define('GLPI_SESSION_DIR',    '/var/lib/glpi/files/_sessions');
 define('GLPI_PLUGIN_DOC_DIR', '/var/lib/glpi/files/_plugins');
-define('GLPI_LOCK_DIR',       '/var/lib/glpi/files/_lock/');
-define('GLPI_GRAPH_DIR',      '/var/lib/glpi/files/_graphs/');
-define('GLPI_TMP_DIR',        '/var/lib/glpi/files/_tmp/');
-define('GLPI_RSS_DIR',        '/var/lib/glpi/files/_rss/');
-define('GLPI_UPLOAD_DIR',     '/var/lib/glpi/files/_uploads/');
-define('GLPI_PICTURE_DIR',    '/var/lib/glpi/files/_pictures/');
+define('GLPI_LOCK_DIR',       '/var/lib/glpi/files/_lock');
+define('GLPI_GRAPH_DIR',      '/var/lib/glpi/files/_graphs');
+define('GLPI_TMP_DIR',        '/var/lib/glpi/files/_tmp');
+define('GLPI_RSS_DIR',        '/var/lib/glpi/files/_rss');
+define('GLPI_UPLOAD_DIR',     '/var/lib/glpi/files/_uploads');
+define('GLPI_PICTURE_DIR',    '/var/lib/glpi/files/_pictures');
 
 // Log
 define('GLPI_LOG_DIR',        '/var/log/glpi');

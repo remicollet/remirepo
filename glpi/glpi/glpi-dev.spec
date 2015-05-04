@@ -27,7 +27,7 @@
 %endif
 
 Name:           glpi
-Version:        0.85.3
+Version:        0.85.4
 Release:        1%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
@@ -35,7 +35,7 @@ Summary(fr):    Gestion Libre de Parc Informatique
 Group:          Applications/Internet
 License:        GPLv2+ and GPLv3+
 URL:            http://www.glpi-project.org/
-Source0:        https://forge.indepnet.net/attachments/download/2006/glpi-0.85.3.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/2020/glpi-0.85.4.tar.gz
 
 Source1:        glpi-httpd.conf
 Source2:        glpi-0.85-config_path.php
@@ -241,10 +241,15 @@ rm -rf %{buildroot}
 %if %{useselinux}
 (
 # New File context
+%if 0%{?rhel} == 5
+semanage fcontext -a -s system_u -t httpd_sys_script_rw_t  -r s0 "%{_sysconfdir}/%{name}(/.*)?"
+semanage fcontext -a -s system_u -t httpd_sys_script_rw_t  -r s0 "%{_localstatedir}/lib/%{name}(/.*)?"
+%else
 semanage fcontext -a -s system_u -t httpd_sys_rw_content_t -r s0 "%{_sysconfdir}/%{name}(/.*)?"
+semanage fcontext -a -s system_u -t httpd_var_lib_t        -r s0 "%{_localstatedir}/lib/%{name}(/.*)?"
+%endif
 semanage fcontext -a -s system_u -t httpd_sys_content_t    -r s0 "%{_datadir}/%{name}(/.*)?"
 semanage fcontext -a -s system_u -t httpd_log_t            -r s0 "%{_localstatedir}/log/%{name}(/.*)?"
-semanage fcontext -a -s system_u -t httpd_var_lib_t        -r s0 "%{_localstatedir}/lib/%{name}(/.*)?"
 # files created by app
 restorecon -R %{_sysconfdir}/%{name}
 restorecon -R %{_datadir}/%{name}
@@ -307,6 +312,11 @@ fi
 
 
 %changelog
+* Mon May  4 2015 Remi Collet <remi@fedoraproject.org> - 0.85.4-1
+- update to 0.85.4
+  https://forge.indepnet.net/versions/1136
+- fix SELinux context on EL-5
+
 * Fri Apr 17 2015 Remi Collet <remi@fedoraproject.org> - 0.85.3-1
 - update to 0.85.3
   https://forge.indepnet.net/versions/1118
