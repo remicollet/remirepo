@@ -14,7 +14,7 @@
 
 Name:           php-andrewsville-php-token-reflection
 Version:        1.4.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Library emulating the PHP internal reflection
 
 Group:          Development/Libraries
@@ -23,6 +23,7 @@ URL:            https://github.com/%{gh_owner}/%{gh_project}
 # https://github.com/Andrewsville/PHP-Token-Reflection/issues/68
 # run mksrc.sh to create the tarball from a git snapshot
 Source0:        %{name}-%{version}-%{gh_short}.tgz
+Source1:        makesrc.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -87,5 +88,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon May  4 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-2
+- add mksrc.sh as source1, per review comment #1207591
+
 * Tue Mar 31 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - initial package
