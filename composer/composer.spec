@@ -6,10 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    1cb427ff5c0b977468643a39436f3b0a356fc8eb
+%global gh_commit    42a9561ae23b236da1d5a4acf50f7ea96ebe68aa
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20150426
+%global gh_date      20150503
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
@@ -47,7 +47,9 @@ BuildRequires:  %{_bindir}/phpunit
 #        "seld/jsonlint": "~1.0",
 #        "symfony/console": "~2.5",
 #        "symfony/finder": "~2.2",
-#        "symfony/process": "~2.1"
+#        "symfony/process": "~2.1",
+#        "seld/phar-utils": "~1.0",
+#        "seld/cli-prompt": "~1.0"
 Requires:       php(language)                           >= 5.3.2
 Requires:       php-cli
 Requires:       php-composer(justinrainbow/json-schema) >= 1.4
@@ -158,6 +160,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon May  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.20150503git42a9561
+- new snapshot
+
 * Mon Apr 27 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.20150426git1cb427f
 - new snapshot
 
