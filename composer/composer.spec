@@ -16,7 +16,7 @@
 
 Name:           composer
 Version:        1.0.0
-Release:        0.3.%{gh_date}git%{gh_short}%{?dist}
+Release:        0.4.%{gh_date}git%{gh_short}%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -56,6 +56,10 @@ Requires:       php-composer(justinrainbow/json-schema) >= 1.4
 Requires:       php-composer(justinrainbow/json-schema) <  2
 Requires:       php-composer(seld/jsonlint)             >= 1.0
 Requires:       php-composer(seld/jsonlint)             <  2
+Requires:       php-composer(seld/phar-utils)           >= 1.0
+Requires:       php-composer(seld/phar-utils)           <  2
+Requires:       php-composer(seld/cli-prompt)           >= 1.0
+Requires:       php-composer(seld/cli-prompt)           <  2
 Requires:       php-composer(symfony/console)           >= 2.5
 Requires:       php-composer(symfony/console)           <  3
 Requires:       php-composer(symfony/finder)            >= 2.2
@@ -160,8 +164,9 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Mon May  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.20150503git42a9561
+* Mon May  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.4.20150503git42a9561
 - new snapshot
+- add dependencies on seld/phar-utils and seld/cli-prompt
 
 * Mon Apr 27 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.20150426git1cb427f
 - new snapshot
