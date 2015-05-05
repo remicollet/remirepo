@@ -2,22 +2,23 @@
 %define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9
 
 Name:    libzip
-Version: 0.11.1
-Release: 1%{?dist}
+Version: 0.11.2
+Release: 5%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
 URL:     http://www.nih.at/libzip/index.html
 Source0: http://www.nih.at/libzip/libzip-%{version}.tar.xz
 
+# https://bugzilla.redhat.com/show_bug.cgi?id=1204677
+# http://hg.nih.at/libzip/raw-rev/9f11d54f692e
+Patch1: libzip-0.11.2-CVE-2015-2331.patch
+
 #BuildRequires:  automake libtool
 BuildRequires:  zlib-devel
 
 # to handle multiarch headers, ex from mysql-devel package
 Source1: zipconf.h
-
-# fonctionnal changes from php bundled library
-Patch0: libzip-0.11-php.patch
 
 
 %description
@@ -37,7 +38,7 @@ developing applications that use %{name}.
 %prep
 %setup -q
 
-%patch0 -p1 -b .forphp
+%patch1 -p1 -b .cve
 
 # Avoid lib64 rpaths (FIXME: recheck this on newer releases)
 %if "%{_libdir}" != "/usr/lib"
@@ -72,11 +73,15 @@ ln -s ../%{_lib}/libzip/include/zipconf.h \
 %endif
 
 
+%check
+make check
+
+
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
 %files
-%doc AUTHORS NEWS README THANKS TODO
+%doc API-CHANGES AUTHORS LICENSE NEWS README THANKS TODO
 %{_bindir}/zipcmp
 %{_bindir}/zipmerge
 %{_bindir}/ziptorrent
@@ -94,6 +99,28 @@ ln -s ../%{_lib}/libzip/include/zipconf.h \
 
 
 %changelog
+* Mon Mar 23 2015 Rex Dieter <rdieter@fedoraproject.org> 0.11.2-5
+- actually apply patch (using %%autosetup)
+
+* Mon Mar 23 2015 Rex Dieter <rdieter@fedoraproject.org> 0.11.2-4
+- CVE-2015-2331: integer overflow when processing ZIP archives (#1204676,#1204677)
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu Dec 19 2013 Remi Collet <remi@fedoraproject.org> - 0.11.2-1
+- update to 0.11.2
+- run test during build
+
+* Thu Oct 24 2013 Remi Collet <remi@fedoraproject.org> - 0.11.1-3
+- replace php patch with upstream one
+
+* Fri Aug 23 2013 Remi Collet <remi@fedoraproject.org> - 0.11.1-2
+- include API-CHANGES and LICENSE in package doc
+
 * Thu Aug 08 2013 Remi Collet <remi@fedoraproject.org> - 0.11.1-1
 - update to 0.11.1
 
