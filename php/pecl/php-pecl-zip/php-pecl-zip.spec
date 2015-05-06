@@ -23,6 +23,7 @@
 %else
 %global ini_name  40-%{pecl_name}.ini
 %endif
+#global prever    dev
 
 Summary:      A ZIP archive management extension
 Summary(fr):  Une extension de gestion des ZIP
@@ -38,7 +39,7 @@ License:      PHP and BSD
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/zip
 
-Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel
@@ -97,7 +98,15 @@ Paquet construit pour PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VE
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' -i package.xml
 
-cd %{pecl_name}-%{version}
+mv %{pecl_name}-%{version}%{?prever} NTS
+cd NTS
+
+# Sanity check, really often broken
+extver=$(sed -n '/#define PHP_ZIP_VERSION/{s/.* "//;s/".*$//;p}' php_zip.h)
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
+   exit 1
+fi
 
 %if %{with_libzip}
 sed -e '/LICENSE_libzip/d' -i ../package.xml
@@ -114,12 +123,12 @@ EOF
 
 %if %{with_zts}
 : Duplicate sources tree for ZTS build
-cp -pr %{pecl_name}-%{version} %{pecl_name}-zts
+cp -pr NTS ZTS
 %endif
 
 
 %build
-cd %{pecl_name}-%{version}
+cd NTS
 %{_bindir}/phpize
 %configure \
 %if %{with_libzip}
@@ -131,7 +140,7 @@ cd %{pecl_name}-%{version}
 make %{?_smp_mflags}
 
 %if %{with_zts}
-cd ../%{pecl_name}-zts
+cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
 %if %{with_libzip}
@@ -147,26 +156,26 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 
-make -C %{pecl_name}-%{version} install INSTALL_ROOT=%{buildroot}
+make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 # Install XML package description
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
-make -C %{pecl_name}-zts install INSTALL_ROOT=%{buildroot}
+make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Documentation
-cd %{pecl_name}-%{version}
+cd NTS
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
 %check
-cd %{pecl_name}-%{version}
+cd NTS
 : minimal load test of NTS extension
 %{_bindir}/php --no-php-ini \
     --define extension_dir=modules \
@@ -182,7 +191,7 @@ TEST_PHP_EXECUTABLE=%{_bindir}/php \
    run-tests.php --show-diff
 
 %if %{with_zts}
-cd ../%{pecl_name}-zts
+cd ../ZTS
 : minimal load test of ZTS extension
 %{_bindir}/zts-php --no-php-ini \
     --define extension_dir=modules \
