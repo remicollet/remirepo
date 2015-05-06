@@ -1,24 +1,30 @@
 
-%define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9
+%global multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9
+%global libname libzip
+%if %{?runselftest}%{!?runselftest:1}
+%global with_tests     %{?_without_tests:0}%{!?_without_tests:1}
+%else
+%global with_tests     %{?_with_tests:1}%{!?_with_tests:0}
+%endif
 
-Name:    libzip
-Version: 0.11.2
-Release: 5%{?dist}
+%if 0%{?fedora} < 23
+Name:    %{libname}-last
+%else
+Name:    %{libname}
+%endif
+Version: 1.0.1
+Release: 1%{?dist}
+Group:   System Environment/Libraries
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
 URL:     http://www.nih.at/libzip/index.html
 Source0: http://www.nih.at/libzip/libzip-%{version}.tar.xz
-
-# https://bugzilla.redhat.com/show_bug.cgi?id=1204677
-# http://hg.nih.at/libzip/raw-rev/9f11d54f692e
-Patch1: libzip-0.11.2-CVE-2015-2331.patch
-
-#BuildRequires:  automake libtool
-BuildRequires:  zlib-devel
-
 # to handle multiarch headers, ex from mysql-devel package
 Source1: zipconf.h
+
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:  zlib-devel
 
 
 %description
@@ -26,19 +32,42 @@ libzip is a C library for reading, creating, and modifying zip archives. Files
 can be added from data buffers, files, or compressed data copied directly from 
 other zip archives. Changes made without closing the archive can be reverted. 
 The API is documented by man pages.
+%if "%{name}" != "%{libname}"
+%{name} is designed to be installed beside %{name}.
+%endif
+
 
 %package devel
-Summary: Development files for %{name}
+Group:    Development/Libraries
+Summary:  Development files for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
+%if "%{name}" != "%{libname}"
+Conflicts: %{libname}-devel < %{version}
+Provides:  %{libname}-devel = %{version}-%{release}
+%endif
+
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
 
-%prep
-%setup -q
+%package tools
+Summary:  Command line tools from %{libname}
+Group:    Applications/System
+Requires: %{name}%{?_isa} = %{version}-%{release}
+%if "%{name}" != "%{libname}"
+Conflicts: %{libname} < %{version}
+Provides:  %{libname} = %{version}-%{release}
+%endif
 
-%patch1 -p1 -b .cve
+%description tools
+The %{name}-utils package provides command line tools split off %{name}:
+- zipcmp
+- zipmerge
+
+
+%prep
+%setup -q -n %{libname}-%{version}
 
 # Avoid lib64 rpaths (FIXME: recheck this on newer releases)
 %if "%{_libdir}" != "/usr/lib"
@@ -74,31 +103,51 @@ ln -s ../%{_lib}/libzip/include/zipconf.h \
 
 
 %check
+%if %{with_tests}
 make check
+%else
+: Test suite disabled
+%endif
 
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
+
 %files
-%doc API-CHANGES AUTHORS LICENSE NEWS README THANKS TODO
+%defattr(-,root,root,-)
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%{_libdir}/libzip.so.4*
+
+%files tools
+%defattr(-,root,root,-)
 %{_bindir}/zipcmp
 %{_bindir}/zipmerge
-%{_bindir}/ziptorrent
-%{_libdir}/libzip.so.2*
-%{_mandir}/man1/*zip*
+%{_mandir}/man1/zip*
 
 %files devel
+%defattr(-,root,root,-)
+%doc API-CHANGES AUTHORS NEWS README THANKS TODO
 %{_includedir}/zip.h
 %{_includedir}/zipconf*.h
 %dir %{_libdir}/libzip
 %{_libdir}/libzip/include
 %{_libdir}/libzip.so
 %{_libdir}/pkgconfig/libzip.pc
-%{_mandir}/man3/*zip*
+%{_mandir}/man3/libzip*
+%{_mandir}/man3/zip*
+%{_mandir}/man3/ZIP*
 
 
 %changelog
+* Tue May  5 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- update to 1.0.1
+- soname bump from .2 to .4
+- drop ziptorrent
+- create "utils" sub package
+- rename to libzip-last to allow parallel installation
+
 * Mon Mar 23 2015 Rex Dieter <rdieter@fedoraproject.org> 0.11.2-5
 - actually apply patch (using %%autosetup)
 
