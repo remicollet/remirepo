@@ -21,7 +21,7 @@
 
 Summary:        MongoDB driver for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.6.0
+Version:        0.6.2
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -215,6 +215,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May 06 2015 Remi Collet <remi@fedoraproject.org> - 0.6.2-1
+- Update to 0.6.2 (alpha)
+
 * Wed May 06 2015 Remi Collet <remi@fedoraproject.org> - 0.6.0-1
 - Update to 0.6.0 (alpha)
 
