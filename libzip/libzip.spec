@@ -1,4 +1,3 @@
-
 %global multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9
 %global libname libzip
 %if %{?runselftest}%{!?runselftest:1}
@@ -25,6 +24,18 @@ Source1: zipconf.h
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  zlib-devel
+# Needed to run the test suite
+# find regress/ -type f | /usr/lib/rpm/perl.req
+BuildRequires:  perl
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(File::Copy)
+BuildRequires:  perl(File::Path)
+BuildRequires:  perl(IPC::Open3)
+BuildRequires:  perl(Symbol)
+BuildRequires:  perl(UNIVERSAL)
+BuildRequires:  perl(strict)
+BuildRequires:  perl(warnings)
 
 
 %description
@@ -61,7 +72,7 @@ Provides:  %{libname} = %{version}-%{release}
 %endif
 
 %description tools
-The %{name}-utils package provides command line tools split off %{name}:
+The %{name}-tools package provides command line tools split off %{name}:
 - zipcmp
 - zipmerge
 
@@ -145,7 +156,7 @@ make check
 - update to 1.0.1
 - soname bump from .2 to .4
 - drop ziptorrent
-- create "utils" sub package
+- create "tools" sub package
 - rename to libzip-last to allow parallel installation
 
 * Mon Mar 23 2015 Rex Dieter <rdieter@fedoraproject.org> 0.11.2-5
