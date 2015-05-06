@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #122 mongodb version 0.5.1 ] {
+Extension [ <persistent> extension #122 mongodb version 0.6.0 ] {
 
   - INI {
     Entry [ mongodb.debug <ALL> ]
@@ -7,7 +7,7 @@ Extension [ <persistent> extension #122 mongodb version 0.5.1 ] {
   }
 
   - Constants [2] {
-    Constant [ string MONGODB_VERSION ] { 0.5.1 }
+    Constant [ string MONGODB_VERSION ] { 0.6.0 }
     Constant [ string MONGODB_STABILITY ] { alpha }
   }
 
@@ -38,7 +38,7 @@ Extension [ <persistent> extension #122 mongodb version 0.5.1 ] {
     }
   }
 
-  - Classes [37] {
+  - Classes [38] {
     Class [ <internal:mongodb> final class MongoDB\Driver\Command ] {
 
       - Constants [0] {
@@ -690,7 +690,7 @@ Extension [ <persistent> extension #122 mongodb version 0.5.1 ] {
       }
     }
 
-    Interface [ <internal:mongodb> interface MongoDB\Driver\Exception ] {
+    Interface [ <internal:mongodb> interface MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -708,7 +708,7 @@ Extension [ <persistent> extension #122 mongodb version 0.5.1 ] {
       }
     }
 
-    Class [ <internal:mongodb> class MongoDB\Driver\RuntimeException extends RuntimeException implements MongoDB\Driver\Exception ] {
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\LogicException extends LogicException implements MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -762,7 +762,7 @@ Extension [ <persistent> extension #122 mongodb version 0.5.1 ] {
       }
     }
 
-    Class [ <internal:mongodb> class MongoDB\Driver\UnexpectedValueException extends UnexpectedValueException implements MongoDB\Driver\Exception ] {
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\RuntimeException extends RuntimeException implements MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -816,7 +816,7 @@ Extension [ <persistent> extension #122 mongodb version 0.5.1 ] {
       }
     }
 
-    Class [ <internal:mongodb> class MongoDB\Driver\InvalidArgumentException extends InvalidArgumentException implements MongoDB\Driver\Exception ] {
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\UnexpectedValueException extends UnexpectedValueException implements MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -870,7 +870,7 @@ Extension [ <persistent> extension #122 mongodb version 0.5.1 ] {
       }
     }
 
-    Class [ <internal:mongodb> class MongoDB\Driver\ConnectionException extends MongoDB\Driver\RuntimeException implements MongoDB\Driver\Exception ] {
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\InvalidArgumentException extends InvalidArgumentException implements MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -924,7 +924,7 @@ Extension [ <persistent> extension #122 mongodb version 0.5.1 ] {
       }
     }
 
-    Class [ <internal:mongodb> class MongoDB\Driver\AuthenticationException extends MongoDB\Driver\ConnectionException implements MongoDB\Driver\Exception ] {
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\ConnectionException extends MongoDB\Driver\Exception\RuntimeException implements MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -978,7 +978,7 @@ Extension [ <persistent> extension #122 mongodb version 0.5.1 ] {
       }
     }
 
-    Class [ <internal:mongodb> final class MongoDB\Driver\SSLConnectionException extends MongoDB\Driver\ConnectionException implements MongoDB\Driver\Exception ] {
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\AuthenticationException extends MongoDB\Driver\Exception\ConnectionException implements MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -1032,7 +1032,61 @@ Extension [ <persistent> extension #122 mongodb version 0.5.1 ] {
       }
     }
 
-    Class [ <internal:mongodb> class MongoDB\Driver\WriteException extends MongoDB\Driver\RuntimeException implements MongoDB\Driver\Exception ] {
+    Class [ <internal:mongodb> final class MongoDB\Driver\Exception\SSLConnectionException extends MongoDB\Driver\Exception\ConnectionException implements MongoDB\Driver\Exception\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\WriteException extends MongoDB\Driver\Exception\RuntimeException implements MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -1093,7 +1147,7 @@ Extension [ <persistent> extension #122 mongodb version 0.5.1 ] {
       }
     }
 
-    Class [ <internal:mongodb> class MongoDB\Driver\WriteConcernException extends MongoDB\Driver\WriteException implements MongoDB\Driver\Exception ] {
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\WriteConcernException extends MongoDB\Driver\Exception\WriteException implements MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -1113,7 +1167,7 @@ Extension [ <persistent> extension #122 mongodb version 0.5.1 ] {
       }
 
       - Methods [10] {
-        Method [ <internal:mongodb, inherits MongoDB\Driver\WriteException> final public method getWriteResult ] {
+        Method [ <internal:mongodb, inherits MongoDB\Driver\Exception\WriteException> final public method getWriteResult ] {
 
           - Parameters [0] {
           }
@@ -1154,7 +1208,7 @@ Extension [ <persistent> extension #122 mongodb version 0.5.1 ] {
       }
     }
 
-    Class [ <internal:mongodb> class MongoDB\Driver\BulkWriteException extends MongoDB\Driver\WriteException implements MongoDB\Driver\Exception ] {
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\BulkWriteException extends MongoDB\Driver\Exception\WriteException implements MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -1174,7 +1228,7 @@ Extension [ <persistent> extension #122 mongodb version 0.5.1 ] {
       }
 
       - Methods [10] {
-        Method [ <internal:mongodb, inherits MongoDB\Driver\WriteException> final public method getWriteResult ] {
+        Method [ <internal:mongodb, inherits MongoDB\Driver\Exception\WriteException> final public method getWriteResult ] {
 
           - Parameters [0] {
           }
@@ -1215,7 +1269,7 @@ Extension [ <persistent> extension #122 mongodb version 0.5.1 ] {
       }
     }
 
-    Class [ <internal:mongodb> final class MongoDB\Driver\DuplicateKeyException extends MongoDB\Driver\WriteException implements MongoDB\Driver\Exception ] {
+    Class [ <internal:mongodb> final class MongoDB\Driver\Exception\DuplicateKeyException extends MongoDB\Driver\Exception\WriteException implements MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -1235,7 +1289,7 @@ Extension [ <persistent> extension #122 mongodb version 0.5.1 ] {
       }
 
       - Methods [10] {
-        Method [ <internal:mongodb, inherits MongoDB\Driver\WriteException> final public method getWriteResult ] {
+        Method [ <internal:mongodb, inherits MongoDB\Driver\Exception\WriteException> final public method getWriteResult ] {
 
           - Parameters [0] {
           }
@@ -1276,7 +1330,7 @@ Extension [ <persistent> extension #122 mongodb version 0.5.1 ] {
       }
     }
 
-    Class [ <internal:mongodb> final class MongoDB\Driver\ExecutionTimeoutException extends MongoDB\Driver\RuntimeException implements MongoDB\Driver\Exception ] {
+    Class [ <internal:mongodb> final class MongoDB\Driver\Exception\ExecutionTimeoutException extends MongoDB\Driver\Exception\RuntimeException implements MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -1330,7 +1384,7 @@ Extension [ <persistent> extension #122 mongodb version 0.5.1 ] {
       }
     }
 
-    Class [ <internal:mongodb> final class MongoDB\Driver\ConnectionTimeoutException extends MongoDB\Driver\ConnectionException implements MongoDB\Driver\Exception ] {
+    Class [ <internal:mongodb> final class MongoDB\Driver\Exception\ConnectionTimeoutException extends MongoDB\Driver\Exception\ConnectionException implements MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
