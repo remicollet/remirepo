@@ -20,9 +20,9 @@ r3: fix a crash if /usr/share/zoneinfo doesn't exist (Raphael Geissert)
 r2: add filesystem trawl to set up name alias index
 r1: initial revision
 
-diff -up php-src-1a4d3e4855619538eb1902b8513473e2cda76804/ext/date/lib/parse_tz.c.systzdata php-src-1a4d3e4855619538eb1902b8513473e2cda76804/ext/date/lib/parse_tz.c
---- php-src-1a4d3e4855619538eb1902b8513473e2cda76804/ext/date/lib/parse_tz.c.systzdata	2015-04-26 12:04:54.000000000 +0200
-+++ php-src-1a4d3e4855619538eb1902b8513473e2cda76804/ext/date/lib/parse_tz.c	2015-04-27 13:02:48.713660916 +0200
+diff -up php-src-dd0b602381fad375d8f29a97f25f099be7c9db35/ext/date/lib/parse_tz.c.systzdata php-src-dd0b602381fad375d8f29a97f25f099be7c9db35/ext/date/lib/parse_tz.c
+--- php-src-dd0b602381fad375d8f29a97f25f099be7c9db35/ext/date/lib/parse_tz.c.systzdata	2015-05-07 07:46:56.000000000 +0200
++++ php-src-dd0b602381fad375d8f29a97f25f099be7c9db35/ext/date/lib/parse_tz.c	2015-05-07 08:31:21.444876177 +0200
 @@ -20,6 +20,16 @@
  
  #include "timelib.h"
@@ -489,7 +489,6 @@ diff -up php-src-1a4d3e4855619538eb1902b8513473e2cda76804/ext/date/lib/parse_tz.
  	return 0;
  }
  
-+
 +static int seek_to_tz_position(const unsigned char **tzf, char *timezone,
 +			       char **map, size_t *maplen,
 +			       const timelib_tzdb *tzdb)
@@ -549,6 +548,7 @@ diff -up php-src-1a4d3e4855619538eb1902b8513473e2cda76804/ext/date/lib/parse_tz.
  {
  	const unsigned char *tzf;
 -	return (seek_to_tz_position(&tzf, timezone, tzdb));
++
 +#ifdef HAVE_SYSTEM_TZDATA
 +	if (tzdb == timezonedb_system) {
 +		char fname[PATH_MAX];
@@ -574,8 +574,8 @@ diff -up php-src-1a4d3e4855619538eb1902b8513473e2cda76804/ext/date/lib/parse_tz.
 +	return (inmem_seek_to_tz_position(&tzf, timezone, tzdb));
  }
  
- static void skip_2nd_header_and_data(const unsigned char **tzf, timelib_tzinfo *tz)
-@@ -361,23 +859,53 @@ static void skip_2nd_header_and_data(con
+ static void skip_64bit_preamble(const unsigned char **tzf, timelib_tzinfo *tz)
+@@ -374,24 +872,54 @@ static void read_64bit_header(const unsi
  timelib_tzinfo *timelib_parse_tzfile(char *timezone, const timelib_tzdb *tzdb)
  {
  	const unsigned char *tzf;
@@ -593,10 +593,13 @@ diff -up php-src-1a4d3e4855619538eb1902b8513473e2cda76804/ext/date/lib/parse_tz.
  		read_transistions(&tzf, tmp);
  		read_types(&tzf, tmp);
 -		if (version == 2) {
--			skip_2nd_header_and_data(&tzf, tmp);
--			skip_transistions_64bit(&tzf, tmp);
--			skip_types_64bit(&tzf, tmp);
+-			skip_64bit_preamble(&tzf, tmp);
+-			read_64bit_header(&tzf, tmp);
+-			skip_64bit_transistions(&tzf, tmp);
+-			skip_64bit_types(&tzf, tmp);
 -			skip_posix_string(&tzf, tmp);
+-		}
+-		read_location(&tzf, tmp);
 +
 +#ifdef HAVE_SYSTEM_TZDATA
 +		if (memmap) {
@@ -625,20 +628,20 @@ diff -up php-src-1a4d3e4855619538eb1902b8513473e2cda76804/ext/date/lib/parse_tz.
 +		{
 +			/* PHP-style - use the embedded info. */
 +			if (version == 2) {
-+				skip_2nd_header_and_data(&tzf, tmp);
-+				skip_transistions_64bit(&tzf, tmp);
-+				skip_types_64bit(&tzf, tmp);
++				skip_64bit_preamble(&tzf, tmp);
++				read_64bit_header(&tzf, tmp);
++				skip_64bit_transistions(&tzf, tmp);
++				skip_64bit_types(&tzf, tmp);
 +				skip_posix_string(&tzf, tmp);
 +			}
 +			read_location(&tzf, tmp);
- 		}
--		read_location(&tzf, tmp);
++ 		}
  	} else {
  		tmp = NULL;
  	}
-diff -up php-src-1a4d3e4855619538eb1902b8513473e2cda76804/ext/date/lib/timelib.m4.systzdata php-src-1a4d3e4855619538eb1902b8513473e2cda76804/ext/date/lib/timelib.m4
---- php-src-1a4d3e4855619538eb1902b8513473e2cda76804/ext/date/lib/timelib.m4.systzdata	2015-04-26 12:04:54.000000000 +0200
-+++ php-src-1a4d3e4855619538eb1902b8513473e2cda76804/ext/date/lib/timelib.m4	2015-04-27 12:51:05.568644759 +0200
+diff -up php-src-dd0b602381fad375d8f29a97f25f099be7c9db35/ext/date/lib/timelib.m4.systzdata php-src-dd0b602381fad375d8f29a97f25f099be7c9db35/ext/date/lib/timelib.m4
+--- php-src-dd0b602381fad375d8f29a97f25f099be7c9db35/ext/date/lib/timelib.m4.systzdata	2015-05-07 07:46:56.000000000 +0200
++++ php-src-dd0b602381fad375d8f29a97f25f099be7c9db35/ext/date/lib/timelib.m4	2015-05-07 08:27:21.541863417 +0200
 @@ -78,3 +78,17 @@ stdlib.h
  
  dnl Check for strtoll, atoll

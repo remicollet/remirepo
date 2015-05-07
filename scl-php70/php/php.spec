@@ -116,11 +116,7 @@
 %endif
 
 %global with_zip       1
-%if 0%{?fedora} >= 20
 %global with_libzip    1
-%else
-%global with_libzip    0
-%endif
 
 
 %if 0%{?fedora} < 18 && 0%{?rhel} < 7
@@ -129,13 +125,13 @@
 %global db_devel  libdb-devel
 %endif
 
-%global gh_commit    94f0b940f923e5f4f5a06283e8401ef34cd83fb0
+%global gh_commit    dd0b602381fad375d8f29a97f25f099be7c9db35
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150428
+%global gh_date      20150507
 %global gh_owner     php
 %global gh_project   php-src
 #global rcver        RC1
-%global rpmrel       5
+%global rpmrel       6
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -857,7 +853,8 @@ License: PHP
 Group: System Environment/Libraries
 Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
 %if %{with_libzip}
-BuildRequires: pkgconfig(libzip) >= 0.11.1
+# 0.11.1 required, but 1.0.1 is bundled
+BuildRequires: pkgconfig(libzip) >= 1.0.1
 %endif
 
 %description zip
@@ -1132,6 +1129,7 @@ pushd build-cgi
 build --libdir=%{_libdir}/php \
       --enable-pcntl \
       --enable-opcache \
+      --enable-opcache-file \
       --enable-phpdbg \
 %if %{with_imap}
       --with-imap=shared --with-imap-ssl \
@@ -1354,6 +1352,7 @@ install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/wsdlcache
+install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/opcache
 
 %if %{with_lsws}
 install -m 755 build-apache/sapi/litespeed/php $RPM_BUILD_ROOT%{_bindir}/lsphp
@@ -1644,6 +1643,7 @@ fi
 %endif
 %attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
 %attr(0770,root,apache) %dir %{_localstatedir}/lib/php/wsdlcache
+%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/opcache
 %config(noreplace) %{_httpd_confdir}/%{name}.conf
 %if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
 %config(noreplace) %{_httpd_modconfdir}/15-%{name}.conf
@@ -1699,6 +1699,7 @@ fi
 %license fpm_LICENSE
 %attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
 %attr(0770,root,apache) %dir %{_localstatedir}/lib/php/wsdlcache
+%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/opcache
 %if %{with_httpd2410}
 %config(noreplace) %{_httpd_confdir}/%{name}.conf
 %endif
@@ -1805,6 +1806,9 @@ fi
 
 
 %changelog
+* Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.6.20150507gitdd0b602
+- add experimental file based opcode cache (disabled by default)
+
 * Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.5.20150428git94f0b94
 - new snapshot
 
