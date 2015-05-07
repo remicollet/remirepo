@@ -125,7 +125,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global gh_commit    dd0b602381fad375d8f29a97f25f099be7c9db35
+%global gh_commit    62b1293e3df520d104c678bc520b413386b628c5
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_date      20150507
 %global gh_owner     php
@@ -198,7 +198,7 @@ Patch91: php-5.6.3-oci8conf.patch
 # Factory is droped from system tzdata
 Patch300: php-5.6.3-datetests.patch
 # Revert changes for pcre < 8.34
-Patch301: php-5.6.0-oldpcre.patch
+Patch301: php-7.0.0-oldpcre.patch
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -908,10 +908,10 @@ support for JavaScript Object Notation (JSON) to PHP.
 # Fixes for tests
 %patch300 -p1 -b .datetests
 %if %{with_libpcre}
-%if 0%{?fedora} < 21
+if ! pkg-config libpcre --atleast-version 8.34 ; then
 # Only apply when system libpcre < 8.34
 %patch301 -p1 -b .pcre834
-%endif
+fi
 %endif
 
 # Prevent %%doc confusion over LICENSE files
@@ -943,6 +943,8 @@ rm ext/date/tests/timezone_version_get.phpt
 rm ext/date/tests/timezone_version_get_basic1.phpt
 # fails sometime
 rm ext/sockets/tests/mcast_ipv?_recv.phpt
+# Should be skipped but fails sometime
+rm ext/standard/tests/file/file_get_contents_error001.phpt
 # cause stack exhausion
 rm Zend/tests/bug54268.phpt
 rm Zend/tests/bug68412.phpt
