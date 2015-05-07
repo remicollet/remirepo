@@ -1,9 +1,14 @@
 %global multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9
 %global libname libzip
+%if 0%{?rhel} == 5
+# Perl is too old
+%global with_tests     0
+%else
 %if %{?runselftest}%{!?runselftest:1}
 %global with_tests     %{?_without_tests:0}%{!?_without_tests:1}
 %else
 %global with_tests     %{?_with_tests:1}%{!?_with_tests:0}
+%endif
 %endif
 
 %if 0%{?fedora} < 23
