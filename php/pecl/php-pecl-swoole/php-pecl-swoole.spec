@@ -23,7 +23,7 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.7.15
+Version:        1.7.16
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -245,6 +245,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 08 2015 Remi Collet <remi@fedoraproject.org> - 1.7.16-1
+- Update to 1.7.16
+
 * Tue Apr 14 2015 Remi Collet <remi@fedoraproject.org> - 1.7.15-1
 - Update to 1.7.15
 
