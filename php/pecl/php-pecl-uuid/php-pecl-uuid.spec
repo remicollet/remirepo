@@ -18,12 +18,12 @@
 %else
 %global ini_name    40-%{pecl_name}.ini
 %endif
-%global prever      RC1
+#global prever      RC1
 
 Summary:       Universally Unique Identifier extension for PHP
 Name:          %{?scl_prefix}php-pecl-uuid
 Version:       1.0.4
-Release:       0.1.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       LGPLv2+
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/uuid
@@ -60,6 +60,10 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -71,6 +75,8 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 
 %description
 A wrapper around Universally Unique Identifier library (libuuid).
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
 
 
 %prep
@@ -189,7 +195,7 @@ rm -rf %{buildroot}
 
 
 %files
-%defattr(-, root, root, 0755)
+%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -204,6 +210,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May  8 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- update to 1.0.4 (no change since RC)
+
 * Sat Apr  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-0.1.RC1
 - update to 1.0.4RC1
 - drop upstream patches
