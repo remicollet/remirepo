@@ -16,7 +16,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:      php-ZendFramework2
-Version:   2.3.7
+Version:   2.3.8
 Release:   1%{?dist}
 Summary:   Zend Framework 2
 
@@ -2549,6 +2549,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Fri May  8 2015 Remi Collet <remi@fedoraproject.org> - 2.3.8-1
+- Update to 2.3.8
+
 * Fri Mar 13 2015 Remi Collet <remi@fedoraproject.org> - 2.3.7-1
 - Update to 2.3.7
 
