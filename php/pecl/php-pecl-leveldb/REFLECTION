@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #163 leveldb version 0.1.4 ] {
+Extension [ <persistent> extension #191 leveldb version 0.1.5 ] {
 
   - Constants [2] {
     Constant [ integer LEVELDB_NO_COMPRESSION ] { 0 }
