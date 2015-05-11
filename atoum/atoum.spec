@@ -1,12 +1,15 @@
+%global gh_commit    9f17fa0a729294f4fcbb1a085f99ae612dc36cb5
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+
 Name:           atoum
-Version:        2.0.1
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        PHP Unit Testing framework
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://atoum.org
-Source0:        https://github.com/%{name}/%{name}/archive/%{version}.tar.gz
+Source0:        https://github.com/%{name}/%{name}/archive/%{gh_commit}/%{name}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -73,11 +76,11 @@ to supervise unit tests.
 
 
 %prep
-%setup -q -n %{name}-%{version}
-rm -f resources/configurations/.gitignore
-rm -f scripts/git/.tag tests/units/classes/scripts/git/.tag
+%setup -qn %{name}-%{gh_commit}
+
+rm resources/configurations/.gitignore
+rm scripts/git/.tag tests/units/classes/scripts/git/.tag
 sed -i bin/%{name} \
-    -e "s|/usr/bin/env php|%{_bindir}/php|" \
     -e "s|__DIR__ . '/../|'%{_datadir}/%{name}/|"
 
 
@@ -131,6 +134,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon May 11 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- update to 2.1.0
+- update source0
+
 * Tue Mar 24 2015 Remi Collet <RPMS@famillecollet.com> - 2.0.1-1
 - add backport stuff
 
