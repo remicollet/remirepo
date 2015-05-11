@@ -1,6 +1,6 @@
 diff -up ./bin/phpreflect.json.dist.rpm ./bin/phpreflect.json.dist
---- ./bin/phpreflect.json.dist.rpm	2015-04-04 15:15:47.860245093 +0200
-+++ ./bin/phpreflect.json.dist	2015-04-04 15:16:37.420443972 +0200
+--- ./bin/phpreflect.json.dist.rpm	2015-05-11 12:55:49.000000000 +0200
++++ ./bin/phpreflect.json.dist	2015-05-11 13:22:14.660514268 +0200
 @@ -6,6 +6,19 @@
          }
      ],
@@ -22,14 +22,9 @@ diff -up ./bin/phpreflect.json.dist.rpm ./bin/phpreflect.json.dist
      "analysers": [
      ],
 diff -up ./bin/phpreflect.rpm ./bin/phpreflect
---- ./bin/phpreflect.rpm	2015-04-03 08:47:14.000000000 +0200
-+++ ./bin/phpreflect	2015-04-04 15:21:07.510527397 +0200
-@@ -1,23 +1,39 @@
--#!/usr/bin/env php
-+#!/usr/bin/php
- <?php
- $appName = 'phpReflect';
- 
+--- ./bin/phpreflect.rpm	2015-05-11 12:55:49.000000000 +0200
++++ ./bin/phpreflect	2015-05-11 13:24:26.130135886 +0200
+@@ -5,19 +5,35 @@ $appName = 'phpReflect';
  if (\Phar::running()) {
      $vendorDir = 'phar://' . strtolower($appName) . '.phar/vendor';
  } else {
@@ -76,12 +71,12 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
  
  Environment::setScanDir();
  
--$application = new Application($appName, '3.0');
+-$application = new Application($appName, '3.1');
 +$application = new Application($appName, '@package_version@');
  $application->run();
 diff -up ./src/Bartlett/Reflect/Console/Application.php.rpm ./src/Bartlett/Reflect/Console/Application.php
---- ./src/Bartlett/Reflect/Console/Application.php.rpm	2015-04-03 08:47:14.000000000 +0200
-+++ ./src/Bartlett/Reflect/Console/Application.php	2015-04-04 15:15:24.203150166 +0200
+--- ./src/Bartlett/Reflect/Console/Application.php.rpm	2015-05-11 12:55:49.000000000 +0200
++++ ./src/Bartlett/Reflect/Console/Application.php	2015-05-11 13:22:14.661514273 +0200
 @@ -82,7 +82,7 @@ class Application extends BaseApplicatio
              $jsonFile =  './' . getenv("BARTLETTRC");
          }
@@ -92,8 +87,8 @@ diff -up ./src/Bartlett/Reflect/Console/Application.php.rpm ./src/Bartlett/Refle
  
          $defaultAnalyser = (strcasecmp($appName, 'phpcompatinfo') === 0)
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
---- ./tests/bootstrap.php.rpm	2015-04-03 08:47:14.000000000 +0200
-+++ ./tests/bootstrap.php	2015-04-04 15:15:24.203150166 +0200
+--- ./tests/bootstrap.php.rpm	2015-05-11 12:55:49.000000000 +0200
++++ ./tests/bootstrap.php	2015-05-11 13:22:14.661514273 +0200
 @@ -1,11 +1,9 @@
  <?php
  
@@ -135,8 +130,8 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 +    require_once $file;
 +}
 diff -up ./tests/Environment/YourLogger.php.rpm ./tests/Environment/YourLogger.php
---- ./tests/Environment/YourLogger.php.rpm	2015-04-03 08:47:14.000000000 +0200
-+++ ./tests/Environment/YourLogger.php	2015-04-04 15:15:24.203150166 +0200
+--- ./tests/Environment/YourLogger.php.rpm	2015-05-11 12:55:49.000000000 +0200
++++ ./tests/Environment/YourLogger.php	2015-05-11 13:22:14.661514273 +0200
 @@ -14,6 +14,7 @@ class YourLogger extends Logger
          if (!file_exists($tempDir)) {
              mkdir($tempDir, 0755, true);
