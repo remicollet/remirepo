@@ -22,7 +22,7 @@
 
 Summary:        Hprose for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.4.2
+Version:        1.5.2
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
@@ -83,6 +83,8 @@ conveniently and efficiently intercommunicate between those programming
 languages.
 
 This project is the implementation of Hprose for PHP.
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
 
 
 %prep
@@ -223,10 +225,10 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc %{pecl_docdir}/%{pecl_name}
 %{?_licensedir:%license NTS/LICENSE.md}
-
+%doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 
@@ -237,6 +239,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon May 11 2015 Remi Collet <remi@fedoraproject.org> - 1.5.2-1
+- Update to 1.5.2
+
 * Mon Apr 20 2015 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
 - Update to 1.4.2
 
