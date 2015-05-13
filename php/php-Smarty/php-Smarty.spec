@@ -1,11 +1,11 @@
-%global gh_commit    ab93b0feee7841e2b692160f9585189b272a0cd2
+%global gh_commit    04f0090c40b1a0e1fb55dbe0297f08386b36de21
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     smarty-php
 %global gh_project   smarty
 
 Name:           php-Smarty
 Summary:        Template/Presentation Framework for PHP
-Version:        3.1.22
+Version:        3.1.23
 Release:        1%{?dist}
 
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed May 13 2015 Remi Collet <remi@fedoraproject.org> - 3.1.23-1
+- update to 3.1.23
+
 * Mon May 11 2015 Remi Collet <remi@fedoraproject.org> - 3.1.22-1
 - update to 3.1.22
 
