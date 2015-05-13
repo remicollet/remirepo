@@ -6,10 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    42a9561ae23b236da1d5a4acf50f7ea96ebe68aa
+%global gh_commit    bc45d9185513575434021527d7756420e9f4b2cf
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20150503
+%global gh_date      20150511
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
@@ -164,6 +164,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May 13 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.4.20150511gitbc45d91
+- new snapshot
+
 * Mon May  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.4.20150503git42a9561
 - new snapshot
 - add dependencies on seld/phar-utils and seld/cli-prompt
