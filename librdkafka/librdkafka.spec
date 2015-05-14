@@ -23,6 +23,8 @@ License: BSD and MIT
 URL:     https://github.com/%{gh_owner}/%{gh_project}
 Source0: https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
+# i686 required
+ExcludeArch:    i386
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # Needed to run the test suite
 # find regress/ -type f | /usr/lib/rpm/perl.req
