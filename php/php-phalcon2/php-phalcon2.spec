@@ -9,7 +9,7 @@
 %{?scl:          %scl_package             php-phalcon}
 %{!?scl:         %global pkg_name         %{name}}
 %{!?__php:       %global __php            %{_bindir}/php}
-%global gh_commit    850808c132908c4c59117dec85910c084b0b6a1e
+%global gh_commit    df311308270b534f299ddd80b8af24bcb5f2e2a1
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phalcon
 %global gh_project   cphalcon
@@ -25,7 +25,7 @@
 %endif
 
 Name:           %{?scl_prefix}php-phalcon2
-Version:        2.0.0
+Version:        2.0.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Phalcon Framework
 
@@ -33,7 +33,7 @@ Group:          Development/Libraries
 License:        MIT
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        %{gh_project}-%{version}-strip.tar.bz2
-# Script to generate the stripped archive
+# Script to generate the stripped archive fr'om a git clone
 Source1:        strip.sh
 # Fake minifiers
 Source2:        cssminifier.c
@@ -215,6 +215,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu May 14 2015 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- update to 2.0.1
+
 * Tue Apr 21 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - update to 2.0.0
 - rename to php-phalcon2
