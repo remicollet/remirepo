@@ -127,7 +127,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver  RC1
+#global rcver  RC1
 %global rpmrel 1
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -912,6 +912,8 @@ mkdir \
 rm ext/date/tests/timezone_location_get.phpt
 rm ext/date/tests/timezone_version_get.phpt
 rm ext/date/tests/timezone_version_get_basic1.phpt
+# Should be skipped but fails sometime
+rm ext/standard/tests/file/file_get_contents_error001.phpt
 # fails sometime
 rm ext/sockets/tests/mcast_ipv?_recv.phpt
 # cause stack exhausion
@@ -1755,6 +1757,10 @@ fi
 
 
 %changelog
+* Thu May 14 2015 Remi Collet <remi@fedoraproject.org> 5.5.25-1
+- Update to 5.5.25
+  http://www.php.net/releases/5_5_25.php
+
 * Wed Apr 29 2015 Remi Collet <remi@fedoraproject.org> 5.5.25-0.1.RC1
 - update to 5.5.25RC1
 

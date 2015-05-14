@@ -124,7 +124,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.5.24
+Version: 5.5.25
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -173,7 +173,7 @@ Patch21: php-5.4.7-odbctimer.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
-Patch42: php-5.5.19-systzdata-v11.patch
+Patch42: php-5.5.25-systzdata-v12.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
 # Use system libzip instead of bundled one
@@ -985,6 +985,8 @@ mkdir build-cgi build-apache build-embedded \
 rm ext/date/tests/timezone_location_get.phpt
 rm ext/date/tests/timezone_version_get.phpt
 rm ext/date/tests/timezone_version_get_basic1.phpt
+# Should be skipped but fails sometime
+rm ext/standard/tests/file/file_get_contents_error001.phpt
 # fails sometime
 rm ext/sockets/tests/mcast_ipv?_recv.phpt
 
@@ -1951,6 +1953,10 @@ fi
 
 
 %changelog
+* Thu May 14 2015 Remi Collet <remi@fedoraproject.org> 5.5.25-1
+- Update to 5.5.25
+  http://www.php.net/releases/5_5_25.php
+
 * Wed Apr 15 2015 Remi Collet <remi@fedoraproject.org> 5.5.24-1
 - Update to 5.5.24
   http://www.php.net/releases/5_5_24.php
