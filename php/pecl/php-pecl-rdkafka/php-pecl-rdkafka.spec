@@ -203,3 +203,5 @@ rm -rf %{buildroot}
 %changelog
 * Thu May 14 2015 Remi Collet <remi@fedoraproject.org> - 0.0.2-1
 - initial package, version 0.0.2 (alpha)
+- open https://github.com/arnaud-lb/php-rdkafka/pull/5 - ZTS build
+- open https://github.com/arnaud-lb/php-rdkafka/pull/4 - License
