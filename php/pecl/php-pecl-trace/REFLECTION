@@ -1,0 +1,21 @@
+Extension [ <persistent> extension #158 trace version 0.3.0-beta ] {
+
+  - INI {
+    Entry [ trace.enable <SYSTEM> ]
+      Current = '1'
+    }
+    Entry [ trace.dotrace <SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ trace.data_dir <SYSTEM> ]
+      Current = '/tmp'
+    }
+    Entry [ trace.recv_size <SYSTEM> ]
+      Current = '4m'
+    }
+    Entry [ trace.send_size <SYSTEM> ]
+      Current = '64m'
+    }
+  }
+}
+
