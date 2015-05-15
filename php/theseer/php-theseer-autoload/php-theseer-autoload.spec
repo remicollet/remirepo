@@ -1,4 +1,4 @@
-# spec file for php-theseer-autoload
+# remirepo/fedora spec file for php-theseer-autoload
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    2a47cae1efaf0b395f72e748cfbcbd2f54399616
+%global gh_commit    b8acc94215571ba71c3128cc3847f2b08c1cc4d1
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     theseer
 %global gh_project   Autoload
@@ -15,14 +15,14 @@
 %global pear_channel pear.netpirates.net
 
 Name:           php-theseer-autoload
-Version:        1.16.2
+Version:        1.17.0
 Release:        1%{?dist}
 Summary:        A tool and library to generate autoload code
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{?gh_short}.tar.gz
 
 # Autoload stuff - die composer !
 Patch0:         %{gh_project}-rpm.patch
@@ -36,11 +36,11 @@ BuildRequires:  php-composer(theseer/directoryscanner) <  1.4
 BuildRequires:  %{_bindir}/phpunit
 
 # From composer.json
-#        "theseer/directoryscanner": "~1.3.0",
-#        "zetacomponents/console-tools": "dev-master"
+#        "theseer/directoryscanner": "~1.3",
+#        "zetacomponents/console-tools": "~1.7"
 Requires:       php(language) >= 5.3.1
-Requires:       php-composer(theseer/directoryscanner) >= 1.3.0
-Requires:       php-composer(theseer/directoryscanner) <  1.4
+Requires:       php-composer(theseer/directoryscanner) >= 1.3
+Requires:       php-composer(theseer/directoryscanner) <  2
 # Use ezc instead of zetacomponent (no release, no package)
 Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
 # From phpcompatinfo report for version 1.16.1
@@ -115,6 +115,9 @@ fi
 
 
 %changelog
+* Fri May 15 2015 Remi Collet <remi@fedoraproject.org> - 1.17.0-1
+- Update to 1.17.0
+
 * Tue Nov 25 2014 Remi Collet <remi@fedoraproject.org> - 1.16.2-1
 - Update to 1.16.2
 
