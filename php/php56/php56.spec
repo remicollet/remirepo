@@ -131,7 +131,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.6.8
+Version: 5.6.9
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -183,7 +183,7 @@ Patch21: php-5.4.7-odbctimer.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
-Patch42: php-5.6.3-systzdata-v11.patch
+Patch42: php-5.6.9-systzdata-v12.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
 # Use -lldap_r for OpenLDAP
@@ -1003,6 +1003,8 @@ mkdir build-cgi build-apache build-embedded \
 rm ext/date/tests/timezone_location_get.phpt
 rm ext/date/tests/timezone_version_get.phpt
 rm ext/date/tests/timezone_version_get_basic1.phpt
+# Should be skipped but fails sometime
+rm ext/standard/tests/file/file_get_contents_error001.phpt
 # fails sometime
 rm ext/sockets/tests/mcast_ipv?_recv.phpt
 # cause stack exhausion
@@ -1957,6 +1959,10 @@ fi
 
 
 %changelog
+* Fri May 15 2015 Remi Collet <remi@fedoraproject.org> 5.6.9-1
+- Update to 5.6.9
+  http://www.php.net/releases/5_6_9.php
+
 * Thu Apr 16 2015 Remi Collet <remi@fedoraproject.org> 5.6.8-1
 - Update to 5.6.8
   http://www.php.net/releases/5_6_8.php
