@@ -1,4 +1,4 @@
-# spec file for php-pecl-stomp
+# remimrepo/fedora spec file for php-pecl-stomp
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA
@@ -24,22 +24,18 @@
 
 Summary:        Stomp client extension
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.0.6
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Version:        1.0.7
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-# URI from sources headers
-Source1:        http://www.php.net/license/3_01.txt
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  openssl-devel
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
@@ -89,12 +85,27 @@ mv %{pecl_name}-%{version} NTS
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' -i package.xml
 
+cd NTS
+
+sed -e '/PHP_STOMP_VERSION_STATUS/s/-dev//' -i php_stomp.h
+
+# Sanity check, really often broken
+extmajor=$(sed -n '/#define PHP_STOMP_MAJOR_VERSION/{s/.* "//;s/".*$//;p}'  php_stomp.h)
+extminor=$(sed -n '/#define PHP_STOMP_MINOR_VERSION/{s/.* "//;s/".*$//;p}'  php_stomp.h)
+extpatch=$(sed -n '/#define PHP_STOMP_PATCH_VERSION/{s/.* "//;s/".*$//;p}'  php_stomp.h)
+extstate=$(sed -n '/#define PHP_STOMP_VERSION_STATUS/{s/.* "//;s/".*$//;p}' php_stomp.h)
+extver=${extmajor}.${extminor}.${extpatch}${extstate}
+if test "x${extver}" != "x%{version}%{?versuf}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?versuf}.
+   exit 1
+fi
+cd ..
+
+
 %if %{with_zts}
 # Duplicate source tree for NTS / ZTS build
 cp -pr NTS ZTS
 %endif
-
-cp %{SOURCE1} NTS/LICENSE
 
 chmod -x ?TS/*.{c,h}
 
@@ -154,17 +165,28 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Documentation
-for i in LICENSE $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
 
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
+
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -205,6 +227,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat May 16 2015 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
+- Update to 1.0.7 (stable)
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.0.6-2.1
 - Fedora 21 SCL mass rebuild
 
