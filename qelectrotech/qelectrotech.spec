@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global svnrel 3889
+%global svnrel 3972
 %global rdate  20150220
 %global upver  0.5
 
@@ -238,6 +238,9 @@ fi
 
 
 %changelog
+* Sun May 17 2015 Remi Collet <remi@fedoraproject.org> - 0,50-0.1.svn3972
+- Update to 0.5 snapshot revision 3972
+
 * Sat Apr 04 2015 Remi Collet <remi@fedoraproject.org> - 0,50-0.1.svn3889
 - Update to 0.5 snapshot revision 3889
 
