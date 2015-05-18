@@ -1,3 +1,4 @@
+# remirepo spec file for php-mtdowling-transducers from Fedora:
 #
 # RPM spec file for php-mtdowling-transducers
 #
@@ -39,6 +40,7 @@ URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{name}-%{version}-%{github_commit}.tar.gz
 Source1:       %{name}-get-source.sh
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:     noarch
 %if %{with_tests}
 # For tests
@@ -91,6 +93,7 @@ AUTOLOAD
 
 
 %install
+rm -rf %{buildroot}
 mkdir -p %{buildroot}%{phpdir}/%{composer_project}
 cp -rp src/* %{buildroot}%{phpdir}/%{composer_project}/
 
@@ -110,7 +113,12 @@ sed -e 's/function testToTraversableReturnsStreamsIter/function SKIP_testToTrave
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc CHANGELOG.md
@@ -120,5 +128,8 @@ sed -e 's/function testToTraversableReturnsStreamsIter/function SKIP_testToTrave
 
 
 %changelog
+* Mon May 18 2015 Remi Collet <RPMS@FamilleCollet.com> - 0.3.0-1
+- add needed backport stuff for remi repository
+
 * Sat May 16 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.3.0-1
 - Initial package
