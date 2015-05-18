@@ -1,4 +1,4 @@
-# spec file for php-pecl-apm
+# remirepo spec file for php-pecl-apm
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
@@ -38,14 +38,12 @@
 
 Name:           %{?scl_prefix}php-pecl-apm
 Summary:        Alternative PHP Monitor
-Version:        2.0.2
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        2.0.3
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 
 # Disable the extension and drivers by default
 Patch0:         %{proj_name}-config.patch
-# Upstream patches
-Patch1:         %{proj_name}-upstream.patch
 
 License:        PHP
 Group:          Development/Languages
@@ -61,8 +59,6 @@ BuildRequires:  sqlite-devel >= 3.6
 BuildRequires:  mysql-devel
 BuildRequires:  zlib-devel
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires:       %{?scl_prefix}php-json%{?_isa}
@@ -122,7 +118,7 @@ mv %{proj_name}-%{version} NTS
 
 cd NTS
 %patch0 -p0 -b .rpm
-%patch1 -p1 -b .upstream
+sed -e 's:/var/php/apm/db:%{_localstatedir}/lib/php/apm/db:' -i apm.ini
 
 : Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APM_VERSION/{s/.* "//;s/".*$//;p}' php_apm.h)
@@ -182,6 +178,9 @@ install -D -m 644 ZTS/apm.ini %{buildroot}%{php_ztsinidir}/%{ini_name}
 # Install the package XML file
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
+# Default database dir
+install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/apm/db
+
 cd NTS
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{proj_name}/$i
@@ -237,6 +236,8 @@ fi
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{proj_name}
 %{pecl_xmldir}/%{name}.xml
+%dir %attr(0770,root,apache) %dir %{_localstatedir}/lib/php/apm
+%dir %attr(0770,root,apache) %dir %{_localstatedir}/lib/php/apm/db
 
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
@@ -248,12 +249,17 @@ fi
 
 
 %changelog
+* Mon May 18 2015 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3 (stable)
+- drop runtime dependency on pear, new scriptlets
+- provide /var/lib/php/apm/db directory
+
 * Tue Mar 10 2015 Remi Collet <remi@fedoraproject.org> - 2.0.2-2
 - upstream patches
 - fix provided configuration
 
 * Tue Mar 10 2015 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
-- Update to 2.0.2
+- Update to 2.0.2 (stable)
 - drop sub package, apm-web is now a separate project
 - enable ZTS extension
 
@@ -264,7 +270,7 @@ fi
 - fix permission of configuration file
 
 * Sat Feb 21 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
-- initial package, version 2.0.0
+- initial package, version 2.0.0 (stable)
 - open upstream bugs:
   https://github.com/patrickallaert/php-apm/issues/10 - configure
   https://github.com/patrickallaert/php-apm/issues/11 - bad version

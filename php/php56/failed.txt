@@ -1,0 +1,24 @@
+===== 5.6.9
+
+$ grep -r 'Tests failed' /var/lib/mock/56*/build.log
+
+/var/lib/mock/el5i/build.log:Tests failed    :    6 (  0.0%) (  0.1%)
+/var/lib/mock/el5x/build.log:Tests failed    :    3 (  0.0%) (  0.0%)
+/var/lib/mock/el6i/build.log:Tests failed    :    3 (  0.0%) (  0.0%)
+/var/lib/mock/el6x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/el7x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/fc20i/build.log:Tests failed    :    3 (  0.0%) (  0.0%)
+/var/lib/mock/fc20x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/fc21i/build.log:Tests failed    :    3 (  0.0%) (  0.0%)
+/var/lib/mock/fc21x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/fc22i/build.log:Tests failed    :    3 (  0.0%) (  0.0%)
+/var/lib/mock/fc22x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+
+el5i, el6i, fc20i, fc21i, fc22i
+	Test getdate() function : usage variation - Passing high positive and negative float values to timestamp. [ext/date/tests/getdate_variation7.phpt]
+	Test localtime() function : usage variation - Passing higher positive and negetive float values to timestamp. [ext/date/tests/localtime_variation3.phpt]
+	Bug #64146 (serialize incorrectly saving objects when they are cloned) [ext/standard/tests/serialize/bug64146.phpt]
+el5i, el5x
+	openssl_x509_parse() basic test for OpenSSL 0.9 [ext/openssl/tests/openssl_x509_parse_basic_v9.phpt]
+	sni_server [ext/openssl/tests/sni_server.phpt]
+	Specific protocol method specification [ext/openssl/tests/stream_crypto_flags_004.phpt]

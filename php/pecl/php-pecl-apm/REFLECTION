@@ -1,7 +1,7 @@
-Extension [ <persistent> extension #171 apm version 2.0.2 ] {
+Extension [ <persistent> extension #180 apm version 2.0.3 ] {
 
   - INI {
-    Entry [ apm.enabled <ALL> ]
+    Entry [ apm.enabled <SYSTEM> ]
       Current = ''
     }
     Entry [ apm.application_id <ALL> ]
@@ -32,7 +32,7 @@ Extension [ <persistent> extension #171 apm version 2.0.2 ] {
       Current = '10'
     }
     Entry [ apm.dump_max_depth <ALL> ]
-      Current = '4'
+      Current = '1'
     }
     Entry [ apm.sqlite_enabled <PERDIR> ]
       Current = ''
@@ -50,7 +50,7 @@ Extension [ <persistent> extension #171 apm version 2.0.2 ] {
       Current = '100'
     }
     Entry [ apm.sqlite_db_path <ALL> ]
-      Current = '/var/php/apm/db'
+      Current = '/var/lib/php/apm/db'
     }
     Entry [ apm.sqlite_process_silenced_events <PERDIR> ]
       Current = '1'

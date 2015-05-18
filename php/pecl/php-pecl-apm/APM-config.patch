@@ -9,7 +9,7 @@
  ; Application identifier, helps identifying which application is being monitored
  ; apm.application_id="My application"
  ; Enable the capture of events such as errors, notices, warnings,...
-@@ -26,7 +26,7 @@
+@@ -29,7 +29,7 @@
  
  ; SQLite configuration
  ; Whether to enable the sqlite driver
@@ -18,7 +18,7 @@
  ; Whether to collect stats for the sqlite driver (ATTENTION: Has an impact on performance!)
  ; apm.sqlite_stats_enabled=Off
  ; Error reporting level specific to the sqlite driver
-@@ -46,7 +46,7 @@
+@@ -49,7 +49,7 @@
  
  ; MySQL configuration
  ; Whether to enable the mysql driver
@@ -27,7 +27,7 @@
  ; Whether to collect stats for the mysql driver (ATTENTION: Has an impact on performance!)
  ; apm.mysql_stats_enabled=Off
  ; Error reporting level specific to the mysql driver
-@@ -68,7 +68,7 @@
+@@ -71,7 +71,7 @@
  
  ; StatsD configuration
  ; Whether to enable the statsd driver
@@ -36,7 +36,7 @@
  ; Whether to collect stats for the StatsD driver
  ; apm.statsd_stats_enabled=On
  ; Host of the statsd server
-@@ -78,7 +78,7 @@
+@@ -81,7 +81,7 @@
  
  ; Socket configuration
  ; Whether to enable the socket driver
