@@ -1,4 +1,4 @@
-# spec file for mongo-c-driver
+# remirepo spec file for mongo-c-driver
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
@@ -14,15 +14,12 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.1.4
-Release:   3%{?dist}
+Version:   1.1.5
+Release:   1%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
-
-# open https://jira.mongodb.org/browse/CDRIVER-624
-Patch0:    %{name}-upstream.patch
 
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libbson-1.0)
@@ -38,7 +35,7 @@ BuildRequires: perl
 %endif
 # From man pages
 BuildRequires: python
-%if 0%{?fedora} > 21
+%if 0
 BuildRequires: libtool autoconf
 %endif
 
@@ -74,8 +71,8 @@ a MongoDB Server.
 %prep
 %setup -q
 
-%if 0%{?fedora} > 21
-%patch0 -p1 -b .upstream
+%if 0
+# only needed when we have to patch .m4 files
 autoreconf -fi
 %endif
 
@@ -108,6 +105,7 @@ rm -r %{buildroot}%{_datadir}/doc/
 : Run a server
 mkdir dbtest
 mongod \
+  --journal \
   --logpath     $PWD/server.log \
   --pidfilepath $PWD/server.pid \
   --dbpath      $PWD/dbtest \
@@ -151,6 +149,9 @@ exit $ret
 
 
 %changelog
+* Mon May 18 2015 Remi Collet <remi@fedoraproject.org> - 1.1.5-1
+- Upstream version 1.1.5
+
 * Sat Apr 25 2015 Remi Collet <remi@fedoraproject.org> - 1.1.4-3
 - test build for upstream patch
 
