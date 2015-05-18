@@ -1,4 +1,4 @@
-# spec file for php-true-punycode
+# remirepo/fedora spec file for php-true-punycode
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    59dca474914324763397be2ea3d6ad3bc48f4688
+%global gh_commit    21c0025130b4e2b2d0b7dbe5f86e9e1512507656
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     true
 %global gh_project   php-punycode
@@ -15,14 +15,14 @@
 # Notice: single file / class, so no need to provide an autoloader for now
 
 Name:           php-true-punycode
-Version:        1.0.1
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        A Bootstring encoding of Unicode for IDNA
 
 Group:          Development/Libraries
 License:        MIT
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -81,5 +81,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon May 18 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- update to version 1.1.0
+
 * Wed Jan  7 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - initial package
