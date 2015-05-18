@@ -1,16 +1,20 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# remirepo spec file for php-pear-Auth-Yubico, from Fedora
+
+%{!?__pear:       %global __pear       %{_bindir}/pear}
+%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
+
 %global pear_name	Auth_Yubico
 %global channel		__uri
 
 Name:		php-pear-Auth-Yubico
-Version:	2.4
+Version:	2.5
 Release:	1%{?dist}
 Summary:	Authentication class for verifying Yubico OTP tokens
 
 Group:		Development/Libraries
 License:	BSD
-URL:		http://php-yubico.googlecode.com/
-Source0:	http://php-yubico.googlecode.com/files/Auth_Yubico-%{version}.tgz
+URL:		https://developers.yubico.com/php-yubico/
+Source0:	https://developers.yubico.com/php-yubico/Releases/Auth_Yubico-%{version}.tgz
 Patch1:		php-pear-Auth-Yubico-2.3.channel.patch
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildArch:	noarch
@@ -61,7 +65,7 @@ rm -rf "${RPM_BUILD_ROOT}"
 
 #	Clean up unnecessary files.
 
-rm -rf "${RPM_BUILD_ROOT}%{pear_phpdir}/".??*
+rm -rf "${RPM_BUILD_ROOT}%{pear_metadir}/".??*
 
 #	Install XML package description.
 
@@ -108,6 +112,10 @@ fi
 #-------------------------------------------------------------------------------
 %changelog
 #-------------------------------------------------------------------------------
+
+* Wed May 13 2015 Patrick Monnerat <pm@datasphere.ch> 2.5-1
+- New upstream release.
+
 * Sat Mar 31 2012 Remi Collet <RPMS@FamilleCollet.com> - 2.4.1
 - upstream 2.4, rebuild for remi repository
 
