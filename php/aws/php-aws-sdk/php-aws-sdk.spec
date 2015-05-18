@@ -1,3 +1,4 @@
+# remirepo spec file for php-aws-sdk, from Fedora:
 #
 # RPM spec file for php-aws-sdk
 #
@@ -13,8 +14,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   2.8.3
-%global github_commit    85c5224582acf507afad232da20a7ef0b2ec0073
+%global github_version   2.8.4
+%global github_commit    1f92deea40f03f1112cd3d026141d89eabbaf858
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -144,6 +145,9 @@ fi
 
 
 %changelog
+* Mon May 18 2015 Remi Collet <remi@fedoraproject.org> - 2.8.4-1
+- Update to 2.8.4
+
 * Mon May 11 2015 Remi Collet <remi@fedoraproject.org> - 2.8.3-1
 - Update to 2.8.3
 
