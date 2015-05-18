@@ -1,3 +1,4 @@
+# remirepo spec file for php-ocramius-proxy-manager from Fedora:
 #
 # RPM spec file for php-ocramius-proxy-manager
 #
@@ -44,6 +45,7 @@ License:       MIT
 URL:           http://ocramius.github.io/ProxyManager/
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:     noarch
 # For autoload generation
 BuildRequires: %{_bindir}/phpab
@@ -110,6 +112,7 @@ AUTOLOAD
 
 
 %install
+rm -rf %{buildroot}
 mkdir -p %{buildroot}%{phpdir}
 cp -rp src/* %{buildroot}%{phpdir}/
 
@@ -134,7 +137,12 @@ AUTOLOAD
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -143,5 +151,8 @@ AUTOLOAD
 
 
 %changelog
+* Mon May 18 2015 Remi Collet <RPMS@FamilleCollet.com> - 1.0.0-1
+- add needed backport stuff for remi repository
+
 * Sat May 16 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.0-1
 - Initial package
