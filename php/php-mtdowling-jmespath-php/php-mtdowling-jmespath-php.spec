@@ -1,3 +1,4 @@
+# remirepo spec file for php-mtdowling-transducers from Fedora:
 #
 # RPM spec file for php-mtdowling-jmespath-php
 #
@@ -35,6 +36,7 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:     noarch
 # For autoload generation
 BuildRequires: %{_bindir}/phpab
@@ -69,8 +71,7 @@ in PHP applications with PHP data structures.
 %setup -qn %{github_name}-%{github_commit}
 
 : Modify bin script
-sed -e "s#/usr/bin/env php#%{_bindir}/php#" \
-    -e "s#.*require.*autoload.*#require '%{phpdir}/JmesPath/autoload.php';#" \
+sed -e "s#.*require.*autoload.*#require '%{phpdir}/JmesPath/autoload.php';#" \
     -i bin/jp.php
 
 
@@ -86,6 +87,7 @@ AUTOLOAD
 
 
 %install
+rm -rf %{buildroot}
 : Lib
 mkdir -p %{buildroot}%{phpdir}/JmesPath
 cp -rp src/* %{buildroot}%{phpdir}/JmesPath/
@@ -103,7 +105,12 @@ install -pm 0755 bin/jp.php %{buildroot}%{_bindir}/
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc CHANGELOG.md
@@ -114,5 +121,8 @@ install -pm 0755 bin/jp.php %{buildroot}%{_bindir}/
 
 
 %changelog
+* Mon May 18 2015 Remi Collet <RPMS@FamilleCollet.com> - 2.1.0-1
+- add needed backport stuff for remi repository
+
 * Sat May 16 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.1.0-1
 - Initial package
