@@ -1,4 +1,4 @@
-# remirepo spec file for php-mtdowling-transducers from Fedora:
+# remirepo spec file for php-mtdowling-jmespath-php from Fedora:
 #
 # RPM spec file for php-mtdowling-jmespath-php
 #
