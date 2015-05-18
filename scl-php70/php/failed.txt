@@ -1,13 +1,7 @@
 $ grep -r 'Tests failed' /var/lib/mock/scl70*/build.log
 
-/var/lib/mock/scl70el6x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
-/var/lib/mock/scl70el7x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
-/var/lib/mock/scl70fc20x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
-/var/lib/mock/scl70fc21x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
-/var/lib/mock/scl70fc22x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
-
-TEST FAILURE: ../tests/func/010.diff --
-008+
-008- Done
-009+ Termsig=11
--- ../tests/func/010.diff result ends.
+/var/lib/mock/scl70el6x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/scl70el7x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/scl70fc20x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/scl70fc21x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/scl70fc22x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
