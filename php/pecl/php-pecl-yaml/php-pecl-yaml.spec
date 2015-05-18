@@ -1,8 +1,8 @@
-# spec file for php-pecl-yaml
+# remirepo spec file for php-pecl-yaml
 #
 # Copyright (c) 2012-2015 Remi Collet
-# Copyright (c) 2011-2012 Theodore Lee
-# Copyright (c) 2011 Thomas Morse
+
+# Fedora spec file for php-pecl-yaml
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -24,8 +24,8 @@
 
 Summary:       PHP Bindings for yaml
 Name:          %{?scl_prefix}php-pecl-yaml
-Version:       1.1.1
-Release:       6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:       1.2.0
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       MIT
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaml
@@ -110,20 +110,23 @@ extension=%{pecl_name}.so
 ; see http://www.php.net/manual/en/yaml.configuration.php
 
 ; Decode entities which have the explicit tag "tag:yaml.org,2002:binary"
-yaml.decode_binary = 0
+;yaml.decode_binary = 0
 
 ; Controls the decoding of "tag:yaml.org,2002:timestamp"
 ; 0 will not apply any decoding, 1 will use strtotime() 2 will use date_create().
-yaml.decode_timestamp = 0
+;yaml.decode_timestamp = 0
 
 ; Cause canonical form output.
-yaml.output_canonical = 0
+;yaml.output_canonical = 0
 
 ; Number of spaces to indent sections. Value should be between 1 and 10.
-yaml.output_indent = 2
+;yaml.output_indent = 2
 
 ; Set the preferred line width. -1 means unlimited.
-yaml.output_width = 80
+;yaml.output_width = 80
+
+; Enable/disable serialized php object processing.
+;yaml.decode_php = 1
 EOF
 
 cp -pr NTS ZTS
@@ -238,6 +241,9 @@ fi
 
 
 %changelog
+* Mon May 18 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- Update to 1.2.0 (stable)
+
 * Mon May  4 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-6
 - drop runtime dependency on pear, new scriptlets
 

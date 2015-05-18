@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #149 yaml version 1.1.1 ] {
+Extension [ <persistent> extension #174 yaml version 1.2.0 ] {
 
   - Dependencies {
     Dependency [ date (Optional) ]
@@ -10,6 +10,9 @@ Extension [ <persistent> extension #149 yaml version 1.1.1 ] {
     }
     Entry [ yaml.decode_timestamp <ALL> ]
       Current = '0'
+    }
+    Entry [ yaml.decode_php <ALL> ]
+      Current = '1'
     }
     Entry [ yaml.output_canonical <ALL> ]
       Current = '0'
