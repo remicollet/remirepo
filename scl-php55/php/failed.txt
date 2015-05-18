@@ -1,0 +1,6 @@
+$ grep -r 'Tests failed' /var/lib/mock/scl55*/build.log
+
+/var/lib/mock/scl55el6x/build.log: Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/scl55el7x/build.log: Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/scl55fc21x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/scl55fc22x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)

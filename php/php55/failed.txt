@@ -1,0 +1,36 @@
+$ grep -r 'Tests failed' /var/lib/mock/*/build.log
+
+/var/lib/mock/el5i/build.log:Tests failed    :    7 (  0.1%) (  0.1%)
+*	Bug #41523 (strtotime('0000-00-00 00:00:00') is parsed as 1999-11-30) (32 bit) [ext/date/tests/bug41523.phpt]
+*	Test getdate() function : usage variation - Passing high positive and negative float values to timestamp. [ext/date/tests/getdate_variation7.phpt]
+*	Test localtime() function : usage variation - Passing higher positive and negetive float values to timestamp. [ext/date/tests/localtime_variation3.phpt]
+	Bug #64802: openssl_x509_parse fails to parse subject properly in some cases [ext/openssl/tests/bug64802.phpt]
+	Bug #66501: EC private key support in openssl_sign [ext/openssl/tests/bug66501.phpt]
+	openssl_x509_parse() basic test for OpenSSL 0.9 [ext/openssl/tests/openssl_x509_parse_basic_v9.phpt]
+	Bug #64146 (serialize incorrectly saving objects when they are cloned) [ext/standard/tests/serialize/bug64146.phpt]
+
+/var/lib/mock/el5x/build.log:Tests failed    :    3 (  0.0%) (  0.0%)
+	Bug #64802: openssl_x509_parse fails to parse subject properly in some cases [ext/openssl/tests/bug64802.phpt]
+	Bug #66501: EC private key support in openssl_sign [ext/openssl/tests/bug66501.phpt]
+	openssl_x509_parse() basic test for OpenSSL 0.9 [ext/openssl/tests/openssl_x509_parse_basic_v9.phpt]
+
+/var/lib/mock/el6i/build.log:Tests failed    :    5 (  0.0%) (  0.1%)
+	Bug #54268 (Double free when destroy_zend_class fails) [Zend/tests/bug54268.phpt]
+*	Bug #41523 (strtotime('0000-00-00 00:00:00') is parsed as 1999-11-30) (32 bit) [ext/date/tests/bug41523.phpt]
+*	Test getdate() function : usage variation - Passing high positive and negative float values to timestamp. [ext/date/tests/getdate_variation7.phpt]
+*	Test localtime() function : usage variation - Passing higher positive and negetive float values to timestamp. [ext/date/tests/localtime_variation3.phpt]
+	Bug #64146 (serialize incorrectly saving objects when they are cloned) [ext/standard/tests/serialize/bug64146.phpt]
+
+/var/lib/mock/el6x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+
+/var/lib/mock/el7x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+
+/var/lib/mock/fc20i/build.log:Tests failed    :    4 (  0.0%) (  0.1%)
+*	Bug #41523 (strtotime('0000-00-00 00:00:00') is parsed as 1999-11-30) (32 bit) [ext/date/tests/bug41523.phpt]
+*	Test getdate() function : usage variation - Passing high positive and negative float values to timestamp. [ext/date/tests/getdate_variation7.phpt]
+*	Test localtime() function : usage variation - Passing higher positive and negetive float values to timestamp. [ext/date/tests/localtime_variation3.phpt]
+	Bug #64146 (serialize incorrectly saving objects when they are cloned) [ext/standard/tests/serialize/bug64146.phpt]
+
+/var/lib/mock/fc20x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+
+* fixed upstream in next
