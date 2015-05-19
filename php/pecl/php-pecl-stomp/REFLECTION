@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #152 Stomp version 1.0.7 ] {
+Extension [ <persistent> extension #152 Stomp version 1.0.8 ] {
 
   - INI {
     Entry [ stomp.default_broker <ALL> ]

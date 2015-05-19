@@ -24,7 +24,7 @@
 
 Summary:        Stomp client extension
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.0.7
+Version:        1.0.8
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -87,14 +87,8 @@ sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd NTS
 
-sed -e '/PHP_STOMP_VERSION_STATUS/s/-dev//' -i php_stomp.h
-
 # Sanity check, really often broken
-extmajor=$(sed -n '/#define PHP_STOMP_MAJOR_VERSION/{s/.* "//;s/".*$//;p}'  php_stomp.h)
-extminor=$(sed -n '/#define PHP_STOMP_MINOR_VERSION/{s/.* "//;s/".*$//;p}'  php_stomp.h)
-extpatch=$(sed -n '/#define PHP_STOMP_PATCH_VERSION/{s/.* "//;s/".*$//;p}'  php_stomp.h)
-extstate=$(sed -n '/#define PHP_STOMP_VERSION_STATUS/{s/.* "//;s/".*$//;p}' php_stomp.h)
-extver=${extmajor}.${extminor}.${extpatch}${extstate}
+extver=$(sed -n '/#define PHP_STOMP_VERSION/{s/.* "//;s/".*$//;p}' php_stomp.h)
 if test "x${extver}" != "x%{version}%{?versuf}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?versuf}.
    exit 1
@@ -106,8 +100,6 @@ cd ..
 # Duplicate source tree for NTS / ZTS build
 cp -pr NTS ZTS
 %endif
-
-chmod -x ?TS/*.{c,h}
 
 # Create configuration file
 cat << 'EOF' | tee %{ini_name}
@@ -227,6 +219,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue May 19 2015 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
+- Update to 1.0.8 (stable, no change)
+
 * Sat May 16 2015 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
 - Update to 1.0.7 (stable)
 - drop runtime dependency on pear, new scriptlets
