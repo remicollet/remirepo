@@ -1,4 +1,4 @@
-# spec file for php-horde-kronolith
+# remirepo/fedora spec file for php-horde-kronolith
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-kronolith
-Version:        4.2.6
+Version:        4.2.7
 Release:        1%{?dist}
 Summary:        A web based calendar
 
@@ -257,6 +257,9 @@ fi
 
 
 %changelog
+* Tue May 19 2015 Remi Collet <remi@fedoraproject.org> - 4.2.7-1
+- Update to 4.2.7
+
 * Wed Apr 29 2015 Remi Collet <remi@fedoraproject.org> - 4.2.6-1
 - Update to 4.2.6
 
