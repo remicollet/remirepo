@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Core
+# remirepo/fedora spec file for php-horde-Horde-Core
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-Horde-Core
-Version:        2.20.0
+Version:        2.20.1
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -281,6 +281,9 @@ fi
 
 
 %changelog
+* Tue May 19 2015 Remi Collet <remi@fedoraproject.org> - 2.20.1-1
+- Update to 2.20.1
+
 * Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.20.0-1
 - Update to 2.20.0
 
