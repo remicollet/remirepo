@@ -1,4 +1,4 @@
-# spec file for php-ioncube-loader
+# remirepo spec file for php-ioncube-loader
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
@@ -24,7 +24,7 @@
 
 Name:          %{?scl_prefix}php-ioncube-loader
 Summary:       Loader for ionCube Encoded Files with ionCube 24 support
-Version:       5.0.5
+Version:       5.0.6
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       Distribuable
 Group:         Development/Languages
@@ -143,12 +143,12 @@ install -D -m 644  %{extname}.zts                      %{buildroot}%{php_ztsinid
 # simple module load test
 %{__php} --no-php-ini \
     --define zend_extension=%{buildroot}%{php_extdir}/%{extname}.so \
-    --modules | grep ionCube
+    --version | grep 'ionCube.*%{version}'
 
 %if %{with_zts}
 %{__ztsphp} --no-php-ini \
     --define zend_extension=%{buildroot}%{php_ztsextdir}/%{extname}.so \
-    --modules | grep ionCube
+    --version | grep 'ionCube.*%{version}'
 %endif
 
 
@@ -172,6 +172,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue May 19 2015 Remi Collet <RPMS@famillecollet.com> - 5.0.6-1
+- update to 5.0.6 (May 18, 2015)
+
 * Sun May 17 2015 Remi Collet <RPMS@famillecollet.com> - 5.0.5-1
 - update to 5.0.5 (May 15, 2015)
 
