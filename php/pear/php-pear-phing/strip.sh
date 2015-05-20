@@ -23,7 +23,7 @@ if [ -f $name-$1.tgz ]; then
 	tar czf $name-$1-strip.tgz package.xml $name-$1
 	tar tf $name-$1-strip.tgz | grep -v '/$' | sort >$list.new
 
-	diff -u $list.old $list.new
+	colordiff -u $list.old $list.new
 	rm -rf $name-$1 package.xml
 else
 	echo "usage $0 <version>"
