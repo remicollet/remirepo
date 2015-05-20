@@ -13,7 +13,7 @@
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.12.12
+Version:         1.12.13
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -839,6 +839,9 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 
 
 %changelog
+* Wed May 20 2015 Remi Collet <RPMS@FamilleCollet.com> - 1.12.13-1
+- update to 1.12.13
+
 * Wed May 20 2015 Remi Collet <RPMS@FamilleCollet.com> - 1.12.12-1
 - update to 1.12.12
 - add composer provides
