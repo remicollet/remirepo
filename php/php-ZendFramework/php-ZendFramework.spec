@@ -1,9 +1,19 @@
+# remirepo spec file for php-ZendFramework, from:
+#
+# Fedora spec file for php-ZendFramework
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
 %global php_name ZendFramework
 #define posttag .PL1
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.12.11
+Version:         1.12.12
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -50,6 +60,7 @@ Obsoletes: %{name}-Gdata < 1.12.0-1
 # Dropped in 1.2.10
 Obsoletes: %{name}-demos < 1.12.10
 
+
 %description
 Extending the art & spirit of PHP, Zend Framework is based on simplicity,
 object-oriented best practices, corporate friendly licensing, and a rigorously
@@ -73,7 +84,9 @@ well as API providers and catalogers like StrikeIron and ProgrammableWeb.
 Summary:  Zend Framework Extras (ZendX)
 Group:    Development/Libraries
 Requires: %{name} = %{version}-%{release}
+
 Provides: %{name}-ZendX = %{version}-%{release}
+Provides: php-composer(zendframework/zf1-extras) = %{version}
 
 %description extras
 This package includes the ZendX libraries.
@@ -106,6 +119,8 @@ Requires: %{name}-Search-Lucene = %{version}-%{release}
 Requires: %{name}-Serializer-Adapter-Igbinary = %{version}-%{release}
 Requires: %{name}-Services = %{version}-%{release}
 Requires: %{name}-Soap = %{version}-%{release}
+
+Provides: php-composer(zendframework/zendframework1) = %{version}
 
 %description full
 This package is a meta package designed to track in most subpackages
@@ -466,9 +481,7 @@ cp -pr library/Zend $RPM_BUILD_ROOT%{_datadir}/php
 #cp -pr demos/Zend $RPM_BUILD_ROOT%{_datadir}/php/Zend/demos
 
 # ZendX
-cd extras
-cp -pr library/ZendX $RPM_BUILD_ROOT%{_datadir}/php
-cd ..
+cp -pr extras/library/ZendX $RPM_BUILD_ROOT%{_datadir}/php
 
 cp -pr bin/zf.{php,sh} \
   $RPM_BUILD_ROOT%{_datadir}/php/Zend
@@ -826,6 +839,10 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 
 
 %changelog
+* Wed May 20 2015 Remi Collet <RPMS@FamilleCollet.com> - 1.12.12-1
+- update to 1.12.12
+- add composer provides
+
 * Thu Feb 12 2015 Remi Collet <RPMS@FamilleCollet.com> - 1.12.11-1
 - update to 1.12.11
 
