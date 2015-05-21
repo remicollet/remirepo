@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #128 sphinx version 1.3.2 ] {
+Extension [ <persistent> extension #146 sphinx version 1.3.3 ] {
 
   - Constants [42] {
     Constant [ integer SEARCHD_OK ] { 0 }
@@ -60,7 +60,7 @@ Extension [ <persistent> extension #128 sphinx version 1.3.2 ] {
       - Properties [0] {
       }
 
-      - Methods [37] {
+      - Methods [38] {
         Method [ <internal:sphinx, ctor> public method __construct ] {
 
           - Parameters [0] {
@@ -179,6 +179,15 @@ Extension [ <persistent> extension #128 sphinx version 1.3.2 ] {
           - Parameters [3] {
             Parameter #0 [ <required> $attribute ]
             Parameter #1 [ <required> $values ]
+            Parameter #2 [ <optional> $exclude ]
+          }
+        }
+
+        Method [ <internal:sphinx> public method setFilterString ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $attribute ]
+            Parameter #1 [ <required> $value ]
             Parameter #2 [ <optional> $exclude ]
           }
         }
