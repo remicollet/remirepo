@@ -40,7 +40,7 @@ Source0:        http://download.suhosin.org/suhosin-%{version}.tar.gz
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-devel > 5.4
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
@@ -145,10 +145,6 @@ install -Dpm 644 ZTS/%{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ini_name}
 cd NTS
 
 # drop known to fail tests
-%if "%{php_version}" < "5.4"
-rm tests/misc/disable_display_errors_fail.phpt
-rm tests/session/session_recursive_crash.phpt
-%endif
 %if "%{php_version}" < "5.5"
 rm tests/executor/function_blacklist_printf.phpt
 rm tests/executor/function_whitelist_call_user_func.phpt
