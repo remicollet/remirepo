@@ -12,7 +12,7 @@
 %{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name  trace
-%global versuf     -beta
+#global versuf     -beta
 %if "%{php_version}" < "5.6"
 %global ini_name   %{pecl_name}.ini
 %else
@@ -22,7 +22,7 @@
 Summary:        Trace is a low-overhead tracing tool for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        0.3.0
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # common/sds is BSD-2, other is ASL 2.0
 License:        ASL 2.0 and BSD
 Group:          Development/Languages
@@ -170,6 +170,13 @@ cd %{pecl_name}-%{version}/extension
     --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+: Upstream test suite for NTS extension
+TEST_PHP_EXECUTABLE=%{_bindir}/php \
+TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{_bindir}/php -n run-tests.php
+
 
 %clean
 rm -rf %{buildroot}
@@ -188,5 +195,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 22 2015 Remi Collet <remi@fedoraproject.org> - 0.3.0-2
+- update to 0.3.0 (stable)
+- enable test suite
+
 * Fri May 15 2015 Remi Collet <remi@fedoraproject.org> - 0.3.0-1
 - initial package, version 0.3.0 (beta)
