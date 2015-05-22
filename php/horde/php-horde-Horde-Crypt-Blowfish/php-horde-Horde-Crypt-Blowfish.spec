@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Crypt-Blowfish
+# remirepo/fedora spec file for php-horde-Horde-Crypt-Blowfish
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Crypt-Blowfish
-Version:        1.0.3
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        Blowfish Encryption Library
 
@@ -106,6 +106,9 @@ fi
 
 
 %changelog
+* Fri May 22 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- Update to 1.1.0
+
 * Thu Jan 08 2015 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - Update to 1.0.3
 - add provides php-composer(horde/horde-crypt-blowfish)
