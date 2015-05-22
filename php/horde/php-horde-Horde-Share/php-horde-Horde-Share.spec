@@ -1,4 +1,4 @@
-# remirepo/fedora spec file for php-horde-Horde-Crypt-Blowfish
+# remirepo/fedora spec file for php-horde-Horde-Share
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
