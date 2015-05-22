@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Date
+# remirepo/fedora spec file for php-horde-Horde-Crypt-Blowfish
 #
 # Copyright (c) 2012-2015 Nick Bebout, Remi Collet
 #
@@ -18,7 +18,7 @@
 %endif
 
 Name:           php-horde-Horde-Date
-Version:        2.0.13
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Horde Date package
 
@@ -138,6 +138,9 @@ fi
 
 
 %changelog
+* Fri May 22 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+
 * Thu Jan 08 2015 Remi Collet <remi@fedoraproject.org> - 2.0.13-1
 - Update to 2.0.13
 - add provides php-composer(horde/horde-date)
