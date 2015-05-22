@@ -258,6 +258,14 @@ export REPORT_EXIT_STATUS=0
 %else
 export REPORT_EXIT_STATUS=1
 %endif
+user=$(id -un)
+: all tests when rpmbuild is used
+if [ "$user" = "remi" ]; then
+export SKIP_ONLINE_TESTS=0
+else
+: only local tests when mock is used
+export SKIP_ONLINE_TESTS=1
+fi
 
 # Shared needed extensions
 modules=""
@@ -276,7 +284,6 @@ done
 %if %{with_tests}
 : Upstream test suite NTS extension
 cd NTS
-SKIP_ONLINE_TESTS=1 \
 TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n $modules -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
@@ -293,7 +300,6 @@ NO_INTERACTION=1 \
 %if %{with_tests}
 : Upstream test suite ZTS extension
 cd ../ZTS
-SKIP_ONLINE_TESTS=1 \
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n $modules -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
