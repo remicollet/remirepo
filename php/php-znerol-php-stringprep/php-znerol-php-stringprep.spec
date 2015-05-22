@@ -94,7 +94,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Tue May 19 2015 Remi Collet <remi@fedoraproject.org> - 0-0.1.20150519git804b0d5.
+* Tue May 19 2015 Remi Collet <remi@fedoraproject.org> - 0-0.1.20150519git804b0d5
 - new snapshot (License PR merged)
 
 * Sun Nov  9 2014 Remi Collet <remi@fedoraproject.org> - 0-0.1.20141109gita23ef29
