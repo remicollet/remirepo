@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Share
+# remirepo/fedora spec file for php-horde-Horde-Crypt-Blowfish
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Share
-Version:        2.0.6
+Version:        2.0.7
 Release:        1%{?dist}
 Summary:        Horde Shared Permissions System
 
@@ -77,6 +77,7 @@ sed -e '/%{pear_name}.po/d' \
     -e '/Horde_Other.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -136,6 +137,9 @@ fi
 
 
 %changelog
+* Fri May 22 2015 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
+- Update to 2.0.7
+
 * Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
 - Update to 2.0.6
 - add provides php-composer(horde/horde-share)
