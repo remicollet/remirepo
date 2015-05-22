@@ -1,4 +1,4 @@
-# spec file for php-pecl-http
+# remirepo/fedora spec file for php-pecl-http
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
@@ -31,10 +31,10 @@
 %global with_tests %{?_without_tests:0}%{!?_without_tests:1}
 %endif
 
-#global prever RC1
+%global prever RC1
 Name:           %{?scl_prefix}php-pecl-http
-Version:        2.4.3
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        2.5.0
+Release:        0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -44,14 +44,6 @@ Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 
 # From http://www.php.net/manual/en/http.configuration.php
 Source1:        %{proj_name}.ini
-
-# http://git.php.net/?p=pecl/http/pecl_http.git;a=blob_plain;f=tests/helper/upload.inc;hb=HEAD
-# See http://git.php.net/?p=pecl/http/pecl_http.git;a=commit;h=5c5ee386409f5b6d697c483edc788d09f8c8aeb3
-Source2:        upload.inc
-# http://git.php.net/?p=pecl/http/pecl_http.git;a=blob_plain;f=tests/querystring003.phpt;hb=HEAD
-Source3:        querystring003.phpt
-# http://git.php.net/?p=pecl/http/pecl_http.git;a=blob_plain;f=tests/bug69313.phpt;hb=HEAD
-Source4:        bug69313.phpt
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel >= 5.3.0
@@ -193,9 +185,6 @@ These are the files needed to compile programs using HTTP extension.
 mv %{proj_name}-%{version}%{?prever} NTS
 cd NTS
 
-cp %{SOURCE2} tests/helper/
-cp %{SOURCE3} %{SOURCE4} tests/
-
 extver=$(sed -n '/#define PHP_PECL_HTTP_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
    : Error: Upstream HTTP version is now ${extver}, expecting %{version}%{?prever}.
@@ -263,12 +252,6 @@ done
 
 
 %check
-%if 0%{?fedora} == 20
-# ignore failed tests (timeout) with curl 7.32
-# see https://bugzilla.redhat.com/show_bug.cgi?id=1194603
-rm ?TS/tests/client{006,007,008,018,021}.phpt
-%endif
-
 %if "%{php_version}" < "5.4"
 # Known failed test with 5.3.3 (need investigations)
 export REPORT_EXIT_STATUS=0
@@ -365,6 +348,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 22 2015 Remi Collet <remi@fedoraproject.org> - 2.5.0-0.1.RC1
+- update to 2.5.0RC1 (beta)
+
 * Wed Apr 08 2015 Remi Collet <remi@fedoraproject.org> - 2.4.3-1
 - Update to 2.4.3
 
