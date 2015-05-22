@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #144 suhosin version 0.9.37.1 ] {
+Extension [ <persistent> extension #194 suhosin version 0.9.38 ] {
 
   - INI {
     Entry [ suhosin.log.syslog <PERDIR,SYSTEM> ]
@@ -216,6 +216,9 @@ Extension [ <persistent> extension #144 suhosin version 0.9.37.1 ] {
     }
     Entry [ suhosin.upload.max_uploads <PERDIR,SYSTEM> ]
       Current = '25'
+    }
+    Entry [ suhosin.upload.max_newlines <PERDIR,SYSTEM> ]
+      Current = '100'
     }
     Entry [ suhosin.upload.disallow_elf <PERDIR,SYSTEM> ]
       Current = '1'

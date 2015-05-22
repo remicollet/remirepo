@@ -1,4 +1,4 @@
-# spec file for php-suhosin
+# remirepo spec file for php-suhosin (from old fedora spec)
 #
 # Copyright (c) 2008-2015 Remi Collet
 # Copyright (c) 2007-2009 Bart Vanbrabant
@@ -26,8 +26,8 @@
 %endif
 
 Name:           %{?scl_prefix}php-suhosin
-Version:        0.9.37.1
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Version:        0.9.38
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Suhosin is an advanced protection system for PHP installations
 
 Group:          Development/Languages
@@ -152,6 +152,9 @@ rm tests/session/session_recursive_crash.phpt
 %if "%{php_version}" < "5.5"
 rm tests/executor/function_blacklist_printf.phpt
 rm tests/executor/function_whitelist_call_user_func.phpt
+rm tests/executor/eval_blacklist.phpt
+rm tests/executor/eval_blacklist_printf.phpt
+rm tests/executor/eval_whitelist_call_user_func.phpt
 %endif
 rm tests/filter/suhosin_upload_disallow_binary_on.phpt
 
@@ -184,6 +187,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 22 2015 Remi Collet <remi@fedoraproject.org> - 0.9.38-1
+- update to 0.9.38
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 0.9.37.1-1.1
 - Fedora 21 SCL mass rebuild
 
