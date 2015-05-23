@@ -1,4 +1,4 @@
-# spec file for php-adoy-fastcgi-client
+# remirepo/fedora spec file for php-adoy-fastcgi-client
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,17 +6,21 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c332dfc8d3f96e47022170f169de73cf8d8d4f0a
+%global gh_commit    ae8234f0781b6d97e909e45d8a425b9f9bd120bb
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150417
+#global gh_date      20150417
 %global gh_owner     adoy
 %global gh_project   PHP-FastCGI-Client
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-adoy-fastcgi-client
 Summary:        Client for communication with a FastCGI application
-Version:        1.0
+Version:        1.0.0
+%if 0%{?gh_date}
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}
+%else
+Release:        1%{?dist}
+%endif
 
 URL:            https://github.com/adoy/PHP-FastCGI-Client
 License:        LGPLv2+
@@ -30,8 +34,8 @@ Requires:       php(language) > 5.3
 Requires:       php-cli
 Requires:       php-pcre
 
-Obsoletes:      php-fastcgi-client <= 1.0
 Provides:       php-composer(adoy/fastcgi-client) = %{version}
+
 
 %description
 This PHP class handles the communication with a FastCGI (FCGI) application
@@ -78,6 +82,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat May 23 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- version 1.0.0
+
 * Fri Apr 17 2015 Remi Collet <remi@fedoraproject.org> - 1.0-0.1.20150417gitc332dfc
 - rename to php-adoy-fastcgi-client
 - PSR-0 tree
