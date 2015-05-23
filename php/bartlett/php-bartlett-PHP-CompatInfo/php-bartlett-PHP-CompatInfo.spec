@@ -32,7 +32,7 @@ Source1:        fedora-review-check
 Patch0:         %{name}-4.2.0-rpm.patch
 
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3.0
+BuildRequires:  php(language) >= 5.3.2
 BuildRequires:  php-pdo_sqlite
 BuildRequires:  php-composer(bartlett/php-reflect) >= 3.1
 %if %{with_tests}
@@ -49,7 +49,7 @@ BuildRequires:  %{_bindir}/phpunit
 #        "ext-pdo_sqlite": "*",
 #        "symfony/console": "~2.5",
 #        "bartlett/php-reflect": "~3.1",
-Requires:       php(language) >= 5.3.0
+Requires:       php(language) >= 5.3.2
 Requires:       php-cli
 Requires:       php-json
 Requires:       php-libxml
@@ -82,13 +82,13 @@ Requires:       php-composer(doctrine/cache)
 Requires:       php-composer(bartlett/umlwriter)
 # Required by autoloader
 Requires:       php-composer(nikic/php-parser)
-BuildRequires:  php-composer(doctrine/collections)
+Requires:       php-composer(doctrine/collections)
 Requires:       php-composer(symfony/class-loader)
 Requires:       php-composer(symfony/event-dispatcher)
 Requires:       php-composer(symfony/finder)
-BuildRequires:  php-composer(symfony/stopwatch)
-BuildRequires:  php-composer(symfony/dependency-injection)
-BuildRequires:  php-composer(phpdocumentor/reflection-docblock)
+Requires:       php-composer(symfony/stopwatch)
+Requires:       php-composer(symfony/dependency-injection)
+Requires:       php-composer(phpdocumentor/reflection-docblock)
 Requires:       php-composer(seld/jsonlint)
 Requires:       php-composer(sebastian/version)
 Requires:       php-composer(justinrainbow/json-schema)
