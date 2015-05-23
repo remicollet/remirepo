@@ -1,5 +1,6 @@
+# remirepo spec file for php-pimple1, from:
 #
-# RPM spec file for php-pimple1
+# Fedora spec file for php-pimple1
 #
 # Copyright (c) 2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
@@ -35,6 +36,7 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}/tree/1.1
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Autoload generation
 BuildRequires: %{_bindir}/phpab
@@ -69,6 +71,7 @@ just one file and one class.
 
 
 %install
+rm -rf %{buildroot}
 mkdir -p %{buildroot}%{phpdir}/Pimple1
 cp -pr lib/* %{buildroot}%{phpdir}/Pimple1/
 
@@ -90,7 +93,12 @@ BOOTSTRAP
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc README.rst
@@ -99,6 +107,9 @@ BOOTSTRAP
 
 
 %changelog
+* Sat May 23 2015 Remi Collet <rpms@famillecollet.com> - 1.1.1-4
+- add backport stuff for remi repo.
+
 * Fri May 22 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.1-4
 - Wrap tests' build requires in "%%if %%{with_tests}"
 
