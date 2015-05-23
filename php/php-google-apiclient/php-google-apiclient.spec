@@ -1,14 +1,35 @@
-%global github_owner   google
-%global github_name    google-api-php-client
-%global github_version 1.1.2
-%global github_commit  9c35bbbbaf04a5236d763560dab1e2f6e672a724
+# remirepo spec file for php-google-apiclient, from:
+#
+# Fedora spec file for php-google-apiclient
+#
+# Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+#                         Adam Williamson <awilliam@redhat.com>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
+%global github_owner     google
+%global github_name      google-api-php-client
+%global github_version   1.1.4
+%global github_commit    2adb5ba90612858d4add0342eee6b8b9aaca398d
+
+%global composer_vendor  google
+%global composer_project apiclient
 
 # "php": ">=5.2.1"
-%global php_min_ver    5.2.1
+%global php_min_ver 5.2.1
 
-Name:          php-google-apiclient
+# Build using "--without tests" to disable tests
+%global with_tests  %{?_without_tests:0}%{!?_without_tests:1}
+
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
+
+Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       1%{?dist}
 Summary:       Client library for Google APIs
 
 Group:         Development/Libraries
@@ -16,33 +37,37 @@ License:       ASL 2.0
 URL:           https://developers.google.com/api-client-library/php/
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
-# Submitted upstream: https://github.com/google/google-api-php-client/pull/437
-# Relocate the autoloader added in 1.1, or else we can't sensibly package it
-# Rediffed against 1.1.2 (files have been moved/added upstream since)
-Patch0:        php-google-apiclient-1.1.2-move_autoloader.patch
-
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
-# For tests
+# Tests
+%if %{with_tests}
+## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: %{_bindir}/phpunit
-# For tests: phpcompatinfo (computed from 1.0.3-beta)
+## phpcompatinfo (computed from version 1.1.4)
+BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-json
 BuildRequires: php-openssl
+BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
+%endif
 
-Requires:      php(language) >= %{php_min_ver}
 Requires:      ca-certificates
-# phpcompatinfo (computed from 1.0.3-beta)
+# composer.json
+Requires:      php(language) >= %{php_min_ver}
+# phpcompatinfo (computed from version 1.1.4)
+Requires:      php-curl
 Requires:      php-date
 Requires:      php-json
 Requires:      php-openssl
+Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
 
-Provides:      php-composer(google/apiclient) = %{version}
+# Composer
+Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 %description
 Google APIs Client Library for PHP provides access to many Google APIs.
@@ -54,7 +79,7 @@ Optional:
 * php-pecl-memcache
 * php-pecl-memcached
 
-Examples available in the %{name}-examples package.
+Examples are available in the %{name}-examples package.
 
 
 %package examples
@@ -69,16 +94,15 @@ Requires: %{name} = %{version}-%{release}
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
-%patch0 -p1
 
-# Replace bundled CA cert trust list with our systemwide one. This location
-# should work for EL6/7 and all supported Fedoras.
+: Unbundle CA cert
 rm -f src/Google/IO/cacerts.pem
 sed "s#dirname(__FILE__)\s*.\s*'/cacerts.pem'#'%{_sysconfdir}/pki/tls/certs/ca-bundle.crt'#" \
-    -i src/Google/IO/Stream.php src/Google/IO/Curl.php
+    -i src/Google/IO/{Stream,Curl}.php
 
-# Update examples' include path
-sed -i 's#../src#%{_datadir}/php#' examples/*.php
+: Update examples autoload require
+sed "s#.*require.*autoload.*#require_once '%{phpdir}/Google/autoload.php';#" \
+    -i examples/*.php
 
 
 %build
@@ -88,33 +112,38 @@ sed -i 's#../src#%{_datadir}/php#' examples/*.php
 %install
 rm -rf %{buildroot}
 
-mkdir -p %{buildroot}%{_datadir}/php
-cp -rp src/* %{buildroot}%{_datadir}/php/
+mkdir -p %{buildroot}%{phpdir}
+cp -rp src/* %{buildroot}%{phpdir}/
 
 
 %check
-# Skip tests requiring network access
-sed -e 's/function testBatchRequest/function SKIP_testBatchRequest/' \
-    -e 's/function testInvalidBatchRequest/function SKIP_testInvalidBatchRequest/' \
-    -i tests/general/ApiBatchRequestTest.php
+%if %{with_tests}
+: Skip tests requiring network access
+rm -f tests/general/ApiBatchRequestTest.php
 
-%{_bindir}/phpunit .
+: Run tests
+%{_bindir}/phpunit
 
-# Ensure unbundled CA cert is referenced
+: Ensure unbundled CA cert is referenced
 grep '%{_sysconfdir}/pki/tls/certs/ca-bundle.crt' --quiet \
-    %{buildroot}%{_datadir}/php/Google/IO/{Curl,Stream}.php
+    %{buildroot}%{phpdir}/Google/IO/{Curl,Stream}.php
+%else
+: Tests skipped
+%endif
 
 
 %clean
 rm -rf %{buildroot}
 
 
+%{!?_licensedir:%global license %%doc}
+
 %files
 %defattr(-,root,root,-)
-%{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc *.md composer.json
-%{_datadir}/php/Google
+%doc *.md
+%doc composer.json
+%{phpdir}/Google
 
 %files examples
 %defattr(-,root,root,-)
@@ -122,6 +151,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 22 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.4-1
+- Updated to 1.1.4 (BZ #1222260)
+- Added spec license header
+- Removed autoload patch
+- Added option to build without tests
+
 * Fri Jan 02 2015 Adam Williamson <awilliam@redhat.com> - 1.1.2-2
 - update autoloader relocation patch to match latest upstream submission
 
@@ -130,7 +165,7 @@ rm -rf %{buildroot}
 - relocate autoloader to make it work with systemwide installation
 
 * Sat Dec 20 2014 Adam Williamson <awilliam@redhat.com> - 1.0.6-0.3.beta
-- use new %license directory
+- use new %%license directory
 - add Packagist/Composer provide
 
 * Fri Nov 07 2014 Adam Williamson <awilliam@redhat.com> - 1.0.6-0.2.beta
