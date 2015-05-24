@@ -1,4 +1,4 @@
-# spec file for php-pecl-hprose
+# remirepo spec file for php-pecl-hprose
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
@@ -22,7 +22,7 @@
 
 Summary:        Hprose for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.5.3
+Version:        1.5.4
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
@@ -239,6 +239,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun May 24 2015 Remi Collet <remi@fedoraproject.org> - 1.5.4-1
+- Update to 1.5.4
+
 * Wed May 13 2015 Remi Collet <remi@fedoraproject.org> - 1.5.3-1
 - Update to 1.5.3
 
