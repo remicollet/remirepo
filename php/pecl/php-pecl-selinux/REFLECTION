@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #126 selinux version <no_version> ] {
+Extension [ <persistent> extension #144 selinux version 0.4.1 ] {
 
   - Functions {
     Function [ <internal:selinux> function selinux_is_enabled ] {
@@ -153,10 +153,11 @@ Extension [ <persistent> extension #126 selinux version <no_version> ] {
     }
     Function [ <internal:selinux> function selinux_compute_create ] {
 
-      - Parameters [3] {
+      - Parameters [4] {
         Parameter #0 [ <required> $scontext ]
         Parameter #1 [ <required> $tcontext ]
         Parameter #2 [ <required> $tclass ]
+        Parameter #3 [ <optional> $name ]
       }
     }
     Function [ <internal:selinux> function selinux_compute_relabel ] {
@@ -258,6 +259,20 @@ Extension [ <persistent> extension #126 selinux version <no_version> ] {
         Parameter #0 [ <required> $device_name ]
         Parameter #1 [ <optional> $validate ]
         Parameter #2 [ <optional> $specfile ]
+      }
+    }
+    Function [ <internal:selinux> function selinux_x_label_lookup ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $x_key ]
+        Parameter #1 [ <required> $x_type ]
+      }
+    }
+    Function [ <internal:selinux> function selinux_db_label_lookup ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $db_key ]
+        Parameter #1 [ <required> $db_type ]
       }
     }
     Function [ <internal:selinux> function selinux_getenforcemode ] {

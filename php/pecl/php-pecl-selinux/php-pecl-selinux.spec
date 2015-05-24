@@ -1,6 +1,9 @@
-# spec file for php-pecl-selinux
+# remirepo spec file for php-pecl-selinux
 #
 # Copyright (c) 2011-2015 Remi Collet
+#
+# Fedora spec file for php-pecl-selinux
+#
 # Copyright (c) 2009-2010 KaiGai Kohei
 #
 # License: MIT
@@ -24,14 +27,12 @@
 
 Summary:        SELinux binding for PHP scripting language
 Name:           %{?scl_prefix}php-pecl-selinux
-Version:        0.3.1
-Release:        17%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        0.4.1
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-#Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-# SVN snapshot
-Source0:        http://pecl.php.net/get/%{pecl_name}-0.4.1dev.tgz
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires:  %{?scl_prefix}php-devel >= 5.2.0
@@ -88,17 +89,13 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -c -q
-mv %{pecl_name}-0.4.1dev NTS
+mv %{pecl_name}-%{version} NTS
 
 # Don't install/register tests
-# Keep version as 0.3.1 for now
 sed -e 's/role="test"/role="src"/' \
-    -e 's/0.4.1dev/0.3.1/' \
     -i package.xml
 
 pushd NTS
-sed -e 's/"0.4.1dev"/"0.3.1"/' -i php_selinux.h
-
 extver=$(sed -n '/#define PHP_SELINUX_VERSION/{s/.* "//;s/".*$//;p}' php_selinux.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}.
@@ -152,7 +149,7 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
+# Documentation
 cd NTS
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
@@ -224,6 +221,9 @@ fi
 
 
 %changelog
+* Sun May 24 2015 Remi Collet <remi@fedoraproject.org> - 0.4.1-1
+- version 0.4.1 (beta)
+
 * Sun Apr  5 2015 Remi Collet <remi@fedoraproject.org> - 0.3.1-17
 - add upstream fix for PHP 7
 - drop runtime dependency on pear, new scriptlets
