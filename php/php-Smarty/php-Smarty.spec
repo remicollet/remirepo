@@ -16,12 +16,15 @@
 Name:           php-Smarty
 Summary:        Template/Presentation Framework for PHP
 Version:        3.1.24
-Release:        1%{?dist}
+Release:        2%{?dist}
 
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 URL:            http://www.smarty.net
 License:        LGPLv2+
 Group:          Development/Libraries
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+
+# https://github.com/smarty-php/smarty/issues/42
+Patch0:         %{name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -52,6 +55,7 @@ high-performance, scalability, security and future growth.
 %prep
 %setup -qn %{gh_project}-%{gh_commit}
 
+%patch0 -p1
 
 %build
 # empty build section, nothing required
@@ -80,6 +84,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun May 24 2015 Remi Collet <remi@fedoraproject.org> - 3.1.24-2
+- upstream patch for 'neq' regression
+  https://github.com/smarty-php/smarty/issues/42
+
 * Sun May 24 2015 Remi Collet <remi@fedoraproject.org> - 3.1.24-1
 - update to 3.1.24
 
