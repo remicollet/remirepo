@@ -1,11 +1,21 @@
-%global gh_commit    04f0090c40b1a0e1fb55dbe0297f08386b36de21
+# remirepo spec file for php-Smarty from:
+#
+# Fedora spec file for php-Smarty
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
+%global gh_commit    b58771e31b11c721f6aa8e574e16e4058f9edc5f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     smarty-php
 %global gh_project   smarty
 
 Name:           php-Smarty
 Summary:        Template/Presentation Framework for PHP
-Version:        3.1.23
+Version:        3.1.24
 Release:        1%{?dist}
 
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
@@ -62,8 +72,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-# https://github.com/uwetews/smarty3-dist/issues/1
-#license COPYING.lib
+%license COPYING.lib
 %doc README change_log.txt SMARTY*.txt
 %doc INHERITANCE_RELEASE_NOTES.txt
 %doc composer.json
@@ -71,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun May 24 2015 Remi Collet <remi@fedoraproject.org> - 3.1.24-1
+- update to 3.1.24
+
 * Wed May 13 2015 Remi Collet <remi@fedoraproject.org> - 3.1.23-1
 - update to 3.1.23
 
