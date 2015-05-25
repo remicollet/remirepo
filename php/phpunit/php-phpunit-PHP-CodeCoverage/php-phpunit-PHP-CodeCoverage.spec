@@ -1,4 +1,4 @@
-# spec file for php-phpunit-PHP-CodeCoverage
+# remirepo/fedora spec file for php-phpunit-PHP-CodeCoverage
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    934fd03eb6840508231a7f73eb8940cf32c3b66c
+%global gh_commit    c4e8e7725e351184a76544634855b8a9c405a6e3
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-code-coverage
@@ -22,7 +22,7 @@
 %endif
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        2.0.16
+Version:        2.0.17
 Release:        1%{?dist}
 Summary:        PHP code coverage information
 
@@ -134,6 +134,9 @@ fi
 
 
 %changelog
+* Mon May 25 2015 Remi Collet <remi@fedoraproject.org> - 2.0.17-1
+- update to 2.0.17
+
 * Mon Apr 13 2015 Remi Collet <remi@fedoraproject.org> - 2.0.16-1
 - update to 2.0.16
 
