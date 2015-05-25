@@ -1,5 +1,14 @@
+# remirepo spec file for ImageMagick-last, from:
+#
+# Fedora spec file for ImageMagick
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 %global VER        6.9.1
-%global Patchlevel 2
+%global Patchlevel 3
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -42,7 +51,7 @@ Name:           %{libname}
 Name:           %{libname}-last
 %endif
 Version:        %{VER}.%{Patchlevel}
-Release:        1%{?dist}.2
+Release:        1%{?dist}
 Summary:        An X application for displaying and manipulating images
 Group:          Applications/Multimedia
 License:        ImageMagick
@@ -434,6 +443,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon May 25 2015 Remi Collet <remi@remirepo.net> - 6.9.1.3-1
+- update to 6.9.1-3
+
 * Mon May  4 2015 Remi Collet <RPMS@FamilleCollet.com> - 6.9.1.2-1.2
 - rebuild with libcms2 in EL-5
 
