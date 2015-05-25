@@ -1,4 +1,4 @@
-# spec file for php-phpunit-PHPUnit
+# remirepo/fedora spec file for php-phpunit-PHPUnit
 #
 # Copyright (c) 2010-2015 Remi Collet
 # Copyright (c) 2006-2009 Christopher Stone
@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    3afe303d873a4d64c62ef84de491b97b006fbdac
+%global gh_commit    57bf06dd4eebe2a5ced79a8de71509e7d5c18b25
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,7 +17,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.6.6
+Version:        4.6.7
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -204,6 +204,9 @@ fi
 
 
 %changelog
+* Mon May 25 2015 Remi Collet <remi@fedoraproject.org> - 4.6.7-1
+- Update to 4.6.7 (no change)
+
 * Thu Apr 30 2015 Remi Collet <remi@fedoraproject.org> - 4.6.6-1
 - Update to 4.6.6
 
