@@ -125,9 +125,9 @@
 %global db_devel  libdb-devel
 %endif
 
-%global gh_commit    cee88571d9dbb2d56b78b312919aea190580d9e5
+%global gh_commit    404360f261ef56b478228caf8f5371ddbe6feaf2
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150518
+%global gh_date      20150525
 %global gh_owner     php
 %global gh_project   php-src
 #global rcver        RC1
@@ -1808,6 +1808,9 @@ fi
 
 
 %changelog
+* Mon May 25 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.6.20150525git404360f
+- new snapshot
+
 * Mon May 18 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.6.20150518gitcee8857
 - new snapshot
 

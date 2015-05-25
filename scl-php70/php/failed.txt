@@ -1,3 +1,5 @@
+===== 7.0.0-0.6.20150525git404360f
+
 $ grep -r 'Tests failed' /var/lib/mock/scl70*/build.log
 
 /var/lib/mock/scl70el6x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
