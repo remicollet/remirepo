@@ -1,4 +1,4 @@
-# spec file for php-phpunit-phploc
+# remirepo/fedora spec file for php-phpunit-phploc
 #
 # Copyright (c) 2009-2015 Guillaume Kulakowski, Christof Damian, Remi Collet
 #
@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a47a7c4758bdfb7cebbb1ccaa2c9df882b10db7f
+%global gh_commit    d6b05c9072ed7ec3e365722d129f220c24aa90f1
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phploc
@@ -17,7 +17,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-phploc
-Version:        2.1.1
+Version:        2.1.2
 Release:        1%{?dist}
 Summary:        A tool for quickly measuring the size of a PHP project
 
@@ -55,6 +55,7 @@ BuildRequires:  php-symfony-console <  3
 #      "sebastian/version": "~1.0.3",
 #      "symfony/console": "~2.5"
 Requires:       php(language) >= 5.4
+Requires:       php-cli
 Requires:       php-composer(sebastian/finder-facade) >= 1.1
 Requires:       php-composer(sebastian/finder-facade) <  2
 Requires:       php-composer(sebastian/git) >= 2.0
@@ -131,6 +132,10 @@ fi
 
 
 %changelog
+* Tue May 26 2015 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
+- update to 2.1.2
+- ensure compatibility with SCL
+
 * Mon Apr 13 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - update to 2.1.1
 
