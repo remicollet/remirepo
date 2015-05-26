@@ -9,7 +9,7 @@
 %{?scl:          %scl_package             php-phalcon}
 %{!?scl:         %global pkg_name         %{name}}
 %{!?__php:       %global __php            %{_bindir}/php}
-%global gh_commit    df311308270b534f299ddd80b8af24bcb5f2e2a1
+%global gh_commit    c705e115264fbe42d44bb3f1fbf7aebd3e2498bb
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phalcon
 %global gh_project   cphalcon
@@ -25,7 +25,7 @@
 %endif
 
 Name:           %{?scl_prefix}php-phalcon2
-Version:        2.0.1
+Version:        2.0.2
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Phalcon Framework
 
@@ -94,7 +94,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-cp %{SOURCE2} %{SOURCE3} %{SOURCE3} %{SOURCE4} \
+cp %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} \
    ext/phalcon/assets/filters/
 
 # Sanity check, really often broken
@@ -215,6 +215,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue May 26 2015 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- update to 2.0.2
+
 * Thu May 14 2015 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - update to 2.0.1
 

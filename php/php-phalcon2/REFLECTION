@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
+Extension [ <persistent> extension #194 phalcon version 2.0.2 ] {
 
   - Classes [340] {
     Interface [ <internal:phalcon> interface Phalcon\Di\InjectionAwareInterface ] {
@@ -526,10 +526,11 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
 
         Method [ <internal:phalcon> abstract public method modifyColumn ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $tableName ]
             Parameter #1 [ <required> $schemaName ]
             Parameter #2 [ <required> Phalcon\Db\ColumnInterface $column ]
+            Parameter #3 [ <optional> Phalcon\Db\ColumnInterface or NULL $currentColumn ]
           }
         }
 
@@ -1247,10 +1248,11 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
 
         Method [ <internal:phalcon> abstract public method modifyColumn ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $tableName ]
             Parameter #1 [ <required> $schemaName ]
             Parameter #2 [ <required> Phalcon\Db\ColumnInterface $column ]
+            Parameter #3 [ <optional> Phalcon\Db\ColumnInterface or NULL $currentColumn ]
           }
         }
 
@@ -3332,7 +3334,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
       - Properties [0] {
       }
 
-      - Methods [38] {
+      - Methods [39] {
         Method [ <internal:phalcon> abstract public method get ] {
 
           - Parameters [3] {
@@ -3375,6 +3377,13 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         }
 
         Method [ <internal:phalcon> abstract public method hasPost ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method hasPut ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $name ]
@@ -6142,7 +6151,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Method [ <internal:phalcon> abstract public method setCustomEventsManager ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> Phalcon\Mvc\Collection\CollectionInterface $model ]
+            Parameter #0 [ <required> Phalcon\Mvc\CollectionInterface $model ]
             Parameter #1 [ <required> Phalcon\Events\ManagerInterface $eventsManager ]
           }
         }
@@ -6150,14 +6159,14 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Method [ <internal:phalcon> abstract public method getCustomEventsManager ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\Collection\CollectionInterface $model ]
+            Parameter #0 [ <required> Phalcon\Mvc\CollectionInterface $model ]
           }
         }
 
         Method [ <internal:phalcon> abstract public method initialize ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\Collection\CollectionInterface $model ]
+            Parameter #0 [ <required> Phalcon\Mvc\CollectionInterface $model ]
           }
         }
 
@@ -6174,7 +6183,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Method [ <internal:phalcon> abstract public method setConnectionService ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> Phalcon\Mvc\Collection\CollectionInterface $model ]
+            Parameter #0 [ <required> Phalcon\Mvc\CollectionInterface $model ]
             Parameter #1 [ <required> $connectionService ]
           }
         }
@@ -6182,7 +6191,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Method [ <internal:phalcon> abstract public method useImplicitObjectIds ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> Phalcon\Mvc\Collection\CollectionInterface $model ]
+            Parameter #0 [ <required> Phalcon\Mvc\CollectionInterface $model ]
             Parameter #1 [ <required> $useImplicitObjectIds ]
           }
         }
@@ -6190,14 +6199,14 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Method [ <internal:phalcon> abstract public method isUsingImplicitObjectIds ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\Collection\CollectionInterface $model ]
+            Parameter #0 [ <required> Phalcon\Mvc\CollectionInterface $model ]
           }
         }
 
         Method [ <internal:phalcon> abstract public method getConnection ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\Collection\CollectionInterface $model ]
+            Parameter #0 [ <required> Phalcon\Mvc\CollectionInterface $model ]
           }
         }
 
@@ -6205,7 +6214,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $eventName ]
-            Parameter #1 [ <required> Phalcon\Mvc\Collection\CollectionInterface $model ]
+            Parameter #1 [ <required> Phalcon\Mvc\CollectionInterface $model ]
           }
         }
       }
@@ -7034,10 +7043,11 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
 
         Method [ <internal:phalcon> public method modifyColumn ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $tableName ]
             Parameter #1 [ <required> $schemaName ]
             Parameter #2 [ <required> Phalcon\Db\ColumnInterface $column ]
+            Parameter #3 [ <optional> Phalcon\Db\ColumnInterface or NULL $currentColumn ]
           }
         }
 
@@ -7933,10 +7943,11 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Adapter> public method modifyColumn ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $tableName ]
             Parameter #1 [ <required> $schemaName ]
             Parameter #2 [ <required> Phalcon\Db\ColumnInterface $column ]
+            Parameter #3 [ <optional> Phalcon\Db\ColumnInterface or NULL $currentColumn ]
           }
         }
 
@@ -8398,10 +8409,11 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\DialectInterface> abstract public method modifyColumn ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $tableName ]
             Parameter #1 [ <required> $schemaName ]
             Parameter #2 [ <required> Phalcon\Db\ColumnInterface $column ]
+            Parameter #3 [ <optional> Phalcon\Db\ColumnInterface or NULL $currentColumn ]
           }
         }
 
@@ -8803,7 +8815,10 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
 
     Class [ <internal:phalcon> abstract class Phalcon\Session\Adapter ] {
 
-      - Constants [0] {
+      - Constants [3] {
+        Constant [ integer SESSION_ACTIVE ] { 2 }
+        Constant [ integer SESSION_NONE ] { 1 }
+        Constant [ integer SESSION_DISABLED ] { 0 }
       }
 
       - Static properties [0] {
@@ -8818,7 +8833,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Property [ <default> protected $_options ]
       }
 
-      - Methods [16] {
+      - Methods [17] {
         Method [ <internal:phalcon, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -8884,6 +8899,9 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         }
 
         Method [ <internal:phalcon> public method destroy ] {
+        }
+
+        Method [ <internal:phalcon> public method status ] {
         }
 
         Method [ <internal:phalcon> public method __get ] {
@@ -9398,7 +9416,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Property [ <default> protected $_previousActionName ]
       }
 
-      - Methods [27] {
+      - Methods [28] {
         Method [ <internal:phalcon, ctor> public method __construct ] {
         }
 
@@ -9533,6 +9551,9 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         }
 
         Method [ <internal:phalcon> public method getHandlerClass ] {
+        }
+
+        Method [ <internal:phalcon> protected method _resolveEmptyProperties ] {
         }
       }
     }
@@ -9863,8 +9884,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
       - Static methods [0] {
       }
 
-      - Properties [11] {
-        Property [ <default> protected $_type ]
+      - Properties [10] {
         Property [ <default> protected $_result ]
         Property [ <default> protected $_cache ]
         Property [ <default> protected $_isFresh ]
@@ -9877,7 +9897,15 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Property [ <default> protected $_hydrateMode ]
       }
 
-      - Methods [26] {
+      - Methods [27] {
+        Method [ <internal:phalcon, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $result ]
+            Parameter #1 [ <optional> Phalcon\Cache\BackendInterface or NULL $cache ]
+          }
+        }
+
         Method [ <internal:phalcon, prototype Iterator> public method next ] {
         }
 
@@ -14353,7 +14381,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Property [ <default> protected $_options ]
       }
 
-      - Methods [37] {
+      - Methods [38] {
         Method [ <internal:phalcon, overwrites Phalcon\Dispatcher, ctor> public method __construct ] {
         }
 
@@ -14543,6 +14571,9 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Dispatcher> public method getHandlerClass ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Dispatcher> protected method _resolveEmptyProperties ] {
         }
       }
     }
@@ -15544,11 +15575,24 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
 
     Class [ <internal:phalcon> abstract class Phalcon\Db ] {
 
-      - Constants [4] {
-        Constant [ integer FETCH_ASSOC ] { 1 }
-        Constant [ integer FETCH_BOTH ] { 2 }
+      - Constants [17] {
+        Constant [ integer FETCH_LAZY ] { 1 }
+        Constant [ integer FETCH_ASSOC ] { 2 }
+        Constant [ integer FETCH_NAMED ] { 11 }
         Constant [ integer FETCH_NUM ] { 3 }
-        Constant [ integer FETCH_OBJ ] { 4 }
+        Constant [ integer FETCH_BOTH ] { 4 }
+        Constant [ integer FETCH_OBJ ] { 5 }
+        Constant [ integer FETCH_BOUND ] { 6 }
+        Constant [ integer FETCH_COLUMN ] { 7 }
+        Constant [ integer FETCH_CLASS ] { 8 }
+        Constant [ integer FETCH_INTO ] { 9 }
+        Constant [ integer FETCH_FUNC ] { 10 }
+        Constant [ integer FETCH_GROUP ] { 65536 }
+        Constant [ integer FETCH_UNIQUE ] { 196608 }
+        Constant [ integer FETCH_KEY_PAIR ] { 12 }
+        Constant [ integer FETCH_CLASSTYPE ] { 262144 }
+        Constant [ integer FETCH_SERIALIZE ] { 524288 }
+        Constant [ integer FETCH_PROPS_LATE ] { 1048576 }
       }
 
       - Static properties [0] {
@@ -15923,10 +15967,11 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Adapter, prototype Phalcon\Db\AdapterInterface> public method modifyColumn ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $tableName ]
             Parameter #1 [ <required> $schemaName ]
             Parameter #2 [ <required> Phalcon\Db\ColumnInterface $column ]
+            Parameter #3 [ <optional> Phalcon\Db\ColumnInterface or NULL $currentColumn ]
           }
         }
 
@@ -16459,10 +16504,11 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Adapter, prototype Phalcon\Db\AdapterInterface> public method modifyColumn ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $tableName ]
             Parameter #1 [ <required> $schemaName ]
             Parameter #2 [ <required> Phalcon\Db\ColumnInterface $column ]
+            Parameter #3 [ <optional> Phalcon\Db\ColumnInterface or NULL $currentColumn ]
           }
         }
 
@@ -16665,6 +16711,25 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
           - Parameters [2] {
             Parameter #0 [ <required> $table ]
             Parameter #1 [ <optional> $schema ]
+          }
+        }
+
+        Method [ <internal:phalcon, overwrites Phalcon\Db\Adapter, prototype Phalcon\Db\AdapterInterface> public method createTable ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $tableName ]
+            Parameter #1 [ <required> $schemaName ]
+            Parameter #2 [ <required> array $definition ]
+          }
+        }
+
+        Method [ <internal:phalcon, overwrites Phalcon\Db\Adapter, prototype Phalcon\Db\AdapterInterface> public method modifyColumn ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $tableName ]
+            Parameter #1 [ <required> $schemaName ]
+            Parameter #2 [ <required> Phalcon\Db\ColumnInterface $column ]
+            Parameter #3 [ <optional> Phalcon\Db\ColumnInterface or NULL $currentColumn ]
           }
         }
 
@@ -16939,15 +17004,6 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
           }
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Db\Adapter, prototype Phalcon\Db\AdapterInterface> public method createTable ] {
-
-          - Parameters [3] {
-            Parameter #0 [ <required> $tableName ]
-            Parameter #1 [ <required> $schemaName ]
-            Parameter #2 [ <required> array $definition ]
-          }
-        }
-
         Method [ <internal:phalcon, inherits Phalcon\Db\Adapter, prototype Phalcon\Db\AdapterInterface> public method dropTable ] {
 
           - Parameters [3] {
@@ -16976,15 +17032,6 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Adapter, prototype Phalcon\Db\AdapterInterface> public method addColumn ] {
-
-          - Parameters [3] {
-            Parameter #0 [ <required> $tableName ]
-            Parameter #1 [ <required> $schemaName ]
-            Parameter #2 [ <required> Phalcon\Db\ColumnInterface $column ]
-          }
-        }
-
-        Method [ <internal:phalcon, inherits Phalcon\Db\Adapter, prototype Phalcon\Db\AdapterInterface> public method modifyColumn ] {
 
           - Parameters [3] {
             Parameter #0 [ <required> $tableName ]
@@ -17523,10 +17570,11 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Adapter, prototype Phalcon\Db\AdapterInterface> public method modifyColumn ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $tableName ]
             Parameter #1 [ <required> $schemaName ]
             Parameter #2 [ <required> Phalcon\Db\ColumnInterface $column ]
+            Parameter #3 [ <optional> Phalcon\Db\ColumnInterface or NULL $currentColumn ]
           }
         }
 
@@ -17822,10 +17870,11 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
 
         Method [ <internal:phalcon, overwrites Phalcon\Db\DialectInterface, prototype Phalcon\Db\DialectInterface> public method modifyColumn ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $tableName ]
             Parameter #1 [ <required> $schemaName ]
             Parameter #2 [ <required> Phalcon\Db\ColumnInterface $column ]
+            Parameter #3 [ <optional> Phalcon\Db\ColumnInterface or NULL $currentColumn ]
           }
         }
 
@@ -18297,10 +18346,11 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
 
         Method [ <internal:phalcon, overwrites Phalcon\Db\DialectInterface, prototype Phalcon\Db\DialectInterface> public method modifyColumn ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $tableName ]
             Parameter #1 [ <required> $schemaName ]
             Parameter #2 [ <required> Phalcon\Db\ColumnInterface $column ]
+            Parameter #3 [ <optional> Phalcon\Db\ColumnInterface or NULL $currentColumn ]
           }
         }
 
@@ -18730,7 +18780,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Property [ <default> protected $_escapeChar ]
       }
 
-      - Methods [56] {
+      - Methods [57] {
         Method [ <internal:phalcon, overwrites Phalcon\Db\DialectInterface, prototype Phalcon\Db\DialectInterface> public method getColumnDefinition ] {
 
           - Parameters [1] {
@@ -18749,10 +18799,11 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
 
         Method [ <internal:phalcon, overwrites Phalcon\Db\DialectInterface, prototype Phalcon\Db\DialectInterface> public method modifyColumn ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $tableName ]
             Parameter #1 [ <required> $schemaName ]
             Parameter #2 [ <required> Phalcon\Db\ColumnInterface $column ]
+            Parameter #3 [ <optional> Phalcon\Db\ColumnInterface or NULL $currentColumn ]
           }
         }
 
@@ -18913,6 +18964,13 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
           - Parameters [2] {
             Parameter #0 [ <required> $table ]
             Parameter #1 [ <optional> $schema ]
+          }
+        }
+
+        Method [ <internal:phalcon> protected method _getTableOptions ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $definition ]
           }
         }
 
@@ -19209,10 +19267,11 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
 
         Method [ <internal:phalcon, overwrites Phalcon\Db\DialectInterface, prototype Phalcon\Db\DialectInterface> public method modifyColumn ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $tableName ]
             Parameter #1 [ <required> $schemaName ]
             Parameter #2 [ <required> Phalcon\Db\ColumnInterface $column ]
+            Parameter #3 [ <optional> Phalcon\Db\ColumnInterface or NULL $currentColumn ]
           }
         }
 
@@ -20694,14 +20753,14 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
           }
         }
 
-        Method [ <internal:phalcon> public method detectEncoding ] {
+        Method [ <internal:phalcon> final public method detectEncoding ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $str ]
           }
         }
 
-        Method [ <internal:phalcon> public method normalizeEncoding ] {
+        Method [ <internal:phalcon> final public method normalizeEncoding ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $str ]
@@ -24541,13 +24600,14 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
       - Static methods [0] {
       }
 
-      - Properties [3] {
+      - Properties [4] {
         Property [ <default> protected $_dependencyInjector ]
         Property [ <default> protected $_rawBody ]
         Property [ <default> protected $_filter ]
+        Property [ <default> protected $_putCache ]
       }
 
-      - Methods [51] {
+      - Methods [52] {
         Method [ <internal:phalcon, prototype Phalcon\Di\InjectionAwareInterface> public method setDI ] {
 
           - Parameters [1] {
@@ -24602,7 +24662,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
           }
         }
 
-        Method [ <internal:phalcon> protected method getHelper ] {
+        Method [ <internal:phalcon> final protected method getHelper ] {
 
           - Parameters [6] {
             Parameter #0 [ <required> array $source ]
@@ -24629,6 +24689,13 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Http\RequestInterface> public method hasPost ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Http\RequestInterface> public method hasPut ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $name ]
@@ -24738,7 +24805,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
           }
         }
 
-        Method [ <internal:phalcon> protected method hasFileHelper ] {
+        Method [ <internal:phalcon> final protected method hasFileHelper ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $data ]
@@ -24753,7 +24820,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
           }
         }
 
-        Method [ <internal:phalcon> protected method smoothFiles ] {
+        Method [ <internal:phalcon> final protected method smoothFiles ] {
 
           - Parameters [6] {
             Parameter #0 [ <required> array $names ]
@@ -24771,7 +24838,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Method [ <internal:phalcon, prototype Phalcon\Http\RequestInterface> public method getHTTPReferer ] {
         }
 
-        Method [ <internal:phalcon> protected method _getQualityHeader ] {
+        Method [ <internal:phalcon> final protected method _getQualityHeader ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $serverIndex ]
@@ -24779,7 +24846,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
           }
         }
 
-        Method [ <internal:phalcon> protected method _getBestQuality ] {
+        Method [ <internal:phalcon> final protected method _getBestQuality ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> array $qualityParts ]
@@ -25265,7 +25332,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Property [ <default> protected $_headers ]
       }
 
-      - Methods [7] {
+      - Methods [8] {
         Method [ <internal:phalcon, prototype Phalcon\Http\Response\HeadersInterface> public method set ] {
 
           - Parameters [2] {
@@ -25302,6 +25369,9 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         }
 
         Method [ <internal:phalcon> public method toArray ] {
+        }
+
+        Method [ <internal:phalcon, ctor> public method __construct ] {
         }
       }
     }
@@ -27158,7 +27228,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Property [ <default> protected $_formatter ]
       }
 
-      - Methods [12] {
+      - Methods [13] {
         Method [ <internal:phalcon> public method getLoggers ] {
         }
 
@@ -27181,58 +27251,74 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
 
         Method [ <internal:phalcon> public method log ] {
 
+          - Parameters [3] {
+            Parameter #0 [ <required> $type ]
+            Parameter #1 [ <optional> $message ]
+            Parameter #2 [ <optional> array or NULL $context ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method critical ] {
+
           - Parameters [2] {
             Parameter #0 [ <required> $message ]
-            Parameter #1 [ <optional> $type ]
+            Parameter #1 [ <optional> array or NULL $context ]
           }
         }
 
         Method [ <internal:phalcon> public method emergency ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $message ]
+            Parameter #1 [ <optional> array or NULL $context ]
           }
         }
 
         Method [ <internal:phalcon> public method debug ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $message ]
+            Parameter #1 [ <optional> array or NULL $context ]
           }
         }
 
         Method [ <internal:phalcon> public method error ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $message ]
+            Parameter #1 [ <optional> array or NULL $context ]
           }
         }
 
         Method [ <internal:phalcon> public method info ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $message ]
+            Parameter #1 [ <optional> array or NULL $context ]
           }
         }
 
         Method [ <internal:phalcon> public method notice ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $message ]
+            Parameter #1 [ <optional> array or NULL $context ]
           }
         }
 
         Method [ <internal:phalcon> public method warning ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $message ]
+            Parameter #1 [ <optional> array or NULL $context ]
           }
         }
 
         Method [ <internal:phalcon> public method alert ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $message ]
+            Parameter #1 [ <optional> array or NULL $context ]
           }
         }
       }
@@ -27981,7 +28067,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Property [ <default> protected $_defaultAction ]
       }
 
-      - Methods [38] {
+      - Methods [39] {
         Method [ <internal:phalcon, prototype Phalcon\Mvc\DispatcherInterface> public method setControllerSuffix ] {
 
           - Parameters [1] {
@@ -28170,6 +28256,9 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Dispatcher> public method getHandlerClass ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Dispatcher> protected method _resolveEmptyProperties ] {
         }
       }
     }
@@ -29196,7 +29285,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
           }
         }
 
-        Method [ <internal:phalcon> protected method addBehavior ] {
+        Method [ <internal:phalcon> public method addBehavior ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> Phalcon\Mvc\Model\BehaviorInterface $behavior ]
@@ -29712,7 +29801,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Property [ <default> protected $_namespaceAliases ]
       }
 
-      - Methods [58] {
+      - Methods [60] {
         Method [ <internal:phalcon, prototype Phalcon\Di\InjectionAwareInterface> public method setDI ] {
 
           - Parameters [1] {
@@ -29841,6 +29930,14 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
           }
         }
 
+        Method [ <internal:phalcon> protected method _getConnection ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $connectionServices ]
+          }
+        }
+
         Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\ManagerInterface> public method getReadConnectionService ] {
 
           - Parameters [1] {
@@ -29852,6 +29949,14 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method _getConnectionService ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $connectionServices ]
           }
         }
 
@@ -31725,6 +31830,11 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         }
 
         Method [ <internal:phalcon> final protected method _prepareSelect ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $ast ]
+            Parameter #1 [ <optional> $merge ]
+          }
         }
 
         Method [ <internal:phalcon> final protected method _prepareInsert ] {
@@ -32272,7 +32382,6 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
       }
 
       - Properties [12] {
-        Property [ <default> protected $_type ]
         Property [ <default> protected $_result ]
         Property [ <default> protected $_cache ]
         Property [ <default> protected $_isFresh ]
@@ -32284,10 +32393,11 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Property [ <default> protected $_errorMessages ]
         Property [ <default> protected $_hydrateMode ]
         Property [ <default> protected $_columnTypes ]
+        Property [ <default> protected $_disableHydration ]
       }
 
       - Methods [27] {
-        Method [ <internal:phalcon, ctor> public method __construct ] {
+        Method [ <internal:phalcon, overwrites Phalcon\Mvc\Model\Resultset, ctor> public method __construct ] {
 
           - Parameters [3] {
             Parameter #0 [ <required> $columnTypes ]
@@ -32438,8 +32548,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
       - Static methods [0] {
       }
 
-      - Properties [14] {
-        Property [ <default> protected $_type ]
+      - Properties [13] {
         Property [ <default> protected $_result ]
         Property [ <default> protected $_cache ]
         Property [ <default> protected $_isFresh ]
@@ -32456,7 +32565,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
       }
 
       - Methods [27] {
-        Method [ <internal:phalcon, ctor> public method __construct ] {
+        Method [ <internal:phalcon, overwrites Phalcon\Mvc\Model\Resultset, ctor> public method __construct ] {
 
           - Parameters [5] {
             Parameter #0 [ <required> $columnMap ]
@@ -35817,7 +35926,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Property [ <default> protected $_parameters ]
       }
 
-      - Methods [12] {
+      - Methods [15] {
         Method [ <internal:phalcon, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -35857,6 +35966,16 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
           }
         }
 
+        Method [ <internal:phalcon> public method stats ] {
+        }
+
+        Method [ <internal:phalcon> public method statsTube ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $tube ]
+          }
+        }
+
         Method [ <internal:phalcon> public method peekReady ] {
         }
 
@@ -35864,6 +35983,9 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         }
 
         Method [ <internal:phalcon> final public method readStatus ] {
+        }
+
+        Method [ <internal:phalcon> final public method readYaml ] {
         }
 
         Method [ <internal:phalcon> public method read ] {
@@ -35902,7 +36024,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Property [ <default> protected $_queue ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:phalcon> public method getId ] {
         }
 
@@ -35940,6 +36062,9 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         }
 
         Method [ <internal:phalcon> public method kick ] {
+        }
+
+        Method [ <internal:phalcon> public method stats ] {
         }
 
         Method [ <internal:phalcon> public method __wakeup ] {
@@ -36261,7 +36386,10 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
 
     Class [ <internal:phalcon> class Phalcon\Session\Adapter\Files extends Phalcon\Session\Adapter implements Phalcon\Session\AdapterInterface ] {
 
-      - Constants [0] {
+      - Constants [3] {
+        Constant [ integer SESSION_ACTIVE ] { 2 }
+        Constant [ integer SESSION_NONE ] { 1 }
+        Constant [ integer SESSION_DISABLED ] { 0 }
       }
 
       - Static properties [0] {
@@ -36276,7 +36404,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Property [ <default> protected $_options ]
       }
 
-      - Methods [16] {
+      - Methods [17] {
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -36344,6 +36472,9 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method destroy ] {
         }
 
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method status ] {
+        }
+
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method __get ] {
 
           - Parameters [1] {
@@ -36377,7 +36508,10 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
 
     Class [ <internal:phalcon> class Phalcon\Session\Adapter\Libmemcached extends Phalcon\Session\Adapter implements Phalcon\Session\AdapterInterface ] {
 
-      - Constants [0] {
+      - Constants [3] {
+        Constant [ integer SESSION_ACTIVE ] { 2 }
+        Constant [ integer SESSION_NONE ] { 1 }
+        Constant [ integer SESSION_DISABLED ] { 0 }
       }
 
       - Static properties [0] {
@@ -36394,7 +36528,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Property [ <default> protected $_lifetime ]
       }
 
-      - Methods [23] {
+      - Methods [24] {
         Method [ <internal:phalcon> public method getLibmemcached ] {
         }
 
@@ -36496,6 +36630,9 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method isStarted ] {
         }
 
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method status ] {
+        }
+
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method __get ] {
 
           - Parameters [1] {
@@ -36529,7 +36666,10 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
 
     Class [ <internal:phalcon> class Phalcon\Session\Adapter\Memcache extends Phalcon\Session\Adapter implements Phalcon\Session\AdapterInterface ] {
 
-      - Constants [0] {
+      - Constants [3] {
+        Constant [ integer SESSION_ACTIVE ] { 2 }
+        Constant [ integer SESSION_NONE ] { 1 }
+        Constant [ integer SESSION_DISABLED ] { 0 }
       }
 
       - Static properties [0] {
@@ -36546,7 +36686,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Property [ <default> protected $_lifetime ]
       }
 
-      - Methods [23] {
+      - Methods [24] {
         Method [ <internal:phalcon> public method getMemcache ] {
         }
 
@@ -36646,6 +36786,9 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method isStarted ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method status ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method __get ] {
@@ -37407,7 +37550,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
       - Static properties [0] {
       }
 
-      - Static methods [8] {
+      - Static methods [10] {
         Method [ <internal:phalcon> static public method camelize ] {
 
           - Parameters [1] {
@@ -37458,16 +37601,28 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
 
         Method [ <internal:phalcon> static public method lower ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $str ]
+            Parameter #1 [ <optional> $encoding ]
           }
         }
 
         Method [ <internal:phalcon> static public method upper ] {
 
+          - Parameters [2] {
+            Parameter #0 [ <required> $str ]
+            Parameter #1 [ <optional> $encoding ]
+          }
+        }
+
+        Method [ <internal:phalcon> static public method reduceSlashes ] {
+
           - Parameters [1] {
             Parameter #0 [ <required> $str ]
           }
+        }
+
+        Method [ <internal:phalcon> static public method concat ] {
         }
       }
 
@@ -37936,7 +38091,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Method [ <internal:phalcon, ctor> public method __construct ] {
 
           - Parameters [1] {
-            Parameter #0 [ <optional> $validators ]
+            Parameter #0 [ <optional> array or NULL $validators ]
           }
         }
 
@@ -37996,7 +38151,7 @@ Extension [ <persistent> extension #193 phalcon version 2.0.1 ] {
         Method [ <internal:phalcon> public method setDefaultMessages ] {
 
           - Parameters [1] {
-            Parameter #0 [ <optional> $messages ]
+            Parameter #0 [ <optional> array or NULL $messages ]
           }
         }
 
