@@ -6,17 +6,17 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    bc45d9185513575434021527d7756420e9f4b2cf
+%global gh_commit    69210d5bc130f8cc9f96f99582a041254d7b9833
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20150511
+%global gh_date      20150525
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           composer
 Version:        1.0.0
-Release:        0.4.%{gh_date}git%{gh_short}%{?dist}
+Release:        0.5.%{gh_date}git%{gh_short}%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -26,7 +26,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 Source1:        %{name}-autoload.php
 Source2:        %{name}-bootstrap.php
 
-# Fix shebang and use our autoloader
+# Use our autoloader, resources path, fix for tests
 Patch0:         %{name}-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -143,7 +143,7 @@ install -Dpm 755 bin/%{name} %{buildroot}%{_bindir}/%{name}
 %if %{with_tests}
 : Run test suite
 export BUILDROOT=%{buildroot}
-%{_bindir}/phpunit --include-path $PWD/src
+%{_bindir}/phpunit --include-path $PWD/src --verbose
 %else
 : Test suite disabled
 %endif
@@ -164,6 +164,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue May 26 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.5.20150525git69210d5
+- new snapshot
+- ensure /usr/share/php is in include_path (for SCL)
+
 * Wed May 13 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.4.20150511gitbc45d91
 - new snapshot
 
