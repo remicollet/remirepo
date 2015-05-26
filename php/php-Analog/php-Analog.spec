@@ -1,35 +1,56 @@
-%global commit 9ab4c9e462cd6804d74f6cae9ba967c054b1629e
-%global shortcommit %(c=%{commit}; echo ${c:0:7})
-%global real_name Analog
-%global minus_name analog
-
-%global devver 1
+# remirepo spec file for php-Analog, from:
+#
+# Fedora spec file for php-Analog
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+%global gh_owner   jbroadway
+%global gh_project analog
+%global gh_commit  1fcc97fd842f37013587d64aba5f3f1fa6b0d911
+%global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
+#global gh_date    20150213
+%global real_name  Analog
 
 Name:           php-Analog
 Summary:        PHP micro logging package
-Version:        1.0.0
-%if %{devver}
-Release:        5.git%{shortcommit}%{?dist}
+Version:        1.0.6
+%if 0%{?gh_date}
+Release:        5.%{gh_date}git%{gh_short}%{?dist}
 %else
-Release:        3%{?dist}
+Release:        %{?dist}
 %endif
-%if %{devver}
-Source0:        https://github.com/jbroadway/%{real_name}/archive/%{commit}/%{real_name}-%{version}-%{shortcommit}.tar.gz
-%else
-Source0:        https://github.com/downloads/jbroadway/%{minus_name}/%{minus_name}-%{version}-stable.tar.gz
-%endif
-URL:            https://github.com/jbroadway/analog
 License:        MIT
 Group:          Development/Libraries
+URL:            https://github.com/jbroadway/analog
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+
+Patch0:         %{name}-php7.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+# For tests
+BuildRequires:  %{_bindir}/phpunit
+BuildRequires:  php-composer(psr/log)
 
-BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
+# from composer.json,  "require": {
+#                "psr/log": "1.*",
+#                "php": ">=5.3.2"
+Requires:       php(language) >= 5.3.2
+Requires:       php-composer(psr/log)
+# From phpcompatinfo report
+Requires:       php-curl
+Requires:       php-date
+Requires:       php-json
+Requires:       php-pcre
+Requires:       php-reflection
+Requires:       php-spl
+Requires:       php-xml
+# mongo is optional
 
-Requires:       php-common >= 5.3.0
-Requires:       php-spl, php-date, php-json
-Requires:       php-pcre, php-curl
+Provides:       php-composer(analog/analog) = %{version}
 
 
 %description
@@ -46,13 +67,13 @@ with examples for each in the examples folder. These include:
 - File - Append messages to a file
 - FirePHP - Send messages to FirePHP browser plugin
 - GELF - Send message to the Graylog2 log management server
+- Ignore - Do nothing
 - LevelBuffer - Buffer messages and send only if sufficient error
   level reached
 - Mail - Send email notices
 - Mongo - Save to MongoDB collection, requires php-pecl(mongo)
   package to be installed
 - Multi - Send different log levels to different handlers
-- Null - Do nothing
 - Post - Send messages over HTTP POST to another machine
 - Stderr - Send messages to STDERR
 - Syslog - Send messages to syslog
@@ -63,16 +84,9 @@ out of the box too.
 
 
 %prep
-%if %{devver}
-%setup -qn %{minus_name}-%{commit}
-%else
-%setup -qn %{minus_name}-%{version}-stable
-%endif
-#files that should not exist
-find ./ -name "._*.php" -exec rm -f '{}' \;
+%setup -qn %{gh_project}-%{gh_commit}
 
-#patch for locked file issue (applied upstreamà
-sed -e "s/ | LOCK_NB//" -i lib/Analog/Handler/File.php
+%patch0 -p1
 
 
 %build
@@ -80,29 +94,47 @@ sed -e "s/ | LOCK_NB//" -i lib/Analog/Handler/File.php
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 # install framework files
-install -d $RPM_BUILD_ROOT%{_datadir}/php
-cp -a lib/%{real_name} $RPM_BUILD_ROOT%{_datadir}/php/
+install -d %{buildroot}%{_datadir}/php
+cp -a lib/%{real_name} %{buildroot}%{_datadir}/php/
 
 
 %check
-#could fail because of seconds in date comparison
-phpunit tests
+: Generate simple PSR-0 autoloader
+cat <<EOF | tee bs.php
+<?php
+spl_autoload_register(function (\$class) {
+    \$src = str_replace(array('\\\\', '_'), '/', \$class).'.php';
+    @include_once \$src;
+});
+EOF
+: Upstream test suite
+phpunit --bootstrap bs.php --include-path=%{buildroot}%{_datadir}/php
+
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README.md examples lib/%{real_name}.php
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README.md
+%doc examples lib/%{real_name}.php
+%doc composer.json
 %dir %{_datadir}/php/%{real_name}
 %{_datadir}/php/%{real_name}/*
 
 
 %changelog
+* Tue May 26 2015 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
+- update to 1.0.6
+- composer dependencies
+- add patch for PHP-7 (add Ignore, Null is deprecated)
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.0-5.git9ab4c9e
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
@@ -129,5 +161,5 @@ rm -rf $RPM_BUILD_ROOT
 - Latest snapshot (bug fixes, new handlers)
 - Fix Requires
 
-* Sun Dec 01 2012 Johan Cwiklinski <johan AT x-tnd DOT be> - 1.0.0-1
+* Sat Dec 01 2012 Johan Cwiklinski <johan AT x-tnd DOT be> - 1.0.0-1
 - Initial packaging
