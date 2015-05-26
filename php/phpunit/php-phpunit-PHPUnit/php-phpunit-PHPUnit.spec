@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-PHPUnit
 Version:        4.6.7
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries
@@ -204,6 +204,9 @@ fi
 
 
 %changelog
+* Tue May 26 2015 Remi Collet <remi@fedoraproject.org> - 4.6.7-3
+- ensure compatibility with SCL
+
 * Tue May 26 2015 Remi Collet <remi@fedoraproject.org> - 4.6.7-2
 - detect and redirect to composer installed version #1157910
 
