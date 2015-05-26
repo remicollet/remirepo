@@ -1,4 +1,4 @@
-# spec file for composer
+# remirepo/fedora spec file for composer
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
