@@ -1,0 +1,22 @@
+From 2358ad26cd4db2806180aca61a7ccaceb19fa526 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Wed, 27 May 2015 11:34:09 +0200
+Subject: [PATCH] switch from efree to STR_FREE
+
+---
+ xdebug_stack.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/xdebug_stack.c b/xdebug_stack.c
+index 56304bf..82707f1 100644
+--- a/xdebug_stack.c
++++ b/xdebug_stack.c
+@@ -247,7 +247,7 @@ void xdebug_append_error_description(xdebug_str *str, int html, const char *erro
+ 		xdebug_str_add(str, xdebug_sprintf(formats[1], error_type_str, escaped, error_filename, error_lineno), 1);
+ 	}
+ 
+-	efree(escaped);
++	STR_FREE(escaped);
+ }
+ 
+ void xdebug_append_printable_stack(xdebug_str *str, int html TSRMLS_DC)

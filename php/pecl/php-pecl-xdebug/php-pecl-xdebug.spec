@@ -1,4 +1,7 @@
-# spec file for php-pecl-xdebug
+# remirepo spec file for php-pecl-xdebug
+# with SCL compatibility, from:
+#
+# Fedora spec file for php-pecl-xdebug
 #
 # Copyright (c) 2010-2015 Remi Collet
 # Copyright (c) 2006-2009 Christopher Stone
@@ -30,7 +33,7 @@
 Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.3.2
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 %if 0%{?gitver:1}
 Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{commit}/%{pecl_name}-%{version}-%{gitver}.tar.gz
 %else
@@ -40,6 +43,8 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 # https://github.com/xdebug/xdebug/pull/172
 # https://bugzilla.redhat.com/1214111
 Patch0:         %{pecl_name}-pr172.patch
+# https://github.com/xdebug/xdebug/pull/176
+Patch1:         %{pecl_name}-pr176.patch
 
 # The Xdebug License, version 1.01
 # (Based on "The PHP License", version 3.0)
@@ -118,6 +123,7 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 
 cd NTS
 %patch0 -p1 -b .pr172
+%patch1 -p1 -b .pr176
 
 # Check extension version
 ver=$(sed -n '/XDEBUG_VERSION/{s/.* "//;s/".*$//;p}' php_xdebug.h)
@@ -265,6 +271,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May 27 2015 Remi Collet <remi@fedoraproject.org> - 2.3.2-3
+- add patch for efree/str_efree in php 5.6
+
 * Wed Apr 22 2015 Remi Collet <remi@fedoraproject.org> - 2.3.2-2
 - add patch for virtual_file_ex in 5.6 #1214111
 
