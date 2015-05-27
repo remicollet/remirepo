@@ -1,5 +1,6 @@
+# remirepo spec file for php-symfony, from:
 #
-# RPM spec file for php-symfony
+# Fedora spec file for php-symfony
 #
 # Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #                         Remi Collet <remi@fedoraproject.org>
@@ -13,8 +14,8 @@
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.5.11
-%global github_commit    bb96c155fb677c0139e36dccb84e765066879c28
+%global github_version   2.5.12
+%global github_commit    5c83d12f2fbe93622e6ae2aad72f4033adbebe36
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -2213,6 +2214,10 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Wed May 27 2015 Remi Collet <remi@fedoraproject.org> - 2.5.12-1
+- Update to 2.5.12
+- security fix for CVE-2015-4050
+
 * Thu Apr  2 2015 Remi Collet <remi@fedoraproject.org> - 2.5.11-1
 - Update to 2.5.11
 - security fix for CVE-2015-2308 and CVE-2015-2309
