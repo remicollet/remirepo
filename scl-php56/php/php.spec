@@ -16,7 +16,7 @@
 %global zendver     20131226
 %global pdover      20080721
 # Extension version
-%global opcachever  7.0.4-dev
+%global opcachever  7.0.6-dev
 %global oci8ver     2.0.9
 
 # Use for first build of PHP (before pecl/zip and pecl/jsonc)
@@ -127,12 +127,12 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver  RC1
+%global rcver  RC1
 %global rpmrel 1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.6.9
+Version: 5.6.10
 %if 0%{?rcver:1}
 Release: 0.%{rpmrel}.%{rcver}%{?dist}
 %else
@@ -196,8 +196,6 @@ Patch91: php-5.6.3-oci8conf.patch
 Patch300: php-5.6.3-datetests.patch
 # Revert changes for pcre < 8.34
 Patch301: php-5.6.0-oldpcre.patch
-# Backported from 7.0
-Patch302: php-5.6.8-openssltests.patch
 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -895,7 +893,6 @@ support for using the enchant library to PHP.
 %patch301 -p1 -b .pcre834
 %endif
 %endif
-%patch302 -p1 -b .sslv3
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1783,6 +1780,10 @@ fi
 
 
 %changelog
+* Thu May 28 2015 Remi Collet <remi@fedoraproject.org> 5.6.10-0.1.RC1
+- update to 5.6.10RC1
+- opcache is now 7.0.6-dev
+
 * Fri May 15 2015 Remi Collet <remi@fedoraproject.org> 5.6.9-1
 - Update to 5.6.9
   http://www.php.net/releases/5_6_9.php
