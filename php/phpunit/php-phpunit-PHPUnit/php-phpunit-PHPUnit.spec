@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    57bf06dd4eebe2a5ced79a8de71509e7d5c18b25
+%global gh_commit    a6cd74b523ef7bad7a23a94e4045d72968e8165b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,14 +17,14 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.6.7
-Release:        3%{?dist}
+Version:        4.6.8
+Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 # Autoload template, from version 3.7
 Source1:        Autoload.php.in
@@ -179,7 +179,7 @@ sed -e '/logging/d' \
     -e '/<log/d' \
     phpunit.xml.dist > phpunit.xml
 
-./phpunit --testsuite=small
+./phpunit --testsuite=small --verbose
 
 
 %clean
@@ -204,6 +204,9 @@ fi
 
 
 %changelog
+* Thu May 28 2015 Remi Collet <remi@fedoraproject.org> - 4.6.8-1
+- Update to 4.6.8 (no change)
+
 * Tue May 26 2015 Remi Collet <remi@fedoraproject.org> - 4.6.7-3
 - ensure compatibility with SCL
 
