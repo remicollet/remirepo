@@ -1,4 +1,4 @@
-# spec file for php-theseer-fDOMDocument
+# remirepo/fedora spec file for php-theseer-fDOMDocument
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 
-%global gh_commit    d08cf070350f884c63fc9078d27893c2ab6c7cef
+%global gh_commit    d9ad139d6c2e8edf5e313ffbe37ff13344cf0684
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     theseer
 %global gh_project   fDOMDocument
@@ -16,14 +16,14 @@
 %global pear_channel pear.netpirates.net
 
 Name:           php-theseer-fDOMDocument
-Version:        1.6.0
-Release:        2%{?dist}
+Version:        1.6.1
+Release:        1%{?dist}
 Summary:        An Extension to PHP standard DOM
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -91,6 +91,9 @@ fi
 
 
 %changelog
+* Thu May 28 2015 Remi Collet <remi@fedoraproject.org> - 1.6.1-1
+- Update to 1.6.1
+
 * Wed Nov 26 2014 Remi Collet <remi@fedoraproject.org> - 1.6.0-2
 - switch from pear to github sources
 
