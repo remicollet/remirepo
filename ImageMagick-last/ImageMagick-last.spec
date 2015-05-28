@@ -1,4 +1,5 @@
-# remirepo spec file for ImageMagick-last, from:
+# remirepo spec file for ImageMagick-last
+# renamed for parallel installation, from:
 #
 # Fedora spec file for ImageMagick
 #
@@ -51,7 +52,7 @@ Name:           %{libname}
 Name:           %{libname}-last
 %endif
 Version:        %{VER}.%{Patchlevel}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An X application for displaying and manipulating images
 Group:          Applications/Multimedia
 License:        ImageMagick
@@ -264,6 +265,7 @@ cp -p Magick++/demo/*.cpp Magick++/demo/*.miff Magick++/examples
 %build
 %configure --enable-shared \
            --disable-static \
+           --disable-silent-rules \
            --with-modules \
            --with-perl \
            --with-x \
@@ -299,6 +301,7 @@ cp -p Magick++/demo/*.cpp Magick++/demo/*.miff Magick++/examples
            --datadir=%{_datadir}/%{name} \
            --sysconfdir=%{_sysconfdir}/%{name} \
 %endif
+           --without-gcc-arch \
            --with-ltdl-lib=%{_libdir}
 
 # Disable rpath
@@ -443,6 +446,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 28 2015 Remi Collet <remi@remirepo.net> - 6.9.1.3-2
+- honors default build options (--without-gcc-arch)
+- make build verbose
+
 * Mon May 25 2015 Remi Collet <remi@remirepo.net> - 6.9.1.3-1
 - update to 6.9.1-3
 
