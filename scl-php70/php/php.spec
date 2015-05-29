@@ -72,7 +72,6 @@
 %global with_sqlite3   1
 %global with_enchant   1
 %global with_recode    1
-%global with_t1lib     1
 %if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
 %global with_libpcre      1
 %else
@@ -125,13 +124,13 @@
 %global db_devel  libdb-devel
 %endif
 
-%global gh_commit    404360f261ef56b478228caf8f5371ddbe6feaf2
+%global gh_commit    6f46fa376bc3452617fa566917320237b687fd7e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150525
+%global gh_date      20150529
 %global gh_owner     php
 %global gh_project   php-src
 #global rcver        RC1
-%global rpmrel       6
+%global rpmrel       7
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -693,9 +692,6 @@ Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
 # Required to build the bundled GD library
 BuildRequires: libjpeg-devel, libpng-devel, freetype-devel
 BuildRequires: libXpm-devel
-%if %{with_t1lib}
-BuildRequires: t1lib-devel
-%endif
 %if %{with_vpx}
 BuildRequires: libvpx-devel
 %endif
@@ -1096,9 +1092,6 @@ ln -sf ../configure
     --with-vpx-dir=%{_root_prefix} \
 %endif
     --enable-gd-native-ttf \
-%if %{with_t1lib}
-    --with-t1lib=%{_root_prefix} \
-%endif
     --without-gdbm \
     --with-jpeg-dir=%{_root_prefix} \
     --with-openssl \
@@ -1808,6 +1801,10 @@ fi
 
 
 %changelog
+* Fri May 29 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.7.20150525git6f46fa3
+- new snapshot
+- t1lib support have been removed
+
 * Mon May 25 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.6.20150525git404360f
 - new snapshot
 
