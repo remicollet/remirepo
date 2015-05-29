@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    787e06820578ca103b21e323e27f0e2eb0712ae5
+%global gh_commit    253c005852591fd547fc18cd5b7b43a1ec82d8f7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit-mock-objects
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-phpunit-PHPUnit-MockObject
-Version:        2.3.2
+Version:        2.3.3
 Release:        1%{?dist}
 Summary:        Mock Object library for PHPUnit
 
@@ -134,6 +134,9 @@ fi
 
 
 %changelog
+* Fri May 29 2015 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
+- update to 2.3.3
+
 * Thu May 28 2015 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
 - update to 2.3.2
 
