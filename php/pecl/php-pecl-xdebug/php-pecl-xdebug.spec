@@ -17,11 +17,11 @@
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
 
-%global pecl_name xdebug
-%global with_zts  0%{?__ztsphp:1}
-#global commit    b1ce1e3ecc95c2e24d2df73cffce7e501df53215
-#global gitver    %(c=%{commit}; echo ${c:0:7})
-#global prever    dev
+%global pecl_name   xdebug
+%global with_zts    0%{?__ztsphp:1}
+%global gh_commit   5c8c76b1d69a0395130fe9b23ad18f767a94e798
+%global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
+%global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 
 # XDebug should be loaded after opcache
 %if "%{php_version}" < "5.6"
@@ -33,12 +33,8 @@
 Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.3.2
-Release:        4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
-%if 0%{?gitver:1}
-Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{commit}/%{pecl_name}-%{version}-%{gitver}.tar.gz
-%else
-Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
-%endif
+Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 
 # https://github.com/xdebug/xdebug/pull/172
 # https://bugzilla.redhat.com/1214111
@@ -47,6 +43,9 @@ Patch0:         %{pecl_name}-pr172.patch
 Patch1:         %{pecl_name}-pr176.patch
 # https://github.com/xdebug/xdebug/pull/167
 Patch2:         %{pecl_name}-pr167.patch
+# https://github.com/xdebug/xdebug/pull/178
+Patch3:         %{pecl_name}-pr178.patch
+
 
 # The Xdebug License, version 1.01
 # (Based on "The PHP License", version 3.0)
@@ -59,6 +58,9 @@ BuildRequires:  %{?scl_prefix}php-pear  > 1.9.1
 BuildRequires:  %{?scl_prefix}php-devel > 5.4
 BuildRequires:  libedit-devel
 BuildRequires:  libtool
+%if %{with_tests}
+BuildRequires:  php-soap
+%endif
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
@@ -115,18 +117,14 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -qc
-%if 0%{?gitver:1}
-sed -e '/release/s/2.2.1/%{version}%{?prever}/' \
-    %{pecl_name}-%{commit}/package.xml >package.xml
-mv %{pecl_name}-%{commit} NTS
-%else
-mv %{pecl_name}-%{version}%{?prever} NTS
-%endif
+mv %{pecl_name}-%{gh_commit} NTS
+mv NTS/package.xml .
 
 cd NTS
 %patch2 -p1 -b .pr167
 %patch0 -p1 -b .pr172
 %patch1 -p1 -b .pr176
+%patch3 -p1 -b .pr178
 
 # Check extension version
 ver=$(sed -n '/XDEBUG_VERSION/{s/.* "//;s/".*$//;p}' php_xdebug.h)
@@ -154,9 +152,7 @@ make %{?_smp_mflags}
 # Build debugclient
 pushd debugclient
 # buildconf required for aarch64 support
-%if 0%{?rhel} != 5
 ./buildconf
-%endif
 %configure --with-libedit
 make %{?_smp_mflags}
 popd
@@ -216,7 +212,9 @@ EOF
 
 # Documentation
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+do
+  [ -f NTS/contrib/$i ] && j=contrib/$i || j=$i
+  install -Dpm 644 NTS/$j %{buildroot}%{pecl_docdir}/%{pecl_name}/$j
 done
 
 
@@ -232,6 +230,31 @@ done
     --no-php-ini \
     --define zend_extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep Xdebug
+%endif
+
+%if %{with_tests}
+cd NTS
+# ignore kwown failed tests
+rm tests/bug00623.phpt
+rm tests/bug00687.phpt
+rm tests/bug00778.phpt
+rm tests/bug00806.phpt
+rm tests/bug00840.phpt
+rm tests/bug00886.phpt
+rm tests/bug00913.phpt
+rm tests/bug01059.phpt
+rm tests/bug01104.phpt
+rm tests/dbgp-context-get.phpt
+rm tests/dbgp-property-get-constants.phpt
+
+: Upstream test suite NTS extension
+TEST_PHP_EXECUTABLE=%{_bindir}/php \
+TEST_PHP_ARGS="-n -d extension=soap.so -d zend_extension=$PWD/modules/%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{__php} -n run-tests.php --show-diff
+%else
+: Test suite disabled
 %endif
 
 
@@ -274,6 +297,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 29 2015 Remi Collet <remi@fedoraproject.org> - 2.3.2-5
+- sources from github, with test suite
+- run test suite when build using "--with tests" option
+- add upstream patch to fix crash when another extension calls
+  call_user_function() during RINIT (e.g. phk)
+
 * Fri May 29 2015 Remi Collet <remi@fedoraproject.org> - 2.3.2-4
 - add patch for exception code change (for phpunit)
 
