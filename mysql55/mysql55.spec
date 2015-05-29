@@ -10,7 +10,7 @@
 #endif
 
 Name: mysql
-Version: 5.5.43
+Version: 5.5.44
 Release: 1%{?dist}
 
 Summary: MySQL client programs and shared libraries
@@ -72,8 +72,6 @@ Patch19: mysql-file-contents.patch
 Patch20: mysql-string-overflow.patch
 Patch21: mysql-dh1024.patch
 Patch22: mysql-innodbwarn.patch
-# http://bugs.mysql.com/68999
-Patch23: mysql-openssl.patch
 Patch24: mysql-ssltest.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -276,7 +274,6 @@ rm -f Docs/mysql.info
 %patch20 -p1
 %patch21 -p1
 %patch22 -p1
-%patch23 -p1
 %patch24 -p1
 
 # workaround for upstream bug #56342
@@ -843,6 +840,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Fri May 29 2015 Remi Collet <RPMS@FamilleCollet.com> - 5.5.44-1
+- update to MySQL 5.5.44 Community Server GA
+  http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-44.html
+
 * Mon Apr 13 2015 Remi Collet <RPMS@FamilleCollet.com> - 5.5.43-1
 - update to MySQL 5.5.43 Community Server GA
   http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-43.html
