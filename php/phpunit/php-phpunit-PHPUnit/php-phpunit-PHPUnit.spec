@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a6cd74b523ef7bad7a23a94e4045d72968e8165b
+%global gh_commit    816d12536a7a032adc3b68737f82cfbbf98b79c1
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,7 +17,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.6.8
+Version:        4.6.9
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -204,6 +204,9 @@ fi
 
 
 %changelog
+* Fri May 29 2015 Remi Collet <remi@fedoraproject.org> - 4.6.9-1
+- Update to 4.6.9
+
 * Thu May 28 2015 Remi Collet <remi@fedoraproject.org> - 4.6.8-1
 - Update to 4.6.8 (no change)
 
