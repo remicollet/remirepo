@@ -1,0 +1,1048 @@
+From 3816db8b6a37921b505e621ef16e13db7ae7bceb Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 28 May 2015 18:40:51 +0200
+Subject: [PATCH] fix ZTS build
+
+---
+ Automap_Class.c    |   2 +-
+ Automap_Handlers.c |  12 ++---
+ Automap_Loader.c   |   6 +--
+ Automap_Mnt.c      |  18 +++----
+ Automap_Mnt.h      |   2 +-
+ Automap_Parser.c   |   2 +-
+ Automap_Pmap.c     |  26 +++++-----
+ Automap_Pmap.h     |   4 +-
+ PHK.c              |  22 ++++----
+ PHK_Cache.c        |   6 +--
+ PHK_Mgr.c          | 144 ++++++++++++++++++++++++++---------------------------
+ PHK_Mgr.h          |   4 +-
+ PHK_Stream.c       |  56 ++++++++++-----------
+ PHK_Stream.h       |   2 +-
+ utils.c            |  40 +++++++--------
+ utils.h            |  20 ++++----
+ 16 files changed, 181 insertions(+), 185 deletions(-)
+
+diff --git a/Automap_Class.c b/Automap_Class.c
+index b14d102..a9edbe5 100644
+--- a/Automap_Class.c
++++ b/Automap_Class.c
+@@ -36,7 +36,7 @@ static zval *Automap_map_object_by_mp(Automap_Mnt *mp TSRMLS_DC)
+ 		args[1]=flags_zp;
+ 		mp->map_object=ut_new_instance(ZEND_STRL("Automap\\Map"), YES, 2
+ 			, args TSRMLS_CC);
+-		ut_ezval_ptr_dtor(&flags_zp);
++		ut_ezval_ptr_dtor(&flags_zp TSRMLS_CC);
+ 	}
+ 
+ 	return mp->map_object;
+diff --git a/Automap_Handlers.c b/Automap_Handlers.c
+index 90da44c..a1f0337 100644
+--- a/Automap_Handlers.c
++++ b/Automap_Handlers.c
+@@ -57,8 +57,8 @@ static void Automap_callFailureHandlers(char type, char *symbol, int slen TSRMLS
+ 			,Z_STRLEN_P(PHK_G(automap_failureHandlers)[i])
+ 			,2 ,args TSRMLS_CC);
+ 		}
+-		ut_ezval_ptr_dtor(&ztype);
+-		ut_ezval_ptr_dtor(&zsymbol);
++		ut_ezval_ptr_dtor(&ztype TSRMLS_CC);
++		ut_ezval_ptr_dtor(&zsymbol TSRMLS_CC);
+ 	}
+ }
+ 
+@@ -103,8 +103,8 @@ static void Automap_callSuccessHandlers(Automap_Mnt *mp
+ 				,Z_STRLEN_P(PHK_G(automap_successHandlers)[i])
+ 				,2,args TSRMLS_CC);
+ 		}
+-		ut_ezval_ptr_dtor(&entry_zp);
+-		ut_ezval_ptr_dtor(&id_zp);
++		ut_ezval_ptr_dtor(&entry_zp TSRMLS_CC);
++		ut_ezval_ptr_dtor(&id_zp TSRMLS_CC);
+ 	}
+ }
+ 
+@@ -141,7 +141,7 @@ static int RSHUTDOWN_Automap_Handlers(TSRMLS_D)
+ 
+ 	if (PHK_G(automap_fh_count)) {
+ 		for (i=0;i<PHK_G(automap_fh_count);i++) {
+-			ut_ezval_ptr_dtor(PHK_G(automap_failureHandlers)+i);
++			ut_ezval_ptr_dtor(PHK_G(automap_failureHandlers)+i TSRMLS_CC);
+ 		}
+ 		EALLOCATE(PHK_G(automap_failureHandlers),0);
+ 		PHK_G(automap_fh_count)=0;
+@@ -149,7 +149,7 @@ static int RSHUTDOWN_Automap_Handlers(TSRMLS_D)
+ 
+ 	if (PHK_G(automap_sh_count)) {
+ 		for (i=0;i<PHK_G(automap_sh_count);i++) {
+-			ut_ezval_ptr_dtor(PHK_G(automap_successHandlers)+i);
++			ut_ezval_ptr_dtor(PHK_G(automap_successHandlers)+i TSRMLS_CC);
+ 		}
+ 		EALLOCATE(PHK_G(automap_successHandlers),0);
+ 		PHK_G(automap_sh_count)=0;
+diff --git a/Automap_Loader.c b/Automap_Loader.c
+index 8e8e885..24f63ac 100644
+--- a/Automap_Loader.c
++++ b/Automap_Loader.c
+@@ -48,7 +48,7 @@ static void Automap_Loader_register_hook(TSRMLS_D)
+ 	MAKE_STD_ZVAL(zp);
+ 	ZVAL_STRINGL(zp,"Automap\\Mgr::autoloadHook",25,1);
+ 	ut_call_user_function_void(NULL,ZEND_STRL("spl_autoload_register"),1,&zp TSRMLS_CC);
+-	ut_ezval_ptr_dtor(&zp);
++	ut_ezval_ptr_dtor(&zp TSRMLS_CC);
+ }
+ 
+ /*---------------------------------------------------------------*/
+@@ -82,7 +82,7 @@ static int Automap_resolve_symbol(char type, char *symbol, int slen, int autoloa
+ 		if (!mp) continue;
+ 		if (Automap_Mnt_resolve_key(mp, zkey, hash TSRMLS_CC)==SUCCESS) {
+ 			DBG_MSG2("Found key %s in map %d",Z_STRVAL_P(zkey),mp->id);
+-			ut_ezval_ptr_dtor(&zkey);
++			ut_ezval_ptr_dtor(&zkey TSRMLS_CC);
+ 			return SUCCESS;
+ 		}
+ 	}
+@@ -94,7 +94,7 @@ static int Automap_resolve_symbol(char type, char *symbol, int slen, int autoloa
+ 		THROW_EXCEPTION_2("Automap: Unknown %s: %s",ts,symbol);
+ 	}
+ 
+-	ut_ezval_ptr_dtor(&zkey);
++	ut_ezval_ptr_dtor(&zkey TSRMLS_CC);
+ 	return FAILURE;
+ }
+ 
+diff --git a/Automap_Mnt.c b/Automap_Mnt.c
+index b9a6aed..28442e2 100644
+--- a/Automap_Mnt.c
++++ b/Automap_Mnt.c
+@@ -20,12 +20,10 @@
+ /* Here, we check every pointers because the function can be called during
+    the creation of the structure (load failure) */
+  
+-static void Automap_Mnt_dtor(Automap_Mnt *mp)
++static void Automap_Mnt_dtor(Automap_Mnt *mp TSRMLS_DC)
+ {
+-	TSRMLS_FETCH();
+-
+-	ut_ezval_ptr_dtor(&(mp->map_object));
+-	ut_ezval_ptr_dtor(&(mp->zpath));
++	ut_ezval_ptr_dtor(&(mp->map_object) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&(mp->zpath) TSRMLS_CC);
+ }
+ 
+ /*---------------------------------------------------------------*/
+@@ -33,7 +31,7 @@ static void Automap_Mnt_dtor(Automap_Mnt *mp)
+ static void Automap_Mnt_remove(Automap_Mnt *mp TSRMLS_DC)
+ {
+ 	PHK_G(map_array)[mp->id]=NULL;
+-	Automap_Mnt_dtor(mp);
++	Automap_Mnt_dtor(mp TSRMLS_CC);
+ 	EALLOCATE(mp,0);
+ }
+ 
+@@ -112,7 +110,7 @@ static Automap_Mnt *Automap_Mnt_load_extended(zval *zpathp, zval *zufidp
+ 	ZVAL_STRINGL(mp->zpath,Z_STRVAL_P(zpathp),Z_STRLEN_P(zpathp),1);
+ 	mp->flags=flags;
+ 	
+-	Automap_Mnt_array_add(mp);
++	Automap_Mnt_array_add(mp TSRMLS_CC);
+ 	return mp;
+ }
+ 
+@@ -138,7 +136,7 @@ static Automap_Mnt *Automap_Mnt_load(zval *zpathp, long flags TSRMLS_DC)
+ 	ZVAL_STRINGL(zapathp, p, len, 0);
+ 	
+ 	if (!(pmp=Automap_Pmap_get_or_create(zapathp, flags TSRMLS_CC))) {
+-		ut_ezval_ptr_dtor(&zapathp);
++		ut_ezval_ptr_dtor(&zapathp TSRMLS_CC);
+ 		return NULL;
+ 	}
+ 
+@@ -151,7 +149,7 @@ static Automap_Mnt *Automap_Mnt_load(zval *zpathp, long flags TSRMLS_DC)
+ 	mp->zpath=zapathp;
+ 	mp->flags=flags;
+ 
+-	Automap_Mnt_array_add(mp);
++	Automap_Mnt_array_add(mp TSRMLS_CC);
+ 	return mp;
+ }
+ 
+@@ -331,7 +329,7 @@ static int RSHUTDOWN_Automap_Mnt(TSRMLS_D)
+ 	if (PHK_G(map_count) > 1) {
+ 		for (i=1;i<PHK_G(map_count);i++) { /* Slot 0 is always NULL */
+ 			mp=PHK_G(map_array)[i];
+-			if (mp) Automap_Mnt_remove(mp);
++			if (mp) Automap_Mnt_remove(mp TSRMLS_CC);
+ 		}
+ 	}
+ 
+diff --git a/Automap_Mnt.h b/Automap_Mnt.h
+index 07a4372..5e3a8dc 100644
+--- a/Automap_Mnt.h
++++ b/Automap_Mnt.h
+@@ -39,7 +39,7 @@ typedef struct _Automap_Mnt {	/* Per request */
+ 
+ /*============================================================================*/
+ 
+-static void Automap_Mnt_dtor(Automap_Mnt *mp);
++static void Automap_Mnt_dtor(Automap_Mnt *mp TSRMLS_DC);
+ static void Automap_Mnt_remove(Automap_Mnt *mp TSRMLS_DC);
+ static Automap_Mnt *Automap_Mnt_get(long id, int exception TSRMLS_DC);
+ static PHP_METHOD(Automap, isActiveID);
+diff --git a/Automap_Parser.c b/Automap_Parser.c
+index b5ba3a2..38a87f4 100644
+--- a/Automap_Parser.c
++++ b/Automap_Parser.c
+@@ -91,7 +91,7 @@ static void Automap_Parser_addSymbol(zval *arr,char type,char *ns,int nslen
+ 
+ #define CLEANUP_AUTOMAP_PARSE_TOKENS() \
+ 	{ \
+-	ut_ezval_dtor(&ztokens); \
++	ut_ezval_dtor(&ztokens TSRMLS_CC); \
+ 	}
+ 
+ #define RETURN_FROM_AUTOMAP_PARSE_TOKENS() \
+diff --git a/Automap_Pmap.c b/Automap_Pmap.c
+index 56304c4..674d4f7 100644
+--- a/Automap_Pmap.c
++++ b/Automap_Pmap.c
+@@ -112,11 +112,11 @@ static Automap_Pmap *Automap_Pmap_get_or_create(zval *zapathp
+ 	/* Run extended func */
+ 	
+ 	pmp=Automap_Pmap_get_or_create_extended(zapathp, zufidp
+-		, ZSTRING_HASH(zufidp), NULL, flags TSRMLS_DC);
++		, ZSTRING_HASH(zufidp), NULL, flags TSRMLS_CC);
+ 
+ 	/* Cleanup */
+ 
+-	ut_ezval_ptr_dtor(&zufidp);
++	ut_ezval_ptr_dtor(&zufidp TSRMLS_CC);
+ 
+ 	return pmp;
+ }
+@@ -134,9 +134,9 @@ static Automap_Pmap *Automap_Pmap_get_or_create(zval *zapathp
+ 
+ #define CLEANUP_AUTOMAP_PMAP_GET_OR_CREATE() \
+ 	{ \
+-	ut_ezval_dtor(&zdata); \
+-	ut_ezval_dtor(&zlong); \
+-	ut_ezval_dtor(&znull); \
++	ut_ezval_dtor(&zdata TSRMLS_CC); \
++	ut_ezval_dtor(&zlong TSRMLS_CC); \
++	ut_ezval_dtor(&znull TSRMLS_CC); \
+ 	}
+ 
+ #define RETURN_FROM_AUTOMAP_PMAP_GET_OR_CREATE(_ret) \
+@@ -148,7 +148,7 @@ static Automap_Pmap *Automap_Pmap_get_or_create(zval *zapathp
+ 
+ #define ABORT_AUTOMAP_PMAP_GET_OR_CREATE() \
+ 	{ \
+-	Automap_Pmap_dtor(&tmp_map); \
++	Automap_Pmap_dtor(&tmp_map TSRMLS_CC); \
+ 	RETURN_FROM_AUTOMAP_PMAP_GET_OR_CREATE(NULL); \
+ 	}
+ 
+@@ -205,14 +205,14 @@ static Automap_Pmap *Automap_Pmap_get_or_create_extended(zval *zpathp
+ 
+ 	ZVAL_LONG(&zlong,AUTOMAP_MAP_PROTOCOL);
+ 	args[0] = &zlong;
+-	ut_call_user_function_array(map,ZEND_STRL("_peclGetMap"),&zdata,1,args);
++	ut_call_user_function_array(map,ZEND_STRL("_peclGetMap"),&zdata,1,args TSRMLS_CC);
+ 	if (EG(exception)) ABORT_AUTOMAP_PMAP_GET_OR_CREATE();
+ 	if (!ZVAL_IS_ARRAY(&zdata)) {
+ 		THROW_EXCEPTION_1("%s : Automap\\Map::_peclGetMap() should return an array",Z_STRVAL_P(zpathp));
+ 		ABORT_AUTOMAP_PMAP_GET_OR_CREATE();
+ 	}
+ 	
+-	ut_ezval_ptr_dtor(&map);	/* Delete Automap_Map object */
++	ut_ezval_ptr_dtor(&map TSRMLS_CC);	/* Delete Automap_Map object */
+ 	
+ 	/* Move data to persistent storage */
+ 
+@@ -238,17 +238,17 @@ static Automap_Pmap *Automap_Pmap_get_or_create_extended(zval *zpathp
+ 
+ /*---------------------------------------------------------------*/
+ 
+-static void Automap_Pmap_dtor(Automap_Pmap *pmp)
++static void Automap_Pmap_dtor(Automap_Pmap *pmp TSRMLS_DC)
+ {
+-	ut_pzval_ptr_dtor(&(pmp->zsymbols));
++	ut_pzval_ptr_dtor(&(pmp->zsymbols) TSRMLS_CC);
+ }
+ 
+ /*---------------------------------------------------------------*/
+ 
+-static void Automap_Pmap_Entry_dtor(Automap_Pmap_Entry *pep)
++static void Automap_Pmap_Entry_dtor(Automap_Pmap_Entry *pep TSRMLS_DC)
+ {
+-	ut_pzval_dtor(&(pep->zsname));
+-	ut_pzval_dtor(&(pep->zfapath));
++	ut_pzval_dtor(&(pep->zsname) TSRMLS_CC);
++	ut_pzval_dtor(&(pep->zfapath) TSRMLS_CC);
+ }
+ 
+ /*---------------------------------------------------------------*/
+diff --git a/Automap_Pmap.h b/Automap_Pmap.h
+index 95ac6aa..080383d 100644
+--- a/Automap_Pmap.h
++++ b/Automap_Pmap.h
+@@ -51,8 +51,8 @@ static Automap_Pmap *Automap_Pmap_get_or_create(zval *zapathp
+ 	, long flags TSRMLS_DC);
+ static Automap_Pmap *Automap_Pmap_get_or_create_extended(zval *zpathp
+ 	, zval *zufidp, ulong hash, zval *zbasePathp_arg, long flags TSRMLS_DC);
+-static void Automap_Pmap_dtor(Automap_Pmap *pmp);
+-static void Automap_Pmap_Entry_dtor(Automap_Pmap_Entry *pep);
++static void Automap_Pmap_dtor(Automap_Pmap *pmp TSRMLS_DC);
++static void Automap_Pmap_Entry_dtor(Automap_Pmap_Entry *pep TSRMLS_DC);
+ static Automap_Pmap_Entry *Automap_Pmap_find_key(Automap_Pmap *pmp
+ 	, zval *zkey, ulong hash TSRMLS_DC);
+ static void Automap_Pmap_exportEntry(Automap_Pmap_Entry *pep, zval *zp TSRMLS_DC);
+diff --git a/PHK.c b/PHK.c
+index 40bcbeb..128df2b 100644
+--- a/PHK.c
++++ b/PHK.c
+@@ -147,7 +147,7 @@ static PHP_METHOD(PHK, setCache)
+ 			FAILURE) EXCEPTION_ABORT("Cannot parse parameters");
+ 
+ 	SEPARATE_ARG_IF_REF(zp);
+-	ut_ezval_ptr_dtor(&(mp->caching));
++	ut_ezval_ptr_dtor(&(mp->caching) TSRMLS_CC);
+ 	mp->caching = zp;
+ }
+ 
+@@ -203,7 +203,7 @@ static int PHK_cacheEnabled(PHK_Mnt * mp, zval * command,
+ 
+ static void PHK_umount(PHK_Mnt * mp TSRMLS_DC)
+ {
+-	if (mp->plugin) ut_ezval_ptr_dtor(&(mp->plugin));
++	if (mp->plugin) ut_ezval_ptr_dtor(&(mp->plugin) TSRMLS_CC);
+ 
+ 	if (mp->umount_script_uri
+ 		&& (!(Z_LVAL_P(mp->flags) & PHK_FLAG_NO_MOUNT_SCRIPT))) {
+@@ -212,7 +212,7 @@ static void PHK_umount(PHK_Mnt * mp TSRMLS_DC)
+ 	}
+ 
+ 	if (mp->automapURI) {
+-		Automap_unload(mp->automapID);
++		Automap_unload(mp->automapID TSRMLS_CC);
+ 	}
+ }
+ 
+@@ -409,7 +409,7 @@ static char *gotoMain(PHK_Mnt * mp TSRMLS_DC)
+ 		MAKE_STD_ZVAL(zp);
+ 		PHK_Mgr_uri(mp->mnt, mp->web_run_script, zp TSRMLS_CC);
+ 		spprintf(&p, 1024, "require('%s');", Z_STRVAL_P(zp));
+-		ut_ezval_ptr_dtor(&zp);
++		ut_ezval_ptr_dtor(&zp TSRMLS_CC);
+ 	}
+ 	return p;
+ }
+@@ -419,8 +419,8 @@ static char *gotoMain(PHK_Mnt * mp TSRMLS_DC)
+ 
+ #define CLEANUP_WEB_TUNNEL() \
+ 	{ \
+-	ut_ezval_ptr_dtor(&tpath); \
+-	ut_ezval_ptr_dtor(&uri); \
++	ut_ezval_ptr_dtor(&tpath TSRMLS_CC); \
++	ut_ezval_ptr_dtor(&uri TSRMLS_CC); \
+ 	}
+ 
+ static char *webTunnel(PHK_Mnt * mp, zval * path,
+@@ -563,7 +563,7 @@ static void PHK_mimeHeader(PHK_Mnt * mp, zval * path TSRMLS_DC)
+ 		EALLOCATE(p,0);
+ 	}
+ 
+-	ut_ezval_ptr_dtor(&type);
++	ut_ezval_ptr_dtor(&type TSRMLS_CC);
+ }
+ 
+ /*---------------------------------------------------------------*/
+@@ -592,7 +592,7 @@ static void PHK_mimeType(zval *ret, PHK_Mnt * mp, zval * path TSRMLS_DC)
+ {
+ 	zval *suffix, **zpp;
+ 
+-	ut_ezval_dtor(ret);
++	ut_ezval_dtor(ret TSRMLS_CC);
+ 	INIT_PZVAL(ret);
+ 
+ 	ALLOC_INIT_ZVAL(suffix);
+@@ -617,7 +617,7 @@ static void PHK_mimeType(zval *ret, PHK_Mnt * mp, zval * path TSRMLS_DC)
+ 		}
+ 	}
+ 
+-	ut_ezval_ptr_dtor(&suffix);
++	ut_ezval_ptr_dtor(&suffix TSRMLS_CC);
+ }
+ 
+ /*---------------------------------------------------------------*/
+@@ -650,7 +650,7 @@ static int PHK_isPHPSourcePath(PHK_Mnt * mp, zval * path TSRMLS_DC)
+ 	if (ZVAL_IS_STRING(type) && (Z_STRLEN_P(type)==23)
+ 		&& (!memcmp(Z_STRVAL_P(type),"application/x-httpd-php",23))) res=1;
+ 	
+-	ut_ezval_ptr_dtor(&type);
++	ut_ezval_ptr_dtor(&type TSRMLS_CC);
+ 	return res;
+ }
+ 
+@@ -1043,7 +1043,7 @@ static inline void init_mimeTable(TSRMLS_D)
+ 
+ static void shutdown_mimeTable(TSRMLS_D)
+ {
+-	ut_ezval_ptr_dtor(&PHK_G(mimeTable));
++	ut_ezval_ptr_dtor(&PHK_G(mimeTable) TSRMLS_CC);
+ }
+ 
+ /*---------------------------------------------------------------*/
+diff --git a/PHK_Cache.c b/PHK_Cache.c
+index 69354d3..f9b9fdd 100644
+--- a/PHK_Cache.c
++++ b/PHK_Cache.c
+@@ -114,7 +114,7 @@ static void PHK_Cache_cacheID(const char *prefix, int prefix_len, const char *ke
+ 	memmove(p + prefix_len + 9, key, key_len);
+ 	p[prefix_len + key_len + 9] = '\0';
+ 
+-	ut_ezval_dtor(z_ret_p);
++	ut_ezval_dtor(z_ret_p TSRMLS_CC);
+ 	ZVAL_STRINGL(z_ret_p, p, len, 0);
+ }
+ 
+@@ -154,7 +154,7 @@ static PHP_METHOD(PHK_Cache, setCacheMaxSize)
+ 
+ static void PHK_Cache_get(zval * z_key_p, zval * z_ret_p TSRMLS_DC)
+ {
+-	ut_ezval_dtor(z_ret_p);
++	ut_ezval_dtor(z_ret_p TSRMLS_CC);
+ 
+ 	if (!cache) return;
+ 
+@@ -220,7 +220,7 @@ static void PHK_Cache_set(zval * z_key_p, zval * z_data_p TSRMLS_DC)
+ 		ut_call_user_function_void(NULL, cache->set_funcname_string
+ 			,cache->set_funcname_len, 3, args TSRMLS_CC);
+ 		
+-		ut_ezval_ptr_dtor(&ttl);
++		ut_ezval_ptr_dtor(&ttl TSRMLS_CC);
+ 	}
+ }
+ 
+diff --git a/PHK_Mgr.c b/PHK_Mgr.c
+index 3b2e70b..66c7935 100644
+--- a/PHK_Mgr.c
++++ b/PHK_Mgr.c
+@@ -44,13 +44,11 @@ static void PHK_Mgr_shutdown_pdata(TSRMLS_D)
+    ut_ezval_ptr_dtor() handles this case.
+ */
+ 
+-static void PHK_Mgr_mnt_dtor(PHK_Mnt * mp)
++static void PHK_Mgr_mnt_dtor(PHK_Mnt * mp TSRMLS_DC)
+ {
+-	TSRMLS_FETCH();
+-
+ 	EALLOCATE(mp->children,0);
+ 
+-	ut_ezval_ptr_dtor(&(mp->mnt));
++	ut_ezval_ptr_dtor(&(mp->mnt) TSRMLS_CC);
+ 
+ 	if (mp->instance) /* Invalidate object */
+ 		{
+@@ -58,31 +56,31 @@ static void PHK_Mgr_mnt_dtor(PHK_Mnt * mp)
+ 			,sizeof(PHK_MP_PROPERTY_NAME));
+ 		}
+ 
+-	ut_ezval_ptr_dtor(&(mp->instance));
+-	ut_ezval_ptr_dtor(&(mp->proxy));
+-	ut_ezval_ptr_dtor(&(mp->path));
+-	ut_ezval_ptr_dtor(&(mp->plugin));
+-	ut_ezval_ptr_dtor(&(mp->flags));
+-	ut_ezval_ptr_dtor(&(mp->caching));
+-	ut_ezval_ptr_dtor(&(mp->mtime));
+-	ut_ezval_ptr_dtor(&(mp->backend));
+-
+-	ut_ezval_ptr_dtor(&(mp->minVersion));
+-	ut_ezval_ptr_dtor(&(mp->options));
+-	ut_ezval_ptr_dtor(&(mp->buildInfo));
+-	ut_ezval_ptr_dtor(&(mp->mime_types));
+-	ut_ezval_ptr_dtor(&(mp->web_run_script));
+-	ut_ezval_ptr_dtor(&(mp->plugin_class));
+-	ut_ezval_ptr_dtor(&(mp->web_access));
+-	ut_ezval_ptr_dtor(&(mp->min_php_version));
+-	ut_ezval_ptr_dtor(&(mp->max_php_version));
+-
+-	ut_ezval_ptr_dtor(&(mp->baseURI));
+-	ut_ezval_ptr_dtor(&(mp->automapURI));
+-	ut_ezval_ptr_dtor(&(mp->mount_script_uri));
+-	ut_ezval_ptr_dtor(&(mp->umount_script_uri));
+-	ut_ezval_ptr_dtor(&(mp->lib_run_script_uri));
+-	ut_ezval_ptr_dtor(&(mp->cli_run_command));
++	ut_ezval_ptr_dtor(&(mp->instance) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&(mp->proxy) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&(mp->path) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&(mp->plugin) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&(mp->flags) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&(mp->caching) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&(mp->mtime) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&(mp->backend) TSRMLS_CC);
++
++	ut_ezval_ptr_dtor(&(mp->minVersion) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&(mp->options) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&(mp->buildInfo) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&(mp->mime_types) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&(mp->web_run_script) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&(mp->plugin_class) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&(mp->web_access) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&(mp->min_php_version) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&(mp->max_php_version) TSRMLS_CC);
++
++	ut_ezval_ptr_dtor(&(mp->baseURI) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&(mp->automapURI) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&(mp->mount_script_uri) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&(mp->umount_script_uri) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&(mp->lib_run_script_uri) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&(mp->cli_run_command) TSRMLS_CC);
+ }
+ 
+ /*---------------------------------------------------------------*/
+@@ -774,19 +772,19 @@ static void PHK_Mgr_pathToMnt(zval * path, zval * mnt TSRMLS_DC)
+ 	tmp_mnt=NULL;
+ 	PHK_Mgr_computeMnt(path, NULL, &tmp_mnt, NULL TSRMLS_CC);
+ 	if (EG(exception)) {
+-		ut_ezval_ptr_dtor(&tmp_mnt);
++		ut_ezval_ptr_dtor(&tmp_mnt TSRMLS_CC);
+ 		return;
+ 	}
+ 
+ 	PHK_Mgr_get_mnt(tmp_mnt, 0, 1 TSRMLS_CC);
+ 	if (EG(exception)) {
+-		ut_ezval_ptr_dtor(&tmp_mnt);
++		ut_ezval_ptr_dtor(&tmp_mnt TSRMLS_CC);
+ 		return;
+ 	}
+ 
+ 	ZVAL_COPY_VALUE(mnt,tmp_mnt);
+ 	zval_copy_ctor(mnt);
+-	ut_ezval_ptr_dtor(&tmp_mnt);
++	ut_ezval_ptr_dtor(&tmp_mnt TSRMLS_CC);
+ }
+ 
+ /*---------------------------------------------------------------*/
+@@ -904,8 +902,8 @@ static long PHK_Mgr_mount_from_Automap(zval * path, long flags TSRMLS_DC)
+ 
+ #define CLEANUP_PHK_MGR_MOUNT() \
+ 	{ \
+-	ut_ezval_ptr_dtor(&mnt); \
+-	ut_ezval_ptr_dtor(&mtime); \
++	ut_ezval_ptr_dtor(&mnt TSRMLS_CC); \
++	ut_ezval_ptr_dtor(&mtime TSRMLS_CC); \
+ 	}
+ 
+ #define RETURN_FROM_PHK_MGR_MOUNT(_ret) \
+@@ -1078,9 +1076,9 @@ static PHK_Pdata *PHK_Mgr_get_pdata(
+ 
+ #define CLEANUP_PHK_GET_OR_CREATE_PERSISTENT_DATA() \
+ 	{ \
+-	ut_ezval_ptr_dtor(&minVersion); \
+-	ut_ezval_ptr_dtor(&options); \
+-	ut_ezval_ptr_dtor(&buildInfo); \
++	ut_ezval_ptr_dtor(&minVersion TSRMLS_CC); \
++	ut_ezval_ptr_dtor(&options TSRMLS_CC); \
++	ut_ezval_ptr_dtor(&buildInfo TSRMLS_CC); \
+ 	}
+ 	
+ #define RETURN_FROM_PHK_GET_OR_CREATE_PERSISTENT_DATA(_ret) \
+@@ -1127,7 +1125,7 @@ static PHK_Pdata *PHK_Mgr_get_or_create_pdata(zval * mnt,
+ 	args[1] = ztmp;
+ 	ut_call_user_function_string(NULL
+ 		, ZEND_STRL("PHK\\Tools\\Util::getMinVersion"), minVersion,2, args TSRMLS_CC);
+-	ut_ezval_ptr_dtor(&ztmp);
++	ut_ezval_ptr_dtor(&ztmp TSRMLS_CC);
+ 	if (EG(exception)) ABORT_PHK_GET_OR_CREATE_PERSISTENT_DATA();
+ 
+ 	/* Check minVersion */
+@@ -1142,7 +1140,7 @@ static PHK_Pdata *PHK_Mgr_get_or_create_pdata(zval * mnt,
+ 	args[1] = ztmp;
+ 	ut_call_user_function_array(NULL
+ 			, ZEND_STRL("PHK\\Tools\\Util::getOptions"), options, 2,	args TSRMLS_CC);
+-	ut_ezval_ptr_dtor(&ztmp);
++	ut_ezval_ptr_dtor(&ztmp TSRMLS_CC);
+ 	if (EG(exception)) ABORT_PHK_GET_OR_CREATE_PERSISTENT_DATA();
+ 
+ 	/* Check that the required extensions are present or can be loaded */
+@@ -1183,14 +1181,14 @@ static PHK_Pdata *PHK_Mgr_get_or_create_pdata(zval * mnt,
+ 
+ 	entry->ctime = time(NULL);
+ 
+-	entry->minVersion=ut_persist_zval(minVersion);
++	entry->minVersion=ut_persist_zval(minVersion TSRMLS_CC);
+ 
+-	entry->options=ut_persist_zval(options);
++	entry->options=ut_persist_zval(options TSRMLS_CC);
+ 	opt_ht = Z_ARRVAL_P(entry->options);
+ 
+ 	ut_call_user_function_array(NULL
+ 		, ZEND_STRL("PHK\\Tools\\Util::getBuildInfo"), buildInfo, 2, args TSRMLS_CC);
+-	entry->buildInfo=ut_persist_zval(buildInfo);
++	entry->buildInfo=ut_persist_zval(buildInfo TSRMLS_CC);
+ 
+ 	/* Set shortcuts */
+ 
+@@ -1234,39 +1232,39 @@ static PHK_Pdata *PHK_Mgr_get_or_create_pdata(zval * mnt,
+ 
+ 	ALLOC_INIT_ZVAL(ztmp);
+ 	compute_baseURI(mnt, ztmp TSRMLS_CC);
+-	entry->baseURI=ut_persist_zval(ztmp);
+-	ut_ezval_ptr_dtor(&ztmp);
++	entry->baseURI=ut_persist_zval(ztmp TSRMLS_CC);
++	ut_ezval_ptr_dtor(&ztmp TSRMLS_CC);
+ 
+ 	if ((FIND_HKEY(Z_ARRVAL_P(entry->buildInfo), map_defined, &zpp) ==
+ 		 SUCCESS) && ZVAL_IS_BOOL(*zpp) && Z_BVAL_PP(zpp)) {
+ 		ALLOC_INIT_ZVAL(ztmp);
+ 		compute_automapURI(mnt, ztmp TSRMLS_CC);
+-		entry->automapURI=ut_persist_zval(ztmp);
+-		ut_ezval_ptr_dtor(&ztmp);
++		entry->automapURI=ut_persist_zval(ztmp TSRMLS_CC);
++		ut_ezval_ptr_dtor(&ztmp TSRMLS_CC);
+ 	}
+ 
+ 	if ((FIND_HKEY(opt_ht, mount_script, &zpp) == SUCCESS)
+ 		&& (ZVAL_IS_STRING(*zpp))) {
+ 		ALLOC_INIT_ZVAL(ztmp);
+ 		PHK_Mgr_uri(mnt, *zpp, ztmp TSRMLS_CC);
+-		entry->mount_script_uri=ut_persist_zval(ztmp);
+-		ut_ezval_ptr_dtor(&ztmp);
++		entry->mount_script_uri=ut_persist_zval(ztmp TSRMLS_CC);
++		ut_ezval_ptr_dtor(&ztmp TSRMLS_CC);
+ 	}
+ 
+ 	if ((FIND_HKEY(opt_ht, umount_script, &zpp) == SUCCESS)
+ 		&& (ZVAL_IS_STRING(*zpp))) {
+ 		ALLOC_INIT_ZVAL(ztmp);
+ 		PHK_Mgr_uri(mnt, *zpp, ztmp TSRMLS_CC);
+-		entry->umount_script_uri=ut_persist_zval(ztmp);
+-		ut_ezval_ptr_dtor(&ztmp);
++		entry->umount_script_uri=ut_persist_zval(ztmp TSRMLS_CC);
++		ut_ezval_ptr_dtor(&ztmp TSRMLS_CC);
+ 	}
+ 
+ 	if ((FIND_HKEY(opt_ht, lib_run_script, &zpp) == SUCCESS)
+ 		&& (ZVAL_IS_STRING(*zpp))) {
+ 		ALLOC_INIT_ZVAL(ztmp);
+ 		PHK_Mgr_uri(mnt, *zpp, ztmp TSRMLS_CC);
+-		entry->lib_run_script_uri=ut_persist_zval(ztmp);
+-		ut_ezval_ptr_dtor(&ztmp);
++		entry->lib_run_script_uri=ut_persist_zval(ztmp TSRMLS_CC);
++		ut_ezval_ptr_dtor(&ztmp TSRMLS_CC);
+ 	}
+ 
+ 	if ((FIND_HKEY(opt_ht, cli_run_script, &zpp) == SUCCESS)
+@@ -1276,9 +1274,9 @@ static PHK_Pdata *PHK_Mgr_get_or_create_pdata(zval * mnt,
+ 		PHK_Mgr_uri(mnt, *zpp, ztmp TSRMLS_CC);
+ 		spprintf(&p, UT_PATH_MAX, "require('%s');", Z_STRVAL_P(ztmp));
+ 		ZVAL_STRING(ztmp2, p, 0);
+-		entry->cli_run_command=ut_persist_zval(ztmp2);
+-		ut_ezval_ptr_dtor(&ztmp);
+-		ut_ezval_ptr_dtor(&ztmp2);
++		entry->cli_run_command=ut_persist_zval(ztmp2 TSRMLS_CC);
++		ut_ezval_ptr_dtor(&ztmp TSRMLS_CC);
++		ut_ezval_ptr_dtor(&ztmp2 TSRMLS_CC);
+ 	}
+ 
+ 	/* Cleanup and return */
+@@ -1360,26 +1358,26 @@ static PHP_METHOD(PHK_Mgr, mimeHeader)
+ /*---------------------------------------------------------------*/
+ /* zval_dtor works for persistent arrays, but not for persistent strings */
+ 
+-static void PHK_Mgr_Persistent_Data_dtor(PHK_Pdata * entry)
++static void PHK_Mgr_Persistent_Data_dtor(PHK_Pdata * entry TSRMLS_DC)
+ {
+-	ut_pzval_ptr_dtor(&(entry->minVersion));
++	ut_pzval_ptr_dtor(&(entry->minVersion) TSRMLS_CC);
+ 	/* TODO: Why do these two lines cause free() errors ? */
+-	ut_pzval_ptr_dtor(&(entry->options));
+-	ut_pzval_ptr_dtor(&(entry->buildInfo));
+-
+-	ut_pzval_ptr_dtor(&(entry->mime_types));
+-	ut_pzval_ptr_dtor(&(entry->web_run_script));
+-	ut_pzval_ptr_dtor(&(entry->plugin_class));
+-	ut_pzval_ptr_dtor(&(entry->web_access));
+-	ut_pzval_ptr_dtor(&(entry->min_php_version));
+-	ut_pzval_ptr_dtor(&(entry->max_php_version));
+-
+-	ut_pzval_ptr_dtor(&(entry->baseURI));
+-	ut_pzval_ptr_dtor(&(entry->automapURI));
+-	ut_pzval_ptr_dtor(&(entry->mount_script_uri));
+-	ut_pzval_ptr_dtor(&(entry->umount_script_uri));
+-	ut_pzval_ptr_dtor(&(entry->lib_run_script_uri));
+-	ut_pzval_ptr_dtor(&(entry->cli_run_command));
++	ut_pzval_ptr_dtor(&(entry->options) TSRMLS_CC);
++	ut_pzval_ptr_dtor(&(entry->buildInfo) TSRMLS_CC);
++
++	ut_pzval_ptr_dtor(&(entry->mime_types) TSRMLS_CC);
++	ut_pzval_ptr_dtor(&(entry->web_run_script) TSRMLS_CC);
++	ut_pzval_ptr_dtor(&(entry->plugin_class) TSRMLS_CC);
++	ut_pzval_ptr_dtor(&(entry->web_access) TSRMLS_CC);
++	ut_pzval_ptr_dtor(&(entry->min_php_version) TSRMLS_CC);
++	ut_pzval_ptr_dtor(&(entry->max_php_version) TSRMLS_CC);
++
++	ut_pzval_ptr_dtor(&(entry->baseURI) TSRMLS_CC);
++	ut_pzval_ptr_dtor(&(entry->automapURI) TSRMLS_CC);
++	ut_pzval_ptr_dtor(&(entry->mount_script_uri) TSRMLS_CC);
++	ut_pzval_ptr_dtor(&(entry->umount_script_uri) TSRMLS_CC);
++	ut_pzval_ptr_dtor(&(entry->lib_run_script_uri) TSRMLS_CC);
++	ut_pzval_ptr_dtor(&(entry->cli_run_command) TSRMLS_CC);
+ }
+ 
+ /*---------------------------------------------------------------*/
+diff --git a/PHK_Mgr.h b/PHK_Mgr.h
+index 4e17630..2832ba3 100644
+--- a/PHK_Mgr.h
++++ b/PHK_Mgr.h
+@@ -129,7 +129,7 @@ StaticMutexDeclare(persistent_mtab);
+ 
+ static void PHK_Mgr_init_pdata(TSRMLS_D);
+ static void PHK_Mgr_shutdown_pdata(TSRMLS_D);
+-static void PHK_Mgr_mnt_dtor(PHK_Mnt * mp);
++static void PHK_Mgr_mnt_dtor(PHK_Mnt * mp TSRMLS_DC);
+ static void PHK_Mgr_remove_mnt(PHK_Mnt * mp TSRMLS_DC);
+ static PHK_Mnt *PHK_Mgr_new_mnt(zval * mnt, ulong hash TSRMLS_DC);
+ static PHK_Mnt *PHK_Mgr_get_mnt(zval * mnt, ulong hash,
+@@ -185,7 +185,7 @@ static PHK_Pdata *PHK_Mgr_get_pdata(zval * mnt, ulong hash TSRMLS_DC);
+ static PHK_Pdata *PHK_Mgr_get_or_create_pdata(zval * mnt,ulong hash TSRMLS_DC);
+ static void PHK_Mgr_populate_pdata(zval * mnt, ulong hash,PHK_Mnt * mp TSRMLS_DC);
+ static PHP_METHOD(PHK_Mgr, mimeHeader);
+-static void PHK_Mgr_Persistent_Data_dtor(PHK_Pdata * entry);
++static void PHK_Mgr_Persistent_Data_dtor(PHK_Pdata * entry TSRMLS_DC);
+ 
+ static int MINIT_PHK_Mgr(TSRMLS_D);
+ static int MSHUTDOWN_PHK_Mgr(TSRMLS_D);
+diff --git a/PHK_Stream.c b/PHK_Stream.c
+index e8af86d..30a5823 100644
+--- a/PHK_Stream.c
++++ b/PHK_Stream.c
+@@ -40,15 +40,15 @@ static PHK_STREAM_DATA *new_dp(int show_errors)
+ 
+ /*--------------------*/
+ 
+-static void free_dp(PHK_STREAM_DATA ** dpp)
++static void free_dp(PHK_STREAM_DATA ** dpp TSRMLS_DC)
+ {
+ 	if ((!dpp) || (!(*dpp))) return;
+ 
+-	ut_ezval_ptr_dtor(&((*dpp)->z_command));
+-	ut_ezval_ptr_dtor(&((*dpp)->z_params));
+-	ut_ezval_ptr_dtor(&((*dpp)->z_mnt));
+-	ut_ezval_ptr_dtor(&((*dpp)->z_path));
+-	ut_ezval_ptr_dtor(&((*dpp)->z_data));
++	ut_ezval_ptr_dtor(&((*dpp)->z_command) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&((*dpp)->z_params) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&((*dpp)->z_mnt) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&((*dpp)->z_path) TSRMLS_CC);
++	ut_ezval_ptr_dtor(&((*dpp)->z_data) TSRMLS_CC);
+ 
+ 	EALLOCATE(*dpp,0);
+ }
+@@ -91,7 +91,7 @@ static int is_last_cached_opcode(const char *path, int len TSRMLS_DC)
+ 
+ #define INIT_PHK_STREAM_GET_FILE() \
+ 	{ \
+-	ut_ezval_dtor(ret_p); \
++	ut_ezval_dtor(ret_p TSRMLS_CC); \
+ 	ALLOC_INIT_ZVAL(key); \
+ 	ALLOC_INIT_ZVAL(can_cache); \
+ 	ALLOC_INIT_ZVAL(tmp); \
+@@ -99,15 +99,15 @@ static int is_last_cached_opcode(const char *path, int len TSRMLS_DC)
+ 
+ #define CLEANUP_PHK_STREAM_GET_FILE() \
+ 	{ \
+-	ut_ezval_ptr_dtor(&key); \
+-	ut_ezval_ptr_dtor(&can_cache); \
+-	ut_ezval_ptr_dtor(&tmp); \
++	ut_ezval_ptr_dtor(&key TSRMLS_CC); \
++	ut_ezval_ptr_dtor(&can_cache TSRMLS_CC); \
++	ut_ezval_ptr_dtor(&tmp TSRMLS_CC); \
+ 	}
+ 
+ #define ABORT_PHK_STREAM_GET_FILE() \
+ 	{ \
+ 	CLEANUP_PHK_STREAM_GET_FILE(); \
+-	ut_ezval_dtor(ret_p); \
++	ut_ezval_dtor(ret_p TSRMLS_CC); \
+ 	return; \
+ 	}
+ 
+@@ -226,7 +226,7 @@ static int PHK_Stream_close(php_stream * stream,
+ {
+ 	PHK_STREAM_DATA *dp = stream->abstract;
+ 
+-	free_dp(&dp);
++	free_dp(&dp TSRMLS_CC);
+ 
+ 	return 0;
+ }
+@@ -288,15 +288,15 @@ static int PHK_Stream_seek(php_stream * stream, off_t offset, int whence,
+ 
+ #define CLEANUP_PHK_STREAM_DO_STAT() \
+ 	{ \
+-	ut_ezval_ptr_dtor(&z_key); \
+-	ut_ezval_ptr_dtor(&z_cache); \
+-	ut_ezval_ptr_dtor(&z_tmp); \
+-	ut_ezval_ptr_dtor(&z_tmp_a); \
+-	ut_ezval_ptr_dtor(&z_ssb); \
+-	ut_ezval_ptr_dtor(&z_uri); \
+-	ut_ezval_ptr_dtor(&z_mode); \
+-	ut_ezval_ptr_dtor(&z_size); \
+-	ut_ezval_ptr_dtor(&z_mtime); \
++	ut_ezval_ptr_dtor(&z_key TSRMLS_CC); \
++	ut_ezval_ptr_dtor(&z_cache TSRMLS_CC); \
++	ut_ezval_ptr_dtor(&z_tmp TSRMLS_CC); \
++	ut_ezval_ptr_dtor(&z_tmp_a TSRMLS_CC); \
++	ut_ezval_ptr_dtor(&z_ssb TSRMLS_CC); \
++	ut_ezval_ptr_dtor(&z_uri TSRMLS_CC); \
++	ut_ezval_ptr_dtor(&z_mode TSRMLS_CC); \
++	ut_ezval_ptr_dtor(&z_size TSRMLS_CC); \
++	ut_ezval_ptr_dtor(&z_mtime TSRMLS_CC); \
+ 	}
+ 
+ #define ABORT_PHK_STREAM_DO_STAT() \
+@@ -535,10 +535,10 @@ static php_stream_ops phk_dirops = {
+ 
+ #define CLEANUP_PHK_STREAM_OPEN() \
+ 	{ \
+-	ut_ezval_ptr_dtor(&z_key); \
+-	ut_ezval_ptr_dtor(&z_cache); \
+-	ut_ezval_ptr_dtor(&z_tmp); \
+-	ut_ezval_ptr_dtor(&z_uri); \
++	ut_ezval_ptr_dtor(&z_key TSRMLS_CC); \
++	ut_ezval_ptr_dtor(&z_cache TSRMLS_CC); \
++	ut_ezval_ptr_dtor(&z_tmp TSRMLS_CC); \
++	ut_ezval_ptr_dtor(&z_uri TSRMLS_CC); \
+ 	}
+ 
+ #define ABORT_PHK_STREAM_OPEN() \
+@@ -546,7 +546,7 @@ static php_stream_ops phk_dirops = {
+ 	DBG_MSG("Aborting generic_open()"); \
+ 	zend_clear_exception(TSRMLS_C); \
+ 	CLEANUP_PHK_STREAM_OPEN(); \
+-	free_dp(&dp); \
++	free_dp(&dp TSRMLS_CC); \
+ 	return NULL; \
+ 	}
+ 
+@@ -654,7 +654,7 @@ static int PHK_Stream_url_stat(php_stream_wrapper *wrapper, const char *uri,
+ 
+ 	dp = new_dp((flags & PHP_STREAM_URL_STAT_QUIET) ? 0 : REPORT_ERRORS);
+ 	retval = do_stat(wrapper, uri, dp, ssb TSRMLS_CC);
+-	free_dp(&dp);
++	free_dp(&dp TSRMLS_CC);
+ 
+ 	return retval;
+ }
+@@ -830,7 +830,7 @@ static char *PHK_Stream_cache_key(php_stream_wrapper * wrapper,
+ 	(*mnt_end) = '/';
+ 
+ 	mp = PHK_Mgr_get_mnt(mnt, 0, 0 TSRMLS_CC);
+-	ut_ezval_ptr_dtor(&mnt);
++	ut_ezval_ptr_dtor(&mnt TSRMLS_CC);
+ 	if ((!mp) || mp->no_opcode_cache) return NULL;
+ 
+ 	set_last_cached_opcode(uri, uri_len TSRMLS_CC);
+diff --git a/PHK_Stream.h b/PHK_Stream.h
+index 4804831..a6369b6 100644
+--- a/PHK_Stream.h
++++ b/PHK_Stream.h
+@@ -38,7 +38,7 @@ static int last_cached_opcode_len;
+ /*============================================================================*/
+ 
+ static PHK_STREAM_DATA *new_dp(int show_errors);
+-static void free_dp(PHK_STREAM_DATA ** dpp);
++static void free_dp(PHK_STREAM_DATA ** dpp TSRMLS_DC);
+ static void clear_last_cached_opcode(TSRMLS_D);
+ static void set_last_cached_opcode(const char *path, int len TSRMLS_DC);
+ static int is_last_cached_opcode(const char *path, int len TSRMLS_DC);
+diff --git a/utils.c b/utils.c
+index 727aee8..c405ef9 100644
+--- a/utils.c
++++ b/utils.c
+@@ -260,7 +260,7 @@ UT_SYMBOL void ut_decref(zval *zp)
+ /*---------*/
+ /* Free zval content and reset it */
+ 
+-UT_SYMBOL void ut_pezval_dtor(zval *zp, int persistent)
++UT_SYMBOL void ut_pezval_dtor(zval *zp, int persistent TSRMLS_DC)
+ {
+ 	if (persistent) {
+ 		switch (Z_TYPE_P(zp) & IS_CONSTANT_TYPE_MASK) {
+@@ -283,20 +283,20 @@ UT_SYMBOL void ut_pezval_dtor(zval *zp, int persistent)
+ 
+ /*---------*/
+ 
+-UT_SYMBOL void ut_ezval_dtor(zval *zp) { ut_pezval_dtor(zp,0); }
+-UT_SYMBOL void ut_pzval_dtor(zval *zp) { ut_pezval_dtor(zp,1); }
++UT_SYMBOL void ut_ezval_dtor(zval *zp TSRMLS_DC) { ut_pezval_dtor(zp,0 TSRMLS_CC); }
++UT_SYMBOL void ut_pzval_dtor(zval *zp TSRMLS_DC) { ut_pezval_dtor(zp,1 TSRMLS_CC); }
+ 
+ /*---------*/
+ /* clear the zval pointer */
+ 
+-UT_SYMBOL void ut_pezval_ptr_dtor(zval ** zpp, int persistent)
++UT_SYMBOL void ut_pezval_ptr_dtor(zval ** zpp, int persistent TSRMLS_DC)
+ {
+ 	if (*zpp) {
+ 		if (persistent) {
+ 			ut_decref(*zpp);
+ 			/* php_printf("Reference count = %d\n",Z_REFCOUNT_PP(zpp)); */
+ 			if (Z_REFCOUNT_PP(zpp) == 0) {
+-				ut_pzval_dtor(*zpp);
++				ut_pzval_dtor(*zpp TSRMLS_CC);
+ 				GC_REMOVE_ZVAL_FROM_BUFFER(*zpp);
+ 				ut_pallocate(*zpp, 0);
+ 			} 
+@@ -309,12 +309,12 @@ UT_SYMBOL void ut_pezval_ptr_dtor(zval ** zpp, int persistent)
+ 
+ /*---------*/
+ 
+-UT_SYMBOL void ut_ezval_ptr_dtor(zval **zpp) { ut_pezval_ptr_dtor(zpp,0); }
+-UT_SYMBOL void ut_pzval_ptr_dtor(zval **zpp) { ut_pezval_ptr_dtor(zpp,1); }
++UT_SYMBOL void ut_ezval_ptr_dtor(zval **zpp TSRMLS_DC) { ut_pezval_ptr_dtor(zpp,0 TSRMLS_CC); }
++UT_SYMBOL void ut_pzval_ptr_dtor(zval **zpp TSRMLS_DC) { ut_pezval_ptr_dtor(zpp,1 TSRMLS_CC); }
+ 
+ /*---------*/
+ 
+-UT_SYMBOL void ut_persistent_array_init(zval * zp)
++UT_SYMBOL void ut_persistent_array_init(zval * zp TSRMLS_DC)
+ {
+ 	HashTable *htp;
+ 
+@@ -326,16 +326,16 @@ UT_SYMBOL void ut_persistent_array_init(zval * zp)
+ 
+ /*---------*/
+ 
+-UT_SYMBOL void ut_persistent_copy_ctor(zval ** ztpp)
++UT_SYMBOL void ut_persistent_copy_ctor(zval ** ztpp TSRMLS_DC)
+ {
+-	*ztpp=ut_persist_zval(*ztpp);
++	*ztpp=ut_persist_zval(*ztpp TSRMLS_CC);
+ }
+ 
+ /*---------*/
+ /* Duplicates a zval and all its descendants to persistent storage */
+ /* Does not support objects and resources */
+ 
+-UT_SYMBOL zval *ut_persist_zval(zval * zsp)
++UT_SYMBOL zval *ut_persist_zval(zval * zsp TSRMLS_DC)
+ {
+ 	int type, len;
+ 	char *p;
+@@ -354,7 +354,7 @@ UT_SYMBOL zval *ut_persist_zval(zval * zsp)
+ 
+ 	  case IS_ARRAY:
+ 	  case IS_CONSTANT_ARRAY:
+-		  ut_persistent_array_init(ztp);
++		  ut_persistent_array_init(ztp TSRMLS_CC);
+ 		  zend_hash_copy(Z_ARRVAL_P(ztp), Z_ARRVAL_P(zsp)
+ 						 , (copy_ctor_func_t) ut_persistent_copy_ctor,
+ 						 NULL, sizeof(zval *));
+@@ -408,7 +408,7 @@ UT_SYMBOL void ut_call_user_function_void(zval *obj_zp, char *func,
+ 
+ 	ALLOC_INIT_ZVAL(ret);
+ 	ut_call_user_function(obj_zp, func, func_len, ret, nb_args, args TSRMLS_CC);
+-	ut_ezval_ptr_dtor(&ret);		/* Discard return value */
++	ut_ezval_ptr_dtor(&ret TSRMLS_CC);		/* Discard return value */
+ }
+ 
+ /*---------------------------------------------------------------*/
+@@ -422,7 +422,7 @@ UT_SYMBOL int ut_call_user_function_bool(zval * obj_zp, char *func,
+ 	ALLOC_INIT_ZVAL(ret);
+ 	ut_call_user_function(obj_zp, func, func_len, ret, nb_args, args TSRMLS_CC);
+ 	result = zend_is_true(ret);
+-	ut_ezval_ptr_dtor(&ret);
++	ut_ezval_ptr_dtor(&ret TSRMLS_CC);
+ 
+ 	return result;
+ }
+@@ -440,7 +440,7 @@ UT_SYMBOL long ut_call_user_function_long(zval *obj_zp, char *func,
+ 
+ 	ENSURE_LONG(ret);
+ 	result=Z_LVAL_P(ret);
+-	ut_ezval_ptr_dtor(&ret);
++	ut_ezval_ptr_dtor(&ret TSRMLS_CC);
+ 
+ 	return result;
+ }
+@@ -518,11 +518,11 @@ and 5.3.9 */
+ 
+ 	status=call_user_function(EG(function_table), &obj_zp, func_zp, ret, nb_args,
+ 		args TSRMLS_CC);
+-	ut_ezval_ptr_dtor(&func_zp);
++	ut_ezval_ptr_dtor(&func_zp TSRMLS_CC);
+ 
+ #if ZEND_MODULE_API_NO <= 20050922
+ 	if (clen) {
+-		ut_ezval_ptr_dtor(&obj_zp);
++		ut_ezval_ptr_dtor(&obj_zp TSRMLS_CC);
+ 	}
+ #endif
+ 
+@@ -572,7 +572,7 @@ UT_SYMBOL void ut_loadExtension(char *name, int len TSRMLS_DC)
+ 
+ 	ut_loadExtension_file(zp TSRMLS_CC);
+ 
+-	ut_ezval_ptr_dtor(&zp);
++	ut_ezval_ptr_dtor(&zp TSRMLS_CC);
+ }
+ 
+ /*---------------------------------------------------------------*/
+@@ -865,7 +865,7 @@ UT_SYMBOL void ut_unserialize_zval(const unsigned char *buffer
+ 
+ 	INIT_ZVAL(*ret);
+ 	if (!php_var_unserialize(&ret,&buffer,buffer+len,&var_hash TSRMLS_CC)) {
+-		ut_ezval_dtor(ret);
++		ut_ezval_dtor(ret TSRMLS_CC);
+ 		THROW_EXCEPTION("Unserialize error");
+ 		}
+ 	PHP_VAR_UNSERIALIZE_DESTROY(var_hash);
+@@ -888,7 +888,7 @@ UT_SYMBOL void ut_file_get_contents(char *path, zval *ret TSRMLS_DC)
+ 
+ 	if (len < 0) EXCEPTION_ABORT_1("%s : Cannot read file",path);
+ 
+-	ut_ezval_dtor(ret);
++	ut_ezval_dtor(ret TSRMLS_CC);
+ 	ZVAL_STRINGL(ret,contents,len,0);
+ }
+ 
+diff --git a/utils.h b/utils.h
+index 9bc9655..e3e4cb1 100644
+--- a/utils.h
++++ b/utils.h
+@@ -324,7 +324,7 @@ which is the case in this extension. */
+ #else
+ #define RETVAL_BY_REF(zp) \
+ 	{ \
+-	ut_ezval_ptr_dtor(return_value_ptr); \
++	ut_ezval_ptr_dtor(return_value_ptr TSRMLS_CC); \
+ 	Z_ADDREF_P(zp); \
+ 	*return_value_ptr=(zp); \
+ 	}
+@@ -420,15 +420,15 @@ UT_SYMBOL inline void ut_dbg_print_time();
+ 
+ UT_SYMBOL inline int ut_is_web(void);
+ UT_SYMBOL void ut_decref(zval *zp);
+-UT_SYMBOL void ut_pezval_dtor(zval *zp, int persistent);
+-UT_SYMBOL void ut_ezval_dtor(zval *zp);
+-UT_SYMBOL void ut_pzval_dtor(zval *zp);
+-UT_SYMBOL void ut_pezval_ptr_dtor(zval ** zpp, int persistent);
+-UT_SYMBOL void ut_ezval_ptr_dtor(zval **zpp);
+-UT_SYMBOL void ut_pzval_ptr_dtor(zval **zpp);
+-UT_SYMBOL void ut_persistent_array_init(zval * zp);
+-UT_SYMBOL void ut_persistent_copy_ctor(zval ** ztpp);
+-UT_SYMBOL zval *ut_persist_zval(zval * zsp);
++UT_SYMBOL void ut_pezval_dtor(zval *zp, int persistent TSRMLS_DC);
++UT_SYMBOL void ut_ezval_dtor(zval *zp TSRMLS_DC);
++UT_SYMBOL void ut_pzval_dtor(zval *zp TSRMLS_DC);
++UT_SYMBOL void ut_pezval_ptr_dtor(zval ** zpp, int persistent TSRMLS_DC);
++UT_SYMBOL void ut_ezval_ptr_dtor(zval **zpp TSRMLS_DC);
++UT_SYMBOL void ut_pzval_ptr_dtor(zval **zpp TSRMLS_DC);
++UT_SYMBOL void ut_persistent_array_init(zval * zp TSRMLS_DC);
++UT_SYMBOL void ut_persistent_copy_ctor(zval ** ztpp TSRMLS_DC);
++UT_SYMBOL zval *ut_persist_zval(zval * zsp TSRMLS_DC);
+ UT_SYMBOL zval *ut_new_instance(char *class_name, int class_name_len,
+ 	int construct, int nb_args,	zval ** args TSRMLS_DC);
+ UT_SYMBOL inline void ut_call_user_function_void(zval *obj_zp, char *func,

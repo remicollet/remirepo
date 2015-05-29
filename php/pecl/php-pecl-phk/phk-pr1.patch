@@ -1,0 +1,36 @@
+From fcc79f64fdae2a4fa6b02dca0310aef7749501c7 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 28 May 2015 17:53:39 +0200
+Subject: [PATCH] fix for PHP 5.5
+
+---
+ php_phk.h | 2 +-
+ utils.c   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/php_phk.h b/php_phk.h
+index d938dd8..e455e26 100644
+--- a/php_phk.h
++++ b/php_phk.h
+@@ -106,7 +106,7 @@
+ #include "PHK_Mgr.h"
+ #include "PHK.h"
+ 
+-#if ZEND_EXTENSION_API_NO >= PHP_5_5_X_API_NO
++#if ZEND_EXTENSION_API_NO >= PHP_5_6_X_API_NO
+ #include "zend_virtual_cwd.h"
+ #else
+ #include "TSRM/tsrm_virtual_cwd.h"
+diff --git a/utils.c b/utils.c
+index 727aee8..7ba6c23 100644
+--- a/utils.c
++++ b/utils.c
+@@ -48,7 +48,7 @@
+ #include "SAPI.h"
+ #include "php_streams.h"
+ 
+-#if ZEND_EXTENSION_API_NO >= PHP_5_5_X_API_NO
++#if ZEND_EXTENSION_API_NO >= PHP_5_6_X_API_NO
+ #include "zend_virtual_cwd.h"
+ #else
+ #include "TSRM/tsrm_virtual_cwd.h"
