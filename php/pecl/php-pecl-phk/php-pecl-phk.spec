@@ -23,19 +23,11 @@
 Summary:        Accelerator for Automap and PHK
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        3.0.0
-Release:        0%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/flaupretre/pecl-phk/pull/1
-Patch0:         %{pecl_name}-pr1.patch
-# https://github.com/flaupretre/pecl-phk/pull/2
-Patch1:         %{pecl_name}-pr2.patch
-# https://github.com/flaupretre/pecl-phk/pull/3
-Patch2:         %{pecl_name}-pr3.patch
-
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -104,9 +96,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-%patch0 -p1 -b .php55
-%patch1 -p1 -b .phpzts
-%patch2 -p1 -b .zpp
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PHK_VERSION/{s/.* "//;s/".*$//;p}' php_phk.h)
@@ -243,6 +232,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 29 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- version 3.0.0 (beta)
+
 * Thu May 28 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0
 - initial package for upcoming version 3.0.0
 - open # https://github.com/flaupretre/pecl-phk/pull/1 PHP 5.5
