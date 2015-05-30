@@ -1,4 +1,4 @@
-# spec file for php-phpspec
+# remirepo/fedora spec file for php-phpspec
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
@@ -6,20 +6,20 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9727d75919a00455433e867565bc022f0b985a39
+%global gh_commit    e9a40577323e67f1de2e214abf32976a0352d8f8
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpspec
 %global gh_project   phpspec
 
 Name:           php-phpspec
-Version:        2.2.0
+Version:        2.2.1
 Release:        1%{?dist}
 Summary:        Specification-oriented BDD framework for PHP
 
 Group:          Development/Libraries
 License:        MIT
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 Source1:        %{gh_project}-autoload.php
 
@@ -147,6 +147,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat May 30 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
+- update to 2.2.1
+
 * Sun Apr 19 2015 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - update to 2.2.0
 - raise dependency on phpspec/prophecy 1.4
