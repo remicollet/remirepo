@@ -1,3 +1,4 @@
+# remirepo spec file for php-d11wtq-boris, from Fedora:
 #
 # RPM spec file for php-d11wtq-boris
 #
@@ -33,6 +34,7 @@ URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
 BuildArch:     noarch
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 # Autoload generation
 BuildRequires: %{_bindir}/phpab
 
@@ -81,6 +83,8 @@ rm -f lib/autoload.php
 
 
 %install
+rm -rf %{buildroot}
+
 : Lib
 mkdir -p %{buildroot}%{phpdir}
 cp -pr lib/* %{buildroot}%{phpdir}/
@@ -94,7 +98,12 @@ install -pm 0755 bin/boris %{buildroot}%{_bindir}/
 : No upstream tests
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -104,6 +113,9 @@ install -pm 0755 bin/boris %{buildroot}%{_bindir}/
 
 
 %changelog
+* Sun May 31 2015 Remi Collet <remi@remirepo.net> - 1.0.10-2
+- backport in remi repository
+
 * Sat May 30 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.10-2
 - php(language) => php-cli dependency change
 
