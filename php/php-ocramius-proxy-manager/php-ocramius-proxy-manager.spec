@@ -25,7 +25,7 @@
 %global zf_max_ver  3.0
 
 # Skip tests for EPEL 6 b/c PHPUnit < 4
-# TODO: Need to get tests running on EPEL 6!
+# TODO: Get tests running on EPEL 6!
 %if 0%{?el6}
 %global with_tests 0
 %else
@@ -37,7 +37,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}
 Summary:       OOP proxy wrappers utilities
 
 Group:         Development/Libraries
@@ -47,10 +47,10 @@ Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:     noarch
-# For autoload generation
+# Autoload generation
 BuildRequires: %{_bindir}/phpab
 %if %{with_tests}
-# For tests
+# Tests
 ## composer.json
 BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language)                         >= %{php_min_ver}
@@ -99,16 +99,15 @@ Optional:
 : Generate autoloader
 %{_bindir}/phpab --nolower --output src/ProxyManager/autoload.php src/ProxyManager
 
-cat >> src/ProxyManager/autoload.php <<'AUTOLOAD'
+(cat <<'AUTOLOAD'
 
-// TODO: Add Zend autoloaders from their packages when they are available
+// TODO: Add Zend/ZendXml/Ocramius autoloaders from their packages when they are available
 spl_autoload_register(function ($class) {
-    if (0 === strpos($class, 'Zend\\')) {
-        $src = str_replace('\\', '/',  $class) . '.php';
-        @include_once $src;
-    }
+    $src = str_replace('\\', '/',  $class) . '.php';
+    @include_once $src;
 });
 AUTOLOAD
+) | tee -a src/ProxyManager/autoload.php
 
 
 %install
@@ -124,14 +123,15 @@ cp -rp src/* %{buildroot}%{phpdir}/
 
 : Create mock Composer "vendor/autoload.php"
 mkdir vendor
-cat >> vendor/autoload.php <<'AUTOLOAD'
+(cat <<'AUTOLOAD'
 <?php
 require __DIR__ . '/../tests/autoload.php';
 require '%{buildroot}%{phpdir}/ProxyManager/autoload.php';
 AUTOLOAD
+) | tee vendor/autoload.php
 
 : Run tests
-%{_bindir}/phpunit --exclude-group Performance
+%{_bindir}/phpunit -v --exclude-group Performance
 %else
 : Tests skipped
 %endif
@@ -151,6 +151,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 29 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.0-2
+- Fix autoloader to load all optional pkgs
+- Some spec cleanup
+
 * Mon May 18 2015 Remi Collet <RPMS@FamilleCollet.com> - 1.0.0-1
 - add needed backport stuff for remi repository
 
