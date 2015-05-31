@@ -1,7 +1,8 @@
+# remirepo spec file for php-ocramius-proxy-manager from Fedora:
 #
 # RPM spec file for php-Faker
 #
-# Copyright (c) 2012-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2012-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -11,14 +12,16 @@
 
 %global github_owner   fzaninotto
 %global github_name    Faker
-%global github_version 1.4.0
-%global github_commit  010c7efedd88bf31141a02719f51fb44c732d5a0
+%global github_version 1.5.0
+%global github_commit  d0190b156bcca848d401fb80f31f504f37141c8d
 
 # "php": ">=5.3.3"
 %global php_min_ver    5.3.3
 
 # Build using "--without tests" to disable tests
 %global with_tests     %{?_without_tests:0}%{!?_without_tests:1}
+
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-%{github_name}
 Version:       %{github_version}
@@ -32,14 +35,19 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Autoload generation
+BuildRequires: %{_bindir}/phpab
+# Tests
 %if %{with_tests}
-# For tests: composer.json
+## composer.json
+BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-phpunit-PHPUnit
-# For tests: phpcompatinfo (computed from version 1.4.0)
+## phpcompatinfo (computed from version 1.5.0)
 BuildRequires: php-curl
 BuildRequires: php-date
+BuildRequires: php-filter
 BuildRequires: php-hash
+BuildRequires: php-intl
 BuildRequires: php-mbstring
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -48,6 +56,8 @@ BuildRequires: php-spl
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
+# composer.json: optional
+Requires:      php-intl
 # phpcompatinfo (computed from version 1.4.0)
 Requires:      php-curl
 Requires:      php-date
@@ -65,56 +75,82 @@ to bootstrap your database, create good-looking XML documents, fill-in your
 persistence to stress test it, or anonymize data taken from a production
 service, Faker is for you.
 
-Faker is heavily inspired by Perl's Data::Faker
-(http://search.cpan.org/~jasonk/Data-Faker/), and by Ruby's Faker
-(http://faker.rubyforge.org/).
+Faker is heavily inspired by Perl's Data::Faker [1], and by Ruby's Faker [2].
 
 Optional:
+* CakePHP (http://cakephp.org/)
 * Doctrine ORM (php-doctrine-orm)
+* Mandango (http://mandango.org/)
+* Propel (http://propelorm.org/)
+
+[1] http://search.cpan.org/~jasonk/Data-Faker/
+[2] http://faker.rubyforge.org/
 
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+: Remove executable bits
+: https://github.com/fzaninotto/Faker/pull/593
+chmod a-x \
+    src/Faker/Provider/sl_SI/Address.php \
+    src/Faker/Provider/sl_SI/Internet.php \
+    src/Faker/Provider/sl_SI/Payment.php \
+    src/Faker/Provider/sl_SI/PhoneNumber.php \
+    test/Faker/Provider/ja_JP/PersonTest.php
+
 
 %build
-# Empty build section, nothing to build
+: Generate autoloader
+%{_bindir}/phpab --nolower --output src/Faker/autoload.php src/Faker
+
+(cat <<'AUTOLOAD'
+
+// TODO: Add optional package autoloaders from their packages when they are available
+spl_autoload_register(function ($class) {
+    $src = str_replace('\\', '/',  $class) . '.php';
+    @include_once $src;
+});
+AUTOLOAD
+) | tee -a src/Faker/autoload.php
 
 
 %install
-mkdir -p %{buildroot}%{_datadir}/php
-cp -rp src/%{github_name} %{buildroot}%{_datadir}/php/
+rm -rf %{buildroot}
+mkdir -p %{buildroot}%{phpdir}
+cp -rp src/%{github_name} %{buildroot}%{phpdir}/
 
 
 %check
 %if %{with_tests}
-# Create autoloader
-mkdir vendor
-cat > vendor/autoload.php <<'AUTOLOAD'
-<?php
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', $class).'.php';
-    @include_once $src;
-});
-AUTOLOAD
-
-# Skip tests that require downloading content
+: Skip tests that require downloading content
 sed 's/function testDownloadWithDefaults/function SKIP_testDownloadWithDefaults/' \
     -i test/Faker/Provider/ImageTest.php
 
-%{_bindir}/phpunit --include-path="./src:./test" -d date.timezone="UTC"
+%{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Faker/autoload.php
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
 %files
 %defattr(-,root,root,-)
-%doc LICENSE CHANGELOG *.md composer.json
-%{_datadir}/php/%{github_name}
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *.md
+%doc composer.json
+%{phpdir}/%{github_name}
 
 
 %changelog
+* Sat May 30 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.5.0-1
+- Updated to 1.5.0 (BZ #1226339)
+- Packaged autoloader
+- %%license usage
+
 * Sun Jun  8 2014 Remi Collet <RPMS@FamilleCollet.com> - 1.4.0-1
 - backport 1.3.0 for remi repo.
 
