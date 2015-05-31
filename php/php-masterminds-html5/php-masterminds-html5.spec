@@ -1,3 +1,4 @@
+# remirepo spec file for php-masterminds-html5, from Fedora:
 #
 # RPM spec file for php-masterminds-html5
 #
@@ -36,6 +37,7 @@ URL:           http://masterminds.github.io/html5-php
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
 BuildArch:     noarch
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 # Autoload generation
 BuildRequires: %{_bindir}/phpab
 # Tests
@@ -100,6 +102,7 @@ mv src/HTML5/Serializer/*.md docs/Serializer/
 
 
 %install
+rm -rf %{buildroot}
 mkdir -p  %{buildroot}%{phpdir}/Masterminds
 cp -pr src/* %{buildroot}%{phpdir}/Masterminds/
 # Project-level autoloader for consistency with other pkgs
@@ -127,7 +130,12 @@ AUTOLOAD
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE.txt
 %doc docs/*
@@ -135,5 +143,8 @@ AUTOLOAD
 
 
 %changelog
+* Sun May 31 2015 Remi Collet <remi@remirepo.net> - 2.1.1-1
+- backport in remi repository
+
 * Fri May 22 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.1.1-1
 - Initial package

@@ -31,7 +31,7 @@ URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
 BuildArch:     noarch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 # Autoload generation
 BuildRequires: %{_bindir}/phpab
 
