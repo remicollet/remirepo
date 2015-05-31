@@ -1,4 +1,4 @@
-# remirepo spec file for php-ocramius-proxy-manager from Fedora:
+# remirepo spec file for php-Faker, from Fedora:
 #
 # RPM spec file for php-Faker
 #
