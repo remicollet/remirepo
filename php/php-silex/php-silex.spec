@@ -1,3 +1,4 @@
+# remirepo spec file for php-silex, from Fedora:
 #
 # RPM spec file for php-silex
 #
@@ -55,6 +56,7 @@ URL:           http://silex.sensiolabs.org
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
 BuildArch:     noarch
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 # For autoload generation
 BuildRequires: %{_bindir}/phpab
 %if %{with_tests}
@@ -198,6 +200,8 @@ AUTOLOAD
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}
 cp -rp src/* %{buildroot}%{phpdir}
 
@@ -224,7 +228,12 @@ rm -f \
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc README.rst
@@ -234,6 +243,9 @@ rm -f \
 
 
 %changelog
+* Sun May 31 2015 Remi Collet <remi@remirepo.net> - 1.2.4-3
+- backport in remi repository
+
 * Wed May 20 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.4-3
 - "%%{phpdir}/Pimple" => "%%{phpdir}/Pimple1"
 
