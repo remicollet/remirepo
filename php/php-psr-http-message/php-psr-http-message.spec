@@ -1,3 +1,4 @@
+# remirepo spec file for php-psr-http-message, from Fedora:
 #
 # RPM spec file for php-psr-http-message
 #
@@ -11,38 +12,42 @@
 
 %global github_owner     php-fig
 %global github_name      http-message
-%global github_version   0.10.1
-%global github_commit    9723465b3e7c8ecb0436f066bfb8a13e1bac1789
+%global github_version   1.0
+%global github_commit    85d63699f0dbedb190bbd4b0d2b9dc707ea4c298
 
 %global composer_vendor  psr
 %global composer_project http-message
 
 %{!?phpdir:  %global phpdir  %{_datadir}/php}
 
-Name:      php-%{composer_vendor}-%{composer_project}
-Version:   %{github_version}
-Release:   1%{?github_release}%{?dist}
-Summary:   Common interface for HTTP messages (PSR-7)
+Name:          php-%{composer_vendor}-%{composer_project}
+Version:       %{github_version}
+Release:       1%{?github_release}%{?dist}
+Summary:       Common interface for HTTP messages (PSR-7)
 
-Group:     Development/Libraries
-License:   MIT
-URL:       https://github.com/%{github_owner}/%{github_name}
-Source0:   %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+Group:         Development/Libraries
+License:       MIT
+URL:           https://github.com/%{github_owner}/%{github_name}
+Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
-BuildArch: noarch
+BuildArch:     noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+# Autoload generation
+BuildRequires: %{_bindir}/phpab
 
-# phpcompatinfo (computed from version 0.10.1)
-Requires:  php(language) >= 5.3.0
+# phpcompatinfo (computed from version 1.0)
+Requires:      php(language) >= 5.3.0
 
 # Composer
-Provides:  php-composer(%{composer_vendor}/%{composer_project}) = %{version}
+Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 %description
-This package holds all interfaces/classes/traits related to PSR-7.
+This package holds all interfaces/classes/traits related to PSR-7 [1].
 
 Note that this is not a HTTP message implementation of its own. It is merely an
 interface that describes a HTTP message. See the specification for more details.
+
+[1] http://www.php-fig.org/psr/psr-7/
 
 
 %prep
@@ -50,7 +55,8 @@ interface that describes a HTTP message. See the specification for more details.
 
 
 %build
-# Empty build section, nothing required
+: Generate autoloader
+%{_bindir}/phpab --nolower --output src/autoload.php src
 
 
 %install
@@ -79,6 +85,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat May 30 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0-1
+- Updated to 1.0 (BZ #1218459)
+- Added autoloader
+
 * Mon Apr 13 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.10.1-1
 - Updated to 0.10.1 (BZ #1187918)
 
