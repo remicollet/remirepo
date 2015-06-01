@@ -1,4 +1,4 @@
-# spec file for glpi-reports
+# remirepo spec file for glpi-reports
 #
 # Copyright (c) 2010-2015 Remi Collet
 # License: CC-BY-SA
@@ -9,7 +9,7 @@
 %global pluginname   reports
 
 Name:           glpi-reports
-Version:        1.7.3
+Version:        1.8.0
 Release:        1%{?dist}
 Summary:        GLPI Plugin providing additional reports
 Summary(fr):    Extension GLPI fournissant des rapports supplémentaires
@@ -18,14 +18,14 @@ Group:          Applications/Internet
 License:        GPLv2+
 URL:            https://forge.indepnet.net/projects/reports
 
-Source0:        https://forge.indepnet.net/attachments/download/1920/glpi_reports-1.7.3.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/2037/glpi-reports-1.8.0.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
 
-Requires:       glpi >= 0.84
-Requires:       glpi <  0.85
+Requires:       glpi >= 0.85
+Requires:       glpi <  0.86
 
 
 %description
@@ -101,6 +101,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun  1 2015 Remi Collet <remi@fedoraproject.org> - 1.8.0-1
+- version 1.8.0 for GLPI 0.85
+  https://forge.indepnet.net/versions/1108
+
 * Mon Dec  1 2014 Remi Collet <remi@fedoraproject.org> - 1.7.3-1
 - version 1.7.3
   https://forge.indepnet.net/versions/1093
