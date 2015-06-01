@@ -1,4 +1,4 @@
-# spec file for php-pecl-swoole
+# remirepo spec file for php-pecl-swoole
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -23,7 +23,7 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.7.16
+Version:        1.7.17
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -31,7 +31,7 @@ URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-devel >= 5.3.10
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-sockets
 BuildRequires:  %{?scl_prefix}php-mysqli
@@ -245,6 +245,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 01 2015 Remi Collet <remi@fedoraproject.org> - 1.7.17-1
+- Update to 1.7.17
+
 * Fri May 08 2015 Remi Collet <remi@fedoraproject.org> - 1.7.16-1
 - Update to 1.7.16
 
