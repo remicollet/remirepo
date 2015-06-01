@@ -22,7 +22,7 @@
 
 Summary:        Accelerator for Automap and PHK
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        3.0.0
+Version:        3.0.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
@@ -232,6 +232,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 01 2015 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
+- Update to 3.0.1 (beta)
+
 * Fri May 29 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
 - version 3.0.0 (beta)
 
