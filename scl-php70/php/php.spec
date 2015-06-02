@@ -124,9 +124,9 @@
 %global db_devel  libdb-devel
 %endif
 
-%global gh_commit    6f46fa376bc3452617fa566917320237b687fd7e
+%global gh_commit    8a089e7e71bfcb0829e97feb42a7495f8e39e1b4
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150529
+%global gh_date      20150602
 %global gh_owner     php
 %global gh_project   php-src
 #global rcver        RC1
@@ -1801,6 +1801,9 @@ fi
 
 
 %changelog
+* Tue Jun  2 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.7.20150602git8a089e7
+- new snapshot
+
 * Fri May 29 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.7.20150525git6f46fa3
 - new snapshot
 - t1lib support have been removed
