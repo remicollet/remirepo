@@ -13,7 +13,7 @@
 %{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name   imagick
-%global prever      RC1
+%global prever      RC2
 %global with_zts    0%{?__ztsphp:1}
 %if "%{php_version}" < "5.6"
 %global ini_name  %{pecl_name}.ini
@@ -27,7 +27,7 @@
 Summary:       Extension to create and modify images using ImageMagick
 Name:          %{?scl_prefix}php-pecl-imagick
 Version:       3.3.0
-Release:       0.2.RC1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       0.3.RC2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
@@ -214,6 +214,8 @@ fi
 : ignore failed test with ImageMagick 6.7.8
 rm ?TS/tests/bug20636.phpt
 %endif
+# https://github.com/mkoppanen/imagick/issues/97
+rm ?TS/tests/024-ispixelsimilar.phpt
 
 : simple module load test for NTS extension
 cd NTS
@@ -223,13 +225,11 @@ cd NTS
     --modules | grep %{pecl_name}
 
 : upstream test suite for NTS extension
-export TEST_PHP_EXECUTABLE=%{__php}
-export REPORT_EXIT_STATUS=1
-export NO_INTERACTION=1
-%{__php} -n run-tests.php \
-    -n -q --show-diff \
-    -d extension_dir=%{buildroot}%{php_extdir} \
-    -d extension=%{pecl_name}.so
+TEST_PHP_EXECUTABLE=%{__php} \
+TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
+REPORT_EXIT_STATUS=1 \
+NO_INTERACTION=1 \
+%{__php} -n run-tests.php --show-diff
 
 %if %{with_zts}
 : simple module load test for ZTS extension
@@ -277,6 +277,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun  2 2015 Remi Collet <remi@fedoraproject.org> - 3.3.0-0.3.RC2
+- update to 3.3.0RC2
+
 * Mon Mar 30 2015 Remi Collet <remi@fedoraproject.org> - 3.3.0-0.2.RC1
 - update to 3.3.0RC1
 - drop runtime dependency on pear, new scriptlets

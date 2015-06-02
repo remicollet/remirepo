@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #101 imagick version 3.3.0RC1 ] {
+Extension [ <persistent> extension #102 imagick version 3.3.0RC2 ] {
 
   - Dependencies {
     Dependency [ spl (Required) ]
@@ -9,7 +9,7 @@ Extension [ <persistent> extension #101 imagick version 3.3.0RC1 ] {
       Current = '0'
     }
     Entry [ imagick.skip_version_check <ALL> ]
-      Current = '0'
+      Current = '1'
     }
     Entry [ imagick.progress_monitor <SYSTEM> ]
       Current = '0'
@@ -289,7 +289,7 @@ Extension [ <persistent> extension #101 imagick version 3.3.0RC1 ] {
 
     Class [ <internal:imagick> <iterateable> class Imagick implements Iterator, Traversable, Countable ] {
 
-      - Constants [541] {
+      - Constants [542] {
         Constant [ integer COLOR_BLACK ] { 11 }
         Constant [ integer COLOR_BLUE ] { 12 }
         Constant [ integer COLOR_CYAN ] { 13 }
@@ -301,7 +301,7 @@ Extension [ <persistent> extension #101 imagick version 3.3.0RC1 ] {
         Constant [ integer COLOR_ALPHA ] { 19 }
         Constant [ integer COLOR_FUZZ ] { 20 }
         Constant [ integer IMAGICK_EXTNUM ] { 30300 }
-        Constant [ string IMAGICK_EXTVER ] { 3.3.0RC1 }
+        Constant [ string IMAGICK_EXTVER ] { 3.3.0RC2 }
         Constant [ integer QUANTUM_RANGE ] { 65535 }
         Constant [ integer USE_ZEND_MM ] { 0 }
         Constant [ integer COMPOSITE_DEFAULT ] { 40 }
@@ -485,6 +485,7 @@ Extension [ <persistent> extension #101 imagick version 3.3.0RC1 ] {
         Constant [ integer DECORATION_UNDERLINE ] { 2 }
         Constant [ integer DECORATION_OVERLINE ] { 3 }
         Constant [ integer DECORATION_LINETROUGH ] { 4 }
+        Constant [ integer DECORATION_LINETHROUGH ] { 4 }
         Constant [ integer NOISE_UNIFORM ] { 1 }
         Constant [ integer NOISE_GAUSSIAN ] { 2 }
         Constant [ integer NOISE_MULTIPLICATIVEGAUSSIAN ] { 3 }
@@ -4609,7 +4610,8 @@ Extension [ <persistent> extension #101 imagick version 3.3.0RC1 ] {
 
         Method [ <internal:imagick> public method getcolorvaluequantum ] {
 
-          - Parameters [0] {
+          - Parameters [1] {
+            Parameter #0 [ <required> $color ]
           }
         }
 
