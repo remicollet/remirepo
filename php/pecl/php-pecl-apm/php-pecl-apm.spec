@@ -38,7 +38,7 @@
 
 Name:           %{?scl_prefix}php-pecl-apm
 Summary:        Alternative PHP Monitor
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 
@@ -179,7 +179,7 @@ install -D -m 644 ZTS/apm.ini %{buildroot}%{php_ztsinidir}/%{ini_name}
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # Default database dir
-install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/apm/db
+install -m 700 -d %{buildroot}%{_localstatedir}/lib/php/apm/db
 
 cd NTS
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
@@ -249,6 +249,9 @@ fi
 
 
 %changelog
+* Tue Jun 02 2015 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4 (stable)
+
 * Mon May 18 2015 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3 (stable)
 - drop runtime dependency on pear, new scriptlets
