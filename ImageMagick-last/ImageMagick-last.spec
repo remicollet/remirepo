@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        6.9.1
-%global Patchlevel 3
+%global Patchlevel 4
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -52,12 +52,12 @@ Name:           %{libname}
 Name:           %{libname}-last
 %endif
 Version:        %{VER}.%{Patchlevel}
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        An X application for displaying and manipulating images
 Group:          Applications/Multimedia
 License:        ImageMagick
 Url:            http://www.imagemagick.org/
-Source0:        ftp://ftp.ImageMagick.org/pub/ImageMagick/ImageMagick-%{VER}-%{Patchlevel}.tar.bz2
+Source0:        ftp://ftp.ImageMagick.org/pub/ImageMagick/ImageMagick-%{VER}-%{Patchlevel}.tar.xz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  bzip2-devel, freetype-devel, libjpeg-devel, libpng-devel
@@ -446,6 +446,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jun  2 2015 Remi Collet <remi@remirepo.net> - 6.9.1.4-1
+- update to 6.9.1-4
+
 * Thu May 28 2015 Remi Collet <remi@remirepo.net> - 6.9.1.3-2
 - honors default build options (--without-gcc-arch)
 - make build verbose
