@@ -1,3 +1,4 @@
+# remirepo spec file for php-react-promise, from Fedora:
 #
 # RPM spec file for php-react-promise
 #
@@ -23,12 +24,11 @@
 # Build using "--without tests" to disable tests
 %global with_tests %{?_without_tests:0}%{!?_without_tests:1}
 
-%{!?phpdir:     %global phpdir     %{_datadir}/php}
-%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       3%{?github_release}%{?dist}
 Summary:       A lightweight implementation of CommonJS Promises/A for PHP
 
 Group:         Development/Libraries
@@ -38,14 +38,17 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Tests
 %if %{with_tests}
-BuildRequires: %{__phpunit}
-# composer.json
+BuildRequires: %{_bindir}/phpunit
+## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 2.2.0)
+## phpcompatinfo (computed from version 2.2.0)
 BuildRequires: php-json
 BuildRequires: php-reflection
 BuildRequires: php-spl
+## Autoloader
+BuildRequires: php-composer(symfony/class-loader) >= 2.5
 %endif
 
 # composer.json
@@ -54,6 +57,8 @@ Requires:      php(language) >= %{php_min_ver}
 Requires:      php-json
 Requires:      php-reflection
 Requires:      php-spl
+# Autoloader
+Requires:      php-composer(symfony/class-loader) >= 2.5
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -67,6 +72,25 @@ A lightweight implementation of CommonJS Promises/A [1] for PHP.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+: Create autoloader
+(cat <<'AUTOLOAD'
+<?php
+/**
+ * Autoloader created by %{name}-%{version}-%{release}
+ */
+
+if (!class_exists('Symfony\\Component\\ClassLoader\\Psr4ClassLoader', false)) {
+    require_once 'Symfony/Component/ClassLoader/Psr4ClassLoader.php';
+}
+
+$loader = new \Symfony\Component\ClassLoader\Psr4ClassLoader();
+$loader->addPrefix('React\\Promise', __DIR__);
+$loader->register();
+
+require_once __DIR__ . '/functions_include.php';
+AUTOLOAD
+) | tee src/autoload.php
+
 
 %build
 # Empty build section, nothing required
@@ -74,33 +98,23 @@ A lightweight implementation of CommonJS Promises/A [1] for PHP.
 
 %install
 rm -rf %{buildroot}
-mkdir -pm 0755 %{buildroot}%{phpdir}/React/Promise
+mkdir -p %{buildroot}%{phpdir}/React/Promise
 cp -rp src/* %{buildroot}%{phpdir}/React/Promise/
 
 
 %check
 %if %{with_tests}
-# Create bootstrap
-cat > bootstrap.php <<'BOOTSTRAP'
+: Create tests bootstrap
+(cat <<'BOOTSTRAP'
 <?php
 
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', $class).'.php';
+require_once '%{buildroot}%{phpdir}/React/Promise/autoload.php';
 
-    if (!@include_once $src) {
-        $psr4_class = str_replace('React\\Promise\\', '', $class);
-        $psr4_src = str_replace('\\', '/', $psr4_class).'.php';
-
-        @include_once $psr4_src;
-    }
-});
-
-require_once '%{buildroot}%{phpdir}/React/Promise/functions.php';
+$loader->addPrefix('React\\Promise', __DIR__ . '/tests');
 BOOTSTRAP
+) | tee bootstrap.php
 
-%{__phpunit} \
-    --bootstrap ./bootstrap.php \
-    --include-path %{buildroot}%{phpdir}:./tests
+%{_bindir}/phpunit --bootstrap ./bootstrap.php -v
 %else
 : Tests skipped
 %endif
@@ -114,12 +128,19 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc *.md composer.json
+%doc *.md
+%doc composer.json
 %dir %{phpdir}/React
      %{phpdir}/React/Promise
 
 
 %changelog
+* Mon Jun 01 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.2.0-3
+- Use include path in autoloader
+
+* Mon Jun 01 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.2.0-2
+- Added autoloader
+
 * Sun Jan 04 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.2.0-1
 - Updated to 2.2.0 (BZ #1178411)
 
