@@ -6,10 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    69210d5bc130f8cc9f96f99582a041254d7b9833
+%global gh_commit    0ec86be5e988261e8b625ac696d566afa2c35faf
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20150525
+%global gh_date      20150531
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
@@ -164,6 +164,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun  2 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.5.20150531git0ec86be
+- new snapshot
+
 * Tue May 26 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.5.20150525git69210d5
 - new snapshot
 - ensure /usr/share/php is in include_path (for SCL)
