@@ -1,4 +1,4 @@
-# spec file for glpi-webservices
+# remirepo spec file for glpi-webservices
 #
 # Copyright (c) 2010-2015 Remi Collet
 # License: CC-BY-SA
@@ -10,7 +10,7 @@
 #global svnrelease   322
 
 Name:           glpi-webservices
-Version:        1.4.3
+Version:        1.5.0
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -28,17 +28,18 @@ URL:            https://forge.indepnet.net/projects/webservices
 # tar czf glpi-webservices-1.3.0-322.tar.gz webservices
 Source0:        glpi-%{pluginname}-%{version}-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/1907/glpi-webservices-1.4.3.tar.gz
+Source0:        https://forge.indepnet.net/attachments/download/2033/glpi-webservices-1.5.0.tar.gz
 %endif
 
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-Requires:       glpi >= 0.84
-Requires:       glpi <  0.85
+Requires:       glpi >= 0.85
+Requires:       glpi <  0.86
 Requires:       php-xmlrpc
 Requires:       php-soap
+
 
 %description
 This plugin provides a server for Web Services which allow
@@ -98,12 +99,18 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE AUTHORS.txt
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc AUTHORS.txt
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %{_datadir}/glpi/plugins/%{pluginname}
 
 
 %changelog
+* Tue Jun  2 2015 Remi Collet <Fedora@FamilleCollet.com> - 1.5.0-1
+- version 1.5.0 fir GLPI 0.85
+  https://forge.indepnet.net/versions/1102
+
 * Mon Nov 17 2014 Remi Collet <Fedora@FamilleCollet.com> - 1.4.3-1
 - version 1.4.3
   https://forge.indepnet.net/versions/1040
