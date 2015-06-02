@@ -1,3 +1,4 @@
+# remirepo spec file for php-guzzlehttp-streams, from Fedora:
 #
 # RPM spec file for php-guzzlehttp-streams
 #
@@ -23,12 +24,11 @@
 # Build using "--without tests" to disable tests
 %global with_tests       %{?_without_tests:0}%{!?_without_tests:1}
 
-%{!?phpdir:     %global phpdir     %{_datadir}/php}
-%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}
 Summary:       Provides a simple abstraction over streams of data
 
 Group:         Development/Libraries
@@ -43,14 +43,17 @@ Patch0:        %{name}-ad4c07ea55d02789a65ae75f6e4a9ee2cb9dab3f.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Tests
 %if %{with_tests}
-# composer.json
+## composer.json
+BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: %{__phpunit}
-# phpcompatinfo (computed from version 3.0.0)
+## phpcompatinfo (computed from version 3.0.0)
 BuildRequires: php-hash
 BuildRequires: php-spl
 BuildRequires: php-zlib
+## Autoloader
+BuildRequires: php-composer(symfony/class-loader) >= 2.5
 %endif
 
 # composer.json
@@ -58,6 +61,8 @@ Requires:      php(language) >= %{php_min_ver}
 # phpcompatinfo (computed from version 3.0.0)
 Requires:      php-hash
 Requires:      php-spl
+# Autoloader
+Requires:      php-composer(symfony/class-loader) >= 2.5
 
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
@@ -70,33 +75,46 @@ Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 %patch0 -p1 -b .ad4c07ea55d02789a65ae75f6e4a9ee2cb9dab3f
 
+: Create autoloader
+(cat <<'AUTOLOAD'
+<?php
+/**
+ * Autoloader created by %{name}-%{version}-%{release}
+ */
+
+if (!class_exists('Symfony\\Component\\ClassLoader\\Psr4ClassLoader', false)) {
+    require_once 'Symfony/Component/ClassLoader/Psr4ClassLoader.php';
+}
+
+$loader = new \Symfony\Component\ClassLoader\Psr4ClassLoader();
+$loader->addPrefix('GuzzleHttp\\Stream', __DIR__);
+$loader->register();
+AUTOLOAD
+) | tee src/autoload.php
+
 
 %build
 # Empty build section, nothing required
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p  %{buildroot}%{phpdir}/GuzzleHttp/Stream
 cp -pr src/* %{buildroot}%{phpdir}/GuzzleHttp/Stream/
 
 
 %check
 %if %{with_tests}
-# Create autoloader
-mkdir vendor
-cat > vendor/autoload.php <<'AUTOLOAD'
-<?php
-
-spl_autoload_register(function ($class) {
-    $src = str_replace(array('\\', '_'), '/', $class).'.php';
-    @include_once $src;
-});
-AUTOLOAD
-
-%{__phpunit} --include-path="%{buildroot}%{phpdir}"
+%{_bindir}/phpunit -v \
+    --bootstrap %{buildroot}%{phpdir}/GuzzleHttp/Stream/autoload.php
 %else
 : Tests skipped
 %endif
+
+
+%clean
+rm -rf %{buildroot}
 
 
 %files
@@ -110,6 +128,9 @@ AUTOLOAD
 
 
 %changelog
+* Mon Jun 01 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.0.0-2
+- Added autoloader
+
 * Sun Feb 08 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.0.0-1
 - Updated to 3.0.0 (BZ #1131103)
 
