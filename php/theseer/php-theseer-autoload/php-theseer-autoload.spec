@@ -44,6 +44,7 @@ Requires:       php-composer(theseer/directoryscanner) <  2
 Requires:       php-composer(zetacomponents/console-tools) >= 1.7
 Requires:       php-composer(zetacomponents/console-tools) <  2
 # From phpcompatinfo report for version 1.16.1
+Requires:       php-cli
 Requires:       php-date
 Requires:       php-json
 Requires:       php-openssl

@@ -10,7 +10,7 @@
 
 Name:           php-phpunit-bytekit
 Version:        1.1.3
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A command-line tool built on the PHP Bytekit extension
 
 Group:          Development/Libraries
@@ -18,8 +18,7 @@ License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
-Patch0:         %{gh_project}-rpm.patch
-Patch1:         symfony_2.2.patch
+Patch0:         %{name}-autoload.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -27,9 +26,11 @@ BuildRequires:  php(language) >= 5.3.3
 
 # From package.xml
 Requires:       php(language) >= 5.3.3
-Requires:       php-symfony-finder >= 2.1.0
-Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
+Requires:       php-composer(symfony/finder)
+Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(zetacomponents/console-tools)
 # From phpcomaptinfo report for version 1.1.3
+Requires:       php-cli
 Requires:       php-dom
 Requires:       php-pcre
 Requires:       php-spl
@@ -50,9 +51,9 @@ analysis tasks.
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
-%patch1 -p1 -b .orig
-
 rm Bytekit/Autoload.php.*
+
+find . -name \*.php -exec sed -e 's/@package_version@/%{version}/' -i {} \;
 
 
 %build
@@ -89,6 +90,11 @@ fi
 
 
 %changelog
+* Wed Jun  3 2015 Remi Collet <remi@fedoraproject.org> - 1.1.3-4
+- swicth from eZ to Zeta Components
+- ensure compatibility with SCL
+- fix reported version
+
 * Sun May  4 2014 Remi Collet <remi@fedoraproject.org> - 1.1.3-3
 - sources from github
 
