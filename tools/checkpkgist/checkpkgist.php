@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 /**
  * CheckPkgist is a tool to check RPM update needed
@@ -68,6 +68,9 @@ class PkgClient {
 function run($name, $rpm) {
 	global $quiet, $verb, $client;
 
+	if (in_array($name, ['znerol/php-stringprep'])) {
+		return;
+	}
 	list($owner, $library) = explode('/', $name, 2);
 	if (in_array($owner, ['horde', 'kolab'])) {
 		return;
