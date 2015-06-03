@@ -16,7 +16,7 @@
 
 Name:           php-theseer-autoload
 Version:        1.17.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A tool and library to generate autoload code
 
 Group:          Development/Libraries
@@ -31,8 +31,8 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.1
 # For tests
-BuildRequires:  php-composer(theseer/directoryscanner) >= 1.3.0
-BuildRequires:  php-composer(theseer/directoryscanner) <  1.4
+BuildRequires:  php-composer(theseer/directoryscanner) >= 1.3
+BuildRequires:  php-composer(theseer/directoryscanner) <  2
 BuildRequires:  %{_bindir}/phpunit
 
 # From composer.json
@@ -41,8 +41,8 @@ BuildRequires:  %{_bindir}/phpunit
 Requires:       php(language) >= 5.3.1
 Requires:       php-composer(theseer/directoryscanner) >= 1.3
 Requires:       php-composer(theseer/directoryscanner) <  2
-# Use ezc instead of zetacomponent (no release, no package)
-Requires:       php-pear(components.ez.no/ConsoleTools) >= 1.6
+Requires:       php-composer(zetacomponents/console-tools) >= 1.7
+Requires:       php-composer(zetacomponents/console-tools) <  2
 # From phpcompatinfo report for version 1.16.1
 Requires:       php-date
 Requires:       php-json
@@ -115,6 +115,10 @@ fi
 
 
 %changelog
+* Wed Jun  3 2015 Remi Collet <remi@fedoraproject.org> - 1.17.0-2
+- swicth from eZ to Zeta Components
+- ensure compatibility with SCL
+
 * Fri May 15 2015 Remi Collet <remi@fedoraproject.org> - 1.17.0-1
 - Update to 1.17.0
 
