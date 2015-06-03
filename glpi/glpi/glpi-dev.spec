@@ -28,7 +28,7 @@
 
 Name:           glpi
 Version:        0.85.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
@@ -86,7 +86,7 @@ Requires:       php-ZendFramework2-ServiceManager
 Requires:       php-ZendFramework2-Stdlib
 Requires:       php-ZendFramework2-Version
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
-Requires:       php-pear(components.ez.no/Graph) >= 1.5
+Requires:       php-composer(zetacomponents/graph)
 Requires:       gnu-free-sans-fonts
 %else
 Requires:       freefont
@@ -138,7 +138,9 @@ rm -rf lib/htmlawed
 rm -rf lib/Zend
 rm -rf lib/simplepie
 rm -rf lib/tcpdf
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 rm -rf lib/ezcomponents
+%endif
 
 %if 0%{?fedora} < 9 && 0%{?rhel} < 6
 # fix font path on old version
@@ -312,6 +314,9 @@ fi
 
 
 %changelog
+* Wed Jun  3 2015 Remi Collet <remi@fedoraproject.org> - 0.85.4-2
+- switch from eZ component to Zeta component
+
 * Mon May  4 2015 Remi Collet <remi@fedoraproject.org> - 0.85.4-1
 - update to 0.85.4
   https://forge.indepnet.net/versions/1136

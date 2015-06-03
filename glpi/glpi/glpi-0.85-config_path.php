@@ -23,7 +23,7 @@ define('GLPI_LOG_DIR',        '/var/log/glpi');
 
 // System libraries
 define('GLPI_PHPMAILER_DIR',  'PHPMailer');
-define('GLPI_EZC_BASE',       'ezc/Base/base.php');
+define('GLPI_EZC_BASE',       '/usr/share/php/ezc/Base/base.php');
 define('GLPI_PHPCAS',         'CAS.php');
 define('GLPI_HTMLAWED',       'htmLawed/htmLawed.php');
 define('GLPI_ZEND_PATH',      '/usr/share/php/Zend');
