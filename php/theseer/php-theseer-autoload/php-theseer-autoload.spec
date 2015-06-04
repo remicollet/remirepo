@@ -16,7 +16,7 @@
 
 Name:           php-theseer-autoload
 Version:        1.17.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A tool and library to generate autoload code
 
 Group:          Development/Libraries
@@ -116,6 +116,9 @@ fi
 
 
 %changelog
+* Thu Jun  4 2015 Remi Collet <remi@fedoraproject.org> - 1.17.0-3
+- missing dependency on php-cli
+
 * Wed Jun  3 2015 Remi Collet <remi@fedoraproject.org> - 1.17.0-2
 - swicth from eZ to Zeta Components
 - ensure compatibility with SCL
