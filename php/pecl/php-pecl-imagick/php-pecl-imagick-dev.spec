@@ -211,6 +211,7 @@ fi
 %if 0%{?fedora} == 19 || 0%{?rhel} == 7
 # 001- success
 # 001+ php: unable to acquire cache view `No such file or directory' @ fatal/cache-view.c/AcquireAuthenticCacheView/121.
+# See https://bugzilla.redhat.com/1228034
 : ignore failed test with ImageMagick 6.7.8
 rm ?TS/tests/bug20636.phpt
 %endif
