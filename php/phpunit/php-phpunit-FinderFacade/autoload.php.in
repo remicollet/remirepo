@@ -6,12 +6,12 @@ require_once $vendorDir . '/TheSeer/fDOMDocument/autoload.php';
 require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 
-$loader = new UniversalClassLoader();
-$loader->registerNamespaces(array(
+$sfuloader = new UniversalClassLoader();
+$sfuloader->registerNamespaces(array(
     'Symfony\\Component\\Finder'          => $vendorDir,
     'Symfony\\Component\\ClassLoader'     => $vendorDir,
 ));
-$loader->register();
+$sfuloader->register();
 
 // @codingStandardsIgnoreFile
 // @codeCoverageIgnoreStart

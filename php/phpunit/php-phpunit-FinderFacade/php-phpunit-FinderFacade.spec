@@ -17,7 +17,7 @@
 
 Name:           php-phpunit-FinderFacade
 Version:        1.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Wrapper for Symfony Finder component
 
 Group:          Development/Libraries
@@ -107,6 +107,9 @@ fi
 
 
 %changelog
+* Thu Jun  4 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-2
+- use $sfuloader
+
 * Thu Jun  4 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - upgrade to 1.2.0
 - raise dependency on symfony/finder 2.3
