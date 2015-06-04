@@ -1,0 +1,35 @@
+<?php
+/* Inspipred from Autoload from version 1.1 */
+
+$vendorDir = '/usr/share/php';
+require_once $vendorDir . '/TheSeer/fDOMDocument/autoload.php';
+require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+use Symfony\Component\ClassLoader\UniversalClassLoader;
+
+$loader = new UniversalClassLoader();
+$loader->registerNamespaces(array(
+    'Symfony\\Component\\Finder'          => $vendorDir,
+    'Symfony\\Component\\ClassLoader'     => $vendorDir,
+));
+$loader->register();
+
+// @codingStandardsIgnoreFile
+// @codeCoverageIgnoreStart
+spl_autoload_register(
+  function($class) {
+    static $classes = NULL;
+
+    if ($classes === NULL) {
+      $classes = array(
+        ___CLASSLIST___
+      );
+    }
+
+    $cn = strtolower($class);
+
+    if (isset($classes[$cn])) {
+      require ___BASEDIR___$classes[$cn];
+    }
+  }
+);
+// @codeCoverageIgnoreEnd

@@ -1,4 +1,4 @@
-# spec file for php-phpunit-FinderFacade
+# remirepo/fedora spec file for php-phpunit-FinderFacade
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    1e396fda3449fce9df032749fa4fa2619e0347e0
+%global gh_commit    a520dcc3dd39160eea480daa3426f4fd419a327b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   finder-facade
@@ -16,36 +16,42 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-FinderFacade
-Version:        1.1.0
-Release:        6%{?dist}
+Version:        1.2.0
+Release:        1%{?dist}
 Summary:        Wrapper for Symfony Finder component
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+# Autoloader template
+Source1:        autoload.php.in
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
-BuildRequires:  php-pear-PHPUnit >= 3.7.0
-BuildRequires:  php-theseer-fDOMDocument >= 1.3.1
-BuildRequires:  php-symfony-finder >= 2.2.0
+BuildRequires:  %{_bindir}/phpunit
+BuildRequires:  php-composer(theseer/fdomdocument) >= 1.3
+BuildRequires:  php-composer(symfony/finder) >=  2.3
+BuildRequires:  php-composer(symfony/class-loader)
 %endif
 
-# From composer.json
-#      "theseer/fdomdocument": ">=1.3.1",
-#      "symfony/finder": ">=2.2.0"
+# From composer.json "require": {
+#        "theseer/fdomdocument": "~1.3",
+#        "symfony/finder": "~2.3"
 Requires:       php(language) >= 5.3.3
-Requires:       php-theseer-fDOMDocument >= 1.3.1
-Requires:       php-symfony-finder >= 2.2.0
-# From phpcompatinfo report
+Requires:       php-composer(theseer/fdomdocument) >= 1.3
+Requires:       php-composer(theseer/fdomdocument) <  2
+Requires:       php-composer(symfony/finder) >=  2.3
+Requires:       php-composer(symfony/finder) <   3
+# From phpcompatinfo report for version 1.2.0
 Requires:       php-ctype
-Requires:       php-spl
+# For our autoloader
+Requires:       php-composer(symfony/class-loader)
 
 Provides:       php-composer(sebastian/finder-facade) = %{version}
-
 # For compatibility with PEAR mode
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -57,17 +63,12 @@ Convenience wrapper for Symfony's Finder component.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-rm src/autoload.php.in
-
 
 %build
-# Empty build section, most likely nothing required.
-
-# If upstream drop Autoload.php, command to generate it.
-#phpab \
-#  --output   src/autoload.php \
-#  --template src/autoload.php.in \
-#  src
+phpab \
+  --output   src/autoload.php \
+  --template %{SOURCE1} \
+  src
 
 
 %install
@@ -79,9 +80,8 @@ cp -pr src %{buildroot}%{php_home}/SebastianBergmann/FinderFacade
 %if %{with_tests}
 %check
 phpunit \
-  -d date.timezone=UTC \
-  --bootstrap src/autoload.php \
-  tests
+  --bootstrap %{buildroot}%{php_home}/SebastianBergmann/FinderFacade/autoload.php \
+  --verbose tests
 %endif
 
 
@@ -98,12 +98,21 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog.md README.md LICENSE composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README.md
+%doc composer.json
 %dir %{php_home}/SebastianBergmann
      %{php_home}/SebastianBergmann/FinderFacade
 
 
 %changelog
+* Thu Jun  4 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- upgrade to 1.2.0
+- raise dependency on symfony/finder 2.3
+- generate autoloader (dropped upstream)
+- fix license handling
+
 * Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-6
 - composer dependencies
 
