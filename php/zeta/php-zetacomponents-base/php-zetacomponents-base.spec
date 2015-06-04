@@ -17,7 +17,7 @@
 
 Name:           php-%{gh_owner}-%{cname}
 Version:        1.9
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Zeta Base Component
 
 Group:          Development/Libraries
@@ -27,6 +27,8 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 # Use old PEAR layout
 Patch0:         %{name}-layout.patch
+# Upstream
+Patch1:         %{name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -35,11 +37,13 @@ BuildRequires:  %{_bindir}/phpab
 BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  %{_bindir}/convert
 BuildRequires:  php-composer(%{gh_owner}/unit-test)
+BuildRequires:  php-posix
 %endif
 
 # From phpcompatinfo report for 1.9
 Requires:       php(language) > 5.3
 Requires:       php-pcre
+Requires:       php-posix
 Requires:       php-simplexml
 Requires:       php-spl
 
@@ -47,7 +51,7 @@ Provides:       php-composer(%{gh_owner}/%{cname}) = %{version}
 
 
 %description
-This is the base package of the eZ publish components, offering the basic
+This is the base package of the Zeta components, offering the basic
 support that all Components need. In the first version this will be the
 autoload support.
 
@@ -56,6 +60,7 @@ autoload support.
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p0
+%patch1 -p1
 
 
 %build
@@ -104,7 +109,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license NOTICE CREDITS
+%license LICENSE* CREDITS
 %doc ChangeLog
 %doc composer.json
 %doc docs design
@@ -115,6 +120,9 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Wed Jun  3 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+* Thu Jun  4 2015 Remi Collet <remi@fedoraproject.org> - 1.9-2
+- add upstream patch for LICENSE file
+
+* Wed Jun  3 2015 Remi Collet <remi@fedoraproject.org> - 1.9-1
 - initial package
 - open https://github.com/zetacomponents/UnitTest/issues/4 License
