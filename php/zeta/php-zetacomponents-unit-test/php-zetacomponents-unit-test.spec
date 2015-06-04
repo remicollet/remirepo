@@ -16,7 +16,7 @@
 
 Name:           php-%{gh_owner}-%{cname}
 Version:        1.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Zeta UnitTest Component
 
 Group:          Development/Libraries
@@ -26,6 +26,8 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 # https://github.com/zetacomponents/UnitTest/pull/5
 Patch0:         %{name}-pr5.patch
+# Upstream
+Patch1:         %{name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -36,6 +38,8 @@ Requires:       php(language) > 5.3
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
+Requires:       php-composer(phpunit/phpunit)
+# Also use Exception for Base, skipped to avoid circular dep.
 
 Provides:       php-composer(%{gh_owner}/%{cname}) = %{version}
 
@@ -53,6 +57,7 @@ the mailing list.
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1
+%patch1 -p1
 
 
 %build
@@ -81,7 +86,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license NOTICE CREDITS
+%license LICENSE* CREDITS
 %doc ChangeLog
 %doc composer.json
 %doc docs design
@@ -92,6 +97,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-2
+- add upstream patch for LICENSE file
+
 * Wed Jun  3 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - initial package
 - open https://github.com/zetacomponents/UnitTest/issues/4 License
