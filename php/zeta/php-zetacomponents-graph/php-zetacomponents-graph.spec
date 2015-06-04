@@ -17,7 +17,7 @@
 
 Name:           php-%{gh_owner}-%{cname}
 Version:        1.5.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Zeta Graph Component
 
 Group:          Development/Libraries
@@ -27,6 +27,8 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 # https://github.com/zetacomponents/Graph/pull/16
 Patch0:         %{name}-pr16.patch
+# Upstream
+Patch1:         %{name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -59,15 +61,14 @@ Provides:       php-composer(%{gh_owner}/%{cname}) = %{version}
 
 
 %description
-This is the base package of the eZ publish components, offering the basic
-support that all Components need. In the first version this will be the
-autoload support.
+A component for creating pie charts, line graphs and other kinds of diagrams.
 
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1
+%patch1 -p1
 
 
 %build
@@ -117,7 +118,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license NOTICE CREDITS
+%license LICENSE* CREDITS
 %doc ChangeLog
 %doc composer.json
 %doc docs design
@@ -126,6 +127,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun  4 2015 Remi Collet <remi@fedoraproject.org> - 1.5.2-2
+- add upstream patch for LICENSE file
+
 * Wed Jun  3 2015 Remi Collet <remi@fedoraproject.org> - 1.5.2-1
 - initial package
 - open https://github.com/zetacomponents/Graph/pull/16
