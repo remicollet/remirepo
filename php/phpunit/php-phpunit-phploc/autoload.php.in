@@ -1,10 +1,20 @@
 <?php
 /* Inspired from autoload from version 2.0.3 */
 
-require_once 'SebastianBergmann/FinderFacade/autoload.php';
-require_once 'SebastianBergmann/Git/autoload.php';
-require_once 'SebastianBergmann/Version/autoload.php';
-require_once 'Symfony/Component/Console/autoloader.php';
+$vendorDir = '/usr/share/php';
+require_once $vendorDir . '/SebastianBergmann/FinderFacade/autoload.php';
+require_once $vendorDir . '/SebastianBergmann/Git/autoload.php';
+require_once $vendorDir . '/SebastianBergmann/Version/autoload.php';
+
+if (!(isset($sfuloader) && $sfuloader instanceof Symfony\Component\ClassLoader\UniversalClassLoader)) {
+    require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+    $sfuloader = new Symfony\Component\ClassLoader\UniversalClassLoader();
+    $sfuloader->register();
+}
+$sfuloader->registerNamespaces(array(
+    'Symfony\\Component\\Console'         => $vendorDir,
+    'Symfony\\Component\\ClassLoader'     => $vendorDir,
+));
 
 spl_autoload_register(
     function($class) {
