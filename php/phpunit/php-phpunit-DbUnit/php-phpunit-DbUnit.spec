@@ -1,4 +1,4 @@
-# spec file for php-phpunit-DbUnit
+# remirepo/fedora spec file for php-phpunit-DbUnit
 #
 # Copyright (c) 2010-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    1507040c2541bdffd7fbd71fc792cecdea6a7c61
+%global gh_commit    1afe25c90834ec499f007f48dd73767fdec3bf4f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   dbunit
@@ -16,33 +16,33 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-DbUnit
-Version:        1.3.2
+Version:        1.4.0
 Release:        1%{?dist}
 Summary:        DbUnit port for PHP/PHPUnit
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
 %if %{with_tests}
 BuildRequires:  php-pdo
-BuildRequires:  php-pear-PHPUnit >= 3.7.0
+BuildRequires:  php-pear-PHPUnit >= 4.0
 %endif
 
 # From composer.json
 #        "php": ">=5.3.3",
-#        "phpunit/phpunit": "~3.7|~4.0",
+#        "phpunit/phpunit": "~4.0",
 #        "symfony/yaml": "~2.1",
 #        "ext-pdo": "*",
 #        "ext-simplexml": "*"
 Requires:       php(language) >= 5.3.3
 Requires:       php-pdo
 Requires:       php-simplexml
-Requires:       php-composer(phpunit/phpunit) >= 3.7
+Requires:       php-composer(phpunit/phpunit) >= 4.0
 Requires:       php-composer(phpunit/phpunit) <  5
 Requires:       php-composer(symfony/yaml)    >= 2.1
 Requires:       php-composer(symfony/yaml)    <  3
@@ -115,7 +115,11 @@ fi
 
 
 %changelog
-* Sun Mar 29 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
+* Fri Jun  5 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
+- update to 1.3.2
+- raise dependency on PHPUnit 4.0
+
+* Sun Mar 29 2015 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
 - update to 1.3.2
 - switch all dependencies to composer
 
