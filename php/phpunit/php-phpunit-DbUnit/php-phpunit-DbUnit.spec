@@ -13,7 +13,12 @@
 %global php_home     %{_datadir}/php
 %global pear_name    DbUnit
 %global pear_channel pear.phpunit.de
+%if 0%{?rhel} == 5
+# libxml is too old for LIBXML_PARSEHUGE used in tests
+%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%else
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 Name:           php-phpunit-DbUnit
 Version:        1.4.0
@@ -118,6 +123,7 @@ fi
 * Fri Jun  5 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - update to 1.3.2
 - raise dependency on PHPUnit 4.0
+- disable test suite on EL-5
 
 * Sun Mar 29 2015 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
 - update to 1.3.2
