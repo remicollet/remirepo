@@ -1,3 +1,13 @@
+# remirepo spec file for roundcubemail, from:
+
+# Fedora spec file for roundcubemail
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
 %if 0%{?fedora} >= 21
 # support for apache / nginx / php-fpm
 %global with_phpfpm 1
@@ -8,8 +18,8 @@
 %define roundcubedir %{_datadir}/roundcubemail
 %global _logdir /var/log  
 Name: roundcubemail
-Version:  1.1.1
-Release:  2%{?dist}
+Version:  1.1.2
+Release:  1%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
 Group: Applications/System
@@ -258,6 +268,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun  5 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
+- update to 1.1.2
+
 * Wed Mar 25 2015 Robert Scheck <robert@fedoraproject.org> - 1.1.1-2
 - switch run-time requirement from php-mcrypt to php-openssl
 
