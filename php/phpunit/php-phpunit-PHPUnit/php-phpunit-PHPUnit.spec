@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    7b5fe98b28302a8b25693b2298bca74463336975
+%global gh_commit    bdd15c9ec6e16a307398d5385b3445673608e805
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,7 +17,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.6.10
+Version:        4.7.1
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -38,7 +38,7 @@ BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  %{_bindir}/phpab
 BuildRequires:  php-composer(phpunit/php-file-iterator) >= 1.3.2
 BuildRequires:  php-composer(phpunit/php-text-template) >= 1.2
-BuildRequires:  php-composer(phpunit/php-code-coverage) >= 2.0.11
+BuildRequires:  php-composer(phpunit/php-code-coverage) >= 2.1
 BuildRequires:  php-composer(phpunit/php-timer) >= 1.0.2
 BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 2.3
 BuildRequires:  php-composer(phpspec/prophecy) >= 1.3.1
@@ -57,7 +57,7 @@ BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 #        "php": ">=5.3.3",
 #        "phpunit/php-file-iterator": "~1.4",
 #        "phpunit/php-text-template": "~1.2",
-#        "phpunit/php-code-coverage": "~2.0>=2.0.11",
+#        "phpunit/php-code-coverage": "~2.1",
 #        "phpunit/php-timer": "~1.0",
 #        "phpunit/phpunit-mock-objects": "~2.2",
 #        "phpspec/prophecy": "~1.3,>=1.3.1",
@@ -80,7 +80,7 @@ Requires:       php-composer(phpunit/php-file-iterator) >= 1.4
 Requires:       php-composer(phpunit/php-file-iterator) <  2
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
-Requires:       php-composer(phpunit/php-code-coverage) >= 2.0.11
+Requires:       php-composer(phpunit/php-code-coverage) >= 2.1
 Requires:       php-composer(phpunit/php-code-coverage) <  3
 Requires:       php-composer(phpunit/php-timer) >= 1.0
 Requires:       php-composer(phpunit/php-timer) <  2
@@ -204,6 +204,11 @@ fi
 
 
 %changelog
+* Fri Jun  5 2015 Remi Collet <remi@fedoraproject.org> - 4.7.1-1
+- Update to 4.7.1
+- raise dependency on phpunit/php-code-coverage ~2.1
+- improve autoloader
+
 * Wed Jun  3 2015 Remi Collet <remi@fedoraproject.org> - 4.6.10-1
 - Update to 4.6.10
 

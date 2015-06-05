@@ -18,15 +18,15 @@ require_once 'Doctrine/Instantiator/autoload.php';
 require_once 'Prophecy/autoload.php';
 
 $vendorDir = '/usr/share/php';
-require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
-use Symfony\Component\ClassLoader\UniversalClassLoader;
-
-$loader = new UniversalClassLoader();
-$loader->registerNamespaces(array(
+if (!(isset($sfuloader) && $sfuloader instanceof Symfony\Component\ClassLoader\UniversalClassLoader)) {
+    require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
+    $sfuloader = new Symfony\Component\ClassLoader\UniversalClassLoader();
+    $sfuloader->register();
+}
+$sfuloader->registerNamespaces(array(
     'Symfony\\Component\\Yaml'            => $vendorDir,
     'Symfony\\Component\\ClassLoader'     => $vendorDir,
 ));
-$loader->register();
 
 spl_autoload_register(
   function ($class)
