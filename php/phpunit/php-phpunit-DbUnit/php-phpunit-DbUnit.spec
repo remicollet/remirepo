@@ -113,7 +113,9 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog.markdown LICENSE composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc ChangeLog.markdown composer.json
 %doc Samples
 %{_bindir}/dbunit
 %{php_home}/PHPUnit/Extensions/Database
