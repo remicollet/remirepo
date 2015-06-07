@@ -1,3 +1,5 @@
+# remirepo spec file for php-twig
+# With SCL stuff, from Fedora:
 #
 # RPM spec file for php-twig
 #
@@ -12,8 +14,8 @@
 
 %global github_owner     fabpot
 %global github_name      Twig
-%global github_version   1.18.1
-%global github_commit    9f70492f44398e276d1b81c1b43adfe6751c7b7f
+%global github_version   1.18.2
+%global github_commit    e8e6575abf6102af53ec283f7f14b89e304fa602
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 
@@ -236,11 +238,11 @@ sed 's/function testGetAttributeWithTemplateAsObject/function SKIP_testGetAttrib
 %endif
 
 : Test suite without extension
-%{__phpunit} --include-path ./lib
+%{__phpunit} --include-path ./lib --verbose
 
 : Test suite with extension
 %{__php} --define extension=ext/NTS/modules/%{ext_name}.so \
-    %{__phpunit} --include-path ./lib
+    %{__phpunit} --include-path ./lib --verbose
 %else
 : Tests skipped
 %endif
@@ -269,6 +271,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jun  7 2015 Remi Collet <remi@fedoraproject.org> - 1.18.2-1
+- Update to 1.18.2
+
 * Sun Apr 19 2015 Remi Collet <remi@fedoraproject.org> - 1.18.1-1
 - Update to 1.18.1
 
