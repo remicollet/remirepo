@@ -124,19 +124,23 @@
 %global db_devel  libdb-devel
 %endif
 
-%global gh_commit    8a089e7e71bfcb0829e97feb42a7495f8e39e1b4
+%global gh_commit    8a884d628b5c23c4b33c96c723331fda9e17d2bc
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150602
+%global gh_date      20150609
 %global gh_owner     php
 %global gh_project   php-src
-#global rcver        RC1
-%global rpmrel       7
+%global rcver        alpha1
+%global rpmrel       8
 
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 7.0.0
+%if 0%{?rcver:1}
+Release: 0.%{rpmrel}.%{rcver}%{?dist}
+%else
 Release: 0.%{rpmrel}.%{gh_date}git%{gh_short}%{?dist}
+%endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -947,8 +951,8 @@ rm Zend/tests/bug68412.phpt
 
 # Safety check for API version change.
 pver=$(sed -n '/#define PHP_VERSION /{s/.* "//;s/".*$//;p}' main/php_version.h)
-if test "x${pver}" != "x%{version}%{?rcver}%{?gh_date:-dev}"; then
-   : Error: Upstream PHP version is now ${pver}, expecting %{version}%{?rcver}%{?gh_date:-dev}.
+if test "x${pver}" != "x%{version}%{?rcver}%{!?rcver:%{?gh_date:-dev}}"; then
+   : Error: Upstream PHP version is now ${pver}, expecting %{version}%{?rcver}%{!?rcver:%{?gh_date:-dev}}.
    : Update the version/rcver macros and rebuild.
    exit 1
 fi
@@ -1801,6 +1805,9 @@ fi
 
 
 %changelog
+* Tue Jun  9 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.8.alpha1
+- Update to 7.0.0alpha1
+
 * Tue Jun  2 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.7.20150602git8a089e7
 - new snapshot
 

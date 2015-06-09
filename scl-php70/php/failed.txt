@@ -1,4 +1,4 @@
-===== 7.0.0-0.7.20150602git8a089e7
+===== 7.0.0-0.8.alpha1
 
 $ grep -r 'Tests failed' /var/lib/mock/scl70*/build.log
 
