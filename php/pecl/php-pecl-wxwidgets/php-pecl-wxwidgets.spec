@@ -1,4 +1,4 @@
-# spec file for php-pecl-wxwidgets
+# remirepo spec file for php-pecl-wxwidgets
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA
@@ -17,7 +17,7 @@
 
 Summary:       Cross-platform widget toolkit
 Name:          %{?scl_prefix}php-pecl-wxwidgets
-Version:       3.0.0.2
+Version:       3.0.2.0
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
@@ -33,14 +33,9 @@ BuildRequires:    wxGTK3-devel
 BuildRequires:    devtoolset-2-toolchain
 %endif
 
-Requires(post):   %{__pecl}
-Requires(postun): %{__pecl}
 Requires:         %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:         %{?scl_prefix}php(api) = %{php_core_api}
 Requires:         %{__php}
-%if %{with_zts}
-Requires:         %{__ztsphp}
-%endif
 
 Provides:         %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:         %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
@@ -49,14 +44,17 @@ Provides:         %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:     php54-pecl-%{pecl_name}
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name}
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -79,6 +77,18 @@ Use the "wxphp" command to launch an application.
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
 
+cd NTS
+# Ensure no download will be done
+sed -e '/Downloading/s/$/; exit 1/' -i config.m4
+
+# Sanity check, really often broken
+extver=$(sed -n '/#define PHP_WXWIDGETS_EXTVER/{s/.* "//;s/".*$//;p}' php_wxwidgets.h)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}.
+   exit 1
+fi
+cd ..
+
 cat << 'EOF' | tee NTS/wxphp
 #!/bin/sh
 exec %{__php} -d extension=%{pecl_name}.so "$@"
@@ -89,7 +99,10 @@ cp -r NTS ZTS
 
 cat << 'EOF' | tee ZTS/wxphp
 #!/bin/sh
-exec %{__ztsphp} -d extension=%{pecl_name}.so "$@"
+if [ -x %{__ztsphp} ]
+then exec %{__ztsphp} -d extension=%{pecl_name}.so "$@"
+else echo "zts-php not available on this system"
+fi
 EOF
 %endif
 
@@ -144,12 +157,20 @@ done
 rm -rf %{buildroot}
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -169,5 +190,10 @@ fi
 
 
 %changelog
+* Tue Jun 09 2015 Remi Collet <remi@fedoraproject.org> - 3.0.2.0-1
+- Update to 3.0.2.0
+- drop runtime dependency on pear, new scriptlets
+- drop dependency on zts-php, checked on runtime
+
 * Fri Apr 25 2014  Remi Collet <remi@fedoraproject.org> - 3.0.0.2-1
 - initial package, version 3.0.0.2 (stable)
