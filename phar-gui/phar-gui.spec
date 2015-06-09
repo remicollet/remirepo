@@ -1,4 +1,4 @@
-# spec file for phar-gui
+# remirepo spec file for phar-gui
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,9 +6,9 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit  edbd631f37630839e6d05cf5e0adc4503a02cbb1
+%global gh_commit  bc1177aee3b376ebab87cd91e5c177a8b8107dbf
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date    20140417
+%global gh_date    20150609
 %global gh_owner   jgmdev
 %global gh_project phar-gui
 
@@ -24,7 +24,7 @@ License:        MIT
 Group:          Development/Libraries
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{gh_commit}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -95,12 +95,18 @@ install -D -m 755 %{name} %{buildroot}%{_bindir}/%{name}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README.md
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README.md
 %{_datadir}/%{name}
 %{_bindir}/%{name}
 
 
 %changelog
+* Tue Jun  9 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.20150609gitbc1177a
+- new snapshot, for pecl/wxWidgets 3.0.2.0
+- fix license handling
+
 * Fri Apr 25 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.20140417gitedbd631
 - keep LICENSE.txt in /usr/share/phar-gui (used in the GUI)
 - open https://github.com/jgmdev/phar-gui/pull/1
