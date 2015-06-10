@@ -1,9 +1,18 @@
+# remirepo spec file for php-natxet-cssmin, from:
+#
+# Fedora spec file for php-natxet-cssmin
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 %global github_owner    natxet
 %global github_name     CssMin
-%global github_version  3.0.2
-%global github_commit   8883d28cd2de131c364f2f657e4bcc09bfa45082
+%global github_version  3.0.3
+%global github_commit   f076e41392b0008efb47074a133ec1d90dc8c99f
 # if set, will be a post-release snapshot build, otherwise a 'normal' build
-%global github_date     20141229
+#global github_date     20141229
 %global shortcommit %(c=%{github_commit}; echo ${c:0:7})
 %global packagist_owner natxet
 %global packagist_name  CssMin
@@ -15,7 +24,7 @@
 
 Name:           php-%{packagist_owner}-%{lcname}
 Version:        %{github_version}
-Release:        2%{?github_date:.%{github_date}git%{shortcommit}}%{?dist}
+Release:        1%{?github_date:.%{github_date}git%{shortcommit}}%{?dist}
 Summary:        Configurable CSS parser and minifier
 
 Group:          Development/Libraries
@@ -71,6 +80,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 09 2015 Adam Williamson <awilliam@redhat.com> - 3.0.3-1
+- new release 3.0.3
+
 * Tue Feb 24 2015 Remi Collet <remi@fedoraproject.org> - 3.0.2-2.20141229git8883d28
 - add backport stuff for remi repo
 
