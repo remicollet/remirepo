@@ -1,0 +1,30 @@
+===== 5.5.42
+
+$ grep -r 'Tests failed' /var/lib/mock/*/build.log
+
+/var/lib/mock/el5x/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
+	Bug #64802: openssl_x509_parse fails to parse subject properly in some cases [ext/openssl/tests/bug64802.phpt]
+	Bug #66501: EC private key support in openssl_sign [ext/openssl/tests/bug66501.phpt]
+
+/var/lib/mock/el6x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
+	Bug #32001 (xml_parse*() goes into infinite loop when autodetection in effect), using UTF-* [ext/xml/tests/bug32001.phpt]
+
+/var/lib/mock/el7x/build.log:Tests failed    :    3 (  0.0%) (  0.0%)
+	Bug #37911 (preg_replace_callback ignores named groups) [ext/pcre/tests/bug37911.phpt]
+	preg_grep() 2nd test [ext/pcre/tests/grep2.phpt]
+	preg_match() flags 3 [ext/pcre/tests/match_flags3.phpt]
+
+/var/lib/mock/el5i/build.log:Tests failed    :    5 (  0.0%) (  0.1%)
+	Bug #41523 (strtotime('0000-00-00 00:00:00') is parsed as 1999-11-30) (32 bit) [ext/date/tests/bug41523.phpt]
+	Bug #64802: openssl_x509_parse fails to parse subject properly in some cases [ext/openssl/tests/bug64802.phpt]
+	Bug #66501: EC private key support in openssl_sign [ext/openssl/tests/bug66501.phpt]
+	Testing xpath() with invalid XML [ext/simplexml/tests/SimpleXMLElement_xpath.phpt]
+	Bug #64146 (serialize incorrectly saving objects when they are cloned) [ext/standard/tests/serialize/bug64146.phpt]
+
+/var/lib/mock/el6i/build.log:Tests failed    :    6 (  0.0%) (  0.1%)
+	Bug #41523 (strtotime('0000-00-00 00:00:00') is parsed as 1999-11-30) (32 bit) [ext/date/tests/bug41523.phpt]
+	IPv4 Loopback test [ext/sockets/tests/ipv4loop.phpt]
+	ext/sockets - socket_getpeername_ipv4loop - basic test [ext/sockets/tests/socket_getpeername_ipv4loop.phpt]
+	Testing xpath() with invalid XML [ext/simplexml/tests/SimpleXMLElement_xpath.phpt]
+	Bug #64146 (serialize incorrectly saving objects when they are cloned) [ext/standard/tests/serialize/bug64146.phpt]
+	Bug #32001 (xml_parse*() goes into infinite loop when autodetection in effect), using UTF-* [ext/xml/tests/bug32001.phpt]

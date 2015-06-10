@@ -1,0 +1,33 @@
+===== 5.5.42
+
+$ grep -r 'Tests failed' /var/lib/mock/scl54*/build.log
+
+/var/lib/mock/scl54fc19x/build.log:Tests failed    :    4 (  0.0%) (  0.1%)
+	Bug #37911 (preg_replace_callback ignores named groups) [ext/pcre/tests/bug37911.phpt]
+	preg_grep() 2nd test [ext/pcre/tests/grep2.phpt]
+	preg_match() flags 3 [ext/pcre/tests/match_flags3.phpt]
+	Test setlocale() function : usage variations - Setting all available locales in the platform [ext/standard/tests/strings/setlocale_variation2.phpt]
+
+/var/lib/mock/scl54fc20x/build.log:Tests failed    :    4 (  0.0%) (  0.1%)
+	idem f19
+
+/var/lib/mock/scl54fc21x/build.log:Tests failed    :   10 (  0.1%) (  0.1%)
+	Test DateTimeZone::getTransitions() function : basic functionality [ext/date/tests/DateTimeZone_getTransitions_basic1.phpt]
+	DateTime::add() -- massive [ext/date/tests/DateTime_add-massive.phpt]
+	DateTime::diff() -- massive [ext/date/tests/DateTime_diff-massive.phpt]
+	DateTime::sub() -- massive [ext/date/tests/DateTime_sub-massive.phpt]
+	Bug #48058 (Year formatter goes wrong with out-of-int range) [ext/date/tests/bug48058.phpt]
+	Test getdate() function : usage variation - Passing high positive and negative float values to timestamp. [ext/date/tests/getdate_variation7.phpt]
+	mktime() [3] (64-bit) [ext/date/tests/mktime-3-64bit.phpt]
+	Test timezone_transitions_get() function : basic functionality [ext/date/tests/timezone_transitions_get_basic1.phpt]
+	Test setlocale() function : usage variations - Setting all available locales in the platform [ext/standard/tests/strings/setlocale_variation2.phpt]
+	Test strptime() function : basic functionality [ext/standard/tests/time/strptime_basic.phpt]
+
+/var/lib/mock/scl54fc22x/build.log:Tests failed    :   10 (  0.1%) (  0.1%)
+	idem f21
+
+/var/lib/mock/scl54el6x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
+	Bug #32001 (xml_parse*() goes into infinite loop when autodetection in effect), using UTF-* [ext/xml/tests/bug32001.phpt]
+
+/var/lib/mock/scl54el7x/build.log:Tests failed    :    4 (  0.0%) (  0.1%)
+	idem f19
