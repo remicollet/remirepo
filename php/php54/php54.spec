@@ -140,8 +140,10 @@ Patch102: php-5.4.39-bug50444.patch
 # Security fixes
 
 # Fixes for tests
-# see https://bugzilla.redhat.com/971416
-Patch302: php-5.4.30-noNO.patch
+# no_NO issue
+Patch301: php-5.4.42-datetests-2.patch
+# Revert changes for pcre < 8.34
+Patch302: php-5.4.42-oldpcre.patch
 
 # RC Patch
 Patch91: php-5.3.7-oci8conf.patch
@@ -838,7 +840,13 @@ rm -f ext/json/utf8_to_utf16.*
 # security patches
 
 # Fixes for tests
-%patch302 -p0 -b .971416
+%patch301 -p1 -b .datetests2
+%if 0%{?fedora} >= 14 || 0%{?rhel} >= 7
+%if 0%{?fedora} < 21
+# Only apply when system libpcre < 8.34
+%patch302 -p1 -b .pcre834
+%endif
+%endif
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE

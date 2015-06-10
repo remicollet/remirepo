@@ -9,10 +9,7 @@ $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 /var/lib/mock/el6x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
 	Bug #32001 (xml_parse*() goes into infinite loop when autodetection in effect), using UTF-* [ext/xml/tests/bug32001.phpt]
 
-/var/lib/mock/el7x/build.log:Tests failed    :    3 (  0.0%) (  0.0%)
-	Bug #37911 (preg_replace_callback ignores named groups) [ext/pcre/tests/bug37911.phpt]
-	preg_grep() 2nd test [ext/pcre/tests/grep2.phpt]
-	preg_match() flags 3 [ext/pcre/tests/match_flags3.phpt]
+/var/lib/mock/el7x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 
 /var/lib/mock/el5i/build.log:Tests failed    :    5 (  0.0%) (  0.1%)
 	Bug #41523 (strtotime('0000-00-00 00:00:00') is parsed as 1999-11-30) (32 bit) [ext/date/tests/bug41523.phpt]

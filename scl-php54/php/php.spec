@@ -169,6 +169,12 @@ Patch102: php-5.4.39-bug50444.patch
 # Security fixes (200+)
 
 # Fixes for tests (300+)
+# Backported from 5.5
+Patch300: php-5.4.42-datetests-1.patch
+# no_NO issue
+Patch301: php-5.4.42-datetests-2.patch
+# Revert changes for pcre < 8.34
+Patch302: php-5.4.42-oldpcre.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -799,6 +805,14 @@ support for using the enchant library to PHP.
 # security patches
 
 # Fixes for tests
+%patch300 -p1 -b .datetests1
+%patch301 -p1 -b .datetests2
+%if %{with_libpcre}
+%if 0%{?fedora} < 21
+# Only apply when system libpcre < 8.34
+%patch302 -p1 -b .pcre834
+%endif
+%endif
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE

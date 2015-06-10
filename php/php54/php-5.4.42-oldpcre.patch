@@ -1,0 +1,39 @@
+diff -up ./ext/pcre/tests/bug37911.phpt.pcre834 ./ext/pcre/tests/bug37911.phpt
+--- ./ext/pcre/tests/bug37911.phpt.pcre834	2014-03-26 14:10:18.285452752 +0100
++++ ./ext/pcre/tests/bug37911.phpt	2014-03-26 14:10:40.028526763 +0100
+@@ -37,5 +37,5 @@ array(3) {
+   string(4) "blub"
+ }
+ 
+-Warning: preg_replace_callback(): Compilation failed: group name must start with a non-digit at offset %d in %sbug37911.php on line %d
++Warning: preg_replace_callback(): Numeric named subpatterns are not allowed in %sbug37911.php on line %d
+ NULL
+diff -up ./ext/pcre/tests/grep2.phpt.pcre834 ./ext/pcre/tests/grep2.phpt
+--- ./ext/pcre/tests/grep2.phpt.pcre834	2014-03-26 14:08:26.583072531 +0100
++++ ./ext/pcre/tests/grep2.phpt	2014-03-26 14:09:09.345218089 +0100
+@@ -40,12 +40,6 @@ array(1) {
+   string(1) "1"
+ }
+ bool(true)
+-array(3) {
+-  [5]=>
+-  string(1) "a"
+-  ["xyz"]=>
+-  string(2) "q6"
+-  [6]=>
+-  string(3) "h20"
++array(0) {
+ }
+-bool(false)
++bool(true)
+diff -up ./ext/pcre/tests/match_flags3.phpt.pcre834 ./ext/pcre/tests/match_flags3.phpt
+--- ./ext/pcre/tests/match_flags3.phpt.pcre834	2014-03-26 14:06:48.792739665 +0100
++++ ./ext/pcre/tests/match_flags3.phpt	2014-03-26 14:07:31.820886128 +0100
+@@ -42,5 +42,5 @@ array(1) {
+   }
+ }
+ 
+-Warning: preg_match(): Compilation failed: group name must start with a non-digit at offset %d in %smatch_flags3.php on line %d
++Warning: preg_match(): Numeric named subpatterns are not allowed in %smatch_flags3.php on line %d
+ bool(false)
+diff -up ./ext/standard/tests/strings/setlocale_variation2.phpt.pcre834 ./ext/standard/tests/strings/setlocale_variation2.phpt
