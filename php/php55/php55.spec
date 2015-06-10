@@ -3,7 +3,7 @@
 %global zendver     20121212
 %global pdover      20080721
 # Extension version
-%global opcachever  7.0.4-dev
+%global opcachever  7.0.6-dev
 %global oci8ver     1.4.10
 
 # Use for first build of PHP (before pecl/zip and pecl/jsonc)
@@ -124,7 +124,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.5.25
+Version: 5.5.26
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -1953,6 +1953,11 @@ fi
 
 
 %changelog
+* Wed Jun 10 2015 Remi Collet <remi@fedoraproject.org> 5.5.26-1
+- Update to 5.5.26
+  http://www.php.net/releases/5_5_26.php
+- opcache is now 7.0.6-dev
+
 * Thu May 14 2015 Remi Collet <remi@fedoraproject.org> 5.5.25-1
 - Update to 5.5.25
   http://www.php.net/releases/5_5_25.php
