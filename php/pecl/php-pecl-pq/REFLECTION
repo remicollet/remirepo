@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #172 pq version 0.5.5 ] {
+Extension [ <persistent> extension #188 pq version 0.6.0RC1 ] {
 
   - Dependencies {
     Dependency [ raphf (Required) ]
@@ -66,16 +66,16 @@ Extension [ <persistent> extension #172 pq version 0.5.5 ] {
       }
 
       - Static methods [3] {
-        Method [ <internal:date, inherits DateTime> static public method __set_state ] {
-        }
-
-        Method [ <internal:date, inherits DateTime> static public method createFromFormat ] {
+        Method [ <internal:pq, overwrites DateTime, prototype DateTime> static public method createFromFormat ] {
 
           - Parameters [3] {
             Parameter #0 [ <required> $format ]
-            Parameter #1 [ <required> $time ]
-            Parameter #2 [ <optional> $object ]
+            Parameter #1 [ <required> $datetime ]
+            Parameter #2 [ <optional> $timezone ]
           }
+        }
+
+        Method [ <internal:date, inherits DateTime> static public method __set_state ] {
         }
 
         Method [ <internal:date, inherits DateTime> static public method getLastErrors ] {
@@ -523,7 +523,7 @@ Extension [ <persistent> extension #172 pq version 0.5.5 ] {
       - Static methods [0] {
       }
 
-      - Properties [19] {
+      - Properties [20] {
         Property [ <default> public $status ]
         Property [ <default> public $transactionStatus ]
         Property [ <default> public $socket ]
@@ -536,6 +536,7 @@ Extension [ <persistent> extension #172 pq version 0.5.5 ] {
         Property [ <default> public $pass ]
         Property [ <default> public $host ]
         Property [ <default> public $port ]
+        Property [ <default> public $params ]
         Property [ <default> public $options ]
         Property [ <default> public $eventHandlers ]
         Property [ <default> public $defaultFetchType ]
@@ -550,7 +551,7 @@ Extension [ <persistent> extension #172 pq version 0.5.5 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $dsn ]
-            Parameter #1 [ <optional> $async ]
+            Parameter #1 [ <optional> $flags ]
           }
         }
 
@@ -1119,12 +1120,14 @@ Extension [ <persistent> extension #172 pq version 0.5.5 ] {
       - Static methods [0] {
       }
 
-      - Properties [2] {
+      - Properties [4] {
         Property [ <default> public $name ]
         Property [ <default> public $connection ]
+        Property [ <default> public $query ]
+        Property [ <default> public $types ]
       }
 
-      - Methods [6] {
+      - Methods [10] {
         Method [ <internal:pq, ctor> public method __construct ] {
 
           - Parameters [5] {
@@ -1144,16 +1147,35 @@ Extension [ <persistent> extension #172 pq version 0.5.5 ] {
           }
         }
 
-        Method [ <internal:pq> public method exec ] {
+        Method [ <internal:pq> public method deallocate ] {
 
-          - Parameters [1] {
-            Parameter #0 [ <optional> array or NULL $params ]
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:pq> public method deallocateAsync ] {
+
+          - Parameters [0] {
           }
         }
 
         Method [ <internal:pq> public method desc ] {
 
           - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:pq> public method descAsync ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $callable ]
+          }
+        }
+
+        Method [ <internal:pq> public method exec ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> array or NULL $params ]
           }
         }
 
@@ -1165,10 +1187,15 @@ Extension [ <persistent> extension #172 pq version 0.5.5 ] {
           }
         }
 
-        Method [ <internal:pq> public method descAsync ] {
+        Method [ <internal:pq> public method prepare ] {
 
-          - Parameters [1] {
-            Parameter #0 [ <required> $callable ]
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:pq> public method prepareAsync ] {
+
+          - Parameters [0] {
           }
         }
       }
@@ -1325,12 +1352,14 @@ Extension [ <persistent> extension #172 pq version 0.5.5 ] {
       - Static methods [0] {
       }
 
-      - Properties [2] {
+      - Properties [4] {
         Property [ <default> public $name ]
         Property [ <default> public $connection ]
+        Property [ <default> public $query ]
+        Property [ <default> public $flags ]
       }
 
-      - Methods [7] {
+      - Methods [9] {
         Method [ <internal:pq, ctor> public method __construct ] {
 
           - Parameters [5] {
@@ -1348,7 +1377,19 @@ Extension [ <persistent> extension #172 pq version 0.5.5 ] {
           }
         }
 
+        Method [ <internal:pq> public method openAsync ] {
+
+          - Parameters [0] {
+          }
+        }
+
         Method [ <internal:pq> public method close ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:pq> public method closeAsync ] {
 
           - Parameters [0] {
           }

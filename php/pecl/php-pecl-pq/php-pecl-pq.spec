@@ -1,4 +1,4 @@
-# spec file for php-pecl-pq
+# remirepo spec file for php-pecl-pq
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA
@@ -13,6 +13,7 @@
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  pq
+%global rcver      RC1
 %if %{?runselftest}%{!?runselftest:1}
 # Build using "--without tests" to disable tests
 %global with_tests %{?_without_tests:0}%{!?_without_tests:1}
@@ -30,16 +31,23 @@
 
 Summary:        PostgreSQL client library (libpq) binding
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.5.5
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Version:        0.6.0
+%if 0%{?rcver:1}
+Release:        0.1.%{rcver}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+%else
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+%endif
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?rcver}.tgz
+
+# https://github.com/m6w6/ext-pq/issues/2 (to revert)
+Patch0:         %{pecl_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  postgresql-devel > 9
-BuildRequires:  %{?scl_prefix}php-devel > 5.2
+BuildRequires:  %{?scl_prefix}php-devel > 5.4
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-json
 BuildRequires:  %{?scl_prefix}php-pecl-raphf-devel
@@ -100,16 +108,18 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -q -c
-mv %{pecl_name}-%{version} NTS
+mv %{pecl_name}-%{version}%{?rcver} NTS
 
 # Don't install tests
 sed -e '/role="test"/d' -i package.xml
 
 cd NTS
+%patch0 -p1 -R -b .upstream
+
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PQ_VERSION/{s/.* "//;s/".*$//;p}' php_pq.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}.
+if test "x${extver}" != "x%{version}%{?rcver}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?rcver}.
    exit 1
 fi
 cd ..
@@ -130,6 +140,7 @@ EOF
 cd NTS
 %{_bindir}/phpize
 %configure \
+    --with-libdir=%{_lib} \
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
@@ -137,6 +148,7 @@ make %{?_smp_mflags}
 cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
+    --with-libdir=%{_lib} \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 %endif
@@ -165,12 +177,20 @@ do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -264,6 +284,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 10 2015 Remi Collet <remi@fedoraproject.org> - 0.6.0-0.1.RC1
+- Update to 0.6.0RC1
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 0.5.5-1.1
 - Fedora 21 SCL mass rebuild
 
