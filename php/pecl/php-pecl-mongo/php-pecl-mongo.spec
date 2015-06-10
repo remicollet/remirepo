@@ -1,3 +1,16 @@
+# remirepo spec file for php-pecl-mongo
+# with SCL stuff, from:
+#
+# Fedora spec file for php-pecl-mongo
+#
+# Copyright (c) 2014-2015 Remi Collet
+# Copyright (c) 2010-2013 Christof Damian
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 %{?scl:          %scl_package        php-pecl-mongo}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -7,7 +20,7 @@
 %global with_zts    0%{?__ztsphp:1}
 #global prever      RC3
 # see https://github.com/mongodb/mongo-php-driver/releases
-%global gh_commit   a7713fd44da5c34456476766ea09f8f2b08d6652
+%global gh_commit   17706d367d3715ab47a7c791072e3a7f1a8ac0db
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    mongodb
 %global gh_project  mongo-php-driver
@@ -22,7 +35,7 @@
 
 Summary:      PHP MongoDB database driver
 Name:         %{?scl_prefix}php-pecl-mongo
-Version:      1.6.8
+Version:      1.6.9
 Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      ASL 2.0
 Group:        Development/Languages
@@ -233,6 +246,9 @@ rm -rf data
 
 
 %changelog
+* Wed Jun 10 2015 Remi Collet <remi@fedoraproject.org> - 1.6.9-1
+- update to 1.6.9 (stable)
+
 * Wed May 13 2015 Remi Collet <remi@fedoraproject.org> - 1.6.8-1
 - update to 1.6.8 (stable)
 
