@@ -1,4 +1,4 @@
-# spec file for php-pecl-imagick
+# remirepo spec file for php-pecl-imagick
 #
 # Copyright (c) 2008-2015 Remi Collet
 # License: CC-BY-SA
@@ -59,7 +59,6 @@ Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}%{?prever}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
 Conflicts:     %{?scl_prefix}php-pecl-gmagick
 
-# Other third party repo stuff
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
