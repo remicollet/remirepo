@@ -44,6 +44,12 @@
 %global with_oci8   %{?_with_oci8:1}%{!?_with_oci8:0}
 %global with_fpm 1
 
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+%global with_sqlite3  1
+%else
+%global with_sqlite3  0
+%endif
+
 %if 0%{?__isa:1}
 %if 0%{?rhel} == 7
 %global isasuffix -%{__isa_bits}
@@ -92,7 +98,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.4.42
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -166,7 +172,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: bzip2-devel, curl-devel >= 7.9, gmp-devel
 BuildRequires: httpd-devel >= 2.0.46-1, pam-devel
 BuildRequires: libstdc++-devel, openssl-devel
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+%if %{with_sqlite3}
 # For Sqlite3 extension
 BuildRequires: sqlite-devel >= 3.6.0
 %else
@@ -403,7 +409,9 @@ Requires: php-common%{?_isa} = %{version}-%{release}
 # ABI/API check - Arch specific
 Provides: php-pdo-abi = %{pdover}%{isasuffix}
 Provides: php(pdo-abi) = %{pdover}%{isasuffix}
+%if %{with_sqlite3}
 Provides: php-sqlite3, php-sqlite3%{?_isa}
+%endif
 Provides: php-pdo_sqlite, php-pdo_sqlite%{?_isa}
 Obsoletes: php53-pdo, php53u-pdo, php54-pdo, php54w-pdo
 
@@ -1094,7 +1102,7 @@ build --libdir=%{_libdir}/php \
       --with-pdo-pgsql=shared,%{_prefix} \
       --with-pdo-sqlite=shared,%{_prefix} \
       --with-pdo-dblib=shared,%{_prefix} \
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+%if %{with_sqlite3}
       --with-sqlite3=shared,%{_prefix} \
 %else
       --without-sqlite3 \
@@ -1217,7 +1225,7 @@ build --includedir=%{_includedir}/php-zts \
       --with-pdo-pgsql=shared,%{_prefix} \
       --with-pdo-sqlite=shared,%{_prefix} \
       --with-pdo-dblib=shared,%{_prefix} \
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+%if %{with_sqlite3}
       --with-sqlite3=shared,%{_prefix} \
 %else
       --without-sqlite3 \
@@ -1419,7 +1427,7 @@ for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
     gmp \
     pdo pdo_mysql pdo_pgsql pdo_odbc pdo_sqlite json %{zipmod} \
     %{?_with_oci8:oci8} %{?_with_oci8:pdo_oci} interbase pdo_firebird \
-%if 0%{?fedora} >= 11  || 0%{?rhel} >= 6
+%if %{with_sqlite3}
     sqlite3 \
 %endif
     enchant phar fileinfo intl \
@@ -1470,7 +1478,7 @@ cat files.sysv* files.posix > files.process
 # Package sqlite3 and pdo_sqlite with pdo; isolating the sqlite dependency
 # isn't useful at this time since rpm itself requires sqlite.
 cat files.pdo_sqlite >> files.pdo
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+%if %{with_sqlite3}
 cat files.sqlite3 >> files.pdo
 %endif
 
@@ -1724,6 +1732,9 @@ fi
 
 
 %changelog
+* Thu Jun 11 2015 Remi Collet <remi@fedoraproject.org> 5.4.42-1.1
+- don't provide php-sqlite3 on EL-5
+
 * Wed Jun 10 2015 Remi Collet <remi@fedoraproject.org> 5.4.42-1
 - Update to 5.4.42
   http://www.php.net/releases/5_4_42.php
