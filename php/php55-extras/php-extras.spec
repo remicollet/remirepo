@@ -29,8 +29,8 @@
 
 Name:       %{?scl_prefix}php-extras
 Summary:    Additional PHP modules from the standard PHP distribution
-Version:    5.5.6
-Release:    3%{?dist}
+Version:    5.5.21
+Release:    1%{?dist}
 Group:      Development/Languages
 License:    The PHP License
 URL:        http://www.php.net/
@@ -38,7 +38,6 @@ URL:        http://www.php.net/
 Source0:    php-%{version}-strip.tar.xz
 
 # Security patches
-Patch0: php-5.4.16-mcrypt.patch
 
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel >= %{version}
@@ -162,8 +161,6 @@ messages on mail servers. PHP is an HTML-embedded scripting language.
 %prep
 %setup -q -n php-%{version}
 
-%patch0 -p1 -b .security
-
 # avoid tests which requires databases
 rm -rf ext/{mssql,pdo_dblib,interbase,pdo_firebird}/tests
 
@@ -251,6 +248,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 11 2015 Remi Collet <rcollet@redhat.com> - 5.5.21-1
+- update to 5.5.21 (rhscl 2.0)
+
 * Fri Feb 13 2015 Remi Collet <rcollet@redhat.com> - 5.5.6-3
 - mcrypt upstream security fix
 
