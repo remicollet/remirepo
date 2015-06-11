@@ -124,13 +124,13 @@
 %global db_devel  libdb-devel
 %endif
 
-%global gh_commit    8a884d628b5c23c4b33c96c723331fda9e17d2bc
+%global gh_commit    8cfe28259ed0b0bebb72d8292abc877181b84d34
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150609
+%global gh_date      20150611
 %global gh_owner     php
 %global gh_project   php-src
-%global rcver        alpha1
-%global rpmrel       8
+#global rcver        alpha1
+%global rpmrel       9
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1414,10 +1414,6 @@ install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 sed -e 's:php-fpm.service:%{?scl_prefix}php-fpm.service:' \
     -i $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 
-
-# Fix the link
-(cd $RPM_BUILD_ROOT%{_bindir}; ln -sfn phar.phar phar)
-
 # make the cli commands available in standard root for SCL build
 %if 0%{?scl:1}
 install -m 755 -d $RPM_BUILD_ROOT%{_root_bindir}
@@ -1805,6 +1801,10 @@ fi
 
 
 %changelog
+* Thu Jun 11 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.9.20150611git8cfe282
+- new snapshot
+- the phar link is now correctly created
+
 * Tue Jun  9 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.8.alpha1
 - Update to 7.0.0alpha1
 

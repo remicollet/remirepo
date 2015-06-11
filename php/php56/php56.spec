@@ -1592,9 +1592,6 @@ install -D -m 644 %{SOURCE13} $RPM_BUILD_ROOT%{_sysconfdir}/nginx/conf.d/php-fpm
 install -D -m 644 %{SOURCE14} $RPM_BUILD_ROOT%{_sysconfdir}/nginx/default.d/php.conf
 %endif
 
-# Fix the link
-(cd $RPM_BUILD_ROOT%{_bindir}; ln -sfn phar.phar phar)
-
 # Generate files lists and stub .ini files for each subpackage
 for mod in pgsql odbc ldap snmp xmlrpc imap \
     mysqlnd mysql mysqli pdo_mysql \
@@ -1976,6 +1973,7 @@ fi
 %changelog
 * Thu Jun 11 2015 Remi Collet <remi@fedoraproject.org> 5.6.10-1.1
 - don't provide php-sqlite3 on EL-5
+- the phar link is now correctly created
 
 * Thu Jun 11 2015 Remi Collet <remi@fedoraproject.org> 5.6.10-1
 - Update to 5.6.10

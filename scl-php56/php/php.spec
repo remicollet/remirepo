@@ -1398,10 +1398,6 @@ install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 sed -e 's:php-fpm.service:%{?scl_prefix}php-fpm.service:' \
     -i $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 
-
-# Fix the link
-(cd $RPM_BUILD_ROOT%{_bindir}; ln -sfn phar.phar phar)
-
 # make the cli commands available in standard root for SCL build
 %if 0%{?scl:1}
 install -m 755 -d $RPM_BUILD_ROOT%{_root_bindir}
@@ -1790,6 +1786,8 @@ fi
 
 
 %changelog
+- the phar link is now correctly created
+
 * Thu Jun 11 2015 Remi Collet <remi@fedoraproject.org> 5.6.10-1
 - Update to 5.6.10
   http://www.php.net/releases/5_6_10.php
