@@ -1007,6 +1007,10 @@ rm ext/date/tests/timezone_version_get_basic1.phpt
 rm ext/standard/tests/file/file_get_contents_error001.phpt
 # fails sometime
 rm ext/sockets/tests/mcast_ipv?_recv.phpt
+# avoid issue when 2 builds run simultaneously
+%ifnarch x86_64
+sed -e 's/64321/64322/' -i ext/openssl/tests/*.phpt
+%endif
 
 # Safety check for API version change.
 pver=$(sed -n '/#define PHP_VERSION /{s/.* "//;s/".*$//;p}' main/php_version.h)
@@ -1971,6 +1975,7 @@ fi
 * Thu Jun 11 2015 Remi Collet <remi@fedoraproject.org> 5.5.26-1.1
 - don't provide php-sqlite3 on EL-5
 - the phar link is now correctly created
+- avoid issue when 2 builds run simultaneously
 
 * Wed Jun 10 2015 Remi Collet <remi@fedoraproject.org> 5.5.26-1
 - Update to 5.5.26
