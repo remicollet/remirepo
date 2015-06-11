@@ -28,15 +28,14 @@
 
 Name:       %{?scl_prefix}php-extras
 Summary:    Additional PHP modules from the standard PHP distribution
-Version:    5.4.16
-Release:    6%{?dist}
+Version:    5.4.40
+Release:    1%{?dist}
 Group:      Development/Languages
 License:    The PHP License
 URL:        http://www.php.net/
 Source0:    http://www.php.net/distributions/php-%{version}.tar.bz2
 
 # Security patches
-Patch0: php-5.4.16-mcrypt.patch
 
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel >= 5.4
@@ -158,8 +157,6 @@ add support for using the enchant library to PHP.
 %prep
 %setup -q -n php-%{version}
 
-%patch0 -p1 -b .security
-
 # avoid tests which requires databases
 rm -rf ext/{mssql,pdo_dblib,interbase,pdo_firebird}/tests
 
@@ -247,6 +244,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 11 2015 Remi Collet <rcollet@redhat.com> - 5.4.40-1
+- update to 5.4.40 (rhscl-2.0)
+
 * Fri Feb 13 2015 Remi Collet <rcollet@redhat.com> - 5.4.16-6
 - mcrypt upstream security fix
 
