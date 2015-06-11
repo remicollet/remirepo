@@ -1,3 +1,13 @@
+# remirepo spec file for php56-php
+# with SCL and backport stuff, adapted from
+#
+# Fedora spec file for php
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 %if 0%{?scl:1}
 %scl_package php
 %else
@@ -127,7 +137,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver  RC1
+#global rcver  RC1
 %global rpmrel 1
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1780,6 +1790,10 @@ fi
 
 
 %changelog
+* Thu Jun 11 2015 Remi Collet <remi@fedoraproject.org> 5.6.10-1
+- Update to 5.6.10
+  http://www.php.net/releases/5_6_10.php
+
 * Thu May 28 2015 Remi Collet <remi@fedoraproject.org> 5.6.10-0.1.RC1
 - update to 5.6.10RC1
 - opcache is now 7.0.6-dev

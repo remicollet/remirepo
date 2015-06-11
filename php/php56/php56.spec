@@ -1,9 +1,19 @@
+# remirepo spec file for php 5.6
+# with backport stuff, adapted from
+#
+# Fedora spec file for php
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 # API/ABI check
 %global apiver      20131106
 %global zendver     20131226
 %global pdover      20080721
 # Extension version
-%global opcachever  7.0.4-dev
+%global opcachever  7.0.6-dev
 %global oci8ver     2.0.9
 
 # Use for first build of PHP (before pecl/zip and pecl/jsonc)
@@ -131,7 +141,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.6.9
+Version: 5.6.10
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -205,8 +215,6 @@ Patch91: php-5.6.3-oci8conf.patch
 Patch300: php-5.6.3-datetests.patch
 # Revert changes for pcre < 8.34
 Patch301: php-5.6.0-oldpcre.patch
-# Backported from 7.0
-Patch302: php-5.6.8-openssltests.patch
 
 # WIP
 
@@ -971,7 +979,6 @@ rm -rf ext/json
 %patch301 -p1 -b .pcre834
 %endif
 %endif
-%patch302 -p1 -b .sslv3
 
 # WIP patch
 
@@ -1959,6 +1966,11 @@ fi
 
 
 %changelog
+* Thu Jun 11 2015 Remi Collet <remi@fedoraproject.org> 5.6.10-1
+- Update to 5.6.10
+  http://www.php.net/releases/5_6_10.php
+- opcache is now 7.0.6-dev
+
 * Fri May 15 2015 Remi Collet <remi@fedoraproject.org> 5.6.9-1
 - Update to 5.6.9
   http://www.php.net/releases/5_6_9.php
