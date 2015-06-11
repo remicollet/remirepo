@@ -1,3 +1,13 @@
+# remirepo spec file for php 5.4
+# with backport stuff, adapted from
+#
+# Fedora spec file for php
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 # API/ABI check
 %global apiver      20100412
 %global zendver     20100525

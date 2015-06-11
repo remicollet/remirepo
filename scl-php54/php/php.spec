@@ -1,3 +1,13 @@
+# remirepo spec file for php54-php
+# with SCL and backport stuff, adapted from
+#
+# Fedora spec file for php
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 %if 0%{?scl:1}
 %scl_package php
 %else
