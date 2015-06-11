@@ -1,4 +1,4 @@
-# spec file for php-phalcon2
+# remirepo spec file for php-phalcon2
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA
@@ -9,7 +9,7 @@
 %{?scl:          %scl_package             php-phalcon}
 %{!?scl:         %global pkg_name         %{name}}
 %{!?__php:       %global __php            %{_bindir}/php}
-%global gh_commit    c705e115264fbe42d44bb3f1fbf7aebd3e2498bb
+%global gh_commit    b922cca7fd24ccd54ab714d147561a6034ceb424
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phalcon
 %global gh_project   cphalcon
@@ -25,7 +25,7 @@
 %endif
 
 Name:           %{?scl_prefix}php-phalcon2
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Phalcon Framework
 
@@ -201,7 +201,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license docs/LICENSE.txt
-%doc CHANGELOG
+%doc CHANGELOG.md
 %doc CONTRIBUTING.md
 %doc docs/DOCUMENTATION.txt
 
@@ -215,6 +215,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 11 2015 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- update to 2.0.3
+
 * Tue May 26 2015 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - update to 2.0.2
 
