@@ -11,7 +11,7 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit  7aca9e671815d884206e8fc47c789ab76c2865f2
+%global gh_commit  3b43b26f28a615ee1a1dda36f0081dd67785d78c
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   laruence
 %global gh_project yar
@@ -106,14 +106,9 @@ mv NTS/package2.xml .
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' \
-    -e '/README/s/role="doc"/role="test"/' \
     -i package2.xml
 
 cd NTS
-
-# Add shebang
-sed -e 's:<?php:#!%{_bindir}/php\n<?php:' \
-     -i tools/yar_debug.php
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_YAR_VERSION/{s/.* "//;s/".*$//;p}' php_yar.h)
@@ -289,6 +284,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 12 2015 Remi Collet <remi@fedoraproject.org> - 1.2.5-0.2.20150612git3b43b26
+- enable test suite during the build
+
 * Fri Jun 12 2015 Remi Collet <remi@fedoraproject.org> - 1.2.5-0.1.20150612git7aca9e6
 - Update to 1.2.5-dev for PHP 7
 - sources from github
