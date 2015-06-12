@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #16 yaf version 3.0.0-dev ] {
+Extension [ <persistent> extension #90 yaf version 3.0.0-dev ] {
 
   - Dependencies {
     Dependency [ spl (Required) ]
