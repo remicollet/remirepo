@@ -1,4 +1,4 @@
-# spec file for php-pecl-yaf
+# remirepo spec file for php-pecl-yaf
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
@@ -11,22 +11,31 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global with_zts  0%{?__ztsphp:1}
-%global pecl_name yaf
+%global gh_commit   a1bd3ac1c05638b6a7824ee477b3565678d6e567
+%global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner    laruence
+%global gh_project  php-yaf
+%global gh_date     20150612
+%global with_zts    0%{?__ztsphp:1}
+%global pecl_name   yaf
 %if "%{php_version}" < "5.6"
-%global ini_name  %{pecl_name}.ini
+%global ini_name    %{pecl_name}.ini
 %else
-%global ini_name  40-%{pecl_name}.ini
+%global ini_name    40-%{pecl_name}.ini
 %endif
 
 Summary:       Yet Another Framework
 Name:          %{?scl_prefix}php-pecl-yaf
-Version:       2.3.3
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Version:       3.0.0
+%if 0%{?gh_date:1}
+Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+%else
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+%endif
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaf
-Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 Source1:       %{pecl_name}.ini
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -34,8 +43,6 @@ BuildRequires: %{?scl_prefix}php-devel >= 5.2.0
 BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: pcre-devel
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
@@ -76,8 +83,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 
 %prep
-%setup -q -c 
-mv %{pecl_name}-%{version} NTS
+%setup -qc
+mv %{gh_project}-%{gh_commit} NTS
+mv NTS/package.xml .
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' -i package.xml
@@ -85,8 +93,8 @@ sed -e 's/role="test"/role="src"/' -i package.xml
 cd NTS
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_YAF_VERSION/{s/.*\t"//;s/".*$//;p}' php_yaf.h )
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}.
+if test "x${extver}" != "x%{version}%{?gh_date:-dev}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?gh_date:-dev}.
    exit 1
 fi
 cd ..
@@ -144,7 +152,7 @@ TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__php} -n run-tests.php
+%{__php} -n run-tests.php --show-diff
 
 %if %{with_zts}
 cd ../ZTS
@@ -158,16 +166,24 @@ TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__ztsphp} -n run-tests.php
+%{__ztsphp} -n run-tests.php --show-diff
 %endif
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -178,6 +194,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -191,6 +208,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 12 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.1.20150612gita1bd3ac
+- Update to 3.0.0-dev for PHP 7
+- sources from github
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 2.3.3-1.1
 - Fedora 21 SCL mass rebuild
 
