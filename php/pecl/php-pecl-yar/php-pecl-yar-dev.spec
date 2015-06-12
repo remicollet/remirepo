@@ -18,6 +18,7 @@
 %global gh_date    20150612
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  yar
+%global with_tests %{?_without_tests:0}%{!?_without_tests:1}
 %if "%{php_version}" < "5.6"
 # After json, msgpack
 %global ini_name   %{pecl_name}.ini
@@ -43,6 +44,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  curl-devel
 BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  %{?scl_prefix}php-json
 BuildRequires:  %{?scl_prefix}php-pecl-msgpack-devel
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
@@ -229,6 +231,41 @@ fi
     --define extension=msgpack.so \
     --define extension=ZTS/modules/%{pecl_name}.so \
     --modules | grep %{pecl_name}
+%endif
+
+%if %{with_tests}
+cd NTS
+
+: Create test configuration
+export TEST_PHP_EXECUTABLE=%{__php}
+export TEST_PHP_ARGS="-n -d extension=json.so -d extension=msgpack.so -d extension=$PWD/modules/%{pecl_name}.so"
+export NO_INTERACTION=1
+export REPORT_EXIT_STATUS=1
+RET=0
+
+%ifarch x86_64
+PORT=8088
+%else
+PORT=8084
+%endif
+
+sed -e "/YAR_API_HOST/s|localhost:8090|127.0.0.1:$PORT|" \
+    -e "/YAR_API_URI/s|/yar/|/|" \
+    -i tests/yar.inc
+
+: launch the server
+%{__php} $TEST_PHP_ARGS -S 127.0.0.1:$PORT -t tests/htdocs &>serv.log &
+PID=$!
+
+: Run the upstream test suite
+%{__php} -n run-tests.php --show-diff || RET=1
+
+: Cleanup
+kill $PID
+
+exit $RET
+%else
+: upstream test suite disabled
 %endif
 
 
