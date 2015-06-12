@@ -1,4 +1,7 @@
-# spec file for php-pecl-msgpack
+# remirepo spec file for php-pecl-msgpack
+# with SCL compatibility, from:
+#
+# Fedora spec file for php-pecl-msgpack
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
@@ -11,6 +14,11 @@
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
 
+%global gh_commit   95c8dc3624dd5651b25a1f4803080e8abe00d842
+%global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner    laruence
+%global gh_project  msgpack-php
+%global gh_date     20150612
 %global pecl_name   msgpack
 %global with_zts    0%{?__ztsphp:1}
 %if "%{php_version}" < "5.6"
@@ -27,15 +35,16 @@
 
 Summary:       API for communicating with MessagePack serialization
 Name:          %{?scl_prefix}php-pecl-msgpack
-Version:       0.5.6
+Version:       0.5.7
+%if 0%{?gh_date:1}
+Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+%else
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+%endif
 License:       BSD
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/msgpack
-Source:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/msgpack/msgpack-php/issues/16
-Patch0:        %{pecl_name}.patch
+Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
@@ -111,11 +120,13 @@ These are the files needed to compile programs using MessagePack serializer.
 
 
 %prep
-%setup -q -c 
+%setup -qc
+mv %{gh_project}-%{gh_commit} NTS
+mv NTS/package.xml .
 
-mv %{pecl_name}-%{version} NTS
+sed -e '/release/s/0.5.6/%{version}%{?gh_date:dev}/' -i package.xml
+
 cd NTS
-%patch0 -p1 -b .build
 
 %if %{with_msgpack}
 # use system library
@@ -127,8 +138,8 @@ rm -rf msgpack
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_MSGPACK_VERSION/{s/.* "//;s/".*$//;p}' php_msgpack.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}.
+if test "x${extver}" != "x%{version}%{?gh_date:-dev}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?gh_date:-dev}.
    exit 1
 fi
 cd ..
@@ -183,7 +194,7 @@ install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 # Test & Documentation
 cd NTS
 for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+do [ -f tests/$i ] && install -Dpm 644 tests/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/tests/$i
 done
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
@@ -192,7 +203,7 @@ done
 
 %check
 # Known by upstream as failed test (travis result)
-rm */tests/{018,030,040b,040c,040d}.phpt
+rm */tests/026.phpt
 
 cd NTS
 : Minimal load test for NTS extension
@@ -246,7 +257,7 @@ rm -rf %{buildroot}
 
 
 %files
-%defattr(-, root, root, 0755)
+%defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -260,7 +271,7 @@ rm -rf %{buildroot}
 
 
 %files devel
-%defattr(-, root, root, 0755)
+%defattr(-,root,root,-)
 %doc %{pecl_testdir}/%{pecl_name}
 %{php_incldir}/ext/%{pecl_name}
 
@@ -270,6 +281,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 12 2015 Remi Collet <remi@fedoraproject.org> - 0.5.7-0.1.20150612git95c8dc3
+- update to 0.5.7dev for PHP 7
+- sources from github
+
 * Mon Apr 27 2015 Remi Collet <remi@fedoraproject.org> - 0.5.6-1
 - Update to 0.5.6
 - drop runtime dependency on pear, new scriptlets
