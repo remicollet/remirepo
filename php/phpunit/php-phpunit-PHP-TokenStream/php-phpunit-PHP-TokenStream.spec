@@ -1,4 +1,4 @@
-# spec file for php-phpunit-PHP-TokenStream
+# remirepo/fedora spec file for php-phpunit-PHP-TokenStream
 #
 # Copyright (c) 2010-2015 Christof Damian, Remi Collet
 #
@@ -8,7 +8,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    eab81d02569310739373308137284e0158424330
+%global gh_commit    db63be1159c81df649cd0260e30249a586d4129e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-token-stream
@@ -22,14 +22,14 @@
 %endif
 
 Name:           php-phpunit-PHP-TokenStream
-Version:        1.4.1
+Version:        1.4.2
 Release:        1%{?dist}
 Summary:        Wrapper around PHP tokenizer extension
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 # Autoload template, from version 1.2.2
 Source1:        Autoload.php.in
@@ -90,6 +90,7 @@ sed -e 's:vendor/autoload.php:PHP/Token/Stream/Autoload.php:' \
 # Run tests
 phpunit  \
    --bootstrap tests/bootstrap.php \
+   --verbose \
    tests
 %endif
 
@@ -114,6 +115,9 @@ fi
 
 
 %changelog
+* Fri Jun 12 2015 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
+- Update to 1.4.2
+
 * Wed Apr  8 2015 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
 - Update to 1.4.1
 
