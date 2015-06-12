@@ -1,4 +1,4 @@
-# spec file for php-pecl-yar
+# remirepo spec file for php-pecl-yar
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA

@@ -1,4 +1,4 @@
-# spec file for php-pecl-yar
+# remirepo spec file for php-pecl-yar
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -11,6 +11,11 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
+%global gh_commit  7aca9e671815d884206e8fc47c789ab76c2865f2
+%global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner   laruence
+%global gh_project yar
+%global gh_date    20150612
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  yar
 %if "%{php_version}" < "5.6"
@@ -23,12 +28,16 @@
 
 Summary:        Light, concurrent RPC framework
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.2.4
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
-License:        BSD
+Version:        1.2.5
+%if 0%{?gh_date:1}
+Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+%else
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+%endif
+License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  curl-devel
@@ -36,8 +45,6 @@ BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-pecl-msgpack-devel
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %if "%{php_version}" < "5.4"
@@ -70,6 +77,10 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -87,11 +98,14 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 
 %prep
-%setup -q -c
-mv %{pecl_name}-%{version} NTS
+%setup -qc
+mv %{gh_project}-%{gh_commit} NTS
+mv NTS/package2.xml .
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package2.xml
+sed -e 's/role="test"/role="src"/' \
+    -e '/README/s/role="doc"/role="test"/' \
+    -i package2.xml
 
 cd NTS
 
@@ -101,8 +115,8 @@ sed -e 's:<?php:#!%{_bindir}/php\n<?php:' \
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_YAR_VERSION/{s/.* "//;s/".*$//;p}' php_yar.h)
-if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
+if test "x${extver}" != "x%{version}%{?prever:-%{prever}}%{?gh_date:-dev}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}%{?gh_date:-dev}.
    exit 1
 fi
 cd ..
@@ -181,12 +195,20 @@ do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -230,6 +252,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 12 2015 Remi Collet <remi@fedoraproject.org> - 1.2.5-0.1.20150612git7aca9e6
+- Update to 1.2.5-dev for PHP 7
+- sources from github
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.2.4-1.1
 - Fedora 21 SCL mass rebuild
 
