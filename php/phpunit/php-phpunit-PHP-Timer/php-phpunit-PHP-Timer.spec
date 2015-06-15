@@ -1,26 +1,35 @@
-%global gh_commit    19689d4354b295ee3d8c54b4f42c3efb69cbc17c
+# remirepo/fedora spec file for php-phpunit-PHP-Timer
+#
+# Copyright (c) 2010-2015 Christof Damian, Remi Collet
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
+%global gh_commit    83fe1bdc5d47658b727595c14da140da92b3d66d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-timer
 %global php_home     %{_datadir}/php
 %global pear_name    PHP_Timer
 %global pear_channel pear.phpunit.de
-# Circular dependency with phpunit
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-PHP-Timer
-Version:        1.0.5
-Release:        5%{?dist}
+Version:        1.0.6
+Release:        1%{?dist}
 Summary:        PHP Utility class for timing
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
 BuildRequires:  %{_bindir}/phpunit
 %endif
@@ -43,17 +52,16 @@ PHP Utility class for timing
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-rm PHP/Timer/Autoload.php.in
+# Restore PSR-0 tree
+mv src PHP
+mkdir PHP/Timer
 
 
 %build
-# Empty build section, most likely nothing required.
-
-# If upstream drop Autoload.php, command to generate it
-# phpab \
-#   --output PHP/Timer/Autoload.php \
-#   --template PHP/Timer/Autoload.php.in \
-#   PHP
+phpab \
+   --output  PHP/Timer/Autoload.php \
+   --basedir PHP/Timer \
+   PHP
 
 
 %install
@@ -65,8 +73,8 @@ cp -pr PHP %{buildroot}%{php_home}
 %if %{with_tests}
 %check
 phpunit \
-  --bootstrap PHP/Timer/Autoload.php \
-  -d date.timezone=UTC
+  --include-path=%{buildroot}%{php_home} \
+  --verbose .
 %endif
 
 
@@ -86,10 +94,16 @@ fi
 %doc README.md composer.json
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%{php_home}
+%{php_home}/PHP
 
 
 %changelog
+* Mon Jun 15 2015 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
+- update to 1.0.6
+- generate autoloader, no more provided by upstream
+- enable test suite during build
+- add explicit spec license header
+
 * Fri Jul 18 2014 Remi Collet <remi@fedoraproject.org> - 1.0.5-5
 - add composer dependencies
 
@@ -120,4 +134,3 @@ fi
 
 * Thu Jul 15 2010 Christof Damian <christof@damian.net> - 1.0.0-1
 - initial package
-
