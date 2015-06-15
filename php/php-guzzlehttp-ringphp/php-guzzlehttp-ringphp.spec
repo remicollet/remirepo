@@ -112,6 +112,7 @@ clients and servers for both blocking and non-blocking requests.
 %package tests
 
 Summary:  Tests for %{name}
+Group:    Development/Libraries
 
 Requires: %{name} = %{version}-%{release}
 Requires: nodejs
