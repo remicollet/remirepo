@@ -215,7 +215,7 @@ fi
 rm ?TS/tests/bug20636.phpt
 %endif
 # https://github.com/mkoppanen/imagick/issues/97
-rm ?TS/tests/024-ispixelsimilar.phpt
+#rm ?TS/tests/024-ispixelsimilar.phpt
 
 : simple module load test for NTS extension
 cd NTS
