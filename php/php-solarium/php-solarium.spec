@@ -1,4 +1,4 @@
-# Spec file for php-solarium
+# remirepo/fedora spec file for php-solarium
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a9d8a52ba9fd8add04b2294fad997a004c1f2fab
+%global gh_commit    90d006c65efffcbcbfa8a31920e93c10d0657b96
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     basdenooijer
 %global gh_project   solarium
@@ -14,8 +14,8 @@
 
 Name:           php-%{gh_project}
 Summary:        Solarium PHP Solr client library
-Version:        3.3.0
-Release:        2%{?dist}
+Version:        3.4.1
+Release:        1%{?dist}
 
 URL:            http://www.solarium-project.org/
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
@@ -36,7 +36,7 @@ BuildRequires:  php-symfony-eventdispatcher < 3
 Requires:       php(language) >= 5.3.2
 Requires:       php-symfony-eventdispatcher > 2.1
 Requires:       php-symfony-eventdispatcher < 3
-# From phpcompatinfo report for version 3.2.0
+# From phpcompatinfo report for version 3.4.1
 Requires:       php-curl
 Requires:       php-date
 Requires:       php-json
@@ -96,7 +96,8 @@ cp -pr library/Solarium %{buildroot}%{_datadir}/php/Solarium
 %if %{with_tests}
 : Run upstream test suite against installed library
 phpunit \
-  --include-path=%{buildroot}%{_datadir}/php:./tests
+  --include-path=%{buildroot}%{_datadir}/php:./tests \
+  --verbose
 %else
 : Skip upstream test suite
 %endif
@@ -106,11 +107,14 @@ phpunit \
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license COPYING
-%doc composer.json README.md examples
+%doc composer.json *.md examples
 %{_datadir}/php/Solarium
 
 
 %changelog
+* Mon Jun 15 2015 Remi Collet <remi@fedoraproject.org> - 3.4.1-1
+- update to 3.4.1
+
 * Tue Nov 18 2014 Remi Collet <remi@fedoraproject.org> - 3.3.0-2
 - provide php-composer(solarium/solarium)
 - fix license handling
