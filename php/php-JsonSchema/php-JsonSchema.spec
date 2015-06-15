@@ -93,7 +93,9 @@ cat > autoload.php <<'AUTOLOAD'
 <?php
 spl_autoload_register(function ($class) {
     $src = str_replace('\\', '/', $class).'.php';
-    @include $src;
+    if ($path = stream_resolve_include_path($src)) {
+        require_once $path;
+    }
 });
 AUTOLOAD
 
@@ -121,6 +123,9 @@ rm -rf tests/JsonSchema/Tests/Drafts
 %changelog
 * Mon Jun 15 2015 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
 - update to 1.4.2
+
+* Mon Apr 13 2015 Remi Collet <remi@fedoraproject.org> - 1.4.1-2
+- fix tests autoloader (FTBFS detected by Koschei)
 
 * Fri Mar 27 2015 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
 - Update to 1.4.1
