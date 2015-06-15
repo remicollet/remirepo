@@ -1,4 +1,4 @@
-# spec file for php-doctrine-instantiator
+# remirepo/fedora spec file for php-doctrine-instantiator
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA
@@ -9,7 +9,7 @@
 
 # bootstrap needed when rebuilding PHPUnit for new major version
 %global bootstrap    0
-%global gh_commit    f976e5de371104877ebc89bd8fecb0019ed9c119
+%global gh_commit    8e884e78f9f0eb1329e445619e04456e64d8051d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     doctrine
 %global gh_project   instantiator
@@ -20,14 +20,14 @@
 %endif
 
 Name:           php-doctrine-instantiator
-Version:        1.0.4
-Release:        2%{?dist}
+Version:        1.0.5
+Release:        1%{?dist}
 Summary:        Instantiate objects in PHP without invoking their constructors
 
 Group:          Development/Libraries
 License:        MIT
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -41,9 +41,9 @@ BuildRequires:  %{_bindir}/phpunit
 %endif
 
 # From composer.json
-#        "php": "~5.3"
+#        "php": ">=5.3,<8.0-DEV"
 Requires:       php(language) >= 5.3
-# From phpcompatinfo report for version 1.0.0
+# From phpcompatinfo report for version 1.0.5
 Requires:       php-reflection
 
 Provides:       php-composer(doctrine/instantiator) = %{version}
@@ -73,28 +73,20 @@ cp -pr src/* %{buildroot}%{_datadir}/php
 
 %check
 %if %{with_tests}
-: Generate autoloader
+: Generate tests autoloader
 %{_bindir}/phpab \
-    --basedir $PWD \
-    --output autoload.php \
-    src tests
-
-if [ -d /usr/share/php/PHPUnit ] \
-   && grep -q Doctrine /usr/share/php/PHPUnit/Autoload.php
-then
-  # Hack PHPUnit >= 4.3 autoloader to not use system Instantiator
-  mkdir PHPUnit
-  sed -e '/Doctrine\\\\Instantiator/d' \
-    -e 's:dirname(__FILE__):"/usr/share/php/PHPUnit":' \
-    /usr/share/php/PHPUnit/Autoload.php \
-    >PHPUnit/Autoload.php
-fi
+    --output tests/autoload.php \
+    tests
 
 sed -e '/log/d' phpunit.xml.dist >phpunit.xml
 
 : Run test suite
-%{_bindir}/phpunit \
-    --bootstrap autoload.php
+%{_bindir}/php \
+    -d include_path=".:%{buildroot}%{_datadir}/php:%{_datadir}/php" \
+    %{_bindir}/phpunit \
+        --include-path=%{buildroot}%{_datadir}/php \
+        --bootstrap tests/autoload.php \
+        --verbose
 %else
 : Test suite disabled
 %endif
@@ -110,10 +102,14 @@ rm -rf %{buildroot}
 %license LICENSE
 %doc *.md composer.json
 %dir %{_datadir}/php/Doctrine
-%{_datadir}/php/Doctrine/Instantiator
+     %{_datadir}/php/Doctrine/Instantiator
 
 
 %changelog
+* Mon Jun 15 2015 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
+- update to 1.0.5
+- improve test suite during the build
+
 * Fri Feb 13 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-2
 - add autoloader
 
