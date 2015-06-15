@@ -6,10 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9fb2d4f2d642a0749decb41bc2fe4be2bf8bef7a
+%global gh_commit    8e9659bd8317ad3f623c4d17940380443cf8772c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20150605
+%global gh_date      20150614
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
@@ -164,6 +164,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 15 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.5.20150614git8e9659b
+- new snapshot
+
 * Sun Jun  7 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.5.20150605git9fb2d4f
 - new snapshot
 

@@ -1,21 +1,12 @@
 diff -up ./bin/composer.rpm ./bin/composer
 --- ./bin/composer.rpm	2015-05-25 15:29:26.000000000 +0200
 +++ ./bin/composer	2015-05-26 15:36:46.984350206 +0200
-@@ -5,7 +5,16 @@ if (PHP_SAPI !== 'cli') {
+@@ -5,7 +5,7 @@ if (PHP_SAPI !== 'cli') {
      echo 'Warning: Composer should be invoked via the CLI version of PHP, not the '.PHP_SAPI.' SAPI'.PHP_EOL;
  }
 
 -require __DIR__.'/../src/bootstrap.php';
-+// Ensure correct include_path for RHSCL
-+$inc = get_include_path();
-+$dirs = explode(':', $inc);
-+if (!in_array('/usr/share/php', $dirs)) {
-+    $dirs[] = '/usr/share/php';
-+    set_include_path(implode(':', $dirs));
-+}
-+unset ($inc, $dirs);
-+
-+require 'Composer/autoload.php';
++require '/usr/share/php/Composer/autoload.php';
 
  use Composer\Console\Application;
 
