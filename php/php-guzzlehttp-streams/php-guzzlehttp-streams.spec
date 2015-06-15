@@ -22,13 +22,13 @@
 %global php_min_ver      5.4.0
 
 # Build using "--without tests" to disable tests
-%global with_tests       %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
 
 %{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       3%{?github_release}%{?dist}
 Summary:       Provides a simple abstraction over streams of data
 
 Group:         Development/Libraries
@@ -53,7 +53,7 @@ BuildRequires: php-hash
 BuildRequires: php-spl
 BuildRequires: php-zlib
 ## Autoloader
-BuildRequires: php-composer(symfony/class-loader) >= 2.5
+BuildRequires: php-composer(symfony/class-loader)
 %endif
 
 # composer.json
@@ -62,7 +62,7 @@ Requires:      php(language) >= %{php_min_ver}
 Requires:      php-hash
 Requires:      php-spl
 # Autoloader
-Requires:      php-composer(symfony/class-loader) >= 2.5
+Requires:      php-composer(symfony/class-loader)
 
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
@@ -80,15 +80,22 @@ Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 <?php
 /**
  * Autoloader created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
  */
 
-if (!class_exists('Symfony\\Component\\ClassLoader\\Psr4ClassLoader', false)) {
-    require_once 'Symfony/Component/ClassLoader/Psr4ClassLoader.php';
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once 'Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
 }
 
-$loader = new \Symfony\Component\ClassLoader\Psr4ClassLoader();
-$loader->addPrefix('GuzzleHttp\\Stream', __DIR__);
-$loader->register();
+$fedoraClassLoader->addPrefix('GuzzleHttp\\Stream', dirname(dirname(__DIR__)));
+
+return $fedoraClassLoader;
 AUTOLOAD
 ) | tee src/autoload.php
 
@@ -128,6 +135,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 12 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.0.0-3
+- Use new $fedoraClassLoader concept in autoloader
+
 * Mon Jun 01 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.0.0-2
 - Added autoloader
 
