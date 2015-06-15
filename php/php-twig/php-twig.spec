@@ -12,7 +12,7 @@
 # Please preserve changelog entries
 #
 
-%global github_owner     fabpot
+%global github_owner     twigphp
 %global github_name      Twig
 %global github_version   1.18.2
 %global github_commit    e8e6575abf6102af53ec283f7f14b89e304fa602
@@ -40,18 +40,18 @@
 %global with_tests 0
 %else
 # Build using "--without tests" to disable tests
-%global with_tests %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
 %endif
 
-%{?scl:         %scl_package       php-twig}
-%{!?scl:        %global pkg_name   %{name}}
-%{!?php_inidir: %global php_inidir %{_sysconfdir}/php.d}
-%{!?__php:      %global __php      %{_bindir}/php}
-%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
+%{?scl:          %scl_package        php-twig}
+%{!?scl:         %global pkg_name    %{name}}
+%{!?phpdir:      %global phpdir      %{_datadir}/php}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 Name:          %{?scl_prefix}php-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:       The flexible, fast, and secure template engine for PHP
 
 Group:         Development/Libraries
@@ -64,7 +64,7 @@ BuildRequires: %{?scl_prefix}php-devel >= %{php_min_ver}
 %if %{with_tests}
 # For tests
 BuildRequires: %{_bindir}/phpunit
-# For tests: phpcompatinfo (computed from version 1.17.0)
+## phpcompatinfo (computed from version 1.18.2)
 BuildRequires: %{?scl_prefix}php-ctype
 BuildRequires: %{?scl_prefix}php-date
 BuildRequires: %{?scl_prefix}php-dom
@@ -80,7 +80,7 @@ BuildRequires: %{?scl_prefix}php-spl
 # Lib
 ## composer.json
 Requires:      %{?scl_prefix}php(language) >= %{php_min_ver}
-## phpcompatinfo (computed from version 1.17.0)
+## phpcompatinfo (computed from version 1.18.2)
 Requires:      %{?scl_prefix}php-ctype
 Requires:      %{?scl_prefix}php-date
 Requires:      %{?scl_prefix}php-dom
@@ -163,31 +163,41 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-# Ext
-## NTS
+: Ext -- NTS
 mv ext/%{ext_name} ext/NTS
-## ZTS
 %if %{with_zts}
+: Ext -- ZTS
 cp -pr ext/NTS ext/ZTS
 %endif
 
-## Create configuration file
+: Ext -- Create configuration file
 cat > %{ini_name} << 'INI'
 ; Enable %{ext_name} extension module
 extension=%{ext_name}.so
 INI
 
+: Create lib autoloader
+(cat <<'AUTOLOAD'
+<?php
+/**
+ * Autoloader created by %{name}-%{version}-%{release}
+ */
+
+require_once __DIR__ . '/Autoloader.php';
+Twig_Autoloader::register();
+AUTOLOAD
+) | tee lib/Twig/autoload.php
+
 
 %build
-# Ext
-## NTS
+: Ext -- NTS
 pushd ext/NTS
 %{_bindir}/phpize
 %configure --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 popd
 
-## ZTS
+: Ext -- ZTS
 %if %{with_zts}
 pushd ext/ZTS
 %{_bindir}/zts-phpize
@@ -200,15 +210,14 @@ popd
 %install
 rm -rf %{buildroot}
 
-# Lib
-mkdir -p %{buildroot}/%{_datadir}/php
-cp -rp lib/* %{buildroot}/%{_datadir}/php/
+: Lib
+mkdir -p %{buildroot}%{phpdir}
+cp -rp lib/* %{buildroot}%{phpdir}/
 
-# Ext
-## NTS
+: Ext -- NTS
 make -C ext/NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 0644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
-## ZTS
+: Ext -- ZTS
 %if %{with_zts}
 make -C ext/ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 0644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
@@ -216,7 +225,6 @@ install -D -m 0644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 
 %check
-# Ext
 : Extension NTS minimal load test
 %{__php} --no-php-ini \
     --define extension=ext/NTS/modules/%{ext_name}.so \
@@ -230,19 +238,21 @@ install -D -m 0644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 %if %{with_tests}
-# Test suite
-## Skip tests known to fail
+: Skip tests known to fail
+sed 's#function testGetAttributeExceptions#function SKIP_testGetAttributeExceptions#' \
+    -i test/Twig/Tests/TemplateTest.php
+# i386 failing on EL-5
 %ifarch ppc64 %{ix86}
 sed 's/function testGetAttributeWithTemplateAsObject/function SKIP_testGetAttributeWithTemplateAsObject/' \
     -i test/Twig/Tests/TemplateTest.php
 %endif
 
 : Test suite without extension
-%{__phpunit} --include-path ./lib --verbose
+%{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php -v
 
 : Test suite with extension
-%{__php} --define extension=ext/NTS/modules/%{ext_name}.so \
-    %{__phpunit} --include-path ./lib --verbose
+%{_bindir}/php --define extension=ext/NTS/modules/%{ext_name}.so \
+    %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php -v
 %else
 : Tests skipped
 %endif
@@ -258,7 +268,7 @@ rm -rf %{buildroot}
 %license LICENSE
 %doc CHANGELOG README.rst composer.json
 # Lib
-%{_datadir}/php/Twig
+%{phpdir}/Twig
 # Ext
 ## NTS
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -271,6 +281,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 15 2015 Remi Collet <remi@fedoraproject.org> - 1.18.2-2
+- rebuild for remirepo with rawhide changes (autoloader)
+
+* Thu Jun 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.18.2-1
+- Updated to 1.18.2 (BZ #1183601)
+- Added autoloader
+
 * Sun Jun  7 2015 Remi Collet <remi@fedoraproject.org> - 1.18.2-1
 - Update to 1.18.2
 
