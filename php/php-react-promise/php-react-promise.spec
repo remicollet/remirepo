@@ -22,13 +22,13 @@
 %global php_min_ver 5.4.0
 
 # Build using "--without tests" to disable tests
-%global with_tests %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
 
 %{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       3%{?github_release}%{?dist}
+Release:       4%{?github_release}%{?dist}
 Summary:       A lightweight implementation of CommonJS Promises/A for PHP
 
 Group:         Development/Libraries
@@ -48,7 +48,7 @@ BuildRequires: php-json
 BuildRequires: php-reflection
 BuildRequires: php-spl
 ## Autoloader
-BuildRequires: php-composer(symfony/class-loader) >= 2.5
+BuildRequires: php-composer(symfony/class-loader)
 %endif
 
 # composer.json
@@ -58,7 +58,7 @@ Requires:      php-json
 Requires:      php-reflection
 Requires:      php-spl
 # Autoloader
-Requires:      php-composer(symfony/class-loader) >= 2.5
+Requires:      php-composer(symfony/class-loader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -77,17 +77,24 @@ A lightweight implementation of CommonJS Promises/A [1] for PHP.
 <?php
 /**
  * Autoloader created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
  */
 
-if (!class_exists('Symfony\\Component\\ClassLoader\\Psr4ClassLoader', false)) {
-    require_once 'Symfony/Component/ClassLoader/Psr4ClassLoader.php';
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once 'Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
 }
 
-$loader = new \Symfony\Component\ClassLoader\Psr4ClassLoader();
-$loader->addPrefix('React\\Promise', __DIR__);
-$loader->register();
+$fedoraClassLoader->addPrefix('React\\Promise', dirname(dirname(__DIR__)));
 
 require_once __DIR__ . '/functions_include.php';
+
+return $fedoraClassLoader;
 AUTOLOAD
 ) | tee src/autoload.php
 
@@ -104,13 +111,18 @@ cp -rp src/* %{buildroot}%{phpdir}/React/Promise/
 
 %check
 %if %{with_tests}
+: Restore PSR-0 for tests
+mkdir -p psr-0/React/
+mv tests psr-0/React/Promise
+mv psr-0 tests
+
 : Create tests bootstrap
 (cat <<'BOOTSTRAP'
 <?php
 
 require_once '%{buildroot}%{phpdir}/React/Promise/autoload.php';
 
-$loader->addPrefix('React\\Promise', __DIR__ . '/tests');
+$fedoraClassLoader->addPrefix(null, __DIR__ . '/tests');
 BOOTSTRAP
 ) | tee bootstrap.php
 
@@ -135,6 +147,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 12 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.2.0-4
+- Use new $fedoraClassLoader concept in autoloader
+
 * Mon Jun 01 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.2.0-3
 - Use include path in autoloader
 
