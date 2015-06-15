@@ -1,5 +1,6 @@
+# remirepo spec file for php-JsonSchema, from:
 #
-# RPM spec file for php-JsonSchema
+# Fedora spec file for php-JsonSchema
 #
 # Copyright (c) 2012-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
@@ -11,11 +12,10 @@
 
 %global github_owner   justinrainbow
 %global github_name    json-schema
-%global github_version 1.4.1
-%global github_commit  2465fe486c864e30badaa4d005ebdf89dbc503f3
+%global github_version 1.4.2
+%global github_commit  7dfe4f1db8a62be3dd35710efce663537d515653
 %global github_short   %(c=%{github_commit}; echo ${c:0:7})
 
-# See https://github.com/justinrainbow/json-schema/pull/96
 %global php_min_ver    5.3.2
 
 %global lib_name       JsonSchema
@@ -32,10 +32,6 @@ Group:         Development/Libraries
 License:       BSD
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_short}.tar.gz
-
-# PHP < 5.4.0 compatibility for "--dump-schema"
-# https://github.com/justinrainbow/json-schema/pull/109
-Patch0:        %{name}-php-lt-5-4-0-compat.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -54,8 +50,9 @@ BuildRequires: php-spl
 %endif
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from v1.4.0)
+# phpcompatinfo (computed from v1.4.2)
 Requires:      php-curl
+Requires:      php-date
 Requires:      php-filter
 Requires:      php-json
 Requires:      php-mbstring
@@ -73,12 +70,6 @@ See http://json-schema.org for more details.
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
-
-%patch0 -p1
-
-# Update bin shebang
-sed 's#/usr/bin/env php#%{_bindir}/php#' \
-    -i bin/validate-json
 
 
 %build
@@ -102,7 +93,7 @@ cat > autoload.php <<'AUTOLOAD'
 <?php
 spl_autoload_register(function ($class) {
     $src = str_replace('\\', '/', $class).'.php';
-    require_once $src;
+    @include $src;
 });
 AUTOLOAD
 
@@ -111,7 +102,8 @@ rm -rf tests/JsonSchema/Tests/Drafts
 
 %{_bindir}/phpunit \
     --include-path="./src:./tests" \
-    --bootstrap="./autoload.php"
+    --bootstrap="./autoload.php" \
+    --verbose
 %else
 : Tests skipped
 %endif
@@ -127,6 +119,9 @@ rm -rf tests/JsonSchema/Tests/Drafts
 
 
 %changelog
+* Mon Jun 15 2015 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
+- update to 1.4.2
+
 * Fri Mar 27 2015 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
 - Update to 1.4.1
 
