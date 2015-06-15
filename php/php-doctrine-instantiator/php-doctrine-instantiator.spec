@@ -73,19 +73,22 @@ cp -pr src/* %{buildroot}%{_datadir}/php
 
 %check
 %if %{with_tests}
-: Generate tests autoloader
+# "src" directory only needed for EPEL-6
+: Generate autoloader
 %{_bindir}/phpab \
-    --output tests/autoload.php \
-    tests
+    --basedir $PWD \
+    --output autoload.php \
+    src tests
 
 sed -e '/log/d' phpunit.xml.dist >phpunit.xml
 
+# "pear" directory only needed for EPEL-6
 : Run test suite
 %{_bindir}/php \
-    -d include_path=".:%{buildroot}%{_datadir}/php:%{_datadir}/php" \
+    -d include_path=".:%{buildroot}%{_datadir}/php:%{_datadir}/pear:%{_datadir}/php" \
     %{_bindir}/phpunit \
         --include-path=%{buildroot}%{_datadir}/php \
-        --bootstrap tests/autoload.php \
+        --bootstrap autoload.php \
         --verbose
 %else
 : Test suite disabled
