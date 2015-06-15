@@ -39,7 +39,7 @@ BuildArch: noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-phpunit-PHPUnit
-# For tests: phpcompatinfo (computed from v1.4.0)
+# For tests: phpcompatinfo (computed from v1.4.2)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -51,6 +51,7 @@ BuildRequires: php-spl
 
 Requires:      php(language) >= %{php_min_ver}
 # phpcompatinfo (computed from v1.4.2)
+Requires:      php-cli
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-filter
