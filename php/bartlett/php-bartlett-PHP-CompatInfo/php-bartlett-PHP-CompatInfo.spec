@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    4026f69cd3d5f03467a58386a4a00225e3dc2544
+%global gh_commit    c4bfef85fe799d2079f98f7b3e46d021bc739069
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150303
 %global gh_owner     llaville
@@ -15,7 +15,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        4.2.0
+Version:        4.3.0
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
@@ -29,7 +29,7 @@ Source1:        fedora-review-check
 
 # Autoloader for RPM - die composer !
 # and sqlite database path
-Patch0:         %{name}-4.2.0-rpm.patch
+Patch0:         %{name}-4.3.0-rpm.patch
 
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.2
@@ -142,6 +142,7 @@ install -D -p -m 755 %{SOURCE1}                  %{buildroot}%{_datadir}/%{name}
 %{_bindir}/phpunit \
     --include-path src \
     -d memory_limit=-1 \
+    --verbose \
 %if 0%{?fedora} < 21
     || exit 0
 %endif
@@ -167,6 +168,9 @@ fi
 
 
 %changelog
+* Tue Jun 16 2015 Remi Collet <remi@fedoraproject.org> - 4.6.0-1
+- update to 4.3.0
+
 * Tue May 19 2015 Remi Collet <remi@fedoraproject.org> - 4.2.0-1
 - update to 4.2.0
 - raise dependency on bartlett/php-reflect 3.1
