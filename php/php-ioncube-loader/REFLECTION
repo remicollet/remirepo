@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #196 ionCube Loader version <no_version> ] {
+Extension [ <persistent> extension #197 ionCube Loader version <no_version> ] {
 
   - INI {
     Entry [ ic24.enable <SYSTEM> ]
@@ -19,6 +19,9 @@ Extension [ <persistent> extension #196 ionCube Loader version <no_version> ] {
     Entry [ ic24.api_check_ip <SYSTEM> ]
       Current = '1'
     }
+    Entry [ ic24.sec.enable <SYSTEM> ]
+      Current = '1'
+    }
     Entry [ ic24.sec.alert_action <SYSTEM> ]
       Current = '–<Hñœò'
     }
@@ -30,6 +33,9 @@ Extension [ <persistent> extension #196 ionCube Loader version <no_version> ] {
     }
     Entry [ ic24.home_dir <SYSTEM> ]
       Current = ''
+    }
+    Entry [ ic24.dump_cache <SYSTEM> ]
+      Current = '0'
     }
     Entry [ ioncube.loader.encoded_paths <ALL> ]
       Current = ''

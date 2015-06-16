@@ -24,7 +24,7 @@
 
 Name:          %{?scl_prefix}php-ioncube-loader
 Summary:       Loader for ionCube Encoded Files with ionCube 24 support
-Version:       5.0.7
+Version:       5.0.8
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       Distribuable
 Group:         Development/Languages
@@ -98,8 +98,10 @@ zend_extension = %{extname}.so
 ;ic24.api_access_key = ''
 ;ic24.api_check_ip = 1
 ;ic24.sec.alert_action = '^E<96><H<F1><9C><F2>'
+;ic24.sec.enable=1
 ;ic24.sec.exclusion_key = ''
 ;ic24.cache_path = ''
+;ic24.dump_cache=0
 ;ic24.home_dir = ''
 ;ioncube.loader.encoded_paths = ''
 ;phpd = 1
@@ -172,6 +174,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 16 2015 Remi Collet <remi@remirepo.net> - 5.0.8-1
+- update to 5.0.8 (Jun 16, 2015)
+- update configuration with new options
+
 * Sat May 23 2015 Remi Collet <RPMS@famillecollet.com> - 5.0.7-1
 - update to 5.0.7 (May 22, 2015)
 
