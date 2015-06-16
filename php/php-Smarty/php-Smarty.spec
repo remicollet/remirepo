@@ -8,23 +8,20 @@
 # Please preserve changelog entries
 #
 
-%global gh_commit    b58771e31b11c721f6aa8e574e16e4058f9edc5f
+%global gh_commit    58616d6ee598674b682f8a2b81352ec4da7100c7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     smarty-php
 %global gh_project   smarty
 
 Name:           php-Smarty
 Summary:        Template/Presentation Framework for PHP
-Version:        3.1.24
-Release:        2%{?dist}
+Version:        3.1.25
+Release:        1%{?dist}
 
 URL:            http://www.smarty.net
 License:        LGPLv2+
 Group:          Development/Libraries
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
-
-# https://github.com/smarty-php/smarty/issues/42
-Patch0:         %{name}-upstream.patch
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -55,7 +52,6 @@ high-performance, scalability, security and future growth.
 %prep
 %setup -qn %{gh_project}-%{gh_commit}
 
-%patch0 -p1
 
 %build
 # empty build section, nothing required
@@ -84,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jun 16 2015 Remi Collet <remi@fedoraproject.org> - 3.1.25-1
+- update to 3.1.25
+
 * Sun May 24 2015 Remi Collet <remi@fedoraproject.org> - 3.1.24-2
 - upstream patch for 'neq' regression
   https://github.com/smarty-php/smarty/issues/42
