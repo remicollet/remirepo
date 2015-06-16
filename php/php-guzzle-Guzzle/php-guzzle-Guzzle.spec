@@ -1,7 +1,8 @@
+# remirepo spec file for php-guzzle-Guzzle, from Fedora:
 #
 # RPM spec file for php-guzzle-Guzzle
 #
-# Copyright (c) 2012-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2012-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -17,8 +18,8 @@
 
 %global github_owner     guzzle
 %global github_name      guzzle3
-%global github_version   3.9.2
-%global github_commit    54991459675c1a2924122afbb0e5609ade581155
+%global github_version   3.9.3
+%global github_commit    0645b70d953bc1c067bbc8d5bc53194706b628d9
 
 %global composer_vendor  guzzle
 %global composer_project guzzle
@@ -34,9 +35,6 @@
 # "monolog/monolog": "~1.0"
 %global monolog_min_ver 1.0
 %global monolog_max_ver 2.0
-# "phpunit/phpunit": "3.7.*"
-#     NOTE: Max version ignored on purpose
-%global _min_ver 3.7.0
 # "psr/log": "~1.0"
 %global psr_log_min_ver 1.0
 %global psr_log_max_ver 2.0
@@ -55,11 +53,13 @@
 %global with_tests 0
 %else
 # Build using "--without tests" to disable tests
-%global with_tests %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
 %endif
 
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
+
 Name:          php-guzzle-%{pear_name}
-Version:       3.9.2
+Version:       %{github_version}
 Release:       1%{?dist}
 Summary:       PHP HTTP client library and framework for building RESTful web service clients
 
@@ -70,24 +70,21 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Tests
 %if %{with_tests}
-# For tests
 BuildRequires: nodejs
-# For tests: composer.json
-BuildRequires: php(language)                 >= %{php_min_ver}
-BuildRequires: php-composer(doctrine/cache)  >= %{doctrine_cache_min_ver}
-BuildRequires: php-composer(doctrine/cache)  <  %{doctrine_cache_max_ver}
-BuildRequires: php-composer(monolog/monolog) >= %{monolog_min_ver}
-BuildRequires: php-composer(monolog/monolog) <  %{monolog_max_ver}
-BuildRequires: php-composer(psr/log)         >= %{psr_log_min_ver}
-BuildRequires: php-composer(psr/log)         <  %{psr_log_max_ver}
-BuildRequires: php-phpunit-PHPUnit
-BuildRequires: php-symfony-eventdispatcher   >= %{symfony_min_ver}
-BuildRequires: php-symfony-eventdispatcher   <  %{symfony_max_ver}
-BuildRequires: php-ZendFramework2            >= %{zend_min_ver}
-BuildRequires: php-ZendFramework2            <  %{zend_max_ver}
+## composer.json
+BuildRequires: %{_bindir}/phpunit
+BuildRequires: php(language)                          >= %{php_min_ver}
+BuildRequires: php-composer(doctrine/cache)           >= %{doctrine_cache_min_ver}
+BuildRequires: php-composer(monolog/monolog)          >= %{monolog_min_ver}
+BuildRequires: php-composer(psr/log)                  >= %{psr_log_min_ver}
+BuildRequires: php-composer(symfony/class-loader)     >= %{symfony_min_ver}
+BuildRequires: php-composer(symfony/event-dispatcher) >= %{symfony_min_ver}
+BuildRequires: php-composer(zendframework/zend-cache) >= %{zend_min_ver}
+BuildRequires: php-composer(zendframework/zend-log)   >= %{zend_min_ver}
 BuildRequires: php-curl
-# For tests: phpcompatinfo (computed from version 3.9.2)
+## phpcompatinfo (computed from version 3.9.3)
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -103,20 +100,16 @@ BuildRequires: php-xmlwriter
 BuildRequires: php-zlib
 %endif
 
-%if %{with_cacert}
-Requires:      ca-certificates
-%endif
 # composer.json
-Requires:      php(language) >= %{php_min_ver}
-Requires:      php-symfony-eventdispatcher >= %{symfony_min_ver}
-Requires:      php-symfony-eventdispatcher <  %{symfony_max_ver}
+Requires:      php(language)                          >= %{php_min_ver}
+Requires:      php-composer(symfony/event-dispatcher) >= %{symfony_min_ver}
+Requires:      php-composer(symfony/event-dispatcher) <  %{symfony_max_ver}
 Requires:      php-curl
-# phpcompatinfo (computed from version 3.9.2)
+# phpcompatinfo (computed from version 3.9.3)
 Requires:      php-ctype
 Requires:      php-date
 Requires:      php-filter
 Requires:      php-hash
-Requires:      php-intl
 Requires:      php-json
 Requires:      php-libxml
 Requires:      php-pcre
@@ -124,14 +117,53 @@ Requires:      php-reflection
 Requires:      php-simplexml
 Requires:      php-spl
 Requires:      php-xmlwriter
+%if %{with_cacert}
+# Unbundled CA certificate
+Requires:      ca-certificates
+%endif
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
 
 # Composer
-Provides:  php-composer(%{composer_vendor}/%{composer_project}) = %{version}
+Provides:  php-composer(%{composer_vendor}/%{composer_project})   = %{version}
+## Sub-packages
+Provides:  php-composer(%{composer_vendor}/batch)                 = %{version}
+Provides:  php-composer(%{composer_vendor}/cache)                 = %{version}
+Provides:  php-composer(%{composer_vendor}/common)                = %{version}
+Provides:  php-composer(%{composer_vendor}/http)                  = %{version}
+Provides:  php-composer(%{composer_vendor}/inflection)            = %{version}
+Provides:  php-composer(%{composer_vendor}/iterator)              = %{version}
+Provides:  php-composer(%{composer_vendor}/log)                   = %{version}
+Provides:  php-composer(%{composer_vendor}/parser)                = %{version}
+Provides:  php-composer(%{composer_vendor}/plugin)                = %{version}
+Provides:  php-composer(%{composer_vendor}/plugin-async)          = %{version}
+Provides:  php-composer(%{composer_vendor}/plugin-backoff)        = %{version}
+Provides:  php-composer(%{composer_vendor}/plugin-cache)          = %{version}
+Provides:  php-composer(%{composer_vendor}/plugin-cookie)         = %{version}
+Provides:  php-composer(%{composer_vendor}/plugin-curlauth)       = %{version}
+Provides:  php-composer(%{composer_vendor}/plugin-error-response) = %{version}
+Provides:  php-composer(%{composer_vendor}/plugin-history)        = %{version}
+Provides:  php-composer(%{composer_vendor}/plugin-log)            = %{version}
+Provides:  php-composer(%{composer_vendor}/plugin-md5)            = %{version}
+Provides:  php-composer(%{composer_vendor}/plugin-mock)           = %{version}
+Provides:  php-composer(%{composer_vendor}/plugin-oauth)          = %{version}
+Provides:  php-composer(%{composer_vendor}/service)               = %{version}
+Provides:  php-composer(%{composer_vendor}/stream)                = %{version}
 # PEAR
-Provides:  php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:  php-pear(%{pear_channel}/%{pear_name})                 = %{version}
 
 # This pkg was the only one in this channel so the channel is no longer needed
 Obsoletes: php-channel-guzzle
+
+# Optional dependency version conflicts
+Conflicts: php-composer(doctrine/cache)           <  %{doctrine_cache_min_ver}
+Conflicts: php-composer(doctrine/cache)           >= %{doctrine_cache_max_ver}
+Conflicts: php-composer(monolog/monolog)          <  %{monolog_min_ver}
+Conflicts: php-composer(monolog/monolog)          >= %{monolog_max_ver}
+Conflicts: php-composer(zendframework/zend-cache) <  %{zend_min_ver}
+Conflicts: php-composer(zendframework/zend-cache) >= %{zend_max_ver}
+Conflicts: php-composer(zendframework/zend-log)   <  %{zend_min_ver}
+Conflicts: php-composer(zendframework/zend-log)   >= %{zend_max_ver}
 
 %description
 Guzzle takes the pain out of sending HTTP requests and the redundancy out
@@ -151,22 +183,58 @@ batching for sending a large number of requests as efficiently as possible.
 * Plugins for caching, logging, OAuth, mocks, and more
 
 Optional dependencies:
-* Zend Framework (php-ZendFramework2)
-* Doctrine Cache (php-doctrine-cache)
-* Monolog (php-Monolog)
+* Doctrine Cache (%{doctrine_cache_min_ver} <= php-doctrine-cache < %{doctrine_cache_max_ver})
+* Monolog (%{monolog_min_ver} <= php-Monolog < %{monolog_max_ver})
+* Zend Framework 2 Cache (%{zend_min_ver} <= php-ZendFramework2-Cache < %{zend_max_ver})
+* Zend Framework 2 Log (%{zend_min_ver} <= php-ZendFramework2-Log < %{zend_max_ver})
+
+***** EOL NOTICE *****
+
+This package is for Guzzle 3.x. Guzzle 5.x+, the new versions of Guzzle, has
+been released and is available as the package "php-guzzlehttp-guzzle". The
+documentation for Guzzle version 5+ can be found at http://guzzlephp.org.
+
+Guzzle 3 is only maintained for bug and security fixes. Guzzle 3 will be EOL at
+some point in late 2015.
+
+**********************
 
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
 %if %{with_cacert}
-# Remove bundled cert
+: Unbundle CA certificate
 sed -e "s#__DIR__\s*.\s*'/Resources/cacert.pem'#'%{_sysconfdir}/pki/tls/cert.pem'#" \
     -e 's#$expectedMd5\s*=\s*.*#$expectedMd5 = $actualMd5;  // RPM NOTE: cacert.pem is managed by the ca-certificates package#' \
     -i src/Guzzle/Http/Client.php
-
 rm src/Guzzle/Http/Resources/cacert.pem
 %endif
+
+: Create autoloader
+(cat <<'AUTOLOAD'
+<?php
+/**
+ * Autoloader created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once 'Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('Guzzle', dirname(__DIR__));
+$fedoraClassLoader->setUseIncludePath(true);
+
+return $fedoraClassLoader;
+AUTOLOAD
+) | tee src/Guzzle/autoload.php
 
 
 %build
@@ -175,26 +243,29 @@ rm src/Guzzle/Http/Resources/cacert.pem
 
 %install
 rm -rf %{buildroot}
-mkdir -p %{buildroot}%{_datadir}/php
-cp -rp src/* %{buildroot}%{_datadir}/php/
+
+mkdir -p %{buildroot}%{phpdir}
+cp -rp src/* %{buildroot}%{phpdir}/
 
 
 %check
 %if %{with_tests}
-# Create autoloader
-mkdir vendor
-cat > vendor/autoload.php <<'AUTOLOAD'
+: Create tests autoloader
+(cat <<'AUTOLOAD'
 <?php
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', $class).'.php';
-    @include_once $src;
-});
+
+require_once 'Guzzle/autoload.php';
+
+$fedoraClassLoader->addPrefix('Guzzle\\Tests', __DIR__);
 AUTOLOAD
+) | tee tests/autoload.php
 
-# Create PHPUnit config w/ colors turned off
-sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
+: Modify tests bootstrap
+sed "s#require.*autoload.*#require __DIR__ . '/autoload.php';#" \
+    -i tests/bootstrap.php
 
-# Skip tests known to fail
+: Skip tests known to fail
+%if 0%{?rhel} == 6 || 0%{?rhel} == 5
 rm -f tests/Guzzle/Tests/Http/RedirectPluginTest.php
 sed 's/function testCanCreateStreamsUsingDefaultFactory/function SKIP_testCanCreateStreamsUsingDefaultFactory/' \
     -i tests/Guzzle/Tests/Http/StaticClientTest.php
@@ -211,8 +282,11 @@ sed -e 's/function testThrowsExceptionWithStrictMode/function SKIP_testThrowsExc
     -i tests/Guzzle/Tests/Plugin/Cookie/CookieTest.php
 sed 's/function testThrowsExceptionWithStrictMode/function SKIP_testThrowsExceptionWithStrictMode/' \
     -i tests/Guzzle/Tests/Plugin/Cookie/CookieJar/ArrayCookieJarTest.php
+sed 's/function testMustReturnRequest/function SKIP_testMustReturnRequest/' \
+    -i tests/Guzzle/Tests/Service/Command/ClosureCommandTest.php
+%endif
 
-%{_bindir}/phpunit --include-path=./src:./tests -d date.timezone="UTC" .
+%{_bindir}/phpunit --include-path %{buildroot}%{phpdir}
 %else
 : Tests skipped
 %endif
@@ -241,10 +315,22 @@ fi
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc *.md composer.json
-%{_datadir}/php/Guzzle
+%doc *.md
+%doc composer.json
+%{phpdir}/Guzzle
+%exclude %{phpdir}/Guzzle/*/composer.json
+%exclude %{phpdir}/Guzzle/*/*/composer.json
 
 %changelog
+* Mon Jun 15 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.9.3-1
+- Updated to 3.9.3
+- Updated dependencies to use php-composer(*)
+- Added composer sub-packages' provides
+- Added optional dependency version conflicts
+- Added EOL notice to %%description
+- Added autoloader
+- Excluded sub-packages' composer.json
+
 * Sat Aug 23 2014 Remi Collet <remi@fedoraproject.org> - 3.9.2-2
 - really drop bundled cacert
 
