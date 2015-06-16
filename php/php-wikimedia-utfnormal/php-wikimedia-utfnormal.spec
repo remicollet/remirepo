@@ -11,6 +11,7 @@ Name:		php-wikimedia-utfnormal
 Version:	1.0.2
 Release:	1%{?dist}
 Summary:	Unicode normalization functions
+Group:		Development/Libraries
 
 License:	GPLv2+
 URL:		http://www.mediawiki.org/wiki/Utfnormal
