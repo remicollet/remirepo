@@ -19,8 +19,14 @@ Source1:	gpl-2.0.txt
 
 Buildarch:	noarch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:	%{_bindir}/phpunit
+BuildRequires:	%{_bindir}/phpab
 
 Requires:	php(language) >= 5.3.3
+# From phpcompatinfo report for 1.0.2
+Requires:	php-intl
+Requires:	php-pcre
+Requires:	php-spl
 
 Provides:	php-composer(wikimedia/utfnormal) = %{version}
 
@@ -33,15 +39,28 @@ split out of MediaWiki core during the 1.25 development cycle.
 %prep
 %setup -qc %{name}-%{version}
 
+cp -p %{SOURCE1} COPYING
+
 
 %build
+: Generate an simple "classmap" autoloader
+%{_bindir}/phpab \
+    --output src/autoload.php \
+    src
 
 
 %install
 rm -rf %{buildroot}
-cp -p %{SOURCE1} COPYING
+
 mkdir -pm 0755 %{buildroot}%{_datadir}/php/UtfNormal
 cp -rp src/* %{buildroot}%{_datadir}/php/UtfNormal
+
+
+%check
+: Run upstream test suite
+%{_bindir}/phpunit \
+    --bootstrap=%{buildroot}%{_datadir}/php/UtfNormal/autoload.php \
+    --verbose
 
 
 %clean
@@ -59,6 +78,7 @@ rm -rf %{buildroot}
 %changelog
 * Tue Jun 16 2015 Remi Collet <remi@remirepo.net> - 1.0.2-1
 - add backport stuff for remirepo
+- run test suite during build
 
 * Mon Jun 15 2015 Michael Cronenworth <mike@cchtml.com> - 1.0.2-1
 - Initial package
