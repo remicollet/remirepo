@@ -1,4 +1,7 @@
-# spec file for php-pecl-yac (previously php-yac)
+# remirepo spec file for php-pecl-yac
+# with SCL stuff, from:
+#
+# Fedora spec file for php-pecl-yac (previously php-yac)
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -11,6 +14,11 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
+%global gh_commit   1d26cd46e37d42b47cfea16d3391464022453570
+%global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner    laruence
+%global gh_project  yac
+%global gh_date     20150616
 %global with_zts    0%{?__ztsphp:1}
 %global pecl_name   yac
 %global with_tests  %{!?_without_tests:1}%{?_without_tests:0}
@@ -23,13 +31,17 @@
 
 Summary:        Lockless user data cache
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.9.2
+Version:        0.9.3
+%if 0%{?gh_date:1}
+Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+%else
 Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+%endif
 
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.2
@@ -87,7 +99,8 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -qc
-mv %{pecl_name}-%{version} NTS
+mv %{gh_project}-%{gh_commit} NTS
+mv NTS/package.xml .
 
 # Don't install (register) the tests
 sed -e 's/role="test"/role="src"/' -i package.xml
@@ -100,8 +113,8 @@ rm -r compressor/fastlz
 
 # Check version as upstream often forget to update this
 extver=$(sed -n '/#define PHP_YAC_VERSION/{s/.* "//;s/".*$//;p}' php_yac.h)
-if test "x${extver}" != "x%{version}%{?prever}"; then
-   : Error: Upstream YAC version is ${extver}, expecting %{version}%{?prever}.
+if test "x${extver}" != "x%{version}%{?prever}%{?gh_date:-dev}"; then
+   : Error: Upstream YAC version is ${extver}, expecting %{version}%{?prever}%{?gh_date:-dev}.
    exit 1
 fi
 cd ..
@@ -163,9 +176,9 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
-for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+# Documentation
+for i in README.md $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do [ -f NTS/$i ] &&  install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
@@ -233,6 +246,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-, root, root, 0755)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -246,6 +260,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 16 2015 Remi Collet <remi@fedoraproject.org> - 0.9.3-0.1.20150616git1d26cd4
+- update to 0.9.3-dev for PHP 7
+- sources from github
+
 * Sun Mar  1 2015 Remi Collet <remi@fedoraproject.org> - 0.9.2-2
 - drop runtime dependency on pear, new scriplets
 
