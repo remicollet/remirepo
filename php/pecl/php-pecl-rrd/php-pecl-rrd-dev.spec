@@ -33,6 +33,10 @@ URL:          http://pecl.php.net/package/rrd
 
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
+# http://svn.php.net/viewvc?view=revision&revision=336981
+# http://svn.php.net/viewvc?view=revision&revision=336985
+Patch0:       %{pecl_name}-upstream.patch
+
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel >= 7
 BuildRequires: rrdtool
@@ -89,12 +93,16 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' -i package.xml
 
+cd NTS
+%patch0 -p3 -b .upstream
+
 # Sanity check, really often broken
-extver=$(sed -n '/#define PHP_RRD_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_rrd.h)
+extver=$(sed -n '/#define PHP_RRD_VERSION/{s/.* "//;s/".*$//;p}' php_rrd.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
+cd ..
 
 cat > %{ini_name} << 'EOF'
 ; Enable %{pecl_name} extension module
@@ -156,12 +164,12 @@ done
 cd NTS
 if pkg-config librrd --atleast-version=1.5.0
 then
-  : ignore test failed with rrdtool > 1.5
+  : ignore test failed with rrdtool gt 1.5
   rm tests/rrd_{016,017}.phpt
 fi
 if ! pkg-config librrd --atleast-version=1.4.0
 then
-  : ignore test failed with rrdtool < 1.4
+  : ignore test failed with rrdtool lt 1.4
   rm tests/rrd_{012,017}.phpt
 fi
 
@@ -220,6 +228,7 @@ fi
 - raise dependency on php >= 7
 - drop runtime dependency on pear, new scriptlets
 - don't install test suite
+- add some upstream patches, post-beta2
 
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.1.3-3.1
 - Fedora 21 SCL mass rebuild
