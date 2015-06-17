@@ -124,9 +124,9 @@
 %global db_devel  libdb-devel
 %endif
 
-%global gh_commit    48ed660cdf6fe94ac2cd8eac217ea97340766e75
+%global gh_commit    3697f0221282831c846ff67054a1b03a833f50bd
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150616
+%global gh_date      20150617
 %global gh_owner     php
 %global gh_project   php-src
 #global rcver        alpha1
@@ -1284,7 +1284,7 @@ if ! make test; then
     if ! grep -q XFAIL "${f/.diff/.phpt}"
     then
       echo "TEST FAILURE: $f --"
-      cat "$f"
+      head -n 100 "$f"
       echo -e "\n-- $f result ends."
     fi
   done
@@ -1801,7 +1801,7 @@ fi
 
 
 %changelog
-* Tue Jun 16 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.9.20150616git48ed660
+* Wed Jun 17 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.9.20150617git3697f02
 - new snapshot
 
 * Thu Jun 11 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.9.20150611git8cfe282
