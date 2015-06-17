@@ -11,11 +11,11 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit  410ca7a3f1d633050000ee2ec233366d73e3fda3
+%global gh_commit  d1fb4b5e2c669e1a09dcc2cd5a11597b79b423ab
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   laruence
 %global gh_project yar
-%global gh_date    20150615
+%global gh_date    20150617
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  yar
 %global with_tests %{?_without_tests:0}%{!?_without_tests:1}
@@ -39,8 +39,6 @@ License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
-
-Patch0:         %{pecl_name}-pr51.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  curl-devel
@@ -111,7 +109,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package2.xml
 
 cd NTS
-%patch0 -p1
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_YAR_VERSION/{s/.* "//;s/".*$//;p}' php_yar.h)
@@ -273,8 +270,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 17 2015 Remi Collet <remi@fedoraproject.org> - 1.2.5-0.3.20150617gitd1fb4b5
+- rebuild
+
 * Wed Jun 17 2015 Remi Collet <remi@fedoraproject.org> - 1.2.5-0.3.20150615git410ca7a
 - rebuild
+- open https://github.com/laruence/yar/pull/51
 
 * Fri Jun 12 2015 Remi Collet <remi@fedoraproject.org> - 1.2.5-0.2.20150612git3b43b26
 - enable test suite during the build
