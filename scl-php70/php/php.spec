@@ -124,9 +124,9 @@
 %global db_devel  libdb-devel
 %endif
 
-%global gh_commit    8cfe28259ed0b0bebb72d8292abc877181b84d34
+%global gh_commit    48ed660cdf6fe94ac2cd8eac217ea97340766e75
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150611
+%global gh_date      20150616
 %global gh_owner     php
 %global gh_project   php-src
 #global rcver        alpha1
@@ -1801,6 +1801,9 @@ fi
 
 
 %changelog
+* Tue Jun 16 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.9.20150616git48ed660
+- new snapshot
+
 * Thu Jun 11 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.9.20150611git8cfe282
 - new snapshot
 - the phar link is now correctly created
