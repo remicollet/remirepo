@@ -1,3 +1,4 @@
+# remirepo spec file for php-jdorn-sql-formatter, from Fedora:
 #
 # RPM spec file for php-jdorn-sql-formatter
 #
@@ -37,6 +38,7 @@ URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
 BuildArch:     noarch
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # Tests
 %if %{with_tests}
 ## composer.json
@@ -103,6 +105,8 @@ sed "s#require.*SqlFormatter.*#require_once '%{libdir}/autoload.php';#" \
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p %{buildroot}%{libdir}
 cp -pr lib/* %{buildroot}%{libdir}/
 
@@ -115,7 +119,12 @@ cp -pr lib/* %{buildroot}%{libdir}/
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE.txt
 %doc *.md
@@ -125,6 +134,9 @@ cp -pr lib/* %{buildroot}%{libdir}/
 
 
 %changelog
+* Wed Jun 17 2015 Remi Collet <remi@remirepo.net> - 1.2.17-2
+- add backport stuff for remirepo
+
 * Tue Jun 16 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.17-2
 - Fixed examples
 
