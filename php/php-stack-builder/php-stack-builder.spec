@@ -1,3 +1,4 @@
+# remirepo spec file for php-stack-builder, from Fedora:
 #
 # RPM spec file for php-stack-builder
 #
@@ -42,6 +43,7 @@ URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
 BuildArch:     noarch
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # For autoload generation
 BuildRequires: %{_bindir}/phpab
 # For tests
@@ -101,6 +103,8 @@ AUTOLOAD
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}
 cp -rp src/* %{buildroot}%{phpdir}/
 
@@ -120,7 +124,12 @@ BOOTSTRAP
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -132,5 +141,8 @@ BOOTSTRAP
 
 
 %changelog
+* Wed Jun 17 2015 Remi Collet <remi@remirepo.net> - 1.0.3-1
+- add backport stuff for remirepo
+
 * Sat May 16 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.3-1
 - Initial package
