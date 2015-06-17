@@ -1,8 +1,8 @@
-# spec file for phpMyAdmin
+# remirepo spec file for phpMyAdmin
 #
 # Copyright (c) 2008-2015 Remi Collet
-# Copyright (c) 2007-2009 Robert Scheck
-# Copyright (c) 2006-2007 Mike McGrath
+#
+# Fedora spec file for phpMyAdmin
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -22,7 +22,7 @@
 %endif
 
 Name: phpMyAdmin
-Version: 4.4.9
+Version: 4.4.10
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -213,6 +213,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Wed Jun 17 2015 Remi Collet <remi@remirepo.net> 4.4.10-1
+- update to 4.4.10 (2015-06-17, bugfix)
+
 * Thu Jun  4 2015 Remi Collet <rpms@famillecollet.com> 4.4.9-1
 - update to 4.4.9 (2015-06-04, bugfix)
 
