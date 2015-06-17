@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #181 apm version 2.0.4 ] {
+Extension [ <persistent> extension #181 apm version 2.0.5 ] {
 
   - INI {
     Entry [ apm.enabled <SYSTEM> ]
@@ -91,6 +91,9 @@ Extension [ <persistent> extension #181 apm version 2.0.4 ] {
     Entry [ apm.statsd_stats_enabled <ALL> ]
       Current = '1'
     }
+    Entry [ apm.statsd_exception_mode <PERDIR> ]
+      Current = '1'
+    }
     Entry [ apm.statsd_error_reporting <ALL> ]
       Current = ''
     }
@@ -107,6 +110,9 @@ Extension [ <persistent> extension #181 apm version 2.0.4 ] {
       Current = ''
     }
     Entry [ apm.socket_stats_enabled <ALL> ]
+      Current = '1'
+    }
+    Entry [ apm.socket_exception_mode <PERDIR> ]
       Current = '1'
     }
     Entry [ apm.socket_error_reporting <ALL> ]

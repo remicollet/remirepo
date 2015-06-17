@@ -1,5 +1,5 @@
---- apm.ini.rpm	2015-03-16 09:05:02.000000000 +0100
-+++ apm.ini	2015-03-16 09:07:05.000000000 +0100
+--- apm.ini.rpm	2015-06-17 18:05:59.000000000 +0200
++++ apm.ini	2015-06-17 18:19:02.707376619 +0200
 @@ -2,7 +2,7 @@
  
  extension=apm.so
@@ -33,10 +33,10 @@
  ; Whether to enable the statsd driver
 -; apm.statsd_enabled=On
 +apm.statsd_enabled=Off
- ; Whether to collect stats for the StatsD driver
- ; apm.statsd_stats_enabled=On
- ; Host of the statsd server
-@@ -81,7 +81,7 @@
+ ; Error reporting level specific to the statsd driver
+ ; apm.statsd_error_reporting=E_ALL|E_STRICT
+ ; Control which exceptions to collect (0: none exceptions collected, 1: collect uncaught exceptions (default), 2: collect ALL exceptions)
+@@ -85,7 +85,7 @@
  
  ; Socket configuration
  ; Whether to enable the socket driver

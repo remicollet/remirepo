@@ -23,12 +23,6 @@
 # after 40-json.ini
 %global ini_name  50-%{pecl_name}.ini
 %endif
-%if 0%{?fedora} >= 21
-# support for apache / nginx / php-fpm
-%global with_phpfpm 1
-%else
-%global with_phpfpm 0
-%endif
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 %global with_sqlite 1
 %else
@@ -38,7 +32,7 @@
 
 Name:           %{?scl_prefix}php-pecl-apm
 Summary:        Alternative PHP Monitor
-Version:        2.0.4
+Version:        2.0.5
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 
@@ -249,6 +243,9 @@ fi
 
 
 %changelog
+* Wed Jun 17 2015 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- Update to 2.0.5 (stable)
+
 * Tue Jun 02 2015 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4 (stable)
 
