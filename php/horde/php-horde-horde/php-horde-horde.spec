@@ -1,4 +1,4 @@
-# spec file for php-horde-horde
+# remirepo/fedora spec file for php-horde-horde
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-horde
-Version:        5.2.5
+Version:        5.2.6
 Release:        1%{?dist}
 Summary:        Horde Application Framework
 
@@ -311,6 +311,9 @@ fi
 
 
 %changelog
+* Thu Jun 18 2015 Remi Collet <remi@fedoraproject.org> - 5.2.6-1
+- Update to 5.2.6
+
 * Wed Apr 29 2015 Remi Collet <remi@fedoraproject.org> - 5.2.5-1
 - Update to 5.2.5
 
