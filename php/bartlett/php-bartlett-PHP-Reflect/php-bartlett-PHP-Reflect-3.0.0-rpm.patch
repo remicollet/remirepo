@@ -21,28 +21,27 @@ diff -up ./bin/phpreflect.json.dist.rpm ./bin/phpreflect.json.dist
      ],
      "analysers": [
      ],
-diff -up ./bin/phpreflect.rpm ./bin/phpreflect
---- ./bin/phpreflect.rpm	2015-05-11 12:55:49.000000000 +0200
-+++ ./bin/phpreflect	2015-05-11 13:24:26.130135886 +0200
-@@ -5,19 +5,35 @@ $appName = 'phpReflect';
+--- ./bin/phpreflect.rpm	2015-06-18 13:30:46.000000000 +0200
++++ ./bin/phpreflect	2015-06-18 15:22:05.844085467 +0200
+@@ -5,19 +5,34 @@
  if (\Phar::running()) {
      $vendorDir = 'phar://' . strtolower($appName) . '.phar/vendor';
  } else {
 -    $baseDir   = dirname(__DIR__);
 -    $vendorDir = $baseDir . '/vendor';
-+    putenv('BARTLETT_COMPATINFO_DB=/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite');
- 
+-
 -    if (!file_exists($vendorDir . '/autoload.php')) {
 -        $vendorDir = dirname(dirname($baseDir));
 -    }
-+    $vendorDir = '/usr/share/php';
- 
++    putenv('BARTLETT_COMPATINFO_DB=/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite');
+
      if (!getenv("BARTLETTRC")) {
          putenv("BARTLETTRC=" . strtolower($appName) . '.json');
      }
  }
 -$loader = require_once $vendorDir . '/autoload.php';
 -$loader->setUseIncludePath(true);
++
 +require_once $vendorDir . '/PhpParser/Autoloader.php';
 +PhpParser\Autoloader::register();
 +
@@ -64,13 +63,13 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
 +));
 +$loader->useIncludePath(true);
 +$loader->register();
- 
- if (PHP_SAPI !== 'cli') {
-     return;
-@@ -28,5 +44,5 @@ use Bartlett\Reflect\Console\Application
- 
+
+ if (\Phar::running()) {
+     if ($home) {
+@@ -40,5 +55,5 @@
+
  Environment::setScanDir();
- 
+
 -$application = new Application($appName, '3.1');
 +$application = new Application($appName, '@package_version@');
  $application->run();

@@ -1,4 +1,4 @@
-# spec file for php-bartlett-PHP-Reflect
+# remirepo/fedora spec file for php-bartlett-PHP-Reflect
 #
 # Copyright (c) 2011-2015 Remi Collet
 # License: CC-BY-SA
@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    c5c669565030b1d051dfa75feb49783ac6b9dfa9
+%global gh_commit    b07c6160c9a6dd6ecfeeb4e72527e15bbe8099cd
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150331
 %global gh_owner     llaville
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-bartlett-PHP-Reflect
-Version:        3.1.0
+Version:        3.1.1
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
@@ -191,6 +191,9 @@ fi
 
 
 %changelog
+* Thu Jun 18 2015 Remi Collet <remi@fedoraproject.org> - 3.1.1-1
+- update to 3.1.1
+
 * Mon May 11 2015 Remi Collet <remi@fedoraproject.org> - 3.1.0-1
 - update to 3.1.0
 
