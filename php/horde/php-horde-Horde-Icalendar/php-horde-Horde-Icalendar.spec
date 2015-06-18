@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Icalendar
+# remirepo/fedora spec file for php-horde-Horde-Icalendar
 #
 # Copyright (c) 2012-2015 Nick Bebout, Remi Collet
 #
@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Icalendar
-Version:        2.0.11
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        iCalendar API
 
@@ -102,7 +102,7 @@ done | tee ../%{pear_name}.lang
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit .
+phpunit --verbose .
 
 
 %post
@@ -128,6 +128,9 @@ fi
 
 
 %changelog
+* Thu Jun 18 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+
 * Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.0.11-1
 - Update to 2.0.11
 - add provides php-composer(horde/horde-icalendar)
