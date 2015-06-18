@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    41fea1e84ed84d373f5ac099a1276c4358c90708
+%global gh_commit    e5f851f324f7add846316f39e668e9deac97a103
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,7 +17,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.7.3
+Version:        4.7.4
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -39,7 +39,7 @@ BuildRequires:  %{_bindir}/phpab
 BuildRequires:  php-composer(phpunit/php-file-iterator) >= 1.3.2
 BuildRequires:  php-composer(phpunit/php-text-template) >= 1.2
 BuildRequires:  php-composer(phpunit/php-code-coverage) >= 2.1
-BuildRequires:  php-composer(phpunit/php-timer) >= 1.0.2
+BuildRequires:  php-composer(phpunit/php-timer) >= 1.0.6
 BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 2.3
 BuildRequires:  php-composer(phpspec/prophecy) >= 1.3.1
 BuildRequires:  php-composer(sebastian/comparator) >= 1.1
@@ -58,7 +58,7 @@ BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 #        "phpunit/php-file-iterator": "~1.4",
 #        "phpunit/php-text-template": "~1.2",
 #        "phpunit/php-code-coverage": "~2.1",
-#        "phpunit/php-timer": "~1.0",
+#        "phpunit/php-timer": ">=1.0.6",
 #        "phpunit/phpunit-mock-objects": "~2.2",
 #        "phpspec/prophecy": "~1.3,>=1.3.1",
 #        "symfony/yaml": "~2.1|~3.0",
@@ -82,7 +82,7 @@ Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
 Requires:       php-composer(phpunit/php-code-coverage) >= 2.1
 Requires:       php-composer(phpunit/php-code-coverage) <  3
-Requires:       php-composer(phpunit/php-timer) >= 1.0
+Requires:       php-composer(phpunit/php-timer) >= 1.0.6
 Requires:       php-composer(phpunit/php-timer) <  2
 Requires:       php-composer(phpunit/phpunit-mock-objects) >= 2.3
 Requires:       php-composer(phpunit/phpunit-mock-objects) <  3
@@ -204,6 +204,10 @@ fi
 
 
 %changelog
+* Thu Jun 18 2015 Remi Collet <remi@fedoraproject.org> - 4.7.4-1
+- Update to 4.7.4
+- raise dependency on phpunit/php-timer >= 1.0.6
+
 * Thu Jun 11 2015 Remi Collet <remi@fedoraproject.org> - 4.7.3-1
 - Update to 4.7.3
 
