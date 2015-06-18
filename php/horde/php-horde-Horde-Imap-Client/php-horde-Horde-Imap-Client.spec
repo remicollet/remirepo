@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Imap-Client
+# remirepo/fedora spec file for php-horde-Horde-Imap-Client
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
@@ -12,7 +12,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.28.1
+Version:        2.29.0
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -34,6 +34,8 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Stream) >= 1.4.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Mime) >= 2.5.2
 BuildRequires:  php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Pack) >= 1.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Crypt_Blowfish) >= 1.1.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Stringprep) >= 1.0.0
 %endif
 
 Requires(post): %{__pear}
@@ -80,6 +82,7 @@ Requires:       php-pcre
 Requires:       php-spl
 # Optional and implicilyt required :
 #   Horde_Compress_Fast, Horde_HashTable, Horde_Mongo, mongo, Horde_Support
+#   Horde_Crypt_Blowfish
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Provides:       php-composer(horde/horde-imap-client) = %{version}
@@ -133,8 +136,9 @@ done | tee ../%{pear_name}.lang
 
 %check
 %if %{with_tests}
+export LANG=fr_FR.utf8
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit .
+phpunit --verbose .
 %else
 : bootstrap build with test suite disabled
 %endif
@@ -165,6 +169,10 @@ fi
 
 
 %changelog
+* Thu Jun 18 2015 Remi Collet <remi@fedoraproject.org> - 2.29.0-1
+- Update to 2.29.0
+- add BR on Horde_Crypt_Blowfish and Horde_Stringprep
+
 * Wed May 13 2015 Remi Collet <remi@fedoraproject.org> - 2.28.1-1
 - Update to 2.28.1
 
