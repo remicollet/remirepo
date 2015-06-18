@@ -18,13 +18,16 @@
 
 Name:           php-znerol-php-stringprep
 Version:        0
-Release:        0.1.%{gh_date}git%{gh_short}%{?dist}
+Release:        0.2.%{gh_date}git%{gh_short}%{?dist}
 Summary:        Implementation of RFC 3454 Preparation of Internationalized Strings
 
 Group:          Development/Libraries
 License:        LGPLv3
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+
+# https://github.com/znerol/Stringprep/pull/6
+Patch0:         %{gh_project}-pr6.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -55,6 +58,8 @@ See: http://tools.ietf.org/html/rfc3454
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+
+%patch0 -p1
 
 
 %build
@@ -94,6 +99,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 18 2015 Remi Collet <remi@fedoraproject.org> - 0-0.2.20150519git804b0d5
+- add patch for autoload issue
+  https://github.com/znerol/Stringprep/pull/6
+
 * Tue May 19 2015 Remi Collet <remi@fedoraproject.org> - 0-0.1.20150519git804b0d5
 - new snapshot (License PR merged)
 
