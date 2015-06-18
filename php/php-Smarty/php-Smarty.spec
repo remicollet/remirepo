@@ -8,14 +8,14 @@
 # Please preserve changelog entries
 #
 
-%global gh_commit    58616d6ee598674b682f8a2b81352ec4da7100c7
+%global gh_commit    4537d8aae6c4a26f5439bc3a05d3437d25c2c4d2
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     smarty-php
 %global gh_project   smarty
 
 Name:           php-Smarty
 Summary:        Template/Presentation Framework for PHP
-Version:        3.1.25
+Version:        3.1.27
 Release:        1%{?dist}
 
 URL:            http://www.smarty.net
@@ -80,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jun 18 2015 Remi Collet <remi@fedoraproject.org> - 3.1.27-1
+- update to 3.1.27
+
 * Tue Jun 16 2015 Remi Collet <remi@fedoraproject.org> - 3.1.25-1
 - update to 3.1.25
 
