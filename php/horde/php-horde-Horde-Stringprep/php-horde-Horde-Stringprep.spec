@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Stringprep
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        Preparation of Internationalized Strings ("stringprep")
 
@@ -39,6 +39,7 @@ Requires:       php-channel(%{pear_channel})
 Requires:       php-composer(znerol/php-stringprep)
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-stringprep) = %{version}
 
 
 %description
@@ -99,6 +100,10 @@ fi
 
 
 %changelog
+* Thu Jun 18 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- Update to 1.0.2
+- add provides php-composer(horde/horde-stringprep)
+
 * Tue Nov 18 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1
 

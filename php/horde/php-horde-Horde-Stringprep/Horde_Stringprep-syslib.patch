@@ -1,14 +1,14 @@
-diff -up Horde_Stringprep-1.0.0/lib/Horde/Stringprep.php.old Horde_Stringprep-1.0.0/lib/Horde/Stringprep.php
---- Horde_Stringprep-1.0.0/lib/Horde/Stringprep.php.old	2014-11-09 14:58:55.000000000 +0100
-+++ Horde_Stringprep-1.0.0/lib/Horde/Stringprep.php	2014-11-09 14:59:50.000000000 +0100
+diff -up Horde_Stringprep-1.0.2/lib/Horde/Stringprep.php.syslib Horde_Stringprep-1.0.2/lib/Horde/Stringprep.php
+--- Horde_Stringprep-1.0.2/lib/Horde/Stringprep.php.syslib	2015-06-18 13:41:42.987550940 +0200
++++ Horde_Stringprep-1.0.2/lib/Horde/Stringprep.php	2015-06-18 13:42:31.127777933 +0200
 @@ -34,11 +34,7 @@ class Horde_Stringprep
       */
      public static function autoload()
      {
--        if (file_exists(__DIR__ . '/vendor/autoload.php')) {
--            require_once __DIR__ . '/vendor/autoload.php';
+-        if (file_exists(__DIR__ . '/Stringprep/vendor/autoload.php')) {
+-            require_once __DIR__ . '/Stringprep/vendor/autoload.php';
 -        } else {
--            require_once __DIR__ . '/../../../bundle/vendor/autoload.php';
+-            require_once __DIR__ . '/../../bundle/vendor/autoload.php';
 -        }
 +        require_once('/usr/share/php/Znerol/Component/Stringprep/autoload.php');
      }
