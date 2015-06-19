@@ -1,4 +1,4 @@
-# spec file for php-horde-nag
+# remirepo/fedora spec file for php-horde-nag
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-nag
-Version:        4.2.4
+Version:        4.2.5
 Release:        1%{?dist}
 Summary:        A web based task list manager
 
@@ -214,6 +214,9 @@ fi
 
 
 %changelog
+* Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 4.2.5-1
+- Update to 4.2.5
+
 * Tue Feb 10 2015 Remi Collet <remi@fedoraproject.org> - 4.2.4-1
 - Update to 4.2.4
 - add provides php-composer(horde/nag)
