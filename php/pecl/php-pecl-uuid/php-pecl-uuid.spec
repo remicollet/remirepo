@@ -1,4 +1,7 @@
-# spec file for php-pecl-uuid
+# remirepo spec file for php-pecl-uuid
+# with SCL stuff, from:
+#
+# Fedora spec file for php-pecl-uuid
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,6 +9,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{?scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-uuid}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -21,9 +32,9 @@
 #global prever      RC1
 
 Summary:       Universally Unique Identifier extension for PHP
-Name:          %{?scl_prefix}php-pecl-uuid
+Name:          %{?sub_prefix}php-pecl-uuid
 Version:       1.0.4
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       LGPLv2+
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/uuid
@@ -210,6 +221,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-2
+- allow build against rh-php56 (as more-php56)
+
 * Fri May  8 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
 - update to 1.0.4 (no change since RC)
 
