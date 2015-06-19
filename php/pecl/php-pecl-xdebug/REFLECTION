@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #197 xdebug version 2.3.2 ] {
+Extension [ <persistent> extension #199 xdebug version 2.3.3 ] {
 
   - INI {
     Entry [ xdebug.auto_trace <ALL> ]
@@ -170,7 +170,7 @@ Extension [ <persistent> extension #197 xdebug version 2.3.2 ] {
       Current = '3'
     }
     Entry [ xdebug.cli_color <ALL> ]
-      Current = '1'
+      Current = '0'
     }
     Entry [ xdebug.scream <ALL> ]
       Current = '0'
