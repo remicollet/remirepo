@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    be2286cb8c7e1773eded49d9719219e6f74f9e3e
+%global gh_commit    631e365cf26bb2c078683e8d9bcf8bc631ac4d44
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-code-coverage
@@ -22,14 +22,14 @@
 %endif
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        2.1.5
+Version:        2.1.6
 Release:        1%{?dist}
 Summary:        PHP code coverage information
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 # Autoload template from version 1.2
 Source1:        Autoload.php.in
