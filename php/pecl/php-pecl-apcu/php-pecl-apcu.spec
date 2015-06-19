@@ -1,4 +1,7 @@
-# spec file for php-pecl-apcu
+# remirepo spec file for php-pecl-apcu
+# with SCL stuff, from:
+#
+# Fedora spec file for php-pecl-apcu
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,6 +9,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{?scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-apcu}
 %{!?scl:         %global pkg_name    %{name}}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
@@ -20,10 +31,10 @@
 %global ini_name  40-%{pecl_name}.ini
 %endif
 
-Name:           %{?scl_prefix}php-pecl-apcu
+Name:           %{?sub_prefix}php-pecl-apcu
 Summary:        APC User Cache
 Version:        4.0.7
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 Source1:        %{pecl_name}.ini
 Source2:        %{pecl_name}-panel.conf
@@ -318,6 +329,9 @@ fi
 
 
 %changelog
+* Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 4.0.7-3
+- allow build against rh-php56 (as more-php56)
+
 * Tue Jun  9 2015 Remi Collet <remi@fedoraproject.org> - 4.0.7-2
 - upstream fix for the control panel
 - drop runtime dependency on pear, new scriptlets
