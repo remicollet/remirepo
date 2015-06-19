@@ -134,6 +134,9 @@ fi
 
 
 %changelog
+* Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 2.1.6-1
+- update to 2.1.6
+
 * Tue Jun  9 2015 Remi Collet <remi@fedoraproject.org> - 2.1.5-1
 - update to 2.1.5
 
