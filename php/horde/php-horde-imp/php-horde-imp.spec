@@ -1,4 +1,4 @@
-# spec file for php-horde-imp
+# remirepo/fedora spec file for php-horde-imp
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-imp
-Version:        6.2.8
+Version:        6.2.9
 Release:        1%{?dist}
 Summary:        A web based webmail system
 
@@ -213,7 +213,7 @@ cd %{pear_name}-%{version}/test/Imp
 # Ignore this one - Need investigation
 rm Unit/Mime/Viewer/ItipTest.php
 
-phpunit .
+phpunit --verbose .
 
 
 %clean
@@ -257,6 +257,9 @@ fi
 
 
 %changelog
+* Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 6.2.9-1
+- Update to 6.2.9
+
 * Wed Apr 29 2015 Remi Collet <remi@fedoraproject.org> - 6.2.8-1
 - Update to 6.2.8
 
