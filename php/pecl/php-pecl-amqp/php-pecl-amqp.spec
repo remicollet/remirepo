@@ -1,4 +1,7 @@
-# spec file for php-pecl-amqp
+# remirepo spec file for php-pecl-amqp
+# with SCL stuff, from:
+#
+# Fedora spec file for php-pecl-amqp
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,6 +9,13 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{?scl_prefix}
+%endif
+%endif
 
 %{?scl:          %scl_package        php-pecl-amqp}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
@@ -23,9 +33,9 @@
 %global prever      beta3
 
 Summary:       Communicate with any AMQP compliant server
-Name:          %{?scl_prefix}php-pecl-amqp
+Name:          %{?sub_prefix}php-pecl-amqp
 Version:       1.6.0
-Release:       0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
@@ -34,8 +44,12 @@ Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 5.2.0
 BuildRequires: %{?scl_prefix}php-pear
+%if "%{?vendor}" == "Remi Collet"
 # Upstream requires 0.5.2, set 0.6.0 to ensure "last" is used.
 BuildRequires: librabbitmq-devel >= 0.6.0
+%else
+BuildRequires: librabbitmq-devel >= 0.5.2
+%endif
 %if %{with_tests}
 BuildRequires: rabbitmq-server
 %endif
@@ -269,6 +283,9 @@ fi
 
 
 %changelog
+* Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 1.6.0-0.2.beta3
+- allow build against rh-php56 (as more-php56)
+
 * Mon Apr 20 2015 Remi Collet <remi@fedoraproject.org> - 1.6.0-0.1.beta3
 - update to 1.6.0beta3
 - drop runtime dependency on pear, new scriptlets
