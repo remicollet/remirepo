@@ -91,7 +91,7 @@ City, State, Country, Longitude, Latitude, and other information as
 all, such as ISP and connection type. It makes use of Maxminds geoip
 database
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep

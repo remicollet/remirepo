@@ -1,4 +1,4 @@
-# spec file for php-pecl-xxtea
+# remirepo spec file for php-pecl-xxtea
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,6 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-xxtea}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -20,9 +28,9 @@
 %endif
 
 Summary:        XXTEA encryption algorithm extension for PHP
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.10
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -72,6 +80,8 @@ This is a XXTEA extension for PHP.
 It is different from the original XXTEA encryption algorithm.
 It encrypts and decrypts string instead of uint32 array, and
 the key is also string.
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -217,6 +227,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 20 2015 Remi Collet <remi@fedoraproject.org> - 1.0.10-2
+- allow build against rh-php56 (as more-php56)
+
 * Sat Mar 28 2015 Remi Collet <remi@fedoraproject.org> - 1.0.10-1
 - Update to 1.0.10
 
