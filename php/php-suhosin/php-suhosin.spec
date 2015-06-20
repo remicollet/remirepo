@@ -8,6 +8,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 #global gh_commit    f0683bf1d9d77e5532e637778107e20826b8d1af
 #global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     stefanesser
@@ -25,9 +33,9 @@
 %global ini_name  40-%{ext_name}.ini
 %endif
 
-Name:           %{?scl_prefix}php-suhosin
+Name:           %{?sub_prefix}php-suhosin
 Version:        0.9.38
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Suhosin is an advanced protection system for PHP installations
 
 Group:          Development/Languages
@@ -183,6 +191,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 20 2015 Remi Collet <remi@fedoraproject.org> - 0.9.38-2
+- allow build against rh-php56 (as more-php56)
+
 * Fri May 22 2015 Remi Collet <remi@fedoraproject.org> - 0.9.38-1
 - update to 0.9.38
 
