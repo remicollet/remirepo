@@ -1,4 +1,7 @@
-# spec file for php-pecl-msgpack
+# remirepo spec file for php-pecl-msgpack
+# with SCL compatibility, from:
+#
+# Fedora spec file for php-pecl-msgpack
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,6 +9,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package         php-pecl-msgpack}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
@@ -26,9 +37,9 @@
 %endif
 
 Summary:       API for communicating with MessagePack serialization
-Name:          %{?scl_prefix}php-pecl-msgpack
+Name:          %{?sub_prefix}php-pecl-msgpack
 Version:       0.5.6
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       BSD
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/msgpack
@@ -97,7 +108,7 @@ a perfect replacement.
 
 This extension is still EXPERIMENTAL.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %package devel
@@ -270,6 +281,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 20 2015 Remi Collet <remi@fedoraproject.org> - 0.5.6-2
+- allow build against rh-php56 (as more-php56)
+
 * Mon Apr 27 2015 Remi Collet <remi@fedoraproject.org> - 0.5.6-1
 - Update to 0.5.6
 - drop runtime dependency on pear, new scriptlets
