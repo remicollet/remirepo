@@ -85,6 +85,8 @@ Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 This package provides a PHP binding for FANN
 (Fast Artificial Neural Network) Library.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+
 
 %prep
 %setup -q -c

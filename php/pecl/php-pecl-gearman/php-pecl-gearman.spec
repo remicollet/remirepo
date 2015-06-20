@@ -1,13 +1,21 @@
-# spec file for php-pecl-gearman
+# remirepo spec file for php-pecl-gearman
+# with SCL compatibility, from:
 #
-# Copyright (c) 2011-2015 Remi Collet
-# Copyright (c) 2011 Paul Whalen
+# Fedora spec file for php-pecl-gearman
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package         php-pecl-gearman}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
@@ -21,23 +29,13 @@
 %global ini_name  40-%{pecl_name}.ini
 %endif
 
-%if 0%{?fedora} >= 12 && 0%{?fedora} <= 15
-%global extver 0.8.3
-%global libver 0.10
-%endif
-%if 0%{?fedora} >= 16 && 0%{?fedora} <= 18
-%global extver 1.0.3
-%global libver 0.21
-%endif
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 5
 %global extver 1.1.2
 %global libver 1.1.0
-%endif
 
 
-Name:           %{?scl_prefix}php-pecl-gearman
+Name:           %{?sub_prefix}php-pecl-gearman
 Version:        %{extver}
-Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:        7%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        PHP wrapper to libgearman
 
 Group:          Development/Tools
@@ -53,8 +51,6 @@ BuildRequires:  %{?scl_prefix}php-pear
 # Required by phpize
 BuildRequires:  autoconf, automake, libtool
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
@@ -93,7 +89,7 @@ communicating with gearmand, and writing clients and workers
 
 Documentation: http://php.net/gearman
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -152,7 +148,7 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -Dpm644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
+# Documentation
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -176,12 +172,20 @@ done
 rm -rf %{buildroot}
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -202,6 +206,10 @@ fi
 
 
 %changelog
+* Sat Jun 20 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-7
+- allow build against rh-php56 (as more-php56)
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-6.1
 - Fedora 21 SCL mass rebuild
 
