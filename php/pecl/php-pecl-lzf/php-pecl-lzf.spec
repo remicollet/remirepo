@@ -1,3 +1,21 @@
+# remirepo spec file for php-pecl-lzf
+# adapted for SCL, from
+#
+# Fedora spec file for php-pecl-lzf
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{?scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-lzf}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -12,9 +30,9 @@
 %global ini_name    40-%{ext_name}.ini
 %endif
 
-Name:           %{?scl_prefix}php-pecl-lzf
+Name:           %{?sub_prefix}php-pecl-lzf
 Version:        1.6.3
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extension to handle LZF de/compression
 Group:          Development/Languages
 License:        PHP
@@ -215,6 +233,9 @@ fi
 
 
 %changelog
+* Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 1.6.3-2
+- allow build against rh-php56 (as more-php56)
+
 * Mon Apr 20 2015 Remi Collet <remi@fedoraproject.org> - 1.6.3-1
 - update to 1.6.3
 
