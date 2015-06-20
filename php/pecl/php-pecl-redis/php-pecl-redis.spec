@@ -1,4 +1,7 @@
-# spec file for php-pecl-redis
+# remirepo spec file for php-pecl-xmldiff
+# adapted for scl, from
+#
+# Fedora spec file for php-pecl-redis
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,6 +9,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{?scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-redis}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -23,9 +34,9 @@
 %endif
 
 Summary:       Extension for communicating with the Redis key-value store
-Name:          %{?scl_prefix}php-pecl-redis
+Name:          %{?sub_prefix}php-pecl-redis
 Version:       2.2.7
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/redis
@@ -35,7 +46,8 @@ Source1:       https://github.com/phpredis/phpredis/archive/%{version}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
-BuildRequires: %{?scl_prefix}php-pecl-igbinary-devel
+BuildRequires: %{?scl_prefix}php-pear
+BuildRequires: %{?sub_prefix}php-pecl-igbinary-devel
 # to run Test suite
 %if %{with_tests}
 BuildRequires: redis >= 2.6
@@ -44,7 +56,7 @@ BuildRequires: redis >= 2.6
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 # php-pecl-igbinary missing php-pecl(igbinary)%{?_isa}
-Requires:      %{?scl_prefix}php-pecl-igbinary%{?_isa}
+Requires:      %{?sub_prefix}php-pecl-igbinary%{?_isa}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Obsoletes:     %{?scl_prefix}php-redis < %{version}
@@ -84,7 +96,7 @@ This Redis client implements most of the latest Redis API.
 As method only only works when also implemented on the server side,
 some doesn't work with an old redis server version.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -272,6 +284,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 20 2015 Remi Collet <remi@fedoraproject.org> - 2.2.7-2
+- allow build against rh-php56 (as more-php56)
+
 * Tue Mar 03 2015 Remi Collet <remi@fedoraproject.org> - 2.2.7-1
 - Update to 2.2.7 (stable)
 - drop runtime dependency on pear, new scriptlets
