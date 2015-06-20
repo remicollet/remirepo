@@ -1,4 +1,4 @@
-# spec file for php-pecl-xattr
+# remirepo spec file for php-pecl-xattr
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,6 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{?scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-xattr}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -20,9 +28,9 @@
 %endif
 
 Summary:        Extended attributes
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.2.1
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -73,7 +81,7 @@ Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 This package allows to manipulate extended attributes on filesystems that
 support them. Requires libattr from Linux XFS project.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -218,6 +226,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-2
+- allow build against rh-php56 (as more-php56)
+
 * Sun Apr 19 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - update to 1.2.1
 - run upstream test suite during build
