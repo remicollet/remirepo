@@ -1,4 +1,5 @@
 # remirepo spec file for php-pecl-selinux
+# adapted for SCL
 #
 # Copyright (c) 2011-2015 Remi Collet
 #
@@ -11,6 +12,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{?scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package         php-pecl-selinux}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -26,9 +35,9 @@
 %endif
 
 Summary:        SELinux binding for PHP scripting language
-Name:           %{?scl_prefix}php-pecl-selinux
+Name:           %{?sub_prefix}php-pecl-selinux
 Version:        0.4.1
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -221,6 +230,9 @@ fi
 
 
 %changelog
+* Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 0.4.1-2
+- allow build against rh-php56 (as more-php56)
+
 * Sun May 24 2015 Remi Collet <remi@fedoraproject.org> - 0.4.1-1
 - version 0.4.1 (beta)
 
