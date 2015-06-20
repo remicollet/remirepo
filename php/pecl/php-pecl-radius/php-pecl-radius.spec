@@ -1,4 +1,7 @@
-# spec file for php-pecl-radius
+# remirepo spec file for php-pecl-radius
+# adapted for SCL, from:
+#
+# Fedora spec file for php-pecl-radius
 #
 # Copyright (c) 2009-2015 Remi Collet
 # Copyright (c) 2006-2009 Christopher Stone
@@ -8,6 +11,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package         php-pecl-radius}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
@@ -21,9 +32,9 @@
 %global ini_name  40-%{pecl_name}.ini
 %endif
 
-Name:           %{?scl_prefix}php-pecl-radius
+Name:           %{?sub_prefix}php-pecl-radius
 Version:        1.2.7
-Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Radius client library
 
 License:        BSD
@@ -42,8 +53,6 @@ BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-posix
 BuildRequires:  %{?scl_prefix}php-sockets
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
@@ -83,11 +92,16 @@ and extensions.  This PECL provides full support for RADIUS authentication
 Its an easy way to authenticate your users against the user-database of your
 OS (for example against Windows Active-Directory via IAS).
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+
 
 %prep
 %setup -qc
 
 sed -e '/CREDITS/s/role="src"/role="doc"/' -i package.xml
+
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
 
 mv %{pecl_name}-%{version} NTS
 cd NTS
@@ -142,11 +156,8 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -Dpm644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
+# Documentation
 cd NTS
-for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
 for i in LICENSE  $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -191,12 +202,20 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -208,7 +227,6 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -221,6 +239,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 20 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-6
+- allow build against rh-php56 (as more-php56)
+- drop runtime dependency on pear, new scriptlets
+- don't install/register tests
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-5.1
 - Fedora 21 SCL mass rebuild
 
