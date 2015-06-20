@@ -6,6 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{?scl_prefix}
+%endif
+%endif
 
 %{?scl:          %scl_package        php-pecl-imagick}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -23,9 +30,9 @@
 %global imbuildver %(pkg-config --silence-errors --modversion ImageMagick 2>/dev/null || echo 65536)
 
 Summary:       Extension to create and modify images using ImageMagick
-Name:          %{?scl_prefix}php-pecl-imagick
+Name:          %{?sub_prefix}php-pecl-imagick
 Version:       3.1.2
-Release:       5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
@@ -83,6 +90,8 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %description
 Imagick is a native php extension to create and modify images
 using the ImageMagick API.
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -245,7 +254,11 @@ rm -rf %{buildroot}
 %{php_ztsincldir}/ext/%{pecl_name}
 %endif
 
+
 %changelog
+* Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 3.1.2-6
+- allow build against rh-php56 (as more-php56)
+
 * Thu Jun 11 2015 Remi Collet <remi@fedoraproject.org> - 3.1.2-5
 - adapt for SCL
 
