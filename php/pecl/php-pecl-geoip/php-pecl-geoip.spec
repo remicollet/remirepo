@@ -173,10 +173,8 @@ done
 %endif
 
 cd NTS
-%if 0%{?fedora} > 21
 # TODO America/Toronto instead of America/Montreal
 rm tests/013.phpt
-%endif
 
 TEST_PHP_EXECUTABLE=%{__php} \
 REPORT_EXIT_STATUS=1 \
