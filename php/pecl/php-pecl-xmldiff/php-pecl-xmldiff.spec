@@ -1,4 +1,4 @@
-# spec file for php-pecl-xmldiff
+# remirepo spec file for php-pecl-xmldiff
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,6 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{?scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-xmldiff}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?php_incldir: %global php_incldir %{_includedir}/php}
@@ -23,9 +31,9 @@
 %endif
 
 Summary:        XML diff and merge
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.1.2
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -84,6 +92,8 @@ The extension is able to produce diffs of two XML documents and then to apply
 the difference to the source document. The diff is a XML document containing
 copy/insert/delete instruction nodes in human readable format. DOMDocument
 objects, local files and strings in memory can be processed.
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %package devel
@@ -253,6 +263,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-2
+- allow build against rh-php56 (as more-php56)
+
 * Mon Feb 09 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - Update to 1.1.2 (stable)
 
