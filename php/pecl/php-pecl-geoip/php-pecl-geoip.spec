@@ -1,3 +1,21 @@
+# remirepo spec file for php-pecl-geoip
+# with SCL compatibility, from:
+#
+# Fedora spec file for php-pecl-geoip
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-geoip}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
@@ -12,9 +30,9 @@
 %endif
 
 
-Name:           %{?scl_prefix}php-pecl-geoip
+Name:           %{?sub_prefix}php-pecl-geoip
 Version:        1.1.0
-Release:        4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extension to map IP addresses to geographic places
 Group:          Development/Languages
 License:        PHP
@@ -208,6 +226,9 @@ fi
 
 
 %changelog
+* Sat Jun 20 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-5
+- allow build against rh-php56 (as more-php56)
+
 * Mon Apr  6 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-4
 - add fix for PHP 7 compatibility
 - drop runtime dependency on pear, new scriptlets
