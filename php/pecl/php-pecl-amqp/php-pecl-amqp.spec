@@ -13,7 +13,7 @@
 %if "%{scl}" == "rh-php56"
 %global sub_prefix more-php56-
 %else
-%global sub_prefix %{?scl_prefix}
+%global sub_prefix %{scl_prefix}
 %endif
 %endif
 
@@ -95,6 +95,8 @@ This extension can communicate with any AMQP spec 0-9-1 compatible server,
 such as RabbitMQ, OpenAMQP and Qpid, giving you the ability to create and
 delete exchanges and queues, as well as publish to any exchange and consume
 from any queue.
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep

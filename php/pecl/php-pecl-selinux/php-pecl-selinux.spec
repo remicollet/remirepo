@@ -16,7 +16,7 @@
 %if "%{scl}" == "rh-php56"
 %global sub_prefix more-php56-
 %else
-%global sub_prefix %{?scl_prefix}
+%global sub_prefix %{scl_prefix}
 %endif
 %endif
 
@@ -93,7 +93,7 @@ The libselinux is a set of application program interfaces towards in-kernel
 SELinux, contains get/set security context, communicate security server,
 translate between raw and readable format and so on.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep

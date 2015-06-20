@@ -12,7 +12,7 @@
 %if "%{scl}" == "rh-php56"
 %global sub_prefix more-php56-
 %else
-%global sub_prefix %{?scl_prefix}
+%global sub_prefix %{scl_prefix}
 %endif
 %endif
 
@@ -87,7 +87,7 @@ library
 LZF is a very fast compression algorithm, ideal for saving space with a 
 slight speed cost.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep

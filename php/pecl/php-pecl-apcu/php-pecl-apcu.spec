@@ -13,7 +13,7 @@
 %if "%{scl}" == "rh-php56"
 %global sub_prefix more-php56-
 %else
-%global sub_prefix %{?scl_prefix}
+%global sub_prefix %{scl_prefix}
 %endif
 %endif
 
@@ -118,7 +118,7 @@ upgrade path for the future. When O+ takes over, many will be tempted to use
 this would be a grave error. The tried and tested APC codebase provides far
 superior support for local storage of PHP variables.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %package devel

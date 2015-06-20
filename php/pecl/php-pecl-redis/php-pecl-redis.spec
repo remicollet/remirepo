@@ -13,7 +13,7 @@
 %if "%{scl}" == "rh-php56"
 %global sub_prefix more-php56-
 %else
-%global sub_prefix %{?scl_prefix}
+%global sub_prefix %{scl_prefix}
 %endif
 %endif
 
