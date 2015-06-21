@@ -126,6 +126,7 @@ fi
 * Sun Jun 21 2015 Remi Collet <remi@fedoraproject.org> - 1.1.4-1
 - update to 1.1.4
 - raise dependencies on PHP >= 5.3.3 and php-timer >= 1.0.6
+- generate autoloader
 
 * Fri Jul 18 2014 Remi Collet <remi@fedoraproject.org> - 1.1.3-6
 - add composer dependencies
