@@ -1,4 +1,4 @@
-# spec file for php-phpunit-PHP-Invoker
+# remirepo/fedora spec file for php-phpunit-PHP-Invoker
 #
 # Copyright (c) 2011-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,39 +6,44 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    8696484458cb43eed025ab46260846de5b74655c
+%global bootstrap    0
+%global gh_commit    86074bf0fc2caf02ec8819a93f65a37cd0b44c8e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-invoker
 %global php_home     %{_datadir}/php
 %global pear_name    PHP_Invoker
 %global pear_channel pear.phpunit.de
-# Circular dependency with phpunit
+%if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%else
+%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%endif
 
 Name:           php-phpunit-PHP-Invoker
-Version:        1.1.3
-Release:        6%{?dist}
+Version:        1.1.4
+Release:        1%{?dist}
 Summary:        Utility class for invoking callables with a timeout
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.2.7
+BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
 BuildRequires:  %{_bindir}/phpunit
 %endif
 
 # From composer.json
-#        "php": ">=5.2.7",
-#        "phpunit/php-timer": ">=1.0.4",
+#        "php": ">=5.3.3",
+#        "phpunit/php-timer": ">=1.0.6",
 #        "ext-pcntl": "*"
-Requires:       php(language) >= 5.2.7
-Requires:       php-composer(phpunit/php-timer) >= 1.0.4
+Requires:       php(language) >= 5.3.3
+Requires:       php-composer(phpunit/php-timer) >= 1.0.6
 Requires:       php-pcntl
 # From phpcompatinfo report for version 1.0.5
 Requires:       php-spl
@@ -56,17 +61,25 @@ Utility class for invoking callables with a timeout.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-rm PHP/Invoker/Autoload.php.in
+: Restore previous PSR-0 layout
+mkdir -p PHP/Invoker
+mv src/Invoker.php PHP/
+mv src/*.php       PHP/Invoker/
+rmdir src
 
 
 %build
-# Empty build section, most likely nothing required.
+: Generate autoloader
+%{_bindir}/phpab \
+   --output  PHP/Invoker/Autoload.php \
+   --basedir PHP/Invoker \
+   PHP
 
-# If upstream drop Autoload.php, command to generate it
-# phpab \
-#   --output PHP/Invoker/Autoload.php \
-#   --template PHP/Invoker/Autoload.php.in \
-#   PHP
+cat << EOF | tee -a PHP/Invoker/Autoload.php
+// Dependencies
+require_once 'PHP/Timer/Autoload.php';
+EOF
+
 
 
 %install
@@ -77,8 +90,16 @@ cp -pr PHP %{buildroot}%{php_home}
 
 %if %{with_tests}
 %check
-phpunit \
-  -d date.timezone=UTC
+: Generate tests autoloader
+%{_bindir}/phpab \
+   --output tests/bs.php \
+   tests
+
+: Run upstream test suite
+%{_bindir}/phpunit \
+  --include-path %{buildroot}%{php_home} \
+  --bootstrap tests/bs.php \
+  --verbose
 %endif
 
 
@@ -94,16 +115,17 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc README.markdown ChangeLog.markdown composer.json
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-
-%{php_home}/*
+%doc README.md
+%doc composer.json
+%{php_home}/PHP/Invoker*
 
 
 %changelog
 * Fri Jul 18 2014 Remi Collet <remi@fedoraproject.org> - 1.1.3-6
 - add composer dependencies
+- raise dependencies on PHP >= 5.3.3 and php-timer >= 1.0.6
 
 * Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.1.3-4
 - cleanup pear registry
