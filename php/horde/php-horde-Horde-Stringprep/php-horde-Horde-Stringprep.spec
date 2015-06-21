@@ -8,12 +8,14 @@
 #
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear:       %global __pear       %{_bindir}/pear}
+%{!?_pkgdocdir:   %global _pkgdocdir   %{_datadir}/doc/%{name}-%{version}}
+
 %global pear_name    Horde_Stringprep
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Stringprep
 Version:        1.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Preparation of Internationalized Strings ("stringprep")
 
 Group:          Development/Libraries
@@ -75,6 +77,12 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
+# Handle license file (keep upstream location, linked to fedora one)
+%if 0%{?_licensedir:1}
+DEST=$(echo %{_pkgdocdir} | sed -e 's:%_docdir:%_licensedir:')
+ln -sf $DEST/COPYING %{buildroot}%{pear_docdir}/%{pear_name}/COPYING
+%endif
+
 
 %clean
 rm -rf %{buildroot}
@@ -93,6 +101,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license %{pear_name}-%{version}/doc/Horde/Stringprep/COPYING}
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
 %dir %{pear_phpdir}/Horde
@@ -100,6 +109,9 @@ fi
 
 
 %changelog
+* Sun Jun 21 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-2
+- fix license handling per review #1222799
+
 * Thu Jun 18 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Update to 1.0.2
 - add provides php-composer(horde/horde-stringprep)
