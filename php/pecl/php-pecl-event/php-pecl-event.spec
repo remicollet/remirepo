@@ -104,7 +104,7 @@ Version 1.0.0 introduces:
 * new OO API breaking backwards compatibility
 * support of libevent 2+ including HTTP, DNS, OpenSSL and the event listener.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
