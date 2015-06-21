@@ -1,4 +1,7 @@
-# spec file for php-pecl-apfd
+# remirepo spec file for php-pecl-apfd
+# with SCL stuff, from:
+#
+# Fedora spec file for php-pecl-apfd
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
@@ -6,6 +9,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-apfd}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -22,9 +33,9 @@
 #global prever     RC1
 
 Summary:        Always Populate Form Data
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.1
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -79,7 +90,7 @@ handler, like "json_post") without regard to the request's request method.
 
 This extension does not provide any INI entries, constants, functions or classes.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -218,6 +229,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jun 21 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
+- allow build against rh-php56 (as more-php56)
+
 * Sat Apr 25 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1 (stable)
 
