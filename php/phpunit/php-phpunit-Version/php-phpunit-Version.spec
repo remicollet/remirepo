@@ -43,11 +43,15 @@ of Git-hosted PHP projects.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+: Restore PSR-0 layout
+mkdir src/Version
+
 
 %build
 : Generate autoloader
 %{_bindir}/phpab \
-  --output src/autoload.php \
+  --output  src/Version/autoload.php \
+  --basedir src/Version \
   src
 
 
@@ -55,7 +59,7 @@ of Git-hosted PHP projects.
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{php_home}
 
-cp -pr src %{buildroot}%{php_home}/Version
+cp -pr src/* %{buildroot}%{php_home}
 
 
 %clean
@@ -76,13 +80,14 @@ fi
 %doc README.md
 %doc composer.json
 %dir %{php_home}
-     %{php_home}/Version
+     %{php_home}/Version*
 
 
 %changelog
 * Sun Jun 21 2015 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
 - Update to 1.0.6
 - generate autoloader
+- fix PSR-0 layout
 
 * Fri Apr  3 2015 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
 - Update to 1.0.5
