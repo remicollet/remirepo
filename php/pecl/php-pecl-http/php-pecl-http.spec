@@ -1,4 +1,7 @@
-# remirepo/fedora spec file for php-pecl-http
+# remirepo spec file for php-pecl-http
+# with SCL stuff, from:
+#
+# Fedora spec file for php-pecl-http
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,6 +9,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package         php-pecl-http}
 %{!?scl:         %global _root_prefix %{_prefix}}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
@@ -32,9 +43,9 @@
 %endif
 
 %global prever RC1
-Name:           %{?scl_prefix}php-pecl-http
+Name:           %{?sub_prefix}php-pecl-http
 Version:        2.5.0
-Release:        0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -55,15 +66,15 @@ BuildRequires:  pcre-devel
 BuildRequires:  zlib-devel >= 1.2.0.4
 BuildRequires:  curl-devel >= 7.18.2
 BuildRequires:  libidn-devel
-BuildRequires:  %{?scl_prefix}php-pecl-propro-devel
-BuildRequires:  %{?scl_prefix}php-pecl-raphf-devel
+BuildRequires:  %{?sub_prefix}php-pecl-propro-devel
+BuildRequires:  %{?sub_prefix}php-pecl-raphf-devel
 
 %if 0%{?scl:1} && 0%{?fedora} < 15 && 0%{?rhel} < 7 && "%{?scl_vendor}" != "remi"
 # Filter in the SCL collection
 %{?filter_requires_in: %filter_requires_in %{_libdir}/.*\.so}
 # libvent from SCL as not available in system
-BuildRequires: %{scl_prefix}libevent-devel  > 2
-Requires:      %{scl_prefix}libevent%{_isa} > 2
+BuildRequires: %{sub_prefix}libevent-devel  > 2
+Requires:      %{sub_prefix}libevent%{_isa} > 2
 Requires:      libcurl%{_isa}
 Requires:      zlib%{_isa}
 %global        _event_prefix %{_prefix}
@@ -159,7 +170,7 @@ Note:
 
 Documentation : http://devel-m6w6.rhcloud.com/mdref/http
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %package devel
@@ -354,6 +365,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jun 21 2015 Remi Collet <remi@fedoraproject.org> - 2.5.0-0.2.RC1
+- allow build against rh-php56 (as more-php56)
+
 * Fri May 22 2015 Remi Collet <remi@fedoraproject.org> - 2.5.0-0.1.RC1
 - update to 2.5.0RC1 (beta)
 
