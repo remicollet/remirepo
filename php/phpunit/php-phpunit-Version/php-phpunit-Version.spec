@@ -81,7 +81,7 @@ fi
 
 %changelog
 * Sun Jun 21 2015 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
-- Update to 1.0.5
+- Update to 1.0.6
 - generate autoloader
 
 * Fri Apr  3 2015 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
