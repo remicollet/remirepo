@@ -38,6 +38,11 @@
 %if 0%{?scl:1}
 # PHPUnit not available in SCL
 %global with_tests 0
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
 %else
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
@@ -49,9 +54,9 @@
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-Name:          %{?scl_prefix}php-%{composer_project}
+Name:          %{?sub_prefix}php-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:       The flexible, fast, and secure template engine for PHP
 
 Group:         Development/Libraries
@@ -157,7 +162,7 @@ Obsoletes:     php70w-%{ext_name} <= %{version}
   developer to define its own custom tags and filters, and create its own
   DSL.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -281,6 +286,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 1.18.2-3
+- allow build against rh-php56 (as more-php56)
+
 * Mon Jun 15 2015 Remi Collet <remi@fedoraproject.org> - 1.18.2-2
 - rebuild for remirepo with rawhide changes (autoloader)
 
