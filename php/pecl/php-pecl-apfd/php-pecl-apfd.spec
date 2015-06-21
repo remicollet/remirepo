@@ -231,6 +231,7 @@ rm -rf %{buildroot}
 %changelog
 * Sun Jun 21 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
 - allow build against rh-php56 (as more-php56)
+- drop runtime dependency on pear, new scriptlets
 
 * Sat Apr 25 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1 (stable)
