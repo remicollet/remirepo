@@ -6,10 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    8e9659bd8317ad3f623c4d17940380443cf8772c
+%global gh_commit    d0ff01698de0eb74e45ebe379b6ac8ccd5a6b0db
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20150614
+%global gh_date      20150620
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
@@ -28,6 +28,9 @@ Source2:        %{name}-bootstrap.php
 
 # Use our autoloader, resources path, fix for tests
 Patch0:         %{name}-rpm.patch
+# https://github.com/composer/composer/pull/4169
+# skip online tests
+Patch1:         %{name}-pr4169.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -39,6 +42,7 @@ BuildRequires:  php-composer(symfony/finder)            >= 2.2
 BuildRequires:  php-composer(symfony/process)           >= 2.1
 BuildRequires:  php-composer(symfony/class-loader)
 BuildRequires:  %{_bindir}/phpunit
+BuildRequires:  php-zip
 %endif
 
 # From composer.json, requires
@@ -107,6 +111,8 @@ Documentation: https://getcomposer.org/doc/
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
+%patch1 -p1 -b .pr4169
+
 cp -p %{SOURCE1} src/Composer/autoload.php
 cp -p %{SOURCE2} tests/bootstrap.php
 rm src/bootstrap.php
@@ -164,6 +170,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jun 21 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.5.20150620gitd0ff016
+- new snapshot
+- add missing BR on php-zip
+- open https://github.com/composer/composer/pull/4169 for online test
+
 * Mon Jun 15 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.5.20150614git8e9659b
 - new snapshot
 

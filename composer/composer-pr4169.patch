@@ -1,0 +1,23 @@
+From c350bceeea660f49f92f033170aea35fae7333f2 Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@famillecollet.com>
+Date: Sun, 21 Jun 2015 07:46:08 +0200
+Subject: [PATCH] Set this test as slow
+
+---
+ tests/Composer/Test/Util/RemoteFilesystemTest.php | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/tests/Composer/Test/Util/RemoteFilesystemTest.php b/tests/Composer/Test/Util/RemoteFilesystemTest.php
+index 04502eb..62a70c9 100644
+--- a/tests/Composer/Test/Util/RemoteFilesystemTest.php
++++ b/tests/Composer/Test/Util/RemoteFilesystemTest.php
+@@ -137,6 +137,9 @@ public function testCallbackGetPassesThrough404()
+         $this->assertNull($this->callCallbackGet($fs, STREAM_NOTIFY_FAILURE, 0, 'HTTP/1.1 404 Not Found', 404, 0, 0));
+     }
+ 
++    /**
++     * @group slow
++     */
+     public function testCaptureAuthenticationParamsFromUrl()
+     {
+         $io = $this->getMock('Composer\IO\IOInterface');
