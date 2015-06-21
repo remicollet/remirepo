@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    ab931d46cd0d3204a91e1b9a40c4bc13032b58e4
+%global gh_commit    58b3a85e7999757d6ad81c787a1fbf5ff6c628c6
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   version
@@ -14,21 +14,19 @@
 %global with_tests   %{?_without_tests:0}%{!?_withou_tests:1}
 
 Name:           php-phpunit-Version
-Version:        1.0.5
+Version:        1.0.6
 Release:        1%{?dist}
 Summary:        Managing the version number of Git-hosted PHP projects
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
-%if %{with_tests}
-BuildRequires:  %{_bindir}/phpunit
-%endif
+BuildRequires:  %{_bindir}/phpab
 
 Requires:       php(language) >= 5.3.3
 Requires:       php-spl
@@ -47,7 +45,10 @@ of Git-hosted PHP projects.
 
 
 %build
-# Empty build section, most likely nothing required.
+: Generate autoloader
+%{_bindir}/phpab \
+  --output src/autoload.php \
+  src
 
 
 %install
@@ -55,14 +56,6 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}%{php_home}
 
 cp -pr src %{buildroot}%{php_home}/Version
-
-
-%if %{with_tests}
-%check
-# For now: No tests executed!
-cd build
-phpunit
-%endif
 
 
 %clean
@@ -80,12 +73,17 @@ fi
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc ChangeLog.md README.md composer.json
+%doc README.md
+%doc composer.json
 %dir %{php_home}
-%{php_home}/Version
+     %{php_home}/Version
 
 
 %changelog
+* Sun Jun 21 2015 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
+- Update to 1.0.5
+- generate autoloader
+
 * Fri Apr  3 2015 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
 - Update to 1.0.5
 
