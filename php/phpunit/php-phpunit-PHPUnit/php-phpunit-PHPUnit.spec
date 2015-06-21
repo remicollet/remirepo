@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    e5f851f324f7add846316f39e668e9deac97a103
+%global gh_commit    f6701ef3faea759acd1910a7751d8d102a7fd5bc
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -17,7 +17,7 @@
 %global pear_channel pear.phpunit.de
 
 Name:           php-phpunit-PHPUnit
-Version:        4.7.4
+Version:        4.7.5
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -204,6 +204,9 @@ fi
 
 
 %changelog
+* Sun Jun 21 2015 Remi Collet <remi@fedoraproject.org> - 4.7.5-1
+- Update to 4.7.5
+
 * Thu Jun 18 2015 Remi Collet <remi@fedoraproject.org> - 4.7.4-1
 - Update to 4.7.4
 - raise dependency on phpunit/php-timer >= 1.0.6
