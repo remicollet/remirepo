@@ -16,7 +16,7 @@
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        4.3.0
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -168,7 +168,10 @@ fi
 
 
 %changelog
-* Tue Jun 16 2015 Remi Collet <remi@fedoraproject.org> - 4.6.0-1
+* Sun Jun 21 2015 Remi Collet <remi@fedoraproject.org> - 4.3.0-2
+- fix autoloader
+
+* Tue Jun 16 2015 Remi Collet <remi@fedoraproject.org> - 4.3.0-1
 - update to 4.3.0
 
 * Tue May 19 2015 Remi Collet <remi@fedoraproject.org> - 4.2.0-1

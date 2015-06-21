@@ -37,7 +37,7 @@ diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
 +require_once $vendorDir . '/PhpParser/Autoloader.php';
 +PhpParser\Autoloader::register();
 +
-+require_once $vendorDir . '/SebastianBergmann/Version/Version.php';
++require_once $vendorDir . '/SebastianBergmann/Version/autoload.php';
 +
 +require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
 +use Symfony\Component\ClassLoader\UniversalClassLoader;
@@ -115,7 +115,7 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 +require_once $vendorDir . '/PhpParser/Autoloader.php';
 +PhpParser\Autoloader::register();
  
-+require_once $vendorDir . '/SebastianBergmann/Version/Version.php';
++require_once $vendorDir . '/SebastianBergmann/Version/autoload.php';
 +
 +require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
 +use Symfony\Component\ClassLoader\UniversalClassLoader;
