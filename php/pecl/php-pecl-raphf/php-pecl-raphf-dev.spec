@@ -1,4 +1,7 @@
-# spec file for php-pecl-raphf
+# remirepo spec file for php-pecl-raphf
+# with SCL stuff, from:
+#
+# Fedora spec file for php-pecl-raphf
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,6 +9,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-raphf}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?php_incldir: %global php_incldir %{_includedir}/php}
@@ -79,7 +90,7 @@ Obsoletes:     php56w-pecl-%{pecl_name}
 A reusable split-off of pecl_http's persistent handle and resource
 factory API.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %package devel
@@ -163,6 +174,12 @@ for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
+
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 # posttrans as pear can be installed after us
 %posttrans
