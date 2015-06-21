@@ -21,7 +21,7 @@
 
 Name:           php-bartlett-PHP-Reflect
 Version:        3.1.1
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -191,6 +191,9 @@ fi
 
 
 %changelog
+* Sun Jun 21 2015 Remi Collet <remi@fedoraproject.org> - 3.1.1-2
+- fix autoloader
+
 * Thu Jun 18 2015 Remi Collet <remi@fedoraproject.org> - 3.1.1-1
 - update to 3.1.1
 

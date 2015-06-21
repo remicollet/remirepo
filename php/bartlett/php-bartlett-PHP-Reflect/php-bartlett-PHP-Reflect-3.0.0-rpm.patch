@@ -21,9 +21,10 @@ diff -up ./bin/phpreflect.json.dist.rpm ./bin/phpreflect.json.dist
      ],
      "analysers": [
      ],
+diff -up ./bin/phpreflect.rpm ./bin/phpreflect
 --- ./bin/phpreflect.rpm	2015-06-18 13:30:46.000000000 +0200
-+++ ./bin/phpreflect	2015-06-18 15:22:05.844085467 +0200
-@@ -5,19 +5,34 @@
++++ ./bin/phpreflect	2015-06-21 20:10:01.185883366 +0200
+@@ -5,19 +5,35 @@ $appName = 'phpReflect';
  if (\Phar::running()) {
      $vendorDir = 'phar://' . strtolower($appName) . '.phar/vendor';
  } else {
@@ -33,6 +34,7 @@ diff -up ./bin/phpreflect.json.dist.rpm ./bin/phpreflect.json.dist
 -    if (!file_exists($vendorDir . '/autoload.php')) {
 -        $vendorDir = dirname(dirname($baseDir));
 -    }
++    $vendorDir = '/usr/share/php';
 +    putenv('BARTLETT_COMPATINFO_DB=/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite');
 
      if (!getenv("BARTLETTRC")) {
@@ -46,7 +48,7 @@ diff -up ./bin/phpreflect.json.dist.rpm ./bin/phpreflect.json.dist
 +PhpParser\Autoloader::register();
 +
 +require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
-+require_once $vendorDir . '/SebastianBergmann/Version/Version.php';
++require_once $vendorDir . '/SebastianBergmann/Version/autoload.php';
 +
 +use Symfony\Component\ClassLoader\UniversalClassLoader;
 +
@@ -66,7 +68,7 @@ diff -up ./bin/phpreflect.json.dist.rpm ./bin/phpreflect.json.dist
 
  if (\Phar::running()) {
      if ($home) {
-@@ -40,5 +55,5 @@
+@@ -40,5 +56,5 @@ use Bartlett\Reflect\Console\Application
 
  Environment::setScanDir();
 
