@@ -1,3 +1,13 @@
+# remirepo spec file for libevent-last
+# renamed for parallel installation, from:
+#
+# Fedora spec file for libevent
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 %{?scl:             %scl_package         %{libname}}
 
 %if 0%{?fedora} && 0%{?fedora} >= 20
@@ -24,14 +34,25 @@ Name:           %{libname}
 %global with_conflicts 0
 
 %else
-# Build for parallel install
-%{?scl:Name:    %{scl_prefix}%{libname}}
-%{!?scl:Name:   %{libname}-last}
-%global with_conflicts 0%{!?scl:1}
+# Build for parallel install - SCL
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+Name:           %{sub_prefix}%{libname}
+%global with_conflicts 0
+
+%else
+# Build for parallel install - last
+Name:           %{libname}-last
+%global with_conflicts 1
+%endif
 %endif
 
 Version:        2.0.22
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Abstract asynchronous event notification library
 
 Group:          System Environment/Libraries
@@ -186,6 +207,9 @@ make check
 
 
 %changelog
+* Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 2.0.22-2
+- allow build against rh-php56 (as more-php56)
+
 * Wed Apr 15 2015 Remi Collet <remi@fedoraproject.org> - 2.0.22-1
 - Update to 2.0.22
 
