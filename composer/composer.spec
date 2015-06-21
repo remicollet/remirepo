@@ -164,6 +164,7 @@ rm -rf %{buildroot}
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md doc
+%doc composer.json
 %{_bindir}/%{name}
 %{_datadir}/php/Composer
 %{_datadir}/%{name}
