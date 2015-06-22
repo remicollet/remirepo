@@ -1,4 +1,4 @@
-# spec file for php-phpunit-Version
+# remirepo/fedora spec file for php-phpunit-Version
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
