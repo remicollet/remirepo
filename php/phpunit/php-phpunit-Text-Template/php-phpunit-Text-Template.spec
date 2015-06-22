@@ -1,4 +1,4 @@
-# spec file for php-phpunit-Text-Template
+# remirepo/fedora spec file for php-phpunit-Text-Template
 #
 # Copyright (c) 2010-2015 Remi Collet
 # License: CC-BY-SA
