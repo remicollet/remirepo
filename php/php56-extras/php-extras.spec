@@ -45,7 +45,7 @@
 Name:       %{?sub_prefix}php-extras
 Summary:    Additional PHP modules from the standard PHP distribution
 Version:    5.6.5
-Release:    1%{?dist}
+Release:    2%{?dist}
 Group:      Development/Languages
 License:    The PHP License
 URL:        http://www.php.net/
@@ -70,6 +70,8 @@ Summary:     Standard PHP module provides GNU recode support
 Group:       Development/Languages
 Requires:    %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:    %{?scl_prefix}php(api) = %{php_core_api}
+Provides:    %{?scl_prefix}php-recode         = %{version}-%{release}
+Provides:    %{?scl_prefix}php-recode%{?_isa} = %{version}-%{release}
 %{?_with_recode:BuildRequires: recode-devel}
 
 %description -n %{?sub_prefix}php-recode
@@ -82,6 +84,8 @@ Summary:     Standard PHP module provides mcrypt library support
 Group:       Development/Languages
 Requires:    %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:    %{?scl_prefix}php(api) = %{php_core_api}
+Provides:    %{?scl_prefix}php-mcrypt         = %{version}-%{release}
+Provides:    %{?scl_prefix}php-mcrypt%{?_isa} = %{version}-%{release}
 %{?_with_mcrypt:BuildRequires: libmcrypt-devel}
 
 %description -n %{?sub_prefix}php-mcrypt
@@ -94,6 +98,8 @@ Summary:     Standard PHP module provides tidy library support
 Group:       Development/Languages
 Requires:    %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:    %{?scl_prefix}php(api) = %{php_core_api}
+Provides:    %{?scl_prefix}php-tidy         = %{version}-%{release}
+Provides:    %{?scl_prefix}php-tidy%{?_isa} = %{version}-%{release}
 %{?_with_tidy:BuildRequires: libtidy-devel}
 
 %description -n %{?sub_prefix}php-tidy
@@ -107,7 +113,9 @@ Group: Development/Languages
 Requires:    %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:    %{?scl_prefix}php(api) = %{php_core_api}
 Requires:    %{?scl_prefix}php(pdo-abi) = %{php_pdo_api}
-Provides:    php_database
+Provides:    %{?scl_prefix}php_database
+Provides:    %{?scl_prefix}php-mssql         = %{version}-%{release}
+Provides:    %{?scl_prefix}php-mssql%{?_isa} = %{version}-%{release}
 %{?_with_mssql:BuildRequires: freetds-devel}
 
 %description -n %{?sub_prefix}php-mssql
@@ -123,7 +131,10 @@ Group:       Development/Languages
 Requires:    %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:    %{?scl_prefix}php(api) = %{php_core_api}
 Requires:    %{?scl_prefix}php(pdo-abi) = %{php_pdo_api}
-Provides: php_database, php-firebird
+Provides:    %{?scl_prefix}php_database
+Provides:    %{?scl_prefix}php-firebird
+Provides:    %{?scl_prefix}php-interbase         = %{version}-%{release}
+Provides:    %{?scl_prefix}php-interbase%{?_isa} = %{version}-%{release}
 %{?_with_interbase:BuildRequires: firebird-devel}
 
 %description -n %{?sub_prefix}php-interbase
@@ -146,6 +157,8 @@ License:     PHP
 Group:       Development/Languages
 Requires:    %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:    %{?scl_prefix}php(api) = %{php_core_api}
+Provides:    %{?scl_prefix}php-enchant         = %{version}-%{release}
+Provides:    %{?scl_prefix}php-enchant%{?_isa} = %{version}-%{release}
 %{?_with_enchant:BuildRequires: enchant-devel >= 1.2.4}
 
 %description -n %{?sub_prefix}php-enchant
@@ -160,6 +173,8 @@ Group:       Development/Languages
 License:     PHP
 Requires:    %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:    %{?scl_prefix}php(api) = %{php_core_api}
+Provides:    %{?scl_prefix}php-imap         = %{version}-%{release}
+Provides:    %{?scl_prefix}php-imap%{?_isa} = %{version}-%{release}
 %{?_with_imap:BuildRequires: krb5-devel, openssl-devel, libc-client-devel}
 
 %description -n %{?sub_prefix}php-imap
@@ -265,6 +280,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 22 2015 Remi Collet <rcollet@redhat.com> - 5.6.5-2
+- add virtual "rh-php56" provides
+
 * Sat Jun 20 2015 Remi Collet <rcollet@redhat.com> - 5.6.5-1
 - update to 5.6.5 for rh-php56 (rhscl 2.0)
 
