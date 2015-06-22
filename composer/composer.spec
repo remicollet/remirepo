@@ -78,9 +78,9 @@ Requires:       php-openssl
 # For our autoloader
 Requires:       php-composer(symfony/class-loader)
 # From phpcompatinfo
-Requires:       php-ctype
 Requires:       php-curl
 Requires:       php-date
+Requires:       php-dom
 Requires:       php-filter
 Requires:       php-hash
 Requires:       php-iconv
@@ -110,8 +110,8 @@ Documentation: https://getcomposer.org/doc/
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-%patch0 -p1 -b .rpm
-%patch1 -p1 -b .pr4169
+%patch0 -p1
+%patch1 -p1
 
 cp -p %{SOURCE1} src/Composer/autoload.php
 cp -p %{SOURCE2} tests/bootstrap.php
