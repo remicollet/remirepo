@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global bootstrap    1
+%global bootstrap    0
 %global gh_commit    c883bf1f80370397198c5eae0615173380fa6119
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150331
@@ -21,7 +21,7 @@
 
 Name:           php-bartlett-umlwriter
 Version:        1.0.0
-%global specrel 1
+%global specrel 4
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Create UML class diagrams from your PHP source
 
@@ -49,6 +49,7 @@ BuildRequires:  php-composer(andrewsville/php-token-reflection) >= 1.4
 #        "symfony/console": "~2.5",
 #        "sebastian/version": "~1.0"
 Requires:       php(language) >= 5.3.0
+Requires:       php-spl
 Requires:       php-composer(symfony/console)                   >= 2.5
 Requires:       php-composer(symfony/console)                   <  3
 Requires:       php-composer(sebastian/version)                 >= 1.0
@@ -122,6 +123,12 @@ install -D -p -m 755 bin/umlwriter  %{buildroot}%{_bindir}/umlwriter
 
 
 %changelog
+* Mon Jun 22 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-4
+- fix Autoload
+
+* Fri May 22 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- standard build (no bootstrap)
+
 * Fri Apr  3 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - update to 1.0.0
 
