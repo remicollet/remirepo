@@ -16,7 +16,8 @@
 %{!?__php:       %global __php            %{_bindir}/php}
 
 %global ext_name     xcache
-#global svnrev       1264
+#global svnrev       1496
+#global prever       rc1
 %global with_zts     0%{?__ztsphp:1}
 
 %if "%{php_version}" < "5.6"
@@ -27,18 +28,19 @@
 
 Summary:       Fast, stable PHP opcode cacher
 Name:          %{?scl_prefix}php-xcache
-Version:       3.1.1
+Epoch:         1
+Version:       3.2.0
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:       BSD
 Group:         Development/Languages
 URL:           http://xcache.lighttpd.net/
 
 %if 0%{?svnrev}
-# svn co -r 1264 svn://svn.lighttpd.net/xcache/trunk xcache-3.1.0
-# tar czf xcache-svn1264.tgz xcache-3.1.0
-Source0:       xcache-svn1264.tgz
+# svn export -r 1496 svn://svn.lighttpd.net/xcache/branches/3.2 xcache-3.2
+# tar czf xcache-svn1496.tgz xcache-4.0.0
+Source0:       xcache-svn%{svnrev}.tgz
 %else
-Source0:       http://xcache.lighttpd.net/pub/Releases/%{version}/%{ext_name}-%{version}.tar.gz
+Source0:       http://xcache.lighttpd.net/pub/Releases/%{version}%{?prever:-%{prever}}/%{ext_name}-%{version}%{?prever:-%{prever}}.tar.gz
 %endif
 Source1:       xcache-httpd.conf
 
@@ -56,17 +58,17 @@ Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes: php53-xcache
-Obsoletes: php53u-xcache
-Obsoletes: php54-xcache
-Obsoletes: php54w-xcache
+Obsoletes: php53-xcache  <= %{epoch}:%{version}
+Obsoletes: php53u-xcache <= %{epoch}:%{version}
+Obsoletes: php54-xcache  <= %{epoch}:%{version}
+Obsoletes: php54w-xcache <= %{epoch}:%{version}
 %if "%{php_version}" > "5.5"
-Obsoletes: php55u-xcache
-Obsoletes: php55w-xcache
+Obsoletes: php55u-xcache <= %{epoch}:%{version}
+Obsoletes: php55w-xcache <= %{epoch}:%{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes: php56u-xcache
-Obsoletes: php56w-xcache
+Obsoletes: php56u-xcache <= %{epoch}:%{version}
+Obsoletes: php56w-xcache <= %{epoch}:%{version}
 %endif
 %endif
 
@@ -94,7 +96,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 Summary:       XCache Administration
 Group:         Development/Languages
 Requires:      %{?scl_prefix}mod_php
-Requires:      %{name} = %{version}-%{release}
+Requires:      %{name} = %{epoch}:%{version}-%{release}
 %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 BuildArch:     noarch
 %endif
@@ -117,7 +119,7 @@ This requires to configure, in XCache configuration file (xcache.ini):
 %setup -q -c 
 
 # rename source folder
-mv %{version} nts
+mv xcache-%{version}%{?prever:-%{prever}} nts
 
 %if 0%{?scl:1}
 sed -e 's:%{_root_datadir}:%{_datadir}:' \
@@ -135,8 +137,8 @@ cd nts
 
 # Sanity check, really often broken
 extver=$(sed -n '/define XCACHE_VERSION/{s/.* "//;s/".*$//;p}' xcache.h)
-if test "x${extver}" != "x%{version}%{?svnrev:-dev}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?svnrev:-dev}.
+if test "x${extver}" != "x%{version}%{?svnrev:-dev}%{?prever:-%{prever}}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?svnrev:-dev}%{?prever:-%{prever}}.
    exit 1
 fi
 cd ..
@@ -215,7 +217,7 @@ cd nts
 TEST_PHP_EXECUTABLE=%{__php} \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__php} run-tests.php -n -c xcache-test.ini tests
+%{__php} -n run-tests.php -n -c xcache-test.ini tests
 
 %if %{with_zts}
 cd ../zts
@@ -227,7 +229,7 @@ cd ../zts
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__ztsphp} run-tests.php -n -c xcache-test.ini tests
+%{__ztsphp} -n run-tests.php -n -c xcache-test.ini tests
 %endif
 
 
@@ -255,14 +257,24 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 3.1.1-1.1
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1:3.2.0-1.1
 - Fedora 21 SCL mass rebuild
+
+* Thu Sep 18 2014 Remi Collet <remi@fedoraproject.org> - 1:3.2.0-1
+- Update to 3.2.0
+
+* Tue Sep  9 2014 Remi Collet <remi@fedoraproject.org> - 1:3.2.0-0.1.rc1
+- Update to 3.2.0-rc1
 
 * Tue Sep  9 2014 Remi Collet <remi@fedoraproject.org> - 3.1.1-1
 - version 3.1.1
 
-* Mon Sep  1 2014 Remi Collet <rcollet@redhat.com> - 3.1.0-3
+* Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 4.0.0-0.2.svn1496
 - improve SCL build
+
+* Sat Jun  7 2014 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.1.svn1496
+- Update to 4.0.0-dev for PHP 5.6
+- add numerical prefix to configuration file
 
 * Thu Jan  9 2014 Remi Collet <remi@fedoraproject.org> - 3.1.0-2
 - adapt for SCL
