@@ -35,7 +35,7 @@
 
 Name:           %{?sub_prefix}php-suhosin
 Version:        0.9.38
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Suhosin is an advanced protection system for PHP installations
 
 Group:          Development/Languages
@@ -53,6 +53,10 @@ BuildRequires:  %{?scl_prefix}php-devel > 5.4
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
+
+## Compat SCL (rh-php56)
+Provides:       %{?scl_prefix}php-suhosin         = %{version}-%{release}
+Provides:       %{?scl_prefix}php-suhosin%{?_isa} = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -191,6 +195,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 22 2015 Remi Collet <rcollet@redhat.com> - 0.9.38-3
+- add virtual "rh-php56" provides
+
 * Sat Jun 20 2015 Remi Collet <remi@fedoraproject.org> - 0.9.38-2
 - allow build against rh-php56 (as more-php56)
 
