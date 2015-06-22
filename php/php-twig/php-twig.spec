@@ -56,7 +56,7 @@
 
 Name:          %{?sub_prefix}php-%{composer_project}
 Version:       %{github_version}
-Release:       3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:       The flexible, fast, and secure template engine for PHP
 
 Group:         Development/Libraries
@@ -114,6 +114,9 @@ Provides:      %{?scl_prefix}php-pear(pear.twig-project.org/Twig) = %{version}
 Obsoletes:     %{?scl_prefix}php-twig-ctwig         < %{version}-%{release}
 Provides:      %{?scl_prefix}php-twig-ctwig         = %{version}-%{release}
 Provides:      %{?scl_prefix}php-twig-ctwig%{?_isa} = %{version}-%{release}
+## Compat SCL (rh-php56)
+Provides:      %{?scl_prefix}php-twig         = %{version}-%{release}
+Provides:      %{?scl_prefix}php-twig%{?_isa} = %{version}-%{release}
 ## PECL
 Provides:      %{?scl_prefix}php-pecl(pear.twig-project.org/CTwig)         = %{version}
 Provides:      %{?scl_prefix}php-pecl(pear.twig-project.org/CTwig)%{?_isa} = %{version}
@@ -286,6 +289,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 22 2015 Remi Collet <rcollet@redhat.com> - 1.18.2-4
+- add virtual "rh-php56" provides
+
 * Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 1.18.2-3
 - allow build against rh-php56 (as more-php56)
 
