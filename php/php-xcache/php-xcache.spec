@@ -1,4 +1,7 @@
-# spec file for php-xcache
+# remirepo spec file for php-xcache
+# With SCL stuff, from Fedora:
+#
+# Fedora spec file for php-xcache
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,6 +9,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package             php-xcache}
 %{!?scl:         %global pkg_name         %{name}}
 %{!?scl:         %global _root_sysconfdir %{_sysconfdir}}
@@ -27,10 +38,10 @@
 %endif
 
 Summary:       Fast, stable PHP opcode cacher
-Name:          %{?scl_prefix}php-xcache
+Name:          %{?sub_prefix}php-xcache
 Epoch:         1
 Version:       3.2.0
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       BSD
 Group:         Development/Languages
 URL:           http://xcache.lighttpd.net/
@@ -55,6 +66,10 @@ BuildRequires: %{?scl_prefix}php-devel
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
+
+## Compat SCL (rh-php56)
+Provides:      %{?scl_prefix}php-xcache         = %{epoch}:%{version}-%{release}
+Provides:      %{?scl_prefix}php-xcache%{?_isa} = %{epoch}:%{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -92,7 +107,7 @@ data cache. You need to edit configuration file (xcache.ini) to enable it.
 Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
 
 
-%package -n %{?scl_prefix}xcache-admin
+%package -n %{?sub_prefix}xcache-admin
 Summary:       XCache Administration
 Group:         Development/Languages
 Requires:      %{?scl_prefix}mod_php
@@ -105,7 +120,7 @@ Obsoletes:     %{?scl_prefix}php-xcache-coverager < 3.0.0
 Obsoletes:     %{?scl_prefix}xcache-coverager     < 3.0.0
 Provides:      %{?scl_prefix}xcache-coverager     = %{version}-%{release}
 
-%description -n %{?scl_prefix}xcache-admin
+%description -n %{?sub_prefix}xcache-admin
 This package provides the XCache Administration web application,
 with Apache configuration, on http://localhost/xcache
 
@@ -248,7 +263,7 @@ rm -rf %{buildroot}
 %{php_ztsextdir}/%{ext_name}.so
 %endif
 
-%files -n %{?scl_prefix}xcache-admin
+%files -n %{?sub_prefix}xcache-admin
 %defattr(-,root,root,-)
 %config(noreplace) %{_root_sysconfdir}/httpd/conf.d/%{?scl_prefix}xcache.conf
 %{_datadir}/xcache
@@ -257,6 +272,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 22 2015 Remi Collet <rcollet@redhat.com> - 0.9.38-3
+- allow build against rh-php56 (as more-php56)
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1:3.2.0-1.1
 - Fedora 21 SCL mass rebuild
 
