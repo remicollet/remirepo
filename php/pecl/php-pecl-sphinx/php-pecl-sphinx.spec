@@ -9,6 +9,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-selinux}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -22,9 +30,9 @@
 %global ini_name    40-%{pecl_name}.ini
 %endif
 
-Name:           %{?scl_prefix}php-pecl-sphinx
+Name:           %{?sub_prefix}php-pecl-sphinx
 Version:        1.3.3
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        PECL extension for Sphinx SQL full-text search engine
 Group:          Development/Languages
 License:        PHP
@@ -47,17 +55,21 @@ Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:     php54-pecl-%{pecl_name}
-Obsoletes:     php54w-pecl-%{pecl_name}
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}
-Obsoletes:     php55w-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name}
-Obsoletes:     php56w-pecl-%{pecl_name}
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -71,6 +83,8 @@ Obsoletes:     php56w-pecl-%{pecl_name}
 %description
 This extension provides PHP bindings for libsphinxclient, 
 client library for Sphinx the SQL full-text search engine.
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -143,7 +157,7 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -Dpm644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
+# Documentation
 cd NTS
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
@@ -188,6 +202,9 @@ fi
 
 
 %changelog
+* Tue Jun 23 2015 Remi Collet <remi@fedoraproject.org> - 1.3.3-2
+- allow build against rh-php56 (as more-php56)
+
 * Thu May 21 2015 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
 - Update to 1.3.3
 - drop runtime dependency on pear, new scriptlets
