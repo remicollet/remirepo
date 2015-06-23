@@ -1,4 +1,7 @@
-# spec file for php-pecl-zmq
+# remirepo spec file for php-pecl-zmq
+# with SCL compatibility
+#
+# Fedora spec file for php-pecl-zmq
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,6 +9,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-zmq}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -21,9 +32,9 @@
 %endif
 
 Summary:        ZeroMQ messaging
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.1.2
-Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -33,6 +44,8 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.2
 BuildRequires:  %{?scl_prefix}php-pear
 %if 0%{?fedora} >= 22 || 0%{?rhel} == 5
+# v4 in Fedora22+
+# v2 in EPEL-5
 BuildRequires:  zeromq-devel >= 2.0.7
 %else
 BuildRequires:  zeromq3-devel
@@ -77,6 +90,8 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %description
 ZeroMQ is a software library that lets you quickly design and implement
 a fast message-based applications.
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -208,6 +223,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -221,6 +237,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 23 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-6
+- allow build against rh-php56 (as more-php56)
+
 * Sun Mar  1 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-5
 - drop runtime dependency on pear, new scriplets
 - don't install test suite
