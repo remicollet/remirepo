@@ -1,3 +1,21 @@
+# remirepo spec file for php-pecl-oauth
+# with SCL compatibility, from Fedora:
+#
+# Fedora spec file for php-pecl-oauth
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package         php-pecl-oauth}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
@@ -11,9 +29,9 @@
 %global ini_name    40-%{pecl_name}.ini
 %endif
 
-Name:           %{?scl_prefix}php-pecl-oauth
+Name:           %{?sub_prefix}php-pecl-oauth
 Version:        1.2.3
-Release:        9%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        10%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        PHP OAuth consumer extension
 Group:          Development/Languages
 License:        BSD
@@ -29,8 +47,6 @@ BuildRequires:  curl-devel
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
@@ -66,7 +82,7 @@ OAuth is an authorization protocol built on top of HTTP which allows
 applications to securely access data without having to store
 user names and passwords.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -167,10 +183,12 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
+%{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
-%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
@@ -179,6 +197,9 @@ fi
 
 
 %changelog
+* Tue Jun 23 2015 Remi Collet <rcollet@redhat.com> - 1.2.3-10
+- allow build against rh-php56 (as more-php56)
+
 * Fri Jan 23 2015 Remi Collet <remi@fedoraproject.org> - 1.2.3-9
 - fix %%postun scriplet
 

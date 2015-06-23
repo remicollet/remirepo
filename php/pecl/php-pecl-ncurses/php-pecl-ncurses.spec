@@ -96,6 +96,8 @@ it will be of little use for writing Web applications, but may
 be useful when writing scripts meant using PHP from the command
 line.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+
 
 
 %prep 
