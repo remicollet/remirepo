@@ -2,6 +2,8 @@
 %global scl_name_version 70
 %global scl              %{scl_name_base}%{scl_name_version}
 %global macrosdir        %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_root_sysconfdir}/rpm; echo $d)
+%global nfsmountable     1
+%global install_scl      1
 %if 0%{?fedora} >= 20
 # Requires scl-utils v2
 %global with_modules     1
@@ -16,7 +18,7 @@
 Summary:       Package that installs PHP 7.0
 Name:          %scl_name
 Version:       1.0
-Release:       0.2%{?dist}
+Release:       0.3%{?dist}
 Group:         Development/Languages
 License:       GPLv2+
 
@@ -47,6 +49,7 @@ the development version of PHP 7.0.
 Summary:   Package that handles %scl Software Collection.
 Group:     Development/Languages
 Requires:  scl-utils
+Requires(post): policycoreutils-python libselinux-utils
 Provides:  %{?scl_name}-runtime(%{scl_vendor})
 Provides:  %{?scl_name}-runtime(%{scl_vendor})%{?_isa}
 
@@ -112,6 +115,10 @@ EOF
 # copy the license file so %%files section sees it
 cp %{SOURCE2} .
 
+: prefix in %{_prefix}
+: config in %{_sysconfdir}
+: data in %{_localstatedir}
+
 
 %build
 # generate a helper script that will be used by help2man
@@ -151,6 +158,17 @@ if [ "%{_root_sysconfdir}/rpm" != "%{macrosdir}" ]; then
 fi
 
 
+%post runtime
+# Simple copy of context from system root to SCL root.
+semanage fcontext -a -e /                      %{?_scl_root}     &>/dev/null || :
+semanage fcontext -a -e %{_root_sysconfdir}    %{_sysconfdir}    &>/dev/null || :
+semanage fcontext -a -e %{_root_localstatedir} %{_localstatedir} &>/dev/null || :
+selinuxenabled && load_policy || :
+restorecon -R %{?_scl_root}     &>/dev/null || :
+restorecon -R %{_sysconfdir}    &>/dev/null || :
+restorecon -R %{_localstatedir} &>/dev/null || :
+
+
 %{!?_licensedir:%global license %%doc}
 
 %files
@@ -181,6 +199,12 @@ fi
 
 
 %changelog
+* Tue Jun 23 2015 Remi Collet <remi@fedoraproject.org> 1.0-0.3
+- enable nfsmountable (not to be nfs montable)
+- move configuration dir to /etc/opt
+- move localstate dir to /var/opt
+- fix incorrect selinux contexts
+
 * Wed Mar 25 2015 Remi Collet <remi@fedoraproject.org> 1.0-0.2
 - fix licenses location
 - own directories for pecl packages
