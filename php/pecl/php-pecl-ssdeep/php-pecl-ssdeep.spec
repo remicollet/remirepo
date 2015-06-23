@@ -1,4 +1,7 @@
-# spec file for php-pecl-ssdeep
+# remirepo spec file for php-pecl-ssdeep
+# with SCL compatibility, from Fedora:
+#
+# Fedora spec file for php-pecl-ssdeep
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,6 +9,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package         php-pecl-ssdeep}
 %{!?scl:         %global _root_prefix %{_prefix}}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
@@ -21,9 +32,9 @@
 %endif
 
 Summary:        Wrapper for libfuzzy library
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.4
-Release:        4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -88,7 +99,7 @@ This extensions wraps the ssdeep fuzzy hashing API created by Jesse Kornblum.
 
 Documentation: http://php.net/ssdeep
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -232,6 +243,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 23 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-5
+- allow build against rh-php56 (as more-php56)
+
 * Mon Apr  6 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-4
 - add fix for PHP 7
 - drop runtime dependency on pear, new scriptlets
