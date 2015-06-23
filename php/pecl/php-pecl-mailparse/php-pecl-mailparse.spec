@@ -1,4 +1,7 @@
-# spec file for php-pecl-mailparse
+# remirepo spec file for php-pecl-mailparse
+# With SCL stuff, from Fedora:
+#
+# Fedora spec file for php-pecl-mailparse
 #
 # Copyright (c) 2008-2015 Remi Collet
 # Copyright (c) 2004-2007 Matthias Saou
@@ -8,6 +11,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package         php-pecl-mailparse}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
@@ -24,9 +35,9 @@
 %endif
 
 Summary:   PHP PECL package for parsing and working with email messages
-Name:      %{?scl_prefix}php-pecl-mailparse
+Name:      %{?sub_prefix}php-pecl-mailparse
 Version:   2.1.6
-Release:   8%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:   9%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:   PHP
 Group:     Development/Languages
 URL:       http://pecl.php.net/package/mailparse
@@ -47,8 +58,6 @@ BuildRequires: autoconf, automake, libtool
 Requires: %{?scl_prefix}php-mbstring%{?_isa}
 Requires: %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires: %{?scl_prefix}php(api) = %{php_core_api}
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides: %{?scl_prefix}php-%{pecl_name} = %{version}
@@ -83,11 +92,16 @@ Obsoletes:     php56w-pecl-%{pecl_name}
 Mailparse is an extension for parsing and working with email messages.
 It can deal with rfc822 and rfc2045 (MIME) compliant messages.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+
 
 %prep
 %setup -q -c
 
 mv %{pecl_name}-%{version} NTS
+
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd NTS
 cp %{SOURCE1} LICENSE
@@ -142,10 +156,7 @@ install -Dpm 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 # Install XML package description
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
-# Test & Documentation
-for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
+# Documentation
 for i in LICENSE $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -189,24 +200,32 @@ php run-tests.php \
 rm -rf %{buildroot}
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
-# We prefix the config file with "z-" so that it loads after mbstring.ini
+%{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
-%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
@@ -215,6 +234,11 @@ fi
 
 
 %changelog
+* Tue Jun 23 2015 Remi Collet <rcollet@redhat.com> - 2.1.6-9
+- allow build against rh-php56 (as more-php56)
+- don't install/register tests
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 2.1.6-8.1
 - Fedora 21 SCL mass rebuild
 
