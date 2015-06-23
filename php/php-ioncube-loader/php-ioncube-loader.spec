@@ -24,7 +24,7 @@
 
 Name:          %{?scl_prefix}php-ioncube-loader
 Summary:       Loader for ionCube Encoded Files with ionCube 24 support
-Version:       5.0.9
+Version:       5.0.10
 Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       Distribuable
 Group:         Development/Languages
@@ -174,6 +174,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 23 2015 Remi Collet <remi@remirepo.net> - 5.0.10-1
+- update to 5.0.10 (Jun 22, 2015)
+
 * Sat Jun 20 2015 Remi Collet <remi@remirepo.net> - 5.0.9-1
 - update to 5.0.9 (Jun 19, 2015)
 
