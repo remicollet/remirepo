@@ -1,4 +1,7 @@
-# spec file for php-pecl-ncurses
+# remirepo spec file for php-pecl-ncurses
+# With SCL compatibility, from Fedora:
+#
+# Fedora spec file for php-pecl-ncurses
 #
 # Copyright (c) 2007-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,6 +9,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package         php-pecl-ncurses}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
@@ -20,9 +31,9 @@
 %endif
 
 Summary:      Terminal screen handling and optimization package
-Name:         %{?scl_prefix}php-pecl-ncurses
+Name:         %{?sub_prefix}php-pecl-ncurses
 Version:      1.0.2
-Release:      8%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:      9%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/ncurses
@@ -39,8 +50,6 @@ BuildRequires: %{?scl_prefix}php-simplexml
 BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: ncurses-devel
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:     %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:     %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
@@ -53,17 +62,21 @@ Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:     php54-pecl-%{pecl_name}
-Obsoletes:     php54w-pecl-%{pecl_name}
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}
-Obsoletes:     php55w-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name}
-Obsoletes:     php56w-pecl-%{pecl_name}
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -87,6 +100,9 @@ line.
 
 %prep 
 %setup -c -q
+
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
 
 cat >%{ini_name} << 'EOF'
 ; Enable %{pecl_name} extension module
@@ -134,10 +150,7 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -Dpm 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
-for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
+# Documentation
 for i in LICENSE $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -179,23 +192,33 @@ NO_INTERACTION=1 \
 rm -rf %{buildroot}
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
 
 %files
 %defattr(-, root, root, -)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
+%{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
-%{pecl_xmldir}/%{name}.xml
+
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
@@ -203,6 +226,11 @@ fi
 
 
 %changelog
+* Tue Jun 23 2015 Remi Collet <rcollet@redhat.com> - 1.0.2-9
+- allow build against rh-php56 (as more-php56)
+- drop runtime dependency on pear, new scriptlets
+- don't install/register tests
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-8.1
 - Fedora 21 SCL mass rebuild
 
