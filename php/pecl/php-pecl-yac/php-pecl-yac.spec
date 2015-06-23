@@ -1,4 +1,7 @@
-# spec file for php-pecl-yac (previously php-yac)
+# remirepo spec file for php-pecl-yac
+# with SCL compatibility, from:
+#
+# Fedora spec file for php-pecl-yac (previously php-yac)
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,6 +9,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-yac}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -22,9 +33,9 @@
 %global with_fastlz 1
 
 Summary:        Lockless user data cache
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        0.9.2
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 
 License:        PHP
 Group:          Development/Languages
@@ -82,7 +93,7 @@ chance you will get a wrong data(depends on how many key slots are
 allocated and how many keys are stored), so you'd better make sure
 that your product is not very sensitive to that.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -233,6 +244,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-, root, root, 0755)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -246,6 +258,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 23 2015 Remi Collet <remi@fedoraproject.org> - 0.9.2-3
+- allow build against rh-php56 (as more-php56)
+
 * Sun Mar  1 2015 Remi Collet <remi@fedoraproject.org> - 0.9.2-2
 - drop runtime dependency on pear, new scriplets
 
