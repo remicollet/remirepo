@@ -32,7 +32,7 @@
 
 Name:           %{?sub_prefix}php-pecl-ssh2
 Version:        0.12
-Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        6%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Bindings for the libssh2 library
 
 %global buildver %(pkg-config --silence-errors --modversion libssh2  2>/dev/null || echo 65536)
