@@ -6,6 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-apm}
 %{!?scl:         %global pkg_name    %{name}}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
@@ -30,10 +38,10 @@
 %endif
 
 
-Name:           %{?scl_prefix}php-pecl-apm
+Name:           %{?sub_prefix}php-pecl-apm
 Summary:        Alternative PHP Monitor
 Version:        2.0.5
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 
 # Disable the extension and drivers by default
@@ -103,7 +111,7 @@ NOTICE: the extension is disable, apm.ini configuration file needs to be edited.
 
 The optional %{?scl_prefix}apm-web package provides the web application.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -228,6 +236,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{proj_name}
 %{pecl_xmldir}/%{name}.xml
 %dir %attr(0770,root,apache) %dir %{_localstatedir}/lib/php/apm
@@ -243,6 +252,9 @@ fi
 
 
 %changelog
+* Tue Jun 23 2015 Remi Collet <rcollet@redhat.com> - 2.0.5-2
+- allow build against rh-php56 (as more-php56)
+
 * Wed Jun 17 2015 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5 (stable)
 
