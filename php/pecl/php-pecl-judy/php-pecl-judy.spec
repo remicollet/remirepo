@@ -97,6 +97,8 @@ consumes memory only when it is populated, yet can grow to
 take advantage of all available memory if desired. Judy's key
 benefits are scalability, high performance, and memory efficiency.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+
 
 %package devel
 Summary:       %{name} developer files (header)

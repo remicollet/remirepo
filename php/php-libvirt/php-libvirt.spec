@@ -1,3 +1,24 @@
+# remirepo spec file for php-libvirt
+# With SCL stuff, from Fedora:
+#
+# Fedora spec file for php-libvirt
+#
+# Copyright (c) 2012-2015 Remi Collet
+# Copyright (c) 2011 Michal Novotny
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-libvirt}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__php:       %global __php       %{_bindir}/php}
@@ -11,9 +32,9 @@
 %global ini_name             40-%{extname}.ini
 %endif
 
-Name:		%{?scl_prefix}php-libvirt
+Name:		%{?sub_prefix}php-libvirt
 Version:	0.4.8
-Release:	2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:	3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:	PHP language binding for Libvirt
 
 Group:		Development/Libraries
@@ -33,6 +54,10 @@ Requires:	%{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:	%{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
+## Compat SCL (rh-php56)
+Provides:	%{?scl_prefix}php-libvirt         = %{version}-%{release}
+Provides:	%{?scl_prefix}php-libvirt%{?_isa} = %{version}-%{release}
+
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
@@ -43,6 +68,8 @@ Requires:	%{?scl_prefix}php(api) = %{php_core_api}
 %description
 PHP language bindings for Libvirt API. 
 For more details see: http://www.libvirt.org/php/
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %package doc
@@ -114,6 +141,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 23 2015 Remi Collet <rcollet@redhat.com> - 0.4.8-3
+- allow build against rh-php56 (as more-php56)
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 0.4.8-2.1
 - Fedora 21 SCL mass rebuild
 
