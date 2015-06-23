@@ -1,5 +1,5 @@
 # remirepo spec file for php-pecl-amqp
-# with SCL stuff, from:
+# with SCL compatibility, from:
 #
 # Fedora spec file for php-pecl-amqp
 #

@@ -1,5 +1,5 @@
 # remipo spec file for php-pecl-rrd
-# with SCL stuff, from:
+# with SCL compatibility, from:
 #
 # Fedora spec file for php-pecl-rrd
 #
