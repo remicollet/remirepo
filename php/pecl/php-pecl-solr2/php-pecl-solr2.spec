@@ -1,4 +1,7 @@
-# spec file for php-pecl-solr2
+# remirepo spec file for php-pecl-solr2
+# with SCL compatibility, from Fedora:
+#
+# Fedora spec file for php-pecl-solr2
 #
 # Copyright (c) 2011-2015 Remi Collet
 # Copyright (c) 2010 Johan Cwiklinski
@@ -7,6 +10,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package         php-pecl-solr2}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
@@ -25,9 +36,9 @@
 
 Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
-Name:           %{?scl_prefix}php-pecl-solr2
+Name:           %{?sub_prefix}php-pecl-solr2
 Version:        2.1.0
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
@@ -60,7 +71,7 @@ Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 # Only one version of the extension
-Conflicts:      %{?scl_prefix}php-pecl-solr < 2
+Conflicts:      %{?sub_prefix}php-pecl-solr < 2
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 Obsoletes:     php53-pecl-%{pecl_name}2  <= %{version}
@@ -107,7 +118,7 @@ Please consult the documentation for more details on features.
 Warning: PECL Solr 2 is not compatible with Solr Server < 4.0
 PECL Solr 1 is available in php-pecl-solr package.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -242,6 +253,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-, root, root, -)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -255,6 +267,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 23 2015 Remi Collet <rcollet@redhat.com> - 2.1.0-3
+- allow build against rh-php56 (as more-php56)
+
 * Fri Jan 23 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-2
 - fix %%postun scriplet
 
