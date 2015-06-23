@@ -1,11 +1,22 @@
-# spec file for php-pecl-ssh2
+# remirepo spec file for php-pecl-ssh2
+# with SCL compatibility
 #
 # Copyright (c) 2011-2015 Remi Collet
-# Copyright (c) 2008-2011 Itamar Reis Peixoto
+#
+# Fedora spec file for php-pecl-ssh2
+#
 # License: MIT
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-ssh2}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -19,9 +30,9 @@
 %global ini_name  40-%{pecl_name}.ini
 %endif
 
-Name:           %{?scl_prefix}php-pecl-ssh2
+Name:           %{?sub_prefix}php-pecl-ssh2
 Version:        0.12
-Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Bindings for the libssh2 library
 
 %global buildver %(pkg-config --silence-errors --modversion libssh2  2>/dev/null || echo 65536)
@@ -37,8 +48,6 @@ BuildRequires:  libssh2-devel >= 1.2
 BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires:       libssh2%{?_isa}  >= %{buildver}
@@ -79,7 +88,7 @@ a secure cryptographic transport.
 
 Documentation: http://php.net/ssh2
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -166,12 +175,20 @@ done
 %endif
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -184,9 +201,10 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
+%{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/ssh2.so
-%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
@@ -195,6 +213,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 23 2015 Remi Collet <remi@fedoraproject.org> - 0.12-6
+- allow build against rh-php56 (as more-php56)
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 0.12-5.1
 - Fedora 21 SCL mass rebuild
 
