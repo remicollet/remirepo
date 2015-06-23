@@ -1,4 +1,7 @@
-# spec file for libmemcached
+# remirepo spec file for libmemcached-last and <scl>-libmemcached
+# renamed for parallel/SCL installation, from:
+#
+# Fedora spec file for libmemcached
 #
 # Copyright (c) 2009-2015 Remi Collet
 # License: CC-BY-SA
@@ -15,15 +18,27 @@
 # libmemcached >= 1.0.16 have soname 11
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 # Standard build
-Name:         %{libname}
+Name:      %{libname}
+
 %else
-# Build for parallel install
-%{?scl:Name:  %{scl_prefix}%{libname}}
-%{!?scl:Name: %{libname}-last}
+# Build for parallel install - SCL
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
 %endif
+Name:      %{sub_prefix}%{libname}
+
+%else
+# Build for parallel install - last
+Name:      %{libname}-last
+%endif
+%endif
+
 Summary:   Client library and command line tools for memcached server
 Version:   1.0.18
-Release:   4%{?dist}
+Release:   5%{?dist}
 License:   BSD
 Group:     Applications/System
 URL:       http://libmemcached.org/
@@ -48,7 +63,7 @@ BuildRequires: systemtap-sdt-devel
 %endif
 
 %if 0%{?scl:1}
-BuildRequires: %{scl_prefix}libevent-devel  > 2
+BuildRequires: %{sub_prefix}libevent-devel  > 2
 %else
 BuildRequires: libevent-devel > 2
 %if "%{libname}" != "%{name}"
@@ -114,7 +129,7 @@ Group:      System Environment/Libraries
 
 %if 0%{?scl:1}
 Requires:      %{scl}-runtime
-Requires:      %{scl_prefix}libevent%{_isa} > 2
+Requires:      %{sub_prefix}libevent%{_isa} > 2
 Requires:      openssl%{?_isa}
 Requires:      libstdc++%{?_isa}
 %if %{with_sasl}
@@ -252,6 +267,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 23 2015 Remi Collet <remi@fedoraproject.org> - 1.0.18-5
+- allow build against rh-php56 (as more-php56)
+
 * Tue Mar 25 2014 Remi Collet <remi@fedoraproject.org> - 1.0.18-4
 - improve SCL build
 
