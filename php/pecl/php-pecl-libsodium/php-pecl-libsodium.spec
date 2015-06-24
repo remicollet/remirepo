@@ -1,4 +1,4 @@
-# spec file for php-pecl-libsodium
+# remirepo spec file for php-pecl-libsodium
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,6 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-libsodium}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -21,9 +29,9 @@
 %endif
 
 Summary:        Wrapper for the Sodium cryptographic library
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        0.1.3
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -77,7 +85,7 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %description
 A simple, low-level PHP extension for libsodium.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -223,6 +231,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> - 0.1.3-2
+- allow build against rh-php56 (as more-php56)
+- rebuild for "rh_layout" (php70)
+
 * Wed Apr 15 2015 Remi Collet <remi@fedoraproject.org> - 0.1.3-1
 - Update to 0.1.3 (beta)
 
