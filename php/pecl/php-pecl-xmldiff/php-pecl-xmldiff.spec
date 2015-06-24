@@ -33,7 +33,7 @@
 Summary:        XML diff and merge
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.1.2
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -265,6 +265,7 @@ rm -rf %{buildroot}
 %changelog
 * Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-2
 - allow build against rh-php56 (as more-php56)
+- rebuild for "rh_layout" (php70)
 
 * Mon Feb 09 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - Update to 1.1.2 (stable)
