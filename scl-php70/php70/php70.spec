@@ -2,13 +2,14 @@
 %global scl_name_version 70
 %global scl              %{scl_name_base}%{scl_name_version}
 %global macrosdir        %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_root_sysconfdir}/rpm; echo $d)
-%global nfsmountable     1
 %global install_scl      1
 %if 0%{?fedora} >= 20
 # Requires scl-utils v2
 %global with_modules     1
+%global rh_layout        1
 %else
 %global with_modules     0
+%global nfsmountable     1
 %endif
 %scl_package %scl
 
@@ -18,7 +19,7 @@
 Summary:       Package that installs PHP 7.0
 Name:          %scl_name
 Version:       1.0
-Release:       0.3%{?dist}
+Release:       0.4%{?dist}
 Group:         Development/Languages
 License:       GPLv2+
 
@@ -147,6 +148,8 @@ install -d -m 755 %{buildroot}%{_localstatedir}/lib/pear/pkgxml
 
 %scl_install
 
+cat %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-config
+
 # Add the scl_package_override macro
 sed -e 's/@SCL@/%{scl}/g' %{SOURCE0} \
   | tee -a %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-config
@@ -199,6 +202,9 @@ restorecon -R %{_localstatedir} &>/dev/null || :
 
 
 %changelog
+* Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> 1.0-0.4
+- use rh_layout instead of nfsmountable in Fedora
+
 * Tue Jun 23 2015 Remi Collet <remi@fedoraproject.org> 1.0-0.3
 - enable nfsmountable (not to be nfs montable)
 - move configuration dir to /etc/opt
