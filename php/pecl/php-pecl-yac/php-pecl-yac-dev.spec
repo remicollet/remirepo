@@ -41,7 +41,7 @@ Summary:        Lockless user data cache
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        0.9.3
 %if 0%{?gh_date:1}
-Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -268,6 +268,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> - 0.9.3-0.2.20150616git1d26cd4
+- rebuild for "rh_layout" (php70)
+
 * Tue Jun 16 2015 Remi Collet <remi@fedoraproject.org> - 0.9.3-0.1.20150616git1d26cd4
 - update to 0.9.3-dev for PHP 7
 - sources from github
