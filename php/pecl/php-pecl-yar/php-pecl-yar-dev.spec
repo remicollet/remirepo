@@ -6,6 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-yar}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -28,12 +36,12 @@
 %endif
 
 Summary:        Light, concurrent RPC framework
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.2.5
 %if 0%{?gh_date:1}
-Release:        0.3.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 License:        PHP
 Group:          Development/Languages
@@ -45,7 +53,7 @@ BuildRequires:  curl-devel
 BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-json
-BuildRequires:  %{?scl_prefix}php-pecl-msgpack-devel
+BuildRequires:  %{?sub_prefix}php-pecl-msgpack-devel
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
@@ -96,7 +104,7 @@ Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 Yar (Yet another RPC framework) is a light, concurrent RPC framework,
 supports multi package protocols (json, msgpack).
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -270,8 +278,8 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Wed Jun 17 2015 Remi Collet <remi@fedoraproject.org> - 1.2.5-0.3.20150617gitd1fb4b5
-- rebuild
+* Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> - 1.2.5-0.4.20150617gitd1fb4b5
+- rebuild for "rh_layout"
 
 * Wed Jun 17 2015 Remi Collet <remi@fedoraproject.org> - 1.2.5-0.3.20150615git410ca7a
 - rebuild
