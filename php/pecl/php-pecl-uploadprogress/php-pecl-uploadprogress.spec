@@ -1,4 +1,4 @@
-# spec file for php-pecl-uploadprogress
+# remirepo spec file for php-pecl-uploadprogress
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,6 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-uploadprogress}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -20,9 +28,9 @@
 %endif
 
 Summary:        An extension to track progress of a file upload
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.3.1
-Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        7%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -83,7 +91,7 @@ unfortunately still have issues.
 See %{pecl_docdir}/%{pecl_name}/examples
 for a little example.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -216,6 +224,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 23 2015 Remi Collet <remi@fedoraproject.org> - 1.0.3.1-7
+- allow build against rh-php56 (as more-php56)
+- rebuild for "rh_layout" (php70)
+
 * Thu Apr  9 2015 Remi Collet <remi@fedoraproject.org> - 1.0.3.1-6
 - add fix for PHP 7
 - drop runtime dependency on pear, new scriptlets
