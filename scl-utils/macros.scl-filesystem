@@ -104,6 +104,8 @@ cat >> %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-config << EOF
 %%%%scl %scl
 %{?nfsmountable:%%%%nfsmountable %{nfsmountable}}
 %{!?nfsmountable:%%%%undefine nfsmountable}
+%{?rh_layout:%%%%rh_layout %{rh_layout}}
+%{!?rh_layout:%%%%undefine rh_layout}
 EOF
 cat >> %{buildroot}%{_root_sysconfdir}/scl/prefixes/%{scl} << EOF
 %_scl_prefix

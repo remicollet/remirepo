@@ -1,7 +1,7 @@
 Name:       scl-utils
 Epoch:      1
 Version:    2.0.1
-Release:    2%{dist}
+Release:    3%{dist}
 Summary:    Utilities for alternative packaging
 
 License:    GPLv2+
@@ -75,9 +75,10 @@ rm -rf %buildroot
 %{_rpmconfigdir}/brp-scl-python-bytecompile
 
 %changelog
-* Wed Jun 24 2015 Remi Collet <remi@remirepo.net> - 1:2.0.1-2
-- remove /scls/ from _sysconfdir, _sharedstatedir
-  and _localstatedir, in sync with RHEL version
+* Wed Jun 24 2015 Remi Collet <remi@remirepo.net> - 1:2.0.1-3
+- add "rh_layout" to remove /scls/ from _sysconfdir,
+  _sharedstatedir and _localstatedir, in sync with RHEL version
+  see #1198693
 
 * Wed Jan 21 2015 Lubos Kardos <lkardos@redhat.com> - 1:2.0.1-2
 - added owning of module file
