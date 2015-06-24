@@ -32,7 +32,7 @@
 
 Name:           %{?sub_prefix}php-pecl-geoip
 Version:        1.1.0
-Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        5%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Extension to map IP addresses to geographic places
 Group:          Development/Languages
 License:        PHP
