@@ -13,7 +13,7 @@
 %global pear_name     PHP_CodeSniffer
 
 Name:           php-pear-PHP-CodeSniffer
-Version:        2.3.2
+Version:        2.3.3
 Release:        1%{?dist}
 Summary:        PHP coding standards enforcement tool
 
@@ -120,8 +120,11 @@ fi
 
 
 %changelog
+* Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
+- Update to 2.3.3 (stable)
+
 * Wed Apr 29 2015 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
-- Update to 2.3.2
+- Update to 2.3.2 (stable)
 
 * Thu Apr 23 2015 Remi Collet <remi@fedoraproject.org> - 2.3.1-1
 - Update to 2.3.1 (stable)
