@@ -45,9 +45,9 @@ Summary:       API for communicating with MessagePack serialization
 Name:          %{?sub_prefix}php-pecl-msgpack
 Version:       0.5.7
 %if 0%{?gh_date:1}
-Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       0.3.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 License:       BSD
 Group:         Development/Languages
@@ -289,8 +289,9 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Sat Jun 20 2015 Remi Collet <remi@fedoraproject.org> - 0.5.7-0.2.20150612git95c8dc3
+* Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> - 0.5.7-0.3.20150612git95c8dc3
 - allow build against rh-php56 (as more-php56)
+- rebuild for "rh_layout" (php70)
 
 * Fri Jun 12 2015 Remi Collet <remi@fedoraproject.org> - 0.5.7-0.1.20150612git95c8dc3
 - update to 0.5.7dev for PHP 7
