@@ -147,7 +147,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in 21 22 20 19 18
+  for i in 21 22 20 19
   do
     echo -n "$(date +%X) fc$i "
     setarch i686  mock $quiet --configdir=$mocketc -r fc${i}i --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
@@ -236,7 +236,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in 21 22 20
+  for i in 21 22
   do
     echo -n "$(date +%X) test-fc$i "
     setarch i686  mock $quiet --configdir=$mocketc -r fc${i}it  --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
@@ -261,7 +261,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in 21 22 20 19 18
+  for i in 21 22 20 19
   do
     echo -n "$(date +%X) fc$i "
     mock $quiet --configdir=$mocketc -r fc${i}x rebuild $1 && echo " Ok." || echo " Error !"
@@ -459,7 +459,7 @@ if [ "$1" = "-q" ]; then
 fi
 
 if [ -f "$1" ]; then
-  for i in 21 22 20
+  for i in 21 22
   do
     echo -n "$(date +%X) test-fc$i "
     mock $quiet --configdir=$mocketc -r fc${i}xt rebuild $1 && echo " Ok." || echo " Error !"
