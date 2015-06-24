@@ -10,11 +10,11 @@
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__php:       %global __php        %{_bindir}/php}
 
-%global gh_commit   f3ca30dca4407cfd9d737a1d4d3b8c3534e253e1
+%global gh_commit   ad0c665855987030607dd95f85b815e2f171a9fc
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    laruence
 %global gh_project  yaconf
-%global gh_date     20150612
+%global gh_date     20150617
 %global ext_name    yaconf
 %global with_zts    0%{?__ztsphp:1}
 %if "%{php_version}" < "5.6"
@@ -27,9 +27,9 @@ Summary:       Yet Another Configurations Container
 Name:          %{?scl_prefix}php-yaconf
 Version:       1.0.0
 %if 0%{?gh_date:1}
-Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 License:       PHP
 Group:         Development/Languages
@@ -75,7 +75,17 @@ A PHP Persistent Configurations Container.
 
 This extension is still EXPERIMENTAL.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+
+
+%package devel
+Summary:       %{name} developer files (header)
+Group:         Development/Libraries
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+Requires:      %{?scl_prefix}php-devel%{?_isa}
+
+%description devel
+These are the files needed to compile programs using %{name}.
 
 
 %prep
@@ -190,6 +200,19 @@ rm -rf %{buildroot}
 %endif
 
 
+%files devel
+%defattr(-,root,root,-)
+%{php_incldir}/ext/%{ext_name}
+
+%if %{with_zts}
+%{php_ztsincldir}/ext/%{ext_name}
+%endif
+
+
 %changelog
+* Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.20150617gitad0c665
+- new snapshot
+- add "devel" subpackage
+
 * Fri Jun 12 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.20150612gitf3ca30d
 - new package
