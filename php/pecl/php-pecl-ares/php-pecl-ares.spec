@@ -1,4 +1,4 @@
-# spec file for php-pecl-ares
+# remirepo spec file for php-pecl-ares
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,7 +6,15 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package        php-pecl-judy}
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
+%{?scl:          %scl_package        php-pecl-ares}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?php_incldir: %global php_incldir %{_includedir}/php}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -24,9 +32,9 @@
 %global with_tests %{?_with_tests:1}%{!?_with_tests:0}
 
 Summary:        Asynchronous Resolver
-Name:           %{?scl_prefix}php-pecl-ares
+Name:           %{?sub_prefix}php-pecl-ares
 Version:        0.8.0
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -37,8 +45,6 @@ BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  c-ares-devel
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
@@ -74,7 +80,7 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %description
 Binding for the c-ares (CURL) library.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -150,12 +156,20 @@ do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -214,6 +228,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> - 0.8.0-2
+- allow build against rh-php56 (as more-php56)
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 0.8.0-1.1
 - Fedora 21 SCL mass rebuild
 
