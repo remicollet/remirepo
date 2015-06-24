@@ -38,7 +38,7 @@
 Summary:        Property proxy
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.1
-Release:        0.1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -239,6 +239,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-0.2
+- rebuild for "rh_layout" (php70)
+
 * Thu Mar 26 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-0.1
 - git snapshot for PHP 7
 - drop runtime dependency on pear, new scriptlets
