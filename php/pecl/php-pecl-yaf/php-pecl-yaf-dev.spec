@@ -6,16 +6,24 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-yaf}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit   a1bd3ac1c05638b6a7824ee477b3565678d6e567
+%global gh_commit   a40f01e2e157bd6eefcceec8ecb1558744fc194d
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    laruence
 %global gh_project  php-yaf
-%global gh_date     20150612
+%global gh_date     20150618
 %global with_zts    0%{?__ztsphp:1}
 %global pecl_name   yaf
 %if "%{php_version}" < "5.6"
@@ -25,12 +33,12 @@
 %endif
 
 Summary:       Yet Another Framework
-Name:          %{?scl_prefix}php-pecl-yaf
+Name:          %{?sub_prefix}php-pecl-yaf
 Version:       3.0.0
 %if 0%{?gh_date:1}
-Release:       0.3.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       0.3.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 License:       PHP
 Group:         Development/Languages
@@ -83,7 +91,7 @@ Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 The Yet Another Framework (Yaf) extension is a PHP framework that is used
 to develop web applications. 
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -145,9 +153,6 @@ done
 
 
 %check
-# Temp
-sed -e 's/refcount(1)/refcount(2)/' -i ?TS/tests/005.phpt
-
 cd NTS
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
@@ -215,7 +220,11 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Wed Jun 17 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.3.20150612gita1bd3ac
+* Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.3.20150618gita40f01e
+- new snapshot
+- rebuild for "rh_layout"
+
+* Wed Jun 17 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.2.20150612gita1bd3ac
 - rebuild
 
 * Fri Jun 12 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.1.20150612gita1bd3ac
