@@ -9,6 +9,9 @@ Group:      Applications/File
 URL:        https://fedorahosted.org/SoftwareCollections/
 Source0:    https://fedorahosted.org/released/scl-utils/%{name}-%{version}.tar.bz2
 Source1:    macros.scl-filesystem
+
+Patch0:     %{name}-layout.patch
+
 Buildrequires:  cmake
 Buildrequires:  rpm-devel
 Requires:   environment-modules
@@ -26,7 +29,10 @@ Requires:   redhat-rpm-config
 Essential RPM build macros for alternative packaging.
 
 %prep
-%autosetup
+%setup -q
+
+%patch0 -p0
+
 
 %build
 %cmake
@@ -69,6 +75,10 @@ rm -rf %buildroot
 %{_rpmconfigdir}/brp-scl-python-bytecompile
 
 %changelog
+* Wed Jun 24 2015 Remi Collet <remi@remirepo.net> - 1:2.0.1-2
+- remove /scls/ from _sysconfdir, _sharedstatedir
+  and _localstatedir, in sync with RHEL version
+
 * Wed Jan 21 2015 Lubos Kardos <lkardos@redhat.com> - 1:2.0.1-2
 - added owning of module file
 
