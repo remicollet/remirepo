@@ -26,7 +26,7 @@
 Summary:      PHP Bindings for rrdtool
 Name:         %{?scl_prefix}php-pecl-rrd
 Version:      2.0.0
-Release:      0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      BSD
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/rrd
@@ -83,6 +83,8 @@ Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %description
 Procedural and simple OO wrapper for rrdtool - data logging and graphing
 system for time series data.
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep 
@@ -223,6 +225,9 @@ fi
 
 
 %changelog
+* Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.2.beta2
+- rebuild for "rh_layout" (php70)
+
 * Tue Jun 16 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.1.beta2
 - update to 2.0.0beta2
 - raise dependency on php >= 7
