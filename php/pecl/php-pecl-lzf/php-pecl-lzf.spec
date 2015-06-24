@@ -32,7 +32,7 @@
 
 Name:           %{?sub_prefix}php-pecl-lzf
 Version:        1.6.3
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Extension to handle LZF de/compression
 Group:          Development/Languages
 License:        PHP
@@ -235,6 +235,7 @@ fi
 %changelog
 * Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 1.6.3-2
 - allow build against rh-php56 (as more-php56)
+- rebuild for "rh_layout" (php70)
 
 * Mon Apr 20 2015 Remi Collet <remi@fedoraproject.org> - 1.6.3-1
 - update to 1.6.3
