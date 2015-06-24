@@ -124,13 +124,13 @@
 %global db_devel  libdb-devel
 %endif
 
-%global gh_commit    3697f0221282831c846ff67054a1b03a833f50bd
+%global gh_commit    9876b2c2cf65fbe6aeb0edccbaa421d3d92c345e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150617
+%global gh_date      20150623
 %global gh_owner     php
 %global gh_project   php-src
-#global rcver        alpha1
-%global rpmrel       9
+%global rcver        alpha2
+%global rpmrel       10
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1801,6 +1801,10 @@ fi
 
 
 %changelog
+* Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.10.alpha2
+- Update to 7.0.0alpha2
+- use new layout (/etc/opt, /var/opt)
+
 * Wed Jun 17 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.9.20150617git3697f02
 - new snapshot
 
