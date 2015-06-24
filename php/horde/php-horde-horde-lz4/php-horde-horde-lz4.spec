@@ -1,4 +1,7 @@
-# spec file for php-horde-horde-lz4
+# remirepo spec file for php-horde-horde-lz4
+# with SCL compatibility, from:
+#
+# Fedora spec file for php-horde-horde-lz4
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,6 +9,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:         %scl_package        php-horde-horde-lz4}
 %{!?php_inidir: %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:     %global __pecl      %{_bindir}/pecl}
@@ -27,9 +38,9 @@
 %endif
 
 Summary:        Horde LZ4 Compression Extension
-Name:           %{?scl_prefix}php-horde-horde-lz4
+Name:           %{?sub_prefix}php-horde-horde-lz4
 Version:        1.0.8
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        MIT
 Group:          Development/Languages
 URL:            http://www.horde.org
@@ -82,7 +93,7 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 PHP extension that implements the LZ4 compression algorithm,
 an extremely fast lossless compression algorithm.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -224,6 +235,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> - 1.0.8-2
+- allow build against rh-php56 (as more-php56)
+
 * Tue Apr 14 2015 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
 - Update to 1.0.8
 
