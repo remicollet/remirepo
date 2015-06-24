@@ -23,7 +23,7 @@
 Summary:        A termbox wrapper for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        0.1.2
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        ASL 2.0
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -77,7 +77,7 @@ termbox is a robust, minimal alternative to ncurses.
 %{name} is a wrapper extension that provides termbox
 functionality in PHP land.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -222,6 +222,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> - 0.1.2-3
+- rebuild for "rh_layout" (php70)
+
 * Sat Mar 28 2015 Remi Collet <remi@fedoraproject.org> - 0.1.2-2
 - add fix for PHP 7
 - drop runtime dependency on pear, new scriptlets
