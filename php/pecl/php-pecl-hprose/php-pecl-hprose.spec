@@ -30,15 +30,12 @@
 
 Summary:        Hprose for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.5.4
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.5.5
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        MIT
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/hprose/hprose-pecl/pull/10
-Patch0:         %{pecl_name}-pr10.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -107,8 +104,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-%patch0 -p1 -b .pr10
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_HPROSE_VERSION/{s/.* "//;s/".*$//;p}' php_hprose.h)
 if test "x${extver}" != "x%{version}"; then
@@ -252,6 +247,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 25 2015 Remi Collet <remi@fedoraproject.org> - 1.5.5-1
+- Update to 1.5.5 (stable)
+
 * Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> - 1.5.4-2
 - allow build against rh-php56 (as more-php56)
 
