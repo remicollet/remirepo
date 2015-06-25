@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Perms
+# remirepo/fedora spec file for php-horde-Horde-Perms
 #
 # Copyright (c) 2012-2015 Nick Bebout, Remi Collet
 #
@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Perms
-Version:        2.1.4
+Version:        2.1.5
 Release:        1%{?dist}
 Summary:        Horde Permissions System
 
@@ -103,7 +103,7 @@ done | tee ../%{pear_name}.lang
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit .
+phpunit --verbose .
 
 
 %post
@@ -130,6 +130,9 @@ fi
 
 
 %changelog
+* Thu Jun 25 2015 Remi Collet <remi@fedoraproject.org> - 2.1.5-1
+- Update to 2.1.5
+
 * Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
 - Update to 2.1.4
 

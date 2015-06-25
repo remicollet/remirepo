@@ -69,7 +69,7 @@ Build order
 	* Horde_Image               2.3.1      BR: Horde_Stream, Horde_Test  R: Horde_Exception, Horde_Stream, Horde_Support, Horde_Translation, Horde_Util
 	* Horde_Lock                2.1.1      BR: Horde_Test, Horde_Db  R: Horde_Exception, Horde_Support, Horde_Db
 	* Horde_Mail                2.6.1      BR: Horde_Test I: Horde_Mime, Horde_Smtp R: Horde_Exception, Horde_Mime, Horde_Idna, Horde_Stream_Filter, Horde_Translation, Horde_Util
-	* Horde_Perms               2.1.4      BR: Horde_Test, Horde_Group  R: Horde_Db, Horde_Exception, Horde_Group, Horde_Util, Horde_Translation, Horde_Tree
+	* Horde_Perms               2.1.5      BR: Horde_Test, Horde_Group  R: Horde_Db, Horde_Exception, Horde_Group, Horde_Util, Horde_Translation, Horde_Tree
 	* Horde_Rdo                 2.0.4      BR: Horde_Test, Horde_Db  R: Horde_Db, Horde_Exception, Horde_Util
 	* Horde_SessionHandler      2.2.4      BR: Horde_Test, Horde_Db  R: Horde_Exception, Horde_Support, Horde_Db
 	* Horde_Token               2.0.6      BR: Horde_Test, Horde_Db, Horde_Url  R: Horde_Exception, Horde_Translation, Horde_Url, Horde_Util, Horde_Db
