@@ -137,12 +137,12 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver  RC1
+%global rcver  RC1
 %global rpmrel 1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.6.10
+Version: 5.6.11
 %if 0%{?rcver:1}
 Release: 0.%{rpmrel}.%{rcver}%{?dist}
 %else
@@ -1786,6 +1786,8 @@ fi
 
 
 %changelog
+* Thu Jun 25 2015 Remi Collet <remi@fedoraproject.org> 5.6.11-0.1.RC1
+- update to 5.6.11RC1
 - the phar link is now correctly created
 
 * Thu Jun 11 2015 Remi Collet <remi@fedoraproject.org> 5.6.10-1
