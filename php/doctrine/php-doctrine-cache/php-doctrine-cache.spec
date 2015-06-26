@@ -1,5 +1,6 @@
+# remirepo spec file for php-doctrine-cache, from:
 #
-# RPM spec file for php-doctrine-cache
+# Fedora spec file for php-doctrine-cache
 #
 # Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
@@ -11,8 +12,8 @@
 
 %global github_owner     doctrine
 %global github_name      cache
-%global github_version   1.4.0
-%global github_commit    2346085d2b027b233ae1d5de59b07440b9f288c8
+%global github_version   1.4.1
+%global github_commit    c9eadeb743ac6199f7eec423cb9426bc518b7b03
 
 %global composer_vendor  doctrine
 %global composer_project cache
@@ -21,10 +22,9 @@
 %global php_min_ver      5.3.2
 
 # Build using "--without tests" to disable tests
-%global with_tests       %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
 
-%{!?phpdir:     %global phpdir     %{_datadir}/php}
-%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
@@ -38,11 +38,12 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Tests
 %if %{with_tests}
-# For tests
-BuildRequires: php(language) >= %{php_min_ver}
+## composer.json
 BuildRequires: %{_bindir}/phpunit
-# For tests: phpcompatinfo (computed from version 1.4.0)
+BuildRequires: php(language) >= %{php_min_ver}
+## phpcompatinfo (computed from version 1.4.1)
 BuildRequires: php-date
 BuildRequires: php-hash
 BuildRequires: php-pcre
@@ -51,10 +52,13 @@ BuildRequires: php-spl
 %if 0%{?rhel} != 5
 BuildRequires: php-sqlite3
 %endif
+# Autoloader
+BuildRequires: php-composer(symfony/class-loader)
 %endif
 
+# composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.4.0)
+# phpcompatinfo (computed from version 1.4.1)
 Requires:      php-date
 Requires:      php-hash
 Requires:      php-pcre
@@ -62,6 +66,8 @@ Requires:      php-spl
 %if 0%{?rhel} != 5
 Requires:      php-sqlite3
 %endif
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -86,7 +92,31 @@ Optional:
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-# Remove files that will never be used
+: Create autoloader
+(cat <<'AUTOLOAD'
+<?php
+/**
+ * Autoloader created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('Doctrine\\Common\\Cache', dirname(dirname(dirname(__DIR__))));
+
+return $fedoraClassLoader;
+AUTOLOAD
+) | tee lib/Doctrine/Common/Cache/autoload.php
+
+: Remove files that will never be used
 find . -name '*WinCache*' -delete
 find . -name '*ZendDataCache*' -delete
 
@@ -97,35 +127,38 @@ find . -name '*ZendDataCache*' -delete
 
 %install
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/%{phpdir}
-cp -rp lib/* %{buildroot}/%{phpdir}/
+mkdir -p %{buildroot}%{phpdir}
+cp -rp lib/* %{buildroot}%{phpdir}/
 
 
 %check
 %if %{with_tests}
-# Create tests' bootstrap
-cat > bootstrap.php <<'BOOTSTRAP'
+: Create tests autoloader
+(cat <<'AUTOLOAD'
 <?php
 
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', str_replace('_', '/', $class)).'.php';
-    @include_once $src;
-});
-BOOTSTRAP
+$fedoraClassLoader =
+    require_once '%{buildroot}%{phpdir}/Doctrine/Common/Cache/autoload.php';
 
-# Skip tests requiring a server to connect to
+$fedoraClassLoader->addPrefix('Doctrine\\Tests', __DIR__ . '/tests');
+AUTOLOAD
+) | tee autoload.php
+
+: Skip tests requiring a server to connect to
 rm -f \
-%if 0%{?rhel} == 5
-    tests/Doctrine/Tests/Common/Cache/SQLite3CacheTest.php \
-%endif
     tests/Doctrine/Tests/Common/Cache/CouchbaseCacheTest.php \
+    tests/Doctrine/Tests/Common/Cache/MemcacheCacheTest.php \
+    tests/Doctrine/Tests/Common/Cache/MemcachedCacheTest.php \
     tests/Doctrine/Tests/Common/Cache/MongoDBCacheTest.php \
     tests/Doctrine/Tests/Common/Cache/PredisCacheTest.php \
+    tests/Doctrine/Tests/Common/Cache/RedisCacheTest.php \
     tests/Doctrine/Tests/Common/Cache/RiakCacheTest.php
+%if 0%{?rhel} == 5
+rm  tests/Doctrine/Tests/Common/Cache/SQLite3CacheTest.php
+%endif
 
-%{__phpunit} \
-    --bootstrap bootstrap.php \
-    --include-path %{buildroot}/%{phpdir}:./tests
+: Run tests
+%{_bindir}/phpunit -v --bootstrap autoload.php
 %else
 : Tests skipped
 %endif
@@ -141,12 +174,16 @@ rm -rf %{buildroot}
 %license LICENSE
 %doc *.md
 %doc composer.json
-%dir %{_datadir}/php/Doctrine
-%dir %{_datadir}/php/Doctrine/Common
-     %{_datadir}/php/Doctrine/Common/Cache
+%dir %{phpdir}/Doctrine
+%dir %{phpdir}/Doctrine/Common
+     %{phpdir}/Doctrine/Common/Cache
 
 
 %changelog
+* Wed Jun 24 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.4.1-1
+- Updated to 1.4.1 (RHBZ #1211817)
+- Added autoloader
+
 * Fri Jan 30 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.4.0-1
 - Updated to 1.4.0 (BZ #1183598)
 
