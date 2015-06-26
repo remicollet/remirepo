@@ -1,3 +1,4 @@
+# remirepo spec file for php-doctrine-doctrine-cache-bundle, from:
 #
 # RPM spec file for php-doctrine-doctrine-cache-bundle
 #
@@ -46,6 +47,7 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -134,6 +136,7 @@ AUTOLOAD
 
 
 %install
+rm -rf %{buildroot}
 mkdir -p %{buildroot}%{phpdir}/Doctrine/Bundle/DoctrineCacheBundle
 cp -pr Acl Command DependencyInjection Resources Tests *.php \
     %{buildroot}%{phpdir}/Doctrine/Bundle/DoctrineCacheBundle/
@@ -153,7 +156,12 @@ sed -e 's#\./#%{buildroot}%{phpdir}/Doctrine/Bundle/DoctrineCacheBundle/#g' \
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -164,6 +172,9 @@ sed -e 's#\./#%{buildroot}%{phpdir}/Doctrine/Bundle/DoctrineCacheBundle/#g' \
 
 
 %changelog
+* Fri Jun 26 2015 Remi Collet <remi@remirepo.net> - 1.0.1-2
+- backport for remirepo
+
 * Tue Jun 16 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.1-2
 - Fix dependencies
 
