@@ -1,6 +1,6 @@
 diff -up ./bin/phpreflect.json.dist.rpm ./bin/phpreflect.json.dist
---- ./bin/phpreflect.json.dist.rpm	2015-05-11 12:55:49.000000000 +0200
-+++ ./bin/phpreflect.json.dist	2015-05-11 13:22:14.660514268 +0200
+--- ./bin/phpreflect.json.dist.rpm	2015-06-18 13:30:46.000000000 +0200
++++ ./bin/phpreflect.json.dist	2015-06-26 09:18:15.577663962 +0200
 @@ -6,6 +6,19 @@
          }
      ],
@@ -23,61 +23,69 @@ diff -up ./bin/phpreflect.json.dist.rpm ./bin/phpreflect.json.dist
      ],
 diff -up ./bin/phpreflect.rpm ./bin/phpreflect
 --- ./bin/phpreflect.rpm	2015-06-18 13:30:46.000000000 +0200
-+++ ./bin/phpreflect	2015-06-21 20:10:01.185883366 +0200
-@@ -5,19 +5,35 @@ $appName = 'phpReflect';
- if (\Phar::running()) {
-     $vendorDir = 'phar://' . strtolower($appName) . '.phar/vendor';
- } else {
++++ ./bin/phpreflect	2015-06-26 10:06:59.277781055 +0200
+@@ -2,35 +2,16 @@
+ <?php
+ $appName = 'phpReflect';
+ 
+-if (\Phar::running()) {
+-    $vendorDir = 'phar://' . strtolower($appName) . '.phar/vendor';
+-} else {
 -    $baseDir   = dirname(__DIR__);
 -    $vendorDir = $baseDir . '/vendor';
 -
 -    if (!file_exists($vendorDir . '/autoload.php')) {
 -        $vendorDir = dirname(dirname($baseDir));
 -    }
-+    $vendorDir = '/usr/share/php';
+-
+-    if (!getenv("BARTLETTRC")) {
+-        putenv("BARTLETTRC=" . strtolower($appName) . '.json');
+-    }
++$vendorDir = '/usr/share/php';
++if (is_file('/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite')) {
 +    putenv('BARTLETT_COMPATINFO_DB=/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite');
-
-     if (!getenv("BARTLETTRC")) {
-         putenv("BARTLETTRC=" . strtolower($appName) . '.json');
-     }
  }
 -$loader = require_once $vendorDir . '/autoload.php';
 -$loader->setUseIncludePath(true);
+-
+-if (\Phar::running()) {
+-    if ($home) {
+-        // when optional resources are not embedded in phar distribution,
+-        // avoid PHP Warnings, and lookup first in global vendor dir (COMPOSER_HOME) if exists
+-        $classMapfiltered = $fallbackClassMap($loader->getClassMap(), 'Net_Growl');
+-        $loader->addClassMap($classMapfiltered);
+-
+-        // try to find PEAR Net_Growl classes package in folder $fallbackNetGrowlDir (see phar-stub.php)
+-        $loader->add(false, $fallbackNetGrowlDir);
+-    }
++if (!getenv("BARTLETTRC")) {
++    putenv("BARTLETTRC=" . strtolower($appName) . '.json');
+ }
+ 
++require_once $vendorDir . '/Bartlett/Reflect/autoload.php';
 +
-+require_once $vendorDir . '/PhpParser/Autoloader.php';
-+PhpParser\Autoloader::register();
-+
-+require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
-+require_once $vendorDir . '/SebastianBergmann/Version/autoload.php';
-+
-+use Symfony\Component\ClassLoader\UniversalClassLoader;
-+
-+$loader = new UniversalClassLoader();
-+$loader->registerNamespaces(array(
-+    'Symfony\\Component'                  => $vendorDir,
-+    'Doctrine\\Common'                    => $vendorDir,
-+    'phpDocumentor\\Reflection'           => $vendorDir,
-+    'Seld\\JsonLint'                      => $vendorDir,
-+    'JsonSchema'                          => $vendorDir,
-+    'Psr\\Log'                            => $vendorDir,
-+    'Monolog'                             => $vendorDir,
-+    'Bartlett'                            => $vendorDir,
-+));
-+$loader->useIncludePath(true);
-+$loader->register();
-
- if (\Phar::running()) {
-     if ($home) {
-@@ -40,5 +56,5 @@ use Bartlett\Reflect\Console\Application
-
+ if (PHP_SAPI !== 'cli') {
+     return;
+ }
+@@ -40,5 +21,5 @@ use Bartlett\Reflect\Console\Application
+ 
  Environment::setScanDir();
-
+ 
 -$application = new Application($appName, '3.1');
 +$application = new Application($appName, '@package_version@');
  $application->run();
 diff -up ./src/Bartlett/Reflect/Console/Application.php.rpm ./src/Bartlett/Reflect/Console/Application.php
---- ./src/Bartlett/Reflect/Console/Application.php.rpm	2015-05-11 12:55:49.000000000 +0200
-+++ ./src/Bartlett/Reflect/Console/Application.php	2015-05-11 13:22:14.661514273 +0200
+--- ./src/Bartlett/Reflect/Console/Application.php.rpm	2015-06-18 13:30:46.000000000 +0200
++++ ./src/Bartlett/Reflect/Console/Application.php	2015-06-26 09:18:15.584663991 +0200
+@@ -42,7 +42,7 @@ use Symfony\Component\EventDispatcher\Ev
+  * @package  PHP_Reflect
+  * @author   Laurent Laville <pear@laurent-laville.org>
+  * @license  http://www.opensource.org/licenses/bsd-license.php  BSD License
+- * @version  Release: @package_version@
++ * @version  Release: 3.1.1
+  * @link     http://php5.laurent-laville.org/reflect/
+  * @since    Class available since Release 3.0.0-alpha1
+  */
 @@ -82,7 +82,7 @@ class Application extends BaseApplicatio
              $jsonFile =  './' . getenv("BARTLETTRC");
          }
@@ -88,8 +96,8 @@ diff -up ./src/Bartlett/Reflect/Console/Application.php.rpm ./src/Bartlett/Refle
  
          $defaultAnalyser = (strcasecmp($appName, 'phpcompatinfo') === 0)
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
---- ./tests/bootstrap.php.rpm	2015-05-11 12:55:49.000000000 +0200
-+++ ./tests/bootstrap.php	2015-05-11 13:22:14.661514273 +0200
+--- ./tests/bootstrap.php.rpm	2015-06-18 13:30:46.000000000 +0200
++++ ./tests/bootstrap.php	2015-06-26 10:07:14.589844514 +0200
 @@ -1,11 +1,9 @@
  <?php
  
@@ -104,35 +112,28 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
          'Bartlett\Tests\Reflect\Analyser\FooAnalyser'
              => __DIR__ . '/Analyser/FooAnalyser.php',
          'Bartlett\Tests\Reflect\Analyser\BarAnalyser'
-@@ -14,5 +12,24 @@ $loader->addClassMap(
+@@ -14,5 +12,17 @@ $loader->addClassMap(
              => __DIR__ . '/Model/GenericModelTest.php',
          'Bartlett\Tests\Reflect\Environment\YourLogger'
              => __DIR__ . '/Environment/YourLogger.php',
 -    )
  );
-+require_once $vendorDir . '/PhpParser/Autoloader.php';
-+PhpParser\Autoloader::register();
 +
-+require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
++require_once 'Bartlett/Reflect/autoload.php';
++$fedoraClassLoader->addPrefix('Bartlett\\Tests\\Reflect', $baseDir . '/tests');
 +
-+use Symfony\Component\ClassLoader\UniversalClassLoader;
-+
-+$loader = new UniversalClassLoader();
-+$loader->registerNamespaces(array(
-+    'Bartlett\\Tests\\Reflect'            => $baseDir . '/tests',
-+    'Bartlett\\UmlWriter'                 => $vendorDir,
-+    'Bartlett'                            => $baseDir . '/src',
-+    'Monolog'                             => $vendorDir,
-+));
-+$loader->useIncludePath(true);
-+$loader->register();
++// Needed when installed for 'Bartlett\CompatInfo\Analyser\CompatibilityAnalyser'
++if (is_file('/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite')) {
++   putenv("BARTLETT_COMPATINFO_DB=/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite");
++}
++//print_r($fedoraClassLoader->getPrefixes());
 +
 +foreach ($tab as $class => $file) {
 +    require_once $file;
 +}
 diff -up ./tests/Environment/YourLogger.php.rpm ./tests/Environment/YourLogger.php
---- ./tests/Environment/YourLogger.php.rpm	2015-05-11 12:55:49.000000000 +0200
-+++ ./tests/Environment/YourLogger.php	2015-05-11 13:22:14.661514273 +0200
+--- ./tests/Environment/YourLogger.php.rpm	2015-06-18 13:30:46.000000000 +0200
++++ ./tests/Environment/YourLogger.php	2015-06-26 09:18:15.578663966 +0200
 @@ -14,6 +14,7 @@ class YourLogger extends Logger
          if (!file_exists($tempDir)) {
              mkdir($tempDir, 0755, true);

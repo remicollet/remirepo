@@ -21,7 +21,7 @@
 
 Name:           php-bartlett-PHP-Reflect
 Version:        3.1.1
-%global specrel 2
+%global specrel 3
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -31,8 +31,10 @@ URL:            http://php5.laurent-laville.org/reflect/
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
 
 # Autoloader for RPM - die composer !
+Source1:        %{name}-autoload.php
+
 # Enable cache plugin
-Patch0:         %{name}-3.0.0-rpm.patch
+Patch0:         %{name}-3.1.1-rpm.patch
 
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3
@@ -42,7 +44,6 @@ BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php-composer(sebastian/version)                 >= 1.0
 BuildRequires:  php-composer(nikic/php-parser)                  >= 1.2.2
 BuildRequires:  php-composer(doctrine/collections)              >= 1.2
-BuildRequires:  php-composer(symfony/class-loader)              >= 2.5
 BuildRequires:  php-composer(symfony/event-dispatcher)          >= 2.5
 BuildRequires:  php-composer(symfony/finder)                    >= 2.5
 BuildRequires:  php-composer(symfony/console)                   >= 2.5
@@ -52,7 +53,10 @@ BuildRequires:  php-composer(phpdocumentor/reflection-docblock) >= 2.0
 BuildRequires:  php-composer(seld/jsonlint)                     >= 1.1
 BuildRequires:  php-composer(justinrainbow/json-schema)         >= 1.3
 BuildRequires:  php-composer(monolog/monolog)                   >= 1.10
-BuildRequires:  php-composer(bartlett/umlwriter)                >= 1.0
+# For our patch / autoloader
+BuildRequires:  php-doctrine-collections                        >= 1.3.0-2
+BuildRequires:  php-doctrine-cache                              >= 1.4.1
+BuildRequires:  php-composer(symfony/class-loader)              >= 2.5
 %endif
 
 # From composer.json, "require": {
@@ -122,9 +126,11 @@ Requires:       php-composer(psr/log)                  >= 1.0
 Requires:       php-composer(bartlett/umlwriter)       >= 1.0
 Requires:       php-composer(bartlett/umlwriter)       <  2
 %endif
-# For our patch
+# For our patch / autoloader
 Requires:       php-composer(symfony/class-loader)     >= 2.5
 Requires:       php-composer(symfony/class-loader)     <  3
+Requires:       php-doctrine-collections               >= 1.3.0-2
+Requires:       php-doctrine-cache                     >= 1.4.1
 
 Obsoletes:      php-channel-bartlett <= 1.3
 
@@ -142,6 +148,7 @@ Documentation: http://php5.laurent-laville.org/reflect/manual/current/en/
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
+cp %{SOURCE1} src/Bartlett/Reflect/autoload.php
 
 sed -e 's/@package_version@/%{version}%{?prever}/' \
     -i $(find src -name \*.php) bin/phpreflect
@@ -162,12 +169,11 @@ install -D -p -m 644 bin/phpreflect.1         %{buildroot}%{_mandir}/man1/phpref
 
 %check
 %if %{with_tests}
-# Required when bartlett/php-compatinfo installed (local build)
-export BARTLETT_COMPATINFO_DB=%{_datadir}/php-bartlett-PHP-CompatInfo/compatinfo.sqlite
-
-# Version 3.0.0 : OK, but incomplete, skipped, or risky tests!
+# Version 3.1.1 : OK, but incomplete, skipped, or risky tests!
 # Tests: 122, Assertions: 123, Incomplete: 3.
-%{_bindir}/phpunit -v
+%{_bindir}/phpunit \
+    --include-path=%{buildroot}%{_datadir}/php \
+    --verbose
 %else
 : Test suite disabled
 %endif
@@ -191,6 +197,9 @@ fi
 
 
 %changelog
+* Fri Jun 26 2015 Remi Collet <remi@fedoraproject.org> - 3.1.1-3
+- rewrite autoloader
+
 * Sun Jun 21 2015 Remi Collet <remi@fedoraproject.org> - 3.1.1-2
 - fix autoloader
 
