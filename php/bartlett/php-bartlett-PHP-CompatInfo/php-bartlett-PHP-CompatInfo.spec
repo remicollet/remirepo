@@ -137,13 +137,13 @@ install -D -p -m 755 %{SOURCE1}                  %{buildroot}%{_datadir}/%{name}
 # drop some test because of RC version
 rm tests/Reference/Extension/AmqpExtensionTest.php
 rm tests/Reference/Extension/SphinxExtensionTest.php
-
+%if 0%{?fedora} < 21 && 0%{?rhel} < 7
+rm tests/Reference/Extension/CurlExtensionTest.php
+rm tests/Reference/Extension/LibxmlExtensionTest.php
+%endif
 %{_bindir}/phpunit \
     --include-path %{buildroot}%{_datadir}/php \
     -d memory_limit=1G
-%if 0%{?fedora} < 21
-    || exit 0
-%endif
 %endif
 
 
