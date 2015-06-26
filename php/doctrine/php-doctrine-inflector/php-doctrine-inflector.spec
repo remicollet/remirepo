@@ -1,5 +1,6 @@
+# remirepo spec file for php-doctrine-inflector, from:
 #
-# RPM spec file for php-doctrine-inflector
+# Fedora spec file for php-doctrine-inflector
 #
 # Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
@@ -21,11 +22,13 @@
 %global php_min_ver      5.3.2
 
 # Build using "--without tests" to disable tests
-%global with_tests       %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
+
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       4%{?github_release}%{?dist}
 Summary:       Common string manipulations with regard to casing and singular/plural rules
 
 Group:         Development/Libraries
@@ -35,18 +38,24 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Tests
 %if %{with_tests}
-# For tests
+## composer.json
+BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-phpunit-PHPUnit
-# For tests: phpcompatinfo (computed from version 1.0.1)
+## phpcompatinfo (computed from version 1.0.1)
 BuildRequires: php-pcre
 BuildRequires: php-spl
+# Autoloader
+BuildRequires: php-composer(symfony/class-loader)
 %endif
 
+# composer.json
 Requires:      php(language) >= %{php_min_ver}
 # phpcompatinfo (computed from version 1.0.1)
 Requires:      php-pcre
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -59,6 +68,30 @@ with regard to upper-/lowercase and singular/plural forms of words.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+: Create autoloader
+(cat <<'AUTOLOAD'
+<?php
+/**
+ * Autoloader created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('Doctrine\\Common\\Inflector', dirname(dirname(dirname(__DIR__))));
+
+return $fedoraClassLoader;
+AUTOLOAD
+) | tee lib/Doctrine/Common/Inflector/autoload.php
+
 
 %build
 # Empty build section, nothing required
@@ -66,13 +99,25 @@ with regard to upper-/lowercase and singular/plural forms of words.
 
 %install
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/%{_datadir}/php
-cp -rp lib/* %{buildroot}/%{_datadir}/php/
+mkdir -p %{buildroot}%{phpdir}
+cp -rp lib/* %{buildroot}%{phpdir}/
 
 
 %check
 %if %{with_tests}
-%{_bindir}/phpunit
+: Create tests autoloader
+(cat <<'AUTOLOAD'
+<?php
+
+$fedoraClassLoader =
+    require_once '%{buildroot}%{phpdir}/Doctrine/Common/Inflector/autoload.php';
+
+$fedoraClassLoader->addPrefix('Doctrine\\Tests', __DIR__ . '/tests');
+AUTOLOAD
+) | tee autoload.php
+
+: Run tests
+%{_bindir}/phpunit -v --bootstrap autoload.php
 %else
 : Tests skipped
 %endif
@@ -87,12 +132,15 @@ rm -rf %{buildroot}
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md composer.json
-%dir %{_datadir}/php/Doctrine
-%dir %{_datadir}/php/Doctrine/Common
-     %{_datadir}/php/Doctrine/Common/Inflector
+%dir %{phpdir}/Doctrine
+%dir %{phpdir}/Doctrine/Common
+     %{phpdir}/Doctrine/Common/Inflector
 
 
 %changelog
+* Wed Jun 24 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.1-4
+- Added autoloader
+
 * Sun Dec 28 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.1-2
 - %%license usage
 
