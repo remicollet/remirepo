@@ -1,6 +1,6 @@
 diff -up ./bin/phpcompatinfo.json.dist.rpm ./bin/phpcompatinfo.json.dist
---- ./bin/phpcompatinfo.json.dist.rpm	2015-04-04 15:32:17.536201524 +0200
-+++ ./bin/phpcompatinfo.json.dist	2015-04-04 15:32:37.776282296 +0200
+--- ./bin/phpcompatinfo.json.dist.rpm	2015-06-16 10:56:41.000000000 +0200
++++ ./bin/phpcompatinfo.json.dist	2015-06-26 11:15:13.028747350 +0200
 @@ -6,6 +6,19 @@
          }
      ],
@@ -22,89 +22,76 @@ diff -up ./bin/phpcompatinfo.json.dist.rpm ./bin/phpcompatinfo.json.dist
      "analysers" : [
      ],
 diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
---- ./bin/phpcompatinfo.rpm	2015-04-04 08:52:23.000000000 +0200
-+++ ./bin/phpcompatinfo	2015-04-04 15:33:59.668609143 +0200
-@@ -16,8 +16,30 @@ if (\Phar::running()) {
-         putenv("BARTLETTRC=" . strtolower($appName) . '.json');
-     }
+--- ./bin/phpcompatinfo.rpm	2015-06-16 10:56:41.000000000 +0200
++++ ./bin/phpcompatinfo	2015-06-26 11:15:13.033747371 +0200
+@@ -1,23 +1,13 @@
+ #!/usr/bin/env php
+ <?php
+ $appName = 'phpCompatInfo';
++$vendorDir = '/usr/share/php';
+ 
+-if (\Phar::running()) {
+-    $vendorDir = 'phar://' . strtolower($appName) . '.phar/vendor';
+-} else {
+-    $baseDir   = dirname(__DIR__);
+-    $vendorDir = $baseDir . '/vendor';
+-
+-    if (!file_exists($vendorDir . '/autoload.php')) {
+-        $vendorDir = dirname(dirname($baseDir));
+-    }
+-
+-    if (!getenv("BARTLETTRC")) {
+-        putenv("BARTLETTRC=" . strtolower($appName) . '.json');
+-    }
++require_once $vendorDir . '/Bartlett/CompatInfo/autoload.php';
++putenv('BARTLETT_COMPATINFO_DB=/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite');
++if (!getenv("BARTLETTRC")) {
++     putenv("BARTLETTRC=" . strtolower($appName) . '.json');
  }
 -$loader = require_once $vendorDir . '/autoload.php';
 -$loader->setUseIncludePath(true);
-+
-+putenv('BARTLETT_COMPATINFO_DB=/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite');
-+
-+$vendorDir = '/usr/share/php';
-+require_once $vendorDir . '/PhpParser/Autoloader.php';
-+PhpParser\Autoloader::register();
-+
-+require_once $vendorDir . '/SebastianBergmann/Version/autoload.php';
-+
-+require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
-+use Symfony\Component\ClassLoader\UniversalClassLoader;
-+
-+$loader = new UniversalClassLoader();
-+$loader->registerNamespaces(array(
-+    'Symfony\\Component'                  => $vendorDir,
-+    'Doctrine\\Common'                    => $vendorDir,
-+    'phpDocumentor\\Reflection'           => $vendorDir,
-+    'Seld\\JsonLint'                      => $vendorDir,
-+    'JsonSchema'                          => $vendorDir,
-+    'Psr\\Log'                            => $vendorDir,
-+    'Monolog'                             => $vendorDir,
-+    'Bartlett'                            => $vendorDir,
-+));
-+$loader->register();
  
  if (PHP_SAPI !== 'cli') {
      return;
-@@ -28,5 +50,5 @@ use Bartlett\CompatInfo\Console\Applicat
+@@ -28,5 +18,5 @@ use Bartlett\CompatInfo\Console\Applicat
  
  Environment::setScanDir();
  
 -$application = new Application($appName, '4.3');
-+$application = new Application($appName, '@package_version@');
++$application = new Application($appName, '4.3.0');
  $application->run();
 diff -up ./data/handleDB.php.rpm ./data/handleDB.php
---- ./data/handleDB.php.rpm	2015-04-04 08:52:23.000000000 +0200
-+++ ./data/handleDB.php	2015-04-04 15:31:55.188112331 +0200
-@@ -11,7 +11,18 @@
+--- ./data/handleDB.php.rpm	2015-06-16 10:56:41.000000000 +0200
++++ ./data/handleDB.php	2015-06-26 11:15:13.028747350 +0200
+@@ -11,7 +11,8 @@
   * @since    Release 4.0.0alpha3
   */
  
 -require_once dirname(__DIR__) . '/vendor/autoload.php';
-+$baseDir   = dirname(__DIR__);
-+$vendorDir = '/usr/share/php';
-+require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
-+use Symfony\Component\ClassLoader\UniversalClassLoader;
-+
-+$loader = new UniversalClassLoader();
-+$loader->registerNamespaces(array(
-+    'Symfony\\Component'                  => $vendorDir,
-+ ));
-+
-+$loader->register();
++require_once __DIR__ . '/../src/Bartlett/CompatInfo/autoload.php';
 +
  require_once __DIR__ . '/ReferenceCollection.php';
  
  use Bartlett\CompatInfo\Reference\ExtensionFactory;
 diff -up ./src/Bartlett/CompatInfo/Environment.php.rpm ./src/Bartlett/CompatInfo/Environment.php
---- ./src/Bartlett/CompatInfo/Environment.php.rpm	2015-04-04 08:52:23.000000000 +0200
-+++ ./src/Bartlett/CompatInfo/Environment.php	2015-04-04 15:31:55.188112331 +0200
-@@ -34,6 +34,10 @@ class Environment
+--- ./src/Bartlett/CompatInfo/Environment.php.rpm	2015-06-26 11:20:20.075019885 +0200
++++ ./src/Bartlett/CompatInfo/Environment.php	2015-06-26 11:23:06.329708917 +0200
+@@ -34,6 +34,11 @@ class Environment
       */
      public static function initRefDb()
      {
-+        if ($database = getenv('BARTLETT_COMPATINFO_DB')) {
++        if (($database = getenv('BARTLETT_COMPATINFO_DB')) && file_exists($database)) {
++            return new \PDO('sqlite:' . $database);
++        } else if (file_exists($database = '/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite')) {
 +            return new \PDO('sqlite:' . $database);
 +        }
-+
          $database = 'compatinfo.sqlite';
          $tempDir  = sys_get_temp_dir() . '/bartlett';
  
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
---- ./tests/bootstrap.php.rpm	2015-04-04 08:52:23.000000000 +0200
-+++ ./tests/bootstrap.php	2015-04-04 15:31:55.188112331 +0200
-@@ -1,8 +1,31 @@
+--- ./tests/bootstrap.php.rpm	2015-06-16 10:56:41.000000000 +0200
++++ ./tests/bootstrap.php	2015-06-26 11:17:16.429258776 +0200
+@@ -1,8 +1,11 @@
  <?php
  
  $baseDir   = dirname(__DIR__);
@@ -112,29 +99,9 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 +$vendorDir = '/usr/share/php';
  
 -require_once $vendorDir . '/autoload.php';
-+require_once $vendorDir . '/PhpParser/Autoloader.php';
-+PhpParser\Autoloader::register();
++require_once 'Bartlett/CompatInfo/autoload.php';
++$fedoraClassLoader->addPrefix('Bartlett\\Tests\\CompatInfo', $baseDir . '/tests');
  
-+require_once $vendorDir . '/SebastianBergmann/Version/autoload.php';
-+
-+require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
-+use Symfony\Component\ClassLoader\UniversalClassLoader;
-+
-+$loader = new UniversalClassLoader();
-+$loader->registerNamespaces(array(
-+    'Doctrine\\Common'                    => $vendorDir,
-+    'phpDocumentor\\Reflection'           => $vendorDir,
-+    'Symfony\\Component'                  => $vendorDir,
-+    'Seld\\JsonLint'                      => $vendorDir,
-+    'JsonSchema'                          => $vendorDir,
-+    'Bartlett\\Reflect'                   => $vendorDir,
-+    'Bartlett\\UmlWriter'                 => $vendorDir,
-+    'Bartlett\\Tests\\CompatInfo'         => $baseDir . '/tests',
-+    'Bartlett'                            => $baseDir . '/src',
-+ ));
-+
-+$loader->register();
-+
++putenv('BARTLETT_COMPATINFO_DB='.dirname(__DIR__).'/data/compatinfo.sqlite');
 +# Class not catched by autoloader
-+require $vendorDir . '/Bartlett/Reflect.php';
  require __DIR__ . '/Reference/GenericTest.php';

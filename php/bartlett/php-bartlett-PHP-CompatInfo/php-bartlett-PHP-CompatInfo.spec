@@ -16,7 +16,7 @@
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        4.3.0
-%global specrel 2
+%global specrel 3
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -24,20 +24,25 @@ Group:          Development/Libraries
 License:        BSD
 URL:            http://php5.laurent-laville.org/compatinfo/
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
+
 # Script for fedora-review
 Source1:        fedora-review-check
 
 # Autoloader for RPM - die composer !
-# and sqlite database path
+Source2:        %{name}-autoload.php
+
+# Autoload and sqlite database path
 Patch0:         %{name}-4.3.0-rpm.patch
 
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.2
-BuildRequires:  php-pdo_sqlite
-BuildRequires:  php-composer(bartlett/php-reflect) >= 3.1
 %if %{with_tests}
 # to run test suite
 BuildRequires:  %{_bindir}/phpunit
+BuildRequires:  php-pdo_sqlite
+# For our patch / autoloader
+BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-bartlett-PHP-Reflect >= 3.1.1-3
 %endif
 
 # From composer.json, "require"
@@ -78,20 +83,9 @@ Requires:       php-composer(symfony/console)      <  3
 #        "bartlett/umlwriter": "Allow writing UML class diagrams (Graphviz or PlantUML)"
 #        "doctrine/cache": "Allow caching results, since bartlett/php-reflect 2.2"
 #        "bartlett/umlwriter": "Allow writing UML class diagrams (Graphviz or PlantUML)"
-Requires:       php-composer(doctrine/cache)
-Requires:       php-composer(bartlett/umlwriter)
 # Required by autoloader
-Requires:       php-composer(nikic/php-parser)
-Requires:       php-composer(doctrine/collections)
 Requires:       php-composer(symfony/class-loader)
-Requires:       php-composer(symfony/event-dispatcher)
-Requires:       php-composer(symfony/finder)
-Requires:       php-composer(symfony/stopwatch)
-Requires:       php-composer(symfony/dependency-injection)
-Requires:       php-composer(phpdocumentor/reflection-docblock)
-Requires:       php-composer(seld/jsonlint)
-Requires:       php-composer(sebastian/version)
-Requires:       php-composer(justinrainbow/json-schema)
+Requires:       php-bartlett-PHP-Reflect >= 3.1.1-3
 
 Provides:       phpcompatinfo = %{version}
 Provides:       php-composer(bartlett/php-compatinfo) = %{version}
@@ -111,6 +105,7 @@ Documentation: http://php5.laurent-laville.org/compatinfo/manual/current/en/
 #setup -q -n %{gh_project}-%{version}
 
 %patch0 -p1 -b .rpm
+cp %{SOURCE2} src/Bartlett/CompatInfo/autoload.php
 
 # Cleanup patched files
 find src -name \*rpm -delete -print
@@ -139,10 +134,13 @@ install -D -p -m 755 %{SOURCE1}                  %{buildroot}%{_datadir}/%{name}
 
 %if %{with_tests}
 %check
+# drop some test because of RC version
+rm tests/Reference/Extension/AmqpExtensionTest.php
+rm tests/Reference/Extension/SphinxExtensionTest.php
+
 %{_bindir}/phpunit \
-    --include-path src \
-    -d memory_limit=-1 \
-    --verbose \
+    --include-path %{buildroot}%{_datadir}/php \
+    -d memory_limit=1G
 %if 0%{?fedora} < 21
     || exit 0
 %endif
@@ -168,6 +166,9 @@ fi
 
 
 %changelog
+* Fri Jun 26 2015 Remi Collet <remi@fedoraproject.org> - 4.3.0-3
+- rewrite autoloader
+
 * Sun Jun 21 2015 Remi Collet <remi@fedoraproject.org> - 4.3.0-2
 - fix autoloader
 
