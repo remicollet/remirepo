@@ -1,5 +1,6 @@
+# remirepo spec file for php-doctrine-lexer, from:
 #
-# RPM spec file for php-doctrine-lexer
+# Fedora spec file for php-doctrine-lexer
 #
 # Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
@@ -20,9 +21,11 @@
 # "php": ">=5.3.2"
 %global php_min_ver      5.3.2
 
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
+
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       4%{?github_release}%{?dist}
 Summary:       Base library for a lexer that can be used in top-down, recursive descent parsers
 
 Group:         Development/Libraries
@@ -33,10 +36,13 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 
+# composer.json
 Requires:      php(language) >= %{php_min_ver}
 # phpcompatinfo (computed from version 1.0.1)
 Requires:      php-pcre
 Requires:      php-reflection
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -51,6 +57,30 @@ This lexer is used in Doctrine Annotations and in Doctrine ORM (DQL).
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+: Create autoloader
+(cat <<'AUTOLOAD'
+<?php
+/**
+ * Autoloader created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('Doctrine\\Common\\Lexer', dirname(dirname(dirname(__DIR__))));
+
+return $fedoraClassLoader;
+AUTOLOAD
+) | tee lib/Doctrine/Common/Lexer/autoload.php
+
 
 %build
 # Empty build section, nothing required
@@ -58,8 +88,8 @@ This lexer is used in Doctrine Annotations and in Doctrine ORM (DQL).
 
 %install
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/%{_datadir}/php
-cp -rp lib/* %{buildroot}/%{_datadir}/php/
+mkdir -p %{buildroot}%{phpdir}
+cp -rp lib/* %{buildroot}%{phpdir}/
 
 
 %check
@@ -74,13 +104,20 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc *.md composer.json
+%doc *.md
+%doc composer.json
 %dir %{_datadir}/php/Doctrine
 %dir %{_datadir}/php/Doctrine/Common
      %{_datadir}/php/Doctrine/Common/Lexer
 
 
 %changelog
+* Wed Jun 24 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.1-4
+- Added autoloader dependency
+
+* Tue Jun 23 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.1-3
+- Added autoloader
+
 * Mon Jan 05 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.1-1
 - Updated to 1.0.1 (same commit but tagged version instead of snapshot; BZ #1178808)
 - %%license usage
