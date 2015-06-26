@@ -1,7 +1,8 @@
+# remirepo spec file for php-doctrine-collections, from:
 #
-# RPM spec file for php-doctrine-collections
+# Fedora spec file for php-doctrine-collections
 #
-# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -11,8 +12,8 @@
 
 %global github_owner     doctrine
 %global github_name      collections
-%global github_version   1.2
-%global github_commit    b99c5c46c87126201899afe88ec490a25eedd6a2
+%global github_version   1.3.0
+%global github_commit    6c1e4eef75f310ea1b3e30945e9f06e652128b8a
 
 %global composer_vendor  doctrine
 %global composer_project collections
@@ -21,11 +22,13 @@
 %global php_min_ver      5.3.2
 
 # Build using "--without tests" to disable tests
-%global with_tests       %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
+
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       3%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}
 Summary:       Collections abstraction library
 
 Group:         Development/Libraries
@@ -35,17 +38,23 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Tests
 %if %{with_tests}
-# For tests
+## composer.json
+BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-phpunit-PHPUnit
-# For tests: phpcompatinfo (computed from v1.2)
+## phpcompatinfo (computed from version 1.3.0)
 BuildRequires: php-spl
+# Autoloader
+BuildRequires: php-composer(symfony/class-loader)
 %endif
 
+# composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from v1.2)
+# phpcompatinfo (computed from version 1.3.0)
 Requires:      php-spl
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -60,6 +69,30 @@ Conflicts:     php-pear(pear.doctrine-project.org/DoctrineCommon) < 2.4
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+: Create autoloader
+(cat <<'AUTOLOAD'
+<?php
+/**
+ * Autoloader created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('Doctrine\\Common\\Collections', dirname(dirname(dirname(__DIR__))));
+
+return $fedoraClassLoader;
+AUTOLOAD
+) | tee lib/Doctrine/Common/Collections/autoload.php
+
 
 %build
 # Empty build section, nothing required
@@ -67,26 +100,25 @@ Conflicts:     php-pear(pear.doctrine-project.org/DoctrineCommon) < 2.4
 
 %install
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/%{_datadir}/php
-cp -rp lib/* %{buildroot}/%{_datadir}/php/
+mkdir -p %{buildroot}%{phpdir}
+cp -rp lib/* %{buildroot}%{phpdir}/
 
 
 %check
 %if %{with_tests}
-# Create autoloader
-mkdir vendor
-cat > vendor/autoload.php <<'AUTOLOAD'
+: Create tests autoloader
+(cat <<'AUTOLOAD'
 <?php
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', str_replace('_', '/', $class)).'.php';
-    @include_once $src;
-});
+
+$fedoraClassLoader =
+    require_once '%{buildroot}%{phpdir}/Doctrine/Common/Collections/autoload.php';
+
+$fedoraClassLoader->addPrefix('Doctrine\\Tests', __DIR__ . '/tests');
 AUTOLOAD
+) | tee autoload.php
 
-# Create PHPUnit config w/ colors turned off
-sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
-
-%{_bindir}/phpunit --include-path ./lib:./tests -d date.timezone="UTC"
+: Run tests
+%{_bindir}/phpunit -v --bootstrap autoload.php
 %else
 : Tests skipped
 %endif
@@ -98,13 +130,24 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE *.md composer.json
-%dir %{_datadir}/php/Doctrine
-%dir %{_datadir}/php/Doctrine/Common
-     %{_datadir}/php/Doctrine/Common/Collections
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *.md
+%doc composer.json
+%dir %{phpdir}/Doctrine
+%dir %{phpdir}/Doctrine/Common
+     %{phpdir}/Doctrine/Common/Collections
 
 
 %changelog
+* Wed Jun 24 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.0-2
+- Added autoloader dependencies
+
+* Wed Jun 24 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.0-1
+- Updated to 1.3.0 (RHBZ #1211818)
+- Added autoloader
+- %%license usage
+
 * Fri Jun 20 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2-3
 - Added php-composer(%%{composer_vendor}/%%{composer_project}) virtual provide
 - Added option to build without tests ("--without tests")
