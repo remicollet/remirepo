@@ -1,7 +1,8 @@
+# remirepo spec file for php-doctrine-annotations, from:
 #
-# RPM spec file for php-doctrine-annotations
+# Fedora spec file for php-doctrine-annotations
 #
-# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -11,8 +12,8 @@
 
 %global github_owner     doctrine
 %global github_name      annotations
-%global github_version   1.2.3
-%global github_commit    eeda578cbe24a170331a1cfdf78be723412df7a4
+%global github_version   1.2.6
+%global github_commit    f4a91702ca3cd2e568c3736aa031ed00c3752af4
 
 %global composer_vendor  doctrine
 %global composer_project annotations
@@ -20,14 +21,18 @@
 # "php": ">=5.3.2"
 %global php_min_ver      5.3.2
 # "doctrine/cache": "1.*"
-%global cache_min_ver    1.0
+#     NOTE: Min version not 1.0 because autoloader required
+%global cache_min_ver    1.4.1
 %global cache_max_ver    2.0
 # "doctrine/lexer": "1.*"
-%global lexer_min_ver    1.0
+#     NOTE: Min version not 1.0 because autoloader required
+%global lexer_min_ver    1.0.1-4
 %global lexer_max_ver    2.0
 
 # Build using "--without tests" to disable tests
-%global with_tests       %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
+
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
@@ -44,15 +49,15 @@ Source1:       %{name}-get-source.sh
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Tests
 %if %{with_tests}
-# composer.json
+## composer.json
+BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language)                >= %{php_min_ver}
 BuildRequires: php-composer(doctrine/cache) >= %{cache_min_ver}
-BuildRequires: php-composer(doctrine/cache) <  %{cache_max_ver}
-BuildRequires: php-composer(doctrine/lexer) >= %{lexer_min_ver}
-BuildRequires: php-composer(doctrine/lexer) <  %{lexer_max_ver}
-BuildRequires: php-phpunit-PHPUnit
-# phpcompatinfo (computed from version 1.2.3)
+#BuildRequires: php-composer(doctrine/lexer) >= %%{lexer_min_ver}
+BuildRequires: php-doctrine-lexer           >= %{lexer_min_ver}
+## phpcompatinfo (computed from version 1.2.6)
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-json
@@ -60,13 +65,16 @@ BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
 BuildRequires: php-tokenizer
+# Autoloader
+BuildRequires: php-composer(symfony/class-loader)
 %endif
 
 # composer.json
 Requires:      php(language)                >= %{php_min_ver}
-Requires:      php-composer(doctrine/lexer) >= %{lexer_min_ver}
+#Requires:      php-composer(doctrine/lexer) >= %%{lexer_min_ver}
+Requires:      php-doctrine-lexer           >= %{lexer_min_ver}
 Requires:      php-composer(doctrine/lexer) <  %{lexer_max_ver}
-# phpcompatinfo (computed from version 1.2.3)
+# phpcompatinfo (computed from version 1.2.6)
 Requires:      php-ctype
 Requires:      php-date
 Requires:      php-json
@@ -74,6 +82,8 @@ Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
 Requires:      php-tokenizer
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -88,6 +98,32 @@ Conflicts:     php-pear(pear.doctrine-project.org/DoctrineCommon) < 2.4
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+: Create autoloader
+(cat <<'AUTOLOAD'
+<?php
+/**
+ * Autoloader created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+require_once '%{phpdir}/Doctrine/Common/Lexer/autoload.php';
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('Doctrine\\Common\\Annotations', dirname(dirname(dirname(__DIR__))));
+
+return $fedoraClassLoader;
+AUTOLOAD
+) | tee lib/Doctrine/Common/Annotations/autoload.php
+
 
 %build
 # Empty build section, nothing required
@@ -95,24 +131,27 @@ Conflicts:     php-pear(pear.doctrine-project.org/DoctrineCommon) < 2.4
 
 %install
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/%{_datadir}/php
-cp -rp lib/* %{buildroot}/%{_datadir}/php/
+mkdir -p %{buildroot}%{phpdir}
+cp -rp lib/* %{buildroot}%{phpdir}/
 
 
 %check
 %if %{with_tests}
-# Create autoloader
-mkdir vendor
-cat > vendor/autoload.php <<'AUTOLOAD'
+: Modify tests init
+sed "s#require.*autoload.*#require_once '%{buildroot}%{phpdir}/Doctrine/Common/Annotations/autoload.php';#" \
+     -i tests/Doctrine/Tests/TestInit.php
+
+: Create tests bootstrap
+(cat <<'BOOTSTRAP'
 <?php
 
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', $class).'.php';
-    @include_once $src;
-});
-AUTOLOAD
+require_once '%{phpdir}/Doctrine/Common/Cache/autoload.php';
+require_once __DIR__ . '/tests/Doctrine/Tests/TestInit.php';
+BOOTSTRAP
+) | tee bootstrap.php
 
-%{_bindir}/phpunit --include-path %{buildroot}/%{_datadir}/php
+: Run tests
+%{_bindir}/phpunit -v --bootstrap bootstrap.php
 %else
 : Tests skipped
 %endif
@@ -126,11 +165,16 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc *.md composer.json
-%{_datadir}/php/Doctrine/Common/Annotations
+%doc *.md
+%doc composer.json
+%{phpdir}/Doctrine/Common/Annotations
 
 
 %changelog
+* Wed Jun 24 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.6-1
+- Updated to 1.2.6 (RHBZ #1211816)
+- Added autoloader
+
 * Sun Dec 28 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.3-1
 - Updated to 1.2.3 (BZ #1176942)
 
