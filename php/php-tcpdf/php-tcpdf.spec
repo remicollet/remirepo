@@ -1,4 +1,4 @@
-# spec file for php-tcpdf
+# remirepo/Fedora spec file for php-tcpdf
 #
 # Copyright (c) 2013-2015 Remi Collet, Johan Cwiklinski
 # License: CC-BY-SA
@@ -11,7 +11,7 @@
 
 Name:           php-tcpdf
 Summary:        PHP class for generating PDF documents and barcodes
-Version:        6.2.8
+Version:        6.2.9
 Release:        1%{?dist}
 
 URL:            http://www.tcpdf.org
@@ -322,6 +322,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 27 2015 Remi Collet <remi@fedoraproject.org> - 6.2.9-1
+- update to 6.2.9
+
 * Thu Apr 30 2015 Remi Collet <remi@fedoraproject.org> - 6.2.8-1
 - update to 6.2.8
 
