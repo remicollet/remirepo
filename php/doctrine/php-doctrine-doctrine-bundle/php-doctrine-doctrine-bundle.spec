@@ -1,3 +1,4 @@
+# remirepo spec file for php-doctrine-doctrine-bundle, from:
 #
 # Fedora spec file for php-doctrine-doctrine-bundle
 #
@@ -58,6 +59,7 @@ URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
 BuildArch:     noarch
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # Tests
 %if %{with_tests}
 ## composer.json
@@ -160,6 +162,7 @@ AUTOLOAD
 
 
 %install
+rm -rf %{buildroot}
 mkdir -p %{buildroot}%{phpdir}/Doctrine/Bundle/DoctrineBundle
 cp -pr Command Controller DataCollector DependencyInjection Mapping Resources Tests Twig *.php \
     %{buildroot}%{phpdir}/Doctrine/Bundle/DoctrineBundle/
@@ -174,7 +177,12 @@ cp -pr Command Controller DataCollector DependencyInjection Mapping Resources Te
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -184,6 +192,9 @@ cp -pr Command Controller DataCollector DependencyInjection Mapping Resources Te
 
 
 %changelog
+* Sat Jun 27 2015 Remi Collet <remi@remirepo.net> - 1.5.0-3
+- backport for remi repo
+
 * Fri Jun 26 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.5.0-3
 - Autoloader updates
 
