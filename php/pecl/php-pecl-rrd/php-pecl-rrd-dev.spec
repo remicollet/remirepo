@@ -21,21 +21,17 @@
 %else
 %global ini_name  40-%{pecl_name}.ini
 %endif
-%global prever    beta2
+%global prever    beta3
 
 Summary:      PHP Bindings for rrdtool
 Name:         %{?scl_prefix}php-pecl-rrd
 Version:      2.0.0
-Release:      0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:      0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      BSD
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/rrd
 
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
-
-# http://svn.php.net/viewvc?view=revision&revision=336981
-# http://svn.php.net/viewvc?view=revision&revision=336985
-Patch0:       %{pecl_name}-upstream.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel >= 7
@@ -96,7 +92,6 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd NTS
-%patch0 -p3 -b .upstream
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_RRD_VERSION/{s/.* "//;s/".*$//;p}' php_rrd.h)
@@ -225,6 +220,10 @@ fi
 
 
 %changelog
+* Sat Jun 27 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.3.beta3
+- update to 2.0.0beta3
+- drop upstream patches
+
 * Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.2.beta2
 - rebuild for "rh_layout" (php70)
 
