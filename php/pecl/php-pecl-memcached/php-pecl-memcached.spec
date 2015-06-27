@@ -244,11 +244,8 @@ make install -C ZTS INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
+# Documentation
 cd NTS
-for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -347,7 +344,7 @@ exit $ret
 
 
 %changelog
-* Tue Jun 23 2015 Remi Collet <rcollet@redhat.com> - 2.1.6-9
+* Tue Jun 23 2015 Remi Collet <rcollet@redhat.com> - 2.2.0-6
 - allow build against rh-php56 (as more-php56)
 - don't install/register tests
 - drop runtime dependency on pear, new scriptlets

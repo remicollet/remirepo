@@ -24,9 +24,17 @@
 %{!?__php:       %global __php        %{_bindir}/php}
 
 %global with_fastlz 1
+%global with_igbin  0
 %global with_zts    0%{?__ztsphp:1}
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 %global pecl_name   memcached
+%global gh_commit   4187e2277fa7469b0b8a67045083dde1950cecc0
+%global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_date     20150423
+#global gh_owner    php-memcached-dev
+# Temporarily use Rasmus fork
+%global gh_owner    rlerdorf
+%global gh_project  php-memcached
 #global prever      RC1
 #global intver      rc1
 %if "%{php_version}" < "5.6"
@@ -40,22 +48,24 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?sub_prefix}php-pecl-memcached
 Version:      2.2.0
-Release:      6%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:      7.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
-Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
+Source0:      https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}.tar.gz
 
-# https://github.com/php-memcached-dev/php-memcached/pull/151
-Patch0:       %{pecl_name}-fastlz.patch
+# https://github.com/rlerdorf/php-memcached/pull/2
+Patch0:       %{pecl_name}-pr2.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # 5.2.10 required to HAVE_JSON enabled
 BuildRequires: %{?scl_prefix}php-devel >= 5.2.10
 BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: %{?scl_prefix}php-json
+%if %{with_igbin}
 BuildRequires: %{?sub_prefix}php-pecl-igbinary-devel
+%endif
 %ifnarch ppc64
 BuildRequires: %{?sub_prefix}php-pecl-msgpack-devel
 %endif
@@ -89,7 +99,9 @@ BuildRequires: libmemcached-devel  >= 1.0.16
 Requires:     %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:     %{?scl_prefix}php(api) = %{php_core_api}
 Requires:     %{?scl_prefix}php-json%{?_isa}
+%if %{with_igbin}
 Requires:     %{?sub_prefix}php-pecl-igbinary%{?_isa}
+%endif
 %ifnarch ppc64
 Requires:     %{?sub_prefix}php-pecl-msgpack%{?_isa}
 %endif
@@ -143,7 +155,8 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %prep 
 %setup -c -q
 
-mv %{pecl_name}-%{version}%{?prever} NTS
+mv %{gh_project}-%{gh_commit} NTS
+mv NTS/package.xml .
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' -i package.xml
@@ -153,7 +166,7 @@ cd NTS
 
 %if %{with_fastlz}
 rm -r fastlz
-sed -e '/name="fastlz/d' -i ../package.xml
+sed -e '/name=.fastlz/d' -i ../package.xml
 %endif
 
 # Check version as upstream often forget to update this
@@ -198,13 +211,16 @@ cp -r NTS ZTS
 export PKG_CONFIG_PATH=%{_libdir}/pkgconfig
 
 peclconf() {
-%configure --enable-memcached-igbinary \
+%configure \
+%if %{with_igbin}
+           --enable-memcached-igbinary \
+%endif
            --enable-memcached-json \
            --enable-memcached-sasl \
 %ifnarch ppc64
            --enable-memcached-msgpack \
 %endif
-%if 0%{?rhel} == 5
+%if 1
            --disable-memcached-protocol \
 %else
            --enable-memcached-protocol \
@@ -244,12 +260,9 @@ make install -C ZTS INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
+# Documentation
 cd NTS
-for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
-for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep "role='doc'" ../package.xml | sed -e "s/^.*name='//;s/'.*$//")
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -347,7 +360,13 @@ exit $ret
 
 
 %changelog
-* Tue Jun 23 2015 Remi Collet <rcollet@redhat.com> - 2.1.6-9
+* Sat Jun 27 2015 Remi Collet <rcollet@redhat.com> - 2.2.0-7.20150423git4187e22
+- switch sources from pecl to github
+- temporarily use rlerdorf fork (php7 compatibility)
+- disable igbinary
+- open https://github.com/rlerdorf/php-memcached/pull/2 - msgpack
+
+* Tue Jun 23 2015 Remi Collet <rcollet@redhat.com> - 2.2.0-6
 - allow build against rh-php56 (as more-php56)
 - don't install/register tests
 - drop runtime dependency on pear, new scriptlets
