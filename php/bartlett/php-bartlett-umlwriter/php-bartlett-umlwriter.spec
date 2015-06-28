@@ -21,7 +21,7 @@
 
 Name:           php-bartlett-umlwriter
 Version:        1.0.0
-%global specrel 5
+%global specrel 6
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Create UML class diagrams from your PHP source
 
@@ -115,8 +115,10 @@ install -D -p -m 755 bin/umlwriter  %{buildroot}%{_bindir}/umlwriter
 
 %check
 %if %{with_tests}
+#php -r 'require "%{buildroot}%{_datadir}/php/Bartlett/UmlWriter/autoload.php"; print_r($fedoraClassLoader->getPrefixes());'
+
 %{_bindir}/phpunit \
-  --bootstrap src/Bartlett/UmlWriter/autoload.php \
+  --bootstrap %{buildroot}%{_datadir}/php/Bartlett/UmlWriter/autoload.php \
   --verbose
 %else
 : Test suite disabled
@@ -133,6 +135,9 @@ install -D -p -m 755 bin/umlwriter  %{buildroot}%{_bindir}/umlwriter
 
 
 %changelog
+* Sun Jun 28 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-6
+- fix autoloader
+
 * Fri Jun 26 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-5
 - rewrite autoloader
 

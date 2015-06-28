@@ -15,13 +15,10 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
     $fedoraClassLoader->register();
 }
 $fedoraClassLoader->addPrefixes(array(
-    'Symfony\\Component'                  => $vendorDir,
-    'TokenReflection'                     => $vendorDir,
-    'Bartlett\\Umlwiter'                  => dirname(dirname(__DIR__)),
+    'Symfony\\Component\\'                  => $vendorDir,
+    'TokenReflection\\'                     => $vendorDir,
+    'Bartlett\\UmlWriter\\'                 => dirname(dirname(__DIR__)),
 ));
-if (is_file('/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite')) {
-    putenv('BARTLETT_COMPATINFO_DB=/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite');
-}
 
 // Dependencies
 require_once $vendorDir . '/SebastianBergmann/Version/autoload.php';
