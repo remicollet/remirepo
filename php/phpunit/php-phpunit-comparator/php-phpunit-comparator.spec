@@ -65,10 +65,11 @@ This component provides the functionality to compare PHP values for equality.
 # Generate the Autoloader
 phpab --output src/autoload.php src
 
+# Rely on include_path as in PHPUnit dependencies
 cat <<EOF | tee -a src/autoload.php
 // Dependencies' autoloaders
-require_once '%{_datadir}/php/SebastianBergmann/Diff/autoload.php';
-require_once '%{_datadir}/php/SebastianBergmann/Exporter/autoload.php';
+require_once 'SebastianBergmann/Diff/autoload.php';
+require_once 'SebastianBergmann/Exporter/autoload.php';
 EOF
 
 
