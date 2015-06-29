@@ -1,23 +1,29 @@
 <?php
-/* not namespaced, use classs-map */
-require_once 'phpspec/php-diff/autoload.php';
-/* prophecy and its dependencies */
-require_once 'Prophecy/autoload.php';
+/* Autoloader for phpspec/phpspec and its dependencies */
 
 $vendorDir = '/usr/share/php';
-require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
-use Symfony\Component\ClassLoader\UniversalClassLoader;
+// Use Symfony autoloader
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once $vendorDir . '/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
 
-$loader = new UniversalClassLoader();
-$ns = array(
-    'Doctrine\\Instantiator'              => $vendorDir,
-    'SebastianBergmann'                   => $vendorDir,
-    'Symfony\\Component'                  => $vendorDir,
-    'PhpSpec'                             => dirname(__DIR__),
-);
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefixes(array(
+    'Symfony\\Component\\'                  => $vendorDir,
+    'PhpSpec\\'                             => dirname(__DIR__),
+));
+
 /* spec tree in current dir, when exists */
 if (is_dir(getcwd().'/spec')) {
-    $ns['spec'] = getcwd();
+    $fedoraClassLoader->addPrefix('spec', getcwd());
 }
-$loader->registerNamespaces($ns);
-$loader->register();
+
+// Depdencies (Rely on include_path as in PHPUnit dependencies + circular dependencies)
+require_once 'phpspec/php-diff/autoload.php';
+require_once 'Prophecy/autoload.php';
+require_once 'SebastianBergmann/Exporter/autoload.php';
+require_once 'Doctrine/Instantiator/autoload.php';

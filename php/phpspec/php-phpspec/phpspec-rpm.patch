@@ -1,6 +1,7 @@
---- bin/phpspec.rpm	2015-04-19 06:39:34.900178171 +0200
-+++ bin/phpspec	2015-04-19 06:41:59.521743839 +0200
-@@ -5,22 +5,9 @@
+diff -up bin/phpspec.rpm bin/phpspec
+--- bin/phpspec.rpm	2015-05-30 17:21:40.000000000 +0200
++++ bin/phpspec	2015-06-29 15:29:46.783393891 +0200
+@@ -5,22 +5,18 @@
  
 -if (is_file($autoload = getcwd() . '/vendor/autoload.php')) {
 -    require $autoload;
@@ -21,7 +22,15 @@
 -        'php composer.phar install' . PHP_EOL
 -    );
 -    exit(1);
--}
++// Ensure correct include_path for RHSCL
++$inc = get_include_path();
++$dirs = explode(':', $inc);
++if (!in_array('/usr/share/php', $dirs)) {
++    $dirs[] = '/usr/share/php';
++    set_include_path(implode(':', $dirs));
+ }
++unset ($inc, $dirs);
++
 +require_once 'PhpSpec/autoload.php';
  
  $app = new PhpSpec\Console\Application(PHPSPEC_VERSION);

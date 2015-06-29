@@ -13,7 +13,7 @@
 
 Name:           php-phpspec
 Version:        2.2.1
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Specification-oriented BDD framework for PHP
 
 Group:          Development/Libraries
@@ -38,9 +38,10 @@ BuildRequires:  php-composer(symfony/finder)           >= 2.1
 BuildRequires:  php-composer(symfony/process)          >= 2.1
 BuildRequires:  php-composer(symfony/yaml)             >= 2.1
 BuildRequires:  php-composer(doctrine/instantiator)    >= 1.0.1
-BuildRequires:  php-composer(symfony/class-loader)
 # From composer.json, require-dev
 BuildRequires:  php-composer(symfony/filesystem)       >= 2.1
+# For our autoloader
+BuildRequires:  php-composer(symfony/class-loader)
 
 # From composer.json, require
 #         "php":                      ">=5.3.3",
@@ -122,14 +123,15 @@ install -Dpm755 bin/phpspec %{buildroot}%{_bindir}/phpspec
 
 %check
 export LANG=en_GB.utf8
+
 %{_bindir}/php \
-  -d include_path=.:src:/usr/share/php \
+  -d include_path=.:%{buildroot}%{_datadir}/php \
   bin/phpspec \
   run --format pretty --verbose --no-ansi
 
 %{_bindir}/phpunit \
   --verbose \
-  --bootstrap src/PhpSpec/autoload.php
+  --bootstrap %{buildroot}%{_datadir}/php/PhpSpec/autoload.php
 
 
 %clean
@@ -147,6 +149,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 29 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-3
+- switch to $fedoraClassLoader autoloader
+- ensure /usr/share/php is in include_path
+
 * Sat May 30 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - update to 2.2.1
 
