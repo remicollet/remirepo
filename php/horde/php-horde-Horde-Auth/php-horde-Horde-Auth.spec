@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Auth
+# remirepo/fedora spec file for php-horde-Horde-Auth
 #
 # Copyright (c) 2012-2015 Nick Bebout, Remi Collet
 #
@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Auth
-Version:        2.1.8
+Version:        2.1.9
 Release:        1%{?dist}
 Summary:        Horde Authentication API
 
@@ -146,6 +146,9 @@ fi
 
 
 %changelog
+* Mon Jun 29 2015 Remi Collet <remi@fedoraproject.org> - 2.1.9-1
+- Update to 2.1.9
+
 * Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.1.8-1
 - Update to 2.1.8
 
