@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-phploc
 Version:        2.1.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A tool for quickly measuring the size of a PHP project
 
 Group:          Development/Libraries
@@ -46,6 +46,7 @@ BuildRequires:  php-composer(sebastian/version) >= 1.0.3
 BuildRequires:  php-composer(sebastian/version) <  2
 BuildRequires:  php-composer(symfony/console) >= 2.5
 BuildRequires:  php-composer(symfony/console) <  3
+# For our autoloader
 BuildRequires:  php-composer(symfony/class-loader)
 %endif
 
@@ -110,7 +111,7 @@ install -D -p -m 755 phploc %{buildroot}%{_bindir}/phploc
 %if %{with_tests}
 %check
 phpunit \
-   --bootstrap src/autoload.php \
+   --bootstrap %{buildroot}%{php_home}/PHPLOC/autoload.php \
    --verbose tests
 %endif
 
@@ -137,6 +138,9 @@ fi
 
 
 %changelog
+* Mon Jun 29 2015 Remi Collet <remi@fedoraproject.org> - 2.1.3-2
+- switch to $fedoraClassLoader autoloader
+
 * Thu Jun  4 2015 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
 - update to 2.1.3
 - improve autoloader

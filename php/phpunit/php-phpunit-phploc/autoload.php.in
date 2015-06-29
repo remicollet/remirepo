@@ -1,20 +1,24 @@
 <?php
-/* Inspired from autoload from version 2.0.3 */
+/* Autoloader for phploc/phploc and its dependencies */
 
 $vendorDir = '/usr/share/php';
 require_once $vendorDir . '/SebastianBergmann/FinderFacade/autoload.php';
 require_once $vendorDir . '/SebastianBergmann/Git/autoload.php';
 require_once $vendorDir . '/SebastianBergmann/Version/autoload.php';
 
-if (!(isset($sfuloader) && $sfuloader instanceof Symfony\Component\ClassLoader\UniversalClassLoader)) {
-    require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
-    $sfuloader = new Symfony\Component\ClassLoader\UniversalClassLoader();
-    $sfuloader->register();
+require_once $vendorDir . '/TheSeer/fDOMDocument/autoload.php';
+// Use Symfony autoloader
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once $vendorDir . '/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
 }
-$sfuloader->registerNamespaces(array(
-    'Symfony\\Component\\Console'         => $vendorDir,
-    'Symfony\\Component\\ClassLoader'     => $vendorDir,
-));
+
+/* For symfony/console */
+$fedoraClassLoader->addPrefix('Symfony\\Component\\', $vendorDir);
 
 spl_autoload_register(
     function($class) {
