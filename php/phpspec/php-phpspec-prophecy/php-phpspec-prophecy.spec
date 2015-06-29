@@ -1,4 +1,4 @@
-# spec file for php-phpspec-prophecy
+# remirepo/fedora spec file for php-phpspec-prophecy
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
@@ -77,6 +77,7 @@ cp %{SOURCE1} src/Prophecy/autoload.php
 
 %build
 # Nothing
+
 
 %install
 rm -rf       %{buildroot}
