@@ -1,10 +1,10 @@
-diff -up Bytekit/Autoload.php.orig Bytekit/Autoload.php
---- a/Bytekit/Autoload.php	2012-08-27 07:04:42.000000000 +0200
-+++ b/Bytekit/Autoload.php	2015-06-03 18:18:33.706764805 +0200
-@@ -41,16 +41,16 @@
+diff -up ./Bytekit/Autoload.php.rpm ./Bytekit/Autoload.php
+--- ./Bytekit/Autoload.php.rpm	2012-08-27 07:04:42.000000000 +0200
++++ ./Bytekit/Autoload.php	2015-06-29 19:22:45.032189615 +0200
+@@ -41,16 +41,19 @@
   * @since     File available since Release 1.0.0
   */
-
+ 
 -require_once 'Symfony/Component/Finder/Finder.php';
 -require_once 'Symfony/Component/Finder/Glob.php';
 -require_once 'Symfony/Component/Finder/Iterator/FilterIterator.php';
@@ -16,26 +16,36 @@ diff -up Bytekit/Autoload.php.orig Bytekit/Autoload.php
 -require_once 'Symfony/Component/Finder/SplFileInfo.php';
 -require_once 'ezc/Base/base.php';
 +$vendorDir = '/usr/share/php';
-+require_once $vendorDir . '/ezc/Base/base.php';
-+require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
-+use Symfony\Component\ClassLoader\UniversalClassLoader;
++// Use Symfony autoloader
++if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
++    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
++        require_once $vendorDir . '/Symfony/Component/ClassLoader/ClassLoader.php';
++    }
 +
-+$loader = new UniversalClassLoader();
-+$loader->registerNamespaces(array(
-+    'Symfony\\Component\\Finder'          => $vendorDir,
-+));
-+$loader->register();
-
++    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
++    $fedoraClassLoader->register();
++}
++
++/* for symfony/finder */
++$fedoraClassLoader->addPrefix('Symfony\\Component\\', $vendorDir);
+ 
  spl_autoload_register(
      function($class) {
---- a/bytekit.php	2015-06-03 18:26:38.915850268 +0200
-+++ b/bytekit.php	2015-06-03 18:27:45.246135361 +0200
-@@ -46,7 +46,7 @@
+@@ -82,4 +85,5 @@ spl_autoload_register(
+     }
+ );
+ 
++require_once $vendorDir . '/ezc/Base/base.php';
+ spl_autoload_register(array('ezcBase', 'autoload'));
+diff -up ./bytekit.php.rpm ./bytekit.php
+--- ./bytekit.php.rpm	2012-08-27 07:04:42.000000000 +0200
++++ ./bytekit.php	2015-06-29 19:20:55.066655475 +0200
+@@ -46,7 +46,7 @@ if (strpos('@php_bin@', '@php_bin') ===
      set_include_path(dirname(__FILE__) . PATH_SEPARATOR . get_include_path());
  }
-
+ 
 -require_once 'Bytekit/Autoload.php';
 +require_once '/usr/share/php/Bytekit/Autoload.php';
-
+ 
  $command = new Bytekit_TextUI_Command;
  $command->main();

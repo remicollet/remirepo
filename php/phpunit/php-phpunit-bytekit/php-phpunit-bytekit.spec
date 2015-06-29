@@ -10,7 +10,7 @@
 
 Name:           php-phpunit-bytekit
 Version:        1.1.3
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A command-line tool built on the PHP Bytekit extension
 
 Group:          Development/Libraries
@@ -90,6 +90,9 @@ fi
 
 
 %changelog
+* Mon Jun 29 2015 Remi Collet <remi@fedoraproject.org> - 1.1.3-5
+- use $fedoraClassLoader autoloader
+
 * Wed Jun  3 2015 Remi Collet <remi@fedoraproject.org> - 1.1.3-4
 - swicth from eZ to Zeta Components
 - ensure compatibility with SCL
