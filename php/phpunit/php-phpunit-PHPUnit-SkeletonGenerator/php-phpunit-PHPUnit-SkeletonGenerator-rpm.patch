@@ -1,12 +1,6 @@
 diff -up phpunit-skeleton-generator-e933d394bdfacec34b7ff4e8fc53c625e09e9721/phpunit-skelgen.rpm phpunit-skeleton-generator-e933d394bdfacec34b7ff4e8fc53c625e09e9721/phpunit-skelgen
 --- phpunit-skeleton-generator-e933d394bdfacec34b7ff4e8fc53c625e09e9721/phpunit-skelgen.rpm	2014-05-13 15:03:03.000000000 +0200
 +++ phpunit-skeleton-generator-e933d394bdfacec34b7ff4e8fc53c625e09e9721/phpunit-skelgen	2014-05-13 15:04:42.000000000 +0200
-@@ -1,4 +1,4 @@
--#!/usr/bin/env php
-+#!/usr/bin/php
- <?php
- /**
-  * phpunit-skeleton-generator
 @@ -42,23 +42,7 @@
   * @since     File available since Release 1.0.0
   */

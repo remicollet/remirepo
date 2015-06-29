@@ -1,20 +1,27 @@
 <?php
-/* inspired from autoload from version 1.2.1 */
+/* Autoloader for phpunit/phpunit-skeleton-generator and its dependencies */
 
-$phpdir = '/usr/share/php';
+$vendorDir = '/usr/share/php';
+// Use Symfony autoloader
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once $vendorDir . '/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
 
-require_once $phpdir.'/Text/Template/Autoload.php';
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
 
-require_once $phpdir.'/SebastianBergmann/Version/autoload.php';
+/* for symfony/console */
+$fedoraClassLoader->addPrefix('Symfony\\Component\\', $vendorDir);
 
-require_once $phpdir.'/Symfony/Component/ClassLoader/UniversalClassLoader.php';
-$loader = new Symfony\Component\ClassLoader\UniversalClassLoader();
-$loader->registerNamespaces(array(
-    'Symfony\\Component\\Console'         => $phpdir,
-    'Symfony\\Component\\ClassLoader'     => $phpdir,
-    'org\\bovigo\\vfs'                    => $phpdir,
-));
-$loader->register();
+/* optional, for test suite */
+if (is_dir($vendorDir . '/org/bovigo/vfs')) {
+    $fedoraClassLoader->addPrefix('org\\bovigo\\vfs', $vendorDir);
+}
+
+require_once $vendorDir . '/Text/Template/Autoload.php';
+require_once $vendorDir . '/SebastianBergmann/Version/autoload.php';
 
 spl_autoload_register(
     function($class) {

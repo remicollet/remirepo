@@ -1,4 +1,4 @@
-# spec file for php-phpunit-PHPUnit-SkeletonGenerator
+# remirepo/fedora spec file for php-phpunit-PHPUnit-SkeletonGenerator
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
@@ -17,7 +17,7 @@
 
 Name:           php-phpunit-PHPUnit-SkeletonGenerator
 Version:        2.0.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Tool that can generate skeleton test classes
 
 Group:          Development/Libraries
@@ -36,15 +36,19 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
-BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php-composer(phpunit/php-text-template) >= 1.2
 BuildRequires:  php-composer(sebastian/version)         >= 1.0
 BuildRequires:  php-composer(symfony/console)           >= 2.4
-BuildRequires:  php-composer(symfony/class-loader)      >= 2.4
+# From composer.json, requires-dev
+#        "mikey179/vfsStream": "~1.2"
+#        "phpunit/phpunit": "~4.0",
 BuildRequires:  php-composer(mikey179/vfsStream)        >= 1.2
+BuildRequires:  %{_bindir}/phpunit
+# For our autoloader
+BuildRequires:  php-composer(symfony/class-loader)
 %endif
 
-# From composer.json
+# From composer.json, requires
 #        "php": ">=5.3.3",
 #        "phpunit/php-text-template": "~1.2",
 #        "sebastian/version": "~1.0",
@@ -57,8 +61,7 @@ Requires:       php-composer(sebastian/version)         <  2
 Requires:       php-composer(symfony/console)           >= 2.4
 Requires:       php-composer(symfony/console)           <  3
 # Need for our autoloader patch
-Requires:       php-composer(symfony/class-loader)      >= 2.4
-Requires:       php-composer(symfony/class-loader)      <  3
+Requires:       php-composer(symfony/class-loader)
 # From phpcompatinfo report from 2.0.0
 Requires:       php-date
 Requires:       php-pcre
@@ -104,8 +107,8 @@ rm -rf %{buildroot}
 %check
 cd build
 phpunit \
-  -d date.timezone=UTC \
-  --bootstrap ../src/autoload.php
+  --bootstrap %{buildroot}%{php_home}/SebastianBergmann/PHPUnit/SkeletonGenerator/autoload.php \
+  --verbose
 %endif
 
 
@@ -126,6 +129,9 @@ fi
 
 
 %changelog
+* Mon Jun 29 2015 Remi Collet <remi@fedoraproject.org> - 2.0.1-3
+- use $fedoraClassLoader autoloader
+
 * Tue Jul 22 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
 - composer dependencies
 
