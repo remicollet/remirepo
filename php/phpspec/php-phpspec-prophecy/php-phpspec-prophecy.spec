@@ -71,6 +71,7 @@ to be used inside any testing framework out there with minimal effort.
 : Generate a simple autoloader
 %{_bindir}/phpab --output src/Prophecy/autoload.php src/Prophecy
 
+# Rely on include_path as in PHPUnit dependencies + circular dependencies
 cat <<EOF | tee -a src/Prophecy/autoload.php
 // Dependencies' autoloaders
 require_once 'Doctrine/Instantiator/autoload.php';
