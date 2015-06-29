@@ -6,17 +6,17 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    d0ff01698de0eb74e45ebe379b6ac8ccd5a6b0db
+%global gh_commit    943107cfe717a74aa791f57b87fa514c88582b0d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20150620
+%global gh_date      20150626
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           composer
 Version:        1.0.0
-Release:        0.5.%{gh_date}git%{gh_short}%{?dist}
+Release:        0.6.%{gh_date}git%{gh_short}%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -149,7 +149,7 @@ install -Dpm 755 bin/%{name} %{buildroot}%{_bindir}/%{name}
 %if %{with_tests}
 : Run test suite
 export BUILDROOT=%{buildroot}
-%{_bindir}/phpunit --include-path $PWD/src --verbose
+%{_bindir}/phpunit --include-path %{buildroot}%{_datadir}/php --verbose
 %else
 : Test suite disabled
 %endif
@@ -171,6 +171,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 29 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.6.20150626git943107c
+- new snapshot
+- review autoloader
+
 * Sun Jun 21 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.5.20150620gitd0ff016
 - new snapshot
 - add missing BR on php-zip
