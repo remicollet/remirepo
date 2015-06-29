@@ -20,7 +20,7 @@
 
 Name:           php-phpunit-comparator
 Version:        1.1.1
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Compare PHP values for equality
 
 Group:          Development/Libraries
@@ -65,6 +65,12 @@ This component provides the functionality to compare PHP values for equality.
 # Generate the Autoloader
 phpab --output src/autoload.php src
 
+cat <<EOF | tee -a src/autoload.php
+// Dependencies' autoloaders
+require_once '%{_datadir}/php/SebastianBergmann/Diff/autoload.php';
+require_once '%{_datadir}/php/SebastianBergmann/Exporter/autoload.php';
+EOF
+
 
 %install
 rm -rf     %{buildroot}
@@ -78,7 +84,7 @@ sed -e 's/vendor/src/' -i tests/bootstrap.php
 sed -e '/log/d' phpunit.xml.dist >phpunit.xml
 
 phpunit \
-  --include-path %{_datadir}/php \
+  --include-path %{buildroot}%{_datadir}/php \
   --bootstrap tests/bootstrap.php
 %else
 : bootstrap build with test suite disabled
@@ -99,6 +105,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 29 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-3
+- manage dependencies in autoloader
+
 * Fri Jan 30 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - update to 1.1.1
 - raise dependency on sebastian/diff >= 1.2
