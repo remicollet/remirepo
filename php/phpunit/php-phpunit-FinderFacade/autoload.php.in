@@ -1,20 +1,21 @@
 <?php
-/* Inspipred from Autoload from version 1.1 */
+/* Autoloader for sebastian/finder-facade and its dependencies */
 
 $vendorDir = '/usr/share/php';
 require_once $vendorDir . '/TheSeer/fDOMDocument/autoload.php';
-require_once $vendorDir . '/Symfony/Component/ClassLoader/UniversalClassLoader.php';
-use Symfony\Component\ClassLoader\UniversalClassLoader;
+// Use Symfony autoloader
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once $vendorDir . '/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
 
-$sfuloader = new UniversalClassLoader();
-$sfuloader->registerNamespaces(array(
-    'Symfony\\Component\\Finder'          => $vendorDir,
-    'Symfony\\Component\\ClassLoader'     => $vendorDir,
-));
-$sfuloader->register();
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
 
-// @codingStandardsIgnoreFile
-// @codeCoverageIgnoreStart
+/* For symfony/finder */
+$fedoraClassLoader->addPrefix('Symfony\\Component\\', $vendorDir);
+
 spl_autoload_register(
   function($class) {
     static $classes = NULL;
@@ -32,4 +33,3 @@ spl_autoload_register(
     }
   }
 );
-// @codeCoverageIgnoreEnd
