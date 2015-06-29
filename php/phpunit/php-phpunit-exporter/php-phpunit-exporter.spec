@@ -73,9 +73,11 @@ Provides the functionality to export PHP variables for visualization.
 # Generate the Autoloader (which was part of the Pear package)
 phpab --output src/autoload.php src
 
-# Add dependency
-echo "require_once 'SebastianBergmann/RecursionContext/autoload.php';" \
-    >> src/autoload.php
+# Rely on include_path as in PHPUnit dependencies
+cat <<EOF | tee -a src/autoload.php
+// Dependency' autoloader
+require_once 'SebastianBergmann/RecursionContext/autoload.php';
+EOF
 
 
 %install
