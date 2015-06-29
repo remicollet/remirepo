@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global bootstrap    1
+%global bootstrap    0
 %global gh_commit    3132b1f44c7bf2ec4c7eb2d3cb78fdeca760d373
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpspec
@@ -20,7 +20,7 @@
 
 Name:           php-phpspec-prophecy
 Version:        1.4.1
-Release:        1%{?dist}
+Release:        4%{?dist}
 Summary:        Highly opinionated mocking framework for PHP
 
 Group:          Development/Libraries
@@ -28,11 +28,15 @@ License:        MIT
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
+# Autoloader
+Source1:        %{name}-autoload.php
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
 BuildRequires:  %{_bindir}/phpspec
+# For autoloader
+BuildRequires:  php-composer(symfony/class-loader)
 %endif
 
 # from composer.json, requires
@@ -51,6 +55,8 @@ Requires:       php(language) >= 5.3.0
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
+# For autoloader
+Requires:       php-composer(symfony/class-loader)
 
 Provides:       php-composer(phpspec/prophecy) = %{version}
 
@@ -66,19 +72,11 @@ to be used inside any testing framework out there with minimal effort.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+cp %{SOURCE1} src/Prophecy/autoload.php
+
 
 %build
-: Generate a simple autoloader
-%{_bindir}/phpab --output src/Prophecy/autoload.php src/Prophecy
-
-# Rely on include_path as in PHPUnit dependencies + circular dependencies
-cat <<EOF | tee -a src/Prophecy/autoload.php
-// Dependencies' autoloaders
-require_once 'Doctrine/Instantiator/autoload.php';
-require_once 'SebastianBergmann/Comparator/autoload.php';
-require_once 'phpDocumentor/Reflection/DocBlock/autoload.php';
-EOF
-
+# Nothing
 
 %install
 rm -rf       %{buildroot}
@@ -111,6 +109,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 29 2015 Remi Collet <remi@fedoraproject.org> - 1.4.1-4
+- use symfony/class-loader
+- enable test suite
+
 * Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
 - update to 1.4.1
 
