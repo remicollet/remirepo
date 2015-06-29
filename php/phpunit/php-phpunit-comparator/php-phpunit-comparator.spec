@@ -1,4 +1,4 @@
-# spec file for php-phpunit-comparator
+# remirepo/fedora spec file for php-phpunit-comparator
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA
