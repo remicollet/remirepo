@@ -28,7 +28,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Doctrine Cache
 
 Group:         Development/Libraries
@@ -110,7 +110,7 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
     $fedoraClassLoader->register();
 }
 
-$fedoraClassLoader->addPrefix('Doctrine\\Common\\Cache', dirname(dirname(dirname(__DIR__))));
+$fedoraClassLoader->addPrefix('Doctrine\\Common\\Cache\\', dirname(dirname(dirname(__DIR__))));
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -180,6 +180,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 27 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.4.1-2
+- Updated autoloader with trailing separator
+
 * Wed Jun 24 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.4.1-1
 - Updated to 1.4.1 (RHBZ #1211817)
 - Added autoloader
