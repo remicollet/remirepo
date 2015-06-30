@@ -1,5 +1,6 @@
+# remirepo spec file for php-guzzlehttp-guzzle, from:
 #
-# RPM spec file for php-guzzlehttp-guzzle
+# Fedora spec file for php-guzzlehttp-guzzle
 #
 # Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
@@ -11,27 +12,31 @@
 
 %global github_owner     guzzle
 %global github_name      guzzle
-%global github_version   5.1.0
-%global github_commit    f1085bb4e023766a66b7b051914ec73bdf7202b5
+%global github_version   5.3.0
+%global github_commit    f3c8c22471cb55475105c14769644a49c3262b93
 
 %global composer_vendor  guzzlehttp
 %global composer_project guzzle
 
 # "php": ">=5.4.0"
 %global php_min_ver      5.4.0
-# "guzzlehttp/ringphp": "~1.0"
-%global ring_min_ver     1.0
+# "guzzlehttp/ringphp": "^1.1"
+#     Note: Min version not "1.1" because autoloader required
+%global ring_min_ver     1.1.0-3
 %global ring_max_ver     2.0
-# "psr/log": "~1.0"
+# "psr/log": "^1.0"
 %global psr_log_min_ver  1.0
 %global psr_log_max_ver  2.0
 
-%{!?phpdir:     %global phpdir     %{_datadir}/php}
-%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
+# Build using "--without tests" to disable tests
+%global with_tests 0%{!?_without_tests:1}
+
+%{!?phpdir:    %global phpdir    %{_datadir}/php}
+%{!?testsdir:  %global testsdir  %{_datadir}/tests}
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       3%{?github_release}%{?dist}
 Summary:       PHP HTTP client and webservice framework
 
 Group:         Development/Libraries
@@ -41,13 +46,36 @@ Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Tests
+%if %{with_tests}
+BuildRequires: nodejs
+BuildRequires: %{_bindir}/phpunit
+BuildRequires: php-guzzlehttp-ringphp-tests
+## composer.json
+BuildRequires: php(language)                    >= %{php_min_ver}
+#BuildRequires: php-composer(guzzlehttp/ringphp) >= %%{ring_min_ver}
+BuildRequires: php-guzzlehttp-ringphp           >= %{ring_min_ver}
+## phpcompatinfo (computed from version 5.3.0)
+BuildRequires: php-curl
+BuildRequires: php-date
+BuildRequires: php-filter
+BuildRequires: php-json
+BuildRequires: php-libxml
+BuildRequires: php-pcre
+BuildRequires: php-reflection
+BuildRequires: php-simplexml
+BuildRequires: php-spl
+## Autoloader
+BuildRequires: php-composer(symfony/class-loader)
+%endif
 
 Requires:      ca-certificates
 # composer.json
 Requires:      php(language)                    >= %{php_min_ver}
-Requires:      php-composer(guzzlehttp/ringphp) >= %{ring_min_ver}
+#Requires:      php-composer(guzzlehttp/ringphp) >= %%{ring_min_ver}
+Requires:      php-guzzlehttp-ringphp           >= %{ring_min_ver}
 Requires:      php-composer(guzzlehttp/ringphp) <  %{ring_max_ver}
-# phpcompatinfo (computed from version 5.1.0)
+# phpcompatinfo (computed from version 5.3.0)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-filter
@@ -56,6 +84,8 @@ Requires:      php-libxml
 Requires:      php-pcre
 Requires:      php-simplexml
 Requires:      php-spl
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
 
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
@@ -78,6 +108,32 @@ the pain out of consuming web services.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+: Create autoloader
+(cat <<'AUTOLOAD'
+<?php
+/**
+ * Autoloader created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+require_once '%{phpdir}/GuzzleHttp/Ring/autoload.php';
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('GuzzleHttp\\', dirname(__DIR__));
+
+return $fedoraClassLoader;
+AUTOLOAD
+) | tee src/autoload.php
+
 
 %build
 # Empty build section, nothing required
@@ -90,8 +146,30 @@ cp -pr src/* %{buildroot}%{phpdir}/GuzzleHttp/
 
 
 %check
-# Cannot run tests because RingPHP package does not provide tests
-# (tests/bootstrap.php requires GuzzleHttp\Tests\Ring\Client\Server)
+%if %{with_tests}
+: Create tests autoloader
+(cat <<'AUTOLOAD'
+<?php
+
+require_once 'GuzzleHttp/autoload.php';
+
+$fedoraClassLoader->addPrefix('GuzzleHttp\\Tests', __DIR__);
+AUTOLOAD
+) | tee tests/autoload.php
+
+: Modify tests bootstrap
+sed -e "s#.*require.*autoload.*#require __DIR__ . '/autoload.php';#" \
+    -e "s#.*require.*Server.php.*#require '%{testsdir}/php-guzzlehttp-ringphp/autoload.php';#" \
+    -i tests/bootstrap.php
+
+: Mock tests PSR-0
+mkdir tests/GuzzleHttp
+ln -s .. tests/GuzzleHttp/Tests
+
+%{_bindir}/phpunit --include-path %{buildroot}%{phpdir} -v
+%else
+: Tests skipped
+%endif
 
 
 %clean
@@ -108,6 +186,14 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jun 28 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 5.3.0-3
+- Autoloader updates
+
+* Sun Jun 14 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 5.3.0-1
+- Updated to 5.3.0 (BZ #1140134)
+- Added autoloader
+- Re-added tests
+
 * Sun Feb 08 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 5.1.0-1
 - Updated to 5.1.0 (BZ #1140134)
 - CA cert no longer bundled (see
