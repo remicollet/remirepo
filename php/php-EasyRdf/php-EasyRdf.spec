@@ -1,7 +1,8 @@
+# remirepo spec file for php-EasyRdf, from:
 #
-# RPM spec file for php-EasyRdf
+# Fedora spec file for php-EasyRdf
 #
-# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -11,25 +12,31 @@
 %global composer_vendor  easyrdf
 %global composer_project easyrdf
 
-# ">=5.2.8"
+# "php": ">=5.2.8"
 %global php_min_ver 5.2.8
+
+%if 0%{?el6}
+%global raptor_pkg raptor
+%else
+%global raptor_pkg raptor2
+%endif
+
+# php-redland not available in remirepo
+%global redland_support 0%{!?rhel}
 
 %if 0%{?fedora} > 9 || 0%{?rhel} > 5
 # Build using "--without tests" to disable tests
-%global with_tests %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
 %else
 # need raptor 1.4.17
 %global with_tests 0
 %endif
 
-%{!?phpdir:     %global phpdir     %{_datadir}/php}
-%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
-
-# TODO see for php-redland not yet available in remirepo
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-EasyRdf
-Version:       0.8.0
-Release:       3%{?dist}
+Version:       0.9.0
+Release:       1%{?dist}
 Summary:       A PHP library designed to make it easy to consume and produce RDF
 
 Group:         Development/Libraries
@@ -39,14 +46,17 @@ Source0:       %{url}/downloads/easyrdf-%{version}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Tests
 %if %{with_tests}
 BuildRequires: graphviz
-# provided by raptor or raptor2
-BuildRequires: %{_bindir}/rapper
-# compose.json
+BuildRequires: %{raptor_pkg}
+%if %{redland_support}
+BuildRequires: php-redland
+%endif
+## composer.json
+BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-phpunit-PHPUnit
-# phpcompatinfo (computed from version 0.8.0)
+## phpcompatinfo (computed from version 0.9.0)
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-dom
@@ -54,15 +64,17 @@ BuildRequires: php-json
 BuildRequires: php-libxml
 BuildRequires: php-mbstring
 BuildRequires: php-pcre
-#BuildRequires: php-redland
 BuildRequires: php-reflection
 BuildRequires: php-simplexml
 BuildRequires: php-spl
 BuildRequires: php-xml
+## Autoloader
+BuildRequires: php-composer(symfony/class-loader)
 %endif
 
+# composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo requires (computed from version 0.8.0)
+# phpcompatinfo requires (computed from version 0.9.0)
 Requires:      php-ctype
 Requires:      php-date
 Requires:      php-dom
@@ -70,11 +82,13 @@ Requires:      php-json
 Requires:      php-libxml
 Requires:      php-mbstring
 Requires:      php-pcre
-#Requires:      php-redland
 Requires:      php-simplexml
 Requires:      php-spl
 Requires:      php-xml
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
 
+# Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 Obsoletes:     %{name}-test
@@ -97,8 +111,11 @@ SPARQL queries can be made over HTTP to a Triplestore using the
 EasyRdf_Sparql_Client class. SELECT and ASK queries will return an
 EasyRdf_Sparql_Result object and CONSTRUCT and DESCRIBE queries will
 return an EasyRdf_Graph object.
-
-Optional dependencies: graphviz, graphviz-gd, raptor, raptor2
+%if %{redland_support}
+Optional dependencies: graphviz, graphviz-gd, %{raptor_pkg}, php-redland
+%else
+Optional dependencies: graphviz, graphviz-gd, %{raptor_pkg}
+%endif
 
 
 %package doc
@@ -112,28 +129,55 @@ Group:   Documentation
 %prep
 %setup -qn easyrdf-%{version}
 
+: Create autoloader
+(cat <<'AUTOLOAD'
+<?php
+/**
+ * Autoloader created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('EasyRdf_', dirname(__DIR__));
+
+return $fedoraClassLoader;
+AUTOLOAD
+) | tee lib/EasyRdf/autoload.php
+
 
 %build
 # Empty build section, nothing to build
 
 
 %install
-mkdir -p -m 0755 %{buildroot}%{phpdir}
+rm -rf %{buildroot}
+mkdir -p %{buildroot}%{phpdir}
 cp -rp lib/* %{buildroot}%{phpdir}/
 
 
 %check
 %if %{with_tests}
-: Temporarily skipping tests that sometimes cause timeout exceptions
+: Skip tests that sometimes cause timeout exceptions
 sed -e 's/testSerialiseSvg/SKIP_testSerialiseSvg/' \
     -e 's/testSerialiseGif/SKIP_testSerialiseGif/' \
     -e 's/testSerialiseSvg/SKIP_testSerialisePng/' \
     -i test/EasyRdf/Serialiser/GraphVizTest.php
 
-# Create PHPUnit config
-cat > phpunit.xml <<'PHPUNIT'
+: Create PHPUnit config
+(cat <<'PHPUNIT'
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit>
+<phpunit
+    bootstrap="%{buildroot}%{phpdir}/EasyRdf/autoload.php"
+    colors="true">
     <testsuites>
       <testsuite name="EasyRdf Library">
         <directory suffix="Test.php">./test/EasyRdf/</directory>
@@ -141,27 +185,52 @@ cat > phpunit.xml <<'PHPUNIT'
     </testsuites>
 </phpunit>
 PHPUNIT
+) | tee phpunit.xml
 
-%{__phpunit}
+%if !%{redland_support}
+: No redland support
+rm -f test/EasyRdf/Parser/RedlandTest.php
+%endif
+
+: Run tests
+%{_bindir}/phpunit -v
 %else
 : Tests skipped
 %endif
+
+
+%clean
+rm -rf %{buildroot}
 
 
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE.md
-%doc README.md CHANGELOG.md composer.json doap.rdf
+%doc CHANGELOG.md
+%doc README.md
+%doc composer.json
+%doc doap.rdf
 %{phpdir}/EasyRdf.php
 %{phpdir}/EasyRdf
 
 %files doc
 %defattr(-,root,root,-)
-%doc LICENSE.md docs examples
+%doc docs
+%doc examples
 
 
 %changelog
+* Sun Jun 28 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.9.0-1
+- Updated to 0.9.0 (RHBZ #1163321)
+- Added autoloader
+
+* Tue Nov 18 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.8.0-5
+- Modified raptor and redland logic
+
+* Fri Nov 14 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.8.0-4
+- No raptor or redland for el7
+
 * Thu Nov 13 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.8.0-3
 - Added php-composer(easyrdf/easyrdf) virtual provide
 - Added option to build without tests ("--without tests")
