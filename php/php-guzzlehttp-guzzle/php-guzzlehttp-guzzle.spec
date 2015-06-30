@@ -10,6 +10,12 @@
 # Please preserve changelog entries
 #
 
+%if 0%{?rhel} == 5
+%global with_cacert 0
+%else
+%global with_cacert 1
+%endif
+
 %global github_owner     guzzle
 %global github_name      guzzle
 %global github_version   5.3.0
@@ -28,8 +34,13 @@
 %global psr_log_min_ver  1.0
 %global psr_log_max_ver  2.0
 
+%if 0%{?rhel} == 5
+# no nodejs available in RHEL-5
+%global with_tests %{?_with_tests:1}%{!?_with_tests:0}
+%else
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
+%endif
 
 %{!?phpdir:    %global phpdir    %{_datadir}/php}
 %{!?testsdir:  %global testsdir  %{_datadir}/tests}
@@ -69,7 +80,9 @@ BuildRequires: php-spl
 BuildRequires: php-composer(symfony/class-loader)
 %endif
 
+%if %{with_cacert}
 Requires:      ca-certificates
+%endif
 # composer.json
 Requires:      php(language)                    >= %{php_min_ver}
 #Requires:      php-composer(guzzlehttp/ringphp) >= %%{ring_min_ver}
