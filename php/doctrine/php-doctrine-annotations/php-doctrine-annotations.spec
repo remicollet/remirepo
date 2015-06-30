@@ -36,7 +36,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}
 Summary:       PHP docblock annotations parser library
 
 Group:         Development/Libraries
@@ -118,7 +118,7 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
     $fedoraClassLoader->register();
 }
 
-$fedoraClassLoader->addPrefix('Doctrine\\Common\\Annotations', dirname(dirname(dirname(__DIR__))));
+$fedoraClassLoader->addPrefix('Doctrine\\Common\\Annotations\\', dirname(dirname(dirname(__DIR__))));
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -151,7 +151,9 @@ BOOTSTRAP
 ) | tee bootstrap.php
 
 : Run tests
-%{_bindir}/phpunit -v --bootstrap bootstrap.php
+%{_bindir}/phpunit \
+  -d pcre.recursion_limit=10000 \
+  -v --bootstrap bootstrap.php
 %else
 : Tests skipped
 %endif
@@ -171,6 +173,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 27 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.6-2
+- Updated autoloader with trailing separator
+
 * Wed Jun 24 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.6-1
 - Updated to 1.2.6 (RHBZ #1211816)
 - Added autoloader
