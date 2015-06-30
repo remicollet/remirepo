@@ -28,7 +28,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       4%{?github_release}%{?dist}
+Release:       5%{?github_release}%{?dist}
 Summary:       Common string manipulations with regard to casing and singular/plural rules
 
 Group:         Development/Libraries
@@ -86,7 +86,7 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
     $fedoraClassLoader->register();
 }
 
-$fedoraClassLoader->addPrefix('Doctrine\\Common\\Inflector', dirname(dirname(dirname(__DIR__))));
+$fedoraClassLoader->addPrefix('Doctrine\\Common\\Inflector\\', dirname(dirname(dirname(__DIR__))));
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -138,6 +138,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 27 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.1-5
+- Updated autoloader with trailing separator
+
 * Wed Jun 24 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.1-4
 - Added autoloader
 
