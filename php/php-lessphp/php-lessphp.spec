@@ -1,32 +1,61 @@
-%global libname     lessphp
-%global php_min_ver 5.3.0
+# remirepo spec file for php-lessphp, from:
+#
+# Fedora spec file for php-lessphp
+#
+# Copyright (c) 2012-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 
-Name:          php-%{libname}
-Version:       0.4.0
-Release:       1%{?dist}
+%global github_owner     leafo
+%global github_name      lessphp
+%global github_version   0.5.0
+%global github_commit    0f5a7f5545d2bcf4e9fad9a228c8ad89cc9aa283
+
+%global composer_vendor  leafo
+%global composer_project lessphp
+
+# Build using "--without tests" to disable tests
+%global with_tests 0%{!?_without_tests:1}
+
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
+
+Name:          php-%{composer_project}
+Version:       %{github_version}
+Release:       2%{?dist}
 Summary:       A compiler for LESS written in PHP
 
 Group:         Development/Libraries
 License:       MIT or GPLv3
 URL:           http://leafo.net/lessphp
-Source0:       %{url}/src/%{libname}-%{version}.tar.gz
+Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
-BuildRequires: help2man
-# For tests
-BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# For tests: phpcompatinfo
+# Tests
+%if %{with_tests}
+BuildRequires: %{_bindir}/phpunit
+## phpcompatinfo (computed from version 0.5.0)
+BuildRequires: php(language) >= 5.3.0
 BuildRequires: php-ctype
 BuildRequires: php-date
+BuildRequires: php-fileinfo
 BuildRequires: php-pcre
+%endif
 
-Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo
+Requires:      php-cli
+# phpcompatinfo (computed from version 0.5.0)
+Requires:      php(language) >= 5.3.0
 Requires:      php-ctype
 Requires:      php-date
+Requires:      php-fileinfo
 Requires:      php-pcre
+
+# Composer
+Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 %description
 lessphp is a compiler that generates CSS from a superset language which
@@ -39,19 +68,11 @@ suitable as a drop in replacement for PHP projects.
 
 
 %prep
-%setup -q -n %{libname}
+%setup -qn %{github_name}-%{github_commit}
 
-# Create man page for bin
-# Required here b/c path to include file is changed in next command
-help2man --version-option='-v' --no-info ./plessc > plessc.1
-
-# Update path in bin file
-sed 's#$path\s*=.*#$path = "%{_datadir}/php/%{libname}/";#' \
+: Update bin requires and shebang
+sed 's#$path\s*=.*#$path = "%{phpdir}/%{composer_project}/";#' \
     -i plessc
-
-# Update tests' require
-sed -e 's#.*require.*lessc.inc.php.*#require_once "%{_datadir}/php/%{libname}/lessc.inc.php";#' \
-    -i tests/*.php
 
 
 %build
@@ -59,38 +80,51 @@ sed -e 's#.*require.*lessc.inc.php.*#require_once "%{_datadir}/php/%{libname}/le
 
 
 %install
-mkdir -p -m 755 %{buildroot}%{_datadir}/php/%{libname}
-cp -p lessc.inc.php %{buildroot}%{_datadir}/php/%{libname}/
+rm -rf %{buildroot}
+: Lib
+mkdir -p %{buildroot}%{phpdir}/%{composer_project}
+cp -p lessc.inc.php %{buildroot}%{phpdir}/%{composer_project}/
 
-mkdir -p -m 755 %{buildroot}%{_datadir}/tests/%{name}
-cp -rp tests/* %{buildroot}%{_datadir}/tests/%{name}/
-
+: Bin
 mkdir -p %{buildroot}%{_bindir}
 cp -p plessc %{buildroot}%{_bindir}/
 
-mkdir -p %{buildroot}%{_mandir}/man1
-cp -p plessc.1 %{buildroot}%{_mandir}/man1/
-
 
 %check
-# Update tests' require to use buildroot
-sed 's#%{_datadir}#%{buildroot}%{_datadir}#' -i tests/*.php
+%if %{with_tests}
+%{_bindir}/phpunit -v tests
+%else
+: Tests skipped
+%endif
 
-%{_bindir}/phpunit tests
+
+%clean
+rm -rf %{buildroot}
 
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README.md docs composer.json
-%doc %{_mandir}/man1/plessc.1*
-%{_datadir}/php/%{libname}
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README.md
+%doc composer.json
+%doc docs/*
+%{phpdir}/%{composer_project}
 %{_bindir}/plessc
-%dir %{_datadir}/tests
-     %{_datadir}/tests/%{name}
 
 
 %changelog
-* Mon Aug 20 2013 Remi Collet <RPMS@famillecollet.com> 0.4.0-1
+* Sun Jun 28 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.5.0-2
+- Added php-composer(leafo/lessphp) virtual provide
+
+* Sun Jun 28 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.5.0-1
+- Updated to 0.5.0 (RHBZ #1211066)
+- %%license usage
+- Unpackaged tests
+- Removed bin manpage
+- Spec cleanup
+
+* Tue Aug 20 2013 Remi Collet <RPMS@famillecollet.com> 0.4.0-1
 - backport 0.4.0 for remi repo
 
 * Sun Aug 11 2013 Shawn Iwinski <shawn.iwinski@gmail.com> 0.4.0-1
