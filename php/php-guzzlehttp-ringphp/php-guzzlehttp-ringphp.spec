@@ -1,6 +1,6 @@
 # remirepo spec for php-guzzlehttp-ringphp, from Fedora:
 #
-# RPM spec file for php-guzzlehttp-ringphp
+# Fedora spec file for php-guzzlehttp-ringphp
 #
 # Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
@@ -21,11 +21,11 @@
 # "php": ">=5.4.0"
 %global php_min_ver      5.4.0
 # "guzzlehttp/streams": "~3.0"
-# Note: Min version not "3.0" because autoloader required
+#     Note: Min version not "3.0" because autoloader required
 %global streams_min_ver  3.0.0-3
 %global streams_max_ver  4.0
 # "react/promise": "~2.0"
-# Note: Min version not "2.0" because autoloader required
+#     Note: Min version not "2.0" because autoloader required
 %global promise_min_ver  2.2.0-4
 %global promise_max_ver  3.0
 
@@ -42,7 +42,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       3%{?github_release}%{?dist}
+Release:       5%{?github_release}%{?dist}
 Summary:       Simple handler system used to power clients and servers in PHP
 
 Group:         Development/Libraries
@@ -76,13 +76,11 @@ BuildRequires: php-composer(symfony/class-loader)
 # composer.json
 Requires:      php(language)                    >= %{php_min_ver}
 #Requires:      php-composer(guzzlehttp/streams) >= %%{streams_min_ver}
-#Requires:      php-composer(guzzlehttp/streams) <  %%{streams_max_ver}
 Requires:      php-guzzlehttp-streams           >= %{streams_min_ver}
-Requires:      php-guzzlehttp-streams           <  %{streams_max_ver}
+Requires:      php-composer(guzzlehttp/streams) <  %{streams_max_ver}
 #Requires:      php-composer(react/promise)      >= %%{promise_min_ver}
-#Requires:      php-composer(react/promise)      <  %%{promise_max_ver}
 Requires:      php-react-promise                >= %{promise_min_ver}
-Requires:      php-react-promise                <  %{promise_max_ver}
+Requires:      php-composer(react/promise)      <  %{promise_max_ver}
 # composer.json: optional
 Requires:      php-curl
 # phpcompatinfo (computed from version 1.1.0)
@@ -142,19 +140,19 @@ Requires: php-zlib
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
 
+require_once '%{phpdir}/GuzzleHttp/Stream/autoload.php';
+require_once '%{phpdir}/React/Promise/autoload.php';
+
 if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
     if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once 'Symfony/Component/ClassLoader/ClassLoader.php';
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
     }
 
     $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
     $fedoraClassLoader->register();
 }
 
-require_once 'GuzzleHttp/Stream/autoload.php';
-require_once 'React/Promise/autoload.php';
-
-$fedoraClassLoader->addPrefix('GuzzleHttp\\Ring', dirname(dirname(__DIR__)));
+$fedoraClassLoader->addPrefix('GuzzleHttp\\Ring\\', dirname(dirname(__DIR__)));
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -171,7 +169,7 @@ AUTOLOAD
 
 require_once 'GuzzleHttp/Ring/autoload.php';
 
-$fedoraClassLoader->addPrefix('GuzzleHttp\\Tests\\Ring', __DIR__);
+$fedoraClassLoader->addPrefix('GuzzleHttp\\Tests\\Ring\\', __DIR__);
 $fedoraClassLoader->setUseIncludePath(true);
 
 return $fedoraClassLoader;
@@ -245,6 +243,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jun 28 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.0-5
+- Autoloader updates
+
 * Fri Jun 12 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.0-3
 - Fix tests' autoload
 
