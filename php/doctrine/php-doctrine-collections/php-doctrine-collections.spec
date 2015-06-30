@@ -28,7 +28,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       3%{?github_release}%{?dist}
 Summary:       Collections abstraction library
 
 Group:         Development/Libraries
@@ -87,7 +87,7 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
     $fedoraClassLoader->register();
 }
 
-$fedoraClassLoader->addPrefix('Doctrine\\Common\\Collections', dirname(dirname(dirname(__DIR__))));
+$fedoraClassLoader->addPrefix('Doctrine\\Common\\Collections\\', dirname(dirname(dirname(__DIR__))));
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -140,6 +140,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 27 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.0-3
+- Updated autoloader with trailing separator
+
 * Wed Jun 24 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.0-2
 - Added autoloader dependencies
 
