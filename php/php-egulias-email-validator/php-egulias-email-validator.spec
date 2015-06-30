@@ -1,5 +1,6 @@
+# remirepo spec file for php-egulias-email-validator, from
 #
-# RPM spec file for php-egulias-email-validator
+# Fedora spec file for php-egulias-email-validator
 #
 # Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
@@ -11,23 +12,23 @@
 
 %global github_owner     egulias
 %global github_name      EmailValidator
-%global github_version   1.2.7
-%global github_commit    af9417f765623429c9d2a200f0159537e08d1ef3
+%global github_version   1.2.9
+%global github_commit    af864423f50ea59f96c87bb1eae147a70bcf67a1
 
 %global composer_vendor  egulias
 %global composer_project email-validator
 
 # "php": ">= 5.3.3"
 %global php_min_ver 5.3.3
-# "doctrine/lexer": "~1.0"
-%global doctrine_lexer_min_ver 1.0
+# "doctrine/lexer": "~1.0,>=1.0.1"
+#     NOTE: Min version not 1.0.1 because autoloader required
+%global doctrine_lexer_min_ver 1.0.1-4
 %global doctrine_lexer_max_ver 2.0
 
 # Build using "--without tests" to disable tests
-%global with_tests  %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
 
-%{!?phpdir:     %global phpdir     %{_datadir}/php}
-%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
@@ -41,27 +42,34 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:     noarch
+# Tests
 %if %{with_tests}
-BuildRequires: php-phpunit-PHPUnit
-# composer.json
+BuildRequires: %{_bindir}/phpunit
+## composer.json
 BuildRequires: php(language)                >= %{php_min_ver}
-BuildRequires: php-composer(doctrine/lexer) >= %{doctrine_lexer_min_ver}
+#BuildRequires: php-composer(doctrine/lexer) >= %%{doctrine_lexer_min_ver}
+BuildRequires: php-doctrine-lexer           >= %{doctrine_lexer_min_ver}
 BuildRequires: php-composer(doctrine/lexer) <  %{doctrine_lexer_max_ver}
-# phpcompatinfo (computed from version 1.2.7)
+## phpcompatinfo (computed from version 1.2.9)
 BuildRequires: php-filter
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
+## Autoloader
+BuildRequires: php-composer(symfony/class-loader)
 %endif
 
 # composer.json
 Requires:      php(language)                >= %{php_min_ver}
-Requires:      php-composer(doctrine/lexer) >= %{doctrine_lexer_min_ver}
+#Requires:      php-composer(doctrine/lexer) >= %%{doctrine_lexer_min_ver}
+Requires:      php-doctrine-lexer           >= %{doctrine_lexer_min_ver}
 Requires:      php-composer(doctrine/lexer) <  %{doctrine_lexer_max_ver}
-# phpcompatinfo (computed from version 1.2.7)
+# phpcompatinfo (computed from version 1.2.9)
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -73,8 +81,31 @@ Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-# W: wrong-file-end-of-line-encoding /usr/share/doc/php-egulias-email-validator/README.md
-sed -i 's/\r$//' README.md
+: Create autoloader
+(cat <<'AUTOLOAD'
+<?php
+/**
+ * Autoloader created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+require_once '%{phpdir}/Doctrine/Common/Lexer/autoload.php';
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('Egulias\\EmailValidator\\', dirname(dirname(__DIR__)));
+
+return $fedoraClassLoader;
+AUTOLOAD
+) | tee src/Egulias/EmailValidator/autoload.php
 
 
 %build
@@ -83,31 +114,21 @@ sed -i 's/\r$//' README.md
 
 %install
 rm -rf %{buildroot}
-mkdir -pm 0755 %{buildroot}%{phpdir}
+mkdir -p %{buildroot}%{phpdir}
 cp -rp src/* %{buildroot}%{phpdir}/
 
 
 %check
 %if %{with_tests}
-# Create autoloader
-mkdir vendor
-cat > vendor/autoload.php <<'AUTOLOAD'
-<?php
-
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', $class).'.php';
-    @include_once $src;
-});
-AUTOLOAD
-
-# Skip testValidEmailsWithWarningsCheck and testInvalidEmailsWithDnsCheckAndStrictMode
+: Skip testValidEmailsWithWarningsCheck and testInvalidEmailsWithDnsCheckAndStrictMode
 # because Koji does not have network access so assertEquals(expected_warnings, actual_warnings)
 # fails because EmailValidator::DNSWARN_NO_RECORD is not an expected warning
 sed -e 's/function testValidEmailsWithWarningsCheck/function SKIP_testValidEmailsWithWarningsCheck/' \
     -e 's/function testInvalidEmailsWithDnsCheckAndStrictMode/function SKIP_testInvalidEmailsWithDnsCheckAndStrictMode/' \
     -i tests/egulias/Tests/EmailValidator/EmailValidatorTest.php
 
-%{__phpunit} --include-path %{buildroot}%{phpdir}
+: Run tests
+%{_bindir}/phpunit -v --bootstrap %{buildroot}%{phpdir}/Egulias/EmailValidator/autoload.php
 %else
 : Tests skipped
 %endif
@@ -121,12 +142,17 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc README.md composer.json
+%doc README.md
+%doc composer.json
 %dir %{phpdir}/Egulias
      %{phpdir}/Egulias/EmailValidator
 
 
 %changelog
+* Sat Jun 27 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.9-1
+- Updated to 1.2.9 (RHBZ #1215684)
+- Added autoloader
+
 * Mon Jan 05 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.7-1
 - Updated to 1.2.7 (BZ #1178809)
 
