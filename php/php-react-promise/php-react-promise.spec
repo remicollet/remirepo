@@ -1,6 +1,6 @@
 # remirepo spec file for php-react-promise, from Fedora:
 #
-# RPM spec file for php-react-promise
+# Fedora spec file for php-react-promise
 #
 # Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
@@ -28,7 +28,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       4%{?github_release}%{?dist}
+Release:       6%{?github_release}%{?dist}
 Summary:       A lightweight implementation of CommonJS Promises/A for PHP
 
 Group:         Development/Libraries
@@ -83,14 +83,14 @@ A lightweight implementation of CommonJS Promises/A [1] for PHP.
 
 if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
     if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once 'Symfony/Component/ClassLoader/ClassLoader.php';
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
     }
 
     $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
     $fedoraClassLoader->register();
 }
 
-$fedoraClassLoader->addPrefix('React\\Promise', dirname(dirname(__DIR__)));
+$fedoraClassLoader->addPrefix('React\\Promise\\', dirname(dirname(__DIR__)));
 
 require_once __DIR__ . '/functions_include.php';
 
@@ -147,6 +147,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jun 28 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.2.0-6
+- Autoloader updates
+
 * Fri Jun 12 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.2.0-4
 - Use new $fedoraClassLoader concept in autoloader
 
