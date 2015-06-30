@@ -1,5 +1,6 @@
+# Fedora spec file for php-Raven, from:
 #
-# RPM spec file for php-Raven
+# Fedora spec file for php-Raven
 #
 # Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
@@ -16,19 +17,18 @@
 
 %global github_owner    getsentry
 %global github_name     raven-php
-%global github_version  0.11.0
-%global github_commit   2b651d779cdbac8b6456b3b0f06c8c77e43f79dd
+%global github_version  0.12.0
+%global github_commit   bd247ca2a8fd9ccfb99b60285c9b31286384a92b
 
 %global lib_name        Raven
 
 # "php": ">=5.2.4"
 %global php_min_ver     5.2.4
-# "phpunit/phpunit": "3.7.*"
-#     Note: Max version ignored on purpose
-%global phpunit_min_ver 3.7.0
 
 # Build using "--without tests" to disable tests
-%global with_tests      %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
+
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-%{lib_name}
 Version:       %{github_version}
@@ -42,20 +42,19 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{version}-%{github_commi
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Tests
 %if %{with_tests}
-# For tests: composer.json
-BuildRequires: php(language)       >= %{php_min_ver}
-BuildRequires: php-phpunit-PHPUnit >= %{phpunit_min_ver}
-# For tests: phpcompatinfo (computed from version 0.11.0)
+## composer.json
+BuildRequires: %{_bindir}/phpunit
+BuildRequires: php(language) >= %{php_min_ver}
+## phpcompatinfo (computed from version 0.12.0)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-hash
-BuildRequires: php-json
 BuildRequires: php-mbstring
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-session
-BuildRequires: php-sockets
 BuildRequires: php-spl
 BuildRequires: php-zlib
 %endif
@@ -65,19 +64,18 @@ Requires:      ca-certificates
 %endif
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 0.11.0)
+# phpcompatinfo (computed from version 0.12.0)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-hash
-Requires:      php-json
 Requires:      php-mbstring
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-session
-Requires:      php-sockets
 Requires:      php-spl
 Requires:      php-zlib
 
+# Composer
 Provides:      php-composer(raven/raven) = %{version}
 
 %description
@@ -87,17 +85,28 @@ Provides:      php-composer(raven/raven) = %{version}
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-# Update autoloader require in bin and test bootstrap
-sed "/require.*Autoloader/s:.*:require_once 'Raven/Autoloader.php';:" \
-    -i bin/raven \
-    -i test/bootstrap.php
-
 %if %{with_cacert}
-# Remove bundled cert
+: Remove bundled cert
 rm -rf lib/Raven/data
 sed "/return.*cacert\.pem/s#.*#        return '%{_sysconfdir}/pki/tls/cert.pem';#" \
     -i lib/Raven/Client.php
 %endif
+
+: Create autoloader
+(cat <<'AUTOLOAD'
+<?php
+/**
+ * Autoloader created by %{name}-%{version}-%{release}
+ */
+
+require_once dirname(__FILE__) . '/Autoloader.php';
+Raven_Autoloader::register();
+AUTOLOAD
+) | tee lib/Raven/autoload.php
+
+: Update autoloader require in bin
+sed "/require.*Autoloader/s:.*:require_once '%{phpdir}/Raven/Autoloader.php';:" \
+    -i bin/raven
 
 
 %build
@@ -105,34 +114,48 @@ sed "/return.*cacert\.pem/s#.*#        return '%{_sysconfdir}/pki/tls/cert.pem';
 
 
 %install
-mkdir -pm 0755 %{buildroot}%{_datadir}/php
-cp -rp lib/* %{buildroot}%{_datadir}/php/
+rm -rf %{buildroot}
+mkdir -p %{buildroot}%{phpdir}
+cp -rp lib/* %{buildroot}%{phpdir}/
 
-mkdir -pm 0755 %{buildroot}%{_bindir}
+mkdir -p %{buildroot}%{_bindir}
 install -pm 0755 bin/raven %{buildroot}%{_bindir}/
 
 
 %check
 %if %{with_tests}
-# Create PHPUnit config w/ colors turned off
-sed 's/colors\s*=\s*"true"/colors="false"/' phpunit.xml.dist > phpunit.xml
+: Update tests autoloader require
+sed "/require.*Autoloader/s:.*:require_once '%{buildroot}%{phpdir}/Raven/Autoloader.php';:" \
+    -i test/bootstrap.php
 
-%{_bindir}/phpunit --include-path %{buildroot}%{_datadir}/php
+: Run tests
+%{_bindir}/phpunit -v
 %else
 : Tests skipped
 %endif
+
+
+%clean
+rm -rf %{buildroot}
 
 
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc AUTHORS *.rst composer.json
-%{_datadir}/php/%{lib_name}
+%doc *.rst
+%doc AUTHORS
+%doc CHANGES
+%doc composer.json
+%{phpdir}/%{lib_name}
 %{_bindir}/raven
 
 
 %changelog
+* Sat Jun 27 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.12.0-1
+- Updated to 0.12.0 (RHBZ #1224010)
+- Added autoloader
+
 * Sun Apr 12 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.11.0-1
 - Updated to 0.11.0 (BZ #1205685)
 
