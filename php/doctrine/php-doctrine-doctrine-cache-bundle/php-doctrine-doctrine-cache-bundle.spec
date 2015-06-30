@@ -39,7 +39,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       Symfony2 Bundle for Doctrine Cache
 
 Group:         Development/Libraries
@@ -123,7 +123,7 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
     $fedoraClassLoader->register();
 }
 
-$fedoraClassLoader->addPrefix('Doctrine\\Bundle\\DoctrineCacheBundle', dirname(dirname(dirname(__DIR__))));
+$fedoraClassLoader->addPrefix('Doctrine\\Bundle\\DoctrineCacheBundle\\', dirname(dirname(dirname(__DIR__))));
 $fedoraClassLoader->setUseIncludePath(true);
 
 return $fedoraClassLoader;
@@ -172,6 +172,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 27 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.1-3
+- Updated autoloader with trailing separator
+
 * Fri Jun 26 2015 Remi Collet <remi@remirepo.net> - 1.0.1-2
 - backport for remirepo
 
