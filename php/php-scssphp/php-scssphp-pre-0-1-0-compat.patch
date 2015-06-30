@@ -1,21 +1,14 @@
 diff --git a/classmap.php b/classmap.php
-index 543efb9..717d80d 100644
+index 2746deb..2ad7588 100644
 --- a/classmap.php
 +++ b/classmap.php
-@@ -13,6 +13,16 @@
+@@ -12,6 +12,9 @@
+  * @link http://leafo.net/scssphp
   */
  
- /**
-+ * Autoload register
-+ */
-+spl_autoload_register(function ($class) {
-+    if (0 === strpos($class, 'Leafo\\ScssPhp\\')) {
-+        $src = str_replace('\\', '/', $class) . '.php';
-+        @include_once $src;
-+    }
-+});
++// Autoloader
++require_once dirname(__DIR__) . '/Leafo/ScssPhp/autoload.php';
 +
-+/**
+ /**
   * @deprecated since 0.1.0
   */
- class scssc extends \Leafo\ScssPhp\Compiler
