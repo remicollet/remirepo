@@ -1,7 +1,8 @@
+# remirepo spec file for php-doctrine-common, from:
 #
-# RPM spec file for php-doctrine-common
+# Fedora spec file for php-doctrine-common
 #
-# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -11,24 +12,43 @@
 
 %global github_owner     doctrine
 %global github_name      common
-%global github_version   2.4.2
-%global github_commit    5db6ab40e4c531f14dad4ca96a394dfce5d4255b
+%global github_version   2.5.0
+%global github_commit    cd8daf2501e10c63dced7b8b9b905844316ae9d3
 
 %global composer_vendor  doctrine
 %global composer_project common
 
 # "php": ">=5.3.2"
 %global php_min_ver      5.3.2
-# "doctrine/*": "1.*"
-%global doctrine_min_ver 1.0
-%global doctrine_max_ver 2.0
+# "doctrine/annotations": "1.*"
+#     NOTE: Min version not 1.0 because autoloader required
+%global doctrine_annotations_min_ver 1.2.6
+%global doctrine_annotations_max_ver 2.0
+# "doctrine/cache": "1.*"
+#     NOTE: Min version not 1.0 because autoloader required
+%global doctrine_cache_min_ver 1.4.1
+%global doctrine_cache_max_ver 2.0
+# "doctrine/collections": "1.*"
+#     NOTE: Min version not 1.0 because autoloader required
+%global doctrine_collections_min_ver 1.3.0
+%global doctrine_collections_max_ver 2.0
+# "doctrine/inflector": "1.*"
+#     NOTE: Min version not 1.0 because autoloader required
+%global doctrine_inflector_min_ver 1.0.1-4
+%global doctrine_inflector_max_ver 2.0
+# "doctrine/lexer": "1.*"
+#     NOTE: Min version not 1.0 because autoloader required
+%global doctrine_lexer_min_ver 1.0.1-4
+%global doctrine_lexer_max_ver 2.0
 
 # Build using "--without tests" to disable tests
-%global with_tests       %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
+
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       3%{?dist}
+Release:       1%{?dist}
 Summary:       Common library for Doctrine projects
 
 Group:         Development/Libraries
@@ -38,44 +58,48 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Tests
 %if %{with_tests}
-# For tests
+## composer.json
+BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language)                      >= %{php_min_ver}
-BuildRequires: php-composer(doctrine/annotations) >= %{doctrine_min_ver}
-BuildRequires: php-composer(doctrine/annotations) <  %{doctrine_max_ver}
-BuildRequires: php-composer(doctrine/cache)       >= %{doctrine_min_ver}
-BuildRequires: php-composer(doctrine/cache)       <  %{doctrine_max_ver}
-BuildRequires: php-composer(doctrine/collections) >= %{doctrine_min_ver}
-BuildRequires: php-composer(doctrine/collections) <  %{doctrine_max_ver}
-BuildRequires: php-composer(doctrine/inflector)   >= %{doctrine_min_ver}
-BuildRequires: php-composer(doctrine/inflector)   <  %{doctrine_max_ver}
-BuildRequires: php-composer(doctrine/lexer)       >= %{doctrine_min_ver}
-BuildRequires: php-composer(doctrine/lexer)       <  %{doctrine_max_ver}
-BuildRequires: php-phpunit-PHPUnit
-# For tests: phpcompatinfo (computed from version 2.4.2)
+BuildRequires: php-composer(doctrine/annotations) >= %{doctrine_annotations_min_ver}
+BuildRequires: php-composer(doctrine/cache)       >= %{doctrine_cache_min_ver}
+BuildRequires: php-composer(doctrine/collections) >= %{doctrine_collections_min_ver}
+#BuildRequires: php-composer(doctrine/inflector)   >= %%{doctrine_inflector_min_ver}
+BuildRequires: php-doctrine-inflector             >= %{doctrine_inflector_min_ver}
+#BuildRequires: php-composer(doctrine/lexer)       >= %%{doctrine_lexer_min_ver}
+BuildRequires: php-doctrine-lexer                 >= %{doctrine_lexer_min_ver}
+## phpcompatinfo (computed from version 2.5.0)
 BuildRequires: php-date
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
 BuildRequires: php-tokenizer
+# Autoloader
+BuildRequires: php-composer(symfony/class-loader)
 %endif
 
 Requires:      php(language)                      >= %{php_min_ver}
-Requires:      php-composer(doctrine/annotations) >= %{doctrine_min_ver}
-Requires:      php-composer(doctrine/annotations) <  %{doctrine_max_ver}
-Requires:      php-composer(doctrine/cache)       >= %{doctrine_min_ver}
-Requires:      php-composer(doctrine/cache)       <  %{doctrine_max_ver}
-Requires:      php-composer(doctrine/collections) >= %{doctrine_min_ver}
-Requires:      php-composer(doctrine/collections) <  %{doctrine_max_ver}
-Requires:      php-composer(doctrine/inflector)   >= %{doctrine_min_ver}
-Requires:      php-composer(doctrine/inflector)   <  %{doctrine_max_ver}
-Requires:      php-composer(doctrine/lexer)       >= %{doctrine_min_ver}
-Requires:      php-composer(doctrine/lexer)       <  %{doctrine_max_ver}
-# phpcompatinfo (computed from version 2.4.2)
+Requires:      php-composer(doctrine/annotations) >= %{doctrine_annotations_min_ver}
+Requires:      php-composer(doctrine/annotations) <  %{doctrine_annotations_max_ver}
+Requires:      php-composer(doctrine/cache)       >= %{doctrine_cache_min_ver}
+Requires:      php-composer(doctrine/cache)       <  %{doctrine_cache_max_ver}
+Requires:      php-composer(doctrine/collections) >= %{doctrine_collections_min_ver}
+Requires:      php-composer(doctrine/collections) <  %{doctrine_collections_max_ver}
+#Requires:      php-composer(doctrine/inflector)   >= %%{doctrine_inflector_min_ver}
+Requires:      php-doctrine-inflector             >= %{doctrine_inflector_min_ver}
+Requires:      php-composer(doctrine/inflector)   <  %{doctrine_inflector_max_ver}
+#Requires:      php-composer(doctrine/lexer)       >= %%{doctrine_lexer_min_ver}
+Requires:      php-doctrine-lexer                 >= %{doctrine_lexer_min_ver}
+Requires:      php-composer(doctrine/lexer)       <  %{doctrine_lexer_max_ver}
+# phpcompatinfo (computed from version 2.5.0)
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
 Requires:      php-tokenizer
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -93,6 +117,36 @@ functionality.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+: Create autoloader
+(cat <<'AUTOLOAD'
+<?php
+/**
+ * Autoloader created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+require_once '%{phpdir}/Doctrine/Common/Annotations/autoload.php';
+require_once '%{phpdir}/Doctrine/Common/Cache/autoload.php';
+require_once '%{phpdir}/Doctrine/Common/Collections/autoload.php';
+require_once '%{phpdir}/Doctrine/Common/Inflector/autoload.php';
+require_once '%{phpdir}/Doctrine/Common/Lexer/autoload.php';
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('Doctrine\\Common\\', dirname(dirname(__DIR__)));
+
+return $fedoraClassLoader;
+AUTOLOAD
+) | tee lib/Doctrine/Common/autoload.php
+
 
 %build
 # Empty build section, nothing required
@@ -100,31 +154,26 @@ functionality.
 
 %install
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/%{_datadir}/php
-cp -rp lib/* %{buildroot}/%{_datadir}/php/
+mkdir -p %{buildroot}%{phpdir}
+cp -rp lib/* %{buildroot}%{phpdir}/
 
 
 %check
 %if %{with_tests}
-# Create tests' init
-cat > tests/Doctrine/Tests/TestInit.php <<'TESTINIT'
-<?php
-namespace Doctrine\Tests;
+: Modify tests init
+sed "s#require.*autoload.*#require_once '%{buildroot}%{phpdir}/Doctrine/Common/autoload.php';#" \
+     -i tests/Doctrine/Tests/TestInit.php
 
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', str_replace('_', '/', $class)).'.php';
-    @include_once $src;
-});
+%if 0%{?fedora} > 20 || 0%{?rhel} > 6
+: PHPUnit greater than 3.7
+# Non-static method PHPUnit_Framework_MockObject_Generator::getMock() should not
+# be called statically, assuming $this from incompatible context
+sed -e 's/function testGetManagerForAliasedClass/function SKIP_testGetManagerForAliasedClass/' \
+    -e 's/function testGetManagerForClass/function SKIP_testGetManagerForClass/' \
+    -i tests/Doctrine/Tests/Common/Persistence/ManagerRegistryTest.php
+%endif
 
-\Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
-    'Doctrine\Tests\Common\Annotations\Fixtures', __DIR__ . '/../../'
-);
-TESTINIT
-
-# Create PHPUnit config w/ colors turned off
-sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
-
-%{_bindir}/phpunit --include-path ./lib:./tests -d date.timezone="UTC"
+%{_bindir}/phpunit -v
 %else
 : Tests skipped
 %endif
@@ -136,15 +185,24 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE *.md UPGRADE* composer.json
-%{_datadir}/php/Doctrine/Common/*.php
-%{_datadir}/php/Doctrine/Common/Persistence
-%{_datadir}/php/Doctrine/Common/Proxy
-%{_datadir}/php/Doctrine/Common/Reflection
-%{_datadir}/php/Doctrine/Common/Util
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *.md
+%doc UPGRADE*
+%doc composer.json
+%{phpdir}/Doctrine/Common/*.php
+%{phpdir}/Doctrine/Common/Persistence
+%{phpdir}/Doctrine/Common/Proxy
+%{phpdir}/Doctrine/Common/Reflection
+%{phpdir}/Doctrine/Common/Util
 
 
 %changelog
+* Sat Jun 27 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.5.0-1
+- Updated to 2.5.0 (RHBZ #1209683)
+- Added autoloader
+- %%license usage
+
 * Fri Jun 20 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.4.2-3
 - Added php-composer(%%{composer_vendor}/%%{composer_project}) virtual provide
 - Added option to build without tests ("--without tests")
