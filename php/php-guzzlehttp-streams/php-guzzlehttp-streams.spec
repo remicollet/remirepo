@@ -1,6 +1,6 @@
 # remirepo spec file for php-guzzlehttp-streams, from Fedora:
 #
-# RPM spec file for php-guzzlehttp-streams
+# Fedora spec file for php-guzzlehttp-streams
 #
 # Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
@@ -28,7 +28,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       3%{?github_release}%{?dist}
+Release:       5%{?github_release}%{?dist}
 Summary:       Provides a simple abstraction over streams of data
 
 Group:         Development/Libraries
@@ -86,14 +86,14 @@ Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
     if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once 'Symfony/Component/ClassLoader/ClassLoader.php';
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
     }
 
     $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
     $fedoraClassLoader->register();
 }
 
-$fedoraClassLoader->addPrefix('GuzzleHttp\\Stream', dirname(dirname(__DIR__)));
+$fedoraClassLoader->addPrefix('GuzzleHttp\\Stream\\', dirname(dirname(__DIR__)));
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -135,6 +135,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jun 28 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.0.0-5
+- Autoloader updates
+
 * Fri Jun 12 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.0.0-3
 - Use new $fedoraClassLoader concept in autoloader
 
