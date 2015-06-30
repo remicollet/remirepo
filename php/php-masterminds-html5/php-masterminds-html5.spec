@@ -1,6 +1,6 @@
-# remirepo spec file for php-masterminds-html5, from Fedora:
+# remirepo spec file for php-masterminds-html5, from:
 #
-# RPM spec file for php-masterminds-html5
+# Fedora spec file for php-masterminds-html5
 #
 # Copyright (c) 2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
@@ -12,8 +12,8 @@
 
 %global github_owner     Masterminds
 %global github_name      html5-php
-%global github_version   2.1.1
-%global github_commit    28490e9e0caea10f5ca09ab68f88d1f26e80ff9d
+%global github_version   2.1.2
+%global github_commit    8f782e0f01a6e33a319bdc8f6de9cfd6569979a4
 
 %global composer_vendor  masterminds
 %global composer_project html5
@@ -22,7 +22,7 @@
 %global php_min_ver 5.3.0
 
 # Build using "--without tests" to disable tests
-%global with_tests  %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
 
 %{!?phpdir:  %global phpdir  %{_datadir}/php}
 
@@ -45,7 +45,7 @@ BuildRequires: %{_bindir}/phpab
 ## composer.json
 BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language) >= %{php_min_ver}
-## phpcompatinfo (computed from version 2.1.1)
+## phpcompatinfo (computed from version 2.1.2)
 BuildRequires: php-ctype
 BuildRequires: php-dom
 BuildRequires: php-iconv
@@ -59,11 +59,10 @@ BuildRequires: php-xml
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 2.1.1)
+# phpcompatinfo (computed from version 2.1.2)
 Requires:      php-ctype
 Requires:      php-dom
 Requires:      php-iconv
-Requires:      php-json
 Requires:      php-mbstring
 Requires:      php-pcre
 Requires:      php-spl
@@ -124,7 +123,7 @@ require __DIR__ . '/../test/autoload.php';
 AUTOLOAD
 
 : Run tests
-%{_bindir}/phpunit
+%{_bindir}/phpunit -v
 %else
 : Tests skipped
 %endif
@@ -143,6 +142,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jun 28 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.1.2-1
+- Updated to 2.1.2 (RHBZ #1229011)
+
 * Sun May 31 2015 Remi Collet <remi@remirepo.net> - 2.1.1-1
 - backport in remi repository
 
