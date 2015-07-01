@@ -1,0 +1,22 @@
+From 1421aa08b9705ebfbef4b6cbbd3575483279a081 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Wed, 1 Jul 2015 16:41:43 +0200
+Subject: [PATCH] restore php < 5.5 compatibility, fix #1
+
+---
+ src/Type/Square/QrCode.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Type/Square/QrCode.php b/src/Type/Square/QrCode.php
+index 59da935..12458fc 100644
+--- a/src/Type/Square/QrCode.php
++++ b/src/Type/Square/QrCode.php
+@@ -108,7 +108,7 @@ protected function setParameters()
+         if (!isset($this->params[3])) {
+             $this->params[3] = 1;
+         }
+-        $this->case_sensitive = boolval($this->params[3]);
++        $this->case_sensitive = ($this->params[3] ? true : false);
+     }
+ 
+     /**

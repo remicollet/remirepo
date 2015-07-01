@@ -25,6 +25,9 @@ License:        LGPLv3+
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{?gh_short}.tar.gz
 
+# https://github.com/tecnickcom/tc-lib-barcode/pull/2 - php < 5.5 compat
+Patch0:         %{name}-pr2.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
@@ -72,6 +75,8 @@ Optional dependency: php-pecl-imagick
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+
+%patch0 -p1
 
 : Sanity check
 grep -q '^%{version}$' VERSION
@@ -125,3 +130,5 @@ rm -rf %{buildroot}
 %changelog
 * Wed Jul  1 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - initial package, version 1.1.2
+- open https://github.com/tecnickcom/tc-lib-barcode/pull/2
+  PHP < 5.5 compatibility
