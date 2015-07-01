@@ -6,6 +6,8 @@
     "phpunit\/phpunit-story": "php-phpunit-PHPUnit-Story",
     "sebastian\/phpcpd": "php-phpunit-phpcpd",
     "sebastian\/phpdcd": "php-phpunit-phpdcd",
+    "tecnick.com\/tc-lib-color": "php-tecnickcom-tc-lib-color",
+    "tecnick.com\/tc-lib-barcode": "php-tecnickcom-tc-lib-barcode",
     "jasig\/phpcas": "php-pear-CAS",
     "theseer\/fxsl": "php-theseer-fxsl"
 }
