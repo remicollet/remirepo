@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    1c92ea2f5d3ae5d2121da85522c6f053cf7bcfd1
+%global gh_commit    a51c78d05cd2df0bb91f3ccc113a18774a299190
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnick.com
 %global gh_owner     tecnickcom
@@ -16,7 +16,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.1.2
+Version:        1.1.3
 Release:        1%{?dist}
 Summary:        PHP library to manipulate various color representations
 
@@ -24,9 +24,6 @@ Group:          Development/Libraries
 License:        LGPLv3+
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{?gh_short}.tar.gz
-
-# https://github.com/tecnickcom/tc-lib-barcode/pull/2 - php < 5.5 compat
-Patch0:         %{name}-pr2.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -75,8 +72,6 @@ Optional dependency: php-pecl-imagick
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
-
-%patch0 -p1
 
 : Sanity check
 grep -q '^%{version}$' VERSION
@@ -128,6 +123,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jul  1 2015 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
+- update to 1.1.3
+- drop patch merged upstream
+
 * Wed Jul  1 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - initial package, version 1.1.2
 - open https://github.com/tecnickcom/tc-lib-barcode/pull/2
