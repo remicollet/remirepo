@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b8acc94215571ba71c3128cc3847f2b08c1cc4d1
+%global gh_commit    0602ff0fbe21455a4c59c14bc33d96a5f2d7a930
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     theseer
 %global gh_project   Autoload
@@ -15,8 +15,8 @@
 %global pear_channel pear.netpirates.net
 
 Name:           php-theseer-autoload
-Version:        1.17.0
-Release:        3%{?dist}
+Version:        1.18.0
+Release:        1%{?dist}
 Summary:        A tool and library to generate autoload code
 
 Group:          Development/Libraries
@@ -33,6 +33,7 @@ BuildRequires:  php(language) >= 5.3.1
 # For tests
 BuildRequires:  php-composer(theseer/directoryscanner) >= 1.3
 BuildRequires:  php-composer(theseer/directoryscanner) <  2
+BuildRequires:  php-composer(zetacomponents/console-tools) >= 1.7
 BuildRequires:  %{_bindir}/phpunit
 
 # From composer.json
@@ -67,8 +68,18 @@ the option of creating static require lists as well as phar archives.
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p0 -b .rpm
-# autoload only for this package
-sed -e '\:../vendor/:d'          -i src/autoload.php
+
+: drop composer dependencies
+sed -e '\:../vendor/:d'    -i src/autoload.php
+
+: add package dependencies
+cat <<EOF | tee            -a src/autoload.php
+// Dependencies
+require '/usr/share/php/TheSeer/DirectoryScanner/autoload.php';
+require '/usr/share/php/ezc/Base/base.php';
+spl_autoload_register(array('\ezcBase','autoload'));
+EOF
+
 # set version
 sed -e 's/@VERSION@/%{version}/' -i phpab.php
 
@@ -88,11 +99,10 @@ install -Dpm 0755 phpab.php %{buildroot}%{_bindir}/phpab
 %check
 cat <<EOF | tee tests/init.php
 <?php
-require 'TheSeer/DirectoryScanner/autoload.php';
-require 'TheSeer/Autoload/autoload.php';
+require '%{buildroot}%{_datadir}/php/TheSeer/Autoload/autoload.php';
 EOF
 
-phpunit --include-path=%{buildroot}%{_datadir}/php
+phpunit --verbose
 
 
 %clean
@@ -116,6 +126,10 @@ fi
 
 
 %changelog
+* Wed Jul  1 2015 Remi Collet <remi@fedoraproject.org> - 1.18.0-1
+- update to 1.18.0
+- load dependencies in the autoloader (not in the command)
+
 * Thu Jun  4 2015 Remi Collet <remi@fedoraproject.org> - 1.17.0-3
 - missing dependency on php-cli
 

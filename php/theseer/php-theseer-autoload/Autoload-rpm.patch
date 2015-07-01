@@ -1,6 +1,6 @@
---- phpab.php.rpm	2014-11-25 11:32:11.000000000 +0100
-+++ phpab.php	2014-11-25 14:40:59.288514790 +0100
-@@ -42,12 +42,15 @@
+--- phpab.php.rpm	2015-06-30 22:02:53.000000000 +0200
++++ phpab.php	2015-07-01 10:13:32.443481551 +0200
+@@ -42,12 +42,12 @@
   *   4 - Lint Error
   */
  
@@ -11,10 +11,7 @@
       ini_set('date.timezone', 'UTC');
  }
 -require __DIR__ . '/src/autoload.php';
-+require '/usr/share/php/TheSeer/DirectoryScanner/autoload.php';
 +require '/usr/share/php/TheSeer/Autoload/autoload.php';
-+require '/usr/share/php/ezc/Base/base.php';
-+spl_autoload_register(array('\ezcBase','autoload'));
  
  $factory = new \TheSeer\Autoload\Factory();
  $factory->getCLI()->run();
