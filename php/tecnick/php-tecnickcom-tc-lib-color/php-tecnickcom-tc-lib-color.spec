@@ -6,17 +6,16 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    681df858ebf5e07bb014732094bc2b221b1626c2
+%global gh_commit    f6fedd430add8d4bb3864ee8fa98d8beef7c6258
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnick.com
 %global gh_owner     tecnickcom
 %global gh_project   tc-lib-color
-%global php_home     %{_datadir}/php/Com/Tecnick
-%global php_project  %{php_home}/Color
+%global php_project  %{_datadir}/php/Com/Tecnick/Color
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.4.5
+Version:        1.5.0
 Release:        1%{?dist}
 Summary:        PHP library to manipulate various color representations
 
@@ -71,7 +70,7 @@ sed -e 's:^require:////require:' \
 
 %install
 rm -rf     %{buildroot}
-mkdir -p   %{buildroot}%{php_home}
+mkdir -p   $(dirname %{buildroot}%{php_project})
 cp -pr src %{buildroot}%{php_project}
 cp -p  resources/autoload.php \
            %{buildroot}%{php_project}/autoload.php
@@ -107,5 +106,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul  2 2015 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
+- update to 1.5.0
+
 * Wed Jul  1 2015 Remi Collet <remi@fedoraproject.org> - 1.4.5-1
 - initial package, version 1.4.5
