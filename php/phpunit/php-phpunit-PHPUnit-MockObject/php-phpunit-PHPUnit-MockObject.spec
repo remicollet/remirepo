@@ -22,7 +22,7 @@
 
 Name:           php-phpunit-PHPUnit-MockObject
 Version:        2.3.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Mock Object library for PHPUnit
 
 Group:          Development/Libraries
@@ -40,7 +40,7 @@ Patch0:         %{gh_project}-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php-theseer-autoload >= 1.19
 %if %{with_tests}
 # From composer.json, "require-dev": {
 #        "phpunit/phpunit": "~4.4"
@@ -134,6 +134,9 @@ fi
 
 
 %changelog
+* Thu Jul  2 2015 Remi Collet <remi@fedoraproject.org> - 2.3.4-2
+- fix autoloader
+
 * Thu Jun 11 2015 Remi Collet <remi@fedoraproject.org> - 2.3.4-1
 - update to 2.3.4
 

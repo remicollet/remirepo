@@ -37,7 +37,7 @@ Source1:        Autoload.php.in
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php-theseer-autoload >= 1.19
 %if %{with_tests}
 BuildRequires:  php-pear-PHPUnit >= 3.7.0
 %endif
