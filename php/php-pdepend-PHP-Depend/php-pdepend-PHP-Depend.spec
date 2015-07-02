@@ -123,7 +123,12 @@ install -Dpm 0755 src/bin/pdepend %{buildroot}%{_bindir}/pdepend
 
 %check
 %if %{with_tests}
-mkdir vendor
+%if 0%{?fedora} >= 22
+# Temporary ignore this test, BC break in libxml, see
+# https://bugzilla.redhat.com/1199396  incorrect identification of duplicate ID
+rm src/test/php/PDepend/Report/Jdepend/ChartTest.php
+%endif
+
 cat <<EOF | tee src/test/php/PDepend/bootstrap.php
 <?php
 require '%{buildroot}%{php_home}/autoload.php';
