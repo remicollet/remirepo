@@ -1,97 +1,168 @@
+# remirepo spec file for php-pdepend-PHP-Depend
+# using git sources, from:
+#
+# Fedora spec file for php-pdepend-PHP-Depend
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
+%global gh_commit    f58902a774449f73f1a1d9cd1a07aeac8fbee367
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     pdepend
+%global gh_project   pdepend
 %{!?__pear: %global __pear %{_bindir}/pear}
-%global pear_name PHP_Depend
-%global channel   pear.pdepend.org
+%global pear_name    PHP_Depend
+%global pear_channel pear.pdepend.org
+%global php_home     %{_datadir}/php/PDepend
+%global with_tests   0%{!?_without_tests:1}
 
 Name:           php-pdepend-PHP-Depend
-Version:        1.1.4
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        PHP_Depend design quality metrics for PHP package
 
 Group:          Development/Libraries
 License:        BSD
-URL:            http://www.pdepend.org/
-Source0:        http://pear.pdepend.org/get/%{pear_name}-%{version}.tgz
+URL:            http://pdepend.org/
+# git snashop to get upstream test suite
+Source0:        %{name}-%{version}-%{gh_short}.tgz
+Source1:        makesrc.sh
+# Autoloader
+Source2:        %{name}-autoload.php
+Patch0:         %{name}-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear
-BuildRequires:  php-channel(%{channel})
+%if %{with_tests}
+# For tests
+BuildRequires:  %{_bindir}/phpunit
+BuildRequires:  php(language) >= 5.3.7
+BuildRequires:  php-composer(symfony/dependency-injection) >= 2.4
+BuildRequires:  php-composer(symfony/filesystem) >= 2.4
+BuildRequires:  php-composer(symfony/config) >= 2.4
+BuildRequires:  php-bcmath
+BuildRequires:  php-date
+BuildRequires:  php-dom
+BuildRequires:  php-libxml
+BuildRequires:  php-pcre
+BuildRequires:  php-reflection
+BuildRequires:  php-simplexml
+BuildRequires:  php-spl
+BuildRequires:  php-tokenizer
+BuildRequires:  php-composer(symfony/class-loader)
+%endif
 
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
-Requires:       php-channel(%{channel})
-# From upstream
-Requires:       php(language) >= 5.2.3
-Requires:       php-dom
-Requires:       php-pcre
-Requires:       php-spl
-Requires:       php-tokenizer
-Requires:       php-simplexml
-# From upstream, optional
-Requires:       php-pecl(imagick) >= 2.2.0b2
-# From phpcompatinfo
+# From composer.json, "require": {
+#        "php": ">=5.3.7"
+#        "symfony/dependency-injection": ">=2.4",
+#        "symfony/filesystem": ">=2.4",
+#        "symfony/config": ">=2.4"
+Requires:       php(language) >= 5.3.7
+Requires:       php-composer(symfony/dependency-injection) >= 2.4
+Requires:       php-composer(symfony/dependency-injection) <  3
+Requires:       php-composer(symfony/filesystem) >= 2.4
+Requires:       php-composer(symfony/filesystem) <  3
+Requires:       php-composer(symfony/config) >= 2.4
+Requires:       php-composer(symfony/config) <  3
+# From phpcompatinfo report for version 2.1.0
 Requires:       php-bcmath
 Requires:       php-date
+Requires:       php-dom
 Requires:       php-libxml
+Requires:       php-pcre
 Requires:       php-reflection
+Requires:       php-simplexml
+Requires:       php-spl
+Requires:       php-tokenizer
+# Autoloader
+Requires:       php-composer(symfony/class-loader)
 
-Provides:       php-pear(%{channel}/%{pear_name}) = %{version}
+# Single package in this channel
+Obsoletes:      php-channel-pdepend <= 1.3
+
+Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 
 %description
-PHP_Depend is an adaption of the Java design quality metrics software JDepend 
-and the NDepend metric tool.
+PHP_Depend is an adaption of the established Java development tool JDepend.
+This tool shows you the quality of your design in the terms of extensibility,
+reusability and maintainability.
 
 
 %prep
-%setup -q -c
-cd %{pear_name}-%{version}
-mv ../package.xml %{name}.xml
+%setup -q -n %{gh_project}-%{gh_commit}
+
+%patch0 -p0
+cp %{SOURCE2} src/main/php/PDepend/autoload.php
+
+find src/main/php -name \*php -exec sed -e 's:@package_version@:%{version}:' -i {} \;
+find src/test/php -name \*xml -exec sed -e 's:@package_version@:%{version}:' -i {} \;
 
 
 %build
-cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
 
 
 %install
 rm -rf %{buildroot}
-cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
+: Library
+mkdir -p $(dirname %{buildroot}%{php_home})
+cp -pr src/main/php/PDepend %{buildroot}%{php_home}
 
-# Install XML package description
-mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+: Resources
+mkdir -p %{buildroot}%{_datadir}/%{name}
+cp -pr src/main/resources %{buildroot}%{_datadir}/%{name}/resources
+
+: Command
+install -Dpm 0755 src/bin/pdepend %{buildroot}%{_bindir}/pdepend
+
+
+%check
+%if %{with_tests}
+mkdir vendor
+cat <<EOF | tee src/test/php/PDepend/bootstrap.php
+<?php
+require '%{buildroot}%{php_home}/autoload.php';
+\$fedoraClassLoader->addPrefix('PDepend\\\\', dirname(__DIR__));
+EOF
+
+%{_bindir}/phpunit -d memory_limit=1G --verbose
+%else
+: Test suite disabled
+%endif
+
+
+%pre
+if [ -x %{_bindir}/pear ]; then
+   %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      %{pear_channel}/%{pear_name} >/dev/null || :
+fi
 
 
 %clean
 rm -rf %{buildroot}
 
 
-%post
-%{__pear} install --nodeps --soft --force --register-only \
-  %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-
-%postun
-if [ $1 -eq 0 ] ; then
-  %{__pear} uninstall --nodeps --ignore-errors --register-only \
-    %{channel}/%{pear_name} >/dev/null || :
-fi
-
-
 %files
 %defattr(-,root,root,-)
-%{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/PHP
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc composer.json
+%{php_home}
+%{_datadir}/%{name}
 %{_bindir}/pdepend
-%doc %{pear_docdir}/%{pear_name}
 
 
 %changelog
+* Thu Jul  2 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- update to 2.1.0
+- switch from pear channel to git snapshot sources
+- run upstream test suite during build
+
 * Sun May 04 2014 Remi Collet <remi@fedoraproject.org> - 1.1.4-1
 - Update to 1.1.4
 
@@ -204,7 +275,7 @@ fi
 * Sat May 22 2010 Christof Damian <christof@damian.net> - 0.9.14-1
 - upstream 0.9.14
 
-* Tue May 10 2010 Remi Collet <RPMS@FamilleCollet.com> - 0.9.13-1
+* Mon May 10 2010 Remi Collet <RPMS@FamilleCollet.com> - 0.9.13-1
 - rebuild for remi repository
 
 * Mon May 10 2010 Christof Damian <christof@damian.net> - 0.9.13-1
@@ -240,5 +311,5 @@ fi
 - own /usr/share/pear/PHP
 - include test files (which currently don't work)
 
-* Fri Jan 1 2010 Christof Damian <christof@damian.net> 0.9.9-1
+* Fri Jan  1 2010 Christof Damian <christof@damian.net> 0.9.9-1
 - initial release
