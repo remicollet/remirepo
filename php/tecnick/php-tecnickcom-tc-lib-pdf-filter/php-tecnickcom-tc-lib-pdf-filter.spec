@@ -1,4 +1,4 @@
-# remirepo/fedora spec file for php-tecnickcom-tc-pdf-filter
+# remirepo/fedora spec file for php-tecnickcom-tc-lib-pdf-filter
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
@@ -39,7 +39,7 @@ Requires:       php-zlib
 # From composer.json, "require": {
 #        "php": ">=5.3.3"
 Requires:       php(language) >= 5.3.3
-# From phpcompatinfo report for version 1.4.5
+# From phpcompatinfo report for version 1.1.0
 Requires:       php-pcre
 Requires:       php-zlib
 
