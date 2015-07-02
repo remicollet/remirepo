@@ -10,6 +10,10 @@
     "sebastian\/phpdcd": "php-phpunit-phpdcd",
     "tecnick.com\/tc-lib-color": "php-tecnickcom-tc-lib-color",
     "tecnick.com\/tc-lib-barcode": "php-tecnickcom-tc-lib-barcode",
+    "tecnick.com\/tc-lib-pdf-parser": "php-tecnickcom-tc-lib-pdf-parser",
+    "tecnick.com\/tc-lib-pdf-filter": "php-tecnickcom-tc-lib-pdf-filter",
+    "tecnick.com\/tc-lib-pdf-page": "php-tecnickcom-tc-lib-pdf-page",
+    "tecnick.com\/tc-lib-pdf-font-data": "php-tecnickcom-tc-lib-pdf-font-data",
     "jasig\/phpcas": "php-pear-CAS",
     "theseer\/fxsl": "php-theseer-fxsl"
 }
