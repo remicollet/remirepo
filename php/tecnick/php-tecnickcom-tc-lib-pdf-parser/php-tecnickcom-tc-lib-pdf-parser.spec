@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    4e200983f43e6967cda74faa5ec045b9032c009d
+%global gh_commit    f8413619661cf10a9bad7879f2fa730567d37cf9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnick.com
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.1.0
+Version:        2.1.2
 Release:        1%{?dist}
 Summary:        PHP library to parse PDF documents
 
@@ -23,9 +23,6 @@ Group:          Development/Libraries
 License:        LGPLv3+
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{?gh_short}.tar.gz
-
-Patch0:         %{name}-pr1.patch
-Patch1:         %{name}-pr2.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -59,9 +56,6 @@ The initial source code has been extracted from TCPDF (http://www.tcpdf.org).
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
-
-%patch0 -p1
-%patch1 -p1
 
 : Sanity check
 grep -q '^%{version}$' VERSION
@@ -115,6 +109,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul  2 2015 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
+- update to 2.1.2
+- drop patches merged/fixed upstream
+
 * Thu Jul  2 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - initial package, version 2.1.0
 - open https://github.com/tecnickcom/tc-lib-pdf-parser/pull/1
