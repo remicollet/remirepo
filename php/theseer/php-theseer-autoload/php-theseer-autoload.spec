@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0602ff0fbe21455a4c59c14bc33d96a5f2d7a930
+%global gh_commit    b6b9521dee22d7e6e9caf696bb163dcbbbdc0221
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     theseer
 %global gh_project   Autoload
@@ -15,7 +15,7 @@
 %global pear_channel pear.netpirates.net
 
 Name:           php-theseer-autoload
-Version:        1.18.0
+Version:        1.19.0
 Release:        1%{?dist}
 Summary:        A tool and library to generate autoload code
 
@@ -24,7 +24,7 @@ License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{?gh_short}.tar.gz
 
-# Autoload stuff - die composer !
+# Autoloader path
 Patch0:         %{gh_project}-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -126,6 +126,9 @@ fi
 
 
 %changelog
+* Thu Jul  2 2015 Remi Collet <remi@fedoraproject.org> - 1.19.0-1
+- update to 1.19.0
+
 * Wed Jul  1 2015 Remi Collet <remi@fedoraproject.org> - 1.18.0-1
 - update to 1.18.0
 - load dependencies in the autoloader (not in the command)
