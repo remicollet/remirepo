@@ -6,17 +6,16 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a51c78d05cd2df0bb91f3ccc113a18774a299190
+%global gh_commit    b1cb116ef5b5e3826374a87535fc81ff26673500
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnick.com
 %global gh_owner     tecnickcom
 %global gh_project   tc-lib-barcode
-%global php_home     %{_datadir}/php/Com/Tecnick
-%global php_project  %{php_home}/Barcode
+%global php_project  %{_datadir}/php/Com/Tecnick/Barcode
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.1.3
+Version:        1.2.0
 Release:        1%{?dist}
 Summary:        PHP library to manipulate various color representations
 
@@ -88,7 +87,7 @@ sed -e 's:^require:////require:' \
 
 %install
 rm -rf     %{buildroot}
-mkdir -p   %{buildroot}%{php_home}
+mkdir -p   $(dirname %{buildroot}%{php_project})
 cp -pr src %{buildroot}%{php_project}
 cp -p  resources/autoload.php \
            %{buildroot}%{php_project}/autoload.php
@@ -100,7 +99,7 @@ mkdir vendor
 cat <<EOF | tee vendor/autoload.php
 <?php
 require '%{buildroot}%{php_project}/autoload.php';
-require '%{php_home}/Color/autoload.php';
+require '%{php_project}/../Color/autoload.php';
 EOF
 
 %{_bindir}/phpunit --verbose
@@ -123,6 +122,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul  2 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- update to 1.2.0
+
 * Wed Jul  1 2015 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
 - update to 1.1.3
 - drop patch merged upstream
