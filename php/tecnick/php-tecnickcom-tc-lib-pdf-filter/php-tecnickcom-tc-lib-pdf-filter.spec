@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    ea313a032fa0207668f80c422ddadaf157e68ecd
+%global gh_commit    6d4eae06bc6a7ca5846578379c39dc3690de2b70
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnick.com
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.1.0
+Version:        1.1.1
 Release:        1%{?dist}
 Summary:        PHP library to decode PDF compression and encryption filters
 
@@ -23,8 +23,6 @@ Group:          Development/Libraries
 License:        LGPLv3+
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{?gh_short}.tar.gz
-
-Patch0:         %{name}-pr1.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -57,8 +55,6 @@ The initial source code has been extracted from TCPDF (http://www.tcpdf.org).
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
-
-%patch0 -p1
 
 : Sanity check
 grep -q '^%{version}$' VERSION
@@ -107,6 +103,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul  2 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- update to 1.1.1
+- drop patch merged upstream
+
 * Thu Jul  2 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - initial package, version 1.1.0
 - open https://github.com/tecnickcom/tc-lib-pdf-filter/pull/1
