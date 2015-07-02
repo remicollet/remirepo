@@ -23,7 +23,7 @@
 
 Name:           php-phpunit-PHP-CodeCoverage
 Version:        2.1.7
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        PHP code coverage information
 
 Group:          Development/Libraries
@@ -134,6 +134,9 @@ fi
 
 
 %changelog
+* Thu Jul  2 2015 Remi Collet <remi@fedoraproject.org> - 2.1.7-2
+- fix autoloader
+
 * Tue Jun 30 2015 Remi Collet <remi@fedoraproject.org> - 2.1.7-1
 - update to 2.1.7
 
