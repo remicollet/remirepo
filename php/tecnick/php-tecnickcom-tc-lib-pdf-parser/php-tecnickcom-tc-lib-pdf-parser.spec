@@ -25,6 +25,7 @@ URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{?gh_short}.tar.gz
 
 Patch0:         %{name}-pr1.patch
+Patch1:         %{name}-pr2.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -60,6 +61,7 @@ The initial source code has been extracted from TCPDF (http://www.tcpdf.org).
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1
+%patch1 -p1
 
 : Sanity check
 grep -q '^%{version}$' VERSION
@@ -117,3 +119,5 @@ rm -rf %{buildroot}
 - initial package, version 2.1.0
 - open https://github.com/tecnickcom/tc-lib-pdf-parser/pull/1
   fix autoloader
+- open https://github.com/tecnickcom/tc-lib-pdf-parser/pull/2
+  php < 5.5 compatibility

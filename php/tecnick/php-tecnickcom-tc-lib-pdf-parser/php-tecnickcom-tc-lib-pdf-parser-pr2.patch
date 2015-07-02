@@ -1,0 +1,22 @@
+From b8e3ae24efd9f59f78863ca28715df0f9e73fefe Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@famillecollet.com>
+Date: Thu, 2 Jul 2015 14:59:30 +0200
+Subject: [PATCH] Fix PHP < 5.5 compatibility
+
+---
+ src/Parser.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Parser.php b/src/Parser.php
+index cddba0b..ac3b3ed 100644
+--- a/src/Parser.php
++++ b/src/Parser.php
+@@ -65,7 +65,7 @@ class Parser extends \Com\Tecnick\Pdf\Parser\Process\Xref
+     public function __construct($cfg = array())
+     {
+         if (isset($cfg['ignore_filter_errors'])) {
+-            $this->cfg['ignore_filter_errors'] = boolval($cfg['ignore_filter_errors']);
++            $this->cfg['ignore_filter_errors'] = ($cfg['ignore_filter_errors'] ? true : false);
+         }
+     }
+ 
