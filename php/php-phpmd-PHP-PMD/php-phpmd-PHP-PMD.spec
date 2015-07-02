@@ -1,36 +1,85 @@
+# remirepo spec file for php-phpmd-PHP-PMD
+# using git sources, from:
+#
+# Fedora spec file for php-phpmd-PHP-PMD
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
+%global gh_commit    5eeb5a4d39c8304910b33ae49f8813905346cc35
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     phpmd
+%global gh_project   phpmd
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 %global pear_name    PHP_PMD
 %global pear_channel pear.phpmd.org
+%global php_home     %{_datadir}/php/PHPMD
+%global with_tests   0%{!?_without_tests:1}
 
 Name:           php-phpmd-PHP-PMD
-Version:        1.5.0
+Version:        2.2.3
 Release:        1%{?dist}
 Summary:        PHPMD - PHP Mess Detector
 
 Group:          Development/Libraries
 License:        BSD
-URL:            http://www.phpmd.org/
-Source0:        http://pear.phpmd.org/get/%{pear_name}-%{version}.tgz
+URL:            http://phpmd.org/
+# git snashop to get upstream test suite
+Source0:        %{name}-%{version}-%{gh_short}.tgz
+Source1:        makesrc.sh
+# Autoloader
+Source2:        %{name}-autoload.php
+Patch0:         %{name}-rpm.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 BuildArch:      noarch
-BuildRequires:  php-pear
-BuildRequires:  php-channel(%{pear_channel})
+%if %{with_tests}
+# For tests
+BuildRequires:  %{_bindir}/phpunit
+BuildRequires:  php(language) >= 5.3
+BuildRequires:  php-composer(pdepend/pdepend) >= 2.0
+BuildRequires:  php-composer(symfony/dependency-injection) >= 2.4
+BuildRequires:  php-composer(symfony/filesystem) >= 2.4
+BuildRequires:  php-composer(symfony/config) >= 2.4
+BuildRequires:  php-date
+BuildRequires:  php-libxml
+BuildRequires:  php-pcre
+BuildRequires:  php-simplexml
+BuildRequires:  php-spl
+BuildRequires:  php-composer(symfony/class-loader)
+%endif
 
-Requires:       php-channel(%{pear_channel})
-Requires:       php(language) >= 5.2.3
-Requires:       php-dom
+# From composer.json,     "require": {
+#        "php": ">=5.3.0",
+#        "pdepend/pdepend": "~2.0",
+#        "symfony/dependency-injection": ">=2.4",
+#        "symfony/filesystem": ">=2.4",
+#        "symfony/config": ">=2.4"
+Requires:       php(language) >= 5.3
+Requires:       php-composer(pdepend/pdepend) >= 2.0
+Requires:       php-composer(pdepend/pdepend) <  3
+Requires:       php-composer(symfony/dependency-injection) >= 2.4
+Requires:       php-composer(symfony/dependency-injection) <  3
+Requires:       php-composer(symfony/filesystem) >= 2.4
+Requires:       php-composer(symfony/filesystem) <  3
+Requires:       php-composer(symfony/config) >= 2.4
+Requires:       php-composer(symfony/config) <  3
+# From phpcompatinfo report for version 2.2.3
+Requires:       php-date
+Requires:       php-libxml
 Requires:       php-pcre
 Requires:       php-simplexml
 Requires:       php-spl
-# phpcompatinfo detected
-Requires:       php-date
-Requires:       php-libxml
-Requires:       php-pear(pear.pdepend.org/PHP_Depend) >= 1.1.1
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
+# Autoloader
+Requires:       php-composer(symfony/class-loader)
+
+# Single package in this channel
+Obsoletes:      php-channel-phpmd <= 1.3
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 
 %description
@@ -41,55 +90,76 @@ stream measured by PHP Depend.
 
 
 %prep
-%setup -q -c
-cd %{pear_name}-%{version}
-mv ../package.xml %{name}.xml
+%setup -q -n %{gh_project}-%{gh_commit}
+
+%patch0 -p0
+cp %{SOURCE2} src/main/php/PHPMD/autoload.php
+
+find src/main/php -name \*php -exec sed -e 's:@package_version@:%{version}:' -i {} \;
+find src/test     -type f     -exec sed -e 's:@package_version@:%{version}:' -i {} \;
 
 
 %build
-cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
 
 
 %install
 rm -rf %{buildroot}
-cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
+: Library
+mkdir -p $(dirname %{buildroot}%{php_home})
+cp -pr src/main/php/PHPMD %{buildroot}%{php_home}
 
-# Install XML package description
-mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+: Resources
+mkdir -p %{buildroot}%{_datadir}/%{name}
+cp -pr src/main/resources %{buildroot}%{_datadir}/%{name}/resources
+
+: Command
+install -Dpm 0755 src/bin/phpmd %{buildroot}%{_bindir}/phpmd
+
+
+%check
+%if %{with_tests}
+cat <<EOF | tee src/test/php/bootstrap.php
+<?php
+require '%{buildroot}%{php_home}/autoload.php';
+\$fedoraClassLoader->addPrefix('PHPMD\\\\', __DIR__);
+EOF
+
+%{_bindir}/phpunit --verbose
+%else
+: Test suite disabled
+%endif
+
+
+%pre
+if [ -x %{_bindir}/pear ]; then
+   %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+      %{pear_channel}/%{pear_name} >/dev/null || :
+fi
 
 
 %clean
 rm -rf %{buildroot}
 
 
-%post
-%{__pear} install --nodeps --soft --force --register-only \
-  %{pear_xmldir}/%{name}.xml >/dev/null || :
-
-
-%postun
-if [ $1 -eq 0 ] ; then
-  %{__pear} uninstall --nodeps --ignore-errors --register-only \
-    %{pear_channel}/%{pear_name} >/dev/null || :
-fi
-
-
 %files
 %defattr(-,root,root,-)
-%doc %{pear_docdir}/%{pear_name}
-%{pear_xmldir}/%{name}.xml
-%{pear_phpdir}/PHP/PMD.php
-%{pear_phpdir}/PHP/PMD
-%{pear_datadir}/PHP_PMD
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc composer.json
+%doc CONTRIBUTING.md README.rst AUTHORS.rst
+%{php_home}
+%{_datadir}/%{name}
 %{_bindir}/phpmd
 
+
 %changelog
+* Thu Jul  2 2015 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
+- update to 2.2.3
+- switch from pear channel to git snapshot sources
+- run upstream test suite during build
+
 * Fri Jul 26 2013 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
 - Update to 1.5.0
 
@@ -170,7 +240,7 @@ fi
 * Sun Apr  4 2010 Christof Damian <christof@damian.net> - 0.2.5-1
 - upsteam 0.2.5: bugfixes
 
-* Thu Mar  9 2010 Remi Collet <RPMS@FamilleCollet.com> - 0.2.4-1
+* Tue Mar  9 2010 Remi Collet <RPMS@FamilleCollet.com> - 0.2.4-1
 - rebuild for remi repository
 
 * Tue Mar  9 2010 Christof Damian <christof@damian.net> - 0.2.4-1
@@ -198,6 +268,6 @@ fi
 * Tue Jan 12 2010 Christof Damian <christof@damian.net> - 0.2.1-1
 - upstream 0.2.1
 
-* Fri Jan 1 2010 Christof Damian <christof@damian.net> 0.2.0-1
+* Fri Jan  1 2010 Christof Damian <christof@damian.net> 0.2.0-1
 - initial release
 
