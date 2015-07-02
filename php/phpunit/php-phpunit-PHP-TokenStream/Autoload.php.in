@@ -12,7 +12,7 @@ spl_autoload_register(
             ___CLASSLIST___
           );
 
-          $path = dirname(dirname(dirname(__FILE__)));
+          $path = __DIR__;
       }
 
       $cn = strtolower($class);

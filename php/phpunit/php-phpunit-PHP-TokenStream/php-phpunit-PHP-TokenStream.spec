@@ -23,7 +23,7 @@
 
 Name:           php-phpunit-PHP-TokenStream
 Version:        1.4.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Wrapper around PHP tokenizer extension
 
 Group:          Development/Libraries
@@ -115,6 +115,9 @@ fi
 
 
 %changelog
+* Thu Jul  2 2015 Remi Collet <remi@fedoraproject.org> - 1.4.3-2
+- fix autoloader
+
 * Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 1.4.3-1
 - Update to 1.4.3
 
