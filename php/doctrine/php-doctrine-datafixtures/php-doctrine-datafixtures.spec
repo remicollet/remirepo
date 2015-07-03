@@ -1,7 +1,8 @@
+# remirepo spec file for php-doctrine-datafixtures, from Fedora:
 #
 # RPM spec file for php-doctrine-datafixtures
 #
-# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -11,24 +12,30 @@
 
 %global github_owner     doctrine
 %global github_name      data-fixtures
-%global github_version   1.0.0
-%global github_commit    b4a135c7db56ecc4602b54a2184368f440cac33e
+%global github_version   1.1.1
+%global github_commit    bd44f6b6e40247b6530bc8abe802e4e4d914976a
 
 %global composer_vendor  doctrine
 %global composer_project data-fixtures
 
 # "php": ">=5.3.2"
-%global php_min_ver      5.3.2
-# "doctrine/*": ">=2.2,<2.5-dev"
-%global doctrine_min_ver 2.2
-%global doctrine_max_ver 2.5
+%global php_min_ver 5.3.2
+# "doctrine/common": "~2.2"
+#     NOTE: Min version not 2.2 because autoloader required
+%global doctrine_common_min_ver 2.5
+%global doctrine_common_max_ver 3.0
+# "doctrine/orm": "~2.4"
+%global doctrine_orm_min_ver 2.4
+%global doctrine_orm_max_ver 3.0
 
 # Build using "--without tests" to disable tests
-%global with_tests       %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
+
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-%{composer_vendor}-datafixtures
 Version:       %{github_version}
-Release:       4%{?dist}
+Release:       1%{?dist}
 Summary:       Data Fixtures for all Doctrine Object Managers
 
 Group:         Development/Libraries
@@ -38,31 +45,39 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Tests
 %if %{with_tests}
-# For tests
+## composer.json
+BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language)                 >= %{php_min_ver}
-BuildRequires: php-composer(doctrine/common) >= %{doctrine_min_ver}
-BuildRequires: php-composer(doctrine/common) <  %{doctrine_max_ver}
-BuildRequires: php-composer(doctrine/orm)    >= %{doctrine_min_ver}
-BuildRequires: php-composer(doctrine/orm)    <  %{doctrine_max_ver}
-BuildRequires: php-phpunit-PHPUnit
-# For tests: phpcompatinfo (computed from v1.0.0)
+BuildRequires: php-composer(doctrine/common) >= %{doctrine_common_min_ver}
+BuildRequires: php-composer(doctrine/common) <  %{doctrine_common_max_ver}
+BuildRequires: php-composer(doctrine/orm)    >= %{doctrine_orm_min_ver}
+BuildRequires: php-composer(doctrine/orm)    <  %{doctrine_orm_max_ver}
+## phpcompatinfo (computed from version 1.1.1)
 BuildRequires: php-json
 BuildRequires: php-reflection
 BuildRequires: php-spl
+## Autoloader
+BuildRequires: php-composer(symfony/class-loader)
 %endif
 
+# composer.json
 Requires:      php(language)                 >= %{php_min_ver}
-Requires:      php-composer(doctrine/common) >= %{doctrine_min_ver}
-Requires:      php-composer(doctrine/common) <  %{doctrine_max_ver}
-# Optional
-Requires:      php-composer(doctrine/orm)    >= %{doctrine_min_ver}
-Requires:      php-composer(doctrine/orm)    <  %{doctrine_max_ver}
-# phpcompatinfo (computed from v1.0.0)
+Requires:      php-composer(doctrine/common) >= %{doctrine_common_min_ver}
+Requires:      php-composer(doctrine/common) <  %{doctrine_common_max_ver}
+# composer.json: optional
+Requires:      php-composer(doctrine/orm)    >= %{doctrine_orm_min_ver}
+Requires:      php-composer(doctrine/orm)    <  %{doctrine_orm_max_ver}
+# phpcompatinfo (computed from version 1.1.1)
 Requires:      php-json
 Requires:      php-reflection
 Requires:      php-spl
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
 
+# Standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming
+Provides:      php-%{composer_vendor}-%{composer_project} = %{version}-%{release}
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
@@ -74,6 +89,40 @@ of data fixtures for the Doctrine ORM or ODM.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+: Create autoloader
+(cat <<'AUTOLOAD'
+<?php
+/**
+ * Autoloader created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+require_once '%{phpdir}/Doctrine/Common/autoload.php';
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('Doctrine\\Common\\DataFixtures\\', dirname(dirname(dirname(__DIR__))));
+
+// Doctrine ORM does not provide its' own autoloader yet. Use it when it is
+// available otherwise fall back to using include path.
+if (file_exists('%{phpdir}/Doctrine/ORM/autoload.php')) {
+    require_once '%{phpdir}/Doctrine/ORM/autoload.php';
+} else {
+    $fedoraClassLoader->setUseIncludePath(true);
+}
+
+return $fedoraClassLoader;
+AUTOLOAD
+) | tee lib/Doctrine/Common/DataFixtures/autoload.php
+
 
 %build
 # Empty build section, nothing required
@@ -82,33 +131,24 @@ of data fixtures for the Doctrine ORM or ODM.
 %install
 rm -rf %{buildroot}
 
-mkdir -p %{buildroot}/%{_datadir}/php
-cp -rp lib/* %{buildroot}/%{_datadir}/php/
+mkdir -p %{buildroot}%{phpdir}
+cp -rp lib/* %{buildroot}%{phpdir}/
 
 
 %check
 %if %{with_tests}
-# Rewrite tests' bootstrap
-cat > tests/bootstrap.php <<'BOOTSTRAP'
+: Create tests bootstrap
+(cat <<'BOOTSTRAP'
 <?php
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', str_replace('_', '/', $class)).'.php';
-    @include_once $src;
-});
+
+$fedoraClassLoader =
+    require_once '%{buildroot}%{phpdir}/Doctrine/Common/DataFixtures/autoload.php';
+
+$fedoraClassLoader->addPrefix('Doctrine\\Tests\\', __DIR__ . '/tests');
 BOOTSTRAP
+) | tee bootstrap.php
 
-# Skip tests known to fail
-sed -e 's#function test_orderFixturesByDependencies_circularReferencesMakeMethodThrowCircularReferenceException#function SKIP_test_orderFixturesByDependencies_circularReferencesMakeMethodThrowCircularReferenceException#' \
-    -e 's#function test_orderFixturesByDependencies_fixturesCantHaveItselfAsParent#function SKIP_test_orderFixturesByDependencies_fixturesCantHaveItselfAsParent#' \
-    -e 's#function test_inCaseAFixtureHasAnUnexistentDependencyOrIfItWasntLoaded_throwsException#function SKIP_test_inCaseAFixtureHasAnUnexistentDependencyOrIfItWasntLoaded_throwsException#' \
-    -i tests/Doctrine/Tests/Common/DataFixtures/DependentFixtureTest.php
-sed 's#function testReferenceReconstruction#function SKIP_testReferenceReconstruction#' \
-    -i tests/Doctrine/Tests/Common/DataFixtures/ProxyReferenceRepositoryTest.php
-
-# Create PHPUnit config w/ colors turned off
-sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
-
-%{_bindir}/phpunit --include-path ./lib:./tests -d date.timezone="UTC"
+%{_bindir}/phpunit -v --bootstrap ./bootstrap.php
 %else
 : Tests skipped
 %endif
@@ -120,11 +160,21 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE *.md UPGRADE composer.json
-%{_datadir}/php/Doctrine/Common/DataFixtures
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *.md
+%doc UPGRADE
+%doc composer.json
+%{phpdir}/Doctrine/Common/DataFixtures
 
 
 %changelog
+* Thu Jul 02 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.1-1
+- Updated to 1.1.1 (RHBZ #1206860)
+- Added standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming provides
+- Added autoloader
+- %%license usage
+
 * Sat Jun 21 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.0-4
 - Added php-composer(%%{composer_vendor}/%%{composer_project}) virtual provide
 - Added option to build without tests ("--without tests")
