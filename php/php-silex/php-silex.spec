@@ -12,14 +12,14 @@
 
 %global github_owner          silexphp
 %global github_name           Silex
-%global github_version        1.2.4
-%global github_commit         417deb440eecf776df868d8760d0b7d8e2c4e6d1
+%global github_version        1.3.0
+%global github_commit         2d623a4853c37005d3790e5e7897a2c30b492caf
 
 %global composer_vendor       silex
 %global composer_project      silex
 
-# "php": ">=5.3.3"
-%global php_min_ver           5.3.3
+# "php": ">=5.3.9"
+%global php_min_ver           5.3.9
 # "doctrine/dbal": "~2.2"
 %global doctrine_dbal_min_ver 2.2.0
 %global doctrine_dbal_max_ver 3.0.0
@@ -32,22 +32,22 @@
 # "swiftmailer/swiftmailer": "5.*"
 %global swiftmailer_min_ver   5.0.0
 %global swiftmailer_max_ver   6.0.0
-# "symfony/*": "~2.3,<2.7"
-%global symfony_min_ver       2.3.0
-%global symfony_max_ver       2.7.0
+# "symfony/*": "~2.3,<3.0"
+%global symfony_min_ver       2.3
+%global symfony_max_ver       3.0
 # "twig/twig": ">=1.8.0,<2.0-dev"
 %global twig_min_ver          1.8.0
 %global twig_max_ver          2.0.0
 
 # Build using "--without tests" to disable tests
-%global with_tests  %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
 
 %{!?phpdir:   %global phpdir   %{_datadir}/php}
 %{!?peardir:  %global peardir  %{_datadir}/pear}
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       3%{dist}
+Release:       1%{dist}
 Summary:       PHP micro-framework based on the Symfony components
 
 Group:         Development/Libraries
@@ -57,8 +57,6 @@ Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{githu
 
 BuildArch:     noarch
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-# For autoload generation
-BuildRequires: %{_bindir}/phpab
 %if %{with_tests}
 # For tests
 ## composer.json
@@ -114,15 +112,16 @@ BuildRequires: php-composer(twig/twig)                >= %{twig_min_ver}
 BuildRequires: php-composer(twig/twig)                <  %{twig_max_ver}
 BuildRequires: php-swift-Swift                        >= %{swiftmailer_min_ver}
 BuildRequires: php-swift-Swift                        <  %{swiftmailer_max_ver}
-## phpcompatinfo (computed from version 1.2.4)
+## phpcompatinfo (computed from version 1.3.0)
 BuildRequires: php-date
-BuildRequires: php-intl
 BuildRequires: php-json
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-session
 BuildRequires: php-spl
 BuildRequires: php-tokenizer
+# Autoloader
+BuildRequires: php-composer(symfony/class-loader)
 %endif
 
 # composer.json
@@ -146,14 +145,15 @@ Requires:      php-composer(symfony/dom-crawler)      >= %{symfony_min_ver}
 Requires:      php-composer(symfony/dom-crawler)      <  %{symfony_max_ver}
 Requires:      php-composer(symfony/form)             >= %{symfony_min_ver}
 Requires:      php-composer(symfony/form)             <  %{symfony_max_ver}
-# phpcompatinfo (computed from version 1.2.4)
+# phpcompatinfo (computed from version 1.3.0)
 Requires:      php-date
-Requires:      php-intl
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-session
 Requires:      php-spl
 Requires:      php-tokenizer
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -175,28 +175,42 @@ aims to be:
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-
-%build
-: Generate autoloader
-%{_bindir}/phpab --nolower --output src/Silex/autoload.php src/Silex
-
-cat >> src/Silex/autoload.php <<'AUTOLOAD'
+: Create autoloader
+(cat <<'AUTOLOAD'
+<?php
+/**
+ * Autoloader created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
 
 require '%{phpdir}/Pimple1/autoload.php';
 
-// TODO: Add other pkg autoloaders when they are available
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
 
-// Add non-standard Swift path to include path
-set_include_path(
-    get_include_path()
-    . PATH_SEPARATOR . '%{peardir}/Swift'
-);
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
 
-spl_autoload_register(function ($class) {
-    $src = str_replace(array('\\', '_'), '/',  $class) . '.php';
-    @include_once $src;
-});
+$fedoraClassLoader->addPrefix('Silex\\', dirname(__DIR__));
+
+if (file_exists('%{pear_phpdir}/Swift')) {
+    $fedoraClassLoader->addPrefix('Swift_', '%{pear_phpdir}/Swift');
+}
+
+// Fall back to include path for dependencies for now.
+$fedoraClassLoader->setUseIncludePath(true);
+
+return $fedoraClassLoader;
 AUTOLOAD
+) | tee src/Silex/autoload.php
+
+
+%build
+# Empty build section, nothing required
 
 
 %install
@@ -208,13 +222,16 @@ cp -rp src/* %{buildroot}%{phpdir}
 
 %check
 %if %{with_tests}
-: Recreate test bootstrap
-rm -f tests/bootstrap.php
-%{_bindir}/phpab --nolower --output tests/bootstrap.php tests
-cat >> tests/bootstrap.php <<'BOOTSTRAP'
+: Create test bootstrap
+(cat <<'BOOTSTRAP'
+<?php
 
-require '%{buildroot}%{phpdir}/Silex/autoload.php';
+$fedoraClassLoader =
+    require_once '%{buildroot}%{phpdir}/Silex/autoload.php';
+
+$fedoraClassLoader->addPrefix('Silex\\Tests\\', __DIR__ . '/tests');
 BOOTSTRAP
+) | tee bootstrap.php
 
 : Temporarily skip tests known to fail
 rm -f \
@@ -222,7 +239,7 @@ rm -f \
     tests/Silex/Tests/Application/SwiftmailerTraitTest.php
 
 : Run tests
-%{_bindir}/phpunit
+%{_bindir}/phpunit -v --bootstrap ./bootstrap.php
 %else
 : Tests skipped
 %endif
@@ -243,6 +260,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 03 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.0-1
+- Updated to 1.3.0 (RHBZ #1238910)
+
+* Fri Jul 03 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.5-1
+- Updated to 1.2.5 (RHBZ #1238910)
+- Autoloader changed from phpab to Symfony ClassLoader
+
 * Sun May 31 2015 Remi Collet <remi@remirepo.net> - 1.2.4-3
 - backport in remi repository
 
