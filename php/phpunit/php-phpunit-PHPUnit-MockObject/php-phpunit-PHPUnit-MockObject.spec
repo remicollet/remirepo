@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    92408bb1968a81b3217a6fdf6c1a198da83caa35
+%global gh_commit    1c330b1b6e1ea8fd15f2fbea46770576e366855c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit-mock-objects
@@ -21,17 +21,14 @@
 %endif
 
 Name:           php-phpunit-PHPUnit-MockObject
-Version:        2.3.4
-Release:        2%{?dist}
+Version:        2.3.5
+Release:        1%{?dist}
 Summary:        Mock Object library for PHPUnit
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
-
-# Autoload template
-Source1:        Autoload.php.in
 
 # Temporary workaround, under investigation
 Patch0:         %{gh_project}-rpm.patch
@@ -40,11 +37,11 @@ Patch0:         %{gh_project}-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-theseer-autoload >= 1.19
+BuildRequires:  php-theseer-autoload
 %if %{with_tests}
 # From composer.json, "require-dev": {
 #        "phpunit/phpunit": "~4.4"
-BuildRequires:  php-pear-PHPUnit >= 4.4.0
+BuildRequires:  php-composer(phpunit/phpunit) >= 4.4
 %endif
 
 # From composer.json, "require": {
@@ -59,10 +56,11 @@ Requires:       php-composer(doctrine/instantiator) <  2
 # From composer.json, "suggest": {
 #        "ext-soap": "*"
 Requires:       php-soap
-# From phpcompatinfo report for version 2.3.1
+# From phpcompatinfo report for version 2.3.5
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
+Requires:       php-composer(sebastian/exporter)
 
 Provides:       php-composer(phpunit/phpunit-mock-objects) = %{version}
 
@@ -81,9 +79,15 @@ find . -name \*.orig -exec rm {} \; -print
 
 %build
 phpab \
-  --output   src/Framework/MockObject/Autoload.php \
-  --template %{SOURCE1} \
-  src
+  --output src/Framework/MockObject/Autoload.php \
+  src/Framework/MockObject
+
+cat <<EOF | tee -a src/Framework/MockObject/Autoload.php
+/* dependencies */
+require_once 'Text/Template/Autoload.php';
+require_once 'Doctrine/Instantiator/autoload.php';
+require_once 'SebastianBergmann/Exporter/autoload.php';
+EOF
 
 
 %install
@@ -97,18 +101,20 @@ cp -pr src %{buildroot}%{php_home}/PHPUnit
 # No phpcov
 grep -v 'log' phpunit.xml.dist > phpunit.xml
 
-# Generate autoloader for tests
+: Generate autoloader for tests
 phpab --output tests/_fixture/autoload.php tests/_fixture/
 
-# Fix bootstrap
+: Fix bootstrap - vendor/autoload used in tests
 mkdir vendor
-ln -s ../src/Framework/MockObject/Autoload.php vendor/autoload.php
+ln -s %{buildroot}%{php_home}/PHPUnit/Framework/MockObject/Autoload.php vendor/autoload.php
+
 cat <<EOF >>tests/bootstrap.php
 require __DIR__ . '/_fixture/autoload.php';
 EOF
 
-# Run tests
-phpunit
+: Run tests - set include_path to ensure PHPUnit autoloader use it
+%{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+%{_bindir}/phpunit
 %endif
 
 
@@ -134,6 +140,9 @@ fi
 
 
 %changelog
+* Sat Jul  4 2015 Remi Collet <remi@fedoraproject.org> - 2.3.5-1
+- update to 2.3.5
+
 * Thu Jul  2 2015 Remi Collet <remi@fedoraproject.org> - 2.3.4-2
 - fix autoloader
 
