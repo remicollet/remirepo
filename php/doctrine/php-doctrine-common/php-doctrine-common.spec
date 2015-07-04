@@ -164,7 +164,7 @@ cp -rp lib/* %{buildroot}%{phpdir}/
 sed "s#require.*autoload.*#require_once '%{buildroot}%{phpdir}/Doctrine/Common/autoload.php';#" \
      -i tests/Doctrine/Tests/TestInit.php
 
-%if 0%{?fedora} > 20 || 0%{?rhel} > 6
+%if 1
 : PHPUnit greater than 3.7
 # Non-static method PHPUnit_Framework_MockObject_Generator::getMock() should not
 # be called statically, assuming $this from incompatible context
