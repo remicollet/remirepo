@@ -90,7 +90,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -812,7 +812,7 @@ Group:     Development/Libraries
 
 # composer.json: optional
 Requires:  php-composer(%{composer_vendor}/config)               = %{version}
-Requires:  php-composer(%{composer_vendor}/proxy-manager-bridge) = %{version}
+#equires:  php-composer(%{composer_vendor}/proxy-manager-bridge) = %{version}
 Requires:  php-composer(%{composer_vendor}/yaml)                 = %{version}
 # phpcompatinfo (computed from version 2.7.1)
 Requires:  php-dom
@@ -2489,6 +2489,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Sat Jul  4 2015 Remi Collet <remi@fedoraproject.org> - 2.7.1-2
+- dependency-injection: drop option dependency on proxy-manager-bridge
+
 * Sat Jun 27 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.7.1-1
 - Updated to 2.7.1 (RHBZ #1171055)
 - Added autoloaders
