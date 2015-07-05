@@ -1,0 +1,45 @@
+diff --git a/bin/doctrine-dbal.php b/bin/doctrine-dbal.php
+index 3d1131f..f99b2da 100644
+--- a/bin/doctrine-dbal.php
++++ b/bin/doctrine-dbal.php
+@@ -1,3 +1,4 @@
++#!/usr/bin/php
+ <?php
+ /*
+  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+@@ -17,27 +18,21 @@
+  * <http://www.doctrine-project.org>.
+  */
+ 
++require_once '/usr/share/php/Doctrine/Common/ClassLoader.php';
++
++$classLoaderDoctrine = new \Doctrine\Common\ClassLoader('Doctrine');
++$classLoaderDoctrine->register();
++
++$classLoaderSymfony = new \Doctrine\Common\ClassLoader('Symfony');
++$classLoaderSymfony->register();
++
+ use Symfony\Component\Console\Helper\HelperSet;
+ use Doctrine\DBAL\Tools\Console\ConsoleRunner;
+ 
+-$files       = array(__DIR__ . '/../vendor/autoload.php', __DIR__ . '/../../../autoload.php');
+-$loader      = null;
+ $cwd         = getcwd();
+ $directories = array($cwd, $cwd . DIRECTORY_SEPARATOR . 'config');
+ $configFile  = null;
+ 
+-foreach ($files as $file) {
+-    if (file_exists($file)) {
+-        $loader = require $file;
+-
+-        break;
+-    }
+-}
+-
+-if ( ! $loader) {
+-    throw new RuntimeException('vendor/autoload.php could not be found. Did you run `php composer.phar install`?');
+-}
+-
+ foreach ($directories as $directory) {
+     $configFile = $directory . DIRECTORY_SEPARATOR . 'cli-config.php';
+ 
