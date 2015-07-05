@@ -1,0 +1,131 @@
+From 3b4823d89c03e54917ce6844dfbd227c8b4d6adc Mon Sep 17 00:00:00 2001
+From: Adam Williamson <awilliam@redhat.com>
+Date: Fri, 12 Sep 2014 23:33:18 -0700
+Subject: [PATCH 1/3] add function to invalidate one opcache file, use it if
+ possible #9885
+
+Issue #9885 appears to be triggered by ownCloud invalidating the entire
+PHP opcache. Testing indicates it can be avoided by only invalidating the
+single file that was written from the opcache, instead of clearing the
+whole thing. In general it is more efficient to invalidate only the single
+file that was changed, rather than the whole cache.
+
+This adds a deleteFromOpcodeCache() function which invalidates a single
+file from the opcache if possible, returning true if the underlying
+function returns true (which may mean 'success', or 'file does not exist',
+or 'file exists but is not in opcache', all of which are OK to treat as
+good for our purposes). It also changes writeData() in config.php to try
+using deleteFromOpcodeCache() and only fall back on clearOpcodeCache() if
+that fails.
+---
+ lib/private/config.php |  7 +++++--
+ lib/private/util.php   | 25 +++++++++++++++++++++++++
+ 2 files changed, 30 insertions(+), 2 deletions(-)
+
+diff --git a/lib/private/config.php b/lib/private/config.php
+index f054844..8bb2a5c 100644
+--- a/lib/private/config.php
++++ b/lib/private/config.php
+@@ -207,8 +207,11 @@ private function writeData() {
+ 		flock($filePointer, LOCK_UN);
+ 		fclose($filePointer);
+ 
+-		// Clear the opcode cache
+-		\OC_Util::clearOpcodeCache();
++		// Try invalidating the opcache just for the file we wrote...
++		if (!\OC_Util::deleteFromOpcodeCache($this->configFilename)) {
++			// But if that doesn't work, clear the whole cache.
++			\OC_Util::clearOpcodeCache();
++		}
+ 	}
+ }
+ 
+diff --git a/lib/private/util.php b/lib/private/util.php
+index bee0a57..fa0c6f1 100644
+--- a/lib/private/util.php
++++ b/lib/private/util.php
+@@ -1250,6 +1250,31 @@ public static function getTheme() {
+ 	}
+ 
+ 	/**
++	 * Clear a single file from the opcode cache
++	 * This is useful for writing to the config file
++	 * in case the opcode cache does not re-validate files
++	 * Returns true if successful, false if unsuccessful:
++	 * caller should fall back on clearing the entire cache
++	 * with clearOpcodeCache() if unsuccessful
++	 *
++	 * @return bool true if underlying function returns true, otherwise false
++	 */
++	public static function deleteFromOpcodeCache($path=NULL) {
++		$ret = false;
++		if ($path) {
++			// APC >= 3.1.1
++			if (function_exists('apc_delete_file')) {
++				$ret = @apc_delete_file($path);
++			}
++			// Zend OpCache >= 7.0.0, PHP >= 5.5.0
++			if (function_exists('opcache_invalidate')) {
++				$ret = opcache_invalidate($path);
++			}
++		}
++		return $ret;
++	}
++
++	/**
+ 	 * Clear the opcode cache if one exists
+ 	 * This is necessary for writing to the config file
+ 	 * in case the opcode cache does not re-validate files
+
+From 8b2b0aae31fe084c3f8edbc6b307a39db03211c9 Mon Sep 17 00:00:00 2001
+From: Adam Williamson <awilliam@redhat.com>
+Date: Thu, 6 Nov 2014 18:05:20 -0800
+Subject: [PATCH 2/3] deleteFromOpcodeCache: make parameter mandatory, document
+ parameter
+
+Both pointed out in submission review by @bantu, thanks.
+---
+ lib/private/util.php | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/lib/private/util.php b/lib/private/util.php
+index fa0c6f1..0e1bb34 100644
+--- a/lib/private/util.php
++++ b/lib/private/util.php
+@@ -1257,9 +1257,10 @@ public static function getTheme() {
+ 	 * caller should fall back on clearing the entire cache
+ 	 * with clearOpcodeCache() if unsuccessful
+ 	 *
++	 * @param string $path the path of the file to clear from the cache
+ 	 * @return bool true if underlying function returns true, otherwise false
+ 	 */
+-	public static function deleteFromOpcodeCache($path=NULL) {
++	public static function deleteFromOpcodeCache($path) {
+ 		$ret = false;
+ 		if ($path) {
+ 			// APC >= 3.1.1
+
+From 013feb8da052e7d8f2e1171fb6600d82b3c3ac29 Mon Sep 17 00:00:00 2001
+From: Adam Williamson <awilliam@redhat.com>
+Date: Thu, 6 Nov 2014 18:10:43 -0800
+Subject: [PATCH 3/3] writeData(): correct variable name for config file path
+
+It changed since we wrote this patch.
+---
+ lib/private/config.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/private/config.php b/lib/private/config.php
+index 8bb2a5c..3e7fef4 100644
+--- a/lib/private/config.php
++++ b/lib/private/config.php
+@@ -208,7 +208,7 @@ private function writeData() {
+ 		fclose($filePointer);
+ 
+ 		// Try invalidating the opcache just for the file we wrote...
+-		if (!\OC_Util::deleteFromOpcodeCache($this->configFilename)) {
++		if (!\OC_Util::deleteFromOpcodeCache($this->configFilePath)) {
+ 			// But if that doesn't work, clear the whole cache.
+ 			\OC_Util::clearOpcodeCache();
+ 		}
+

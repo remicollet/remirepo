@@ -1,0 +1,10 @@
+--- owncloud/lib/base.php	2014-07-29 00:30:26.998084605 -0700
++++ owncloud/lib/base.php.new	2014-07-29 00:35:08.579372364 -0700
+@@ -491,6 +491,7 @@
+ 			$loader->add('Pimple', '/usr/share/php/Pimple');
+ 			$loader->add('Sabre', '/usr/share/php');
+ 			$loader->add('Sabre\VObject', '/usr/share/pear');
++			$loader->setUseIncludePath(true);
+ 		} else {
+ 			OC_Response::setStatus(OC_Response::STATUS_SERVICE_UNAVAILABLE);
+			// we can't use the template error page here, because this needs the

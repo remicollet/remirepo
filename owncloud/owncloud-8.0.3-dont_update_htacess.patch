@@ -1,0 +1,37 @@
+diff --git a/lib/private/setup.php b/lib/private/setup.php
+index e3a29b6..7eeeb92 100644
+--- a/lib/private/setup.php
++++ b/lib/private/setup.php
+@@ -230,12 +230,6 @@ class OC_Setup {
+ 			// out that this is indeed an ownCloud data directory
+ 			file_put_contents(OC_Config::getValue('datadirectory', OC::$SERVERROOT.'/data').'/.ocdata', '');
+ 
+-			// Update htaccess files for apache hosts
+-			if (isset($_SERVER['SERVER_SOFTWARE']) && strstr($_SERVER['SERVER_SOFTWARE'], 'Apache')) {
+-				self::updateHtaccess();
+-				self::protectDataDirectory();
+-			}
+-
+ 			//and we are done
+ 			OC_Config::setValue('installed', true);
+ 		}
+diff --git a/lib/private/updater.php b/lib/private/updater.php
+index 08731c7..2b722e3 100644
+--- a/lib/private/updater.php
++++ b/lib/private/updater.php
+@@ -202,15 +202,6 @@ class Updater extends BasicEmitter {
+ 			throw new \Exception('Updates between multiple major versions are unsupported.');
+ 		}
+ 
+-		// Update htaccess files for apache hosts
+-		if (isset($_SERVER['SERVER_SOFTWARE']) && strstr($_SERVER['SERVER_SOFTWARE'], 'Apache')) {
+-			try {
+-				\OC_Setup::updateHtaccess();
+-			} catch (\Exception $e) {
+-				throw new \Exception($e->getMessage());
+-			}
+-		}
+-
+ 		// create empty file in data dir, so we can later find
+ 		// out that this is indeed an ownCloud data directory
+ 		// (in case it didn't exist before)

@@ -1,0 +1,14 @@
+--- owncloud/lib/base.php	2014-07-29 00:27:51.154263240 -0700
++++ owncloud/lib/base.php.new	2014-07-29 00:30:26.998084605 -0700
+@@ -475,7 +475,10 @@
+ 		// setup 3rdparty autoloader
+ 		$vendorAutoLoad = OC::$THIRDPARTYROOT . '/3rdparty/autoload.php';
+ 		if (file_exists($vendorAutoLoad)) {
+-			require_once $vendorAutoLoad;
++			$loader = require_once $vendorAutoLoad;
++			$loader->add('Pimple', '/usr/share/php/Pimple');
++			$loader->add('Sabre', '/usr/share/php');
++			$loader->add('Sabre\VObject', '/usr/share/pear');
+ 		} else {
+			OC_Response::setStatus(OC_Response::STATUS_SERVICE_UNAVAILABLE);
+			// we can't use the template error page here, because this needs the
