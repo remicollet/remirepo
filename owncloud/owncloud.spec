@@ -1,7 +1,17 @@
+# remirepo spec file for owncloud from:
+#
+# Fedora spec file for owncloud
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 Name:           owncloud
 Version:        8.0.4
 Release:        3%{?dist}
 Summary:        Private file sync and share server
+Group:          Applications/Internet
 
 License:        AGPLv3+ and MIT and BSD and CC-BY and CC-BY-SA and GPLv3 and Public Domain and (MPLv1.1 or GPLv2+ or LGPLv2+) and (MIT or GPL+) and (MIT or GPLv2) and ASL 2.0 and LGPLv3
 URL:            http://owncloud.org
@@ -63,6 +73,7 @@ Patch7:        owncloud-8.0.0-disable_minify.patch
 # Distributors are on the case.
 Patch8:         owncloud-8.0.3-dont_update_htacess.patch
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
 # expand pear macros on install
@@ -158,6 +169,7 @@ applications and plugins.
 
 %package httpd
 Summary:    Httpd integration for ownCloud
+Group:      Applications/Internet
 
 Provides:   %{name}-webserver = %{version}-%{release}
 Requires:   %{name} = %{version}-%{release}
@@ -171,6 +183,7 @@ Requires:       php
 
 %package nginx
 Summary:    Nginx integration for ownCloud
+Group:      Applications/Internet
 
 Provides:   %{name}-webserver = %{version}-%{release}
 Requires:   %{name} = %{version}-%{release}
@@ -184,6 +197,7 @@ Requires:   php-fpm nginx
 
 %package mysql
 Summary:    MySQL database support for ownCloud
+Group:      Applications/Internet
 
 Provides:   %{name}-database = %{version}-%{release}
 Requires:   %{name} = %{version}-%{release}
@@ -202,6 +216,7 @@ more details.
 
 %package postgresql
 Summary:    PostgreSQL database support for ownCloud
+Group:      Applications/Internet
 
 Provides:   %{name}-database = %{version}-%{release}
 Requires:   %{name} = %{version}-%{release}
@@ -221,6 +236,7 @@ for more details.
 
 %package sqlite
 Summary:    SQLite 3 database support for ownCloud
+Group:      Applications/Internet
 
 Provides:   %{name}-database = %{version}-%{release}
 Requires:   %{name} = %{version}-%{release}
@@ -336,6 +352,8 @@ rm -r apps/updater
 
 
 %install
+rm -rf %{buildroot}
+
 install -dm 755 %{buildroot}%{_datadir}/%{name}
 
 # create owncloud datadir
@@ -435,7 +453,12 @@ if [ $1 -eq 0 ]; then
 fi
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %doc AUTHORS COPYING-AGPL README.fedora config/config.sample.php
 
 %dir %attr(-,apache,apache) %{_sysconfdir}/%{name}
@@ -450,21 +473,31 @@ fi
 
 
 %files httpd
+%defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %{_sysconfdir}/httpd/conf.d/%{name}-access.conf.avail
 %{_sysconfdir}/httpd/conf.d/*.inc
 
 %files nginx
+%defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/nginx/conf.d/%{name}.conf
 
 %files mysql
+%defattr(-,root,root,-)
 %doc README.mysql
+
 %files postgresql
+%defattr(-,root,root,-)
 %doc README.postgresql
+
 %files sqlite
+%defattr(-,root,root,-)
 
 
 %changelog
+* Sun Jul  5 2015 Remi Collet <remi@remirepo.net> - 8.0.4-3
+- backport for remimrepo
+
 * Sat Jul 04 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 8.0.4-3
 - Fix Symfony max version (2.6 changed to 3.0)
 
