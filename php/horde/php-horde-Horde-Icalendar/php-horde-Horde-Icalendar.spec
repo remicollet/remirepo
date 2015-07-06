@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Icalendar
-Version:        2.1.0
+Version:        2.1.1
 Release:        1%{?dist}
 Summary:        iCalendar API
 
@@ -128,6 +128,9 @@ fi
 
 
 %changelog
+* Mon Jul 06 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
+- Update to 2.1.1
+
 * Thu Jun 18 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0
 
