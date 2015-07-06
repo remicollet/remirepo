@@ -811,9 +811,8 @@ URL:       http://symfony.com/doc/current/components/dependency_injection/index.
 Group:     Development/Libraries
 
 # composer.json: optional
-Requires:  php-composer(%{composer_vendor}/config)               = %{version}
-#equires:  php-composer(%{composer_vendor}/proxy-manager-bridge) = %{version}
-Requires:  php-composer(%{composer_vendor}/yaml)                 = %{version}
+Requires:  php-composer(%{composer_vendor}/config) = %{version}
+Requires:  php-composer(%{composer_vendor}/yaml)   = %{version}
 # phpcompatinfo (computed from version 2.7.1)
 Requires:  php-dom
 Requires:  php-hash
@@ -835,6 +834,10 @@ Provides:  %{name}-dependencyinjection  = %{version}
 %description dependency-injection
 The Dependency Injection component allows you to standardize and centralize
 the way objects are constructed in your application.
+
+Optional:
+* Symfony ProxyManager Bridge (php-%{composer_vendor}-proxy-manager-bridge)
+      Generate service proxies to lazy load them.
 
 # ------------------------------------------------------------------------------
 
@@ -991,9 +994,7 @@ Requires:  php-composer(%{composer_vendor}/intl)             = %{version}
 Requires:  php-composer(%{composer_vendor}/options-resolver) = %{version}
 Requires:  php-composer(%{composer_vendor}/property-access)  = %{version}
 # composer.json: optional
-Requires:  php-composer(%{composer_vendor}/framework-bundle) = %{version}
 Requires:  php-composer(%{composer_vendor}/security-csrf)    = %{version}
-Requires:  php-composer(%{composer_vendor}/twig-bridge)      = %{version}
 Requires:  php-composer(%{composer_vendor}/validator)        = %{version}
 # phpcompatinfo (computed from version 2.7.1)
 Requires:  php-ctype
@@ -1019,6 +1020,12 @@ Provides:  %{name}2-Form = %{version}
 Form provides tools for defining forms, rendering and mapping request data
 to related models. Furthermore it provides integration with the Validation
 component.
+
+Optional:
+* Symfony Framework Bundle (php-%{composer_vendor}-framework-bundle)
+      For templating with PHP.
+* Symfony Twig Bridge (php-%{composer_vendor}-twig-bridge)
+      For templating with Twig.
 
 # ------------------------------------------------------------------------------
 
@@ -1121,6 +1128,7 @@ Configuration reference:
 http://symfony.com/doc/current/reference/configuration/kernel.html
 
 Optional:
+* APC (php-pecl-apcu)
 * Memcache (php-pecl-memcache)
 * Memcached (php-pecl-memcached)
 * Mongo (php-pecl-mongo)
@@ -2489,6 +2497,10 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Sun Jul 05 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.7.1-2
+- Remove optional bridge and bundle dependencies in dependency-injection and
+  form components.  Add optional text to descriptions.
+
 * Sat Jul  4 2015 Remi Collet <remi@fedoraproject.org> - 2.7.1-2
 - dependency-injection: drop option dependency on proxy-manager-bridge
 
