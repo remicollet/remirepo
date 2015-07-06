@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        6.9.1
-%global Patchlevel 6
+%global Patchlevel 7
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -44,6 +44,8 @@
 %else
 %global with_gslib 1
 %endif
+
+%global with_gvc   1
 
 %global libname ImageMagick
 %if 0%{?fedora} > 20
@@ -89,6 +91,9 @@ BuildRequires:  jbigkit-devel
 %endif
 %if %{with_jp2}
 BuildRequires:  openjpeg2-devel >= 2.1.0
+%endif
+%if %{with_gvc}
+BuildRequires:  graphviz-devel >= 2.9.0
 %endif
 
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
@@ -294,6 +299,9 @@ cp -p Magick++/demo/*.cpp Magick++/demo/*.miff Magick++/examples
 %if %{with_jp2}
            --with-openjp2 \
 %endif
+%if %{with_gvc}
+           --with-gvc \
+%endif
            --with-perl-options="INSTALLDIRS=vendor %{?perl_prefix} CC='%__cc -L$PWD/magick/.libs' LDDLFLAGS='-shared -L$PWD/magick/.libs'" \
            --without-dps \
            --without-included-ltdl --with-ltdl-include=%{_includedir} \
@@ -446,6 +454,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jul  6 2015 Remi Collet <remi@remirepo.net> - 6.9.1.7-1
+- update to 6.9.1-7
+- build with gvc support (graphviz)
+
 * Mon Jun 22 2015 Remi Collet <remi@remirepo.net> - 6.9.1.6-1
 - update to 6.9.1-6
 
