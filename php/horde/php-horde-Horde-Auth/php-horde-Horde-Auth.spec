@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Auth
-Version:        2.1.9
+Version:        2.1.10
 Release:        1%{?dist}
 Summary:        Horde Authentication API
 
@@ -146,6 +146,9 @@ fi
 
 
 %changelog
+* Tue Jul 07 2015 Remi Collet <remi@fedoraproject.org> - 2.1.10-1
+- Update to 2.1.10
+
 * Mon Jun 29 2015 Remi Collet <remi@fedoraproject.org> - 2.1.9-1
 - Update to 2.1.9
 

@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Form
+# remirepo/fedora spec file for php-horde-Horde-Form
 #
 # Copyright (c) 2012-2015 Nick Bebout, Remi Collet
 #
