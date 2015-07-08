@@ -26,7 +26,7 @@
 Summary:      PHP Bindings for rrdtool
 Name:         %{?scl_prefix}php-pecl-rrd
 Version:      2.0.0
-Release:      0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:      0.4.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      BSD
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/rrd
@@ -220,6 +220,9 @@ fi
 
 
 %changelog
+* Wed Jul  8 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.4.beta3
+- rebuild against php 7.0.0beta1
+
 * Sat Jun 27 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.3.beta3
 - update to 2.0.0beta3
 - drop upstream patches
