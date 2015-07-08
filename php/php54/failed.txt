@@ -1,4 +1,4 @@
-===== 5.5.42
+===== 5.5.43
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
@@ -18,10 +18,8 @@ $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 	Testing xpath() with invalid XML [ext/simplexml/tests/SimpleXMLElement_xpath.phpt]
 	Bug #64146 (serialize incorrectly saving objects when they are cloned) [ext/standard/tests/serialize/bug64146.phpt]
 
-/var/lib/mock/el6i/build.log:Tests failed    :    6 (  0.0%) (  0.1%)
+/var/lib/mock/el6i/build.log:Tests failed    :    4 (  0.0%) (  0.1%)
 	Bug #41523 (strtotime('0000-00-00 00:00:00') is parsed as 1999-11-30) (32 bit) [ext/date/tests/bug41523.phpt]
-	IPv4 Loopback test [ext/sockets/tests/ipv4loop.phpt]
-	ext/sockets - socket_getpeername_ipv4loop - basic test [ext/sockets/tests/socket_getpeername_ipv4loop.phpt]
 	Testing xpath() with invalid XML [ext/simplexml/tests/SimpleXMLElement_xpath.phpt]
 	Bug #64146 (serialize incorrectly saving objects when they are cloned) [ext/standard/tests/serialize/bug64146.phpt]
 	Bug #32001 (xml_parse*() goes into infinite loop when autodetection in effect), using UTF-* [ext/xml/tests/bug32001.phpt]
