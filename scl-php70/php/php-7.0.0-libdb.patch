@@ -1,6 +1,6 @@
-diff -up php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/dba/config.m4.libdb php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/dba/config.m4
---- php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/dba/config.m4.libdb	2015-03-25 07:01:04.000000000 +0100
-+++ php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/dba/config.m4	2015-03-25 08:39:57.404661073 +0100
+diff -up php-7.0.0beta1/ext/dba/config.m4.libdb php-7.0.0beta1/ext/dba/config.m4
+--- php-7.0.0beta1/ext/dba/config.m4.libdb	2015-07-08 02:24:59.252022638 +0200
++++ php-7.0.0beta1/ext/dba/config.m4	2015-07-08 07:00:16.834403233 +0200
 @@ -312,57 +312,13 @@ if test "$PHP_DB4" != "no"; then
    dbdp4="/usr/local/BerkeleyDB.4."
    dbdp5="/usr/local/BerkeleyDB.5."
@@ -61,9 +61,9 @@ diff -up php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/dba/config.m4.libd
  fi
  PHP_DBA_STD_RESULT(db4,Berkeley DB4)
  
-diff -up php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/dba/dba.c.libdb php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/dba/dba.c
---- php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/dba/dba.c.libdb	2015-03-25 07:01:04.000000000 +0100
-+++ php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/dba/dba.c	2015-03-25 08:41:34.871061250 +0100
+diff -up php-7.0.0beta1/ext/dba/dba.c.libdb php-7.0.0beta1/ext/dba/dba.c
+--- php-7.0.0beta1/ext/dba/dba.c.libdb	2015-07-08 02:24:59.119020904 +0200
++++ php-7.0.0beta1/ext/dba/dba.c	2015-07-08 07:01:43.158767655 +0200
 @@ -52,6 +52,10 @@
  #include "php_qdbm.h"
  #include "php_tcadb.h"
@@ -75,7 +75,7 @@ diff -up php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/dba/dba.c.libdb ph
  /* {{{ arginfo */
  ZEND_BEGIN_ARG_INFO_EX(arginfo_dba_popen, 0, 0, 2)
  	ZEND_ARG_INFO(0, path)
-@@ -537,6 +541,10 @@ PHP_MINFO_FUNCTION(dba)
+@@ -545,6 +549,10 @@ PHP_MINFO_FUNCTION(dba)
  
  	php_info_print_table_start();
   	php_info_print_table_row(2, "DBA support", "enabled");
@@ -85,4 +85,4 @@ diff -up php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/dba/dba.c.libdb ph
 +#endif
  	if (handlers.s) {
  		smart_str_0(&handlers);
- 		php_info_print_table_row(2, "Supported handlers", handlers.s->val);
+ 		php_info_print_table_row(2, "Supported handlers", ZSTR_VAL(handlers.s));

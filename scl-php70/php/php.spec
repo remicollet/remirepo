@@ -124,13 +124,13 @@
 %global db_devel  libdb-devel
 %endif
 
-%global gh_commit    9876b2c2cf65fbe6aeb0edccbaa421d3d92c345e
-%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150623
-%global gh_owner     php
-%global gh_project   php-src
-%global rcver        alpha2
-%global rpmrel       10
+#global gh_commit    9876b2c2cf65fbe6aeb0edccbaa421d3d92c345e
+#global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+#global gh_date      20150623
+#global gh_owner     php
+#global gh_project   php-src
+%global rcver        beta1
+%global rpmrel       11
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -151,7 +151,7 @@ URL: http://www.php.net/
 %if 0%{?gh_date}
 Source0: https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}%{?gh_short:-%{gh_short}}.tar.gz
 %else
-Source0: http://www.php.net/distributions/php-%{version}%{?rcver}.tar.bz2
+Source0: http://www.php.net/distributions/php-%{version}%{?rcver}.tar.xz
 %endif
 Source1: php.conf
 Source2: php.ini
@@ -1045,8 +1045,10 @@ cat $(aclocal --print-ac-dir)/{libtool,ltoptions,ltsugar,ltversion,lt~obsolete}.
 cat $(aclocal --print-ac-dir)/libtool.m4 > build/libtool.m4
 %endif
 
+%if 0%{?gh_date}
 # Bison files
 ./genfiles
+%endif
 
 # Regenerate configure scripts (patches change config.m4's)
 touch configure.in
@@ -1801,6 +1803,10 @@ fi
 
 
 %changelog
+* Wed Jul  8 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.11.beta1
+- Update to 7.0.0beta1
+- use upstream tarball instead of git snapshot
+
 * Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.10.alpha2
 - Update to 7.0.0alpha2
 - use new layout (/etc/opt, /var/opt)
