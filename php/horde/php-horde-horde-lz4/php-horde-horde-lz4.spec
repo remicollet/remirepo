@@ -40,7 +40,7 @@
 Summary:        Horde LZ4 Compression Extension
 Name:           %{?sub_prefix}php-horde-horde-lz4
 Version:        1.0.8
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        MIT
 Group:          Development/Languages
 URL:            http://www.horde.org
@@ -68,17 +68,21 @@ Provides:       %{?scl_prefix}php-pecl(%{pecl_channel}/%{pecl_name})%{?_isa} = %
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
-Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
-Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php53-horde-horde-lz4  <= %{version}
+Obsoletes:     php53u-horde-horde-lz4 <= %{version}
+Obsoletes:     php54-horde-horde-lz4  <= %{version}
+Obsoletes:     php54w-horde-horde-lz4 <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55u-horde-horde-lz4 <= %{version}
+Obsoletes:     php55w-horde-horde-lz4 <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56u-horde-horde-lz4 <= %{version}
+Obsoletes:     php56w-horde-horde-lz4 <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-horde-horde-lz4 <= %{version}
+Obsoletes:     php70w-horde-horde-lz4 <= %{version}
 %endif
 %endif
 
@@ -235,6 +239,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jul  8 2015 Remi Collet <remi@fedoraproject.org> - 1.0.8-3
+- rebuild against php 7.0.0beta1
+
 * Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> - 1.0.8-2
 - allow build against rh-php56 (as more-php56)
 
