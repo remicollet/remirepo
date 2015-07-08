@@ -37,7 +37,7 @@
 Summary:        SELinux binding for PHP scripting language
 Name:           %{?sub_prefix}php-pecl-selinux
 Version:        0.4.1
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -230,6 +230,9 @@ fi
 
 
 %changelog
+* Wed Jul  8 2015 Remi Collet <remi@fedoraproject.org> - 0.4.1-3
+- rebuild against php 7.0.0beta1
+
 * Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 0.4.1-2
 - allow build against rh-php56 (as more-php56)
 - rebuild for "rh_layout" (php70)
