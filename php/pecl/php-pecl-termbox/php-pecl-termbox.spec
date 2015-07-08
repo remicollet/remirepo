@@ -23,7 +23,7 @@
 Summary:        A termbox wrapper for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        0.1.2
-Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        ASL 2.0
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -61,6 +61,10 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -222,6 +226,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jul  8 2015 Remi Collet <remi@fedoraproject.org> - 0.1.2-4
+- rebuild against php 7.0.0beta1
+
 * Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> - 0.1.2-3
 - rebuild for "rh_layout" (php70)
 
