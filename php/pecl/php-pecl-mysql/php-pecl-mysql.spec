@@ -15,11 +15,11 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit   01751ce1a8881ffaa111b5bda2139cc87aa9091b
+%global gh_commit   617e5103743d07435fdfe5cbbe6ad310e610c4b9
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    php
 %global gh_project  pecl-database-mysql
-%global gh_date     20150305
+%global gh_date     20150703
 %global with_zts    0%{?__ztsphp:1}
 %global pecl_name   mysql
 %global with_tests  %{!?_without_tests:1}%{?_without_tests:0}
@@ -31,7 +31,7 @@ Summary:        MySQL database access functions
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
 %if 0%{?gh_date:1}
-Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -206,5 +206,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jul  8 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.20150703git617e510
+- new snapshot, rebuild against php 7.0.0beta1
+
 * Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.20150305git01751ce
 - initial package, version 1.0.0-dev
