@@ -28,9 +28,9 @@
 %global with_zts    0%{?__ztsphp:1}
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 %global pecl_name   memcached
-%global gh_commit   4187e2277fa7469b0b8a67045083dde1950cecc0
+%global gh_commit   3c79a97aeb6e8c946116c536831816a36eb4eb0f
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date     20150423
+%global gh_date     20150628
 #global gh_owner    php-memcached-dev
 # Temporarily use Rasmus fork
 %global gh_owner    rlerdorf
@@ -48,15 +48,12 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?sub_prefix}php-pecl-memcached
 Version:      2.2.0
-Release:      7.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:      8.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
-Source0:      https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}.tar.gz
-
-# https://github.com/rlerdorf/php-memcached/pull/2
-Patch0:       %{pecl_name}-pr2.patch
+Source0:      https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # 5.2.10 required to HAVE_JSON enabled
@@ -162,7 +159,6 @@ mv NTS/package.xml .
 sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd NTS
-%patch0 -p1 -b .fastlz
 
 %if %{with_fastlz}
 rm -r fastlz
@@ -360,6 +356,9 @@ exit $ret
 
 
 %changelog
+* Wed Jul  8 2015 Remi Collet <rcollet@redhat.com> - 2.2.0-8.20150628git3c79a97
+- new snapshot
+
 * Sat Jun 27 2015 Remi Collet <rcollet@redhat.com> - 2.2.0-7.20150423git4187e22
 - switch sources from pecl to github
 - temporarily use rlerdorf fork (php7 compatibility)
