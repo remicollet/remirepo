@@ -37,15 +37,15 @@
 %endif
 %ifarch %{arm}
 # Test suite disabled because of erratic results on slow ARM (timeout)
-%global with_tests %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests 0%{?_with_tests:1}
 %else
-%global with_tests %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
 %endif
 
-%global prever RC1
+#global prever RC1
 Name:           %{?sub_prefix}php-pecl-http
 Version:        2.5.0
-Release:        0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -365,6 +365,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul  9 2015 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
+- update to 2.5.0
+
 * Sun Jun 21 2015 Remi Collet <remi@fedoraproject.org> - 2.5.0-0.2.RC1
 - allow build against rh-php56 (as more-php56)
 
