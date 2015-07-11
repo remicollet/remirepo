@@ -1732,6 +1732,9 @@ fi
 
 
 %changelog
+* Sat Jul 11 2015 Andy Kimpe <andykimpe@gmail.com> 5.5.26-2
+- Adding possibility to compile with the scl httpd24
+
 * Wed Jul  8 2015 Remi Collet <remi@fedoraproject.org> 5.4.43-1
 - Update to 5.4.43
   http://www.php.net/releases/5_4_43.php
