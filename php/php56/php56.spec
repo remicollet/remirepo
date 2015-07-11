@@ -28,8 +28,8 @@
 # Adding possibility to compile with the scl httpd24
 # To enable the compilation with httpd24
 # change with_httpd24 to 1 and with_httpd to 0
-%global with_httpd24         0
-%global with_httpd           1
+%global with_httpd24         1
+%global with_httpd           0
 
 %global mysql_sock %(mysql_config --socket 2>/dev/null || echo /var/lib/mysql/mysql.sock)
 
@@ -1526,6 +1526,7 @@ build --includedir=%{_includedir}/php-zts \
       --with-recode=shared,%{_prefix}
 popd
 
+%if %{with_httpd}
 # Build a special thread-safe Apache SAPI
 pushd build-zts
 build --with-apxs2=%{_httpd_apxs} \
@@ -1537,6 +1538,21 @@ build --with-apxs2=%{_httpd_apxs} \
       --disable-pdo \
       ${without_shared}
 popd
+endif
+
+%if %{with_httpd24}
+# Build a special thread-safe Apache SAPI
+pushd build-zts
+build --with-apxs2=%{_httpd24_apxs} \
+      --includedir=%{_includedir}/php-zts \
+      --libdir=%{_libdir}/php-zts \
+      --enable-maintainer-zts \
+      --with-config-file-scan-dir=%{_sysconfdir}/php-zts.d \
+      --without-mysql \
+      --disable-pdo \
+      ${without_shared}
+popd
+endif
 
 ### NOTE!!! EXTENSION_DIR was changed for the -zts build, so it must remain
 ### the last SAPI to be built.
@@ -2876,4 +2892,3 @@ fi
 - first work on php 5.4
 - remove -sqlite subpackage
 - move php/modules-zts to php-zts/modules
-
