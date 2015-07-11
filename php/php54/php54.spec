@@ -138,7 +138,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.4.43
-Release: 1%{?dist}
+Release: 2%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1732,7 +1732,7 @@ fi
 
 
 %changelog
-* Sat Jul 11 2015 Andy Kimpe <andykimpe@gmail.com> 5.5.26-2
+* Sat Jul 11 2015 Andy Kimpe <andykimpe@gmail.com> 5.4.43-2
 - Adding possibility to compile with the scl httpd24
 
 * Wed Jul  8 2015 Remi Collet <remi@fedoraproject.org> 5.4.43-1
