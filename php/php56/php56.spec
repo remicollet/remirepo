@@ -1538,7 +1538,7 @@ build --with-apxs2=%{_httpd_apxs} \
       --disable-pdo \
       ${without_shared}
 popd
-endif
+%endif
 
 %if %{with_httpd24}
 # Build a special thread-safe Apache SAPI
@@ -1552,7 +1552,7 @@ build --with-apxs2=%{_httpd24_apxs} \
       --disable-pdo \
       ${without_shared}
 popd
-endif
+%endif
 
 ### NOTE!!! EXTENSION_DIR was changed for the -zts build, so it must remain
 ### the last SAPI to be built.
