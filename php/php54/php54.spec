@@ -1305,6 +1305,7 @@ install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/wsdlcache
 %if %{with_httpd24}
 install -D -m 644 php.gif $RPM_BUILD_ROOT%{_httpd24_contentdir}/icons/%{name}.gif
 install -D -m 755 build-httpd24/libs/libphp5.so $RPM_BUILD_ROOT%{_httpd24_moddir}/lib%{name}5.so
+sed -e 's/libphp5/lib%{name}5/' %{SOURCE9} >modconf
 install -D -m 644 modconf    $RPM_BUILD_ROOT%{_httpd24_modconfdir}/10-%{name}.conf
 install -D -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_httpd24_confdir}/%{name}.conf
 sed -e 's:/var/lib:%{_localstatedir}/lib:' \
