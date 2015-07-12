@@ -38,6 +38,13 @@
 # version used for php embedded library soname
 %global embed_version 5.6
 
+# Adding possibility to compile with the scl httpd24
+# To enable the compilation with httpd24
+# change with_httpd24 to 1 and with_httpd to 0
+%global with_httpd24         0
+%global with_httpd           1
+
+%if %{with_httpd}
 # Ugly hack. Harcoded values to avoid relocation.
 %global _httpd_mmn         %(cat %{_root_includedir}/httpd/.mmn 2>/dev/null || echo 0)
 %global _httpd_confdir     %{_root_sysconfdir}/httpd/conf.d
@@ -53,6 +60,18 @@
 %global _httpd_apxs        %{_root_sbindir}/apxs
 %global _httpd_modconfdir  %{_root_sysconfdir}/httpd/conf.d
 %global _httpd_contentdir  /var/www
+%endif
+%endif
+
+%if %{with_httpd24}
+# Ugly hack. Harcoded values to avoid relocation.
+%global _httpd24-httpd-mmn   %(cat %{_scl_prefix}/httpd24/root/%{_root_includedir}/httpd/.mmn 2>/dev/null || echo 0)
+%global _httpd24_confdir     %{_scl_prefix}/httpd24/root/%{_root_sysconfdir}/httpd/conf.d
+%global _httpd24_moddir      %{_scl_prefix}/httpd24/root/%{_libdir}/httpd/modules
+%global _root_httpd24_moddir %{_scl_prefix}/httpd24/root/%{_root_libdir}/httpd/modules
+%global _httpd24_apxs        %{_scl_prefix}/httpd24/root/%{_root_bindir}/apxs
+%global _httpd24_modconfdir  %{_scl_prefix}/httpd24/root/%{_root_sysconfdir}/httpd/conf.modules.d
+%global _httpd24_contentdir  %{_scl_prefix}/httpd24/root/usr/share/httpd
 %endif
 
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_root_sysconfdir}/rpm; echo $d)
@@ -137,12 +156,12 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver  RC1
-%global rpmrel 1
+#global rcver  RC1
+%global rpmrel 2
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.6.11
+Version: 5.6.10
 %if 0%{?rcver:1}
 Release: 0.%{rpmrel}.%{rcver}%{?dist}
 %else
@@ -211,10 +230,15 @@ Patch301: php-5.6.0-oldpcre.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: bzip2-devel, curl-devel >= 7.9, %{db_devel}
+%if %{with_httpd}
 BuildRequires: httpd-devel >= 2.0.46-1, pam-devel
 %if %{with_httpd2410}
 # to ensure we are using httpd with filesystem feature (see #1081453)
 BuildRequires: httpd-filesystem
+%endif
+%endif
+%if %{with_httpd24}
+BuildRequires: httpd24-httpd-devel >= 2.0.46-1, pam-devel
 %endif
 BuildRequires: libstdc++-devel, openssl-devel
 %if %{with_sqlite3}
@@ -233,6 +257,7 @@ BuildRequires: libtool-ltdl-devel
 %if %{with_dtrace}
 BuildRequires: systemtap-sdt-devel
 %endif
+%if %{with_httpd}
 Requires: httpd-mmn = %{_httpd_mmn}
 Provides: %{?scl_prefix}mod_php = %{version}-%{release}
 Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
@@ -243,6 +268,17 @@ Requires: %{?scl_prefix}php-cli%{?_isa} = %{version}-%{release}
 Requires(pre): httpd-filesystem
 %else
 Requires(pre): httpd
+%endif
+%endif
+
+%if %{with_httpd24}
+Requires: httpd24-httpd-mmn = %{_httpd24_mmn}
+Provides: httpd24-mod_php = %{version}-%{release}
+Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
+# For backwards-compatibility, require php-cli for the time being:
+Requires: %{?scl_prefix}php-cli%{?_isa} = %{version}-%{release}
+# To ensure correct /var/lib/php/session ownership:
+Requires(pre): httpd24-httpd
 %endif
 
 
@@ -260,8 +296,14 @@ non-commercial database management systems, so writing a
 database-enabled webpage with PHP is fairly simple. The most common
 use of PHP coding is probably as a replacement for CGI scripts.
 
+%if %{with_httpd}
 This package contains the module (often referred to as mod_php)
 which adds support for the PHP language to system Apache HTTP Server.
+%endif
+%if %{with_httpd24}
+This package contains the module (often referred to as mod_php)
+which adds support for the PHP language to Apache HTTP 2.4 Server.
+%endif
 
 
 %package cli
@@ -312,12 +354,14 @@ Requires(post): systemd-sysv
 Requires(preun): initscripts
 Requires(postun): initscripts
 %endif
+%if %{with_httpd}
 %if %{with_httpd2410}
 # To ensure correct /var/lib/php/session ownership:
 Requires(pre): httpd-filesystem
 # For php.conf in /etc/httpd/conf.d
 # and version 2.4.10 for proxy support in SetHandler
 Requires: httpd-filesystem >= 2.4.10
+%endif
 %endif
 
 %description fpm
@@ -923,7 +967,12 @@ cp ext/bcmath/libbcmath/COPYING.LIB libbcmath_COPYING
 # Multiple builds for multiple SAPIs
 mkdir \
     build-fpm \
+%if %{with_httpd}
     build-apache \
+%endif
+%if %{with_httpd24}
+    build-httpd24 \
+%endif
     build-embedded \
     build-cgi
 
@@ -1221,6 +1270,7 @@ without_shared="--without-gd \
       --disable-shmop --disable-sockets --disable-tokenizer \
       --disable-sysvmsg --disable-sysvshm --disable-sysvsem"
 
+%if %{with_httpd}
 # Build Apache module, and the CLI SAPI, /usr/bin/php
 pushd build-apache
 build --with-apxs2=%{_httpd_apxs} \
@@ -1245,6 +1295,36 @@ build --enable-fpm \
       --disable-pdo \
       ${without_shared}
 popd
+%endif
+
+### LATEST build as we need to enable the collection
+
+%if %{with_httpd24}
+. %{_scl_prefix}/httpd24/enable
+# Build Apache module, and the CLI SAPI, /usr/bin/php
+pushd build-httpd24
+build --with-apxs2=%{_httpd24_apxs} \
+      --libdir=%{_libdir}/php \
+%if %{with_lsws}
+      --with-litespeed \
+%endif
+      --without-mysql \
+      --disable-pdo \
+      ${without_shared}
+popd
+
+# Build php-fpm
+pushd build-fpm
+build --enable-fpm \
+%if %{with_systemd}
+      --with-fpm-systemd \
+%endif
+      --libdir=%{_libdir}/php \
+      --without-mysql \
+      --disable-pdo \
+      ${without_shared}
+popd
+%endif
 
 # Build for inclusion as embedded script language into applications,
 # /usr/lib[64]/libphp5.so
@@ -1259,7 +1339,12 @@ popd
 %check
 %if %runselftest
 
+%if %{with_httpd}
 cd build-apache
+%endif
+%if %{with_httpd24}
+cd build-httpd24
+%endif
 
 # Run tests, using the CLI SAPI
 export NO_INTERACTION=1 REPORT_EXIT_STATUS=1 MALLOC_CHECK_=2
@@ -1305,6 +1390,7 @@ install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/php
 
 sed -e 's/libphp5/lib%{name}5/' %{SOURCE9} >modconf
 
+%if %{with_httpd}
 # install the DSO
 install -m 755 -d $RPM_BUILD_ROOT%{_httpd_moddir}
 install -m 755 build-apache/libs/libphp5.so $RPM_BUILD_ROOT%{_httpd_moddir}
@@ -1327,20 +1413,34 @@ install -D -m 644 modconf    $RPM_BUILD_ROOT%{_httpd_modconfdir}/10-%{name}.conf
 install -D -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_httpd_confdir}/%{name}.conf
 %if %{with_httpd2410}
 cat %{SOURCE10} >>$RPM_BUILD_ROOT%{_httpd_confdir}/%{name}.conf
+%if %{with_lsws}
+install -m 755 build-apache/sapi/litespeed/php $RPM_BUILD_ROOT%{_bindir}/lsphp
+sed -e 's:/var/lib:%{_localstatedir}/lib:' \
+    -i $RPM_BUILD_ROOT%{_httpd_confdir}/%{name}.conf
+%endif
+%endif
 %endif
 %endif
 
+
+
+%if %{with_httpd24}
+install -D -m 644 php.gif $RPM_BUILD_ROOT%{_httpd24_contentdir}/icons/%{name}.gif
+install -D -m 755 build-httpd24/libs/libphp5.so $RPM_BUILD_ROOT%{_httpd24_moddir}/lib%{name}5.so
+install -D -m 644 modconf $RPM_BUILD_ROOT%{_httpd24_modconfdir}/10-%{name}.conf
+install -D -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_httpd24_confdir}/%{name}.conf
 sed -e 's:/var/lib:%{_localstatedir}/lib:' \
-    -i $RPM_BUILD_ROOT%{_httpd_confdir}/%{name}.conf
+    -i $RPM_BUILD_ROOT%{_httpd24_confdir}/%{name}.conf
+	
+%if %{with_lsws}
+install -m 755 build-httpd24/sapi/litespeed/php $RPM_BUILD_ROOT%{_bindir}/lsphp
+%endif
+%endif
 
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/wsdlcache
-
-%if %{with_lsws}
-install -m 755 build-apache/sapi/litespeed/php $RPM_BUILD_ROOT%{_bindir}/lsphp
-%endif
 
 # PHP-FPM stuff
 # Log
@@ -1397,6 +1497,10 @@ install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
 install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 sed -e 's:php-fpm.service:%{?scl_prefix}php-fpm.service:' \
     -i $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
+
+
+# Fix the link
+(cd $RPM_BUILD_ROOT%{_bindir}; ln -sfn phar.phar phar)
 
 # make the cli commands available in standard root for SCL build
 %if 0%{?scl:1}
@@ -1621,6 +1725,7 @@ fi
 
 %files
 %defattr(-,root,root)
+%if %{with_httpd}
 %{_httpd_moddir}/libphp5.so
 %if 0%{?scl:1}
 %dir %{_libdir}/httpd
@@ -1634,6 +1739,17 @@ fi
 %config(noreplace) %{_httpd_modconfdir}/10-%{name}.conf
 %endif
 %{_httpd_contentdir}/icons/%{name}.gif
+%endif
+
+%if %{with_httpd24}
+%{_httpd24_moddir}/lib%{name}5.so
+%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
+%attr(0770,root,apache) %dir %{_localstatedir}/lib/php/wsdlcache
+%config(noreplace) %{_httpd24_confdir}/%{name}.conf
+%config(noreplace) %{_httpd24_modconfdir}/10-%{name}.conf
+%{_httpd24_contentdir}/icons/%{name}.gif
+%endif
+
 
 %files common -f files.common
 %defattr(-,root,root)
@@ -1786,9 +1902,8 @@ fi
 
 
 %changelog
-* Thu Jun 25 2015 Remi Collet <remi@fedoraproject.org> 5.6.11-0.1.RC1
-- update to 5.6.11RC1
-- the phar link is now correctly created
+* Sat Jul 11 2015 Andy Kimpe <andykimpe@gmail.com> 5.6.10-2
+- Adding possibility to compile with the scl httpd24
 
 * Thu Jun 11 2015 Remi Collet <remi@fedoraproject.org> 5.6.10-1
 - Update to 5.6.10
