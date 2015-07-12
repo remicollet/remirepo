@@ -280,6 +280,7 @@ Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
 # For backwards-compatibility, require php-cli for the time being:
 Requires: %{?scl_prefix}php-cli%{?_isa} = %{version}-%{release}
 # To ensure correct /var/lib/php/session ownership:
+Requires(pre): httpd24-httpd
 %endif
 
 # Don't provides extensions, or shared libraries (embedded)
