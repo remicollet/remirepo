@@ -1,4 +1,4 @@
-===== 5.6.10
+===== 5.6.11
 
 $ grep -r 'Tests failed' /var/lib/mock/56*/build.log
 
@@ -23,5 +23,5 @@ el5i, el5x
 	sni_server [ext/openssl/tests/sni_server.phpt]
 	Specific protocol method specification [ext/openssl/tests/stream_crypto_flags_004.phpt]
 
-[1] known issue, not fix found
+[1] known issue, no fix found
 [2] ext/openssl erratic results... unable to connect to ssl://127.0.0.1:64321
