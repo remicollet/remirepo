@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    07e27765596d72c378a6103e80da5d84e802f1e4
+%global gh_commit    6044546998c7627ab997501a3d0db972b3db9790
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-code-coverage
@@ -22,8 +22,8 @@
 %endif
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        2.1.7
-Release:        2%{?dist}
+Version:        2.1.8
+Release:        1%{?dist}
 Summary:        PHP code coverage information
 
 Group:          Development/Libraries
@@ -109,7 +109,11 @@ cp -pr PHP %{buildroot}%{php_home}/PHP
 %check
 sed -e '/log/d' phpunit.xml.dist >phpunit.xml
 
-phpunit --bootstrap PHP/CodeCoverage/Autoload.php --verbose
+%{_bindir}/php \
+    -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+    %{_bindir}/phpunit \
+        --bootstrap %{buildroot}%{php_home}/PHP/CodeCoverage/Autoload.php \
+        --verbose
 %endif
 
 
@@ -134,6 +138,9 @@ fi
 
 
 %changelog
+* Mon Jul 13 2015 Remi Collet <remi@fedoraproject.org> - 2.1.8-1
+- update to 2.1.8
+
 * Thu Jul  2 2015 Remi Collet <remi@fedoraproject.org> - 2.1.7-2
 - fix autoloader
 
