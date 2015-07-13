@@ -17,7 +17,7 @@
 
 Name:           php-%{gh_owner}-%{cname}
 Version:        1.7
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Zeta %{gh_project} Component
 
 Group:          Development/Libraries
@@ -35,7 +35,6 @@ BuildArch:      noarch
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
 BuildRequires:  %{_bindir}/phpunit
-BuildRequires:  php-gd
 BuildRequires:  php-composer(%{gh_owner}/base) >= 1.8
 BuildRequires:  php-composer(%{gh_owner}/unit-test)
 %endif
@@ -58,6 +57,18 @@ A set of classes to do different actions with the console, also called shell.
 It can render a progress bar, tables and a status bar and contains a class for
 parsing command line options.
 
+Documentation is available in the %{name}-doc package.
+
+
+%package doc
+Summary:  Documentation for %{name}
+Group:    Documentation
+# For License
+Requires: %{name} = %{version}-%{release}
+
+%description doc
+%{summary}.
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
@@ -73,7 +84,7 @@ parsing command line options.
    src
 cat <<EOF | tee -a  src/autoloader.php
 # Dependencies
-require_once 'ezc/Base/autoloader.php';
+require_once '%{ezcdir}/Base/autoloader.php';
 EOF
 
 
@@ -96,8 +107,11 @@ mkdir vendor
 cat <<EOF | tee vendor/autoload.php
 <?php
 require '%{ezcdir}/UnitTest/autoloader.php';
-require '$PWD/src/autoloader.php';
+require '%{buildroot}%{ezcdir}/%{gh_project}/autoloader.php';
 EOF
+
+: Drop assertion which rely on path in sources dir
+sed -e '/realpath/d' -i tests/statusbar_test.php
 
 : Run test test suite
 %{_bindir}/phpunit --exclude-group interactive
@@ -116,12 +130,19 @@ rm -rf %{buildroot}
 %license LICENSE* CREDITS
 %doc ChangeLog
 %doc composer.json
-%doc docs design
 %{ezcdir}/autoload/*
 %{ezcdir}/%{gh_project}
 
+%files doc
+%defattr(-,root,root,-)
+%doc docs design
+
 
 %changelog
+* Mon Jul 13 2015 Remi Collet <remi@fedoraproject.org> - 1.7-3
+- create subpackage for documentation
+- minor improvments, from review #1228091 comments
+
 * Thu Jun  4 2015 Remi Collet <remi@fedoraproject.org> - 1.7-2
 - fix summary
 
