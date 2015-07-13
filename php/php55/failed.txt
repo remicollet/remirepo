@@ -1,4 +1,4 @@
-==== PHP 5.5.26
+==== PHP 5.5.27
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 

@@ -140,11 +140,11 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.5.26
+Version: 5.5.27
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 1%{?dist}.1
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1972,6 +1972,10 @@ fi
 
 
 %changelog
+* Mon Jul 13 2015 Remi Collet <remi@fedoraproject.org> 5.5.27-1
+- Update to 5.5.27
+  http://www.php.net/releases/5_5_27.php
+
 * Thu Jun 11 2015 Remi Collet <remi@fedoraproject.org> 5.5.26-1.1
 - don't provide php-sqlite3 on EL-5
 - the phar link is now correctly created
