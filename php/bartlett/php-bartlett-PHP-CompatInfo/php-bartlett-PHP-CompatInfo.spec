@@ -6,7 +6,8 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c4bfef85fe799d2079f98f7b3e46d021bc739069
+%{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
+%global gh_commit    92ee6348c3059c614b58d9927a21a778b5d7b97e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150303
 %global gh_owner     llaville
@@ -15,8 +16,8 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        4.3.0
-%global specrel 3
+Version:        4.4.0
+%global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -32,7 +33,7 @@ Source1:        fedora-review-check
 Source2:        %{name}-autoload.php
 
 # Autoload and sqlite database path
-Patch0:         %{name}-4.3.0-rpm.patch
+Patch0:         %{name}-4.4.0-rpm.patch
 
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.2
@@ -141,6 +142,10 @@ rm tests/Reference/Extension/SphinxExtensionTest.php
 rm tests/Reference/Extension/CurlExtensionTest.php
 rm tests/Reference/Extension/LibxmlExtensionTest.php
 %endif
+%if "%{php_version}" < "5.5"
+rm tests/Reference/Extension/IntlExtensionTest.php
+%endif
+
 %{_bindir}/phpunit \
     --include-path %{buildroot}%{_datadir}/php \
     -d memory_limit=1G
@@ -166,6 +171,9 @@ fi
 
 
 %changelog
+* Mon Jul 13 2015 Remi Collet <remi@fedoraproject.org> - 4.4.0-1
+- update to 4.4.0
+
 * Fri Jun 26 2015 Remi Collet <remi@fedoraproject.org> - 4.3.0-3
 - rewrite autoloader
 

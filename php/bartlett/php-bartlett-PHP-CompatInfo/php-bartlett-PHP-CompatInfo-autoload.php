@@ -17,9 +17,6 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 $fedoraClassLoader->addPrefixes(array(
     'Bartlett\\CompatInfo'                  => dirname(dirname(__DIR__)),
 ));
-if (is_file('/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite')) {
-    putenv('BARTLETT_COMPATINFO_DB=/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite');
-}
 
 // Dependencies
 require_once $vendorDir . '/Bartlett/Reflect/autoload.php';
