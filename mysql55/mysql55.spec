@@ -549,7 +549,7 @@ rm -rf $RPM_BUILD_ROOT
 %pre libs
 echo -e "\nWARNING : This MySQL RPM is not an official Fedora / Red Hat build and it"
 echo -e "overrides the official one. Don't file bugs on Fedora Project nor Red Hat."
-echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
+echo -e "Use dedicated forum at http://forum.remirepo.net/\n"
 
 %if %{?fedora}%{!?fedora:99} <= 18
 echo -e "WARNING : Fedora %{fedora} is now EOL :"

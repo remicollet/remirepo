@@ -1515,7 +1515,7 @@ rm -f README.{Zeus,QNX,CVS-RULES}
 %pre common
 echo -e "\nWARNING : These %{name}-* RPMs are not official Fedora / Red Hat build and"
 echo -e "overrides the official ones. Don't file bugs on Fedora Project nor Red Hat.\n"
-echo -e "Use dedicated forums http://forums.famillecollet.com/\n"
+echo -e "Use dedicated forum at http://forum.remirepo.net/\n"
 
 %if %{?fedora}%{!?fedora:99} < 18
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
