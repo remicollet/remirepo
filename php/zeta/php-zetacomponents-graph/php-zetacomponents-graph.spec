@@ -17,7 +17,7 @@
 
 Name:           php-%{gh_owner}-%{cname}
 Version:        1.5.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Zeta Graph Component
 
 Group:          Development/Libraries
@@ -63,12 +63,29 @@ Provides:       php-composer(%{gh_owner}/%{cname}) = %{version}
 %description
 A component for creating pie charts, line graphs and other kinds of diagrams.
 
+Documentation is available in the %{name}-doc package.
+
+
+%package doc
+Summary:  Documentation for %{name}
+Group:    Documentation
+# For License
+Requires: %{name} = %{version}-%{release}
+
+%description doc
+%{summary}.
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1
 %patch1 -p1
+
+: Drop bundled fonts
+rm docs/tutorial/tutorial_font.*
+sed -e 's:tutorial_font.ttf:/usr/share/fonts/gnu-free/FreeSans.ttf:' \
+    -i docs/tutorial/*php
 
 
 %build
@@ -78,7 +95,7 @@ A component for creating pie charts, line graphs and other kinds of diagrams.
    src
 cat <<EOF | tee -a  src/autoloader.php
 # Dependencies
-require_once 'ezc/Base/autoloader.php';
+require_once '%{ezcdir}/Base/autoloader.php';
 EOF
 
 
@@ -101,7 +118,7 @@ mkdir vendor
 cat <<EOF | tee vendor/autoload.php
 <?php
 require '%{ezcdir}/UnitTest/autoloader.php';
-require '$PWD/src/autoloader.php';
+require '%{buildroot}%{ezcdir}/%{gh_project}/autoloader.php';
 EOF
 
 : Run test test suite
@@ -121,12 +138,19 @@ rm -rf %{buildroot}
 %license LICENSE* CREDITS
 %doc ChangeLog
 %doc composer.json
-%doc docs design
 %{ezcdir}/autoload/*
 %{ezcdir}/%{gh_project}
 
+%files doc
+%defattr(-,root,root,-)
+%doc docs design
+
 
 %changelog
+* Mon Jul 13 2015 Remi Collet <remi@fedoraproject.org> - 1.5.2-3
+- create subpackage for documentation
+- minor improvments, from review #1228090 comments
+
 * Thu Jun  4 2015 Remi Collet <remi@fedoraproject.org> - 1.5.2-2
 - add upstream patch for LICENSE file
 
