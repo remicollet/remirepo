@@ -9,7 +9,7 @@
 %{?scl:          %scl_package             php-phalcon}
 %{!?scl:         %global pkg_name         %{name}}
 %{!?__php:       %global __php            %{_bindir}/php}
-%global gh_commit    b922cca7fd24ccd54ab714d147561a6034ceb424
+%global gh_commit    e69843ed16ab7531e457752433de2e7618710493
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phalcon
 %global gh_project   cphalcon
@@ -25,7 +25,7 @@
 %endif
 
 Name:           %{?scl_prefix}php-phalcon2
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Phalcon Framework
 
@@ -108,6 +108,20 @@ fi
 cat << 'EOF' | tee %{ini_name}
 ; Enable '%{summary}' extension module
 extension=%{ext_name}.so
+
+; Configuration
+;phalcon.db.escape_identifiers = '1'
+;phalcon.db.force_casting = '0'
+;phalcon.orm.events = '1'
+;phalcon.orm.virtual_foreign_keys = '1'
+;phalcon.orm.column_renaming = '1'
+;phalcon.orm.not_null_validations = '1'
+;phalcon.orm.exception_on_failed_save = '0'
+;phalcon.orm.enable_literals = '1'
+;phalcon.orm.late_state_binding = '0'
+;phalcon.orm.cast_on_hydrate = '0'
+;phalcon.orm.ignore_unknown_columns = '0'
+
 EOF
 
 
@@ -215,6 +229,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 13 2015 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- update to 2.0.4
+
 * Thu Jun 11 2015 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - update to 2.0.3
 

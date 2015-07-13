@@ -1,6 +1,42 @@
-Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
+Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
-  - Classes [344] {
+  - INI {
+    Entry [ phalcon.db.escape_identifiers <ALL> ]
+      Current = '1'
+    }
+    Entry [ phalcon.db.force_casting <ALL> ]
+      Current = '0'
+    }
+    Entry [ phalcon.orm.events <ALL> ]
+      Current = '1'
+    }
+    Entry [ phalcon.orm.virtual_foreign_keys <ALL> ]
+      Current = '1'
+    }
+    Entry [ phalcon.orm.column_renaming <ALL> ]
+      Current = '1'
+    }
+    Entry [ phalcon.orm.not_null_validations <ALL> ]
+      Current = '1'
+    }
+    Entry [ phalcon.orm.exception_on_failed_save <ALL> ]
+      Current = '0'
+    }
+    Entry [ phalcon.orm.enable_literals <ALL> ]
+      Current = '1'
+    }
+    Entry [ phalcon.orm.late_state_binding <ALL> ]
+      Current = '0'
+    }
+    Entry [ phalcon.orm.cast_on_hydrate <ALL> ]
+      Current = '0'
+    }
+    Entry [ phalcon.orm.ignore_unknown_columns <ALL> ]
+      Current = '0'
+    }
+  }
+
+  - Classes [347] {
     Interface [ <internal:phalcon> interface Phalcon\Di\InjectionAwareInterface ] {
 
       - Constants [0] {
@@ -311,7 +347,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon> abstract public method validate ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $record ]
+            Parameter #0 [ <required> Phalcon\Mvc\EntityInterface $record ]
           }
         }
       }
@@ -1678,6 +1714,38 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
       }
     }
 
+    Interface [ <internal:phalcon> interface Phalcon\Mvc\EntityInterface ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:phalcon> abstract public method readAttribute ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $attribute ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method writeAttribute ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $attribute ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+      }
+    }
+
     Interface [ <internal:phalcon> interface Phalcon\Mvc\Model\ResultsetInterface ] {
 
       - Constants [0] {
@@ -1900,7 +1968,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
       - Properties [0] {
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:phalcon> abstract public method setViewsDir ] {
 
           - Parameters [1] {
@@ -1948,6 +2016,14 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         }
 
         Method [ <internal:phalcon> abstract public method getContent ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method partial ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $partialPath ]
+            Parameter #1 [ <optional> $params ]
+          }
         }
       }
     }
@@ -2736,22 +2812,15 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
       - Properties [0] {
       }
 
-      - Methods [4] {
-        Method [ <internal:phalcon, ctor> abstract public method __construct ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> Phalcon\Mvc\ViewBaseInterface $view ]
-            Parameter #1 [ <optional> Phalcon\DiInterface or NULL $dependencyInjector ]
-          }
-        }
-
+      - Methods [3] {
         Method [ <internal:phalcon> abstract public method getContent ] {
         }
 
         Method [ <internal:phalcon> abstract public method partial ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $partialPath ]
+            Parameter #1 [ <optional> $params ]
           }
         }
 
@@ -3506,8 +3575,9 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
 
         Method [ <internal:phalcon> abstract public method isMethod ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $methods ]
+            Parameter #1 [ <optional> $strict ]
           }
         }
 
@@ -3900,7 +3970,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
       - Properties [0] {
       }
 
-      - Methods [15] {
+      - Methods [13] {
         Method [ <internal:phalcon> abstract public method setId ] {
 
           - Parameters [1] {
@@ -3925,21 +3995,6 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         }
 
         Method [ <internal:phalcon> abstract public method getConnection ] {
-        }
-
-        Method [ <internal:phalcon> abstract public method readAttribute ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $attribute ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method writeAttribute ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $attribute ]
-            Parameter #1 [ <required> $value ]
-          }
         }
 
         Method [ <internal:phalcon> abstract public method fireEvent ] {
@@ -3974,6 +4029,24 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
 
         Method [ <internal:phalcon> abstract public method delete ] {
         }
+      }
+    }
+
+    Interface [ <internal:phalcon> interface Phalcon\Mvc\ControllerInterface ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
       }
     }
 
@@ -4332,7 +4405,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
       - Properties [0] {
       }
 
-      - Methods [30] {
+      - Methods [28] {
         Method [ <internal:phalcon> abstract public method setTransaction ] {
 
           - Parameters [1] {
@@ -4462,21 +4535,6 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $skip ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method readAttribute ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $attribute ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method writeAttribute ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $attribute ]
-            Parameter #1 [ <required> $value ]
           }
         }
 
@@ -5922,13 +5980,6 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
           }
         }
 
-        Method [ <internal:phalcon> abstract public method partial ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $partialPath ]
-          }
-        }
-
         Method [ <internal:phalcon> abstract public method finish ] {
         }
 
@@ -5994,6 +6045,14 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Mvc\ViewBaseInterface> abstract public method getContent ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\ViewBaseInterface> abstract public method partial ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $partialPath ]
+            Parameter #1 [ <optional> $params ]
+          }
         }
       }
     }
@@ -6281,24 +6340,6 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
             Parameter #1 [ <required> Phalcon\Mvc\Collection\BehaviorInterface $behavior ]
           }
         }
-      }
-    }
-
-    Interface [ <internal:phalcon> interface Phalcon\Mvc\ControllerInterface ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [0] {
       }
     }
 
@@ -6768,17 +6809,18 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon> public method getMessages ] {
         }
 
-        Method [ <internal:phalcon> protected method getOptions ] {
+        Method [ <internal:phalcon> public method getOptions ] {
         }
 
-        Method [ <internal:phalcon> protected method getOption ] {
+        Method [ <internal:phalcon> public method getOption ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $option ]
+            Parameter #1 [ <optional> $defaultValue ]
           }
         }
 
-        Method [ <internal:phalcon> protected method isSetOption ] {
+        Method [ <internal:phalcon> public method isSetOption ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $option ]
@@ -6899,7 +6941,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Property [ <default> protected $_transactionsWithSavepoints ]
       }
 
-      - Methods [55] {
+      - Methods [56] {
         Method [ <internal:phalcon> public method getDialectType ] {
         }
 
@@ -7257,6 +7299,9 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         }
 
         Method [ <internal:phalcon> public method getDefaultIdValue ] {
+        }
+
+        Method [ <internal:phalcon> public method getDefaultValue ] {
         }
 
         Method [ <internal:phalcon> public method supportSequences ] {
@@ -7706,7 +7751,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Property [ <default> protected $_affectedRows ]
       }
 
-      - Methods [73] {
+      - Methods [74] {
         Method [ <internal:phalcon, overwrites Phalcon\Db\Adapter, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -8173,6 +8218,9 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Adapter> public method getDefaultIdValue ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Db\Adapter> public method getDefaultValue ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Adapter> public method supportSequences ] {
@@ -8933,7 +8981,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Property [ <default> protected $_options ]
       }
 
-      - Methods [17] {
+      - Methods [19] {
         Method [ <internal:phalcon, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -8952,6 +9000,16 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         }
 
         Method [ <internal:phalcon> public method getOptions ] {
+        }
+
+        Method [ <internal:phalcon> public method setName ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method getName ] {
         }
 
         Method [ <internal:phalcon> public method get ] {
@@ -9669,13 +9727,14 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
       - Static methods [0] {
       }
 
-      - Properties [3] {
+      - Properties [4] {
         Property [ <default> protected $_cssClasses ]
         Property [ <default> protected $_implicitFlush ]
         Property [ <default> protected $_automaticHtml ]
+        Property [ <default> protected $_messages ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:phalcon, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -9738,6 +9797,9 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
             Parameter #0 [ <required> $type ]
             Parameter #1 [ <required> $message ]
           }
+        }
+
+        Method [ <internal:phalcon> public method clear ] {
         }
       }
     }
@@ -10672,11 +10734,13 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
       }
     }
 
-    Class [ <internal:phalcon> class Phalcon\Mvc\Router implements Phalcon\Di\InjectionAwareInterface, Phalcon\Mvc\RouterInterface ] {
+    Class [ <internal:phalcon> class Phalcon\Mvc\Router implements Phalcon\Di\InjectionAwareInterface, Phalcon\Mvc\RouterInterface, Phalcon\Events\EventsAwareInterface ] {
 
-      - Constants [2] {
+      - Constants [4] {
         Constant [ integer URI_SOURCE_GET_URL ] { 0 }
         Constant [ integer URI_SOURCE_SERVER_REQUEST_URI ] { 1 }
+        Constant [ integer POSITION_FIRST ] { 0 }
+        Constant [ integer POSITION_LAST ] { 1 }
       }
 
       - Static properties [0] {
@@ -10685,8 +10749,9 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
       - Static methods [0] {
       }
 
-      - Properties [18] {
+      - Properties [19] {
         Property [ <default> protected $_dependencyInjector ]
+        Property [ <default> protected $_eventsManager ]
         Property [ <default> protected $_uriSource ]
         Property [ <default> protected $_namespace ]
         Property [ <default> protected $_module ]
@@ -10706,7 +10771,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Property [ <default> protected $_notFoundPaths ]
       }
 
-      - Methods [36] {
+      - Methods [38] {
         Method [ <internal:phalcon, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -10722,6 +10787,16 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Di\InjectionAwareInterface> public method getDI ] {
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Events\EventsAwareInterface> public method setEventsManager ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Events\ManagerInterface $eventsManager ]
+          }
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Events\EventsAwareInterface> public method getEventsManager ] {
         }
 
         Method [ <internal:phalcon> public method getRewriteUri ] {
@@ -10788,66 +10863,74 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
 
         Method [ <internal:phalcon, prototype Phalcon\Mvc\RouterInterface> public method add ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $pattern ]
             Parameter #1 [ <optional> $paths ]
             Parameter #2 [ <optional> $httpMethods ]
+            Parameter #3 [ <optional> $position ]
           }
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Mvc\RouterInterface> public method addGet ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $pattern ]
             Parameter #1 [ <optional> $paths ]
+            Parameter #2 [ <optional> $position ]
           }
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Mvc\RouterInterface> public method addPost ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $pattern ]
             Parameter #1 [ <optional> $paths ]
+            Parameter #2 [ <optional> $position ]
           }
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Mvc\RouterInterface> public method addPut ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $pattern ]
             Parameter #1 [ <optional> $paths ]
+            Parameter #2 [ <optional> $position ]
           }
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Mvc\RouterInterface> public method addPatch ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $pattern ]
             Parameter #1 [ <optional> $paths ]
+            Parameter #2 [ <optional> $position ]
           }
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Mvc\RouterInterface> public method addDelete ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $pattern ]
             Parameter #1 [ <optional> $paths ]
+            Parameter #2 [ <optional> $position ]
           }
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Mvc\RouterInterface> public method addOptions ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $pattern ]
             Parameter #1 [ <optional> $paths ]
+            Parameter #2 [ <optional> $position ]
           }
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Mvc\RouterInterface> public method addHead ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $pattern ]
             Parameter #1 [ <optional> $paths ]
+            Parameter #2 [ <optional> $position ]
           }
         }
 
@@ -11861,7 +11944,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Property [ <default> protected $_sourcePath ]
       }
 
-      - Methods [36] {
+      - Methods [35] {
         Method [ <internal:phalcon> public method getPrefix ] {
         }
 
@@ -12043,9 +12126,6 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
           - Parameters [1] {
             Parameter #0 [ <required> Phalcon\Assets\FilterInterface $filter ]
           }
-        }
-
-        Method [ <internal:phalcon, ctor> public method __construct ] {
         }
       }
     }
@@ -12319,7 +12399,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Property [ <default> protected $_implicitOutput ]
       }
 
-      - Methods [23] {
+      - Methods [24] {
         Method [ <internal:phalcon, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -12483,6 +12563,9 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
           - Parameters [1] {
             Parameter #0 [ <optional> $collectionName ]
           }
+        }
+
+        Method [ <internal:phalcon> public method getCollections ] {
         }
       }
     }
@@ -15798,7 +15881,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Property [ <default> protected $_dialectType ]
       }
 
-      - Methods [74] {
+      - Methods [75] {
         Method [ <internal:phalcon, overwrites Phalcon\Db\Adapter\Pdo, prototype Phalcon\Db\AdapterInterface> public method escapeIdentifier ] {
 
           - Parameters [1] {
@@ -16275,6 +16358,9 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, inherits Phalcon\Db\Adapter, prototype Phalcon\Db\AdapterInterface> public method getDefaultIdValue ] {
         }
 
+        Method [ <internal:phalcon, inherits Phalcon\Db\Adapter> public method getDefaultValue ] {
+        }
+
         Method [ <internal:phalcon, inherits Phalcon\Db\Adapter, prototype Phalcon\Db\AdapterInterface> public method supportSequences ] {
         }
 
@@ -16326,7 +16412,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Property [ <default> protected $_dialectType ]
       }
 
-      - Methods [74] {
+      - Methods [75] {
         Method [ <internal:phalcon, overwrites Phalcon\Db\Adapter\Pdo, prototype Phalcon\Db\AdapterInterface> public method connect ] {
 
           - Parameters [1] {
@@ -16809,6 +16895,9 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, inherits Phalcon\Db\Adapter, prototype Phalcon\Db\AdapterInterface> public method getNestedTransactionSavepointName ] {
         }
 
+        Method [ <internal:phalcon, inherits Phalcon\Db\Adapter> public method getDefaultValue ] {
+        }
+
         Method [ <internal:phalcon, inherits Phalcon\Db\Adapter, prototype Phalcon\Db\AdapterInterface> public method getDescriptor ] {
         }
 
@@ -16854,7 +16943,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Property [ <default> protected $_dialectType ]
       }
 
-      - Methods [74] {
+      - Methods [75] {
         Method [ <internal:phalcon, overwrites Phalcon\Db\Adapter\Pdo, prototype Phalcon\Db\AdapterInterface> public method connect ] {
 
           - Parameters [1] {
@@ -17337,6 +17426,9 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, inherits Phalcon\Db\Adapter, prototype Phalcon\Db\AdapterInterface> public method getNestedTransactionSavepointName ] {
         }
 
+        Method [ <internal:phalcon, inherits Phalcon\Db\Adapter> public method getDefaultValue ] {
+        }
+
         Method [ <internal:phalcon, inherits Phalcon\Db\Adapter, prototype Phalcon\Db\AdapterInterface> public method getDescriptor ] {
         }
 
@@ -17382,7 +17474,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Property [ <default> protected $_dialectType ]
       }
 
-      - Methods [74] {
+      - Methods [75] {
         Method [ <internal:phalcon, overwrites Phalcon\Db\Adapter\Pdo, prototype Phalcon\Db\AdapterInterface> public method connect ] {
 
           - Parameters [1] {
@@ -17415,6 +17507,9 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         }
 
         Method [ <internal:phalcon, overwrites Phalcon\Db\Adapter, prototype Phalcon\Db\AdapterInterface> public method useExplicitIdValue ] {
+        }
+
+        Method [ <internal:phalcon, overwrites Phalcon\Db\Adapter, prototype Phalcon\Db\Adapter> public method getDefaultValue ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Adapter\Pdo, prototype Phalcon\Db\AdapterInterface, ctor> public method __construct ] {
@@ -17884,7 +17979,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
 
     Class [ <internal:phalcon> class Phalcon\Db\Column implements Phalcon\Db\ColumnInterface ] {
 
-      - Constants [15] {
+      - Constants [24] {
         Constant [ integer TYPE_INTEGER ] { 0 }
         Constant [ integer TYPE_DATE ] { 1 }
         Constant [ integer TYPE_VARCHAR ] { 2 }
@@ -17894,9 +17989,18 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Constant [ integer TYPE_TEXT ] { 6 }
         Constant [ integer TYPE_FLOAT ] { 7 }
         Constant [ integer TYPE_BOOLEAN ] { 8 }
+        Constant [ integer TYPE_DOUBLE ] { 9 }
+        Constant [ integer TYPE_TINYBLOB ] { 10 }
+        Constant [ integer TYPE_BLOB ] { 11 }
+        Constant [ integer TYPE_MEDIUMBLOB ] { 12 }
+        Constant [ integer TYPE_LONGBLOB ] { 13 }
+        Constant [ integer TYPE_BIGINTEGER ] { 14 }
+        Constant [ integer TYPE_JSON ] { 15 }
+        Constant [ integer TYPE_JSONB ] { 16 }
         Constant [ integer BIND_PARAM_NULL ] { 0 }
         Constant [ integer BIND_PARAM_INT ] { 1 }
         Constant [ integer BIND_PARAM_STR ] { 2 }
+        Constant [ integer BIND_PARAM_BLOB ] { 3 }
         Constant [ integer BIND_PARAM_BOOL ] { 5 }
         Constant [ integer BIND_PARAM_DECIMAL ] { 32 }
         Constant [ integer BIND_SKIP ] { 1024 }
@@ -20289,12 +20393,24 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Db\ResultInterface> public method fetch ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $fetchStyle ]
+            Parameter #1 [ <optional> $cursorOrientation ]
+            Parameter #2 [ <optional> $cursorOffset ]
+          }
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Db\ResultInterface> public method fetchArray ] {
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Db\ResultInterface> public method fetchAll ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $fetchStyle ]
+            Parameter #1 [ <optional> $fetchArgument ]
+            Parameter #2 [ <optional> $ctorArgs ]
+          }
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Db\ResultInterface> public method numRows ] {
@@ -20309,8 +20425,10 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
 
         Method [ <internal:phalcon, prototype Phalcon\Db\ResultInterface> public method setFetchMode ] {
 
-          - Parameters [1] {
+          - Parameters [3] {
             Parameter #0 [ <required> $fetchMode ]
+            Parameter #1 [ <optional> $colNoOrClassNameOrObject ]
+            Parameter #2 [ <optional> $ctorargs ]
           }
         }
 
@@ -20476,7 +20594,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Property [ <default> protected $_styles ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:phalcon> public method getDetailed ] {
         }
 
@@ -20538,6 +20656,13 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         }
 
         Method [ <internal:phalcon> public method variables ] {
+        }
+
+        Method [ <internal:phalcon> public method toJson ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $variable ]
+          }
         }
       }
     }
@@ -21442,18 +21567,26 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
       - Static methods [0] {
       }
 
-      - Properties [3] {
+      - Properties [4] {
         Property [ <default> protected $_cssClasses ]
         Property [ <default> protected $_implicitFlush ]
         Property [ <default> protected $_automaticHtml ]
+        Property [ <default> protected $_messages ]
       }
 
-      - Methods [10] {
+      - Methods [12] {
         Method [ <internal:phalcon, prototype Phalcon\FlashInterface> public method message ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $type ]
             Parameter #1 [ <required> $message ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method output ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $remove ]
           }
         }
 
@@ -21519,6 +21652,9 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
             Parameter #0 [ <required> $type ]
             Parameter #1 [ <required> $message ]
           }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Flash> public method clear ] {
         }
       }
     }
@@ -21588,10 +21724,11 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
       - Static methods [0] {
       }
 
-      - Properties [4] {
+      - Properties [5] {
         Property [ <default> protected $_cssClasses ]
         Property [ <default> protected $_implicitFlush ]
         Property [ <default> protected $_automaticHtml ]
+        Property [ <default> protected $_messages ]
         Property [ <default> protected $_dependencyInjector ]
       }
 
@@ -21650,7 +21787,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
           }
         }
 
-        Method [ <internal:phalcon> public method clear ] {
+        Method [ <internal:phalcon, overwrites Phalcon\Flash, prototype Phalcon\Flash> public method clear ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Flash, ctor> public method __construct ] {
@@ -24843,7 +24980,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Property [ <default> protected $_putCache ]
       }
 
-      - Methods [52] {
+      - Methods [53] {
         Method [ <internal:phalcon, prototype Phalcon\Di\InjectionAwareInterface> public method setDI ] {
 
           - Parameters [1] {
@@ -25006,10 +25143,18 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, prototype Phalcon\Http\RequestInterface> public method getUserAgent ] {
         }
 
-        Method [ <internal:phalcon, prototype Phalcon\Http\RequestInterface> public method isMethod ] {
+        Method [ <internal:phalcon> public method isValidHttpMethod ] {
 
           - Parameters [1] {
+            Parameter #0 [ <required> $method ]
+          }
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Http\RequestInterface> public method isMethod ] {
+
+          - Parameters [2] {
             Parameter #0 [ <required> $methods ]
+            Parameter #1 [ <optional> $strict ]
           }
         }
 
@@ -25373,9 +25518,10 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
 
         Method [ <internal:phalcon, prototype Phalcon\Http\ResponseInterface> public method setJsonContent ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $content ]
             Parameter #1 [ <optional> $jsonOptions ]
+            Parameter #2 [ <optional> $depth ]
           }
         }
 
@@ -25568,7 +25714,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Property [ <default> protected $_headers ]
       }
 
-      - Methods [8] {
+      - Methods [7] {
         Method [ <internal:phalcon, prototype Phalcon\Http\Response\HeadersInterface> public method set ] {
 
           - Parameters [2] {
@@ -25605,9 +25751,6 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         }
 
         Method [ <internal:phalcon> public method toArray ] {
-        }
-
-        Method [ <internal:phalcon, ctor> public method __construct ] {
         }
       }
     }
@@ -27712,7 +27855,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
       }
     }
 
-    Class [ <internal:phalcon> abstract class Phalcon\Mvc\Collection implements Phalcon\Mvc\CollectionInterface, Phalcon\Di\InjectionAwareInterface, Serializable ] {
+    Class [ <internal:phalcon> abstract class Phalcon\Mvc\Collection implements Phalcon\Mvc\EntityInterface, Phalcon\Mvc\CollectionInterface, Phalcon\Di\InjectionAwareInterface, Serializable ] {
 
       - Constants [4] {
         Constant [ integer OP_NONE ] { 0 }
@@ -27885,14 +28028,14 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, prototype Phalcon\Mvc\CollectionInterface> public method getConnection ] {
         }
 
-        Method [ <internal:phalcon, prototype Phalcon\Mvc\CollectionInterface> public method readAttribute ] {
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\EntityInterface> public method readAttribute ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $attribute ]
           }
         }
 
-        Method [ <internal:phalcon, prototype Phalcon\Mvc\CollectionInterface> public method writeAttribute ] {
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\EntityInterface> public method writeAttribute ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $attribute ]
@@ -27972,19 +28115,6 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, prototype Phalcon\Mvc\CollectionInterface> public method delete ] {
         }
 
-        Method [ <internal:phalcon> public method toArray ] {
-        }
-
-        Method [ <internal:phalcon, prototype Serializable> public method serialize ] {
-        }
-
-        Method [ <internal:phalcon, prototype Serializable> public method unserialize ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $data ]
-          }
-        }
-
         Method [ <internal:phalcon> protected method addBehavior ] {
 
           - Parameters [1] {
@@ -27996,6 +28126,19 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $skip ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method toArray ] {
+        }
+
+        Method [ <internal:phalcon, prototype Serializable> public method serialize ] {
+        }
+
+        Method [ <internal:phalcon, prototype Serializable> public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $data ]
           }
         }
       }
@@ -28113,7 +28256,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
       }
     }
 
-    Class [ <internal:phalcon> class Phalcon\Mvc\Collection\Document implements ArrayAccess ] {
+    Class [ <internal:phalcon> class Phalcon\Mvc\Collection\Document implements Phalcon\Mvc\EntityInterface, ArrayAccess ] {
 
       - Constants [0] {
       }
@@ -28127,7 +28270,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
       - Properties [0] {
       }
 
-      - Methods [6] {
+      - Methods [7] {
         Method [ <internal:phalcon, prototype ArrayAccess> public method offsetExists ] {
 
           - Parameters [1] {
@@ -28157,19 +28300,22 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
           }
         }
 
-        Method [ <internal:phalcon> public method readAttribute ] {
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\EntityInterface> public method readAttribute ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $attribute ]
           }
         }
 
-        Method [ <internal:phalcon> public method writeAttribute ] {
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\EntityInterface> public method writeAttribute ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $attribute ]
             Parameter #1 [ <required> $value ]
           }
+        }
+
+        Method [ <internal:phalcon> public method toArray ] {
         }
       }
     }
@@ -28360,7 +28506,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
       }
     }
 
-    Class [ <internal:phalcon> abstract class Phalcon\Mvc\Controller extends Phalcon\Di\Injectable implements Phalcon\Events\EventsAwareInterface, Phalcon\Di\InjectionAwareInterface ] {
+    Class [ <internal:phalcon> abstract class Phalcon\Mvc\Controller extends Phalcon\Di\Injectable implements Phalcon\Events\EventsAwareInterface, Phalcon\Di\InjectionAwareInterface, Phalcon\Mvc\ControllerInterface ] {
 
       - Constants [0] {
       }
@@ -29180,7 +29326,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
       }
     }
 
-    Class [ <internal:phalcon> abstract class Phalcon\Mvc\Model implements Phalcon\Mvc\ModelInterface, Phalcon\Mvc\Model\ResultInterface, Phalcon\Di\InjectionAwareInterface, Serializable ] {
+    Class [ <internal:phalcon> abstract class Phalcon\Mvc\Model implements Phalcon\Mvc\EntityInterface, Phalcon\Mvc\ModelInterface, Phalcon\Mvc\Model\ResultInterface, Phalcon\Di\InjectionAwareInterface, Serializable ] {
 
       - Constants [7] {
         Constant [ integer OP_NONE ] { 0 }
@@ -29587,14 +29733,14 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
           }
         }
 
-        Method [ <internal:phalcon, prototype Phalcon\Mvc\ModelInterface> public method readAttribute ] {
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\EntityInterface> public method readAttribute ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $attribute ]
           }
         }
 
-        Method [ <internal:phalcon, prototype Phalcon\Mvc\ModelInterface> public method writeAttribute ] {
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\EntityInterface> public method writeAttribute ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $attribute ]
@@ -29739,7 +29885,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $method ]
-            Parameter #1 [ <optional> $arguments ]
+            Parameter #1 [ <required> $arguments ]
           }
         }
 
@@ -29929,7 +30075,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Property [ <default> protected $_hiddenParamNumber ]
       }
 
-      - Methods [33] {
+      - Methods [38] {
         Method [ <internal:phalcon, prototype Phalcon\Di\InjectionAwareInterface> public method setDI ] {
 
           - Parameters [1] {
@@ -29961,6 +30107,13 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> array $bindTypes ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method distinct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $distinct ]
           }
         }
 
@@ -30099,6 +30252,20 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
           }
         }
 
+        Method [ <internal:phalcon> public method groupBy ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $group ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method having ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $having ]
+          }
+        }
+
         Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\CriteriaInterface> public method limit ] {
 
           - Parameters [2] {
@@ -30141,6 +30308,12 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\CriteriaInterface> public method getOrder ] {
+        }
+
+        Method [ <internal:phalcon> public method getGroupBy ] {
+        }
+
+        Method [ <internal:phalcon> public method getHaving ] {
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\CriteriaInterface> public method getParams ] {
@@ -30189,7 +30362,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Property [ <default> protected $_namespaceAliases ]
       }
 
-      - Methods [60] {
+      - Methods [61] {
         Method [ <internal:phalcon, prototype Phalcon\Di\InjectionAwareInterface> public method setDI ] {
 
           - Parameters [1] {
@@ -30487,6 +30660,14 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
           - Parameters [2] {
             Parameter #0 [ <required> $modelName ]
             Parameter #1 [ <required> $alias ]
+          }
+        }
+
+        Method [ <internal:phalcon> final protected method _mergeFindParameters ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $findParamsOne ]
+            Parameter #1 [ <required> $findParamsTwo ]
           }
         }
 
@@ -32293,14 +32474,14 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon> final protected method _getGroupClause ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> $group ]
+            Parameter #0 [ <required> array $group ]
           }
         }
 
         Method [ <internal:phalcon> final protected method _getLimitClause ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> $limitClause ]
+            Parameter #0 [ <required> array $limitClause ]
           }
         }
 
@@ -32402,8 +32583,9 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
 
         Method [ <internal:phalcon> public method setBindParams ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> array $bindParams ]
+            Parameter #1 [ <optional> $merge ]
           }
         }
 
@@ -32412,8 +32594,9 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
 
         Method [ <internal:phalcon> public method setBindTypes ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> array $bindTypes ]
+            Parameter #1 [ <optional> $merge ]
           }
         }
 
@@ -32476,7 +32659,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Property [ <default> protected $_hiddenParamNumber ]
       }
 
-      - Methods [34] {
+      - Methods [35] {
         Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\Query\BuilderInterface, ctor> public method __construct ] {
 
           - Parameters [2] {
@@ -32648,6 +32831,13 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $having ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method forUpdate ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $forUpdate ]
           }
         }
 
@@ -33186,7 +33376,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
       }
     }
 
-    Class [ <internal:phalcon> class Phalcon\Mvc\Model\Row implements ArrayAccess, Phalcon\Mvc\Model\ResultInterface ] {
+    Class [ <internal:phalcon> class Phalcon\Mvc\Model\Row implements Phalcon\Mvc\EntityInterface, Phalcon\Mvc\Model\ResultInterface, ArrayAccess ] {
 
       - Constants [0] {
       }
@@ -33200,7 +33390,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
       - Properties [0] {
       }
 
-      - Methods [6] {
+      - Methods [8] {
         Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\ResultInterface> public method setDirtyState ] {
 
           - Parameters [1] {
@@ -33234,6 +33424,21 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $offset ]
+          }
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\EntityInterface> public method readAttribute ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $attribute ]
+          }
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\EntityInterface> public method writeAttribute ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $attribute ]
+            Parameter #1 [ <required> $value ]
           }
         }
 
@@ -33584,7 +33789,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\ValidatorInterface> public method validate ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $record ]
+            Parameter #0 [ <required> Phalcon\Mvc\EntityInterface $record ]
           }
         }
 
@@ -33607,17 +33812,18 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator, prototype Phalcon\Mvc\Model\ValidatorInterface> public method getMessages ] {
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method getOptions ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method getOptions ] {
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method getOption ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method getOption ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $option ]
+            Parameter #1 [ <optional> $defaultValue ]
           }
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method isSetOption ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method isSetOption ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $option ]
@@ -33646,7 +33852,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\ValidatorInterface> public method validate ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $record ]
+            Parameter #0 [ <required> Phalcon\Mvc\EntityInterface $record ]
           }
         }
 
@@ -33669,17 +33875,18 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator, prototype Phalcon\Mvc\Model\ValidatorInterface> public method getMessages ] {
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method getOptions ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method getOptions ] {
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method getOption ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method getOption ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $option ]
+            Parameter #1 [ <optional> $defaultValue ]
           }
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method isSetOption ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method isSetOption ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $option ]
@@ -33708,7 +33915,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\ValidatorInterface> public method validate ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $record ]
+            Parameter #0 [ <required> Phalcon\Mvc\EntityInterface $record ]
           }
         }
 
@@ -33731,17 +33938,83 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator, prototype Phalcon\Mvc\Model\ValidatorInterface> public method getMessages ] {
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method getOptions ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method getOptions ] {
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method getOption ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method getOption ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $option ]
+            Parameter #1 [ <optional> $defaultValue ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method isSetOption ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $option ]
           }
         }
+      }
+    }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method isSetOption ] {
+    Class [ <internal:phalcon> class Phalcon\Mvc\Model\Validator\Ip extends Phalcon\Mvc\Model\Validator implements Phalcon\Mvc\Model\ValidatorInterface ] {
+
+      - Constants [2] {
+        Constant [ integer VERSION_4 ] { 1048576 }
+        Constant [ integer VERSION_6 ] { 2097152 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [2] {
+        Property [ <default> protected $_options ]
+        Property [ <default> protected $_messages ]
+      }
+
+      - Methods [7] {
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\ValidatorInterface> public method validate ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\EntityInterface $record ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $options ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method appendMessage ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $message ]
+            Parameter #1 [ <optional> $field ]
+            Parameter #2 [ <optional> $type ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator, prototype Phalcon\Mvc\Model\ValidatorInterface> public method getMessages ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method getOptions ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method getOption ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $option ]
+            Parameter #1 [ <optional> $defaultValue ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method isSetOption ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $option ]
@@ -33770,7 +34043,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\ValidatorInterface> public method validate ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $record ]
+            Parameter #0 [ <required> Phalcon\Mvc\EntityInterface $record ]
           }
         }
 
@@ -33793,17 +34066,18 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator, prototype Phalcon\Mvc\Model\ValidatorInterface> public method getMessages ] {
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method getOptions ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method getOptions ] {
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method getOption ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method getOption ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $option ]
+            Parameter #1 [ <optional> $defaultValue ]
           }
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method isSetOption ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method isSetOption ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $option ]
@@ -33832,7 +34106,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\ValidatorInterface> public method validate ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $record ]
+            Parameter #0 [ <required> Phalcon\Mvc\EntityInterface $record ]
           }
         }
 
@@ -33855,17 +34129,18 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator, prototype Phalcon\Mvc\Model\ValidatorInterface> public method getMessages ] {
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method getOptions ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method getOptions ] {
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method getOption ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method getOption ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $option ]
+            Parameter #1 [ <optional> $defaultValue ]
           }
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method isSetOption ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method isSetOption ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $option ]
@@ -33894,7 +34169,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\ValidatorInterface> public method validate ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $record ]
+            Parameter #0 [ <required> Phalcon\Mvc\EntityInterface $record ]
           }
         }
 
@@ -33917,17 +34192,18 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator, prototype Phalcon\Mvc\Model\ValidatorInterface> public method getMessages ] {
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method getOptions ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method getOptions ] {
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method getOption ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method getOption ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $option ]
+            Parameter #1 [ <optional> $defaultValue ]
           }
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method isSetOption ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method isSetOption ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $option ]
@@ -33956,7 +34232,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\ValidatorInterface> public method validate ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $record ]
+            Parameter #0 [ <required> Phalcon\Mvc\EntityInterface $record ]
           }
         }
 
@@ -33979,17 +34255,18 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator, prototype Phalcon\Mvc\Model\ValidatorInterface> public method getMessages ] {
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method getOptions ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method getOptions ] {
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method getOption ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method getOption ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $option ]
+            Parameter #1 [ <optional> $defaultValue ]
           }
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method isSetOption ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method isSetOption ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $option ]
@@ -34018,7 +34295,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\ValidatorInterface> public method validate ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $record ]
+            Parameter #0 [ <required> Phalcon\Mvc\EntityInterface $record ]
           }
         }
 
@@ -34041,17 +34318,18 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator, prototype Phalcon\Mvc\Model\ValidatorInterface> public method getMessages ] {
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method getOptions ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method getOptions ] {
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method getOption ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method getOption ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $option ]
+            Parameter #1 [ <optional> $defaultValue ]
           }
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method isSetOption ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method isSetOption ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $option ]
@@ -34080,7 +34358,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\ValidatorInterface> public method validate ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $record ]
+            Parameter #0 [ <required> Phalcon\Mvc\EntityInterface $record ]
           }
         }
 
@@ -34103,17 +34381,18 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator, prototype Phalcon\Mvc\Model\ValidatorInterface> public method getMessages ] {
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method getOptions ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method getOptions ] {
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method getOption ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method getOption ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $option ]
+            Parameter #1 [ <optional> $defaultValue ]
           }
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> protected method isSetOption ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\Validator> public method isSetOption ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $option ]
@@ -34122,11 +34401,13 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
       }
     }
 
-    Class [ <internal:phalcon> class Phalcon\Mvc\Router\Annotations extends Phalcon\Mvc\Router implements Phalcon\Mvc\RouterInterface, Phalcon\Di\InjectionAwareInterface ] {
+    Class [ <internal:phalcon> class Phalcon\Mvc\Router\Annotations extends Phalcon\Mvc\Router implements Phalcon\Events\EventsAwareInterface, Phalcon\Mvc\RouterInterface, Phalcon\Di\InjectionAwareInterface ] {
 
-      - Constants [2] {
+      - Constants [4] {
         Constant [ integer URI_SOURCE_GET_URL ] { 0 }
         Constant [ integer URI_SOURCE_SERVER_REQUEST_URI ] { 1 }
+        Constant [ integer POSITION_FIRST ] { 0 }
+        Constant [ integer POSITION_LAST ] { 1 }
       }
 
       - Static properties [0] {
@@ -34135,8 +34416,9 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
       - Static methods [0] {
       }
 
-      - Properties [23] {
+      - Properties [24] {
         Property [ <default> protected $_dependencyInjector ]
+        Property [ <default> protected $_eventsManager ]
         Property [ <default> protected $_uriSource ]
         Property [ <default> protected $_namespace ]
         Property [ <default> protected $_module ]
@@ -34161,7 +34443,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Property [ <default> protected $_routePrefix ]
       }
 
-      - Methods [43] {
+      - Methods [45] {
         Method [ <internal:phalcon> public method addResource ] {
 
           - Parameters [2] {
@@ -34239,6 +34521,16 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Method [ <internal:phalcon, inherits Phalcon\Mvc\Router, prototype Phalcon\Di\InjectionAwareInterface> public method getDI ] {
         }
 
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Router, prototype Phalcon\Events\EventsAwareInterface> public method setEventsManager ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Events\ManagerInterface $eventsManager ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Router, prototype Phalcon\Events\EventsAwareInterface> public method getEventsManager ] {
+        }
+
         Method [ <internal:phalcon, inherits Phalcon\Mvc\Router> public method getRewriteUri ] {
         }
 
@@ -34296,66 +34588,74 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Mvc\Router, prototype Phalcon\Mvc\RouterInterface> public method add ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $pattern ]
             Parameter #1 [ <optional> $paths ]
             Parameter #2 [ <optional> $httpMethods ]
+            Parameter #3 [ <optional> $position ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Mvc\Router, prototype Phalcon\Mvc\RouterInterface> public method addGet ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $pattern ]
             Parameter #1 [ <optional> $paths ]
+            Parameter #2 [ <optional> $position ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Mvc\Router, prototype Phalcon\Mvc\RouterInterface> public method addPost ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $pattern ]
             Parameter #1 [ <optional> $paths ]
+            Parameter #2 [ <optional> $position ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Mvc\Router, prototype Phalcon\Mvc\RouterInterface> public method addPut ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $pattern ]
             Parameter #1 [ <optional> $paths ]
+            Parameter #2 [ <optional> $position ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Mvc\Router, prototype Phalcon\Mvc\RouterInterface> public method addPatch ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $pattern ]
             Parameter #1 [ <optional> $paths ]
+            Parameter #2 [ <optional> $position ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Mvc\Router, prototype Phalcon\Mvc\RouterInterface> public method addDelete ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $pattern ]
             Parameter #1 [ <optional> $paths ]
+            Parameter #2 [ <optional> $position ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Mvc\Router, prototype Phalcon\Mvc\RouterInterface> public method addOptions ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $pattern ]
             Parameter #1 [ <optional> $paths ]
+            Parameter #2 [ <optional> $position ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Mvc\Router, prototype Phalcon\Mvc\RouterInterface> public method addHead ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $pattern ]
             Parameter #1 [ <optional> $paths ]
+            Parameter #2 [ <optional> $position ]
           }
         }
 
@@ -34838,10 +35138,11 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
 
         Method [ <internal:phalcon, prototype Phalcon\Mvc\UrlInterface> public method get ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <optional> $uri ]
             Parameter #1 [ <optional> $args ]
             Parameter #2 [ <optional> $local ]
+            Parameter #3 [ <optional> $baseUri ]
           }
         }
 
@@ -35307,7 +35608,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
           }
         }
 
-        Method [ <internal:phalcon, prototype Phalcon\Mvc\ViewInterface> public method partial ] {
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\ViewBaseInterface> public method partial ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $partialPath ]
@@ -35440,7 +35741,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
           }
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\View\Engine, prototype Phalcon\Mvc\View\EngineInterface, ctor> public method __construct ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\View\Engine, ctor> public method __construct ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> Phalcon\Mvc\ViewBaseInterface $view ]
@@ -35573,7 +35874,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
           }
         }
 
-        Method [ <internal:phalcon, inherits Phalcon\Mvc\View\Engine, prototype Phalcon\Mvc\View\EngineInterface, ctor> public method __construct ] {
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\View\Engine, ctor> public method __construct ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> Phalcon\Mvc\ViewBaseInterface $view ]
@@ -36073,7 +36374,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
           }
         }
 
-        Method [ <internal:phalcon> public method partial ] {
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\ViewBaseInterface> public method partial ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $partialPath ]
@@ -36891,7 +37192,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Property [ <default> protected $_options ]
       }
 
-      - Methods [17] {
+      - Methods [19] {
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -36910,6 +37211,16 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method getOptions ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method setName ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method getName ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method get ] {
@@ -37015,7 +37326,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Property [ <default> protected $_lifetime ]
       }
 
-      - Methods [24] {
+      - Methods [26] {
         Method [ <internal:phalcon> public method getLibmemcached ] {
         }
 
@@ -37071,6 +37382,16 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method getOptions ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method setName ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method getName ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method get ] {
@@ -37173,7 +37494,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         Property [ <default> protected $_lifetime ]
       }
 
-      - Methods [24] {
+      - Methods [26] {
         Method [ <internal:phalcon> public method getMemcache ] {
         }
 
@@ -37229,6 +37550,16 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method getOptions ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method setName ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method getName ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method get ] {
@@ -38037,7 +38368,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
       - Static properties [0] {
       }
 
-      - Static methods [10] {
+      - Static methods [11] {
         Method [ <internal:phalcon> static public method camelize ] {
 
           - Parameters [1] {
@@ -38110,6 +38441,16 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
         }
 
         Method [ <internal:phalcon> static public method concat ] {
+        }
+
+        Method [ <internal:phalcon> static public method dynamic ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $text ]
+            Parameter #1 [ <optional> $leftDelimiter ]
+            Parameter #2 [ <optional> $rightDelimiter ]
+            Parameter #3 [ <optional> $separator ]
+          }
         }
       }
 
@@ -39152,7 +39493,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
           }
         }
 
-        Method [ <internal:phalcon> protected method compare ] {
+        Method [ <internal:phalcon> final protected method compare ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $a ]
@@ -39997,6 +40338,30 @@ Extension [ <persistent> extension #195 phalcon version 2.0.3 ] {
       }
 
       - Methods [0] {
+      }
+    }
+
+    Class [ <internal:phalcon> final class phalcon\0__closure ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:phalcon> final public method __invoke ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $matches ]
+          }
+        }
       }
     }
   }
