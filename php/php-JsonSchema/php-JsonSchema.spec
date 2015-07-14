@@ -12,8 +12,8 @@
 
 %global github_owner   justinrainbow
 %global github_name    json-schema
-%global github_version 1.4.3
-%global github_commit  44adc6f25592c6990409607c95537f577861f9b1
+%global github_version 1.4.4
+%global github_commit  8dc9b9d85ab639ca60ab4608b34c1279d6ae7bce
 %global github_short   %(c=%{github_commit}; echo ${c:0:7})
 
 %global php_min_ver    5.3.2
@@ -42,7 +42,7 @@ BuildArch: noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-phpunit-PHPUnit
-# For tests: phpcompatinfo (computed from v1.4.3)
+# For tests: phpcompatinfo (computed from v1.4.4)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -55,7 +55,7 @@ BuildRequires: php-composer(symfony/class-loader)
 %endif
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from v1.4.3)
+# phpcompatinfo (computed from v1.4.4)
 Requires:      php-cli
 Requires:      php-curl
 Requires:      php-date
@@ -124,6 +124,9 @@ EOF
 
 
 %changelog
+* Tue Jul 14 2015 Remi Collet <remi@fedoraproject.org> - 1.4.4-1
+- update to 1.4.4
+
 * Tue Jul 14 2015 Remi Collet <remi@fedoraproject.org> - 1.4.3-1
 - update to 1.4.3
 - add autoloader
