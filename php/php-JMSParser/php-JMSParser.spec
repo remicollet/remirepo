@@ -1,47 +1,83 @@
+# remirepo spec file for php-JMSParser, from Fedora:
+#
+# RPM spec file for php-JMSParser
+#
+# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
 %global github_owner      schmittjoh
 %global github_name       parser-lib
 %global github_version    1.0.0
 %global github_commit     c509473bc1b4866415627af0e1c6cc8ac97fa51d
 
+%global composer_vendor   jms
+%global composer_project  parser-lib
+
 %global php_min_ver       5.3.0
-%global phpoption_min_ver 0.9
+# "phpoption/phpoption": ">=0.9,<2.0-dev"
+#     NOTE: min version not 0.9 because autoloader required
+%global phpoption_min_ver 1.4.0-4
 %global phpoption_max_ver 2.0
+
+# Build using "--without tests" to disable tests
+%global with_tests 0%{!?_without_tests:1}
+
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-JMSParser
 Version:       %{github_version}
-Release:       3%{?dist}
+Release:       7%{?dist}
 Summary:       Library for writing recursive-descent parsers
 
 Group:         Development/Libraries
 License:       ASL 2.0
 URL:           http://jmsyst.com/libs/%{github_name}
-# To create source:
-# wget https://github.com/schmittjoh/parser-lib/archive/%%{github_commit}.tar.gz
-# php-JMSParser-strip.sh %%{github_version} %%{github_commit}
+
+# GitHub export contains non-allowable licened documentation.
+# Run php-JMSParser-get-source.sh to create allowable source.
 Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
-Source1:       %{name}-strip.sh
+Source1:       %{name}-get-source.sh
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
-# Test build requires
+# Tests
+%if %{with_tests}
+BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
+## composer.json
+#BuildRequires: php-composer(phpoption/phpoption) >= %%{phpoption_min_ver}
 BuildRequires: php-PhpOption >= %{phpoption_min_ver}
-BuildRequires: php-PhpOption <  %{phpoption_max_ver}
-# Test build requires: phpci
+## phpcompatinfo (computed from version 1.0.0)
 BuildRequires: php-json
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
+## Autoloader
+BuildRequires: php-composer(symfony/class-loader)
+%endif
 
 Requires:      php(language) >= %{php_min_ver}
-Requires:      php-PhpOption >= %{phpoption_min_ver}
-Requires:      php-PhpOption <  %{phpoption_max_ver}
-# phpci requires
+# composer.json
+#Requires:      php-composer(phpoption/phpoption) >= %%{phpoption_min_ver}
+Requires:      php-PhpOption                     >= %{phpoption_min_ver}
+Requires:      php-composer(phpoption/phpoption) <  %{phpoption_max_ver}
+# phpcompatinfo (computed from version 1.0.0)
 Requires:      php-json
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
+
+# Standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming
+Provides:      php-%{composer_vendor}-%{composer_project} = %{version}-%{release}
+# Composer
+Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 %description
 %{summary}.
@@ -50,16 +86,32 @@ Requires:      php-spl
 %prep
 %setup -q -n %{github_name}-%{github_commit}
 
-# Rewrite tests' bootstrap (which uses Composer autoloader) with simple
-# autoloader that uses include path
-( cat <<'AUTOLOAD'
+: Create autoloader
+cat <<'AUTOLOAD' | tee src/JMS/Parser/autoload.php
 <?php
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', str_replace('_', '/', $class)).'.php';
-    @include_once $src;
-});
+/**
+ * Autoloader for %{name} and its' dependencies
+ *
+ * Created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+require_once '%{phpdir}/PhpOption/autoload.php';
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('JMS\\Parser\\', dirname(dirname(__DIR__)));
+
+return $fedoraClassLoader;
 AUTOLOAD
-) > tests/bootstrap.php
 
 
 %build
@@ -67,24 +119,43 @@ AUTOLOAD
 
 
 %install
-mkdir -p -m 755 %{buildroot}%{_datadir}/php/JMS
-cp -rp src/JMS/Parser %{buildroot}%{_datadir}/php/JMS/
+rm -rf %{buildroot}
+mkdir -p %{buildroot}%{phpdir}
+cp -rp src/* %{buildroot}%{phpdir}/
 
 
 %check
-%{_bindir}/phpunit \
-    -d include_path="./src:./tests:.:%{pear_phpdir}:%{_datadir}/php" \
-    -c phpunit.xml.dist
+%if %{with_tests}
+%{_bindir}/phpunit --verbose \
+    --bootstrap %{buildroot}%{phpdir}/JMS/Parser/autoload.php
+%else
+: Tests skipped
+%endif
+
+
+%clean
+rm -rf %{buildroot}
 
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README.md composer.json
-%dir %{_datadir}/php/JMS
-     %{_datadir}/php/JMS/Parser
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *.md
+%doc composer.json
+%dir %{phpdir}/JMS
+     %{phpdir}/JMS/Parser
 
 
 %changelog
+* Sun Jul 12 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.0-7
+- Added spec license
+- New source script %%{name}-get-source.sh instead of %%{name}-strip.sh
+- Added autoloader
+- Added standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming provides
+- Added php-composer(jms/parser-lib) provide
+- %%license usage
+
 * Tue Mar 19 2013 Remi Collet <remi@fedoraproject.org> 1.0.0-3
 - backport 1.0.0 for remi repo.
 
