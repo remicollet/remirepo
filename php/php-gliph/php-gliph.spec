@@ -1,3 +1,4 @@
+# remirepo spec file for php-gliph, from Fedora:
 #
 # RPM spec file for php-gliph
 #
@@ -17,31 +18,52 @@
 %global composer_vendor  sdboyer
 %global composer_project gliph
 
-%global lib_name         Gliph
-
 # "php": ">=5.3"
 %global php_min_ver      5.3.0
 
-Name:      php-%{composer_project}
-Version:   %{github_version}
-Release:   1%{?github_release}%{?dist}
-Summary:   A graph library for PHP
+# Build using "--without tests" to disable tests
+%global with_tests 0%{!?_without_tests:1}
 
-Group:     Development/Libraries
-License:   MIT
-URL:       https://github.com/%{github_owner}/%{github_name}
-Source0:   %{url}/archive/%{github_commit}/%{name}-%{version}-%{github_commit}.tar.gz
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildArch: noarch
+Name:          php-%{composer_project}
+Version:       %{github_version}
+Release:       4%{?github_release}%{?dist}
+Summary:       A graph library for PHP
+
+Group:         Development/Libraries
+License:       MIT
+URL:           https://github.com/%{github_owner}/%{github_name}
+
+# Run "php-gliph-get-source.sh" to create source
+Source0:       %{name}-%{version}-%{github_commit}.tar.gz
+Source1:       %{name}-get-source.sh
+
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch:     noarch
+# Tests
+%if %{with_tests}
+BuildRequires: %{_bindir}/phpunit
+## composer.json
+BuildRequires: php(language) >= %{php_min_ver}
+## phpcompatinfo (computed from version 0.1.8)
+BuildRequires: php-reflection
+BuildRequires: php-spl
+## Autoloader
+BuildRequires: php-composer(symfony/class-loader)
+%endif
 
 # composer.json
-Requires:  php(language) >= %{php_min_ver}
+Requires:      php(language) >= %{php_min_ver}
 # phpcompatinfo (computed from version 0.1.8)
-Requires:  php-spl
+Requires:      php-spl
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
 
+# Standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming
+Provides:      php-%{composer_vendor}-%{composer_project} = %{version}-%{release}
 # Composer
-Provides:  php-composer(%{composer_vendor}/%{composer_project}) = %{version}
+Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 %description
 Gliph is a graph library for PHP. It provides graph building blocks and
@@ -53,6 +75,31 @@ Neo4J (http://neo4j.org/).
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+: Create autoloader
+cat <<'AUTOLOAD' | tee src/Gliph/autoload.php
+<?php
+/**
+ * Autoloader for %{name} and its' dependencies
+ *
+ * Created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once 'Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('Gliph\\', dirname(__DIR__));
+
+return $fedoraClassLoader;
+AUTOLOAD
+
 
 %build
 # Empty build section, nothing to build
@@ -60,14 +107,27 @@ Neo4J (http://neo4j.org/).
 
 %install
 rm -rf %{buildroot}
-mkdir -pm 0755 %{buildroot}%{_datadir}/php
-cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
+mkdir -p %{buildroot}%{phpdir}
+cp -rp src/* %{buildroot}%{phpdir}/
 
 
 %check
-# As of version 0.1.5, "phpunit.xml.dist" and "/tests" are git export-ignored
-# therefore the RPM source tarball does not contain tests. Upstream will be
-# contacted to revert the git export-ignore so tests may be run here.
+%if %{with_tests}
+: Create tests bootstrap
+cat <<'BOOTSTRAP' | tee bootstrap.php
+<?php
+
+$fedoraClassLoader =
+    require_once '%{buildroot}%{phpdir}/Gliph/autoload.php';
+
+$fedoraClassLoader->addPrefix(null, __DIR__ . '/tests');
+BOOTSTRAP
+
+: Run tests
+%{_bindir}/phpunit --verbose --bootstrap ./bootstrap.php .
+%else
+: Tests skipped
+%endif
 
 
 %clean
@@ -78,11 +138,20 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc README.md composer.json
-%{_datadir}/php/%{lib_name}
+%doc *.md
+%doc composer.json
+%{phpdir}/Gliph
 
 
 %changelog
+* Sat Jul 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.1.8-4
+- Added missing autoloader require
+
+* Sat Jul 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.1.8-3
+- Added autoloader
+- Added tests
+- Added standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming provides
+
 * Sun Aug 17 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.1.8-1
 - Updated to 0.1.8 (BZ #1125361)
 
