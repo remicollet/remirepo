@@ -60,7 +60,7 @@
 
 Name:          php-guzzle-%{pear_name}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       3%{?dist}
 Summary:       PHP HTTP client library and framework for building RESTful web service clients
 
 Group:         Development/Libraries
@@ -124,6 +124,9 @@ Requires:      ca-certificates
 # Autoloader
 Requires:      php-composer(symfony/class-loader)
 
+# Standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming
+Provides:      php-%{composer_vendor}-%{composer_project} = %{version}-%{release}
+Provides:      php-%{composer_project} = %{version}-%{release}
 # Composer
 Provides:  php-composer(%{composer_vendor}/%{composer_project})   = %{version}
 ## Sub-packages
@@ -222,14 +225,17 @@ rm src/Guzzle/Http/Resources/cacert.pem
 
 if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
     if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once 'Symfony/Component/ClassLoader/ClassLoader.php';
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
     }
 
     $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
     $fedoraClassLoader->register();
 }
 
-$fedoraClassLoader->addPrefix('Guzzle', dirname(__DIR__));
+$fedoraClassLoader->addPrefix('Guzzle\\', dirname(__DIR__));
+
+// Not all dependency autoloaders exist or are in every dist yet so fallback
+// to using include path for dependencies for now
 $fedoraClassLoader->setUseIncludePath(true);
 
 return $fedoraClassLoader;
@@ -254,7 +260,8 @@ cp -rp src/* %{buildroot}%{phpdir}/
 (cat <<'AUTOLOAD'
 <?php
 
-require_once 'Guzzle/autoload.php';
+$fedoraClassLoader =
+    require_once '%{buildroot}%{phpdir}/Guzzle/autoload.php';
 
 $fedoraClassLoader->addPrefix('Guzzle\\Tests', __DIR__);
 AUTOLOAD
@@ -286,7 +293,7 @@ sed 's/function testMustReturnRequest/function SKIP_testMustReturnRequest/' \
     -i tests/Guzzle/Tests/Service/Command/ClosureCommandTest.php
 %endif
 
-%{_bindir}/phpunit --include-path %{buildroot}%{phpdir}
+%{_bindir}/phpunit --verbose
 %else
 : Tests skipped
 %endif
@@ -322,6 +329,10 @@ fi
 %exclude %{phpdir}/Guzzle/*/*/composer.json
 
 %changelog
+* Sat Jul 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.9.3-3
+- Autoloader updates
+- Added standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming provides
+
 * Mon Jun 15 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.9.3-1
 - Updated to 3.9.3
 - Updated dependencies to use php-composer(*)
