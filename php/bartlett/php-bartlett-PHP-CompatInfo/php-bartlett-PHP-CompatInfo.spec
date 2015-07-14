@@ -41,6 +41,7 @@ BuildRequires:  php(language) >= 5.3.2
 # to run test suite
 BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php-pdo_sqlite
+BuildRequires:  php-composer(bartlett/php-reflect) >= 3.1
 # For our patch / autoloader
 BuildRequires:  php-composer(symfony/class-loader)
 BuildRequires:  php-bartlett-PHP-Reflect >= 3.1.1-3
@@ -143,6 +144,7 @@ rm tests/Reference/Extension/CurlExtensionTest.php
 rm tests/Reference/Extension/LibxmlExtensionTest.php
 %endif
 %if "%{php_version}" < "5.5"
+# https://github.com/llaville/php-compat-info/issues/206
 rm tests/Reference/Extension/IntlExtensionTest.php
 %endif
 
