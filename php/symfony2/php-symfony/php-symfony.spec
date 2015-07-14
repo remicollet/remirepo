@@ -14,8 +14,8 @@
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.7.1
-%global github_commit    932b6e7499c670f4db6d0b871477a4a3ca161e74
+%global github_version   2.7.2
+%global github_commit    969d709ad428076bf1084e386dc26dd904d9fb84
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -2497,6 +2497,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Mon Jul 13 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.7.2-1
+- Updated to 2.7.2 (RHBZ #1242664)
+
 * Sun Jul 05 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.7.1-2
 - Remove optional bridge and bundle dependencies in dependency-injection and
   form components.  Add optional text to descriptions.
