@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9b7c199393155fdfbb0ed2a759b973d1bf635847
+%global gh_commit    e6191f0ddc7a7a291e58837861d3074014fcdd7d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     theseer
 %global gh_project   Autoload
@@ -15,7 +15,7 @@
 %global pear_channel pear.netpirates.net
 
 Name:           php-theseer-autoload
-Version:        1.19.1
+Version:        1.19.2
 Release:        1%{?dist}
 Summary:        A tool and library to generate autoload code
 
@@ -44,7 +44,7 @@ Requires:       php-composer(theseer/directoryscanner) >= 1.3
 Requires:       php-composer(theseer/directoryscanner) <  2
 Requires:       php-composer(zetacomponents/console-tools) >= 1.7
 Requires:       php-composer(zetacomponents/console-tools) <  2
-# From phpcompatinfo report for version 1.16.1
+# From phpcompatinfo report for version 1.19.2
 Requires:       php-cli
 Requires:       php-date
 Requires:       php-json
@@ -77,7 +77,7 @@ cat <<EOF | tee            -a src/autoload.php
 // Dependencies
 require '/usr/share/php/TheSeer/DirectoryScanner/autoload.php';
 require '/usr/share/php/ezc/Base/base.php';
-spl_autoload_register(array('\ezcBase','autoload'));
+spl_autoload_register(array('\\ezcBase','autoload'));
 EOF
 
 # set version
@@ -109,7 +109,7 @@ phpunit --verbose
 rm -rf %{buildroot}
 
 
-%post
+%pre
 if [ -x %{_bindir}/pear ]; then
   %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
       %{pear_channel}/%{pear_name} >/dev/null || :
@@ -126,6 +126,9 @@ fi
 
 
 %changelog
+* Tue Jul 14 2015 Remi Collet <remi@fedoraproject.org> - 1.19.2-1
+- update to 1.19.2
+
 * Mon Jul 13 2015 Remi Collet <remi@fedoraproject.org> - 1.19.1-1
 - update to 1.19.1
 
