@@ -1,44 +1,77 @@
+# remirepo spec file for php-PhpCollection, from Fedora:
+#
+# RPM spec file for php-PhpCollection
+#
+# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
 %global github_owner      schmittjoh
 %global github_name       php-collection
 %global github_version    0.4.0
 %global github_commit     b8bf55a0a929ca43b01232b36719f176f86c7e83
 
-%global lib_name          PhpCollection
+%global composer_vendor   phpcollection
+%global composer_project  phpcollection
 
 %global php_min_ver       5.3.0
 # "phpoption/phpoption": "1.*"
-%global phpoption_min_ver 1.0
+#     NOTE: min version not 1.0 because autoloader required
+%global phpoption_min_ver 1.4.0-4
 %global phpoption_max_ver 2.0
 
-Name:          php-%{lib_name}
+# Build using "--without tests" to disable tests
+%global with_tests 0%{!?_without_tests:1}
+
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
+
+Name:          php-PhpCollection
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       4%{?dist}
 Summary:       General purpose collection library for PHP
 
 Group:         Development/Libraries
 License:       ASL 2.0
 URL:           http://jmsyst.com/libs/%{github_name}
-# To create source:
-# wget https://github.com/schmittjoh/php-collection/archive/%%{github_commit}.tar.gz
-# php-PhpCollection-strip.sh %%{github_version} %%{github_commit}
+
+# GitHub export contains non-allowable licened documentation.
+# Run php-PhpCollection-get-source.sh to create allowable source.
 Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
-Source1:       %{name}-strip.sh
+Source1:       %{name}-get-source.sh
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
-# For tests
+# Tests
+%if %{with_tests}
+BuildRequires: %{_bindir}/phpunit
+## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
+#BuildRequires: php-composer(phpoption/phpoption) >= %%{phpoption_min_ver}
 BuildRequires: php-PhpOption >= %{phpoption_min_ver}
-BuildRequires: php-PhpOption <  %{phpoption_max_ver}
-# For tests: phpcompatinfo (computed from version 0.4.0)
+## phpcompatinfo (computed from version 0.4.0)
 BuildRequires: php-spl
+## Autoloader
+BuildRequires: php-composer(symfony/class-loader)
+%endif
 
-Requires:      php(language) >= %{php_min_ver}
-Requires:      php-PhpOption >= %{phpoption_min_ver}
-Requires:      php-PhpOption <  %{phpoption_max_ver}
+Requires:      php(language)                     >= %{php_min_ver}
+#Requires:      php-composer(phpoption/phpoption) >= %%{phpoption_min_ver}
+Requires:      php-PhpOption                     >= %{phpoption_min_ver}
+Requires:      php-composer(phpoption/phpoption) <  %{phpoption_max_ver}
 # phpcompatinfo (computed from version 0.4.0)
 Requires:      php-spl
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
+
+# Standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming
+Provides:      php-%{composer_vendor}-%{composer_project} = %{version}-%{release}
+Provides:      php-%{composer_vendor} = %{version}-%{release}
+# Composer
+Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 %description
 This library adds basic collections for PHP.
@@ -73,46 +106,79 @@ General Characteristics:
 %prep
 %setup -q -n %{github_name}-%{github_commit}
 
+: Create autoloader
+cat <<'AUTOLOAD' | tee src/PhpCollection/autoload.php
+<?php
+/**
+ * Autoloader for %{name} and its' dependencies
+ *
+ * Created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+require_once '%{phpdir}/PhpOption/autoload.php';
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('PhpCollection\\', dirname(__DIR__));
+
+return $fedoraClassLoader;
+AUTOLOAD
+
 
 %build
 # Empty build section, nothing to build
 
 
 %install
-mkdir -p -m 755 %{buildroot}%{_datadir}/php
-cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
+rm -rf %{buildroot}
+mkdir -p %{buildroot}%{phpdir}
+cp -rp src/* %{buildroot}%{phpdir}/
 
 
 %check
-# Rewrite tests' bootstrap
-( cat <<'AUTOLOAD'
-<?php
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', str_replace('_', '/', $class)).'.php';
-    @include_once $src;
-});
-AUTOLOAD
-) > tests/bootstrap.php
-
-# Create PHPUnit config w/ colors turned off
-cat phpunit.xml.dist \
-    | sed 's/colors="true"/colors="false"/' \
-    > phpunit.xml
-
-# Skip test known to fail
+%if %{with_tests}
+: Skip test known to fail
 sed 's/function testMap/function SKIP_testMap/' \
     -i tests/PhpCollection/Tests/SequenceTest.php
 
-%{_bindir}/phpunit --include-path="./src:./tests"
+: Run tests
+%{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/PhpCollection/autoload.php
+%else
+: Tests skipped
+%endif
+
+
+%clean
+rm -rf %{buildroot}
 
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE *.md composer.json
-%{_datadir}/php/%{lib_name}
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *.md
+%doc composer.json
+%{phpdir}/PhpCollection
 
 
 %changelog
+* Sun Jul 12 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.4.0-4
+- Added spec license
+- New source script %%{name}-get-source.sh instead of %%{name}-strip.sh
+- Added autoloader
+- Added standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming provides
+- Added php-composer(phpcollection/phpcollection) provide
+- %%license usage
+
 * Tue Apr 22 2014 Remi Collet <remi@fedoraproject.org> 0.4.0-1
 - backport 0.4.0 for remi repo.
 
