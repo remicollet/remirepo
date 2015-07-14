@@ -1,7 +1,8 @@
+# remirepo spec file for php-gitter, from Fedora:
 #
 # RPM spec file for php-gitter
 #
-# Copyright (c) 2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -17,23 +18,19 @@
 %global composer_vendor  klaussilveira
 %global composer_project gitter
 
-%global lib_name         Gitter
-
 # "php": ">=5.3.0"
 %global php_min_ver      5.3.0
-# "phpunit/phpunit": ">=3.7.1"
-%global phpunit_min_ver  3.7.1
 # "symfony/*": ">=2.2"
 %global symfony_min_ver  2.2
 
 # Build using "--without tests" to disable tests
-%global with_tests       %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
 
-%{!?__phpunit: %global __phpunit %{_bindir}/phpunit}
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       5%{?github_release}%{?dist}
 Summary:       Object oriented interaction with Git repositories
 
 Group:         Development/Libraries
@@ -41,34 +38,44 @@ License:       BSD
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+# fix for git 2.4.x
+# https://github.com/klaussilveira/gitter/pull/47
+Patch0:        %{name}-pr47.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Tests
 %if %{with_tests}
-# For tests
 BuildRequires: git
-# For tests: composer.json
-BuildRequires: php(language)          >= %{php_min_ver}
+## composer.json
+BuildRequires: %{_bindir}/phpunit
+BuildRequires: php(language)                    >= %{php_min_ver}
+BuildRequires: php-composer(symfony/filesystem) >= %{symfony_min_ver}
+BuildRequires: php-composer(symfony/process)    >= %{symfony_min_ver}
 BuildRequires: php-deepend-Mockery
-BuildRequires: php-phpunit-PHPUnit    >= %{phpunit_min_ver}
-BuildRequires: php-symfony-process    >= %{symfony_min_ver}
-BuildRequires: php-symfony-filesystem >= %{symfony_min_ver}
-# For tests: phpcompatinfo (computed from version 0.3.0)
+## phpcompatinfo (computed from version 0.3.0)
 BuildRequires: php-date
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
+## Autoloader
+BuildRequires: php-composer(symfony/class-loader)
 %endif
 
 Requires:      git
 # composer.json
-Requires:      php(language)       >= %{php_min_ver}
-Requires:      php-symfony-process >= %{symfony_min_ver}
+Requires:      php(language)                 >= %{php_min_ver}
+Requires:      php-composer(symfony/process) >= %{symfony_min_ver}
 # phpcompatinfo (computed from version 0.3.0)
 Requires:      php-date
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
 
+# Standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming
+Provides:      php-%{composer_vendor}-%{composer_project} = %{version}-%{release}
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
@@ -85,6 +92,39 @@ thing.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+: fix for git 2.4.x
+: https://github.com/klaussilveira/gitter/pull/47
+%patch0 -p1
+
+: Create autoloader
+cat <<'AUTOLOAD' | tee lib/Gitter/autoload.php
+<?php
+/**
+ * Autoloader for %{name} and its' dependencies
+ *
+ * Created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('Gitter\\', dirname(__DIR__));
+
+// Not all dependency autoloaders exist or are in every dist yet so fallback
+// to using include path for dependencies for now
+$fedoraClassLoader->setUseIncludePath(true);
+
+return $fedoraClassLoader;
+AUTOLOAD
+
 
 %build
 # Empty build section, nothing required
@@ -92,43 +132,47 @@ thing.
 
 %install
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/%{_datadir}/php
-cp -rp lib/%{lib_name} %{buildroot}/%{_datadir}/php/
+mkdir -p %{buildroot}/%{phpdir}
+cp -rp lib/* %{buildroot}/%{phpdir}/
 
 
 %check
 %if %{with_tests}
-# Create autoloader
-mkdir vendor
-cat > vendor/autoload.php <<'AUTOLOAD'
-<?php
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', $class).'.php';
-    @include_once $src;
-});
-AUTOLOAD
+: Always run all tests
+sed '/stopOnFailure/d' phpunit.xml.dist > phpunit.xml
 
-# Create PHPUnit config w/ colors turned off
-sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
-
-%{__phpunit} --include-path="./lib:./tests" -d date.timezone="UTC"
+: Run tests
+%{_bindir}/phpunit --verbose \
+    --bootstrap %{buildroot}/%{phpdir}/Gitter/autoload.php
 %else
 : Tests skipped
 %endif
 
+
 %clean
 rm -rf %{buildroot}
 
-%{!?_licensedir:%global license %%doc}
 
 %files
 %defattr(-,root,root,-)
+%{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc README.md composer.json
-%{_datadir}/php/%{lib_name}
+%doc *.md
+%doc composer.json
+%{phpdir}/Gitter
 
 
 %changelog
+* Sat Jul 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.3.0-5
+- Use full require paths in autoloader
+
+* Sat Jul 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.3.0-4
+- Added autoloader
+- Added standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming provides
+
+* Sun May 24 2015 Remi Collet <remi@fedoraproject.org> - 0.3.0-2
+- add patch for git 2.4 (FTBFS detected by Koschei)
+
 * Sat Jul 19 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.3.0-1
 - Updated to 0.3.0 (BZ #1101229)
 - Added "php-composer(klaussilveira/gitter)" virtual provide
