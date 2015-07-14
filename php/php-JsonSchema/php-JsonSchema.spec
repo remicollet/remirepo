@@ -12,16 +12,17 @@
 
 %global github_owner   justinrainbow
 %global github_name    json-schema
-%global github_version 1.4.2
-%global github_commit  7dfe4f1db8a62be3dd35710efce663537d515653
+%global github_version 1.4.3
+%global github_commit  44adc6f25592c6990409607c95537f577861f9b1
 %global github_short   %(c=%{github_commit}; echo ${c:0:7})
 
 %global php_min_ver    5.3.2
 
 %global lib_name       JsonSchema
+%global phpdir         %{_datadir}/php
 
 # Build using "--without tests" to disable tests
-%global with_tests     %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests     0%{!?_without_tests:1}
 
 Name:          php-%{lib_name}
 Version:       %{github_version}
@@ -32,6 +33,8 @@ Group:         Development/Libraries
 License:       BSD
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_short}.tar.gz
+# Autoloader
+Source1:       %{name}-autoload.php
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -39,7 +42,7 @@ BuildArch: noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-phpunit-PHPUnit
-# For tests: phpcompatinfo (computed from v1.4.2)
+# For tests: phpcompatinfo (computed from v1.4.3)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -47,10 +50,12 @@ BuildRequires: php-json
 BuildRequires: php-mbstring
 BuildRequires: php-pcre
 BuildRequires: php-spl
+# Autoloader
+BuildRequires: php-composer(symfony/class-loader)
 %endif
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from v1.4.2)
+# phpcompatinfo (computed from v1.4.3)
 Requires:      php-cli
 Requires:      php-curl
 Requires:      php-date
@@ -59,7 +64,10 @@ Requires:      php-json
 Requires:      php-mbstring
 Requires:      php-pcre
 Requires:      php-spl
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
 
+# Composer
 Provides:      php-composer(justinrainbow/json-schema) = %{version}
 
 
@@ -72,6 +80,8 @@ See http://json-schema.org for more details.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+cp -p %{SOURCE1} src/%{lib_name}/autoload.php
+
 
 %build
 # Empty build section, nothing to build
@@ -79,34 +89,26 @@ See http://json-schema.org for more details.
 
 %install
 # Install lib
-mkdir -pm 0755 %{buildroot}%{_datadir}/php
-cp -rp src/* %{buildroot}%{_datadir}/php/
+mkdir -p %{buildroot}%{phpdir}
+cp -rp src/* %{buildroot}%{phpdir}/
 
 # Install bin
-mkdir -pm 0755 %{buildroot}%{_bindir}
-install -pm 0755 bin/validate-json %{buildroot}%{_bindir}/
+install -Dpm 0755 bin/validate-json %{buildroot}%{_bindir}/validate-json
 
 
 %check
 %if %{with_tests}
-# Create autoloader
-cat > autoload.php <<'AUTOLOAD'
-<?php
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', $class).'.php';
-    if ($path = stream_resolve_include_path($src)) {
-        require_once $path;
-    }
-});
-AUTOLOAD
-
 # Remove empty tests
-rm -rf tests/JsonSchema/Tests/Drafts
+rm -rf tests/%{lib_name}/Tests/Drafts
 
-%{_bindir}/phpunit \
-    --include-path="./src:./tests" \
-    --bootstrap="./autoload.php" \
-    --verbose
+mkdir vendor
+cat <<EOF | tee vendor/autoload.php
+<?php
+require '%{buildroot}%{phpdir}/%{lib_name}/autoload.php';
+\$fedoraClassLoader->addPrefix('%{lib_name}\\\\Tests\\\\', realpath(__DIR__.'/../tests'));
+EOF
+
+%{_bindir}/phpunit --verbose
 %else
 : Tests skipped
 %endif
@@ -117,11 +119,15 @@ rm -rf tests/JsonSchema/Tests/Drafts
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc README.md composer.json
-%{_datadir}/php/%{lib_name}
+%{phpdir}/%{lib_name}
 %{_bindir}/validate-json
 
 
 %changelog
+* Tue Jul 14 2015 Remi Collet <remi@fedoraproject.org> - 1.4.3-1
+- update to 1.4.3
+- add autoloader
+
 * Mon Jun 15 2015 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
 - update to 1.4.2
 
