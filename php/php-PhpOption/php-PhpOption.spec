@@ -1,14 +1,34 @@
-%global github_owner   schmittjoh
-%global github_name    php-option
-%global github_version 1.4.0
-%global github_commit  5d099bcf0393908bf4ad69cc47dafb785d51f7f5
+# remirepo spec file for php-PhpOption, from Fedora:
+#
+# RPM spec file for php-PhpOption
+#
+# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 
-%global lib_name       PhpOption
-%global php_min_ver    5.3.0
+%global github_owner     schmittjoh
+%global github_name      php-option
+%global github_version   1.4.0
+%global github_commit    5d099bcf0393908bf4ad69cc47dafb785d51f7f5
 
-Name:          php-%{lib_name}
+%global composer_vendor  phpoption
+%global composer_project phpoption
+
+# "php": ">=5.3.0"
+%global php_min_ver      5.3.0
+
+# Build using "--without tests" to disable tests
+%global with_tests 0%{!?_without_tests:1}
+
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
+
+Name:          php-PhpOption
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       4%{?dist}
 Summary:       Option type for PHP
 
 Group:         Development/Libraries
@@ -18,15 +38,29 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
-# For tests
+# Tests
+%if %{with_tests}
+BuildRequires: %{_bindir}/phpunit
+## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-pear(pear.phpunit.de/PHPUnit)
-# For tests: phpcompatinfo (computed from 1.4.0)
+## phpcompatinfo (computed from version 1.4.0)
 BuildRequires: php-spl
+## Autoloader
+BuildRequires: php-composer(symfony/class-loader)
+%endif
 
+# composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from 1.4.0)
+# phpcompatinfo (computed from version 1.4.0)
 Requires:      php-spl
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
+
+# Standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming
+Provides:      php-%{composer_vendor}-%{composer_project} = %{version}-%{release}
+Provides:      php-%{composer_vendor} = %{version}-%{release}
+# Composer
+Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 %description
 This package adds an Option type for PHP.
@@ -53,38 +87,67 @@ how he consumes these methods.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+: Create autoloader
+cat <<'AUTOLOAD' | tee src/PhpOption/autoload.php
+<?php
+/**
+ * Autoloader for %{name} and its' dependencies
+ *
+ * Created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('PhpOption\\', dirname(__DIR__));
+
+return $fedoraClassLoader;
+AUTOLOAD
+
 
 %build
 # Empty build section, nothing to build
 
 
 %install
-mkdir -pm 0755 %{buildroot}%{_datadir}/php
-cp -rp src/%{lib_name} %{buildroot}%{_datadir}/php/
+rm -rf %{buildroot}
+mkdir -p %{buildroot}%{phpdir}
+cp -rp src/* %{buildroot}%{phpdir}/
 
 
 %check
-# Rewrite tests' bootstrap
-cat > tests/bootstrap.php <<'BOOTSTRAP'
-<?php
-spl_autoload_register(function ($class) {
-    $src = str_replace(array('\\', '_'), '/', $class).'.php';
-    @include_once $src;
-});
-BOOTSTRAP
+%{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/PhpOption/autoload.php
 
-# Create PHPUnit config w/ colors turned off
-sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
 
-%{_bindir}/phpunit --include-path ./src:./tests -d date.timezone="UTC"
+%clean
+rm -rf %{buildroot}
 
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README.md composer.json
-%{_datadir}/php/%{lib_name}
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *.md
+%doc composer.json
+%{phpdir}/PhpOption
+
 
 %changelog
+* Sat Jul 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.4.0-4
+- Added spec license
+- Added autoloader
+- Added standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming provides
+- Added php-composer(phpoption/phpoption) provide
+- %%license usage
+
 * Mon Feb 17 2014 Remi Collet <RPMS@famillecollet.com> 1.4.0-1
 - backport 1.4.0 for remi repo
 
