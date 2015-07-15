@@ -1,11 +1,8 @@
 {
     "fabpot\/goutte": "php-goutte",
-    "jms\/parser-lib": "php-JMSParser",
     "zendframework\/zendframework1": "php-ZendFramework",
     "sabre\/dav": "php-sabre-dav",
     "phpunit\/phpunit-story": "php-phpunit-PHPUnit-Story",
-    "pdepend\/pdepend": "php-pdepend-PHP-Depend",
-    "phpmd\/phpmd": "php-phpmd-PHP-PMD",
     "sebastian\/phpcpd": "php-phpunit-phpcpd",
     "sebastian\/phpdcd": "php-phpunit-phpdcd",
     "tecnick.com\/tc-lib-color": "php-tecnickcom-tc-lib-color",
@@ -14,7 +11,6 @@
     "tecnick.com\/tc-lib-pdf-filter": "php-tecnickcom-tc-lib-pdf-filter",
     "tecnick.com\/tc-lib-pdf-page": "php-tecnickcom-tc-lib-pdf-page",
     "tecnick.com\/tc-lib-pdf-font-data": "php-tecnickcom-tc-lib-pdf-font-data",
-    "myclabs\/deep-copy": "php-myclabs-deep-copy",
     "jasig\/phpcas": "php-pear-CAS",
     "theseer\/fxsl": "php-theseer-fxsl"
 }
