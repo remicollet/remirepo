@@ -12,7 +12,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.29.0
+Version:        2.29.1
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -169,6 +169,9 @@ fi
 
 
 %changelog
+* Wed Jul 15 2015 Remi Collet <remi@fedoraproject.org> - 2.29.1-1
+- Update to 2.29.1
+
 * Thu Jun 18 2015 Remi Collet <remi@fedoraproject.org> - 2.29.0-1
 - Update to 2.29.0
 - add BR on Horde_Crypt_Blowfish and Horde_Stringprep
