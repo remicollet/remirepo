@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
+Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
 
   - INI {
     Entry [ phalcon.db.escape_identifiers <ALL> ]
@@ -36,7 +36,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
     }
   }
 
-  - Classes [347] {
+  - Classes [349] {
     Interface [ <internal:phalcon> interface Phalcon\Di\InjectionAwareInterface ] {
 
       - Constants [0] {
@@ -493,6 +493,223 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
       }
     }
 
+    Interface [ <internal:phalcon> interface Phalcon\Mvc\Model\MetaDataInterface ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [29] {
+        Method [ <internal:phalcon> abstract public method setStrategy ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\Model\MetaData\StrategyInterface $strategy ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getStrategy ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method readMetaData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method readMetaDataIndex ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method writeMetaDataIndex ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $index ]
+            Parameter #2 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method readColumnMap ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method readColumnMapIndex ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getPrimaryKeyAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getNonPrimaryKeyAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getNotNullAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getDataTypes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getDataTypesNumeric ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getIdentityField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getBindTypes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getAutomaticCreateAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getAutomaticUpdateAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method setAutomaticCreateAttributes ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> array $attributes ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method setAutomaticUpdateAttributes ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> array $attributes ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method setEmptyStringAttributes ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> array $attributes ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getEmptyStringAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getDefaultValues ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getColumnMap ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getReverseColumnMap ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method hasAttribute ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $attribute ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method isEmpty ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method reset ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method read ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method write ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $data ]
+          }
+        }
+      }
+    }
+
     Interface [ <internal:phalcon> interface Phalcon\Db\DialectInterface ] {
 
       - Constants [0] {
@@ -850,223 +1067,6 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $forward ]
-          }
-        }
-      }
-    }
-
-    Interface [ <internal:phalcon> interface Phalcon\Mvc\Model\MetaDataInterface ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [29] {
-        Method [ <internal:phalcon> abstract public method setStrategy ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\Model\MetaData\StrategyInterface $strategy ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method getStrategy ] {
-        }
-
-        Method [ <internal:phalcon> abstract public method readMetaData ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method readMetaDataIndex ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-            Parameter #1 [ <required> $index ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method writeMetaDataIndex ] {
-
-          - Parameters [3] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-            Parameter #1 [ <required> $index ]
-            Parameter #2 [ <required> $data ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method readColumnMap ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method readColumnMapIndex ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-            Parameter #1 [ <required> $index ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method getAttributes ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method getPrimaryKeyAttributes ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method getNonPrimaryKeyAttributes ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method getNotNullAttributes ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method getDataTypes ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method getDataTypesNumeric ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method getIdentityField ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method getBindTypes ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method getAutomaticCreateAttributes ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method getAutomaticUpdateAttributes ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method setAutomaticCreateAttributes ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-            Parameter #1 [ <required> array $attributes ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method setAutomaticUpdateAttributes ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-            Parameter #1 [ <required> array $attributes ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method setEmptyStringAttributes ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-            Parameter #1 [ <required> array $attributes ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method getEmptyStringAttributes ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method getDefaultValues ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method getColumnMap ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method getReverseColumnMap ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method hasAttribute ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-            Parameter #1 [ <required> $attribute ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method isEmpty ] {
-        }
-
-        Method [ <internal:phalcon> abstract public method reset ] {
-        }
-
-        Method [ <internal:phalcon> abstract public method read ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $key ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method write ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $key ]
-            Parameter #1 [ <required> $data ]
           }
         }
       }
@@ -5870,7 +5870,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
       - Properties [0] {
       }
 
-      - Methods [37] {
+      - Methods [38] {
         Method [ <internal:phalcon> abstract public method setLayoutsDir ] {
 
           - Parameters [1] {
@@ -5896,6 +5896,9 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
           - Parameters [1] {
             Parameter #0 [ <required> $basePath ]
           }
+        }
+
+        Method [ <internal:phalcon> abstract public method getBasePath ] {
         }
 
         Method [ <internal:phalcon> abstract public method setRenderLevel ] {
@@ -6915,6 +6918,248 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
       }
     }
 
+    Class [ <internal:phalcon> abstract class Phalcon\Mvc\Model\MetaData implements Phalcon\Di\InjectionAwareInterface ] {
+
+      - Constants [16] {
+        Constant [ integer MODELS_ATTRIBUTES ] { 0 }
+        Constant [ integer MODELS_PRIMARY_KEY ] { 1 }
+        Constant [ integer MODELS_NON_PRIMARY_KEY ] { 2 }
+        Constant [ integer MODELS_NOT_NULL ] { 3 }
+        Constant [ integer MODELS_DATA_TYPES ] { 4 }
+        Constant [ integer MODELS_DATA_TYPES_NUMERIC ] { 5 }
+        Constant [ integer MODELS_DATE_AT ] { 6 }
+        Constant [ integer MODELS_DATE_IN ] { 7 }
+        Constant [ integer MODELS_IDENTITY_COLUMN ] { 8 }
+        Constant [ integer MODELS_DATA_TYPES_BIND ] { 9 }
+        Constant [ integer MODELS_AUTOMATIC_DEFAULT_INSERT ] { 10 }
+        Constant [ integer MODELS_AUTOMATIC_DEFAULT_UPDATE ] { 11 }
+        Constant [ integer MODELS_DEFAULT_VALUES ] { 12 }
+        Constant [ integer MODELS_EMPTY_STRING_VALUES ] { 13 }
+        Constant [ integer MODELS_COLUMN_MAP ] { 0 }
+        Constant [ integer MODELS_REVERSE_COLUMN_MAP ] { 1 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $_dependencyInjector ]
+        Property [ <default> protected $_strategy ]
+        Property [ <default> protected $_metaData ]
+        Property [ <default> protected $_columnMap ]
+      }
+
+      - Methods [30] {
+        Method [ <internal:phalcon> final protected method _initialize ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $key ]
+            Parameter #2 [ <required> $table ]
+            Parameter #3 [ <required> $schema ]
+          }
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Di\InjectionAwareInterface> public method setDI ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\DiInterface $dependencyInjector ]
+          }
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Di\InjectionAwareInterface> public method getDI ] {
+        }
+
+        Method [ <internal:phalcon> public method setStrategy ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\Model\MetaData\StrategyInterface $strategy ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method getStrategy ] {
+        }
+
+        Method [ <internal:phalcon> final public method readMetaData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> final public method readMetaDataIndex ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:phalcon> final public method writeMetaDataIndex ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $index ]
+            Parameter #2 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:phalcon> final public method readColumnMap ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> final public method readColumnMapIndex ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method getAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method getPrimaryKeyAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method getNonPrimaryKeyAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method getNotNullAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method getDataTypes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method getDataTypesNumeric ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method getIdentityField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method getBindTypes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method getAutomaticCreateAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method getAutomaticUpdateAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method setAutomaticCreateAttributes ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> array $attributes ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method setAutomaticUpdateAttributes ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> array $attributes ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method setEmptyStringAttributes ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> array $attributes ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method getEmptyStringAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method getDefaultValues ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method getColumnMap ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method getReverseColumnMap ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method hasAttribute ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $attribute ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method isEmpty ] {
+        }
+
+        Method [ <internal:phalcon> public method reset ] {
+        }
+      }
+    }
+
     Class [ <internal:phalcon> abstract class Phalcon\Db\Adapter implements Phalcon\Events\EventsAwareInterface ] {
 
       - Constants [0] {
@@ -7323,248 +7568,6 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
         }
 
         Method [ <internal:phalcon> public method getSQLBindTypes ] {
-        }
-      }
-    }
-
-    Class [ <internal:phalcon> abstract class Phalcon\Mvc\Model\MetaData implements Phalcon\Di\InjectionAwareInterface ] {
-
-      - Constants [16] {
-        Constant [ integer MODELS_ATTRIBUTES ] { 0 }
-        Constant [ integer MODELS_PRIMARY_KEY ] { 1 }
-        Constant [ integer MODELS_NON_PRIMARY_KEY ] { 2 }
-        Constant [ integer MODELS_NOT_NULL ] { 3 }
-        Constant [ integer MODELS_DATA_TYPES ] { 4 }
-        Constant [ integer MODELS_DATA_TYPES_NUMERIC ] { 5 }
-        Constant [ integer MODELS_DATE_AT ] { 6 }
-        Constant [ integer MODELS_DATE_IN ] { 7 }
-        Constant [ integer MODELS_IDENTITY_COLUMN ] { 8 }
-        Constant [ integer MODELS_DATA_TYPES_BIND ] { 9 }
-        Constant [ integer MODELS_AUTOMATIC_DEFAULT_INSERT ] { 10 }
-        Constant [ integer MODELS_AUTOMATIC_DEFAULT_UPDATE ] { 11 }
-        Constant [ integer MODELS_DEFAULT_VALUES ] { 12 }
-        Constant [ integer MODELS_EMPTY_STRING_VALUES ] { 13 }
-        Constant [ integer MODELS_COLUMN_MAP ] { 0 }
-        Constant [ integer MODELS_REVERSE_COLUMN_MAP ] { 1 }
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [4] {
-        Property [ <default> protected $_dependencyInjector ]
-        Property [ <default> protected $_strategy ]
-        Property [ <default> protected $_metaData ]
-        Property [ <default> protected $_columnMap ]
-      }
-
-      - Methods [30] {
-        Method [ <internal:phalcon> final protected method _initialize ] {
-
-          - Parameters [4] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-            Parameter #1 [ <required> $key ]
-            Parameter #2 [ <required> $table ]
-            Parameter #3 [ <required> $schema ]
-          }
-        }
-
-        Method [ <internal:phalcon, prototype Phalcon\Di\InjectionAwareInterface> public method setDI ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\DiInterface $dependencyInjector ]
-          }
-        }
-
-        Method [ <internal:phalcon, prototype Phalcon\Di\InjectionAwareInterface> public method getDI ] {
-        }
-
-        Method [ <internal:phalcon> public method setStrategy ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\Model\MetaData\StrategyInterface $strategy ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method getStrategy ] {
-        }
-
-        Method [ <internal:phalcon> final public method readMetaData ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> final public method readMetaDataIndex ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-            Parameter #1 [ <required> $index ]
-          }
-        }
-
-        Method [ <internal:phalcon> final public method writeMetaDataIndex ] {
-
-          - Parameters [3] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-            Parameter #1 [ <required> $index ]
-            Parameter #2 [ <required> $data ]
-          }
-        }
-
-        Method [ <internal:phalcon> final public method readColumnMap ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> final public method readColumnMapIndex ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-            Parameter #1 [ <required> $index ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method getAttributes ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method getPrimaryKeyAttributes ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method getNonPrimaryKeyAttributes ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method getNotNullAttributes ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method getDataTypes ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method getDataTypesNumeric ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method getIdentityField ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method getBindTypes ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method getAutomaticCreateAttributes ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method getAutomaticUpdateAttributes ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method setAutomaticCreateAttributes ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-            Parameter #1 [ <required> array $attributes ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method setAutomaticUpdateAttributes ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-            Parameter #1 [ <required> array $attributes ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method setEmptyStringAttributes ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-            Parameter #1 [ <required> array $attributes ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method getEmptyStringAttributes ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method getDefaultValues ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method getColumnMap ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method getReverseColumnMap ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method hasAttribute ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
-            Parameter #1 [ <required> $attribute ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method isEmpty ] {
-        }
-
-        Method [ <internal:phalcon> public method reset ] {
         }
       }
     }
@@ -8306,23 +8309,28 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon, prototype Phalcon\Db\DialectInterface> final public method getColumnList ] {
 
-          - Parameters [1] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $columnList ]
+            Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon> final public method getSqlColumn ] {
 
-          - Parameters [1] {
+          - Parameters [3] {
             Parameter #0 [ <required> $column ]
+            Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon> public method getSqlExpression ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
@@ -8370,17 +8378,19 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon> final protected method getSqlExpressionScalar ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon> final protected method getSqlExpressionObject ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
@@ -8394,33 +8404,37 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon> final protected method getSqlExpressionBinaryOperations ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon> final protected method getSqlExpressionUnaryOperations ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon> final protected method getSqlExpressionFunctionCall ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
-            Parameter #1 [ <optional> $escapeChar ]
+            Parameter #1 [ <required> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon> final protected method getSqlExpressionList ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
@@ -8434,25 +8448,28 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon> final protected method getSqlExpressionCastValue ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon> final protected method getSqlExpressionConvertValue ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon> final protected method getSqlExpressionCase ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
@@ -8466,57 +8483,64 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon> final protected method getSqlExpressionJoins ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon> final protected method getSqlExpressionWhere ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon> final protected method getSqlExpressionGroupBy ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon> final protected method getSqlExpressionHaving ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon> final protected method getSqlExpressionOrderBy ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon> final protected method getSqlExpressionLimit ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon> protected method prepareColumnAlias ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $qualified ]
             Parameter #1 [ <optional> $alias ]
+            Parameter #2 [ <optional> $escapeChar ]
           }
         }
 
@@ -18349,23 +18373,28 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect, prototype Phalcon\Db\DialectInterface> final public method getColumnList ] {
 
-          - Parameters [1] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $columnList ]
+            Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final public method getSqlColumn ] {
 
-          - Parameters [1] {
+          - Parameters [3] {
             Parameter #0 [ <required> $column ]
+            Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> public method getSqlExpression ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
@@ -18413,17 +18442,19 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionScalar ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionObject ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
@@ -18437,33 +18468,37 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionBinaryOperations ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionUnaryOperations ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionFunctionCall ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
-            Parameter #1 [ <optional> $escapeChar ]
+            Parameter #1 [ <required> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionList ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
@@ -18477,25 +18512,28 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionCastValue ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionConvertValue ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionCase ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
@@ -18509,57 +18547,64 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionJoins ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionWhere ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionGroupBy ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionHaving ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionOrderBy ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionLimit ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> protected method prepareColumnAlias ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $qualified ]
             Parameter #1 [ <optional> $alias ]
+            Parameter #2 [ <optional> $escapeChar ]
           }
         }
 
@@ -18836,23 +18881,28 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect, prototype Phalcon\Db\DialectInterface> final public method getColumnList ] {
 
-          - Parameters [1] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $columnList ]
+            Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final public method getSqlColumn ] {
 
-          - Parameters [1] {
+          - Parameters [3] {
             Parameter #0 [ <required> $column ]
+            Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> public method getSqlExpression ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
@@ -18894,17 +18944,19 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionScalar ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionObject ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
@@ -18918,33 +18970,37 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionBinaryOperations ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionUnaryOperations ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionFunctionCall ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
-            Parameter #1 [ <optional> $escapeChar ]
+            Parameter #1 [ <required> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionList ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
@@ -18958,25 +19014,28 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionCastValue ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionConvertValue ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionCase ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
@@ -18990,57 +19049,64 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionJoins ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionWhere ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionGroupBy ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionHaving ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionOrderBy ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionLimit ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> protected method prepareColumnAlias ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $qualified ]
             Parameter #1 [ <optional> $alias ]
+            Parameter #2 [ <optional> $escapeChar ]
           }
         }
 
@@ -19318,23 +19384,28 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect, prototype Phalcon\Db\DialectInterface> final public method getColumnList ] {
 
-          - Parameters [1] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $columnList ]
+            Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final public method getSqlColumn ] {
 
-          - Parameters [1] {
+          - Parameters [3] {
             Parameter #0 [ <required> $column ]
+            Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> public method getSqlExpression ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
@@ -19382,17 +19453,19 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionScalar ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionObject ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
@@ -19406,33 +19479,37 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionBinaryOperations ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionUnaryOperations ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionFunctionCall ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
-            Parameter #1 [ <optional> $escapeChar ]
+            Parameter #1 [ <required> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionList ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
@@ -19446,25 +19523,28 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionCastValue ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionConvertValue ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionCase ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
@@ -19478,57 +19558,64 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionJoins ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionWhere ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionGroupBy ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionHaving ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionOrderBy ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionLimit ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> protected method prepareColumnAlias ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $qualified ]
             Parameter #1 [ <optional> $alias ]
+            Parameter #2 [ <optional> $escapeChar ]
           }
         }
 
@@ -19806,23 +19893,28 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect, prototype Phalcon\Db\DialectInterface> final public method getColumnList ] {
 
-          - Parameters [1] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $columnList ]
+            Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final public method getSqlColumn ] {
 
-          - Parameters [1] {
+          - Parameters [3] {
             Parameter #0 [ <required> $column ]
+            Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> public method getSqlExpression ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
@@ -19870,17 +19962,19 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionScalar ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionObject ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
@@ -19894,33 +19988,37 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionBinaryOperations ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionUnaryOperations ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionFunctionCall ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
-            Parameter #1 [ <optional> $escapeChar ]
+            Parameter #1 [ <required> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionList ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
@@ -19934,25 +20032,28 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionCastValue ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionConvertValue ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionCase ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> array $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
@@ -19966,57 +20067,64 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionJoins ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionWhere ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionGroupBy ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionHaving ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionOrderBy ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> final protected method getSqlExpressionLimit ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $expression ]
             Parameter #1 [ <optional> $escapeChar ]
+            Parameter #2 [ <optional> $bindCounts ]
           }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> protected method prepareColumnAlias ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $qualified ]
             Parameter #1 [ <optional> $alias ]
+            Parameter #2 [ <optional> $escapeChar ]
           }
         }
 
@@ -31441,6 +31549,538 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
       }
     }
 
+    Class [ <internal:phalcon> class Phalcon\Mvc\Model\MetaData\Libmemcached extends Phalcon\Mvc\Model\MetaData implements Phalcon\Di\InjectionAwareInterface, Phalcon\Mvc\Model\MetaDataInterface ] {
+
+      - Constants [16] {
+        Constant [ integer MODELS_ATTRIBUTES ] { 0 }
+        Constant [ integer MODELS_PRIMARY_KEY ] { 1 }
+        Constant [ integer MODELS_NON_PRIMARY_KEY ] { 2 }
+        Constant [ integer MODELS_NOT_NULL ] { 3 }
+        Constant [ integer MODELS_DATA_TYPES ] { 4 }
+        Constant [ integer MODELS_DATA_TYPES_NUMERIC ] { 5 }
+        Constant [ integer MODELS_DATE_AT ] { 6 }
+        Constant [ integer MODELS_DATE_IN ] { 7 }
+        Constant [ integer MODELS_IDENTITY_COLUMN ] { 8 }
+        Constant [ integer MODELS_DATA_TYPES_BIND ] { 9 }
+        Constant [ integer MODELS_AUTOMATIC_DEFAULT_INSERT ] { 10 }
+        Constant [ integer MODELS_AUTOMATIC_DEFAULT_UPDATE ] { 11 }
+        Constant [ integer MODELS_DEFAULT_VALUES ] { 12 }
+        Constant [ integer MODELS_EMPTY_STRING_VALUES ] { 13 }
+        Constant [ integer MODELS_COLUMN_MAP ] { 0 }
+        Constant [ integer MODELS_REVERSE_COLUMN_MAP ] { 1 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [6] {
+        Property [ <default> protected $_dependencyInjector ]
+        Property [ <default> protected $_strategy ]
+        Property [ <default> protected $_metaData ]
+        Property [ <default> protected $_columnMap ]
+        Property [ <default> protected $_ttl ]
+        Property [ <default> protected $_memcache ]
+      }
+
+      - Methods [33] {
+        Method [ <internal:phalcon, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $options ]
+          }
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\MetaDataInterface> public method read ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\MetaDataInterface> public method write ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:phalcon, overwrites Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method reset ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData> final protected method _initialize ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $key ]
+            Parameter #2 [ <required> $table ]
+            Parameter #3 [ <required> $schema ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Di\InjectionAwareInterface> public method setDI ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\DiInterface $dependencyInjector ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Di\InjectionAwareInterface> public method getDI ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method setStrategy ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\Model\MetaData\StrategyInterface $strategy ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getStrategy ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> final public method readMetaData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> final public method readMetaDataIndex ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> final public method writeMetaDataIndex ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $index ]
+            Parameter #2 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> final public method readColumnMap ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> final public method readColumnMapIndex ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getPrimaryKeyAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getNonPrimaryKeyAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getNotNullAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getDataTypes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getDataTypesNumeric ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getIdentityField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getBindTypes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getAutomaticCreateAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getAutomaticUpdateAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method setAutomaticCreateAttributes ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> array $attributes ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method setAutomaticUpdateAttributes ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> array $attributes ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method setEmptyStringAttributes ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> array $attributes ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getEmptyStringAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getDefaultValues ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getColumnMap ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getReverseColumnMap ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method hasAttribute ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $attribute ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method isEmpty ] {
+        }
+      }
+    }
+
+    Class [ <internal:phalcon> class Phalcon\Mvc\Model\MetaData\Memcache extends Phalcon\Mvc\Model\MetaData implements Phalcon\Di\InjectionAwareInterface, Phalcon\Mvc\Model\MetaDataInterface ] {
+
+      - Constants [16] {
+        Constant [ integer MODELS_ATTRIBUTES ] { 0 }
+        Constant [ integer MODELS_PRIMARY_KEY ] { 1 }
+        Constant [ integer MODELS_NON_PRIMARY_KEY ] { 2 }
+        Constant [ integer MODELS_NOT_NULL ] { 3 }
+        Constant [ integer MODELS_DATA_TYPES ] { 4 }
+        Constant [ integer MODELS_DATA_TYPES_NUMERIC ] { 5 }
+        Constant [ integer MODELS_DATE_AT ] { 6 }
+        Constant [ integer MODELS_DATE_IN ] { 7 }
+        Constant [ integer MODELS_IDENTITY_COLUMN ] { 8 }
+        Constant [ integer MODELS_DATA_TYPES_BIND ] { 9 }
+        Constant [ integer MODELS_AUTOMATIC_DEFAULT_INSERT ] { 10 }
+        Constant [ integer MODELS_AUTOMATIC_DEFAULT_UPDATE ] { 11 }
+        Constant [ integer MODELS_DEFAULT_VALUES ] { 12 }
+        Constant [ integer MODELS_EMPTY_STRING_VALUES ] { 13 }
+        Constant [ integer MODELS_COLUMN_MAP ] { 0 }
+        Constant [ integer MODELS_REVERSE_COLUMN_MAP ] { 1 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [6] {
+        Property [ <default> protected $_dependencyInjector ]
+        Property [ <default> protected $_strategy ]
+        Property [ <default> protected $_metaData ]
+        Property [ <default> protected $_columnMap ]
+        Property [ <default> protected $_ttl ]
+        Property [ <default> protected $_memcache ]
+      }
+
+      - Methods [33] {
+        Method [ <internal:phalcon, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $options ]
+          }
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\MetaDataInterface> public method read ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\MetaDataInterface> public method write ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:phalcon, overwrites Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method reset ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData> final protected method _initialize ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $key ]
+            Parameter #2 [ <required> $table ]
+            Parameter #3 [ <required> $schema ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Di\InjectionAwareInterface> public method setDI ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\DiInterface $dependencyInjector ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Di\InjectionAwareInterface> public method getDI ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method setStrategy ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\Model\MetaData\StrategyInterface $strategy ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getStrategy ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> final public method readMetaData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> final public method readMetaDataIndex ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> final public method writeMetaDataIndex ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $index ]
+            Parameter #2 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> final public method readColumnMap ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> final public method readColumnMapIndex ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getPrimaryKeyAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getNonPrimaryKeyAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getNotNullAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getDataTypes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getDataTypesNumeric ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getIdentityField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getBindTypes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getAutomaticCreateAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getAutomaticUpdateAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method setAutomaticCreateAttributes ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> array $attributes ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method setAutomaticUpdateAttributes ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> array $attributes ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method setEmptyStringAttributes ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> array $attributes ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getEmptyStringAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getDefaultValues ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getColumnMap ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getReverseColumnMap ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method hasAttribute ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $attribute ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method isEmpty ] {
+        }
+      }
+    }
+
     Class [ <internal:phalcon> class Phalcon\Mvc\Model\MetaData\Memory extends Phalcon\Mvc\Model\MetaData implements Phalcon\Di\InjectionAwareInterface, Phalcon\Mvc\Model\MetaDataInterface ] {
 
       - Constants [16] {
@@ -35402,7 +36042,7 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
         Property [ <default> protected $_disabled ]
       }
 
-      - Methods [58] {
+      - Methods [59] {
         Method [ <internal:phalcon> public method getRenderLevel ] {
         }
 
@@ -35454,6 +36094,9 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
           - Parameters [1] {
             Parameter #0 [ <required> $basePath ]
           }
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\ViewInterface> public method getBasePath ] {
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Mvc\ViewInterface> public method setRenderLevel ] {
@@ -35803,15 +36446,16 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
       - Static methods [0] {
       }
 
-      - Properties [5] {
+      - Properties [6] {
         Property [ <default> protected $_dependencyInjector ]
         Property [ <default> protected $_eventsManager ]
         Property [ <default> protected $_view ]
         Property [ <default> protected $_options ]
         Property [ <default> protected $_compiler ]
+        Property [ <default> protected $_macros ]
       }
 
-      - Methods [18] {
+      - Methods [19] {
         Method [ <internal:phalcon> public method setOptions ] {
 
           - Parameters [1] {
@@ -35871,6 +36515,14 @@ Extension [ <persistent> extension #195 phalcon version 2.0.4 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> array $value ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method callMacro ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> array $arguments ]
           }
         }
 
