@@ -1,18 +1,18 @@
 diff -up ./bin/composer.rpm ./bin/composer
---- ./bin/composer.rpm	2015-05-25 15:29:26.000000000 +0200
-+++ ./bin/composer	2015-05-26 15:36:46.984350206 +0200
+--- ./bin/composer.rpm	2015-07-14 14:37:15.000000000 +0200
++++ ./bin/composer	2015-07-16 08:58:33.415021590 +0200
 @@ -5,7 +5,7 @@ if (PHP_SAPI !== 'cli') {
      echo 'Warning: Composer should be invoked via the CLI version of PHP, not the '.PHP_SAPI.' SAPI'.PHP_EOL;
  }
-
+ 
 -require __DIR__.'/../src/bootstrap.php';
 +require '/usr/share/php/Composer/autoload.php';
-
+ 
  use Composer\Console\Application;
-
+ 
 diff -up ./src/Composer/Json/JsonFile.php.rpm ./src/Composer/Json/JsonFile.php
---- ./src/Composer/Json/JsonFile.php.rpm	2015-02-25 20:44:34.000000000 +0100
-+++ ./src/Composer/Json/JsonFile.php	2015-02-26 10:25:16.012610034 +0100
+--- ./src/Composer/Json/JsonFile.php.rpm	2015-07-14 14:37:15.000000000 +0200
++++ ./src/Composer/Json/JsonFile.php	2015-07-16 08:58:33.415021590 +0200
 @@ -149,7 +149,7 @@ class JsonFile
              self::validateSyntax($content, $this->path);
          }
@@ -22,38 +22,24 @@ diff -up ./src/Composer/Json/JsonFile.php.rpm ./src/Composer/Json/JsonFile.php
          $schemaData = json_decode(file_get_contents($schemaFile));
  
          if ($schema === self::LAX_SCHEMA) {
-diff -up src/Composer/Util/SpdxLicense.php.old src/Composer/Util/SpdxLicense.php
---- ./src/Composer/Util/SpdxLicense.php.old	2015-04-17 09:57:53.680999733 +0200
-+++ ./src/Composer/Util/SpdxLicense.php	2015-04-17 09:59:50.397498276 +0200
-@@ -38,7 +38,7 @@ class SpdxLicense
+diff -up ./src/Composer/Util/SpdxLicense.php.rpm ./src/Composer/Util/SpdxLicense.php
+--- ./src/Composer/Util/SpdxLicense.php.rpm	2015-07-16 08:58:33.415021590 +0200
++++ ./src/Composer/Util/SpdxLicense.php	2015-07-16 08:59:36.006332340 +0200
+@@ -167,7 +167,7 @@ class SpdxLicense
              return $this->licenses;
          }
-
--        $jsonFile = new JsonFile(__DIR__ . '/../../../res/spdx-licenses.json');
-+        $jsonFile = new JsonFile((getenv('BUILDROOT')?:'') . '/usr/share/composer/res/spdx-licenses.json');
-         $this->licenses = $jsonFile->read();
-
-         return $this->licenses;
-diff -up src/Composer/Util/SpdxLicensesUpdater.php.old src/Composer/Util/SpdxLicensesUpdater.php
---- ./src/Composer/Util/SpdxLicensesUpdater.php.old	2015-04-17 09:58:00.645029479 +0200
-+++ ./src/Composer/Util/SpdxLicensesUpdater.php	2015-04-17 10:00:36.578695534 +0200
-@@ -28,7 +28,7 @@ class SpdxLicensesUpdater
-     {
-         $json = json_encode($this->getLicenses(), true);
-         $prettyJson = JsonFormatter::format($json, true, true);
--        file_put_contents(__DIR__ . '/../../../res/spdx-licenses.json', $prettyJson);
-+        file_put_contents((getenv('BUILDROOT')?:'') . '/usr/share/composer/res/spdx-licenses.json', $prettyJson);
-     }
-
-     private function getLicenses()
-diff -up ./tests/Composer/Test/Json/JsonFileTest.php.rpm ./tests/Composer/Test/Json/JsonFileTest.php
---- ./tests/Composer/Test/Json/JsonFileTest.php.rpm	2015-02-26 10:26:10.607821640 +0100
-+++ ./tests/Composer/Test/Json/JsonFileTest.php	2015-02-26 10:27:05.430034125 +0100
-@@ -54,6 +54,7 @@ class JsonFileTest extends \PHPUnit_Fram
  
-     public function testParseErrorDetectSingleQuotes()
-     {
-+        $this->markTestSkipped('jsonc issue');
-         $json = '{
-         \'foo\': "bar"
- }';
+-        $jsonFile = file_get_contents(__DIR__ . '/../../../res/spdx-licenses.json');
++        $jsonFile = file_get_contents((getenv('BUILDROOT')?:'') . '/usr/share/composer/res/spdx-licenses.json');
+         $this->licenses = json_decode($jsonFile, true);
+ 
+         return $this->licenses;
+@@ -182,7 +182,7 @@ class SpdxLicense
+             return $this->exceptions;
+         }
+ 
+-        $jsonFile = file_get_contents(__DIR__ . '/../../../res/spdx-exceptions.json');
++        $jsonFile = file_get_contents((getenv('BUILDROOT')?:'') . '/usr/share/composer/res/spdx-exceptions.json');
+         $this->exceptions = json_decode($jsonFile, true);
+ 
+         return $this->exceptions;

@@ -11,7 +11,7 @@ diff --git a/tests/Composer/Test/Util/RemoteFilesystemTest.php b/tests/Composer/
 index 04502eb..62a70c9 100644
 --- a/tests/Composer/Test/Util/RemoteFilesystemTest.php
 +++ b/tests/Composer/Test/Util/RemoteFilesystemTest.php
-@@ -137,6 +137,9 @@ public function testCallbackGetPassesThrough404()
+@@ -136,6 +136,9 @@ public function testCallbackGetPassesThrough404()
          $this->assertNull($this->callCallbackGet($fs, STREAM_NOTIFY_FAILURE, 0, 'HTTP/1.1 404 Not Found', 404, 0, 0));
      }
  

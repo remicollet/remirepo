@@ -6,17 +6,17 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    943107cfe717a74aa791f57b87fa514c88582b0d
+%global gh_commit    92faf1c7a83a73794fb914a990be435e1df373ca
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20150626
+%global gh_date      20150714
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           composer
 Version:        1.0.0
-Release:        0.6.%{gh_date}git%{gh_short}%{?dist}
+Release:        0.7.%{gh_date}git%{gh_short}%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -31,11 +31,14 @@ Patch0:         %{name}-rpm.patch
 # https://github.com/composer/composer/pull/4169
 # skip online tests
 Patch1:         %{name}-pr4169.patch
+# https://github.com/composer/composer/pull/4262
+# fix for tests
+Patch2:         %{name}-pr4262.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
-BuildRequires:  php-composer(justinrainbow/json-schema) >= 1.4
+BuildRequires:  php-composer(justinrainbow/json-schema) >= 1.4.4
 BuildRequires:  php-composer(seld/jsonlint)             >= 1.0
 BuildRequires:  php-composer(symfony/console)           >= 2.5
 BuildRequires:  php-composer(symfony/finder)            >= 2.2
@@ -47,7 +50,7 @@ BuildRequires:  php-zip
 
 # From composer.json, requires
 #        "php": ">=5.3.2",
-#        "justinrainbow/json-schema": "~1.4",
+#        "justinrainbow/json-schema": "^1.4.4",
 #        "seld/jsonlint": "~1.0",
 #        "symfony/console": "~2.5",
 #        "symfony/finder": "~2.2",
@@ -56,7 +59,7 @@ BuildRequires:  php-zip
 #        "seld/cli-prompt": "~1.0"
 Requires:       php(language)                           >= 5.3.2
 Requires:       php-cli
-Requires:       php-composer(justinrainbow/json-schema) >= 1.4
+Requires:       php-composer(justinrainbow/json-schema) >= 1.4.4
 Requires:       php-composer(justinrainbow/json-schema) <  2
 Requires:       php-composer(seld/jsonlint)             >= 1.0
 Requires:       php-composer(seld/jsonlint)             <  2
@@ -112,6 +115,7 @@ Documentation: https://getcomposer.org/doc/
 
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 cp -p %{SOURCE1} src/Composer/autoload.php
 cp -p %{SOURCE2} tests/bootstrap.php
@@ -171,6 +175,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul 16 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.7.20150714git92faf1c
+- new snapshot
+- raise dependency on justinrainbow/json-schema 1.4.4
+
 * Mon Jun 29 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.6.20150626git943107c
 - new snapshot
 - review autoloader
