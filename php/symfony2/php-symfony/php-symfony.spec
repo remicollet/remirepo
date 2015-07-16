@@ -90,7 +90,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       2%{?dist}.1
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -144,7 +144,9 @@ BuildRequires: php-session
 BuildRequires: php-simplexml
 BuildRequires: php-sockets
 BuildRequires: php-spl
+%if 0%{?rhel} != 5
 BuildRequires: php-sqlite3
+%endif
 BuildRequires: php-tokenizer
 BuildRequires: php-xml
 %endif
@@ -1105,7 +1107,9 @@ Requires:  php-pdo
 Requires:  php-reflection
 Requires:  php-session
 Requires:  php-spl
+%if 0%{?rhel} != 5
 Requires:  php-sqlite3
+%endif
 Requires:  php-tokenizer
 
 # Composer
@@ -2497,6 +2501,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Mon Jul 13 2015 Remi Collet <remi@remirepo.net> - 2.7.2-2.1
+- drop dependency on sqlite3 on EL-5
+
 * Mon Jul 13 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.7.2-1
 - Updated to 2.7.2 (RHBZ #1242664)
 
