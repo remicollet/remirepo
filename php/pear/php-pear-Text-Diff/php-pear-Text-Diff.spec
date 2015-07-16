@@ -1,23 +1,38 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# remirepo spec file for php-pear-Text-Diff, from:
+#
+# Fedora spec file for php-pear-Text-Diff
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+%{!?__pear: %global __pear %{_bindir}/pear}
 %define pear_name Text_Diff
 
 Name:           php-pear-Text-Diff
-Version:        1.1.1
-Release:        10%{?dist}
+Version:        1.2.0
+Release:        1%{?dist}
 Summary:        Engine for performing and rendering text diffs
 
 Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://pear.php.net/package/%{pear_name}
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear >= 1:1.4.9-1.2
-Requires:       php-pear(PEAR)
+BuildRequires:  php-pear
+BuildRequires:  php-pcre
+
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+# From package.xml
+Requires:       php(language) >= 5.2.0
+Requires:       php-pear(PEAR)
+# From phpcompatinfo report for 1.2.0
+Requires:       php-pcre
+
 Provides:       php-pear(%{pear_name}) = %{version}
 
 
@@ -28,9 +43,8 @@ output formats.
 
 %prep
 %setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{pear_name}.xml
 cd %{pear_name}-%{version}
+mv ../package.xml %{pear_name}.xml
 
 
 %build
@@ -40,23 +54,32 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT docdir
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
+rm -rf %{buildroot} docdir
+%{__pear} install --nodeps --packagingroot %{buildroot} %{pear_name}.xml
 
 # Move documentation
 mkdir -p docdir
-mv $RPM_BUILD_ROOT%{pear_docdir}/* docdir
+mv %{buildroot}%{pear_docdir}/* docdir
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{pear_name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{pear_name}.xml %{buildroot}%{pear_xmldir}
+
+
+%check
+cd %{pear_name}-%{version}
+%{__pear} \
+   run-tests \
+   -i "-d include_path=%{buildroot}%{pear_phpdir}:%{pear_phpdir}" \
+   tests | tee ../tests.log
+grep "FAILED TESTS" ../tests.log && exit 1
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
@@ -79,6 +102,10 @@ fi
 
 
 %changelog
+* Thu Jul 16 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- Update to 1.2.0
+- run upstream test suite during build
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.1-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
