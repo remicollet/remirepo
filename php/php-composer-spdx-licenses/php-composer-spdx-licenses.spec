@@ -6,16 +6,16 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    572abf72e0cc435c5ce325971c3cbf3724f4c83d
+%global gh_commit    2f17228c1b98283b779698cefa917f7f4fd0b0d4
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150717
+#global gh_date      20150717
 %global gh_owner     composer
 %global gh_project   spdx-licenses
 %global php_home     %{_datadir}/php
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-composer-spdx-licenses
-Version:        1.0.0
+Version:        1.1.0
 Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
 Summary:        SPDX licenses list and validation library
 
@@ -122,6 +122,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 17 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- version 1.1.0
+
 * Fri Jul 17 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1.20150717git572abf7
 - new snapshot (issue #6 fixed, uneeded dep on justinrainbow/json-schema)
 
