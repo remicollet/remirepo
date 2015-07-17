@@ -1,4 +1,5 @@
 {
+    "composer\/spdx-licenses": "php-composer-spdx-licenses",
     "fabpot\/goutte": "php-goutte",
     "zendframework\/zendframework1": "php-ZendFramework",
     "sabre\/dav": "php-sabre-dav",
