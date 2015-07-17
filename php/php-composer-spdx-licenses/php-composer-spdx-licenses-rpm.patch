@@ -1,0 +1,12 @@
+diff -up src/SpdxLicenses.php.rpm src/SpdxLicenses.php
+--- src/SpdxLicenses.php.rpm	2015-07-17 07:41:29.007308656 +0200
++++ src/SpdxLicenses.php	2015-07-17 07:43:40.425973108 +0200
+@@ -178,7 +178,7 @@ class SpdxLicenses
+      */
+     public static function getResourcesDir()
+     {
+-        return dirname(__DIR__) . '/res';
++        return (getenv('BUILDROOT_SPDX')?:'') . '/usr/share/php-composer-spdx-licenses';
+     }
+ 
+     private function loadLicenses()
