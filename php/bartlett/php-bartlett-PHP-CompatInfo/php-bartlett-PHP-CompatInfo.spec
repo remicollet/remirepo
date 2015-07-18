@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
-%global gh_commit    92ee6348c3059c614b58d9927a21a778b5d7b97e
+%global gh_commit    91780ebe5aee4e99b938c8668cd207e7f194489a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150303
 %global gh_owner     llaville
@@ -17,7 +17,7 @@
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        4.4.0
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -137,11 +137,11 @@ install -D -p -m 755 %{SOURCE1}                  %{buildroot}%{_datadir}/%{name}
 %if %{with_tests}
 %check
 # drop some test because of RC version
-rm tests/Reference/Extension/AmqpExtensionTest.php
-rm tests/Reference/Extension/SphinxExtensionTest.php
+#rm tests/Reference/Extension/AmqpExtensionTest.php
+#rm tests/Reference/Extension/SphinxExtensionTest.php
 %if 0%{?fedora} < 21 && 0%{?rhel} < 7
-rm tests/Reference/Extension/CurlExtensionTest.php
-rm tests/Reference/Extension/LibxmlExtensionTest.php
+#rm tests/Reference/Extension/CurlExtensionTest.php
+#rm tests/Reference/Extension/LibxmlExtensionTest.php
 %endif
 %if "%{php_version}" < "5.5"
 # https://github.com/llaville/php-compat-info/issues/206
@@ -173,6 +173,9 @@ fi
 
 
 %changelog
+* Sat Jul 18 2015 Remi Collet <remi@fedoraproject.org> - 4.4.0-2
+- test build of master
+
 * Mon Jul 13 2015 Remi Collet <remi@fedoraproject.org> - 4.4.0-1
 - update to 4.4.0
 
