@@ -1,3 +1,4 @@
+# remirepo spec file for php-guzzlehttp-promises, from
 #
 # Fedora spec file for php-guzzlehttp-promises
 #
@@ -35,6 +36,7 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -104,6 +106,8 @@ AUTOLOAD
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}/GuzzleHttp/Promise
 cp -rp src/* %{buildroot}%{phpdir}/GuzzleHttp/Promise/
 
@@ -119,7 +123,12 @@ sed "s#require.*autoload.*#require '%{buildroot}%{phpdir}/GuzzleHttp/Promise/aut
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -129,6 +138,9 @@ sed "s#require.*autoload.*#require '%{buildroot}%{phpdir}/GuzzleHttp/Promise/aut
 
 
 %changelog
+* Mon Jul 20 2015 Remi Collet <remi@remirepo.net> - 1.0.1-3
+- add EL-5 stuff, backport for #remirepo
+
 * Sun Jul 19 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.1-3
 - Use full paths in autoloader
 
