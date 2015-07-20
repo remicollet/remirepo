@@ -16,7 +16,7 @@
 
 Name:           php-composer-spdx-licenses
 Version:        1.1.0
-Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
+Release:        2%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
 Summary:        SPDX licenses list and validation library
 
 Group:          Development/Libraries
@@ -86,7 +86,7 @@ pushd src
 for fic in *
 do
   if ! grep $fic ../.gitattributes; then
-    install -Dp $fic %{buildroot}%{php_home}/Composer/Spdx/$fic
+    install -Dpm 0644 $fic %{buildroot}%{php_home}/Composer/Spdx/$fic
   fi
 done
 popd
@@ -122,6 +122,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 20 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-2
+- fix permissions
+
 * Fri Jul 17 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - version 1.1.0
 
