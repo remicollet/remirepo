@@ -1,3 +1,4 @@
+# remirepo spec file for php-zendframework-zend-diactoros, from
 #
 # Fedora spec file for php-zendframework-zend-diactoros
 #
@@ -42,6 +43,7 @@ URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
 Source1:       %{name}-get-source.sh
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -117,6 +119,8 @@ AUTOLOAD
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}/Zend/Diactoros
 cp -rp src/* %{buildroot}%{phpdir}/Zend/Diactoros/
 
@@ -142,7 +146,12 @@ BOOTSTRAP
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE.md
 %doc CHANGELOG.md
@@ -154,6 +163,9 @@ BOOTSTRAP
 
 
 %changelog
+* Mon Jul 20 2015 Remi Collet <remi@remirepo.net> - 1.1.2-1
+- add EL-5 stuff, backport for #remirepo
+
 * Wed Jul 15 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.2-1
 - Update to 1.1.2
 - Fix license
