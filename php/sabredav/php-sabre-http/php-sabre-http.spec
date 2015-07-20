@@ -1,4 +1,4 @@
-# Spec file for php-sabre-http
+# remirepo/fedora spec file for php-sabre-http
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c4c24f547a5509c6c661b11ecf4ff524d2bf6a44
+%global gh_commit    6b06c03376219b3d608e1f878514ec105ed1b577
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-http
@@ -15,38 +15,57 @@
 
 Name:           php-%{gh_project}
 Summary:        Library for dealing with http requests and responses
-Version:        2.0.4
+Version:        3.0.5
 Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}.tar.gz
 License:        BSD
 Group:          Development/Libraries
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+Source1:        %{name}-autoload.php
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 BuildRequires:  php(language) > 5.4
-BuildRequires:  php-phpunit-PHPUnit
+BuildRequires:  php-mbstring
+BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php-composer(sabre/event) >= 1.0.0
 BuildRequires:  php-composer(sabre/event) <  3
+BuildRequires:  php-ctype
+BuildRequires:  php-curl
+BuildRequires:  php-date
+BuildRequires:  php-hash
+BuildRequires:  php-pcre
+BuildRequires:  php-spl
+BuildRequires:  php-xml
+# Autoloader
+BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(sabre/event) >= 2.0.2
 %endif
 
-# From composer.json
+# From composer.json, "require" : {
 #        "php"          : ">=5.4",
 #        "ext-mbstring" : "*",
 #        "sabre/event"  : ">=1.0.0,<3.0.0"
 Requires:       php(language) > 5.4
-Requires:       php-curl
 Requires:       php-mbstring
 Requires:       php-composer(sabre/event) >= 1.0.0
 Requires:       php-composer(sabre/event) <  3
-# From phpcompatinfo report for version 2.0.4
+# From composer.json, "suggest" : {
+#        "ext-curl" : " to make http requests with the Client class"
+Requires:       php-curl
+# From phpcompatinfo report for version 3.0.5
 Requires:       php-ctype
 Requires:       php-date
+Requires:       php-hash
 Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-xml
+# Autoloader
+Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(sabre/event) >= 2.0.2
+
 # Was split from php-sabre-dav in version 1.9
 Conflicts:      php-sabre-dav < 1.9
 
@@ -80,14 +99,7 @@ The objects are extendable and easily mockable.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-: Create trivial PSR0 autoloader
-cat <<EOF | tee psr0.php
-<?php
-spl_autoload_register(function (\$class) {
-    \$file = str_replace('\\\\', '/', \$class).'.php';
-    @include \$file;
-});
-EOF
+cp %{SOURCE1} lib/autoload.php
 
 
 %build
@@ -96,8 +108,8 @@ EOF
 
 %install
 # Install as a PSR-0 library
-mkdir -p %{buildroot}%{_datadir}/php
-cp -pr lib/Sabre %{buildroot}%{_datadir}/php/Sabre
+mkdir -p %{buildroot}%{_datadir}/php/Sabre
+cp -pr lib %{buildroot}%{_datadir}/php/Sabre/HTTP
 
 
 %check
@@ -105,9 +117,8 @@ cp -pr lib/Sabre %{buildroot}%{_datadir}/php/Sabre
 : Run upstream test suite against installed library
 cd tests
 phpunit \
-  --bootstrap=../psr0.php \
-  --include-path=%{buildroot}%{_datadir}/php \
-  -d date.timezone=UTC
+  --bootstrap=%{buildroot}%{_datadir}/php/Sabre/HTTP/autoload.php \
+  --verbose
 %else
 : Skip upstream test suite
 %endif
@@ -115,11 +126,18 @@ phpunit \
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog composer.json LICENSE README.md
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *md
+%doc composer.json
 %{_datadir}/php/Sabre/HTTP
 
 
 %changelog
+* Mon Jul 20 2015 Remi Collet <remi@fedoraproject.org> - 3.0.5-1
+- update to 3.0.5
+- add autoloader
+
 * Wed Jul 16 2014 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - update to 2.0.4
 - composer dependencies
