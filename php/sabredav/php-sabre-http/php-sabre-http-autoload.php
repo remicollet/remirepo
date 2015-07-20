@@ -1,6 +1,6 @@
 <?php
 /**
- * Autoloader for justinrainbow/json-schema and its dependencies
+ * Autoloader for sabre/http and its dependencies
  */
 
 $vendorDir = '/usr/share/php';

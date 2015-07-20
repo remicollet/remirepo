@@ -53,6 +53,7 @@ It's design is inspired by Node.js's EventEmitter. sabre/event requires PHP 5.4.
 
 cp %{SOURCE1} lib/autoload.php
 
+
 %build
 # nothing to build
 

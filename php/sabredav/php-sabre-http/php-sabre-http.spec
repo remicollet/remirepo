@@ -107,6 +107,8 @@ cp %{SOURCE1} lib/autoload.php
 
 
 %install
+rm -rf %{buildroot}
+
 # Install as a PSR-0 library
 mkdir -p %{buildroot}%{_datadir}/php/Sabre
 cp -pr lib %{buildroot}%{_datadir}/php/Sabre/HTTP
@@ -122,6 +124,10 @@ phpunit \
 %else
 : Skip upstream test suite
 %endif
+
+
+%clean
+rm -rf %{buildroot}
 
 
 %files
