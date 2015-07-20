@@ -14,8 +14,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   2.8.12
-%global github_commit    69cf65438b99051ce4d599f1611dea5d50551b3f
+%global github_version   2.8.13
+%global github_commit    8512d9f2accdd88ee05d9848db4f05279124de64
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -42,7 +42,7 @@
 
 Name:      php-aws-sdk
 Version:   %{github_version}
-Release:   1%{?dist}
+Release:   2%{?dist}
 Summary:   Amazon Web Services framework for PHP
 
 Group:     Development/Libraries
@@ -54,12 +54,12 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
 # composer.json
-Requires:  php(language)     >= %{php_min_ver}
-Requires:  php-guzzle-Guzzle >= %{guzzle_min_ver}
-Requires:  php-guzzle-Guzzle <  %{guzzle_max_ver}
+Requires:  php(language)               >= %{php_min_ver}
+Requires:  php-composer(guzzle/guzzle) >= %{guzzle_min_ver}
+Requires:  php-composer(guzzle/guzzle) <  %{guzzle_max_ver}
 # composer.json: optional
 Requires:  php-openssl
-# phpcompatinfo (computed from version 2.8.2)
+# phpcompatinfo (computed from version 2.8.13)
 Requires:  php-date
 Requires:  php-hash
 Requires:  php-json
@@ -68,14 +68,16 @@ Requires:  php-reflection
 Requires:  php-session
 Requires:  php-simplexml
 Requires:  php-spl
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
 
 # Optional package version checks
 Conflicts: php-composer(doctrine/cache)  <  %{cache_min_ver}
 Conflicts: php-composer(doctrine/cache)  >= %{cache_max_ver}
 Conflicts: php-composer(monolog/monolog) <  %{monolog_min_ver}
 Conflicts: php-composer(monolog/monolog) >= %{monolog_max_ver}
-Conflicts: php-symfony-yaml              <  %{yaml_min_ver}
-Conflicts: php-symfony-yaml              >= %{yaml_max_ver}
+Conflicts: php-composer(symfony/yaml)    <  %{yaml_min_ver}
+Conflicts: php-composer(symfony/yaml)    >= %{yaml_max_ver}
 
 # Composer
 Provides:  php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -106,9 +108,45 @@ Optional:
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-# W: spurious-executable-perm /usr/share/doc/php-aws-sdk/composer.json
-# https://github.com/aws/aws-sdk-php/pull/555
-chmod a-x composer.json
+: Create autoloader
+cat <<'AUTOLOAD' | tee src/Aws/autoload.php
+<?php
+/**
+ * Autoloader for %{name} and its' dependencies
+ *
+ * Created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+// Dependency autoloaders
+foreach (array(
+    '%{phpdir}/Doctrine/Common/Cache/autoload.php',
+    '%{phpdir}/Monolog/autoload.php',
+    '%{phpdir}/Symfony/Component/Yaml/autoload.php',
+) as $dependencyAutoloader) {
+    if (file_exists($dependencyAutoloader)) {
+        require_once $dependencyAutoloader;
+    }
+}
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('Aws\\', dirname(__DIR__));
+
+// Not all dependency autoloaders exist or are in every dist yet so fallback
+// to using include path for dependencies for now
+$fedoraClassLoader->setUseIncludePath(true);
+
+return $fedoraClassLoader;
+AUTOLOAD
 
 
 %build
@@ -116,7 +154,9 @@ chmod a-x composer.json
 
 
 %install
-mkdir -pm 0755 %{buildroot}%{phpdir}/AWSSDKforPHP
+rm -rf %{buildroot}
+
+mkdir -p %{buildroot}%{phpdir}/AWSSDKforPHP
 cp -pr src/* %{buildroot}%{phpdir}/
 # Compat directory structure with old PEAR pkg
 ln -s ../Aws %{buildroot}%{phpdir}/AWSSDKforPHP/Aws
@@ -135,6 +175,10 @@ if [ -x %{_bindir}/pear ]; then
 fi
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
@@ -145,6 +189,14 @@ fi
 
 
 %changelog
+* Fri Jul 10 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.8.13-2
+- Use full require paths in autoloader
+
+* Fri Jul 10 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.8.13-1
+- Updated to 2.8.13 (RHBZ #1213030)
+- Updated dependencies to use php-composer(*)
+- Added autoloader
+
 * Tue Jun 30 2015 Remi Collet <remi@fedoraproject.org> - 2.8.12-1
 - Update to 2.8.12
 
