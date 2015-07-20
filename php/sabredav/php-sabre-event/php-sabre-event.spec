@@ -1,4 +1,4 @@
-# Spec file for php-sabre-event
+# remirepo/fedora spec file for php-sabre-event
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5ee3adf5441c2fe53b8ceacff6db81e621ee884c
+%global gh_commit    337b6f5e10ea6e0b21e22c7e5788dd3883ae73ff
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-event
@@ -14,24 +14,31 @@
 
 Name:           php-%{gh_project}
 Summary:        Lightweight library for event-based programming
-Version:        1.0.1
+Version:        2.0.2
 Release:        1%{?dist}
 
 URL:            http://sabre.io/event
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 License:        BSD
 Group:          Development/Libraries
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+Source1:        %{name}-autoload.php
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 BuildRequires:  php(language) >= 5.4.1
-BuildRequires:  php-phpunit-PHPUnit
+BuildRequires:  php-composer(phpunit/phpunit)
+# Autoloader
+BuildRequires:  php-composer(symfony/class-loader)
 %endif
 
-# From composer.json
+# From composer.json, "require": {
+#        "php": ">=5.4.1"
 Requires:       php(language) >= 5.4.1
-# From phpcompatinfo report: nothing else
+# From phpcompatinfo report for version 2.0.2
+Requires:       php-spl
+# Autoloader
+Requires:       php-composer(symfony/class-loader)
 
 Provides:       php-composer(sabre/event) = %{version}
 
@@ -44,46 +51,49 @@ It's design is inspired by Node.js's EventEmitter. sabre/event requires PHP 5.4.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-: Create trivial PSR0 autoloader
-cat <<EOF | tee psr0.php
-<?php
-spl_autoload_register(function (\$class) {
-    \$file = str_replace('\\\\', '/', \$class).'.php';
-    @include \$file;
-});
-EOF
-
+cp %{SOURCE1} lib/autoload.php
 
 %build
 # nothing to build
 
 
 %install
+rm -rf %{buildroot}
+
 # Install as a PSR-0 library
-mkdir -p %{buildroot}%{_datadir}/php
-cp -pr lib/Sabre %{buildroot}%{_datadir}/php/Sabre
+mkdir -p %{buildroot}%{_datadir}/php/Sabre
+cp -pr lib %{buildroot}%{_datadir}/php/Sabre/Event
 
 
 %check
 %if %{with_tests}
 : Run upstream test suite against installed library
-cd tests
 phpunit \
-  --bootstrap=../psr0.php \
-  --include-path=%{buildroot}%{_datadir}/php \
-  -d date.timezone=UTC
+  --bootstrap=%{buildroot}%{_datadir}/php/Sabre/Event/autoload.php \
+  --verbose
 %else
 : Skip upstream test suite
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog composer.json LICENSE README.md
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *md
+%doc composer.json
 %{_datadir}/php/Sabre
 
 
 %changelog
+* Mon Jul 20 2015 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- update to 2.0.2
+- add autoloader
+
 * Fri Jun 13 2014 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - update to 1.0.1
 - add provides php-composer(sabre/event)
