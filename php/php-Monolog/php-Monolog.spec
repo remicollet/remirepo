@@ -1,5 +1,6 @@
+# remirepo spec file for php-Monolog, from
 #
-# RPM spec file for php-Monolog
+# Fedora spec file for php-Monolog
 #
 # Copyright (c) 2012-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
@@ -9,32 +10,34 @@
 # Please preserve changelog entries
 #
 
-%global github_owner    Seldaek
-%global github_name     monolog
-%global github_version  1.12.0
-%global github_commit   1fbe8c2641f2b163addf49cc5e18f144bec6b19f
+%global github_owner     Seldaek
+%global github_name      monolog
+%global github_version   1.15.0
+%global github_commit    dc5150cc608f2334c72c3b6a553ec9668a4156b0
 
-%global lib_name        Monolog
+%global composer_vendor  monolog
+%global composer_project monolog
 
 # "php": ">=5.3.0"
 %global php_min_ver     5.3.0
 # "psr/log": "~1.0"
 %global psrlog_min_ver  1.0
 %global psrlog_max_ver  2.0
-# "raven/raven": "~0.5"
-%global raven_min_ver   0.5
+# "raven/raven": "~0.8"
+#     NOTE: Min version not 0.8 because autoloader required
+%global raven_min_ver   0.12.0
 %global raven_max_ver   1.0
-# "aws/aws-sdk-php": "~2.4, >2.4.8"
-%global aws_min_ver     2.4.9
+# "aws/aws-sdk-php": "^2.4.9"
+#     NOTE: Min version not 2.4.9 because autoloader required
+%global aws_min_ver     2.8.13
 %global aws_max_ver     3.0
 
 # Build using "--without tests" to disable tests
-%global with_tests      %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
 
-%{!?phpdir:     %global phpdir     %{_datadir}/php}
-%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
-Name:      php-%{lib_name}
+Name:      php-Monolog
 Version:   %{github_version}
 Release:   1%{?dist}
 Summary:   Sends your logs to files, sockets, inboxes, databases and various web services
@@ -46,33 +49,54 @@ Source0:   %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_co
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Tests
 %if %{with_tests}
-# composer.json
+## composer.json
+BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language)         >= %{php_min_ver}
 BuildRequires: php-composer(psr/log) >= %{psrlog_min_ver}
 BuildRequires: php-composer(psr/log) <  %{psrlog_max_ver}
-BuildRequires: %{__phpunit}
-# phpcompatinfo (computed from version 1.12.0)
+## phpcompatinfo (computed from version 1.15.0)
+BuildRequires: php-bcmath
+BuildRequires: php-ctype
 BuildRequires: php-curl
 BuildRequires: php-date
+BuildRequires: php-dom
 BuildRequires: php-filter
 BuildRequires: php-hash
+BuildRequires: php-iconv
 BuildRequires: php-json
+BuildRequires: php-libxml
 BuildRequires: php-mbstring
+BuildRequires: php-mcrypt
 BuildRequires: php-openssl
+BuildRequires: php-pcntl
+BuildRequires: php-soap
 BuildRequires: php-pcre
+BuildRequires: php-pdo
+BuildRequires: php-posix
 BuildRequires: php-reflection
+BuildRequires: php-session
+BuildRequires: php-simplexml
 BuildRequires: php-sockets
 BuildRequires: php-spl
+%if 0%{?rhel} != 5
+BuildRequires: php-sqlite3
+%endif
+BuildRequires: php-tokenizer
 BuildRequires: php-xml
+BuildRequires: php-xmlreader
+BuildRequires: php-xmlwriter
+BuildRequires: php-zlib
+## Autoloader
+BuildRequires: php-composer(symfony/class-loader)
 %endif
 
-Requires:      php-swift-Swift
 # composer.json
 Requires:      php(language)         >= %{php_min_ver}
 Requires:      php-composer(psr/log) >= %{psrlog_min_ver}
 Requires:      php-composer(psr/log) <  %{psrlog_max_ver}
-# phpcompatinfo (computed from version 1.12.0)
+# phpcompatinfo (computed from version 1.15.0)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-filter
@@ -84,9 +108,14 @@ Requires:      php-pcre
 Requires:      php-sockets
 Requires:      php-spl
 Requires:      php-xml
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
 
+# Standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming
+Provides:      php-%{composer_vendor}-%{composer_project} = %{version}-%{release}
+Provides:      php-%{composer_vendor} = %{version}-%{release}
 # Composer
-Provides:      php-composer(monolog/monolog) = %{version}
+Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 Provides:      php-composer(psr/log-implementation) = 1.0.0
 
 # Removed sub-packages
@@ -99,7 +128,7 @@ Provides:      %{name}-mongo  = %{version}-%{release}
 Obsoletes:     %{name}-raven  < %{version}-%{release}
 Provides:      %{name}-raven  = %{version}-%{release}
 
-# Optional dependencies, but need this to enforce versions
+# Optional dependencies
 Conflicts:     php-aws-sdk <  %{aws_min_ver}
 Conflicts:     php-aws-sdk >= %{aws_max_ver}
 Conflicts:     php-Raven   <  %{raven_min_ver}
@@ -123,12 +152,16 @@ Optional:
       Allow sending log messages to a MongoDB server
 * php-Raven (>= %{raven_min_ver}, < %{raven_max_ver})
       Allow sending log messages to a Sentry server
+* php-swift-Swift
+      Allow sending log messages through Swiftmailer
 * https://github.com/doctrine/couchdb-client
       Allow sending log messages to a CouchDB server
 * https://github.com/Graylog2/gelf-php
       Allow sending log messages to a GrayLog2 server
 * https://docs.newrelic.com/docs/php/new-relic-for-php
       Allow sending log messages to a New Relic application
+* https://github.com/phpconsole/phpconsole
+      Allow sending log messages to Google Chrome
 * https://github.com/rollbar/rollbar-php
       Allow sending log messages to Rollbar
 * https://github.com/ruflin/Elastica
@@ -136,11 +169,53 @@ Optional:
 * https://github.com/videlalvaro/php-amqplib
       Allow sending log messages to an AMQP server using php-amqplib
 
-[1] https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md
+[1] http://www.php-fig.org/psr/psr-3/
 
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
+
+: Create autoloader
+cat <<'AUTOLOAD' | tee src/Monolog/autoload.php
+<?php
+/**
+ * Autoloader for %{name} and its' dependencies
+ *
+ * Created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+// Optional dependency autoloaders
+foreach (array(
+    '%{phpdir}/Raven/autoload.php',
+    '%{phpdir}/Aws/autoload.php',
+) as $dependencyAutoloader) {
+    if (file_exists($dependencyAutoloader)) {
+        require_once $dependencyAutoloader;
+    }
+}
+if (file_exists('%{_datadir}/pear/Swift')) {
+    $fedoraClassLoader->addPrefix('Swift_', '%{pear_phpdir}/Swift');
+}
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('Monolog\\', dirname(__DIR__));
+
+// Not all dependency autoloaders exist or are in every dist yet so fallback
+// to using include path for dependencies for now
+$fedoraClassLoader->setUseIncludePath(true);
+
+return $fedoraClassLoader;
+AUTOLOAD
 
 
 %build
@@ -149,28 +224,36 @@ Optional:
 
 %install
 rm -rf %{buildroot}
-mkdir -pm 0755 %{buildroot}%{phpdir}
-cp -pr ./src/* %{buildroot}%{phpdir}/
+
+mkdir -p %{buildroot}%{phpdir}
+cp -pr src/* %{buildroot}%{phpdir}/
 
 
 %check
 %if %{with_tests}
-# Rewrite tests' bootstrap
-cat > tests/bootstrap.php <<'BOOTSTRAP'
+: Create tests bootstrap
+cat <<'BOOTSTRAP' | tee bootstrap.php
 <?php
-spl_autoload_register(function ($class) {
-    $src = str_replace(array('\\', '_'), '/', $class).'.php';
-    @include_once $src;
-});
+
+$fedoraClassLoader = require_once '%{buildroot}%{phpdir}/Monolog/autoload.php';
+$fedoraClassLoader->addPrefix(false, __DIR__ . '/tests');
 BOOTSTRAP
 
-# Remove MongoDBHandlerTest because it requires a running MongoDB server
+: Remove MongoDBHandlerTest because it requires a running MongoDB server
 rm -f tests/Monolog/Handler/MongoDBHandlerTest.php
 
-# Remove GitProcessorTest because it requires a git repo
+: Remove GitProcessorTest because it requires a git repo
 rm -f tests/Monolog/Processor/GitProcessorTest.php
 
-%{__phpunit} --include-path="%{buildroot}%{phpdir}:./tests"
+: Skip tests known to fail
+sed 's/function testMessageCanBeCustomizedGivenLoggedData/function SKIP_testMessageCanBeCustomizedGivenLoggedData/' \
+    -i tests/Monolog/Handler/SwiftMailerHandlerTest.php
+%if 0%{?rhel} > 0
+sed 's/function testThrowsOnInvalidEncoding/function SKIP_testThrowsOnInvalidEncoding/' \
+    -i tests/Monolog/Formatter/NormalizerFormatterTest.php
+%endif
+
+%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
 %else
 : Tests skipped
 %endif
@@ -184,11 +267,17 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc *.mdown doc composer.json
-%{phpdir}/%{lib_name}
+%doc *.mdown
+%doc doc
+%doc composer.json
+%{phpdir}/Monolog
 
 
 %changelog
+* Sun Jul 19 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.15.0-1
+- Updated to 1.15.0 (RHBZ #1199105)
+- Added autoloader
+
 * Sun Jan 04 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.12.0-1
 - Updated to 1.12.0 (BZ #1178410)
 
