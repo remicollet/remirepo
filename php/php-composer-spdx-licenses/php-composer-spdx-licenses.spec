@@ -22,7 +22,7 @@ Summary:        SPDX licenses list and validation library
 Group:          Development/Libraries
 License:        MIT
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-# git snashop to get upstream test suite
+# git snapshot to get upstream test suite
 Source0:        %{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
 Source2:        %{name}-autoload.php
