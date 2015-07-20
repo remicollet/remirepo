@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    96fbdc07635989c35c5a1912379f4c4b2ab15fd5
+%global gh_commit    95d662954e06000cdf63ec9c9f0a6c598d9c5eb9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     myclabs
 %global gh_project   DeepCopy
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-myclabs-deep-copy
-Version:        1.3.0
+Version:        1.3.1
 Release:        1%{?dist}
 Summary:        Create deep copies (clones) of your objects
 
@@ -58,9 +58,6 @@ It is designed to handle cycles in the association graph.
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
-
-# https://github.com/myclabs/DeepCopy/pull/14
-find . -type f -exec chmod -x {} \;
 
 cp %{SOURCE2} src/%{gh_project}/autoload.php
 
@@ -107,6 +104,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 20 2015 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
+- update to 1.3.1 (no change, pr #14 merged)
+
 * Sat Jul  4 2015 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - initial package, version 1.3.0
 - open https://github.com/myclabs/DeepCopy/pull/14 - fix perms
