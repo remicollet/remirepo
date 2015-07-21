@@ -29,7 +29,7 @@ Summary: Web based MySQL browser written in php
 Group: Applications/Internet
 # MIT (js/jquery/, js/canvg/, js/codemirror/), GPLv2+ (the rest)
 License:	GPLv2+ and MIT
-URL: http://www.phpmyadmin.net/
+URL: https://www.phpmyadmin.net/
 Source0: https://files.phpmyadmin.net/%{name}/%{version}/%{name}-%{version}-all-languages.tar.xz
 Source2: phpMyAdmin.htaccess
 Source3: phpMyAdmin.nginx
