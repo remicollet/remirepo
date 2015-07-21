@@ -22,24 +22,3 @@ diff -up ./src/Composer/Json/JsonFile.php.rpm ./src/Composer/Json/JsonFile.php
          $schemaData = json_decode(file_get_contents($schemaFile));
  
          if ($schema === self::LAX_SCHEMA) {
-diff -up ./src/Composer/Util/SpdxLicense.php.rpm ./src/Composer/Util/SpdxLicense.php
---- ./src/Composer/Util/SpdxLicense.php.rpm	2015-07-16 08:58:33.415021590 +0200
-+++ ./src/Composer/Util/SpdxLicense.php	2015-07-16 08:59:36.006332340 +0200
-@@ -167,7 +167,7 @@ class SpdxLicense
-             return $this->licenses;
-         }
- 
--        $jsonFile = file_get_contents(__DIR__ . '/../../../res/spdx-licenses.json');
-+        $jsonFile = file_get_contents((getenv('BUILDROOT')?:'') . '/usr/share/composer/res/spdx-licenses.json');
-         $this->licenses = json_decode($jsonFile, true);
- 
-         return $this->licenses;
-@@ -182,7 +182,7 @@ class SpdxLicense
-             return $this->exceptions;
-         }
- 
--        $jsonFile = file_get_contents(__DIR__ . '/../../../res/spdx-exceptions.json');
-+        $jsonFile = file_get_contents((getenv('BUILDROOT')?:'') . '/usr/share/composer/res/spdx-exceptions.json');
-         $this->exceptions = json_decode($jsonFile, true);
- 
-         return $this->exceptions;
