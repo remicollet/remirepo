@@ -15,16 +15,16 @@
 %global peardir %{_datadir}/pear
 %global metadir %{_localstatedir}/lib/pear
 
-%global getoptver 1.4.0
+%global getoptver 1.4.1
 %global arctarver 1.4.0
 # https://pear.php.net/bugs/bug.php?id=19367
 # Structures_Graph 1.0.4 - incorrect FSF address
-%global structver 1.1.0
+%global structver 1.1.1
 %global xmlutil   1.3.0
 
 # Tests are only run with rpmbuild --with tests
 # Can't be run in mock / koji because PEAR is the first package
-%global with_tests       %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests 0%{?_with_tests:1}
 
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_root_sysconfdir}/rpm; echo $d)
 
@@ -33,7 +33,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.9.5
-Release: 11%{?dist}
+Release: 12%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -270,20 +270,28 @@ grep -rl $RPM_BUILD_ROOT $RPM_BUILD_ROOT && exit 1
 
 
 %if %{with_tests}
+cp /etc/php.ini .
+echo "include_path=.:$RPM_BUILD_ROOT%{peardir}:/usr/share/php" >>php.ini
+export PHPRC=$PWD/php.ini
 LOG=$PWD/rpmlog
 ret=0
 
 cd $RPM_BUILD_ROOT%{_datadir}/tests/pear/Structures_Graph/tests
 phpunit \
-   -d date.timezone=UTC \
-   --include-path=$RPM_BUILD_ROOT%{pear_phpdir} \
    AllTests || ret=1
 
 cd $RPM_BUILD_ROOT%{_datadir}/tests/pear/XML_Util/tests
-php -d include_path=.:$RPM_BUILD_ROOT%{pear_phpdir} \
+%{_bindir}/php \
    $RPM_BUILD_ROOT/usr/share/pear/pearcmd.php \
    run-tests \
    | tee $LOG
+
+cd $RPM_BUILD_ROOT%{_datadir}/tests/pear/Console_Getopt/tests
+%{_bindir}/php \
+   $RPM_BUILD_ROOT/usr/share/pear/pearcmd.php \
+   run-tests \
+   | tee -a $LOG
+
 grep "FAILED TESTS" $LOG && ret=1
 
 exit $ret
@@ -390,6 +398,10 @@ fi
 
 
 %changelog
+* Tue Jul 21 2015 Remi Collet <remi@fedoraproject.org> 1:1.9.5-12
+- update Console_Getopt to 1.4.1
+- update Structures_Graph to 1.1.1
+
 * Mon Jul 20 2015 Remi Collet <remi@fedoraproject.org> 1:1.9.5-11
 - update Archive_Tar to 1.4.0
 
