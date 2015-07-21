@@ -90,13 +90,19 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?dist}.1
+Release:       3%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
 License:       MIT
 URL:           http://symfony.com
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_short}.tar.gz
+
+# [HttpFoundation] [PSR-7] Allow to use resources as content body and to return
+#     resources from string content
+# https://github.com/symfony/symfony/pull/15249
+# https://github.com/symfony/psr-http-message-bridge/issues/8
+Patch0:        %{name}-pr15249.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -1576,7 +1582,6 @@ Requires: php-gd
 Requires: php-iconv
 Requires: php-json
 Requires: php-mbstring
-Requires: php-mysql
 Requires: php-pcre
 Requires: php-posix
 Requires: php-reflection
@@ -1601,6 +1606,9 @@ output formats and methods.
 
 Optional:
 * AMQP (php-pecl-amqp)
+* MySQL (php-mysql)
+      Required for
+      Symfony\Component\VarDumper\Caster\ResourceCaster::castMysqlLink()
 
 # ------------------------------------------------------------------------------
 
@@ -1635,6 +1643,9 @@ The YAML Component loads and dumps YAML files.
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
+
+%patch0 -p1
+rm -f src/Symfony/Component/HttpFoundation/Request.php.orig
 
 : Remove unnecessary files
 find src -name '.git*' -delete
@@ -2501,6 +2512,10 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Mon Jul 21 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.7.2-3
+- Added patch for symfony/psr-http-message-bridge
+- Removed php-mysql dependency from var-dumper
+
 * Mon Jul 13 2015 Remi Collet <remi@remirepo.net> - 2.7.2-2.1
 - drop dependency on sqlite3 on EL-5
 
