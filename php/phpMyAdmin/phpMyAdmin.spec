@@ -22,7 +22,7 @@
 %endif
 
 Name: phpMyAdmin
-Version: 4.4.11
+Version: 4.4.12
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -30,7 +30,7 @@ Group: Applications/Internet
 # MIT (js/jquery/, js/canvg/, js/codemirror/), GPLv2+ (the rest)
 License:	GPLv2+ and MIT
 URL: http://www.phpmyadmin.net/
-Source0: http://downloads.sourceforge.net/sourceforge/phpmyadmin/%{name}-%{version}%{?prever:-%prever}-all-languages.tar.bz2
+Source0: https://files.phpmyadmin.net/%{name}/%{version}/%{name}-%{version}-all-languages.tar.xz
 Source2: phpMyAdmin.htaccess
 Source3: phpMyAdmin.nginx
 
@@ -45,6 +45,7 @@ Requires:  nginx-filesystem
 %if %{with_httpd}
 Requires:  httpd-filesystem
 Requires:  php(httpd)
+Suggests:  httpd
 %endif
 Requires:  php(language) >= 5.3.0
 Requires:  php-bcmath
@@ -213,6 +214,10 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Tue Jul 21 2015 Remi Collet <remi@remirepo.net> 4.4.12-1
+- update to 4.4.12 (2015-07-20, bugfix)
+- fix sources URL
+
 * Mon Jul  6 2015 Remi Collet <remi@remirepo.net> 4.4.11-1
 - update to 4.4.11 (2015-07-06, bugfix)
 
