@@ -39,7 +39,7 @@
 
 Name:      php-Monolog
 Version:   %{github_version}
-Release:   1%{?dist}
+Release:   2%{?dist}
 Summary:   Sends your logs to files, sockets, inboxes, databases and various web services
 
 Group:     Development/Libraries
@@ -49,6 +49,8 @@ Source0:   %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_co
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# %%{pear_phpdir} macro
+BuildRequires: php-pear
 # Tests
 %if %{with_tests}
 ## composer.json
@@ -195,9 +197,6 @@ foreach (array(
         require_once $dependencyAutoloader;
     }
 }
-if (file_exists('%{_datadir}/pear/Swift')) {
-    $fedoraClassLoader->addPrefix('Swift_', '%{pear_phpdir}/Swift');
-}
 
 if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
     if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
@@ -209,6 +208,10 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 }
 
 $fedoraClassLoader->addPrefix('Monolog\\', dirname(__DIR__));
+
+if (file_exists('%{pear_phpdir}/Swift')) {
+    $fedoraClassLoader->addPrefix('Swift_', '%{pear_phpdir}/Swift');
+}
 
 // Not all dependency autoloaders exist or are in every dist yet so fallback
 // to using include path for dependencies for now
@@ -274,6 +277,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 20 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.15.0-2
+- Fix autoloader
+
 * Sun Jul 19 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.15.0-1
 - Updated to 1.15.0 (RHBZ #1199105)
 - Added autoloader
