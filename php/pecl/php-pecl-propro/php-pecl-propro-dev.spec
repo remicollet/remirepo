@@ -23,12 +23,17 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global with_zts  0%{?__ztsphp:1}
-%global pecl_name propro
+%global gh_commit   d9cb4d61eaeabdfa0c12636668c9f4a29a253932
+%global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner    m6w6
+%global gh_project  ext-propro
+%global gh_date     20150615
+%global with_zts    0%{?__ztsphp:1}
+%global pecl_name   propro
 %if "%{php_version}" < "5.6"
-%global ini_name  %{pecl_name}.ini
+%global ini_name    %{pecl_name}.ini
 %else
-%global ini_name  40-%{pecl_name}.ini
+%global ini_name    40-%{pecl_name}.ini
 %endif
 
 # PHP 7 package from phpng branch
@@ -38,11 +43,11 @@
 Summary:        Property proxy
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.1
-Release:        0.3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -101,8 +106,9 @@ These are the files needed to compile programs using %{name}.
 
 
 %prep
-%setup -q -c
-mv %{pecl_name}-%{version} NTS
+%setup -qc
+mv %{gh_project}-%{gh_commit} NTS
+mv NTS/package.xml .
 
 cd NTS
 # Sanity check, really often broken
@@ -159,7 +165,7 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 # Test & Documentation
 for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+do install -Dpm 644 NTS/tests/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/tests/$i
 done
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
@@ -243,7 +249,11 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Wed Jul  8 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-0.2
+* Wed Jul 22 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-0.4.20150615gitd9cb4d6
+- rebuild against php 7.0.0beta2
+- sources from github
+
+* Wed Jul  8 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-0.3
 - rebuild against php 7.0.0beta1
 
 * Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-0.2
