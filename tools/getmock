@@ -193,6 +193,18 @@ elif [ $1 = all56 ]; then
 	n=7
 		getOneMock el${n}x php56
 
+elif [ $1 = all70 ]; then
+	for n in 21 22
+	do
+		getOneMock fc${n}i php70
+		getOneMock fc${n}x php70
+	done
+	n=6
+		getOneMock el${n}i php70
+		getOneMock el${n}x php70
+	n=7
+		getOneMock el${n}x php70
+
 elif [ $1 = all54 ]; then
 	for n in 5 6
 	do
