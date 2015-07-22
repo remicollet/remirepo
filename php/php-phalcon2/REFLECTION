@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
+Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
 
   - INI {
     Entry [ phalcon.db.escape_identifiers <ALL> ]
@@ -36,7 +36,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
     }
   }
 
-  - Classes [349] {
+  - Classes [354] {
     Interface [ <internal:phalcon> interface Phalcon\Di\InjectionAwareInterface ] {
 
       - Constants [0] {
@@ -447,52 +447,6 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
       }
     }
 
-    Interface [ <internal:phalcon> interface Phalcon\Cache\FrontendInterface ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [7] {
-        Method [ <internal:phalcon> abstract public method getLifetime ] {
-        }
-
-        Method [ <internal:phalcon> abstract public method isBuffering ] {
-        }
-
-        Method [ <internal:phalcon> abstract public method start ] {
-        }
-
-        Method [ <internal:phalcon> abstract public method getContent ] {
-        }
-
-        Method [ <internal:phalcon> abstract public method stop ] {
-        }
-
-        Method [ <internal:phalcon> abstract public method beforeStore ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $data ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method afterRetrieve ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $data ]
-          }
-        }
-      }
-    }
-
     Interface [ <internal:phalcon> interface Phalcon\Mvc\Model\MetaDataInterface ] {
 
       - Constants [0] {
@@ -705,6 +659,52 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
           - Parameters [2] {
             Parameter #0 [ <required> $key ]
             Parameter #1 [ <required> $data ]
+          }
+        }
+      }
+    }
+
+    Interface [ <internal:phalcon> interface Phalcon\Cache\FrontendInterface ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [7] {
+        Method [ <internal:phalcon> abstract public method getLifetime ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method isBuffering ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method start ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method getContent ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method stop ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method beforeStore ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method afterRetrieve ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $data ]
           }
         }
       }
@@ -1788,6 +1788,75 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
       }
     }
 
+    Interface [ <internal:phalcon> interface Phalcon\Session\AdapterInterface ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [10] {
+        Method [ <internal:phalcon> abstract public method start ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method setOptions ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $options ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getOptions ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method get ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $index ]
+            Parameter #1 [ <optional> $defaultValue ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method set ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $index ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method has ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method remove ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getId ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method isStarted ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method destroy ] {
+        }
+      }
+    }
+
     Interface [ <internal:phalcon> interface Phalcon\Assets\FilterInterface ] {
 
       - Constants [0] {
@@ -2068,75 +2137,6 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
         }
 
         Method [ <internal:phalcon> abstract public method getLimit ] {
-        }
-      }
-    }
-
-    Interface [ <internal:phalcon> interface Phalcon\Session\AdapterInterface ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [10] {
-        Method [ <internal:phalcon> abstract public method start ] {
-        }
-
-        Method [ <internal:phalcon> abstract public method setOptions ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> array $options ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method getOptions ] {
-        }
-
-        Method [ <internal:phalcon> abstract public method get ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $index ]
-            Parameter #1 [ <optional> $defaultValue ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method set ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $index ]
-            Parameter #1 [ <required> $value ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method has ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $index ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method remove ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $index ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method getId ] {
-        }
-
-        Method [ <internal:phalcon> abstract public method isStarted ] {
-        }
-
-        Method [ <internal:phalcon> abstract public method destroy ] {
         }
       }
     }
@@ -2830,6 +2830,31 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
             Parameter #0 [ <required> $path ]
             Parameter #1 [ <required> $params ]
             Parameter #2 [ <optional> $mustClean ]
+          }
+        }
+      }
+    }
+
+    Interface [ <internal:phalcon> interface Phalcon\Translate\InterpolatorInterface ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:phalcon> abstract public method replacePlaceholders ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $translation ]
+            Parameter #1 [ <optional> $placeholders ]
           }
         }
       }
@@ -8895,96 +8920,6 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
       }
     }
 
-    Class [ <internal:phalcon> class Phalcon\Mvc\Model\Exception extends Phalcon\Exception ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [4] {
-        Property [ <default> protected $message ]
-        Property [ <default> protected $code ]
-        Property [ <default> protected $file ]
-        Property [ <default> protected $line ]
-      }
-
-      - Methods [9] {
-        Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
-
-          - Parameters [3] {
-            Parameter #0 [ <optional> $message ]
-            Parameter #1 [ <optional> $code ]
-            Parameter #2 [ <optional> $previous ]
-          }
-        }
-
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
-        }
-      }
-    }
-
-    Class [ <internal:phalcon> abstract class Phalcon\Paginator\Adapter ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [2] {
-        Property [ <default> protected $_limitRows ]
-        Property [ <default> protected $_page ]
-      }
-
-      - Methods [3] {
-        Method [ <internal:phalcon> public method setCurrentPage ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $page ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method setLimit ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $limitRows ]
-          }
-        }
-
-        Method [ <internal:phalcon> public method getLimit ] {
-        }
-      }
-    }
-
     Class [ <internal:phalcon> abstract class Phalcon\Session\Adapter ] {
 
       - Constants [3] {
@@ -9117,6 +9052,96 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
       }
     }
 
+    Class [ <internal:phalcon> class Phalcon\Mvc\Model\Exception extends Phalcon\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [9] {
+        Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:phalcon> abstract class Phalcon\Paginator\Adapter ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [2] {
+        Property [ <default> protected $_limitRows ]
+        Property [ <default> protected $_page ]
+      }
+
+      - Methods [3] {
+        Method [ <internal:phalcon> public method setCurrentPage ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $page ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method setLimit ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $limitRows ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method getLimit ] {
+        }
+      }
+    }
+
     Class [ <internal:phalcon> abstract class Phalcon\Translate\Adapter ] {
 
       - Constants [0] {
@@ -9128,10 +9153,25 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
       - Static methods [0] {
       }
 
-      - Properties [0] {
+      - Properties [1] {
+        Property [ <default> protected $_interpolator ]
       }
 
-      - Methods [7] {
+      - Methods [9] {
+        Method [ <internal:phalcon, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $options ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method setInterpolator ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Translate\InterpolatorInterface $interpolator ]
+          }
+        }
+
         Method [ <internal:phalcon> public method t ] {
 
           - Parameters [2] {
@@ -18846,6 +18886,16 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
         Method [ <internal:phalcon, overwrites Phalcon\Db\Dialect, prototype Phalcon\Db\DialectInterface> public method supportsReleaseSavepoints ] {
         }
 
+        Method [ <internal:phalcon, overwrites Phalcon\Db\Dialect, prototype Phalcon\Db\Dialect> protected method prepareTable ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $table ]
+            Parameter #1 [ <optional> $schema ]
+            Parameter #2 [ <optional> $alias ]
+            Parameter #3 [ <optional> $escapeChar ]
+          }
+        }
+
         Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> public method registerCustomFunction ] {
 
           - Parameters [2] {
@@ -19107,16 +19157,6 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
             Parameter #0 [ <required> $qualified ]
             Parameter #1 [ <optional> $alias ]
             Parameter #2 [ <optional> $escapeChar ]
-          }
-        }
-
-        Method [ <internal:phalcon, inherits Phalcon\Db\Dialect> protected method prepareTable ] {
-
-          - Parameters [4] {
-            Parameter #0 [ <required> $table ]
-            Parameter #1 [ <optional> $schema ]
-            Parameter #2 [ <optional> $alias ]
-            Parameter #3 [ <optional> $escapeChar ]
           }
         }
 
@@ -25514,7 +25554,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
         Property [ <default> protected $_statusCodes ]
       }
 
-      - Methods [26] {
+      - Methods [27] {
         Method [ <internal:phalcon, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -25587,6 +25627,13 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> DateTime $datetime ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method setCache ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $minutes ]
           }
         }
 
@@ -32345,6 +32392,272 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
       }
     }
 
+    Class [ <internal:phalcon> class Phalcon\Mvc\Model\MetaData\Redis extends Phalcon\Mvc\Model\MetaData implements Phalcon\Di\InjectionAwareInterface, Phalcon\Mvc\Model\MetaDataInterface ] {
+
+      - Constants [16] {
+        Constant [ integer MODELS_ATTRIBUTES ] { 0 }
+        Constant [ integer MODELS_PRIMARY_KEY ] { 1 }
+        Constant [ integer MODELS_NON_PRIMARY_KEY ] { 2 }
+        Constant [ integer MODELS_NOT_NULL ] { 3 }
+        Constant [ integer MODELS_DATA_TYPES ] { 4 }
+        Constant [ integer MODELS_DATA_TYPES_NUMERIC ] { 5 }
+        Constant [ integer MODELS_DATE_AT ] { 6 }
+        Constant [ integer MODELS_DATE_IN ] { 7 }
+        Constant [ integer MODELS_IDENTITY_COLUMN ] { 8 }
+        Constant [ integer MODELS_DATA_TYPES_BIND ] { 9 }
+        Constant [ integer MODELS_AUTOMATIC_DEFAULT_INSERT ] { 10 }
+        Constant [ integer MODELS_AUTOMATIC_DEFAULT_UPDATE ] { 11 }
+        Constant [ integer MODELS_DEFAULT_VALUES ] { 12 }
+        Constant [ integer MODELS_EMPTY_STRING_VALUES ] { 13 }
+        Constant [ integer MODELS_COLUMN_MAP ] { 0 }
+        Constant [ integer MODELS_REVERSE_COLUMN_MAP ] { 1 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [6] {
+        Property [ <default> protected $_dependencyInjector ]
+        Property [ <default> protected $_strategy ]
+        Property [ <default> protected $_metaData ]
+        Property [ <default> protected $_columnMap ]
+        Property [ <default> protected $_ttl ]
+        Property [ <default> protected $_redis ]
+      }
+
+      - Methods [33] {
+        Method [ <internal:phalcon, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $options ]
+          }
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\MetaDataInterface> public method read ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\MetaDataInterface> public method write ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:phalcon, overwrites Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method reset ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData> final protected method _initialize ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $key ]
+            Parameter #2 [ <required> $table ]
+            Parameter #3 [ <required> $schema ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Di\InjectionAwareInterface> public method setDI ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\DiInterface $dependencyInjector ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Di\InjectionAwareInterface> public method getDI ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method setStrategy ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\Model\MetaData\StrategyInterface $strategy ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getStrategy ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> final public method readMetaData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> final public method readMetaDataIndex ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> final public method writeMetaDataIndex ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $index ]
+            Parameter #2 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> final public method readColumnMap ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> final public method readColumnMapIndex ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getPrimaryKeyAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getNonPrimaryKeyAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getNotNullAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getDataTypes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getDataTypesNumeric ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getIdentityField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getBindTypes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getAutomaticCreateAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getAutomaticUpdateAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method setAutomaticCreateAttributes ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> array $attributes ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method setAutomaticUpdateAttributes ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> array $attributes ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method setEmptyStringAttributes ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> array $attributes ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getEmptyStringAttributes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getDefaultValues ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getColumnMap ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method getReverseColumnMap ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method hasAttribute ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $attribute ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Mvc\Model\MetaData, prototype Phalcon\Mvc\Model\MetaDataInterface> public method isEmpty ] {
+        }
+      }
+    }
+
     Class [ <internal:phalcon> class Phalcon\Mvc\Model\MetaData\Session extends Phalcon\Mvc\Model\MetaData implements Phalcon\Di\InjectionAwareInterface, Phalcon\Mvc\Model\MetaDataInterface ] {
 
       - Constants [16] {
@@ -37474,7 +37787,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
         Method [ <internal:phalcon, ctor> public method __construct ] {
 
           - Parameters [3] {
-            Parameter #0 [ <required> $queue ]
+            Parameter #0 [ <required> Phalcon\Queue\Beanstalk $queue ]
             Parameter #1 [ <required> $id ]
             Parameter #2 [ <required> $body ]
           }
@@ -38148,6 +38461,174 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
 
       - Methods [26] {
         Method [ <internal:phalcon> public method getMemcache ] {
+        }
+
+        Method [ <internal:phalcon> public method getLifetime ] {
+        }
+
+        Method [ <internal:phalcon, overwrites Phalcon\Session\Adapter, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> array or NULL $options ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method open ] {
+        }
+
+        Method [ <internal:phalcon> public method close ] {
+        }
+
+        Method [ <internal:phalcon> public method read ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $sessionId ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method write ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $sessionId ]
+            Parameter #1 [ <required> $data ]
+          }
+        }
+
+        Method [ <internal:phalcon, overwrites Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method destroy ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $sessionId ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method gc ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method start ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method setOptions ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $options ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method getOptions ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method setName ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method getName ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method get ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $index ]
+            Parameter #1 [ <optional> $defaultValue ]
+            Parameter #2 [ <optional> $remove ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method set ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $index ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method has ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method remove ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method getId ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method setId ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $id ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method isStarted ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method status ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method __get ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method __set ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $index ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method __isset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method __unset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:phalcon> class Phalcon\Session\Adapter\Redis extends Phalcon\Session\Adapter implements Phalcon\Session\AdapterInterface ] {
+
+      - Constants [3] {
+        Constant [ integer SESSION_ACTIVE ] { 2 }
+        Constant [ integer SESSION_NONE ] { 1 }
+        Constant [ integer SESSION_DISABLED ] { 0 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [5] {
+        Property [ <default> protected $_uniqueId ]
+        Property [ <default> protected $_started ]
+        Property [ <default> protected $_options ]
+        Property [ <default> protected $_redis ]
+        Property [ <default> protected $_lifetime ]
+      }
+
+      - Methods [26] {
+        Method [ <internal:phalcon> public method getRedis ] {
         }
 
         Method [ <internal:phalcon> public method getLifetime ] {
@@ -39142,15 +39623,26 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
       - Static methods [0] {
       }
 
-      - Properties [1] {
+      - Properties [2] {
+        Property [ <default> protected $_interpolator ]
         Property [ <default> protected $_translate ]
       }
 
-      - Methods [10] {
-        Method [ <internal:phalcon, ctor> public method __construct ] {
+      - Methods [12] {
+        Method [ <internal:phalcon, overwrites Phalcon\Translate\Adapter, ctor> public method __construct ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> array $options ]
+          }
+        }
+
+        Method [ <internal:phalcon> private method _load ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $file ]
+            Parameter #1 [ <required> $length ]
+            Parameter #2 [ <required> $delimiter ]
+            Parameter #3 [ <required> $enclosure ]
           }
         }
 
@@ -39166,6 +39658,13 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Translate\Adapter> public method setInterpolator ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Translate\InterpolatorInterface $interpolator ]
           }
         }
 
@@ -39235,15 +39734,16 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
       - Static methods [0] {
       }
 
-      - Properties [4] {
+      - Properties [5] {
+        Property [ <default> protected $_interpolator ]
         Property [ <default> protected $_directory ]
         Property [ <default> protected $_defaultDomain ]
         Property [ <default> protected $_locale ]
         Property [ <default> protected $_category ]
       }
 
-      - Methods [22] {
-        Method [ <internal:phalcon, ctor> public method __construct ] {
+      - Methods [23] {
+        Method [ <internal:phalcon, overwrites Phalcon\Translate\Adapter, ctor> public method __construct ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> array $options ]
@@ -39334,6 +39834,13 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
         Method [ <internal:phalcon> protected method getOptionsDefault ] {
         }
 
+        Method [ <internal:phalcon, inherits Phalcon\Translate\Adapter> public method setInterpolator ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Translate\InterpolatorInterface $interpolator ]
+          }
+        }
+
         Method [ <internal:phalcon, inherits Phalcon\Translate\Adapter, prototype Phalcon\Translate\AdapterInterface> public method t ] {
 
           - Parameters [2] {
@@ -39400,12 +39907,13 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
       - Static methods [0] {
       }
 
-      - Properties [1] {
+      - Properties [2] {
+        Property [ <default> protected $_interpolator ]
         Property [ <default> protected $_translate ]
       }
 
-      - Methods [10] {
-        Method [ <internal:phalcon, ctor> public method __construct ] {
+      - Methods [11] {
+        Method [ <internal:phalcon, overwrites Phalcon\Translate\Adapter, ctor> public method __construct ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> array $options ]
@@ -39424,6 +39932,13 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Translate\Adapter> public method setInterpolator ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Translate\InterpolatorInterface $interpolator ]
           }
         }
 
@@ -39532,6 +40047,56 @@ Extension [ <persistent> extension #188 phalcon version 2.0.5 ] {
         }
 
         Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:phalcon> class Phalcon\Translate\Interpolator\AssociativeArray implements Phalcon\Translate\InterpolatorInterface ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:phalcon, prototype Phalcon\Translate\InterpolatorInterface> public method replacePlaceholders ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $translation ]
+            Parameter #1 [ <optional> $placeholders ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:phalcon> class Phalcon\Translate\Interpolator\IndexedArray implements Phalcon\Translate\InterpolatorInterface ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:phalcon, prototype Phalcon\Translate\InterpolatorInterface> public method replacePlaceholders ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $translation ]
+            Parameter #1 [ <optional> $placeholders ]
+          }
         }
       }
     }
