@@ -1,9 +1,15 @@
-===== 7.0.0-0.11.beta1
+===== 7.0.0-0.12.beta2
 
 $ grep -r 'Tests failed' /var/lib/mock/scl70*/build.log
 
-/var/lib/mock/scl70el6x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
-/var/lib/mock/scl70el7x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
-/var/lib/mock/scl70fc20x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
-/var/lib/mock/scl70fc21x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
-/var/lib/mock/scl70fc22x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/scl70el6x/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
+/var/lib/mock/scl70el7x/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
+/var/lib/mock/scl70fc20x/build.log:Tests failed    :    3 (  0.0%) (  0.0%)
+/var/lib/mock/scl70fc21x/build.log:Tests failed    :    3 (  0.0%) (  0.0%
+/var/lib/mock/scl70fc22x/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
+
+f20, f21
+  Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
+el6, el7, f20, f21, f22
+  Basic print functionality [sapi/phpdbg/tests/print_001.phpt]
+  Relative print commands [sapi/phpdbg/tests/print_002.phpt]

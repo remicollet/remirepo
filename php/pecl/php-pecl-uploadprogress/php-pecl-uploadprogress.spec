@@ -30,7 +30,7 @@
 Summary:        An extension to track progress of a file upload
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.3.1
-Release:        8%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        9%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -224,6 +224,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jul 22 2015 Remi Collet <remi@fedoraproject.org> - 1.0.3.1-9
+- rebuild against php 7.0.0beta2
+
 * Wed Jul  8 2015 Remi Collet <remi@fedoraproject.org> - 1.0.3.1-8
 - rebuild against php 7.0.0beta1
 

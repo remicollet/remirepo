@@ -35,7 +35,7 @@
 Summary:        Always Populate Form Data
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.1
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -229,6 +229,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jul 22 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-3
+- rebuild against php 7.0.0beta2
+
 * Sun Jun 21 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
 - allow build against rh-php56 (as more-php56)
 - drop runtime dependency on pear, new scriptlets

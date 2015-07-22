@@ -22,11 +22,11 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit   85f6e355c26ddd27f76d96fab4ad273f12e346e7
+%global gh_commit   74fa8e2c5cc47a7a59fda102957d72511fde1df0
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    laruence
 %global gh_project  yac
-%global gh_date     20150701
+%global gh_date     20150717
 %global with_zts    0%{?__ztsphp:1}
 %global pecl_name   yac
 %global with_tests  %{!?_without_tests:1}%{?_without_tests:0}
@@ -41,7 +41,7 @@ Summary:        Lockless user data cache
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        0.9.3
 %if 0%{?gh_date:1}
-Release:        0.3.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -272,6 +272,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jul 22 2015 Remi Collet <remi@fedoraproject.org> - 0.9.3-0.4.20150717git74fa8e2
+- rebuild against php 7.0.0beta2
+
 * Wed Jul  8 2015 Remi Collet <remi@fedoraproject.org> - 0.9.3-0.3.20150701git85f6e35
 - rebuild against php 7.0.0beta1
 

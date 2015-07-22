@@ -48,7 +48,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?sub_prefix}php-pecl-memcached
 Version:      2.2.0
-Release:      8.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:      9.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -356,6 +356,9 @@ exit $ret
 
 
 %changelog
+* Wed Jul 22 2015 Remi Collet <rcollet@redhat.com> - 2.2.0-9.20150628git3c79a97
+- rebuild against php 7.0.0beta2
+
 * Wed Jul  8 2015 Remi Collet <rcollet@redhat.com> - 2.2.0-8.20150628git3c79a97
 - new snapshot
 

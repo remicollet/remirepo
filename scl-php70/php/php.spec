@@ -1,3 +1,13 @@
+# remirepo spec file for php56-php
+# with SCL and backport stuff, adapted from
+#
+# Fedora spec file for php
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 %if 0%{?scl:1}
 %scl_package php
 %else
@@ -93,12 +103,6 @@
 # build with system libgd (gd-last in remi repo)
 %global  with_libgd 1
 
-%if 0%{?fedora} < 17 && 0%{?rhel} < 6
-%global  with_vpx  0
-%else
-%global  with_vpx  1
-%endif
-
 # systemd to manage the service, Fedora >= 15
 # systemd with notify mode, Fedora >= 16
 # systemd with additional service config
@@ -129,8 +133,8 @@
 #global gh_date      20150623
 #global gh_owner     php
 #global gh_project   php-src
-%global rcver        beta1
-%global rpmrel       11
+%global rcver        beta2
+%global rpmrel       12
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -696,9 +700,6 @@ Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
 # Required to build the bundled GD library
 BuildRequires: libjpeg-devel, libpng-devel, freetype-devel
 BuildRequires: libXpm-devel
-%if %{with_vpx}
-BuildRequires: libvpx-devel
-%endif
 %if %{with_libgd}
 BuildRequires: gd-devel >= 2.1.1
 %if 0%{?fedora} <= 19 && 0%{?rhel} <= 7
@@ -706,6 +707,8 @@ Requires: gd-last%{?_isa} >= 2.1.1
 %else
 Requires: gd%{?_isa} >= 2.1.1
 %endif
+%else
+BuildRequires: libwebp-devel
 %endif
 
 %description gd
@@ -1094,9 +1097,6 @@ ln -sf ../configure
     --with-freetype-dir=%{_root_prefix} \
     --with-png-dir=%{_root_prefix} \
     --with-xpm-dir=%{_root_prefix} \
-%if %{with_vpx}
-    --with-vpx-dir=%{_root_prefix} \
-%endif
     --enable-gd-native-ttf \
     --without-gdbm \
     --with-jpeg-dir=%{_root_prefix} \
@@ -1141,6 +1141,7 @@ build --libdir=%{_libdir}/php \
       --with-gd=shared,%{_root_prefix} \
 %else
       --with-gd=shared \
+      --with-webp-dir=%{_root_prefix} \
 %endif
       --with-gmp=shared \
       --enable-calendar=shared \
@@ -1803,6 +1804,10 @@ fi
 
 
 %changelog
+* Wed Jul 22 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.12.beta2
+- Update to 7.0.0beta2
+- switch from libvpx to libwebp (only for bundled libgd, not used)
+
 * Wed Jul  8 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.11.beta1
 - Update to 7.0.0beta1
 - use upstream tarball instead of git snapshot
