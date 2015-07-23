@@ -1,0 +1,4 @@
+===== 7.0.0-0.1.beta2
+
+$ grep -r 'Tests failed' /var/lib/mock/*/build.log
+

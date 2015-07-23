@@ -1,0 +1,9 @@
+
+# Redirect to local php-fpm if mod_php (5 or 7) is not available
+<IfModule !mod_php5.c>
+  <IfModule !mod_php7.c>
+    <FilesMatch \.php$>
+        SetHandler "proxy:fcgi://127.0.0.1:9000"
+    </FilesMatch>
+  </IfModule>
+</IfModule>

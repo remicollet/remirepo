@@ -244,11 +244,11 @@ fi
 
 if [ -f "$1" ]; then
   echo -n "$(date +%X) 70 fc21 "
-  setarch i686    mock $quiet --configdir=$mocketc -r fc21i56 --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
+  setarch i686    mock $quiet --configdir=$mocketc -r fc21i70 --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
   echo -n "$(date +%X) 70 fc22 "
-  setarch i686    mock $quiet --configdir=$mocketc -r fc22i56 --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
+  setarch i686    mock $quiet --configdir=$mocketc -r fc22i70 --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
   echo -n "$(date +%X) 70 el6  "
-  setarch i686    mock $quiet --configdir=$mocketc -r el6i56  --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
+  setarch i686    mock $quiet --configdir=$mocketc -r el6i70  --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
   date +%X
 else
   echo "file not found p$1'"
@@ -389,7 +389,7 @@ if [ -f "$1" ]; then
     echo -n "$(date +%X) 70 fc$i "
     mock $quiet --configdir=$mocketc -r fc${i}x70 rebuild $1 && echo " Ok." || echo " Error !"
   done
-  for i in 7 6 5
+  for i in 7 6
   do
     echo -n "$(date +%X) 70 el$i  "
     mock $quiet --configdir=$mocketc -r el${i}x70 rebuild $1 && echo " Ok." || echo " Error !"
