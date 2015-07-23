@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #155 swoole version 1.7.17 ] {
+Extension [ <persistent> extension #155 swoole version 1.7.18 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -42,7 +42,7 @@ Extension [ <persistent> extension #155 swoole version 1.7.17 ] {
     Constant [ integer SWOOLE_KEEP ] { 512 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.7.17 }
+    Constant [ string SWOOLE_VERSION ] { 1.7.18 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_GCC ] { 1 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 2 }
@@ -298,7 +298,7 @@ Extension [ <persistent> extension #155 swoole version 1.7.17 ] {
       - Properties [0] {
       }
 
-      - Methods [30] {
+      - Methods [31] {
         Method [ <internal:swoole, ctor> public method __construct ] {
 
           - Parameters [4] {
@@ -345,6 +345,13 @@ Extension [ <persistent> extension #155 swoole version 1.7.17 ] {
           - Parameters [2] {
             Parameter #0 [ <required> $conn_fd ]
             Parameter #1 [ <required> $send_data ]
+          }
+        }
+
+        Method [ <internal:swoole> public method exist ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $conn_fd ]
           }
         }
 
@@ -618,7 +625,7 @@ Extension [ <persistent> extension #155 swoole version 1.7.17 ] {
       - Static properties [0] {
       }
 
-      - Static methods [4] {
+      - Static methods [5] {
         Method [ <internal:swoole> static public method wait ] {
         }
 
@@ -629,6 +636,9 @@ Extension [ <persistent> extension #155 swoole version 1.7.17 ] {
         }
 
         Method [ <internal:swoole> static public method daemon ] {
+        }
+
+        Method [ <internal:swoole> static public method setaffinity ] {
         }
       }
 
@@ -874,7 +884,7 @@ Extension [ <persistent> extension #155 swoole version 1.7.17 ] {
         Property [ <default> private $global ]
       }
 
-      - Methods [31] {
+      - Methods [32] {
         Method [ <internal:swoole, overwrites swoole_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
@@ -929,6 +939,13 @@ Extension [ <persistent> extension #155 swoole version 1.7.17 ] {
           - Parameters [2] {
             Parameter #0 [ <required> $conn_fd ]
             Parameter #1 [ <required> $send_data ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method exist ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $conn_fd ]
           }
         }
 
@@ -1188,7 +1205,7 @@ Extension [ <persistent> extension #155 swoole version 1.7.17 ] {
       - Properties [0] {
       }
 
-      - Methods [32] {
+      - Methods [33] {
         Method [ <internal:swoole, overwrites swoole_http_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
@@ -1253,6 +1270,13 @@ Extension [ <persistent> extension #155 swoole version 1.7.17 ] {
           - Parameters [2] {
             Parameter #0 [ <required> $conn_fd ]
             Parameter #1 [ <required> $send_data ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method exist ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $conn_fd ]
           }
         }
 
