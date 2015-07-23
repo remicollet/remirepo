@@ -1,7 +1,7 @@
 [remi-php56]
-name=Les RPM de remi - PHP 5.6 - Fedora $releasever - $basearch
-#baseurl=http://rpms.famillecollet.com/fedora/$releasever/php56/$basearch/
-mirrorlist=http://rpms.famillecollet.com/fedora/$releasever/php56/mirror
+name=Remi's RPM repository - PHP 5.6 - Fedora $releasever - $basearch
+#baseurl=http://rpms.remirepo.net/fedora/$releasever/php56/$basearch/
+mirrorlist=http://rpms.remirepo.net/fedora/$releasever/php56/mirror
 # WARNING: If you enable this repository, you must also enable "remi"
 enabled=0
 gpgcheck=1

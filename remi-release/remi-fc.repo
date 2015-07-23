@@ -1,12 +1,12 @@
-# Repository: http://rpms.famillecollet.com/
-# Blog:       http://blog.famillecollet.com/
-# Forum:      http://forums.famillecollet.com/
+# Repository: http://rpms.remirepo.net/
+# Blog:       http://blog.remirepo.net/
+# Forum:      http://forum.remirepo.net/
 
 
 [remi]
-name=Les RPM de remi - Fedora $releasever - $basearch
-#baseurl=http://rpms.famillecollet.com/fedora/$releasever/remi/$basearch/
-mirrorlist=http://rpms.famillecollet.com/fedora/$releasever/remi/mirror
+name=Remi's RPM repository - Fedora $releasever - $basearch
+#baseurl=http://rpms.remirepo.net/fedora/$releasever/remi/$basearch/
+mirrorlist=http://rpms.remirepo.net/fedora/$releasever/remi/mirror
 enabled=0
 gpgcheck=1
 failovermethod=roundrobin

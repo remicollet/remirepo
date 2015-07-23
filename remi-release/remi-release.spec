@@ -1,7 +1,7 @@
 Name:           remi-release
 Version:        %{fedora}
 %if %{fedora} >= 21
-Release:        1%{?dist}
+Release:        2%{?dist}
 %else
 %if %{fedora} >= 18
 Release:        3%{?dist}
@@ -14,17 +14,20 @@ Summary(fr):	Configuration de YUM pour le dépôt remi
 
 Group:          System Environment/Base
 License:        GPLv2+
-URL:            http://rpms.famillecollet.com/
+URL:            http://rpms.remirepo.net/
 Source0:        RPM-GPG-KEY-remi
 Source1:        remi-fc.repo
 Source2:        remi-test-fc.repo
 Source3:        remi-php56-fc.repo
+Source4:        remi-php70-fc.repo
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}
 BuildArchitectures: noarch
 
 %if %{fedora} < 21
 Requires:       yum
+%else
+Requires:       /etc/yum.repos.d
 %endif
 Requires:       fedora-release >= %{fedora}
 
@@ -61,8 +64,11 @@ install -Dp -m 644 %{SOURCE0} %{buildroot}%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY
 # YUM
 install -Dp -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/yum.repos.d/remi.repo
 install -Dp -m 644 %{SOURCE2} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-test.repo
-%if %{fedora} < 21
+%if %{fedora} >= 19 && %{fedora} <= 20
 install -Dp -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php56.repo
+%endif
+%if %{fedora} >= 21 && %{fedora} <= 22
+install -Dp -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php70.repo
 %endif
 
 
@@ -77,6 +83,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul 23 2015 Remi Collet <remi@remirepo.net> - ##-2.fc##.remi
+- add php70 repository
+- update repository configuration for new "remirepo.net" domain
+
 * Fri Feb 27 2015 Remi Collet <RPMS@FamilleCollet.com> - 22-1.fc22.remi
 - Fedora release 22
 

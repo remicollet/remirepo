@@ -1,7 +1,7 @@
 [remi-test]
-name=Les RPM de remi - Testing - Fedora $releasever - $basearch
-#baseurl=http://rpms.famillecollet.com/fedora/$releasever/test/$basearch/
-mirrorlist=http://rpms.famillecollet.com/fedora/$releasever/test/mirror
+name=Remi's RPM repository - Testing - Fedora $releasever - $basearch
+#baseurl=http://rpms.remirepo.net/fedora/$releasever/test/$basearch/
+mirrorlist=http://rpms.remirepo.net/fedora/$releasever/test/mirror
 # WARNING: If you enable this repository, you must also enable "remi"
 enabled=0
 gpgcheck=1
