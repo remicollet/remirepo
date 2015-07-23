@@ -33,7 +33,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.9.5
-Release: 12%{?dist}
+Release: 13%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -165,6 +165,8 @@ cp %{SOURCE1} %{SOURCE30} %{SOURCE31} %{SOURCE32} %{SOURCE33} .
 sed -e 's/@SCL@/%{?scl:%{scl}_}/' \
     -e 's:@VARDIR@:%{_localstatedir}:' \
     -e 's:@BINDIR@:%{_bindir}:' \
+    -e 's:@ETCDIR@:%{_sysconfdir}:' \
+    -e 's:@PREFIX@:%{_prefix}:' \
     %{SOURCE13} | tee macros.pear
 
 
@@ -398,6 +400,9 @@ fi
 
 
 %changelog
+* Thu Jul 23 2015 Remi Collet <remi@fedoraproject.org> 1:1.9.5-13
+- fix default values in rpm macro file (instead of undefined)
+
 * Tue Jul 21 2015 Remi Collet <remi@fedoraproject.org> 1:1.9.5-12
 - update Console_Getopt to 1.4.1
 - update Structures_Graph to 1.1.1
