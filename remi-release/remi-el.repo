@@ -1,3 +1,7 @@
+# Repository: http://rpms.remirepo.net/
+# Blog:       http://blog.remirepo.net/
+# Forum:      http://forum.remirepo.net/
+
 [remi]
 name=Remi's RPM repository for Enterprise Linux VERSION - $basearch
 #baseurl=http://rpms.remirepo.net/enterprise/VERSION/remi/$basearch/

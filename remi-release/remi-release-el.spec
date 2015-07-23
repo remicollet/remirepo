@@ -1,11 +1,11 @@
 Name:           remi-release
 %if %{rhel} == 7
 Version:        7.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 %if %{rhel} == 6
 Version:        6.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 %if %{rhel} == 5
 Version:        5.10
@@ -20,6 +20,7 @@ URL:            http://remirepo.net
 Source0:        RPM-GPG-KEY-remi
 Source1:        remi-el.repo
 Source2:        remi-safe.repo
+Source3:        remi-php70.repo
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}
 BuildArchitectures: noarch
@@ -40,6 +41,7 @@ The repository is not enabled after installation.
 For PHP 5.4 you must use --enablerepo=remi yum option.
 For PHP 5.5 you must use --enablerepo=remi,remi-php55 yum option.
 For PHP 5.6 you must use --enablerepo=remi,remi-php56 yum option.
+For PHP 7.0 you must use --enablerepo=remi,remi-php70 yum option.
 %if %{rhel} >= 6
 Software Collections are in the main "remi" repository.
 %endif
@@ -56,7 +58,8 @@ Le dépôt n'est pas activé après l'installation.
 %endif
 Pour PHP 5.4 vous devez utiliser l'option --enablerepo=remi
 Pour PHP 5.5 vous devez utiliser l'option --enablerepo=remi,remi-php55
-Pour PHP 5.5 vous devez utiliser l'option --enablerepo=remi,remi-php56
+Pour PHP 5.6 vous devez utiliser l'option --enablerepo=remi,remi-php56
+Pour PHP 7.0 vous devez utiliser l'option --enablerepo=remi,remi-php70
 %if %{rhel} >= 6
 Les "Software Collections" sont dans le dépôt principal "remi".
 %endif
@@ -70,6 +73,9 @@ sed -e "s/VERSION/%{rhel}/" %{SOURCE1} | tee remi.repo
 
 %if %{rhel} == 7
 sed -e "s/VERSION/%{rhel}/" %{SOURCE2} | tee remi-safe.repo
+%endif
+%if %{rhel} >= 6
+sed -e "s/VERSION/%{rhel}/" %{SOURCE3} | tee remi-php70.repo
 %endif
 
 
@@ -101,6 +107,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul 23 2015 Remi Collet <remmi@remirepo.net> - 7.1-2 and 6.5-2
+- add remi-php70 repository
+
 * Tue Jun  2 2015 Remi Collet <remmi@remirepo.net> - 7.1-1
 - add remi-safe repository
 - translate repository name
