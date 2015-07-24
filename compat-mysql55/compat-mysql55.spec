@@ -5,7 +5,7 @@
 %endif
 
 Name: compat-mysql55
-Version: 5.5.44
+Version: 5.5.45
 Release: 1%{?dist}
 Summary: MySQL shared libraries
 Group: Applications/Databases
@@ -42,7 +42,6 @@ Patch17: mysql-plugin-test.patch
 Patch18: mysql-cipherspec.patch
 Patch19: mysql-file-contents.patch
 Patch20: mysql-string-overflow.patch
-Patch21: mysql-dh1024.patch
 Patch22: mysql-innodbwarn.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -93,7 +92,6 @@ rm -f Docs/mysql.info
 %patch18 -p1
 %patch19 -p1
 %patch20 -p1
-%patch21 -p1
 %patch22 -p1
 
 # upstream has fallen down badly on symbol versioning, do it ourselves
@@ -219,6 +217,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 24 2015 Remi Collet <RPMS@FamilleCollet.com> - 5.5.45-1
+- update to 5.5.45
+
 * Fri May 29 2015 Remi Collet <RPMS@FamilleCollet.com> - 5.5.44-1
 - update to 5.5.44
 

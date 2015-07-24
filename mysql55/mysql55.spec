@@ -10,7 +10,7 @@
 #endif
 
 Name: mysql
-Version: 5.5.44
+Version: 5.5.45
 Release: 1%{?dist}
 
 Summary: MySQL client programs and shared libraries
@@ -70,7 +70,6 @@ Patch17: mysql-plugin-test.patch
 Patch18: mysql-cipherspec.patch
 Patch19: mysql-file-contents.patch
 Patch20: mysql-string-overflow.patch
-Patch21: mysql-dh1024.patch
 Patch22: mysql-innodbwarn.patch
 Patch24: mysql-ssltest.patch
 
@@ -272,7 +271,6 @@ rm -f Docs/mysql.info
 %patch18 -p1
 %patch19 -p1
 %patch20 -p1
-%patch21 -p1
 %patch22 -p1
 %patch24 -p1
 
@@ -840,6 +838,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Fri Jul 24 2015 Remi Collet <RPMS@FamilleCollet.com> - 5.5.45-1
+- update to MySQL 5.5.45 Community Server GA
+  http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-45.html
+
 * Fri May 29 2015 Remi Collet <RPMS@FamilleCollet.com> - 5.5.44-1
 - update to MySQL 5.5.44 Community Server GA
   http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-44.html
