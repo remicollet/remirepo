@@ -285,6 +285,7 @@ rm -rf %{buildroot}
 %changelog
 * Fri Jul 24 2015 Remi Collet <remi@fedoraproject.org> - 1.2.5-0.7.20150717git07b6772
 - ignore 1 failed test on i386
+- open https://github.com/laruence/yar/issues/56 (1 failed test on i386)
 
 * Wed Jul 22 2015 Remi Collet <remi@fedoraproject.org> - 1.2.5-0.6.20150717git07b6772
 - rebuild against php 7.0.0beta2
