@@ -19,11 +19,11 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit  07b67723f2046764a16c0fd270769a79655fa429
+%global gh_commit  47317d6158925044fbb815d42ee4007498838397
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   laruence
 %global gh_project yar
-%global gh_date    20150717
+%global gh_date    20150724
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  yar
 %global with_tests %{?_without_tests:0}%{!?_without_tests:1}
@@ -39,7 +39,7 @@ Summary:        Light, concurrent RPC framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.2.5
 %if 0%{?gh_date:1}
-Release:        0.7.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.8.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -219,12 +219,6 @@ fi
 
 
 %check
-%ifnarch x86_64
-# https://github.com/laruence/yar/issues/56
-rm ?TS/tests/010.phpt
-%endif
-
-# Upstream test suite requires a web server
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
     --define extension=json.so \
@@ -283,6 +277,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 24 2015 Remi Collet <remi@fedoraproject.org> - 1.2.5-0.8.20150724git47317d6
+- new snapshot
+
 * Fri Jul 24 2015 Remi Collet <remi@fedoraproject.org> - 1.2.5-0.7.20150717git07b6772
 - ignore 1 failed test on i386
 - open https://github.com/laruence/yar/issues/56 (1 failed test on i386)
