@@ -31,7 +31,7 @@ Summary:        MySQL database access functions
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
 %if 0%{?gh_date:1}
-Release:        0.3.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -51,8 +51,9 @@ Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+# Set epoch so provides is > 0:7.0.0 (obsoleted by php-mysqlnd)
+Provides:       %{?scl_prefix}php-%{pecl_name} = 1:%{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = 1:%{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
@@ -206,6 +207,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 24 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.4.20150703git617e510
+- provide php-mysql 1:1.0.0 > 0:7.0.0 which is obsoleted by php-mysqlnd
+
 * Wed Jul 22 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.20150703git617e510
 - rebuild against php 7.0.0beta2
 
