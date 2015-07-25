@@ -14,8 +14,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   2.8.13
-%global github_commit    8512d9f2accdd88ee05d9848db4f05279124de64
+%global github_version   2.8.15
+%global github_commit    5c9cd0d0da069ae556db2900d34c9140bb9166b5
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -42,7 +42,7 @@
 
 Name:      php-aws-sdk
 Version:   %{github_version}
-Release:   2%{?dist}
+Release:   1%{?dist}
 Summary:   Amazon Web Services framework for PHP
 
 Group:     Development/Libraries
@@ -189,6 +189,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jul 25 2015 Remi Collet <remi@fedoraproject.org> - 2.8.15-1
+- Update to 2.8.15
+
 * Fri Jul 10 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.8.13-2
 - Use full require paths in autoloader
 
