@@ -28,12 +28,12 @@
 
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_root_sysconfdir}/rpm; echo $d)
 
-#global pearprever dev1
+%global pearprever dev1
 
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
-Version: 1.9.5
-Release: 13%{?dist}
+Version: 1.10.0
+Release: 0.1.%{pearprever}%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -62,9 +62,9 @@ Source33: pear.conf.5
 
 # From RHEL: ignore REST cache creation failures as non-root user (#747361)
 # TODO See https://github.com/pear/pear-core/commit/dfef86e05211d2abc7870209d69064d448ef53b3#PEAR/REST.php
-Patch0: php-pear-1.9.4-restcache.patch
+Patch0: php-pear-1.10-restcache.patch
 # Relocate Metadata
-Patch1: php-pear-metadata.patch
+Patch1: php-pear-1.10-metadata.patch
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -112,7 +112,7 @@ Obsoletes: php70w-pear <= %{version}
 # Archive_Tar requires 5.2
 # XML_Util, Structures_Graph require 5.3
 # Console_Getopt requires 5.4
-# PEAR requires 4.4
+# PEAR requires 5.4
 Requires:  %{?scl_prefix}php(language) > 5.4
 Requires:  %{?scl_prefix}php-cli
 # phpci detected extension
@@ -237,9 +237,9 @@ install -m 644 -D macros.pear \
 # apply patches on installed PEAR tree
 pushd $RPM_BUILD_ROOT%{peardir} 
  pushd PEAR
-  %__patch -s --no-backup --fuzz 0 -p0 < %{PATCH0}
+  %__patch --no-backup --fuzz 0 -p0 < %{PATCH0}
  popd
-  %__patch -s --no-backup --fuzz 0 -p0 < %{PATCH1}
+  %__patch --no-backup --fuzz 0 -p0 < %{PATCH1}
 popd
 
 # Why this file here ?
@@ -400,6 +400,9 @@ fi
 
 
 %changelog
+* Sat Jul 25 2015 Remi Collet <remi@fedoraproject.org> 1:1.10.0-0.1.dev1
+- update PEAR 1.10.0dev1 (for PHP7)
+
 * Thu Jul 23 2015 Remi Collet <remi@fedoraproject.org> 1:1.9.5-13
 - fix default values in rpm macro file (instead of undefined)
 
