@@ -4,8 +4,8 @@ Version:        7.1
 Release:        2%{?dist}
 %endif
 %if %{rhel} == 6
-Version:        6.5
-Release:        2%{?dist}
+Version:        6.6
+Release:        1%{?dist}
 %endif
 %if %{rhel} == 5
 Version:        5.10
@@ -71,10 +71,8 @@ Forum: http://forum.remirepo.net/
 %setup -c -T
 sed -e "s/VERSION/%{rhel}/" %{SOURCE1} | tee remi.repo
 
-%if %{rhel} == 7
-sed -e "s/VERSION/%{rhel}/" %{SOURCE2} | tee remi-safe.repo
-%endif
 %if %{rhel} >= 6
+sed -e "s/VERSION/%{rhel}/" %{SOURCE2} | tee remi-safe.repo
 sed -e "s/VERSION/%{rhel}/" %{SOURCE3} | tee remi-php70.repo
 %endif
 
@@ -107,6 +105,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 24 2015 Remi Collet <remmi@remirepo.net> - 6.6-1
+- add remi-safe repository
+
 * Thu Jul 23 2015 Remi Collet <remmi@remirepo.net> - 7.1-2 and 6.5-2
 - add remi-php70 repository
 
