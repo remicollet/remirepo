@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    e6191f0ddc7a7a291e58837861d3074014fcdd7d
+%global gh_commit    2898257e7174b80b964c3058ff3e6ddf139e43c3
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     theseer
 %global gh_project   Autoload
@@ -15,7 +15,7 @@
 %global pear_channel pear.netpirates.net
 
 Name:           php-theseer-autoload
-Version:        1.19.2
+Version:        1.20.0
 Release:        1%{?dist}
 Summary:        A tool and library to generate autoload code
 
@@ -126,6 +126,9 @@ fi
 
 
 %changelog
+* Sat Jul 25 2015 Remi Collet <remi@fedoraproject.org> - 1.20.1-1
+- update to 1.20.1
+
 * Tue Jul 14 2015 Remi Collet <remi@fedoraproject.org> - 1.19.2-1
 - update to 1.19.2
 
