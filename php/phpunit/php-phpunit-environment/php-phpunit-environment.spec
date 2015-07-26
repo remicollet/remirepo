@@ -1,4 +1,4 @@
-# spec file for php-phpunit-environment
+# remirepo/fedora spec file for php-phpunit-environment
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA
@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    5a8c7d31914337b69923db26c4221b81ff5a196e
+%global gh_commit    4fe0a44cddd8cc19583a024bdc7374eb2fef0b87
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   environment
@@ -19,14 +19,14 @@
 %endif
 
 Name:           php-phpunit-environment
-Version:        1.2.2
+Version:        1.3.0
 Release:        1%{?dist}
 Summary:        Handle HHVM/PHP environments
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -74,7 +74,9 @@ cp -pr                           SebastianBergmann/Environment \
 
 %if %{with_tests}
 %check
-%{_bindir}/phpunit --bootstrap SebastianBergmann/Environment/autoload.php
+: Run tests - set include_path to ensure PHPUnit autoloader use it
+%{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+%{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/SebastianBergmann/Environment/autoload.php
 %endif
 
 
@@ -92,6 +94,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jul 26 2015 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- update to 1.3.0
+
 * Fri Apr  3 2015 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
 - update to 1.2.2
 - fix license handling
