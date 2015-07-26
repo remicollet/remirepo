@@ -1,6 +1,6 @@
 diff -up PEAR/Command/Install.php.metadata PEAR/Command/Install.php
 --- PEAR/Command/Install.php.metadata	2015-07-25 13:41:42.000000000 +0200
-+++ PEAR/Command/Install.php	2015-07-25 17:07:55.601684682 +0200
++++ PEAR/Command/Install.php	2015-07-26 10:11:07.091721550 +0200
 @@ -555,7 +555,13 @@ Run post-installation scripts in package
              $packrootphp_dir = $this->installer->_prependPath(
                  $this->config->get('php_dir', null, 'pear.php.net'),
@@ -18,7 +18,7 @@ diff -up PEAR/Command/Install.php.metadata PEAR/Command/Install.php
                  $this->ui->outputData('using package root: ' . $options['packagingroot']);
 diff -up PEAR/Config.php.metadata PEAR/Config.php
 --- PEAR/Config.php.metadata	2015-07-25 13:41:42.000000000 +0200
-+++ PEAR/Config.php	2015-07-25 17:14:09.956196305 +0200
++++ PEAR/Config.php	2015-07-26 10:11:07.091721550 +0200
 @@ -86,6 +86,13 @@ if (getenv('PHP_PEAR_INSTALL_DIR')) {
      }
  }
@@ -104,7 +104,7 @@ diff -up PEAR/Config.php.metadata PEAR/Config.php
              }
 diff -up PEAR/DependencyDB.php.metadata PEAR/DependencyDB.php
 --- PEAR/DependencyDB.php.metadata	2015-07-25 13:41:42.000000000 +0200
-+++ PEAR/DependencyDB.php	2015-07-25 17:07:55.602684685 +0200
++++ PEAR/DependencyDB.php	2015-07-26 10:11:07.091721550 +0200
 @@ -120,8 +120,11 @@ class PEAR_DependencyDB
  
          $this->_registry = &$this->_config->getRegistry();
@@ -126,9 +126,21 @@ diff -up PEAR/DependencyDB.php.metadata PEAR/DependencyDB.php
 -}
 \ Pas de fin de ligne à la fin du fichier
 +}
+diff -up PEAR/Downloader/Package.php.metadata PEAR/Downloader/Package.php
+--- PEAR/Downloader/Package.php.metadata	2015-07-26 10:12:03.102981107 +0200
++++ PEAR/Downloader/Package.php	2015-07-26 10:12:07.048999397 +0200
+@@ -413,7 +413,7 @@ class PEAR_Downloader_Package
+                 if ($param->_installRegistry->packageExists($package, $channel)) {
+                     $packageVersion = $param->_installRegistry->packageInfo($package, 'version', $channel);
+                     if (version_compare($packageVersion, $param->getVersion(), '==')) {
+-                        if (!isset($options['force'])) {
++                        if (!isset($options['force']) && !isset($options['packagingroot'])) {
+                             $info = $param->getParsedPackage();
+                             unset($info['version']);
+                             unset($info['state']);
 diff -up PEAR/Installer.php.metadata PEAR/Installer.php
---- PEAR/Installer.php.metadata	2015-07-25 17:16:56.954883069 +0200
-+++ PEAR/Installer.php	2015-07-25 17:17:16.672964162 +0200
+--- PEAR/Installer.php.metadata	2015-07-25 13:41:42.000000000 +0200
++++ PEAR/Installer.php	2015-07-26 10:11:07.092721555 +0200
 @@ -1128,15 +1128,6 @@ class PEAR_Installer extends PEAR_Downlo
  
          $pkgname = $pkg->getName();
@@ -170,7 +182,7 @@ diff -up PEAR/Installer.php.metadata PEAR/Installer.php
                      $chanobj = $this->_registry->getChannel($channel, true);
 diff -up PEAR/Registry.php.metadata PEAR/Registry.php
 --- PEAR/Registry.php.metadata	2015-07-25 13:41:42.000000000 +0200
-+++ PEAR/Registry.php	2015-07-25 17:21:10.112933225 +0200
++++ PEAR/Registry.php	2015-07-26 10:11:07.092721555 +0200
 @@ -131,23 +131,26 @@ class PEAR_Registry extends PEAR
       * @access public
       */

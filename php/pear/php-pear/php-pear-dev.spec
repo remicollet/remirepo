@@ -33,7 +33,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.10.0
-Release: 0.1.%{pearprever}%{?dist}
+Release: 0.2.%{pearprever}%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -62,8 +62,10 @@ Source33: pear.conf.5
 
 # From RHEL: ignore REST cache creation failures as non-root user (#747361)
 # TODO See https://github.com/pear/pear-core/commit/dfef86e05211d2abc7870209d69064d448ef53b3#PEAR/REST.php
+# https://github.com/pear/pear-core/pull/42
 Patch0: php-pear-1.10-restcache.patch
 # Relocate Metadata
+# https://github.com/pear/pear-core/pull/43
 Patch1: php-pear-1.10-metadata.patch
 
 BuildArch: noarch
@@ -75,6 +77,9 @@ BuildRequires: gnupg
 %if %{with_tests}
 BuildRequires:  %{_bindir}/phpunit
 %endif
+
+# Temporary
+%{?scl:Obsoletes: %{scl_prefix}fakepear}
 
 Provides:  %{?scl_prefix}php-pear(Console_Getopt) = %{getoptver}
 Provides:  %{?scl_prefix}php-pear(Archive_Tar) = %{arctarver}
@@ -400,6 +405,9 @@ fi
 
 
 %changelog
+* Sun Jul 26 2015 Remi Collet <remi@fedoraproject.org> 1:1.10.0-0.2.dev1
+- improve metadata patch
+
 * Sat Jul 25 2015 Remi Collet <remi@fedoraproject.org> 1:1.10.0-0.1.dev1
 - update PEAR 1.10.0dev1 (for PHP7)
 
