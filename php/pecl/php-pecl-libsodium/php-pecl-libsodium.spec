@@ -30,14 +30,12 @@
 
 Summary:        Wrapper for the Sodium cryptographic library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        0.1.3
-Release:        4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        0.2.0
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-Patch1:         %{pecl_name}-php7.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if "%{?vendor}" == "Remi Collet"
@@ -100,9 +98,6 @@ mv %{pecl_name}-%{version} NTS
 sed -e '/role="test"/d' -i package.xml
 
 cd NTS
-%if "%{php_version}" > "7"
-%patch1 -p1 -b .php7
-%endif
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_LIBSODIUM_VERSION/{s/.* "//;s/".*$//;p}' php_libsodium.h)
@@ -235,6 +230,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jul 26 2015 Remi Collet <remi@fedoraproject.org> - 0.2.0-1
+- Update to 0.2.0
+
 * Wed Jul 22 2015 Remi Collet <remi@fedoraproject.org> - 0.1.3-4
 - rebuild against php 7.0.0beta2
 
