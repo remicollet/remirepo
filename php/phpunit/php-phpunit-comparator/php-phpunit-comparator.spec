@@ -7,11 +7,11 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    1dd8869519a225f7f2b9eb663e225298fade819e
+%global gh_commit    937efb279bd37a375bcadf584dec0726f84dbf22
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   comparator
-%global php_home     %{_datadir}/php/SebastianBergmann
+%global php_home     %{_datadir}/php
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 %else
@@ -19,21 +19,23 @@
 %endif
 
 Name:           php-phpunit-comparator
-Version:        1.1.1
-Release:        3%{?dist}
+Version:        1.2.0
+Release:        1%{?dist}
 Summary:        Compare PHP values for equality
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
-BuildRequires:  %{_bindir}/phpunit
+# from composer.json, "require-dev": {
+#        "phpunit/phpunit": "~4.4"
+BuildRequires:  php-composer(phpunit/phpunit) >= 4.4
 %endif
 
 # from composer.json
@@ -75,18 +77,17 @@ EOF
 
 %install
 rm -rf     %{buildroot}
-mkdir -p   %{buildroot}%{php_home}
-cp -pr src %{buildroot}%{php_home}/Comparator
+mkdir -p   %{buildroot}%{php_home}/SebastianBergmann
+cp -pr src %{buildroot}%{php_home}/SebastianBergmann/Comparator
 
 
 %check
 %if %{with_tests}
-sed -e 's/vendor/src/' -i tests/bootstrap.php
+sed -e '/vendor/d' -i tests/bootstrap.php
 sed -e '/log/d' phpunit.xml.dist >phpunit.xml
 
-phpunit \
-  --include-path %{buildroot}%{_datadir}/php \
-  --bootstrap tests/bootstrap.php
+%{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+%{_bindir}/phpunit
 %else
 : bootstrap build with test suite disabled
 %endif
@@ -102,10 +103,13 @@ rm -rf %{buildroot}
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 
-%{php_home}/Comparator
+%{php_home}/SebastianBergmann/Comparator
 
 
 %changelog
+* Sun Jul 26 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- update to 1.2.0
+
 * Mon Jun 29 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-3
 - manage dependencies in autoloader
 
