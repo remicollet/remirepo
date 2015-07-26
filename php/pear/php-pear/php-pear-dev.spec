@@ -33,7 +33,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.10.0
-Release: 0.2.%{pearprever}%{?dist}
+Release: 0.3.%{pearprever}%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -41,7 +41,7 @@ License: BSD and LGPLv3+
 Group: Development/Languages
 URL: http://pear.php.net/package/PEAR
 Source0: http://download.pear.php.net/package/PEAR-%{version}%{?pearprever}.tgz
-# wget https://raw.github.com/pear/pear-core/master/install-pear.php
+# wget https://raw.githubusercontent.com/pear/pear-core/stable/install-pear.php
 Source1: install-pear.php
 Source3: strip.php
 Source10: pear.sh
@@ -165,7 +165,8 @@ done
 cp %{SOURCE1} %{SOURCE30} %{SOURCE31} %{SOURCE32} %{SOURCE33} .
 
 # apply patches on used PEAR during install
-%patch1 -p0 -b .metadata
+%patch0 -p1 -b .rest
+%patch1 -p1 -b .metadata
 
 sed -e 's/@SCL@/%{?scl:%{scl}_}/' \
     -e 's:@VARDIR@:%{_localstatedir}:' \
@@ -241,10 +242,8 @@ install -m 644 -D macros.pear \
 
 # apply patches on installed PEAR tree
 pushd $RPM_BUILD_ROOT%{peardir} 
- pushd PEAR
-  %__patch --no-backup --fuzz 0 -p0 < %{PATCH0}
- popd
-  %__patch --no-backup --fuzz 0 -p0 < %{PATCH1}
+  %__patch --no-backup --fuzz 0 -p1 < %{PATCH0}
+  %__patch --no-backup --fuzz 0 -p1 < %{PATCH1}
 popd
 
 # Why this file here ?
@@ -405,6 +404,9 @@ fi
 
 
 %changelog
+* Sun Jul 26 2015 Remi Collet <remi@fedoraproject.org> 1:1.10.0-0.3.dev1
+- patch from PR 42 (merged) and 43 (submitted)
+
 * Sun Jul 26 2015 Remi Collet <remi@fedoraproject.org> 1:1.10.0-0.2.dev1
 - improve metadata patch
 
