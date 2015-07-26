@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    1c330b1b6e1ea8fd15f2fbea46770576e366855c
+%global gh_commit    18dfbcb81d05e2296c0bcddd4db96cade75e6f42
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit-mock-objects
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-phpunit-PHPUnit-MockObject
-Version:        2.3.5
+Version:        2.3.6
 Release:        1%{?dist}
 Summary:        Mock Object library for PHPUnit
 
@@ -48,11 +48,14 @@ BuildRequires:  php-composer(phpunit/phpunit) >= 4.4
 #        "php": ">=5.3.3",
 #        "phpunit/php-text-template": "~1.2",
 #        "doctrine/instantiator": "~1.0,>=1.0.2",
+#        "sebastian/exporter": "~1.2"
 Requires:       php(language) >= 5.3.3
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
 Requires:       php-composer(doctrine/instantiator) >= 1.0.2
 Requires:       php-composer(doctrine/instantiator) <  2
+Requires:       php-composer(sebastian/exporter) >= 1.2
+Requires:       php-composer(sebastian/exporter) <  2
 # From composer.json, "suggest": {
 #        "ext-soap": "*"
 Requires:       php-soap
@@ -60,7 +63,6 @@ Requires:       php-soap
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
-Requires:       php-composer(sebastian/exporter)
 
 Provides:       php-composer(phpunit/phpunit-mock-objects) = %{version}
 
@@ -140,6 +142,9 @@ fi
 
 
 %changelog
+* Sun Jul 26 2015 Remi Collet <remi@fedoraproject.org> - 2.3.6-1
+- update to 2.3.6 (only cleanup)
+
 * Sat Jul  4 2015 Remi Collet <remi@fedoraproject.org> - 2.3.5-1
 - update to 2.3.5
 
