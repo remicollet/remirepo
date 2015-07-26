@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    83fe1bdc5d47658b727595c14da140da92b3d66d
+%global gh_commit    3e82f4e9fc92665fafd9157568e4dcb01d014e5b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-timer
@@ -17,7 +17,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-PHP-Timer
-Version:        1.0.6
+Version:        1.0.7
 Release:        1%{?dist}
 Summary:        PHP Utility class for timing
 
@@ -72,9 +72,9 @@ cp -pr PHP %{buildroot}%{php_home}
 
 %if %{with_tests}
 %check
-phpunit \
-  --include-path=%{buildroot}%{php_home} \
-  --verbose .
+: Run tests - set include_path to ensure PHPUnit autoloader use it
+%{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+%{_bindir}/phpunit .
 %endif
 
 
@@ -91,13 +91,17 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc README.md composer.json
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
+%doc README.md
+%doc composer.json
 %{php_home}/PHP
 
 
 %changelog
+* Sun Jul 26 2015 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
+- update to 1.0.7 (only CS)
+
 * Mon Jun 15 2015 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
 - update to 1.0.6
 - generate autoloader, no more provided by upstream
