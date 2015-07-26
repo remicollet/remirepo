@@ -1,4 +1,4 @@
-# spec file for php-phpunit-exporter
+# remirepo/fedora spec file for php-phpunit-exporter
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -7,11 +7,11 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    84839970d05254c73cde183a721c7af13aede943
+%global gh_commit    7ae5513327cb536431847bcc0c10edba2701064e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   exporter
-%global php_home     %{_datadir}/php/SebastianBergmann/
+%global php_home     %{_datadir}/php
 %global pear_name    Exporter
 %global pear_channel pear.phpunit.de
 %if %{bootstrap}
@@ -21,21 +21,23 @@
 %endif
 
 Name:           php-phpunit-exporter
-Version:        1.2.0
+Version:        1.2.1
 Release:        1%{?dist}
 Summary:        Export PHP variables for visualization
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
-BuildRequires:  %{_bindir}/phpunit
+# from composer.json, "require-dev": {
+#        "phpunit/phpunit": "~4.4"
+BuildRequires:  php-composer(phpunit/phpunit) >= 4.4
 BuildRequires:  php-composer(sebastian/recursion-context) >= 1.0
 %endif
 
@@ -82,15 +84,14 @@ EOF
 
 %install
 rm -rf     %{buildroot}
-mkdir -p   %{buildroot}%{php_home}
-cp -pr src %{buildroot}%{php_home}/Exporter
+mkdir -p   %{buildroot}%{php_home}/SebastianBergmann
+cp -pr src %{buildroot}%{php_home}/SebastianBergmann/Exporter
 
 
 %if %{with_tests}
 %check
-phpunit \
-  --include-path %{buildroot}%{_datadir}/php \
-  --bootstrap %{buildroot}%{php_home}/Exporter/autoload.php
+%{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+%{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/SebastianBergmann/Exporter/autoload.php
 %endif
 
 
@@ -107,13 +108,17 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc README.md composer.json
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%{php_home}/Exporter
+%doc README.md
+%doc composer.json
+%{php_home}/SebastianBergmann/Exporter
 
 
 %changelog
+* Sun Jul 26 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- update to 1.2.1 (only CS)
+
 * Fri Jan 30 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - update to 1.2.0
 
