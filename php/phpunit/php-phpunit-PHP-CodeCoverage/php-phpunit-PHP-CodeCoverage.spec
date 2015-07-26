@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    6044546998c7627ab997501a3d0db972b3db9790
+%global gh_commit    5bd48b86cd282da411bb80baac1398ce3fefac41
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-code-coverage
@@ -22,7 +22,7 @@
 %endif
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        2.1.8
+Version:        2.1.9
 Release:        1%{?dist}
 Summary:        PHP code coverage information
 
@@ -39,8 +39,11 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  php-theseer-autoload >= 1.19
 %if %{with_tests}
-BuildRequires:  php-pear-PHPUnit >= 4.1
-BuildRequires:  php-pecl-xdebug  >= 2.2.1
+# From composer.json, "require-dev": {
+#        "phpunit/phpunit": "~4",
+#        "ext-xdebug": ">=2.1.4"
+BuildRequires:  php-composer(phpunit/phpunit) >= 4
+BuildRequires:  php-pecl-xdebug  >= 2.1.4
 %endif
 
 # From composer.json, require
@@ -67,10 +70,9 @@ Requires:       php-composer(sebastian/version) <  2
 #        "ext-xmlwriter": "*"
 Requires:       php-dom
 Requires:       php-xmlwriter
-# From phpcompatinfo report for version 2.0.11
+# From phpcompatinfo report for version 2.1.9
 Requires:       php-date
 Requires:       php-json
-Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-tokenizer
 
@@ -138,6 +140,9 @@ fi
 
 
 %changelog
+* Sun Jul 26 2015 Remi Collet <remi@fedoraproject.org> - 2.1.9-1
+- update to 2.1.9 (only cleanup)
+
 * Mon Jul 13 2015 Remi Collet <remi@fedoraproject.org> - 2.1.8-1
 - update to 2.1.8
 
