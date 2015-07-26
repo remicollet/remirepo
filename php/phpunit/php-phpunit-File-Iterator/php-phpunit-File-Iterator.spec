@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a923bb15680d0089e2316f7a4af8f437046e96bb
+%global gh_commit    6150bf2c35d3fc379e50c7602b75caceaa39dbf0
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-file-iterator
@@ -18,14 +18,14 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-File-Iterator
-Version:        1.4.0
+Version:        1.4.1
 Release:        1%{?dist}
 Summary:        FilterIterator implementation that filters files based on a list of suffixes
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -92,6 +92,9 @@ fi
 
 
 %changelog
+* Sun Jul 26 2015 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
+- Update to 1.4.1 (only CS)
+
 * Thu Apr  2 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - Update to 1.4.0
 - fix license handling
