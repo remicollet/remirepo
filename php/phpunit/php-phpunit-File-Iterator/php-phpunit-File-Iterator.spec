@@ -1,4 +1,4 @@
-# spec file for php-phpunit-File-Iterator
+# remirepo/fedora spec file for php-phpunit-File-Iterator
 #
 # Copyright (c) 2009-2015 Christof Damian, Remi Collet
 #
