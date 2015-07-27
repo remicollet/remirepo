@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #114 libsodium version 0.2.0 ] {
+Extension [ <persistent> extension #114 libsodium version 0.2.1 ] {
 
   - Constants [36] {
     Constant [ integer Sodium\CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES ] { 32 }
@@ -314,6 +314,12 @@ Extension [ <persistent> extension #114 libsodium version 0.2.0 ] {
       - Parameters [2] {
         Parameter #0 [ <required> $string_1 ]
         Parameter #1 [ <required> $string_2 ]
+      }
+    }
+    Function [ <internal:libsodium> function Sodium\increment ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $string ]
       }
     }
     Function [ <internal:libsodium> function Sodium\library_version_major ] {
