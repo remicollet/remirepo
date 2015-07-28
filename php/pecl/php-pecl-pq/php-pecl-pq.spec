@@ -13,13 +13,13 @@
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  pq
-%global rcver      RC1
+%global rcver      RC2
 %if %{?runselftest}%{!?runselftest:1}
 # Build using "--without tests" to disable tests
-%global with_tests %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
 %else
 # Build using "--with tests" to enable tests
-%global with_tests %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests 0%{?_with_tests:1}
 %endif
 %if "%{php_version}" < "5.6"
 # After raph, json
@@ -33,24 +33,21 @@ Summary:        PostgreSQL client library (libpq) binding
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        0.6.0
 %if 0%{?rcver:1}
-Release:        0.1.%{rcver}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.2.%{rcver}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?rcver}.tgz
 
-# https://github.com/m6w6/ext-pq/issues/2 (to revert)
-Patch0:         %{pecl_name}-upstream.patch
-
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  postgresql-devel > 9
 BuildRequires:  %{?scl_prefix}php-devel > 5.4
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-json
-BuildRequires:  %{?scl_prefix}php-pecl-raphf-devel
+BuildRequires:  %{?scl_prefix}php-pecl-raphf-devel >= 1.1.0
 %if %{with_tests}
 BuildRequires:  postgresql-server
 BuildRequires:  postgresql-contrib
@@ -61,7 +58,7 @@ Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires:       %{?scl_prefix}php-json%{?_isa}
-Requires:       %{?scl_prefix}php-raphf%{?_isa}
+Requires:       %{?scl_prefix}php-raphf%{?_isa}  >= 1.1.0
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
@@ -103,7 +100,7 @@ Highlights:
 * Fetching simple multi-dimensional array maps
 * Working Gateway implementation
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -114,7 +111,6 @@ mv %{pecl_name}-%{version}%{?rcver} NTS
 sed -e '/role="test"/d' -i package.xml
 
 cd NTS
-%patch0 -p1 -R -b .upstream
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PQ_VERSION/{s/.* "//;s/".*$//;p}' php_pq.h)
@@ -284,6 +280,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 28 2015 Remi Collet <remi@fedoraproject.org> - 0.6.0-0.2.RC2
+- Update to 0.6.0RC2 (beta)
+- raise dependency on raphf 1.1.0
+
 * Wed Jun 10 2015 Remi Collet <remi@fedoraproject.org> - 0.6.0-0.1.RC1
 - Update to 0.6.0RC1
 - drop runtime dependency on pear, new scriptlets
