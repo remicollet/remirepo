@@ -8,8 +8,8 @@
 # Please preserve changelog entries
 #
 Name:           owncloud
-Version:        8.0.4
-Release:        3%{?dist}
+Version:        8.0.5
+Release:        1%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
 
@@ -72,6 +72,11 @@ Patch7:        owncloud-8.0.0-disable_minify.patch
 # Stop OC from trying to do stuff to .htaccess files. Just calm down, OC.
 # Distributors are on the case.
 Patch8:         owncloud-8.0.3-dont_update_htacess.patch
+# Use Google autoloader instead of including particular files. Upstream
+# no longer has each file include all others it needs, they expect you
+# to use the autoloader. Can't go upstream until upstream bumps to a
+# version of the lib that actually includes the autoloader...
+Patch9:         owncloud-8.0.4-google_autoload.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -260,6 +265,7 @@ sed -i 's/\r$//' apps/files_encryption/lib/crypt.php
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
+%patch9 -p1
 
 # prepare package doc
 cp %{SOURCE3} README.fedora
@@ -495,6 +501,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 10 2015 Adam Williamson <awilliam@redhat.com> - 8.0.5-1
+- new release 8.0.5 (should fix app enabling, RHBZ #1240776)
+- patch to use Google lib autoloader
+
 * Sun Jul  5 2015 Remi Collet <remi@remirepo.net> - 8.0.4-3
 - backport for remimrepo
 
