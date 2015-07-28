@@ -8,7 +8,10 @@ Extension [ <persistent> extension #198 ionCube Loader version <no_version> ] {
       Current = '1'
     }
     Entry [ ic24.sec.approve_included_files <SYSTEM> ]
-      Current = '0'
+      Current = ''
+    }
+    Entry [ ic24.sec.trusted_include_paths <SYSTEM> ]
+      Current = ''
     }
     Entry [ ic24.sec.block_uploaded_files <SYSTEM> ]
       Current = '1'

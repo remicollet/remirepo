@@ -24,8 +24,8 @@
 
 Name:          %{?scl_prefix}php-ioncube-loader
 Summary:       Loader for ionCube Encoded Files with ionCube 24 support
-Version:       5.0.12
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:       5.0.13
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       Distribuable
 Group:         Development/Languages
 
@@ -68,7 +68,7 @@ Obsoletes:     php56w-ioncube-loader <= %{version}
 %description
 Loader for ionCube Encoded Files with ionCube 24 support.
 
-Package built for PHP %(%{__php} -n -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -n -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -93,7 +93,8 @@ zend_extension = %{extname}.so
 ; ionCube PHP Loader + Intrusion Protection from ioncube24.com configuration
 ;ic24.enable = 0
 ;ic24.sec.stop_on_error = 1
-;ic24.sec.approve_included_files = 0
+;ic24.sec.approve_included_files = ''
+;ic24.sec.trusted_include_paths = ''
 ;ic24.sec.block_uploaded_files = 1
 ;ic24.api_access_key = ''
 ;ic24.api_check_ip = 1
@@ -174,6 +175,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 28 2015 Remi Collet <remi@remirepo.net> - 5.0.13-1
+- update to 5.0.13 (Jul 28, 2015)
+
 * Tue Jul 14 2015 Remi Collet <remi@remirepo.net> - 5.0.12-1
 - update to 5.0.12 (Jul 13, 2015)
 
