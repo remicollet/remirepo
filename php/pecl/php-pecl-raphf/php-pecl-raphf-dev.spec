@@ -45,8 +45,8 @@
 
 Summary:        Resource and persistent handles factory
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.0.5
-Release:        0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        2.0.0
+Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -120,9 +120,9 @@ mv NTS/package.xml .
 cd NTS
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_RAPHF_VERSION/{s/.* "//;s/".*$//;p}' php_raphf.h)
-if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
-   #exit 1
+if test "x${extver}" != "x%{version}%{?prever:-%{prever}}%{?gh_date:dev}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}%{?gh_date:dev}.
+   exit 1
 fi
 cd ..
 
@@ -270,6 +270,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 28 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.1.20150721git6d04f5b
+- bump version (as upstream)
+
 * Wed Jul 22 2015 Remi Collet <remi@fedoraproject.org> - 1.0.5-0.4.20150721git6d04f5b
 - rebuild against php 7.0.0beta2
 - sources from github
