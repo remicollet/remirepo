@@ -66,8 +66,8 @@ BuildRequires:  pcre-devel
 BuildRequires:  zlib-devel >= 1.2.0.4
 BuildRequires:  curl-devel >= 7.18.2
 BuildRequires:  libidn-devel
-BuildRequires:  %{?sub_prefix}php-pecl-propro-devel
-BuildRequires:  %{?sub_prefix}php-pecl-raphf-devel
+BuildRequires:  %{?sub_prefix}php-pecl-propro-devel >= 1.0.0
+BuildRequires:  %{?sub_prefix}php-pecl-raphf-devel  >= 1.1.0
 
 %if 0%{?scl:1} && 0%{?fedora} < 15 && 0%{?rhel} < 7 && "%{?scl_vendor}" != "remi"
 # Filter in the SCL collection
@@ -100,8 +100,8 @@ Requires:       %{?scl_prefix}php-hash%{?_isa}
 Requires:       %{?scl_prefix}php-iconv%{?_isa}
 Requires:       %{?scl_prefix}php-spl%{?_isa}
 %endif
-Requires:       %{?scl_prefix}php-pecl(propro)%{?_isa}
-Requires:       %{?scl_prefix}php-pecl(raphf)%{?_isa}
+Requires:       %{?scl_prefix}php-pecl(propro)%{?_isa} >= 1.0.0
+Requires:       %{?scl_prefix}php-pecl(raphf)%{?_isa}  >= 1.1.0
 %if "%{php_version}" > "5.6"
 # V1 don't support PHP 5.6 https://bugs.php.net/66879
 Obsoletes:      %{?scl_prefix}php-pecl-http1 < 2
