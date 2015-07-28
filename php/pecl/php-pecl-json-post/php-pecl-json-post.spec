@@ -36,14 +36,12 @@
 
 Summary:        JSON POST handler
 Name:           %{?sub_prefix}php-pecl-json-post
-Version:        1.0.0
-Release:        5%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.0.1
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
-
-Patch0:         %{pecl_name}-php7.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -107,7 +105,6 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd NTS
-%patch0 -p1 -b .upstream
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_JSON_POST_VERSION/{s/.* "//;s/".*$//;p}' php_json_post.h)
@@ -244,6 +241,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 28 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1 (stable)
+
 * Fri Jul 24 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-5
 - add upstream patch for PHP 7
 
