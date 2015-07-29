@@ -68,7 +68,7 @@ class PkgClient {
 function run($name, $rpm) {
 	global $quiet, $verb, $client;
 
-	if (in_array($name, ['znerol/php-stringprep'])) {
+	if (in_array($name, ['znerol/php-stringprep', 'psr/http-message-implementation'])) {
 		return;
 	}
 	list($owner, $library) = explode('/', $name, 2);
