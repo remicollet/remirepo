@@ -6,37 +6,39 @@
 #
 # Please, preserve the changelog entries
 #
-%global dl_version %(c=%{version}; echo ${c//./_})
-%global real_name  tcpdf
+%global gh_commit    25394f75d63a46d8c60b940e5e8519369b5964eb
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     tecnickcom
+%global gh_project   TCPDF
+%global real_name    tcpdf
 
 Name:           php-tcpdf
 Summary:        PHP class for generating PDF documents and barcodes
-Version:        6.2.9
+Version:        6.2.10
 Release:        1%{?dist}
 
 URL:            http://www.tcpdf.org
 License:        LGPLv3+
 Group:          Development/Libraries
 
-# Keep full version, min version lack lot of files.
-Source0:        http://downloads.sourceforge.net/%{real_name}/%{real_name}_%{dl_version}.zip
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{?gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-cli
 
 Requires:       php(language) >= 5.3
-# From phpcompatinfo report form version 6.0.057
+# From phpcompatinfo report form version 6.2.10
 Requires:       php-bcmath
 Requires:       php-curl
 Requires:       php-date
 Requires:       php-gd
 Requires:       php-hash
+Requires:       php-json
 Requires:       php-mbstring
-Requires:       php-mcrypt
 Requires:       php-openssl
 Requires:       php-pcre
-Requires:       php-spl
+Requires:       php-posix
 Requires:       php-tidy
 Requires:       php-xml
 Requires:       php-zlib
@@ -207,15 +209,22 @@ This package allow to use system GNU FreeFont serif font faces in TCPDF.
 
 
 %prep
-%setup -qn %{real_name}
+%setup -q -n %{gh_project}-%{gh_commit}
 
 : remove bundled fonts
-rm -rf fonts/dejavu-fonts-ttf* fonts/freefont-*
+rm -rf fonts/dejavu-fonts-ttf* fonts/freefont-* fonts/ae_fonts_*
 for fic in fonts/*.z
 do
   rm -f $fic ${fic/.z/.php}
 done
 ls fonts | sed -e 's|^|%{_datadir}/php/%{real_name}/fonts/|' >corefonts.lst
+
+: Sanity check
+libver=$(sed -n '/"version"/{s/.*: "//;s/".*$//;p}' composer.json)
+if test "x${libver}" != "x%{version}"; then
+   : Error: Upstream version is ${libver}, expecting %{version}.
+   exit 1
+fi
 
 
 %build
@@ -224,7 +233,7 @@ ls fonts | sed -e 's|^|%{_datadir}/php/%{real_name}/fonts/|' >corefonts.lst
 
 %install
 rm -rf %{buildroot}
-# Library
+: Library
 install -d     %{buildroot}%{_datadir}/php/%{real_name}
 cp -a *.php    %{buildroot}%{_datadir}/php/%{real_name}/
 cp -a include  %{buildroot}%{_datadir}/php/%{real_name}/
@@ -233,12 +242,12 @@ install -d     %{buildroot}%{_datadir}/php/%{real_name}/images
 install -m 0644 examples/images/_blank.png \
                %{buildroot}%{_datadir}/php/%{real_name}/images/
 
-# Config
+: Configuration
 install -d     %{buildroot}%{_sysconfdir}/%{name}
 install -m 0644 config/*.php \
                %{buildroot}%{_sysconfdir}/%{name}
 
-# Tools
+: Tools
 install -d %{buildroot}%{_bindir}
 install -m 0755 tools/%{real_name}_addfont.php \
            %{buildroot}%{_bindir}/%{real_name}_addfont
@@ -322,6 +331,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jul 29 2015 Remi Collet <remi@fedoraproject.org> - 6.2.10-1
+- update to 6.2.10
+- sources from github (instead of sourceforge)
+- drop dependency on php-mcrypt
+
 * Sat Jun 27 2015 Remi Collet <remi@fedoraproject.org> - 6.2.9-1
 - update to 6.2.9
 
