@@ -6,6 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-pq}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -30,10 +38,10 @@
 %endif
 
 Summary:        PostgreSQL client library (libpq) binding
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        0.6.0
 %if 0%{?rcver:1}
-Release:        0.2.%{rcver}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.3.%{rcver}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -47,7 +55,7 @@ BuildRequires:  postgresql-devel > 9
 BuildRequires:  %{?scl_prefix}php-devel > 5.4
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-json
-BuildRequires:  %{?scl_prefix}php-pecl-raphf-devel >= 1.1.0
+BuildRequires:  %{?sub_prefix}php-pecl-raphf-devel >= 1.1.0
 %if %{with_tests}
 BuildRequires:  postgresql-server
 BuildRequires:  postgresql-contrib
@@ -58,7 +66,7 @@ Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires:       %{?scl_prefix}php-json%{?_isa}
-Requires:       %{?scl_prefix}php-raphf%{?_isa}  >= 1.1.0
+Requires:       %{?sub_prefix}php-raphf%{?_isa}  >= 1.1.0
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
@@ -280,6 +288,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jul 29 2015 Remi Collet <remi@fedoraproject.org> - 0.6.0-0.3.RC2
+- allow build against rh-php56 (as more-php56)
+
 * Tue Jul 28 2015 Remi Collet <remi@fedoraproject.org> - 0.6.0-0.2.RC2
 - Update to 0.6.0RC2 (beta)
 - raise dependency on raphf 1.1.0
