@@ -10,14 +10,14 @@
 %global pear_name    Predis
 %global pear_channel pear.nrk.io
 
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
+%if 0%{?fedora} >= 21 || 0%{?rhel} >= 7
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 %else
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 %endif
 
 Name:           php-nrk-Predis
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        PHP client library for Redis
 
@@ -33,7 +33,7 @@ BuildRequires:  php-pear(PEAR)
 BuildRequires:  php-channel(%{pear_channel})
 %if %{with_tests}
 BuildRequires:  php-phpunit-PHPUnit
-BuildRequires:  redis > 2.6
+BuildRequires:  redis > 2.8
 %endif
 
 Requires(post): %{__pear}
@@ -140,6 +140,9 @@ fi
 
 
 %changelog
+* Thu Jul 30 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- Update to 1.0.2
+
 * Fri Jan 02 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1
 
