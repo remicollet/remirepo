@@ -1,4 +1,7 @@
-# spec file for php-pecl-jsonc
+# remirepo spec file for php-pecl-jsonc
+# with SCL compatibility, from:
+#
+# Fedora spec file for php-pecl-jsonc
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -12,6 +15,7 @@
 %global pecl_name  json
 %global proj_name  jsonc
 %global with_zts   0%{?__ztsphp:1}
+%global prever     RC1
 
 %if "%{php_version}" > "5.5"
 %global ext_name     json
@@ -25,28 +29,17 @@
 %global ini_name  40-%{ext_name}.ini
 %endif
 
-%if 0%{?fedora} < 19 || 0%{?fedora} > 20
-%global with_libjson 0
-%else
-%global with_libjson 1
-%endif
-
-
 Summary:       Support for JSON serialization
 Name:          %{?scl_prefix}php-pecl-%{proj_name}
-Version:       1.3.7
-Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
-%if %{with_libjson}
-License:       PHP
-%else
+Version:       1.3.8
+Release:       0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # PHP extension is PHP
 # jsonc-c is MIT
 # json-c/linkhask.c is Public Domain
 License:       PHP and MIT and Public Domain
-%endif
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/%{proj_name}
-Source0:       http://pecl.php.net/get/%{proj_name}-%{version}.tgz
+Source0:       http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 
 Patch0:        %{proj_name}-el5-32.patch
 
@@ -54,13 +47,8 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel >= 5.4
 BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: pcre-devel
-%if %{with_libjson}
-BuildRequires: json-c-devel >= 0.11
-BuildRequires: json-c-devel <  0.12
-%else
 Provides:      bundled(libjson-c) = 0.11
 Provides:      bundled(bobjenkins-hash)
-%endif
 
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
@@ -133,14 +121,7 @@ Only used to be the best provider for php-json.
 %prep
 %setup -q -c 
 
-cd %{proj_name}-%{version}
-%if %{with_libjson}
-rm -rf json-c
-%else
-sed -e '/AUTHORS/s/role="src"/role="doc"/' \
-    -e '/COPYING/s/role="src"/role="doc"/' \
-    -i ../package.xml
-%endif
+cd %{proj_name}-%{version}%{?prever}
 
 %ifarch i386
 %if 0%{?rhel} == 5
@@ -150,7 +131,7 @@ sed -e '/AUTHORS/s/role="src"/role="doc"/' \
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_JSON_VERSION/{s/.* "//;s/".*$//;p}' php_json.h )
-if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
+if test "x${extver}" != "x%{version}%{?prever}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
    exit 1
 fi
@@ -168,17 +149,14 @@ EOF
 
 %if %{with_zts}
 # duplicate for ZTS build
-cp -pr %{proj_name}-%{version} %{proj_name}-zts
+cp -pr %{proj_name}-%{version}%{?prever} %{proj_name}-zts
 %endif
 
 
 %build
-cd %{proj_name}-%{version}
+cd %{proj_name}-%{version}%{?prever}
 %{_bindir}/phpize
 %configure \
-%if %{with_libjson}
-  --with-libjson \
-%endif
 %if "%{ext_name}" == "jsonc"
   --with-jsonc \
 %endif
@@ -189,9 +167,6 @@ make %{?_smp_mflags}
 cd ../%{proj_name}-zts
 %{_bindir}/zts-phpize
 %configure \
-%if %{with_libjson}
-  --with-libjson \
-%endif
 %if "%{ext_name}" == "jsonc"
   --with-jsonc \
 %endif
@@ -203,7 +178,7 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 # Install the NTS stuff
-make -C %{proj_name}-%{version} \
+make -C %{proj_name}-%{version}%{?prever} \
      install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
@@ -219,15 +194,15 @@ install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # Test & Documentation
 for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 %{proj_name}-%{version}/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+do install -Dpm 644 %{proj_name}-%{version}%{?prever}/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
 done
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 %{proj_name}-%{version}/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+do install -Dpm 644 %{proj_name}-%{version}%{?prever}/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
 %check
-cd %{proj_name}-%{version}
+cd %{proj_name}-%{version}%{?prever}
 
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
@@ -245,7 +220,7 @@ TEST_PHP_EXECUTABLE=%{_bindir}/php \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{ext_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/php -n run-tests.php
+%{_bindir}/php -n run-tests.php --show-diff
 
 %if %{with_zts}
 cd ../%{proj_name}-zts
@@ -254,7 +229,7 @@ TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{ext_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__ztsphp} -n run-tests.php
+%{__ztsphp} -n run-tests.php --show-diff
 %endif
 
 
@@ -282,10 +257,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%{?_licensedir:%license %{proj_name}-%{version}/LICENSE}
-%if ! %{with_libjson}
-%{?_licensedir:%license %{proj_name}-%{version}/json-c/COPYING}
-%endif
+%{?_licensedir:%license %{proj_name}-%{version}%{?prever}/LICENSE}
+%{?_licensedir:%license %{proj_name}-%{version}%{?prever}/json-c/COPYING}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -317,6 +290,10 @@ rm -rf %{buildroot}
 # Note to remi : remember to always build in remi-php55(56) first
 #
 %changelog
+* Thu Jul 30 2015 Remi Collet <remi@fedoraproject.org> - 1.3.8-0.1.RC1
+- test build for upcoming 1.3.8
+- build with system libjson-c is not more supported
+
 * Fri Mar 27 2015 Remi Collet <remi@fedoraproject.org> - 1.3.7-2
 - fix license: PHP and MIT and Public Domain
 - fix missing license files

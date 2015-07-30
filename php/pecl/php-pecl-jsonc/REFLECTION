@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #104 json version 1.3.7 ] {
+Extension [ <persistent> extension #106 json version 1.3.8RC1 ] {
 
   - Constants [25] {
     Constant [ integer JSON_HEX_TAG ] { 1 }
