@@ -333,3 +333,25 @@ index 5b2ce14..29592dc 100644
                              $info = $param->getParsedPackage();
                              unset($info['version']);
                              unset($info['state']);
+From e484e87b800183d680b6830f23c8bef48d1b6ede Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 30 Jul 2015 13:37:55 +0200
+Subject: [PATCH] skip check (in base) when packagingroot used (different tree)
+
+---
+ PEAR/Downloader/Package.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/PEAR/Downloader/Package.php b/PEAR/Downloader/Package.php
+index 29592dc..70ea8c3 100644
+--- a/PEAR/Downloader/Package.php
++++ b/PEAR/Downloader/Package.php
+@@ -425,7 +425,7 @@ public static function removeInstalled(&$params)
+                             $params[$i] = false;
+                         }
+                     } elseif (!isset($options['force']) && !isset($options['upgrade']) &&
+-                          !isset($options['soft'])) {
++                          !isset($options['soft']) && !isset($options['packagingroot'])) {
+                         $info = $param->getParsedPackage();
+                         $param->_downloader->log(1, 'Skipping package "' .
+                             $param->getShortName() .

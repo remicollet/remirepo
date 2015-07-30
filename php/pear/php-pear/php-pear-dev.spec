@@ -33,7 +33,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.10.0
-Release: 0.3.%{pearprever}%{?dist}
+Release: 0.4.%{pearprever}%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -65,7 +65,8 @@ Source33: pear.conf.5
 # https://github.com/pear/pear-core/pull/42
 Patch0: php-pear-1.10-restcache.patch
 # Relocate Metadata
-# https://github.com/pear/pear-core/pull/43
+# https://github.com/pear/pear-core/pull/44
+# https://github.com/pear/pear-core/pull/45
 Patch1: php-pear-1.10-metadata.patch
 
 BuildArch: noarch
@@ -404,11 +405,17 @@ fi
 
 
 %changelog
+* Thu Jul 30 2015 Remi Collet <remi@fedoraproject.org> 1:1.10.0-0.4.dev1
+- add patch to skip version check with --packagingroot
+- open https://github.com/pear/pear-core/pull/45
+
 * Sun Jul 26 2015 Remi Collet <remi@fedoraproject.org> 1:1.10.0-0.3.dev1
-- patch from PR 42 (merged) and 43 (submitted)
+- patch from PR 42 (merged) and 44 (merged)
 
 * Sun Jul 26 2015 Remi Collet <remi@fedoraproject.org> 1:1.10.0-0.2.dev1
 - improve metadata patch
+- open https://github.com/pear/pear-core/pull/42
+- open https://github.com/pear/pear-core/pull/44
 
 * Sat Jul 25 2015 Remi Collet <remi@fedoraproject.org> 1:1.10.0-0.1.dev1
 - update PEAR 1.10.0dev1 (for PHP7)
