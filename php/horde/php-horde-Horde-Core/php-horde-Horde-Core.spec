@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-Horde-Core
-Version:        2.20.7
+Version:        2.20.8
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -281,6 +281,9 @@ fi
 
 
 %changelog
+* Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 2.20.8-1
+- Update to 2.20.8
+
 * Wed Jul 22 2015 Remi Collet <remi@fedoraproject.org> - 2.20.7-1
 - Update to 2.20.7
 
