@@ -114,6 +114,8 @@ sed -e 's/testHtml2textVarious/SKIP_testHtml2textVarious/' \
     -i Html2textTest.php
 sed -e 's/testBug9567/SKIP_testBug9567/' \
     -i XssTest.php
+sed -e 's/testXss/SKIP_testXss/' \
+    -i XssTest.php
 %endif
 
 phpunit --verbose .
