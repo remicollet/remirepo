@@ -11,8 +11,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Css-Parser
-Version:        1.0.6
-Release:        2%{?dist}
+Version:        1.0.7
+Release:        1%{?dist}
 Summary:        Horde CSS Parser
 
 Group:          Development/Libraries
@@ -88,7 +88,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit .
+phpunit --verbose .
 
 
 %clean
@@ -116,6 +116,9 @@ fi
 
 
 %changelog
+* Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
+- Update to 1.0.7
+
 * Tue Jan 13 2015 Remi Collet <remi@fedoraproject.org> - 1.0.6-2
 - raise dependency on sabberworm/php-css-parser >= 6
 
