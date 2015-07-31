@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Alarm
-Version:        2.2.4
+Version:        2.2.5
 Release:        1%{?dist}
 Summary:        Horde Alarm Libraries
 
@@ -111,10 +111,7 @@ done | tee ../%{pear_name}.lang
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit\
-    --include-path=%{buildroot}%{pear_phpdir} \
-    -d date.timezone=UTC \
-    .
+phpunit .
 
 
 %post
@@ -141,6 +138,9 @@ fi
 
 
 %changelog
+* Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 2.2.5-1
+- Update to 2.2.5
+
 * Wed Feb 11 2015 Remi Collet <remi@fedoraproject.org> - 2.2.4-1
 - Update to 2.2.4
 - add provides php-composer(horde/horde-alarm)
