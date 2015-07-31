@@ -18,7 +18,7 @@
 %endif
 
 Name:           php-horde-Horde-Exception
-Version:        2.0.5
+Version:        2.0.6
 Release:        1%{?dist}
 Summary:        Horde Exception Handler
 
@@ -66,6 +66,7 @@ cd %{pear_name}-%{version}
 sed -e '/%{pear_name}.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -101,7 +102,7 @@ done | tee ../%{pear_name}.lang
 %check
 %if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit .
+phpunit --verbose .
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -130,6 +131,9 @@ fi
 
 
 %changelog
+* Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
+- Update to 2.0.6
+
 * Thu Jan 08 2015 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5
 - add provides php-composer(horde/horde-exception)
