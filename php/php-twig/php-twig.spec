@@ -14,8 +14,8 @@
 
 %global github_owner     twigphp
 %global github_name      Twig
-%global github_version   1.18.2
-%global github_commit    e8e6575abf6102af53ec283f7f14b89e304fa602
+%global github_version   1.19.0
+%global github_commit    edbeaf43b0a606cdaadc32a11d2673614a377b90
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 
@@ -56,7 +56,7 @@
 
 Name:          %{?sub_prefix}php-%{composer_project}
 Version:       %{github_version}
-Release:       4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:       The flexible, fast, and secure template engine for PHP
 
 Group:         Development/Libraries
@@ -289,6 +289,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 1.19.0-1
+- Update to 1.19.0
+
 * Mon Jun 22 2015 Remi Collet <rcollet@redhat.com> - 1.18.2-4
 - add virtual "rh-php56" provides
 
