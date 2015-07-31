@@ -80,7 +80,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
 %if 0%{?fedora} < 24
-: Skip failed test with jsonc < 1.3.8
+: Skip failed test with jsonc before 1.3.8
 sed -e 's/function testJsonInvalidUTF8Input/function SKIP_testJsonInvalidUTF8Input/' \
     -i JsonTest.php
 %endif
