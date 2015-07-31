@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Serialize
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}
 Summary:        Data Encapulation API
 
@@ -79,11 +79,13 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
-# Because of jsonc
+%if 0%{?fedora} < 24
+: Skip failed test with jsonc < 1.3.8
 sed -e 's/function testJsonInvalidUTF8Input/function SKIP_testJsonInvalidUTF8Input/' \
     -i JsonTest.php
+%endif
 
-phpunit .
+phpunit --verbose .
 
 
 %post
@@ -107,6 +109,9 @@ fi
 
 
 %changelog
+* Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4 (no change)
+
 * Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3
 - add provides php-composer(horde/horde-serialize)
