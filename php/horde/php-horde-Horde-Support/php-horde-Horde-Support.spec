@@ -18,7 +18,7 @@
 %endif
 
 Name:           php-horde-Horde-Support
-Version:        2.1.3
+Version:        2.1.4
 Release:        1%{?dist}
 Summary:        Horde support package
 
@@ -91,7 +91,7 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %check
 %if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit .
+phpunit --verbose .
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -117,6 +117,9 @@ fi
 
 
 %changelog
+* Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
+- Update to 2.1.4 (no change)
+
 * Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
 - Update to 2.1.3
 - add dependency on Horde_Util
