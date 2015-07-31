@@ -1,4 +1,4 @@
-# spec file for php-nrk-Predis
+# remirepo/fedora spec file for php-nrk-Predis
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -17,7 +17,7 @@
 %endif
 
 Name:           php-nrk-Predis
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}
 Summary:        PHP client library for Redis
 
@@ -140,6 +140,9 @@ fi
 
 
 %changelog
+* Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3
+
 * Thu Jul 30 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Update to 1.0.2
 
