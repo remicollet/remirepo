@@ -117,7 +117,7 @@ fi
 
 %changelog
 * Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
-- Update to 1.0.7
+- Update to 1.0.7 (no change)
 
 * Tue Jan 13 2015 Remi Collet <remi@fedoraproject.org> - 1.0.6-2
 - raise dependency on sabberworm/php-css-parser >= 6
