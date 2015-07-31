@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-Horde-Mime-Viewer
-Version:        2.1.0
+Version:        2.1.1
 Release:        1%{?dist}
 Summary:        Horde MIME Viewer Library
 
@@ -151,6 +151,9 @@ fi
 
 
 %changelog
+* Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
+- Update to 2.1.1
+
 * Tue Apr 14 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0
 - add optional dependency on Net_DNS2
