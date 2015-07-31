@@ -18,7 +18,7 @@
 %endif
 
 Name:           php-horde-Horde-Date
-Version:        2.1.0
+Version:        2.1.1
 Release:        1%{?dist}
 Summary:        Horde Date package
 
@@ -138,6 +138,9 @@ fi
 
 
 %changelog
+* Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
+- Update to 2.1.1
+
 * Fri May 22 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0
 
