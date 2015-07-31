@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Crypt
-Version:        2.5.3
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        Horde Cryptography API
 
@@ -112,11 +112,10 @@ done | tee ../%{pear_name}.lang
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+: Skip online test
+rm PgpKeyserverTest.php
 
-# Reported version differs (only "Version: GnuPG v1")
-sed -e '/GnuPG v/s/%d.%d.%d (%s)/%s/' -i PgpTest.php
-
-phpunit .
+phpunit --verbose .
 
 
 %post
@@ -142,6 +141,9 @@ fi
 
 
 %changelog
+* Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- Update to 2.6.0
+
 * Wed Feb 11 2015 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
 - Update to 2.5.3
 - add provides php-composer(horde/horde-crypt)
