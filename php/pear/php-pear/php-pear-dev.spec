@@ -15,12 +15,14 @@
 %global peardir %{_datadir}/pear
 %global metadir %{_localstatedir}/lib/pear
 
+
 %global getoptver 1.4.1
 %global arctarver 1.4.0
 # https://pear.php.net/bugs/bug.php?id=19367
 # Structures_Graph 1.0.4 - incorrect FSF address
 %global structver 1.1.1
 %global xmlutil   1.3.0
+%global manpages  1.10.0dev2
 
 # Tests are only run with rpmbuild --with tests
 # Can't be run in mock / koji because PEAR is the first package
@@ -28,14 +30,14 @@
 
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_root_sysconfdir}/rpm; echo $d)
 
-%global pearprever dev1
+%global pearprever dev2
 
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.10.0
-Release: 0.4.%{pearprever}%{?dist}
+Release: 0.5.%{pearprever}%{?dist}
 Epoch: 1
-# PEAR, Archive_Tar, XML_Util, Console_Getopt are BSD
+# PEAR, PEAR_Manpages, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
 License: BSD and LGPLv3+
 Group: Development/Languages
@@ -52,22 +54,7 @@ Source21: http://pear.php.net/get/Archive_Tar-%{arctarver}.tgz
 Source22: http://pear.php.net/get/Console_Getopt-%{getoptver}.tgz
 Source23: http://pear.php.net/get/Structures_Graph-%{structver}.tgz
 Source24: http://pear.php.net/get/XML_Util-%{xmlutil}.tgz
-# Man pages
-# https://github.com/pear/pear-core/pull/14
-Source30: pear.1
-Source31: pecl.1
-Source32: peardev.1
-# https://github.com/pear/pear-core/pull/16
-Source33: pear.conf.5
-
-# From RHEL: ignore REST cache creation failures as non-root user (#747361)
-# TODO See https://github.com/pear/pear-core/commit/dfef86e05211d2abc7870209d69064d448ef53b3#PEAR/REST.php
-# https://github.com/pear/pear-core/pull/42
-Patch0: php-pear-1.10-restcache.patch
-# Relocate Metadata
-# https://github.com/pear/pear-core/pull/44
-# https://github.com/pear/pear-core/pull/45
-Patch1: php-pear-1.10-metadata.patch
+Source25: http://pear.php.net/get/PEAR_Manpages-%{manpages}.tgz
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -87,6 +74,7 @@ Provides:  %{?scl_prefix}php-pear(Archive_Tar) = %{arctarver}
 Provides:  %{?scl_prefix}php-pear(PEAR) = %{version}
 Provides:  %{?scl_prefix}php-pear(Structures_Graph) = %{structver}
 Provides:  %{?scl_prefix}php-pear(XML_Util) = %{xmlutil}
+Provides:  %{?scl_prefix}php-pear(PEAR_Manpages) = %{manpages}
 
 Provides:  %{?scl_prefix}php-composer(pear/console_getopt) = %{getoptver}
 Provides:  %{?scl_prefix}php-composer(pear/archive_tar) = %{arctarver}
@@ -152,7 +140,7 @@ components.  This package contains the basic PEAR components.
 %setup -cT
 
 # Create a usable PEAR directory (used by install-pear.php)
-for archive in %{SOURCE0} %{SOURCE21} %{SOURCE22} %{SOURCE23} %{SOURCE24}
+for archive in %{SOURCE0} %{SOURCE21} %{SOURCE22} %{SOURCE23} %{SOURCE24} %{SOURCE25}
 do
     tar xzf  $archive --strip-components 1 || tar xzf  $archive --strip-path 1
     file=${archive##*/}
@@ -163,11 +151,10 @@ do
     [ -f package2.xml ] && mv package2.xml ${file%%-*}.xml \
                         || mv package.xml  ${file%%-*}.xml
 done
-cp %{SOURCE1} %{SOURCE30} %{SOURCE31} %{SOURCE32} %{SOURCE33} .
+cp %{SOURCE1} .
 
 # apply patches on used PEAR during install
-%patch0 -p1 -b .rest
-%patch1 -p1 -b .metadata
+# None \o/
 
 sed -e 's/@SCL@/%{?scl:%{scl}_}/' \
     -e 's:@VARDIR@:%{_localstatedir}:' \
@@ -219,7 +206,8 @@ export INSTALL_ROOT=$RPM_BUILD_ROOT
                  --test     %{_datadir}/tests/pear \
                  --data     %{_datadir}/pear-data \
                  --metadata %{metadir} \
-                 %{SOURCE0} %{SOURCE21} %{SOURCE22} %{SOURCE23} %{SOURCE24}
+                 --man      %{_mandir} \
+                 %{SOURCE0} %{SOURCE21} %{SOURCE22} %{SOURCE23} %{SOURCE24} %{SOURCE25}
 
 # Replace /usr/bin/* with simple scripts:
 install -m 755 %{SOURCE10} $RPM_BUILD_ROOT%{_bindir}/pear
@@ -243,8 +231,7 @@ install -m 644 -D macros.pear \
 
 # apply patches on installed PEAR tree
 pushd $RPM_BUILD_ROOT%{peardir} 
-  %__patch --no-backup --fuzz 0 -p1 < %{PATCH0}
-  %__patch --no-backup --fuzz 0 -p1 < %{PATCH1}
+# none
 popd
 
 # Why this file here ?
@@ -252,12 +239,6 @@ rm -rf $RPM_BUILD_ROOT/.depdb* $RPM_BUILD_ROOT/.lock $RPM_BUILD_ROOT/.channels $
 
 # Need for re-registrying XML_Util
 install -pm 644 *.xml $RPM_BUILD_ROOT%{_localstatedir}/lib/pear/pkgxml
-
-# The man pages
-install -d $RPM_BUILD_ROOT%{_mandir}/man1
-install -p -m 644 pear.1 pecl.1 peardev.1 $RPM_BUILD_ROOT%{_mandir}/man1/
-install -d $RPM_BUILD_ROOT%{_mandir}/man5
-install -p -m 644 pear.conf.5 $RPM_BUILD_ROOT%{_mandir}/man5/
 
 # make the cli commands available in standard root for SCL build
 %if 0%{?scl:1}
@@ -405,6 +386,12 @@ fi
 
 
 %changelog
+* Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> 1:1.10.0-0.5.dev2
+- update PEAR to 1.10.0dev2
+- drop all patches, merged upstream
+- drop man pages from sources
+- add PEAR_Manpages upstream package
+
 * Thu Jul 30 2015 Remi Collet <remi@fedoraproject.org> 1:1.10.0-0.4.dev1
 - add patch to skip version check with --packagingroot
 - open https://github.com/pear/pear-core/pull/45
@@ -418,7 +405,7 @@ fi
 - open https://github.com/pear/pear-core/pull/44
 
 * Sat Jul 25 2015 Remi Collet <remi@fedoraproject.org> 1:1.10.0-0.1.dev1
-- update PEAR 1.10.0dev1 (for PHP7)
+- update PEAR to 1.10.0dev1 (for PHP7)
 
 * Thu Jul 23 2015 Remi Collet <remi@fedoraproject.org> 1:1.9.5-13
 - fix default values in rpm macro file (instead of undefined)

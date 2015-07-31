@@ -1,10 +1,8 @@
 <?php
-while (@ob_end_flush());
-/* $Id$ */
 
 error_reporting(1803);
 
-if (ini_get('date.timezone') === '' && function_exists('date_default_timezone_set')) {
+if (ini_get('date.timezone') === '') {
     date_default_timezone_set('UTC');
 }
 
@@ -91,6 +89,9 @@ for ($i = 0; $i < sizeof($argv); $i++) {
         $debug = 1;
     } elseif ($arg == '--extremedebug') {
         $debug = 2;
+    } elseif ($arg == '-M' || $arg == '--man') {
+        $man_dir = $argv[$i+1];
+        $i++;
     }
 }
 
@@ -133,6 +134,11 @@ if (!empty($www_dir)) {
     $config->set('www_dir', $www_dir, 'default');
 }
 
+// Manual pages
+if (!empty($man_dir)) {
+    $config->set('man_dir', $man_dir, 'default');
+}
+
 // Downloaded files
 if (!empty($download_dir)) {
     $config->set('download_dir', $download_dir, 'default');
@@ -162,6 +168,7 @@ if (!empty($test_dir)) {
 if (!empty($with_dir)) {
     $ds = DIRECTORY_SEPARATOR;
     $config->set('php_dir', $with_dir, 'default');
+
     // Metadata
     if (!empty($metadata_dir)) {
         $config->set('metadata_dir', $metadata_dir, 'default');
@@ -180,6 +187,9 @@ if (!empty($with_dir)) {
     }
     if (empty($cfg_dir)) {
         $config->set('cfg_dir', $with_dir . $ds . 'cfg', 'default');
+    }
+    if (empty($man_dir)) {
+        $config->set('man_dir', $with_dir . $ds . 'local' . $ds . 'man', 'default');
     }
     if (!is_writable($config->get('cache_dir'))) {
         include_once 'System.php';
@@ -218,7 +228,7 @@ if (isset($suffix)) {
     }
 }
 
-/* Print PEAR Conf (useful for debuging do NOT REMOVE) */
+/* Print PEAR Conf (useful for debugging do NOT REMOVE) */
 if ($debug) {
     sort($keys);
     foreach ($keys as $key) {
