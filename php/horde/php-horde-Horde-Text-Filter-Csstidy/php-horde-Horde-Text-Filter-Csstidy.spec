@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Text-Filter-Csstidy
+# remirepo/fedora spec file for php-horde-Horde-Text-Filter-Csstidy
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA

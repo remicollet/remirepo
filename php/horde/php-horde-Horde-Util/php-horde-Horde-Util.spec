@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Util
+# remirepo/fedora spec file for php-horde-Horde-Util
 #
 # Copyright (c) 2012-2015 Nick Bebout, Remi Collet
 #
@@ -18,7 +18,7 @@
 %endif
 
 Name:           php-horde-Horde-Util
-Version:        2.5.5
+Version:        2.5.6
 Release:        1%{?dist}
 Summary:        Horde Utility Libraries
 
@@ -130,6 +130,9 @@ fi
 
 
 %changelog
+* Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 2.5.6-1
+- Update to 2.5.6
+
 * Tue Apr 14 2015 Remi Collet <remi@fedoraproject.org> - 2.5.5-1
 - Update to 2.5.5
 

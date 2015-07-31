@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-JavascriptMinify
+# remirepo/fedora spec file for php-horde-Horde-JavascriptMinify
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA

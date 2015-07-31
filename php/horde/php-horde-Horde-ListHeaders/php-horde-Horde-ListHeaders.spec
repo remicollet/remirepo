@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-ListHeaders
+# remirepo/fedora spec file for php-horde-Horde-ListHeaders
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA

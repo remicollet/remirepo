@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Kolab-Session
+# remirepo/fedora spec file for php-horde-Horde-Kolab-Session
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA

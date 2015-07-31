@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Controller
+# remirepo/fedora spec file for php-horde-Horde-Controller
 #
 # Copyright (c) 2012-2015 Nick Bebout, Remi Collet
 #

@@ -1,4 +1,4 @@
-# spec file for php-horde-content
+# remirepo/fedora spec file for php-horde-content
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA

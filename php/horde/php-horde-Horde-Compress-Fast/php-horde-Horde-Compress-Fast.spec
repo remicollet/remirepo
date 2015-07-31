@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Compress-Fast
+# remirepo/fedora spec file for php-horde-Horde-Compress-Fast
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA

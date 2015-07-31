@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Kolab-Format
+# remirepo/fedora spec file for php-horde-Horde-Kolab-Format
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA

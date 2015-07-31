@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Imsp
+# remirepo/fedora spec file for php-horde-Horde-Imsp
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA

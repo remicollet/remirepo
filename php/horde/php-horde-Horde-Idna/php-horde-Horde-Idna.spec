@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Idna
+# remirepo/fedora spec file for php-horde-Horde-Idna
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA

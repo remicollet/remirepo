@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Notification
+# remirepo/fedora spec file for php-horde-Horde-Notification
 #
 # Copyright (c) 2012-2015 Nick Bebout, Remi Collet
 #

@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Editor
+# remirepo/fedora spec file for php-horde-Horde-Editor
 #
 # Copyright (c) 2013-2015 Remi Collet
 #

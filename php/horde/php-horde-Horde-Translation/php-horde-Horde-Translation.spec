@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Translation
+# remirepo/fedora spec file for php-horde-Horde-Translation
 #
 # Copyright (c) 2012-2015 Nick Bebout, Remi Collet
 #

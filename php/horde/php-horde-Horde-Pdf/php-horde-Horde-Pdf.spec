@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Pdf
+# remirepo/fedora spec file for php-horde-Horde-Pdf
 #
 # Copyright (c) 2014-2015 Remi Collet
 # License: CC-BY-SA

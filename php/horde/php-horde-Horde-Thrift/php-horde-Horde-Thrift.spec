@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Thrift
+# remirepo/fedora spec file for php-horde-Horde-Thrift
 #
 # Copyright (c) 2012-2015 Nick Bebout, Remi Collet
 #

@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Stream-Filter
+# remirepo/fedora spec file for php-horde-Horde-Stream-Filter
 #
 # Copyright (c) 2012-2015 Nick Bebout, Remi Collet
 #

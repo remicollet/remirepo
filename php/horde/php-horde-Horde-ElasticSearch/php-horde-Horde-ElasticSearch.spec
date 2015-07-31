@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-ElasticSearch
+# remirepo/fedora spec file for php-horde-Horde-ElasticSearch
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA

@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Socket-Client
+# remirepo/fedora spec file for php-horde-Horde-Socket-Client
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA

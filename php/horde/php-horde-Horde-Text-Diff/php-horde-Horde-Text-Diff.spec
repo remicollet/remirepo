@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Text-Diff
+# remirepo/fedora spec file for php-horde-Horde-Text-Diff
 #
 # Copyright (c) 2012-2015 Nick Bebout, Remi Collet
 #

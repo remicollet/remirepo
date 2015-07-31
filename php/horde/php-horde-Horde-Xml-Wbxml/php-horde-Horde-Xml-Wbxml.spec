@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Xml-Wbxml
+# remirepo/fedora spec file for php-horde-Horde-Xml-Wbxml
 #
 # Copyright (c) 2012-2015 Nick Bebout, Remi Collet
 #

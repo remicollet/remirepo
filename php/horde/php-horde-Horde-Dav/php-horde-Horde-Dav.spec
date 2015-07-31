@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Dav
+# remirepo/fedora spec file for php-horde-Horde-Dav
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA

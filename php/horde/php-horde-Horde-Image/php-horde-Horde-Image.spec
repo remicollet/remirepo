@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Image
+# remirepo/fedora spec file for php-horde-Horde-Image
 #
 # Copyright (c) 2012-2015 Nick Bebout, Remi Collet
 #

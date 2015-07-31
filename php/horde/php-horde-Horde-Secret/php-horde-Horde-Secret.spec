@@ -1,4 +1,4 @@
-# spec file for php-horde-Horde-Secret
+# remirepo/fedora spec file for php-horde-Horde-Secret
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
