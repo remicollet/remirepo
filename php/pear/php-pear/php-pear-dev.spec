@@ -11,6 +11,7 @@
 %{?scl:%scl_package php-pear}
 %{!?scl:%global pkg_name %{name}}
 %{!?scl:%global _root_sysconfdir %{_sysconfdir}}
+%{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
 
 %global peardir %{_datadir}/pear
 %global metadir %{_localstatedir}/lib/pear
