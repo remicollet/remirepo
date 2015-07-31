@@ -14,7 +14,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Vfs
-Version:        2.2.2
+Version:        2.3.0
 Release:        1%{?dist}
 Summary:        Virtual File System API
 
@@ -92,6 +92,7 @@ sed -e '/%{pear_name}.po/d' \
     -e '/Horde_Other.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
+touch -r ../package.xml %{name}.xml
 
 
 %build
@@ -162,6 +163,9 @@ fi
 
 
 %changelog
+* Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
+- Update to 2.3.0
+
 * Wed Feb 11 2015 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
 - Update to 2.2.2
 
