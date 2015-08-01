@@ -14,8 +14,8 @@
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.7.2
-%global github_commit    969d709ad428076bf1084e386dc26dd904d9fb84
+%global github_version   2.7.3
+%global github_commit    a9af4708b4bb650c4897e9b8dfbfbdb2ea5f0486
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -90,19 +90,13 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       3%{?dist}
+Release:       1%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
 License:       MIT
 URL:           http://symfony.com
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_short}.tar.gz
-
-# [HttpFoundation] [PSR-7] Allow to use resources as content body and to return
-#     resources from string content
-# https://github.com/symfony/symfony/pull/15249
-# https://github.com/symfony/psr-http-message-bridge/issues/8
-Patch0:        %{name}-pr15249.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -1644,9 +1638,6 @@ The YAML Component loads and dumps YAML files.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-%patch0 -p1
-rm -f src/Symfony/Component/HttpFoundation/Request.php.orig
-
 : Remove unnecessary files
 find src -name '.git*' -delete
 
@@ -1742,7 +1733,7 @@ sed -e 's#function testSpecialVars56#function SKIP_testSpecialVars56#' \
     -e 's#function testGlobalsNoExt#function SKIP_testGlobalsNoExt#' \
     -e 's#function testBuggyRefs#function SKIP_testBuggyRefs#' \
     -i src/Symfony/Component/VarDumper/Tests/CliDumperTest.php
-rm -f \
+rm  src/Symfony/Component/Finder/Tests/Iterator/RecursiveDirectoryIteratorTest.php \
     src/Symfony/Bundle/FrameworkBundle/Tests/Functional/ProfilerTest.php \
     src/Symfony/Bundle/SecurityBundle/Tests/Functional/CsrfFormLoginTest.php \
     src/Symfony/Bundle/SecurityBundle/Tests/Functional/FormLoginTest.php \
@@ -2512,7 +2503,10 @@ exit $RET
 # ##############################################################################
 
 %changelog
-* Mon Jul 21 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.7.2-3
+* Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 2.7.3-1
+- Update to 2.7.3
+
+* Tue Jul 21 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.7.2-3
 - Added patch for symfony/psr-http-message-bridge
 - Removed php-mysql dependency from var-dumper
 
