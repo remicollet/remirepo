@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-horde
-Version:        5.2.6
+Version:        5.2.7
 Release:        1%{?dist}
 Summary:        Horde Application Framework
 
@@ -89,7 +89,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Nls) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Nls) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.1.5
 Requires:       php-pear(%{pear_channel}/Horde_Perms) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Prefs) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Prefs) <  3.0.0
@@ -311,6 +311,10 @@ fi
 
 
 %changelog
+* Sat Aug 01 2015 Remi Collet <remi@fedoraproject.org> - 5.2.7-1
+- Update to 5.2.7
+- raise dependency on Horde_Perms 2.1.5
+
 * Thu Jun 18 2015 Remi Collet <remi@fedoraproject.org> - 5.2.6-1
 - Update to 5.2.6
 
