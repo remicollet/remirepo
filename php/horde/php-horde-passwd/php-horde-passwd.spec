@@ -13,7 +13,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-passwd
-Version:        5.0.2
+Version:        5.0.3
 Release:        1%{?dist}
 Summary:        Horde password changing application
 
@@ -67,6 +67,8 @@ Requires:       php-pcre
 Requires:       php-spl
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/passwd) = %{version}
+Provides:       password = %{version}
 
 
 %description
@@ -181,5 +183,8 @@ fi
 
 
 %changelog
+* Sat Aug 01 2015 Remi Collet <remi@fedoraproject.org> - 5.0.3-1
+- Update to 5.0.3
+
 * Sat Sep 13 2014 Remi Collet <remi@fedoraproject.org> - 5.0.2-1
 - initial package
