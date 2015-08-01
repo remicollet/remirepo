@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-imp
-Version:        6.2.9
+Version:        6.2.10
 Release:        1%{?dist}
 Summary:        A web based webmail system
 
@@ -257,6 +257,9 @@ fi
 
 
 %changelog
+* Sat Aug 01 2015 Remi Collet <remi@fedoraproject.org> - 6.2.10-1
+- Update to 6.2.10
+
 * Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 6.2.9-1
 - Update to 6.2.9
 
