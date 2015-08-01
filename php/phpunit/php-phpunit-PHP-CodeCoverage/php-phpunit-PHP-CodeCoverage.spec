@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    5bd48b86cd282da411bb80baac1398ce3fefac41
+%global gh_commit    e6577d90f61a9adbe94544a6e9a7ca18b5fd9c8f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-code-coverage
@@ -22,7 +22,7 @@
 %endif
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        2.1.9
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        PHP code coverage information
 
@@ -51,7 +51,7 @@ BuildRequires:  php-pecl-xdebug  >= 2.1.4
 #        "phpunit/php-file-iterator": "~1.3",
 #        "phpunit/php-token-stream": "~1.3",
 #        "phpunit/php-text-template": "~1.2",
-#        "sebastian/environment": "~1.0",
+#        "sebastian/environment": "~1.3",
 #        "sebastian/version": "~1.0"
 Requires:       php(language) >= 5.3.3
 Requires:       php-composer(phpunit/php-file-iterator) >= 1.3
@@ -60,7 +60,7 @@ Requires:       php-composer(phpunit/php-token-stream) >= 1.3
 Requires:       php-composer(phpunit/php-token-stream) <  2
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
-Requires:       php-composer(sebastian/environment) >= 1.0
+Requires:       php-composer(sebastian/environment) >= 1.3
 Requires:       php-composer(sebastian/environment) <  2
 Requires:       php-composer(sebastian/version) >= 1.0
 Requires:       php-composer(sebastian/version) <  2
@@ -70,7 +70,7 @@ Requires:       php-composer(sebastian/version) <  2
 #        "ext-xmlwriter": "*"
 Requires:       php-dom
 Requires:       php-xmlwriter
-# From phpcompatinfo report for version 2.1.9
+# From phpcompatinfo report for version 2.2.0
 Requires:       php-date
 Requires:       php-json
 Requires:       php-spl
@@ -140,6 +140,10 @@ fi
 
 
 %changelog
+* Sat Aug  1 2015 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- update to 2.2.0
+- raise dependency on sebastian/environment ~1.3
+
 * Sun Jul 26 2015 Remi Collet <remi@fedoraproject.org> - 2.1.9-1
 - update to 2.1.9 (only cleanup)
 
