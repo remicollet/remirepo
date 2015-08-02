@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    e6577d90f61a9adbe94544a6e9a7ca18b5fd9c8f
+%global gh_commit    6526d9bdb56e2af1e8950114d42391044d18cfa7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-code-coverage
@@ -22,7 +22,7 @@
 %endif
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        2.2.0
+Version:        2.2.1
 Release:        1%{?dist}
 Summary:        PHP code coverage information
 
@@ -51,7 +51,7 @@ BuildRequires:  php-pecl-xdebug  >= 2.1.4
 #        "phpunit/php-file-iterator": "~1.3",
 #        "phpunit/php-token-stream": "~1.3",
 #        "phpunit/php-text-template": "~1.2",
-#        "sebastian/environment": "~1.3",
+#        "sebastian/environment": "~1.3.1",
 #        "sebastian/version": "~1.0"
 Requires:       php(language) >= 5.3.3
 Requires:       php-composer(phpunit/php-file-iterator) >= 1.3
@@ -60,8 +60,8 @@ Requires:       php-composer(phpunit/php-token-stream) >= 1.3
 Requires:       php-composer(phpunit/php-token-stream) <  2
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
-Requires:       php-composer(sebastian/environment) >= 1.3
-Requires:       php-composer(sebastian/environment) <  2
+Requires:       php-composer(sebastian/environment) >= 1.3.1
+Requires:       php-composer(sebastian/environment) <  1.4
 Requires:       php-composer(sebastian/version) >= 1.0
 Requires:       php-composer(sebastian/version) <  2
 # From composer.json, suggest
@@ -140,6 +140,10 @@ fi
 
 
 %changelog
+* Sun Aug  2 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
+- update to 2.2.1 (no change)
+- raise dependency on sebastian/environment ~1.3.1
+
 * Sat Aug  1 2015 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - update to 2.2.0
 - raise dependency on sebastian/environment ~1.3
