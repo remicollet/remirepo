@@ -1,8 +1,17 @@
-%global gh_commit    9f17fa0a729294f4fcbb1a085f99ae612dc36cb5
+# remirepo spec file for atoum, from:
+#
+# Fedora spec file for atoum
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+%global gh_commit    84220013abd7917f04007d24c075eb2e7bd00b4d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 
 Name:           atoum
-Version:        2.1.0
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        PHP Unit Testing framework
 
@@ -24,27 +33,41 @@ BuildRequires:       php-spl
 BuildRequires:       php-tokenizer
 BuildRequires:       php-json
 BuildRequires:       php-mbstring
-BuildRequires:       php-pecl(Xdebug) >= 2.2.1
 BuildRequires:       php-xml
 
+# From composer.json, 	"require": {
+#        "php": ">=5.3.3",
+#        "ext-hash": "*",
+#        "ext-json": "*",
+#        "ext-session": "*",
+#        "ext-tokenizer": "*",
+#        "ext-xml": "*"
 Requires:       php(language) >= 5.3.3
-Requires:       php-dom
-Requires:       php-date
 Requires:       php-hash
-Requires:       php-pcre
-Requires:       php-spl
-Requires:       php-tokenizer
 Requires:       php-json
-Requires:       php-mbstring
-Requires:       php-pecl(Xdebug) >= 2.2.1
+Requires:       php-session
+Requires:       php-tokenizer
 Requires:       php-xml
+# From composer.json, 	"suggest": {
+#        "ext-mbstring": "Provides support for UTF-8 strings"
+Requires:       php-mbstring
+# From phpcompatinfo report for version 2.2.0
+Requires:       php-cli
+Requires:       php-date
+Requires:       php-dom
+Requires:       php-pcre
+Requires:       php-reflection
+Requires:       php-spl
+%if 0%{?fedora} >= 21
+Suggests:       php-pecl-xdebug
+%endif
 
 Provides: php-composer(atoum/atoum) = %{version}
 
 %if %{?runselftest}%{!?runselftest:1}
-%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests   0%{!?_without_tests:1}
 %else
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests   0%{?_with_tests:1}
 %endif
 
 
@@ -74,6 +97,9 @@ which makes it compatible with continuous integration tools such as Jenkins.
 atoum also generates code coverage reports, in order to make it possible
 to supervise unit tests.
 
+Optional dependency:
+- php-pecl-xdebug for code coverage reports
+
 
 %prep
 %setup -qn %{name}-%{gh_commit}
@@ -91,14 +117,14 @@ sed -i bin/%{name} \
 %install
 rm -rf $RPM_BUILD_ROOT
 # create needed directories
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name}
-mkdir -p $RPM_BUILD_ROOT%{_bindir}
-install -m 0644 -p constants.php $RPM_BUILD_ROOT%{_datadir}/%{name}
-install -m 0755 bin/%{name} $RPM_BUILD_ROOT%{_bindir}/%{name}
-cp -pr classes $RPM_BUILD_ROOT%{_datadir}/%{name}
-cp -pr resources $RPM_BUILD_ROOT%{_datadir}/%{name}
-cp -pr scripts $RPM_BUILD_ROOT%{_datadir}/%{name}
-cp -pr tests $RPM_BUILD_ROOT%{_datadir}/%{name}
+mkdir -p %{buildroot}%{_datadir}/%{name}
+mkdir -p %{buildroot}%{_bindir}
+install -m 0644 -p constants.php %{buildroot}%{_datadir}/%{name}
+install -m 0755 bin/%{name} %{buildroot}%{_bindir}/%{name}
+cp -pr classes   %{buildroot}%{_datadir}/%{name}
+cp -pr resources %{buildroot}%{_datadir}/%{name}
+cp -pr scripts   %{buildroot}%{_datadir}/%{name}
+cp -pr tests     %{buildroot}%{_datadir}/%{name}
 
 
 %check
@@ -134,6 +160,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Aug  2 2015 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- update to 2.2.0
+- XDebug is optional
+
 * Mon May 11 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - update to 2.1.0
 - update source0
