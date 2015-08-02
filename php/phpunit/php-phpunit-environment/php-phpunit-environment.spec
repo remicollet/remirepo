@@ -7,19 +7,19 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    4fe0a44cddd8cc19583a024bdc7374eb2fef0b87
+%global gh_commit    3e39374f4c9ec3757839e2952e7a68ac28941760
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   environment
 %global php_home     %{_datadir}/php
 %if %{bootstrap}
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests   0%{?_with_tests:1}
 %else
-%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests   0%{!?_without_tests:1}
 %endif
 
 Name:           php-phpunit-environment
-Version:        1.3.0
+Version:        1.3.1
 Release:        1%{?dist}
 Summary:        Handle HHVM/PHP environments
 
@@ -94,6 +94,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Aug  2 2015 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
+- update to 1.3.1
+
 * Sun Jul 26 2015 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - update to 1.3.0
 
