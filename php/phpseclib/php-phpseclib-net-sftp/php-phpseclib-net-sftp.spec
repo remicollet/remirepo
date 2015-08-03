@@ -1,6 +1,6 @@
-# remirepo spec file for php-phpseclib-math-biginteger, from:
+# remirepo spec file for php-phpseclib-net-sftp, from:
 #
-# Fedora spec file for php-phpseclib-math-biginteger
+# Fedora spec file for php-phpseclib-net-sftp
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
