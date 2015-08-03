@@ -6,7 +6,8 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    25394f75d63a46d8c60b940e5e8519369b5964eb
+# see https://github.com/tecnickcom/TCPDF/releases
+%global gh_commit    354433a33946ae7497c3eab291eaaf814bccbfab
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     tecnickcom
 %global gh_project   TCPDF
@@ -14,7 +15,7 @@
 
 Name:           php-tcpdf
 Summary:        PHP class for generating PDF documents and barcodes
-Version:        6.2.10
+Version:        6.2.11
 Release:        1%{?dist}
 
 URL:            http://www.tcpdf.org
@@ -331,6 +332,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug  3 2015 Remi Collet <remi@fedoraproject.org> - 6.2.11-1
+- update to 6.2.11
+
 * Wed Jul 29 2015 Remi Collet <remi@fedoraproject.org> - 6.2.10-1
 - update to 6.2.10
 - sources from github (instead of sourceforge)
