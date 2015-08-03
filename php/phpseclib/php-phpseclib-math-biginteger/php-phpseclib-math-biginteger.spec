@@ -1,8 +1,17 @@
+# remirepo spec file for php-phpseclib-math-biginteger, from:
+#
+# Fedora spec file for php-phpseclib-math-biginteger
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 %{!?__pear:       %global __pear %{_bindir}/pear}
 %global pear_name Math_BigInteger
 
 Name:           php-phpseclib-math-biginteger
-Version:        0.3.10
+Version:        1.0.0
 Release:        1%{?dist}
 Summary:        Pure-PHP arbitrary precision integer arithmetic library
 
@@ -82,6 +91,9 @@ fi
 
 
 %changelog
+* Mon Aug 03 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- Update to 1.0.0
+
 * Tue Feb 10 2015 Remi Collet <remi@fedoraproject.org> - 0.3.10-1
 - Update to 0.3.10
 
