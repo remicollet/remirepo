@@ -43,6 +43,7 @@ BuildRequires:  php-theseer-autoload >= 1.19
 #        "phpunit/phpunit": "~4",
 #        "ext-xdebug": ">=2.1.4"
 BuildRequires:  php-composer(phpunit/phpunit) >= 4
+BuildRequires:  php-composer(sebastian/environment) >= 1.3
 BuildRequires:  php-pecl-xdebug  >= 2.1.4
 %endif
 
