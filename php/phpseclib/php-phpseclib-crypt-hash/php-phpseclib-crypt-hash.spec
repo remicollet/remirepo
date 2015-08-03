@@ -1,6 +1,6 @@
-# remirepo spec file for php-phpseclib-crypt-blowfish, from:
+# remirepo spec file for php-phpseclib-crypt-hash, from:
 #
-# Fedora spec file for php-phpseclib-crypt-blowfish
+# Fedora spec file for php-phpseclib-crypt-hash
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
