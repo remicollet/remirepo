@@ -1,7 +1,7 @@
-diff -up Crypt_RSA-0.3.8/RSA.php.role Crypt_RSA-0.3.8/RSA.php
---- Crypt_RSA-0.3.8/RSA.php.role	2014-09-13 09:31:03.775079734 +0200
-+++ Crypt_RSA-0.3.8/RSA.php	2014-09-13 09:32:39.595509197 +0200
-@@ -178,7 +178,7 @@ define('CRYPT_RSA_MODE_OPENSSL', 2);
+diff -up Crypt_RSA-1.0.0/RSA.php.role Crypt_RSA-1.0.0/RSA.php
+--- Crypt_RSA-1.0.0/RSA.php.role	2015-08-03 10:04:38.075882028 +0200
++++ Crypt_RSA-1.0.0/RSA.php	2015-08-03 10:07:45.204836674 +0200
+@@ -185,7 +185,7 @@ define('CRYPT_RSA_MODE_OPENSSL', 2);
  /**
   * Default openSSL configuration file.
   */
@@ -10,7 +10,7 @@ diff -up Crypt_RSA-0.3.8/RSA.php.role Crypt_RSA-0.3.8/RSA.php
  
  /**#@+
   * @access public
-@@ -490,7 +490,14 @@ class Crypt_RSA
+@@ -497,7 +497,14 @@ class Crypt_RSA
              include_once 'Math/BigInteger.php';
          }
  
@@ -24,5 +24,5 @@ diff -up Crypt_RSA-0.3.8/RSA.php.role Crypt_RSA-0.3.8/RSA.php
 +        }
 +        $this->configFile = $dir . DIRECTORY_SEPARATOR . CRYPT_RSA_OPENSSL_CONFIG;
  
-         if ( !defined('CRYPT_RSA_MODE') ) {
+         if (!defined('CRYPT_RSA_MODE')) {
              switch (true) {
