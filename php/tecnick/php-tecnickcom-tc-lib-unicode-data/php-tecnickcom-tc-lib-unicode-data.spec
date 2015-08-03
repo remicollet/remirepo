@@ -1,4 +1,4 @@
-# remirepo/fedora spec file for php-tecnickcom-tc-lib-pdf-font-data
+# remirepo/fedora spec file for php-tecnickcom-tc-lib-unicode-data
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
@@ -6,16 +6,16 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    45cfb3223e8d7a6a8a1392a88bc9e22f6562bf71
+%global gh_commit    d638e699520881b1b866a5e4486e26c4ea3f325a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnick.com
 %global gh_owner     tecnickcom
-%global gh_project   tc-lib-pdf-font-data
-%global php_project  %{_datadir}/php/Com/Tecnick/Pdf/Font/Data
+%global gh_project   tc-lib-unicode-data
+%global php_project  %{_datadir}/php/Com/Tecnick/Unicode/Data
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.1.4
+Version:        1.2.0
 Release:        1%{?dist}
 Summary:        PHP library containing UTF-8 font definitions
 
@@ -38,6 +38,8 @@ Requires:       php(language) >= 5.3.3
 # From phpcompatinfo report for version 1.1.1
 # Only Core
 
+# Library renamed (not provided as not compatible)
+Obsoletes:      php-tecnickcom-tc-lib-pdf-font-data < 1.2
 # Composer
 Provides:       php-composer(%{c_vendor}/%{gh_project}) = %{version}
 # Upstream package name
@@ -95,13 +97,16 @@ rm -rf %{buildroot}
 %doc README.md
 %dir %{_datadir}/php/Com
 %dir %{_datadir}/php/Com/Tecnick
-%dir %{_datadir}/php/Com/Tecnick/Pdf
-%dir %{_datadir}/php/Com/Tecnick/Pdf/Font
+%dir %{_datadir}/php/Com/Tecnick/Unicode
 %{php_project}
 
 
 %changelog
+* Mon Aug  3 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- renamed from pdf-font-data to unicode-data
+
 * Mon Aug  3 2015 Remi Collet <remi@fedoraproject.org> - 1.1.4-1
+- update to 1.1.4
 
 * Fri Jul 24 2015 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
 - update to 1.1.3 (no change)
