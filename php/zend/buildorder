@@ -1,4 +1,5 @@
 "zendframework/zend-loader":
+"zendframework/zend-escaper":
 "zendframework/zendxml":
 "zendframework/zend-stdlib":         BS
 "zendframework/zend-config":         BS
@@ -9,12 +10,14 @@
 "zendframework/zend-serializer":     BS
 "zendframework/zend-filter":         BS
 "zendframework/zend-stdlib":             (; config, eventmanager, inputfilter, serializer, servicemanager, filter)
+"zendframework/zend-json":           BS
 
-"zendframework/zend-serializer":       (stdlib, json, math, servicemanager)
-"zendframework/zend-filter":           (stdlib, config, crypt, i18n, loader, servicemanager, uri)
-"zendframework/zend-config":           (filter, i18n, json, mvc, servicemanager)
-"zendframework/zend-inputfilter":      (stdlib, filter, validator, i18n, servicemanager)
-"zendframework/zend-servicemanager":   (di, mvc)
+"zendframework/zend-serializer":         (stdlib, json, math, servicemanager)
+"zendframework/zend-filter":             (stdlib, config, crypt, i18n, loader, servicemanager, uri)
+"zendframework/zend-config":             (filter, i18n, json, mvc, servicemanager)
+"zendframework/zend-inputfilter":        (stdlib, filter, validator, i18n, servicemanager)
+"zendframework/zend-servicemanager":     (di, mvc)
+"zendframework/zend-json":               (stdlib ; http, server, zendxml)
 
 
 
@@ -24,19 +27,17 @@
         "zendframework/zend-captcha":        (math, stdlib, session, text, validator, zendservice-recaptcha)
         "zendframework/zend-code":           (eventmanager, doctrine/common, stdlib, version)
         "zendframework/zend-console":        (stdlib, filter, json, validator)
-        "zendframework/zend-crypt":
-        "zendframework/zend-db":
-        "zendframework/zend-debug":
+*       "zendframework/zend-crypt":          (math, stdlib, servicemanager ; config)
+        "zendframework/zend-db":             (stdlib ; eventmanager, mvc, servicemanager)
+        "zendframework/zend-debug":          (; escaper)
         "zendframework/zend-di":
         "zendframework/zend-dom":
-        "zendframework/zend-escaper":
         "zendframework/zend-feed":
         "zendframework/zend-file":
         "zendframework/zend-form":
         "zendframework/zend-http":
         "zendframework/zend-i18n":
         "zendframework/zend-i18n-resources":
-        "zendframework/zend-json":            (stdlib ; http, server, zendxml)
         "zendframework/zend-log":
         "zendframework/zend-mail":
         "zendframework/zend-memory":          (; cache)
@@ -75,14 +76,12 @@ php-ZendFramework2-Db-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Debug-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Di-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Dom-2.3.9-1.fc21.remi (noarch)
-php-ZendFramework2-Escaper-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Feed-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-File-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Filter-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Form-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Http-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-I18n-2.3.9-1.fc21.remi (noarch)
-php-ZendFramework2-Json-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Ldap-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Log-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Mail-2.3.9-1.fc21.remi (noarch)
