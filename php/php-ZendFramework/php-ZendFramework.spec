@@ -9,11 +9,13 @@
 #
 
 %global php_name ZendFramework
+%global with_extras   0
+%global with_firebird 0
 #define posttag .PL1
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.12.13
+Version:         1.12.14
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -80,6 +82,7 @@ well as API providers and catalogers like StrikeIron and ProgrammableWeb.
 # Pdf, Search-Lucene and Services sub packages.
 
 
+%if %{with_extras}
 %package extras
 Summary:  Zend Framework Extras (ZendX)
 Group:    Development/Libraries
@@ -90,13 +93,15 @@ Provides: php-composer(zendframework/zf1-extras) = %{version}
 
 %description extras
 This package includes the ZendX libraries.
-
+%endif
 
 %package full
 Summary:  Meta package to install full Zend Framework
 Group:    Development/Libraries
 Requires: %{name} = %{version}-%{release}
+%if %{with_extras}
 Requires: %{name}-extras = %{version}-%{release}
+%endif
 Requires: %{name}-Auth-Adapter-Ldap = %{version}-%{release}
 Requires: %{name}-Cache-Backend-Apc = %{version}-%{release}
 Requires: %{name}-Cache-Backend-Memcached = %{version}-%{release}
@@ -105,7 +110,9 @@ Requires: %{name}-Cache-Backend-Libmemcached = %{version}-%{release}
 Requires: %{name}-Captcha = %{version}-%{release}
 Requires: %{name}-Dojo = %{version}-%{release}
 Requires: %{name}-Db-Adapter-Mysqli = %{version}-%{release}
+%if %{with_firebird}
 Requires: %{name}-Db-Adapter-Firebird = %{version}-%{release}
+%endif
 #Requires: %{name}-Db-Adapter-Oracle = %{version}-%{release}
 Requires: %{name}-Db-Adapter-Pdo = %{version}-%{release}
 Requires: %{name}-Db-Adapter-Pdo-Mssql = %{version}-%{release}
@@ -229,6 +236,7 @@ MySQL server via mysqli connector.
 # IBM DB2 database.
 
 
+%if %{with_firebird}
 %package Db-Adapter-Firebird
 Summary:  Zend Framework database adapter for InterBase
 Group:    Development/Libraries
@@ -238,6 +246,7 @@ Requires: php-interbase
 %description Db-Adapter-Firebird
 This package contains the files for Zend Framework necessary to connect to a
 Firebird/InterBase database.
+%endif
 
 
 %package Db-Adapter-Oracle
@@ -480,8 +489,10 @@ rm -f library/Zend/.Version.php.un~
 cp -pr library/Zend $RPM_BUILD_ROOT%{_datadir}/php
 #cp -pr demos/Zend $RPM_BUILD_ROOT%{_datadir}/php/Zend/demos
 
+%if %{with_extras}
 # ZendX
 cp -pr extras/library/ZendX $RPM_BUILD_ROOT%{_datadir}/php
+%endif
 
 cp -pr bin/zf.{php,sh} \
   $RPM_BUILD_ROOT%{_datadir}/php/Zend
@@ -606,7 +617,7 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %exclude %{_datadir}/php/Zend/Service/Audioscrobbler.php
 %exclude %{_datadir}/php/Zend/Service/Delicious.php
 %exclude %{_datadir}/php/Zend/Service/Delicious
-%exclude %{_datadir}/php/Zend/Service/DeveloperGarden
+#exclude %{_datadir}/php/Zend/Service/DeveloperGarden
 %exclude %{_datadir}/php/Zend/Service/Ebay
 %exclude %{_datadir}/php/Zend/Service/Flickr.php
 %exclude %{_datadir}/php/Zend/Service/Flickr
@@ -621,8 +632,8 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %exclude %{_datadir}/php/Zend/Service/SqlAzure
 %exclude %{_datadir}/php/Zend/Service/StrikeIron.php
 %exclude %{_datadir}/php/Zend/Service/StrikeIron
-%exclude %{_datadir}/php/Zend/Service/Technorati.php
-%exclude %{_datadir}/php/Zend/Service/Technorati
+#exclude %{_datadir}/php/Zend/Service/Technorati.php
+#exclude %{_datadir}/php/Zend/Service/Technorati
 %exclude %{_datadir}/php/Zend/Service/Twitter.php
 %exclude %{_datadir}/php/Zend/Service/Twitter
 %exclude %{_datadir}/php/Zend/Service/WindowsAzure
@@ -658,11 +669,13 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 # %{_datadir}/php/Zend/demos
 # %license LICENSE.txt
 
+%if %{with_extras}
 %files extras
 %defattr(-,root,root,-)
 %{_datadir}/php/ZendX
 %exclude %{_datadir}/php/ZendX/Db
 %license LICENSE.txt
+%endif
 
 %files full
 %license LICENSE.txt
@@ -713,6 +726,7 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 # %{_datadir}/php/Zend/Db/Statement/Db2
 # %license LICENSE.txt
 
+%if %{with_firebird}
 %files Db-Adapter-Firebird
 %defattr(-,root,root,-)
 %{_datadir}/php/ZendX/Db/Adapter/Firebird.php
@@ -720,6 +734,7 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %{_datadir}/php/ZendX/Db/Statement/Firebird.php
 %{_datadir}/php/ZendX/Db/Statement/Firebird
 %license LICENSE.txt
+%endif
 
 %files Db-Adapter-Oracle
 %defattr(-,root,root,-)
@@ -808,7 +823,7 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %{_datadir}/php/Zend/Service/Audioscrobbler.php
 %{_datadir}/php/Zend/Service/Delicious.php
 %{_datadir}/php/Zend/Service/Delicious
-%{_datadir}/php/Zend/Service/DeveloperGarden
+#{_datadir}/php/Zend/Service/DeveloperGarden
 %{_datadir}/php/Zend/Service/Ebay
 %{_datadir}/php/Zend/Service/Flickr.php
 %{_datadir}/php/Zend/Service/Flickr
@@ -823,8 +838,8 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %{_datadir}/php/Zend/Service/SqlAzure
 %{_datadir}/php/Zend/Service/StrikeIron.php
 %{_datadir}/php/Zend/Service/StrikeIron
-%{_datadir}/php/Zend/Service/Technorati.php
-%{_datadir}/php/Zend/Service/Technorati
+#{_datadir}/php/Zend/Service/Technorati.php
+#{_datadir}/php/Zend/Service/Technorati
 %{_datadir}/php/Zend/Service/Twitter.php
 %{_datadir}/php/Zend/Service/Twitter
 %{_datadir}/php/Zend/Service/WindowsAzure
@@ -839,6 +854,12 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 
 
 %changelog
+* Tue Aug  4 2015 Remi Collet <remi@remirepo.net> - 1.12.14-1
+- update to 1.12.14
+- extras and Db-Adapter-Firebird sub packages are no
+  more provided (by upstream)
+- DeveloperGarden and Technorati services are dropped
+
 * Wed May 20 2015 Remi Collet <RPMS@FamilleCollet.com> - 1.12.13-1
 - update to 1.12.13
 
