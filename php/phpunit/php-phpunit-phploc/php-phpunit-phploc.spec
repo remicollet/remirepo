@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    ab893cbe5c4b63760b1560b370fedc001eb5717f
+%global gh_commit    6cdf01336c06d20825831fe8cee70764fe373585
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phploc
@@ -17,8 +17,8 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-phploc
-Version:        2.1.3
-Release:        2%{?dist}
+Version:        2.1.4
+Release:        1%{?dist}
 Summary:        A tool for quickly measuring the size of a PHP project
 
 Group:          Development/Libraries
@@ -138,6 +138,9 @@ fi
 
 
 %changelog
+* Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
+- update to 2.1.4
+
 * Mon Jun 29 2015 Remi Collet <remi@fedoraproject.org> - 2.1.3-2
 - switch to $fedoraClassLoader autoloader
 
