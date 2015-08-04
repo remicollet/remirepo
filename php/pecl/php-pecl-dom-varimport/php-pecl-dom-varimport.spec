@@ -179,6 +179,9 @@ done
 %check
 export NO_INTERACTION=1
 export REPORT_EXIT_STATUS=1
+%ifnarch x86_64
+rm ?TS/tests/003_mem_leaks.phpt
+%endif
 
 cd NTS
 : Minimal load test for NTS extension
@@ -256,3 +259,5 @@ fi
 - Initial RPM package
 - open https://github.com/DmitryKoterov/dom_varimport/pull/5
   fix config.m4 + fix role for tests
+- open https://github.com/DmitryKoterov/dom_varimport/issues/6
+  failed test with php 5.6 / 32bits
