@@ -1,0 +1,110 @@
+"zendframework/zend-loader":
+"zendframework/zendxml":
+"zendframework/zend-stdlib":         BS
+"zendframework/zend-config":         BS
+"zendframework/zend-eventmanager":       (stdlib ;)
+"zendframework/zend-inputfilter":    BS
+"zendframework/zend-servicemanager": BS
+"zendframework/zend-math":               (; servicemanager)
+"zendframework/zend-serializer":     BS
+"zendframework/zend-filter":         BS
+"zendframework/zend-stdlib":             (; config, eventmanager, inputfilter, serializer, servicemanager, filter)
+
+"zendframework/zend-serializer":       (stdlib, json, math, servicemanager)
+"zendframework/zend-filter":           (stdlib, config, crypt, i18n, loader, servicemanager, uri)
+"zendframework/zend-config":           (filter, i18n, json, mvc, servicemanager)
+"zendframework/zend-inputfilter":      (stdlib, filter, validator, i18n, servicemanager)
+"zendframework/zend-servicemanager":   (di, mvc)
+
+
+
+        "zendframework/zend-authentication": (stdlib, db, crypt, http, ldap, session, validator, uri)
+        "zendframework/zend-barcode":        (stdlib, validator, servicemanager, config, zendpdf)
+        "zendframework/zend-cache":          (stdlib, servicemanager, serializer, eventmanager ; session)
+        "zendframework/zend-captcha":        (math, stdlib, session, text, validator, zendservice-recaptcha)
+        "zendframework/zend-code":           (eventmanager, doctrine/common, stdlib, version)
+        "zendframework/zend-console":        (stdlib, filter, json, validator)
+        "zendframework/zend-crypt":
+        "zendframework/zend-db":
+        "zendframework/zend-debug":
+        "zendframework/zend-di":
+        "zendframework/zend-dom":
+        "zendframework/zend-escaper":
+        "zendframework/zend-feed":
+        "zendframework/zend-file":
+        "zendframework/zend-form":
+        "zendframework/zend-http":
+        "zendframework/zend-i18n":
+        "zendframework/zend-i18n-resources":
+        "zendframework/zend-json":            (stdlib ; http, server, zendxml)
+        "zendframework/zend-log":
+        "zendframework/zend-mail":
+        "zendframework/zend-memory":          (; cache)
+        "zendframework/zend-mime":
+        "zendframework/zend-modulemanager":
+        "zendframework/zend-mvc":
+        "zendframework/zend-navigation":
+        "zendframework/zend-paginator":
+        "zendframework/zend-permissions-acl":
+        "zendframework/zend-permissions-rbac":
+        "zendframework/zend-progressbar":
+        "zendframework/zend-server":
+        "zendframework/zend-session":
+        "zendframework/zend-soap":
+        "zendframework/zend-tag":
+        "zendframework/zend-test":
+        "zendframework/zend-text":
+        "zendframework/zend-uri":
+        "zendframework/zend-validator":
+        "zendframework/zend-version": (json, http)
+        "zendframework/zend-view":
+        "zendframework/zend-xmlrpc":
+        "zendframework/zend-ldap":
+
+------------------------------------------------
+php-ZendFramework2-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Authentication-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Barcode-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Cache-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Captcha-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Code-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-common-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Console-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Crypt-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Db-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Debug-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Di-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Dom-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Escaper-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Feed-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-File-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Filter-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Form-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Http-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-I18n-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Json-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Ldap-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Log-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Mail-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Math-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Memory-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Mime-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-ModuleManager-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Mvc-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Navigation-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Paginator-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Permissions-Acl-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Permissions-Rbac-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-ProgressBar-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Serializer-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Server-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Session-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Soap-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Tag-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Test-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Text-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Uri-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Validator-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-Version-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-View-2.3.9-1.fc21.remi (noarch)
+php-ZendFramework2-XmlRpc-2.3.9-1.fc21.remi (noarch)
