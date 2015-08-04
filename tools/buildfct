@@ -81,7 +81,6 @@ alias mockfc20x56="              mock --configdir=$mocketc -r fc20x56           
 alias mockfc20xscl54="           mock --configdir=$mocketc -r fc20xscl54          rebuild "
 alias mockfc20xscl56="           mock --configdir=$mocketc -r fc20xscl56          rebuild "
 alias mockfc20xscl70="           mock --configdir=$mocketc -r fc20xscl70          rebuild "
-alias mockfc20xd="               mock --configdir=$mocketc -r fc20xd              rebuild "
 
 alias mockfc21i="  setarch i686  mock --configdir=$mocketc -r fc21i   --arch i686 rebuild "
 alias mockfc21i56="setarch i686  mock --configdir=$mocketc -r fc21i56 --arch i686 rebuild "
@@ -90,6 +89,7 @@ alias mockfc21x="                mock --configdir=$mocketc -r fc21x             
 alias mockfc21x56="              mock --configdir=$mocketc -r fc21x56             rebuild "
 alias mockfc21x70="              mock --configdir=$mocketc -r fc21x70             rebuild "
 alias mockfc21xt="               mock --configdir=$mocketc -r fc21xt              rebuild "
+alias mockfc21xd="               mock --configdir=$mocketc -r fc21xd              rebuild "
 alias mockfc21xscl54="           mock --configdir=$mocketc -r fc21xscl54          rebuild "
 alias mockfc21xscl55="           mock --configdir=$mocketc -r fc21xscl55          rebuild "
 alias mockfc21xscl56="           mock --configdir=$mocketc -r fc21xscl56          rebuild "
