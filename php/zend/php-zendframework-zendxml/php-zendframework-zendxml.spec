@@ -59,7 +59,7 @@ Requires:       php-pcre
 Requires:       php-spl
 
 Obsoletes:      php-ZendFramework2-%{library} < 2.5
-Provides:       php-ZendFramework2-%{library} = %{version}
+Provides:       php-ZendFramework2-%{library} = 1:%{version}
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 
