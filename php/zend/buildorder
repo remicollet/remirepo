@@ -26,6 +26,7 @@
 "zendframework/zend-http":               (loader, stdlib, uri, validator ; config)
 "zendframework/zend-version":            (json ; http)
 "zendframework/zend-code":               (eventmanager, doctrine/common, stdlib, version)
+"zendframework/zend-barcode":            (stdlib, validator, servicemanager, config, zendpdf)
 
 
  dep#
@@ -37,7 +38,6 @@
    4    "zendframework/zend-validator":      (stdlib ; cache, config, db, filter, http, i18n, math, servicemanager, session, uri)
 
    1    "zendframework/zend-authentication": (stdlib, db, crypt, http, ldap, session, validator, uri)
-   0    "zendframework/zend-barcode":        (stdlib, validator, servicemanager, config, zendpdf)
    1    "zendframework/zend-cache":          (stdlib, servicemanager, serializer, eventmanager ; session)
    2    "zendframework/zend-captcha":        (math, stdlib, session, text, validator, zendservice-recaptcha)
    1    "zendframework/zend-db":             (stdlib ; eventmanager, mvc, servicemanager)
@@ -66,7 +66,6 @@
 ------------------------------------------------
 php-ZendFramework2-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Authentication-2.3.9-1.fc21.remi (noarch)
-php-ZendFramework2-Barcode-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Cache-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Captcha-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Db-2.3.9-1.fc21.remi (noarch)
