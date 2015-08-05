@@ -15,6 +15,7 @@
 "zendframework/zend-stdlib":             (; config, eventmanager, inputfilter, serializer, servicemanager, filter)
 "zendframework/zend-json":           BS
 "zendframework/zend-crypt":              (math, stdlib, servicemanager ; config)
+"zendframework/zend-debug":              (; escaper)
 
 "zendframework/zend-serializer":         (stdlib, json, math, servicemanager)
 "zendframework/zend-filter":             (stdlib, config, crypt, i18n, loader, servicemanager, uri)
@@ -32,7 +33,6 @@
         "zendframework/zend-code":           (eventmanager, doctrine/common, stdlib, version)
         "zendframework/zend-console":        (stdlib, filter, json, validator)
         "zendframework/zend-db":             (stdlib ; eventmanager, mvc, servicemanager)
-        "zendframework/zend-debug":          (; escaper)
         "zendframework/zend-di":             (code, stdlib ; config, db, filter, form, log, mvc, servicemanager, view)
         "zendframework/zend-feed":           (escaper, stdlib ; db, cache, http, servicemanager, validator)
         "zendframework/zend-file":           (stdlib ; filter, i18n, servicemanager, validator)
@@ -72,7 +72,6 @@ php-ZendFramework2-Code-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-common-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Console-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Db-2.3.9-1.fc21.remi (noarch)
-php-ZendFramework2-Debug-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Di-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Feed-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-File-2.3.9-1.fc21.remi (noarch)
