@@ -2,6 +2,7 @@
 "zendframework/zend-escaper":
 "zendframework/zendxml":
 "zendframework/zend-dom":
+"zendframework/zend-i18n-resources":
 "zendframework/zend-stdlib":         BS
 "zendframework/zend-config":         BS
 "zendframework/zend-eventmanager":       (stdlib ;)
@@ -37,7 +38,6 @@
         "zendframework/zend-form":           (inputfilter, stdlib ; cache, captcha, code, di, eventmanager, filter, i18n, mvc, servicemanager, session, text, validator, view, zendservice-recaptcha)
         "zendframework/zend-http":           (loader, stdlib, uri, validator ; config)
         "zendframework/zend-i18n":           (stdlib ; cache, config, eventmanager, filter, servicemanager, validator, bview)
-*       "zendframework/zend-i18n-resources": (;)
         "zendframework/zend-log":            (servicemanager, stdlib : console, db, escaper, filter, mail, mvc, validator)
         "zendframework/zend-mail":           (crypt, loader, mime, stdlib, validator ; config, servicemanager)
         "zendframework/zend-memory":         (; cache)
