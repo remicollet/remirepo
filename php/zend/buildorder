@@ -42,6 +42,7 @@
 "zendframework/zend-validator":          (stdlib ; cache, config, db, filter, http, i18n, math, servicemanager, session, uri)
 "zendframework/zend-cache":              (stdlib, servicemanager, serializer, eventmanager ; session)
 "zendframework/zend-file":               (stdlib ; filter, i18n, servicemanager, validator)
+"zendframework/zend-memory":             (; cache)
 
 
  dep#
@@ -55,7 +56,6 @@
    6    "zendframework/zend-form":           (inputfilter, stdlib ; cache, captcha, code, di, eventmanager, filter, i18n, mvc, servicemanager, session, text, validator, view, zendservice-recaptcha)
    2    "zendframework/zend-log":            (servicemanager, stdlib ; console, db, escaper, filter, mail, mvc, validator)
    1    "zendframework/zend-mail":           (crypt, loader, mime, stdlib, validator ; config, servicemanager)
-   0    "zendframework/zend-memory":         (; cache)
    1    "zendframework/zend-mime":           (stdlib ; mail)
    2    "zendframework/zend-modulemanager":  (eventmanager, stdlib ; config, console, di, loader, mvc, servicemanager)
    4    "zendframework/zend-mvc":            (eventmanager, servicemanager, form, stdlib ; authentication, cache, console, di, filter, http, i18n, inputfilter, json, log, modulemanager, session, serializer, text, uri, validator, version, view)
@@ -73,7 +73,6 @@ php-ZendFramework2-Di-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Form-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Log-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Mail-2.3.9-1.fc21.remi (noarch)
-php-ZendFramework2-Memory-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Mime-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-ModuleManager-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Mvc-2.3.9-1.fc21.remi (noarch)
