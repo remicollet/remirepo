@@ -39,12 +39,12 @@
 "zendframework/zend-feed":               (escaper, stdlib ; db, cache, http, servicemanager, validator)
 "zendframework/zend-session":            (eventmanager, stdlib ; cache, db, http, servicemanager, validator)
 "zendframework/zend-authentication":     (stdlib, db, crypt, http, ldap, session, validator, uri)
+"zendframework/zend-validator":          (stdlib ; cache, config, db, filter, http, i18n, math, servicemanager, session, uri)
 
 
  dep#
    1    "zendframework/zend-config":             (filter, i18n, json, mvc, servicemanager)
    2    "zendframework/zend-servicemanager":     (di, mvc)
-   0    "zendframework/zend-validator":      (stdlib ; cache, config, db, filter, http, i18n, math, servicemanager, session, uri)
    1    "zendframework/zend-i18n":           (stdlib ; cache, config, eventmanager, filter, servicemanager, validator, view)
    0    "zendframework/zend-cache":          (stdlib, servicemanager, serializer, eventmanager ; session)
    1    "zendframework/zend-db":             (stdlib ; eventmanager, mvc, servicemanager)
