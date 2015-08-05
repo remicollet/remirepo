@@ -3,6 +3,7 @@
 "zendframework/zendxml":
 "zendframework/zend-dom":
 "zendframework/zend-i18n-resources":
+"zendframework/zend-permissions-rbac":
 "zendframework/zend-stdlib":         BS
 "zendframework/zend-config":         BS
 "zendframework/zend-eventmanager":       (stdlib ;)
@@ -47,7 +48,6 @@
         "zendframework/zend-navigation":     (stdlib ; config, console, http, i18n, log, modulemanager, mvc, permissions, serializer, servicemanager, uri, view)
         "zendframework/zend-paginator":      (stdlib ; cache, config, db, filter, json, mvc, servicemanager, view)
         "zendframework/zend-permissions-acl": (; di, servicemanager)
-*       "zendframework/zend-permissions-rbac": (;)
         "zendframework/zend-progressbar":    (stdlib ; json, session)
         "zendframework/zend-server":         (stdlib, code ;)
         "zendframework/zend-session":        (eventmanager, stdlib ; cache, db, http, servicemanager, validator)
@@ -91,7 +91,6 @@ php-ZendFramework2-Mvc-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Navigation-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Paginator-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Permissions-Acl-2.3.9-1.fc21.remi (noarch)
-php-ZendFramework2-Permissions-Rbac-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-ProgressBar-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Serializer-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Server-2.3.9-1.fc21.remi (noarch)
