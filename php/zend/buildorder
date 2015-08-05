@@ -19,6 +19,7 @@
 "zendframework/zend-serializer":         (stdlib, json, math, servicemanager)
 "zendframework/zend-tag":                (escaper, stdlib ; config, servicemanager)
 "zendframework/zend-ldap":               (stdlib ; config, eventmanager)
+"zendframework/zend-text":               (stdlib, servicemanager ; config)
 
 
 "zendframework/zend-filter":             (stdlib, config, crypt, i18n, loader, servicemanager, uri)
@@ -56,7 +57,6 @@
         "zendframework/zend-session":        (eventmanager, stdlib ; cache, db, http, servicemanager, validator)
         "zendframework/zend-soap":           (server, stdlib, uri ; config, http)
         "zendframework/zend-test":           (console, dom, eventmanager, http, mvc, servicemanager, stdlib, uri, view ; i18n, log, modulemanager, serializer, session)
-*       "zendframework/zend-text":           (stdlib, servicemanager ; config)
         "zendframework/zend-uri":            (escaper, validator ;)
         "zendframework/zend-validator":      (stdlib ; cache, config, db, filter, http, i18n, math, servicemanager, session, uri)
         "zendframework/zend-version":        (json ; http)
@@ -96,7 +96,6 @@ php-ZendFramework2-Server-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Session-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Soap-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Test-2.3.9-1.fc21.remi (noarch)
-php-ZendFramework2-Text-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Uri-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Validator-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Version-2.3.9-1.fc21.remi (noarch)
