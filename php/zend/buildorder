@@ -30,6 +30,7 @@
 "zendframework/zend-server":             (stdlib, code ;)
 "zendframework/zend-json":               (stdlib ; http, server, zendxml)
 "zendframework/zend-soap":               (server, stdlib, uri ; config, http)
+"zendframework/zend-xmlrpc":             (math, http, server, stdlib, zendxml, servicemanager)
 
 
  dep#
@@ -61,7 +62,6 @@
    2    "zendframework/zend-session":        (eventmanager, stdlib ; cache, db, http, servicemanager, validator)
    5    "zendframework/zend-test":           (console, dom, eventmanager, http, mvc, servicemanager, stdlib, uri, view ; i18n, log, modulemanager, serializer, session)
   11    "zendframework/zend-view":           (eventmanager, stdlib, loader ; authentication, cache, config, console, escaper, feed, filter, http, i18n, json, log, modulemanager, mvc, navigation, paginator, permissions-acl, serializer, servicemanager, session, uri)
-   0    "zendframework/zend-xmlrpc":         (math, http, server, stdlib, zendxml, servicemanager)
 
 ------------------------------------------------
 php-ZendFramework2-2.3.9-1.fc21.remi (noarch)
@@ -90,4 +90,3 @@ php-ZendFramework2-Serializer-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Session-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Test-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-View-2.3.9-1.fc21.remi (noarch)
-php-ZendFramework2-XmlRpc-2.3.9-1.fc21.remi (noarch)
