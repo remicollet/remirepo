@@ -27,6 +27,7 @@
 "zendframework/zend-version":            (json ; http)
 "zendframework/zend-code":               (eventmanager, doctrine/common, stdlib, version)
 "zendframework/zend-barcode":            (stdlib, validator, servicemanager, config, zendpdf)
+"zendframework/zend-server":             (stdlib, code ;)
 
 
  dep#
@@ -34,7 +35,7 @@
    2    "zendframework/zend-config":             (filter, i18n, json, mvc, servicemanager)
    1    "zendframework/zend-inputfilter":        (stdlib, filter, validator, i18n, servicemanager)
    2    "zendframework/zend-servicemanager":     (di, mvc)
-   1    "zendframework/zend-json":               (stdlib ; http, server, zendxml)
+   0    "zendframework/zend-json":               (stdlib ; http, server, zendxml)
    4    "zendframework/zend-validator":      (stdlib ; cache, config, db, filter, http, i18n, math, servicemanager, session, uri)
 
    1    "zendframework/zend-authentication": (stdlib, db, crypt, http, ldap, session, validator, uri)
@@ -56,12 +57,11 @@
    4    "zendframework/zend-paginator":      (stdlib ; cache, config, db, filter, json, mvc, servicemanager, view)
    1    "zendframework/zend-permissions-acl": (; di, servicemanager)
    1    "zendframework/zend-progressbar":    (stdlib ; json, session)
-   0    "zendframework/zend-server":         (stdlib, code ;)
    2    "zendframework/zend-session":        (eventmanager, stdlib ; cache, db, http, servicemanager, validator)
-   1    "zendframework/zend-soap":           (server, stdlib, uri ; config, http)
+   0    "zendframework/zend-soap":           (server, stdlib, uri ; config, http)
    5    "zendframework/zend-test":           (console, dom, eventmanager, http, mvc, servicemanager, stdlib, uri, view ; i18n, log, modulemanager, serializer, session)
   11    "zendframework/zend-view":           (eventmanager, stdlib, loader ; authentication, cache, config, console, escaper, feed, filter, http, i18n, json, log, modulemanager, mvc, navigation, paginator, permissions-acl, serializer, servicemanager, session, uri)
-   1    "zendframework/zend-xmlrpc":         (math, http, server, stdlib, zendxml, servicemanager)
+   0    "zendframework/zend-xmlrpc":         (math, http, server, stdlib, zendxml, servicemanager)
 
 ------------------------------------------------
 php-ZendFramework2-2.3.9-1.fc21.remi (noarch)
@@ -87,7 +87,6 @@ php-ZendFramework2-Paginator-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Permissions-Acl-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-ProgressBar-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Serializer-2.3.9-1.fc21.remi (noarch)
-php-ZendFramework2-Server-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Session-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Soap-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Test-2.3.9-1.fc21.remi (noarch)
