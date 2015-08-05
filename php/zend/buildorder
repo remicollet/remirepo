@@ -16,8 +16,9 @@
 "zendframework/zend-json":           BS
 "zendframework/zend-crypt":              (math, stdlib, servicemanager ; config)
 "zendframework/zend-debug":              (; escaper)
-
 "zendframework/zend-serializer":         (stdlib, json, math, servicemanager)
+
+
 "zendframework/zend-filter":             (stdlib, config, crypt, i18n, loader, servicemanager, uri)
 "zendframework/zend-config":             (filter, i18n, json, mvc, servicemanager)
 "zendframework/zend-inputfilter":        (stdlib, filter, validator, i18n, servicemanager)
