@@ -32,12 +32,12 @@
 "zendframework/zend-soap":               (server, stdlib, uri ; config, http)
 "zendframework/zend-xmlrpc":             (math, http, server, stdlib, zendxml, servicemanager)
 "zendframework/zend-i18n":           BS
+"zendframework/zend-inputfilter":        (stdlib, filter, validator, i18n, servicemanager)
 
 
  dep#
    0    "zendframework/zend-filter":             (stdlib, config, crypt, i18n, loader, servicemanager, uri)
    1    "zendframework/zend-config":             (filter, i18n, json, mvc, servicemanager)
-   0    "zendframework/zend-inputfilter":        (stdlib, filter, validator, i18n, servicemanager)
    2    "zendframework/zend-servicemanager":     (di, mvc)
    3    "zendframework/zend-validator":      (stdlib ; cache, config, db, filter, http, i18n, math, servicemanager, session, uri)
    2    "zendframework/zend-i18n":           (stdlib ; cache, config, eventmanager, filter, servicemanager, validator, view)
