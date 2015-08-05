@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global bootstrap    1
+%global bootstrap    0
 %global gh_commit    3b22c403e351d92526c642cba0bd810bc22e1c56
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.5.1
-Release:        0%{?dist}
+Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -44,6 +44,8 @@ BuildRequires:  php-spl
 BuildRequires:  php-composer(%{gh_owner}/zend-di)               >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-mvc)              >= 2.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
+# Because of bootstrap
+BuildRequires:  php-composer(%{gh_owner}/zend-code)              >= 2.5
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif

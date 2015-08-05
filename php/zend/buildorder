@@ -48,9 +48,9 @@
 "zendframework/zend-config":             (filter, i18n, json, mvc, servicemanager)
 "zendframework/zend-db":                 (stdlib ; eventmanager, mvc, servicemanager)
 "zendframework/zend-di":             BS
+"zendframework/zend-servicemanager":     (di, mvc)
 
  dep#
-   0    "zendframework/zend-servicemanager":     (di, mvc)
    1    "zendframework/zend-i18n":           (stdlib ; cache, config, eventmanager, filter, servicemanager, validator, view)
    3    "zendframework/zend-mvc":            (eventmanager, servicemanager, form, stdlib ; authentication, cache, console, di, filter, http, i18n, inputfilter, json, log, modulemanager, session, serializer, text, uri, validator, version, view)
 
