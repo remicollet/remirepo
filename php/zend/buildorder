@@ -30,37 +30,37 @@
         "zendframework/zend-console":        (stdlib, filter, json, validator)
         "zendframework/zend-db":             (stdlib ; eventmanager, mvc, servicemanager)
         "zendframework/zend-debug":          (; escaper)
-        "zendframework/zend-di":
-        "zendframework/zend-dom":
-        "zendframework/zend-feed":
-        "zendframework/zend-file":
-        "zendframework/zend-form":
-        "zendframework/zend-http":
-        "zendframework/zend-i18n":
-        "zendframework/zend-i18n-resources":
-        "zendframework/zend-log":
-        "zendframework/zend-mail":
-        "zendframework/zend-memory":          (; cache)
-        "zendframework/zend-mime":
-        "zendframework/zend-modulemanager":
-        "zendframework/zend-mvc":
-        "zendframework/zend-navigation":
-        "zendframework/zend-paginator":
-        "zendframework/zend-permissions-acl":
-        "zendframework/zend-permissions-rbac":
-        "zendframework/zend-progressbar":
-        "zendframework/zend-server":
-        "zendframework/zend-session":
-        "zendframework/zend-soap":
-        "zendframework/zend-tag":
-        "zendframework/zend-test":
-        "zendframework/zend-text":
-        "zendframework/zend-uri":
-        "zendframework/zend-validator":
-        "zendframework/zend-version": (json, http)
-        "zendframework/zend-view":
-        "zendframework/zend-xmlrpc":
-        "zendframework/zend-ldap":
+        "zendframework/zend-di":             (code, stdlib ; config, db, filter, form, log, mvc, servicemanager, view)
+*       "zendframework/zend-dom":            (;)
+        "zendframework/zend-feed":           (escaper, stdlib ; db, cache, http, servicemanager, validator)
+        "zendframework/zend-file":           (stdlib ; filter, i18n, servicemanager, validator)
+        "zendframework/zend-form":           (inputfilter, stdlib ; cache, captcha, code, di, eventmanager, filter, i18n, mvc, servicemanager, session, text, validator, view, zendservice-recaptcha)
+        "zendframework/zend-http":           (loader, stdlib, uri, validator ; config)
+        "zendframework/zend-i18n":           (stdlib ; cache, config, eventmanager, filter, servicemanager, validator, bview)
+*       "zendframework/zend-i18n-resources": (;)
+        "zendframework/zend-log":            (servicemanager, stdlib : console, db, escaper, filter, mail, mvc, validator)
+        "zendframework/zend-mail":           (crypt, loader, mime, stdlib, validator ; config, servicemanager)
+        "zendframework/zend-memory":         (; cache)
+        "zendframework/zend-mime":           (stdlib ; mail)
+        "zendframework/zend-modulemanager":  (eventmanager, stdlib ; config, console, di, loader, mvc, servicemanager)
+        "zendframework/zend-mvc":            (eventmanager, servicemanager, form, stdlib ; authentication, cache, console, di, filter, http, i18n, inputfilter, json, log, modulemanager, session, serializer, text, uri, validator, version, view)
+        "zendframework/zend-navigation":     (stdlib ; config, console, http, i18n, log, modulemanager, mvc, permissions, serializer, servicemanager, uri, view)
+        "zendframework/zend-paginator":      (stdlib ; cache, config, db, filter, json, mvc, servicemanager, view)
+        "zendframework/zend-permissions-acl": (; di, servicemanager)
+*       "zendframework/zend-permissions-rbac": (;)
+        "zendframework/zend-progressbar":    (stdlib ; json, session)
+        "zendframework/zend-server":         (stdlib, code ;)
+        "zendframework/zend-session":        (eventmanager, stdlib ; cache, db, http, servicemanager, validator)
+        "zendframework/zend-soap":           (server, stdlib, uri ; config, http)
+*       "zendframework/zend-tag":            (escaper, stdlib ; config, servicemanager)
+        "zendframework/zend-test":           (console, dom, eventmanager, http, mvc, servicemanager, stdlib, uri, view ; i18n, log, modulemanager, serializer, session)
+*       "zendframework/zend-text":           (stdlib, servicemanager ; config)
+        "zendframework/zend-uri":            (escaper, validator ;)
+        "zendframework/zend-validator":      (stdlib ; cache, config, db, filter, http, i18n, math, servicemanager, session, uri)
+        "zendframework/zend-version":        (json ; http)
+        "zendframework/zend-view":           (eventmanager, stdlib, loader ; authentication, cache, config, console, escaper, feed, filter, http, i18n, json, log, modulemanager, mvc, navigation, paginator, permissions-acl, serializer, servicemanager, session, uri)
+        "zendframework/zend-xmlrpc":         (math, http, server, stdlib, zendxml, servicemanager)
+*       "zendframework/zend-ldap":           (stdlib ; config, eventmanager)
 
 ------------------------------------------------
 php-ZendFramework2-2.3.9-1.fc21.remi (noarch)
