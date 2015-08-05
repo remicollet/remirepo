@@ -45,10 +45,10 @@
 "zendframework/zend-memory":             (; cache)
 "zendframework/zend-progressbar":        (stdlib ; json, session)
 "zendframework/zend-mvc":            BS
+"zendframework/zend-config":             (filter, i18n, json, mvc, servicemanager)
 
 
  dep#
-   0    "zendframework/zend-config":             (filter, i18n, json, mvc, servicemanager)
    1    "zendframework/zend-servicemanager":     (di, mvc)
    1    "zendframework/zend-i18n":           (stdlib ; cache, config, eventmanager, filter, servicemanager, validator, view)
    0    "zendframework/zend-db":             (stdlib ; eventmanager, mvc, servicemanager)
