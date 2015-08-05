@@ -18,6 +18,7 @@
 "zendframework/zend-debug":              (; escaper)
 "zendframework/zend-serializer":         (stdlib, json, math, servicemanager)
 "zendframework/zend-tag":                (escaper, stdlib ; config, servicemanager)
+"zendframework/zend-ldap":               (stdlib ; config, eventmanager)
 
 
 "zendframework/zend-filter":             (stdlib, config, crypt, i18n, loader, servicemanager, uri)
@@ -61,7 +62,6 @@
         "zendframework/zend-version":        (json ; http)
         "zendframework/zend-view":           (eventmanager, stdlib, loader ; authentication, cache, config, console, escaper, feed, filter, http, i18n, json, log, modulemanager, mvc, navigation, paginator, permissions-acl, serializer, servicemanager, session, uri)
         "zendframework/zend-xmlrpc":         (math, http, server, stdlib, zendxml, servicemanager)
-*       "zendframework/zend-ldap":           (stdlib ; config, eventmanager)
 
 ------------------------------------------------
 php-ZendFramework2-2.3.9-1.fc21.remi (noarch)
@@ -80,7 +80,6 @@ php-ZendFramework2-Filter-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Form-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Http-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-I18n-2.3.9-1.fc21.remi (noarch)
-php-ZendFramework2-Ldap-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Log-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Mail-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Math-2.3.9-1.fc21.remi (noarch)
