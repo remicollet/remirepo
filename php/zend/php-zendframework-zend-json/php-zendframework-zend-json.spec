@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global bootstrap    1
+%global bootstrap    0
 %global gh_commit    c74eaf17d2dd37dc1e964be8dfde05706a821ebc
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.5.1
-Release:        0%{?dist}
+Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -49,7 +49,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 #        "phpunit/PHPUnit": "~4.0"
 BuildRequires:  php-composer(%{gh_owner}/zend-http)             >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-server)           >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zendxml)               >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zendxml)               >= 1.0
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
@@ -72,7 +72,7 @@ Suggests:       php-composer(%{gh_owner}/zend-server)
 Suggests:       php-composer(%{gh_owner}/zendxml)
 %endif
 %endif
-# From phpcompatinfo report for version 2.5.2
+# From phpcompatinfo report for version 2.5.1
 Requires:       php-json
 Requires:       php-mbstring
 Requires:       php-pcre

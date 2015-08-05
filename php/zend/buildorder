@@ -28,6 +28,7 @@
 "zendframework/zend-code":               (eventmanager, doctrine/common, stdlib, version)
 "zendframework/zend-barcode":            (stdlib, validator, servicemanager, config, zendpdf)
 "zendframework/zend-server":             (stdlib, code ;)
+"zendframework/zend-json":               (stdlib ; http, server, zendxml)
 
 
  dep#
@@ -35,7 +36,6 @@
    2    "zendframework/zend-config":             (filter, i18n, json, mvc, servicemanager)
    1    "zendframework/zend-inputfilter":        (stdlib, filter, validator, i18n, servicemanager)
    2    "zendframework/zend-servicemanager":     (di, mvc)
-   0    "zendframework/zend-json":               (stdlib ; http, server, zendxml)
    4    "zendframework/zend-validator":      (stdlib ; cache, config, db, filter, http, i18n, math, servicemanager, session, uri)
 
    1    "zendframework/zend-authentication": (stdlib, db, crypt, http, ldap, session, validator, uri)
