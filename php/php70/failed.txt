@@ -1,23 +1,34 @@
-===== 7.0.0-0.1.beta2
+===== 7.0.0-0.2.beta3
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
-/var/lib/mock/el6i/build.log:Tests failed    :    4 (  0.0%) (  0.0%)
-/var/lib/mock/el6x/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
-/var/lib/mock/el7x/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
-/var/lib/mock/fc21i/build.log:Tests failed    :    4 (  0.0%) (  0.0%)
-/var/lib/mock/fc21x/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
-/var/lib/mock/fc22i/build.log:Tests failed    :    4 (  0.0%) (  0.0%)
-/var/lib/mock/fc22x/build.log:Tests failed    :    4 (  0.0%) (  0.0%)
+/var/lib/mock/el6i/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
+/var/lib/mock/el6x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/el7x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/fc21i/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
+/var/lib/mock/fc21x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/fc22i/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
+/var/lib/mock/fc22x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
 
-32bits
-  Properly handle exceptions going to be uncaught [sapi/phpdbg/tests/exceptions_001.phpt]
-  Test exceptions in eval during exception [sapi/phpdbg/tests/exceptions_002.phpt]
+el6i, fc21i, fc22i
+  Bug #53437 DateInterval unserialize bad data, 32 bit [ext/date/tests/bug53437_var3.phpt]
 
-64bits  (Fixed upstream)
-  Basic print functionality [sapi/phpdbg/tests/print_001.phpt]
-  Relative print commands [sapi/phpdbg/tests/print_002.phpt]
-
-fc22x   (Proc open is erratic)
-  Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
+fc22x
   Bug #64438 proc_open hangs with stdin/out with 4097+ bytes [ext/standard/tests/streams/proc_open_bug64438.phpt]
+
+* proc_open give erratic test results :(
+
+TEST FAILURE: ../ext/date/tests/bug53437_var3.diff --
+003+   int(2)
+003-   int(-1)
+005+   int(0)
+005-   int(-1)
+007+   int(0)
+007-   int(-1)
+009+   int(6)
+009-   int(-1)
+011+   int(8)
+011-   int(-1)
+013+   int(0)
+013-   int(-1)
+-- ../ext/date/tests/bug53437_var3.diff result ends.

@@ -133,8 +133,8 @@
 #global gh_date      20150623
 #global gh_owner     php
 #global gh_project   php-src
-%global rcver        beta2
-%global rpmrel       12
+%global rcver        beta3
+%global rpmrel       13
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1804,6 +1804,9 @@ fi
 
 
 %changelog
+* Wed Aug  5 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.13.beta3
+- Update to 7.0.0beta3
+
 * Wed Jul 22 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.12.beta2
 - Update to 7.0.0beta2
 - switch from libvpx to libwebp (only for bundled libgd, not used)

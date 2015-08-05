@@ -134,12 +134,13 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver         beta2
+%global rcver         beta3
+%global rpmrel        2
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 7.0.0
-Release: 0.1.%{rcver}%{?dist}
+Release: 0.%{rpmrel}.%{rcver}%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1996,6 +1997,9 @@ fi
 
 
 %changelog
+* Wed Aug  5 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.2.beta3
+- update to 7.0.0beta3
+
 * Thu Jul 23 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.1.beta2
 - update to 7.0.0beta2
 - merge changes from php70-php spec file
