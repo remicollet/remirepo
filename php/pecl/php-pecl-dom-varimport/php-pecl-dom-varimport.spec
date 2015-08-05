@@ -31,7 +31,7 @@
 %endif
 
 Name:           %{?sub_prefix}php-pecl-dom-varimport
-Version:        1.11.2
+Version:        1.11.3
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Convert nested arrays into DOMDocument
 Group:          Development/Languages
@@ -108,9 +108,6 @@ These are the files needed to compile programs using %{name}.
 %prep
 %setup -c -q
 
-# https://github.com/DmitryKoterov/dom_varimport/pull/5
-sed -e '/test/s/role="src"/role="test"/' -i package.xml
-
 mv %{pecl_name}-%{version} NTS
 cd NTS
 
@@ -179,9 +176,6 @@ done
 %check
 export NO_INTERACTION=1
 export REPORT_EXIT_STATUS=1
-%ifnarch x86_64
-rm ?TS/tests/003_mem_leaks.phpt
-%endif
 
 cd NTS
 : Minimal load test for NTS extension
@@ -255,6 +249,9 @@ fi
 
 
 %changelog
+* Wed Aug 05 2015 Remi Collet <remi@fedoraproject.org> - 1.11.3-1
+- Update to 1.11.3
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 1.11.2-1
 - Initial RPM package
 - open https://github.com/DmitryKoterov/dom_varimport/pull/5

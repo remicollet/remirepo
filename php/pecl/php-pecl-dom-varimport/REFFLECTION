@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #184 dom_varimport version 1.11.2 ] {
+Extension [ <persistent> extension #184 dom_varimport version 1.11.3 ] {
 
   - Dependencies {
     Dependency [ dom (Required) ]
