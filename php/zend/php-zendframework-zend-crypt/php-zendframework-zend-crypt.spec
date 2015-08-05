@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.5.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -64,8 +64,8 @@ Requires:       php-composer(%{gh_owner}/zend-math)             >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-math)             <  3
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
-Requires:       php-composer(%{gh_owner}/servicemanager)        >= 2.5
-Requires:       php-composer(%{gh_owner}/servicemanager)        <  3
+Requires:       php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
+Requires:       php-composer(%{gh_owner}/zend-servicemanager)   <  3
 # From composer, "suggest": {
 #        "ext-mcrypt": "Required for most features of Zend\\Crypt"
 # https://github.com/zendframework/zend-crypt/issues/3
@@ -149,5 +149,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Aug  5 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-2
+- fix dependencies
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
 - initial package
