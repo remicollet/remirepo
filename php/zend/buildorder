@@ -33,10 +33,10 @@
 "zendframework/zend-xmlrpc":             (math, http, server, stdlib, zendxml, servicemanager)
 "zendframework/zend-i18n":           BS
 "zendframework/zend-inputfilter":        (stdlib, filter, validator, i18n, servicemanager)
+"zendframework/zend-filter":             (stdlib, config, crypt, i18n, loader, servicemanager, uri)
 
 
  dep#
-   0    "zendframework/zend-filter":             (stdlib, config, crypt, i18n, loader, servicemanager, uri)
    1    "zendframework/zend-config":             (filter, i18n, json, mvc, servicemanager)
    2    "zendframework/zend-servicemanager":     (di, mvc)
    3    "zendframework/zend-validator":      (stdlib ; cache, config, db, filter, http, i18n, math, servicemanager, session, uri)
@@ -73,7 +73,6 @@ php-ZendFramework2-Db-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Di-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Feed-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-File-2.3.9-1.fc21.remi (noarch)
-php-ZendFramework2-Filter-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Form-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Log-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Mail-2.3.9-1.fc21.remi (noarch)
