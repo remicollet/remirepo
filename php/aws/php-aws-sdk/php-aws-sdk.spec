@@ -14,8 +14,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   2.8.15
-%global github_commit    5c9cd0d0da069ae556db2900d34c9140bb9166b5
+%global github_version   2.8.17
+%global github_commit    2f854073d68ee891c1e582015a423938942aa913
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -59,7 +59,8 @@ Requires:  php-composer(guzzle/guzzle) >= %{guzzle_min_ver}
 Requires:  php-composer(guzzle/guzzle) <  %{guzzle_max_ver}
 # composer.json: optional
 Requires:  php-openssl
-# phpcompatinfo (computed from version 2.8.13)
+# phpcompatinfo (computed from version 2.8.17)
+Requires:  php-curl
 Requires:  php-date
 Requires:  php-hash
 Requires:  php-json
@@ -69,7 +70,7 @@ Requires:  php-session
 Requires:  php-simplexml
 Requires:  php-spl
 # Autoloader
-Requires:      php-composer(symfony/class-loader)
+Requires:  php-composer(symfony/class-loader)
 
 # Optional package version checks
 Conflicts: php-composer(doctrine/cache)  <  %{cache_min_ver}
@@ -150,7 +151,7 @@ AUTOLOAD
 
 
 %build
-# Empty build section, most likely nothing required.
+# Empty build section, nothing required
 
 
 %install
@@ -189,6 +190,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 04 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.8.17-1
+- Updated to 2.8.17 (RHBZ #1243181)
+
 * Sat Jul 25 2015 Remi Collet <remi@fedoraproject.org> - 2.8.15-1
 - Update to 2.8.15
 
