@@ -1,3 +1,5 @@
+# remirepo spec file for php-pimple, from:
+# adapted for SCL
 #
 # Fedora spec file for php-pimple
 #
@@ -30,36 +32,51 @@
 # "php": ">=5.3.0"
 %global php_min_ver 5.3.0
 
+%if 0%{?scl:1}
+# No need for noarch package in SCL (base package can be used)
+%global with_lib   0
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%else
+%global with_lib   1
+%endif
+
 # Build using "--without tests" to disable tests
 %global with_tests  %{?_without_tests:0}%{!?_without_tests:1}
 
+%{?scl:          %scl_package        php-pimple}
+%{!?scl:         %global pkg_name    %{name}}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?phpdir:      %global phpdir      %{_datadir}/php}
+%{!?__php:       %global __php       %{_bindir}/php}
 
-Name:          php-%{composer_project}
+Name:          %{?sub_prefix}php-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:       A simple dependency injection container for PHP (extension)
 
 Group:         Development/Libraries
 License:       MIT
 URL:           http://pimple.sensiolabs.org
-Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{pkg_name}-%{github_version}-%{github_commit}.tar.gz
 
-BuildRequires: php-devel >= %{php_min_ver}
-# For autoload generation
-BuildRequires: %{_bindir}/phpab
-%if %{with_tests}
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: %{?scl_prefix}php-devel >= %{php_min_ver}
+%if %{with_tests} && %{with_lib}
 # For tests
 ## composer.json
 BuildRequires: %{_bindir}/phpunit
 ## phpcompatinfo (computed from version 3.0.0)
-BuildRequires: php-reflection
-BuildRequires: php-spl
+BuildRequires: %{?scl_prefix}php-reflection
+BuildRequires: %{?scl_prefix}php-spl
 %endif
 
-Requires:      php(zend-abi) = %{php_zend_api}
-Requires:      php(api)      = %{php_core_api}
+Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:      %{?scl_prefix}php(api)      = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
@@ -67,18 +84,26 @@ Requires:      php(api)      = %{php_core_api}
 %{?filter_setup}
 %endif
 
+
 %description
 %{summary}.
 
 NOTE: This package installs the Pimple EXTENSION.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+
+
 # ------------------------------------------------------------------------------
 
+%if %{with_lib}
 %package lib
 
 Summary:   A simple dependency injection container for PHP (library)
+Group:     Development/Libraries
 
+%if 0%{?rhel} != 5
 BuildArch: noarch
+%endif
 
 # composer.json
 Requires:  php(language) >= %{php_min_ver}
@@ -96,12 +121,14 @@ Provides:  php-Pimple = %{version}-%{release}
 
 NOTE: This package installs the Pimple LIBRARY. If you would like the EXTENSION
 for improved speed, install "%{name}".
+%endif
 
 # ------------------------------------------------------------------------------
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+%if %{with_lib}
 : Library: Create autoloader
 cat <<'AUTOLOAD' | tee src/Pimple/autoload.php
 <?php
@@ -126,6 +153,7 @@ $fedoraClassLoader->addPrefix('Pimple\\', dirname(__DIR__));
 
 return $fedoraClassLoader;
 AUTOLOAD
+%endif
 
 : Extension: NTS
 mv ext/%{ext_name} ext/NTS
@@ -159,9 +187,13 @@ popd
 
 
 %install
+rm -rf %{buildroot}
+
+%if %{with_lib}
 : Library
 mkdir -p %{buildroot}/%{phpdir}/
 cp -rp src/* %{buildroot}/%{phpdir}/
+%endif
 
 : Extension: NTS
 make -C ext/NTS install INSTALL_ROOT=%{buildroot}
@@ -187,6 +219,7 @@ install -D -m 0644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 %if %{with_tests}
+%if %{with_lib}
 : Library: Test suite without extension
 %{_bindir}/phpunit --verbose \
     --bootstrap %{buildroot}/%{phpdir}/Pimple/autoload.php
@@ -195,6 +228,7 @@ install -D -m 0644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %{_bindir}/php --define extension=ext/NTS/modules/%{ext_name}.so \
     %{_bindir}/phpunit --verbose \
         --bootstrap %{buildroot}/%{phpdir}/Pimple/autoload.php
+%endif
 
 : Extension: NTS test suite
 pushd ext/NTS
@@ -212,9 +246,14 @@ popd
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %{!?_licensedir:%global license %%doc}
 
 %files
+%defattr(-,root,root,-)
 %license LICENSE
 %doc CHANGELOG
 %doc README.rst
@@ -227,16 +266,24 @@ popd
 %{php_ztsextdir}/%{ext_name}.so
 %endif
 
+%if %{with_lib}
 %files lib
+%defattr(-,root,root,-)
 %license LICENSE
 %doc CHANGELOG
 %doc README.rst
 %doc composer.json
 %{phpdir}/Pimple
 %exclude %{phpdir}/Pimple/Tests
+%endif
 
 
 %changelog
+* Wed Aug  5 2015 Remi Collet <remi@remirepo.net> - 3.0.1-1
+- backport for #remirepo
+- adapt for SCL
+- drop library subpackage in SCL
+
 * Sun Aug 02 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.0.1-1
 - Updated to 3.0.1
 
