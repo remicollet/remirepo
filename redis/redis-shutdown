@@ -15,8 +15,8 @@ fi
 CONFIG_FILE="/etc/$SERVICE_NAME.conf"
 
 # Use awk to retrieve host, port from config file
-HOST=`awk '/^[[:blank:]]*bind/ { print $2 }' $CONFIG_FILE`
-PORT=`awk '/^[[:blank:]]*port/ { print $2 }' $CONFIG_FILE`
+HOST=`awk '/^[[:blank:]]*bind/ { print $2 }' $CONFIG_FILE | tail -n1`
+PORT=`awk '/^[[:blank:]]*port/ { print $2 }' $CONFIG_FILE | tail -n1`
 
 # Just in case, use default host, port
 HOST=${HOST:-127.0.0.1}
