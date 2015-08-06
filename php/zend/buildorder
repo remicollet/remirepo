@@ -56,12 +56,12 @@
 "zendframework/zend-permissions-acl":    (; di, servicemanager)
 "zendframework/zend-mime":           BS
 "zendframework/zend-mail":               (crypt, loader, mime, stdlib, validator ; config, servicemanager)
+"zendframework/zend-mime":               (stdlib ; mail)
 
  dep#
    1    "zendframework/zend-mvc":            (eventmanager, servicemanager, form, stdlib ; authentication, cache, console, di, filter, http, i18n, inputfilter, json, log, modulemanager, session, serializer, text, uri, validator, version, view)
    2    "zendframework/zend-di":             (code, stdlib ; config, db, filter, form, log, mvc, servicemanager, view)
    2    "zendframework/zend-view":           (eventmanager, stdlib, loader ; authentication, cache, config, console, escaper, feed, filter, http, i18n, json, log, modulemanager, mvc, navigation, paginator, permissions-acl, serializer, servicemanager, session, uri)
-   0    "zendframework/zend-mime":           (stdlib ; mail)
 
    2    "zendframework/zend-form":           (inputfilter, stdlib ; cache, captcha, code, di, eventmanager, filter, i18n, mvc, servicemanager, session, text, validator, view, zendservice-recaptcha)
    0    "zendframework/zend-log":            (servicemanager, stdlib ; console, db, escaper, filter, mail, mvc, validator)
