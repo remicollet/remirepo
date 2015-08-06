@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.5.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -73,8 +73,19 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 
 %description
-Zend\Ldap\Ldap is a class for performing LDAP operations including but
-not limited to binding, searching and modifying entries in an LDAP directory.
+Zend\Text is a component to work on text strings.
+It contains the subcomponents:
+
+* Zend\Text\Figlet that enables developers to create a so called FIGlet text.
+  A FIGlet text is a string, which is represented as ASCII art. FIGlets use a
+  special font format, called FLT (FigLet Font). By default, one standard font
+  is shipped with Zend\Text\Figlet, but you can download additional fonts here
+
+* Zend\Text\Table to create text based tables on the fly with different
+  decorators. This can be helpful, if you either want to send structured data
+  in text emails, which are used to have mono-spaced fonts, or to display table
+  information in a CLI application. Zend\Text\Table supports multi-line columns,
+  colspan and align as well.
 
 
 %prep
@@ -126,5 +137,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-2
+- fix description
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
 - initial package
