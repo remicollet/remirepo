@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.5.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -100,8 +100,12 @@ Requires:       php-pcre
 Requires:       php-pcre
 Requires:       php-spl
 
-Obsoletes:      php-ZendFramework2-%{library} < 2.5
-Provides:       php-ZendFramework2-%{library} = %{version}
+Obsoletes:      php-ZendFramework2-%{library}           < 2.5
+Obsoletes:      php-ZendFramework2-%{library}-apc       < 2.5
+Obsoletes:      php-ZendFramework2-%{library}-memcached < 2.5
+Provides:       php-ZendFramework2-%{library}           = %{version}
+Provides:       php-ZendFramework2-%{library}-apc       = %{version}
+Provides:       php-ZendFramework2-%{library}-memcached = %{version}
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 
@@ -161,5 +165,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-2
+- add missing obsoletes
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - initial package
