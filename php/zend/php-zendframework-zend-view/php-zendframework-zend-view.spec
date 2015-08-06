@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.1
+Version:        2.5.2
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -202,5 +202,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
+- version 2.5.2
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
 - initial package
