@@ -52,18 +52,18 @@
 "zendframework/zend-modulemanager":      (eventmanager, stdlib ; config, console, di, loader, mvc, servicemanager)
 "zendframework/zend-i18n":               (stdlib ; cache, config, eventmanager, filter, servicemanager, validator, view)
 "zendframework/zend-captcha":            (math, stdlib ; session, text, validator, zendservice-recaptcha)
+"zendframework/zend-paginator":          (stdlib ; cache, config, db, filter, json, mvc, servicemanager, view)
 
  dep#
    1    "zendframework/zend-mvc":            (eventmanager, servicemanager, form, stdlib ; authentication, cache, console, di, filter, http, i18n, inputfilter, json, log, modulemanager, session, serializer, text, uri, validator, version, view)
    2    "zendframework/zend-di":             (code, stdlib ; config, db, filter, form, log, mvc, servicemanager, view)
-   4    "zendframework/zend-view":           (eventmanager, stdlib, loader ; authentication, cache, config, console, escaper, feed, filter, http, i18n, json, log, modulemanager, mvc, navigation, paginator, permissions-acl, serializer, servicemanager, session, uri)
+   3    "zendframework/zend-view":           (eventmanager, stdlib, loader ; authentication, cache, config, console, escaper, feed, filter, http, i18n, json, log, modulemanager, mvc, navigation, paginator, permissions-acl, serializer, servicemanager, session, uri)
 
    2    "zendframework/zend-form":           (inputfilter, stdlib ; cache, captcha, code, di, eventmanager, filter, i18n, mvc, servicemanager, session, text, validator, view, zendservice-recaptcha)
    1    "zendframework/zend-log":            (servicemanager, stdlib ; console, db, escaper, filter, mail, mvc, validator)
    1    "zendframework/zend-mail":           (crypt, loader, mime, stdlib, validator ; config, servicemanager)
    1    "zendframework/zend-mime":           (stdlib ; mail)
    2    "zendframework/zend-navigation":     (stdlib ; config, console, http, i18n, log, modulemanager, mvc, permissions, serializer, servicemanager, uri, view)
-   0    "zendframework/zend-paginator":      (stdlib ; cache, config, db, filter, json, mvc, servicemanager, view)
    0    "zendframework/zend-permissions-acl": (; di, servicemanager)
    0    "zendframework/zend-test":           (console, dom, eventmanager, http, mvc, servicemanager, stdlib, uri, view ; i18n, log, modulemanager, serializer, session)
 
@@ -74,7 +74,6 @@ php-ZendFramework2-Log-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Mail-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Mime-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Navigation-2.3.9-1.fc21.remi (noarch)
-php-ZendFramework2-Paginator-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Permissions-Acl-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Test-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-View-2.3.9-1.fc21.remi (noarch)
