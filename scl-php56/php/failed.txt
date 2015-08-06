@@ -1,10 +1,15 @@
-===== 5.6.12RC1
+===== 5.6.12
 
 $ grep -r 'Tests failed' /var/lib/mock/scl56*/build.log
 
 /var/lib/mock/scl56el6x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
-/var/lib/mock/scl56el7x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/scl56el7x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
 /var/lib/mock/scl56fc19x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 /var/lib/mock/scl56fc20x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 /var/lib/mock/scl56fc21x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 /var/lib/mock/scl56fc22x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+
+el7
+	Bug #64438 proc_open hangs with stdin/out with 4097+ bytes [ext/standard/tests/streams/proc_open_bug64438.phpt]
+
+* proc_open have erratic results... :(

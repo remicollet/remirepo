@@ -1,21 +1,22 @@
-===== 5.6.11
+===== 5.6.12
 
 $ grep -r 'Tests failed' /var/lib/mock/56*/build.log
 
-/var/lib/mock/el5i/build.log:Tests failed    :    4 (  0.0%) (  0.1%)
+/var/lib/mock/el5i/build.log:Tests failed    :    5 (  0.0%) (  0.1%)
 /var/lib/mock/el5x/build.log:Tests failed    :    3 (  0.0%) (  0.0%)
-/var/lib/mock/el6i/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
+/var/lib/mock/el6i/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
 /var/lib/mock/el6x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 /var/lib/mock/el7x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
-/var/lib/mock/fc20i/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
+/var/lib/mock/fc20i/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
 /var/lib/mock/fc20x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
-/var/lib/mock/fc21i/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
+/var/lib/mock/fc21i/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
 /var/lib/mock/fc21x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 /var/lib/mock/fc22i/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
 /var/lib/mock/fc22x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 
 
 el5i, el6i, fc20i, fc21i, fc22i
+	Bug #53437 DateInterval unserialize bad data, 32 bit [ext/date/tests/bug53437_var3.phpt]
 	[1] Bug #64146 (serialize incorrectly saving objects when they are cloned) [ext/standard/tests/serialize/bug64146.phpt]
 
 el5i, el5x
@@ -23,5 +24,6 @@ el5i, el5x
 	sni_server [ext/openssl/tests/sni_server.phpt]
 	Specific protocol method specification [ext/openssl/tests/stream_crypto_flags_004.phpt]
 
+
 [1] known issue, no fix found
-[2] ext/openssl erratic results... unable to connect to ssl://127.0.0.1:64321
+[2] proc_open erratic results...

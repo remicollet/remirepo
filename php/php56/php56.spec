@@ -147,7 +147,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.6.11
+Version: 5.6.12
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -1594,6 +1594,18 @@ install -m 755 %{SOURCE99} $RPM_BUILD_ROOT%{_initrddir}/php-fpm
 # Nginx configuration
 install -D -m 644 %{SOURCE13} $RPM_BUILD_ROOT%{_sysconfdir}/nginx/conf.d/php-fpm.conf
 install -D -m 644 %{SOURCE14} $RPM_BUILD_ROOT%{_sysconfdir}/nginx/default.d/php.conf
+
+# Switch to UDS
+# FPM
+sed -e 's@127.0.0.1:9000@/run/php-fpm/www.sock@' \
+    -e 's@^;listen.acl_users@listen.acl_users@' \
+    -i $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d/www.conf
+# Nginx
+sed -e 's@127.0.0.1:9000@unix:/run/php-fpm/www.sock@' \
+    -i $RPM_BUILD_ROOT%{_sysconfdir}/nginx/conf.d/php-fpm.conf
+# Apache
+sed -e 's@proxy:fcgi://127.0.0.1:9000@proxy:unix:/run/php-fpm/www.sock|fcgi://localhost@' \
+    -i $RPM_BUILD_ROOT%{_httpd_confdir}/php.conf
 %endif
 
 # Generate files lists and stub .ini files for each subpackage
@@ -1975,6 +1987,11 @@ fi
 
 
 %changelog
+* Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> 5.6.12-1
+- Update to 5.6.12
+  http://www.php.net/releases/5_6_12.php
+- switch FPM to listen on UDS on Fedora 21+
+
 * Sun Jul 12 2015 Remi Collet <remi@fedoraproject.org> 5.6.11-1
 - Update to 5.6.11
   http://www.php.net/releases/5_6_11.php
