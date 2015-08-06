@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.5.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -85,8 +85,7 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 
 %description
-Zend\Ldap\Ldap is a class for performing LDAP operations including but
-not limited to binding, searching and modifying entries in an LDAP directory.
+Zend\Console is a component to design and implement console applications in PHP.
 
 
 %prep
@@ -138,5 +137,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-2
+- fix description
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
 - initial package
