@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global bootstrap    1
+%global bootstrap    0
 %global gh_commit    b3d31e7ba6d0c13a76afe5c8d914a8ff08616b0d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.5.1
-Release:        0%{?dist}
+Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries

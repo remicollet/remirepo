@@ -63,9 +63,7 @@
 "zendframework/zend-mvc":                (eventmanager, servicemanager, form, stdlib ; authentication, cache, console, di, filter, http, i18n, inputfilter, json, log, modulemanager, session, serializer, text, uri, validator, version, view)
 "zendframework/zend-test":               (console, dom, eventmanager, http, mvc, servicemanager, stdlib, uri, view ; i18n, log, modulemanager, serializer, session)
 "zendframework/zend-navigation":         (stdlib ; config, console, http, i18n, log, modulemanager, mvc, permissions, serializer, servicemanager, uri, view)
-
- dep#
-   0    "zendframework/zend-view":           (eventmanager, stdlib, loader ; authentication, cache, config, console, escaper, feed, filter, http, i18n, json, log, modulemanager, mvc, navigation, paginator, permissions-acl, serializer, servicemanager, session, uri)
+"zendframework/zend-view":               (eventmanager, stdlib, loader ; authentication, cache, config, console, escaper, feed, filter, http, i18n, json, log, modulemanager, mvc, navigation, paginator, permissions-acl, serializer, servicemanager, session, uri)
 
 
 ------------------------------------------------
