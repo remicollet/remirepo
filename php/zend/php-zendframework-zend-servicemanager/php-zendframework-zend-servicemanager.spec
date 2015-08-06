@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.5.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -72,14 +72,9 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 
 %description
-Zend\Stdlib is a set of components that implements general purpose utility
-class for different scopes like:
-* array utilities functions;
-* hydrators;
-* json serializable interfaces;
-* general messaging systems;
-* string wrappers;
-* etc.
+The Service Locator design pattern is implemented by the Zend\ServiceManager
+component. The Service Locator is a service/object locator, tasked with
+retrieving other objects.
 
 
 %prep
@@ -131,5 +126,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-2
+- fix description
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
 - initial package
