@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.5.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -49,7 +49,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0"
 BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.5
-#BuildRequires:  php-composer(%{gh_owner}/zendpdf)
+BuildRequires:  php-composer(%{gh_owner}/zendpdf)
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
@@ -72,7 +72,7 @@ Requires:       php-composer(%{gh_owner}/zend-servicemanager)   <  3
 # From composer, "suggest": {
 #        "zendframework/zendpdf": "ZendPdf component"
 %if 0%{?fedora} >= 21
-#Suggests:       php-composer(%{gh_owner}/zendpdf)
+Suggests:       php-composer(%{gh_owner}/zendpdf)
 %endif
 %endif
 # From phpcompatinfo report for version 2.5.2
@@ -143,5 +143,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-2
+- add optional dependency on zendframework/zendpdf
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - initial package
