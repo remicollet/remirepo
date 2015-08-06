@@ -61,14 +61,13 @@
 "zendframework/zend-form":               (inputfilter, stdlib ; cache, captcha, code, di, eventmanager, filter, i18n, mvc, servicemanager, session, text, validator, view, zendservice-recaptcha)
 "zendframework/zend-di":                 (code, stdlib ; config, db, filter, form, log, mvc, servicemanager, view)
 "zendframework/zend-mvc":                (eventmanager, servicemanager, form, stdlib ; authentication, cache, console, di, filter, http, i18n, inputfilter, json, log, modulemanager, session, serializer, text, uri, validator, version, view)
+"zendframework/zend-test":               (console, dom, eventmanager, http, mvc, servicemanager, stdlib, uri, view ; i18n, log, modulemanager, serializer, session)
 
  dep#
    1    "zendframework/zend-view":           (eventmanager, stdlib, loader ; authentication, cache, config, console, escaper, feed, filter, http, i18n, json, log, modulemanager, mvc, navigation, paginator, permissions-acl, serializer, servicemanager, session, uri)
 
    0    "zendframework/zend-navigation":     (stdlib ; config, console, http, i18n, log, modulemanager, mvc, permissions, serializer, servicemanager, uri, view)
-   0    "zendframework/zend-test":           (console, dom, eventmanager, http, mvc, servicemanager, stdlib, uri, view ; i18n, log, modulemanager, serializer, session)
 
 ------------------------------------------------
 php-ZendFramework2-2.3.9-1.fc21.remi (noarch)
 php-ZendFramework2-Navigation-2.3.9-1.fc21.remi (noarch)
-php-ZendFramework2-Test-2.3.9-1.fc21.remi (noarch)
