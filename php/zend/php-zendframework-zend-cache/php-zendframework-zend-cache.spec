@@ -34,7 +34,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.3.23
+BuildRequires:  php(language) >= 5.5
 BuildRequires:  php-reflection
 BuildRequires:  php-date
 BuildRequires:  php-pcre
@@ -59,8 +59,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 #        "zendframework/zend-servicemanager": "~2.5",
 #        "zendframework/zend-serializer": "~2.5",
 #        "zendframework/zend-eventmanager": "~2.5"
-Requires:       php(language) >= 5.3.23
-Requires:       php-ldap
+Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3

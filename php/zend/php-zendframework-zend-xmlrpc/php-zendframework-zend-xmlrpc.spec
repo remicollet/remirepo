@@ -66,7 +66,6 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 #        "zendframework/zend-stdlib": "~2.5",
 #        "zendframework/zendxml": "1.*"
 Requires:       php(language) >= 5.3.23
-Requires:       php-ldap
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-http)             >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-http)             <  3
