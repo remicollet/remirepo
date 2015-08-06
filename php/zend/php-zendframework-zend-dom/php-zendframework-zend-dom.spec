@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.5.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -62,10 +62,9 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 
 %description
-Zend\Math provides general mathematical functions.
-So far the supported functionalities are:
-* Zend\Math\Rand, a random number generator;
-* Zend\Math\BigInteger, a library to manage big integers.
+The Zend\Dom component provides tools for working with DOM documents and
+structures. Currently, we offer Zend\Dom\Query, which provides a unified
+interface for querying DOM documents utilizing both XPath and CSS selectors.
 
 
 %prep
@@ -117,5 +116,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-2
+- fix description
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
 - initial package
