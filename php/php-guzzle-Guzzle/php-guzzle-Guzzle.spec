@@ -44,9 +44,9 @@
 %global symfony_max_ver 3.0
 # "zendframework/zend-cache": "2.*,<2.3",
 # "zendframework/zend-log": "2.*,<2.3"
-#     NOTE: Max 2.4 instead of 2.3 because tests with 2.3 pass
+#     NOTE: Max 3 instead of 2.3 because tests with 2.5.2 pass
 %global zend_min_ver 2.0
-%global zend_max_ver 2.4
+%global zend_max_ver 3
 
 %if 0%{?fedora} < 18 && 0%{?rhel} < 6
 # Missing nodejs
@@ -60,7 +60,7 @@
 
 Name:          php-guzzle-%{pear_name}
 Version:       %{github_version}
-Release:       3%{?dist}
+Release:       3%{?dist}.1
 Summary:       PHP HTTP client library and framework for building RESTful web service clients
 
 Group:         Development/Libraries
@@ -329,6 +329,9 @@ fi
 %exclude %{phpdir}/Guzzle/*/*/composer.json
 
 %changelog
+* Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 3.9.3-3.1
+- ignore max ZF version
+
 * Sat Jul 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.9.3-3
 - Autoloader updates
 - Added standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming provides
