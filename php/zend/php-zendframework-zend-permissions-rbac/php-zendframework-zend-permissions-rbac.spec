@@ -49,6 +49,8 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 Requires:       php(language) >= 5.3.23
 # From phpcompatinfo report for version 2.5.1
 Requires:       php-spl
+# Autoloader
+Requires:       php-composer(%{gh_owner}/zend-loader)           >= 2.5
 
 Obsoletes:      php-ZendFramework2-Permissions-%{library} < 2.5
 Provides:       php-ZendFramework2-Permissions-%{library} = %{version}
@@ -104,7 +106,6 @@ rm -rf %{buildroot}
 %license LICENSE.md
 %doc CONTRIBUTING.md README.md
 %doc composer.json
-%dir %{php_home}/Zend
 %dir %{php_home}/Zend/Permissions
      %{php_home}/Zend/Permissions/%{library}
 

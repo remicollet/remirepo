@@ -57,6 +57,8 @@ Requires:       php(language) >= 5.3.23
 Suggests:       php-pecl(xdebug)
 Suggests:       php-composer(%{gh_owner}/zend-escaper)
 %endif
+# Autoloader
+Requires:       php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 # From phpcompatinfo report for version 2.5.2
 Requires:       php-pcre
@@ -119,8 +121,7 @@ rm -rf %{buildroot}
 %license LICENSE.md
 %doc CONTRIBUTING.md README.md
 %doc composer.json
-%dir %{php_home}/Zend
-     %{php_home}/Zend/%{library}
+%{php_home}/Zend/%{library}
 
 
 %changelog

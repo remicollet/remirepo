@@ -64,6 +64,8 @@ Requires:       php-spl
 Suggests:       php-composer(ocramius/proxy-manager)
 Suggests:       php-composer(%{gh_owner}/zend-di)
 %endif
+# Autoloader
+Requires:       php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 Obsoletes:      php-ZendFramework2-%{library} < 2.5

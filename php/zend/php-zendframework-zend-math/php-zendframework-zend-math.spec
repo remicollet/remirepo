@@ -71,6 +71,8 @@ Requires:       php-gmp
 Suggests:       php-composer(ircmaxell/random-lib)
 Suggests:       php-composer(%{gh_owner}/zend-servicemanager)
 %endif
+# Autoloader
+Requires:       php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 Obsoletes:      php-ZendFramework2-%{library} < 2.5

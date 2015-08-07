@@ -57,6 +57,8 @@ Requires:       php-iconv
 Requires:       php-mbstring
 Requires:       php-pcre
 Requires:       php-spl
+# Autoloader
+Requires:       php-composer(%{gh_owner}/zend-loader)           >= 2.5
 
 Obsoletes:      php-ZendFramework2-%{library} < 2.5
 Provides:       php-ZendFramework2-%{library} = %{version}

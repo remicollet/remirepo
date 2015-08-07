@@ -42,6 +42,8 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 # From composer, "require": {
 #        "php": ">=5.5"
 Requires:       php(language) >= 5.5
+# Autoloader
+Requires:       php-composer(%{gh_owner}/zend-loader)           >= 2.5
 # From phpcompatinfo report for version 2.5.1
 # None
 
@@ -105,7 +107,6 @@ rm -rf %{buildroot}
 %license LICENSE.txt
 %doc CONTRIBUTING.md README.md
 %doc composer.json
-%dir %{php_home}/Zend/
 %dir %{php_home}/Zend/I18n
      %{php_home}/Zend/I18n/%{library}
      %{php_home}/Zend/I18n/languages
