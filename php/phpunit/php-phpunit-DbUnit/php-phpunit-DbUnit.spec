@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    1afe25c90834ec499f007f48dd73767fdec3bf4f
+%global gh_commit    9aaee6447663ff1b0cd50c23637e04af74c5e2ae
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   dbunit
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-phpunit-DbUnit
-Version:        1.4.0
+Version:        1.4.1
 Release:        1%{?dist}
 Summary:        DbUnit port for PHP/PHPUnit
 
@@ -29,6 +29,9 @@ Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+
+# Autoloader full path
+Patch0:         %{gh_project}-autoload.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -40,17 +43,17 @@ BuildRequires:  php-pear-PHPUnit >= 4.0
 
 # From composer.json
 #        "php": ">=5.3.3",
-#        "phpunit/phpunit": "~4.0",
-#        "symfony/yaml": "~2.1",
+#        "phpunit/phpunit": "~4|~5",
+#        "symfony/yaml": "~2.1|~3.0",
 #        "ext-pdo": "*",
 #        "ext-simplexml": "*"
 Requires:       php(language) >= 5.3.3
 Requires:       php-pdo
 Requires:       php-simplexml
-Requires:       php-composer(phpunit/phpunit) >= 4.0
-Requires:       php-composer(phpunit/phpunit) <  5
+Requires:       php-composer(phpunit/phpunit) >= 4
+Requires:       php-composer(phpunit/phpunit) <  6
 Requires:       php-composer(symfony/yaml)    >= 2.1
-Requires:       php-composer(symfony/yaml)    <  3
+Requires:       php-composer(symfony/yaml)    <  4
 # From phpcompatinfo report for version 1.3.0
 Requires:       php-libxml
 Requires:       php-reflection
@@ -68,10 +71,7 @@ DbUnit port for PHP/PHPUnit.
 
 rm PHPUnit/Extensions/Database/Autoload.php.in
 
-# Fix loader
-sed -e 's:/usr/bin/env php:%{_bindir}/php:' \
-    -e 's:@php_bin@:%{php_home}:' \
-    -i dbunit.php
+%patch0 -p0 -b .rpm
 
 
 %build
@@ -96,7 +96,9 @@ install -D -p -m 755 dbunit.php %{buildroot}%{_bindir}/dbunit
 
 %if %{with_tests}
 %check
-phpunit -d date.timezone=UTC
+: Run tests - set include_path to ensure PHPUnit autoloader use it
+%{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+%{_bindir}/phpunit --verbose
 %endif
 
 
@@ -115,15 +117,19 @@ fi
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc ChangeLog.markdown composer.json
+%doc ChangeLog.markdown
 %doc Samples
+%doc composer.json
 %{_bindir}/dbunit
 %{php_home}/PHPUnit/Extensions/Database
 
 
 %changelog
+* Fri Aug  7 2015 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
+- update to 1.4.1
+
 * Fri Jun  5 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
-- update to 1.3.2
+- update to 1.4.0
 - raise dependency on PHPUnit 4.0
 - disable test suite on EL-5
 
