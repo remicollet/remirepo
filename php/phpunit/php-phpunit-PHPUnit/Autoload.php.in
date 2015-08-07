@@ -17,7 +17,8 @@ require_once 'SebastianBergmann/GlobalState/autoload.php';
 require_once 'Doctrine/Instantiator/autoload.php';
 require_once 'Prophecy/autoload.php';
 
-$vendorDir = '/usr/share/php';
+$vendorDir = stream_resolve_include_path('Symfony/Component/ClassLoader/ClassLoader.php');
+$vendorDir = dirname(dirname(dirname(dirname($vendorDir))));
 // Use Symfony autoloader
 if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
     if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
@@ -54,19 +55,13 @@ spl_autoload_register(
 );
 
 /* Optional */
-
-if (stream_resolve_include_path('PHPUnit/Extensions/Database/Autoload.php')) {
-    require_once 'PHPUnit/Extensions/Database/Autoload.php';
-}
-
-if (stream_resolve_include_path('PHPUnit/Extensions/SeleniumCommon/Autoload.php')) {
-    require_once 'PHPUnit/Extensions/SeleniumCommon/Autoload.php';
-}
-
-else if (stream_resolve_include_path('PHPUnit/Extensions/SeleniumTestCase/Autoload.php')) {
-    require_once 'PHPUnit/Extensions/SeleniumTestCase/Autoload.php';
-}
-
-if (stream_resolve_include_path('PHPUnit/Extensions/Story/Autoload.php')) {
-    require_once 'PHPUnit/Extensions/Story/Autoload.php';
+foreach(array(
+            'PHPUnit/Extensions/Database/Autoload.php',
+            'PHPUnit/Extensions/SeleniumCommon/Autoload.php',
+            'PHPUnit/Extensions/SeleniumTestCase/Autoload.php',
+            'PHPUnit/Extensions/Story/Autoload.php'
+        ) as $opt) {
+    if ($fic = stream_resolve_include_path($opt)) {
+        require_once $fic;
+    }
 }

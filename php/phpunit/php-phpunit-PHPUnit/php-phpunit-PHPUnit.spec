@@ -8,16 +8,18 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9b97f9d807b862c2de2a36e86690000801c85724
+%global gh_commit    283111a903eb9225aedb95e846bef876e006a688
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
 %global php_home     %{_datadir}/php
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
+%global major        4.8
+%global minor        0
 
 Name:           php-phpunit-PHPUnit
-Version:        4.7.7
+Version:        %{major}.%{minor}
 Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
@@ -44,7 +46,7 @@ BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 2.3
 BuildRequires:  php-composer(phpspec/prophecy) >= 1.3.1
 BuildRequires:  php-composer(sebastian/comparator) >= 1.1
 BuildRequires:  php-composer(sebastian/diff) >= 1.1
-BuildRequires:  php-composer(sebastian/environment) >= 1.2
+BuildRequires:  php-composer(sebastian/environment) >= 1.3
 BuildRequires:  php-composer(sebastian/exporter) >= 1.2
 BuildRequires:  php-composer(sebastian/recursion-context) >= 1.0
 BuildRequires:  php-composer(sebastian/global-state) >= 1.0
@@ -60,11 +62,11 @@ BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 #        "phpunit/php-code-coverage": "~2.1",
 #        "phpunit/php-timer": ">=1.0.6",
 #        "phpunit/phpunit-mock-objects": "~2.2",
-#        "phpspec/prophecy": "~1.3,>=1.3.1",
+#        "phpspec/prophecy": "^1.3.1",
 #        "symfony/yaml": "~2.1|~3.0",
 #        "sebastian/comparator": "~1.0",
 #        "sebastian/diff": "~1.2",
-#        "sebastian/environment": "~1.1",
+#        "sebastian/environment": "~1.3",
 #        "sebastian/exporter": "~1.1",
 #        "sebastian/recursion-context": "~1.0",
 #        "sebastian/global-state": "~1.0",
@@ -92,7 +94,7 @@ Requires:       php-composer(sebastian/comparator) >= 1.1
 Requires:       php-composer(sebastian/comparator) <  2
 Requires:       php-composer(sebastian/diff) >= 1.2
 Requires:       php-composer(sebastian/diff) <  2
-Requires:       php-composer(sebastian/environment) >= 1.2
+Requires:       php-composer(sebastian/environment) >= 1.3
 Requires:       php-composer(sebastian/environment) <  2
 Requires:       php-composer(sebastian/exporter) >= 1.2
 Requires:       php-composer(sebastian/exporter) <  2
@@ -175,11 +177,7 @@ install -D -p -m 755 phpunit %{buildroot}%{_bindir}/phpunit
 
 
 %check
-sed -e '/logging/d' \
-    -e '/<log/d' \
-    phpunit.xml.dist > phpunit.xml
-
-./phpunit --testsuite=small --verbose
+./phpunit --testsuite=small --no-coverage --verbose
 
 
 %clean
@@ -195,7 +193,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc CONTRIBUTING.md README.md composer.json
+%doc CONTRIBUTING.md README.md composer.json ChangeLog-%{major}.md
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 
@@ -204,6 +202,12 @@ fi
 
 
 %changelog
+* Fri Aug  7 2015 Remi Collet <remi@fedoraproject.org> - 4.8.0-1
+- Update to 4.8.0
+- raise dependency on sebastian/environment 1.3
+- rely on include_path for all dependencies
+- add Changelog in documentation
+
 * Mon Jul 13 2015 Remi Collet <remi@fedoraproject.org> - 4.7.7-1
 - Update to 4.7.7 (no change)
 
