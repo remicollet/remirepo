@@ -77,10 +77,10 @@
 %if 0%{?fedora} < 21 && 0%{?rhel} < 7
 # Build using "--with tests" to enable tests
 # Disabled by default with old PHPUnit version
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests   0%{?_with_tests:1}
 %else
 # Build using "--without tests" to disable tests
-%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests   0%{!?_without_tests:1}
 %endif
 
 %{!?phpdir:  %global phpdir  %{_datadir}/php}
@@ -90,7 +90,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -103,7 +103,8 @@ BuildArch:     noarch
 # Tests
 %if %{with_tests}
 ## composer.json
-BuildRequires: %{_bindir}/phpunit
+# Force version to 4.8 for autoloader
+BuildRequires: php-composer(phpunit/phpunit)          >= 4.8
 BuildRequires: php(language)                          >= %{php_min_ver}
 BuildRequires: php-composer(doctrine/annotations)     >= %{doctrine_annotations_min_ver}
 BuildRequires: php-composer(doctrine/cache)           >= %{doctrine_cache_min_ver}
@@ -1776,14 +1777,6 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 
 %check
 %if %{with_tests}
-: Hack PHPUnit Autoloader -- use current symfony instead of system one
-if [ -d %{phpdir}/PHPUnit ]; then
-  mkdir PHPUnit
-  sed -e '/Symfony/s:\$vendorDir:"%{buildroot}%{phpdir}":' \
-      -e 's:path = dirname(__FILE__):path = "%{phpdir}/PHPUnit":' \
-      %{phpdir}/PHPUnit/Autoload.php > PHPUnit/Autoload.php
-fi
-
 : Modify PHPUnit config
 sed 's#./src#%{buildroot}%{phpdir}#' phpunit.xml.dist > phpunit.xml
 
@@ -1800,6 +1793,7 @@ BOOTSTRAP
 RET=0
 for PKG in %{buildroot}%{phpdir}/Symfony/*/*; do
     echo -e "\n>>>>>>>>>>>>>>>>>>>>>>> ${PKG}\n"
+    %{_bindir}/php -d include_path=.:%{buildroot}%{phpdir}:%{phpdir} \
     %{_bindir}/phpunit \
         --exclude-group benchmark,intl-data,tty \
         --bootstrap bootstrap.php \
@@ -2503,6 +2497,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Fri Aug  7 2015 Remi Collet <remi@fedoraproject.org> - 2.7.3-2
+- rely on PHPUnit 4.8 for test suite
+
 * Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 2.7.3-1
 - Update to 2.7.3
 
