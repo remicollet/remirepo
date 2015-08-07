@@ -6,10 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    00c26791faeb83da8476b54bcc20596cf754362e
+%global gh_commit    c83650f299cfff1049cd61ea72ee5345bd4f92d3
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20150720
+%global gh_date      20150804
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
@@ -28,9 +28,6 @@ Source2:        %{name}-bootstrap.php
 
 # Use our autoloader, resources path, fix for tests
 Patch0:         %{name}-rpm.patch
-# https://github.com/composer/composer/pull/4169
-# skip online tests
-Patch1:         %{name}-pr4169.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -115,7 +112,6 @@ Documentation: https://getcomposer.org/doc/
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1
-%patch1 -p1
 
 cp -p %{SOURCE1} src/Composer/autoload.php
 cp -p %{SOURCE2} tests/bootstrap.php
@@ -175,6 +171,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Aug  7 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.8.20150804gitc83650f
+- new snapshot
+
 * Tue Jul 21 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.8.20150720git00c2679
 - new snapshot
 - add dependency on composer/spdx-licenses
