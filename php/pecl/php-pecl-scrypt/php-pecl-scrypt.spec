@@ -6,6 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-scrypt}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -20,16 +28,13 @@
 %endif
 
 Summary:        Scrypt hashing function
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.2
-Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
+Version:        1.3
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/DomBlack/php-scrypt/pull/16
-Patch0:         %{pecl_name}-tests.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.2
@@ -79,17 +84,17 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %description
 A PHP wrapper to Colin Percival's scrypt implementation.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+
 
 %prep
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
 
-sed -e '/README/s/role="src"/role="doc"/' \
-    -e '/CREDITS/s/role="src"/role="doc"/' \
-    -i package.xml
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd NTS
-%patch0 -p1
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_SCRYPT_VERSION/{s/.* "//;s/".*$//;p}' php_scrypt.h)
@@ -148,10 +153,7 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
-for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
+# Documentation
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -204,8 +206,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -218,6 +220,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Aug 09 2015 Remi Collet <remi@fedoraproject.org> - 1.3-1
+- Update to 1.3
+- don't install/register tests
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.2-5.1
 - Fedora 21 SCL mass rebuild
 
