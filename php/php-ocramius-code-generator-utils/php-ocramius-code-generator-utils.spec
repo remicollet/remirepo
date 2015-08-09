@@ -89,6 +89,8 @@ cp -rp src/* %{buildroot}%{phpdir}/
 # Create autoloader
 cat > autoload.php <<'AUTOLOAD'
 <?php
+require_once 'PhpParser/Autoloader.php';
+PhpParser\Autoloader::register();
 
 spl_autoload_register(function ($class) {
     $src = str_replace('\\', '/', $class).'.php';
@@ -119,6 +121,7 @@ rm -rf %{buildroot}
 %changelog
 * Sun Aug  9 2015 Remi Collet <remi@fedoraproject.org> - 0.3.2-1
 - update to 0.3.2
+- raise dependency on nikic/php-parser ~1.3
 
 * Wed Feb 25 2015 Remi Collet <remi@fedoraproject.org> - 0.3.1-1
 - update to 0.3.1 (no change)
