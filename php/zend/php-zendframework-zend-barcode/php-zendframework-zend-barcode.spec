@@ -49,8 +49,8 @@ BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0"
 BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zendpdf)
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
+# Ommit zendpdf because of build order
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif

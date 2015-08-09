@@ -53,7 +53,7 @@ Requires:       php(language) >= 5.3.23
 # From composer, "suggest": {
 #        "ext/xdebug": "XDebug, for better backtrace output",
 #        "zendframework/zend-escaper": "To support escaped output"
-%if %{?fedora} >= 21
+%if 0%{?fedora} >= 21
 Suggests:       php-pecl(xdebug)
 Suggests:       php-composer(%{gh_owner}/zend-escaper)
 %endif

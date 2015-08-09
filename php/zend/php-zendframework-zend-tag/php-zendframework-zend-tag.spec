@@ -63,7 +63,7 @@ Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
 # From composer, "suggest": {
 #        "zendframework/zend-servicemanager": "Zend\\ServiceManager component"
-%if %{?fedora} >= 21
+%if 0%{?fedora} >= 21
 Suggests:       php-composer(%{gh_owner}/servicemanager)
 %endif
 %endif

@@ -141,6 +141,10 @@ Zend\\Loader\\AutoloaderFactory::factory(array(
 ))));
 require_once '%{php_home}/Zend/autoload.php';
 EOF
+%if 0%{?rhel} == 5
+# sqlite is too old
+rm test/PubSubHubbub/Model/SubscriptionTest.php
+%endif
 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
 %else
 : Test suite disabled

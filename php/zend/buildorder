@@ -50,6 +50,7 @@
 "zendframework/zend-di":             BS
 "zendframework/zend-servicemanager":     (di, mvc)
 "zendframework/zend-modulemanager":      (eventmanager, stdlib ; config, console, di, loader, mvc, servicemanager)
+"zendframework/zend-view":           BS
 "zendframework/zend-i18n":               (stdlib ; cache, config, eventmanager, filter, servicemanager, validator, view)
 "zendframework/zend-captcha":            (math, stdlib ; session, text, validator, zendservice-recaptcha)
 "zendframework/zend-paginator":          (stdlib ; cache, config, db, filter, json, mvc, servicemanager, view)
