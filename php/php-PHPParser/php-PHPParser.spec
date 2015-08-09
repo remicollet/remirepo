@@ -11,8 +11,8 @@
 
 %global github_owner    nikic
 %global github_name     PHP-Parser
-%global github_version  1.3.0
-%global github_commit   dff239267fd1befa1cd40430c9ed12591aa720ca
+%global github_version  1.4.0
+%global github_commit   196f177cfefa0f1f7166c0a05d8255889be12418
 %global github_short    %(c=%{github_commit}; echo ${c:0:7})
 
 %global lib_name        PhpParser
@@ -41,7 +41,7 @@ BuildArch:     noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: %{_bindir}/phpunit
-# For tests: phpcompatinfo (computed from version 1.3.0)
+# For tests: phpcompatinfo (computed from version 1.4.0)
 BuildRequires: php-filter
 BuildRequires: php-pcre
 BuildRequires: php-spl
@@ -52,10 +52,12 @@ BuildRequires: php-xmlwriter
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
 Requires:      php-tokenizer
-# phpcompatinfo (computed from version 1.3.0)
+# phpcompatinfo (computed from version 1.4.0)
+Requires:      php-cli
 Requires:      php-filter
 Requires:      php-pcre
 Requires:      php-spl
+Requires:      php-tokenizer
 Requires:      php-xmlreader
 Requires:      php-xmlwriter
 
@@ -72,6 +74,7 @@ A PHP parser written in PHP to simplify static analysis and code manipulation.
 %setup -q -n %{github_name}-%{github_short}
 
 %patch0 -p0 -b .rpm
+rm lib/%{lib_name}/*rpm
 
 
 %build
@@ -80,7 +83,7 @@ A PHP parser written in PHP to simplify static analysis and code manipulation.
 
 %install
 mkdir -p -m 755 %{buildroot}%{_datadir}/php
-cp -rp lib/%{lib_name} %{buildroot}%{_datadir}/php/
+cp -rp lib/%{lib_name} %{buildroot}%{_datadir}/php/%{lib_name}
 
 # Compat with old version (< 1.0.0)
 mkdir -p -m 755 %{buildroot}%{_datadir}/php/%{lib_name_old}
@@ -91,7 +94,9 @@ install -Dpm 755 bin/php-parse.php %{buildroot}%{_bindir}/php-parse
 
 
 %check
-%{_bindir}/phpunit
+%{_bindir}/phpunit \
+    --bootstrap %{buildroot}%{_datadir}/php/%{lib_name}/autoload.php \
+    --verbose
 
 
 %files
@@ -105,6 +110,10 @@ install -Dpm 755 bin/php-parse.php %{buildroot}%{_bindir}/php-parse
 
 
 %changelog
+* Sun Aug  9 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
+- update to 1.4.0
+- add a simple autoload.php
+
 * Mon May  4 2015 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - update to 1.3.0
 
