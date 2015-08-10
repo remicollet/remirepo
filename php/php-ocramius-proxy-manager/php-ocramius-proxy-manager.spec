@@ -12,8 +12,8 @@
 
 %global github_owner      Ocramius
 %global github_name       ProxyManager
-%global github_version    1.0.0
-%global github_commit     a80a39fac4fbd771aea7d3871929933a3a1bbf3e
+%global github_version    1.0.2
+%global github_commit     57e9272ec0e8deccf09421596e0e2252df440e11
 
 %global composer_vendor   ocramius
 %global composer_project  proxy-manager
@@ -37,7 +37,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       OOP proxy wrappers utilities
 
 Group:         Development/Libraries
@@ -151,6 +151,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug 10 2015 Remi Collet <remi@remirepo.net> - 1.0.2-1
+- update to 1.0.2
+
 * Fri May 29 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.0-2
 - Fix autoloader to load all optional pkgs
 - Some spec cleanup
