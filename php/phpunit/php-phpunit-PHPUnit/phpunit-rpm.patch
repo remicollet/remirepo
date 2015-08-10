@@ -1,12 +1,14 @@
---- ./phpunit.rpm	2015-05-25 07:18:18.000000000 +0200
-+++ ./phpunit	2015-05-26 19:43:34.101986869 +0200
-@@ -13,22 +13,21 @@
+diff -up ./phpunit.rpm ./phpunit
+--- ./phpunit.rpm	2015-08-10 13:22:08.674131079 +0200
++++ ./phpunit	2015-08-10 13:23:53.882702518 +0200
+@@ -22,24 +22,21 @@ if (!ini_get('date.timezone')) {
      ini_set('date.timezone', 'UTC');
  }
-
+ 
 -foreach (array(__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php') as $file) {
 -    if (file_exists($file)) {
 -        define('PHPUNIT_COMPOSER_INSTALL', $file);
+-
 -        break;
 -    }
 +// Ensure correct include_path for RHSCL
@@ -17,7 +19,7 @@
 +    set_include_path(implode(':', $dirs));
  }
 +unset ($inc, $dirs);
-
+ 
 -unset($file);
 -
 -if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
@@ -26,6 +28,7 @@
 -        'wget http://getcomposer.org/composer.phar' . PHP_EOL .
 -        'php composer.phar install' . PHP_EOL
 -    );
+-
 -    die(1);
 +// Libraries PATH
 +if (file_exists('./vendor/phpunit/phpunit/phpunit') && file_exists('./vendor/autoload.php')) {
@@ -34,11 +37,11 @@
 +} else {
 +  define ('PHPUNIT_COMPOSER_INSTALL', stream_resolve_include_path('PHPUnit/Autoload.php'));
  }
-
+ 
  require PHPUNIT_COMPOSER_INSTALL;
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
---- ./tests/bootstrap.php.rpm	2015-01-17 12:24:41.000000000 +0100
-+++ ./tests/bootstrap.php	2015-01-18 08:51:55.668966689 +0100
+--- ./tests/bootstrap.php.rpm	2015-08-10 11:16:56.000000000 +0200
++++ ./tests/bootstrap.php	2015-08-10 13:22:08.674131079 +0200
 @@ -1,6 +1,9 @@
  <?php
  // Needed for isolated tests
