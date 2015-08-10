@@ -12,8 +12,8 @@
 
 %global github_owner     Seldaek
 %global github_name      monolog
-%global github_version   1.15.0
-%global github_commit    dc5150cc608f2334c72c3b6a553ec9668a4156b0
+%global github_version   1.16.0
+%global github_commit    c0c0b4bee3aabce7182876b0d912ef2595563db7
 
 %global composer_vendor  monolog
 %global composer_project monolog
@@ -39,7 +39,7 @@
 
 Name:      php-Monolog
 Version:   %{github_version}
-Release:   2%{?dist}
+Release:   1%{?dist}
 Summary:   Sends your logs to files, sockets, inboxes, databases and various web services
 
 Group:     Development/Libraries
@@ -188,16 +188,6 @@ cat <<'AUTOLOAD' | tee src/Monolog/autoload.php
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
 
-// Optional dependency autoloaders
-foreach (array(
-    '%{phpdir}/Raven/autoload.php',
-    '%{phpdir}/Aws/autoload.php',
-) as $dependencyAutoloader) {
-    if (file_exists($dependencyAutoloader)) {
-        require_once $dependencyAutoloader;
-    }
-}
-
 if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
     if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
         require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
@@ -208,6 +198,16 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 }
 
 $fedoraClassLoader->addPrefix('Monolog\\', dirname(__DIR__));
+
+// Optional dependency autoloaders
+foreach (array(
+    '%{phpdir}/Raven/autoload.php',
+    '%{phpdir}/Aws/autoload.php',
+) as $dependencyAutoloader) {
+    if (file_exists($dependencyAutoloader)) {
+        require_once $dependencyAutoloader;
+    }
+}
 
 if (file_exists('%{pear_phpdir}/Swift')) {
     $fedoraClassLoader->addPrefix('Swift_', '%{pear_phpdir}/Swift');
@@ -240,6 +240,7 @@ cat <<'BOOTSTRAP' | tee bootstrap.php
 
 $fedoraClassLoader = require_once '%{buildroot}%{phpdir}/Monolog/autoload.php';
 $fedoraClassLoader->addPrefix(false, __DIR__ . '/tests');
+var_dump($fedoraClassLoader);
 BOOTSTRAP
 
 : Remove MongoDBHandlerTest because it requires a running MongoDB server
@@ -277,6 +278,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug 10 2015 Remi Collet <remi@remirepo.net> - 1.16.0-1
+- update to 1.16.0
+
 * Mon Jul 20 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.15.0-2
 - Fix autoloader
 
