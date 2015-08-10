@@ -12,8 +12,8 @@
 
 %global github_owner     reactphp
 %global github_name      promise
-%global github_version   2.2.0
-%global github_commit    365fcee430dfa4ace1fbc75737ca60ceea7eeeef
+%global github_version   2.2.1
+%global github_commit    3b6fca09c7d56321057fa8867c8dbe1abf648627
 
 %global composer_vendor  react
 %global composer_project promise
@@ -28,7 +28,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       6%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       A lightweight implementation of CommonJS Promises/A for PHP
 
 Group:         Development/Libraries
@@ -147,6 +147,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug 10 2015 Remi Collet <remi@remirepo.net> - 2.2.1-1
+- update to 2.2.1
+
 * Sun Jun 28 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.2.0-6
 - Autoloader updates
 
