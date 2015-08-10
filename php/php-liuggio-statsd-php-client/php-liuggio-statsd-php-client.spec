@@ -6,7 +6,7 @@
 # Please preserve changelog entries
 #
 Name:		php-liuggio-statsd-php-client
-Version:	1.0.16
+Version:	1.0.18
 Release:	1%{?dist}
 Summary:	Object Oriented Client for etsy/statsd written in php
 Group:		Development/Libraries
@@ -19,7 +19,7 @@ Source1:	autoload.php
 Buildarch:	noarch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # For tests
-BuildRequires:	%{_bindir}/phpunit
+BuildRequires:	php-composer(phpunit/phpunit) >= 4.7
 BuildRequires:	php-composer(symfony/class-loader)
 BuildRequires:	php-composer(monolog/monolog) >= 1.2.0
 
@@ -75,6 +75,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug 10 2015 Remi Collet <remi@remirepo.net> - 1.0.18-1
+- update to 1.0.18
+
 * Tue Jun 16 2015 Remi Collet <remi@remirepo.net> - 1.0.16-1
 - add backport stuff for remirepo
 - run test suite during build
