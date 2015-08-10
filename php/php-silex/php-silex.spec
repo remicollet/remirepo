@@ -12,8 +12,8 @@
 
 %global github_owner          silexphp
 %global github_name           Silex
-%global github_version        1.3.0
-%global github_commit         2d623a4853c37005d3790e5e7897a2c30b492caf
+%global github_version        1.3.1
+%global github_commit         0507b772519ab0d9dd258bb39748921229ad5c46
 
 %global composer_vendor       silex
 %global composer_project      silex
@@ -260,6 +260,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug 10 2015 Remi Collet <remi@remirepo.net> - 1.3.1-1
+- update to 1.3.1
+
 * Fri Jul 03 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.0-1
 - Updated to 1.3.0 (RHBZ #1238910)
 
