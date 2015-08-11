@@ -12,8 +12,8 @@
 
 %global github_owner     zendframework
 %global github_name      zend-diactoros
-%global github_version   1.1.2
-%global github_commit    eeedadd333b80bb5d93559e2285047463fe4fe33
+%global github_version   1.1.3
+%global github_commit    e2f5c12916c74da384058d0dfbc7fbc0b03d1181
 
 %global composer_vendor  zendframework
 %global composer_project zend-diactoros
@@ -163,6 +163,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 11 2015 Remi Collet <remi@remirepo.net> - 1.1.3-1
+- update to 1.1.3
+
 * Mon Jul 20 2015 Remi Collet <remi@remirepo.net> - 1.1.2-1
 - add EL-5 stuff, backport for #remirepo
 
