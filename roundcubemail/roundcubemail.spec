@@ -19,7 +19,7 @@
 %global _logdir /var/log  
 Name: roundcubemail
 Version:  1.1.2
-Release:  1%{?dist}
+Release:  2%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
 Group: Applications/System
@@ -205,6 +205,11 @@ mkdir -p %{buildroot}%{_sysconfdir}/roundcubemail
 mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
 cp -pr %SOURCE2 %{buildroot}%{_sysconfdir}/logrotate.d/roundcubemail
 
+%if 0%{?rhel} == 5 || 0%{?rhel} == 6
+: Remove "su" option from logrotate configuration file - requires logrotate 3.8+
+sed -e '/su /d' -i %{buildroot}%{_sysconfdir}/logrotate.d/roundcubemail
+%endif
+
 # Log files
 mkdir -p %{buildroot}/var/log/roundcubemail
 # Temp files
@@ -268,6 +273,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 11 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-2
+- Remove "su" option from logrotate configuration file (requires
+  logrotate >= 3.8.0) to avoid daily logrotate errors with old RHEL
+
 * Fri Jun  5 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - update to 1.1.2
 
