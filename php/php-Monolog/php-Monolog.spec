@@ -58,38 +58,19 @@ BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language)         >= %{php_min_ver}
 BuildRequires: php-composer(psr/log) >= %{psrlog_min_ver}
 BuildRequires: php-composer(psr/log) <  %{psrlog_max_ver}
-## phpcompatinfo (computed from version 1.15.0)
-BuildRequires: php-bcmath
-BuildRequires: php-ctype
+## phpcompatinfo (computed from version 1.16.0)
 BuildRequires: php-curl
 BuildRequires: php-date
-BuildRequires: php-dom
 BuildRequires: php-filter
 BuildRequires: php-hash
-BuildRequires: php-iconv
 BuildRequires: php-json
-BuildRequires: php-libxml
 BuildRequires: php-mbstring
-BuildRequires: php-mcrypt
 BuildRequires: php-openssl
-BuildRequires: php-pcntl
-BuildRequires: php-soap
 BuildRequires: php-pcre
-BuildRequires: php-pdo
-BuildRequires: php-posix
 BuildRequires: php-reflection
-BuildRequires: php-session
-BuildRequires: php-simplexml
 BuildRequires: php-sockets
 BuildRequires: php-spl
-%if 0%{?rhel} != 5
-BuildRequires: php-sqlite3
-%endif
-BuildRequires: php-tokenizer
 BuildRequires: php-xml
-BuildRequires: php-xmlreader
-BuildRequires: php-xmlwriter
-BuildRequires: php-zlib
 ## Autoloader
 BuildRequires: php-composer(symfony/class-loader)
 %endif
@@ -98,7 +79,7 @@ BuildRequires: php-composer(symfony/class-loader)
 Requires:      php(language)         >= %{php_min_ver}
 Requires:      php-composer(psr/log) >= %{psrlog_min_ver}
 Requires:      php-composer(psr/log) <  %{psrlog_max_ver}
-# phpcompatinfo (computed from version 1.15.0)
+# phpcompatinfo (computed from version 1.16.0)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-filter
@@ -199,7 +180,6 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('Monolog\\', dirname(__DIR__));
 
-// Optional dependency autoloaders
 foreach (array(
     '%{phpdir}/Raven/autoload.php',
     '%{phpdir}/Aws/autoload.php',
@@ -240,7 +220,6 @@ cat <<'BOOTSTRAP' | tee bootstrap.php
 
 $fedoraClassLoader = require_once '%{buildroot}%{phpdir}/Monolog/autoload.php';
 $fedoraClassLoader->addPrefix(false, __DIR__ . '/tests');
-var_dump($fedoraClassLoader);
 BOOTSTRAP
 
 : Remove MongoDBHandlerTest because it requires a running MongoDB server
@@ -278,6 +257,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.16.0-1
+- Updated to 1.16.0 (RHBZ #1251783)
+- Updated autoloader to load dependencies after self registration
+
 * Mon Aug 10 2015 Remi Collet <remi@remirepo.net> - 1.16.0-1
 - update to 1.16.0
 
