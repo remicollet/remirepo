@@ -40,7 +40,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?sub_prefix}php-pecl-memcached
 Version:      2.2.0
-Release:      6%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:      7%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -76,6 +76,7 @@ BuildRequires: %{?sub_prefix}libevent-devel  > 2
 Requires:      %{?sub_prefix}libevent%{_isa} > 2
 BuildRequires: %{?sub_prefix}libmemcached-devel  > 1
 Requires:      %{?sub_prefix}libmemcached-libs%{_isa} > 1
+Requires:      fastlz%{_isa}
 %else
 BuildRequires: libevent-devel >= 2.0.2
 %if 0%{?rhel} == 5
@@ -344,6 +345,10 @@ exit $ret
 
 
 %changelog
+* Wed Aug 12 2015 Remi Collet <rcollet@redhat.com> - 2.2.0-7
+- add explicit dependency on fastlz for SCL on
+  https://www.softwarecollections.org/
+
 * Tue Jun 23 2015 Remi Collet <rcollet@redhat.com> - 2.2.0-6
 - allow build against rh-php56 (as more-php56)
 - don't install/register tests
