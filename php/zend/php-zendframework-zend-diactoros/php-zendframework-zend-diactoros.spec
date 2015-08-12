@@ -51,9 +51,15 @@ BuildArch:     noarch
 BuildRequires: php(language)                  >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(psr/http-message) >= %{psr_http_message_min_ver}
-## phpcompatinfo (computed from version 1.1.2)
+## phpcompatinfo (computed from version 1.1.3)
+### NOTE: curl, gd, gmp, and shmop are all optional for
+###       ZendTest\Diactoros\StreamTest::getResourceFor67()
+###       (test/StreamTest.php) but the first one found wins
+###       so only curl is chosen as a requirement here.
+BuildRequires: php-curl
 BuildRequires: php-json
 BuildRequires: php-pcre
+BuildRequires: php-reflection
 BuildRequires: php-spl
 ## Autoloader
 BuildRequires: php-composer(symfony/class-loader)
@@ -63,7 +69,7 @@ BuildRequires: php-composer(symfony/class-loader)
 Requires:      php(language)                  >= %{php_min_ver}
 Requires:      php-composer(psr/http-message) >= %{psr_http_message_min_ver}
 Requires:      php-composer(psr/http-message) <  %{psr_http_message_max_ver}
-# phpcompatinfo (computed from version 1.1.2)
+# phpcompatinfo (computed from version 1.1.3)
 Requires:      php-json
 Requires:      php-pcre
 Requires:      php-spl
@@ -97,8 +103,6 @@ cat <<'AUTOLOAD' | tee src/autoload.php
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
 
-require_once '%{phpdir}/Psr/Http/Message/autoload.php';
-
 if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
     if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
         require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
@@ -109,6 +113,8 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 }
 
 $fedoraClassLoader->addPrefix('Zend\\Diactoros\\', dirname(dirname(__DIR__)));
+
+require_once '%{phpdir}/Psr/Http/Message/autoload.php';
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -163,6 +169,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.3-1
+- Updated to 1.1.3 (RHBZ #1252195)
+- Updated autoloader to load dependencies after self registration
+
 * Tue Aug 11 2015 Remi Collet <remi@remirepo.net> - 1.1.3-1
 - update to 1.1.3
 
