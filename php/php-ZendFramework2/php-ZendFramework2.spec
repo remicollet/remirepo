@@ -38,7 +38,6 @@ BuildArch: noarch
 %if %{with_tests}
 # PHPUnit + autoloader
 BuildRequires: %{_bindir}/phpunit
-BuildRequires: php-symfony-classloader >= 2.0
 # required by components
 BuildRequires: php(language) >= 5.3.23
 BuildRequires: php-bcmath
