@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    bb78ee15b9dba99dd79b846395273e2b0eadbe5b
+%global gh_commit    3b9d3efbca7fbb34037bbc41fbf49c0f268554b7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-inputfilter
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.3
+Version:        2.5.4
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -113,7 +113,6 @@ Zend\\Loader\\AutoloaderFactory::factory(array(
 ))));
 require_once '%{php_home}/Zend/autoload.php';
 EOF
-%{_bindir}/php -r 'require "vendor/autoload.php"; var_dump(Zend\Loader\AutoloaderFactory::getRegisteredAutoloaders());'
 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
 %else
 : Test suite disabled
@@ -134,5 +133,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Aug 12 2015 Remi Collet <remi@fedoraproject.org> - 2.5.4-1
+- update to 2.5.4
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
 - initial package
