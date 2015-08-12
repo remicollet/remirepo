@@ -17,7 +17,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:      php-ZendFramework2
-Version:   2.3.9
+Version:   2.4.7
 Release:   1%{?dist}
 Summary:   Zend Framework 2
 
@@ -30,9 +30,8 @@ Source0:   https://packages.zendframework.com/releases/ZendFramework-%{version}/
 # git checkout release-2.3.9
 # tar czf ../ZendFramework-tests-2.3.9.tgz tests
 Source1:   ZendFramework-tests-%{version}.tgz
-
-# See https://github.com/zendframework/zf2/issues/7219
-Patch0:    ZendFramework-icu54.patch
+# Autoloader
+Source2:   ZendFramework-autoload.php
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -47,6 +46,7 @@ BuildRequires: php-bz2
 BuildRequires: php-ctype
 BuildRequires: php-curl
 BuildRequires: php-date
+BuildRequires: php-dba
 BuildRequires: php-dom
 BuildRequires: php-fileinfo
 BuildRequires: php-filter
@@ -276,6 +276,7 @@ Optional:
 * DBA (php-dba)
 * Memcache (php-pecl-memcache)
 * Memcached (php-pecl-memcached)
+* Mongo (php-pecl-mongo)
 * Redis (php-pecl-redis)
 * XCache (php-xcache)
 
@@ -1851,8 +1852,6 @@ If the XML document uses ENTITY the library throw an Exception.
 %prep
 %setup -q -n ZendFramework-%{version} -a 1
 
-%patch0 -p1
-
 
 %build
 # Empty build section, nothing required
@@ -1861,6 +1860,8 @@ If the XML document uses ENTITY the library throw an Exception.
 %install
 mkdir -p %{buildroot}%{_datadir}/php
 cp -rp library/* %{buildroot}%{_datadir}/php
+
+install -pm 644 %{SOURCE2} %{buildroot}%{_datadir}/php/Zend/autoload.php
 
 # Symlink package docs to common sub-package docs
 mkdir -p %{buildroot}%{_docdir}
@@ -1874,44 +1875,24 @@ ln -s %{name}-common-%{version} %{buildroot}%{_pkgdocdir}
 %check
 %if %{with_tests}
 cd tests
-# Create autoloader
-cat > _autoload.php <<'AUTOLOADER'
+: Create autoloader for test suite
+cat <<'AUTOLOADER' | tee _autoload.php
 <?php
-require_once 'Symfony/Component/ClassLoader/UniversalClassLoader.php';
+require_once '%{buildroot}%{_datadir}/php/Zend/autoload.php';
 
-use Symfony\Component\ClassLoader\UniversalClassLoader;
-$loader = new UniversalClassLoader();
-$loader->registerNamespace('Zend',             __DIR__.'/../library');
-$loader->registerNamespace('ZendTest',         __DIR__);
-$loader->registerNamespace('org\\bovigo\\vfs', '/usr/share/php');
-$loader->registerNamespace('RandomLib',      '/usr/share/php');
-$loader->registerNamespace('SecurityLib',    '/usr/share/php');
-$loader->useIncludePath(true);
-$loader->register();
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\\Loader\\StandardAutoloader' => array(
+        'namespaces' => array(
+           'ZendTest' => __DIR__ . '/ZendTest',
+))));
 AUTOLOADER
 
-sed -e 's/ colors="true"//' \
-    phpunit.xml.dist >phpunit.xml
+: ignore these for now
+rm ZendTest/Mvc/Controller/Plugin/FilePostRedirectGetTest.php
 
-# ignore these for now
-rm -r ZendTest/Cache
-rm    ZendTest/Console/RequestTest.php
-rm -r ZendTest/Debug
-rm    ZendTest/File/Transfer/Adapter/HttpTest.php
-rm    ZendTest/Form/View/Helper/FormDateTimeSelectTest.php
-# This test requires internet conectivity
-rm    ZendTest/Version/VersionTest.php
-# Date format with microsecond in PHP 5.6
-rm    ZendTest/Ldap/Converter/ConverterTest.php
-# Need mongodb server
-rm    ZendTest/Session/SaveHandler/MongoDBTest.php
-# Strangly fail, lack of date.timezone
-rm    ZendTest/Session/SessionManagerTest.php
-# Need investigation
-rm    ZendTest/Db/Adapter/Platform/SqliteTest.php
 %if 0%{?rhel} == 5
-rm    ZendTest/Feed/PubSubHubbub/Model/SubscriptionTest.php
-rm    ZendTest/Session/SaveHandler/DbTableGatewayTest.php
+rm ZendTest/Feed/PubSubHubbub/Model/SubscriptionTest.php
+rm ZendTest/Session/SaveHandler/DbTableGatewayTest.php
 %endif
 
 RET=0
@@ -2222,6 +2203,7 @@ exit $RET
 %doc library/Zend/Loader/*.md
 %doc library/Zend/Loader/composer.json
 
+%{_datadir}/php/Zend/autoload.php
 %{_datadir}/php/Zend/Loader
 %exclude %{_datadir}/php/Zend/Loader/*.md
 %exclude %{_datadir}/php/Zend/Loader/composer.json
@@ -2550,6 +2532,10 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Wed Aug 12 2015 Remi Collet <remi@fedoraproject.org> - 2.4.7-1
+- Update to 2.4.7
+- add autoloader in php-ZendFramework2-Loader
+
 * Thu May 21 2015 Remi Collet <remi@fedoraproject.org> - 2.3.9-1
 - Update to 2.3.9
 
