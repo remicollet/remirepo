@@ -16,8 +16,8 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        1.4.1
-Release:        1%{?dist}
-Summary:        PHP library to manipulate various color representations
+Release:        2%{?dist}
+Summary:        PHP library to generate linear and bidimensional barcodes
 
 Group:          Development/Libraries
 License:        LGPLv3+
@@ -122,6 +122,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Aug 12 2015 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
+- fix package summary
+
 * Tue Aug 11 2015 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
 - update to 1.4.1
 
