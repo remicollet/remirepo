@@ -9,13 +9,13 @@
 #
 
 %global php_name ZendFramework
-%global with_extras   0
-%global with_firebird 0
+%global with_extras   1
+%global with_firebird 1
 #define posttag .PL1
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.12.14
+Version:         1.12.15
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -486,12 +486,12 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/php
 # remove cruft that somehow slipped into the tarball
 rm -f library/Zend/.Version.php.un~
 
-cp -pr library/Zend $RPM_BUILD_ROOT%{_datadir}/php
+cp -pr library/Zend $RPM_BUILD_ROOT%{_datadir}/php/Zend
 #cp -pr demos/Zend $RPM_BUILD_ROOT%{_datadir}/php/Zend/demos
 
 %if %{with_extras}
 # ZendX
-cp -pr extras/library/ZendX $RPM_BUILD_ROOT%{_datadir}/php
+cp -pr extras/library/ZendX $RPM_BUILD_ROOT%{_datadir}/php/ZendX
 %endif
 
 cp -pr bin/zf.{php,sh} \
@@ -854,6 +854,10 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 
 
 %changelog
+* Wed Aug 12 2015 Remi Collet <remi@remirepo.net> - 1.12.15-1
+- update to 1.12.15
+- extras and Db-Adapter-Firebird sub packages are back
+
 * Tue Aug  4 2015 Remi Collet <remi@remirepo.net> - 1.12.14-1
 - update to 1.12.14
 - extras and Db-Adapter-Firebird sub packages are no
