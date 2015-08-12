@@ -60,7 +60,7 @@
 
 Name:          php-guzzle-%{pear_name}
 Version:       %{github_version}
-Release:       3%{?dist}.1
+Release:       4%{?dist}
 Summary:       PHP HTTP client library and framework for building RESTful web service clients
 
 Group:         Development/Libraries
@@ -329,6 +329,9 @@ fi
 %exclude %{phpdir}/Guzzle/*/*/composer.json
 
 %changelog
+* Wed Aug 12 2015 Remi Collet <remi@fedoraproject.org> - 3.9.3-4
+- raise max version for Zend Framework
+
 * Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 3.9.3-3.1
 - ignore max ZF version
 
