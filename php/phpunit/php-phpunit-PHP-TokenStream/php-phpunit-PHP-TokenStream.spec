@@ -67,6 +67,7 @@ phpab \
   --output   src/Token/Stream/Autoload.php \
   src
 
+
 %install
 rm -rf     %{buildroot}
 mkdir -p   %{buildroot}%{php_home}
@@ -79,7 +80,6 @@ cp -pr src %{buildroot}%{php_home}/PHP
 sed -e '/autoload.php/d' \
     -i tests/bootstrap.php
 
-# Run tests
 cd build
 : Run tests - set include_path to ensure PHPUnit autoloader use it
 %{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
