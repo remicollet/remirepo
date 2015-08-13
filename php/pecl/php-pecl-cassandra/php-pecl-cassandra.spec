@@ -15,8 +15,8 @@
 %global with_zts    0%{?__ztsphp:1}
 %global prever      RC
 # see https://github.com/datastax/php-driver/releases
-%global gh_commit   2b0642b1d6fc451f0481edaf0163e3e5bbf896ec
-%global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
+#global gh_commit   2b0642b1d6fc451f0481edaf0163e3e5bbf896ec
+#global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    datastax
 %global gh_project  php-driver
 %global with_tests  0%{!?_without_tests:1}
@@ -35,7 +35,11 @@ Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
 # Pull sources from github to get tests
+%if 0%{?gh_commit:1}
 Source0:      https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}.tar.gz
+%else
+Source:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
+%endif
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel >= 5.2.6
@@ -86,9 +90,12 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -c -q
-
+%if 0%{?gh_commit:1}
 mv %{gh_project}-%{gh_commit}/ext NTS
 mv NTS/package.xml .
+%else
+mv %{pecl_name}-%{version}%{?prever} NTS
+%endif
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' -i package.xml
