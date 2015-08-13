@@ -6,6 +6,14 @@
 #
 # Please preserve changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-cassandra}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -27,9 +35,9 @@
 %endif
 
 Summary:      DataStax PHP Driver for Apache Cassandra
-Name:         %{?scl_prefix}php-pecl-%{pecl_name}
+Name:         %{?sub_prefix}php-pecl-%{pecl_name}
 Version:      1.0.0
-Release:      0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      ASL 2.0
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -235,5 +243,8 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Thu Aug 13 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.RC
+- fix package name for more-php56
+
 * Thu Aug 13 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.RC
 - Initial package, version 1.0.0RC
