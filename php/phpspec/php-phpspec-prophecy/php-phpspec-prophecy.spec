@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    3132b1f44c7bf2ec4c7eb2d3cb78fdeca760d373
+%global gh_commit    4745ded9307786b730d7a60df5cb5a6c43cf95f7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpspec
 %global gh_project   prophecy
@@ -19,8 +19,8 @@
 %endif
 
 Name:           php-phpspec-prophecy
-Version:        1.4.1
-Release:        4%{?dist}
+Version:        1.5.0
+Release:        1%{?dist}
 Summary:        Highly opinionated mocking framework for PHP
 
 Group:          Development/Libraries
@@ -110,6 +110,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug 13 2015 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
+- update to 1.5.0
+
 * Mon Jun 29 2015 Remi Collet <remi@fedoraproject.org> - 1.4.1-4
 - use symfony/class-loader
 - enable test suite
