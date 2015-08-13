@@ -29,8 +29,8 @@
 
 Summary:       Yet Another Framework
 Name:          %{?sub_prefix}php-pecl-yaf
-Version:       2.3.3
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:       2.3.4
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaf
@@ -192,11 +192,12 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
+%{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
-%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
 %{php_ztsextdir}/%{pecl_name}.so
@@ -205,6 +206,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug 13 2015 Remi Collet <remi@fedoraproject.org> - 2.3.4-1
+- Update to 2.3.4
+
 * Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> - 2.3.3-2
 - allow build against rh-php56 (as more-php56)
 - drop runtime dependency on pear, new scriptlets

@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
+Extension [ <persistent> extension #176 yaf version 2.3.4 ] {
 
   - Dependencies {
     Dependency [ spl (Required) ]
@@ -43,7 +43,7 @@ Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
   }
 
   - Constants [12] {
-    Constant [ string YAF_VERSION ] { 2.3.3 }
+    Constant [ string YAF_VERSION ] { 2.3.4 }
     Constant [ string YAF_ENVIRON ] { product }
     Constant [ integer YAF_ERR_STARTUP_FAILED ] { 512 }
     Constant [ integer YAF_ERR_ROUTE_FAILED ] { 513 }
@@ -2823,7 +2823,7 @@ Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
         Property [ <default> protected $previous ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -2831,6 +2831,9 @@ Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -2878,7 +2881,7 @@ Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
         Property [ <default> protected $previous ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -2886,6 +2889,9 @@ Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -2933,7 +2939,7 @@ Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
         Property [ <default> protected $previous ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -2941,6 +2947,9 @@ Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -2988,7 +2997,7 @@ Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
         Property [ <default> protected $previous ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -2996,6 +3005,9 @@ Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -3043,7 +3055,7 @@ Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
         Property [ <default> protected $previous ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -3051,6 +3063,9 @@ Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -3098,7 +3113,7 @@ Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
         Property [ <default> protected $previous ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -3106,6 +3121,9 @@ Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -3153,7 +3171,7 @@ Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
         Property [ <default> protected $previous ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -3161,6 +3179,9 @@ Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -3208,7 +3229,7 @@ Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
         Property [ <default> protected $previous ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -3216,6 +3237,9 @@ Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -3263,7 +3287,7 @@ Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
         Property [ <default> protected $previous ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -3271,6 +3295,9 @@ Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -3318,7 +3345,7 @@ Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
         Property [ <default> protected $previous ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -3326,6 +3353,9 @@ Extension [ <persistent> extension #160 yaf version 2.3.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
