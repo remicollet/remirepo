@@ -1,0 +1,3383 @@
+Extension [ <persistent> extension #82 cassandra version 1.0.0RC ] {
+
+  - Dependencies {
+    Dependency [ spl (Required) ]
+  }
+
+  - INI {
+    Entry [ cassandra.log <ALL> ]
+      Current = 'cassandra.log'
+    }
+    Entry [ cassandra.log_level <ALL> ]
+      Current = 'ERROR'
+    }
+  }
+
+  - Classes [59] {
+    Interface [ <internal:cassandra> interface Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\InvalidArgumentException extends InvalidArgumentException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\DomainException extends DomainException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\RuntimeException extends RuntimeException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\TimeoutException extends Cassandra\Exception\RuntimeException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\LogicException extends LogicException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\ExecutionException extends Cassandra\Exception\RuntimeException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\ReadTimeoutException extends Cassandra\Exception\ExecutionException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\WriteTimeoutException extends Cassandra\Exception\ExecutionException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\UnavailableException extends Cassandra\Exception\ExecutionException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\TruncateException extends Cassandra\Exception\ExecutionException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\ValidationException extends Cassandra\Exception\RuntimeException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\InvalidQueryException extends Cassandra\Exception\ValidationException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\InvalidSyntaxException extends Cassandra\Exception\ValidationException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\UnauthorizedException extends Cassandra\Exception\ValidationException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\UnpreparedException extends Cassandra\Exception\ValidationException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\ConfigurationException extends Cassandra\Exception\ValidationException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\AlreadyExistsException extends Cassandra\Exception\ConfigurationException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\AuthenticationException extends Cassandra\Exception\RuntimeException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\ProtocolException extends Cassandra\Exception\RuntimeException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\ServerException extends Cassandra\Exception\RuntimeException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\IsBootstrappingException extends Cassandra\Exception\ServerException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\OverloadedException extends Cassandra\Exception\ServerException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\RangeException extends RangeException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra\Exception\DivideByZeroException extends Cassandra\Exception\RangeException implements Cassandra\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Interface [ <internal:cassandra> interface Cassandra\Numeric ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [10] {
+        Method [ <internal:cassandra> abstract public method add ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra> abstract public method sub ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra> abstract public method mul ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra> abstract public method div ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra> abstract public method mod ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra> abstract public method abs ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> abstract public method neg ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> abstract public method sqrt ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> abstract public method toInt ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> abstract public method toDouble ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\Bigint implements Cassandra\Numeric ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [2] {
+        Method [ <internal:cassandra> static public method min ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> static public method max ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [13] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method value ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method add ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method sub ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method mul ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method div ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method mod ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method abs ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method neg ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method sqrt ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method toInt ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method toDouble ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\Blob ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $bytes ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method bytes ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method toBinaryString ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\Decimal implements Cassandra\Numeric ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [14] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method value ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method scale ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method add ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method sub ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method mul ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method div ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method mod ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method abs ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method neg ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method sqrt ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method toInt ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method toDouble ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\Float implements Cassandra\Numeric ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [2] {
+        Method [ <internal:cassandra> static public method min ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> static public method max ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [16] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method value ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method isInfinite ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method isFinite ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method isNaN ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method add ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method sub ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method mul ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method div ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method mod ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method abs ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method neg ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method sqrt ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method toInt ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method toDouble ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\Inet ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [3] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $address ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method address ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\Timestamp ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $seconds ]
+            Parameter #1 [ <optional> $microseconds ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method time ] {
+        }
+
+        Method [ <internal:cassandra> public method microtime ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $get_as_float ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method toDateTime ] {
+        }
+
+        Method [ <internal:cassandra> public method __toString ] {
+        }
+      }
+    }
+
+    Interface [ <internal:cassandra> interface Cassandra\UuidInterface ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:cassandra> abstract public method uuid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> abstract public method version ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\Timeuuid implements Cassandra\UuidInterface ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $timestamp ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\UuidInterface> public method uuid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\UuidInterface> public method version ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method time ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method toDateTime ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\Uuid implements Cassandra\UuidInterface ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $uuid ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\UuidInterface> public method uuid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\UuidInterface> public method version ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\Varint implements Cassandra\Numeric ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [13] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method value ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method add ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method sub ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method mul ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method div ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method mod ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $num ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method abs ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method neg ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method sqrt ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method toInt ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Numeric> public method toDouble ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> <iterateable> final class Cassandra\Set implements Countable, Iterator, Traversable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [11] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $type ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method type ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method values ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method add ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method remove ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> <iterateable> final class Cassandra\Map implements Countable, Iterator, Traversable, ArrayAccess ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [19] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $type ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method keyType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method keys ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method valueType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method values ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method set ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method get ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method remove ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method has ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype ArrayAccess> public method offsetSet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype ArrayAccess> public method offsetGet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype ArrayAccess> public method offsetUnset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype ArrayAccess> public method offsetExists ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> <iterateable> final class Cassandra\Collection implements Countable, Iterator, Traversable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [13] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $type ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method type ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method values ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method add ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method get ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method find ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method remove ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> class Cassandra ] {
+
+      - Constants [41] {
+        Constant [ integer CONSISTENCY_ANY ] { 0 }
+        Constant [ integer CONSISTENCY_ONE ] { 1 }
+        Constant [ integer CONSISTENCY_TWO ] { 2 }
+        Constant [ integer CONSISTENCY_THREE ] { 3 }
+        Constant [ integer CONSISTENCY_QUORUM ] { 4 }
+        Constant [ integer CONSISTENCY_ALL ] { 5 }
+        Constant [ integer CONSISTENCY_LOCAL_QUORUM ] { 6 }
+        Constant [ integer CONSISTENCY_EACH_QUORUM ] { 7 }
+        Constant [ integer CONSISTENCY_SERIAL ] { 8 }
+        Constant [ integer CONSISTENCY_LOCAL_SERIAL ] { 9 }
+        Constant [ integer CONSISTENCY_LOCAL_ONE ] { 10 }
+        Constant [ integer VERIFY_NONE ] { 0 }
+        Constant [ integer VERIFY_PEER_CERT ] { 1 }
+        Constant [ integer VERIFY_PEER_IDENTITY ] { 2 }
+        Constant [ integer BATCH_LOGGED ] { 0 }
+        Constant [ integer BATCH_UNLOGGED ] { 1 }
+        Constant [ integer BATCH_COUNTER ] { 2 }
+        Constant [ integer LOG_DISABLED ] { 0 }
+        Constant [ integer LOG_CRITICAL ] { 1 }
+        Constant [ integer LOG_ERROR ] { 2 }
+        Constant [ integer LOG_WARN ] { 3 }
+        Constant [ integer LOG_INFO ] { 4 }
+        Constant [ integer LOG_DEBUG ] { 5 }
+        Constant [ integer LOG_TRACE ] { 6 }
+        Constant [ string TYPE_TEXT ] { text }
+        Constant [ string TYPE_ASCII ] { ascii }
+        Constant [ string TYPE_VARCHAR ] { varchar }
+        Constant [ string TYPE_BIGINT ] { bigint }
+        Constant [ string TYPE_BLOB ] { blob }
+        Constant [ string TYPE_BOOLEAN ] { boolean }
+        Constant [ string TYPE_COUNTER ] { counter }
+        Constant [ string TYPE_DECIMAL ] { decimal }
+        Constant [ string TYPE_DOUBLE ] { double }
+        Constant [ string TYPE_FLOAT ] { float }
+        Constant [ string TYPE_INT ] { int }
+        Constant [ string TYPE_TIMESTAMP ] { timestamp }
+        Constant [ string TYPE_UUID ] { uuid }
+        Constant [ string TYPE_VARINT ] { varint }
+        Constant [ string TYPE_TIMEUUID ] { timeuuid }
+        Constant [ string TYPE_INET ] { inet }
+        Constant [ string VERSION ] { 1.0.0-rc }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [2] {
+        Method [ <internal:cassandra> static public method cluster ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> static public method ssl ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Interface [ <internal:cassandra> interface Cassandra\Cluster ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:cassandra> abstract public method connect ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $keyspace ]
+          }
+        }
+
+        Method [ <internal:cassandra> abstract public method connectAsync ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $keyspace ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\Cluster\Builder ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [21] {
+        Method [ <internal:cassandra> public method build ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method withDefaultConsistency ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $consistency ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withDefaultPageSize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $pageSize ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withDefaultTimeout ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $timeout ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withContactPoints ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $host ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withPort ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $port ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withRoundRobinLoadBalancingPolicy ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method withDatacenterAwareRoundRobinLoadBalancingPolicy ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $localDatacenter ]
+            Parameter #1 [ <required> $hostPerRemoteDatacenter ]
+            Parameter #2 [ <required> $useRemoteDatacenterForLocalConsistencies ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withTokenAwareRouting ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $enabled ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withCredentials ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $username ]
+            Parameter #1 [ <required> $password ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withConnectTimeout ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $timeout ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withRequestTimeout ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $timeout ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withSSL ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Cassandra\SSLOptions $options ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withPersistentSessions ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $enabled ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withProtocolVersion ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $version ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withIOThreads ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $count ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withConnectionsPerHost ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $core ]
+            Parameter #1 [ <optional> $max ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withReconnectInterval ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $interval ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withLatencyAwareRouting ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $enabled ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withTCPNodelay ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $enabled ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withTCPKeepalive ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $delay ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\DefaultCluster implements Cassandra\Cluster ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:cassandra, prototype Cassandra\Cluster> public method connect ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $keyspace ]
+            Parameter #1 [ <optional> $timeout ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Cluster> public method connectAsync ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $keyspace ]
+          }
+        }
+      }
+    }
+
+    Interface [ <internal:cassandra> interface Cassandra\Future ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:cassandra> abstract public method get ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $timeout ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\FuturePreparedStatement implements Cassandra\Future ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:cassandra, prototype Cassandra\Future> public method get ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $timeout ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\FutureRows implements Cassandra\Future ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:cassandra, prototype Cassandra\Future> public method get ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $timeout ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\FutureSession implements Cassandra\Future ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:cassandra, prototype Cassandra\Future> public method get ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $timeout ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\FutureValue implements Cassandra\Future ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:cassandra, prototype Cassandra\Future> public method get ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $timeout ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\FutureClose implements Cassandra\Future ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:cassandra, prototype Cassandra\Future> public method get ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $timeout ]
+          }
+        }
+      }
+    }
+
+    Interface [ <internal:cassandra> interface Cassandra\Session ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:cassandra> abstract public method execute ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Cassandra\Statement $statement ]
+            Parameter #1 [ <optional> Cassandra\ExecutionOptions $options ]
+          }
+        }
+
+        Method [ <internal:cassandra> abstract public method executeAsync ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Cassandra\Statement $statement ]
+            Parameter #1 [ <optional> Cassandra\ExecutionOptions $options ]
+          }
+        }
+
+        Method [ <internal:cassandra> abstract public method prepare ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $cql ]
+            Parameter #1 [ <optional> Cassandra\ExecutionOptions $options ]
+          }
+        }
+
+        Method [ <internal:cassandra> abstract public method prepareAsync ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $cql ]
+            Parameter #1 [ <optional> Cassandra\ExecutionOptions $options ]
+          }
+        }
+
+        Method [ <internal:cassandra> abstract public method close ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $timeout ]
+          }
+        }
+
+        Method [ <internal:cassandra> abstract public method closeAsync ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\DefaultSession implements Cassandra\Session ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:cassandra, prototype Cassandra\Session> public method execute ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Cassandra\Statement $statement ]
+            Parameter #1 [ <optional> Cassandra\ExecutionOptions $options ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Session> public method executeAsync ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Cassandra\Statement $statement ]
+            Parameter #1 [ <optional> Cassandra\ExecutionOptions $options ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Session> public method prepare ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $cql ]
+            Parameter #1 [ <optional> Cassandra\ExecutionOptions $options ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Session> public method prepareAsync ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $cql ]
+            Parameter #1 [ <optional> Cassandra\ExecutionOptions $options ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Session> public method close ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $timeout ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Session> public method closeAsync ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\SSLOptions ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\SSLOptions\Builder ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:cassandra> public method build ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method withTrustedCerts ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $path ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withVerifyFlags ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $flags ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withClientCert ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $path ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withPrivateKey ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <optional> $passphrase ]
+          }
+        }
+      }
+    }
+
+    Interface [ <internal:cassandra> interface Cassandra\Statement ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\SimpleStatement implements Cassandra\Statement ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $cql ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\PreparedStatement implements Cassandra\Statement ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:cassandra, ctor> private method __construct ] {
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\BatchStatement implements Cassandra\Statement ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $type ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method add ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Cassandra\Statement $statement ]
+            Parameter #1 [ <optional> array or NULL $arguments ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\ExecutionOptions ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> array or NULL $options ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method __get ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> <iterateable> final class Cassandra\Rows implements Iterator, Traversable, ArrayAccess ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [15] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype ArrayAccess> public method offsetExists ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $offset ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype ArrayAccess> public method offsetGet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $offset ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype ArrayAccess> public method offsetSet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $offset ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype ArrayAccess> public method offsetUnset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $offset ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method isLastPage ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method nextPage ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $timeout ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method nextPageAsync ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method first ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+  }
+}
+
