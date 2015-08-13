@@ -6,20 +6,21 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    e9a40577323e67f1de2e214abf32976a0352d8f8
+%global gh_commit    a897a7b02f42d278ac2381f4cd19b0d2b3b6f478
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpspec
 %global gh_project   phpspec
+%global prever       beta3
 
 Name:           php-phpspec
-Version:        2.2.1
-Release:        3%{?dist}
+Version:        2.3.0
+Release:        0.1.%{prever}%{?dist}
 Summary:        Specification-oriented BDD framework for PHP
 
 Group:          Development/Libraries
 License:        MIT
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
 
 Source1:        %{gh_project}-autoload.php
 
@@ -35,7 +36,7 @@ BuildRequires:  php-composer(sebastian/exporter)       >= 1.0
 BuildRequires:  php-composer(symfony/console)          >= 2.3.0
 BuildRequires:  php-composer(symfony/event-dispatcher) >= 2.1
 BuildRequires:  php-composer(symfony/finder)           >= 2.1
-BuildRequires:  php-composer(symfony/process)          >= 2.1
+BuildRequires:  php-composer(symfony/process)          >= 2.6
 BuildRequires:  php-composer(symfony/yaml)             >= 2.1
 BuildRequires:  php-composer(doctrine/instantiator)    >= 1.0.1
 # From composer.json, require-dev
@@ -50,8 +51,8 @@ BuildRequires:  php-composer(symfony/class-loader)
 #         "sebastian/exporter":       "~1.0",
 #         "symfony/console":          "~2.3",
 #         "symfony/event-dispatcher": "~2.1",
+#         "symfony/process":          "^2.6",
 #         "symfony/finder":           "~2.1",
-#         "symfony/process":          "~2.1",
 #         "symfony/yaml":             "~2.1",
 #         "doctrine/instantiator":    "^1.0.1"
 Requires:       php(language) >= 5.3.3
@@ -67,7 +68,7 @@ Requires:       php-composer(symfony/event-dispatcher) >= 2.1
 Requires:       php-composer(symfony/event-dispatcher) <  3
 Requires:       php-composer(symfony/finder)           >= 2.1
 Requires:       php-composer(symfony/finder)           <  3
-Requires:       php-composer(symfony/process)          >= 2.1
+Requires:       php-composer(symfony/process)          >= 2.6
 Requires:       php-composer(symfony/process)          <  3
 Requires:       php-composer(symfony/yaml)             >= 2.1
 Requires:       php-composer(symfony/yaml)             <  3
@@ -149,6 +150,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug 13 2015 Remi Collet <remi@fedoraproject.org> - 2.3.0-0.1.beta1
+- update to 2.3.0beta3
+
 * Mon Jun 29 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-3
 - switch to $fedoraClassLoader autoloader
 - ensure /usr/share/php is in include_path
