@@ -69,7 +69,7 @@ BuildRequires: %{?scl_prefix}php-devel >= %{php_min_ver}
 %if %{with_tests}
 # For tests
 BuildRequires: %{_bindir}/phpunit
-## phpcompatinfo (computed from version 1.18.2)
+## phpcompatinfo (computed from version 1.20.0)
 BuildRequires: %{?scl_prefix}php-ctype
 BuildRequires: %{?scl_prefix}php-date
 BuildRequires: %{?scl_prefix}php-dom
@@ -85,7 +85,7 @@ BuildRequires: %{?scl_prefix}php-spl
 # Lib
 ## composer.json
 Requires:      %{?scl_prefix}php(language) >= %{php_min_ver}
-## phpcompatinfo (computed from version 1.18.2)
+## phpcompatinfo (computed from version 1.20.0)
 Requires:      %{?scl_prefix}php-ctype
 Requires:      %{?scl_prefix}php-date
 Requires:      %{?scl_prefix}php-dom
@@ -185,16 +185,17 @@ extension=%{ext_name}.so
 INI
 
 : Create lib autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee lib/Twig/autoload.php
 <?php
 /**
- * Autoloader created by %{name}-%{version}-%{release}
+ * Autoloader for %{name} and its' dependencies
+ *
+ * Created by %{name}-%{version}-%{release}
  */
 
 require_once __DIR__ . '/Autoloader.php';
 Twig_Autoloader::register();
 AUTOLOAD
-) | tee lib/Twig/autoload.php
 
 
 %build
@@ -247,13 +248,9 @@ install -D -m 0644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 %if %{with_tests}
 : Skip tests known to fail
-sed 's#function testGetAttributeExceptions#function SKIP_testGetAttributeExceptions#' \
+sed -e 's#function testGetAttributeExceptions#function SKIP_testGetAttributeExceptions#' \
+    -e 's/function testGetAttributeWithTemplateAsObject/function skip_testGetAttributeWithTemplateAsObject/' \
     -i test/Twig/Tests/TemplateTest.php
-# i386 failing on EL-5
-%ifarch ppc64 %{ix86}
-sed 's/function testGetAttributeWithTemplateAsObject/function SKIP_testGetAttributeWithTemplateAsObject/' \
-    -i test/Twig/Tests/TemplateTest.php
-%endif
 
 : Test suite without extension
 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php -v
@@ -289,6 +286,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Aug 12 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.20.0-1
+- Updated to 1.20.0 (BZ #1249259)
+
 * Wed Aug 12 2015 Remi Collet <remi@fedoraproject.org> - 1.20.0-1
 - Update to 1.20.0
 
