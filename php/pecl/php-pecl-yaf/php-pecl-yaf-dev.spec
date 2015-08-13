@@ -19,11 +19,11 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit   629d4123c31ebe4e139f4e9b3f2081c43b157a4f
+%global gh_commit   2dd49abe02fb2c17870b18d1ae3a45a0a14ab456
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    laruence
-%global gh_project  php-yaf
-%global gh_date     20150720
+%global gh_project  yaf
+%global gh_date     20150813
 %global with_zts    0%{?__ztsphp:1}
 %global pecl_name   yaf
 %if "%{php_version}" < "5.6"
@@ -211,10 +211,10 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
+%{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
-%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
 %{php_ztsextdir}/%{pecl_name}.so
@@ -223,6 +223,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug 13 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.6.20150813git2dd49ab
+- new shapshot
+
 * Fri Jul 24 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.6.20150720git629d412
 - ignore 1 failed test on ZTS
 - open https://github.com/laruence/php-yaf/issues/180 (1 failed on ZTS)
