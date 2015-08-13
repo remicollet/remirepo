@@ -8,7 +8,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    7a9b0969488c3c54fd62b4d504b3ec758fd005d9
+%global gh_commit    8b0723c09dd6593a27319c631bf7152be809bab0
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-token-stream
@@ -22,17 +22,14 @@
 %endif
 
 Name:           php-phpunit-PHP-TokenStream
-Version:        1.4.3
-Release:        2%{?dist}
+Version:        1.4.4
+Release:        1%{?dist}
 Summary:        Wrapper around PHP tokenizer extension
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
-
-# Autoload template, from version 1.2.2
-Source1:        Autoload.php.in
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -64,34 +61,29 @@ Wrapper around PHP tokenizer extension.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-# Restore PSR-0 tree to ensure current sources are used by tests
-mv src PHP
-
 
 %build
 phpab \
-  --output   PHP/Token/Stream/Autoload.php \
-  --template %{SOURCE1} \
-  PHP
-
+  --output   src/Token/Stream/Autoload.php \
+  src
 
 %install
 rm -rf     %{buildroot}
 mkdir -p   %{buildroot}%{php_home}
-cp -pr PHP %{buildroot}%{php_home}/PHP
+cp -pr src %{buildroot}%{php_home}/PHP
 
 
 %if %{with_tests}
 %check
-# Use generated autoloader
-sed -e 's:vendor/autoload.php:PHP/Token/Stream/Autoload.php:' \
+: Autoloader already called from PHPUnit main autoloader
+sed -e '/autoload.php/d' \
     -i tests/bootstrap.php
 
 # Run tests
-phpunit  \
-   --bootstrap tests/bootstrap.php \
-   --verbose \
-   tests
+cd build
+: Run tests - set include_path to ensure PHPUnit autoloader use it
+%{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+%{_bindir}/phpunit --verbose
 %endif
 
 
@@ -115,6 +107,9 @@ fi
 
 
 %changelog
+* Thu Aug 13 2015 Remi Collet <remi@fedoraproject.org> - 1.4.4-1
+- Update to 1.4.4
+
 * Thu Jul  2 2015 Remi Collet <remi@fedoraproject.org> - 1.4.3-2
 - fix autoloader
 
