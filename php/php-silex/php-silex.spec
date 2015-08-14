@@ -42,8 +42,7 @@
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
 
-%{!?phpdir:   %global phpdir   %{_datadir}/php}
-%{!?peardir:  %global peardir  %{_datadir}/pear}
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
@@ -57,8 +56,10 @@ Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{githu
 
 BuildArch:     noarch
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
+# %%{pear_phpdir} macro
+BuildRequires: php-pear
+# Tests
 %if %{with_tests}
-# For tests
 ## composer.json
 BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language)                          >= %{php_min_ver}
@@ -112,7 +113,7 @@ BuildRequires: php-composer(twig/twig)                >= %{twig_min_ver}
 BuildRequires: php-composer(twig/twig)                <  %{twig_max_ver}
 BuildRequires: php-swift-Swift                        >= %{swiftmailer_min_ver}
 BuildRequires: php-swift-Swift                        <  %{swiftmailer_max_ver}
-## phpcompatinfo (computed from version 1.3.0)
+## phpcompatinfo (computed from version 1.3.1)
 BuildRequires: php-date
 BuildRequires: php-json
 BuildRequires: php-pcre
@@ -145,7 +146,7 @@ Requires:      php-composer(symfony/dom-crawler)      >= %{symfony_min_ver}
 Requires:      php-composer(symfony/dom-crawler)      <  %{symfony_max_ver}
 Requires:      php-composer(symfony/form)             >= %{symfony_min_ver}
 Requires:      php-composer(symfony/form)             <  %{symfony_max_ver}
-# phpcompatinfo (computed from version 1.3.0)
+# phpcompatinfo (computed from version 1.3.1)
 Requires:      php-date
 Requires:      php-pcre
 Requires:      php-reflection
@@ -176,15 +177,15 @@ aims to be:
 %setup -qn %{github_name}-%{github_commit}
 
 : Create autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee src/Silex/autoload.php
 <?php
 /**
- * Autoloader created by %{name}-%{version}-%{release}
+ * Autoloader for %{name} and its' dependencies
+ *
+ * Created by %{name}-%{version}-%{release}
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
-
-require '%{phpdir}/Pimple1/autoload.php';
 
 if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
     if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
@@ -197,16 +198,18 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('Silex\\', dirname(__DIR__));
 
+require_once '%{phpdir}/Pimple1/autoload.php';
+
 if (file_exists('%{pear_phpdir}/Swift')) {
     $fedoraClassLoader->addPrefix('Swift_', '%{pear_phpdir}/Swift');
 }
 
-// Fall back to include path for dependencies for now.
+// Not all dependency autoloaders exist or are in every dist yet so fallback
+// to using include path for dependencies for now
 $fedoraClassLoader->setUseIncludePath(true);
 
 return $fedoraClassLoader;
 AUTOLOAD
-) | tee src/Silex/autoload.php
 
 
 %build
@@ -217,13 +220,13 @@ AUTOLOAD
 rm -rf %{buildroot}
 
 mkdir -p %{buildroot}%{phpdir}
-cp -rp src/* %{buildroot}%{phpdir}
+cp -rp src/* %{buildroot}%{phpdir}/
 
 
 %check
 %if %{with_tests}
 : Create test bootstrap
-(cat <<'BOOTSTRAP'
+cat <<'BOOTSTRAP' | tee bootstrap.php
 <?php
 
 $fedoraClassLoader =
@@ -231,7 +234,6 @@ $fedoraClassLoader =
 
 $fedoraClassLoader->addPrefix('Silex\\Tests\\', __DIR__ . '/tests');
 BOOTSTRAP
-) | tee bootstrap.php
 
 : Temporarily skip tests known to fail
 rm -f \
@@ -239,7 +241,7 @@ rm -f \
     tests/Silex/Tests/Application/SwiftmailerTraitTest.php
 
 : Run tests
-%{_bindir}/phpunit -v --bootstrap ./bootstrap.php
+%{_bindir}/phpunit --verbose --bootstrap ./bootstrap.php
 %else
 : Tests skipped
 %endif
@@ -260,6 +262,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug 13 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.1-1
+- Updated to 1.3.1 (RHBZ #1250055)
+- Updated autoloader to load dependencies after self registration
+
 * Mon Aug 10 2015 Remi Collet <remi@remirepo.net> - 1.3.1-1
 - update to 1.3.1
 
