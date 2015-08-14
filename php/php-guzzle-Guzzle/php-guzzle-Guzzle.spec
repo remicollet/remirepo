@@ -44,7 +44,7 @@
 %global symfony_max_ver 3.0
 # "zendframework/zend-cache": "2.*,<2.3",
 # "zendframework/zend-log": "2.*,<2.3"
-#     NOTE: Max 3 instead of 2.3 because tests with 2.5.2 pass
+#     NOTE: Max version 3 instead of 2.3 because tests pass
 %global zend_min_ver 2.0
 %global zend_max_ver 3
 
@@ -60,7 +60,7 @@
 
 Name:          php-guzzle-%{pear_name}
 Version:       %{github_version}
-Release:       4%{?dist}
+Release:       5%{?dist}
 Summary:       PHP HTTP client library and framework for building RESTful web service clients
 
 Group:         Development/Libraries
@@ -98,6 +98,8 @@ BuildRequires: php-simplexml
 BuildRequires: php-spl
 BuildRequires: php-xmlwriter
 BuildRequires: php-zlib
+## Autoloader
+BuildRequires: php-composer(symfony/class-loader)
 %endif
 
 # composer.json
@@ -215,10 +217,12 @@ rm src/Guzzle/Http/Resources/cacert.pem
 %endif
 
 : Create autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee src/Guzzle/autoload.php
 <?php
 /**
- * Autoloader created by %{name}-%{version}-%{release}
+ * Autoloader for %{name} and its' dependencies
+ *
+ * Created by %{name}-%{version}-%{release}
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
@@ -240,7 +244,6 @@ $fedoraClassLoader->setUseIncludePath(true);
 
 return $fedoraClassLoader;
 AUTOLOAD
-) | tee src/Guzzle/autoload.php
 
 
 %build
@@ -257,7 +260,7 @@ cp -rp src/* %{buildroot}%{phpdir}/
 %check
 %if %{with_tests}
 : Create tests autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee tests/autoload.php
 <?php
 
 $fedoraClassLoader =
@@ -265,7 +268,6 @@ $fedoraClassLoader =
 
 $fedoraClassLoader->addPrefix('Guzzle\\Tests', __DIR__);
 AUTOLOAD
-) | tee tests/autoload.php
 
 : Modify tests bootstrap
 sed "s#require.*autoload.*#require __DIR__ . '/autoload.php';#" \
@@ -329,6 +331,10 @@ fi
 %exclude %{phpdir}/Guzzle/*/*/composer.json
 
 %changelog
+* Thu Aug 13 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.9.3-5
+- Added explicit autoloader build dependency
+- Minor cleanups
+
 * Wed Aug 12 2015 Remi Collet <remi@fedoraproject.org> - 3.9.3-4
 - raise max version for Zend Framework
 
