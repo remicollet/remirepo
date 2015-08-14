@@ -1,12 +1,11 @@
 diff --git a/classmap.php b/classmap.php
-index 2746deb..2ad7588 100644
+index 267eecd..9691a58 100644
 --- a/classmap.php
 +++ b/classmap.php
-@@ -12,6 +12,9 @@
-  * @link http://leafo.net/scssphp
+@@ -11,6 +11,8 @@
+  * @link http://leafo.github.io/scssphp
   */
  
-+// Autoloader
 +require_once dirname(__DIR__) . '/Leafo/ScssPhp/autoload.php';
 +
  /**

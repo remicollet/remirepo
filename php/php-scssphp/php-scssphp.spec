@@ -13,8 +13,8 @@
 
 %global github_owner     leafo
 %global github_name      scssphp
-%global github_version   0.1.6
-%global github_commit    22b369377e5db5a6a93cdb42485852fc652749c0
+%global github_version   0.1.9
+%global github_commit    609c08586d583fc7d1db78b7edd8b4ac57fa5137
 
 %global composer_vendor  leafo
 %global composer_project scssphp
@@ -33,11 +33,10 @@ Release:       1%{?dist}
 Summary:       A compiler for SCSS written in PHP
 
 Group:         Development/Libraries
-License:       MIT or GPLv3
+License:       MIT
 URL:           http://leafo.net/%{github_name}
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 Patch0:        %{name}-pre-0-1-0-compat.patch
-Patch1:        %{name}-bin.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -46,7 +45,7 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language) >= %{php_min_ver}
-## phpcompatinfo (computed from version 0.1.6)
+## phpcompatinfo (computed from version 0.1.9)
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-mbstring
@@ -58,9 +57,10 @@ BuildRequires: php-composer(symfony/class-loader)
 Requires:      php-cli
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 0.1.6)
+# phpcompatinfo (computed from version 0.1.9)
 Requires:      php-ctype
 Requires:      php-date
+Requires:      php-json
 Requires:      php-mbstring
 Requires:      php-pcre
 # Autoloader
@@ -90,14 +90,16 @@ the SCSS syntax.
 %patch0 -p1
 
 : Bin
-%patch1 -p1
-sed 's#__PHPDIR__#%{phpdir}#' -i bin/pscss
+sed "/scss.inc.php/s#.*#require_once '%{phpdir}/Leafo/ScssPhp/autoload.php';#" \
+    -i bin/pscss
 
 : Create autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee src/autoload.php
 <?php
 /**
- * Autoloader created by %{name}-%{version}-%{release}
+ * Autoloader for %{name} and its' dependencies
+ *
+ * Created by %{name}-%{version}-%{release}
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
@@ -115,7 +117,6 @@ $fedoraClassLoader->addPrefix('Leafo\\ScssPhp\\', dirname(dirname(__DIR__)));
 
 return $fedoraClassLoader;
 AUTOLOAD
-) | tee src/autoload.php
 
 
 %build
@@ -140,7 +141,8 @@ install -pm 0755 bin/pscss %{buildroot}%{_bindir}/
 
 %check
 %if %{with_tests}
-%{_bindir}/phpunit -v --bootstrap %{buildroot}%{phpdir}/Leafo/ScssPhp/autoload.php
+%{_bindir}/phpunit --verbose \
+    --bootstrap %{buildroot}%{phpdir}/Leafo/ScssPhp/autoload.php
 %else
 : Tests skipped
 %endif
@@ -162,6 +164,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug 13 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.1.9-1
+- Updated to 0.1.9 (RHBZ #1238727)
+- As of version 0.1.7 license is just MIT (i.e. GPLv3 removed)
+
 * Sun Jun 28 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.1.6-1
 - Updated to 0.1.6 (RHBZ #1226748)
 - Added autoloader
