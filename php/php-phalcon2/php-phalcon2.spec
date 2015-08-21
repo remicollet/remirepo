@@ -9,7 +9,7 @@
 %{?scl:          %scl_package             php-phalcon}
 %{!?scl:         %global pkg_name         %{name}}
 %{!?__php:       %global __php            %{_bindir}/php}
-%global gh_commit    b346d3b591d01d75fb36870291af31dc79f9ead0
+%global gh_commit    880b4fde422c1e7a112d5546e274d12f6784442a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phalcon
 %global gh_project   cphalcon
@@ -25,7 +25,7 @@
 %endif
 
 Name:           %{?scl_prefix}php-phalcon2
-Version:        2.0.6
+Version:        2.0.7
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Phalcon Framework
 
@@ -119,6 +119,7 @@ extension=%{ext_name}.so
 ;phalcon.orm.exception_on_failed_save = '0'
 ;phalcon.orm.enable_literals = '1'
 ;phalcon.orm.late_state_binding = '0'
+;phalcon.orm.enable_implicit_joins = '1'
 ;phalcon.orm.cast_on_hydrate = '0'
 ;phalcon.orm.ignore_unknown_columns = '0'
 
@@ -229,6 +230,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Aug 21 2015 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
+- update to 2.0.7
+
 * Wed Jul 22 2015 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
 - update to 2.0.6
 

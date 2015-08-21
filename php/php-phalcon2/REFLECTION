@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
+Extension [ <persistent> extension #191 phalcon version 2.0.7 ] {
 
   - INI {
     Entry [ phalcon.db.escape_identifiers <ALL> ]
@@ -28,6 +28,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
     Entry [ phalcon.orm.late_state_binding <ALL> ]
       Current = '0'
     }
+    Entry [ phalcon.orm.enable_implicit_joins <ALL> ]
+      Current = '1'
+    }
     Entry [ phalcon.orm.cast_on_hydrate <ALL> ]
       Current = '0'
     }
@@ -36,7 +39,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
     }
   }
 
-  - Classes [354] {
+  - Classes [357] {
     Interface [ <internal:phalcon> interface Phalcon\Di\InjectionAwareInterface ] {
 
       - Constants [0] {
@@ -1802,7 +1805,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
       - Properties [0] {
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:phalcon> abstract public method start ] {
         }
 
@@ -1853,6 +1856,17 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         }
 
         Method [ <internal:phalcon> abstract public method destroy ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $removeData ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method regenerateId ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $deleteOldSession ]
+          }
         }
       }
     }
@@ -3266,7 +3280,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
       - Properties [0] {
       }
 
-      - Methods [7] {
+      - Methods [8] {
         Method [ <internal:phalcon, ctor> abstract public method __construct ] {
 
           - Parameters [3] {
@@ -3304,6 +3318,14 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
           - Parameters [2] {
             Parameter #0 [ <optional> $parameters ]
             Parameter #1 [ <optional> Phalcon\DiInterface or NULL $dependencyInjector ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method setParameter ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $position ]
+            Parameter #1 [ <required> array $parameter ]
           }
         }
       }
@@ -3466,6 +3488,107 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         }
 
         Method [ <internal:phalcon> abstract public method getFilters ] {
+        }
+      }
+    }
+
+    Interface [ <internal:phalcon> interface Phalcon\Http\CookieInterface ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [17] {
+        Method [ <internal:phalcon> abstract public method setValue ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getValue ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $filters ]
+            Parameter #1 [ <optional> $defaultValue ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method send ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method delete ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method useEncryption ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $useEncryption ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method isUsingEncryption ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method setExpiration ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $expire ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getExpiration ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method setPath ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $path ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getName ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method getPath ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method setDomain ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $domain ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getDomain ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method setSecure ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $secure ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getSecure ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method setHttpOnly ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $httpOnly ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method getHttpOnly ] {
         }
       }
     }
@@ -4592,15 +4715,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
       - Static properties [0] {
       }
 
-      - Static methods [1] {
-        Method [ <internal:phalcon> abstract static public method fromInput ] {
-
-          - Parameters [3] {
-            Parameter #0 [ <required> Phalcon\DiInterface $dependencyInjector ]
-            Parameter #1 [ <required> $modelName ]
-            Parameter #2 [ <required> array $data ]
-          }
-        }
+      - Static methods [0] {
       }
 
       - Properties [0] {
@@ -6444,7 +6559,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -6452,6 +6567,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -8940,7 +9058,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $_options ]
       }
 
-      - Methods [19] {
+      - Methods [20] {
         Method [ <internal:phalcon, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -8969,6 +9087,13 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         }
 
         Method [ <internal:phalcon> public method getName ] {
+        }
+
+        Method [ <internal:phalcon> public method regenerateId ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $deleteOldSession ]
+          }
         }
 
         Method [ <internal:phalcon> public method get ] {
@@ -9016,6 +9141,10 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         }
 
         Method [ <internal:phalcon> public method destroy ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $removeData ]
+          }
         }
 
         Method [ <internal:phalcon> public method status ] {
@@ -9070,7 +9199,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -9078,6 +9207,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -10762,7 +10894,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -10770,6 +10902,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -11061,6 +11196,63 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
       }
     }
 
+    Class [ <internal:phalcon> class Phalcon\Mvc\View\Exception extends Phalcon\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
     Class [ <internal:phalcon> abstract class Phalcon\Acl ] {
 
       - Constants [2] {
@@ -11258,7 +11450,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -11266,6 +11458,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -11868,7 +12063,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -11876,6 +12071,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -12212,7 +12410,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -12220,6 +12418,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -14135,7 +14336,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -14143,6 +14344,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -14449,7 +14653,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $_backends ]
       }
 
-      - Methods [7] {
+      - Methods [8] {
         Method [ <internal:phalcon, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -14503,6 +14707,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #0 [ <optional> $keyName ]
             Parameter #1 [ <optional> $lifetime ]
           }
+        }
+
+        Method [ <internal:phalcon> public method flush ] {
         }
       }
     }
@@ -14608,7 +14815,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -14616,6 +14823,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -14899,7 +15109,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -14907,6 +15117,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -15081,7 +15294,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -15089,6 +15302,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -15661,7 +15877,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -15669,6 +15885,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -15840,7 +16059,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -15848,6 +16067,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -20207,7 +20429,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -20215,6 +20437,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -20367,7 +20592,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Method [ <internal:phalcon> public method setSqlVariables ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> $sqlVariables ]
+            Parameter #0 [ <required> array $sqlVariables ]
           }
         }
 
@@ -20377,7 +20602,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Method [ <internal:phalcon> public method setSqlBindTypes ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> $sqlBindTypes ]
+            Parameter #0 [ <required> array $sqlBindTypes ]
           }
         }
 
@@ -20833,7 +21058,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -20841,6 +21066,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -20887,7 +21115,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -20895,6 +21123,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -21164,7 +21395,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
           }
         }
 
-        Method [ <internal:phalcon> public method setParameter ] {
+        Method [ <internal:phalcon, prototype Phalcon\Di\ServiceInterface> public method setParameter ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $position ]
@@ -21331,7 +21562,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -21339,6 +21570,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -21449,7 +21683,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -21457,6 +21691,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -21668,7 +21905,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -21676,6 +21913,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -21825,7 +22065,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -21833,6 +22073,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -24585,7 +24828,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -24593,6 +24836,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -24914,7 +25160,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
       }
     }
 
-    Class [ <internal:phalcon> class Phalcon\Http\Cookie implements Phalcon\Di\InjectionAwareInterface ] {
+    Class [ <internal:phalcon> class Phalcon\Http\Cookie implements Phalcon\Http\CookieInterface, Phalcon\Di\InjectionAwareInterface ] {
 
       - Constants [0] {
       }
@@ -24964,14 +25210,14 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Method [ <internal:phalcon, prototype Phalcon\Di\InjectionAwareInterface> public method getDI ] {
         }
 
-        Method [ <internal:phalcon> public method setValue ] {
+        Method [ <internal:phalcon, prototype Phalcon\Http\CookieInterface> public method setValue ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $value ]
           }
         }
 
-        Method [ <internal:phalcon> public method getValue ] {
+        Method [ <internal:phalcon, prototype Phalcon\Http\CookieInterface> public method getValue ] {
 
           - Parameters [2] {
             Parameter #0 [ <optional> $filters ]
@@ -24979,76 +25225,76 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
           }
         }
 
-        Method [ <internal:phalcon> public method send ] {
+        Method [ <internal:phalcon, prototype Phalcon\Http\CookieInterface> public method send ] {
         }
 
         Method [ <internal:phalcon> public method restore ] {
         }
 
-        Method [ <internal:phalcon> public method delete ] {
+        Method [ <internal:phalcon, prototype Phalcon\Http\CookieInterface> public method delete ] {
         }
 
-        Method [ <internal:phalcon> public method useEncryption ] {
+        Method [ <internal:phalcon, prototype Phalcon\Http\CookieInterface> public method useEncryption ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $useEncryption ]
           }
         }
 
-        Method [ <internal:phalcon> public method isUsingEncryption ] {
+        Method [ <internal:phalcon, prototype Phalcon\Http\CookieInterface> public method isUsingEncryption ] {
         }
 
-        Method [ <internal:phalcon> public method setExpiration ] {
+        Method [ <internal:phalcon, prototype Phalcon\Http\CookieInterface> public method setExpiration ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $expire ]
           }
         }
 
-        Method [ <internal:phalcon> public method getExpiration ] {
+        Method [ <internal:phalcon, prototype Phalcon\Http\CookieInterface> public method getExpiration ] {
         }
 
-        Method [ <internal:phalcon> public method setPath ] {
+        Method [ <internal:phalcon, prototype Phalcon\Http\CookieInterface> public method setPath ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $path ]
           }
         }
 
-        Method [ <internal:phalcon> public method getName ] {
+        Method [ <internal:phalcon, prototype Phalcon\Http\CookieInterface> public method getName ] {
         }
 
-        Method [ <internal:phalcon> public method getPath ] {
+        Method [ <internal:phalcon, prototype Phalcon\Http\CookieInterface> public method getPath ] {
         }
 
-        Method [ <internal:phalcon> public method setDomain ] {
+        Method [ <internal:phalcon, prototype Phalcon\Http\CookieInterface> public method setDomain ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $domain ]
           }
         }
 
-        Method [ <internal:phalcon> public method getDomain ] {
+        Method [ <internal:phalcon, prototype Phalcon\Http\CookieInterface> public method getDomain ] {
         }
 
-        Method [ <internal:phalcon> public method setSecure ] {
+        Method [ <internal:phalcon, prototype Phalcon\Http\CookieInterface> public method setSecure ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $secure ]
           }
         }
 
-        Method [ <internal:phalcon> public method getSecure ] {
+        Method [ <internal:phalcon, prototype Phalcon\Http\CookieInterface> public method getSecure ] {
         }
 
-        Method [ <internal:phalcon> public method setHttpOnly ] {
+        Method [ <internal:phalcon, prototype Phalcon\Http\CookieInterface> public method setHttpOnly ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $httpOnly ]
           }
         }
 
-        Method [ <internal:phalcon> public method getHttpOnly ] {
+        Method [ <internal:phalcon, prototype Phalcon\Http\CookieInterface> public method getHttpOnly ] {
         }
 
         Method [ <internal:phalcon> public method __toString ] {
@@ -25074,7 +25320,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -25082,6 +25328,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -25430,7 +25679,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -25438,6 +25687,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -25812,7 +26064,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -25820,6 +26072,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -26593,7 +26848,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -26601,6 +26856,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -26783,7 +27041,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -26791,6 +27049,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -27447,7 +27708,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -27455,6 +27716,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -27974,7 +28238,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -27982,6 +28246,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -28493,7 +28760,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -28501,6 +28768,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -28963,7 +29233,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -28971,6 +29241,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -29411,7 +29684,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -29419,6 +29692,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -29595,7 +29871,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $method ]
-            Parameter #1 [ <optional> $arguments ]
+            Parameter #1 [ <required> $arguments ]
           }
         }
 
@@ -30212,12 +30488,13 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
       }
 
       - Static methods [1] {
-        Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\CriteriaInterface> static public method fromInput ] {
+        Method [ <internal:phalcon> static public method fromInput ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> Phalcon\DiInterface $dependencyInjector ]
             Parameter #1 [ <required> $modelName ]
             Parameter #2 [ <required> array $data ]
+            Parameter #3 [ <optional> $operator ]
           }
         }
       }
@@ -33271,7 +33548,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
       - Static methods [0] {
       }
 
-      - Properties [19] {
+      - Properties [20] {
         Property [ <default> protected $_dependencyInjector ]
         Property [ <default> protected $_manager ]
         Property [ <default> protected $_metaData ]
@@ -33291,14 +33568,16 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $_uniqueRow ]
         Property [ <default> protected $_bindParams ]
         Property [ <default> protected $_bindTypes ]
+        Property [ <default> protected $_enableImplicitJoins ]
       }
 
       - Methods [44] {
         Method [ <internal:phalcon, ctor> public method __construct ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <optional> $phql ]
             Parameter #1 [ <optional> Phalcon\DiInterface or NULL $dependencyInjector ]
+            Parameter #2 [ <optional> $options ]
           }
         }
 
@@ -33660,9 +33939,10 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
 
         Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\Query\BuilderInterface> public method addFrom ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $model ]
             Parameter #1 [ <optional> $alias ]
+            Parameter #2 [ <optional> $with ]
           }
         }
 
@@ -33926,7 +34206,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $_options ]
       }
 
-      - Methods [15] {
+      - Methods [16] {
         Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\RelationInterface, ctor> public method __construct ] {
 
           - Parameters [5] {
@@ -33960,6 +34240,13 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\RelationInterface> public method getOptions ] {
+        }
+
+        Method [ <internal:phalcon> public method getOption ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\RelationInterface> public method isForeignKey ] {
@@ -34506,7 +34793,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $_record ]
       }
 
-      - Methods [11] {
+      - Methods [12] {
         Method [ <internal:phalcon, overwrites Exception, ctor> public method __construct ] {
 
           - Parameters [2] {
@@ -34519,6 +34806,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         }
 
         Method [ <internal:phalcon> public method getRecord ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -34681,7 +34971,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $_messages ]
       }
 
-      - Methods [11] {
+      - Methods [12] {
         Method [ <internal:phalcon, overwrites Exception, ctor> public method __construct ] {
 
           - Parameters [2] {
@@ -34694,6 +34984,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         }
 
         Method [ <internal:phalcon> public method getMessages ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -35693,7 +35986,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -35701,6 +35994,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -36133,7 +36429,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -36141,6 +36437,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -37212,7 +37511,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
       }
     }
 
-    Class [ <internal:phalcon> class Phalcon\Mvc\View\Exception extends Phalcon\Exception ] {
+    Class [ <internal:phalcon> class Phalcon\Mvc\View\Engine\Volt\Exception extends Phalcon\Mvc\View\Exception ] {
 
       - Constants [0] {
       }
@@ -37230,7 +37529,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -37238,6 +37537,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -37627,7 +37929,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -37635,6 +37937,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -37679,7 +37984,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $_parameters ]
       }
 
-      - Methods [15] {
+      - Methods [16] {
         Method [ <internal:phalcon, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -37727,6 +38032,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
           - Parameters [1] {
             Parameter #0 [ <required> $tube ]
           }
+        }
+
+        Method [ <internal:phalcon> public method listTubes ] {
         }
 
         Method [ <internal:phalcon> public method peekReady ] {
@@ -38083,7 +38391,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -38091,6 +38399,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -38115,6 +38426,62 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         }
 
         Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:phalcon> class Phalcon\Security\Random ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:phalcon> public method bytes ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $len ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method hex ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $len ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method base64 ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $len ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method base64Safe ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $len ]
+            Parameter #1 [ <optional> $padding ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method uuid ] {
+        }
+
+        Method [ <internal:phalcon> public method number ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $len ]
+          }
         }
       }
     }
@@ -38157,7 +38524,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $_options ]
       }
 
-      - Methods [19] {
+      - Methods [20] {
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -38186,6 +38553,13 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method getName ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method regenerateId ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $deleteOldSession ]
+          }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method get ] {
@@ -38233,6 +38607,10 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method destroy ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $removeData ]
+          }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method status ] {
@@ -38291,7 +38669,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $_lifetime ]
       }
 
-      - Methods [26] {
+      - Methods [27] {
         Method [ <internal:phalcon> public method getLibmemcached ] {
         }
 
@@ -38357,6 +38735,13 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method getName ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method regenerateId ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $deleteOldSession ]
+          }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method get ] {
@@ -38459,7 +38844,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $_lifetime ]
       }
 
-      - Methods [26] {
+      - Methods [27] {
         Method [ <internal:phalcon> public method getMemcache ] {
         }
 
@@ -38525,6 +38910,13 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method getName ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method regenerateId ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $deleteOldSession ]
+          }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method get ] {
@@ -38627,7 +39019,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $_lifetime ]
       }
 
-      - Methods [26] {
+      - Methods [27] {
         Method [ <internal:phalcon> public method getRedis ] {
         }
 
@@ -38693,6 +39085,13 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter> public method getName ] {
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method regenerateId ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $deleteOldSession ]
+          }
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Session\Adapter, prototype Phalcon\Session\AdapterInterface> public method get ] {
@@ -38930,7 +39329,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -38938,6 +39337,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -39408,7 +39810,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -39416,6 +39818,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -40015,7 +40420,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -40023,6 +40428,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -40293,7 +40701,7 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -40301,6 +40709,9 @@ Extension [ <persistent> extension #188 phalcon version 2.0.6 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
