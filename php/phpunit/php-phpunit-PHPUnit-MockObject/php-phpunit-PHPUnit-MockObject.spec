@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    18dfbcb81d05e2296c0bcddd4db96cade75e6f42
+%global gh_commit    5e2645ad49d196e020b85598d7c97e482725786a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit-mock-objects
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-phpunit-PHPUnit-MockObject
-Version:        2.3.6
+Version:        2.3.7
 Release:        1%{?dist}
 Summary:        Mock Object library for PHPUnit
 
@@ -47,7 +47,7 @@ BuildRequires:  php-composer(phpunit/phpunit) >= 4.4
 # From composer.json, "require": {
 #        "php": ">=5.3.3",
 #        "phpunit/php-text-template": "~1.2",
-#        "doctrine/instantiator": "~1.0,>=1.0.2",
+#        "doctrine/instantiator": "^1.0.2",
 #        "sebastian/exporter": "~1.2"
 Requires:       php(language) >= 5.3.3
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
@@ -142,6 +142,9 @@ fi
 
 
 %changelog
+* Fri Aug 21 2015 Remi Collet <remi@fedoraproject.org> - 2.3.7-1
+- update to 2.3.7
+
 * Sun Jul 26 2015 Remi Collet <remi@fedoraproject.org> - 2.3.6-1
 - update to 2.3.6 (only cleanup)
 
