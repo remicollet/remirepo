@@ -1,6 +1,6 @@
-diff -up php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/sapi/litespeed/lsapilib.c.dlopen php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/sapi/litespeed/lsapilib.c
---- php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/sapi/litespeed/lsapilib.c.dlopen	2015-03-25 08:54:25.529213259 +0100
-+++ php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/sapi/litespeed/lsapilib.c	2015-03-25 08:54:57.937345809 +0100
+diff -up php-7.0.0RC1/sapi/litespeed/lsapilib.c.dlopen php-7.0.0RC1/sapi/litespeed/lsapilib.c
+--- php-7.0.0RC1/sapi/litespeed/lsapilib.c.dlopen	2015-08-18 23:39:17.000000000 +0200
++++ php-7.0.0RC1/sapi/litespeed/lsapilib.c	2015-08-22 07:46:31.729721983 +0200
 @@ -582,7 +582,7 @@ static int (*fp_lve_leave)(struct liblve
  static int (*fp_lve_jail)( struct passwd *, char *) = NULL;
  static int lsapi_load_lve_lib()
@@ -10,11 +10,10 @@ diff -up php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/sapi/litespeed/lsapili
      if (s_liblve)
      {
          fp_lve_is_available = dlsym(s_liblve, "lve_is_available");
-diff -up php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/Zend/zend.h.dlopen php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/Zend/zend.h
-diff -up php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/Zend/zend_portability.h.dlopen php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/Zend/zend_portability.h
---- php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/Zend/zend_portability.h.dlopen	2015-03-25 08:53:31.701993105 +0100
-+++ php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/Zend/zend_portability.h	2015-03-25 08:56:09.976640451 +0100
-@@ -122,11 +122,11 @@
+diff -up php-7.0.0RC1/Zend/zend_portability.h.dlopen php-7.0.0RC1/Zend/zend_portability.h
+--- php-7.0.0RC1/Zend/zend_portability.h.dlopen	2015-08-18 23:39:16.000000000 +0200
++++ php-7.0.0RC1/Zend/zend_portability.h	2015-08-22 07:46:31.729721983 +0200
+@@ -136,11 +136,11 @@
  # endif
  
  # if defined(RTLD_GROUP) && defined(RTLD_WORLD) && defined(RTLD_PARENT)

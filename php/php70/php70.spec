@@ -134,8 +134,8 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver         beta3
-%global rpmrel        2
+%global rcver         RC1
+%global rpmrel        3
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -1997,6 +1997,9 @@ fi
 
 
 %changelog
+* Sat Aug 22 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.3.RC1
+- Update to 7.0.0RC1
+
 * Wed Aug  5 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.2.beta3
 - update to 7.0.0beta3
 

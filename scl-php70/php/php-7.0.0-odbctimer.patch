@@ -1,7 +1,7 @@
-diff -up php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/odbc/php_odbc.c.odbctimer php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/odbc/php_odbc.c
---- php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/odbc/php_odbc.c.odbctimer	2015-03-25 07:01:04.000000000 +0100
-+++ php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/odbc/php_odbc.c	2015-03-25 08:45:27.265011747 +0100
-@@ -431,7 +431,8 @@ static void _free_odbc_result(zend_resou
+diff -up php-7.0.0RC1/ext/odbc/php_odbc.c.odbctimer php-7.0.0RC1/ext/odbc/php_odbc.c
+--- php-7.0.0RC1/ext/odbc/php_odbc.c.odbctimer	2015-08-18 23:39:26.000000000 +0200
++++ php-7.0.0RC1/ext/odbc/php_odbc.c	2015-08-22 07:44:51.170196466 +0200
+@@ -434,7 +434,8 @@ static void _free_odbc_result(zend_resou
  			efree(res->values);
  			res->values = NULL;
  		}
@@ -11,7 +11,7 @@ diff -up php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/odbc/php_odbc.c.od
  #if defined(HAVE_SOLID) || defined(HAVE_SOLID_30) || defined(HAVE_SOLID_35)
  			SQLTransact(res->conn_ptr->henv, res->conn_ptr->hdbc,
  						(SQLUSMALLINT) SQL_COMMIT);
-@@ -481,9 +482,12 @@ static void _close_odbc_conn(zend_resour
+@@ -484,9 +485,12 @@ static void _close_odbc_conn(zend_resour
  		}
  	} ZEND_HASH_FOREACH_END();
  
@@ -27,7 +27,7 @@ diff -up php-src-02be73b5fac63a02313b9fe0f204c65d4828edeb/ext/odbc/php_odbc.c.od
  	efree(conn);
  	ODBCG(num_links)--;
  }
-@@ -506,9 +510,12 @@ static void _close_odbc_pconn(zend_resou
+@@ -509,9 +513,12 @@ static void _close_odbc_pconn(zend_resou
  		}
  	} ZEND_HASH_FOREACH_END();
  

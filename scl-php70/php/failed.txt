@@ -1,16 +1,14 @@
-===== 7.0.0-0.13.beta3
+===== 7.0.0-0.14.RC1
 
 $ grep -r 'Tests failed' /var/lib/mock/scl70*/build.log
 
 /var/lib/mock/scl70el6x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
-/var/lib/mock/scl70el7x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
-/var/lib/mock/scl70fc20x/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
+/var/lib/mock/scl70el7x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/scl70fc20x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
 /var/lib/mock/scl70fc21x/build.log:Tests failed    :    0 (  0.0%) (  0.0%
-/var/lib/mock/scl70fc22x/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
+/var/lib/mock/scl70fc22x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 
-el7, f20, f22
+f20
   Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
-f20, f22
-  Bug #64438 proc_open hangs with stdin/out with 4097+ bytes [ext/standard/tests/streams/proc_open_bug64438.phpt]
 
 * proc_open give erratic test results :(
