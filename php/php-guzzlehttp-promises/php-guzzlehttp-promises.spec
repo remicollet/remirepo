@@ -12,8 +12,8 @@
 
 %global github_owner     guzzle
 %global github_name      promises
-%global github_version   1.0.1
-%global github_commit    2ee5bc7f1a92efecc90da7f6711a53a7be26b5b7
+%global github_version   1.0.2
+%global github_commit    97fe7210def29451ec74923b27e552238defd75a
 
 %global composer_vendor  guzzlehttp
 %global composer_project promises
@@ -28,7 +28,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       3%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       Guzzle promises library
 
 Group:         Development/Libraries
@@ -43,7 +43,7 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 1.0.1)
+## phpcompatinfo (computed from version 1.0.2)
 BuildRequires: php-json
 BuildRequires: php-spl
 ## Autoloader
@@ -52,7 +52,7 @@ BuildRequires: php-composer(symfony/class-loader)
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.0.1)
+# phpcompatinfo (computed from version 1.0.2)
 Requires:      php-json
 Requires:      php-spl
 # Autoloader
@@ -73,7 +73,7 @@ stack size constant.
 %setup -qn %{github_name}-%{github_commit}
 
 : Create autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee src/autoload.php
 <?php
 /**
  * Autoloader for %{name} and its' dependencies
@@ -94,11 +94,10 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('GuzzleHttp\\Promise\\', dirname(dirname(__DIR__)));
 
-require_once __DIR__ . '/functions.php';
+require_once __DIR__ . '/functions_include.php';
 
 return $fedoraClassLoader;
 AUTOLOAD
-) | tee src/autoload.php
 
 
 %build
@@ -138,6 +137,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Aug 16 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.2-1
+- Updated to 1.0.2 (RHBZ #1253996)
+
 * Mon Jul 20 2015 Remi Collet <remi@remirepo.net> - 1.0.1-3
 - add EL-5 stuff, backport for #remirepo
 
