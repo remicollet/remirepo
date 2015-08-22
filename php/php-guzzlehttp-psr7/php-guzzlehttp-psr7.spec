@@ -12,8 +12,8 @@
 
 %global github_owner     guzzle
 %global github_name      psr7
-%global github_version   1.1.0
-%global github_commit    af0e1758de355eb113917ad79c3c0e3604bce4bd
+%global github_version   1.2.0
+%global github_commit    4ef919b0cf3b1989523138b60163bbcb7ba1ff7e
 
 %global composer_vendor  guzzlehttp
 %global composer_project psr7
@@ -31,7 +31,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       3%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       PSR-7 message implementation
 
 Group:         Development/Libraries
@@ -47,7 +47,7 @@ BuildArch:     noarch
 BuildRequires: php(language)                  >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(psr/http-message) >= %{psr_http_message_min_ver}
-## phpcompatinfo (computed from version 1.1.0)
+## phpcompatinfo (computed from version 1.2.0)
 BuildRequires: php-hash
 BuildRequires: php-pcre
 BuildRequires: php-spl
@@ -60,7 +60,7 @@ BuildRequires: php-composer(symfony/class-loader)
 Requires:      php(language)                  >= %{php_min_ver}
 Requires:      php-composer(psr/http-message) >= %{psr_http_message_min_ver}
 Requires:      php-composer(psr/http-message) <  %{psr_http_message_max_ver}
-# phpcompatinfo (computed from version 1.1.0)
+# phpcompatinfo (computed from version 1.2.0)
 Requires:      php-hash
 Requires:      php-pcre
 Requires:      php-spl
@@ -80,7 +80,7 @@ functionality like query string parsing.
 %setup -qn %{github_name}-%{github_commit}
 
 : Create autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee src/autoload.php
 <?php
 /**
  * Autoloader for %{name} and its' dependencies
@@ -89,8 +89,6 @@ functionality like query string parsing.
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
-
-require_once '%{phpdir}/Psr/Http/Message/autoload.php';
 
 if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
     if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
@@ -103,11 +101,11 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('GuzzleHttp\\Psr7\\', dirname(dirname(__DIR__)));
 
-require_once __DIR__ . '/functions.php';
+require_once __DIR__ . '/functions_include.php';
+require_once '%{phpdir}/Psr/Http/Message/autoload.php';
 
 return $fedoraClassLoader;
 AUTOLOAD
-) | tee src/autoload.php
 
 
 %build
@@ -147,6 +145,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Aug 16 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.0-1
+- Updated to 1.2.0 (RHBZ #1253997)
+- Updated autoloader to load dependencies after self registration
+
 * Mon Jul 20 2015 Remi Collet <remi@remirepo.net> - 1.1.0-3
 - add EL-5 stuff, backport for #remirepo
 
