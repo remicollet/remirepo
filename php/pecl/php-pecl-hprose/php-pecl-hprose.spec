@@ -30,8 +30,8 @@
 
 Summary:        Hprose for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.5.5
-Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.6.0
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        MIT
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -247,6 +247,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Aug 23 2015 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
+- Update to 1.6.0
+
 * Wed Jul 22 2015 Remi Collet <remi@fedoraproject.org> - 1.5.5-3
 - rebuild against php 7.0.0beta2
 
