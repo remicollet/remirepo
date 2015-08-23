@@ -22,3 +22,15 @@ diff -up ./src/Composer/Json/JsonFile.php.rpm ./src/Composer/Json/JsonFile.php
          $schemaData = json_decode(file_get_contents($schemaFile));
  
          if ($schema === self::LAX_SCHEMA) {
+diff -up ./src/Composer/Autoload/AutoloadGenerator.php.rpm ./src/Composer/Autoload/AutoloadGenerator.php
+--- ./src/Composer/Autoload/AutoloadGenerator.php.rpm	2015-08-23 08:55:33.537606407 +0200
++++ ./src/Composer/Autoload/AutoloadGenerator.php	2015-08-23 08:56:17.341809277 +0200
+@@ -268,7 +268,7 @@ EOF;
+         file_put_contents($targetDir.'/autoload_real.php', $this->getAutoloadRealFile(true, (bool) $includePathFileContents, $targetDirLoader, (bool) $includeFilesFileContents, $vendorPathCode, $appBaseDirCode, $suffix, $useGlobalIncludePath, $prependAutoloader, $classMapAuthoritative));
+ 
+         $this->safeCopy(__DIR__.'/ClassLoader.php', $targetDir.'/ClassLoader.php');
+-        $this->safeCopy(__DIR__.'/../../../LICENSE', $targetDir.'/LICENSE');
++        $this->safeCopy((getenv('BUILDROOT')?:'') . '/usr/share/composer/LICENSE', $targetDir.'/LICENSE');
+ 
+         $this->eventDispatcher->dispatchScript(ScriptEvents::POST_AUTOLOAD_DUMP, $this->devMode, array(), array(
+             'optimize' => (bool) $scanPsr0Packages,

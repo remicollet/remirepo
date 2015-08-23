@@ -6,17 +6,17 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c83650f299cfff1049cd61ea72ee5345bd4f92d3
+%global gh_commit    f1aa655e6113e0efa979b8b09d7951a762eaa04c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20150804
+%global gh_date      20150820
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           composer
 Version:        1.0.0
-Release:        0.8.%{gh_date}git%{gh_short}%{?dist}
+Release:        0.9.%{gh_date}git%{gh_short}%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -138,8 +138,11 @@ mkdir -p     %{buildroot}%{_datadir}/php
 cp -pr src/* %{buildroot}%{_datadir}/php
 
 : Resources
-mkdir -p     %{buildroot}%{_datadir}/%{name}
-cp -pr res   %{buildroot}%{_datadir}/%{name}/res
+mkdir -p       %{buildroot}%{_datadir}/%{name}
+cp -pr res     %{buildroot}%{_datadir}/%{name}/res
+cp -p  LICENSE %{buildroot}%{_datadir}/%{name}/LICENSE
+
+ln -sf %{_datadir}/%{name}/LICENSE LICENSE
 
 : Command
 install -Dpm 755 bin/%{name} %{buildroot}%{_bindir}/%{name}
@@ -171,6 +174,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Aug 23 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.9.201508gitf1aa655
+- new snapshot
+- add LICENSE in application data, as used by the code
+
 * Fri Aug  7 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.8.20150804gitc83650f
 - new snapshot
 
