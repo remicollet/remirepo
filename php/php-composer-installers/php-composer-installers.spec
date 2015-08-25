@@ -1,3 +1,4 @@
+# remirepo spec file for php-composer-installers, from:
 #
 # Fedora spec file for php-composer-installers
 #
@@ -37,6 +38,7 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 Patch0:        %{name}-pr226.patch
 
 BuildArch:     noarch
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # Tests
 %if %{with_tests}
 ## composer.json
@@ -113,6 +115,8 @@ AUTOLOAD
 
 
 %install
+rm -rf   %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}
 cp -rp src/Composer %{buildroot}%{phpdir}/
 
@@ -133,7 +137,12 @@ BOOTSTRAP
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -142,5 +151,8 @@ BOOTSTRAP
 
 
 %changelog
+* Tue Aug 25 2015 Remi Collet <remi@remirepo.net> - 1.0.21-1
+- backport for #remirepo
+
 * Thu Aug 20 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.21-1
 - Initial package
