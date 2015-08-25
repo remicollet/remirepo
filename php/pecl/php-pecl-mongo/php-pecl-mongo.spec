@@ -20,7 +20,7 @@
 %global with_zts    0%{?__ztsphp:1}
 #global prever      RC3
 # see https://github.com/mongodb/mongo-php-driver/releases
-%global gh_commit   bbc5be0cdfe06a4cded8e209badf9dbd8696a58d
+%global gh_commit   e9a467683d83580281edeab3f6ddc09771a3cda0
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    mongodb
 %global gh_project  mongo-php-driver
@@ -35,7 +35,7 @@
 
 Summary:      PHP MongoDB database driver
 Name:         %{?scl_prefix}php-pecl-mongo
-Version:      1.6.10
+Version:      1.6.11
 Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      ASL 2.0
 Group:        Development/Languages
@@ -246,6 +246,9 @@ rm -rf data
 
 
 %changelog
+* Tue Aug 25 2015 Remi Collet <remi@fedoraproject.org> - 1.6.11-1
+- update to 1.6.11 (stable)
+
 * Fri Jul  3 2015 Remi Collet <remi@fedoraproject.org> - 1.6.10-1
 - update to 1.6.10 (stable)
 
