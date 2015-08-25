@@ -19,9 +19,14 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
+%global gh_commit  e381164032a750583657e449875f62d52b7b6609
+%global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner   m6w6
+%global gh_project ext-pq
+%global gh_date    20150819
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  pq
-%global rcver      RC2
+%global rcver      dev
 %if %{?runselftest}%{!?runselftest:1}
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
@@ -39,16 +44,16 @@
 
 Summary:        PostgreSQL client library (libpq) binding
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        0.6.0
-%if 0%{?rcver:1}
-Release:        0.3.%{rcver}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        2.0.0
+%if 0%{?gh_date:1}
+Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?rcver}.tgz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  postgresql-devel > 9
@@ -88,6 +93,10 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -113,7 +122,8 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -q -c
-mv %{pecl_name}-%{version}%{?rcver} NTS
+mv %{gh_project}-%{gh_commit} NTS
+mv NTS/package.xml .
 
 # Don't install tests
 sed -e '/role="test"/d' -i package.xml
@@ -288,6 +298,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 25 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.1.20150819gite381164
+- update to 2.0.0dev for PHP 7
+- sources from github
+
 * Wed Jul 29 2015 Remi Collet <remi@fedoraproject.org> - 0.6.0-0.3.RC2
 - allow build against rh-php56 (as more-php56)
 
