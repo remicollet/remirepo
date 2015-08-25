@@ -14,8 +14,8 @@
 
 %global github_owner     twigphp
 %global github_name      Twig
-%global github_version   1.20.0
-%global github_commit    1ea4e5f81c6d005fe84d0b38e1c4f1955eb86844
+%global github_version   1.21.0
+%global github_commit    913d282caca9ee0e8d05940c6caa486d58810dd4
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 
@@ -286,6 +286,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 25 2015 Remi Collet <remi@fedoraproject.org> - 1.21.0-1
+- Update to 1.21.0
+
 * Wed Aug 12 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.20.0-1
 - Updated to 1.20.0 (BZ #1249259)
 
