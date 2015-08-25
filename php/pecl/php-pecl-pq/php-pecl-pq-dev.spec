@@ -46,7 +46,7 @@ Summary:        PostgreSQL client library (libpq) binding
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        2.0.0
 %if 0%{?gh_date:1}
-Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -66,8 +66,6 @@ BuildRequires:  postgresql-server
 BuildRequires:  postgresql-contrib
 %endif
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires:       %{?scl_prefix}php-json%{?_isa}
@@ -298,6 +296,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 25 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.2.20150819gite381164
+- really drop dependency on pear
+
 * Tue Aug 25 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.1.20150819gite381164
 - update to 2.0.0dev for PHP 7
 - sources from github
