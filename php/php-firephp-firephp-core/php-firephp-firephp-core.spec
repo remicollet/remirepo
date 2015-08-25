@@ -1,3 +1,4 @@
+# remirepo spec file for php-firephp-firephp-core, from:
 #
 # Fedora spec file for php-firephp-firephp-core
 #
@@ -33,6 +34,7 @@ URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
 BuildArch:     noarch
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # Tests
 %if %{with_tests}
 BuildRequires: %{_bindir}/phpunit
@@ -75,6 +77,8 @@ normal functioning of the application.
 
 
 %install
+rm -rf       %{buildroot}
+
 : Lib
 mkdir -p %{buildroot}%{phpdir}
 cp -rp lib/* %{buildroot}%{phpdir}/
@@ -93,7 +97,12 @@ popd
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 # README re-used as license file since it has full license text
 %{?_licensedir:%license README.md}
 %doc *.md
@@ -103,5 +112,8 @@ popd
 
 
 %changelog
+* Tue Aug 25 2015 Remi Collet <remi@remirepo.net> - 0.4.0-1
+- backport for #remirepo
+
 * Tue Aug 18 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.4.0-1
 - Initial package
