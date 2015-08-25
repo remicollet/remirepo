@@ -3,8 +3,8 @@
 mv rpmphp.json.prev /tmp
 if wget 'http://rpms.famillecollet.com/rpmphp/get.php?table=packagist' -O rpmphp.json.new
 then
-  cp rpmphp.json     rpmphp.json.prev && \
-  cp rpmphp.json.new rpmphp.json      && \
+  mv rpmphp.json     rpmphp.json.prev && \
+  mv rpmphp.json.new rpmphp.json      && \
   echo done
   colordiff rpmphp.json.prev rpmphp.json
 fi
