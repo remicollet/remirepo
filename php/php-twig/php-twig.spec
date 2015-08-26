@@ -14,8 +14,8 @@
 
 %global github_owner     twigphp
 %global github_name      Twig
-%global github_version   1.21.0
-%global github_commit    913d282caca9ee0e8d05940c6caa486d58810dd4
+%global github_version   1.21.1
+%global github_commit    ca8d3aa90b6a01c82e07909fe815d6b443e75a23
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 
@@ -286,6 +286,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Aug 26 2015 Remi Collet <remi@fedoraproject.org> - 1.21.1-1
+- Update to 1.21.1
+
 * Tue Aug 25 2015 Remi Collet <remi@fedoraproject.org> - 1.21.0-1
 - Update to 1.21.0
 
