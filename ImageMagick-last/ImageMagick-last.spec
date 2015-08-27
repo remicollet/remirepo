@@ -8,8 +8,8 @@
 #
 # Please preserve changelog entries
 #
-%global VER        6.9.1
-%global Patchlevel 10
+%global VER        6.9.2
+%global Patchlevel 0
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -102,7 +102,9 @@ Obsoletes:      ImageMagick2-tools
 %if "%{name}" != "%{libname}"
 # This could be improved in the future
 # https://bugzilla.redhat.com/849065
-Conflicts:      %{libname}
+Conflicts:      %{libname}         < %{version}
+Provides:       %{libname}         = %{version}-%{release}
+Provides:       %{libname}%{?_isa} = %{version}-%{release}
 %endif
 
 # Filter private shared
@@ -389,7 +391,6 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{_libdir}/ImageMagick-%{VER}/modules-Q16/coders/djvu.*
 %endif
 
-
 %files devel
 %defattr(-,root,root,-)
 %{_bindir}/MagickCore-config
@@ -454,6 +455,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Aug 26 2015 Remi Collet <remi@remirepo.net> - 6.9.2.0-1
+- update to 6.9.2-0
+
 * Mon Jul 27 2015 Remi Collet <remi@remirepo.net> - 6.9.1.10-1
 - update to 6.9.1-10
 
