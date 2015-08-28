@@ -9,6 +9,8 @@ $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 /var/lib/mock/fc21x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 /var/lib/mock/fc22i/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
 /var/lib/mock/fc22x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
+/var/lib/mock/fc23i/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/fc23x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 
 el6i, fc22i
   Bug #53437 DateInterval unserialize bad data, 32 bit [ext/date/tests/bug53437_var3.phpt]

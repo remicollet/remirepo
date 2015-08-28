@@ -7,6 +7,7 @@ $ grep -r 'Tests failed' /var/lib/mock/scl70*/build.log
 /var/lib/mock/scl70fc20x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
 /var/lib/mock/scl70fc21x/build.log:Tests failed    :    0 (  0.0%) (  0.0%
 /var/lib/mock/scl70fc22x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/scl70fc23x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 
 f20
   Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
