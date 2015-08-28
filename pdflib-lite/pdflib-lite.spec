@@ -5,7 +5,7 @@ Summary:        Portable C library for dynamically generating PDF files
 Name:           pdflib-lite
 # Remenber to check the URL after changing this...
 Version:        7.0.5
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        Distributable
 Group:          System Environment/Libraries
 URL:            http://www.pdflib.com/
@@ -96,7 +96,8 @@ sed -i -e 's,^PYTHONLIBDIR.*,PYTHONLIBDIR = %{python_sitearch},' \
     --enable-large_files --enable-tiffwrite
 
 # for x86_64 build
-sed -i -e s@/usr/lib@%{_libdir}@ libtool
+sed -e s@/usr/lib@%{_libdir}@ -i libtool
+sed -e /redhat-hardened-ld/s@%{_libdir}@/usr/lib@ -i libtool
 
 %{__make} %{?_smp_mflags}
 for lang in perl python
@@ -192,6 +193,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Aug 28 2015 Remi Collet <Fedora@FamilleCollet.com> 7.0.5-5
+- rebuild
+
 * Thu Dec 19 2013 Remi Collet <Fedora@FamilleCollet.com> 7.0.5-4
 - rebuild
 
