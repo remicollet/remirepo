@@ -1,5 +1,8 @@
 Name:           remi-release
 Version:        %{fedora}
+%if %{fedora} >= 23
+Release:        1%{?dist}
+%else
 %if %{fedora} >= 21
 Release:        2%{?dist}
 %else
@@ -7,6 +10,7 @@ Release:        2%{?dist}
 Release:        3%{?dist}
 %else
 Release:        7%{?dist}
+%endif
 %endif
 %endif
 Summary:        YUM configuration for remi repository
@@ -67,7 +71,7 @@ install -Dp -m 644 %{SOURCE2} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-test.r
 %if %{fedora} >= 19 && %{fedora} <= 20
 install -Dp -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php56.repo
 %endif
-%if %{fedora} >= 21 && %{fedora} <= 22
+%if %{fedora} >= 21 && %{fedora} <= 23
 install -Dp -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php70.repo
 %endif
 
@@ -83,6 +87,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Aug 28 2015 Remi Collet <RPMS@FamilleCollet.com> - 23-1.fc23.remi
+- Fedora release 23
+
 * Thu Jul 23 2015 Remi Collet <remi@remirepo.net> - ##-2.fc##.remi
 - add php70 repository
 - update repository configuration for new "remirepo.net" domain

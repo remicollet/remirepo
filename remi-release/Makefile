@@ -11,6 +11,9 @@ el6:
 el7:
 	rpmbuild $(RPMDEFINES) $(SRCDEFINES) -bs $(NAME)-el.spec --define 'dist .el7.remi' --define 'rhel 7'
 
+f23:
+	rpmbuild $(RPMDEFINES) $(SRCDEFINES) -bs $(NAME).spec --define 'dist .f23.remi' --define 'fedora 23'
+
 f22:
 	rpmbuild $(RPMDEFINES) $(SRCDEFINES) -bs $(NAME).spec --define 'dist .f22.remi' --define 'fedora 22'
 
