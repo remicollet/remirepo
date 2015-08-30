@@ -15,15 +15,18 @@
 %global with_cacert 1
 %endif
 
-%global github_owner    getsentry
-%global github_name     raven-php
-%global github_version  0.12.0
-%global github_commit   bd247ca2a8fd9ccfb99b60285c9b31286384a92b
+%global github_owner     getsentry
+%global github_name      raven-php
+%global github_version   0.12.1
+%global github_commit    b325984c792ff89f985b73da9a3ad8ed8b520bca
 
-%global lib_name        Raven
+%global composer_vendor  raven
+%global composer_project raven
+
+%global lib_name         Raven
 
 # "php": ">=5.2.4"
-%global php_min_ver     5.2.4
+%global php_min_ver      5.2.4
 
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
@@ -47,7 +50,7 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language) >= %{php_min_ver}
-## phpcompatinfo (computed from version 0.12.0)
+## phpcompatinfo (computed from version 0.12.1)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-hash
@@ -57,6 +60,8 @@ BuildRequires: php-reflection
 BuildRequires: php-session
 BuildRequires: php-spl
 BuildRequires: php-zlib
+## Library version value check
+BuildRequires: php-cli
 %endif
 
 %if %{with_cacert}
@@ -64,7 +69,7 @@ Requires:      ca-certificates
 %endif
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 0.12.0)
+# phpcompatinfo (computed from version 0.12.1)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-hash
@@ -75,8 +80,11 @@ Requires:      php-session
 Requires:      php-spl
 Requires:      php-zlib
 
+# Standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming
+Provides:      php-%{composer_vendor}-%{composer_project} = %{version}-%{release}
+Provides:      php-%{composer_project} = %{version}-%{release}
 # Composer
-Provides:      php-composer(raven/raven) = %{version}
+Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 %description
 %{summary} (http://getsentry.com).
@@ -93,7 +101,7 @@ sed "/return.*cacert\.pem/s#.*#        return '%{_sysconfdir}/pki/tls/cert.pem';
 %endif
 
 : Create autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee lib/Raven/autoload.php
 <?php
 /**
  * Autoloader created by %{name}-%{version}-%{release}
@@ -102,7 +110,6 @@ sed "/return.*cacert\.pem/s#.*#        return '%{_sysconfdir}/pki/tls/cert.pem';
 require_once dirname(__FILE__) . '/Autoloader.php';
 Raven_Autoloader::register();
 AUTOLOAD
-) | tee lib/Raven/autoload.php
 
 : Update autoloader require in bin
 sed "/require.*Autoloader/s:.*:require_once '%{phpdir}/Raven/Autoloader.php';:" \
@@ -124,6 +131,10 @@ install -pm 0755 bin/raven %{buildroot}%{_bindir}/
 
 %check
 %if %{with_tests}
+: Library version value check
+%{_bindir}/php -r 'require_once "%{buildroot}%{phpdir}/Raven/autoload.php";
+    exit(version_compare("%{version}", Raven_Client::VERSION, "=") ? 0 : 1);'
+
 : Update tests autoloader require
 sed "/require.*Autoloader/s:.*:require_once '%{buildroot}%{phpdir}/Raven/Autoloader.php';:" \
     -i test/bootstrap.php
@@ -152,6 +163,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Aug 28 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.12.1-1
+- Updated to 0.12.1 (RHBZ #1256982)
+- Added standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming provides
+- Added library version value check
+
 * Sat Jun 27 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.12.0-1
 - Updated to 0.12.0 (RHBZ #1224010)
 - Added autoloader
