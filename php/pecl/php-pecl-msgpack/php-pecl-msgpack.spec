@@ -38,15 +38,12 @@
 
 Summary:       API for communicating with MessagePack serialization
 Name:          %{?sub_prefix}php-pecl-msgpack
-Version:       0.5.6
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:       0.5.7
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       BSD
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/msgpack
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/msgpack/msgpack-php/issues/16
-Patch0:        %{pecl_name}.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
@@ -126,7 +123,6 @@ These are the files needed to compile programs using MessagePack serializer.
 
 mv %{pecl_name}-%{version} NTS
 cd NTS
-%patch0 -p1 -b .build
 
 %if %{with_msgpack}
 # use system library
@@ -159,6 +155,7 @@ extension = %{pecl_name}.so
 ;msgpack.error_display = On
 ;msgpack.illegal_key_insert = Off
 ;msgpack.php_only = On
+;msgpack.use_str8_serialization = On
 EOF
 
 
@@ -203,7 +200,7 @@ done
 
 %check
 # Known by upstream as failed test (travis result)
-rm */tests/{018,030,040b,040c,040d}.phpt
+rm */tests/{018,030,040,040b,040c,040d}.phpt
 
 cd NTS
 : Minimal load test for NTS extension
@@ -257,7 +254,7 @@ rm -rf %{buildroot}
 
 
 %files
-%defattr(-, root, root, 0755)
+%defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -271,7 +268,7 @@ rm -rf %{buildroot}
 
 
 %files devel
-%defattr(-, root, root, 0755)
+%defattr(-,root,root,-)
 %doc %{pecl_testdir}/%{pecl_name}
 %{php_incldir}/ext/%{pecl_name}
 
@@ -281,6 +278,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Aug 30 2015 Remi Collet <remi@fedoraproject.org> - 0.5.7-1
+- Update to 0.5.7 (beta)
+
 * Sat Jun 20 2015 Remi Collet <remi@fedoraproject.org> - 0.5.6-2
 - allow build against rh-php56 (as more-php56)
 

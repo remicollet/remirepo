@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #124 msgpack version 0.5.6 ] {
+Extension [ <persistent> extension #126 msgpack version 0.5.7 ] {
 
   - INI {
     Entry [ msgpack.error_display <ALL> ]
@@ -9,6 +9,9 @@ Extension [ <persistent> extension #124 msgpack version 0.5.6 ] {
     }
     Entry [ msgpack.illegal_key_insert <ALL> ]
       Current = '0'
+    }
+    Entry [ msgpack.use_str8_serialization <ALL> ]
+      Current = '1'
     }
   }
 
