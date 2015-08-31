@@ -26,7 +26,7 @@
 Summary:      PHP Bindings for rrdtool
 Name:         %{?scl_prefix}php-pecl-rrd
 Version:      1.1.3
-Release:      3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:      4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:      BSD
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/rrd
@@ -145,11 +145,16 @@ cd NTS
     --modules | grep %{pecl_name}
 
 
-%if 0%{?fedora} < 14 && 0%{?rhel} < 7
-  # skip tests which only succeed with rrdtool > 1.4.0
-  rm tests/rrd_012.phpt \
-     tests/rrd_017.phpt
-%endif
+if pkg-config librrd --atleast-version=1.5.0
+then
+  : ignore test failed with rrdtool gt 1.5
+  rm tests/rrd_{016,017}.phpt
+fi
+if ! pkg-config librrd --atleast-version=1.4.0
+then
+  : ignore test failed with rrdtool lt 1.4
+  rm tests/rrd_{012,017}.phpt
+fi
 
 make -C tests/data clean
 make -C tests/data all
@@ -193,7 +198,10 @@ fi
 
 
 %changelog
-* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 0.8.0-1.1
+* Mon Aug 31 2015 Remi Collet <remi@fedoraproject.org> - 1.1.3-4
+- F23 build
+
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.1.3-3
 - Fedora 21 SCL mass rebuild
 
 * Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 1.1.3-3
