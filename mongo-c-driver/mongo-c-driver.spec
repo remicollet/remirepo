@@ -29,7 +29,7 @@ Release:   0.1.%{gh_date}git%{gh_short}%{?dist}
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 BuildRequires: libtool autoconf
 %else
-Release:   0.2.%{prever}%{?dist}
+Release:   0.3.%{prever}%{?dist}
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
 %endif
 License:   ASL 2.0
@@ -91,10 +91,6 @@ autoreconf -fvi -I build/autotools
 %endif
 
 %patch0 -p1 -b .upstream
-
-%if 0%{?rhel} == 6
-sed -e '/GCC diagnostic/d' -i src/mongoc/mongoc-matcher-op.c
-%endif
 
 # Ensure we are using system library
 # Done after autoreconf because of m4_include
@@ -173,6 +169,9 @@ exit $ret
 
 
 %changelog
+* Mon Aug 31 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-0.3.beta
+- more upstream patch (for EL-6)
+
 * Mon Aug 31 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-0.2.beta
 - Upstream version 1.2.0beta
 
