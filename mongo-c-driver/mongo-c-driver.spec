@@ -8,12 +8,18 @@
 #
 %global gh_owner     mongodb
 %global gh_project   mongo-c-driver
-%global gh_commit    38fc65a0f4b2b17d71ee71683c93aa84718a6733
+%global gh_commit    8189e90f1ad29fc4a133985452aeec54efd9bb4a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150413
-%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+#global gh_date      20150810
+%if 0%{?fedora} >= 23
+# mongodb-server broken in f23
+%global with_tests   0%{?_with_tests:1}
+%else
+%global with_tests   0%{!?_without_tests:1}
+%endif
 %global libname      libmongoc
 %global libver       1.0
+%global prever       beta
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
@@ -23,12 +29,14 @@ Release:   0.1.%{gh_date}git%{gh_short}%{?dist}
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 BuildRequires: libtool autoconf
 %else
-Release:   1%{?dist}
+Release:   0.2.%{prever}%{?dist}
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
 %endif
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
+
+Patch0:    %{name}-upstream.patch
 
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libbson-1.0)
@@ -79,7 +87,13 @@ a MongoDB Server.
 %setup -q -n %{gh_project}-%{gh_commit}
 autoreconf -fvi -I build/autotools
 %else
-%setup -q
+%setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
+%endif
+
+%patch0 -p1 -b .upstream
+
+%if 0%{?rhel} == 6
+sed -e '/GCC diagnostic/d' -i src/mongoc/mongoc-matcher-op.c
 %endif
 
 # Ensure we are using system library
@@ -159,6 +173,9 @@ exit $ret
 
 
 %changelog
+* Mon Aug 31 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-0.2.beta
+- Upstream version 1.2.0beta
+
 * Wed May 20 2015 Remi Collet <remi@fedoraproject.org> - 1.1.6-1
 - Upstream version 1.1.6
 

@@ -1,0 +1,22 @@
+From 5cd61e3170cfe81e4bc9be12d4b2d86e4e1ca53e Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Mon, 31 Aug 2015 18:48:15 +0200
+Subject: [PATCH] allow driver to use mongoc-log-private
+
+---
+ src/mongoc/mongoc-log-private.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/mongoc/mongoc-log-private.h b/src/mongoc/mongoc-log-private.h
+index fa02960..49bf1cc 100644
+--- a/src/mongoc/mongoc-log-private.h
++++ b/src/mongoc/mongoc-log-private.h
+@@ -17,7 +17,7 @@
+ #ifndef MONGOC_LOG_PRIVATE_H
+ #define MONGOC_LOG_PRIVATE_H
+ 
+-#if !defined (MONGOC_INSIDE) && !defined (MONGOC_COMPILATION)
++#if !defined (MONGOC_INSIDE) && !defined (MONGOC_COMPILATION) && !defined (MONGOC_I_AM_A_DRIVER)
+ # error "Only <mongoc.h> can be included directly."
+ #endif
+ 
