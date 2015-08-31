@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #155 swoole version 1.7.18 ] {
+Extension [ <persistent> extension #158 swoole version 1.7.19 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -42,7 +42,7 @@ Extension [ <persistent> extension #155 swoole version 1.7.18 ] {
     Constant [ integer SWOOLE_KEEP ] { 512 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.7.18 }
+    Constant [ string SWOOLE_VERSION ] { 1.7.19 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_GCC ] { 1 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 2 }
@@ -283,7 +283,7 @@ Extension [ <persistent> extension #155 swoole version 1.7.18 ] {
     }
   }
 
-  - Classes [12] {
+  - Classes [13] {
     Class [ <internal:swoole> class swoole_server ] {
 
       - Constants [0] {
@@ -298,7 +298,7 @@ Extension [ <persistent> extension #155 swoole version 1.7.18 ] {
       - Properties [0] {
       }
 
-      - Methods [31] {
+      - Methods [32] {
         Method [ <internal:swoole, ctor> public method __construct ] {
 
           - Parameters [4] {
@@ -395,6 +395,15 @@ Extension [ <persistent> extension #155 swoole version 1.7.18 ] {
         }
 
         Method [ <internal:swoole> public method addlistener ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $host ]
+            Parameter #1 [ <required> $port ]
+            Parameter #2 [ <required> $sock_type ]
+          }
+        }
+
+        Method [ <internal:swoole> public method listen ] {
 
           - Parameters [3] {
             Parameter #0 [ <required> $host ]
@@ -869,6 +878,41 @@ Extension [ <persistent> extension #155 swoole version 1.7.18 ] {
       }
     }
 
+    Class [ <internal:swoole> class swoole_atomic ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:swoole, ctor> public method __construct ] {
+        }
+
+        Method [ <internal:swoole> public method add ] {
+        }
+
+        Method [ <internal:swoole> public method sub ] {
+        }
+
+        Method [ <internal:swoole> public method get ] {
+        }
+
+        Method [ <internal:swoole> public method set ] {
+        }
+
+        Method [ <internal:swoole> public method cmpset ] {
+        }
+      }
+    }
+
     Class [ <internal:swoole> class swoole_http_server extends swoole_server ] {
 
       - Constants [0] {
@@ -884,7 +928,7 @@ Extension [ <persistent> extension #155 swoole version 1.7.18 ] {
         Property [ <default> private $global ]
       }
 
-      - Methods [32] {
+      - Methods [33] {
         Method [ <internal:swoole, overwrites swoole_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
@@ -989,6 +1033,15 @@ Extension [ <persistent> extension #155 swoole version 1.7.18 ] {
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method addlistener ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $host ]
+            Parameter #1 [ <required> $port ]
+            Parameter #2 [ <required> $sock_type ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method listen ] {
 
           - Parameters [3] {
             Parameter #0 [ <required> $host ]
@@ -1174,10 +1227,10 @@ Extension [ <persistent> extension #155 swoole version 1.7.18 ] {
         Method [ <internal:swoole> public method substr ] {
         }
 
-        Method [ <internal:swoole> public method read ] {
+        Method [ <internal:swoole> public method write ] {
         }
 
-        Method [ <internal:swoole> public method write ] {
+        Method [ <internal:swoole> public method read ] {
         }
 
         Method [ <internal:swoole> public method append ] {
@@ -1205,7 +1258,7 @@ Extension [ <persistent> extension #155 swoole version 1.7.18 ] {
       - Properties [0] {
       }
 
-      - Methods [33] {
+      - Methods [34] {
         Method [ <internal:swoole, overwrites swoole_http_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
@@ -1320,6 +1373,15 @@ Extension [ <persistent> extension #155 swoole version 1.7.18 ] {
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method addlistener ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $host ]
+            Parameter #1 [ <required> $port ]
+            Parameter #2 [ <required> $sock_type ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method listen ] {
 
           - Parameters [3] {
             Parameter #0 [ <required> $host ]
