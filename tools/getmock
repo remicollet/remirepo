@@ -229,7 +229,7 @@ elif [ $1 = allx ]; then
 	done
 
 elif [ $1 = scl54 ]; then
-	for i in 19 20 21 22
+	for i in 19 20 21 22 23
 	do
 		getOneMock scl54fc${i}x $opt
 	done
@@ -239,7 +239,7 @@ elif [ $1 = scl54 ]; then
 	done
 
 elif [ $1 = scl55 ]; then
-	for i in 21 22
+	for i in 21 22 23
 	do
 		getOneMock scl55fc${i}x $opt
 	done
@@ -249,7 +249,7 @@ elif [ $1 = scl55 ]; then
 	done
 
 elif [ $1 = scl56 ]; then
-	for i in 19 20 21 22
+	for i in 19 20 21 22 23
 	do
 		getOneMock scl56fc${i}x $opt
 	done

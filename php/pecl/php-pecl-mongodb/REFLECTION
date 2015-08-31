@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
+Extension [ <persistent> extension #124 mongodb version 1.0.0alpha2 ] {
 
   - INI {
     Entry [ mongodb.debug <ALL> ]
@@ -6,31 +6,32 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
     }
   }
 
-  - Constants [2] {
-    Constant [ string MONGODB_VERSION ] { 0.6.3 }
+  - Constants [3] {
+    Constant [ string MONGODB_VERSION ] { 1.0.0alpha2 }
     Constant [ string MONGODB_STABILITY ] { alpha }
+    Constant [ string BSON_NAMESPACE ] { MongoDB\BSON }
   }
 
   - Functions {
-    Function [ <internal:mongodb> function BSON\fromArray ] {
+    Function [ <internal:mongodb> function MongoDB\BSON\fromPHP ] {
 
       - Parameters [1] {
-        Parameter #0 [ <required> $array ]
+        Parameter #0 [ <required> $value ]
       }
     }
-    Function [ <internal:mongodb> function BSON\toArray ] {
-
-      - Parameters [1] {
-        Parameter #0 [ <required> $bson ]
-      }
-    }
-    Function [ <internal:mongodb> function BSON\toJSON ] {
+    Function [ <internal:mongodb> function MongoDB\BSON\toPHP ] {
 
       - Parameters [1] {
         Parameter #0 [ <required> $bson ]
       }
     }
-    Function [ <internal:mongodb> function BSON\fromJSON ] {
+    Function [ <internal:mongodb> function MongoDB\BSON\toJSON ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $bson ]
+      }
+    }
+    Function [ <internal:mongodb> function MongoDB\BSON\fromJSON ] {
 
       - Parameters [1] {
         Parameter #0 [ <required> $json ]
@@ -163,7 +164,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
       - Properties [0] {
       }
 
-      - Methods [10] {
+      - Methods [12] {
         Method [ <internal:mongodb, ctor> final public method __construct ] {
 
           - Parameters [3] {
@@ -230,7 +231,19 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
           }
         }
 
+        Method [ <internal:mongodb> final public method getReadPreference ] {
+
+          - Parameters [0] {
+          }
+        }
+
         Method [ <internal:mongodb> final public method getServers ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getWriteConcern ] {
 
           - Parameters [0] {
           }
@@ -351,9 +364,10 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
 
         Method [ <internal:mongodb> final public method executeBulkWrite ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $namespace ]
             Parameter #1 [ <required> MongoDB\Driver\BulkWrite $zbulk ]
+            Parameter #2 [ <optional> MongoDB\Driver\WriteConcern or NULL $writeConcern ]
           }
         }
 
@@ -726,7 +740,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -734,6 +748,9 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -780,7 +797,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -788,6 +805,9 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -834,7 +854,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -842,6 +862,9 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -888,7 +911,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -896,6 +919,9 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -942,7 +968,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -950,6 +976,9 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -996,7 +1025,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -1004,6 +1033,9 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -1050,7 +1082,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -1058,6 +1090,9 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -1105,7 +1140,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
         Property [ <default> protected $writeResult ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:mongodb> final public method getWriteResult ] {
 
           - Parameters [0] {
@@ -1119,6 +1154,9 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -1166,7 +1204,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
         Property [ <default> protected $writeResult ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:mongodb, inherits MongoDB\Driver\Exception\WriteException> final public method getWriteResult ] {
 
           - Parameters [0] {
@@ -1180,6 +1218,9 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -1227,7 +1268,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
         Property [ <default> protected $writeResult ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:mongodb, inherits MongoDB\Driver\Exception\WriteException> final public method getWriteResult ] {
 
           - Parameters [0] {
@@ -1241,6 +1282,9 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -1288,7 +1332,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
         Property [ <default> protected $writeResult ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:mongodb, inherits MongoDB\Driver\Exception\WriteException> final public method getWriteResult ] {
 
           - Parameters [0] {
@@ -1302,6 +1346,9 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -1348,7 +1395,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -1356,6 +1403,9 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -1402,7 +1452,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -1410,6 +1460,9 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -1438,7 +1491,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
       }
     }
 
-    Interface [ <internal:mongodb> interface BSON\Type ] {
+    Interface [ <internal:mongodb> interface MongoDB\BSON\Type ] {
 
       - Constants [0] {
       }
@@ -1456,7 +1509,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
       }
     }
 
-    Interface [ <internal:mongodb> interface BSON\Serializable extends BSON\Type ] {
+    Interface [ <internal:mongodb> interface MongoDB\BSON\Serializable extends MongoDB\BSON\Type ] {
 
       - Constants [0] {
       }
@@ -1479,7 +1532,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
       }
     }
 
-    Interface [ <internal:mongodb> interface BSON\Unserializable ] {
+    Interface [ <internal:mongodb> interface MongoDB\BSON\Unserializable ] {
 
       - Constants [0] {
       }
@@ -1503,7 +1556,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
       }
     }
 
-    Interface [ <internal:mongodb> interface BSON\Persistable extends BSON\Unserializable, BSON\Serializable, BSON\Type ] {
+    Interface [ <internal:mongodb> interface MongoDB\BSON\Persistable extends MongoDB\BSON\Unserializable, MongoDB\BSON\Serializable, MongoDB\BSON\Type ] {
 
       - Constants [0] {
       }
@@ -1518,14 +1571,14 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
       }
 
       - Methods [2] {
-        Method [ <internal:mongodb, inherits BSON\Unserializable> abstract public method bsonUnserialize ] {
+        Method [ <internal:mongodb, inherits MongoDB\BSON\Unserializable> abstract public method bsonUnserialize ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> array $data ]
           }
         }
 
-        Method [ <internal:mongodb, inherits BSON\Serializable> abstract public method bsonSerialize ] {
+        Method [ <internal:mongodb, inherits MongoDB\BSON\Serializable> abstract public method bsonSerialize ] {
 
           - Parameters [0] {
           }
@@ -1533,7 +1586,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
       }
     }
 
-    Class [ <internal:mongodb> class BSON\Binary implements BSON\Type ] {
+    Class [ <internal:mongodb> class MongoDB\BSON\Binary implements MongoDB\BSON\Type ] {
 
       - Constants [7] {
         Constant [ integer TYPE_GENERIC ] { 0 }
@@ -1554,16 +1607,22 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
       - Properties [0] {
       }
 
-      - Methods [2] {
+      - Methods [3] {
         Method [ <internal:mongodb, ctor> public method __construct ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $data ]
-            Parameter #1 [ <required> $subtype ]
+            Parameter #1 [ <required> $type ]
           }
         }
 
-        Method [ <internal:mongodb> public method getSubType ] {
+        Method [ <internal:mongodb> public method getData ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> public method getType ] {
 
           - Parameters [0] {
           }
@@ -1571,7 +1630,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
       }
     }
 
-    Class [ <internal:mongodb> class BSON\Javascript implements BSON\Type ] {
+    Class [ <internal:mongodb> class MongoDB\BSON\Javascript implements MongoDB\BSON\Type ] {
 
       - Constants [0] {
       }
@@ -1596,7 +1655,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
       }
     }
 
-    Class [ <internal:mongodb> class BSON\MaxKey implements BSON\Type ] {
+    Class [ <internal:mongodb> class MongoDB\BSON\MaxKey implements MongoDB\BSON\Type ] {
 
       - Constants [0] {
       }
@@ -1614,7 +1673,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
       }
     }
 
-    Class [ <internal:mongodb> class BSON\MinKey implements BSON\Type ] {
+    Class [ <internal:mongodb> class MongoDB\BSON\MinKey implements MongoDB\BSON\Type ] {
 
       - Constants [0] {
       }
@@ -1632,7 +1691,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
       }
     }
 
-    Class [ <internal:mongodb> class BSON\ObjectID implements BSON\Type ] {
+    Class [ <internal:mongodb> class MongoDB\BSON\ObjectID implements MongoDB\BSON\Type ] {
 
       - Constants [0] {
       }
@@ -1662,7 +1721,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
       }
     }
 
-    Class [ <internal:mongodb> class BSON\Regex implements BSON\Type ] {
+    Class [ <internal:mongodb> class MongoDB\BSON\Regex implements MongoDB\BSON\Type ] {
 
       - Constants [0] {
       }
@@ -1705,7 +1764,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
       }
     }
 
-    Class [ <internal:mongodb> class BSON\Timestamp implements BSON\Type ] {
+    Class [ <internal:mongodb> class MongoDB\BSON\Timestamp implements MongoDB\BSON\Type ] {
 
       - Constants [0] {
       }
@@ -1736,7 +1795,7 @@ Extension [ <persistent> extension #122 mongodb version 0.6.3 ] {
       }
     }
 
-    Class [ <internal:mongodb> class BSON\UTCDatetime implements BSON\Type ] {
+    Class [ <internal:mongodb> class MongoDB\BSON\UTCDateTime implements MongoDB\BSON\Type ] {
 
       - Constants [0] {
       }

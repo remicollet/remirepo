@@ -14,19 +14,20 @@
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  mongodb
 %if "%{php_version}" < "5.6"
-%global ini_name    %{pecl_name}.ini
+%global ini_name   %{pecl_name}.ini
 %else
-%global ini_name    40-%{pecl_name}.ini
+%global ini_name   40-%{pecl_name}.ini
 %endif
+%global prever     alpha2
 
 Summary:        MongoDB driver for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.6.3
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.0.0
+Release:        0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -34,6 +35,8 @@ BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  cyrus-sasl-devel
 BuildRequires:  openssl-devel
 BuildRequires:  pkgconfig(libbson-1.0)
+BuildRequires:  pkgconfig(libmongoc-1.0)
+BuildRequires:  pkgconfig(libmongoc-priv)
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
@@ -81,7 +84,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -q -c
-mv %{pecl_name}-%{version} NTS
+mv %{pecl_name}-%{version}%{?prever} NTS
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' -i package.xml
@@ -90,8 +93,8 @@ cd NTS
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define MONGODB_VERSION_S/{s/.* "//;s/".*$//;p}' php_phongo.h)
-if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
+if test "x${extver}" != "x%{version}%{?prever:%{prever}}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:%{prever}}.
    exit 1
 fi
 cd ..
@@ -118,10 +121,12 @@ peclbuild() {
   # Ensure we use system library
   # Need to be removed only after phpize because of m4_include
   rm -r src/libbson
+  rm -r src/libmongoc
 
   %configure \
     --with-php-config=%{_bindir}/${1}-config \
     --with-libbson \
+    --with-libmongoc \
     --enable-mongodb
 
   make %{?_smp_mflags}
@@ -215,6 +220,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug 31 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.alpha2
+- Update to 1.0.0alpha2 (alpha)
+- buid with system libmongoc
+
 * Thu May 07 2015 Remi Collet <remi@fedoraproject.org> - 0.6.3-1
 - Update to 0.6.3 (alpha)
 
