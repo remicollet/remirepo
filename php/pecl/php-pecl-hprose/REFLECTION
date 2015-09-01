@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #99 hprose version 1.6.0 ] {
+Extension [ <persistent> extension #100 hprose version 1.6.1 ] {
 
   - Functions {
     Function [ <internal:hprose> function hprose_serialize ] {
