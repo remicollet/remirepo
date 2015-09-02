@@ -1,4 +1,4 @@
-# remirepo/fedora spec file for php-horde-Horde-Crypt-Blowfish
+# remirepo/fedora spec file for php-horde-Horde-Mime
 #
 # Copyright (c) 2012-2015 Nick Bebout, Remi Collet
 #
@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-horde-Horde-Mime
-Version:        2.9.1
+Version:        2.9.2
 Release:        1%{?dist}
 Summary:        Horde MIME Library
 
@@ -165,6 +165,9 @@ fi
 
 
 %changelog
+* Wed Sep 02 2015 Remi Collet <remi@fedoraproject.org> - 2.9.2-1
+- Update to 2.9.2
+
 * Fri May 22 2015 Remi Collet <remi@fedoraproject.org> - 2.9.1-1
 - Update to 2.9.1
 
