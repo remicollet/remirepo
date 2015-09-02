@@ -1,0 +1,25 @@
+From 7f05510f5582fd120695fef9fa1794120133ba3a Mon Sep 17 00:00:00 2001
+From: Alfred Klomp <git@alfredklomp.com>
+Date: Sun, 23 Aug 2015 17:44:33 +0200
+Subject: [PATCH] config.m4: issue #14: remove unnecessary libs
+
+Remove the -ldl and -lm flags in the code that tests whether
+libsmbclient is available. The flags were not necessary in the first
+place, and broke the build on FreeBSD. See also Issue #14.
+---
+ config.m4 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/config.m4 b/config.m4
+index 3462872..1e7d20f 100644
+--- a/config.m4
++++ b/config.m4
+@@ -49,7 +49,7 @@ if test "$PHP_LIBSMBCLIENT" != "no"; then
+     ],[
+       AC_MSG_ERROR([Could not find libsmbclient.so or symbol smbc_open. Check config.log for more information.])
+     ],[
+-      -lsmbclient -lm -ldl
++      -lsmbclient
+     ])
+ 
+   fi
