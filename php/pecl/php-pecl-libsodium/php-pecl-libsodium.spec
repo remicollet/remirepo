@@ -30,7 +30,7 @@
 
 Summary:        Wrapper for the Sodium cryptographic library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        0.2.1
+Version:        1.0.0
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
@@ -77,17 +77,15 @@ Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
-%if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-%endif
 
 
 %description
 A simple, low-level PHP extension for libsodium.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{scl_vendor})}.
 
 
 %prep
@@ -230,6 +228,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 03 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- Update to 1.0.0 (stable)
+
 * Mon Jul 27 2015 Remi Collet <remi@fedoraproject.org> - 0.2.1-1
 - Update to 0.2.1 (beta)
 

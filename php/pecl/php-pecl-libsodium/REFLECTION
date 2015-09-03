@@ -1,13 +1,17 @@
-Extension [ <persistent> extension #114 libsodium version 0.2.1 ] {
+Extension [ <persistent> extension #117 libsodium version 1.0.0 ] {
 
-  - Constants [36] {
+  - Constants [41] {
     Constant [ integer Sodium\CRYPTO_AEAD_CHACHA20POLY1305_KEYBYTES ] { 32 }
     Constant [ integer Sodium\CRYPTO_AEAD_CHACHA20POLY1305_NSECBYTES ] { 0 }
     Constant [ integer Sodium\CRYPTO_AEAD_CHACHA20POLY1305_NPUBBYTES ] { 8 }
     Constant [ integer Sodium\CRYPTO_AEAD_CHACHA20POLY1305_ABYTES ] { 16 }
+    Constant [ integer Sodium\CRYPTO_AUTH_BYTES ] { 32 }
+    Constant [ integer Sodium\CRYPTO_AUTH_KEYBYTES ] { 32 }
+    Constant [ integer Sodium\CRYPTO_BOX_SEALBYTES ] { 48 }
     Constant [ integer Sodium\CRYPTO_BOX_SECRETKEYBYTES ] { 32 }
     Constant [ integer Sodium\CRYPTO_BOX_PUBLICKEYBYTES ] { 32 }
     Constant [ integer Sodium\CRYPTO_BOX_KEYPAIRBYTES ] { 64 }
+    Constant [ integer Sodium\CRYPTO_BOX_MACBYTES ] { 16 }
     Constant [ integer Sodium\CRYPTO_BOX_NONCEBYTES ] { 24 }
     Constant [ integer Sodium\CRYPTO_KX_BYTES ] { 32 }
     Constant [ integer Sodium\CRYPTO_KX_PUBLICKEYBYTES ] { 32 }
@@ -29,6 +33,7 @@ Extension [ <persistent> extension #114 libsodium version 0.2.1 ] {
     Constant [ integer Sodium\CRYPTO_SHORTHASH_BYTES ] { 8 }
     Constant [ integer Sodium\CRYPTO_SHORTHASH_KEYBYTES ] { 16 }
     Constant [ integer Sodium\CRYPTO_SECRETBOX_KEYBYTES ] { 32 }
+    Constant [ integer Sodium\CRYPTO_SECRETBOX_MACBYTES ] { 16 }
     Constant [ integer Sodium\CRYPTO_SECRETBOX_NONCEBYTES ] { 24 }
     Constant [ integer Sodium\CRYPTO_SIGN_BYTES ] { 64 }
     Constant [ integer Sodium\CRYPTO_SIGN_SEEDBYTES ] { 32 }
@@ -56,6 +61,21 @@ Extension [ <persistent> extension #114 libsodium version 0.2.1 ] {
         Parameter #1 [ <required> $ad ]
         Parameter #2 [ <required> $nonce ]
         Parameter #3 [ <required> $key ]
+      }
+    }
+    Function [ <internal:libsodium> function Sodium\crypto_auth ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $string ]
+        Parameter #1 [ <required> $key ]
+      }
+    }
+    Function [ <internal:libsodium> function Sodium\crypto_auth_verify ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $signature ]
+        Parameter #1 [ <required> $string ]
+        Parameter #2 [ <required> $key ]
       }
     }
     Function [ <internal:libsodium> function Sodium\crypto_box ] {
@@ -251,6 +271,12 @@ Extension [ <persistent> extension #114 libsodium version 0.2.1 ] {
       }
     }
     Function [ <internal:libsodium> function Sodium\crypto_sign_secretkey ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $key ]
+      }
+    }
+    Function [ <internal:libsodium> function Sodium\crypto_sign_publickey_from_secretkey ] {
 
       - Parameters [1] {
         Parameter #0 [ <required> $key ]
