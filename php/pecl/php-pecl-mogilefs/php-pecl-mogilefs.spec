@@ -237,4 +237,7 @@ rm -rf %{buildroot}
 %changelog
 * Thu Sep  3 2015 Remi Collet <remi@fedoraproject.org> - 0.9.2-1
 - initial package, version 0.9.2 (beta)
-- open https://github.com/lstrojny/pecl-mogilefs/issues/15
+- missing license file
+  open https://github.com/lstrojny/pecl-mogilefs/issues/15
+- ZTS build is broken
+  open https://github.com/lstrojny/pecl-mogilefs/pull/16
