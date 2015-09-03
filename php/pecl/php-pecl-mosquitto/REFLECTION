@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #107 mosquitto version 0.2.2 ] {
+Extension [ <persistent> extension #126 mosquitto version 0.3.0 ] {
 
   - Constants [7] {
     Constant [ integer MOSQ_LOG_INFO ] { 1 }
@@ -32,8 +32,13 @@ Extension [ <persistent> extension #107 mosquitto version 0.2.2 ] {
       - Properties [0] {
       }
 
-      - Methods [24] {
+      - Methods [27] {
         Method [ <internal:mosquitto, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $id ]
+            Parameter #1 [ <required> $cleanSession ]
+          }
         }
 
         Method [ <internal:mosquitto> public method onConnect ] {
@@ -78,6 +83,13 @@ Extension [ <persistent> extension #107 mosquitto version 0.2.2 ] {
           }
         }
 
+        Method [ <internal:mosquitto> public method onPublish ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> callable $onConnect ]
+          }
+        }
+
         Method [ <internal:mosquitto> public method getSocket ] {
         }
 
@@ -109,6 +121,9 @@ Extension [ <persistent> extension #107 mosquitto version 0.2.2 ] {
             Parameter #2 [ <required> $qos ]
             Parameter #3 [ <required> $retain ]
           }
+        }
+
+        Method [ <internal:mosquitto> public method clearWill ] {
         }
 
         Method [ <internal:mosquitto> public method setReconnectDelay ] {
@@ -187,6 +202,9 @@ Extension [ <persistent> extension #107 mosquitto version 0.2.2 ] {
             Parameter #1 [ <required> $maxPackets ]
           }
         }
+
+        Method [ <internal:mosquitto> public method exitLoop ] {
+        }
       }
     }
 
@@ -208,7 +226,7 @@ Extension [ <persistent> extension #107 mosquitto version 0.2.2 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -216,6 +234,9 @@ Extension [ <persistent> extension #107 mosquitto version 0.2.2 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
