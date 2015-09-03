@@ -6,6 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-swoole}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -22,9 +30,9 @@
 %endif
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.7.19
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -94,7 +102,7 @@ Asynchronous and concurrent and distributed networking framework for PHP.
 - support IPv4/IPv6/UnixSocket/TCP/UDP
 - SSL/TLS encrypted transmission
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
 
 
 %prep
@@ -245,6 +253,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep  3 2015 Remi Collet <remi@fedoraproject.org> - 1.7.19-2
+- allow build against rh-php56 (as more-php56)
+
 * Mon Aug 31 2015 Remi Collet <remi@fedoraproject.org> - 1.7.19-1
 - Update to 1.7.19
 
