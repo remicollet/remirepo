@@ -14,7 +14,7 @@
 %endif
 %endif
 
-%global gh_commit  f33dd8c67254d0f0202f5e6212bc29ea35b055cf
+%global gh_commit  e3763f178d49ba2b65260dbeba3b0453add64136
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   eduardok
 %global gh_project libsmbclient-php
@@ -35,14 +35,12 @@
 %global with_tests 0%{?_with_tests:1}
 
 Name:           %{?sub_prefix}php-libsmbclient
-Version:        0.6.1
+Version:        0.7.0
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        PHP wrapper for libsmbclient
 
 Group:          Development/Languages
-# See https://github.com/eduardok/libsmbclient-php/issues/15 - switch to BSD
-# See https://github.com/eduardok/libsmbclient-php/issues/19 - License file
-License:        PHP
+License:        BSD
 URL:            https://github.com/eduardok/libsmbclient-php
 Source0:        %{pkg_name}-%{version}-%{gh_short}.tgz
 # git snapshot as upstream doesn't provide test suite
@@ -50,10 +48,6 @@ Source1:        makesrc.sh
 %if %{with_tests}
 Source2:        %{gh_project}-phpunit.xml
 %endif
-
-Patch0:         %{gh_project}-upstream.patch
-Patch1:         %{gh_project}-pr17.patch
-Patch2:         %{gh_project}-pr18.patch
 
 BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  libsmbclient-devel > 3.6
@@ -99,10 +93,6 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{gh_project}-%{gh_commit} NTS
 
 cd NTS
-%patch0 -p1 -b .upstream
-%patch1 -p1 -b .pr17
-%patch2 -p1 -b .pr18
-
 # Check extension version
 ver=$(sed -n '/define LIBSMBCLIENT_VERSION/{s/.*\t"//;s/".*$//;p}' libsmbclient.c)
 if test "$ver" != "%{version}"; then
@@ -174,8 +164,8 @@ cp %{SOURCE2} phpunit.xml
 
 
 %files
-#{!?_licensedir:%global license %%doc}
-#license NTS/LICENSE
+%{!?_licensedir:%global license %%doc}
+%license NTS/LICENSE
 %doc NTS/README.md
 
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -188,6 +178,11 @@ cp %{SOURCE2} phpunit.xml
 
 
 %changelog
+* Thu Sep  3 2015 Remi Collet <rcollet@redhat.com> - 0.7.0-1
+- Update to 0.7.0
+- drop patches merged upstream
+- license is now BSD
+
 * Wed Sep  2 2015 Remi Collet <rcollet@redhat.com> - 0.6.1-1
 - Initial packaging of 0.6.1
 - open https://github.com/eduardok/libsmbclient-php/pull/17
