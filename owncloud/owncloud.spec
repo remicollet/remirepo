@@ -8,7 +8,7 @@
 # Please preserve changelog entries
 #
 Name:           owncloud
-Version:        8.0.5
+Version:        8.0.7
 Release:        1%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
@@ -501,12 +501,15 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 02 2015 Adam Williamson <awilliam@redhat.com> - 8.0.7-1
+- new release 8.0.7
+
 * Fri Jul 10 2015 Adam Williamson <awilliam@redhat.com> - 8.0.5-1
 - new release 8.0.5 (should fix app enabling, RHBZ #1240776)
 - patch to use Google lib autoloader
 
 * Sun Jul  5 2015 Remi Collet <remi@remirepo.net> - 8.0.4-3
-- backport for remimrepo
+- backport for remirepo
 
 * Sat Jul 04 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 8.0.4-3
 - Fix Symfony max version (2.6 changed to 3.0)
