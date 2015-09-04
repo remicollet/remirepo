@@ -127,6 +127,7 @@ alias mockel5i56="setarch i686 mock --configdir=$mocketc -r el5i56 --arch i386 r
 alias mockel5x="               mock --configdir=$mocketc -r el5x               rebuild "
 alias mockel5xt="              mock --configdir=$mocketc -r el5xt              rebuild "
 alias mockel5x55="             mock --configdir=$mocketc -r el5x55             rebuild "
+alias mockel5t55="             mock --configdir=$mocketc -r el5t55             rebuild "
 alias mockel5x56="             mock --configdir=$mocketc -r el5x56             rebuild "
 
 alias mockel6i="  setarch i686 mock --configdir=$mocketc -r el6i   --arch i686 rebuild "
@@ -137,6 +138,7 @@ alias mockel6i70="setarch i686 mock --configdir=$mocketc -r el6i70 --arch i686 r
 alias mockel6x="               mock --configdir=$mocketc -r el6x               rebuild "
 alias mockel6xt="              mock --configdir=$mocketc -r el6xt              rebuild "
 alias mockel6x55="             mock --configdir=$mocketc -r el6x55             rebuild "
+alias mockel6t55="             mock --configdir=$mocketc -r el6t55             rebuild "
 alias mockel6x56="             mock --configdir=$mocketc -r el6x56             rebuild "
 alias mockel6x70="             mock --configdir=$mocketc -r el6x70             rebuild "
 alias mockel6xscl54="          mock --configdir=$mocketc -r el6xscl54          rebuild "
@@ -147,6 +149,7 @@ alias mockel6xscl70="          mock --configdir=$mocketc -r el6xscl70          r
 alias mockel7x="               mock --configdir=$mocketc -r el7x               rebuild "
 alias mockel7xt="              mock --configdir=$mocketc -r el7xt              rebuild "
 alias mockel7x55="             mock --configdir=$mocketc -r el7x55             rebuild "
+alias mockel7t55="             mock --configdir=$mocketc -r el7t55             rebuild "
 alias mockel7x56="             mock --configdir=$mocketc -r el7x56             rebuild "
 alias mockel7x70="             mock --configdir=$mocketc -r el7x70             rebuild "
 alias mockel7xscl54="          mock --configdir=$mocketc -r el7xscl54          rebuild "
@@ -364,6 +367,37 @@ if [ -f "$1" ]; then
   do
     echo -n ""
     (mock $quiet --configdir=$mocketc -r el${i}x55 rebuild $1 && echo "$(date +%X) (55)  el$i   Ok." || echo "el$i  Error !")&
+    pids="$pids $!"
+  done
+  wait $pids
+  date +%X
+else
+  echo "file not found '$1'"
+fi
+}
+
+# Build All distribution / version / noarch for remi/remi-php55
+mock55t()
+{
+quiet="--quiet"
+if [ "$1" = "-q" ]; then
+    quiet="--quiet"
+    shift
+fi
+
+if [ -f "$1" ]; then
+  date +%X
+  pids=""
+  for i in 21 22 20 19
+  do
+    echo -n ""
+    (mock $quiet --configdir=$mocketc -r fc${i}xt  rebuild $1 && echo "$(date +%X) (55+) fc$i  Ok." || echo "fc$1 Error !")&
+    pids="$pids $!"
+  done
+  for i in 7 6 5
+  do
+    echo -n ""
+    (mock $quiet --configdir=$mocketc -r el${i}t55 rebuild $1 && echo "$(date +%X) (55)  el$i   Ok." || echo "el$i  Error !")&
     pids="$pids $!"
   done
   wait $pids
