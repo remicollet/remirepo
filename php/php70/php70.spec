@@ -14,7 +14,7 @@
 %global pdover      20150127
 # Extension version
 %global opcachever  7.0.6-dev
-%global oci8ver     2.0.9
+%global oci8ver     2.1.0
 %global zipver      1.13.0dev
 %global jsonver     1.4.0
 
@@ -44,9 +44,7 @@
 %global mysql_config %{_libdir}/mysql/mysql_config
 
 # Optional components; pass "--with mssql" etc to rpmbuild.
-#global with_oci8      %{?_with_oci8:1}%{!?_with_oci8:0}
-### TODO : create specific 20-oci8.ini configuration file ###
-%global with_oci8      0
+%global with_oci8      %{?_with_oci8:1}%{!?_with_oci8:0}
 
 %if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
 %global with_libpcre  1
@@ -134,8 +132,8 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver         RC1
-%global rpmrel        3
+%global rcver         RC2
+%global rpmrel        4
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -163,8 +161,9 @@ Source12: php.conf2
 Source13: nginx-fpm.conf
 Source14: nginx-php.conf
 # Configuration files for some extensions
-Source50: opcache.ini
+Source50: 10-opcache.ini
 Source51: opcache-default.blacklist
+Source52: 20-oci8.ini
 Source99: php-fpm.init
 
 # Build fixes
@@ -1101,6 +1100,7 @@ echo "d /run/php-fpm 755 root root" >php-fpm.tmpfiles
 
 # Some extensions have their own configuration file
 cp %{SOURCE50} 10-opcache.ini
+cp %{SOURCE52} 20-oci8.ini
 
 # Regenerated bison files
 # to force, rm Zend/zend_{language,ini}_parser.[ch]
@@ -1997,6 +1997,11 @@ fi
 
 
 %changelog
+* Fri Sep  4 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.4.RC2
+- Update to 7.0.0RC2
+- enable oci8 and pdo_oci extensions
+- sync php.ini with upstream php.ini-production
+
 * Sat Aug 22 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.3.RC1
 - Update to 7.0.0RC1
 
