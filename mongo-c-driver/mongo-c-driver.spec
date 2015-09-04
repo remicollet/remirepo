@@ -8,35 +8,28 @@
 #
 %global gh_owner     mongodb
 %global gh_project   mongo-c-driver
-%global gh_commit    8189e90f1ad29fc4a133985452aeec54efd9bb4a
+%global gh_commit    3eaf73ed8a88340584a203520ee9ad98fd1b89d3
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-#global gh_date      20150810
-%if 0%{?fedora} >= 23
-# mongodb-server broken in f23
-%global with_tests   0%{?_with_tests:1}
-%else
+%global gh_date      20150903
 %global with_tests   0%{!?_without_tests:1}
-%endif
 %global libname      libmongoc
 %global libver       1.0
-%global prever       beta
+%global prever       beta1
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.2.0
 %if 0%{?gh_date}
-Release:   0.1.%{gh_date}git%{gh_short}%{?dist}
-Source0:   https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+Release:   0.4.%{gh_date}git%{gh_short}%{?dist}
+Source0:   https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
 BuildRequires: libtool autoconf
 %else
-Release:   0.3.%{prever}%{?dist}
+Release:   0.4.%{prever}%{?dist}
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
 %endif
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
-
-Patch0:    %{name}-upstream.patch
 
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libbson-1.0)
@@ -57,8 +50,7 @@ BuildRequires: python
 %description
 %{name} is a client library written in C for MongoDB.
 
-There are absolutely no guarantees of API/ABI stability at this point.
-But generally, we won't break API/ABI unless we have good reason.
+Documentation: http://api.mongodb.org/c/%{version}/
 
 
 %package devel
@@ -89,8 +81,6 @@ autoreconf -fvi -I build/autotools
 %else
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
 %endif
-
-%patch0 -p1 -b .upstream
 
 # Ensure we are using system library
 # Done after autoreconf because of m4_include
@@ -169,6 +159,10 @@ exit $ret
 
 
 %changelog
+* Fri Sep  4 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-0.4.20150903git3eaf73e
+- update to version 1.2.0beta1 from git snapshot
+- https://jira.mongodb.org/browse/CDRIVER-828 missing tests/json
+
 * Mon Aug 31 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-0.3.beta
 - more upstream patch (for EL-6)
 
