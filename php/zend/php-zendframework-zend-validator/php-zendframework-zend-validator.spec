@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    6b1e4bb249a00603ebbf4023b4b42c867aa79336
+%global gh_commit    53e567a58c8952a03da0b8edf0f075303a5ac5d1
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-validator
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.2
-Release:        2%{?dist}
+Version:        2.5.3
+Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -98,7 +98,7 @@ Suggests:       php-composer(%{gh_owner}/zend-session)
 Suggests:       php-composer(%{gh_owner}/zend-uri)
 %endif
 %endif
-# From phpcompatinfo report for version 2.5.2
+# From phpcompatinfo report for version 2.5.3
 Requires:       php-ctype
 Requires:       php-date
 Requires:       php-fileinfo
@@ -136,14 +136,14 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 %check
 %if %{with_tests}
 mkdir vendor
-cat << EOF | tee vendor/autoload.php
+cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
-Zend\\Loader\\AutoloaderFactory::factory(array(
-    'Zend\\Loader\\StandardAutoloader' => array(
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\StandardAutoloader' => array(
         'namespaces' => array(
-           'ZendTest\\\\%{library}' => dirname(__DIR__).'/test/',
-           'Zend\\\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
+           'ZendTest\\%{library}' => dirname(__DIR__).'/test/',
+           'Zend\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
 EOF
@@ -167,6 +167,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
+- Update to 2.5.3
+
 * Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-2
 - fix description
 
