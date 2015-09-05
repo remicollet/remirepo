@@ -21,7 +21,7 @@
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  pq
-%global rcver      RC2
+#global rcver      RC2
 %if %{?runselftest}%{!?runselftest:1}
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
@@ -286,6 +286,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Sep  5 2015 Remi Collet <remi@fedoraproject.org> - 0.6.0-1
+- Update to 0.6.0 (beta)
+
 * Wed Jul 29 2015 Remi Collet <remi@fedoraproject.org> - 0.6.0-0.3.RC2
 - allow build against rh-php56 (as more-php56)
 

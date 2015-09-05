@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #189 pq version 0.6.0RC2 ] {
+Extension [ <persistent> extension #193 pq version 0.6.0 ] {
 
   - Dependencies {
     Dependency [ raphf (Required) ]
@@ -264,7 +264,7 @@ Extension [ <persistent> extension #189 pq version 0.6.0RC2 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -272,6 +272,9 @@ Extension [ <persistent> extension #189 pq version 0.6.0RC2 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -327,7 +330,7 @@ Extension [ <persistent> extension #189 pq version 0.6.0RC2 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -335,6 +338,9 @@ Extension [ <persistent> extension #189 pq version 0.6.0RC2 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -390,7 +396,7 @@ Extension [ <persistent> extension #189 pq version 0.6.0RC2 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -398,6 +404,9 @@ Extension [ <persistent> extension #189 pq version 0.6.0RC2 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -454,7 +463,7 @@ Extension [ <persistent> extension #189 pq version 0.6.0RC2 ] {
         Property [ <default> public $sqlstate ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -462,6 +471,9 @@ Extension [ <persistent> extension #189 pq version 0.6.0RC2 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
