@@ -23,7 +23,7 @@
 
 Name: phpMyAdmin
 Version: 4.4.14
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -72,8 +72,7 @@ Requires:  php-zlib
 Requires:  php-php-gettext
 Requires:  php-tcpdf
 Requires:  php-tcpdf-dejavu-sans-fonts
-Requires:  php-phpseclib-crypt-aes
-Requires:  php-phpseclib-crypt-random
+Requires:  php-composer(phpseclib/phpseclib) >= 2.0.0
 # optional and ignored php-gmp (as bcmath is enough)
 
 Provides:  phpmyadmin = %{version}-%{release}
@@ -111,7 +110,7 @@ sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
     -e "/'SETUP_CONFIG_FILE'/s@./config/config.inc.php@%{_localstatedir}/lib/%{name}/config/config.inc.php@" \
     -e "/'GETTEXT_INC'/s@./libraries/php-gettext/gettext.inc@%{_datadir}/php/gettext/gettext.inc@" \
     -e "/'TCPDF_INC'/s@./libraries/tcpdf/tcpdf.php@%{_datadir}/php/tcpdf/tcpdf.php@" \
-    -e "/'PHPSECLIB_INC_DIR'/s@./libraries/phpseclib@%{_datadir}/pear@" \
+    -e "/'PHPSECLIB_INC_DIR'/s@./libraries/phpseclib@%{_datadir}/php/phpseclib@" \
 %if 0%{?_licensedir:1}
     -e '/LICENSE_FILE/s:%_defaultdocdir:%_defaultlicensedir:' \
 %endif
@@ -214,6 +213,10 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Sun Sep  6 2015 Remi Collet <remi@remirepo.net> 4.4.14-2
+- switch to phpseclib v2 for PHP 7
+  see https://github.com/phpmyadmin/phpmyadmin/issues/11387
+
 * Fri Aug 21 2015 Remi Collet <remi@remirepo.net> 4.4.14-1
 - update to 4.4.14 (2015-08-20, bugfix)
 
