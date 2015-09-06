@@ -1,13 +1,25 @@
+# remirepo spec file for php-php-gettext, from:
+#
+# Fedora spec file for php-php-gettext
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
 Summary:	Gettext emulation in PHP
 Name:		php-php-gettext
 Version:	1.0.11
-Release:	4%{?dist}
+Release:	12%{?dist}
 License:	GPLv2+
 Group:		Development/Libraries
 URL:		https://launchpad.net/php-gettext
 Source0:	http://launchpad.net/php-gettext/trunk/%{version}/+download/php-gettext-%{version}.tar.gz
-Requires:	php-common, php-mbstring
-Obsoletes:	php-gettext < 1.0.11-3
+Patch0:		php-php-gettext-1.0.11-php7.patch
+Requires:	php-common
+Requires:	php-mbstring
+Obsoletes:	php-gettext < 1.0.11-5
 Obsoletes:	php53-php-gettext
 BuildArch:	noarch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -18,6 +30,7 @@ not compiled in or when appropriate locale is not present on the system.
 
 %prep
 %setup -q -n php-gettext-%{version}
+%patch0 -p1 -b .php7
 
 %build
 
@@ -32,10 +45,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc README AUTHORS COPYING
+%{!?_licensedir:%global license %%doc}
+%license COPYING
+%doc README AUTHORS
 %{_datadir}/php/gettext/
 
 %changelog
+* Fri Sep 04 2015 Robert Scheck <robert@fedoraproject.org> 1.0.11-12
+- Added a patch for compatibility with PHP 7
+
 * Mon Sep  3 2012 Remi Collet <RPMS@FamilleCollet.com> 1.0.11-4
 - obsoletes php53-php-gettext
 
