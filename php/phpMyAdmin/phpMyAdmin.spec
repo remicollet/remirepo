@@ -23,7 +23,7 @@
 
 Name: phpMyAdmin
 Version: 4.4.14
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -72,8 +72,8 @@ Requires:  php-zlib
 Requires:  php-php-gettext
 Requires:  php-tcpdf
 Requires:  php-tcpdf-dejavu-sans-fonts
-Requires:  php-phpseclib-crypt-aes
-Requires:  php-phpseclib-crypt-random
+Requires:  php-phpseclib-crypt-aes >= 2.0.0
+Requires:  php-phpseclib-crypt-random >= 2.0.0
 # optional and ignored php-gmp (as bcmath is enough)
 
 Provides:  phpmyadmin = %{version}-%{release}
@@ -214,6 +214,10 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Sun Sep 06 2015 Robert Scheck <robert@fedoraproject.org> 4.4.14-2
+- require phpseclib >= 2.0 (php-phpseclib-crypt-{aes,random}) for
+  PHP 7, see https://github.com/phpmyadmin/phpmyadmin/issues/11387
+
 * Fri Aug 21 2015 Remi Collet <remi@remirepo.net> 4.4.14-1
 - update to 4.4.14 (2015-08-20, bugfix)
 
