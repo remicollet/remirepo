@@ -12,8 +12,8 @@
 
 %global github_owner     doctrine
 %global github_name      annotations
-%global github_version   1.2.6
-%global github_commit    f4a91702ca3cd2e568c3736aa031ed00c3752af4
+%global github_version   1.2.7
+%global github_commit    f25c8aab83e0c3e976fd7d19875f198ccf2f7535
 
 %global composer_vendor  doctrine
 %global composer_project annotations
@@ -36,14 +36,15 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       PHP docblock annotations parser library
 
 Group:         Development/Libraries
 License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 
-# Run "php-doctrine-annotations-get-source.sh" to create source
+# GitHub export does not include tests.
+# Run php-doctrine-annotations-get-source.sh to create full source.
 Source0:       %{name}-%{version}-%{github_commit}.tar.gz
 Source1:       %{name}-get-source.sh
 
@@ -57,7 +58,7 @@ BuildRequires: php(language)                >= %{php_min_ver}
 BuildRequires: php-composer(doctrine/cache) >= %{cache_min_ver}
 #BuildRequires: php-composer(doctrine/lexer) >= %%{lexer_min_ver}
 BuildRequires: php-doctrine-lexer           >= %{lexer_min_ver}
-## phpcompatinfo (computed from version 1.2.6)
+## phpcompatinfo (computed from version 1.2.7)
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-json
@@ -74,7 +75,7 @@ Requires:      php(language)                >= %{php_min_ver}
 #Requires:      php-composer(doctrine/lexer) >= %%{lexer_min_ver}
 Requires:      php-doctrine-lexer           >= %{lexer_min_ver}
 Requires:      php-composer(doctrine/lexer) <  %{lexer_max_ver}
-# phpcompatinfo (computed from version 1.2.6)
+# phpcompatinfo (computed from version 1.2.7)
 Requires:      php-ctype
 Requires:      php-date
 Requires:      php-json
@@ -99,15 +100,13 @@ Conflicts:     php-pear(pear.doctrine-project.org/DoctrineCommon) < 2.4
 %setup -qn %{github_name}-%{github_commit}
 
 : Create autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee lib/Doctrine/Common/Annotations/autoload.php
 <?php
 /**
  * Autoloader created by %{name}-%{version}-%{release}
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
-
-require_once '%{phpdir}/Doctrine/Common/Lexer/autoload.php';
 
 if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
     if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
@@ -120,9 +119,10 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('Doctrine\\Common\\Annotations\\', dirname(dirname(dirname(__DIR__))));
 
+require_once '%{phpdir}/Doctrine/Common/Lexer/autoload.php';
+
 return $fedoraClassLoader;
 AUTOLOAD
-) | tee lib/Doctrine/Common/Annotations/autoload.php
 
 
 %build
@@ -139,21 +139,20 @@ cp -rp lib/* %{buildroot}%{phpdir}/
 %if %{with_tests}
 : Modify tests init
 sed "s#require.*autoload.*#require_once '%{buildroot}%{phpdir}/Doctrine/Common/Annotations/autoload.php';#" \
-     -i tests/Doctrine/Tests/TestInit.php
+    -i tests/Doctrine/Tests/TestInit.php
 
 : Create tests bootstrap
-(cat <<'BOOTSTRAP'
+cat <<'BOOTSTRAP' | tee bootstrap.php
 <?php
 
 require_once '%{phpdir}/Doctrine/Common/Cache/autoload.php';
 require_once __DIR__ . '/tests/Doctrine/Tests/TestInit.php';
 BOOTSTRAP
-) | tee bootstrap.php
 
 : Run tests
 %{_bindir}/phpunit \
-  -d pcre.recursion_limit=10000 \
-  -v --bootstrap bootstrap.php
+    -d pcre.recursion_limit=10000 \
+    --verbose --bootstrap bootstrap.php
 %else
 : Tests skipped
 %endif
@@ -173,6 +172,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Sep 05 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.7-1
+- Updated to 1.2.7 (RHBZ #1258669 / CVE-2015-5723)
+- Updated autoloader to load dependencies after self registration
+
 * Sat Jun 27 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.6-2
 - Updated autoloader with trailing separator
 
