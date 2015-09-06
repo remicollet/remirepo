@@ -1,4 +1,4 @@
-# spec file for php-pecl-yaf
+# remirepo spec file for php-pecl-yaf
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
@@ -29,7 +29,7 @@
 
 Summary:       Yet Another Framework
 Name:          %{?sub_prefix}php-pecl-yaf
-Version:       2.3.4
+Version:       2.3.5
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
@@ -78,7 +78,7 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 The Yet Another Framework (Yaf) extension is a PHP framework that is used
 to develop web applications. 
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{scl_vendor})}.
 
 
 %prep
@@ -206,6 +206,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep  6 2015 Remi Collet <remi@fedoraproject.org> - 2.3.5-1
+- Update to 2.3.5
+
 * Thu Aug 13 2015 Remi Collet <remi@fedoraproject.org> - 2.3.4-1
 - Update to 2.3.4
 
