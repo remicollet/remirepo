@@ -12,8 +12,8 @@
 
 %global github_owner     doctrine
 %global github_name      DoctrineBundle
-%global github_version   1.5.0
-%global github_commit    0b9e27037c4fdbad515ee5ec89842e9091a6480f
+%global github_version   1.5.2
+%global github_commit    d63be7eb9a95d46720f7d6badac4e5bc2bcff2e3
 
 %global composer_vendor  doctrine
 %global composer_project doctrine-bundle
@@ -32,13 +32,13 @@
 # "jdorn/sql-formatter": "~1.1"
 %global sql_formatter_min_ver 1.1
 %global sql_formatter_max_ver 2.0
-# "symfony/console": "~2.3"
-# "symfony/doctrine-bridge": "~2.2"
-# "symfony/framework-bundle": "~2.3"
-# "symfony/validator": "~2.2"
-# "symfony/yaml": "~2.2"
+# "symfony/console": "~2.3|~3.0"
+# "symfony/doctrine-bridge": "~2.2|~3.0"
+# "symfony/framework-bundle": "~2.3|~3.0"
+# "symfony/validator": "~2.2|~3.0"
+# "symfony/yaml": "~2.2|~3.0"
 %global symfony_min_ver 2.3
-%global symfony_max_ver 3.0
+%global symfony_max_ver 4.0
 # "twig/twig": "~1.10"
 %global twig_min_ver 1.10
 %global twig_max_ver 2.0
@@ -50,7 +50,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       3%{?dist}
+Release:       1%{?dist}
 Summary:       Symfony Bundle for Doctrine
 
 Group:         Development/Libraries
@@ -75,7 +75,7 @@ BuildRequires: php-composer(symfony/framework-bundle)       >= %{symfony_min_ver
 BuildRequires: php-composer(symfony/validator)              >= %{symfony_min_ver}
 BuildRequires: php-composer(symfony/yaml)                   >= %{symfony_min_ver}
 BuildRequires: php-composer(twig/twig)                      >= %{twig_min_ver}
-## phpcompatinfo (computed from version 1.5.0)
+## phpcompatinfo (computed from version 1.5.2)
 BuildRequires: php-dom
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -98,7 +98,7 @@ Requires:      php-composer(symfony/doctrine-bridge)        >= %{symfony_min_ver
 Requires:      php-composer(symfony/doctrine-bridge)        <  %{symfony_max_ver}
 Requires:      php-composer(symfony/framework-bundle)       >= %{symfony_min_ver}
 Requires:      php-composer(symfony/framework-bundle)       <  %{symfony_max_ver}
-# phpcompatinfo (computed from version 1.5.0)
+# phpcompatinfo (computed from version 1.5.2)
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
@@ -129,16 +129,15 @@ Optional:
 %setup -qn %{github_name}-%{github_commit}
 
 : Create autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee autoload.php
 <?php
 /**
- * Autoloader created by %{name}-%{version}-%{release}
+ * Autoloader for %{name} and its' dependencies
+ *
+ * Created by %{name}-%{version}-%{release}
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
-
-require_once '%{phpdir}/Doctrine/Bundle/DoctrineCacheBundle/autoload.php';
-require_once '%{phpdir}/jdorn-sql-formatter/autoload.php';
 
 if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
     if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
@@ -150,11 +149,16 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 }
 
 $fedoraClassLoader->addPrefix('Doctrine\\Bundle\\DoctrineBundle\\', dirname(dirname(dirname(__DIR__))));
+
+require_once '%{phpdir}/Doctrine/Bundle/DoctrineCacheBundle/autoload.php';
+require_once '%{phpdir}/jdorn-sql-formatter/autoload.php';
+
+// Not all dependency autoloaders exist or are in every dist yet so fallback
+// to using include path for dependencies for now
 $fedoraClassLoader->setUseIncludePath(true);
 
 return $fedoraClassLoader;
 AUTOLOAD
-) | tee autoload.php
 
 
 %build
@@ -170,7 +174,7 @@ cp -pr Command Controller DataCollector DependencyInjection Mapping Resources Te
 
 %check
 %if %{with_tests}
-%{_bindir}/phpunit -v \
+%{_bindir}/phpunit --verbose \
     --bootstrap %{buildroot}%{phpdir}/Doctrine/Bundle/DoctrineBundle/autoload.php
 %else
 : Tests skipped
@@ -192,6 +196,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Sep 05 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.5.2-1
+- Updated to 1.5.2 (RHBZ #1253092 / CVE-2015-5723)
+- Updated autoloader to load dependencies after self registration
+
 * Sat Jun 27 2015 Remi Collet <remi@remirepo.net> - 1.5.0-3
 - backport for remi repo
 
