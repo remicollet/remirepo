@@ -12,8 +12,8 @@
 
 %global github_owner     doctrine
 %global github_name      cache
-%global github_version   1.4.1
-%global github_commit    c9eadeb743ac6199f7eec423cb9426bc518b7b03
+%global github_version   1.4.2
+%global github_commit    8c434000f420ade76a07c64cbe08ca47e5c101ca
 
 %global composer_vendor  doctrine
 %global composer_project cache
@@ -28,7 +28,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       1%{?dist}
 Summary:       Doctrine Cache
 
 Group:         Development/Libraries
@@ -43,7 +43,7 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language) >= %{php_min_ver}
-## phpcompatinfo (computed from version 1.4.1)
+## phpcompatinfo (computed from version 1.4.2)
 BuildRequires: php-date
 BuildRequires: php-hash
 BuildRequires: php-pcre
@@ -58,7 +58,7 @@ BuildRequires: php-composer(symfony/class-loader)
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.4.1)
+# phpcompatinfo (computed from version 1.4.2)
 Requires:      php-date
 Requires:      php-hash
 Requires:      php-pcre
@@ -93,7 +93,7 @@ Optional:
 %setup -qn %{github_name}-%{github_commit}
 
 : Create autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee lib/Doctrine/Common/Cache/autoload.php
 <?php
 /**
  * Autoloader created by %{name}-%{version}-%{release}
@@ -114,7 +114,6 @@ $fedoraClassLoader->addPrefix('Doctrine\\Common\\Cache\\', dirname(dirname(dirna
 
 return $fedoraClassLoader;
 AUTOLOAD
-) | tee lib/Doctrine/Common/Cache/autoload.php
 
 : Remove files that will never be used
 find . -name '*WinCache*' -delete
@@ -134,7 +133,7 @@ cp -rp lib/* %{buildroot}%{phpdir}/
 %check
 %if %{with_tests}
 : Create tests autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee autoload.php
 <?php
 
 $fedoraClassLoader =
@@ -142,7 +141,6 @@ $fedoraClassLoader =
 
 $fedoraClassLoader->addPrefix('Doctrine\\Tests', __DIR__ . '/tests');
 AUTOLOAD
-) | tee autoload.php
 
 : Skip tests requiring a server to connect to
 rm -f \
@@ -158,7 +156,7 @@ rm  tests/Doctrine/Tests/Common/Cache/SQLite3CacheTest.php
 %endif
 
 : Run tests
-%{_bindir}/phpunit -v --bootstrap autoload.php
+%{_bindir}/phpunit --verbose --bootstrap autoload.php
 %else
 : Tests skipped
 %endif
@@ -180,6 +178,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Sep 05 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.4.2-1
+- Updated to 1.4.2 (RHBZ #1258670 / CVE-2015-5723)
+
 * Sat Jun 27 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.4.1-2
 - Updated autoloader with trailing separator
 
