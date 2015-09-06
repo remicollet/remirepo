@@ -14,8 +14,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   2.8.17
-%global github_commit    2f854073d68ee891c1e582015a423938942aa913
+%global github_version   2.8.20
+%global github_commit    e01825efad025dbe6d88997e02bd32ec80814381
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -59,7 +59,7 @@ Requires:  php-composer(guzzle/guzzle) >= %{guzzle_min_ver}
 Requires:  php-composer(guzzle/guzzle) <  %{guzzle_max_ver}
 # composer.json: optional
 Requires:  php-openssl
-# phpcompatinfo (computed from version 2.8.17)
+# phpcompatinfo (computed from version 2.8.20)
 Requires:  php-curl
 Requires:  php-date
 Requires:  php-hash
@@ -120,17 +120,6 @@ cat <<'AUTOLOAD' | tee src/Aws/autoload.php
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
 
-// Dependency autoloaders
-foreach (array(
-    '%{phpdir}/Doctrine/Common/Cache/autoload.php',
-    '%{phpdir}/Monolog/autoload.php',
-    '%{phpdir}/Symfony/Component/Yaml/autoload.php',
-) as $dependencyAutoloader) {
-    if (file_exists($dependencyAutoloader)) {
-        require_once $dependencyAutoloader;
-    }
-}
-
 if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
     if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
         require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
@@ -141,6 +130,16 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 }
 
 $fedoraClassLoader->addPrefix('Aws\\', dirname(__DIR__));
+
+foreach (array(
+    '%{phpdir}/Doctrine/Common/Cache/autoload.php',
+    '%{phpdir}/Monolog/autoload.php',
+    '%{phpdir}/Symfony/Component/Yaml/autoload.php',
+) as $dependencyAutoloader) {
+    if (file_exists($dependencyAutoloader)) {
+        require_once $dependencyAutoloader;
+    }
+}
 
 // Not all dependency autoloaders exist or are in every dist yet so fallback
 // to using include path for dependencies for now
@@ -190,6 +189,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Sep 05 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.8.20-1
+- Updated to 2.8.20 (RHBZ #1253094)
+- Updated autoloader to load dependencies after self registration
+
 * Tue Aug 04 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.8.17-1
 - Updated to 2.8.17 (RHBZ #1243181)
 
