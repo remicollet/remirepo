@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #177 zip version 1.12.5 ] {
+Extension [ <persistent> extension #182 zip version 1.13.0 ] {
 
   - Functions {
     Function [ <internal:zip> function zip_open ] {
@@ -151,7 +151,7 @@ Extension [ <persistent> extension #177 zip version 1.12.5 ] {
       - Properties [0] {
       }
 
-      - Methods [35] {
+      - Methods [37] {
         Method [ <internal:zip> public method open ] {
 
           - Parameters [2] {
@@ -426,6 +426,24 @@ Extension [ <persistent> extension #177 zip version 1.12.5 ] {
             Parameter #1 [ <required> &$opsys ]
             Parameter #2 [ <required> &$attr ]
             Parameter #3 [ <optional> $flags ]
+          }
+        }
+
+        Method [ <internal:zip> public method setCompressionName ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $method ]
+            Parameter #2 [ <optional> $compflags ]
+          }
+        }
+
+        Method [ <internal:zip> public method setCompressionIndex ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $index ]
+            Parameter #1 [ <required> $method ]
+            Parameter #2 [ <optional> $compflags ]
           }
         }
       }
