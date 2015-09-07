@@ -15,7 +15,7 @@
 %global pecl_name  json
 %global proj_name  jsonc
 %global with_zts   0%{?__ztsphp:1}
-%global prever     RC1
+#global prever     RC1
 
 %if "%{php_version}" > "5.5"
 %global ext_name     json
@@ -32,7 +32,7 @@
 Summary:       Support for JSON serialization
 Name:          %{?scl_prefix}php-pecl-%{proj_name}
 Version:       1.3.8
-Release:       0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 # PHP extension is PHP
 # jsonc-c is MIT
 # json-c/linkhask.c is Public Domain
@@ -94,7 +94,7 @@ serialization to PHP.
 This is a dropin alternative to standard PHP JSON extension which
 use the json-c library parser.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{scl_vendor})}.
 
 
 %package devel
@@ -290,6 +290,9 @@ rm -rf %{buildroot}
 # Note to remi : remember to always build in remi-php55(56) first
 #
 %changelog
+* Mon Sep  7 2015 Remi Collet <remi@fedoraproject.org> - 1.3.8-1
+- release 1.3.8 (stable)
+
 * Thu Jul 30 2015 Remi Collet <remi@fedoraproject.org> - 1.3.8-0.1.RC1
 - test build for upcoming 1.3.8
 - build with system libjson-c is not more supported
