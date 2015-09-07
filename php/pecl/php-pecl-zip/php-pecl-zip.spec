@@ -12,7 +12,7 @@
 %global with_zts       0%{?__ztsphp:1}
 %global pecl_name      zip
 
-%if 0%{?fedora} >= 20
+%if 0%{?rhel} != 5
 %global with_libzip    1
 %else
 %global with_libzip    0
@@ -28,8 +28,8 @@
 Summary:      A ZIP archive management extension
 Summary(fr):  Une extension de gestion des ZIP
 Name:         %{?scl_prefix}php-pecl-zip
-Version:      1.12.5
-Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:      1.13.0
+Release:      1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %if %{with_libzip}
 License:      PHP
 %else
@@ -44,7 +44,7 @@ Source:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel
 %if %{with_libzip}
-BuildRequires: pkgconfig(libzip) >= 0.11.1
+BuildRequires: pkgconfig(libzip) >= 1.0.0
 %endif
 BuildRequires: zlib-devel
 BuildRequires: %{?scl_prefix}php-pear
@@ -72,6 +72,10 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -84,12 +88,12 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %description
 Zip is an extension to create and read zip files.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{scl_vendor})}.
 
 %description -l fr
 Zip est une extension pour créer et lire les archives au format ZIP.
 
-Paquet construit pour PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: en Software Collection}.
+Paquet construit pour PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: en Software Collection (%{scl} by %{scl_vendor})}.
 
 
 %prep 
@@ -102,7 +106,7 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
 
 # Sanity check, really often broken
-extver=$(sed -n '/#define PHP_ZIP_VERSION/{s/.* "//;s/".*$//;p}' php_zip.h)
+extver=$(sed -n '/#define PHP_ZIP_VERSION/{s/.* "//;s/".*$//;p}' php5/php_zip.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
    exit 1
@@ -244,6 +248,10 @@ fi
 
 
 %changelog
+* Mon Sep  7 2015 Remi Collet <remi@fedoraproject.org> - 1.13.0-1
+- Update to 1.13.0
+- raise dependency on libzip 1.0.0
+
 * Wed Apr 15 2015 Remi Collet <remi@fedoraproject.org> - 1.12.5-1
 - Update to 1.12.5
 - Don't install/register tests
