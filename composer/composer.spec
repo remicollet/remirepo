@@ -6,10 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    f1aa655e6113e0efa979b8b09d7951a762eaa04c
+%global gh_commit    9f6fdfd703f433bd0777fd89fb4684908a6c4f06
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20150820
+%global gh_date      20150907
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
@@ -174,7 +174,10 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Sun Aug 23 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.9.201508gitf1aa655
+* Tue Sep  8 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.9.20150907git9f6fdfd
+- new snapshot
+
+* Sun Aug 23 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.9.20150820gitf1aa655
 - new snapshot
 - add LICENSE in application data, as used by the code
 
