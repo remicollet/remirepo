@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    2f17228c1b98283b779698cefa917f7f4fd0b0d4
+%global gh_commit    324b3530ac3e6277ff4bedf82a34fbf35836eb8d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150717
 %global gh_owner     composer
@@ -15,8 +15,8 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-composer-spdx-licenses
-Version:        1.1.0
-Release:        2%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
+Version:        1.1.1
+Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
 Summary:        SPDX licenses list and validation library
 
 Group:          Development/Libraries
@@ -122,6 +122,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep  8 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- version 1.1.1
+
 * Mon Jul 20 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-2
 - fix permissions
 
