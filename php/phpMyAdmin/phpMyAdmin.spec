@@ -22,8 +22,8 @@
 %endif
 
 Name: phpMyAdmin
-Version: 4.4.14
-Release: 2%{?dist}
+Version: 4.4.14.1
+Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -31,6 +31,7 @@ Group: Applications/Internet
 License:	GPLv2+ and MIT
 URL: https://www.phpmyadmin.net/
 Source0: https://files.phpmyadmin.net/%{name}/%{version}/%{name}-%{version}-all-languages.tar.xz
+Source1: https://files.phpmyadmin.net/%{name}/%{version}/%{name}-%{version}-all-languages.tar.xz.asc
 Source2: phpMyAdmin.htaccess
 Source3: phpMyAdmin.nginx
 
@@ -47,7 +48,7 @@ Requires:  httpd-filesystem
 Requires:  php(httpd)
 Suggests:  httpd
 %endif
-Requires:  php(language) >= 5.3.0
+Requires:  php(language) >= 5.3.7
 Requires:  php-bcmath
 Requires:  php-bz2
 Requires:  php-ctype
@@ -213,6 +214,10 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Wed Sep  9 2015 Remi Collet <remi@remirepo.net> 4.4.14.1-1
+- update to 4.4.14.1 (2015-09-08, security)
+- fix PMASA-2015-4
+
 * Sun Sep  6 2015 Remi Collet <remi@remirepo.net> 4.4.14-2
 - switch to phpseclib v2 for PHP 7
   see https://github.com/phpmyadmin/phpmyadmin/issues/11387
