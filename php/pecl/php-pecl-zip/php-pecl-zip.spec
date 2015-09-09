@@ -28,7 +28,7 @@
 Summary:      A ZIP archive management extension
 Summary(fr):  Une extension de gestion des ZIP
 Name:         %{?scl_prefix}php-pecl-zip
-Version:      1.13.0
+Version:      1.13.1
 Release:      1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %if %{with_libzip}
 License:      PHP
@@ -55,8 +55,8 @@ Requires:     %{?scl_prefix}php(api) = %{php_core_api}
 
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
-Provides:     %{?scl_prefix}php-%{pecl_name} = %{version}-%{release}
-Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}-%{release}
+Provides:     %{?scl_prefix}php-%{pecl_name} = 1:%{version}-%{release}
+Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = 1:%{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -76,6 +76,10 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
+%endif
+
+%if "%{php_version}" > "7.0"
+Obsoletes:     %{?scl_prefix}php-zip <= 7.0.0
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -248,6 +252,9 @@ fi
 
 
 %changelog
+* Wed Sep  9 2015 Remi Collet <remi@fedoraproject.org> - 1.13.1-1
+- Update to 1.13.1
+
 * Mon Sep  7 2015 Remi Collet <remi@fedoraproject.org> - 1.13.0-1
 - Update to 1.13.0
 - raise dependency on libzip 1.0.0
