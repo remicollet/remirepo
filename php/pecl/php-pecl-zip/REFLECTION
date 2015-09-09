@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #182 zip version 1.13.0 ] {
+Extension [ <persistent> extension #182 zip version 1.13.1 ] {
 
   - Functions {
     Function [ <internal:zip> function zip_open ] {
