@@ -14,8 +14,8 @@
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.7.3
-%global github_commit    a9af4708b4bb650c4897e9b8dfbfbdb2ea5f0486
+%global github_version   2.7.4
+%global github_commit    1fdf23fe28876844b887b0e1935c9adda43ee645
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -70,9 +70,9 @@
 #     src/Symfony/Bridge/Swiftmailer/composer.json
 #     NOTE: Max version ignored on purpose
 %global swiftmailer_min_ver 4.2.0
-# "twig/twig": "~1.18"
-%global twig_min_ver 1.18
-%global twig_max_ver 2.0
+# "twig/twig": "~1.20|~2.0"
+%global twig_min_ver 1.20
+%global twig_max_ver 3
 
 %if 0%{?fedora} < 21 && 0%{?rhel} < 7
 # Build using "--with tests" to enable tests
@@ -90,7 +90,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       1%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -783,9 +783,6 @@ Group:    Development/Libraries
 # composer.json
 Requires:  php-composer(psr/log)                           >= %{psrlog_min_ver}
 Requires:  php-composer(psr/log)                           <  %{psrlog_max_ver}
-# composer.json: optional
-Requires: php-composer(%{composer_vendor}/http-foundation) =  %{version}
-Requires: php-composer(%{composer_vendor}/http-kernel)     =  %{version}
 # phpcompatinfo (computed from version 2.7.1)
 Requires: php-pcre
 Requires: php-reflection
@@ -1643,7 +1640,7 @@ The YAML Component loads and dumps YAML files.
 find src -name '.git*' -delete
 
 : Create autoloader
-(cat <<'AUTOLOAD'
+cat << 'AUTOLOAD' | tee src/Symfony/autoload.php
 <?php
 /**
  * Autoloader for all Symfony bridges/bundles/components and their dependencies.
@@ -1702,7 +1699,6 @@ $fedoraClassLoader->setUseIncludePath(true);
 
 return $fedoraClassLoader;
 AUTOLOAD
-) | tee src/Symfony/autoload.php
 
 : Create autoloader softlinks for each bridge/bundle/component
 for PKG in src/Symfony/*/*
@@ -1781,13 +1777,12 @@ ln -s %{name}-common-%{version} %{buildroot}%{_docdir}/%{name}-%{version}
 sed 's#./src#%{buildroot}%{phpdir}#' phpunit.xml.dist > phpunit.xml
 
 : Create tests bootstrap
-(cat <<'BOOTSTRAP'
+cat << 'BOOTSTRAP' | tee bootstrap.php
 <?php
 
 require_once '%{buildroot}%{phpdir}/Symfony/autoload.php';
 require_once '%{buildroot}%{phpdir}/Symfony/Bridge/PhpUnit/bootstrap.php';
 BOOTSTRAP
-) | tee bootstrap.php
 
 : Run tests
 RET=0
@@ -2497,6 +2492,10 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Wed Sep  9 2015 Remi Collet <remi@fedoraproject.org> - 2.7.4-1
+- Update to 2.7.4
+- raise dependency on twig/twig ~1.20|~2.0
+
 * Fri Aug  7 2015 Remi Collet <remi@fedoraproject.org> - 2.7.3-2
 - rely on PHPUnit 4.8 for test suite
 
