@@ -169,7 +169,7 @@ $pkgs = file_get_contents(__DIR__."/rpmphp.json");
 if (!$pkgs) {
 	die("Missing configuration file rpmphp\n");
 }
-$pkgs = json_decode($pkgs, true, 5, JSON_PARSER_NOTSTRICT);
+$pkgs = json_decode($pkgs, true, 5);
 if (!$pkgs) {
 	die("Bad configuration file rpmphp\n");
 }
@@ -177,7 +177,7 @@ $pkg2 = file_get_contents(__DIR__."/checkpkgist.json");
 if (!$pkg2) {
 	die("Missing configuration file checkpkgist\n");
 }
-$pkg2 = json_decode($pkg2, true, 5, JSON_PARSER_NOTSTRICT);
+$pkg2 = json_decode($pkg2, true, 5);
 if (!$pkg2) {
 	die("Bad configuration file checkpkgist\n");
 }
