@@ -14,10 +14,12 @@
 %endif
 %endif
 
-%global gh_commit  e3763f178d49ba2b65260dbeba3b0453add64136
+%global gh_commit  a65127d6b271e4627456aa5e8a2d8aff51cbf6fd
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   eduardok
 %global gh_project libsmbclient-php
+%global gh_date    20150909
+%global prever     -dev
 %{?scl:          %scl_package         php-libsmbclient}
 %{!?scl:         %global pkg_name     %{name}}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
@@ -35,8 +37,8 @@
 %global with_tests 0%{?_with_tests:1}
 
 Name:           %{?sub_prefix}php-libsmbclient
-Version:        0.7.0
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        0.8.0
+Release:        0.1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        PHP wrapper for libsmbclient
 
 Group:          Development/Languages
@@ -74,6 +76,10 @@ Obsoletes:     php55w-%{ext_name} <= %{version}
 Obsoletes:     php56u-%{ext_name} <= %{version}
 Obsoletes:     php56w-%{ext_name} <= %{version}
 %endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-%{ext_name} <= %{version}
+Obsoletes:     php70w-%{ext_name} <= %{version}
+%endif
 %endif
 
 # Filter private shared
@@ -85,7 +91,7 @@ Obsoletes:     php56w-%{ext_name} <= %{version}
 libsmbclient-php is a PHP extension that uses Samba's libsmbclient
 library to provide Samba related functions to PHP programs.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{scl_vendor})}.
 
 
 %prep
@@ -94,9 +100,9 @@ mv %{gh_project}-%{gh_commit} NTS
 
 cd NTS
 # Check extension version
-ver=$(sed -n '/define LIBSMBCLIENT_VERSION/{s/.*\t"//;s/".*$//;p}' libsmbclient.c)
-if test "$ver" != "%{version}"; then
-   : Error: Upstream LIBSMBCLIENT_VERSION version is ${ver}, expecting %{version}.
+ver=$(sed -n '/define LIBSMBCLIENT_VERSION/{s/.* "//;s/".*$//;p}' php_libsmbclient.h)
+if test "$ver" != "%{version}%{?prever}"; then
+   : Error: Upstream LIBSMBCLIENT_VERSION version is ${ver}, expecting %{version}%{?prever}.
    exit 1
 fi
 cd ..
@@ -178,6 +184,11 @@ cp %{SOURCE2} phpunit.xml
 
 
 %changelog
+* Thu Sep  3 2015 Remi Collet <rcollet@redhat.com> - 0.8.0-0.1.20150909gita65127d
+- update to 0.8.0-dev
+- https://github.com/eduardok/libsmbclient-php/pull/20 streams support
+- https://github.com/eduardok/libsmbclient-php/pull/23 PHP 7
+
 * Thu Sep  3 2015 Remi Collet <rcollet@redhat.com> - 0.7.0-1
 - Update to 0.7.0
 - drop patches merged upstream
