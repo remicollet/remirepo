@@ -25,8 +25,8 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             redis
-Version:          3.0.3
-Release:          1%{?dist}.1
+Version:          3.0.4
+Release:          1%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -258,6 +258,10 @@ fi
 
 
 %changelog
+* Thu Sep 10 2015 Remi Collet <remi@fedoraproject.org> - 3.0.4-1
+- Redis 3.0.4 - Release date: 8 Sep 2015
+- Upgrade urgency: HIGH for Redis and Sentinel.
+
 * Wed Aug  5 2015 Remi Collet <remi@fedoraproject.org> - 3.0.3-1.1
 - make redis-shutdown more robust, see #22
 
