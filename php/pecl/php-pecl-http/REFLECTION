@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #183 http version 2.5.1 ] {
+Extension [ <persistent> extension #187 http version 2.5.2 ] {
 
   - Dependencies {
     Dependency [ raphf (Required) ]
@@ -84,7 +84,7 @@ Extension [ <persistent> extension #183 http version 2.5.1 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -92,6 +92,9 @@ Extension [ <persistent> extension #183 http version 2.5.1 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -138,7 +141,7 @@ Extension [ <persistent> extension #183 http version 2.5.1 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -146,6 +149,9 @@ Extension [ <persistent> extension #183 http version 2.5.1 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -192,7 +198,7 @@ Extension [ <persistent> extension #183 http version 2.5.1 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -200,6 +206,9 @@ Extension [ <persistent> extension #183 http version 2.5.1 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -246,7 +255,7 @@ Extension [ <persistent> extension #183 http version 2.5.1 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -254,6 +263,9 @@ Extension [ <persistent> extension #183 http version 2.5.1 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -300,7 +312,7 @@ Extension [ <persistent> extension #183 http version 2.5.1 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -308,6 +320,9 @@ Extension [ <persistent> extension #183 http version 2.5.1 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -354,7 +369,7 @@ Extension [ <persistent> extension #183 http version 2.5.1 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -362,6 +377,9 @@ Extension [ <persistent> extension #183 http version 2.5.1 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -408,7 +426,7 @@ Extension [ <persistent> extension #183 http version 2.5.1 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -416,6 +434,9 @@ Extension [ <persistent> extension #183 http version 2.5.1 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -462,7 +483,7 @@ Extension [ <persistent> extension #183 http version 2.5.1 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -470,6 +491,9 @@ Extension [ <persistent> extension #183 http version 2.5.1 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -516,7 +540,7 @@ Extension [ <persistent> extension #183 http version 2.5.1 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -524,6 +548,9 @@ Extension [ <persistent> extension #183 http version 2.5.1 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
