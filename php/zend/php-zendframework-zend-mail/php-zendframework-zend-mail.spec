@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    684ca1af4b3ae75be52dff4857d98366c1293e0b
+%global gh_commit    68b1357c6389d476d80c050a75bf3091e873202c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-mail
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.1
-Release:        2%{?dist}
+Version:        2.5.2
+Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -58,13 +58,13 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.3.23",
+#        "php": ">=5.5",
 #        "zendframework/zend-crypt": "~2.5",
 #        "zendframework/zend-loader": "~2.5",
 #        "zendframework/zend-mime": "~2.5",
 #        "zendframework/zend-stdlib": "~2.5",
 #        "zendframework/zend-validator": "~2.5"
-Requires:       php(language) >= 5.3.23
+Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-crypt)            >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-crypt)            <  3
@@ -120,14 +120,14 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 %check
 %if %{with_tests}
 mkdir vendor
-cat << EOF | tee vendor/autoload.php
+cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
-Zend\\Loader\\AutoloaderFactory::factory(array(
-    'Zend\\Loader\\StandardAutoloader' => array(
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\StandardAutoloader' => array(
         'namespaces' => array(
-           'ZendTest\\\\%{library}' => dirname(__DIR__).'/test/',
-           'Zend\\\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
+           'ZendTest\\%{library}' => dirname(__DIR__).'/test/',
+           'Zend\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
 EOF
@@ -151,8 +151,9 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Fri Aug  7 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-2
-- rebuild
+* Fri Sep 11 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
+- update to 2.5.2
+- raise minimum PHP version to 5.5
 
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
 - initial package
