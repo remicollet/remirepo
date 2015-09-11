@@ -20,7 +20,7 @@
 
 Summary:        Threading API
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        3.0.0
+Version:        3.0.1
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
@@ -146,11 +146,6 @@ fi
 %check
 cd %{pecl_name}-%{version}
 
-: ignore failed tests for now
-rm tests/workers-no-start.phpt
-rm tests/workers-ok-unstack.phpt
-rm tests/crazy-refcounting-stuff.phpt
-
 : Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
     --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
@@ -179,6 +174,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 10 2015 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
+- Update to 3.0.1 (stable)
+
 * Thu Sep 10 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
 - Update to 3.0.0 (stable)
 - raise minimum PHP version to 7
