@@ -18,12 +18,12 @@
 %else
 %global ini_name   40-%{pecl_name}.ini
 %endif
-%global prever     alpha2
+%global prever     beta1
 
 Summary:        MongoDB driver for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -79,7 +79,7 @@ The purpose of this driver is to provide exceptionally thin glue between
 MongoDB and PHP, implementing only fundemental and performance-critical
 components necessary to build a fully-functional MongoDB driver.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -220,6 +220,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 11 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2-beta1
+- Update to 1.0.0beta1 (beta)
+
 * Mon Aug 31 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.alpha2
 - Update to 1.0.0alpha2 (alpha)
 - buid with system libmongoc
