@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #124 mongodb version 1.0.0alpha2 ] {
+Extension [ <persistent> extension #125 mongodb version 1.0.0beta1 ] {
 
   - INI {
     Entry [ mongodb.debug <ALL> ]
@@ -7,8 +7,8 @@ Extension [ <persistent> extension #124 mongodb version 1.0.0alpha2 ] {
   }
 
   - Constants [3] {
-    Constant [ string MONGODB_VERSION ] { 1.0.0alpha2 }
-    Constant [ string MONGODB_STABILITY ] { alpha }
+    Constant [ string MONGODB_VERSION ] { 1.0.0beta1 }
+    Constant [ string MONGODB_STABILITY ] { beta }
     Constant [ string BSON_NAMESPACE ] { MongoDB\BSON }
   }
 
@@ -348,17 +348,19 @@ Extension [ <persistent> extension #124 mongodb version 1.0.0alpha2 ] {
 
         Method [ <internal:mongodb> final public method executeCommand ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $db ]
             Parameter #1 [ <required> MongoDB\Driver\Command $command ]
+            Parameter #2 [ <optional> MongoDB\Driver\ReadPreference or NULL $readPreference ]
           }
         }
 
         Method [ <internal:mongodb> final public method executeQuery ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $namespace ]
             Parameter #1 [ <required> MongoDB\Driver\Query $zquery ]
+            Parameter #2 [ <optional> MongoDB\Driver\ReadPreference or NULL $readPreference ]
           }
         }
 
