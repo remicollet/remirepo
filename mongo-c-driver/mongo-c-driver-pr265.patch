@@ -1,0 +1,459 @@
+From af2acd17bf4bcb5ef0d812c118628f0ccdf0680f Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Fri, 4 Sep 2015 16:58:20 +0200
+Subject: [PATCH] CDRIVER-832: export library verson in the API
+
+---
+ CMakeLists.txt                    |  2 ++
+ build/autotools/versions.ldscript |  5 +++
+ build/cmake/libmongoc-ssl.def     |  5 +++
+ build/cmake/libmongoc.def         |  5 +++
+ doc/mongoc_check_version.page     | 33 +++++++++++++++++
+ doc/mongoc_get_major_version.page | 24 +++++++++++++
+ doc/mongoc_get_micro_version.page | 24 +++++++++++++
+ doc/mongoc_get_minor_version.page | 24 +++++++++++++
+ doc/mongoc_get_version.page       | 24 +++++++++++++
+ doc/mongoc_version.page           |  9 +++++
+ src/mongoc/Makefile.am            |  1 +
+ src/mongoc/mongoc-version.c       | 76 +++++++++++++++++++++++++++++++++++++++
+ src/mongoc/mongoc-version.h.in    |  5 +++
+ tests/Makefile.am                 |  1 +
+ tests/test-libmongoc.c            |  2 ++
+ tests/test-mongoc-version.c       | 24 +++++++++++++
+ 16 files changed, 264 insertions(+)
+ create mode 100644 doc/mongoc_check_version.page
+ create mode 100644 doc/mongoc_get_major_version.page
+ create mode 100644 doc/mongoc_get_micro_version.page
+ create mode 100644 doc/mongoc_get_minor_version.page
+ create mode 100644 doc/mongoc_get_version.page
+ create mode 100644 src/mongoc/mongoc-version.c
+ create mode 100644 tests/test-mongoc-version.c
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f1db842..f41017d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -125,6 +125,7 @@ set (SOURCES
+    ${SOURCE_DIR}/src/mongoc/mongoc-topology-description.c
+    ${SOURCE_DIR}/src/mongoc/mongoc-topology-scanner.c
+    ${SOURCE_DIR}/src/mongoc/mongoc-uri.c
++   ${SOURCE_DIR}/src/mongoc/mongoc-version.c
+    ${SOURCE_DIR}/src/mongoc/mongoc-util.c
+    ${SOURCE_DIR}/src/mongoc/mongoc-write-command.c
+    ${SOURCE_DIR}/src/mongoc/mongoc-write-concern.c
+@@ -283,6 +284,7 @@ set(test-libmongoc-sources
+    ${SOURCE_DIR}/tests/test-mongoc-topology-reconcile.c
+    ${SOURCE_DIR}/tests/test-mongoc-topology-scanner.c
+    ${SOURCE_DIR}/tests/test-mongoc-uri.c
++   ${SOURCE_DIR}/tests/test-mongoc-version.c
+    ${SOURCE_DIR}/tests/test-mongoc-usleep.c
+    ${SOURCE_DIR}/tests/test-mongoc-write-concern.c
+    ${SOURCE_DIR}/tests/test-sasl.c
+diff --git a/build/autotools/versions.ldscript b/build/autotools/versions.ldscript
+index 6f0813c..0a68825 100644
+--- a/build/autotools/versions.ldscript
++++ b/build/autotools/versions.ldscript
+@@ -256,4 +256,9 @@ LIBMONGOC_1.2 {
+         mongoc_uri_get_read_prefs_t;
+         mongoc_client_pool_max_size;
+         mongoc_client_pool_min_size;
++        mongoc_get_major_version;
++        mongoc_get_minor_version;
++        mongoc_get_micro_version;
++        mongoc_get_version;
++        mongoc_check_version;
+ } LIBMONGOC_1.1;
+diff --git a/build/cmake/libmongoc-ssl.def b/build/cmake/libmongoc-ssl.def
+index 6eca72c..7da6aad 100644
+--- a/build/cmake/libmongoc-ssl.def
++++ b/build/cmake/libmongoc-ssl.def
+@@ -16,6 +16,7 @@ mongoc_bulk_operation_set_hint
+ mongoc_bulk_operation_set_write_concern
+ mongoc_bulk_operation_update
+ mongoc_bulk_operation_update_one
++mongoc_check_version
+ mongoc_cleanup
+ mongoc_client_command
+ mongoc_client_command_simple
+@@ -106,6 +107,10 @@ mongoc_database_remove_all_users
+ mongoc_database_remove_user
+ mongoc_database_set_read_prefs
+ mongoc_database_set_write_concern
++mongoc_get_major_version
++mongoc_get_micro_version
++mongoc_get_minor_version
++mongoc_get_version
+ mongoc_gridfs_create_file
+ mongoc_gridfs_create_file_from_stream
+ mongoc_gridfs_destroy
+diff --git a/build/cmake/libmongoc.def b/build/cmake/libmongoc.def
+index 35e30bb..bab4963 100644
+--- a/build/cmake/libmongoc.def
++++ b/build/cmake/libmongoc.def
+@@ -16,6 +16,7 @@ mongoc_bulk_operation_set_hint
+ mongoc_bulk_operation_set_write_concern
+ mongoc_bulk_operation_update
+ mongoc_bulk_operation_update_one
++mongoc_check_version
+ mongoc_cleanup
+ mongoc_client_command
+ mongoc_client_command_simple
+@@ -104,6 +105,10 @@ mongoc_database_remove_all_users
+ mongoc_database_remove_user
+ mongoc_database_set_read_prefs
+ mongoc_database_set_write_concern
++mongoc_get_major_version
++mongoc_get_micro_version
++mongoc_get_minor_version
++mongoc_get_version
+ mongoc_gridfs_create_file
+ mongoc_gridfs_create_file_from_stream
+ mongoc_gridfs_destroy
+diff --git a/doc/mongoc_check_version.page b/doc/mongoc_check_version.page
+new file mode 100644
+index 0000000..07c2822
+--- /dev/null
++++ b/doc/mongoc_check_version.page
+@@ -0,0 +1,33 @@
++<?xml version="1.0"?>
++<page xmlns="http://projectmallard.org/1.0/"
++      type="topic"
++      style="function"
++      xmlns:api="http://projectmallard.org/experimental/api/"
++      xmlns:ui="http://projectmallard.org/experimental/ui/"
++      id="mongoc_get_version">
++  <info>
++    <link type="guide" xref="version" group="function"/>
++  </info>
++  <title>mongoc_check_major_version()</title>
++
++  <section id="synopsis">
++    <title>Synopsis</title>
++    <synopsis><code mime="text/x-csrc"><![CDATA[const char *
++mongoc_get_major_version (int requiredmajor, int requiredminor, int requiredmicro);
++]]></code></synopsis>
++  </section>
++
++  <section id="parameters">
++    <title>Parameters</title>
++    <table>
++      <tr><td><p>requiredmajor</p></td><td><p>The minimum major version required.</p></td></tr>
++      <tr><td><p>requiredminor</p></td><td><p>The minimum minor version required.</p></td></tr>
++      <tr><td><p>requiredmicro</p></td><td><p>The minimum micro version required.</p></td></tr>
++    </table>
++  </section>
++
++  <section id="return">
++    <title>Returns</title>
++	<p><code>NULL</code> if requirement is met, else the value of <code>MONGOC_VERSION_S</code>.</p>
++  </section>
++</page>
+diff --git a/doc/mongoc_get_major_version.page b/doc/mongoc_get_major_version.page
+new file mode 100644
+index 0000000..a173504
+--- /dev/null
++++ b/doc/mongoc_get_major_version.page
+@@ -0,0 +1,24 @@
++<?xml version="1.0"?>
++<page xmlns="http://projectmallard.org/1.0/"
++      type="topic"
++      style="function"
++      xmlns:api="http://projectmallard.org/experimental/api/"
++      xmlns:ui="http://projectmallard.org/experimental/ui/"
++      id="mongoc_get_major_version">
++  <info>
++    <link type="guide" xref="version" group="function"/>
++  </info>
++  <title>mongoc_get_major_version()</title>
++
++  <section id="synopsis">
++    <title>Synopsis</title>
++    <synopsis><code mime="text/x-csrc"><![CDATA[int
++mongoc_get_major_version (void);
++]]></code></synopsis>
++  </section>
++
++  <section id="return">
++    <title>Returns</title>
++    <p>The value of <code>MONGOC_MAJOR_VERSION</code> when Libmongoc was compiled.</p>
++  </section>
++</page>
+diff --git a/doc/mongoc_get_micro_version.page b/doc/mongoc_get_micro_version.page
+new file mode 100644
+index 0000000..ba5588b
+--- /dev/null
++++ b/doc/mongoc_get_micro_version.page
+@@ -0,0 +1,24 @@
++<?xml version="1.0"?>
++<page xmlns="http://projectmallard.org/1.0/"
++      type="topic"
++      style="function"
++      xmlns:api="http://projectmallard.org/experimental/api/"
++      xmlns:ui="http://projectmallard.org/experimental/ui/"
++      id="mongoc_get_micro_version">
++  <info>
++    <link type="guide" xref="version" group="function"/>
++  </info>
++  <title>mongoc_get_micro_version()</title>
++
++  <section id="synopsis">
++    <title>Synopsis</title>
++    <synopsis><code mime="text/x-csrc"><![CDATA[int
++mongoc_get_micro_version (void);
++]]></code></synopsis>
++  </section>
++
++  <section id="return">
++    <title>Returns</title>
++    <p>The value of <code>MONGOC_MICRO_VERSION</code> when Libmongoc was compiled.</p>
++  </section>
++</page>
+diff --git a/doc/mongoc_get_minor_version.page b/doc/mongoc_get_minor_version.page
+new file mode 100644
+index 0000000..e7b5b7f
+--- /dev/null
++++ b/doc/mongoc_get_minor_version.page
+@@ -0,0 +1,24 @@
++<?xml version="1.0"?>
++<page xmlns="http://projectmallard.org/1.0/"
++      type="topic"
++      style="function"
++      xmlns:api="http://projectmallard.org/experimental/api/"
++      xmlns:ui="http://projectmallard.org/experimental/ui/"
++      id="mongoc_get_minor_version">
++  <info>
++    <link type="guide" xref="version" group="function"/>
++  </info>
++  <title>mongoc_get_minor_version()</title>
++
++  <section id="synopsis">
++    <title>Synopsis</title>
++    <synopsis><code mime="text/x-csrc"><![CDATA[int
++mongoc_get_minor_version (void);
++]]></code></synopsis>
++  </section>
++
++  <section id="return">
++    <title>Returns</title>
++    <p>The value of <code>MONGOC_MINOR_VERSION</code> when Libmongoc was compiled.</p>
++  </section>
++</page>
+diff --git a/doc/mongoc_get_version.page b/doc/mongoc_get_version.page
+new file mode 100644
+index 0000000..b9ca63e
+--- /dev/null
++++ b/doc/mongoc_get_version.page
+@@ -0,0 +1,24 @@
++<?xml version="1.0"?>
++<page xmlns="http://projectmallard.org/1.0/"
++      type="topic"
++      style="function"
++      xmlns:api="http://projectmallard.org/experimental/api/"
++      xmlns:ui="http://projectmallard.org/experimental/ui/"
++      id="mongoc_get_version">
++  <info>
++    <link type="guide" xref="version" group="function"/>
++  </info>
++  <title>mongoc_get_major_version()</title>
++
++  <section id="synopsis">
++    <title>Synopsis</title>
++    <synopsis><code mime="text/x-csrc"><![CDATA[const char *
++mongoc_get_major_version (void);
++]]></code></synopsis>
++  </section>
++
++  <section id="return">
++    <title>Returns</title>
++    <p>The value of <code>MONGOC_VERSION_S</code> when Libmongoc was compiled.</p>
++  </section>
++</page>
+diff --git a/doc/mongoc_version.page b/doc/mongoc_version.page
+index f0cd67e..6303cd9 100644
+--- a/doc/mongoc_version.page
++++ b/doc/mongoc_version.page
+@@ -33,4 +33,13 @@ static void do_something (void) {
+ #endif]]></code>
+   </listing>
+ 
++  <section id="seealso">
++    <title>See Also</title>
++    <p><link type="seealso" xref="mongoc_get_major_version">mongoc_get_major_version()</link>.</p>
++    <p><link type="seealso" xref="mongoc_get_minor_version">mongoc_get_minor_version()</link>.</p>
++    <p><link type="seealso" xref="mongoc_get_micro_version">mongoc_get_micro_version()</link>.</p>
++    <p><link type="seealso" xref="mongoc_get_version">mongoc_get_version()</link>.</p>
++    <p><link type="seealso" xref="mongoc_check_version">mongoc_check_version()</link>.</p>
++  </section>
++
+ </page>
+diff --git a/src/mongoc/Makefile.am b/src/mongoc/Makefile.am
+index 1c8b1b4..dc0a5c1 100644
+--- a/src/mongoc/Makefile.am
++++ b/src/mongoc/Makefile.am
+@@ -150,6 +150,7 @@ MONGOC_SOURCES_SHARED += \
+ 	src/mongoc/mongoc-topology-scanner.c \
+ 	src/mongoc/mongoc-uri.c \
+ 	src/mongoc/mongoc-util.c \
++	src/mongoc/mongoc-version.c \
+ 	src/mongoc/mongoc-write-command.c \
+ 	src/mongoc/mongoc-write-concern.c
+ 
+diff --git a/src/mongoc/mongoc-version.c b/src/mongoc/mongoc-version.c
+new file mode 100644
+index 0000000..b353282
+--- /dev/null
++++ b/src/mongoc/mongoc-version.c
+@@ -0,0 +1,76 @@
++/*
++ * Copyright 2015 MongoDB, Inc.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *   http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++
++#include "mongoc.h"
++#include "mongoc-version.h"
++
++/**
++ * mongoc_get_major_version:
++ *
++ * Helper function to return the runtime major version of the library.
++ */
++int
++mongoc_get_major_version (void)
++{
++   return MONGOC_MAJOR_VERSION;
++}
++
++
++/**
++ * mongoc_get_minor_version:
++ *
++ * Helper function to return the runtime minor version of the library.
++ */
++int
++mongoc_get_minor_version (void)
++{
++   return MONGOC_MINOR_VERSION;
++}
++
++/**
++ * mongoc_get_micro_version:
++ *
++ * Helper function to return the runtime micro version of the library.
++ */
++int
++mongoc_get_micro_version (void)
++{
++   return MONGOC_MICRO_VERSION;
++}
++
++/**
++ * mongoc_get_version:
++ *
++ * Helper function to return the runtime string version of the library.
++ */
++const char *
++mongoc_get_version (void)
++{
++   return MONGOC_VERSION_S;
++}
++
++/**
++ * mongoc_check_version:
++ *
++ * Helper function to check the runtime string version of the library.
++ * return NULL it met the required version, else return the version string.
++ */
++const char *
++mongoc_check_version (int requiredmajor, int requiredminor, int requiredmicro)
++{
++   return (MONGOC_CHECK_VERSION(requiredmajor, requiredminor, requiredmicro) ? NULL : MONGOC_VERSION_S);
++}
+diff --git a/src/mongoc/mongoc-version.h.in b/src/mongoc/mongoc-version.h.in
+index 917a647..536938d 100644
+--- a/src/mongoc/mongoc-version.h.in
++++ b/src/mongoc/mongoc-version.h.in
+@@ -91,5 +91,10 @@
+          (MONGOC_MAJOR_VERSION == (major) && MONGOC_MINOR_VERSION == (minor) && \
+           MONGOC_MICRO_VERSION >= (micro)))
+ 
++int mongoc_get_major_version (void);
++int mongoc_get_minor_version (void);
++int mongoc_get_micro_version (void);
++const char *mongoc_get_version (void);
++const char *mongoc_check_version (int requiredmajor, int requiredminor, int requiredmicro);
+ 
+ #endif /* MONGOC_VERSION_H */
+diff --git a/tests/Makefile.am b/tests/Makefile.am
+index 5fe375f..1c8dcd1 100644
+--- a/tests/Makefile.am
++++ b/tests/Makefile.am
+@@ -121,6 +121,7 @@ test_libmongoc_SOURCES = \
+ 	tests/test-mongoc-topology.c \
+ 	tests/test-mongoc-uri.c \
+ 	tests/test-mongoc-usleep.c \
++	tests/test-mongoc-version.c \
+ 	tests/test-mongoc-write-concern.c \
+ 	tests/test-libmongoc.h \
+ 	tests/test-sasl.c \
+diff --git a/tests/test-libmongoc.c b/tests/test-libmongoc.c
+index 1c5bc1b4..65380d1 100644
+--- a/tests/test-libmongoc.c
++++ b/tests/test-libmongoc.c
+@@ -26,6 +26,7 @@
+ #include "test-libmongoc.h"
+ 
+ 
++extern void test_version_install              (TestSuite *suite);
+ extern void test_array_install                (TestSuite *suite);
+ extern void test_async_install                (TestSuite *suite);
+ extern void test_buffer_install               (TestSuite *suite);
+@@ -887,6 +888,7 @@ main (int   argc,
+ 
+    TestSuite_Init (&suite, "", argc, argv);
+ 
++   test_version_install (&suite);
+    test_array_install (&suite);
+    test_async_install (&suite);
+    test_buffer_install (&suite);
+diff --git a/tests/test-mongoc-version.c b/tests/test-mongoc-version.c
+new file mode 100644
+index 0000000..995aa28
+--- /dev/null
++++ b/tests/test-mongoc-version.c
+@@ -0,0 +1,24 @@
++#include <mongoc.h>
++
++#include "TestSuite.h"
++
++#include "test-libmongoc.h"
++
++static void
++test_mongoc_version (void)
++{
++   ASSERT_CMPINT(mongoc_get_major_version(), ==, MONGOC_MAJOR_VERSION);
++   ASSERT_CMPINT(mongoc_get_minor_version(), ==, MONGOC_MINOR_VERSION);
++   ASSERT_CMPINT(mongoc_get_micro_version(), ==, MONGOC_MICRO_VERSION);
++   ASSERT_CMPSTR(mongoc_get_version(), MONGOC_VERSION_S);
++
++   ASSERT (0 == mongoc_check_version(1,0,0));
++   ASSERT (0 == mongoc_check_version(MONGOC_MAJOR_VERSION, MONGOC_MINOR_VERSION, MONGOC_MICRO_VERSION));
++   ASSERT (0 != mongoc_check_version(MONGOC_MAJOR_VERSION, MONGOC_MINOR_VERSION+1, MONGOC_MICRO_VERSION));
++}
++
++void
++test_version_install (TestSuite *suite)
++{
++   TestSuite_Add (suite, "/Version", test_mongoc_version);
++}

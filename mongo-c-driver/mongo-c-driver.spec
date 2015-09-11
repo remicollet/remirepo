@@ -20,8 +20,10 @@ Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.2.0
 %if 0%{?gh_date}
-Release:   0.4.%{gh_date}git%{gh_short}%{?dist}
+Release:   0.5.%{gh_date}git%{gh_short}%{?dist}
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
+# https://github.com/mongodb/mongo-c-driver/pull/265
+Patch0:    %{name}-pr265.patch
 BuildRequires: libtool autoconf
 %else
 Release:   0.4.%{prever}%{?dist}
@@ -77,6 +79,7 @@ a MongoDB Server.
 %prep
 %if 0%{?gh_date}
 %setup -q -n %{gh_project}-%{gh_commit}
+%patch0 -p1 -b .pr265
 autoreconf -fvi -I build/autotools
 %else
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
@@ -159,6 +162,10 @@ exit $ret
 
 
 %changelog
+* Fri Sep 11 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-0.5.20150903git3eaf73e
+- add patch to export library verson in the API
+  open https://github.com/mongodb/mongo-c-driver/pull/265
+
 * Fri Sep  4 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-0.4.20150903git3eaf73e
 - update to version 1.2.0beta1 from git snapshot
 - https://jira.mongodb.org/browse/CDRIVER-828 missing tests/json
