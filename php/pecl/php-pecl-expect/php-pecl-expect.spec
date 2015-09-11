@@ -15,6 +15,7 @@
 %endif
 
 %{?scl:          %scl_package        php-pecl-expect}
+%{!?scl:         %global _root_libdir %{_libdir}}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
@@ -31,10 +32,11 @@
 Summary:        PHP extension for expect library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        0.3.2
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
+# Manually generated from a SVN checkout (to include all my patches)
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -125,6 +127,7 @@ cd NTS
 %{_bindir}/phpize
 %configure \
     --with-expect \
+    --with-tcldir=%{_root_libdir} \
     --with-libdir=%{_lib} \
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
@@ -134,6 +137,7 @@ cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
     --with-expect \
+    --with-tcldir=%{_root_libdir} \
     --with-libdir=%{_lib} \
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
@@ -238,5 +242,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 11 2015 Remi Collet <remi@fedoraproject.org> - 0.3.2-2
+- fix EL-5 build
+
 * Fri Sep 11 2015 Remi Collet <remi@fedoraproject.org> - 0.3.2-1
 - initial package, version 0.3.2 (stable)
