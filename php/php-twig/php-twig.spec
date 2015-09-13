@@ -69,7 +69,7 @@ BuildRequires: %{?scl_prefix}php-devel >= %{php_min_ver}
 %if %{with_tests}
 # For tests
 BuildRequires: %{_bindir}/phpunit
-## phpcompatinfo (computed from version 1.20.0)
+## phpcompatinfo (computed from version 1.21.2)
 BuildRequires: %{?scl_prefix}php-ctype
 BuildRequires: %{?scl_prefix}php-date
 BuildRequires: %{?scl_prefix}php-dom
@@ -85,7 +85,7 @@ BuildRequires: %{?scl_prefix}php-spl
 # Lib
 ## composer.json
 Requires:      %{?scl_prefix}php(language) >= %{php_min_ver}
-## phpcompatinfo (computed from version 1.20.0)
+## phpcompatinfo (computed from version 1.21.2)
 Requires:      %{?scl_prefix}php-ctype
 Requires:      %{?scl_prefix}php-date
 Requires:      %{?scl_prefix}php-dom
@@ -253,11 +253,11 @@ sed -e 's#function testGetAttributeExceptions#function SKIP_testGetAttributeExce
     -i test/Twig/Tests/TemplateTest.php
 
 : Test suite without extension
-%{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php -v
+%{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php --verbose
 
 : Test suite with extension
 %{_bindir}/php --define extension=ext/NTS/modules/%{ext_name}.so \
-    %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php -v
+    %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php --verbose
 %else
 : Tests skipped
 %endif
@@ -286,6 +286,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Sep 12 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.21.2-1
+- Updated to 1.21.2 (BZ #1256767)
+
 * Wed Sep  9 2015 Remi Collet <remi@fedoraproject.org> - 1.21.2-1
 - Update to 1.21.2
 
