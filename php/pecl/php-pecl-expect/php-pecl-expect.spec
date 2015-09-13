@@ -31,12 +31,11 @@
 
 Summary:        PHP extension for expect library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        0.3.2
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        0.3.3
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-# Manually generated from a SVN checkout (to include all my patches)
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -96,6 +95,19 @@ mv %{pecl_name}-%{version} NTS
 sed -e '/role="test"/d' -i package.xml
 
 cd NTS
+: Find the libexpect name
+for lib in %{_root_libdir}/libexpect5*so
+do
+  ver=${lib%.so}
+  ver=${ver##*/lib}
+done
+if [ -n "ver" ]
+then : use $ver
+  sed -e "/PHP_ADD_LIBRARY_WITH_PATH/s/expect/$ver/" \
+      -i config.m4
+else exit 1
+fi
+
 : Sanity check, really often broken
 extver=$(sed -n '/#define PHP_EXPECT_VERSION/{s/.* "//;s/".*$//;p}' php_expect.h)
 if test "x${extver}" != "x%{version}"; then
@@ -242,6 +254,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 13 2015 Remi Collet <remi@fedoraproject.org> - 0.3.3-1
+- Update to 0.3.3 (stable)
+
 * Fri Sep 11 2015 Remi Collet <remi@fedoraproject.org> - 0.3.2-2
 - fix EL-5 build
 
