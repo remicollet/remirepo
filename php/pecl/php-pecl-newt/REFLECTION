@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #110 newt version 1.2.8 ] {
+Extension [ <persistent> extension #130 newt version 1.2.9 ] {
 
   - Constants [100] {
     Constant [ integer NEWT_COLORSET_ROOT ] { 2 }
