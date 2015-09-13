@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # see https://github.com/tecnickcom/TCPDF/releases
-%global gh_commit    354433a33946ae7497c3eab291eaaf814bccbfab
+%global gh_commit    2f732eaa91b5665274689b1d40b285a7bacdc37f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     tecnickcom
 %global gh_project   TCPDF
@@ -15,7 +15,7 @@
 
 Name:           php-tcpdf
 Summary:        PHP class for generating PDF documents and barcodes
-Version:        6.2.11
+Version:        6.2.12
 Release:        1%{?dist}
 
 URL:            http://www.tcpdf.org
@@ -45,7 +45,10 @@ Requires:       php-xml
 Requires:       php-zlib
 # imagick is optionnal (and conflicts with gmagick)
 
+# Old name for compatibility
 Provides:       php-composer(tecnick.com/tcpdf) = %{version}
+# New name
+Provides:       php-composer(tecnickcom/tcpdf)  = %{version}
 
 
 %description
@@ -332,6 +335,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 13 2015 Remi Collet <remi@fedoraproject.org> - 6.2.12-1
+- update to 6.2.12
+- provide php-composer(tecnickcom/tcpdf)
+
 * Mon Aug  3 2015 Remi Collet <remi@fedoraproject.org> - 6.2.11-1
 - update to 6.2.11
 
