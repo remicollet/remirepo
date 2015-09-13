@@ -6,16 +6,16 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    cba563dabd85636a21fc812404b5611d85f729fd
+%global gh_commit    dbfd74eea2bca78b03a856c0cf11788aa5229a11
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global c_vendor     tecnick.com
+%global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
 %global gh_project   tc-lib-pdf-parser
 %global php_project  %{_datadir}/php/Com/Tecnick/Pdf/Parser
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.1.3
+Version:        2.1.4
 Release:        1%{?dist}
 Summary:        PHP library to parse PDF documents
 
@@ -109,6 +109,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 13 2015 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
+- update to 2.1.4
+- provide php-composer(tecnickcom/tc-lib-pdf-parser)
+
 * Fri Jul 24 2015 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
 - update to 2.1.3 (no change)
 
