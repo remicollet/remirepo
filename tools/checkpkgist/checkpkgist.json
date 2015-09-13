@@ -57,10 +57,13 @@
     "phpunit\/phpunit-story": "php-phpunit-PHPUnit-Story",
     "sebastian\/phpcpd": "php-phpunit-phpcpd",
     "sebastian\/phpdcd": "php-phpunit-phpdcd",
-    "tecnick.com\/tc-lib-pdf-parser": "php-tecnickcom-tc-lib-pdf-parser",
-    "tecnick.com\/tc-lib-pdf-filter": "php-tecnickcom-tc-lib-pdf-filter",
-    "tecnick.com\/tc-lib-pdf-page": "php-tecnickcom-tc-lib-pdf-page",
-    "tecnick.com\/tc-lib-unicode-data": "php-tecnickcom-tc-lib-unicode-data",
+    "tecnickcom\/tcpdf": "php-tcpdf",
+    "tecnickcom\/tc-lib-barcode": "php-tecnickcom-tc-lib-barcode",
+    "tecnickcom\/tc-lib-color": "php-tecnickcom-tc-lib-color",
+    "tecnickcom\/tc-lib-pdf-parser": "php-tecnickcom-tc-lib-pdf-parser",
+    "tecnickcom\/tc-lib-pdf-filter": "php-tecnickcom-tc-lib-pdf-filter",
+    "tecnickcom\/tc-lib-pdf-page": "php-tecnickcom-tc-lib-pdf-page",
+    "tecnickcom\/tc-lib-unicode-data": "php-tecnickcom-tc-lib-unicode-data",
     "jasig\/phpcas": "php-pear-CAS",
     "theseer\/fxsl": "php-theseer-fxsl"
 }
