@@ -6,16 +6,16 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    76641a38dcf57bed03547fd6b6ffbbb6dcc1fa0e
+%global gh_commit    752e8891dbce8c7be204c196e099f2eaa678acf5
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global c_vendor     tecnick.com
+%global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
 %global gh_project   tc-lib-unicode-data
 %global php_project  %{_datadir}/php/Com/Tecnick/Unicode/Data
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.4.2
+Version:        1.4.3
 Release:        1%{?dist}
 Summary:        PHP library containing UTF-8 font definitions
 
@@ -102,6 +102,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 13 2015 Remi Collet <remi@fedoraproject.org> - 1.4.3-1
+- update to 1.4.3
+- provide php-composer(tecnickcom/tc-lib-unicode-data)
+
 * Sat Aug  8 2015 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
 - update to 1.4.2
 
