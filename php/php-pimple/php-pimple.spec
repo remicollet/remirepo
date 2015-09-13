@@ -13,8 +13,8 @@
 
 %global github_owner     silexphp
 %global github_name      Pimple
-%global github_version   3.0.1
-%global github_commit    3313af5935dbc560fab845b76a1ca351b47855af
+%global github_version   3.0.2
+%global github_commit    a30f7d6e57565a2e1a316e1baf2a483f788b258a
 
 # Lib
 %global composer_vendor  pimple
@@ -69,7 +69,7 @@ BuildRequires: %{?scl_prefix}php-devel >= %{php_min_ver}
 # For tests
 ## composer.json
 BuildRequires: %{_bindir}/phpunit
-## phpcompatinfo (computed from version 3.0.0)
+## phpcompatinfo (computed from version 3.0.2)
 BuildRequires: %{?scl_prefix}php-reflection
 BuildRequires: %{?scl_prefix}php-spl
 %endif
@@ -90,7 +90,7 @@ Requires:      %{?scl_prefix}php(api)      = %{php_core_api}
 
 NOTE: This package installs the Pimple EXTENSION.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 # ------------------------------------------------------------------------------
@@ -107,7 +107,7 @@ BuildArch: noarch
 
 # composer.json
 Requires:  php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 3.0.1)
+# phpcompatinfo (computed from version 3.0.2)
 Requires:  php-spl
 
 # Composer
@@ -279,6 +279,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Sep 12 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.0.2-1
+- Updated to 3.0.2 (RHBZ #1262507)
+
 * Wed Aug  5 2015 Remi Collet <remi@remirepo.net> - 3.0.1-1
 - backport for #remirepo
 - adapt for SCL
