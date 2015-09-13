@@ -6,16 +6,16 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9303a1ccf2b9fe4a804257d0b91e79a49b846c71
+%global gh_commit    3d76d63b8a622a67664ec60a13d9c33189721784
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global c_vendor     tecnick.com
+%global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
 %global gh_project   tc-lib-barcode
 %global php_project  %{_datadir}/php/Com/Tecnick/Barcode
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.4.2
+Version:        1.4.3
 Release:        1%{?dist}
 Summary:        PHP library to generate linear and bidimensional barcodes
 
@@ -122,6 +122,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 13 2015 Remi Collet <remi@fedoraproject.org> - 1.4.3-1
+- update to 1.4.3
+- provide php-composer(tecnickcom/tc-lib-barcode)
+
 * Thu Aug 27 2015 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
 - update to 1.4.2
 
