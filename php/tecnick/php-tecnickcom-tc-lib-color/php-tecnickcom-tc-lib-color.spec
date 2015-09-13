@@ -6,16 +6,16 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c0ab403218e9eda7c3afc0abc6607b64debb5217
+%global gh_commit    3e1268d4cc95f55bbe81eac5507c02dccafcb370
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global c_vendor     tecnick.com
+%global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
 %global gh_project   tc-lib-color
 %global php_project  %{_datadir}/php/Com/Tecnick/Color
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.5.1
+Version:        1.5.2
 Release:        1%{?dist}
 Summary:        PHP library to manipulate various color representations
 
@@ -106,6 +106,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 13 2015 Remi Collet <remi@fedoraproject.org> - 1.5.2-1
+- update to 1.5.2
+- provide php-composer(tecnickcom/tc-lib-color)
+
 * Fri Jul 24 2015 Remi Collet <remi@fedoraproject.org> - 1.5.1-1
 - update to 1.5.1 (no change)
 
