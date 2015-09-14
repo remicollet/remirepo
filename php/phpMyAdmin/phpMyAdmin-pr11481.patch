@@ -1,0 +1,42 @@
+From c3af684194f25e3f15c3f5576828bcce3ac32ae5 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Mon, 14 Sep 2015 16:13:05 +0200
+Subject: [PATCH] allow to use system udan11/sql-parser
+
+Signed-off-by: Remi Collet <remi@fedoraproject.org>
+---
+ libraries/common.inc.php    | 2 +-
+ libraries/vendor_config.php | 6 +++++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/libraries/common.inc.php b/libraries/common.inc.php
+index 83ff2cc..ea15788 100644
+--- a/libraries/common.inc.php
++++ b/libraries/common.inc.php
+@@ -1069,7 +1069,7 @@
+         /**
+          * Initializes the SQL parsing library.
+          */
+-        include_once './libraries/sql-parser/autoload.php';
++        include_once SQL_PARSER_AUTOLOAD;
+ 
+         // Loads closest context to this version.
+         SqlParser\Context::loadClosest(
+diff --git a/libraries/vendor_config.php b/libraries/vendor_config.php
+index b9c25c6..7087150 100644
+--- a/libraries/vendor_config.php
++++ b/libraries/vendor_config.php
+@@ -85,8 +85,12 @@
+ define('PHPSECLIB_INC_DIR', './libraries/phpseclib/');
+ 
+ /**
++ * Path to the udan11/sql-parser. Useful when you want to use system version.
++ */
++define('SQL_PARSER_AUTOLOAD', './libraries/sql-parser/autoload.php');
++
++/**
+  * Avoid referring to nonexistent files (causes warnings when open_basedir
+  * is used)
+  */
+ define('K_PATH_IMAGES', '');
+-

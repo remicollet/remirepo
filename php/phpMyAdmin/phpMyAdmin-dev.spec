@@ -9,7 +9,7 @@
 #
 # Please, preserve the changelog entries
 #
-#global prever rc1
+%global prever rc1
 %{!?_pkgdocdir: %global _pkgdocdir %{_datadir}/doc/%{name}-%{version}}
 %if 0%{?fedora} >= 21
 # nginx 1.6 with nginx-filesystem
@@ -22,18 +22,21 @@
 %endif
 
 Name: phpMyAdmin
-Version: 4.4.14.1
-Release: 1%{?dist}
+Version: 4.5.0
+Release: 0.1.%{prever}%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
 # MIT (js/jquery/, js/canvg/, js/codemirror/), GPLv2+ (the rest)
 License:	GPLv2+ and MIT
 URL: https://www.phpmyadmin.net/
-Source0: https://files.phpmyadmin.net/%{name}/%{version}/%{name}-%{version}-all-languages.tar.xz
-Source1: https://files.phpmyadmin.net/%{name}/%{version}/%{name}-%{version}-all-languages.tar.xz.asc
+Source0: https://files.phpmyadmin.net/%{name}/%{version}%{?prever:-%prever}/%{name}-%{version}%{?prever:-%prever}-all-languages.tar.xz
+Source1: https://files.phpmyadmin.net/%{name}/%{version}%{?prever:-%prever}/%{name}-%{version}%{?prever:-%prever}-all-languages.tar.xz.asc
 Source2: phpMyAdmin.htaccess
 Source3: phpMyAdmin.nginx
+
+# See https://github.com/phpmyadmin/phpmyadmin/pull/11481
+Patch0: %{name}-pr11481.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -74,6 +77,7 @@ Requires:  php-php-gettext
 Requires:  php-tcpdf
 Requires:  php-tcpdf-dejavu-sans-fonts
 Requires:  php-composer(phpseclib/phpseclib) >= 2.0.0
+Requires:  php-composer(udan11/sql-parser)
 # optional and ignored php-gmp (as bcmath is enough)
 
 Provides:  phpmyadmin = %{version}-%{release}
@@ -92,6 +96,8 @@ is available in 50 languages
 %prep
 %setup -qn phpMyAdmin-%{version}%{?prever:-%prever}-all-languages
 
+%patch0 -p1
+
 # Fix links on home page to match allowed domains
 # see https://github.com/phpmyadmin/phpmyadmin/pull/1291
 sed -e 's/www.phpmyadmin.net/www.phpMyAdmin.net/' \
@@ -107,11 +113,12 @@ sed -e "/'extension'/s@'mysql'@'mysqli'@"  \
 # Setup vendor config file
 sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
     -e "/'LICENSE_FILE'/s@./LICENSE@%{_pkgdocdir}/LICENSE@" \
-    -e "/'CONFIG_DIR'/s@'./'@'%{_sysconfdir}/%{name}/'@" \
+    -e "/'CONFIG_DIR'/s@''@'%{_sysconfdir}/%{name}/'@" \
     -e "/'SETUP_CONFIG_FILE'/s@./config/config.inc.php@%{_localstatedir}/lib/%{name}/config/config.inc.php@" \
     -e "/'GETTEXT_INC'/s@./libraries/php-gettext/gettext.inc@%{_datadir}/php/gettext/gettext.inc@" \
     -e "/'TCPDF_INC'/s@./libraries/tcpdf/tcpdf.php@%{_datadir}/php/tcpdf/tcpdf.php@" \
     -e "/'PHPSECLIB_INC_DIR'/s@./libraries/phpseclib@%{_datadir}/php/phpseclib@" \
+    -e "/'SQL_PARSER_AUTOLOAD'/s@./libraries/sql-parser@%{_datadir}/php/SqlParser@" \
 %if 0%{?_licensedir:1}
     -e '/LICENSE_FILE/s:%_defaultdocdir:%_defaultlicensedir:' \
 %endif
@@ -127,6 +134,7 @@ rm doc/html/.buildinfo
 rm -r libraries/php-gettext
 rm -r libraries/tcpdf
 rm -r libraries/phpseclib
+rm -r libraries/sql-parser
 
 # Remove sources of JavaScript librairies
 rm -r js/jquery/src
@@ -214,6 +222,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Mon Sep 14 2015 Remi Collet <remi@remirepo.net> 4.5.0-0.1.rc1
+- update to 4.5.0-rc1
+
 * Wed Sep  9 2015 Remi Collet <remi@remirepo.net> 4.4.14.1-1
 - update to 4.4.14.1 (2015-09-08, security)
 - fix PMASA-2015-4
