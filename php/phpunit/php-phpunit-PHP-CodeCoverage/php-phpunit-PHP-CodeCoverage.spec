@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    2d7c03c0e4e080901b8f33b2897b0577be18a13c
+%global gh_commit    ef1ca6835468857944d5c3b48fa503d5554cff2f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-code-coverage
@@ -22,7 +22,7 @@
 %endif
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        2.2.2
+Version:        2.2.3
 Release:        1%{?dist}
 Summary:        PHP code coverage information
 
@@ -91,21 +91,19 @@ for PHP code coverage information.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-# Restore PSR-0 tree to ensure current sources are used by tests
-mv src PHP
-
 
 %build
 phpab \
-  --output   PHP/CodeCoverage/Autoload.php \
+  --output   src/CodeCoverage/Autoload.php \
   --template %{SOURCE1} \
-  PHP
+  src
 
 
 %install
 rm -rf     %{buildroot}
+# Restore PSR-0 tree
 mkdir -p   %{buildroot}%{php_home}
-cp -pr PHP %{buildroot}%{php_home}/PHP
+cp -pr src %{buildroot}%{php_home}/PHP
 
 
 %if %{with_tests}
@@ -141,6 +139,9 @@ fi
 
 
 %changelog
+* Mon Sep 14 2015 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
+- update to 2.2.3
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
 - update to 2.2.2
 - raise dependency on sebastian/environment ^1.3.2

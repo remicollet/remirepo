@@ -11,20 +11,17 @@ spl_autoload_register(
   function ($class)
   {
       static $classes = NULL;
-      static $path = NULL;
 
       if ($classes === NULL) {
           $classes = array(
             ___CLASSLIST___
           );
-
-          $path = __DIR__;
       }
 
       $cn = strtolower($class);
 
       if (isset($classes[$cn])) {
-          require $path . $classes[$cn];
+          require __DIR__ . $classes[$cn];
       }
   }
 );
