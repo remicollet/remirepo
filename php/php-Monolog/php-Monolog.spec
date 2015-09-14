@@ -12,8 +12,8 @@
 
 %global github_owner     Seldaek
 %global github_name      monolog
-%global github_version   1.16.0
-%global github_commit    c0c0b4bee3aabce7182876b0d912ef2595563db7
+%global github_version   1.17.1
+%global github_commit    0524c87587ab85bc4c2d6f5b41253ccb930a5422
 
 %global composer_vendor  monolog
 %global composer_project monolog
@@ -58,7 +58,7 @@ BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language)         >= %{php_min_ver}
 BuildRequires: php-composer(psr/log) >= %{psrlog_min_ver}
 BuildRequires: php-composer(psr/log) <  %{psrlog_max_ver}
-## phpcompatinfo (computed from version 1.16.0)
+## phpcompatinfo (computed from version 1.17.1)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -79,7 +79,7 @@ BuildRequires: php-composer(symfony/class-loader)
 Requires:      php(language)         >= %{php_min_ver}
 Requires:      php-composer(psr/log) >= %{psrlog_min_ver}
 Requires:      php-composer(psr/log) <  %{psrlog_max_ver}
-# phpcompatinfo (computed from version 1.16.0)
+# phpcompatinfo (computed from version 1.17.1)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-filter
@@ -257,6 +257,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 13 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.17.1-1
+- Updated to 1.17.1 (RHBZ #1258230)
+
 * Tue Aug 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.16.0-1
 - Updated to 1.16.0 (RHBZ #1251783)
 - Updated autoloader to load dependencies after self registration
