@@ -1,0 +1,125 @@
+Extension [ <persistent> extension #150 SeasLog version 1.4.0 ] {
+
+  - INI {
+    Entry [ seaslog.default_basepath <ALL> ]
+      Current = '/log'
+    }
+    Entry [ seaslog.default_logger <ALL> ]
+      Current = 'default'
+    }
+    Entry [ seaslog.logger <ALL> ]
+      Current = 'default'
+    }
+    Entry [ seaslog.disting_type <ALL> ]
+      Current = '0'
+    }
+    Entry [ seaslog.disting_by_hour <ALL> ]
+      Current = '0'
+    }
+    Entry [ seaslog.use_buffer <ALL> ]
+      Current = '0'
+    }
+    Entry [ seaslog.buffer_size <ALL> ]
+      Current = '0'
+    }
+    Entry [ seaslog.level <ALL> ]
+      Current = '0'
+    }
+  }
+
+  - Constants [11] {
+    Constant [ string SEASLOG_VERSION ] { 1.4.0 }
+    Constant [ string SEASLOG_AUTHOR ] { Chitao.Gao  [ neeke@php.net ] }
+    Constant [ string SEASLOG_ALL ] { all }
+    Constant [ string SEASLOG_DEBUG ] { debug }
+    Constant [ string SEASLOG_INFO ] { info }
+    Constant [ string SEASLOG_NOTICE ] { notice }
+    Constant [ string SEASLOG_WARNING ] { warning }
+    Constant [ string SEASLOG_ERROR ] { error }
+    Constant [ string SEASLOG_CRITICAL ] { critical }
+    Constant [ string SEASLOG_ALERT ] { alert }
+    Constant [ string SEASLOG_EMERGENCY ] { emergency }
+  }
+
+  - Functions {
+    Function [ <internal:SeasLog> function seaslog_get_version ] {
+    }
+    Function [ <internal:SeasLog> function seaslog_get_author ] {
+    }
+  }
+
+  - Classes [1] {
+    Class [ <internal:SeasLog> class SeasLog ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [2] {
+        Property [ public static $seaslog_buffer ]
+        Property [ public static $seaslog_buffer_size ]
+      }
+
+      - Static methods [16] {
+        Method [ <internal:SeasLog> static public method setBasePath ] {
+        }
+
+        Method [ <internal:SeasLog> static public method getBasePath ] {
+        }
+
+        Method [ <internal:SeasLog> static public method setLogger ] {
+        }
+
+        Method [ <internal:SeasLog> static public method getLastLogger ] {
+        }
+
+        Method [ <internal:SeasLog> static public method analyzerCount ] {
+        }
+
+        Method [ <internal:SeasLog> static public method analyzerDetail ] {
+        }
+
+        Method [ <internal:SeasLog> static public method getBuffer ] {
+        }
+
+        Method [ <internal:SeasLog> static public method log ] {
+        }
+
+        Method [ <internal:SeasLog> static public method debug ] {
+        }
+
+        Method [ <internal:SeasLog> static public method info ] {
+        }
+
+        Method [ <internal:SeasLog> static public method notice ] {
+        }
+
+        Method [ <internal:SeasLog> static public method warning ] {
+        }
+
+        Method [ <internal:SeasLog> static public method error ] {
+        }
+
+        Method [ <internal:SeasLog> static public method critical ] {
+        }
+
+        Method [ <internal:SeasLog> static public method alert ] {
+        }
+
+        Method [ <internal:SeasLog> static public method emergency ] {
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:SeasLog, ctor> public method __construct ] {
+        }
+
+        Method [ <internal:SeasLog, dtor> public method __destruct ] {
+        }
+      }
+    }
+  }
+}
+
