@@ -21,7 +21,7 @@
 
 %global pecl_name   cassandra
 %global with_zts    0%{?__ztsphp:1}
-%global prever      RC
+#global prever      RC
 # see https://github.com/datastax/php-driver/releases
 #global gh_commit   2b0642b1d6fc451f0481edaf0163e3e5bbf896ec
 #global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
@@ -37,7 +37,7 @@
 Summary:      DataStax PHP Driver for Apache Cassandra
 Name:         %{?sub_prefix}php-pecl-%{pecl_name}
 Version:      1.0.0
-Release:      0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      ASL 2.0
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -93,7 +93,7 @@ A modern, feature-rich and highly tunable PHP client library for Apache
 Cassandra and DataStax Enterprise using exclusively Cassandra's binary
 protocol and Cassandra Query Language v3.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -243,6 +243,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Tue Sep 15 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- update to 1.0.0 (stable)
+
 * Thu Aug 13 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.RC
 - fix package name for more-php56
 
