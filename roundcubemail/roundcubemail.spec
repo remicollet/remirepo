@@ -18,8 +18,8 @@
 %define roundcubedir %{_datadir}/roundcubemail
 %global _logdir /var/log  
 Name: roundcubemail
-Version:  1.1.2
-Release:  2%{?dist}
+Version:  1.1.3
+Release:  1%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
 Group: Applications/System
@@ -82,22 +82,19 @@ Requires: php-spl
 Requires: php-xml
 # From composer.json, require
 #        "php": ">=5.3.7",
-#        "roundcube/plugin-installer": ">=0.1.5",
-#        "pear/mail_mime": ">=1.8.9",
-#        "pear/mail_mime-decode": "~1.5.5",
-#        "pear/net_smtp": "dev-master",
-#        "pear-pear.php.net/auth_sasl": ">=1.0.6",
-#        "pear-pear.php.net/net_idna2": ">=0.1.1",
-#        "pear-pear.php.net/net_sieve": ">=1.3.2",
-#        "patchwork/utf8": "1.2.x"
+#        "roundcube/plugin-installer": "~0.1.6",
+#        "pear-pear.php.net/auth_sasl": "~1.0.6",
+#        "pear-pear.php.net/net_idna2": "~0.1.1",
+#        "pear-pear.php.net/net_sieve": "~1.3.4",
+#        "pear-pear.php.net/mail_mime": "~1.9.0",
+#        "pear-pear.php.net/net_smtp": "~1.6.3",
+#        "patchwork/utf8": "~1.2.3"
 #   not available and optional patchwork/utf8
 #   not available and doesn't make sense roundcube/plugin-installer
 Requires: php-pear(Auth_SASL)       >= 1.0.6
-Requires: php-pear(Mail_Mime)       >= 1.8.1
-Requires: php-pear(Net_SMTP)
-Requires: php-pear(Net_Sieve)       >= 1.3.2
-Requires: php-pear(Mail_mimeDecode) >= 1.5.5
-Requires: php-pear(Mail_mimeDecode) <  1.6
+Requires: php-pear(Mail_Mime)       >= 1.9.0
+Requires: php-pear(Net_SMTP)        >= 1.6.3
+Requires: php-pear(Net_Sieve)       >= 1.3.4
 Requires: php-pear(Net_IDNA2)       >= 0.1.1
 # From composer.json, require-dev
 #        "pear-pear.php.net/crypt_gpg": "*",
@@ -273,6 +270,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 15 2015 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
+- update to 1.1.3
+- raise dependencies on Mail_Mime 1.9.0, Net_Sieve 1.3.4,
+  Net_SMTP 1.6.3
+- drop dependency on Mail_mimeDecode
+
 * Tue Aug 11 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-2
 - Remove "su" option from logrotate configuration file (requires
   logrotate >= 3.8.0) to avoid daily logrotate errors with old RHEL
