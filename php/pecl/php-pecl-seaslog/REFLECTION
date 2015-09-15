@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #150 SeasLog version 1.4.0 ] {
+Extension [ <persistent> extension #150 SeasLog version 1.4.2 ] {
 
   - INI {
     Entry [ seaslog.default_basepath <ALL> ]
@@ -25,10 +25,16 @@ Extension [ <persistent> extension #150 SeasLog version 1.4.0 ] {
     Entry [ seaslog.level <ALL> ]
       Current = '0'
     }
+    Entry [ seaslog.trace_error <ALL> ]
+      Current = '0'
+    }
+    Entry [ seaslog.trace_exception <ALL> ]
+      Current = '1'
+    }
   }
 
   - Constants [11] {
-    Constant [ string SEASLOG_VERSION ] { 1.4.0 }
+    Constant [ string SEASLOG_VERSION ] { 1.4.2 }
     Constant [ string SEASLOG_AUTHOR ] { Chitao.Gao  [ neeke@php.net ] }
     Constant [ string SEASLOG_ALL ] { all }
     Constant [ string SEASLOG_DEBUG ] { debug }
