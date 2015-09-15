@@ -14,8 +14,8 @@
 
 %global github_owner     twigphp
 %global github_name      Twig
-%global github_version   1.22.0
-%global github_commit    204a6c94907c2c2225322c267e09adbb2b1c04fd
+%global github_version   1.22.1
+%global github_commit    b7fc2469fa009897871fb95b68237286fc54a5ad
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 
@@ -165,7 +165,7 @@ Obsoletes:     php70w-%{ext_name} <= %{version}
   developer to define its own custom tags and filters, and create its own
   DSL.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{scl_vendor})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -286,6 +286,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 15 2015 Remi Collet <remi@fedoraproject.org> - 1.22.1-1
+- Update to 1.22.1
+
 * Sun Sep 13 2015 Remi Collet <remi@fedoraproject.org> - 1.22.0-1
 - Update to 1.22.0
 
