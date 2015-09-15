@@ -6,6 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-newt}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -20,9 +28,9 @@
 %endif
 
 Summary:        Extension for Red Hat Newt window library
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.2.9
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -201,6 +209,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 15 2015 Remi Collet <remi@fedoraproject.org> - 1.2.9-2
+- fix package name for more-php56
+
 * Sun Sep 13 2015 Remi Collet <remi@fedoraproject.org> - 1.2.9-1
 - Update to 1.2.9 (stable)
 - drop runtime dependency on pear, new scriptlets
