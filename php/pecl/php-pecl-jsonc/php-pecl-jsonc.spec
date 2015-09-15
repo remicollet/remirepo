@@ -31,7 +31,7 @@
 
 Summary:       Support for JSON serialization
 Name:          %{?scl_prefix}php-pecl-%{proj_name}
-Version:       1.3.8
+Version:       1.3.9
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 # PHP extension is PHP
 # jsonc-c is MIT
@@ -290,6 +290,9 @@ rm -rf %{buildroot}
 # Note to remi : remember to always build in remi-php55(56) first
 #
 %changelog
+* Tue Sep 15 2015 Remi Collet <remi@fedoraproject.org> - 1.3.9-1
+- release 1.3.9 (stable)
+
 * Mon Sep  7 2015 Remi Collet <remi@fedoraproject.org> - 1.3.8-1
 - release 1.3.8 (stable)
 
