@@ -15,7 +15,7 @@
 # Extension version
 %global opcachever  7.0.6-dev
 %global oci8ver     2.1.0
-%global zipver      1.13.0dev
+%global zipver      1.13.0
 %global jsonver     1.4.0
 
 # Adds -z now to the linker flags
@@ -124,7 +124,7 @@
 %endif
 
 %global with_libzip  1
-%global with_zip     1
+%global with_zip     0
 
 %if 0%{?fedora} < 18 && 0%{?rhel} < 7
 %global db_devel  db4-devel
@@ -132,8 +132,8 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver         RC2
-%global rpmrel        4
+%global rcver         RC3
+%global rpmrel        5
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -1059,12 +1059,14 @@ if test "$ver" != "%{oci8ver}"; then
    exit 1
 fi
 
+%if %{with_zip}
 ver=$(sed -n '/#define PHP_ZIP_VERSION /{s/.* "//;s/".*$//;p}' ext/zip/php_zip.h)
 if test "$ver" != "%{zipver}"; then
    : Error: Upstream ZIP version is now ${ver}, expecting %{zipver}.
    : Update the %{zipver} macro and rebuild.
    exit 1
 fi
+%endif
 
 ver=$(sed -n '/#define PHP_JSON_VERSION /{s/.* "//;s/".*$//;p}' ext/json/php_json.h)
 if test "$ver" != "%{jsonver}"; then
@@ -1997,6 +1999,10 @@ fi
 
 
 %changelog
+* Wed Sep 16 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.5.RC3
+- Update to 7.0.0RC3
+- disable zip extension (provided in php-pecl-zip)
+
 * Fri Sep  4 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.4.RC2
 - Update to 7.0.0RC2
 - enable oci8 and pdo_oci extensions

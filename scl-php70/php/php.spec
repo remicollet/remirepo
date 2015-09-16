@@ -115,7 +115,7 @@
 %global with_httpd2410 0
 %endif
 
-%global with_zip       1
+%global with_zip       0
 %global with_libzip    1
 
 
@@ -130,8 +130,8 @@
 #global gh_date      20150623
 #global gh_owner     php
 #global gh_project   php-src
-%global rcver        RC2
-%global rpmrel       15
+%global rcver        RC3
+%global rpmrel       16
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1803,6 +1803,10 @@ fi
 
 
 %changelog
+* Wed Sep 16 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.16.RC3
+- Update to 7.0.0RC3
+- disable zip extension (provided in php-pecl-zip)
+
 * Fri Sep  4 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.15.RC2
 - Update to 7.0.0RC2
 - enable oci8 and pdo_oci extensions

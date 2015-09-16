@@ -1,4 +1,4 @@
-===== 7.0.0-0.15.RC2 (2015-09-04)
+===== 7.0.0-0.16.RC3 (2015-09-17)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl70*/build.log
 
@@ -6,13 +6,8 @@ $ grep -r 'Tests failed' /var/lib/mock/scl70*/build.log
 /var/lib/mock/scl70el7x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 /var/lib/mock/scl70fc20x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 /var/lib/mock/scl70fc21x/build.log:Tests failed    :    0 (  0.0%) (  0.0%
-/var/lib/mock/scl70fc22x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
-/var/lib/mock/scl70fc23x/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
+/var/lib/mock/scl70fc22x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/scl70fc23x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 
-f22
-	Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
-f23
-	Bug #55259 (openssl extension does not get the DH parameters from DH key resource) [ext/openssl/tests/bug55259.phpt]
-	Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
 
 * proc_open give erratic test results :(
