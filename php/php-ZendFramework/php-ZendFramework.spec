@@ -15,7 +15,7 @@
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.12.15
+Version:         1.12.16
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -854,6 +854,9 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 
 
 %changelog
+* Wed Sep 16 2015 Remi Collet <remi@remirepo.net> - 1.12.16-1
+- update to 1.12.16
+
 * Wed Aug 12 2015 Remi Collet <remi@remirepo.net> - 1.12.15-1
 - update to 1.12.15
 - extras and Db-Adapter-Firebird sub packages are back
