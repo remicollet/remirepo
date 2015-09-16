@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    325afc68d4381cf8b95288ebb9b1d38dc32ed579
+%global gh_commit    7ff9d6b922ae29dbdc53f6a62b471fb6e58565df
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-cache
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.2
-Release:        2%{?dist}
+Version:        2.5.3
+Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -57,7 +57,6 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 #        "php": ">=5.5",
 #        "zendframework/zend-stdlib": "~2.5",
 #        "zendframework/zend-servicemanager": "~2.5",
-#        "zendframework/zend-serializer": "~2.5",
 #        "zendframework/zend-eventmanager": "~2.5"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
@@ -65,8 +64,6 @@ Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
 Requires:       php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-servicemanager)   <  3
-Requires:       php-composer(%{gh_owner}/zend-serializer)       >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-serializer)       <  3
 Requires:       php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-eventmanager)     <  3
 # From composer, "suggest": {
@@ -82,6 +79,7 @@ Requires:       php-composer(%{gh_owner}/zend-eventmanager)     <  3
 #        "ext-xcache": "XCache, to use the XCache storage adapter",
 #        "mongofill/mongofill": "Alternative to ext-mongo - a pure PHP implementation designed as a drop in replacement"
 %if 0%{?fedora} >= 21
+Suggests:       php-composer(%{gh_owner}/zend-serializer)
 Suggests:       php-composer(%{gh_owner}/zend-session)
 Suggests:       php-pecl(apcu)
 Suggests:       php-dba
@@ -136,11 +134,11 @@ mkdir vendor
 cat << EOF | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
-Zend\\Loader\\AutoloaderFactory::factory(array(
-    'Zend\\Loader\\StandardAutoloader' => array(
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\StandardAutoloader' => array(
         'namespaces' => array(
-           'ZendTest\\\\%{library}' => dirname(__DIR__).'/test/',
-           'Zend\\\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
+           'ZendTest\\%{library}' => dirname(__DIR__).'/test/',
+           'Zend\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
 EOF
@@ -164,6 +162,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 16 2015 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
+- update to 2.5.3
+- zend-serializer is optional
+
 * Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-2
 - add missing obsoletes
 
