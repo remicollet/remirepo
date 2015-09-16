@@ -1,4 +1,4 @@
-# remirepo spec file for php-libsmbclient
+# remirepo spec file for php-smbclient
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
@@ -14,19 +14,20 @@
 %endif
 %endif
 
-%global gh_commit  a65127d6b271e4627456aa5e8a2d8aff51cbf6fd
+%global gh_commit  8b9587df1a0859074eae6133c5210451d6527e38
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   eduardok
 %global gh_project libsmbclient-php
 %global gh_date    20150909
-%global prever     -dev
-%{?scl:          %scl_package         php-libsmbclient}
+%global prever     -rc1
+
+%{?scl:          %scl_package         php-smbclient}
 %{!?scl:         %global pkg_name     %{name}}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
 
-%global ext_name   libsmbclient
+%global ext_name   smbclient
 %global with_zts   0%{?__ztsphp:1}
 %if "%{php_version}" < "5.6"
 %global ini_name   %{ext_name}.ini
@@ -36,9 +37,9 @@
 # Test suite requires a Samba server and configuration file
 %global with_tests 0%{?_with_tests:1}
 
-Name:           %{?sub_prefix}php-libsmbclient
+Name:           %{?sub_prefix}php-smbclient
 Version:        0.8.0
-Release:        0.1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.rc1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        PHP wrapper for libsmbclient
 
 Group:          Development/Languages
@@ -61,6 +62,10 @@ BuildRequires:  samba
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
+# Rename
+Obsoletes:      %{?sub_prefix}php-libsmbclient         < 0.8.0-0.2
+Provides:       %{?sub_prefix}php-libsmbclient         = %{version}-%{release}
+Provides:       %{?sub_prefix}php-libsmbclient%{?_isa} = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -82,13 +87,15 @@ Obsoletes:     php70w-%{ext_name} <= %{version}
 %endif
 %endif
 
+%if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
+%endif
 
 
 %description
-libsmbclient-php is a PHP extension that uses Samba's libsmbclient
+%{ext_name} is a PHP extension that uses Samba's libsmbclient
 library to provide Samba related functions to PHP programs.
 
 Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{scl_vendor})}.
@@ -100,9 +107,9 @@ mv %{gh_project}-%{gh_commit} NTS
 
 cd NTS
 # Check extension version
-ver=$(sed -n '/define LIBSMBCLIENT_VERSION/{s/.* "//;s/".*$//;p}' php_libsmbclient.h)
+ver=$(sed -n '/define PHP_SMBCLIENT_VERSION/{s/.* "//;s/".*$//;p}' php_smbclient.h)
 if test "$ver" != "%{version}%{?prever}"; then
-   : Error: Upstream LIBSMBCLIENT_VERSION version is ${ver}, expecting %{version}%{?prever}.
+   : Error: Upstream VERSION version is ${ver}, expecting %{version}%{?prever}.
    exit 1
 fi
 cd ..
@@ -184,6 +191,11 @@ cp %{SOURCE2} phpunit.xml
 
 
 %changelog
+* Wed Sep 16 2015 Remi Collet <rcollet@redhat.com> - 0.8.0-0.2.rc1
+- update to 0.8.0-rc1
+- rename from php-libsmbclient to php-smbclient
+- https://github.com/eduardok/libsmbclient-php/pull/26 rename
+
 * Thu Sep  3 2015 Remi Collet <rcollet@redhat.com> - 0.8.0-0.1.20150909gita65127d
 - update to 0.8.0-dev
 - https://github.com/eduardok/libsmbclient-php/pull/20 streams support

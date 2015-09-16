@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #116 libsmbclient version 0.7.0 ] {
+Extension [ <persistent> extension #152 smbclient version 0.8.0-rc1 ] {
 
   - Constants [30] {
     Constant [ integer SMBCLIENT_XATTR_CREATE ] { 1 }
@@ -34,22 +34,22 @@ Extension [ <persistent> extension #116 libsmbclient version 0.7.0 ] {
   }
 
   - Functions {
-    Function [ <internal:libsmbclient> function smbclient_version ] {
+    Function [ <internal:smbclient> function smbclient_version ] {
 
       - Parameters [0] {
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_library_version ] {
+    Function [ <internal:smbclient> function smbclient_library_version ] {
 
       - Parameters [0] {
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_state_new ] {
+    Function [ <internal:smbclient> function smbclient_state_new ] {
 
       - Parameters [0] {
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_state_init ] {
+    Function [ <internal:smbclient> function smbclient_state_init ] {
 
       - Parameters [4] {
         Parameter #0 [ <required> $state ]
@@ -58,26 +58,26 @@ Extension [ <persistent> extension #116 libsmbclient version 0.7.0 ] {
         Parameter #3 [ <optional> $password ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_state_errno ] {
+    Function [ <internal:smbclient> function smbclient_state_errno ] {
 
       - Parameters [1] {
         Parameter #0 [ <required> $state ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_state_free ] {
+    Function [ <internal:smbclient> function smbclient_state_free ] {
 
       - Parameters [1] {
         Parameter #0 [ <required> $state ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_option_get ] {
+    Function [ <internal:smbclient> function smbclient_option_get ] {
 
       - Parameters [2] {
         Parameter #0 [ <required> $state ]
         Parameter #1 [ <required> $option ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_option_set ] {
+    Function [ <internal:smbclient> function smbclient_option_set ] {
 
       - Parameters [3] {
         Parameter #0 [ <required> $state ]
@@ -85,42 +85,42 @@ Extension [ <persistent> extension #116 libsmbclient version 0.7.0 ] {
         Parameter #2 [ <required> $value ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_opendir ] {
+    Function [ <internal:smbclient> function smbclient_opendir ] {
 
       - Parameters [2] {
         Parameter #0 [ <required> $state ]
         Parameter #1 [ <required> $path ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_readdir ] {
+    Function [ <internal:smbclient> function smbclient_readdir ] {
 
       - Parameters [2] {
         Parameter #0 [ <required> $state ]
         Parameter #1 [ <required> $dir ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_closedir ] {
+    Function [ <internal:smbclient> function smbclient_closedir ] {
 
       - Parameters [2] {
         Parameter #0 [ <required> $state ]
         Parameter #1 [ <required> $dir ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_stat ] {
+    Function [ <internal:smbclient> function smbclient_stat ] {
 
       - Parameters [2] {
         Parameter #0 [ <required> $state ]
         Parameter #1 [ <required> $path ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_fstat ] {
+    Function [ <internal:smbclient> function smbclient_fstat ] {
 
       - Parameters [2] {
         Parameter #0 [ <required> $state ]
         Parameter #1 [ <required> $file ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_open ] {
+    Function [ <internal:smbclient> function smbclient_open ] {
 
       - Parameters [4] {
         Parameter #0 [ <required> $state ]
@@ -129,7 +129,7 @@ Extension [ <persistent> extension #116 libsmbclient version 0.7.0 ] {
         Parameter #3 [ <optional> $mode ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_creat ] {
+    Function [ <internal:smbclient> function smbclient_creat ] {
 
       - Parameters [3] {
         Parameter #0 [ <required> $state ]
@@ -137,21 +137,21 @@ Extension [ <persistent> extension #116 libsmbclient version 0.7.0 ] {
         Parameter #2 [ <optional> $mode ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_read ] {
+    Function [ <internal:smbclient> function smbclient_read ] {
 
       - Parameters [2] {
         Parameter #0 [ <required> $state ]
         Parameter #1 [ <required> $file ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_close ] {
+    Function [ <internal:smbclient> function smbclient_close ] {
 
       - Parameters [2] {
         Parameter #0 [ <required> $state ]
         Parameter #1 [ <required> $file ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_mkdir ] {
+    Function [ <internal:smbclient> function smbclient_mkdir ] {
 
       - Parameters [3] {
         Parameter #0 [ <required> $state ]
@@ -159,14 +159,14 @@ Extension [ <persistent> extension #116 libsmbclient version 0.7.0 ] {
         Parameter #2 [ <optional> $mode ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_rmdir ] {
+    Function [ <internal:smbclient> function smbclient_rmdir ] {
 
       - Parameters [2] {
         Parameter #0 [ <required> $state ]
         Parameter #1 [ <required> $path ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_rename ] {
+    Function [ <internal:smbclient> function smbclient_rename ] {
 
       - Parameters [4] {
         Parameter #0 [ <required> $oldstate ]
@@ -175,7 +175,7 @@ Extension [ <persistent> extension #116 libsmbclient version 0.7.0 ] {
         Parameter #3 [ <required> $oldpath ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_write ] {
+    Function [ <internal:smbclient> function smbclient_write ] {
 
       - Parameters [4] {
         Parameter #0 [ <required> $state ]
@@ -184,14 +184,14 @@ Extension [ <persistent> extension #116 libsmbclient version 0.7.0 ] {
         Parameter #3 [ <optional> $count ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_unlink ] {
+    Function [ <internal:smbclient> function smbclient_unlink ] {
 
       - Parameters [2] {
         Parameter #0 [ <required> $state ]
         Parameter #1 [ <required> $path ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_lseek ] {
+    Function [ <internal:smbclient> function smbclient_lseek ] {
 
       - Parameters [4] {
         Parameter #0 [ <required> $state ]
@@ -200,7 +200,7 @@ Extension [ <persistent> extension #116 libsmbclient version 0.7.0 ] {
         Parameter #3 [ <required> $whence ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_ftruncate ] {
+    Function [ <internal:smbclient> function smbclient_ftruncate ] {
 
       - Parameters [3] {
         Parameter #0 [ <required> $state ]
@@ -208,7 +208,7 @@ Extension [ <persistent> extension #116 libsmbclient version 0.7.0 ] {
         Parameter #2 [ <required> $offset ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_chmod ] {
+    Function [ <internal:smbclient> function smbclient_chmod ] {
 
       - Parameters [3] {
         Parameter #0 [ <required> $state ]
@@ -216,7 +216,7 @@ Extension [ <persistent> extension #116 libsmbclient version 0.7.0 ] {
         Parameter #2 [ <optional> $mode ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_utimes ] {
+    Function [ <internal:smbclient> function smbclient_utimes ] {
 
       - Parameters [4] {
         Parameter #0 [ <required> $state ]
@@ -225,14 +225,14 @@ Extension [ <persistent> extension #116 libsmbclient version 0.7.0 ] {
         Parameter #3 [ <required> $atime ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_listxattr ] {
+    Function [ <internal:smbclient> function smbclient_listxattr ] {
 
       - Parameters [2] {
         Parameter #0 [ <required> $state ]
         Parameter #1 [ <required> $path ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_getxattr ] {
+    Function [ <internal:smbclient> function smbclient_getxattr ] {
 
       - Parameters [3] {
         Parameter #0 [ <required> $state ]
@@ -240,7 +240,7 @@ Extension [ <persistent> extension #116 libsmbclient version 0.7.0 ] {
         Parameter #2 [ <required> $name ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_setxattr ] {
+    Function [ <internal:smbclient> function smbclient_setxattr ] {
 
       - Parameters [5] {
         Parameter #0 [ <required> $state ]
@@ -250,7 +250,7 @@ Extension [ <persistent> extension #116 libsmbclient version 0.7.0 ] {
         Parameter #4 [ <optional> $flags ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_removexattr ] {
+    Function [ <internal:smbclient> function smbclient_removexattr ] {
 
       - Parameters [3] {
         Parameter #0 [ <required> $state ]
@@ -258,14 +258,14 @@ Extension [ <persistent> extension #116 libsmbclient version 0.7.0 ] {
         Parameter #2 [ <required> $name ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_statvfs ] {
+    Function [ <internal:smbclient> function smbclient_statvfs ] {
 
       - Parameters [2] {
         Parameter #0 [ <required> $state ]
         Parameter #1 [ <required> $path ]
       }
     }
-    Function [ <internal:libsmbclient> function smbclient_fstatvfs ] {
+    Function [ <internal:smbclient> function smbclient_fstatvfs ] {
 
       - Parameters [2] {
         Parameter #0 [ <required> $state ]
