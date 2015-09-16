@@ -1,4 +1,4 @@
-# spec file for glpi
+# Fedora/remirepo spec file for glpi
 #
 # Copyright (c) 2007-2015 Remi Collet
 # License: CC-BY-SA
@@ -27,15 +27,16 @@
 %endif
 
 Name:           glpi
-Version:        0.85.4
-Release:        2%{?dist}
+Version:        0.85.5
+Release:        1%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
 Group:          Applications/Internet
 License:        GPLv2+ and GPLv3+
 URL:            http://www.glpi-project.org/
-Source0:        https://forge.indepnet.net/attachments/download/2020/glpi-0.85.4.tar.gz
+# Upstream sources (not the github auto-generated archive)
+Source0:        https://github.com/glpi-project/%{name}/releases/download/%{version}/glpi-%{version}.tar.gz
 
 Source1:        glpi-httpd.conf
 Source2:        glpi-0.85-config_path.php
@@ -85,6 +86,7 @@ Requires:       php-ZendFramework2-Loader
 Requires:       php-ZendFramework2-ServiceManager
 Requires:       php-ZendFramework2-Stdlib
 Requires:       php-ZendFramework2-Version
+Requires:       php-composer(ircmaxell/password-compat)
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 Requires:       php-composer(zetacomponents/graph)
 Requires:       gnu-free-sans-fonts
@@ -138,9 +140,13 @@ rm -rf lib/htmlawed
 rm -rf lib/Zend
 rm -rf lib/simplepie
 rm -rf lib/tcpdf
+rm -rf lib/password_compat
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
-rm -rf lib/ezcomponents
+rm -rf lib/zeta
 %endif
+rm -rf lib/FreeSans.ttf
+: bundled JS libraries
+ls lib
 
 %if 0%{?fedora} < 9 && 0%{?rhel} < 6
 # fix font path on old version
@@ -314,6 +320,11 @@ fi
 
 
 %changelog
+* Wed Sep 16 2015 Remi Collet <remi@fedoraproject.org> - 0.85.5-1
+- update to 0.85.5
+  https://github.com/glpi-project/glpi/issues?q=milestone:0.85.5
+- use system ircmaxell/password-compat
+
 * Wed Jun  3 2015 Remi Collet <remi@fedoraproject.org> - 0.85.4-2
 - switch from eZ component to Zeta component
 
