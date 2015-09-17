@@ -1,4 +1,4 @@
-# spec file for php-pecl-pthreads
+# remirepo spec file for php-pecl-pthreads
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
