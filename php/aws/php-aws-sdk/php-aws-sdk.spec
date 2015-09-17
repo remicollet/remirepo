@@ -14,8 +14,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   2.8.20
-%global github_commit    e01825efad025dbe6d88997e02bd32ec80814381
+%global github_version   2.8.21
+%global github_commit    92642ca4906e6681a1301971cf41500d7c68581c
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -189,6 +189,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 17 2015 Remi Collet <remi@fedoraproject.org> - 2.8.21-1
+- Update to 2.8.21
+
 * Sat Sep 05 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.8.20-1
 - Updated to 2.8.20 (RHBZ #1253094)
 - Updated autoloader to load dependencies after self registration
