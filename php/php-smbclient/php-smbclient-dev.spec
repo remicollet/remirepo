@@ -96,7 +96,8 @@ Obsoletes:     php70w-%{ext_name} <= %{version}
 
 %description
 %{ext_name} is a PHP extension that uses Samba's libsmbclient
-library to provide Samba related functions to PHP programs.
+library to provide Samba related functions and 'smb' streams
+to PHP programs.
 
 Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{scl_vendor})}.
 
