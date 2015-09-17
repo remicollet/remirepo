@@ -37,8 +37,8 @@
 Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
 Name:           %{?sub_prefix}php-pecl-solr2
-Version:        2.1.0
-Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        2.2.0
+Release:        0.1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
@@ -118,7 +118,7 @@ Please consult the documentation for more details on features.
 Warning: PECL Solr 2 is not compatible with Solr Server < 4.0
 PECL Solr 1 is available in php-pecl-solr package.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -206,7 +206,8 @@ fi
 
 
 %check
-cd NTS
+rm ?TS/tests/070.solrquery_collapse.phpt
+rm ?TS/tests/150.solrcollapsefunction.phpt
 
 : Minimal load test for NTS installed extension
 %{__php} \
@@ -217,17 +218,16 @@ cd NTS
    -m | grep %{pecl_name}
 
 : Upstream test suite for NTS extension
+cd NTS
 sed -e '/SOLR_SERVER_CONFIGURED/s/true/false/' -i tests/test.config.inc
 
 TEST_PHP_ARGS="-n -d extension=curl.so -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
 REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
 TEST_PHP_EXECUTABLE=%{__php} \
-%{__php} -n run-tests.php
+%{__php} -n run-tests.php --show-diff
 
 %if %{with_zts}
-cd ../ZTS
-
 : Minimal load test for ZTS installed extension
 %{__ztsphp} \
    -n \
@@ -237,13 +237,14 @@ cd ../ZTS
    -m | grep %{pecl_name}
 
 : Upstream test suite for ZTS extension
+cd ../ZTS
 sed -e '/SOLR_SERVER_CONFIGURED/s/true/false/' -i tests/test.config.inc
 
 TEST_PHP_ARGS="-n -d extension=curl.so -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
 REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-%{__ztsphp} -n run-tests.php
+%{__ztsphp} -n run-tests.php --show-diff
 %endif
 
 
@@ -267,6 +268,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 17 2015 Remi Collet <rcollet@redhat.com> - 2.2.0-0.1
+- test build for upcoming 2.2.0
+
 * Tue Jun 23 2015 Remi Collet <rcollet@redhat.com> - 2.1.0-3
 - allow build against rh-php56 (as more-php56)
 

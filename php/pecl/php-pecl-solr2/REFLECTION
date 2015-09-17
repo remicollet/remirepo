@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #176 solr version 2.1.0 ] {
+Extension [ <persistent> extension #198 solr version 2.2.0 ] {
 
   - Dependencies {
     Dependency [ libxml (Required) ]
@@ -7,9 +7,9 @@ Extension [ <persistent> extension #176 solr version 2.1.0 ] {
 
   - Constants [4] {
     Constant [ integer SOLR_MAJOR_VERSION ] { 2 }
-    Constant [ integer SOLR_MINOR_VERSION ] { 1 }
+    Constant [ integer SOLR_MINOR_VERSION ] { 2 }
     Constant [ integer SOLR_PATCH_VERSION ] { 0 }
-    Constant [ string SOLR_EXTENSION_VERSION ] { 2.1.0 }
+    Constant [ string SOLR_EXTENSION_VERSION ] { 2.2.0 }
   }
 
   - Functions {
@@ -20,7 +20,7 @@ Extension [ <persistent> extension #176 solr version 2.1.0 ] {
     }
   }
 
-  - Classes [20] {
+  - Classes [22] {
     Class [ <internal:solr> final class SolrObject implements ArrayAccess ] {
 
       - Constants [0] {
@@ -514,7 +514,7 @@ Extension [ <persistent> extension #176 solr version 2.1.0 ] {
         Property [ <default> private $_hashtable_index ]
       }
 
-      - Methods [23] {
+      - Methods [25] {
         Method [ <internal:solr, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -624,6 +624,20 @@ Extension [ <persistent> extension #176 solr version 2.1.0 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> array $queries ]
+          }
+        }
+
+        Method [ <internal:solr> public method &getById ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $id ]
+          }
+        }
+
+        Method [ <internal:solr> public method &getByIds ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $ids ]
           }
         }
 
@@ -908,7 +922,7 @@ Extension [ <persistent> extension #176 solr version 2.1.0 ] {
         Property [ <default> protected $_hashtable_index ]
       }
 
-      - Methods [167] {
+      - Methods [206] {
         Method [ <internal:solr, overwrites SolrModifiableParams, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -1336,6 +1350,263 @@ Extension [ <persistent> extension #176 solr version 2.1.0 ] {
 
           - Parameters [1] {
             Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr> public method &setGroup ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr> public method getGroup ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method &addGroupField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr> public method getGroupFields ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method &addGroupFunction ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr> public method getGroupFunctions ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method &addGroupQuery ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr> public method getGroupQueries ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method &setGroupLimit ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr> public method getGroupLimit ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method &setGroupOffset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr> public method getGroupOffset ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method &addGroupSortField ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $field ]
+            Parameter #1 [ <optional> $order ]
+          }
+        }
+
+        Method [ <internal:solr> public method getGroupSortFields ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method &setGroupFormat ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr> public method getGroupFormat ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method &setGroupMain ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr> public method getGroupMain ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method &setGroupNGroups ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr> public method getGroupNGroups ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method &setGroupTruncate ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr> public method getGroupTruncate ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method &setGroupFacet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr> public method getGroupFacet ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method &setGroupCachePercent ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $percent ]
+          }
+        }
+
+        Method [ <internal:solr> public method getGroupCachePercent ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method &collapse ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> SolrCollapseFunction &$collapseFunction ]
+          }
+        }
+
+        Method [ <internal:solr> public method &setExpand ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr> public method getExpand ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method &addExpandSortField ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $field ]
+            Parameter #1 [ <optional> $order ]
+          }
+        }
+
+        Method [ <internal:solr> public method &removeExpandSortField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:solr> public method getExpandSortFields ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method &setExpandRows ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr> public method getExpandRows ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method &setExpandQuery ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $q ]
+          }
+        }
+
+        Method [ <internal:solr> public method getExpandQuery ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method &addExpandFilterQuery ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fq ]
+          }
+        }
+
+        Method [ <internal:solr> public method &removeExpandFilterQuery ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fq ]
+          }
+        }
+
+        Method [ <internal:solr> public method getExpandFilterQueries ] {
+
+          - Parameters [0] {
           }
         }
 
@@ -2066,7 +2337,7 @@ Extension [ <persistent> extension #176 solr version 2.1.0 ] {
         Property [ <default> protected $_hashtable_index ]
       }
 
-      - Methods [194] {
+      - Methods [233] {
         Method [ <internal:solr, overwrites SolrQuery, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -2690,6 +2961,263 @@ Extension [ <persistent> extension #176 solr version 2.1.0 ] {
 
           - Parameters [1] {
             Parameter #0 [ <optional> $field_override ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setGroup ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getGroup ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &addGroupField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getGroupFields ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &addGroupFunction ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getGroupFunctions ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &addGroupQuery ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getGroupQueries ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setGroupLimit ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getGroupLimit ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setGroupOffset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getGroupOffset ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &addGroupSortField ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $field ]
+            Parameter #1 [ <optional> $order ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getGroupSortFields ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setGroupFormat ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getGroupFormat ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setGroupMain ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getGroupMain ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setGroupNGroups ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getGroupNGroups ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setGroupTruncate ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getGroupTruncate ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setGroupFacet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getGroupFacet ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setGroupCachePercent ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $percent ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getGroupCachePercent ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &collapse ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> SolrCollapseFunction &$collapseFunction ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setExpand ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getExpand ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &addExpandSortField ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $field ]
+            Parameter #1 [ <optional> $order ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &removeExpandSortField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getExpandSortFields ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setExpandRows ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getExpandRows ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &setExpandQuery ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $q ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getExpandQuery ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &addExpandFilterQuery ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fq ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method &removeExpandFilterQuery ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fq ]
+          }
+        }
+
+        Method [ <internal:solr, inherits SolrQuery> public method getExpandFilterQueries ] {
+
+          - Parameters [0] {
           }
         }
 
@@ -3405,6 +3933,136 @@ Extension [ <persistent> extension #176 solr version 2.1.0 ] {
       }
     }
 
+    Class [ <internal:solr> class SolrCollapseFunction ] {
+
+      - Constants [3] {
+        Constant [ string NULLPOLICY_IGNORE ] { ignore }
+        Constant [ string NULLPOLICY_EXPAND ] { expand }
+        Constant [ string NULLPOLICY_COLLAPSE ] { collapse }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [1] {
+        Property [ <default> protected $_hashtable_index ]
+      }
+
+      - Methods [17] {
+        Method [ <internal:solr, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field ]
+          }
+        }
+
+        Method [ <internal:solr, dtor> public method __destruct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method setField ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $field ]
+          }
+        }
+
+        Method [ <internal:solr> public method getField ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method setMax ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr> public method getMax ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method setMin ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr> public method getMin ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method setSize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr> public method getSize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method setHint ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:solr> public method getHint ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method setNullPolicy ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $policy ]
+          }
+        }
+
+        Method [ <internal:solr> public method getNullPolicy ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method __sleep ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
     Class [ <internal:solr> abstract class SolrResponse ] {
 
       - Constants [2] {
@@ -4041,7 +4699,7 @@ Extension [ <persistent> extension #176 solr version 2.1.0 ] {
         Property [ <default> protected $zif_name ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:solr> public method getInternalInfo ] {
 
           - Parameters [0] {
@@ -4055,6 +4713,9 @@ Extension [ <persistent> extension #176 solr version 2.1.0 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -4104,7 +4765,7 @@ Extension [ <persistent> extension #176 solr version 2.1.0 ] {
         Property [ <default> protected $zif_name ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:solr, overwrites SolrException, prototype SolrException> public method getInternalInfo ] {
 
           - Parameters [0] {
@@ -4118,6 +4779,9 @@ Extension [ <persistent> extension #176 solr version 2.1.0 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -4167,7 +4831,7 @@ Extension [ <persistent> extension #176 solr version 2.1.0 ] {
         Property [ <default> protected $zif_name ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:solr, overwrites SolrException, prototype SolrException> public method getInternalInfo ] {
 
           - Parameters [0] {
@@ -4181,6 +4845,9 @@ Extension [ <persistent> extension #176 solr version 2.1.0 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -4230,7 +4897,7 @@ Extension [ <persistent> extension #176 solr version 2.1.0 ] {
         Property [ <default> protected $zif_name ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:solr, overwrites SolrException, prototype SolrException> public method getInternalInfo ] {
 
           - Parameters [0] {
@@ -4244,6 +4911,9 @@ Extension [ <persistent> extension #176 solr version 2.1.0 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -4293,7 +4963,7 @@ Extension [ <persistent> extension #176 solr version 2.1.0 ] {
         Property [ <default> protected $zif_name ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:solr, overwrites SolrException, prototype SolrException> public method getInternalInfo ] {
 
           - Parameters [0] {
@@ -4307,6 +4977,75 @@ Extension [ <persistent> extension #176 solr version 2.1.0 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:solr> class SolrMissingMandatoryParameterException extends SolrException ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [7] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+        Property [ <default> protected $sourceline ]
+        Property [ <default> protected $sourcefile ]
+        Property [ <default> protected $zif_name ]
+      }
+
+      - Methods [11] {
+        Method [ <internal:solr, inherits SolrException> public method getInternalInfo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
