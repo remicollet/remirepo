@@ -34,7 +34,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.9.5
-Release: 13%{?dist}
+Release: 14%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -95,18 +95,10 @@ Obsoletes: php53-pear  <= %{version}
 Obsoletes: php53u-pear <= %{version}
 Obsoletes: php54-pear  <= %{version}
 Obsoletes: php54w-pear <= %{version}
-%if "%{php_version}" > "5.5"
 Obsoletes: php55u-pear <= %{version}
 Obsoletes: php55w-pear <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
 Obsoletes: php56u-pear <= %{version}
 Obsoletes: php56w-pear <= %{version}
-%endif
-%if "%{php_version}" > "7.0"
-Obsoletes: php70u-pear <= %{version}
-Obsoletes: php70w-pear <= %{version}
-%endif
 %endif
 
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}}
@@ -401,6 +393,9 @@ fi
 
 
 %changelog
+* Thu Sep 17 2015 Remi Collet <remi@fedoraproject.org> 1:1.9.5-14
+- improve obsoletes
+
 * Thu Jul 23 2015 Remi Collet <remi@fedoraproject.org> 1:1.9.5-13
 - fix default values in rpm macro file (instead of undefined)
 

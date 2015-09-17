@@ -36,7 +36,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.10.0
-Release: 0.5.%{pearprever}%{?dist}
+Release: 0.6.%{pearprever}%{?dist}
 Epoch: 1
 # PEAR, PEAR_Manpages, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -89,18 +89,12 @@ Obsoletes: php53-pear  <= %{version}
 Obsoletes: php53u-pear <= %{version}
 Obsoletes: php54-pear  <= %{version}
 Obsoletes: php54w-pear <= %{version}
-%if "%{php_version}" > "5.5"
 Obsoletes: php55u-pear <= %{version}
 Obsoletes: php55w-pear <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
 Obsoletes: php56u-pear <= %{version}
 Obsoletes: php56w-pear <= %{version}
-%endif
-%if "%{php_version}" > "7.0"
 Obsoletes: php70u-pear <= %{version}
 Obsoletes: php70w-pear <= %{version}
-%endif
 %endif
 
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}}
@@ -387,6 +381,9 @@ fi
 
 
 %changelog
+* Thu Sep 17 2015 Remi Collet <remi@fedoraproject.org> 1:1.10.0-0.6.dev2
+- improve obsoletes
+
 * Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> 1:1.10.0-0.5.dev2
 - update PEAR to 1.10.0dev2
 - drop all patches, merged upstream
