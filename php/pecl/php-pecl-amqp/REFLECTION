@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #74 amqp version 1.6.0beta3 ] {
+Extension [ <persistent> extension #74 amqp version 1.6.0beta4 ] {
 
   - INI {
     Entry [ amqp.host <ALL> ]
@@ -34,10 +34,20 @@ Extension [ <persistent> extension #74 amqp version 1.6.0beta3 ] {
     Entry [ amqp.prefetch_count <ALL> ]
       Current = '3'
     }
+    Entry [ amqp.channel_max <ALL> ]
+      Current = '256'
+    }
+    Entry [ amqp.frame_max <ALL> ]
+      Current = '131072'
+    }
+    Entry [ amqp.heartbeat <ALL> ]
+      Current = '0'
+    }
   }
 
-  - Constants [21] {
+  - Constants [22] {
     Constant [ integer AMQP_NOPARAM ] { 0 }
+    Constant [ integer AMQP_JUST_CONSUME ] { 1 }
     Constant [ integer AMQP_DURABLE ] { 2 }
     Constant [ integer AMQP_PASSIVE ] { 4 }
     Constant [ integer AMQP_EXCLUSIVE ] { 8 }
@@ -364,7 +374,7 @@ Extension [ <persistent> extension #74 amqp version 1.6.0beta3 ] {
       - Properties [0] {
       }
 
-      - Methods [23] {
+      - Methods [24] {
         Method [ <internal:amqp, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -517,6 +527,12 @@ Extension [ <persistent> extension #74 amqp version 1.6.0beta3 ] {
         }
 
         Method [ <internal:amqp> public method getConnection ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method getConsumerTag ] {
 
           - Parameters [0] {
           }
@@ -836,7 +852,7 @@ Extension [ <persistent> extension #74 amqp version 1.6.0beta3 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -844,6 +860,9 @@ Extension [ <persistent> extension #74 amqp version 1.6.0beta3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -890,7 +909,7 @@ Extension [ <persistent> extension #74 amqp version 1.6.0beta3 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -898,6 +917,9 @@ Extension [ <persistent> extension #74 amqp version 1.6.0beta3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -944,7 +966,7 @@ Extension [ <persistent> extension #74 amqp version 1.6.0beta3 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -952,6 +974,9 @@ Extension [ <persistent> extension #74 amqp version 1.6.0beta3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -998,7 +1023,7 @@ Extension [ <persistent> extension #74 amqp version 1.6.0beta3 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -1006,6 +1031,9 @@ Extension [ <persistent> extension #74 amqp version 1.6.0beta3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -1052,7 +1080,7 @@ Extension [ <persistent> extension #74 amqp version 1.6.0beta3 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -1060,6 +1088,9 @@ Extension [ <persistent> extension #74 amqp version 1.6.0beta3 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {

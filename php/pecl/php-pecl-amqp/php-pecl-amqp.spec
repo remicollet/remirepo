@@ -23,19 +23,19 @@
 %{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts    0%{?__ztsphp:1}
-%global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests  0%{?_with_tests:1}
 %global pecl_name   amqp
 %if "%{php_version}" < "5.6"
 %global ini_name    %{pecl_name}.ini
 %else
 %global ini_name    40-%{pecl_name}.ini
 %endif
-%global prever      beta3
+%global prever      beta4
 
 Summary:       Communicate with any AMQP compliant server
 Name:          %{?sub_prefix}php-pecl-amqp
 Version:       1.6.0
-Release:       0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
@@ -96,7 +96,7 @@ such as RabbitMQ, OpenAMQP and Qpid, giving you the ability to create and
 delete exchanges and queues, as well as publish to any exchange and consume
 from any queue.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -118,8 +118,6 @@ cd ..
 cat > %{ini_name} << 'EOF'
 ; Enable %{pecl_name} extension module
 extension = %{pecl_name}.so
-
-; http://www.php.net/manual/en/amqp.configuration.php
 
 ; Whether calls to AMQPQueue::get() and AMQPQueue::consume()
 ; should require that the client explicitly acknowledge messages. 
@@ -148,10 +146,14 @@ extension = %{pecl_name}.so
 ;amqp.vhost = /
 
 ; Timeout
-;amqp.timeout=
-;amqp.read_timeout=0
-;amqp.write_timeout=0
-;amqp.connect_timeout=0
+;amqp.timeout =
+;amqp.read_timeout = 0
+;amqp.write_timeout = 0
+;amqp.connect_timeout = 0
+
+;amqp.channel_max = 256
+;amqp.frame_max = 131072
+;amqp.heartbeat = 0
 EOF
 
 %if %{with_zts}
@@ -285,6 +287,9 @@ fi
 
 
 %changelog
+* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.6.0-0.3.beta4
+- update to 1.6.0beta4
+
 * Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 1.6.0-0.2.beta3
 - allow build against rh-php56 (as more-php56)
 
