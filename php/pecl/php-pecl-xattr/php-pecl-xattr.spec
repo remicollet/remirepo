@@ -1,3 +1,6 @@
+# Fedora spec file for php-pecl-xattr
+# with SCL compatibility removed, from
+#
 # remirepo spec file for php-pecl-xattr
 #
 # Copyright (c) 2013-2015 Remi Collet
@@ -6,15 +9,6 @@
 #
 # Please, preserve the changelog entries
 #
-%if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
-%global sub_prefix %{scl_prefix}
-%endif
-%endif
-
-%{?scl:          %scl_package        php-pecl-xattr}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
@@ -28,47 +22,25 @@
 %endif
 
 Summary:        Extended attributes
-Name:           %{?sub_prefix}php-pecl-%{pecl_name}
+Name:           php-pecl-%{pecl_name}
 Version:        1.2.1
-Release:        5%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel
-BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  php-devel
+BuildRequires:  php-pear
 BuildRequires:  libattr-devel
 
-Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
-Requires:       %{?scl_prefix}php(api) = %{php_core_api}
-%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
+Requires:       php(zend-abi) = %{php_zend_api}
+Requires:       php(api) = %{php_core_api}
 
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
-
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
-# Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
-Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
-Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
-%if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "7.0"
-Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
-%endif
-%endif
+Provides:       php-%{pecl_name} = %{version}
+Provides:       php-%{pecl_name}%{?_isa} = %{version}
+Provides:       php-pecl(%{pecl_name}) = %{version}
+Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared object
@@ -81,15 +53,12 @@ Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 This package allows to manipulate extended attributes on filesystems that
 support them. Requires libattr from Linux XFS project.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
-
 
 %prep
 %setup -q -c
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' -i package.xml
-
 
 mv %{pecl_name}-%{version} NTS
 
@@ -136,8 +105,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
@@ -159,7 +126,7 @@ done
 
 
 # when pear installed alone, after us
-%triggerin -- %{?scl_prefix}php-pear
+%triggerin -- php-pear
 if [ -x %{__pecl} ] ; then
     %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
 fi
@@ -206,12 +173,7 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -226,8 +188,8 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-5
-- F23 rebuild with rh_layout
+* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- drop SCL compatibility for Fedora review
 
 * Wed Jul 22 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-4
 - rebuild against php 7.0.0beta2
