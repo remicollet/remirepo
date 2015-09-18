@@ -35,11 +35,16 @@
 Summary:       Communicate with any AMQP compliant server
 Name:          %{?sub_prefix}php-pecl-amqp
 Version:       1.6.0
-Release:       0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.4.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
+
+# https://github.com/pdezwart/php-amqp/pull/178
+Patch0:        %{pecl_name}-178.patch
+# https://github.com/pdezwart/php-amqp/pull/179
+Patch1:        %{pecl_name}-179.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 5.2.0
@@ -107,6 +112,9 @@ sed -e 's/role="test"/role="src"/' -i package.xml
 
 mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
+%patch0 -p1 -b .pr178
+%patch1 -p1 -b .pr179
+
 # Upstream often forget to change this
 extver=$(sed -n '/#define PHP_AMQP_VERSION/{s/.* "//;s/".*$//;p}' php_amqp.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -287,6 +295,10 @@ fi
 
 
 %changelog
+* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.6.0-0.4.beta4
+- open https://github.com/pdezwart/php-amqp/pull/178 - librabbitmq 0.5
+- open https://github.com/pdezwart/php-amqp/pull/179 --with-libdir
+
 * Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.6.0-0.3.beta4
 - update to 1.6.0beta4
 

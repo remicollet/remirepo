@@ -85,7 +85,7 @@ Extension [ <persistent> extension #74 amqp version 1.6.0beta4 ] {
       - Properties [0] {
       }
 
-      - Methods [27] {
+      - Methods [29] {
         Method [ <internal:amqp, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -252,6 +252,18 @@ Extension [ <persistent> extension #74 amqp version 1.6.0beta4 ] {
         }
 
         Method [ <internal:amqp> public method isPersistent ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method getHeartbeatInterval ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method getMaxFrameSize ] {
 
           - Parameters [0] {
           }
