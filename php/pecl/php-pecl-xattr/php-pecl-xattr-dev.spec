@@ -78,8 +78,8 @@ Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 
 
 %description
-This package allows to manipulate extended attributes on filesystems that
-support them. Requires libattr from Linux XFS project.
+This package allows to manipulate extended attributes on filesystems
+that support them.
 
 Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
