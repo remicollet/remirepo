@@ -1,7 +1,9 @@
+%global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
+
 Name:       scl-utils
 Epoch:      1
 Version:    2.0.1
-Release:    3%{dist}
+Release:    7%{dist}
 Summary:    Utilities for alternative packaging
 
 License:    GPLv2+
@@ -9,12 +11,13 @@ Group:      Applications/File
 URL:        https://fedorahosted.org/SoftwareCollections/
 Source0:    https://fedorahosted.org/released/scl-utils/%{name}-%{version}.tar.bz2
 Source1:    macros.scl-filesystem
-
-Patch0:     %{name}-layout.patch
-
 Buildrequires:  cmake
 Buildrequires:  rpm-devel
 Requires:   environment-modules
+
+Patch0:     %{name}-layout.patch
+Patch1:     0001-Honor-CFLAGS-passed-to-cmake.patch
+Patch2:     0002-Fix-core-dumps-with-large-input-on-stdin-rhbz-125727.patch
 
 %description
 Run-time utility for alternative packaging.
@@ -29,10 +32,7 @@ Requires:   redhat-rpm-config
 Essential RPM build macros for alternative packaging.
 
 %prep
-%setup -q
-
-%patch0 -p0
-
+%autosetup -p1
 
 %build
 %cmake
@@ -42,7 +42,12 @@ make %{?_smp_mflags} CFLAGS="$RPM_OPT_FLAGS" LDFLAGS="$RPM_LD_FLAGS"
 %install
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
-cat %SOURCE1 >> %{buildroot}%{_sysconfdir}/rpm/macros.scl
+if [ %{macrosdir} != %{_sysconfdir}/rpm ]; then
+    mkdir -p %{buildroot}%{macrosdir}
+    mv %{buildroot}%{_sysconfdir}/rpm/macros.scl %{buildroot}%{macrosdir}
+    rmdir %{buildroot}%{_sysconfdir}/rpm
+fi
+cat %SOURCE1 >> %{buildroot}%{macrosdir}/macros.scl
 mkdir -p %{buildroot}%{_sysconfdir}/scl
 cd %{buildroot}%{_sysconfdir}/scl
 mkdir modulefiles
@@ -67,7 +72,7 @@ rm -rf %buildroot
 
 %files build
 %defattr(-,root,root,-)
-%{_sysconfdir}/rpm/macros.scl
+%{macrosdir}/macros.scl
 %{_rpmconfigdir}/scldeps.sh
 %{_rpmconfigdir}/fileattrs/scl.attr
 %{_rpmconfigdir}/fileattrs/sclbuild.attr
@@ -75,10 +80,30 @@ rm -rf %buildroot
 %{_rpmconfigdir}/brp-scl-python-bytecompile
 
 %changelog
+* Fri Sep 18 2015 Remi Collet <remi@remirepo.net> - 1:2.0.1-7
+- add "rh_layout" to remove /scls/ from _sysconfdir,
+  _sharedstatedir and _localstatedir, in sync with RHEL version
+  see #1198693
+
+* Thu Aug 27 2015 Lubos Kardos <lkardos@redhat.com> - 1:2.0.1-7
+- Fix core dumps with large input on stdin (#1257274)
+
+* Mon Jul 27 2015 Lubos Kardos <lkardos@redhat.com> - 1:2.0.1-6
+- Rebuild with the newest rpm.
+
+* Tue Jul 07 2015 Lubos Kardos <lkardos@redhat.com> - 1:2.0.1-5
+- Honor CFLAGS passed to cmake (#1239997)
+
 * Wed Jun 24 2015 Remi Collet <remi@remirepo.net> - 1:2.0.1-3
 - add "rh_layout" to remove /scls/ from _sysconfdir,
   _sharedstatedir and _localstatedir, in sync with RHEL version
   see #1198693
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.0.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed Mar  4 2015 Ville Skyttä <ville.skytta@iki.fi> - 1:2.0.1-3
+- Install macros in %%{_rpmconfigdir}/macros.d where available (#1074284)
 
 * Wed Jan 21 2015 Lubos Kardos <lkardos@redhat.com> - 1:2.0.1-2
 - added owning of module file

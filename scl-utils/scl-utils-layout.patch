@@ -1,6 +1,6 @@
 diff -up rpm/macros.scl.orig rpm/macros.scl
---- rpm/macros.scl.orig	2015-06-24 07:26:39.838044392 +0200
-+++ rpm/macros.scl	2015-06-24 07:34:13.762968582 +0200
+--- a/rpm/macros.scl.orig	2015-06-24 07:26:39.838044392 +0200
++++ a/rpm/macros.scl	2015-06-24 07:34:13.762968582 +0200
 @@ -69,10 +69,13 @@ package or when debugging this package.
  %global _datadir		%{_prefix}/share
  %global _sysconfdir		%{_scl_root}/etc
