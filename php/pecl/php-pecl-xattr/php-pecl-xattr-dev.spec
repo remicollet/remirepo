@@ -13,6 +13,7 @@
 %global sub_prefix %{scl_prefix}
 %endif
 %endif
+%global prever  RC1
 
 %{?scl:          %scl_package        php-pecl-xattr}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
@@ -29,17 +30,16 @@
 
 Summary:        Extended attributes
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.2.1
-Release:        5%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.3.0
+Release:        0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
-BuildRequires:  libattr-devel
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
@@ -81,7 +81,7 @@ Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 This package allows to manipulate extended attributes on filesystems that
 support them. Requires libattr from Linux XFS project.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -91,14 +91,14 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 sed -e 's/role="test"/role="src"/' -i package.xml
 
 
-mv %{pecl_name}-%{version} NTS
+mv %{pecl_name}-%{version}%{?prever} NTS
 
 cd NTS
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_XATTR_VERSION/{s/.* "//;s/".*$//;p}' php_xattr.h)
-if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
 cd ..
@@ -226,6 +226,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.3.0-0.1.RC1
+- update to 1.3.0RC1
+- drop dependency on libxattr
+
 * Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-5
 - F23 rebuild with rh_layout
 
