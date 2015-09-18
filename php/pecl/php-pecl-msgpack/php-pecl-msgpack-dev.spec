@@ -45,7 +45,7 @@ Summary:       API for communicating with MessagePack serialization
 Name:          %{?sub_prefix}php-pecl-msgpack
 Version:       0.5.7
 %if 0%{?gh_date:1}
-Release:       0.5.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.6.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -289,6 +289,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 0.5.7-0.6.20150702gitce27a10
+- F23 rebuild with rh_layout
+
 * Wed Jul 22 2015 Remi Collet <remi@fedoraproject.org> - 0.5.7-0.5.20150702gitce27a10
 - rebuild against php 7.0.0beta2
 

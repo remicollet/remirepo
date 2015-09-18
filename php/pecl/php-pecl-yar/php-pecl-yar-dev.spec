@@ -39,7 +39,7 @@ Summary:        Light, concurrent RPC framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.2.5
 %if 0%{?gh_date:1}
-Release:        0.8.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.9.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -277,6 +277,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.2.5-0.9.20150724git47317d6
+- F23 rebuild with rh_layout
+
 * Fri Jul 24 2015 Remi Collet <remi@fedoraproject.org> - 1.2.5-0.8.20150724git47317d6
 - new snapshot
 

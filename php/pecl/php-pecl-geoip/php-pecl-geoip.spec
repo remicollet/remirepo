@@ -32,7 +32,7 @@
 
 Name:           %{?sub_prefix}php-pecl-geoip
 Version:        1.1.0
-Release:        7%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        8%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Extension to map IP addresses to geographic places
 Group:          Development/Languages
 License:        PHP
@@ -224,6 +224,9 @@ fi
 
 
 %changelog
+* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-8
+- F23 rebuild with rh_layout
+
 * Wed Jul 22 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-7
 - rebuild against php 7.0.0beta2
 

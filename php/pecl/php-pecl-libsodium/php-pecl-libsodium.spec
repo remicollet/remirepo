@@ -31,7 +31,7 @@
 Summary:        Wrapper for the Sodium cryptographic library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -228,6 +228,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- F23 rebuild with rh_layout
+
 * Thu Sep 03 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - Update to 1.0.0 (stable)
 

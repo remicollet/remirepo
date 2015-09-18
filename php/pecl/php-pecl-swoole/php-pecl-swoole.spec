@@ -32,7 +32,7 @@
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.7.19
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -253,6 +253,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.7.19-3
+- F23 rebuild with rh_layout
+
 * Thu Sep  3 2015 Remi Collet <remi@fedoraproject.org> - 1.7.19-2
 - allow build against rh-php56 (as more-php56)
 

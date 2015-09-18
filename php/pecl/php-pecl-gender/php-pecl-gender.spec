@@ -31,7 +31,7 @@
 Summary:        Gender Extension
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.1.0
-Release:        4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        5%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 # Code is BSD, nam_dict.txt is GFDL
 License:        BSD and GFDL
 Group:          Development/Languages
@@ -230,6 +230,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-5
+- F23 rebuild with rh_layout
+
 * Wed Jul 22 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-4
 - rebuild against php 7.0.0beta2
 

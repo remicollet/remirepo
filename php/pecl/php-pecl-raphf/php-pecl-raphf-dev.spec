@@ -46,7 +46,7 @@
 Summary:        Resource and persistent handles factory
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        2.0.0
-Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -270,6 +270,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.2.20150721git6d04f5b
+- F23 rebuild with rh_layout
+
 * Tue Jul 28 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.1.20150721git6d04f5b
 - bump version (as upstream)
 

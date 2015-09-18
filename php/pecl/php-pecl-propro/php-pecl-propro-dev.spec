@@ -43,7 +43,7 @@
 Summary:        Property proxy
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.1
-Release:        0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.5.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -249,6 +249,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-0.5.20150615gitd9cb4d6
+- F23 rebuild with rh_layout
+
 * Wed Jul 22 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-0.4.20150615gitd9cb4d6
 - rebuild against php 7.0.0beta2
 - sources from github

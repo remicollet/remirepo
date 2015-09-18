@@ -131,7 +131,7 @@
 #global gh_owner     php
 #global gh_project   php-src
 %global rcver        RC3
-%global rpmrel       16
+%global rpmrel       17
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1803,6 +1803,9 @@ fi
 
 
 %changelog
+* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.17.RC3
+- F23 rebuild with rh_layout
+
 * Wed Sep 16 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.16.RC3
 - Update to 7.0.0RC3
 - disable zip extension (provided in php-pecl-zip)

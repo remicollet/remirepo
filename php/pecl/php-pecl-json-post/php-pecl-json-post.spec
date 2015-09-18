@@ -37,7 +37,7 @@
 Summary:        JSON POST handler
 Name:           %{?sub_prefix}php-pecl-json-post
 Version:        1.0.1
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -241,6 +241,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
+- F23 rebuild with rh_layout
+
 * Tue Jul 28 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1 (stable)
 

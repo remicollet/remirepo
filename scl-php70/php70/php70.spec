@@ -19,7 +19,7 @@
 Summary:       Package that installs PHP 7.0
 Name:          %scl_name
 Version:       1.0
-Release:       0.4%{?dist}
+Release:       0.5%{?dist}
 Group:         Development/Languages
 License:       GPLv2+
 
@@ -202,6 +202,9 @@ restorecon -R %{_localstatedir} &>/dev/null || :
 
 
 %changelog
+* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> 1.0-0.5
+- F23 rebuild with rh_layout
+
 * Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> 1.0-0.4
 - use rh_layout instead of nfsmountable in Fedora
 

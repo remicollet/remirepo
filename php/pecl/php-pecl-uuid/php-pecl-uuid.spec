@@ -34,7 +34,7 @@
 Summary:       Universally Unique Identifier extension for PHP
 Name:          %{?sub_prefix}php-pecl-uuid
 Version:       1.0.4
-Release:       4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       5%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       LGPLv2+
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/uuid
@@ -221,6 +221,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-5
+- F23 rebuild with rh_layout
+
 * Wed Jul 22 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-4
 - rebuild against php 7.0.0beta2
 
