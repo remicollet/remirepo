@@ -11,7 +11,7 @@
 %define pear_name Text_Diff
 
 Name:           php-pear-Text-Diff
-Version:        1.2.0
+Version:        1.2.1
 Release:        1%{?dist}
 Summary:        Engine for performing and rendering text diffs
 
@@ -102,6 +102,9 @@ fi
 
 
 %changelog
+* Sat Sep 19 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- Update to 1.2.1
+
 * Thu Jul 16 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - Update to 1.2.0
 - run upstream test suite during build
