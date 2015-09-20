@@ -16,7 +16,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        0
-Release:        0.2.%{gh_date}git%{gh_short}%{?dist}
+Release:        0.3.%{gh_date}git%{gh_short}%{?dist}
 Summary:        A validating SQL lexer and parser with a focus on MySQL dialect
 
 Group:          Development/Libraries
@@ -42,11 +42,13 @@ Requires:       php(language) >= 5.3.0
 # From phpcompatinfo report for 20150629
 Requires:       php-ctype
 Requires:       php-mbstring
+Requires:       php-pcre
+# For generated autoloader
 Requires:       php-spl
 
 # Rename
 Obsoletes:      php-dmitry-php-sql-parser < 0-0.2
-Provides:       php-dmitry-php-sql-parser <= %{version}-%{release}
+Provides:       php-dmitry-php-sql-parser = %{version}-%{release}
 
 # Composer
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
@@ -107,6 +109,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 20 2015 Remi Collet <remi@fedoraproject.org> - 0-0.3.20150820git1b2988f
+- fix provides and self-obsoletion (review #1262807)
+
 * Mon Sep 14 2015 Remi Collet <remi@fedoraproject.org> - 0-0.2.20150820git1b2988f
 - rename to php-udan11-sql-parser
 
