@@ -12,6 +12,7 @@ git clone https://github.com/nikic/PHP-Parser.git $PROJECT-$SHORT
 
 echo "Gettin commit..."
 pushd $PROJECT-$SHORT
+cp composer.json ../composer-$VERSION.json
 git checkout $COMMIT
 popd
 

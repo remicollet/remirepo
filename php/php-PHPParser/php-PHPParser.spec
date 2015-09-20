@@ -11,8 +11,8 @@
 
 %global github_owner    nikic
 %global github_name     PHP-Parser
-%global github_version  1.4.0
-%global github_commit   196f177cfefa0f1f7166c0a05d8255889be12418
+%global github_version  1.4.1
+%global github_commit   f78af2c9c86107aa1a34cd1dbb5bbe9eeb0d9f51
 %global github_short    %(c=%{github_commit}; echo ${c:0:7})
 
 %global lib_name        PhpParser
@@ -41,7 +41,7 @@ BuildArch:     noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: %{_bindir}/phpunit
-# For tests: phpcompatinfo (computed from version 1.4.0)
+# For tests: phpcompatinfo (computed from version 1.4.1)
 BuildRequires: php-filter
 BuildRequires: php-pcre
 BuildRequires: php-spl
@@ -52,12 +52,11 @@ BuildRequires: php-xmlwriter
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
 Requires:      php-tokenizer
-# phpcompatinfo (computed from version 1.4.0)
+# phpcompatinfo (computed from version 1.4.1)
 Requires:      php-cli
 Requires:      php-filter
 Requires:      php-pcre
 Requires:      php-spl
-Requires:      php-tokenizer
 Requires:      php-xmlreader
 Requires:      php-xmlwriter
 
@@ -68,6 +67,9 @@ Provides:      php-composer(nikic/php-parser) = %{version}
 
 %description
 A PHP parser written in PHP to simplify static analysis and code manipulation.
+
+To use this library, you just have to add, in your project:
+  require_once '%{_datadir}/php/%{lib_name}/autoload.php';
 
 
 %prep
@@ -110,6 +112,9 @@ install -Dpm 755 bin/php-parse.php %{buildroot}%{_bindir}/php-parse
 
 
 %changelog
+* Sun Sep 20 2015 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
+- update to 1.4.1
+
 * Sun Aug  9 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - update to 1.4.0
 - add a simple autoload.php
