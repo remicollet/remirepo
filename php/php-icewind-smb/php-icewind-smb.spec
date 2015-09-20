@@ -29,7 +29,7 @@
 
 Name:           php-%{pk_vendor}-%{pk_name}
 Version:        1.0.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        php wrapper for smbclient and libsmbclient-php
 
 Group:          Development/Libraries
@@ -133,10 +133,12 @@ rm -rf %{buildroot}
 %license LICENSE.txt
 %doc composer.json
 %doc *.md example.php
-%dir %{_datadir}/php/%{ns_vendor}
-     %{_datadir}/php/%{ns_vendor}/%{ns_name}
+%{_datadir}/php/%{ns_vendor}/%{ns_name}
 
 
 %changelog
+* Sun Sep 20 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-2
+- don't own /usr/share/php/Icewind (review #1259172)
+
 * Wed Sep  2 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
 - initial package, version 1.0.4
