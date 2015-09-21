@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    f58902a774449f73f1a1d9cd1a07aeac8fbee367
+%global gh_commit    eceacb580af64e9039b274a1e9c6997fc69756c7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     pdepend
 %global gh_project   pdepend
@@ -19,7 +19,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-pdepend-PHP-Depend
-Version:        2.1.0
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        PHP_Depend design quality metrics for PHP package
 
@@ -163,6 +163,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Sep 21 2015 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- update to 2.2.0
 * Thu Jul  2 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - update to 2.1.0
 - switch from pear channel to git snapshot sources
