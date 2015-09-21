@@ -1,4 +1,4 @@
-# Fedora spec file for php-Raven, from:
+# remirepo spec file for php-Raven, from:
 #
 # Fedora spec file for php-Raven
 #
@@ -17,8 +17,8 @@
 
 %global github_owner     getsentry
 %global github_name      raven-php
-%global github_version   0.12.1
-%global github_commit    b325984c792ff89f985b73da9a3ad8ed8b520bca
+%global github_version   0.13.0
+%global github_commit    1d5be07afc001df98a3528d1f928eeb2241afce6
 
 %global composer_vendor  raven
 %global composer_project raven
@@ -45,12 +45,14 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{version}-%{github_commi
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Library version value check
+BuildRequires: php-cli
 # Tests
 %if %{with_tests}
 ## composer.json
 BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language) >= %{php_min_ver}
-## phpcompatinfo (computed from version 0.12.1)
+## phpcompatinfo (computed from version 0.13.0)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-hash
@@ -60,8 +62,6 @@ BuildRequires: php-reflection
 BuildRequires: php-session
 BuildRequires: php-spl
 BuildRequires: php-zlib
-## Library version value check
-BuildRequires: php-cli
 %endif
 
 %if %{with_cacert}
@@ -69,7 +69,7 @@ Requires:      ca-certificates
 %endif
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 0.12.1)
+# phpcompatinfo (computed from version 0.13.0)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-hash
@@ -104,7 +104,9 @@ sed "/return.*cacert\.pem/s#.*#        return '%{_sysconfdir}/pki/tls/cert.pem';
 cat <<'AUTOLOAD' | tee lib/Raven/autoload.php
 <?php
 /**
- * Autoloader created by %{name}-%{version}-%{release}
+ * Autoloader for %{name} and its' dependencies
+ *
+ * Created by %{name}-%{version}-%{release}
  */
 
 require_once dirname(__FILE__) . '/Autoloader.php';
@@ -130,17 +132,17 @@ install -pm 0755 bin/raven %{buildroot}%{_bindir}/
 
 
 %check
-%if %{with_tests}
 : Library version value check
 %{_bindir}/php -r 'require_once "%{buildroot}%{phpdir}/Raven/autoload.php";
     exit(version_compare("%{version}", Raven_Client::VERSION, "=") ? 0 : 1);'
 
+%if %{with_tests}
 : Update tests autoloader require
 sed "/require.*Autoloader/s:.*:require_once '%{buildroot}%{phpdir}/Raven/Autoloader.php';:" \
     -i test/bootstrap.php
 
 : Run tests
-%{_bindir}/phpunit -v
+%{_bindir}/phpunit --verbose
 %else
 : Tests skipped
 %endif
@@ -163,6 +165,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 20 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.13.0-1
+- Updated to 0.13.0 (RHBZ #1261679)
+- Always run library version value check
+
 * Fri Aug 28 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.12.1-1
 - Updated to 0.12.1 (RHBZ #1256982)
 - Added standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming provides
