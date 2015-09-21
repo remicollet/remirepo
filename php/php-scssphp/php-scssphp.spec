@@ -13,8 +13,8 @@
 
 %global github_owner     leafo
 %global github_name      scssphp
-%global github_version   0.1.9
-%global github_commit    609c08586d583fc7d1db78b7edd8b4ac57fa5137
+%global github_version   0.3.1
+%global github_commit    2977aa444415787e931c048989b8c9195fd5b344
 
 %global composer_vendor  leafo
 %global composer_project scssphp
@@ -34,20 +34,32 @@ Summary:       A compiler for SCSS written in PHP
 
 Group:         Development/Libraries
 License:       MIT
-URL:           http://leafo.net/%{github_name}
-Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+URL:           http://leafo.github.io/scssphp
+
+# GitHub export does not include tests.
+# Run php-scssphp-get-source.sh to create full source.
+Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
+Source1:       %{name}-get-source.sh
+
+# Pre-0.1.0 compat
 Patch0:        %{name}-pre-0-1-0-compat.patch
+# Fix lib version to 0.3.1
+# https://github.com/leafo/scssphp/commit/18fccbd309f250fd5fe34cd9c6d6f5da67aed958
+Patch1:        %{name}-fix-lib-version.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Library version value check
+BuildRequires: php-cli
 # Tests
 %if %{with_tests}
 ## composer.json
 BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language) >= %{php_min_ver}
-## phpcompatinfo (computed from version 0.1.9)
+## phpcompatinfo (computed from version 0.3.1)
 BuildRequires: php-ctype
 BuildRequires: php-date
+BuildRequires: php-json
 BuildRequires: php-mbstring
 BuildRequires: php-pcre
 ## Autoloader
@@ -57,7 +69,7 @@ BuildRequires: php-composer(symfony/class-loader)
 Requires:      php-cli
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 0.1.9)
+# phpcompatinfo (computed from version 0.3.1)
 Requires:      php-ctype
 Requires:      php-date
 Requires:      php-json
@@ -66,6 +78,8 @@ Requires:      php-pcre
 # Autoloader
 Requires:      php-composer(symfony/class-loader)
 
+# Standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming
+Provides:      php-%{composer_vendor}-%{composer_project} = %{version}-%{release}
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
@@ -79,8 +93,8 @@ The entire compiler comes in a single class file ready for including in any kind
 of project in addition to a command line tool for running the compiler from the
 terminal.
 
-scssphp implements SCSS (3.2.12). It does not implement the SASS syntax, only
-the SCSS syntax.
+scssphp implements SCSS. It does not implement the SASS syntax, only the SCSS
+syntax.
 
 
 %prep
@@ -88,6 +102,9 @@ the SCSS syntax.
 
 : Lib pre-0.1.0 compat
 %patch0 -p1
+
+: Fix lib version to 0.3.1
+%patch1 -p1
 
 : Bin
 sed "/scss.inc.php/s#.*#require_once '%{phpdir}/Leafo/ScssPhp/autoload.php';#" \
@@ -140,6 +157,10 @@ install -pm 0755 bin/pscss %{buildroot}%{_bindir}/
 
 
 %check
+: Library version value check
+%{_bindir}/php -r 'require_once "%{buildroot}%{phpdir}/Leafo/ScssPhp/autoload.php";
+    exit(version_compare("%{version}", ltrim(\Leafo\ScssPhp\Version::VERSION, "v"), "=") ? 0 : 1);'
+
 %if %{with_tests}
 %{_bindir}/phpunit --verbose \
     --bootstrap %{buildroot}%{phpdir}/Leafo/ScssPhp/autoload.php
@@ -164,6 +185,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 20 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.3.1-1
+- Updated to 0.3.1 (RHBZ #1256168)
+- Updated URL
+- Added standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming provides
+- Added library version value check
+
 * Thu Aug 13 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.1.9-1
 - Updated to 0.1.9 (RHBZ #1238727)
 - As of version 0.1.7 license is just MIT (i.e. GPLv3 removed)
