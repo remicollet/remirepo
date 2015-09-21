@@ -1,3 +1,4 @@
+# remirepo spec file for php-punic, from
 #
 # Fedora spec file for php-punic
 #
@@ -40,6 +41,7 @@ URL:           http://punic.github.io/
 Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
 Source1:       %{name}-get-source.sh
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Relative paths
 BuildRequires: python
@@ -123,6 +125,8 @@ AUTOLOAD
 
 
 %install
+rm -rf     %{buildroot}
+
 : Library
 mkdir -p %{buildroot}%{phpdir}/Punic
 cp -rp code/* %{buildroot}%{phpdir}/Punic/
@@ -131,19 +135,27 @@ cp -rp code/* %{buildroot}%{phpdir}/Punic/
 mkdir -p %{buildroot}%{_datadir}
 mv %{buildroot}%{phpdir}/Punic/data %{buildroot}%{_datadir}/%{name}
 ln -s \
-    %(python -c "import os.path; print os.path.relpath('%{_datadir}/%{name}', '%{phpdir}/Punic')") \
+    ../../%{name} \
     %{buildroot}%{phpdir}/Punic/data
 
 
 %check
 %if %{with_tests}
-%{_bindir}/phpunit --verbose --bootstrap %{buildroot}%{phpdir}/Punic/autoload.php
+%{_bindir}/phpunit \
+  -d memory_limit=-1 \
+  --bootstrap %{buildroot}%{phpdir}/Punic/autoload.php \
+  --verbose
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE.txt
 %license UNICODE-LICENSE.txt
@@ -154,5 +166,8 @@ ln -s \
 
 
 %changelog
+* Mon Sep 21 2015 Remi Collet <remi@remirepo.net> - 1.6.3-1
+- backport for #remirepo
+
 * Fri Sep 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.6.3-1
 - Initial package
