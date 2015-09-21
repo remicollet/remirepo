@@ -24,7 +24,7 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit  a3128dafe76c411c4cf68cc56473128153884a4e
+%global gh_commit  ea1022644d867d74a6b0d435bf4a61f42ed2d82f
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   krakjoe
 %global gh_project apcu
@@ -41,7 +41,7 @@ Name:           %{?sub_prefix}php-pecl-apcu
 Summary:        APC User Cache
 Version:        5.0.0
 %if 0%{?gh_date:1}
-Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -251,9 +251,6 @@ done
 
 
 %check
-: ignore unfinished part for now
-rm ?TS/tests/apc54_014.phpt
-
 cd NTS
 # Check than both extensions are reported (BC mode)
 %{_bindir}/php -n -d extension_dir=modules -d extension=apcu.so -m | grep 'apcu'
@@ -340,6 +337,9 @@ fi
 
 
 %changelog
+* Mon Sep 21 2015 Remi Collet <remi@fedoraproject.org> - 5.0.0-0.2.20150921gitea10226
+- new snapshot
+
 * Mon Sep 21 2015 Remi Collet <remi@fedoraproject.org> - 5.0.0-0.1.20150921gita3128da
 - update to 5.0.0-dev for PHP 7
 - sources from github
