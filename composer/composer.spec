@@ -6,17 +6,17 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9f6fdfd703f433bd0777fd89fb4684908a6c4f06
+%global gh_commit    9f2e562e48145f10bf224f93f561e762df980638
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20150907
+%global gh_date      20150920
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           composer
 Version:        1.0.0
-Release:        0.9.%{gh_date}git%{gh_short}%{?dist}
+Release:        0.10.%{gh_date}git%{gh_short}%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -37,6 +37,7 @@ BuildRequires:  php-composer(composer/spdx-licenses)    >= 1.0
 BuildRequires:  php-composer(seld/jsonlint)             >= 1.0
 BuildRequires:  php-composer(symfony/console)           >= 2.5
 BuildRequires:  php-composer(symfony/finder)            >= 2.2
+BuildRequires:  php-composer(symfony/filesystem)        >= 2.5
 BuildRequires:  php-composer(symfony/process)           >= 2.1
 BuildRequires:  php-composer(symfony/class-loader)
 BuildRequires:  %{_bindir}/phpunit
@@ -51,6 +52,7 @@ BuildRequires:  php-zip
 #        "symfony/console": "~2.5",
 #        "symfony/finder": "~2.2",
 #        "symfony/process": "~2.1",
+#        "symfony/filesystem": "~2.5",
 #        "seld/phar-utils": "~1.0",
 #        "seld/cli-prompt": "~1.0"
 Requires:       php(language)                           >= 5.3.2
@@ -71,6 +73,8 @@ Requires:       php-composer(symfony/finder)            >= 2.2
 Requires:       php-composer(symfony/finder)            <  3
 Requires:       php-composer(symfony/process)           >= 2.1
 Requires:       php-composer(symfony/process)           <  3
+Requires:       php-composer(symfony/filesystem)        >= 2.5
+Requires:       php-composer(symfony/filesystem)        <  3
 # From composer.json, suggest
 #        "ext-zip": "Enabling the zip extension allows you to unzip archives, and allows gzip compression of all internet traffic",
 #        "ext-openssl": "Enabling the openssl extension allows you to access https URLs for repositories and packages"
@@ -174,6 +178,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Sep 21 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.9.20150920git9f2e562
+- new snapshot
+- add dependency on symfony/filesystem
+
 * Tue Sep  8 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.9.20150907git9f6fdfd
 - new snapshot
 
