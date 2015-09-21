@@ -1,5 +1,4 @@
-# remirepo spec file for php-pdepend-PHP-Depend
-# using git sources, from:
+# remirepo spec file for php-pdepend-PHP-Depend, from:
 #
 # Fedora spec file for php-pdepend-PHP-Depend
 #
@@ -165,6 +164,7 @@ rm -rf %{buildroot}
 %changelog
 * Mon Sep 21 2015 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - update to 2.2.0
+
 * Thu Jul  2 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - update to 2.1.0
 - switch from pear channel to git snapshot sources
