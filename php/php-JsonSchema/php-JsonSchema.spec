@@ -12,8 +12,8 @@
 
 %global github_owner   justinrainbow
 %global github_name    json-schema
-%global github_version 1.4.4
-%global github_commit  8dc9b9d85ab639ca60ab4608b34c1279d6ae7bce
+%global github_version 1.5.0
+%global github_commit  a4bee9f4b344b66e0a0d96c7afae1e92edf385fe
 %global github_short   %(c=%{github_commit}; echo ${c:0:7})
 
 %global php_min_ver    5.3.2
@@ -41,7 +41,7 @@ BuildArch: noarch
 %if %{with_tests}
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-phpunit-PHPUnit
+BuildRequires: php-composer(phpunit/phpunit) >= 3.7
 # For tests: phpcompatinfo (computed from v1.4.4)
 BuildRequires: php-curl
 BuildRequires: php-date
@@ -102,10 +102,10 @@ install -Dpm 0755 bin/validate-json %{buildroot}%{_bindir}/validate-json
 rm -rf tests/%{lib_name}/Tests/Drafts
 
 mkdir vendor
-cat <<EOF | tee vendor/autoload.php
+cat << 'EOF' | tee vendor/autoload.php
 <?php
 require '%{buildroot}%{phpdir}/%{lib_name}/autoload.php';
-\$fedoraClassLoader->addPrefix('%{lib_name}\\\\Tests\\\\', realpath(__DIR__.'/../tests'));
+$fedoraClassLoader->addPrefix('%{lib_name}\\Tests\\', realpath(__DIR__.'/../tests'));
 EOF
 
 %{_bindir}/phpunit --verbose

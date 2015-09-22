@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    246b254505951508bea08db5dde44322264f75fe
+%global gh_commit    241bc5f8d140419a8d981ec11063e009b05fd4c5
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpmd
 %global gh_project   phpmd
@@ -18,7 +18,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-phpmd-PHP-PMD
-Version:        2.3.0
+Version:        2.3.1
 Release:        1%{?dist}
 Summary:        PHPMD - PHP Mess Detector
 
@@ -151,13 +151,15 @@ rm -rf %{buildroot}
 %license LICENSE
 %doc composer.json
 %doc CONTRIBUTING.md README.rst AUTHORS.rst
+%doc CHANGELOG
 %{php_home}
 %{_datadir}/%{name}
 %{_bindir}/phpmd
 
 
 %changelog
-#TODO add CHANGELOG
+* Tue Sep 22 2015 Remi Collet <remi@fedoraproject.org> - 2.3.1-1
+- update to 2.3.1
 
 * Tue Sep 22 2015 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
 - update to 2.3.0
