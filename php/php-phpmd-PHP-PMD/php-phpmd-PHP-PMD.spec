@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5eeb5a4d39c8304910b33ae49f8813905346cc35
+%global gh_commit    246b254505951508bea08db5dde44322264f75fe
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpmd
 %global gh_project   phpmd
@@ -19,7 +19,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-phpmd-PHP-PMD
-Version:        2.2.3
+Version:        2.3.0
 Release:        1%{?dist}
 Summary:        PHPMD - PHP Mess Detector
 
@@ -37,7 +37,10 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 # For tests
-BuildRequires:  %{_bindir}/phpunit
+# From composer.json, "require-dev": {
+#        "phpunit/phpunit": "^4.0",
+#        "squizlabs/php_codesniffer": "^2.0"
+BuildRequires:  php-composer(phpunit/phpunit) >= 4.0
 BuildRequires:  php(language) >= 5.3
 BuildRequires:  php-composer(pdepend/pdepend) >= 2.0
 BuildRequires:  php-composer(symfony/dependency-injection) >= 2.4
@@ -54,9 +57,9 @@ BuildRequires:  php-composer(symfony/class-loader)
 # From composer.json,     "require": {
 #        "php": ">=5.3.0",
 #        "pdepend/pdepend": "~2.0",
-#        "symfony/dependency-injection": ">=2.4",
-#        "symfony/filesystem": ">=2.4",
-#        "symfony/config": ">=2.4"
+#        "symfony/dependency-injection": "^2.4",
+#        "symfony/filesystem": "^2.4",
+#        "symfony/config": "^2.4"
 Requires:       php(language) >= 5.3
 Requires:       php-composer(pdepend/pdepend) >= 2.0
 Requires:       php-composer(pdepend/pdepend) <  3
@@ -155,6 +158,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 22 2015 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
+- update to 2.3.0
+
 * Thu Jul  2 2015 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
 - update to 2.2.3
 - switch from pear channel to git snapshot sources
