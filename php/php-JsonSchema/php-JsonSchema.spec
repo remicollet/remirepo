@@ -124,6 +124,9 @@ EOF
 
 
 %changelog
+* Tue Sep 22 2015 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
+- update to 1.5.0
+
 * Tue Jul 14 2015 Remi Collet <remi@fedoraproject.org> - 1.4.4-1
 - update to 1.4.4
 
