@@ -162,6 +162,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+#TODO add CHANGELOG
+
 * Mon Sep 21 2015 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - update to 2.2.0
 

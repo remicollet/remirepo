@@ -1,5 +1,4 @@
 # remirepo spec file for php-phpmd-PHP-PMD
-# using git sources, from:
 #
 # Fedora spec file for php-phpmd-PHP-PMD
 #
@@ -158,6 +157,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+#TODO add CHANGELOG
+
 * Tue Sep 22 2015 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
 - update to 2.3.0
 
