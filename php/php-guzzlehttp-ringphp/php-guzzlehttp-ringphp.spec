@@ -22,11 +22,11 @@
 %global php_min_ver      5.4.0
 # "guzzlehttp/streams": "~3.0"
 #     Note: Min version not "3.0" because autoloader required
-%global streams_min_ver  3.0.0-3
+%global streams_min_ver  3.0.0-5
 %global streams_max_ver  4.0
 # "react/promise": "~2.0"
 #     Note: Min version not "2.0" because autoloader required
-%global promise_min_ver  2.2.0-4
+%global promise_min_ver  2.2.0-6
 %global promise_max_ver  3.0
 
 %if 0%{?rhel} == 5
@@ -42,7 +42,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       5%{?github_release}%{?dist}
+Release:       6%{?github_release}%{?dist}
 Summary:       Simple handler system used to power clients and servers in PHP
 
 Group:         Development/Libraries
@@ -132,16 +132,15 @@ Requires: php-zlib
 %setup -qn %{github_name}-%{github_commit}
 
 : Create library autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee src/autoload.php
 <?php
 /**
- * Autoloader created by %{name}-%{version}-%{release}
+ * Autoloader for %{name} and its' dependencies
+ *
+ * Created by %{name}-%{version}-%{release}
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
-
-require_once '%{phpdir}/GuzzleHttp/Stream/autoload.php';
-require_once '%{phpdir}/React/Promise/autoload.php';
 
 if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
     if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
@@ -154,18 +153,22 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('GuzzleHttp\\Ring\\', dirname(dirname(__DIR__)));
 
+require_once '%{phpdir}/GuzzleHttp/Stream/autoload.php';
+require_once '%{phpdir}/React/Promise/autoload.php';
+
 return $fedoraClassLoader;
 AUTOLOAD
-) | tee src/autoload.php
 
 : Create tests autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee tests/autoload.php
 <?php
 /**
- * Autoloader created by %{name}-tests-%{version}-%{release}
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
- */
+  * Autoloader for %{name}-tests and its' dependencies
+  *
+  * Created by %{name}-tests-%{version}-%{release}
+  *
+  * @return \Symfony\Component\ClassLoader\ClassLoader
+  */
 
 require_once 'GuzzleHttp/Ring/autoload.php';
 
@@ -174,11 +177,10 @@ $fedoraClassLoader->setUseIncludePath(true);
 
 return $fedoraClassLoader;
 AUTOLOAD
-) | tee tests/autoload.php
 
 : Create custom tests PHPUnit config
 rm -f phpunit.xml.dist
-(cat <<'PHPUNIT'
+cat <<'PHPUNIT' | tee phpunit.xml.dist
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit bootstrap="./bootstrap.php" colors="true">
     <testsuites>
@@ -188,7 +190,6 @@ rm -f phpunit.xml.dist
     </testsuites>
 </phpunit>
 PHPUNIT
-) | tee phpunit.xml.dist
 
 : Modify tests bootstrap
 sed -e "s#.*require.*autoload.*#require __DIR__ . '/autoload.php';#" \
@@ -217,7 +218,7 @@ cp -p phpunit.xml.dist %{buildroot}%{testsdir}/%{name}/
 
 %check
 %if %{with_tests}
-%{_bindir}/phpunit -v \
+%{_bindir}/phpunit --verbose \
     --configuration %{buildroot}%{testsdir}/%{name} \
     --include-path %{buildroot}%{phpdir}
 %else
@@ -243,6 +244,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 22 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.0-6
+- Updated autoloader to load dependencies after self registration
+- Minor cleanups
+
 * Sun Jun 28 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.0-5
 - Autoloader updates
 
