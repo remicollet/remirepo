@@ -28,7 +28,7 @@
 %global php_min_ver      5.4.0
 # "guzzlehttp/ringphp": "^1.1"
 #     Note: Min version not "1.1" because autoloader required
-%global ring_min_ver     1.1.0-3
+%global ring_min_ver     1.1.0-6
 %global ring_max_ver     2.0
 # "psr/log": "^1.0"
 %global psr_log_min_ver  1.0
@@ -47,7 +47,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       3%{?github_release}%{?dist}
+Release:       4%{?github_release}%{?dist}
 Summary:       PHP HTTP client and webservice framework
 
 Group:         Development/Libraries
@@ -122,15 +122,15 @@ the pain out of consuming web services.
 %setup -qn %{github_name}-%{github_commit}
 
 : Create autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee src/autoload.php
 <?php
 /**
- * Autoloader created by %{name}-%{version}-%{release}
+ * Autoloader for %{name} and its' dependencies
+ *
+ * Created by %{name}-%{version}-%{release}
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
-
-require_once '%{phpdir}/GuzzleHttp/Ring/autoload.php';
 
 if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
     if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
@@ -143,9 +143,10 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('GuzzleHttp\\', dirname(__DIR__));
 
+require_once '%{phpdir}/GuzzleHttp/Ring/autoload.php';
+
 return $fedoraClassLoader;
 AUTOLOAD
-) | tee src/autoload.php
 
 
 %build
@@ -161,14 +162,13 @@ cp -pr src/* %{buildroot}%{phpdir}/GuzzleHttp/
 %check
 %if %{with_tests}
 : Create tests autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee tests/autoload.php
 <?php
 
-require_once 'GuzzleHttp/autoload.php';
+require_once '%{buildroot}%{phpdir}/GuzzleHttp/autoload.php';
 
 $fedoraClassLoader->addPrefix('GuzzleHttp\\Tests', __DIR__);
 AUTOLOAD
-) | tee tests/autoload.php
 
 : Modify tests bootstrap
 sed -e "s#.*require.*autoload.*#require __DIR__ . '/autoload.php';#" \
@@ -179,7 +179,7 @@ sed -e "s#.*require.*autoload.*#require __DIR__ . '/autoload.php';#" \
 mkdir tests/GuzzleHttp
 ln -s .. tests/GuzzleHttp/Tests
 
-%{_bindir}/phpunit --include-path %{buildroot}%{phpdir} -v
+%{_bindir}/phpunit --verbose
 %else
 : Tests skipped
 %endif
@@ -199,6 +199,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 22 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 5.3.0-4
+- Updated autoloader to load dependencies after self registration
+- Minor cleanups
+
 * Sun Jun 28 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 5.3.0-3
 - Autoloader updates
 
