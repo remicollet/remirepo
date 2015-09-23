@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    090889f0f6e3234115952380e7218d76bcfae200
+%global gh_commit    a5e17866ce6658667afe7b84d95cb68548a7bf20
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-db
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.1
+Version:        2.5.2
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -34,7 +34,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.3.23
+BuildRequires:  php(language) >= 5.5
 BuildRequires:  php-date
 BuildRequires:  php-pcre
 BuildRequires:  php-pdo
@@ -44,20 +44,22 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 #        "zendframework/zend-eventmanager": "~2.5",
 #        "zendframework/zend-mvc": "~2.5",
 #        "zendframework/zend-servicemanager": "~2.5",
+#        "zendframework/zend-stdlib": ">=2.5.0,<2.7.0",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0"
 BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-mvc)              >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.3.23",
+#        "php": ">=5.5",
 #        "zendframework/zend-stdlib": "~2.5"
-Requires:       php(language) >= 5.3.23
+Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
@@ -105,14 +107,14 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 %check
 %if %{with_tests}
 mkdir vendor
-cat << EOF | tee vendor/autoload.php
+cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
-Zend\\Loader\\AutoloaderFactory::factory(array(
-    'Zend\\Loader\\StandardAutoloader' => array(
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\StandardAutoloader' => array(
         'namespaces' => array(
-           'ZendTest\\\\%{library}' => dirname(__DIR__).'/test/',
-           'Zend\\\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
+           'ZendTest\\%{library}' => dirname(__DIR__).'/test/',
+           'Zend\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
 EOF
@@ -136,5 +138,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 23 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
+- update to 2.5.2
+- raise dependency on php 5.5
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
 - initial package
