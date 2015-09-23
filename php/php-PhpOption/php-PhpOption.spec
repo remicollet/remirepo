@@ -12,8 +12,8 @@
 
 %global github_owner     schmittjoh
 %global github_name      php-option
-%global github_version   1.4.0
-%global github_commit    5d099bcf0393908bf4ad69cc47dafb785d51f7f5
+%global github_version   1.5.0
+%global github_commit    94e644f7d2051a5f0fcf77d81605f152eecff0ed
 
 %global composer_vendor  phpoption
 %global composer_project phpoption
@@ -28,7 +28,7 @@
 
 Name:          php-PhpOption
 Version:       %{github_version}
-Release:       4%{?dist}
+Release:       1%{?dist}
 Summary:       Option type for PHP
 
 Group:         Development/Libraries
@@ -40,10 +40,10 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
-BuildRequires: %{_bindir}/phpunit
+BuildRequires: php-composer(phpunit/phpunit) >= 4.7
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
-## phpcompatinfo (computed from version 1.4.0)
+## phpcompatinfo (computed from version 1.5.0)
 BuildRequires: php-spl
 ## Autoloader
 BuildRequires: php-composer(symfony/class-loader)
@@ -51,7 +51,7 @@ BuildRequires: php-composer(symfony/class-loader)
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.4.0)
+# phpcompatinfo (computed from version 1.5.0)
 Requires:      php-spl
 # Autoloader
 Requires:      php-composer(symfony/class-loader)
@@ -141,6 +141,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 22 2015 Remi Collet <remi@remirepo.net> 1.4.0-1
+- update to 1.5.0
+
 * Sat Jul 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.4.0-4
 - Added spec license
 - Added autoloader
