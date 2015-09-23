@@ -28,7 +28,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}
 Summary:       A lightweight implementation of CommonJS Promises/A for PHP
 
 Group:         Development/Libraries
@@ -73,10 +73,12 @@ A lightweight implementation of CommonJS Promises/A [1] for PHP.
 %setup -qn %{github_name}-%{github_commit}
 
 : Create autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee src/autoload.php
 <?php
 /**
- * Autoloader created by %{name}-%{version}-%{release}
+ * Autoloader for %{name} and its' dependencies
+ *
+ * Created by %{name}-%{version}-%{release}
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
@@ -96,7 +98,6 @@ require_once __DIR__ . '/functions_include.php';
 
 return $fedoraClassLoader;
 AUTOLOAD
-) | tee src/autoload.php
 
 
 %build
@@ -117,16 +118,15 @@ mv tests psr-0/React/Promise
 mv psr-0 tests
 
 : Create tests bootstrap
-(cat <<'BOOTSTRAP'
+cat <<'BOOTSTRAP' | tee bootstrap.php
 <?php
 
 require_once '%{buildroot}%{phpdir}/React/Promise/autoload.php';
 
 $fedoraClassLoader->addPrefix(null, __DIR__ . '/tests');
 BOOTSTRAP
-) | tee bootstrap.php
 
-%{_bindir}/phpunit --bootstrap ./bootstrap.php -v
+%{_bindir}/phpunit --verbose --bootstrap ./bootstrap.php
 %else
 : Tests skipped
 %endif
@@ -147,6 +147,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 23 2015 Remi Collet <remi@remirepo.net> - 2.2.1-2
+- clean from Fedora
+
+* Tue Sep 22 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.2.0-7
+- Minor updates
+
 * Mon Aug 10 2015 Remi Collet <remi@remirepo.net> - 2.2.1-1
 - update to 2.2.1
 
