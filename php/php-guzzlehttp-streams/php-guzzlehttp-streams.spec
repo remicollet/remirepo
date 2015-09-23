@@ -28,7 +28,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       5%{?github_release}%{?dist}
+Release:       6%{?github_release}%{?dist}
 Summary:       Provides a simple abstraction over streams of data
 
 Group:         Development/Libraries
@@ -76,10 +76,12 @@ Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 %patch0 -p1 -b .ad4c07ea55d02789a65ae75f6e4a9ee2cb9dab3f
 
 : Create autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee src/autoload.php
 <?php
 /**
- * Autoloader created by %{name}-%{version}-%{release}
+ * Autoloader for %{name} and its' dependencies
+ *
+ * Created by %{name}-%{version}-%{release}
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
@@ -97,7 +99,6 @@ $fedoraClassLoader->addPrefix('GuzzleHttp\\Stream\\', dirname(dirname(__DIR__)))
 
 return $fedoraClassLoader;
 AUTOLOAD
-) | tee src/autoload.php
 
 
 %build
@@ -113,7 +114,7 @@ cp -pr src/* %{buildroot}%{phpdir}/GuzzleHttp/Stream/
 
 %check
 %if %{with_tests}
-%{_bindir}/phpunit -v \
+%{_bindir}/phpunit --verbose \
     --bootstrap %{buildroot}%{phpdir}/GuzzleHttp/Stream/autoload.php
 %else
 : Tests skipped
@@ -135,6 +136,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 22 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.0.0-6
+- Minor cleanups
+
 * Sun Jun 28 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.0.0-5
 - Autoloader updates
 
