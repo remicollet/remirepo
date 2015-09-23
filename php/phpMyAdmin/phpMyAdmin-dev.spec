@@ -9,7 +9,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global prever rc1
+#global prever rc1
 %{!?_pkgdocdir: %global _pkgdocdir %{_datadir}/doc/%{name}-%{version}}
 %if 0%{?fedora} >= 21
 # nginx 1.6 with nginx-filesystem
@@ -23,7 +23,7 @@
 
 Name: phpMyAdmin
 Version: 4.5.0
-Release: 0.1.%{prever}%{?dist}
+Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -34,9 +34,6 @@ Source0: https://files.phpmyadmin.net/%{name}/%{version}%{?prever:-%prever}/%{na
 Source1: https://files.phpmyadmin.net/%{name}/%{version}%{?prever:-%prever}/%{name}-%{version}%{?prever:-%prever}-all-languages.tar.xz.asc
 Source2: phpMyAdmin.htaccess
 Source3: phpMyAdmin.nginx
-
-# See https://github.com/phpmyadmin/phpmyadmin/pull/11481
-Patch0: %{name}-pr11481.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -51,7 +48,7 @@ Requires:  httpd-filesystem
 Requires:  php(httpd)
 Suggests:  httpd
 %endif
-Requires:  php(language) >= 5.3.7
+Requires:  php(language) >= 5.5
 Requires:  php-bcmath
 Requires:  php-bz2
 Requires:  php-ctype
@@ -95,8 +92,6 @@ is available in 50 languages
 
 %prep
 %setup -qn phpMyAdmin-%{version}%{?prever:-%prever}-all-languages
-
-%patch0 -p1
 
 # Fix links on home page to match allowed domains
 # see https://github.com/phpmyadmin/phpmyadmin/pull/1291
@@ -222,6 +217,13 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Wed Sep 23 2015 Remi Collet <remi@remirepo.net> 4.5.0-1
+- update to 4.5.0 (2015-09-23, features release)
+- raise php minimal version to 5.5
+
+* Sun Sep 20 2015 Remi Collet <remi@remirepo.net> 4.4.15-1
+- update to 4.4.15 (2015-09-20, last bugfix release)
+
 * Mon Sep 14 2015 Remi Collet <remi@remirepo.net> 4.5.0-0.1.rc1
 - update to 4.5.0-rc1
 
