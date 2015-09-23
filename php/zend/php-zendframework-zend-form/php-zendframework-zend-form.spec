@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    576ef1010c36f657135ada7b124220f4cf0f56bf
+%global gh_commit    468a172b71f2b484d557cb8dc3fa33cd90d71c25
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-form
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.2
+Version:        2.5.3
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -83,13 +83,13 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 # From composer, "require": {
 #        "php": ">=5.5",
 #        "zendframework/zend-inputfilter": "~2.5",
-#        "zendframework/zend-stdlib": "~2.5"
+#        "zendframework/zend-stdlib": ">=2.5.0,<2.7.0"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-inputfilter)      >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-inputfilter)      <  3
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  2.7
 # From composer, "suggest": {
 #        "zendframework/zend-captcha": "Zend\\Captcha component",
 #        "zendframework/zend-code": "Zend\\Code component",
@@ -179,6 +179,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 23 2015 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
+- update to 2.5.3
+
 * Thu Sep 10 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - update to 2.5.2
 - raise minimum php version to 5.5
