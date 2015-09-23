@@ -32,7 +32,7 @@
 
 Summary:        A effective,fast,stable log extension for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.4.2
+Version:        1.4.4
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        ASL 2.0
 Group:          Development/Languages
@@ -127,7 +127,7 @@ extension=%{pecl_name}.so
 ;seaslog.use_buffer = 0
 ;seaslog.buffer_size = 0
 ;seaslog.level = 0
-;seaslog.trace_error = 0
+;seaslog.trace_error = 1
 ;seaslog.trace_exception = 0
 EOF
 
@@ -229,6 +229,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 23 2015 Remi Collet <remi@fedoraproject.org> - 1.4.4-1
+- Update to 1.4.4 (stable)
+
 * Tue Sep 15 2015 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
 - Update to 1.4.2 (stable)
 

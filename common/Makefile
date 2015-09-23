@@ -94,3 +94,6 @@ devsrc:
 src:
 	spectool -g -S $(NAME).spec
 
+REFLECTION: $(NAME).spec
+
+	php --re $(shell pwd | sed -e 's/.*-//') >REFLECTION
