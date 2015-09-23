@@ -9,14 +9,14 @@
 %global gh_commit    1b2988f296611f7294593fd1fff07c70ac514e2a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     udan11
-%global gh_date      20150820
+#global gh_date      20150820
 %global gh_project   sql-parser
 %global with_tests   0%{!?_without_tests:1}
 %global psr0         SqlParser
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        0
-Release:        0.3.%{gh_date}git%{gh_short}%{?dist}
+Version:        1.0.0
+Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A validating SQL lexer and parser with a focus on MySQL dialect
 
 Group:          Development/Libraries
@@ -109,6 +109,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 23 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- tagged as 1.0.0 (no change)
+
 * Sun Sep 20 2015 Remi Collet <remi@fedoraproject.org> - 0-0.3.20150820git1b2988f
 - fix provides and self-obsoletion (review #1262807)
 
