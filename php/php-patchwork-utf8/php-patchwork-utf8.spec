@@ -1,3 +1,4 @@
+# remirepo spec file for php-patchwork-utf8, from:
 #
 # Fedora spec file for php-patchwork-utf8
 #
@@ -21,7 +22,11 @@
 %global php_min_ver 5.3.0
 
 # Build using "--without tests" to disable tests
+%if 0%{?rhel} == 5
+%global with_tests 0%{?_with_tests:1}
+%else
 %global with_tests 0%{!?_without_tests:1}
+%endif
 
 %{!?phpdir:  %global phpdir  %{_datadir}/php}
 
@@ -43,6 +48,7 @@ Source1:       %{name}-get-source.sh
 # https://github.com/tchwork/utf8/pull/50
 Patch0:        %{name}-pull-50.patch
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Relative paths
 BuildRequires: python
@@ -133,6 +139,8 @@ rm -f \
 
 
 %install
+rm -rf %{buildroot}
+
 : Library
 mkdir -p %{buildroot}%{phpdir}
 cp -rp src/Patchwork %{buildroot}%{phpdir}/
@@ -160,18 +168,26 @@ ln -s \
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE*
 %doc *.md
 %doc composer.json
 %{phpdir}/Patchwork
 %exclude %{phpdir}/Patchwork/Utf8/unicode-data.tbz2
-%exclude %{phpdir}/Patchwork/Utf8/WindowsStreamWrapper.php
+#exclude %{phpdir}/Patchwork/Utf8/WindowsStreamWrapper.php
 %{_datadir}/%{name}
 
 
 %changelog
+* Wed Sep 23 2015 Remi Collet <remi]remirepo.net> - 1.2.3-3
+- backport for remi repository
+
 * Tue Sep 22 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.3-3
 - Update patch for license files
 
