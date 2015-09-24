@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    076b0c8cef37da91427aa43957e9e93fb67370e1
+%global gh_commit    bae0da8318323da7dd71d64aa8054f91f782951b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-mvc
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.2
+Version:        2.5.3
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -92,7 +92,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 #        "zendframework/zend-eventmanager": "~2.5",
 #        "zendframework/zend-servicemanager": "~2.5",
 #        "zendframework/zend-form": "~2.5",
-#        "zendframework/zend-stdlib": "~2.5"
+#        "zendframework/zend-stdlib": ">=2.5.0,<2.7.0"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
@@ -101,8 +101,8 @@ Requires:       php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-servicemanager)   <  3
 Requires:       php-composer(%{gh_owner}/zend-form)             >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-form)             <  3
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5.0
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  2.7
 # From composer, "suggest": {
 #        "zendframework/zend-authentication": "Zend\\Authentication component for Identity plugin",
 #        "zendframework/zend-config": "Zend\\Config component",
@@ -222,6 +222,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 24 2015 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
+- version 2.5.3
+
 * Tue Sep 15 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - version 2.5.2
 
