@@ -1,4 +1,4 @@
-# remirepo spec/Fedora file for php-zendframework-zend-mime
+# remirepo/Fedora spec file for php-zendframework-zend-mime
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA

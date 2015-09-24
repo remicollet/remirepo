@@ -1,4 +1,4 @@
-# remirepo spec/Fedora file for php-zendframework-zend-view
+# remirepo/Fedora spec file for php-zendframework-zend-view
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA

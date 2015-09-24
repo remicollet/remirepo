@@ -1,4 +1,4 @@
-# remirepo spec/Fedora file for php-zendframework-zend-eventmanager
+# remirepo/Fedora spec file for php-zendframework-zend-eventmanager
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA

@@ -1,4 +1,4 @@
-# remirepo spec/Fedora file for php-zendframework-zend-navigation
+# remirepo/Fedora spec file for php-zendframework-zend-navigation
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA

@@ -1,4 +1,4 @@
-# remirepo spec/Fedora file for zend-permissions-acl
+# remirepo/Fedora spec file for zend-permissions-acl
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
