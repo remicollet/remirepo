@@ -9,10 +9,11 @@
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Dav
 %global pear_channel pear.horde.org
+%global with_sabre   0
 
 Name:           php-horde-Horde-Dav
 Version:        1.1.2
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Horde library for WebDAV, CalDAV, CardDAV
 
 Group:          Development/Libraries
@@ -43,10 +44,30 @@ Requires:       php-pear(%{pear_channel}/Horde_Stream) >= 1.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Stream) <  2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Translation) <  3.0.0
+%if %{with_sabre}
 # php-sabredav-Sabre_DAV is 1.7, php-sabre-dav is 1.8
 Requires:       php-sabre-dav  >= 1.8.10
+%else
+Obsoletes:      php-sabredav-Sabre_CalDAV                 < 1:1.8
+Provides:       php-sabredav-Sabre_CalDAV                 = 1:1.8.7
+Provides:       php-pear(pear.sabredav.org/Sabre_CalDAV)  =   1.8.7
+Obsoletes:      php-sabredav-Sabre_CardDAV                < 1:1.8
+Provides:       php-sabredav-Sabre_CardDAV                = 1:1.8.7
+Provides:       php-pear(pear.sabredav.org/Sabre_CardDAV) =   1.8.7
+Obsoletes:      php-sabredav-Sabre_DAV                    < 1:1.8
+Provides:       php-sabredav-Sabre_DAV                    = 1:1.8.10
+Provides:       php-pear(pear.sabredav.org/Sabre_DAV)     =   1.8.10
+Obsoletes:      php-sabredav-Sabre_DAVACL                 < 1:1.8
+Provides:       php-sabredav-Sabre_DAVACL                 = 1:1.8.7
+Provides:       php-pear(ppear.sabredav.org/Sabre_HTTP)   =   1.8.7
+Obsoletes:      php-sabredav-Sabre_HTTP                   < 1:1.8
+Provides:       php-sabredav-Sabre_HTTP                   = 1:1.8.9
+Provides:       php-pear(pear.sabredav.org/Sabre_HTTP)    =   1.8.9
+%endif
 # php-sabredav-Sabre_VObject is 2.1, php-sabre-vobject is  3.1
 Requires:       php-pear(Sabre_VObject) >= 2.1.4
+# For rpmclassmap
+Requires:       php-horde-Horde-Autoloader >= 2.1.1-3
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
@@ -63,11 +84,28 @@ cd %{pear_name}-%{version}
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
 
-sed -e '/sabre/d' \
-    -e '/%{pear_name}.po/d' \
+sed -e '/%{pear_name}.po/d' \
     -e '/%{pear_name}.mo/s/md5sum=.*name=/name=/' \
+%if %{with_sabre}
+    -e '/sabre/d' \
+%else
+    -e '/vobject/d' \
+    -e '/LICENSE/s/role="php"/role="doc"/' \
+%endif
     ../package.xml >%{name}.xml
 touch -r ../package.xml %{name}.xml
+
+cat << 'EOF' | tee rpmclassmap.php
+<?php
+return array(
+%if %{with_sabre}
+   '/^Sabre\\\\/'            => '%{_datadir}/php/Sabre',
+%else
+   '/^Sabre\\\\/'            => '%{pear_phpdir}/Sabre',
+%endif
+   '/^Sabre\\\\VObject\\\\/' => '%{pear_phpdir}/Sabre/VObject'
+);
+EOF
 
 
 %build
@@ -91,6 +129,9 @@ rm -rf %{buildroot}%{pear_metadir}/.??*
 # Install XML package description
 mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
+
+# RPM classmap for Horde_Autoloader.php
+install -pm 644 rpmclassmap.php %{buildroot}%{pear_phpdir}/Horde/Dav/rpmclassmap.php
 
 for loc in locale/{??,??_??}
 do
@@ -119,6 +160,9 @@ fi
 %defattr(-,root,root,-)
 %doc %{pear_docdir}/%{pear_name}
 %{pear_xmldir}/%{name}.xml
+%if ! %{with_sabre}
+%{pear_phpdir}/Sabre
+%endif
 %{pear_phpdir}/Horde/Dav
 %dir %{pear_datadir}/%{pear_name}
 %dir %{pear_datadir}/%{pear_name}/locale
@@ -127,6 +171,9 @@ fi
 
 
 %changelog
+* Thu Sep 24 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-3
+- bundle Sabre libraries
+
 * Wed Dec 03 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - Update to 1.1.2
 - add dependency on Horde_Translation

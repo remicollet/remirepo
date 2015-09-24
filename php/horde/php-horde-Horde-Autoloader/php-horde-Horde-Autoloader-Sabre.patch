@@ -13,14 +13,14 @@ diff -up Horde_Autoloader-2.1.0/lib/Horde/Autoloader/Default.php.fedora Horde_Au
                  new Horde_Autoloader_ClassPathMapper_Default($path)
              );
          }
-+        /* Ensure Sabre is taken from /usr/share/php, as /usr/share/pear may contains old version */
-+        if (is_dir($sabre = '/usr/share/php/Sabre')) {
-+            $this->addClassPathMapper(new Horde_Autoloader_ClassPathMapper_Prefix('/^Sabre\\\\/', $sabre));
++        /* Allow Class Path overload */
++        foreach(glob('/usr/share/pear/Horde/*/rpmclassmap.php') as $inc) {
++            $tab = include($inc);
++            foreach ($tab as $regex => $path) {
++                $this->addClassPathMapper(new Horde_Autoloader_ClassPathMapper_Prefix($regex, $path));
++            }
 +        }
-+        /* Keep VObject from pear (v2.1), not ready for v3.1 */
-+        if (is_dir($vobject = '/usr/share/pear/Sabre/VObject')) {
-+            $this->addClassPathMapper(new Horde_Autoloader_ClassPathMapper_Prefix('/^Sabre\\\\VObject\\\\/', $vobject));
-+        }
++        unset($tab, $inc);
      }
  
  }

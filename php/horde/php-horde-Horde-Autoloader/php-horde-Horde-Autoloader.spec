@@ -19,7 +19,7 @@
 
 Name:           php-horde-Horde-Autoloader
 Version:        2.1.1
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Horde Autoloader
 
 Group:          Development/Libraries
@@ -113,6 +113,9 @@ fi
 
 
 %changelog
+* Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-3
+- simplify ClassPathMapper patch for Sabre
+
 * Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - Update to 2.1.1
 - add provides php-composer(horde/horde-autoloader)
