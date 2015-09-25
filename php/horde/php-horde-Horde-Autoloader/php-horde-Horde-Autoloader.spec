@@ -113,7 +113,7 @@ fi
 
 
 %changelog
-* Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-3
+* Fri Sep 25 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-3
 - simplify ClassPathMapper patch for Sabre
 
 * Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-1

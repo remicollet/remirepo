@@ -9,6 +9,8 @@
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Dav
 %global pear_channel pear.horde.org
+# See https://fedorahosted.org/fpc/ticket/571
+# sabre/dav bundle temporary exception in Horde
 %global with_sabre   0
 
 Name:           php-horde-Horde-Dav
@@ -172,7 +174,7 @@ fi
 
 %changelog
 * Thu Sep 24 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-3
-- bundle Sabre libraries
+- bundle sabre/dav libraries (not vobject)
 
 * Wed Dec 03 2014 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - Update to 1.1.2
