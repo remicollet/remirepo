@@ -14,8 +14,8 @@
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.7.4
-%global github_commit    1fdf23fe28876844b887b0e1935c9adda43ee645
+%global github_version   2.7.5
+%global github_commit    619528a274647cffc1792063c3ea04c4fa8266a0
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -36,20 +36,20 @@
 #     src/Symfony/Component/Validator/composer.json
 %global doctrine_cache_min_ver 1.0
 %global doctrine_cache_max_ver 2.0
-# "doctrine/common": "~2.3"
-%global doctrine_common_min_ver 2.3
+# "doctrine/common": "~2.4"
+%global doctrine_common_min_ver 2.4
 %global doctrine_common_max_ver 3.0
 # "doctrine/data-fixtures": "1.0.*"
 %global doctrine_datafixtures_min_ver 1.0.0
 %global doctrine_datafixtures_max_ver 1.1.0
-# "doctrine/dbal": "~2.2"
-%global doctrine_dbal_min_ver 2.2
+# "doctrine/dbal": "~2.4"
+%global doctrine_dbal_min_ver 2.4
 %global doctrine_dbal_max_ver 3.0
 # "doctrine/doctrine-bundle": "~1.2"
 %global doctrine_bundle_min_ver 1.2
 %global doctrine_bundle_max_ver 2.0
-# "doctrine/orm": "~2.2,>=2.2.3"
-%global doctrine_orm_min_ver 2.2.3
+# "doctrine/orm": "~2.4,>=2.4.5"
+%global doctrine_orm_min_ver 2.4.5
 %global doctrine_orm_max_ver 3.0
 # "egulias/email-validator": "~1.2"
 %global email_validator_min_ver 1.2
@@ -463,6 +463,7 @@ Requires: php-composer(doctrine/annotations)                    <  %{doctrine_an
 Requires: php-composer(%{composer_vendor}/console)              =  %{version}
 Requires: php-composer(%{composer_vendor}/finder)               =  %{version}
 Requires: php-composer(%{composer_vendor}/form)                 =  %{version}
+Requires: php-composer(%{composer_vendor}/serializer)           =  %{version}
 Requires: php-composer(%{composer_vendor}/validator)            =  %{version}
 Requires: php-composer(%{composer_vendor}/yaml)                 =  %{version}
 Requires: php-composer(doctrine/cache)                          >= %{doctrine_cache_min_ver}
@@ -2371,7 +2372,7 @@ exit $RET
 %exclude %{symfony_dir}/Component/Security/composer.json
 %exclude %{symfony_dir}/Component/Security/phpunit.*
 %exclude %{symfony_dir}/Component/Security/*/phpunit.*
-%exclude %{symfony_dir}/Component/Security/Tests
+#exclude %{symfony_dir}/Component/Security/Tests
 %exclude %{symfony_dir}/Component/Security/*/Tests
 %exclude %{symfony_dir}/Component/Security/*/LICENSE
 %exclude %{symfony_dir}/Component/Security/*/*.md
@@ -2492,6 +2493,12 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Fri Sep 25 2015 Remi Collet <remi@fedoraproject.org> - 2.7.5-1
+- Update to 2.7.5
+- raise dependency on doctrine/common ~2.4,
+  doctrine/dbal ~2.4 and doctrine/orm ^2.4.5
+- add optionnal dependency for framework-bundle on serializer
+
 * Wed Sep  9 2015 Remi Collet <remi@fedoraproject.org> - 2.7.4-1
 - Update to 2.7.4
 - raise dependency on twig/twig ~1.20|~2.0
