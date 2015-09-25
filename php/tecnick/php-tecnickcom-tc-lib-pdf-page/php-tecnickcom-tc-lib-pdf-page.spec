@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c126c1e76c79915852d75d84d8c3ebc880a447d3
+%global gh_commit    6cead617c270d4cbed79141f87e0dba5498c1e68
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.1.3
+Version:        1.1.5
 Release:        1%{?dist}
 Summary:        PHP library containing PDF page formats and definitions
 
@@ -100,6 +100,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 25 2015 Remi Collet <remi@fedoraproject.org> - 1.1.5-1
+- update to 1.1.5 (no change)
+
 * Sun Sep 13 2015 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
 - update to 1.1.3
 - provide php-composer(tecnickcom/tc-lib-pdf-page)
