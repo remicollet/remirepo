@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    241bc5f8d140419a8d981ec11063e009b05fd4c5
+%global gh_commit    08b5bcd454a7148579b68931fc500d824afd3bb5
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpmd
 %global gh_project   phpmd
@@ -18,7 +18,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-phpmd-PHP-PMD
-Version:        2.3.1
+Version:        2.3.2
 Release:        1%{?dist}
 Summary:        PHPMD - PHP Mess Detector
 
@@ -42,9 +42,6 @@ BuildArch:      noarch
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.0
 BuildRequires:  php(language) >= 5.3
 BuildRequires:  php-composer(pdepend/pdepend) >= 2.0
-BuildRequires:  php-composer(symfony/dependency-injection) >= 2.4
-BuildRequires:  php-composer(symfony/filesystem) >= 2.4
-BuildRequires:  php-composer(symfony/config) >= 2.4
 BuildRequires:  php-date
 BuildRequires:  php-libxml
 BuildRequires:  php-pcre
@@ -56,18 +53,9 @@ BuildRequires:  php-composer(symfony/class-loader)
 # From composer.json,     "require": {
 #        "php": ">=5.3.0",
 #        "pdepend/pdepend": "~2.0",
-#        "symfony/dependency-injection": "^2.4",
-#        "symfony/filesystem": "^2.4",
-#        "symfony/config": "^2.4"
 Requires:       php(language) >= 5.3
 Requires:       php-composer(pdepend/pdepend) >= 2.0
 Requires:       php-composer(pdepend/pdepend) <  3
-Requires:       php-composer(symfony/dependency-injection) >= 2.4
-Requires:       php-composer(symfony/dependency-injection) <  3
-Requires:       php-composer(symfony/filesystem) >= 2.4
-Requires:       php-composer(symfony/filesystem) <  3
-Requires:       php-composer(symfony/config) >= 2.4
-Requires:       php-composer(symfony/config) <  3
 # From phpcompatinfo report for version 2.2.3
 Requires:       php-date
 Requires:       php-libxml
@@ -158,6 +146,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 25 2015 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
+- update to 2.3.2
+- drop dependency on symfony
+
 * Tue Sep 22 2015 Remi Collet <remi@fedoraproject.org> - 2.3.1-1
 - update to 2.3.1
 

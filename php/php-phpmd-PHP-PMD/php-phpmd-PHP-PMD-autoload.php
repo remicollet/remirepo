@@ -15,8 +15,5 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 /* PHPMD */
 $fedoraClassLoader->addPrefix('PHPMD\\', dirname(__DIR__));
 
-/* for symfony/dependency-injection, filesystem and config */
-$fedoraClassLoader->addPrefix('Symfony\\Component\\', $vendorDir);
-
 /* PDepend */
 require_once $vendorDir . '/PDepend/autoload.php';
