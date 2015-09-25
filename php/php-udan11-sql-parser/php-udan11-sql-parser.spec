@@ -16,8 +16,11 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        1.0.0
-Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
+Release:        2%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A validating SQL lexer and parser with a focus on MySQL dialect
+
+# https://github.com/udan11/sql-parser/commit/1415469b34b1fc33189e2c801302597b5b50f704
+Patch0:         %{gh_project}-upstream.patch
 
 Group:          Development/Libraries
 License:        GPLv2+
@@ -67,6 +70,8 @@ To use this library, you just have to add, in your project:
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+%patch0 -p1
+
 
 %build
 : generate an simple autoloader
@@ -109,7 +114,10 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Wed Sep 23 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+* Wed Sep 23 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- upstream patch for phpMyAdmin 4.5.0.2
+
+* Wed Sep 23 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - tagged as 1.0.0 (no change)
 
 * Sun Sep 20 2015 Remi Collet <remi@fedoraproject.org> - 0-0.3.20150820git1b2988f
