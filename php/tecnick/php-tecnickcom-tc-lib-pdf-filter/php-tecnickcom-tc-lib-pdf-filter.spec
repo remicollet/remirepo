@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a90ef450c2d95477b9ce360c0fafa470cac46663
+%global gh_commit    cf7488cd2e79b8b905d34121cf85601d8474d443
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.1.4
+Version:        1.1.7
 Release:        1%{?dist}
 Summary:        PHP library to decode PDF compression and encryption filters
 
@@ -103,6 +103,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 25 2015 Remi Collet <remi@fedoraproject.org> - 1.1.7-1
+- update to 1.1.7 (no change)
+
 * Sun Sep 13 2015 Remi Collet <remi@fedoraproject.org> - 1.1.4-1
 - update to 1.1.4
 - provide php-composer(tecnickcom/tc-lib-pdf-filter)
