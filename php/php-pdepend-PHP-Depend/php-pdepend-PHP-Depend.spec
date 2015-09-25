@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    eceacb580af64e9039b274a1e9c6997fc69756c7
+%global gh_commit    a77b6bede0afdd232155eb6f1de0b2826bcf2803
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     pdepend
 %global gh_project   pdepend
@@ -18,7 +18,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-pdepend-PHP-Depend
-Version:        2.2.0
+Version:        2.2.1
 Release:        1%{?dist}
 Summary:        PHP_Depend design quality metrics for PHP package
 
@@ -35,12 +35,14 @@ Patch0:         %{name}-rpm.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
-# For tests
-BuildRequires:  %{_bindir}/phpunit
+# From composer/json, "require-dev": {
+#        "phpunit/phpunit": "^4.0.0",
+#        "squizlabs/php_codesniffer": "^2.0.0"
+BuildRequires:  php-composer(phpunit/phpunit) >= 4.0.0
 BuildRequires:  php(language) >= 5.3.7
-BuildRequires:  php-composer(symfony/dependency-injection) >= 2.4
-BuildRequires:  php-composer(symfony/filesystem) >= 2.4
-BuildRequires:  php-composer(symfony/config) >= 2.4
+BuildRequires:  php-composer(symfony/dependency-injection) >= 2.3.0
+BuildRequires:  php-composer(symfony/filesystem) >= 2.3.0
+BuildRequires:  php-composer(symfony/config) >= 2.3.0
 BuildRequires:  php-bcmath
 BuildRequires:  php-date
 BuildRequires:  php-dom
@@ -55,15 +57,15 @@ BuildRequires:  php-composer(symfony/class-loader)
 
 # From composer.json, "require": {
 #        "php": ">=5.3.7"
-#        "symfony/dependency-injection": ">=2.4",
-#        "symfony/filesystem": ">=2.4",
-#        "symfony/config": ">=2.4"
+#        "symfony/dependency-injection": "^2.3.0",
+#        "symfony/filesystem": "^2.3.0",
+#        "symfony/config": "^2.3.0"
 Requires:       php(language) >= 5.3.7
-Requires:       php-composer(symfony/dependency-injection) >= 2.4
+Requires:       php-composer(symfony/dependency-injection) >= 2.3.0
 Requires:       php-composer(symfony/dependency-injection) <  3
-Requires:       php-composer(symfony/filesystem) >= 2.4
+Requires:       php-composer(symfony/filesystem) >= 2.3.0
 Requires:       php-composer(symfony/filesystem) <  3
-Requires:       php-composer(symfony/config) >= 2.4
+Requires:       php-composer(symfony/config) >= 2.3.0
 Requires:       php-composer(symfony/config) <  3
 # From phpcompatinfo report for version 2.1.0
 Requires:       php-bcmath
@@ -156,13 +158,15 @@ rm -rf %{buildroot}
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc composer.json
+%doc CHANGELOG
 %{php_home}
 %{_datadir}/%{name}
 %{_bindir}/pdepend
 
 
 %changelog
-#TODO add CHANGELOG
+* Fri Sep 25 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
+- update to 2.2.1
 
 * Mon Sep 21 2015 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - update to 2.2.0
