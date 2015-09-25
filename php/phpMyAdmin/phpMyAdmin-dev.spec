@@ -27,8 +27,10 @@ Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
-# MIT (js/jquery/, js/canvg/, js/codemirror/), GPLv2+ (the rest)
-License:	GPLv2+ and MIT
+# MIT (js/jquery/, js/canvg/, js/codemirror/),
+# BSD (libraries/plugins/auth/recaptcha/),
+# GPLv2+ (the rest)
+License: GPLv2+ and MIT and BSD
 URL: https://www.phpmyadmin.net/
 Source0: https://files.phpmyadmin.net/%{name}/%{version}%{?prever:-%prever}/%{name}-%{version}%{?prever:-%prever}-all-languages.tar.xz
 Source1: https://files.phpmyadmin.net/%{name}/%{version}%{?prever:-%prever}/%{name}-%{version}%{?prever:-%prever}-all-languages.tar.xz.asc
@@ -169,9 +171,10 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/%{name}/{upload,save,config}
 rm -rf %{buildroot}%{_datadir}/%{name}/libraries/php-gettext
 rm -rf %{buildroot}%{_datadir}/%{name}/libraries/tcpdf
 
-mv js/jquery/MIT-LICENSE.txt   LICENSE-jquery
-mv js/canvg/MIT-LICENSE.txt    LICENSE-canvg
-mv js/codemirror/LICENSE       LICENSE-codemirror
+mv -f $RPM_BUILD_ROOT%{_datadir}/%{name}/js/jquery/MIT-LICENSE.txt LICENSE-jquery
+mv -f $RPM_BUILD_ROOT%{_datadir}/%{name}/js/canvg/MIT-LICENSE.txt LICENSE-canvg
+mv -f $RPM_BUILD_ROOT%{_datadir}/%{name}/js/codemirror/LICENSE LICENSE-codemirror
+mv -f $RPM_BUILD_ROOT%{_datadir}/%{name}/libraries/plugins/auth/recaptcha/LICENSE LICENSE-recaptcha
 
 
 %clean
