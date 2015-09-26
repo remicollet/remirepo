@@ -33,6 +33,8 @@
 # After 20-curl, 40-json
 %global ini_name  50-%{pecl_name}.ini
 %endif
+# For full test, with online server (solr5 must resolve)
+%global with_tests 0%{?_with_tests:1}
 
 Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
@@ -206,6 +208,12 @@ fi
 
 
 %check
+%if %{with_tests}
+sed -e '/SOLR_SERVER_CONFIGURED/s/false/true/' -i ?TS/tests/test.config.inc
+%else
+sed -e '/SOLR_SERVER_CONFIGURED/s/true/false/' -i ?TS/tests/test.config.inc
+%endif
+
 : Minimal load test for NTS installed extension
 %{__php} \
    -n \
@@ -216,9 +224,7 @@ fi
 
 : Upstream test suite for NTS extension
 cd NTS
-sed -e '/SOLR_SERVER_CONFIGURED/s/true/false/' -i tests/test.config.inc
-
-TEST_PHP_ARGS="-n -d extension=curl.so -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
+TEST_PHP_ARGS="-n -d extension=curl.so -d extension=json.so -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so" \
 REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
 TEST_PHP_EXECUTABLE=%{__php} \
@@ -235,9 +241,7 @@ TEST_PHP_EXECUTABLE=%{__php} \
 
 : Upstream test suite for ZTS extension
 cd ../ZTS
-sed -e '/SOLR_SERVER_CONFIGURED/s/true/false/' -i tests/test.config.inc
-
-TEST_PHP_ARGS="-n -d extension=curl.so -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
+TEST_PHP_ARGS="-n -d extension=curl.so -d extension=json.so -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so" \
 REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
