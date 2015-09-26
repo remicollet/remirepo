@@ -33,8 +33,9 @@
 # After 20-curl, 40-json
 %global ini_name  50-%{pecl_name}.ini
 %endif
-# For full test (with online server) use --with tests
-# solr5 must be resolved, or use --define "server <ip>"
+# For full test (using localhost server) use --with tests
+# create:  docker run -d -p 8983:8983 --name solr5 -t omars/solr53
+# cleanup: docker stop solr5 && docker rm solr5
 %global with_tests 0%{?_with_tests:1}
 
 Summary:        Object oriented API to Apache Solr
@@ -211,7 +212,7 @@ fi
 %check
 %if %{with_tests}
 sed -e '/SOLR_SERVER_CONFIGURED/s/false/true/' \
-    %{?server: -e '/SOLR_SERVER_HOSTNAME/s/solr5/%{server}/'} \
+    -e '/SOLR_SERVER_HOSTNAME/s/solr5/localhost/' \
     -i ?TS/tests/test.config.inc
 %else
 sed -e '/SOLR_SERVER_CONFIGURED/s/true/false/' \
