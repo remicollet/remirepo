@@ -6,10 +6,19 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package             php-phalcon}
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
+%{?scl:          %scl_package             php-phalcon2}
 %{!?scl:         %global pkg_name         %{name}}
 %{!?__php:       %global __php            %{_bindir}/php}
-%global gh_commit    880b4fde422c1e7a112d5546e274d12f6784442a
+
+%global gh_commit    c8d4916bbfd0cb18395fe25d8c5a663fc5077d8f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phalcon
 %global gh_project   cphalcon
@@ -24,9 +33,9 @@
 %global ini_name  50-%{ext_name}.ini
 %endif
 
-Name:           %{?scl_prefix}php-phalcon2
-Version:        2.0.7
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Name:           %{?sub_prefix}php-phalcon2
+Version:        2.0.8
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Phalcon Framework
 
 Group:          Development/Libraries
@@ -49,7 +58,7 @@ BuildRequires: %{?scl_prefix}php-json
 BuildRequires: %{?scl_prefix}php-pdo
 BuildRequires: %{?scl_prefix}php-session
 BuildRequires: %{?scl_prefix}php-spl
-BuildRequires: %{?scl_prefix}php-pecl-igbinary-devel
+BuildRequires: %{?sub_prefix}php-pecl-igbinary-devel
 
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
@@ -88,7 +97,7 @@ Notice: non-free JS and CSS minifiers are disabled.
 
 Documentation: http://docs.phalconphp.com
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -230,6 +239,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Sep 26 2015 Remi Collet <remi@fedoraproject.org> - 2.0.8-1
+- update to 2.0.8
+- allow build against rh-php56 (as more-php56)
+
 * Fri Aug 21 2015 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
 - update to 2.0.7
 
