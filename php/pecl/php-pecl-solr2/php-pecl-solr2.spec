@@ -36,13 +36,13 @@
 # For full test (using localhost server) use --with tests
 # create:  docker run -d -p 8983:8983 --name solr5 -t omars/solr53
 # cleanup: docker stop solr5 && docker rm solr5
-%global with_tests 1%{?_with_tests:1}
+%global with_tests 0%{?_with_tests:1}
 
 Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
 Name:           %{?sub_prefix}php-pecl-solr2
 Version:        2.2.1
-Release:        0.1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
@@ -275,10 +275,13 @@ rm -rf %{buildroot}
 
 %changelog
 * Sun Sep 27 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
+- update to 2.2.1 (stable)
+
+* Sun Sep 27 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-0.1
 - test build for upcoming 2.2.1
 
 * Sat Sep 26 2015 Remi Collet <rcollet@redhat.com> - 2.2.0-1
-- update to 2.2.0
+- update to 2.2.0 (stable)
 
 * Fri Sep 25 2015 Remi Collet <rcollet@redhat.com> - 2.2.0-0.3
 - test build for upcoming 2.2.0
