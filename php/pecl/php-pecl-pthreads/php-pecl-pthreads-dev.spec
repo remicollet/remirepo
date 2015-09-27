@@ -20,7 +20,7 @@
 
 Summary:        Threading API
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        3.0.6
+Version:        3.0.7
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
@@ -174,6 +174,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 27 2015 Remi Collet <remi@fedoraproject.org> - 3.0.7-1
+- Update to 3.0.7 (stable)
+
 * Tue Sep 22 2015 Remi Collet <remi@fedoraproject.org> - 3.0.6-1
 - Update to 3.0.6 (stable)
 
