@@ -20,7 +20,7 @@
 
 Name:           php-phpunit-PHPUnit
 Version:        %{major}.%{minor}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries
@@ -33,6 +33,8 @@ Source1:        Autoload.php.in
 
 # Fix command for autoload
 Patch0:         %{gh_project}-rpm.patch
+# add --atleast-version option, backported from 5.0
+Patch1:         %{gh_project}-atleast.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -152,6 +154,8 @@ for the creation, execution and analysis of Unit Tests.
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p0 -b .rpm
+%patch1 -p1 -b .atleast
+rm src/TextUI/Command.php.atleast
 
 # Restore PSR-0 tree
 mv src PHPUnit
@@ -202,6 +206,9 @@ fi
 
 
 %changelog
+* Sun Sep 27 2015 Remi Collet <remi@fedoraproject.org> - 4.8.9-2
+- add --atleast-version command option, backported from 5.0
+
 * Mon Sep 21 2015 Remi Collet <remi@fedoraproject.org> - 4.8.9-1
 - Update to 4.8.9
 
