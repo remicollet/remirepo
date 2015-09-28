@@ -42,7 +42,7 @@ Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
 Name:           %{?sub_prefix}php-pecl-solr2
 Version:        2.2.1
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
@@ -210,6 +210,12 @@ fi
 
 
 %check
+: Ignore test with jsonc before 1.3.9
+%{__php} -r '
+  $v=phpversion("json");
+  exit(version_compare($v,"1.3.0",">=") && version_compare($v,"1.3.9","<") ? 0 : 1);
+' && rm ?TS/tests/bug_67394.phpt
+
 %if %{with_tests}
 sed -e '/SOLR_SERVER_CONFIGURED/s/false/true/' \
     -e '/SOLR_SERVER_HOSTNAME/s/solr5/localhost/' \
@@ -274,6 +280,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 27 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-2
+- ignore test with jsonc < 1.3.9
+
 * Sun Sep 27 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - update to 2.2.1 (stable)
 
