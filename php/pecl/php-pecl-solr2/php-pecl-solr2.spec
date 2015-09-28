@@ -42,12 +42,14 @@ Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
 Name:           %{?sub_prefix}php-pecl-solr2
 Version:        2.2.1
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
 
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
+
+Patch0:         %{pecl_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -134,6 +136,8 @@ sed -e 's/role="test"/role="src"/' -i package.xml
 mv %{pecl_name}-%{version}%{?prever} NTS
 
 cd NTS
+%patch0 -p1 -b .upstream
+
 # Check version
 extver=$(sed -n '/#define PHP_SOLR_VERSION /{s/.* "//;s/".*$//;p}' php_solr_version.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -285,6 +289,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Sep 28 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-3
+- add upstream patch for zpp calls (fix broken ppc64)
+
 * Sun Sep 27 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-2
 - ignore test with jsonc < 1.3.9
 

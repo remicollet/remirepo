@@ -1,0 +1,84 @@
+From cd0f083c625505e6587102b03c840c7273fb761f Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Mon, 28 Sep 2015 15:31:39 +0200
+Subject: [PATCH] fix zpp calls
+
+---
+ php_solr_client.c | 8 ++++----
+ php_solr_utils.c  | 6 +++---
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/php_solr_client.c b/php_solr_client.c
+index 71572a0..1c324ea 100644
+--- a/php_solr_client.c
++++ b/php_solr_client.c
+@@ -1085,7 +1085,7 @@ PHP_METHOD(SolrClient, request)
+ PHP_METHOD(SolrClient, deleteById)
+ {
+ 	solr_char_t *id = NULL;
+-	long int id_length = 0L;
++	int id_length = 0L;
+ 	solr_client_t *client = NULL;
+ 	xmlNode *root_node = NULL;
+ 	xmlDoc *doc_ptr = NULL;
+@@ -1279,7 +1279,7 @@ end_doc_ids_loop :
+ PHP_METHOD(SolrClient, deleteByQuery)
+ {
+ 	solr_char_t *query = NULL;
+-	long int query_length = 0L;
++	int query_length = 0L;
+ 	solr_client_t *client = NULL;
+ 	xmlNode *root_node = NULL;
+ 	xmlDoc *doc_ptr = NULL;
+@@ -1357,7 +1357,7 @@ PHP_METHOD(SolrClient, getById)
+ {
+     solr_client_t *client;
+     solr_char_t *id;
+-    size_t id_len = 0;
++    int id_len = 0;
+     solr_string_t query_string;
+     int success = 1;
+ 
+@@ -1479,7 +1479,7 @@ solr_getbyids_exit:
+ PHP_METHOD(SolrClient, setResponseWriter)
+ {
+ 	solr_char_t *wt = NULL;
+-	long int wt_length = 0L;
++	int wt_length = 0L;
+ 	solr_client_t *client = NULL;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &wt, &wt_length) == FAILURE) {
+diff --git a/php_solr_utils.c b/php_solr_utils.c
+index 4ad16ca..5e5c2d7 100644
+--- a/php_solr_utils.c
++++ b/php_solr_utils.c
+@@ -28,7 +28,7 @@ PHP_METHOD(SolrUtils, escapeQueryChars)
+ {
+ 	solr_char_t *unescaped = NULL;
+ 	solr_string_t sbuilder;
+-	long int unescaped_length = 0;
++	int unescaped_length = 0;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &unescaped, &unescaped_length) == FAILURE) {
+ 
+@@ -56,7 +56,7 @@ PHP_METHOD(SolrUtils, queryPhrase)
+ {
+ 	solr_char_t *unescaped = NULL;
+ 	solr_string_t sbuilder;
+-	long int unescaped_length = 0;
++	int unescaped_length = 0;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &unescaped, &unescaped_length) == FAILURE) {
+ 
+@@ -152,7 +152,7 @@ PHP_METHOD(SolrUtils, digestXmlResponse)
+ PHP_METHOD(SolrUtils, digestJsonResponse)
+ {
+     solr_char_t *jsonResponse = NULL;
+-    long jsonResponse_len = 0;
++    int jsonResponse_len = 0;
+     unsigned char *raw_resp = NULL, *str_end = NULL;
+ 
+     solr_string_t buffer;
+-- 
+2.1.4
+
