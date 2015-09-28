@@ -1,4 +1,4 @@
-# spec file for php-pecl-eio
+# remirepo spec file for php-pecl-eio
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,6 +6,25 @@
 #
 # Please, preserve the changelog entries
 #
+%global pecl_name eio
+%global with_zts  0%{?__ztsphp:1}
+%if "%{php_version}" < "5.6"
+# After sockets
+%global ini_name  z-%{pecl_name}.ini
+%else
+# After 20-sockets
+%global ini_name  40-%{pecl_name}.ini
+%endif
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+Provides: %{?scl_prefix}php-pecl-%{pecl_name}         = %{version}-%{release}
+Provides: %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-eio}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -15,21 +34,11 @@
 # NOTE: bundled libeio (which is retired from Fedora)
 #
 
-%global pecl_name eio
-%global with_zts  0%{?__ztsphp:1}
-
-%if "%{php_version}" < "5.6"
-# After sockets
-%global ini_name  z-%{pecl_name}.ini
-%else
-# After 20-sockets
-%global ini_name  40-%{pecl_name}.ini
-%endif
 
 Summary:        Provides interface to the libeio library
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.2.5
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
+Version:        1.2.6
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -42,8 +51,6 @@ BuildRequires:  %{?scl_prefix}php-sockets
 # For tests
 BuildRequires:  %{?scl_prefix}php-posix
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %if "%{php_version}" < "5.4"
@@ -93,10 +100,15 @@ fdatasync, mknod, readdir etc.); sendfile (native on Solaris, Linux, HP-UX,
 FreeBSD); readahead. libeio itself emulates the system calls, if they are not
 available on specific(UNIX-like) platform.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
+
 
 %prep
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
+
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd NTS
 
@@ -157,22 +169,27 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
+# Documentation
 cd NTS
-for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
-for i in LICENSE $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -230,8 +247,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -244,6 +261,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Sep 28 2015 Remi Collet <remi@fedoraproject.org> - 1.2.6-1
+- Update to 1.2.6
+- don't install/register tests
+- allow build against rh-php56 (as more-php56)
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.2.5-3.1
 - Fedora 21 SCL mass rebuild
 
