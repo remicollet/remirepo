@@ -216,6 +216,11 @@ fi
   exit(version_compare($v,"1.3.0",">=") && version_compare($v,"1.3.9","<") ? 0 : 1);
 ' && rm ?TS/tests/bug_67394.phpt
 
+: Ignore test with old PHP 5.3
+%if "%{php_version}" < "5.4"
+  rm ?TS/tests/151.solrcollapsefunction_illegal_operations.phpt
+%endif
+
 %if %{with_tests}
 sed -e '/SOLR_SERVER_CONFIGURED/s/false/true/' \
     -e '/SOLR_SERVER_HOSTNAME/s/solr5/localhost/' \
