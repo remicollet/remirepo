@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    b07c6160c9a6dd6ecfeeb4e72527e15bbe8099cd
+%global gh_commit    e2ec9e8bd324e18030059d8cba4bfbdfe763678c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150331
 %global gh_owner     llaville
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-bartlett-PHP-Reflect
-Version:        3.1.1
-%global specrel 3
+Version:        3.1.2
+%global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -79,6 +79,7 @@ BuildRequires:  php-composer(symfony/class-loader)              >= 2.5
 #        "justinrainbow/json-schema": "~1.3",
 #        "seld/jsonlint": "~1.1"
 Requires:       php(language) >= 5.3.2
+Requires:       php-cli
 Requires:       php-date
 Requires:       php-json
 Requires:       php-pcre
@@ -169,7 +170,7 @@ install -D -p -m 644 bin/phpreflect.1         %{buildroot}%{_mandir}/man1/phpref
 
 %check
 %if %{with_tests}
-# Version 3.1.1 : OK, but incomplete, skipped, or risky tests!
+# Version 3.1.2: OK, but incomplete, skipped, or risky tests!
 # Tests: 122, Assertions: 123, Incomplete: 3.
 %{_bindir}/phpunit \
     --include-path=%{buildroot}%{_datadir}/php \
@@ -197,6 +198,9 @@ fi
 
 
 %changelog
+* Tue Sep 29 2015 Remi Collet <remi@fedoraproject.org> - 3.1.2-1
+- update to 3.1.2
+
 * Fri Jun 26 2015 Remi Collet <remi@fedoraproject.org> - 3.1.1-3
 - rewrite autoloader
 
