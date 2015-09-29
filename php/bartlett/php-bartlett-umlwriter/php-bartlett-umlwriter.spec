@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    c883bf1f80370397198c5eae0615173380fa6119
+%global gh_commit    d6805ccea1c0e90c35904456e5ad79a0a7a5ab8c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150331
 %global gh_owner     llaville
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-bartlett-umlwriter
-Version:        1.0.0
-%global specrel 6
+Version:        1.0.1
+%global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Create UML class diagrams from your PHP source
 
@@ -55,6 +55,7 @@ BuildRequires:   php-bartlett-PHP-Reflect >= 3.1.1-3
 #        "symfony/console": "~2.5",
 #        "sebastian/version": "~1.0"
 Requires:       php(language) >= 5.3.0
+Requires:       php-cli
 Requires:       php-spl
 Requires:       php-composer(symfony/console)                   >= 2.5
 Requires:       php-composer(symfony/console)                   <  3
@@ -115,8 +116,6 @@ install -D -p -m 755 bin/umlwriter  %{buildroot}%{_bindir}/umlwriter
 
 %check
 %if %{with_tests}
-#php -r 'require "%{buildroot}%{_datadir}/php/Bartlett/UmlWriter/autoload.php"; print_r($fedoraClassLoader->getPrefixes());'
-
 %{_bindir}/phpunit \
   --bootstrap %{buildroot}%{_datadir}/php/Bartlett/UmlWriter/autoload.php \
   --verbose
@@ -135,6 +134,9 @@ install -D -p -m 755 bin/umlwriter  %{buildroot}%{_bindir}/umlwriter
 
 
 %changelog
+* Tue Sep 29 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- update to 1.0.1
+
 * Sun Jun 28 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-6
 - fix autoloader
 
