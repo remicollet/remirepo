@@ -2,6 +2,7 @@ Add support for use of the system timezone database, rather
 than embedding a copy.  Discussed upstream but was not desired.
 
 History:
+r13: adapt for upstream changes to use PHP allocator
 r12: adapt for upstream changes for new zic
 r11: use canonical names to avoid more case sensitivity issues
      round lat/long from zone.tab towards zero per builtin db
@@ -435,9 +436,9 @@ diff -up php-7.0.0RC1/ext/date/lib/parse_tz.c.systzdata php-7.0.0RC1/ext/date/li
 +{
 +    if (timezonedb_system) {
 +        timelib_tzdb_index_entry *ent, lookup;
-+        
++
 +        lookup.id = (char *)timezone;
-+        
++
 +        ent = bsearch(&lookup, timezonedb_system->index,
 +                      timezonedb_system->index_size, sizeof lookup,
 +                      sysdbcmp);
@@ -609,8 +610,8 @@ diff -up php-7.0.0RC1/ext/date/lib/parse_tz.c.systzdata php-7.0.0RC1/ext/date/li
 +			 * if possible. */
 +
 +			if ((li = find_zone_info(system_location_table, timezone)) != NULL) {
-+				tmp->location.comments = strdup(li->comment);
-+                                strncpy(tmp->location.country_code, li->code, 2);
++				tmp->location.comments = timelib_strdup(li->comment);
++				strncpy(tmp->location.country_code, li->code, 2);
 +				tmp->location.longitude = li->longitude;
 +				tmp->location.latitude = li->latitude;
 +				tmp->bc = 1;
@@ -618,7 +619,7 @@ diff -up php-7.0.0RC1/ext/date/lib/parse_tz.c.systzdata php-7.0.0RC1/ext/date/li
 +			else {
 +				strcpy(tmp->location.country_code, "??");
 +				tmp->bc = 0;
-+				tmp->location.comments = strdup("");
++				tmp->location.comments = timelib_strdup("");
 +			}
 +
 +			/* Now done with the mmap segment - discard it. */

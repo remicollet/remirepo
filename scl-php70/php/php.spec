@@ -130,8 +130,8 @@
 #global gh_date      20150623
 #global gh_owner     php
 #global gh_project   php-src
-%global rcver        RC3
-%global rpmrel       17
+%global rcver        RC4
+%global rpmrel       18
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -182,7 +182,7 @@ Patch21: php-7.0.0-odbctimer.patch
 
 # Functional changes
 Patch40: php-7.0.0-dlopen.patch
-Patch42: php-7.0.0-systzdata-v12.patch
+Patch42: php-7.0.0-systzdata-v13.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
 # Use -lldap_r for OpenLDAP
@@ -1803,6 +1803,10 @@ fi
 
 
 %changelog
+* Wed Sep 30 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.18.RC4
+- Update to 7.0.0RC4
+- php-fpm: set http authorization headers
+
 * Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.17.RC3
 - F23 rebuild with rh_layout
 

@@ -132,8 +132,8 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver         RC3
-%global rpmrel        5
+%global rcver         RC4
+%global rpmrel        6
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -178,7 +178,7 @@ Patch21: php-7.0.0-odbctimer.patch
 
 # Functional changes
 Patch40: php-7.0.0-dlopen.patch
-Patch42: php-7.0.0-systzdata-v12.patch
+Patch42: php-7.0.0-systzdata-v13.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
 # Use -lldap_r for OpenLDAP
@@ -955,7 +955,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch21 -p1 -b .odbctimer
 
 %patch40 -p1 -b .dlopen
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 5
+%if 0%{?fedora} >= 21 || 0%{?rhel} >= 5
 %patch42 -p1 -b .systzdata
 %endif
 %patch43 -p1 -b .headers
@@ -972,7 +972,9 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 # security patches
 
 # Fixes for tests
+%if 0%{?fedora} >= 21 || 0%{?rhel} >= 5
 %patch300 -p1 -b .datetests
+%endif
 %if %{with_libpcre}
 if ! pkg-config libpcre --atleast-version 8.34 ; then
 # Only apply when system libpcre < 8.34
@@ -1189,7 +1191,7 @@ ln -sf ../configure
     --with-layout=GNU \
     --with-kerberos \
     --with-libxml-dir=%{_prefix} \
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 5
+%if 0%{?fedora} >= 21 || 0%{?rhel} >= 5
     --with-system-tzdata \
 %endif
     --with-mhash \
@@ -1999,6 +2001,10 @@ fi
 
 
 %changelog
+* Wed Sep 30 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.6.RC4
+- Update to 7.0.0RC4
+- php-fpm: set http authorization headers
+
 * Wed Sep 16 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.5.RC3
 - Update to 7.0.0RC3
 - disable zip extension (provided in php-pecl-zip)

@@ -1,27 +1,26 @@
-===== 7.0.0-0.5.RC3 (2015-09-17)
+===== 7.0.0-0.6.RC4 (2015-10-01)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
-/var/lib/mock/el6i/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
-/var/lib/mock/el6x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
-/var/lib/mock/el7x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
-/var/lib/mock/fc21i/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
-/var/lib/mock/fc21x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
-/var/lib/mock/fc22i/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
+/var/lib/mock/el6i/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
+/var/lib/mock/el6x/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
+/var/lib/mock/el7x/build.log:Tests failed    :    3 (  0.0%) (  0.0%)
+/var/lib/mock/fc21i/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/fc21x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/fc22i/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 /var/lib/mock/fc22x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
-/var/lib/mock/fc23i/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
+/var/lib/mock/fc23i/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 /var/lib/mock/fc23x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 
-el6x
-	Test session_set_save_handler() function : test lazy_write [ext/session/tests/session_set_save_handler_variation6.phpt]
-fc21i,
+
+el6i, el6x, el7x
+	Bug #33414 [2] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-2.phpt]
+el6x, el7x
+	strtotime() function (64 bit) [ext/date/tests/strtotime3-64bit.phpt]
+el7x
+	Test session_set_save_handler() function : basic functionality [ext/session/tests/session_set_save_handler_basic.phpt]
+fc22x
 	Bug #64438 proc_open hangs with stdin/out with 4097+ bytes [ext/standard/tests/streams/proc_open_bug64438.phpt]
-fc21i, fc22x, fc23i
-	Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
-fc22i
-	Bug #55259 (openssl extension does not get the DH parameters from DH key resource) [ext/openssl/tests/bug55259.phpt]
-fc21x
-	Bug #69521      Segfault in gc_collect_cycles() [ext/standard/tests/streams/bug69521.phpt]
 
 
 * proc_open give erratic test results :(
