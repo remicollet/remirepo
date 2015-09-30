@@ -137,7 +137,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver  RC1
+#global rcver  RC1
 %global rpmrel 1
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1786,6 +1786,11 @@ fi
 
 
 %changelog
+* Wed Sep 30 2015 Remi Collet <remi@fedoraproject.org> 5.6.14-1
+- Update to 5.6.14
+  http://www.php.net/releases/5_6_14.php
+- php-fpm: enable http authorization headers
+
 * Thu Sep 17 2015 Remi Collet <remi@fedoraproject.org> 5.6.14-0.1.RC1
 - update to 5.6.14RC1
 

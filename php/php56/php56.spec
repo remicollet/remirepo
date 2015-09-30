@@ -147,7 +147,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.6.13
+Version: 5.6.14
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -1739,7 +1739,7 @@ echo -e "\nWARNING : These %{name}-* RPMs are not official Fedora / Red Hat buil
 echo -e "overrides the official ones. Don't file bugs on Fedora Project nor Red Hat.\n"
 echo -e "Use dedicated forum at http://forum.remirepo.net/\n"
 
-%if %{?fedora}%{!?fedora:99} < 19
+%if %{?fedora}%{!?fedora:99} < 21
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -1987,6 +1987,11 @@ fi
 
 
 %changelog
+* Wed Sep 30 2015 Remi Collet <remi@fedoraproject.org> 5.6.14-1
+- Update to 5.6.14
+  http://www.php.net/releases/5_6_14.php
+- php-fpm: enable http authorization headers
+
 * Thu Sep  3 2015 Remi Collet <remi@fedoraproject.org> 5.6.13-1
 - Update to 5.6.13
   http://www.php.net/releases/5_6_13.php
