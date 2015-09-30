@@ -119,7 +119,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.4.45
-Release: 1%{?dist}
+Release: 2%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -177,6 +177,8 @@ Patch101: php-5.4.38-systemd.patch
 Patch102: php-5.4.39-bug50444.patch
 
 # Security fixes (200+)
+Patch200: bug69720.patch
+Patch201: bug70433.patch
 
 # Fixes for tests (300+)
 # Backported from 5.5
@@ -813,6 +815,8 @@ support for using the enchant library to PHP.
 %patch102 -p1 -b .bug50444
 
 # security patches
+%patch200 -p1 -b .bug69720
+%patch201 -p1 -b .bug70433
 
 # Fixes for tests
 %patch300 -p1 -b .datetests1
@@ -1463,6 +1467,16 @@ if [ -f /etc/rc.d/init.d/%{?scl_prefix}php-fpm ]; then
 fi
 %endif
 
+%pre common
+cat << EOF
+
+WARNING : PHP 5.4 have reached its "End of Life".
+Even, if this package includes some security fix, backported from 5.5,
+The upgrade to a maintained version is very strongly recommended.
+
+EOF
+
+
 %{!?_licensedir:%global license %%doc}
 
 %files
@@ -1617,6 +1631,11 @@ fi
 
 
 %changelog
+* Wed Sep 30 2015 Remi Collet <remi@fedoraproject.org> 5.4.45-2
+- Fix bug #70433 - Uninitialized pointer in phar_make_dirstream
+  when zip entry filename is "/"
+- Fix bug #69720: Null pointer dereference in phar_get_fp_offset()
+
 * Wed Sep  2 2015 Remi Collet <remi@fedoraproject.org> 5.4.45-1
 - Update to 5.4.45
   http://www.php.net/releases/5_4_45.php

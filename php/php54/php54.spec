@@ -98,7 +98,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.4.45
-Release: 1%{?dist}
+Release: 2%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -154,6 +154,8 @@ Patch100: php-5.4.33-bug65641.patch
 Patch102: php-5.4.39-bug50444.patch
 
 # Security fixes
+Patch200: bug69720.patch
+Patch201: bug70433.patch
 
 # Fixes for tests
 # no_NO issue
@@ -856,6 +858,8 @@ rm -f ext/json/utf8_to_utf16.*
 %patch102 -p1 -b .bug50444
 
 # security patches
+%patch200 -p1 -b .bug69720
+%patch201 -p1 -b .bug70433
 
 # Fixes for tests
 %patch301 -p1 -b .datetests2
@@ -1513,14 +1517,23 @@ rm -f README.{Zeus,QNX,CVS-RULES}
 
 
 %pre common
-echo -e "\nWARNING : These %{name}-* RPMs are not official Fedora / Red Hat build and"
-echo -e "overrides the official ones. Don't file bugs on Fedora Project nor Red Hat.\n"
-echo -e "Use dedicated forum at http://forum.remirepo.net/\n"
+cat << EOF
+==========================================================================
 
-%if %{?fedora}%{!?fedora:99} < 18
-echo -e "WARNING : Fedora %{fedora} is now EOL :"
-echo -e "You should consider upgrading to a supported release.\n"
+WARNING : PHP 5.4 have reached its "End of Life".
+Even, if this package includes some security fix, backported from 5.5,
+The upgrade to a maintained version is very strongly recommended.
+
+WARNING : These php-* RPMs are not official Fedora / Red Hat build and
+overrides the official ones. Don't file bugs on Fedora Project nor Red Hat.
+
+Use dedicated forum at http://forum.remirepo.net/
+%if %{?fedora}%{!?fedora:99} < 21
+WARNING : Fedora %{fedora} is now EOL :
+You should consider upgrading to a supported release
 %endif
+==========================================================================
+EOF
 
 
 %if %{with_fpm}
@@ -1736,6 +1749,11 @@ fi
 
 
 %changelog
+* Wed Sep 30 2015 Remi Collet <remi@fedoraproject.org> 5.4.45-2
+- Fix bug #70433 - Uninitialized pointer in phar_make_dirstream
+  when zip entry filename is "/"
+- Fix bug #69720: Null pointer dereference in phar_get_fp_offset()
+
 * Wed Sep  2 2015 Remi Collet <remi@fedoraproject.org> 5.4.45-1
 - Update to 5.4.45
   http://www.php.net/releases/5_4_45.php
