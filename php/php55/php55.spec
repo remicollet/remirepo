@@ -139,7 +139,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.5.29
+Version: 5.5.30
 Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1967,6 +1967,10 @@ fi
 
 
 %changelog
+* Thu Oct  1 2015 Remi Collet <remi@fedoraproject.org> 5.5.30-1
+- Update to 5.5.30
+  http://www.php.net/releases/5_5_30.php
+
 * Thu Sep  3 2015 Remi Collet <remi@fedoraproject.org> 5.5.29-1
 - Update to 5.5.29
   http://www.php.net/releases/5_5_29.php
