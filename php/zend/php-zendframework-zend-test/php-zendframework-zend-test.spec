@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.5.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -78,7 +78,8 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 #        "zendframework/zend-view": "~2.5"
 Requires:       php(language) >= 5.3.23
 Requires:       php-composer(phpunit/phpunit)                   >= 4.0
-Requires:       php-composer(phpunit/phpunit)                   <  5
+# Max version gnored, as test suite pass with 5.0
+# Requires:       php-composer(phpunit/phpunit)                 <  5
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-console)          >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-console)          <  3
@@ -138,14 +139,14 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 %check
 %if %{with_tests}
 mkdir vendor
-cat << EOF | tee vendor/autoload.php
+cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
-Zend\\Loader\\AutoloaderFactory::factory(array(
-    'Zend\\Loader\\StandardAutoloader' => array(
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\StandardAutoloader' => array(
         'namespaces' => array(
-           'ZendTest\\\\%{library}' => dirname(__DIR__).'/test/',
-           'Zend\\\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
+           'ZendTest\\%{library}' => dirname(__DIR__).'/test/',
+           'Zend\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
 EOF
@@ -169,5 +170,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct  2 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-2
+- ignore phpunit upstream recommended max version
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
 - initial package
