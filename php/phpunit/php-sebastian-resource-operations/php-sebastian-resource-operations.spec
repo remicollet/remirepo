@@ -8,7 +8,7 @@
 #
 %global bootstrap    0
 %global gh_commit    ce990bb21759f94aeafd30209e8cfcdfa8bc3f52
-%global gh_date      20150728
+#global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   resource-operations
@@ -97,5 +97,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct  2 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- Update to 1.0.0 (no change)
+
 * Tue Sep 29 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.20150728gitce990bb
 - initial package
