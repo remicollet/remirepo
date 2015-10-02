@@ -8,8 +8,8 @@
 #
 
 %global bootstrap    0
-%global gh_commit    12259bb1352612df9ec24048714a3bedafe79674
-%global gh_date      20150924
+%global gh_commit    86e0dafb0e6c5165cce7b3b6892807d07504baa0
+#global gh_date      20150924
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-code-coverage
@@ -144,6 +144,12 @@ fi
 
 
 %changelog
+* Fri Oct  2 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- Update to 3.0.0
+
+* Fri Oct  2 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0
+- Update to 3.0.0, boostrap build
+
 * Mon Sep 14 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.1.20150924git12259bb
 - rebuild (not boostrap)
 
