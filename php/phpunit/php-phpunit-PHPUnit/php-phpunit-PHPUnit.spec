@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    73fad41adb5b7bc3a494bb930d90648df1d5e74b
+%global gh_commit    463163747474815c5ccd4ae12b5b355ec12158e8
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -16,11 +16,11 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        4.8
-%global minor        9
+%global minor        10
 
 Name:           php-phpunit-PHPUnit
 Version:        %{major}.%{minor}
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries
@@ -206,6 +206,9 @@ fi
 
 
 %changelog
+* Fri Oct  2 2015 Remi Collet <remi@fedoraproject.org> - 4.8.10-1
+- Update to 4.8.10
+
 * Sun Sep 27 2015 Remi Collet <remi@fedoraproject.org> - 4.8.9-2
 - add --atleast-version command option, backported from 5.0
 
