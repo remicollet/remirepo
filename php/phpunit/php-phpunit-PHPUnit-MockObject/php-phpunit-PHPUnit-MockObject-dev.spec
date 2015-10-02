@@ -7,8 +7,8 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    4f526b7e2c42cacf32c86e1e0c9ab9d3b24273cf
-%global gh_date      20150902
+%global gh_commit    b66bfd55201aa33e8096d8c9bcb762361521c301
+#global gh_date      20150902
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit-mock-objects
@@ -148,6 +148,9 @@ fi
 
 
 %changelog
+* Fri Oct  2 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- Update to 3.0.0
+
 * Mon Sep 14 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.1.20150902git4f526b7
 - update to 3.0.0-dev
 - raise dependency on PHP >= 5.6
