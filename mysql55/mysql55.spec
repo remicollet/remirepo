@@ -10,7 +10,7 @@
 #endif
 
 Name: mysql
-Version: 5.5.45
+Version: 5.5.46
 Release: 1%{?dist}
 
 Summary: MySQL client programs and shared libraries
@@ -838,6 +838,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Thu Oct  1 2015 Remi Collet <RPMS@FamilleCollet.com> - 5.5.46-1
+- update to MySQL 5.5.46 Community Server GA
+  http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-46.html
+
 * Fri Jul 24 2015 Remi Collet <RPMS@FamilleCollet.com> - 5.5.45-1
 - update to MySQL 5.5.45 Community Server GA
   http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-45.html

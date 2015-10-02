@@ -24,7 +24,7 @@
 %global mysql_vendor_2          Sun Microsystems, Inc.
 %global mysql_vendor            Oracle and/or its affiliates
 
-%global mysql_version   5.5.45
+%global mysql_version   5.5.46
 
 %global mysqld_user     mysql
 %global mysqld_group    mysql
@@ -242,7 +242,7 @@
 Name:           MySQL%{product_suffix}
 Summary:        MySQL: a very fast and reliable SQL database server
 Group:          Applications/Databases
-Version:        5.5.45
+Version:        5.5.46
 Release:        %{release}%{?distro_releasetag:.%{distro_releasetag}}
 Distribution:   %{distro_description}
 License:        Copyright (c) 2000, 2015, %{mysql_vendor}. All rights reserved. Under %{license_type} license as shown in the Description field.
@@ -635,7 +635,7 @@ install -m 644 "%{malloc_lib_source}" \
 # Check local settings to support them.
 if [ -x %{_bindir}/my_print_defaults ]
 then
-  mysql_datadir=`%{_bindir}/my_print_defaults server mysqld | grep '^--datadir=' | sed -n 's/--datadir=//p'`
+  mysql_datadir=`%{_bindir}/my_print_defaults server mysqld | grep '^--datadir=' | tail -1 | sed -n 's/--datadir=//p'`
   PID_FILE_PATT=`%{_bindir}/my_print_defaults server mysqld | grep '^--pid-file=' | sed -n 's/--pid-file=//p'`
 fi
 if [ -z "$mysql_datadir" ]
@@ -740,7 +740,7 @@ esac
 
 STATUS_FILE=$mysql_datadir/RPM_UPGRADE_MARKER
 
-if [ -f $STATUS_FILE ]; then
+if [ -f "$STATUS_FILE" ]; then
 	echo "Some previous upgrade was not finished:"
 	ls -ld $STATUS_FILE
 	echo "Please check its status, then do"
@@ -811,7 +811,7 @@ fi
 # Check local settings to support them.
 if [ -x %{_bindir}/my_print_defaults ]
 then
-  mysql_datadir=`%{_bindir}/my_print_defaults server mysqld | grep '^--datadir=' | sed -n 's/--datadir=//p'`
+  mysql_datadir=`%{_bindir}/my_print_defaults server mysqld | grep '^--datadir=' | tail -1 | sed -n 's/--datadir=//p'`
 fi
 if [ -z "$mysql_datadir" ]
 then
@@ -824,8 +824,8 @@ STATUS_FILE=$mysql_datadir/RPM_UPGRADE_MARKER
 # ----------------------------------------------------------------------
 # Create data directory if needed, check whether upgrade or install
 # ----------------------------------------------------------------------
-if [ ! -d $mysql_datadir ] ; then mkdir -m 755 $mysql_datadir; fi
-if [ -f $STATUS_FILE ] ; then
+if [ ! -d "$mysql_datadir" ] ; then mkdir -m 755 "$mysql_datadir" ; fi
+if [ -f "$STATUS_FILE" ] ; then
 	SERVER_TO_START=`grep '^SERVER_TO_START=' $STATUS_FILE | cut -c17-`
 else
 	SERVER_TO_START=''
@@ -1003,7 +1003,7 @@ fi
 # Check local settings to support them.
 if [ -x %{_bindir}/my_print_defaults ]
 then
-  mysql_datadir=`%{_bindir}/my_print_defaults server mysqld | grep '^--datadir=' | sed -n 's/--datadir=//p'`
+  mysql_datadir=`%{_bindir}/my_print_defaults server mysqld | grep '^--datadir=' | tail -1 | sed -n 's/--datadir=//p'`
 fi
 if [ -z "$mysql_datadir" ]
 then
@@ -1014,7 +1014,7 @@ NEW_VERSION=%{mysql_version}-%{release}
 STATUS_FILE=$mysql_datadir/RPM_UPGRADE_MARKER-LAST  # Note the difference!
 STATUS_HISTORY=$mysql_datadir/RPM_UPGRADE_HISTORY
 
-if [ -f $STATUS_FILE ] ; then
+if [ -f "$STATUS_FILE" ] ; then
 	SERVER_TO_START=`grep '^SERVER_TO_START=' $STATUS_FILE | cut -c17-`
 else
 	# This should never happen, but let's be prepared
