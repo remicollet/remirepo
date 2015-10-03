@@ -20,6 +20,10 @@ URL:            https://forge.glpi-project.org/projects/reports
 
 Source0:        https://forge.glpi-project.org/attachments/download/2101/glpi-reports-1.9.0.tar.gz
 
+# Upstream patches
+Patch1:         changeset_r322.diff
+Patch2:         changeset_r323.diff
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
@@ -51,7 +55,12 @@ Fonctionnalités principales :
 %prep
 %setup -q -c 
 
-rm -r %{pluginname}/tools
+pushd %{pluginname}
+%patch1 -p1
+%patch2 -p1
+
+rm -rf tools
+popd
 
 # Create link to LICENSE for standard doc folder
 ln -s %{_datadir}/glpi/plugins/%{pluginname}/LICENSE LICENSE
