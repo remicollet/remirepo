@@ -8,25 +8,23 @@
 #
 %global gh_owner     mongodb
 %global gh_project   mongo-c-driver
-%global gh_commit    3eaf73ed8a88340584a203520ee9ad98fd1b89d3
+%global gh_commit    c45526094073e13f2c391c8057fa39e77d20b6b4
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150903
+#global gh_date      20151001
 %global with_tests   0%{!?_without_tests:1}
 %global libname      libmongoc
 %global libver       1.0
-%global prever       beta1
+%global prever       rc0
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.2.0
 %if 0%{?gh_date}
-Release:   0.5.%{gh_date}git%{gh_short}%{?dist}
+Release:   0.6.%{gh_date}git%{gh_short}%{?dist}
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
-# https://github.com/mongodb/mongo-c-driver/pull/265
-Patch0:    %{name}-pr265.patch
 BuildRequires: libtool autoconf
 %else
-Release:   0.4.%{prever}%{?dist}
+Release:   0.6.%{prever}%{?dist}
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
 %endif
 License:   ASL 2.0
@@ -79,7 +77,6 @@ a MongoDB Server.
 %prep
 %if 0%{?gh_date}
 %setup -q -n %{gh_project}-%{gh_commit}
-%patch0 -p1 -b .pr265
 autoreconf -fvi -I build/autotools
 %else
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
@@ -162,6 +159,9 @@ exit $ret
 
 
 %changelog
+* Sun Oct  4 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-0.6.rc0
+- Update to 1.2.0-rc0
+
 * Fri Sep 11 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-0.5.20150903git3eaf73e
 - add patch to export library verson in the API
   open https://github.com/mongodb/mongo-c-driver/pull/265
