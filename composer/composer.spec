@@ -6,17 +6,17 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9f2e562e48145f10bf224f93f561e762df980638
+%global gh_commit    fcce52b169799fc5973d080d31c27532ca41b7b8
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20150920
+%global gh_date      20151004
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           composer
 Version:        1.0.0
-Release:        0.10.%{gh_date}git%{gh_short}%{?dist}
+Release:        0.11.%{gh_date}git%{gh_short}%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -34,6 +34,7 @@ BuildArch:      noarch
 %if %{with_tests}
 BuildRequires:  php-composer(justinrainbow/json-schema) >= 1.4.4
 BuildRequires:  php-composer(composer/spdx-licenses)    >= 1.0
+BuildRequires:  php-composer(composer/semver)           >= 1.0
 BuildRequires:  php-composer(seld/jsonlint)             >= 1.0
 BuildRequires:  php-composer(symfony/console)           >= 2.5
 BuildRequires:  php-composer(symfony/finder)            >= 2.2
@@ -47,7 +48,8 @@ BuildRequires:  php-zip
 # From composer.json, requires
 #        "php": ">=5.3.2",
 #        "justinrainbow/json-schema": "^1.4.4",
-#        "composer/spdx-licenses": "~1.0",
+#        "composer/spdx-licenses": "^1.0",
+#        "composer/semver": "^1.0",
 #        "seld/jsonlint": "~1.0",
 #        "symfony/console": "~2.5",
 #        "symfony/finder": "~2.2",
@@ -61,6 +63,8 @@ Requires:       php-composer(justinrainbow/json-schema) >= 1.4.4
 Requires:       php-composer(justinrainbow/json-schema) <  2
 Requires:       php-composer(composer/spdx-licenses)    >= 1.0
 Requires:       php-composer(composer/spdx-licenses)    <  2
+Requires:       php-composer(composer/semver)           >= 1.0
+Requires:       php-composer(composer/semver)           <  2
 Requires:       php-composer(seld/jsonlint)             >= 1.0
 Requires:       php-composer(seld/jsonlint)             <  2
 Requires:       php-composer(seld/phar-utils)           >= 1.0
@@ -178,7 +182,11 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Mon Sep 21 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.9.20150920git9f2e562
+* Sun Oct  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.11.20151004gitfcce52b
+- new snapshot
+- add dependency on composer/semver
+
+* Mon Sep 21 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.10.20150920git9f2e562
 - new snapshot
 - add dependency on symfony/filesystem
 

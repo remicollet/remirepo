@@ -21,4 +21,5 @@ $fedoraClassLoader->register();
 
 // Dependencies
 require_once $vendorDir . '/Composer/Spdx/autoload.php';
+require_once $vendorDir . '/Composer/Semver/autoload.php';
 require_once $vendorDir . '/JsonSchema/autoload.php';
