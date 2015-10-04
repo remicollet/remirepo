@@ -1,4 +1,3 @@
-# spec file for qelectrotech
 #
 # Copyright (c) 2009-2015 Remi Collet
 # License: CC-BY-SA
@@ -6,9 +5,9 @@
 #
 # Please, preserve the changelog entries
 #
-%global svnrel 4080
-%global rdate  20150220
-%global upver  0.5
+#global svnrel 4080
+%global rdate  20151004
+%global upver  0.5b
 
 Name:        qelectrotech
 
@@ -33,7 +32,7 @@ Version:     0.50
 %if 0%{?svnrel}
 Release:     0.1.svn%{svnrel}%{?dist}
 %else
-Release:     1%{?dist}
+Release:     0.2.beta%{?dist}
 %endif
 
 Group:       Applications/Engineering
@@ -50,6 +49,10 @@ Source0:    qelectrotech-%{upver}-svn%{?svnrel}.tgz
 Source0:    http://download.tuxfamily.org/qet/tags/%{rdate}/qelectrotech-%{upver}-src.tar.gz
 %endif
 
+# Stupid change, to revert
+# or switch to qmake-qt5 'QMAKE_COPY_DIR = cp -f -r --preserve=timestamps' qelectrotech.pro
+Patch0:     r4224-scorpio810.diff
+
 BuildRequires:    desktop-file-utils
 BuildRequires:    qt5-qtbase-devel
 BuildRequires:    qt5-qtsvg-devel
@@ -58,47 +61,47 @@ Requires:         electronics-menu
 
 
 %description
-QElectroTech is a Qt4 application to design electric diagrams. It uses XML  
+QElectroTech is a Qt application to design electric diagrams. It uses XML
 files for elements and diagrams, and includes both a diagram editor and an 
 element editor.
 
 %description -l cs
-QElectroTech je aplikací Qt4 určenou pro návrh nákresů elektrických obvodů.
+QElectroTech je aplikací Qt určenou pro návrh nákresů elektrických obvodů.
 Pro prvky a nákresy používá soubory XML, a zahrnuje v sobě jak editor nákresů,
 tak editor prvků.
 
 %description -l el
-Το QElectroTech είναι μια εφαρμογή Qt4 για σχεδίαση ηλεκτρικών διαγραμμάτων.
+Το QElectroTech είναι μια εφαρμογή Qt για σχεδίαση ηλεκτρικών διαγραμμάτων.
 Χρησιμοποιεί αρχεία XML για στοιχεία και διαγράμματα, και περιλαμβάνει
 επεξεργαστή διαγραμμάτων καθώς και επεξεργαστή στοιχείων.
 
 %description -l es
-QElectroTech es una aplicación Qt4 para diseñar esquemas eléctricos.
+QElectroTech es una aplicación Qt para diseñar esquemas eléctricos.
 Utiliza archivos XML para los elementos y esquemas, e incluye un editor 
 de esquemas y un editor de elemento.
 
 %description -l fr
-QElectroTech est une application Qt4 pour réaliser des schémas électriques.
+QElectroTech est une application Qt pour réaliser des schémas électriques.
 QET utilise le format XML pour ses éléments et ses schémas et inclut un
 éditeur de schémas ainsi qu'un éditeur d'élément.
 
 %description -l it
-QElectroTech è una applicazione fatta in Qt4 per disegnare schemi elettrici.
+QElectroTech è una applicazione fatta in Qt per disegnare schemi elettrici.
 QET usa il formato XML per i suoi elementi e schemi, includendo anche un
 editor per gli stessi.
 
 %description -l pl
-QElectroTech to aplikacja napisana w Qt4, przeznaczona do tworzenia schematów
+QElectroTech to aplikacja napisana w Qt, przeznaczona do tworzenia schematów
 elektrycznych. Wykorzystuje XML do zapisywania plików elementów i projektów.
 Posiada edytor schematów i elementów.
 
 %description -l pt
-QElectroTech é uma aplicação baseada em Qt4 para desenhar esquemas eléctricos.
+QElectroTech é uma aplicação baseada em Qt para desenhar esquemas eléctricos.
 QET utiliza ficheiros XML para os elementos e para os esquemas e inclui um
 editor de esquemas e um editor de elementos.
 
 %description -l ru
-QElectroTech - приложение написанное на Qt4 и предназначенное для разработки
+QElectroTech - приложение написанное на Qt и предназначенное для разработки
 электрических схем. Оно использует XML-файлы для элементов и схем, и включает,
 как редактор схем, так и редактор элементов.
 
@@ -153,6 +156,8 @@ Colecção de elementos para QElectroTech.
 %else
 %setup -q -n %{name}-%{upver}-src
 %endif
+
+%patch0 -p1 -R
 
 sed -e s,/usr/local/,%{_prefix}/, \
     -e /QET_MAN_PATH/s,'man/','share/man', \
@@ -238,13 +243,16 @@ fi
 
 
 %changelog
-* Wed Jul 29 2015 Remi Collet <remi@fedoraproject.org> - 0,50-0.1.svn4080
+* Sun Oct  4 2015 Remi Collet <remi@fedoraproject.org> - 0.50-0.2.beta
+- update to 0.5b (beta)
+
+* Wed Jul 29 2015 Remi Collet <remi@fedoraproject.org> - 0.50-0.1.svn4080
 - Update to 0.5 snapshot revision 4080
 
-* Sun May 17 2015 Remi Collet <remi@fedoraproject.org> - 0,50-0.1.svn3972
+* Sun May 17 2015 Remi Collet <remi@fedoraproject.org> - 0.50-0.1.svn3972
 - Update to 0.5 snapshot revision 3972
 
-* Sat Apr 04 2015 Remi Collet <remi@fedoraproject.org> - 0,50-0.1.svn3889
+* Sat Apr 04 2015 Remi Collet <remi@fedoraproject.org> - 0.50-0.1.svn3889
 - Update to 0.5 snapshot revision 3889
 
 * Sun Mar 22 2015 Remi Collet <remi@fedoraproject.org> - 0.50-0.1.svn3844
