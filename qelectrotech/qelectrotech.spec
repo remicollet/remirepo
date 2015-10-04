@@ -13,6 +13,7 @@ Name:        qelectrotech
 
 Summary:     An electric diagrams editor
 Summary(ar): مُحرّر مخططات كهربائية
+Summary(be): Elektrische schema editor
 Summary(ca): Editar esquemes elèctrics
 Summary(cs): Editor výkresů elektrických obvodů
 Summary(de): Zeichenprogramm für Schaltpläne
@@ -20,6 +21,7 @@ Summary(el): Επεξεργασία ηλεκτρικών διαγραμμάτω�
 Summary(es): Un editor de esquemas eléctricos
 Summary(fr): Un éditeur de schémas électriques
 Summary(hr): Uredi elektro sheme
+Summary(nl): Elektrische schema editor
 Summary(it): Un programma per disegnare schemi elettrici
 Summary(pl): Edytor schematów elektrycznych
 Summary(pt): Um editor de esquemas eléctricos
@@ -61,6 +63,11 @@ QElectroTech is a Qt application to design electric diagrams. It uses XML
 files for elements and diagrams, and includes both a diagram editor and an 
 element editor.
 
+%description -l be
+QElectroTech is een QT toepassing voor het maken en beheren van elektrische
+schema's. QET gebruikt XML voor de elementen en schema's en omvat een
+schematische editor, itemeditor, en een titel sjabloon editor.
+
 %description -l cs
 QElectroTech je aplikací Qt určenou pro návrh nákresů elektrických obvodů.
 Pro prvky a nákresy používá soubory XML, a zahrnuje v sobě jak editor nákresů,
@@ -86,6 +93,11 @@ QElectroTech è una applicazione fatta in Qt per disegnare schemi elettrici.
 QET usa il formato XML per i suoi elementi e schemi, includendo anche un
 editor per gli stessi.
 
+%description -l nl
+QElectroTech is een Qt4 applicatie om elektrische schema's te ontwerpen.
+Het maakt gebruik van XML-bestanden voor elementen en diagrammen, en omvat
+zowel een diagram bewerker, een element bewerker, en een bloksjabloon bewerker.
+
 %description -l pl
 QElectroTech to aplikacja napisana w Qt, przeznaczona do tworzenia schematów
 elektrycznych. Wykorzystuje XML do zapisywania plików elementów i projektów.
@@ -104,11 +116,13 @@ QElectroTech - приложение написанное на Qt и предна
 
 %package symbols
 Summary:     Elements collection for QElectroTech
+Summary(be): Elementen collectie voor QElectroTech
 Summary(cs): Sbírka prvků pro QElectroTech
 Summary(el): Συλλογή στοιχείων του QElectroTech
 Summary(es): Collección de elementos para QElectroTech
 Summary(fr): Collection d'éléments pour QElectroTech
 Summary(it): Collezione di elementi per QElectroTech
+Summary(nl): Elementen collectie voor QElectroTech
 Summary(pl): Kolekcja elementów QElectroTech
 Summary(pt): Colecção de elementos para QElectroTech
 Summary(ru): Коллекция элементов для QElectroTech
@@ -120,6 +134,9 @@ Requires:    qelectrotech = %{version}-%{release}
 
 %description symbols
 Elements collection for QElectroTech.
+
+%description -l be symbols
+Elementen collectie voor QElectroTech.
 
 %description -l cs symbols
 Sbírka prvků pro QElectroTech.
@@ -135,6 +152,9 @@ Collection d'éléments pour QElectroTech.
 
 %description -l it symbols
 Collezione di elementi per QElectroTech.
+
+%description -l nl symbols
+Elementen collectie voor QElectroTech.
 
 %description -l pl symbols
 Kolekcja elementów QElectroTech.
