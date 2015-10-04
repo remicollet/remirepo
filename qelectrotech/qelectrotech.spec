@@ -49,10 +49,6 @@ Source0:    qelectrotech-%{upver}-svn%{?svnrel}.tgz
 Source0:    http://download.tuxfamily.org/qet/tags/%{rdate}/qelectrotech-%{upver}-src.tar.gz
 %endif
 
-# Stupid change, to revert
-# or switch to qmake-qt5 'QMAKE_COPY_DIR = cp -f -r --preserve=timestamps' qelectrotech.pro
-Patch0:     r4224-scorpio810.diff
-
 BuildRequires:    desktop-file-utils
 BuildRequires:    qt5-qtbase-devel
 BuildRequires:    qt5-qtsvg-devel
@@ -157,14 +153,14 @@ Colecção de elementos para QElectroTech.
 %setup -q -n %{name}-%{upver}-src
 %endif
 
-%patch0 -p1 -R
-
 sed -e s,/usr/local/,%{_prefix}/, \
     -e /QET_MAN_PATH/s,'man/','share/man', \
     -e /QET_MIME/s,../,, \
     -i %{name}.pro
 
-qmake-qt5 %{name}.pro
+qmake-qt5 \
+  'QMAKE_COPY_DIR = cp -f -r --preserve=timestamps' \
+  qelectrotech.pro
 
 
 %build
