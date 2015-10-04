@@ -6,12 +6,12 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    13cf0becd7d57d599ccf1cecf8530f6500915725
+%global gh_commit    7afe7e98969889c442f780eda45172d33a1d9e8e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     mongodb
 %global gh_project   libbson
 %global libver       1.0
-%global prever       beta
+%global prever       rc0
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 # TODO bundled yajl version 2.0.4
@@ -20,7 +20,7 @@
 Name:      libbson
 Summary:   Library to build, parse, and iterate BSON documents
 Version:   1.2.0
-Release:   0.1.%{prever}%{?dist}
+Release:   0.2.%{prever}%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -91,6 +91,9 @@ make check
 
 
 %changelog
+* Sun Oct  4 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-0.2.rc0
+- Update to 1.2.0-rc0
+
 * Wed Apr 22 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-0.1.beta
 - Initial package
 - https://jira.mongodb.org/browse/CDRIVER-621 - typo in man pages
