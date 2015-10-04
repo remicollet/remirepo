@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    3672d3f54e7122245436732d22c5ff2170b3776c
+%global gh_commit    f07aed0cac16879dcab19efb0f2dc65c5df666c6
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     theseer
 %global gh_project   Autoload
@@ -15,7 +15,7 @@
 %global pear_channel pear.netpirates.net
 
 Name:           php-theseer-autoload
-Version:        1.20.2
+Version:        1.20.3
 Release:        1%{?dist}
 Summary:        A tool and library to generate autoload code
 
@@ -30,13 +30,15 @@ Patch0:         %{gh_project}-rpm.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.1
-# For tests
+# From composer.json, "require-dev": {
+#        "phpunit/phpunit": "~4.0|~5.0",
+#        "squizlabs/php_codesniffer": "~1.5"
+BuildRequires:  php-composer(phpunit/phpunit) >= 4.0
 BuildRequires:  php-composer(theseer/directoryscanner) >= 1.3
 BuildRequires:  php-composer(theseer/directoryscanner) <  2
 BuildRequires:  php-composer(zetacomponents/console-tools) >= 1.7
-BuildRequires:  %{_bindir}/phpunit
 
-# From composer.json
+# From composer.json, "require": {
 #        "theseer/directoryscanner": "~1.3",
 #        "zetacomponents/console-tools": "~1.7"
 Requires:       php(language) >= 5.3.1
@@ -44,7 +46,7 @@ Requires:       php-composer(theseer/directoryscanner) >= 1.3
 Requires:       php-composer(theseer/directoryscanner) <  2
 Requires:       php-composer(zetacomponents/console-tools) >= 1.7
 Requires:       php-composer(zetacomponents/console-tools) <  2
-# From phpcompatinfo report for version 1.19.2
+# From phpcompatinfo report for version 1.20.3
 Requires:       php-cli
 Requires:       php-date
 Requires:       php-json
@@ -97,9 +99,6 @@ install -Dpm 0755 phpab.php %{buildroot}%{_bindir}/phpab
 
 
 %check
-: Create dir used in tests - https://github.com/theseer/Autoload/pull/67
-mkdir -p vendor/theseer
-
 : Fix test suite to use installed library
 cat <<EOF | tee tests/init.php
 <?php
@@ -131,6 +130,9 @@ fi
 
 
 %changelog
+* Sun Oct  4 2015 Remi Collet <remi@fedoraproject.org> - 1.20.3-1
+- update to 1.20.3
+
 * Sun Oct  4 2015 Remi Collet <remi@fedoraproject.org> - 1.20.2-1
 - update to 1.20.2
 
