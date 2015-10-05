@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    85d3c38f0b455aa7097512b8f3256f796e9b4db6
+%global gh_commit    9ef291483ff65eefd8639584d61bbfb044d747f3
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpcov
@@ -18,14 +18,14 @@
 
 
 Name:           php-phpunit-phpcov
-Version:        2.0.1
+Version:        2.0.2
 Release:        1%{?dist}
 Summary:        TextUI front-end for PHP_CodeCoverage
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 # Autoload template
 Source1:        autoload.php.in
@@ -39,9 +39,7 @@ BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.1
-BuildRequires:  php-composer(phpunit/phpunit) <  5
 BuildRequires:  php-composer(phpunit/php-code-coverage) >= 2.0
-BuildRequires:  php-composer(phpunit/php-code-coverage) <  3
 BuildRequires:  php-composer(sebastian/diff) >= 1.1
 BuildRequires:  php-composer(sebastian/diff) <  2
 BuildRequires:  php-composer(sebastian/finder-facade) >= 1.1
@@ -53,23 +51,21 @@ BuildRequires:  php-symfony-console >= 2.2
 
 # from composer.json
 #        "php": ">=5.3.3",
-#        "phpunit/phpunit": "~4.1",
+#        "phpunit/phpunit": ">=4.1",
 #        "phpunit/php-code-coverage": "~2.0",
 #        "sebastian/diff": "~1.1",
 #        "sebastian/finder-facade": "~1.1",
-#        "sebastian/version": "~1.0.3",
+#        "sebastian/version": "~1.0",
 #        "symfony/console": "~2.2"
 Requires:       php(language) >= 5.3.3
 Requires:       php-composer(phpunit/phpunit) >= 4.1
-Requires:       php-composer(phpunit/phpunit) <  5
 Requires:       php-composer(phpunit/php-code-coverage) >= 2.0
-Requires:       php-composer(phpunit/php-code-coverage) <  3
 Requires:       php-composer(sebastian/diff) >= 1.1
 Requires:       php-composer(sebastian/diff) <  2
 Requires:       php-composer(sebastian/finder-facade) >= 1.1
 Requires:       php-composer(sebastian/finder-facade) <  2
-Requires:       php-composer(sebastian/version) >= 1.0.3
-Requires:       php-composer(sebastian/version) <  1.1
+Requires:       php-composer(sebastian/version) >= 1.0
+Requires:       php-composer(sebastian/version) <  2
 Requires:       php-symfony-console >= 2.2
 # from phpcompatinfo report for version 1.1.0
 Requires:       php-reflection
@@ -135,6 +131,10 @@ fi
 
 
 %changelog
+* Mon Oct  5 2015 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- update to 2.0.2
+- allow PHPUnit 5
+
 * Wed Jun 25 2014 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - update to 2.0.1
 - composer dependencies
