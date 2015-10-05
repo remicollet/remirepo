@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    95d662954e06000cdf63ec9c9f0a6c598d9c5eb9
+%global gh_commit    d8093b631a31628342d0703764935f8bac2c56b1
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     myclabs
 %global gh_project   DeepCopy
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-myclabs-deep-copy
-Version:        1.3.1
+Version:        1.4.0
 Release:        1%{?dist}
 Summary:        Create deep copies (clones) of your objects
 
@@ -77,13 +77,14 @@ cp -pr src/%{gh_project} %{buildroot}%{php_home}/%{gh_project}
 %check
 %if %{with_tests}
 mkdir vendor
-cat <<EOF | tee vendor/autoload.php
+cat << 'EOF' | tee vendor/autoload.php
 <?php
-require_once '%{buildroot}%{php_home}/%{gh_project}/autoload.php';
-\$fedoraClassLoader->addPrefix('DeepCopyTest\\\\', __DIR__ . '/../tests');
-\$fedoraClassLoader->addPrefix('Doctrine\\\\', '%{php_home}');
+require '%{buildroot}%{php_home}/%{gh_project}/autoload.php';
+$fedoraClassLoader->addPrefix('DeepCopyTest\\', __DIR__ . '/../tests');
+$fedoraClassLoader->addPrefix('Doctrine\\', '%{php_home}');
 EOF
 
+%{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
 %{_bindir}/phpunit --verbose
 %else
 : Test suite disabled
@@ -104,6 +105,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct  5 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
+- update to 1.4.0
+
 * Mon Jul 20 2015 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
 - update to 1.3.1 (no change, pr #14 merged)
 
