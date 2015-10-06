@@ -1,4 +1,7 @@
-# spec file for php-pecl-mongodb
+# Fedora spec file for php-pecl-mongodb
+# without SCL compatibility, from
+#
+# remirepo spec file for php-pecl-mongodb
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
@@ -6,8 +9,6 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package        php-pecl-mongodb}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
@@ -21,51 +22,29 @@
 %global prever     beta2
 
 Summary:        MongoDB driver for PHP
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Name:           php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.4.%{prever}%{?dist}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel
-BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  php-devel > 5.4
+BuildRequires:  php-pear
 BuildRequires:  cyrus-sasl-devel
 BuildRequires:  openssl-devel
 BuildRequires:  pkgconfig(libbson-1.0)
 BuildRequires:  pkgconfig(libmongoc-1.0)
 BuildRequires:  pkgconfig(libmongoc-priv)
 
-Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
-Requires:       %{?scl_prefix}php(api) = %{php_core_api}
-%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
+Requires:       php(zend-abi) = %{php_zend_api}
+Requires:       php(api) = %{php_core_api}
 
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
-
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
-# Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
-Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
-Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
-%if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "7.0"
-Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
-%endif
-%endif
+Provides:       php-%{pecl_name} = %{version}
+Provides:       php-%{pecl_name}%{?_isa} = %{version}
+Provides:       php-pecl(%{pecl_name}) = %{version}
+Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
@@ -78,8 +57,6 @@ Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 The purpose of this driver is to provide exceptionally thin glue between
 MongoDB and PHP, implementing only fundemental and performance-critical
 components necessary to build a fully-functional MongoDB driver.
-
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -142,8 +119,6 @@ peclbuild zts-php
 
 
 %install
-rm -rf %{buildroot}
-
 make -C NTS \
      install INSTALL_ROOT=%{buildroot}
 
@@ -167,7 +142,7 @@ done
 
 
 # when pear installed alone, after us
-%triggerin -- %{?scl_prefix}php-pear
+%triggerin -- php-pear
 if [ -x %{__pecl} ] ; then
     %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
 fi
@@ -200,13 +175,8 @@ cd ../ZTS
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
-%{?_licensedir:%license NTS/LICENSE}
+%license NTS/LICENSE
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -220,8 +190,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct  6 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.4-beta2
+- drop SCL compatibility for Fedora
+
 * Tue Oct  6 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3-beta2
-- Update to 1.0.0beta1 (beta)
+- Update to 1.0.0beta2 (beta)
 
 * Fri Sep 11 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2-beta1
 - Update to 1.0.0beta1 (beta)

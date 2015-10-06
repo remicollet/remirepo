@@ -1,4 +1,4 @@
-# spec file for php-pecl-mongodb
+# remirepo spec file for php-pecl-mongodb
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
@@ -30,7 +30,7 @@ URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-devel > 5.4
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  cyrus-sasl-devel
 BuildRequires:  openssl-devel
@@ -221,7 +221,7 @@ rm -rf %{buildroot}
 
 %changelog
 * Tue Oct  6 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3-beta2
-- Update to 1.0.0beta1 (beta)
+- Update to 1.0.0beta2 (beta)
 
 * Fri Sep 11 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2-beta1
 - Update to 1.0.0beta1 (beta)
