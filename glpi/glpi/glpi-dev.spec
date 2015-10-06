@@ -63,7 +63,7 @@ Requires:       php(httpd)
 %else
 Requires:       httpd, mod_php
 %endif
-Requires:       php(language) >= 5.3
+Requires:       php(language) >= 5.4
 Requires:       php-date
 Requires:       php-gd
 Requires:       php-fileinfo

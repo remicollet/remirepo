@@ -1,4 +1,4 @@
-# spec file for glpi-behaviors
+# remirepo spec file for glpi-behaviors
 #
 # Copyright (c) 2012-2015 Remi Collet
 # License: CC-BY-SA
@@ -9,23 +9,23 @@
 %global pluginname   behaviors
 
 Name:           glpi-behaviors
-Version:        0.85
+Version:        0.90
 Release:        1%{?dist}
 Summary:        Plugin to add optional behaviors to GLPI
 Summary(fr):    Extension ajoutant des comportements optionnels à GLPI
 
 Group:          Applications/Internet
 License:        AGPLv3+
-URL:            https://forge.indepnet.net/projects/behaviors
+URL:            https://forge.glpi-project.org/projects/behaviors
 
-Source0:        https://forge.indepnet.net/attachments/download/1905/glpi-behaviors-0.85.tar.gz
+Source0:        https://forge.glpi-project.org/attachments/download/2097/glpi-behaviors-0.90.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
 
-Requires:       glpi >= 0.85
-Requires:       glpi <  0.86
+Requires:       glpi >= 0.90
+Requires:       glpi <  0.91
 
 
 %description
@@ -84,6 +84,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct  6 2015 Remi Collet <remi@fedoraproject.org> - 0.90-1
+- version 0.90
+  https://forge.glpi-project.org/versions/1101
+
 * Wed Dec 17 2014 Remi Collet <remi@fedoraproject.org> - 0.85-1
 - version 0.85
   https://forge.indepnet.net/versions/922
