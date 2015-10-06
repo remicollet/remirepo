@@ -69,7 +69,7 @@ diff -up ./bin/phpcompatinfo.rpm ./bin/phpcompatinfo
  
  Environment::setScanDir();
  
--$application = new Application($appName, '4.4');
+-$application = new Application($appName, '4.5');
 +$application = new Application($appName, '@package_version@');
  $application->run();
 diff -up ./data/handleDB.php.rpm ./data/handleDB.php

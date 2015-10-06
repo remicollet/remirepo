@@ -7,17 +7,17 @@
 # Please, preserve the changelog entries
 #
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
-%global gh_commit    03c8d2f50e8f3f5472d8f01da153b1cf1fb66932
+%global gh_commit    31d781af6cf6113db85da8838bf25eb73e7b093e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150930
+#global gh_date      20151005
 %global gh_owner     llaville
 %global gh_project   php-compat-info
 #global prever       RC2
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        4.4.0
-%global specrel 3
+Version:        4.5.0
+%global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -32,10 +32,8 @@ Source1:        fedora-review-check
 # Autoloader for RPM - die composer !
 Source2:        %{name}-autoload.php
 
-Source3:        Pthreads3.methods.json
-
 # Autoload and sqlite database path
-Patch0:         %{name}-4.4.0-rpm.patch
+Patch0:         %{name}-4.5.0-rpm.patch
 
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.2
@@ -120,8 +118,6 @@ sed -e 's/@package_version@/%{version}%{?prever}/' \
 
 
 %build
-cp %{SOURCE3} data/references/
-
 : Generate the references database
 %{_bindir}/php -d date.timezone=Europe/Paris data/handleDB.php db:init
 
@@ -143,13 +139,10 @@ install -D -p -m 755 %{SOURCE1}                  %{buildroot}%{_datadir}/%{name}
 # drop some test because of RC version
 rm tests/Reference/Extension/AmqpExtensionTest.php
 rm tests/Reference/Extension/SphinxExtensionTest.php
+
 %if 0%{?fedora} < 21 && 0%{?rhel} < 7
-#rm tests/Reference/Extension/CurlExtensionTest.php
-#rm tests/Reference/Extension/LibxmlExtensionTest.php
-%endif
-%if "%{php_version}" < "5.5"
-# https://github.com/llaville/php-compat-info/issues/206
-rm tests/Reference/Extension/IntlExtensionTest.php
+rm tests/Reference/Extension/CurlExtensionTest.php
+rm tests/Reference/Extension/LibxmlExtensionTest.php
 %endif
 
 %{_bindir}/phpunit \
@@ -177,6 +170,9 @@ fi
 
 
 %changelog
+* Tue Oct  6 2015 Remi Collet <remi@fedoraproject.org> - 4.5.0-1
+- update to 4.5.0
+
 * Sat Oct  3 2015 Remi Collet <remi@fedoraproject.org> - 4.4.0-3
 - test build of master
 
