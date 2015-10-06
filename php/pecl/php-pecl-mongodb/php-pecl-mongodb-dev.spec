@@ -34,9 +34,9 @@ BuildRequires:  %{?scl_prefix}php-devel > 5.4
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  cyrus-sasl-devel
 BuildRequires:  openssl-devel
-BuildRequires:  pkgconfig(libbson-1.0)
-BuildRequires:  pkgconfig(libmongoc-1.0)
-BuildRequires:  pkgconfig(libmongoc-priv)
+BuildRequires:  pkgconfig(libbson-1.0)    >= 1.2.0
+BuildRequires:  pkgconfig(libmongoc-1.0)  >= 1.2.0
+BuildRequires:  pkgconfig(libmongoc-priv) >= 1.2.0
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
