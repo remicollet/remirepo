@@ -34,3 +34,15 @@ diff -up ./src/Composer/Json/JsonFile.php.rpm ./src/Composer/Json/JsonFile.php
          $schemaData = json_decode(file_get_contents($schemaFile));
  
          if ($schema === self::LAX_SCHEMA) {
+diff -up ./src/Composer/Command/DiagnoseCommand.php.rpm ./src/Composer/Command/DiagnoseCommand.php
+--- ./src/Composer/Command/DiagnoseCommand.php.rpm	2015-10-06 16:40:52.931166384 +0200
++++ ./src/Composer/Command/DiagnoseCommand.php	2015-10-06 16:40:57.692191142 +0200
+@@ -133,7 +133,7 @@ EOT
+         $this->outputResult($this->checkDiskSpace($config));
+ 
+         $io->write('Checking composer version: ', false);
+-        $this->outputResult($this->checkVersion());
++        $io->write('<info>RPM</info>');
+ 
+         return $this->failures;
+     }

@@ -16,7 +16,7 @@
 
 Name:           composer
 Version:        1.0.0
-Release:        0.11.%{gh_date}git%{gh_short}%{?dist}
+Release:        0.12.%{gh_date}git%{gh_short}%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -182,6 +182,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct  6 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.12.20151004gitfcce52b
+- don't check version in diagnose command (display RPM)
+
 * Sun Oct  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.11.20151004gitfcce52b
 - new snapshot
 - add dependency on composer/semver
