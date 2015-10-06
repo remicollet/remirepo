@@ -1,4 +1,4 @@
-# spec file for glpi
+# Fedora/remirepo spec file for glpi
 #
 # Copyright (c) 2007-2015 Remi Collet
 # License: CC-BY-SA
@@ -27,26 +27,24 @@
 %endif
 
 Name:           glpi
-Version:        0.84.8
-Release:        4%{?dist}
+Version:        0.85.5
+Release:        1%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
 Group:          Applications/Internet
 License:        GPLv2+ and GPLv3+
 URL:            http://www.glpi-project.org/
-Source0:        https://forge.indepnet.net/attachments/download/1873/glpi-0.84.8.tar.gz
+# Upstream sources (not the github auto-generated archive)
+Source0:        https://github.com/glpi-project/%{name}/releases/download/%{version}/glpi-%{version}.tar.gz
 
 Source1:        glpi-httpd.conf
-Source2:        glpi-config_path.php
+Source2:        glpi-0.85-config_path.php
 Source3:        glpi-logrotate
 Source4:        glpi-nginx.conf
 
 # Switch all internal cron tasks to system
-Patch0:         glpi-0.84-cron.patch
-# Upstream security patch
-Patch1:         glpi-0.84-CVE-2014-9258.patch
-Patch2:         glpi-0.84-bug5218.patch
+Patch0:         glpi-0.85-cron.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -76,8 +74,8 @@ Requires:       php-mysqli
 Requires:       php-pcre
 Requires:       php-session
 Requires:       php-xml
-Requires:       php-pear(Cache_Lite) >= 1.7.4
 Requires:       php-PHPMailer
+Requires:       php-tcpdf
 Requires:       php-pear-CAS >= 1.2.0
 Requires:       php-htmLawed
 Requires:       php-simplepie
@@ -88,8 +86,9 @@ Requires:       php-ZendFramework2-Loader
 Requires:       php-ZendFramework2-ServiceManager
 Requires:       php-ZendFramework2-Stdlib
 Requires:       php-ZendFramework2-Version
+Requires:       php-composer(ircmaxell/password-compat)
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
-Requires:       php-pear(components.ez.no/Graph) >= 1.5
+Requires:       php-composer(zetacomponents/graph)
 Requires:       gnu-free-sans-fonts
 %else
 Requires:       freefont
@@ -128,8 +127,6 @@ techniciens grâce à une maintenance plus cohérente.
 %setup -q -n glpi
 
 %patch0 -p0
-%patch1 -p2
-%patch2 -p2
 
 find . -name \*.orig -exec rm {} \; -print
 
@@ -137,13 +134,19 @@ find . -name \*.orig -exec rm {} \; -print
 find lib -name \*.swf -exec rm {} \; -print
 
 # Use system lib
-rm -rf lib/cache_lite
 rm -rf lib/phpmailer
 rm -rf lib/phpcas
 rm -rf lib/htmlawed
 rm -rf lib/Zend
 rm -rf lib/simplepie
-rm -rf lib/ezcomponents
+rm -rf lib/tcpdf
+rm -rf lib/password_compat
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+rm -rf lib/zeta
+%endif
+rm -rf lib/FreeSans.ttf
+: bundled JS libraries
+ls lib
 
 %if 0%{?fedora} < 9 && 0%{?rhel} < 6
 # fix font path on old version
@@ -154,7 +157,6 @@ cp  %{SOURCE2}  config/config_path.php
 %endif
 
 mv lib/tiny_mce/license.txt LICENSE.tiny_mce
-mv lib/extjs/gpl-3.0.txt    LICENSE.extjs
 mv lib/icalcreator/lgpl.txt LICENSE.icalcreator
 rm scripts/glpi_cron_*.sh
 
@@ -166,8 +168,8 @@ done
 
 cat >cron <<EOF
 # GLPI core
-# Run cron from to execute task even when no user connected
-*/3 * * * * apache %{_bindir}/php %{_datadir}/%{name}/front/cron.php
+# Run cron to execute task even when no user connected
+* * * * * apache %{_bindir}/php %{_datadir}/%{name}/front/cron.php
 EOF
 
 
@@ -247,10 +249,15 @@ rm -rf %{buildroot}
 %if %{useselinux}
 (
 # New File context
+%if 0%{?rhel} == 5
+semanage fcontext -a -s system_u -t httpd_sys_script_rw_t  -r s0 "%{_sysconfdir}/%{name}(/.*)?"
+semanage fcontext -a -s system_u -t httpd_sys_script_rw_t  -r s0 "%{_localstatedir}/lib/%{name}(/.*)?"
+%else
 semanage fcontext -a -s system_u -t httpd_sys_rw_content_t -r s0 "%{_sysconfdir}/%{name}(/.*)?"
+semanage fcontext -a -s system_u -t httpd_var_lib_t        -r s0 "%{_localstatedir}/lib/%{name}(/.*)?"
+%endif
 semanage fcontext -a -s system_u -t httpd_sys_content_t    -r s0 "%{_datadir}/%{name}(/.*)?"
 semanage fcontext -a -s system_u -t httpd_log_t            -r s0 "%{_localstatedir}/log/%{name}(/.*)?"
-semanage fcontext -a -s system_u -t httpd_var_lib_t        -r s0 "%{_localstatedir}/lib/%{name}(/.*)?"
 # files created by app
 restorecon -R %{_sysconfdir}/%{name}
 restorecon -R %{_datadir}/%{name}
@@ -313,11 +320,41 @@ fi
 
 
 %changelog
-* Tue Mar 24 2015 Remi Collet <remi@fedoraproject.org> - 0.84.8-4
-- add security fix https://forge.indepnet.net/issues/5218
+* Wed Sep 16 2015 Remi Collet <remi@fedoraproject.org> - 0.85.5-1
+- update to 0.85.5
+  https://github.com/glpi-project/glpi/issues?q=milestone:0.85.5
+- use system ircmaxell/password-compat
 
-* Mon Dec 22 2014 Remi Collet <remi@fedoraproject.org> - 0.84.8-3
-- fix SQL Injection CVE-2014-9258
+* Wed Jun  3 2015 Remi Collet <remi@fedoraproject.org> - 0.85.4-2
+- switch from eZ component to Zeta component
+
+* Mon May  4 2015 Remi Collet <remi@fedoraproject.org> - 0.85.4-1
+- update to 0.85.4
+  https://forge.indepnet.net/versions/1136
+- fix SELinux context on EL-5
+
+* Fri Apr 17 2015 Remi Collet <remi@fedoraproject.org> - 0.85.3-1
+- update to 0.85.3
+  https://forge.indepnet.net/versions/1118
+
+* Fri Feb 27 2015 Remi Collet <remi@fedoraproject.org> - 0.85.2-2
+- add security fix https://forge.indepnet.net/issues/5218
+- add fix for temporary directory relocation
+
+* Wed Jan 21 2015 Remi Collet <remi@fedoraproject.org> - 0.85.2-1
+- update to 0.85.2
+  https://forge.indepnet.net/versions/1110
+
+* Mon Dec 22 2014 Remi Collet <remi@fedoraproject.org> - 0.85.1-2
+- increase system cron frequency and limit
+- cleanup patched files
+
+* Wed Dec 17 2014 Remi Collet <remi@fedoraproject.org> - 0.85.1-1
+- update to 0.85.1
+  0.85   https://forge.indepnet.net/versions/539
+  0.85.1 https://forge.indepnet.net/versions/1071
+- drop dependency on pear/Cache_Lite
+- add dependency on php-tcpdf
 
 * Fri Nov  7 2014 Remi Collet <remi@fedoraproject.org> - 0.84.8-2
 - use httpd_var_lib_t selinux context for /var/lib/glpi
