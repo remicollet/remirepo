@@ -6,38 +6,38 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    4dc0d2f622412f561f5b242b19b98068bbbc883a
+%global gh_commit    73bcb605b741a7d5044b47592338c633788b0eb7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     mikey179
 %global gh_project   vfsStream
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-mikey179-vfsstream
-Version:        1.5.0
+Version:        1.6.0
 Release:        1%{?dist}
 Summary:        PHP stream wrapper for a virtual file system
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-#Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
-# See https://github.com/mikey179/vfsStream/issues/108
-# run mksrc.sh to create the tarball from a git snapshot
-Source0:        %{name}-%{version}-%{gh_short}.tgz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
-BuildRequires:  %{_bindir}/phpunit
+# From composer.json, "require-dev": {
+#        "phpunit/phpunit": "~4.5"
+BuildRequires:  php-composer(phpunit/phpunit) >= 4.5
 %endif
 
-# From composer.json
+# From composer.json, "require": {
 #        "php": ">=5.3.0"
 Requires:       php(language) >= 5.3
 # From phpcompatifo report for 1.3.0
 Requires:       php-date
+Requires:       php-pcre
 Requires:       php-posix
 Requires:       php-spl
 Requires:       php-xml
@@ -52,13 +52,19 @@ helpful in unit tests to mock the real file system.
 
 It can be used with any unit test framework, like PHPUnit or SimpleTest.
 
+To use this library, you just have to add, in your project:
+  require_once '%{_datadir}/php/org/bovigo/vfs/autoload.php';
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
 
 %build
-# Nothing
+: Generate autoloader
+%{_bindir}/phpab \
+    --output src/main/php/org/bovigo/vfs/autoload.php \
+             src/main/php/org/bovigo/vfs
 
 
 %install
@@ -69,13 +75,11 @@ cp -pr src/main/php/org %{buildroot}%{_datadir}/php/org
 
 %if %{with_tests}
 %check
-: generate the bootstrap/autoloader
-phpab --output src/main/php/bs.php src/main/php
 
-: run test suite
-phpunit \
-  --bootstrap src/main/php/bs.php \
-  -d date.timezone=UTC
+: Run test suite with installed library
+%{_bindir}/phpunit \
+  --bootstrap %{buildroot}%{_datadir}/php/org/bovigo/vfs/autoload.php \
+  --verbose
 %endif
 
 
@@ -95,8 +99,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct  7 2015 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
+- update to 1.6.0
+- add generated autoloader
+
 * Sun Mar 29 2015 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
-- update to 1.4.0
+- update to 1.5.0
 - create source from git snapshot for test suite
   see https://github.com/mikey179/vfsStream/issues/108
 
