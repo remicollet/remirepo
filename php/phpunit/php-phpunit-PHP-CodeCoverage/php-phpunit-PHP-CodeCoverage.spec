@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    ef1ca6835468857944d5c3b48fa503d5554cff2f
+%global gh_commit    eabf68b476ac7d0f73793aada060f1c1a9bf8979
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-code-coverage
@@ -22,7 +22,7 @@
 %endif
 
 Name:           php-phpunit-PHP-CodeCoverage
-Version:        2.2.3
+Version:        2.2.4
 Release:        1%{?dist}
 Summary:        PHP code coverage information
 
@@ -139,6 +139,9 @@ fi
 
 
 %changelog
+* Wed Oct  7 2015 Remi Collet <remi@fedoraproject.org> - 2.2.4-1
+- update to 2.2.4
+
 * Mon Sep 14 2015 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
 - update to 2.2.3
 
