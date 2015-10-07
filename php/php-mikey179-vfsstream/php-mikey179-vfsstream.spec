@@ -35,8 +35,9 @@ BuildRequires:  php-composer(phpunit/phpunit) >= 4.5
 # From composer.json, "require": {
 #        "php": ">=5.3.0"
 Requires:       php(language) >= 5.3
-# From phpcompatifo report for 1.3.0
+# From phpcompatifo report for 1.6.0
 Requires:       php-date
+Requires:       php-dom
 Requires:       php-pcre
 Requires:       php-posix
 Requires:       php-spl
