@@ -15,11 +15,11 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit   617e5103743d07435fdfe5cbbe6ad310e610c4b9
+%global gh_commit   be23da14a025e5dc80a1645280bc8ebd1e1ef123
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    php
 %global gh_project  pecl-database-mysql
-%global gh_date     20150703
+%global gh_date     20151007
 %global with_zts    0%{?__ztsphp:1}
 %global pecl_name   mysql
 %global with_tests  %{!?_without_tests:1}%{?_without_tests:0}
@@ -31,7 +31,7 @@ Summary:        MySQL database access functions
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
 %if 0%{?gh_date:1}
-Release:        0.5.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.6.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -79,7 +79,7 @@ Although it should be possible to use this extension with PHP 7.0, you are
 strongly encouraged to port your code to use either MySQLi or PDO_MySQL,
 as this extension is not maintained and is available for historical reasons only.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -192,7 +192,7 @@ rm -rf %{buildroot}
 
 
 %files
-%defattr(-, root, root, 0755)
+%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -207,6 +207,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct  7 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.6.20151007gitbe23da1
+- refresh, new snapshot
+
 * Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.5.20150703git617e510
 - F23 rebuild with rh_layout
 
