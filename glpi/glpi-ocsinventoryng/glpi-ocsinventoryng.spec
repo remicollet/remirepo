@@ -1,4 +1,4 @@
-# spec file for glpi-ocsinventoryng
+# remirepo spec file for glpi-ocsinventoryng
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -10,7 +10,7 @@
 %global lockname     ocsinventoryng.lock
 
 Name:           glpi-ocsinventoryng
-Version:        1.0.3
+Version:        1.1.2
 Release:        1%{?dist}
 Summary:        Plugin to synchronize GLPI with OCS Inventory NG
 
@@ -18,15 +18,15 @@ Group:          Applications/Internet
 License:        GPLv2+
 URL:            https://forge.indepnet.net/projects/ocsinventoryng
 
-Source0:        https://forge.indepnet.net/attachments/download/1847/glpi-ocsinventoryng-1.0.3.tar.gz
+Source0:        https://forge.glpi-project.org/attachments/download/2094/glpi-ocsinventoryng-1.1.2.tar.gz
 Source1:        %{name}-httpd.conf
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
 
-Requires:       glpi >= 0.84
-Requires:       glpi <  0.85
+Requires:       glpi >= 0.85
+Requires:       glpi <  0.86
 Requires:       crontabs
 Requires:       php-cli
 # phpcompatinfo for version 1.0.2
@@ -55,6 +55,7 @@ mv %{pluginname}/docs docs
 # dos2unix to avoid rpmlint warnings
 for doc in docs/* ; do
     sed -i -e 's/\r//' $doc
+    chmod -x $doc
 done
 
 # Create link to LICENSE for standard doc folder
@@ -78,8 +79,8 @@ cat <<EOF | tee cron
 EOF
 
 # fix perms
+find %{pluginname} -type f -exec chmod -x {} \;
 chmod +x %{pluginname}/scripts/*.sh
-chmod -x %{pluginname}/scripts/*.php
 
 
 %build
@@ -91,7 +92,7 @@ done
 
 
 %install
-rm -rf %{buildroot} 
+rm -rf %{buildroot}
 
 # Plugin
 mkdir -p %{buildroot}/%{_datadir}/glpi/plugins
@@ -116,7 +117,7 @@ touch %{buildroot}%{_localstatedir}/lib/glpi/files/_lock/%{lockname}
 
 
 %clean
-rm -rf %{buildroot} 
+rm -rf %{buildroot}
 
 
 %post
@@ -161,6 +162,18 @@ grep %{lockname} %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}/setup.php |
 
 
 %changelog
+* Wed Sep 16 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
+- Update to 1.1.2 for GLPI 0.85+
+  https://forge.glpi-project.org/versions/1131
+
+* Mon Jun  8 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- Update to 1.1.1 for GLPI 0.85+
+- add upstream patch for https://forge.indepnet.net/issues/5359
+
+* Sun Mar  1 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- Update to 1.1.0 for GLPI 0.85+
+  https://forge.indepnet.net/versions/1116
+
 * Mon Sep  8 2014 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - Update to 1.0.3 for GLPI 0.84+
   https://forge.indepnet.net/versions/957
