@@ -25,11 +25,10 @@
 %global with_nginx     0
 %global with_httpd     0
 %endif
-%global prever         -RC2
 
 Name:           glpi
 Version:        0.90
-Release:        0.1.RC2%{?dist}
+Release:        1%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
@@ -318,6 +317,9 @@ fi
 
 
 %changelog
+* Thu Oct  8 2015 Remi Collet <remi@fedoraproject.org> - 0.90-1
+- update to 0.90
+
 * Tue Oct  6 2015 Remi Collet <remi@fedoraproject.org> - 0.90-0.1.RC2
 - update to 0.90-RC2
 
