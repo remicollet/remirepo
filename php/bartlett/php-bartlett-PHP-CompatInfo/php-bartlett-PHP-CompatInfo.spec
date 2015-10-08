@@ -17,7 +17,7 @@
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        4.5.0
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -34,6 +34,10 @@ Source2:        %{name}-autoload.php
 
 # Autoload and sqlite database path
 Patch0:         %{name}-4.5.0-rpm.patch
+
+# Upstream patch for missing extensions
+# https://github.com/llaville/php-compat-info/issues/210
+Patch1:         %{name}-upstream.patch
 
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.2
@@ -107,6 +111,7 @@ Documentation: http://php5.laurent-laville.org/compatinfo/manual/current/en/
 #setup -q -n %{gh_project}-%{version}
 
 %patch0 -p1 -b .rpm
+%patch1 -p1
 cp %{SOURCE2} src/Bartlett/CompatInfo/autoload.php
 
 # Cleanup patched files
@@ -170,6 +175,10 @@ fi
 
 
 %changelog
+* Thu Oct  8 2015 Remi Collet <remi@fedoraproject.org> - 4.5.0-2
+- add upstream patch for missing extensions
+  https://github.com/llaville/php-compat-info/issues/210
+
 * Tue Oct  6 2015 Remi Collet <remi@fedoraproject.org> - 4.5.0-1
 - update to 4.5.0
 
