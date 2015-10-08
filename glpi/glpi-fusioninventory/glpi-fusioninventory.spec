@@ -7,23 +7,25 @@
 # Please, preserve the changelog entries
 #
 %global pluginname    fusioninventory
-%global glpi_version  0.85.0
-%global glpi_max      0.86
-%global plug_version  1.3
+%global glpi_version  0.90
+%global glpi_min      0.85.0
+%global glpi_max      0.91
+%global plug_version  1.0
+%global gh_tag        glpi090+1.0
 
 Name:           glpi-fusioninventory
 # New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
 Epoch:          1
-Version:        %{glpi_version}.%{plug_version}
+Version:        %{glpi_version}.0.%{plug_version}
 Release:        1%{?dist}
 Summary:        FusionInventory Server embedded as a GLPI plugin
 Summary(fr):    Serveur FusionInventory en extension pour GLPI
 
 Group:          Applications/Internet
 License:        AGPLv3+
-URL:            http://forge.fusioninventory.org/projects/fusioninventory-for-glpi
+URL:            http://fusioninventory.org/
 
-Source0:        http://forge.fusioninventory.org/attachments/download/1893/fusioninventory-for-glpi_0.85+1.3.tar.gz
+Source0:        https://github.com/fusioninventory/fusioninventory-for-glpi/releases/download/%{gh_tag}/fusioninventory-for-glpi_%{glpi_version}.%{plug_version}.tar.gz
 Source1:        %{name}-httpd.conf
 
 
@@ -43,7 +45,7 @@ Requires:       php-simplexml
 Requires:       php-spl
 Requires:       php-zip
 Requires:       php-zlib
-Requires:       glpi >= %{glpi_version}
+Requires:       glpi >= %{glpi_min}
 Requires:       glpi <  %{glpi_max}
 
 
@@ -132,6 +134,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct  8 2015 Remi Collet <remi@fedoraproject.org> - 1:0.90.0.1.0-1
+- update to 0.90+1.0 for GLPI 0.90
+
 * Tue Oct  6 2015 Remi Collet <remi@fedoraproject.org> - 1:0.85.0.1.3-1
 - update to 0.85+1.3 for GLPI 0.85
   http://forge.fusioninventory.org/versions/217
