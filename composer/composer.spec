@@ -6,13 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    fcce52b169799fc5973d080d31c27532ca41b7b8
+%global gh_commit    7a9eb02190d334513e99a479510f87eed18cf958
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20151004
+%global gh_date      20151007
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%global api_version  1.0.0
 
 Name:           composer
 Version:        1.0.0
@@ -31,6 +32,7 @@ Patch0:         %{name}-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  php-cli
 %if %{with_tests}
 BuildRequires:  php-composer(justinrainbow/json-schema) >= 1.4.4
 BuildRequires:  php-composer(composer/spdx-licenses)    >= 1.0
@@ -106,7 +108,10 @@ Requires:       php-tokenizer
 Requires:       php-xsl
 Requires:       php-zlib
 
+# Composer library
 Provides:       php-composer(composer/composer) = %{version}
+# Special internal for Plugin API
+Provides:       php-composer(composer-plugin-api) = %{api_version}
 
 
 %description
@@ -132,6 +137,15 @@ sed -e '/VERSION/s/@package_version@/%{gh_commit}/' \
     -e '/BRANCH_ALIAS_VERSION/s/@package_branch_alias_version@/%{gh_branch}/' \
     -e "/RELEASE_DATE/s/@release_date@/$DATE/" \
     -i src/Composer/Composer.php
+
+: check Plugin API version
+php -r '
+namespace Composer\Plugin;
+include "src/Composer/Plugin/PluginInterface.php";
+if (version_compare(PluginInterface::PLUGIN_API_VERSION, "%{api_version}")) {
+  printf("Plugin API version is %s, expected %s\n", PluginInterface::PLUGIN_API_VERSION, "%{api_version}");
+  exit(1);
+}'
 
 
 %build
@@ -182,8 +196,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct 11 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.12.20151007git7a9eb02
+- new snapshot
+- provide php-composer(composer-plugin-api)
+
 * Tue Oct  6 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.12.20151004gitfcce52b
-- don't check version in diagnose command (display RPM)
+- don't check version in diagnose command
 
 * Sun Oct  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.11.20151004gitfcce52b
 - new snapshot
