@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    c7428acdb62ece0a45e6306f1ae85e1c05b09c01
+%global gh_commit    bc37d50fea7d017d3d340f230811c9f1d7280af4
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   global-state
@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-sebastian-global-state
-Version:        1.0.0
+Version:        1.1.1
 Release:        1%{?dist}
 Summary:        Snapshotting of global state
 
@@ -33,10 +33,12 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
-BuildRequires:  %{_bindir}/phpunit
+# from composer.json, "require-dev": {
+#        "phpunit/phpunit": "~4.2"
+BuildRequires:  php-composer(phpunit/phpunit) > 4.2
 %endif
 
-# from composer.json
+# from composer.json, "require": {
 #        "php": ">=5.3.3"
 Requires:       php(language) >= 5.3.3
 # Optional: php-pecl-uopz
@@ -75,8 +77,8 @@ require 'SebastianBergmann/GlobalState/autoload.php';
 require 'tests/autoload.php';
 EOF
 
-phpunit \
-  --include-path %{buildroot}%{_datadir}/php \
+%{_bindir}/php -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
+%{_bindir}/phpunit \
   --bootstrap bs.php \
   tests
 %else
@@ -96,5 +98,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 12 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- update to 1.1.1
+
 * Fri Dec  5 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package
