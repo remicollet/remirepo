@@ -12,8 +12,8 @@
 
 %global github_owner     egulias
 %global github_name      EmailValidator
-%global github_version   1.2.9
-%global github_commit    af864423f50ea59f96c87bb1eae147a70bcf67a1
+%global github_version   1.2.10
+%global github_commit    de448a30fa78f2dc93889be529e875a13c6034ac
 
 %global composer_vendor  egulias
 %global composer_project email-validator
@@ -44,13 +44,13 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
-BuildRequires: %{_bindir}/phpunit
+BuildRequires: php-composer(phpunit/phpunit)
 ## composer.json
 BuildRequires: php(language)                >= %{php_min_ver}
 #BuildRequires: php-composer(doctrine/lexer) >= %%{doctrine_lexer_min_ver}
 BuildRequires: php-doctrine-lexer           >= %{doctrine_lexer_min_ver}
 BuildRequires: php-composer(doctrine/lexer) <  %{doctrine_lexer_max_ver}
-## phpcompatinfo (computed from version 1.2.9)
+## phpcompatinfo (computed from version 1.2.10)
 BuildRequires: php-filter
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -64,7 +64,7 @@ Requires:      php(language)                >= %{php_min_ver}
 #Requires:      php-composer(doctrine/lexer) >= %%{doctrine_lexer_min_ver}
 Requires:      php-doctrine-lexer           >= %{doctrine_lexer_min_ver}
 Requires:      php-composer(doctrine/lexer) <  %{doctrine_lexer_max_ver}
-# phpcompatinfo (computed from version 1.2.9)
+# phpcompatinfo (computed from version 1.2.10)
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
@@ -82,15 +82,15 @@ Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 %setup -qn %{github_name}-%{github_commit}
 
 : Create autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee src/Egulias/EmailValidator/autoload.php
 <?php
 /**
- * Autoloader created by %{name}-%{version}-%{release}
+ * Autoloader for %{name} and its' dependencies
+ *
+ * Created by %{name}-%{version}-%{release}
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
-
-require_once '%{phpdir}/Doctrine/Common/Lexer/autoload.php';
 
 if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
     if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
@@ -103,9 +103,10 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('Egulias\\EmailValidator\\', dirname(dirname(__DIR__)));
 
+require_once '%{phpdir}/Doctrine/Common/Lexer/autoload.php';
+
 return $fedoraClassLoader;
 AUTOLOAD
-) | tee src/Egulias/EmailValidator/autoload.php
 
 
 %build
@@ -128,7 +129,7 @@ sed -e 's/function testValidEmailsWithWarningsCheck/function SKIP_testValidEmail
     -i tests/egulias/Tests/EmailValidator/EmailValidatorTest.php
 
 : Run tests
-%{_bindir}/phpunit -v --bootstrap %{buildroot}%{phpdir}/Egulias/EmailValidator/autoload.php
+%{_bindir}/phpunit --verbose --bootstrap %{buildroot}%{phpdir}/Egulias/EmailValidator/autoload.php
 %else
 : Tests skipped
 %endif
@@ -149,6 +150,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.10-1
+- Updated to 1.2.10 (RHBZ #1270623)
+- Modified autoloader to load dependencies after self-registration
+
 * Sat Jun 27 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.9-1
 - Updated to 1.2.9 (RHBZ #1215684)
 - Added autoloader
