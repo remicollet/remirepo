@@ -1,7 +1,7 @@
 # remirepo spec file for php-twig
 # With SCL stuff, from Fedora:
 #
-# RPM spec file for php-twig
+# Fedora spec file for php-twig
 #
 # Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #                         Remi Collet <remi@fedoraproject.org>
@@ -69,7 +69,7 @@ BuildRequires: %{?scl_prefix}php-devel >= %{php_min_ver}
 %if %{with_tests}
 # For tests
 BuildRequires: %{_bindir}/phpunit
-## phpcompatinfo (computed from version 1.21.2)
+## phpcompatinfo (computed from version 1.22.2)
 BuildRequires: %{?scl_prefix}php-ctype
 BuildRequires: %{?scl_prefix}php-date
 BuildRequires: %{?scl_prefix}php-dom
@@ -85,7 +85,7 @@ BuildRequires: %{?scl_prefix}php-spl
 # Lib
 ## composer.json
 Requires:      %{?scl_prefix}php(language) >= %{php_min_ver}
-## phpcompatinfo (computed from version 1.21.2)
+## phpcompatinfo (computed from version 1.22.2)
 Requires:      %{?scl_prefix}php-ctype
 Requires:      %{?scl_prefix}php-date
 Requires:      %{?scl_prefix}php-dom
@@ -234,6 +234,14 @@ install -D -m 0644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 
 %check
+: Library version check
+%{_bindir}/php -r 'require_once "%{buildroot}%{phpdir}/Twig/autoload.php";
+    exit(version_compare("%{version}", Twig_Environment::VERSION, "=") ? 0 : 1);'
+
+: Extension version check
+EXT_VERSION=`grep PHP_TWIG_VERSION ext/NTS/php_twig.h | awk '{print $3}' | sed 's/"//g'` \
+    %{_bindir}/php -r 'exit(version_compare("%{version}", getenv("EXT_VERSION"), "=") ? 0 : 1);'
+
 : Extension NTS minimal load test
 %{__php} --no-php-ini \
     --define extension=ext/NTS/modules/%{ext_name}.so \
@@ -286,6 +294,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.22.2-1
+- Updated to 1.22.2 (RHBZ #1262655)
+- Added lib and ext version checks
+
 * Wed Sep 23 2015 Remi Collet <remi@fedoraproject.org> - 1.22.2-1
 - Update to 1.22.2
 
