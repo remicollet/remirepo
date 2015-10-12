@@ -1,6 +1,6 @@
 # remirepo spec file for php-silex, from Fedora:
 #
-# RPM spec file for php-silex
+# Fedora spec file for php-silex
 #
 # Copyright (c) 2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
@@ -12,8 +12,8 @@
 
 %global github_owner          silexphp
 %global github_name           Silex
-%global github_version        1.3.1
-%global github_commit         0507b772519ab0d9dd258bb39748921229ad5c46
+%global github_version        1.3.4
+%global github_commit         d6de62716fcda76084f3015165125f30b1563517
 
 %global composer_vendor       silex
 %global composer_project      silex
@@ -21,23 +21,23 @@
 # "php": ">=5.3.9"
 %global php_min_ver           5.3.9
 # "doctrine/dbal": "~2.2"
-%global doctrine_dbal_min_ver 2.2.0
-%global doctrine_dbal_max_ver 3.0.0
-# "monolog/monolog": "~1.4,>=1.4.1"
+%global doctrine_dbal_min_ver 2.2
+%global doctrine_dbal_max_ver 3.0
+# "monolog/monolog": "^1.4.1"
 %global monolog_min_ver       1.4.1
 %global monolog_max_ver       2.0.0
 # "pimple/pimple": "~1.0"
-%global pimple_min_ver        1.0.0
-%global pimple_max_ver        2.0.0
-# "swiftmailer/swiftmailer": "5.*"
-%global swiftmailer_min_ver   5.0.0
-%global swiftmailer_max_ver   6.0.0
-# "symfony/*": "~2.3,<3.0"
+%global pimple_min_ver        1.0
+%global pimple_max_ver        2.0
+# "swiftmailer/swiftmailer": "~5"
+%global swiftmailer_min_ver   5.0
+%global swiftmailer_max_ver   6.0
+# "symfony/*": "~2.3|3.0.*"
 %global symfony_min_ver       2.3
-%global symfony_max_ver       3.0
-# "twig/twig": ">=1.8.0,<2.0-dev"
-%global twig_min_ver          1.8.0
-%global twig_max_ver          2.0.0
+%global symfony_max_ver       3.1
+# "twig/twig": "~1.8|~2.0"
+%global twig_min_ver          1.8
+%global twig_max_ver          3.0
 
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
@@ -60,60 +60,37 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php-pear
 # Tests
 %if %{with_tests}
+BuildRequires: php-composer(phpunit/phpunit)
 ## composer.json
-BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language)                          >= %{php_min_ver}
 BuildRequires: php-composer(doctrine/dbal)            >= %{doctrine_dbal_min_ver}
-BuildRequires: php-composer(doctrine/dbal)            <  %{doctrine_dbal_max_ver}
 BuildRequires: php-composer(monolog/monolog)          >= %{monolog_min_ver}
-BuildRequires: php-composer(monolog/monolog)          <  %{monolog_max_ver}
 BuildRequires: php-composer(pimple/pimple)            >= %{pimple_min_ver}
 BuildRequires: php-composer(pimple/pimple)            <  %{pimple_max_ver}
 BuildRequires: php-composer(symfony/browser-kit)      >= %{symfony_min_ver}
-BuildRequires: php-composer(symfony/browser-kit)      <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/config)           >= %{symfony_min_ver}
-BuildRequires: php-composer(symfony/config)           <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/css-selector)     >= %{symfony_min_ver}
-BuildRequires: php-composer(symfony/css-selector)     <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/debug)            >= %{symfony_min_ver}
-BuildRequires: php-composer(symfony/debug)            <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/dom-crawler)      >= %{symfony_min_ver}
-BuildRequires: php-composer(symfony/dom-crawler)      <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/event-dispatcher) >= %{symfony_min_ver}
-BuildRequires: php-composer(symfony/event-dispatcher) <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/finder)           >= %{symfony_min_ver}
-BuildRequires: php-composer(symfony/finder)           <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/form)             >= %{symfony_min_ver}
-BuildRequires: php-composer(symfony/form)             <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/http-foundation)  >= %{symfony_min_ver}
-BuildRequires: php-composer(symfony/http-foundation)  <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/http-kernel)      >= %{symfony_min_ver}
-BuildRequires: php-composer(symfony/http-kernel)      <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/locale)           >= %{symfony_min_ver}
-BuildRequires: php-composer(symfony/locale)           <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/monolog-bridge)   >= %{symfony_min_ver}
-BuildRequires: php-composer(symfony/monolog-bridge)   <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/options-resolver) >= %{symfony_min_ver}
-BuildRequires: php-composer(symfony/options-resolver) <  %{symfony_max_ver}
+#BuildRequires: php-composer(symfony/phpunit-bridge)   >= %%{symfony_min_ver}
 BuildRequires: php-composer(symfony/process)          >= %{symfony_min_ver}
-BuildRequires: php-composer(symfony/process)          <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/routing)          >= %{symfony_min_ver}
-BuildRequires: php-composer(symfony/routing)          <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/security)         >= %{symfony_min_ver}
-BuildRequires: php-composer(symfony/security)         <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/serializer)       >= %{symfony_min_ver}
-BuildRequires: php-composer(symfony/serializer)       <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/translation)      >= %{symfony_min_ver}
-BuildRequires: php-composer(symfony/translation)      <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/twig-bridge)      >= %{symfony_min_ver}
-BuildRequires: php-composer(symfony/twig-bridge)      <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/validator)        >= %{symfony_min_ver}
-BuildRequires: php-composer(symfony/validator)        <  %{symfony_max_ver}
 BuildRequires: php-composer(twig/twig)                >= %{twig_min_ver}
-BuildRequires: php-composer(twig/twig)                <  %{twig_max_ver}
 BuildRequires: php-swift-Swift                        >= %{swiftmailer_min_ver}
-BuildRequires: php-swift-Swift                        <  %{swiftmailer_max_ver}
-## phpcompatinfo (computed from version 1.3.1)
+## phpcompatinfo (computed from version 1.3.4)
 BuildRequires: php-date
 BuildRequires: php-json
 BuildRequires: php-pcre
@@ -121,7 +98,7 @@ BuildRequires: php-reflection
 BuildRequires: php-session
 BuildRequires: php-spl
 BuildRequires: php-tokenizer
-# Autoloader
+## Autoloader
 BuildRequires: php-composer(symfony/class-loader)
 %endif
 
@@ -137,16 +114,7 @@ Requires:      php-composer(symfony/http-kernel)      >= %{symfony_min_ver}
 Requires:      php-composer(symfony/http-kernel)      <  %{symfony_max_ver}
 Requires:      php-composer(symfony/routing)          >= %{symfony_min_ver}
 Requires:      php-composer(symfony/routing)          <  %{symfony_max_ver}
-# composer.json: Optional
-Requires:      php-composer(symfony/browser-kit)      >= %{symfony_min_ver}
-Requires:      php-composer(symfony/browser-kit)      <  %{symfony_max_ver}
-Requires:      php-composer(symfony/css-selector)     >= %{symfony_min_ver}
-Requires:      php-composer(symfony/css-selector)     <  %{symfony_max_ver}
-Requires:      php-composer(symfony/dom-crawler)      >= %{symfony_min_ver}
-Requires:      php-composer(symfony/dom-crawler)      <  %{symfony_max_ver}
-Requires:      php-composer(symfony/form)             >= %{symfony_min_ver}
-Requires:      php-composer(symfony/form)             <  %{symfony_max_ver}
-# phpcompatinfo (computed from version 1.3.1)
+# phpcompatinfo (computed from version 1.3.4)
 Requires:      php-date
 Requires:      php-pcre
 Requires:      php-reflection
@@ -262,6 +230,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.4-1
+- Updated to 1.3.4 (RHBZ #1256774)
+
 * Thu Aug 13 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.1-1
 - Updated to 1.3.1 (RHBZ #1250055)
 - Updated autoloader to load dependencies after self registration
