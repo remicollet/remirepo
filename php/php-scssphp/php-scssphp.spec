@@ -13,8 +13,8 @@
 
 %global github_owner     leafo
 %global github_name      scssphp
-%global github_version   0.3.1
-%global github_commit    2977aa444415787e931c048989b8c9195fd5b344
+%global github_version   0.3.2
+%global github_commit    033dd027dfc8e1905ce782a687160d66d3bd65ee
 
 %global composer_vendor  leafo
 %global composer_project scssphp
@@ -43,20 +43,17 @@ Source1:       %{name}-get-source.sh
 
 # Pre-0.1.0 compat
 Patch0:        %{name}-pre-0-1-0-compat.patch
-# Fix lib version to 0.3.1
-# https://github.com/leafo/scssphp/commit/18fccbd309f250fd5fe34cd9c6d6f5da67aed958
-Patch1:        %{name}-fix-lib-version.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
-# Library version value check
+# Library version check
 BuildRequires: php-cli
 # Tests
 %if %{with_tests}
 ## composer.json
-BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language) >= %{php_min_ver}
-## phpcompatinfo (computed from version 0.3.1)
+BuildRequires: php-composer(phpunit/phpunit)
+## phpcompatinfo (computed from version 0.3.2)
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-json
@@ -69,7 +66,7 @@ BuildRequires: php-composer(symfony/class-loader)
 Requires:      php-cli
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 0.3.1)
+# phpcompatinfo (computed from version 0.3.2)
 Requires:      php-ctype
 Requires:      php-date
 Requires:      php-json
@@ -102,9 +99,6 @@ syntax.
 
 : Lib pre-0.1.0 compat
 %patch0 -p1
-
-: Fix lib version to 0.3.1
-%patch1 -p1
 
 : Bin
 sed "/scss.inc.php/s#.*#require_once '%{phpdir}/Leafo/ScssPhp/autoload.php';#" \
@@ -157,7 +151,7 @@ install -pm 0755 bin/pscss %{buildroot}%{_bindir}/
 
 
 %check
-: Library version value check
+: Library version check
 %{_bindir}/php -r 'require_once "%{buildroot}%{phpdir}/Leafo/ScssPhp/autoload.php";
     exit(version_compare("%{version}", ltrim(\Leafo\ScssPhp\Version::VERSION, "v"), "=") ? 0 : 1);'
 
@@ -185,6 +179,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.3.2-1
+- Updated to 0.3.2 (RHBZ #1268709)
+
 * Sun Sep 20 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.3.1-1
 - Updated to 0.3.1 (RHBZ #1256168)
 - Updated URL
