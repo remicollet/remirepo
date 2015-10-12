@@ -13,8 +13,8 @@
 
 %global github_owner     google
 %global github_name      google-api-php-client
-%global github_version   1.1.4
-%global github_commit    2adb5ba90612858d4add0342eee6b8b9aaca398d
+%global github_version   1.1.5
+%global github_commit    2bc00ec4e8fa1a5eec793d800fac339f30b730db
 
 %global composer_vendor  google
 %global composer_project apiclient
@@ -23,7 +23,7 @@
 %global php_min_ver 5.2.1
 
 # Build using "--without tests" to disable tests
-%global with_tests  %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
 
 %{!?phpdir:  %global phpdir  %{_datadir}/php}
 
@@ -43,21 +43,23 @@ BuildArch:     noarch
 %if %{with_tests}
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: %{_bindir}/phpunit
-## phpcompatinfo (computed from version 1.1.4)
+BuildRequires: php-composer(phpunit/phpunit)
+## phpcompatinfo (computed from version 1.1.5)
 BuildRequires: php-curl
 BuildRequires: php-date
+BuildRequires: php-filter
 BuildRequires: php-json
 BuildRequires: php-openssl
 BuildRequires: php-pcre
 BuildRequires: php-reflection
+BuildRequires: php-session
 BuildRequires: php-spl
 %endif
 
 Requires:      ca-certificates
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.1.4)
+# phpcompatinfo (computed from version 1.1.5)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-json
@@ -122,7 +124,7 @@ cp -rp src/* %{buildroot}%{phpdir}/
 rm -f tests/general/ApiBatchRequestTest.php
 
 : Run tests
-%{_bindir}/phpunit
+%{_bindir}/phpunit --verbose
 
 : Ensure unbundled CA cert is referenced
 grep '%{_sysconfdir}/pki/tls/certs/ca-bundle.crt' --quiet \
@@ -151,6 +153,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.5-1
+- Updated to 1.1.5 (RHBZ #1266282)
+
 * Fri May 22 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.4-1
 - Updated to 1.1.4 (BZ #1222260)
 - Added spec license header
