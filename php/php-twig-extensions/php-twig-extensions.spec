@@ -100,6 +100,7 @@ AUTOLOAD
 
 %install
 rm -rf %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}
 cp -rp lib/* %{buildroot}%{phpdir}/
 
