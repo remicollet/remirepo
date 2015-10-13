@@ -14,8 +14,8 @@
 
 %global github_owner     twigphp
 %global github_name      Twig
-%global github_version   1.22.2
-%global github_commit    79249fc8c9ff62e41e217e0c630e2e00bcadda6a
+%global github_version   1.22.3
+%global github_commit    ebfc36b7e77b0c1175afe30459cf943010245540
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 
@@ -294,6 +294,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.22.3-1
+- Update to 1.22.3
+
 * Sun Oct 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.22.2-1
 - Updated to 1.22.2 (RHBZ #1262655)
 - Added lib and ext version checks
