@@ -1,7 +1,8 @@
+# remirepo spec file for php-twig-extensions, from
 #
-# RPM spec file for php-twig-extensions
+# Fedora spec file for php-twig-extensions
 #
-# Copyright (c) 2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -11,8 +12,8 @@
 
 %global github_owner     twigphp
 %global github_name      Twig-extensions
-%global github_version   1.2.0
-%global github_commit    8cf4b9fe04077bd54fc73f4fde83347040c3b8cd
+%global github_version   1.3.0
+%global github_commit    449e3c8a9ffad7c2479c7864557275a32b037499
 
 %global composer_vendor  twig
 %global composer_project extensions
@@ -20,19 +21,18 @@
 # "symfony/translation": "~2.3"
 %global symfony_min_ver  2.3
 %global symfony_max_ver  3.0
-# "twig/twig": "~1.12"
-%global twig_min_ver     1.12
-%global twig_max_ver     2.0
+# "twig/twig": "~1.20|~2.0"
+%global twig_min_ver     1.20
+%global twig_max_ver     3.0
 
 # Build using "--without tests" to disable tests
-%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
 
-%{!?phpdir:     %global phpdir     %{_datadir}/php}
-%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       1%{?dist}
 Summary:       Twig extensions
 
 Group:         Development/Libraries
@@ -42,14 +42,13 @@ Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Tests
 %if %{with_tests}
-BuildRequires: php-phpunit-PHPUnit
-# composer.json
+BuildRequires: php-composer(phpunit/phpunit)
+## composer.json
 BuildRequires: php-composer(symfony/translation) >= %{symfony_min_ver}
-BuildRequires: php-composer(symfony/translation) <  %{symfony_max_ver}
 BuildRequires: php-composer(twig/twig)           >= %{twig_min_ver}
-BuildRequires: php-composer(twig/twig)           <  %{twig_max_ver}
-# phpcompatinfo (computed from version 1.2.0)
+## phpcompatinfo (computed from version 1.3.0)
 BuildRequires: php-date
 BuildRequires: php-intl
 BuildRequires: php-mbstring
@@ -63,7 +62,7 @@ Requires:      php-composer(twig/twig)           <  %{twig_max_ver}
 # composer.json: optional
 Requires:      php-composer(symfony/translation) >= %{symfony_min_ver}
 Requires:      php-composer(symfony/translation) <  %{symfony_max_ver}
-# phpcompatinfo (computed from version 1.2.0)
+# phpcompatinfo (computed from version 1.3.0)
 Requires:      php-intl
 Requires:      php-mbstring
 Requires:      php-pcre
@@ -79,6 +78,21 @@ Common additional features for Twig that do not directly belong in core Twig.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+: Create autoloader
+cat <<'AUTOLOAD' | tee lib/Twig/Extensions/autoload.php
+<?php
+/**
+ * Autoloader for %{name} and its' dependencies
+ *
+ * Created by %{name}-%{version}-%{release}
+ */
+
+require_once __DIR__ . '/Autoloader.php';
+Twig_Extensions_Autoloader::register();
+
+require_once '%{phpdir}/Twig/autoload.php';
+AUTOLOAD
+
 
 %build
 # Empty build section, nothing required
@@ -86,23 +100,14 @@ Common additional features for Twig that do not directly belong in core Twig.
 
 %install
 rm -rf %{buildroot}
-mkdir -pm 0755 %{buildroot}%{phpdir}
+mkdir -p %{buildroot}%{phpdir}
 cp -rp lib/* %{buildroot}%{phpdir}/
 
 
 %check
 %if %{with_tests}
-# Create tests' bootstrap
-mkdir vendor
-cat > vendor/autoload.php <<'AUTOLOAD'
-<?php
-spl_autoload_register(function ($class) {
-    $src = str_replace(array('\\', '_'), '/', $class) . '.php';
-    @include_once $src;
-});
-AUTOLOAD
-
-%{__phpunit} --include-path %{buildroot}%{phpdir}
+%{_bindir}/phpunit --verbose \
+    --bootstrap %{buildroot}%{phpdir}/Twig/Extensions/autoload.php
 %else
 : Tests skipped
 %endif
@@ -116,11 +121,18 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc README.rst composer.json doc
+%doc README.rst
+%doc composer.json
+%doc doc
 %{phpdir}/Twig/Extensions
 
 
 %changelog
+* Mon Oct 12 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.0-1
+- Updated to 1.3.0 (RHBZ #1256169)
+- "php-phpunit-PHPUnit" build dependency changed to "php-composer(phpunit/phpunit)"
+- "twig/twig" dependency version changed from "~1.12" to "~1.20|~2.0"
+
 * Fri Nov 14 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-2
 - backport for remi repo, add EL-5 stuff
 
