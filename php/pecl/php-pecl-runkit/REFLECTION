@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #123 runkit version 1.0.4-dev ] {
+Extension [ <persistent> extension #147 runkit version 1.0.4 ] {
 
   - INI {
     Entry [ runkit.superglobal <PERDIR,SYSTEM> ]
@@ -17,7 +17,7 @@ Extension [ <persistent> extension #123 runkit version 1.0.4-dev ] {
     Constant [ integer RUNKIT_IMPORT_CLASS_STATIC_PROPS ] { 16 }
     Constant [ integer RUNKIT_IMPORT_CLASSES ] { 30 }
     Constant [ integer RUNKIT_IMPORT_OVERRIDE ] { 32 }
-    Constant [ string RUNKIT_VERSION ] { 1.0.4-dev }
+    Constant [ string RUNKIT_VERSION ] { 1.0.4 }
     Constant [ integer RUNKIT_ACC_RETURN_REFERENCE ] { 67108864 }
     Constant [ integer RUNKIT_ACC_PUBLIC ] { 256 }
     Constant [ integer RUNKIT_ACC_PROTECTED ] { 512 }

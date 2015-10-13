@@ -1,20 +1,31 @@
-# spec file for php-pecl-runkit
+# remirepo spec file for php-pecl-runkit
 #
 # Copyright (c) 2012-2015 Remi Collet
-# Copyright (c) 2008-2012 Pavel Alexeev
+#
+# with SCL compatibility from:
+
+# Fedora spec file for php-pecl-runkit
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package         php-pecl-runkit}
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
 
 %global gh_owner    zenovich
-%global gh_commit   5e179e978af79444d3c877d5681ea91d15134a01
+%global gh_commit   80160a2cf94b0377924a7d08f9318bef0c225214
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global pecl_name   runkit
 %global with_zts    0%{?__ztsphp:1}
@@ -23,13 +34,12 @@
 %else
 %global ini_name    40-%{pecl_name}.ini
 %endif
+%global channel     zenovich.github.io/pear
 
 Summary:          Mangle with user defined functions and classes
-Summary(ru):      Манипулирование пользовательскими функциями и классами
-Summary(pl):      Obróbka zdefiniowanych przez użytkownika funkcji i klas
-Name:             %{?scl_prefix}php-pecl-%{pecl_name}
+Name:             %{?sub_prefix}php-pecl-%{pecl_name}
 Version:          1.0.4
-Release:          0.9%{?gh_short:.git%{gh_short}}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:          1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:          PHP
 Group:            Development/Libraries
 # URL:            http://pecl.php.net/package/runkit/
@@ -42,12 +52,10 @@ Source0:          https://github.com/%{gh_owner}/%{pecl_name}/archive/%{gh_commi
 Source0:          http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 
-BuildRoot:    %{_tmppath}/%{name}-%{version}-root-%(id -u -n)
+BuildRoot:        %{_tmppath}/%{name}-%{version}-root-%(id -u -n)
 BuildRequires:    %{?scl_prefix}php-pear
 BuildRequires:    %{?scl_prefix}php-devel
 
-Requires(post):   %{__pecl}
-Requires(postun): %{__pecl}
 Requires:         %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:         %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
@@ -56,20 +64,29 @@ Provides:         %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:         %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:         %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:         %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+# Virtual provides for new channel (temporary ?)
+Provides:         %{?scl_prefix}php-zenovich-%{pecl_name} = %{version}
+Provides:         %{?scl_prefix}php-zenovich-%{pecl_name}%{?_isa} = %{version}
+Provides:         %{?scl_prefix}php-pecl(%{channel}/%{pecl_name}) = %{version}
+Provides:         %{?scl_prefix}php-pecl(%{channel}/%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:        php53-pecl-%{pecl_name}
-Obsoletes:        php53u-pecl-%{pecl_name}
-Obsoletes:        php54-pecl-%{pecl_name}
-Obsoletes:        php54w-pecl-%{pecl_name}
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:        php55u-pecl-%{pecl_name}
-Obsoletes:        php55w-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:        php56u-pecl-%{pecl_name}
-Obsoletes:        php56w-pecl-%{pecl_name}
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -85,16 +102,7 @@ Replace, rename, and remove user defined functions and classes. Define
 customized superglobal variables for general purpose use. Execute code
 in restricted environment (sandboxing).
 
-%description -l ru
-Замещение, переименование и удаление оперделенных пользователем функций
-и классов. Определение собственных суперглобальных переменных. Выполнение
-кода в ограниченной среде (песочнице)
-
-%description -l pl
-Zastępowanie, zmiana nazwy lub usuwanie zdefiniowanych przez
-użytkownika funkcji i klas. Definiowanie zmiennych superglobalnych do
-ogólnego użytku. Wykonywanie danego kodu w ograniczonym środowisku
-(sandbox).
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -103,14 +111,20 @@ ogólnego użytku. Wykonywanie danego kodu w ograniczonym środowisku
 mv runkit-%{gh_commit} NTS
 mv NTS/package.xml .
 
-sed -e 's/-Werror//' -i NTS/config.m4
+sed -e '/<channel>/s:%{channel}:pecl.php.net:' -i package.xml
 
-%if "%{php_version}" > "5.6"
-# Quick fix for PHP 5.6
-# https://github.com/zenovich/runkit/issues/69
-sed -e 's/IS_CONSTANT_ARRAY/IS_CONSTANT_AST/' \
-    -i NTS/runkit_import.c NTS/runkit_props.c
-%endif
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
+
+cd NTS
+sed -e 's/-Werror//' -i config.m4
+
+extver=$(sed -n '/#define PHP_RUNKIT_VERSION/{s/.*\t"//;s/".*$//;p}' php_runkit.h)
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}%{?prever}.
+   exit 1
+fi
+cd ..
 
 %if %{with_zts}
 # duplicate for ZTS build
@@ -158,11 +172,8 @@ make install -C ZTS install INSTALL_ROOT=%{buildroot}
 install -Dpm 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Test & Documentation
+# Documentation
 cd NTS
-for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 tests/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -180,7 +191,7 @@ TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n -d extension_dir=%{buildroot}%{php_extdir} -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/php -n run-tests.php
+%{_bindir}/php -n run-tests.php --show-diff
 
 %if %{with_zts}
 %{__ztsphp} --no-php-ini \
@@ -192,15 +203,24 @@ TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension_dir=%{buildroot}%{php_ztsextdir} -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/php -n run-tests.php
+%{_bindir}/php -n run-tests.php --show-diff
 %endif
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
+
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ "$1" -eq "0" ]; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -212,7 +232,6 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
 %{php_extdir}/%{pecl_name}.so
@@ -225,6 +244,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- update to 1.0.4
+- drop runtime dependency on pear, new scriptlets
+- don't install/register tests
+- add virtual provides for php-zenovich-runkit and
+  php-pecl(zenovich.github.io/pear/runkit)
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-0.9.git5e179e9
 - Fedora 21 SCL mass rebuild
 
