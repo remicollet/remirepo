@@ -10,7 +10,7 @@
 # Please, preserve the changelog entries
 #
 
-%global gh_commit   4dde30ce8d984edda540349f57eb7995a87ba9de
+%global gh_commit   a5365166f57919aaca7265607aabd7159fe8a68a
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    alanxz
 %global gh_project  rabbitmq-c
@@ -25,7 +25,7 @@ Name:      %{libname}-last
 Name:      %{libname}
 %endif
 Summary:   Client library for AMQP
-Version:   0.7.0
+Version:   0.7.1
 Release:   1%{?dist}
 License:   MIT
 Group:     System Environment/Libraries
@@ -36,16 +36,12 @@ Source0:   https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{g
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if 0%{?rhel} == 5
 BuildRequires: cmake28
-%else
-BuildRequires: cmake > 2.8
-%endif
-BuildRequires: openssl-devel
-# For tools
-%if 0%{?rhel} == 5
 BuildRequires: popt
 %else
+BuildRequires: cmake > 2.8
 BuildRequires: popt-devel
 %endif
+BuildRequires: openssl-devel
 # For man page
 BuildRequires: xmlto
 
@@ -158,6 +154,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 0.7.1-1
+- update to 0.7.1
+
 * Fri Jul  3 2015 Remi Collet <remi@fedoraproject.org> - 0.7.0-1
 - update to 0.7.0
 - swicth to cmake
