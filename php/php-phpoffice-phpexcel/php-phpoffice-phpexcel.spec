@@ -1,3 +1,4 @@
+# remirepo spec file for php-phpoffice-phpexcel, from
 #
 # Fedora spec file for php-phpoffice-phpexcel
 #
@@ -44,6 +45,7 @@ Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{githu
 # NOTE: Custom patch for 1.8.1 because pull request patch does not apply cleanly
 Patch0:        %{name}-pr695-1-8-1-custom.patch
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -67,7 +69,9 @@ BuildRequires: php-posix
 BuildRequires: php-reflection
 BuildRequires: php-simplexml
 BuildRequires: php-spl
+%if 0%{?rhel} != 5
 BuildRequires: php-sqlite3
+%endif
 BuildRequires: php-xmlreader
 BuildRequires: php-zlib
 %endif
@@ -92,7 +96,9 @@ Requires:      php-posix
 Requires:      php-reflection
 Requires:      php-simplexml
 Requires:      php-spl
+%if 0%{?rhel} != 5
 Requires:      php-sqlite3
+%endif
 Requires:      php-xmlreader
 Requires:      php-zlib
 # Unbundled
@@ -143,6 +149,8 @@ rm -rf Classes/PHPExcel/Shared/PCLZip
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}
 cp -rp Classes/* %{buildroot}%{phpdir}/
 
@@ -186,7 +194,12 @@ rm -f \
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files -f %{name}.lang
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license license.md
 %doc Examples
@@ -211,6 +224,9 @@ rm -f \
 
 
 %changelog
+* Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.8.1-1
+- backport for remi repo, add EL-5 stuff
+
 * Sun Oct 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.8.1-1
 - Updated to 1.8.1
 - Spec cleanup
