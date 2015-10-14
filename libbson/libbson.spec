@@ -6,12 +6,12 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    7afe7e98969889c442f780eda45172d33a1d9e8e
+%global gh_commit    e434c354a3939db063ee78345834baed19002f7e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     mongodb
 %global gh_project   libbson
 %global libver       1.0
-%global prever       rc0
+#global prever       rc0
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 # TODO bundled yajl version 2.0.4
@@ -20,7 +20,7 @@
 Name:      libbson
 Summary:   Library to build, parse, and iterate BSON documents
 Version:   1.2.0
-Release:   0.2.%{prever}%{?dist}
+Release:   1%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -91,6 +91,9 @@ make check
 
 
 %changelog
+* Wed Oct 14 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- Update to 1.2.0
+
 * Sun Oct  4 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-0.2.rc0
 - Update to 1.2.0-rc0
 
