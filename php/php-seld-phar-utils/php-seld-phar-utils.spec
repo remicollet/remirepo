@@ -1,4 +1,4 @@
-# spec file for php-seld-phar-utils
+# remirepo/fedora spec file for php-seld-phar-utils
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA

@@ -1,4 +1,4 @@
-# spec file for php-seld-cli-prompt
+# remirepo/fedora spec file for php-seld-cli-prompt
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
