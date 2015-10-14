@@ -11,15 +11,15 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 }
 
 $fedoraClassLoader->addPrefixes(array(
-    'Seld\\JsonLint\\'             => $vendorDir,
-    'Seld\\PharUtils\\'            => $vendorDir,
-    'Seld\\CliPrompt\\'            => $vendorDir,
     'Symfony\\Component\\'         => $vendorDir,
     'Composer\\'                   => dirname(__DIR__)
 ));
 $fedoraClassLoader->register();
 
 // Dependencies
+require_once $vendorDir . '/Seld/JsonLint/autoload.php';
+require_once $vendorDir . '/Seld/PharUtils/autoload.php';
+require_once $vendorDir . '/Seld/CliPrompt/autoload.php';
 require_once $vendorDir . '/Composer/Spdx/autoload.php';
 require_once $vendorDir . '/Composer/Semver/autoload.php';
 require_once $vendorDir . '/JsonSchema/autoload.php';

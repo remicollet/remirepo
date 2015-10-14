@@ -6,10 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    7a9eb02190d334513e99a479510f87eed18cf958
+%global gh_commit    a54f84f05f915c6d42bed94de0cdcb4406a4707b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20151007
+%global gh_date      20151013
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
@@ -17,7 +17,7 @@
 
 Name:           composer
 Version:        1.0.0
-Release:        0.12.%{gh_date}git%{gh_short}%{?dist}
+Release:        0.13.%{gh_date}git%{gh_short}%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -38,16 +38,26 @@ BuildRequires:  php-composer(justinrainbow/json-schema) >= 1.4.4
 BuildRequires:  php-composer(composer/spdx-licenses)    >= 1.0
 BuildRequires:  php-composer(composer/semver)           >= 1.0
 BuildRequires:  php-composer(seld/jsonlint)             >= 1.0
+BuildRequires:  php-composer(seld/phar-utils)           >= 1.0
+BuildRequires:  php-composer(seld/cli-prompt)           >= 1.0
 BuildRequires:  php-composer(symfony/console)           >= 2.5
 BuildRequires:  php-composer(symfony/finder)            >= 2.2
 BuildRequires:  php-composer(symfony/filesystem)        >= 2.5
 BuildRequires:  php-composer(symfony/process)           >= 2.1
-BuildRequires:  php-composer(symfony/class-loader)
-BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php-zip
+# From composer.json, "require-dev": {
+#        "phpunit/phpunit": "~4.5|^5.0.5",
+#        "phpunit/phpunit-mock-objects": "2.3.0|~3.0"
+BuildRequires:  php-composer(phpunit/phpunit)           >= 4.5
+# For autoloader
+BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-seld-phar-utils >= 1.0.1
+BuildRequires:  php-seld-cli-prompt >= 1.0.0-3
+BuildRequires:  php-jsonlint        >= 1.3.1-3
+
 %endif
 
-# From composer.json, requires
+# From composer.json, "require": {
 #        "php": ">=5.3.2",
 #        "justinrainbow/json-schema": "^1.4.4",
 #        "composer/spdx-licenses": "^1.0",
@@ -88,6 +98,9 @@ Requires:       php-zip
 Requires:       php-openssl
 # For our autoloader
 Requires:       php-composer(symfony/class-loader)
+Requires:       php-seld-phar-utils >= 1.0.1
+Requires:       php-seld-cli-prompt >= 1.0.0-3
+Requires:       php-jsonlint        >= 1.3.1-3
 # From phpcompatinfo
 Requires:       php-curl
 Requires:       php-date
@@ -196,6 +209,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct 14 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.13.20151013gita54f84f
+- new snapshot
+- use autoloader from all dependencies
+
 * Sun Oct 11 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.12.20151007git7a9eb02
 - new snapshot
 - provide php-composer(composer-plugin-api)
