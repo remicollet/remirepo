@@ -24,11 +24,11 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit  ea1022644d867d74a6b0d435bf4a61f42ed2d82f
+%global gh_commit  9c361d2627676c910ec0c1a5d13c9031f3143bf9
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   krakjoe
 %global gh_project apcu
-%global gh_date    20150921
+%global gh_date    20151014
 %global pecl_name  apcu
 %global with_zts   0%{?__ztsphp:1}
 %if "%{php_version}" < "5.6"
@@ -41,12 +41,12 @@ Name:           %{?sub_prefix}php-pecl-apcu
 Summary:        APC User Cache
 Version:        5.0.0
 %if 0%{?gh_date:1}
-Release:        0.3.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
-Source1:        %{pecl_name}.ini
+Source1:        %{pecl_name}-5.0.0.ini
 Source2:        %{pecl_name}-panel.conf
 Source3:        %{pecl_name}.conf.php
 
@@ -200,6 +200,7 @@ sed -e s:apc.conf.php:%{_sysconfdir}/apcu-panel/conf.php:g \
 cd NTS
 %{_bindir}/phpize
 %configure \
+   --enable-apcu-bc \
    --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
@@ -207,6 +208,7 @@ make %{?_smp_mflags}
 cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
+   --enable-apcu-bc \
    --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 %endif
@@ -255,8 +257,13 @@ done
 %check
 cd NTS
 # Check than both extensions are reported (BC mode)
-%{_bindir}/php -n -d extension_dir=modules -d extension=apcu.so -m | grep 'apcu'
-%{_bindir}/php -n -d extension_dir=modules -d extension=apcu.so -m | grep 'apc$'
+%{_bindir}/php -n \
+   -d extension=%{buildroot}%{php_extdir}/apcu.so \
+   -m | grep 'apcu'
+%{_bindir}/php -n \
+   -d extension=%{buildroot}%{php_extdir}/apcu.so \
+   -d extension=%{buildroot}%{php_extdir}/apc.so \
+   -m | grep 'apc$'
 
 # Upstream test suite for NTS extension
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
@@ -267,9 +274,13 @@ REPORT_EXIT_STATUS=1 \
 
 %if %{with_zts}
 cd ../ZTS
-
-%{__ztsphp}    -n -d extension_dir=modules -d extension=apcu.so -m | grep 'apcu'
-%{__ztsphp}    -n -d extension_dir=modules -d extension=apcu.so -m | grep 'apc$'
+%{__ztsphp} -n \
+   -d extension=%{buildroot}%{php_ztsextdir}/apcu.so \
+   -m | grep 'apcu'
+%{__ztsphp} -n \
+   -d extension=%{buildroot}%{php_ztsextdir}/apcu.so \
+   -d extension=%{buildroot}%{php_ztsextdir}/apc.so \
+   -m | grep 'apc$'
 
 # Upstream test suite for ZTS extension
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
@@ -309,11 +320,13 @@ fi
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{ini_name}
-%{php_extdir}/%{pecl_name}.so
+%{php_extdir}/apc.so
+%{php_extdir}/apcu.so
 
 %if %{with_zts}
-%{php_ztsextdir}/%{pecl_name}.so
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
+%{php_ztsextdir}/apc.so
+%{php_ztsextdir}/apcu.so
 %endif
 
 
@@ -339,6 +352,9 @@ fi
 
 
 %changelog
+* Wed Oct 14 2015 Remi Collet <remi@fedoraproject.org> - 5.0.0-0.4.20151014git9c361d2
+- new snapshot (with apcu and apc extensions)
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 5.0.0-0.3.20150921gitea10226
 - rebuild for PHP 7.0.0RC5 new API version
 - new snapshot
