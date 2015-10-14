@@ -46,7 +46,7 @@ Summary:        PostgreSQL client library (libpq) binding
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        2.0.0
 %if 0%{?gh_date:1}
-Release:        0.3.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -115,7 +115,7 @@ Highlights:
 * Fetching simple multi-dimensional array maps
 * Working Gateway implementation
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -296,6 +296,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.4.20150819gite381164
+- rebuild for PHP 7.0.0RC5 new API version
+
 * Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.3.20150819gite381164
 - F23 rebuild with rh_layout
 

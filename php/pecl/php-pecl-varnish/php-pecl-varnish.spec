@@ -31,7 +31,7 @@
 Summary:        Varnish Cache bindings
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.2.1
-Release:        5%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        6%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -89,7 +89,7 @@ Varnish Cache is an open source, state of the art web application accelerator.
 The extension makes it possible to interact with a running varnish instance
 through TCP socket or shared memory.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -283,7 +283,10 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-4
+* Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-6
+- rebuild for PHP 7.0.0RC5 new API version
+
+* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-5
 - F23 rebuild with rh_layout
 
 * Wed Jul 22 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-4

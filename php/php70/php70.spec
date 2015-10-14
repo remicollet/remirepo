@@ -9,8 +9,8 @@
 # Please preserve changelog entries
 #
 # API/ABI check
-%global apiver      20131218
-%global zendver     20141001
+%global apiver      20151012
+%global zendver     20151012
 %global pdover      20150127
 # Extension version
 %global opcachever  7.0.6-dev
@@ -132,8 +132,8 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver         RC4
-%global rpmrel        6
+%global rcver         RC5
+%global rpmrel        7
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -400,7 +400,7 @@ Provides: php-tokenizer, php-tokenizer%{?_isa}
 Provides: php-zlib, php-zlib%{?_isa}
 # For user experience, those extensions were part of php-common
 Requires:  php-json%{?_isa}
-Requires:  php-zip%{?_isa}
+#Requires:  php-zip%{?_isa}
 
 Obsoletes: php-pecl-phar < 1.2.4
 Obsoletes: php-pecl-Fileinfo < 1.0.5
@@ -2001,6 +2001,11 @@ fi
 
 
 %changelog
+* Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.7.RC5
+- Update to 7.0.0RC4
+- update php-fpm.d/www.conf comments
+- API and Zend API are now set to 20151012
+
 * Wed Sep 30 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.6.RC4
 - Update to 7.0.0RC4
 - php-fpm: set http authorization headers

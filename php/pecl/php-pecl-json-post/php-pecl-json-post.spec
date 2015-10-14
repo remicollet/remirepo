@@ -37,7 +37,7 @@
 Summary:        JSON POST handler
 Name:           %{?sub_prefix}php-pecl-json-post
 Version:        1.0.1
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -94,7 +94,7 @@ the JSON contents of the request body will by parsed into `$_POST`.
 
 This extension does not provide any constants, functions or classes.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -241,6 +241,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-3
+- rebuild for PHP 7.0.0RC5 new API version
+
 * Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
 - F23 rebuild with rh_layout
 

@@ -22,11 +22,11 @@
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
 
-%global gh_commit   ce27a107c77d239d95ba0d6b81105b8b2b2c0525
+%global gh_commit   7a5bdb1e485dce3e1c29de41d4470f4bd7b5fe00
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    msgpack
 %global gh_project  msgpack-php
-%global gh_date     20150702
+%global gh_date     20151002
 %global pecl_name   msgpack
 %global with_zts    0%{?__ztsphp:1}
 %if "%{php_version}" < "5.6"
@@ -45,7 +45,7 @@ Summary:       API for communicating with MessagePack serialization
 Name:          %{?sub_prefix}php-pecl-msgpack
 Version:       0.5.7
 %if 0%{?gh_date:1}
-Release:       0.6.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.7.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -114,7 +114,7 @@ a perfect replacement.
 
 This extension is still EXPERIMENTAL.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %package devel
@@ -212,6 +212,9 @@ done
 %check
 # Known by upstream as failed test (travis result)
 rm */tests/026.phpt
+%ifnarch x86_64
+rm */tests/{040,040b,040d}.phpt
+%endif
 
 cd NTS
 : Minimal load test for NTS extension
@@ -289,6 +292,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 0.5.7-0.7.20151002git7a5bdb1
+- rebuild for PHP 7.0.0RC5 new API version
+- new snapshot
+
 * Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 0.5.7-0.6.20150702gitce27a10
 - F23 rebuild with rh_layout
 

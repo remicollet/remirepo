@@ -10,11 +10,11 @@
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__php:       %global __php        %{_bindir}/php}
 
-%global gh_commit   778424f5396321af728953e2d0fc960a98c6fa27
+%global gh_commit   06cc6d07a3600d521fceafea85687427979cea28
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    laruence
 %global gh_project  yaconf
-%global gh_date     20150718
+%global gh_date     20150910
 %global ext_name    yaconf
 %global with_zts    0%{?__ztsphp:1}
 %if "%{php_version}" < "5.6"
@@ -27,7 +27,7 @@ Summary:       Yet Another Configurations Container
 Name:          %{?scl_prefix}php-yaconf
 Version:       1.0.0
 %if 0%{?gh_date:1}
-Release:       0.6.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.7.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -211,6 +211,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.7.20150910git06cc6d0
+- rebuild for PHP 7.0.0RC5 new API version
+- new snapshot
+
 * Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.6.20150718git778424f
 - F23 rebuild with rh_layout
 

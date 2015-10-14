@@ -22,8 +22,8 @@
 %endif
 
 # API/ABI check
-%global apiver      20131218
-%global zendver     20141001
+%global apiver      20151012
+%global zendver     20151012
 %global pdover      20150127
 # Extension version
 %global opcachever  7.0.6-dev
@@ -130,8 +130,8 @@
 #global gh_date      20150623
 #global gh_owner     php
 #global gh_project   php-src
-%global rcver        RC4
-%global rpmrel       18
+%global rcver        RC5
+%global rpmrel       19
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -391,7 +391,7 @@ Provides: %{?scl_prefix}php-zlib, %{?scl_prefix}php-zlib%{?_isa}
 %{?scl:Requires: %{scl}-runtime}
 # For user experience, those extensions were part of php-common
 Requires: %{?scl_prefix}php-json%{?_isa}
-Requires: %{?scl_prefix}php-zip%{?_isa}
+#Requires: %{?scl_prefix}php-zip%{?_isa}
 
 %description common
 The %{?scl_prefix}php-common package contains files used by both
@@ -1803,6 +1803,11 @@ fi
 
 
 %changelog
+* Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.19.RC5
+- Update to 7.0.0RC4
+- update php-fpm.d/www.conf comments
+- API and Zend API are now set to 20151012
+
 * Wed Sep 30 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.18.RC4
 - Update to 7.0.0RC4
 - php-fpm: set http authorization headers

@@ -31,7 +31,7 @@
 Summary:        Gender Extension
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.1.0
-Release:        5%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        6%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 # Code is BSD, nam_dict.txt is GFDL
 License:        BSD and GFDL
 Group:          Development/Languages
@@ -84,7 +84,7 @@ by Joerg Michael. The main purpose is to find out the gender of firstnames.
 
 The name dictionary contains >40000 firstnames from 54 countries.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -230,6 +230,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-6
+- rebuild for PHP 7.0.0RC5 new API version
+
 * Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-5
 - F23 rebuild with rh_layout
 

@@ -1,4 +1,4 @@
-===== 7.0.0-0.18.RC4 (2015-10-01)
+===== 7.0.0-0.18.RC5 (2015-10-15)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl70*/build.log
 

@@ -19,11 +19,11 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit   63222a2c40782fd79a14257475e951de3ce33d87
+%global gh_commit   aeb6457cb0ac64dc0524a793c3020e3283789a5e
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    laruence
 %global gh_project  yaf
-%global gh_date     20150906
+%global gh_date     20150914
 %global with_zts    0%{?__ztsphp:1}
 %global pecl_name   yaf
 %if "%{php_version}" < "5.6"
@@ -36,7 +36,7 @@ Summary:       Yet Another Framework
 Name:          %{?sub_prefix}php-pecl-yaf
 Version:       3.0.0
 %if 0%{?gh_date:1}
-Release:       0.7.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.8.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -223,6 +223,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.8.20150914gitaeb6457
+- rebuild for PHP 7.0.0RC5 new API version
+- new snapshot
+
 * Sun Sep  6 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.7.20150906git63222a2
 - new shapshot (changes from 2.3.5)
 

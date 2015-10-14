@@ -23,11 +23,11 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit   d9cb4d61eaeabdfa0c12636668c9f4a29a253932
+%global gh_commit   55c3639a82f5e3dad0bb2e913e55ba929c624e34
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    m6w6
 %global gh_project  ext-propro
-%global gh_date     20150615
+%global gh_date     20150930
 %global with_zts    0%{?__ztsphp:1}
 %global pecl_name   propro
 %if "%{php_version}" < "5.6"
@@ -42,8 +42,8 @@
 
 Summary:        Property proxy
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.0.1
-Release:        0.5.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        2.0.0
+Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -92,7 +92,7 @@ Obsoletes:     php70w-pecl-%{pecl_name}
 %description
 A reusable split-off of pecl_http's property proxy API.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %package devel
@@ -249,6 +249,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.1.20150930git55c3639
+- rebuild for PHP 7.0.0RC5 new API version
+- new snapshot
+
 * Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-0.5.20150615gitd9cb4d6
 - F23 rebuild with rh_layout
 

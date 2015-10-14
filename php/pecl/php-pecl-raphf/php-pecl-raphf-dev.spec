@@ -23,11 +23,11 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit  6d04f5be0a7ac5ff0d6da2d167c8f1c833dcbaff
+%global gh_commit  b07c6f39d2ef4059d3f4cebf695e1315dc3fd5ec
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   m6w6
 %global gh_project ext-raphf
-%global gh_date    20150721
+%global gh_date    20150930
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  raphf
 # tests disabled because of circular dependency on pecl/http
@@ -46,7 +46,7 @@
 Summary:        Resource and persistent handles factory
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        2.0.0
-Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.3.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -99,7 +99,7 @@ Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 A reusable split-off of pecl_http's persistent handle and resource
 factory API.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %package devel
@@ -270,6 +270,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.3.20150930gitb07c6f3
+- rebuild for PHP 7.0.0RC5 new API version
+- new snapshot
+
 * Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.2.20150721git6d04f5b
 - F23 rebuild with rh_layout
 
