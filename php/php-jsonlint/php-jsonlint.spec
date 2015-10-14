@@ -1,5 +1,6 @@
+# remirepo spec file for php-jsonlint, from:
 #
-# RPM spec file for php-jsonlint
+# Fedora spec file for php-jsonlint
 #
 # Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #                         Remi Collet <remi@fedoraproject.org>
@@ -23,13 +24,16 @@
 
 Name:          php-%{github_name}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       3%{?dist}
 Summary:       JSON Lint for PHP
 
 Group:         Development/Libraries
 License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+
+# Autoloader
+Source1:        %{name}-autoload.php
 
 # Bin usage without Composer autoloader
 Patch0:        %{name}-bin-without-composer-autoloader.patch
@@ -39,14 +43,19 @@ BuildArch:     noarch
 %if %{with_tests}
 # For tests: composer.json
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-phpunit-PHPUnit
+BuildRequires: php-composer(phpunit/phpunit)
 # For tests: phpcompatinfo (computed from version 1.3.1)
 BuildRequires: php-pcre
+# For autoloader
+BuildRequires: php-composer(symfony/class-loader)
 %endif
 
 Requires:      php(language) >= %{php_min_ver}
 # phpcompatinfo (computed from version 1.3.1)
+Requires:      php-cli
 Requires:      php-pcre
+# For autoloader
+Requires:      php-composer(symfony/class-loader)
 
 Provides:      php-composer(seld/jsonlint) = %{version}
 
@@ -57,10 +66,14 @@ Provides:      php-composer(seld/jsonlint) = %{version}
 This library is a port of the JavaScript jsonlint
 (https://github.com/zaach/jsonlint) library.
 
+To use this library, you just have to add, in your project:
+  require_once '%{_datadir}/php/Seld/JsonLint/autoload.php';
+
 
 %prep
 %setup -q -n %{github_name}-%{github_commit}
 
+cp %{SOURCE1} src/Seld/JsonLint/autoload.php
 %patch0 -p1
 
 
@@ -80,16 +93,9 @@ install -pm 0755 bin/jsonlint %{buildroot}%{_bindir}/
 
 %check
 %if %{with_tests}
-# Create autoloader
-cat > autoload.php <<'AUTOLOAD'
-<?php
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', $class).'.php';
-    @include_once $src;
-});
-AUTOLOAD
-
-%{_bindir}/phpunit --bootstrap ./autoload.php --include-path %{buildroot}%{_datadir}/php .
+%{_bindir}/phpunit \
+  --bootstrap %{buildroot}%{_datadir}/php/Seld/JsonLint/autoload.php \
+  --verbose
 %else
 : Tests skipped
 %endif
@@ -106,6 +112,9 @@ AUTOLOAD
 
 
 %changelog
+* Wed Oct 14 2015 Remi Collet <remi@fedoraproject.org> - 1.3.1-3
+- add autoloader
+
 * Mon Jan  5 2015 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
 - Updated to 1.3.1
 
