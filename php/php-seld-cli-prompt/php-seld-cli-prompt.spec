@@ -13,7 +13,7 @@
 
 Name:           php-seld-cli-prompt
 Version:        1.0.0
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Allows you to prompt for user input on the command line
 
 Group:          Development/Libraries
@@ -21,9 +21,16 @@ License:        MIT
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
+# Autoloader
+Source1:        %{gh_project}-autoload.php
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3
+# For test
+BuildRequires:  php-cli
+# Autoloader
+BuildRequires:  php-composer(symfony/class-loader)
 
 # From composer.json
 #       "php": ">=5.3.0",
@@ -31,6 +38,8 @@ Requires:       php(language) >= 5.3.0
 # From phpcompatifo report for 1.0.0
 Requires:       php-pcre
 Requires:       php-spl
+# Autoloader
+Requires:       php-composer(symfony/class-loader)
 
 Provides:       php-composer(seld/cli-prompt) = %{version}
 
@@ -41,9 +50,14 @@ need to prompt for sensitive information. In these cases, the characters typed
 in by the user should not be directly visible, and this is quite a pain to do
 in a cross-platform way.
 
+To use this library, you just have to add, in your project:
+  require_once '%{_datadir}/php/Seld/CliPrompt/autoload.php';
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+
+cp %{SOURCE1} src/autoload.php
 
 
 %build
@@ -55,6 +69,16 @@ rm -rf       %{buildroot}
 # Restore PSR-0 tree
 mkdir -p     %{buildroot}%{_datadir}/php/Seld/CliPrompt
 cp -pr src/* %{buildroot}%{_datadir}/php/Seld/CliPrompt/
+
+
+%check
+: Check if our autoloader works
+php -r '
+require "%{buildroot}%{_datadir}/php/Seld/CliPrompt/autoload.php";
+$a = new \Seld\CliPrompt\CliPrompt();
+echo "Ok\n";
+exit(0);
+'
 
 
 %clean
@@ -70,5 +94,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct 14 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-3
+- add autoloader
+
 * Mon May  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package
