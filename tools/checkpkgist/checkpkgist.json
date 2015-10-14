@@ -1,5 +1,4 @@
 {
-    "composer\/semver": "php-composer-semver",
     "fabpot\/goutte": "php-goutte",
     "zendframework\/zendframework1": "php-ZendFramework",
     "sabre\/dav": "php-sabre-dav",
@@ -11,6 +10,5 @@
     "tecnickcom\/tc-lib-pdf-page": "php-tecnickcom-tc-lib-pdf-page",
     "tecnickcom\/tc-lib-unicode-data": "php-tecnickcom-tc-lib-unicode-data",
     "jasig\/phpcas": "php-pear-CAS",
-    "sebastian\/resource-operations": "php-sebastian-resource-operations",
     "theseer\/fxsl": "php-theseer-fxsl"
 }
