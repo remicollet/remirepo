@@ -8,13 +8,13 @@
 #
 %global gh_owner     mongodb
 %global gh_project   mongo-c-driver
-%global gh_commit    c45526094073e13f2c391c8057fa39e77d20b6b4
+%global gh_commit    495cd3ffa9beade31c2b410eb5e9555c7db240e1
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20151001
 %global with_tests   0%{!?_without_tests:1}
 %global libname      libmongoc
 %global libver       1.0
-%global prever       rc0
+#global prever       rc0
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
@@ -24,7 +24,7 @@ Release:   0.6.%{gh_date}git%{gh_short}%{?dist}
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
 BuildRequires: libtool autoconf
 %else
-Release:   0.6.%{prever}%{?dist}
+Release:   1%{?dist}
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
 %endif
 License:   ASL 2.0
@@ -159,6 +159,9 @@ exit $ret
 
 
 %changelog
+* Wed Oct 14 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- Update to 1.2.0
+
 * Sun Oct  4 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-0.6.rc0
 - Update to 1.2.0-rc0
 
