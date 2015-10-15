@@ -12,8 +12,8 @@
 
 %global github_owner     tchwork
 %global github_name      utf8
-%global github_version   1.2.3
-%global github_commit    a7a9a987d01d052ff9c99510ecbd07ebc6c270f2
+%global github_version   1.2.5
+%global github_commit    25a55c6c668de61cc3b97aab4237ebf6dadabe17
 
 %global composer_vendor  patchwork
 %global composer_project utf8
@@ -32,7 +32,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       3%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       Portable and performant UTF-8, Unicode and Grapheme Clusters for PHP
 
 Group:         Development/Libraries
@@ -43,10 +43,6 @@ URL:           https://github.com/%{github_owner}/%{github_name}
 # Run php-patchwork-utf8-get-source.sh to create full source.
 Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
 Source1:       %{name}-get-source.sh
-
-# Add license files
-# https://github.com/tchwork/utf8/pull/50
-Patch0:        %{name}-pull-50.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -98,8 +94,6 @@ Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
-
-%patch0 -p1
 
 : Create autoloader
 cat <<'AUTOLOAD' | tee src/Patchwork/autoload.php
@@ -185,6 +179,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 15 2015 Remi Collet <remi]remirepo.net> - 1.2.5-1
+- update to 1.2.5
+
 * Wed Sep 23 2015 Remi Collet <remi]remirepo.net> - 1.2.3-3
 - backport for remi repository
 
