@@ -9,8 +9,8 @@
 #
 %global github_owner    natxet
 %global github_name     CssMin
-%global github_version  3.0.3
-%global github_commit   f076e41392b0008efb47074a133ec1d90dc8c99f
+%global github_version  3.0.4
+%global github_commit   92de3fe3ccb4f8298d31952490ef7d5395855c39
 # if set, will be a post-release snapshot build, otherwise a 'normal' build
 #global github_date     20141229
 %global shortcommit %(c=%{github_commit}; echo ${c:0:7})
@@ -80,6 +80,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 15 2015 Remi Collet <remi@fedoraproject.org> - 3.0.4-1
+- update to 3.0.4
+
 * Tue Jun 09 2015 Adam Williamson <awilliam@redhat.com> - 3.0.3-1
 - new release 3.0.3
 
