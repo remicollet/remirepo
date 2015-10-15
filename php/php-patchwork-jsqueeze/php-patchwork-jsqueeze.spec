@@ -1,7 +1,7 @@
 %global github_owner    tchwork
 %global github_name     jsqueeze
-%global github_version  2.0.2
-%global github_commit   2e581762884cfd035d9b148794ef2a4ab2c3b893
+%global github_version  2.0.3
+%global github_commit   074a7ac403d1fae262fd662c43c04b62d71c3e50
 %global packagist_owner patchwork
 %global packagist_name  jsqueeze
 %global psr4_namespace  Patchwork
@@ -77,6 +77,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 15 2015 Remi Collet <remmi@fedoraproject.org> - 2.0.2-2
+- update to 2.0.3
+
 * Sat Apr 25 2015 Adam Williamson <awilliam@redhat.com> - 2.0.2-1
 - new release 2.0.2
 
