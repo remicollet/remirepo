@@ -12,8 +12,8 @@
 
 %global github_owner     Seldaek
 %global github_name      monolog
-%global github_version   1.17.1
-%global github_commit    0524c87587ab85bc4c2d6f5b41253ccb930a5422
+%global github_version   1.17.2
+%global github_commit    bee7f0dc9c3e0b69a6039697533dca1e845c8c24
 
 %global composer_vendor  monolog
 %global composer_project monolog
@@ -23,9 +23,9 @@
 # "psr/log": "~1.0"
 %global psrlog_min_ver  1.0
 %global psrlog_max_ver  2.0
-# "raven/raven": "~0.8"
+# "raven/raven": "^0.13"
 #     NOTE: Min version not 0.8 because autoloader required
-%global raven_min_ver   0.12.0
+%global raven_min_ver   0.13
 %global raven_max_ver   1.0
 # "aws/aws-sdk-php": "^2.4.9"
 #     NOTE: Min version not 2.4.9 because autoloader required
@@ -223,14 +223,14 @@ $fedoraClassLoader->addPrefix(false, __DIR__ . '/tests');
 BOOTSTRAP
 
 : Remove MongoDBHandlerTest because it requires a running MongoDB server
-rm -f tests/Monolog/Handler/MongoDBHandlerTest.php
+rm tests/Monolog/Handler/MongoDBHandlerTest.php
 
 : Remove GitProcessorTest because it requires a git repo
-rm -f tests/Monolog/Processor/GitProcessorTest.php
+rm tests/Monolog/Processor/GitProcessorTest.php
 
 : Skip tests known to fail
-sed 's/function testMessageCanBeCustomizedGivenLoggedData/function SKIP_testMessageCanBeCustomizedGivenLoggedData/' \
-    -i tests/Monolog/Handler/SwiftMailerHandlerTest.php
+rm tests/Monolog/Handler/SwiftMailerHandlerTest.php
+
 %if 0%{?rhel} > 0
 sed 's/function testThrowsOnInvalidEncoding/function SKIP_testThrowsOnInvalidEncoding/' \
     -i tests/Monolog/Formatter/NormalizerFormatterTest.php
@@ -257,6 +257,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 15 2015 Remi Collet <remi@remirepo.net> - 1.17.2-1
+- update to 1.17.2
+
 * Sun Sep 13 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.17.1-1
 - Updated to 1.17.1 (RHBZ #1258230)
 
