@@ -24,7 +24,6 @@
 %global psrlog_min_ver  1.0
 %global psrlog_max_ver  2.0
 # "raven/raven": "^0.13"
-#     NOTE: Min version not 0.8 because autoloader required
 %global raven_min_ver   0.13
 %global raven_max_ver   1.0
 # "aws/aws-sdk-php": "^2.4.9"
@@ -54,11 +53,11 @@ BuildRequires: php-pear
 # Tests
 %if %{with_tests}
 ## composer.json
-BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language)         >= %{php_min_ver}
+BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(psr/log) >= %{psrlog_min_ver}
 BuildRequires: php-composer(psr/log) <  %{psrlog_max_ver}
-## phpcompatinfo (computed from version 1.17.1)
+## phpcompatinfo (computed from version 1.17.2)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -79,7 +78,7 @@ BuildRequires: php-composer(symfony/class-loader)
 Requires:      php(language)         >= %{php_min_ver}
 Requires:      php-composer(psr/log) >= %{psrlog_min_ver}
 Requires:      php-composer(psr/log) <  %{psrlog_max_ver}
-# phpcompatinfo (computed from version 1.17.1)
+# phpcompatinfo (computed from version 1.17.2)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-filter
@@ -223,14 +222,13 @@ $fedoraClassLoader->addPrefix(false, __DIR__ . '/tests');
 BOOTSTRAP
 
 : Remove MongoDBHandlerTest because it requires a running MongoDB server
-rm tests/Monolog/Handler/MongoDBHandlerTest.php
+rm -f tests/Monolog/Handler/MongoDBHandlerTest.php
 
 : Remove GitProcessorTest because it requires a git repo
-rm tests/Monolog/Processor/GitProcessorTest.php
+rm -f tests/Monolog/Processor/GitProcessorTest.php
 
 : Skip tests known to fail
-rm tests/Monolog/Handler/SwiftMailerHandlerTest.php
-
+rm -f tests/Monolog/Handler/SwiftMailerHandlerTest.php
 %if 0%{?rhel} > 0
 sed 's/function testThrowsOnInvalidEncoding/function SKIP_testThrowsOnInvalidEncoding/' \
     -i tests/Monolog/Formatter/NormalizerFormatterTest.php
@@ -257,6 +255,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 15 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.17.2-1
+- Updated to 1.17.2 (RHBZ #1271882)
+
 * Thu Oct 15 2015 Remi Collet <remi@remirepo.net> - 1.17.2-1
 - update to 1.17.2
 
