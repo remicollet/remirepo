@@ -50,14 +50,14 @@ BuildArch:     noarch
 BuildRequires: python
 # Tests
 %if %{with_tests}
-BuildRequires: %{_bindir}/phpunit
+BuildRequires: php-composer(phpunit/phpunit)
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-iconv
 BuildRequires: php-intl
 BuildRequires: php-mbstring
 BuildRequires: php-pcre
-## phpcompatinfo (computed from version 1.2.3)
+## phpcompatinfo (computed from version 1.2.5)
 BuildRequires: php-reflection
 BuildRequires: php-date
 BuildRequires: php-exif
@@ -76,7 +76,7 @@ Requires:      php-pcre
 Requires:      php-iconv
 Requires:      php-intl
 Requires:      php-mbstring
-# phpcompatinfo (computed from version 1.2.3)
+# phpcompatinfo (computed from version 1.2.5)
 #Requires:      php-exif
 Requires:      php-filter
 Requires:      php-json
@@ -173,12 +173,17 @@ rm -rf %{buildroot}
 %doc *.md
 %doc composer.json
 %{phpdir}/Patchwork
+%exclude %{phpdir}/Patchwork/Utf8/Compiler.php
+%exclude %{phpdir}/Patchwork/Utf8/WindowsStreamWrapper.php
 %exclude %{phpdir}/Patchwork/Utf8/unicode-data.tbz2
-#exclude %{phpdir}/Patchwork/Utf8/WindowsStreamWrapper.php
 %{_datadir}/%{name}
 
 
 %changelog
+* Thu Oct 15 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.5-1
+- Updated to 1.2.5 (RHBZ #1271631)
+- Exclude Patchwork/Utf8/Compiler.php
+
 * Thu Oct 15 2015 Remi Collet <remi]remirepo.net> - 1.2.5-1
 - update to 1.2.5
 
