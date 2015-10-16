@@ -1,6 +1,7 @@
 {
     "fabpot\/goutte": "php-goutte",
     "hamcrest\/hamcrest-php": "php-hamcrest",
+    "swiftmailer\/swiftmailer": "php-swift-Swift",
     "zendframework\/zendframework1": "php-ZendFramework",
     "sabre\/dav": "php-sabre-dav",
     "phpunit\/phpunit-story": "php-phpunit-PHPUnit-Story",

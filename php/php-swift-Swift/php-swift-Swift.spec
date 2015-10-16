@@ -1,27 +1,48 @@
-%{!?__pear: %global __pear %{_bindir}/pear}
-%global pear_name Swift
+# remirepo spec file for php-swift-Swift, from
+#
+# Fedora spec file for php-swift-Swift
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+%global gh_commit    0697e6aa65c83edf97bb0f23d8763f94e3f11421
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     swiftmailer
+%global gh_project   swiftmailer
+%global with_tests   0%{!?_without_tests:1}
+%global php_home     %{_datadir}/php
 
 Name:           php-swift-Swift
-Version:        5.1.0
+Version:        5.4.1
 Release:        1%{?dist}
 Summary:        Free Feature-rich PHP Mailer
 
 Group:          Development/Libraries
 License:        MIT
 URL:            http://www.swiftmailer.org/
-Source0:        http://pear.swiftmailer.org/get/Swift-%{version}.tgz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+
+# Upstream patches
+# Fix test bootstrap and disable gc to avoid segfault
+Patch0:         %{gh_project}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-channel(pear.swiftmailer.org)
-BuildRequires:  php-pear(PEAR)
+%if %{with_tests}
+BuildRequires:  php-composer(phpunit/phpunit)
+BuildRequires:  php-composer(theseer/autoload)
+# From composer.json, "require-dev": {
+#        "mockery/mockery": "~0.9.1,<0.9.4"
+BuildRequires:  php-composer(mockery/mockery) >= 0.9.1
+BuildRequires:  php-composer(mockery/mockery) <  0.9.4
+%endif
 
-Requires(post): %{__pear}
-Requires(postun): %{__pear}
-Requires:       php(language) >= 5.2.4
-Requires:       php-pear(PEAR)
-Requires:       php-channel(pear.swiftmailer.org)
-# from phpcompatinfo report on version 5.1.0
+# From composer.json, "require": {
+#        "php": ">=5.3.3"
+Requires:       php(language) >= 5.3.3
+# from phpcompatinfo report on version 5.4.1
 Requires:       php-bcmath
 Requires:       php-ctype
 Requires:       php-date
@@ -33,47 +54,62 @@ Requires:       php-mhash
 Requires:       php-openssl
 Requires:       php-pcre
 Requires:       php-reflection
+Requires:       php-simplexml
 Requires:       php-spl
 
-# optional but not yet available https://github.com/xdecock/php-opendkim
+# Single package in this channel
+Obsoletes:      php-channel-swift <= 1.3
 
-Provides:       php-pear(pear.swiftmailer.org/%{pear_name}) = %{version}
+Provides:       php-composer(swiftmailer/swiftmailer) = %{version}
+Provides:       php-pear(pear.swiftmailer.org/Swift) = %{version}
+
 
 %description
 Swift Mailer integrates into any web app written in PHP 5, offering a 
 flexible and elegant object-oriented approach to sending emails with 
 a multitude of features.
 
+To use this library, you just have to add, in your project:
+  require_once '%{php_home}/Swift/swift_required.php';
+
+
 
 %prep
-%setup -q -c
-cd %{pear_name}-%{version}
-mv ../package.xml %{pear_name}.xml
+%setup -q -n %{gh_project}-%{gh_commit}
+
+%patch0 -p1
+
+mv lib/swift_required_pear.php lib/swift_required.php
+rm lib/swiftmailer_generate_mimes_config.php
 
 
 %build
-cd %{pear_name}-%{version}
 # Empty build section, most likely nothing required.
 
 
 %install
 rm -rf %{buildroot}
-cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot %{buildroot} %{pear_name}.xml
 
-# Clean up unnecessary files
-rm -rf %{buildroot}%{pear_metadir}/.??*
+mkdir -p                   %{buildroot}/%{php_home}/Swift
+cp -p lib/*.php            %{buildroot}/%{php_home}/Swift/
+cp -pr lib/classes/*       %{buildroot}/%{php_home}/Swift/
+cp -pr lib/dependency_maps %{buildroot}/%{php_home}/Swift/
 
-mkdir -p %{buildroot}%{pear_phpdir}/tmp
-mv %{buildroot}%{pear_phpdir}/*.php \
-   %{buildroot}%{pear_phpdir}/Swift \
-   %{buildroot}%{pear_phpdir}/dependency_maps \
-   %{buildroot}%{pear_phpdir}/tmp
-mv %{buildroot}%{pear_phpdir}/tmp %{buildroot}%{pear_phpdir}/Swift
 
-# Install XML package description
-mkdir -p %{buildroot}%{pear_xmldir}
-install -pm 644 %{pear_name}.xml %{buildroot}%{pear_xmldir}
+%check
+%if %{with_tests}
+: Use installed tree and autoloader
+mkdir vendor
+%{_bindir}/phpab --output vendor/autoload.php tests
+cat << 'EOF' | tee -a vendor/autoload.php
+require_once '%{buildroot}/%{php_home}/Swift/swift_required.php';
+require_once '/usr/share/php/Mockery/autoload.php';
+EOF
+
+: Run upstream test suite
+%{_bindir}/phpunit --exclude smoke --verbose
+%endif
+
 
 
 %clean
@@ -81,23 +117,30 @@ rm -rf %{buildroot}
 
 
 %post
-%{__pear} install --nodeps --soft --force --register-only \
-    %{pear_xmldir}/%{pear_name}.xml >/dev/null || :
-
-%postun
-if [ $1 -eq 0 ] ; then
-    %{__pear} uninstall --nodeps --ignore-errors --register-only \
-        %{pear_name} >/dev/null || :
+if [ -x %{_bindir}/pear ]; then
+  %{_bindir}/pear uninstall --nodeps --ignore-errors --register-only \
+    pear.swiftmailer.org/Swift >/dev/null || :
 fi
 
 
 %files
 %defattr(-,root,root,-)
-%doc %{pear_docdir}/%{pear_name}
-%{pear_xmldir}/%{pear_name}.xml
-%{pear_phpdir}/%{pear_name}
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc CHANGES README
+%doc doc
+%doc composer.json
+%{php_home}/Swift
+
 
 %changelog
+* Fri Oct 16 2015 Remi Collet <remi@fedoraproject.org> - 5.4.1-1
+- update to 5.4.1
+- sources from github, pear channel is dead
+- provide php-composer(swiftmailer/swiftmailer)
+- add BR on mockery/mockery
+- fix license handling
+
 * Tue Mar 18 2014 Remi Collet <remi@fedoraproject.org> - 5.1.0-1
 - Update to 5.1.0 (stable)
 - add dependencies on bcmath, mcrypt and mhash
