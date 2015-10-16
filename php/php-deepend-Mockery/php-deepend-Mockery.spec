@@ -7,14 +7,14 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    70bba85e4aabc9449626651f48b9018ede04f86b
+%global gh_commit    686f85fa5b3b079cc0157d7cd3e9adb97f0b41e1
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     padraic
 %global gh_project   mockery
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-deepend-Mockery
-Version:        0.9.4
+Version:        0.9.3
 Release:        1%{?dist}
 Summary:        Mockery is a simple but flexible PHP mock object framework
 
@@ -120,6 +120,9 @@ fi
 
 
 %changelog
+* Fri Oct 16 2015 Remi Collet <remi@fedoraproject.org> - 0.9.3-1
+- downgrade to 0.9.3
+
 * Fri Oct 16 2015 Remi Collet <remi@fedoraproject.org> - 0.9.4-1
 - Update to 0.9.4
 - add autoloader using symfony/class-loader
