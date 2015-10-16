@@ -90,7 +90,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -1669,6 +1669,7 @@ foreach (array(
     '%{phpdir}/Psr/Log/autoload.php',
     '%{phpdir}/Twig/autoload.php',
     '%{phpdir}/password_compat/password.php',
+    '%{phpdir}/Swift/swift_required.php',
 ) as $dependencyAutoloader) {
     if (file_exists($dependencyAutoloader)) {
         require_once $dependencyAutoloader;
@@ -2493,6 +2494,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Fri Oct 16 2015 Remi Collet <remi@fedoraproject.org> - 2.7.5-2
+- fix autoloader for recent swiftmailer
+
 * Fri Sep 25 2015 Remi Collet <remi@fedoraproject.org> - 2.7.5-1
 - Update to 2.7.5
 - raise dependency on doctrine/common ~2.4,
