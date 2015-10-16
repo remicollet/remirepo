@@ -228,7 +228,6 @@ rm -f tests/Monolog/Handler/MongoDBHandlerTest.php
 rm -f tests/Monolog/Processor/GitProcessorTest.php
 
 : Skip tests known to fail
-rm -f tests/Monolog/Handler/SwiftMailerHandlerTest.php
 %if 0%{?rhel} > 0
 sed 's/function testThrowsOnInvalidEncoding/function SKIP_testThrowsOnInvalidEncoding/' \
     -i tests/Monolog/Formatter/NormalizerFormatterTest.php
