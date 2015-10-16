@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a77b6bede0afdd232155eb6f1de0b2826bcf2803
+%global gh_commit    d3ae0d084d526cdc6c3f1b858fb7148de77b41c5
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     pdepend
 %global gh_project   pdepend
@@ -18,7 +18,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-pdepend-PHP-Depend
-Version:        2.2.1
+Version:        2.2.2
 Release:        1%{?dist}
 Summary:        PHP_Depend design quality metrics for PHP package
 
@@ -36,8 +36,9 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 # From composer/json, "require-dev": {
-#        "phpunit/phpunit": "^4.0.0",
+#        "phpunit/phpunit": "^4.0.0,<4.8",
 #        "squizlabs/php_codesniffer": "^2.0.0"
+# Test suite pass with PHPUnit 4.8.12 and PHPUnit 5.0.5
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.0.0
 BuildRequires:  php(language) >= 5.3.7
 BuildRequires:  php-composer(symfony/dependency-injection) >= 2.3.0
@@ -165,6 +166,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 16 2015 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
+- update to 2.2.2
+
 * Fri Sep 25 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - update to 2.2.1
 
