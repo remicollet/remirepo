@@ -1,23 +1,60 @@
+# remirepo spec file for php-deepend-Mockery, from
+#
+# Fedora spec file for php-deepend-Mockery
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+%global gh_commit    70bba85e4aabc9449626651f48b9018ede04f86b
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     padraic
+%global gh_project   mockery
+%global with_tests   0%{!?_without_tests:1}
+
 Name:           php-deepend-Mockery
-Version:        0.9.1
-Release:        2%{?dist}
+Version:        0.9.4
+Release:        1%{?dist}
 Summary:        Mockery is a simple but flexible PHP mock object framework
 
 Group:          Development/Libraries
 License:        BSD
-URL:            http://github.com/padraic/mockery
-Source0:        https://github.com/padraic/mockery/archive/%{version}/mockery-%{version}.tar.gz
+URL:            https://github.com/%{gh_owner}/%{gh_project}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+
+# Autoloader
+Source1:        %{gh_project}-autoload.php
+
+# Use our autoloader
+Patch0:         %{gh_project}-tests.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
-# TODO: enable tests
-# TODO: make hamcrest as dependency for additional features
+%if %{with_tests}
+# From composer.json, "require-dev": {
+#        "phpunit/phpunit": "~4.0"
+BuildRequires:  php-composer(phpunit/phpunit) >= 4.0
+BuildRequires:  php(language) >= 5.3.2
+BuildRequires:  php-composer(hamcrest/hamcrest-php) >= 1.1
+# Autoloader
+BuildRequires:  php-composer(symfony/class-loader)
+%endif
+
+# From composer.json, "require": {
+#        "php": ">=5.3.2",
+#        "lib-pcre": ">=7.0",
+#        "hamcrest/hamcrest-php": "~1.1"
 Requires:       php(language) >= 5.3.2
-#Requires:       pcre >= 7.0
+Requires:       php-composer(hamcrest/hamcrest-php) >= 1.1
+Requires:       php-composer(hamcrest/hamcrest-php) <  2
+# From phpcompatinfo report for version 0.9.4
 Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-reflection
+# Autoloader
+Requires:       php-composer(symfony/class-loader)
 
 Provides:       php-composer(mockery/mockery) = %{version}
 Provides:       php-pear(pear.survivethedeepend.com/Mockery) = %{version}
@@ -29,8 +66,15 @@ Mockery is a simple but flexible PHP mock object framework for use in unit
 testing. It is inspired by Ruby's flexmock and Java's Mockito, borrowing 
 elements from both of their APIs.
 
+To use this library, you just have to add, in your project:
+  require_once '%{_datadir}/php/Mockery/autoload.php';
+
+
 %prep
-%setup -q -n mockery-%{version}
+%setup -q -n %{gh_project}-%{gh_commit}
+
+cp %{SOURCE1} library/Mockery/autoload.php
+%patch0 -p0 -b .rpm
 
 
 %build
@@ -39,6 +83,7 @@ elements from both of their APIs.
 
 %install
 rm -rf %{buildroot}
+
 mkdir -p %{buildroot}/%{_datadir}/php
 cp -rp library/* %{buildroot}/%{_datadir}/php/
 
@@ -48,10 +93,13 @@ rm -rf %{buildroot}
 
 
 %check
-# We need this packages to pass tests
-# hamcrest/hamcrest-php: ~1.1
-# satooshi/php-coveralls: ~0.7@dev
-# phpunit --include-path ./library:./tests -d date.timezone="UTC"
+%if %{with_tests}
+: Use installed tree and our autoloader
+sed -e 's:@BUILD@:%{buildroot}/%{_datadir}/php:' -i tests/Bootstrap.php
+
+: Run upstream test suite
+%{_bindir}/phpunit --verbose
+%endif
 
 
 %post
@@ -63,12 +111,22 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README.md docs/*
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README.md docs
+%doc composer.json
 %{_datadir}/php/Mockery/
 %{_datadir}/php/Mockery.php
 
 
 %changelog
+* Fri Oct 16 2015 Remi Collet <remi@fedoraproject.org> - 0.9.4-1
+- Update to 0.9.4
+- add autoloader using symfony/class-loader
+- add dependency on hamcrest/hamcrest-php
+- run test suite
+- use github archive from commit reference
+
 * Wed Jul 16 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 0.9.1-2
 - fixed requires (Remi)
 - add script which will delete older pear package if installed (Remi)
