@@ -34,12 +34,15 @@
 Summary:       PHP Bindings for yaml
 Name:          %{?sub_prefix}php-pecl-yaml
 Version:       2.0.0
-Release:       0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaml
 
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
+
+# Upstream patch
+Patch0:        %{pecl_name}-upstream.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel >= 7
@@ -99,6 +102,8 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 sed -e '/role="test"/d' -i package.xml
 
 cd NTS
+%patch0 -p1 -b .upstream
+
 # Check upstream version (often broken)
 extver=$(sed -n '/#define PHP_YAML_VERSION/{s/.* "//;s/".*$//;p}' php_yaml.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -188,7 +193,7 @@ cd NTS
 TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
-REPORT_EXIT_STATUS=0 \
+REPORT_EXIT_STATUS=1 \
 %{__php} -n run-tests.php --show-diff
 
 %if %{with_zts}
@@ -202,7 +207,7 @@ cd ../ZTS
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
-REPORT_EXIT_STATUS=0 \
+REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php --show-diff
 
 %endif
@@ -246,6 +251,9 @@ fi
 
 
 %changelog
+* Sat Oct 17 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.2.RC2
+- add uptream patches, fix segfault and test suite
+
 * Sat Oct 17 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.1.RC2
 - update to 2.0.0RC2 for PHP 7
 - 2 failed tests, so ignore test suite results for now
