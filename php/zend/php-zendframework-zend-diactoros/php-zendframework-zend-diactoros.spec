@@ -12,8 +12,9 @@
 
 %global github_owner     zendframework
 %global github_name      zend-diactoros
-%global github_version   1.1.3
-%global github_commit    e2f5c12916c74da384058d0dfbc7fbc0b03d1181
+%global github_version   1.1.4
+%global github_commit    3f0ce6c0ba2106e018fb514a9f09dbb91eb6bfd0
+%global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  zendframework
 %global composer_project zend-diactoros
@@ -40,8 +41,8 @@ URL:           https://github.com/%{github_owner}/%{github_name}
 
 # GitHub export does not include tests.
 # Run php-zendframework-zend-diactoros-get-source.sh to create full source.
-Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
-Source1:       %{name}-get-source.sh
+Source0:       %{name}-%{github_version}-%{github_short}.tgz
+Source1:       makesrc.sh
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -169,6 +170,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct 18 2015 Remi Collet <remi@remirepo.net> - 1.1.4-1
+- update to 1.1.4
+
 * Tue Aug 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.3-1
 - Updated to 1.1.3 (RHBZ #1252195)
 - Updated autoloader to load dependencies after self registration
