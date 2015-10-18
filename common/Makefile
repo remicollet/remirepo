@@ -91,6 +91,15 @@ rpmdiff:
 devsrc:
 	spectool -g -S $(NAME)-dev.spec
 
+php7src:
+	spectool -g -S $(NAME)-php7.spec
+
+php7build:
+	time rpmbuild $(RPMDEFINES) --define "scl php70" --without zts -bb $(NAME)-php7.spec
+
+php7srpm:
+	rpmbuild $(RPMDEFINES) $(SRCDEFINES) -bs $(NAME)-php7.spec
+
 src:
 	spectool -g -S $(NAME).spec
 
