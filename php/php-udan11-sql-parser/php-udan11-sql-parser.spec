@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    1b2988f296611f7294593fd1fff07c70ac514e2a
+%global gh_commit    42c34ddd1fee261da43331e855c80bc432d66247
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     udan11
 #global gh_date      20150820
@@ -15,12 +15,9 @@
 %global psr0         SqlParser
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.0.0
-Release:        2%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
+Version:        3.0.3
+Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A validating SQL lexer and parser with a focus on MySQL dialect
-
-# https://github.com/udan11/sql-parser/commit/1415469b34b1fc33189e2c801302597b5b50f704
-Patch0:         %{gh_project}-upstream.patch
 
 Group:          Development/Libraries
 License:        GPLv2+
@@ -70,8 +67,6 @@ To use this library, you just have to add, in your project:
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-%patch0 -p1
-
 
 %build
 : generate an simple autoloader
@@ -114,6 +109,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 19 2015 Remi Collet <remi@fedoraproject.org> - 3.0.3-1
+- update to 3.0.3 (for upcoming phpMyAdmin 4.5.1)
+
 * Wed Sep 23 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
 - upstream patch for phpMyAdmin 4.5.0.2
 
