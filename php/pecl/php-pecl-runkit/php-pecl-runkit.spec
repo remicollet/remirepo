@@ -24,9 +24,9 @@
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
 
-%global gh_owner    zenovich
-%global gh_commit   80160a2cf94b0377924a7d08f9318bef0c225214
-%global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
+#global gh_owner    zenovich
+#global gh_commit   80160a2cf94b0377924a7d08f9318bef0c225214
+#global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global pecl_name   runkit
 %global with_zts    0%{?__ztsphp:1}
 %if "%{php_version}" < "5.6"
@@ -39,7 +39,7 @@
 Summary:          Mangle with user defined functions and classes
 Name:             %{?sub_prefix}php-pecl-%{pecl_name}
 Version:          1.0.4
-Release:          1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:          2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:          PHP
 Group:            Development/Libraries
 # URL:            http://pecl.php.net/package/runkit/
@@ -64,11 +64,6 @@ Provides:         %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:         %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:         %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:         %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
-# Virtual provides for new channel (temporary ?)
-Provides:         %{?scl_prefix}php-zenovich-%{pecl_name} = %{version}
-Provides:         %{?scl_prefix}php-zenovich-%{pecl_name}%{?_isa} = %{version}
-Provides:         %{?scl_prefix}php-pecl(%{channel}/%{pecl_name}) = %{version}
-Provides:         %{?scl_prefix}php-pecl(%{channel}/%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -106,12 +101,15 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 
 %prep
+%if 0%{?gh_short:1}
 %setup -q -c
-
 mv runkit-%{gh_commit} NTS
 mv NTS/package.xml .
-
 sed -e '/<channel>/s:%{channel}:pecl.php.net:' -i package.xml
+%else
+%setup -q -c
+mv runkit-%{version} NTS
+%endif
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' -i package.xml
@@ -180,6 +178,9 @@ done
 
 
 %check
+# See https://github.com/zenovich/runkit/pull/93
+rm ?TS/tests/runkit_fpm_internal_function_restore.phpt
+
 # Minimal load test
 %{__php} --no-php-ini \
     --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
@@ -244,6 +245,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 19 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-2
+- switch to pecl sources
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
 - update to 1.0.4
 - drop runtime dependency on pear, new scriptlets
