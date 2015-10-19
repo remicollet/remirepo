@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9dd41835831e430f10f5063225a8e543d0d99364
+%global gh_commit    3e71925b7641ff3637980f11a6b6cd2a252506af
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.5.4
+Version:        1.6.2
 Release:        1%{?dist}
 Summary:        PHP library to manipulate various color representations
 
@@ -28,7 +28,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 # For tests
-BuildRequires:  %{_bindir}/phpunit
+BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php(language) >= 5.3.3
 Requires:       php-pcre
 %endif
@@ -106,6 +106,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 19 2015 Remi Collet <remi@fedoraproject.org> - 1.6.2-1
+- update to 1.6.2
+
 * Fri Sep 25 2015 Remi Collet <remi@fedoraproject.org> - 1.5.4-1
 - update to 1.5.4 (no change)
 
