@@ -10,3 +10,15 @@
        ;;
      static)
        PHP_EMBED_TYPE=static
+diff -up php-5.5.30/scripts/php-config.in.old php-5.5.30/scripts/php-config.in
+--- php-5.5.30/scripts/php-config.in.old	2015-10-19 15:17:31.944747715 +0200
++++ php-5.5.30/scripts/php-config.in	2015-10-19 15:17:58.278858083 +0200
+@@ -18,7 +18,7 @@ exe_extension="@EXEEXT@"
+ php_cli_binary=NONE
+ php_cgi_binary=NONE
+ configure_options="@CONFIGURE_OPTIONS@"
+-php_sapis="@PHP_INSTALLED_SAPIS@"
++php_sapis="apache2handler embed fpm @PHP_INSTALLED_SAPIS@"
+ 
+ # Set php_cli_binary and php_cgi_binary if available
+ for sapi in $php_sapis; do

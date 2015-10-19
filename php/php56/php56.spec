@@ -189,7 +189,7 @@ Source99: php-fpm.init
 
 # Build fixes
 Patch5: php-5.6.3-includedir.patch
-Patch6: php-5.2.4-embed.patch
+Patch6: php-5.6.3-embed.patch
 Patch7: php-5.3.0-recode.patch
 Patch8: php-5.6.3-libdb.patch
 
