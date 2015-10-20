@@ -78,7 +78,7 @@ Latte speaks your language: it has intuitive syntax and helps you to build
 better websites easily.
 
 To use this library, you just have to add, in your project:
-  require_once '%{php_home}/%{ns_vendor}/autoload.php';';
+  require_once '%{php_home}/%{ns_vendor}/autoload.php';
 
 
 %prep
