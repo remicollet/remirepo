@@ -86,6 +86,9 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 %description
 Nette Utility Classes.
 
+To use this library, you just have to add, in your project:
+  require_once '%{php_home}/%{ns_vendor}/Utils/autoload.php';';
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
@@ -93,7 +96,7 @@ Nette Utility Classes.
 
 %build
 : Generate a classmap autoloader
-phpab --output src/utils-autoload.php src
+phpab --output src/Utils/autoload.php src
 
 
 %install
@@ -118,7 +121,7 @@ mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/Tester/autoload.php';
-require_once '%{buildroot}%{php_home}/%{ns_vendor}/utils-autoload.php';
+require_once '%{buildroot}%{php_home}/%{ns_vendor}/Utils/autoload.php';
 EOF
 
 : Run test suite in sources tree
@@ -138,7 +141,9 @@ rm -rf %{buildroot}
 %license license.md
 %doc readme.md contributing.md
 %doc composer.json
-%{php_home}/%{ns_vendor}
+%dir %{php_home}/%{ns_vendor}
+     %{php_home}/%{ns_vendor}/Utils
+     %{php_home}/%{ns_vendor}/Iterators
 
 
 %changelog
