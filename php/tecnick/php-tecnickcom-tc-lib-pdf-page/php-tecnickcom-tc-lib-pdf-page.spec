@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    6cead617c270d4cbed79141f87e0dba5498c1e68
+%global gh_commit    c19b4f8dc4b363fe4d64b0aa1214b1c962e3c019
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.1.5
+Version:        1.1.7
 Release:        1%{?dist}
 Summary:        PHP library containing PDF page formats and definitions
 
@@ -28,7 +28,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 # For tests
-BuildRequires:  %{_bindir}/phpunit
+BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php(language) >= 5.3.3
 %endif
 
@@ -100,6 +100,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 1.1.7-1
+- update to 1.1.7 (no change)
+
 * Fri Sep 25 2015 Remi Collet <remi@fedoraproject.org> - 1.1.5-1
 - update to 1.1.5 (no change)
 
