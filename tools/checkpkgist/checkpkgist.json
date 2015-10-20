@@ -18,5 +18,6 @@
     "nette\/utils": "php-nette-utils",
     "nette\/neon": "php-nette-neon",
     "nette\/php-generator": "php-nette-php-generator",
+    "latte\/latte": "php-latte",
     "theseer\/fxsl": "php-theseer-fxsl"
 }
