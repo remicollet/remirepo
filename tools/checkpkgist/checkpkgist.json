@@ -15,10 +15,11 @@
     "nette\/caching": "php-nette-caching",
     "nette\/di": "php-nette-di",
     "nette\/finder": "php-nette-finder",
-    "nette\/tester": "php-nette-tester",
-    "nette\/utils": "php-nette-utils",
     "nette\/neon": "php-nette-neon",
     "nette\/php-generator": "php-nette-php-generator",
+    "nette\/reflection": "php-nette-reflection",
+    "nette\/tester": "php-nette-tester",
+    "nette\/utils": "php-nette-utils",
     "latte\/latte": "php-latte",
     "theseer\/fxsl": "php-theseer-fxsl"
 }
