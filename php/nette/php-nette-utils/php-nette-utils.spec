@@ -11,6 +11,7 @@
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
 %global gh_project   utils
+%global ns_vendor    Nette
 %global php_home     %{_datadir}/php
 %global with_tests   0%{!?_without_tests:1}
 
@@ -97,8 +98,8 @@ phpab --output src/utils-autoload.php src
 
 %install
 rm -rf       %{buildroot}
-mkdir -p     %{buildroot}%{php_home}/Nette
-cp -pr src/* %{buildroot}%{php_home}/Nette/
+mkdir -p     %{buildroot}%{php_home}/%{ns_vendor}
+cp -pr src/* %{buildroot}%{php_home}/%{ns_vendor}/
 
 
 %check
@@ -117,7 +118,7 @@ mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/Tester/autoload.php';
-require_once '%{buildroot}%{php_home}/Nette/utils-autoload.php';
+require_once '%{buildroot}%{php_home}/%{ns_vendor}/utils-autoload.php';
 EOF
 
 : Run test suite in sources tree
@@ -137,7 +138,7 @@ rm -rf %{buildroot}
 %license license.md
 %doc readme.md contributing.md
 %doc composer.json
-%{php_home}/Nette
+%{php_home}/%{ns_vendor}
 
 
 %changelog
