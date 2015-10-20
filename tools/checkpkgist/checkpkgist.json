@@ -14,6 +14,7 @@
     "jasig\/phpcas": "php-pear-CAS",
     "nette\/tester": "php-nette-tester",
     "nette\/utils": "php-nette-utils",
+    "nette\/neon": "php-nette-neon",
     "nette\/php-generator": "php-nette-php-generator",
     "theseer\/fxsl": "php-theseer-fxsl"
 }

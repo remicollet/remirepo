@@ -25,7 +25,7 @@ Summary:        Nette PHP Generator
 Group:          Development/Libraries
 License:        BSD or GPLv2 or GPLv3
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
+Source0:        %{name}-%{version}-%{gh_short}.tgz
 # pull a git snapshot to get test sutie
 Source1:        makesrc.sh
 
