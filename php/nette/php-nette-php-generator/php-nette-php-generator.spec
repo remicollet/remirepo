@@ -58,6 +58,9 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 %description
 Generate PHP code with a simple programmatical API.
 
+To use this library, you just have to add, in your project:
+  require_once '%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php';
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
@@ -65,10 +68,11 @@ Generate PHP code with a simple programmatical API.
 
 %build
 : Generate a classmap autoloader
-phpab --output src/%{gh_project}-autoload.php src
-cat << 'EOF' | tee -a src/%{gh_project}-autoload.php
+phpab --output src/%{ns_project}/autoload.php src
+
+cat << 'EOF' | tee -a src/%{ns_project}/autoload.php
 // Dependencies
-require_once '%{php_home}/%{ns_vendor}/utils-autoload.php';
+require_once '%{php_home}/%{ns_vendor}/Utils/autoload.php';
 EOF
 
 
@@ -89,7 +93,7 @@ mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/Tester/autoload.php';
-require_once '%{buildroot}%{php_home}/%{ns_vendor}/%{gh_project}-autoload.php';
+require_once '%{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php';
 EOF
 
 : Run test suite in sources tree
@@ -109,7 +113,6 @@ rm -rf %{buildroot}
 %license license.md
 %doc readme.md contributing.md
 %doc composer.json
-%{php_home}/%{ns_vendor}/%{gh_project}-autoload.php
 %{php_home}/%{ns_vendor}/%{ns_project}
 
 
