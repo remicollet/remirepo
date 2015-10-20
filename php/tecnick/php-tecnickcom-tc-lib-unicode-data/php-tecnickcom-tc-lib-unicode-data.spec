@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    fa31b93318aabe158e2dbdb49d418107161361ba
+%global gh_commit    489f152fcd6676e2f596c58a00e483a4955cd041
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.4.6
+Version:        1.4.7
 Release:        1%{?dist}
 Summary:        PHP library containing UTF-8 font definitions
 
@@ -28,7 +28,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 # For tests
-BuildRequires:  %{_bindir}/phpunit
+BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php(language) >= 5.3.3
 %endif
 
@@ -102,6 +102,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 1.4.7-1
+- update to 1.4.7 (no change)
+
 * Fri Sep 25 2015 Remi Collet <remi@fedoraproject.org> - 1.4.6-1
 - update to 1.4.6 (no change)
 
