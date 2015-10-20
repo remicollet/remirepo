@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    22ef8c222fa27b4d1a58c5436bdb698449ff4e0f
+%global gh_commit    03e7abeca8911ebae287b2dfc2a4889d99e9f67f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.1.6
+Version:        2.1.7
 Release:        1%{?dist}
 Summary:        PHP library to parse PDF documents
 
@@ -28,7 +28,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 # For tests
-BuildRequires:  %{_bindir}/phpunit
+BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  php-composer(%{c_vendor}/tc-lib-pdf-filter)
 BuildRequires:  php-pcre
@@ -109,6 +109,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 2.1.7-1
+- update to 2.1.7 (no change)
+
 * Fri Sep 25 2015 Remi Collet <remi@fedoraproject.org> - 2.1.6-1
 - update to 2.1.6 (no change)
 
