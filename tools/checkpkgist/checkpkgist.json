@@ -23,5 +23,6 @@
     "nette\/utils": "php-nette-utils",
     "latte\/latte": "php-latte",
     "tracy\/tracy": "php-tracy",
+    "kukulich\/fshl": "php-kukulich-fshl",
     "theseer\/fxsl": "php-theseer-fxsl"
 }
