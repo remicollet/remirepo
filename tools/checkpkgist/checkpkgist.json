@@ -13,6 +13,7 @@
     "tecnickcom\/tc-lib-unicode-data": "php-tecnickcom-tc-lib-unicode-data",
     "jasig\/phpcas": "php-pear-CAS",
     "nette\/di": "php-nette-di",
+    "nette\/finder": "php-nette-finder",
     "nette\/tester": "php-nette-tester",
     "nette\/utils": "php-nette-utils",
     "nette\/neon": "php-nette-neon",
