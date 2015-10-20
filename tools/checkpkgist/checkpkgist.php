@@ -129,7 +129,9 @@ function run($name, $rpm) {
 			else if (version_compare($pkver, $rpmver, 'eq') && $verb && !$display) {
 				printf(" %-40s %15s %15s %15s\n", $rpm, $rpmver, $pkver, $date->format("Y-m-d"));
 				$display = true;
-				break;
+				if (!$verb) {
+					break;
+				}
 			}
 		}
 		if ($verb && !$display) {

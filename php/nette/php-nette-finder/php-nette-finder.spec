@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    6bd3cd1ffaf3fecb424ff02e8b716228d1f86c9d
+%global gh_commit    38f803a03f4cddf352e28af70294c71f7026e516
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -18,7 +18,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.2.2
+Version:        2.3.1
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Finder: Files Searching
@@ -49,7 +49,7 @@ BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.4
 Requires:       php(language) >= 5.3.1
 Requires:       php-composer(%{gh_owner}/utils) >= 2.2
 Requires:       php-composer(%{gh_owner}/utils) <  3
-# from phpcompatinfo report for version 2.3.4
+# from phpcompatinfo report for version 2.3.1
 Requires:       php-pcre
 Requires:       php-spl
 
@@ -118,5 +118,5 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 2.3.4-1
+* Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 2.3.1-1
 - initial package
