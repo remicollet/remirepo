@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b439a37a8879d09a2e557c628816f1c2ff68585c
+%global gh_commit    b676da28cc5f7d3e611824173fc237deaa69cfc6
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.4.6
+Version:        1.4.7
 Release:        1%{?dist}
 Summary:        PHP library to generate linear and bidimensional barcodes
 
@@ -28,7 +28,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 # For tests
-BuildRequires:  %{_bindir}/phpunit
+BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  php-composer(%{c_vendor}/tc-lib-color)
 BuildRequires:  php-bcmath
@@ -122,6 +122,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 1.4.7-1
+- update to 1.4.7 (no change)
+
 * Fri Sep 25 2015 Remi Collet <remi@fedoraproject.org> - 1.4.6-1
 - update to 1.4.6 (no change)
 
