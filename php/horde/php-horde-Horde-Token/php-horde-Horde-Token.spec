@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Token
-Version:        2.0.6
+Version:        2.0.7
 Release:        1%{?dist}
 Summary:        Horde Token API
 
@@ -134,6 +134,9 @@ fi
 
 
 %changelog
+* Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
+- Update to 2.0.7
+
 * Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
 - Update to 2.0.6
 - add provides php-composer(horde/horde-token)
