@@ -10,10 +10,10 @@
 %global pear_name    mnemo
 %global pear_channel pear.horde.org
 # All tests are "ignored"
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests   0%{?_with_tests:1}
 
 Name:           php-horde-mnemo
-Version:        4.2.7
+Version:        4.2.8
 Release:        1%{?dist}
 Summary:        A web based notes manager
 
@@ -43,7 +43,7 @@ Requires:       php(language) >= 5.3.0
 Requires:       php-gettext
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
-Requires:       php-pear(%{pear_channel}/content) >= 2.0.3
+Requires:       php-pear(%{pear_channel}/content) >= 2.0.5
 Requires:       php-pear(%{pear_channel}/content) <  3.0.0
 Requires:       php-pear(%{pear_channel}/horde) >= 5.0.0
 Requires:       php-pear(%{pear_channel}/horde) <  6.0.0
@@ -205,6 +205,9 @@ fi
 
 
 %changelog
+* Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 4.2.8-1
+- Update to 4.2.8
+
 * Sat Aug 01 2015 Remi Collet <remi@fedoraproject.org> - 4.2.7-1
 - Update to 4.2.7
 
