@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #158 swoole version 1.7.19 ] {
+Extension [ <persistent> extension #160 swoole version 1.7.20 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -39,10 +39,10 @@ Extension [ <persistent> extension #158 swoole version 1.7.19 ] {
     Constant [ integer SWOOLE_SOCK_ASYNC ] { 1 }
     Constant [ integer SWOOLE_SYNC ] { 2048 }
     Constant [ integer SWOOLE_ASYNC ] { 1024 }
-    Constant [ integer SWOOLE_KEEP ] { 512 }
+    Constant [ integer SWOOLE_KEEP ] { 4096 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.7.19 }
+    Constant [ string SWOOLE_VERSION ] { 1.7.20 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_GCC ] { 1 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 2 }
@@ -298,7 +298,7 @@ Extension [ <persistent> extension #158 swoole version 1.7.19 ] {
       - Properties [0] {
       }
 
-      - Methods [32] {
+      - Methods [34] {
         Method [ <internal:swoole, ctor> public method __construct ] {
 
           - Parameters [4] {
@@ -463,6 +463,22 @@ Extension [ <persistent> extension #158 swoole version 1.7.19 ] {
         }
 
         Method [ <internal:swoole> public method connection_list ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $start_fd ]
+            Parameter #1 [ <required> $find_count ]
+          }
+        }
+
+        Method [ <internal:swoole> public method getClientInfo ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $fd ]
+            Parameter #1 [ <required> $from_id ]
+          }
+        }
+
+        Method [ <internal:swoole> public method getClientList ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $start_fd ]
@@ -695,17 +711,10 @@ Extension [ <persistent> extension #158 swoole version 1.7.19 ] {
 
     Class [ <internal:swoole> <iterateable> class swoole_table implements Iterator, Traversable, Countable ] {
 
-      - Constants [10] {
+      - Constants [3] {
         Constant [ integer TYPE_INT ] { 1 }
         Constant [ integer TYPE_STRING ] { 7 }
         Constant [ integer TYPE_FLOAT ] { 6 }
-        Constant [ integer FIND_GT ] { 3 }
-        Constant [ integer FIND_LT ] { 4 }
-        Constant [ integer FIND_EQ ] { 1 }
-        Constant [ integer FIND_NEQ ] { 2 }
-        Constant [ integer FIND_LEFTLIKE ] { 5 }
-        Constant [ integer FIND_RIGHTLIKE ] { 6 }
-        Constant [ integer FIND_LIKE ] { 7 }
       }
 
       - Static properties [0] {
@@ -717,15 +726,12 @@ Extension [ <persistent> extension #158 swoole version 1.7.19 ] {
       - Properties [0] {
       }
 
-      - Methods [18] {
+      - Methods [17] {
         Method [ <internal:swoole, ctor> public method __construct ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $table_size ]
           }
-        }
-
-        Method [ <internal:swoole, dtor> public method __destruct ] {
         }
 
         Method [ <internal:swoole> public method column ] {
@@ -928,7 +934,7 @@ Extension [ <persistent> extension #158 swoole version 1.7.19 ] {
         Property [ <default> private $global ]
       }
 
-      - Methods [33] {
+      - Methods [35] {
         Method [ <internal:swoole, overwrites swoole_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
@@ -1100,6 +1106,22 @@ Extension [ <persistent> extension #158 swoole version 1.7.19 ] {
           }
         }
 
+        Method [ <internal:swoole, inherits swoole_server> public method getClientInfo ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $fd ]
+            Parameter #1 [ <required> $from_id ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method getClientList ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $start_fd ]
+            Parameter #1 [ <required> $find_count ]
+          }
+        }
+
         Method [ <internal:swoole, inherits swoole_server> public method addtimer ] {
 
           - Parameters [1] {
@@ -1258,7 +1280,7 @@ Extension [ <persistent> extension #158 swoole version 1.7.19 ] {
       - Properties [0] {
       }
 
-      - Methods [34] {
+      - Methods [36] {
         Method [ <internal:swoole, overwrites swoole_http_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
@@ -1433,6 +1455,22 @@ Extension [ <persistent> extension #158 swoole version 1.7.19 ] {
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method connection_list ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $start_fd ]
+            Parameter #1 [ <required> $find_count ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method getClientInfo ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $fd ]
+            Parameter #1 [ <required> $from_id ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method getClientList ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $start_fd ]
