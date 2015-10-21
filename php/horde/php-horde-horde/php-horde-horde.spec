@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-horde
-Version:        5.2.7
+Version:        5.2.8
 Release:        1%{?dist}
 Summary:        Horde Application Framework
 
@@ -126,7 +126,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Feed) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Feed) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_OpenXchange) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_OpenXchange) <  2.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Service_Weather) >= 2.1.0
+Requires:       php-pear(%{pear_channel}/Horde_Service_Weather) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Service_Weather) <  3.0.0
 # Optional but implicitly required
 #               Horde_Db, Horde_Oauth, Horde_SyncMl
@@ -311,6 +311,9 @@ fi
 
 
 %changelog
+* Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 5.2.8-1
+- Update to 5.2.8
+
 * Sat Aug 01 2015 Remi Collet <remi@fedoraproject.org> - 5.2.7-1
 - Update to 5.2.7
 - raise dependency on Horde_Perms 2.1.5
