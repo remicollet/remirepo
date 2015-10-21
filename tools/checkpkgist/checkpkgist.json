@@ -24,5 +24,9 @@
     "latte\/latte": "php-latte",
     "tracy\/tracy": "php-tracy",
     "kukulich\/fshl": "php-kukulich-fshl",
+    "herrera-io\/json": "php-herrera-io-json",
+    "herrera-io\/phar-update": "php-herrera-io-phar-update",
+    "herrera-io\/phpunit-test-case": "php-herrera-io-phpunit-test-case",
+    "herrera-io\/version": "php-herrera-io-version",
     "theseer\/fxsl": "php-theseer-fxsl"
 }
