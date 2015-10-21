@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Service-Weather
-Version:        2.2.0
+Version:        2.3.0
 Release:        1%{?dist}
 Summary:        Horde Weather Provider
 
@@ -19,8 +19,6 @@ Group:          Development/Libraries
 License:        BSD
 URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-
-Patch0:         %{pear_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -73,14 +71,12 @@ WorldWeatherOnline, and Google Weather.
 %setup -q -c
 
 cd %{pear_name}-%{version}
-%patch0 -p3 -b .upstream
 
 # Don't install .po and .pot files
 # Remove checksum for .mo, as we regenerate them
 sed -e '/%{pear_name}.po/d' \
     -e '/Horde_Other.po/d' \
     -e '/%{pear_name}.mo/s/md5sum="[^"]*"//' \
-    -e '/Wwov2Test.php/s/md5sum="[^"]*"//' \
     ../package.xml >%{name}.xml
 touch -r ../package.xml %{name}.xml
 
@@ -150,6 +146,9 @@ fi
 
 
 %changelog
+* Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
+- Update to 2.3.0
+
 * Sun Aug 30 2015 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - Update to 2.2.0
 
