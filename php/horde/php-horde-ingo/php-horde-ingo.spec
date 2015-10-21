@@ -9,6 +9,7 @@
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    ingo
 %global pear_channel pear.horde.org
+%global with_tests   0%{!?_without_tests:1}
 
 Name:           php-horde-ingo
 Version:        3.2.7
@@ -27,8 +28,10 @@ BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
+%if %{with_tests}
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Core) >= 2.12.0
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -150,8 +153,15 @@ done | tee ../%{pear_name}.lang
 
 
 %check
+%if %{with_tests}
 cd %{pear_name}-%{version}/test/Ingo
-phpunit .
+if phpunit --atleast-version 4
+then phpunit .
+else : PHPUnit is too old
+fi
+%else
+: tests disabled
+%endif
 
 
 %clean

@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-turba
-Version:        4.2.8
+Version:        4.2.9
 Release:        1%{?dist}
 Summary:        A web based address book
 
@@ -226,6 +226,9 @@ fi
 
 
 %changelog
+* Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 4.2.9-1
+- Update to 4.2.9
+
 * Sat Aug 01 2015 Remi Collet <remi@fedoraproject.org> - 4.2.8-1
 - Update to 4.2.8
 
