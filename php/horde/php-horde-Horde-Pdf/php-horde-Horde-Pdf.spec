@@ -12,7 +12,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Pdf
-Version:        2.0.5
+Version:        2.0.6
 Release:        1%{?dist}
 Summary:        Horde PDF library
 
@@ -111,6 +111,9 @@ fi
 
 
 %changelog
+* Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
+- Update to 2.0.6
+
 * Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5
 - add dependency on Horde_Util
