@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-nag
-Version:        4.2.5
+Version:        4.2.6
 Release:        1%{?dist}
 Summary:        A web based task list manager
 
@@ -41,7 +41,7 @@ Requires:       php-gettext
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/content) >= 2.0.3
+Requires:       php-pear(%{pear_channel}/content) >= 2.0.5
 Requires:       php-pear(%{pear_channel}/content) <  3.0.0
 Requires:       php-pear(%{pear_channel}/horde) >= 5.0.0
 Requires:       php-pear(%{pear_channel}/horde) <  6.0.0
@@ -214,6 +214,9 @@ fi
 
 
 %changelog
+* Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 4.2.6-1
+- Update to 4.2.6
+
 * Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 4.2.5-1
 - Update to 4.2.5
 
