@@ -15,6 +15,8 @@ License:        ISC
 URL:            http://libsodium.org/
 Source0:        http://download.libsodium.org/libsodium/releases/%{libname}-%{version}.tar.gz
 
+Patch0:         %{libname}-upstream.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 
@@ -55,6 +57,9 @@ This package can't be installed with system %{libname}-devel.
 
 %prep
 %setup -q -n %{libname}-%{version}
+
+%patch0 -p1 -b .upstream
+
 
 %build
 %configure --disable-static --disable-silent-rules
@@ -100,6 +105,8 @@ rm -rf %{buildroot}
 %changelog
 * Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
 - update to 1.0.4
+- add upstream patch for segfault on RHEL-6 i386
+  https://github.com/jedisct1/libsodium/issues/307
 
 * Sat May 16 2015 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - update to 1.0.3
