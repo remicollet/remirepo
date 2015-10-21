@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-SessionHandler
-Version:        2.2.4
+Version:        2.2.5
 Release:        1%{?dist}
 Summary:        Horde Session Handler API
 
@@ -45,6 +45,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Db) <  3.0.0
 # Optional and implicitly required: Horde_HashTable, Horde_Log, Horde_Mongo
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/horde-sessionhandler) = %{version}
 
 
 %description
@@ -112,6 +113,10 @@ fi
 
 
 %changelog
+* Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 2.2.5-1
+- Update to 2.2.5
+- add provides php-composer(horde/horde-sessionhandler)
+
 * Tue Mar 04 2014 Remi Collet <remi@fedoraproject.org> - 2.2.4-1
 - Update to 2.2.4
 
