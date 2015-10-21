@@ -13,7 +13,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-passwd
-Version:        5.0.3
+Version:        5.0.4
 Release:        1%{?dist}
 Summary:        Horde password changing application
 
@@ -183,6 +183,9 @@ fi
 
 
 %changelog
+* Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 5.0.4-1
+- Update to 5.0.4
+
 * Sat Aug 01 2015 Remi Collet <remi@fedoraproject.org> - 5.0.3-1
 - Update to 5.0.3
 
