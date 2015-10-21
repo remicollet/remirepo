@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-kronolith
-Version:        4.2.9
+Version:        4.2.10
 Release:        1%{?dist}
 Summary:        A web based calendar
 
@@ -46,7 +46,7 @@ Requires:       php-pear(Date)
 Requires:       php-pear(Date_Holidays) >= 0.21.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
-Requires:       php-pear(%{pear_channel}/content) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/content) >= 2.0.5
 Requires:       php-pear(%{pear_channel}/content) <  3.0.0
 Requires:       php-pear(%{pear_channel}/horde) >= 5.0.0
 Requires:       php-pear(%{pear_channel}/horde) <  6.0.0
@@ -54,7 +54,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Auth) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Auth) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Autoloader) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.5.0
+Requires:       php-pear(%{pear_channel}/Horde_Core) >= 2.21.0
 Requires:       php-pear(%{pear_channel}/Horde_Core) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Data) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Data) <  3.0.0
@@ -257,6 +257,9 @@ fi
 
 
 %changelog
+* Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 4.2.10-1
+- Update to 4.2.10
+
 * Sat Aug 01 2015 Remi Collet <remi@fedoraproject.org> - 4.2.9-1
 - Update to 4.2.9
 
