@@ -9,15 +9,10 @@
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    content
 %global pear_channel pear.horde.org
-%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
-
-# TODO
-# Tests are not ready
-# config: provides one ?
-# "horde-content" sub package with apache stuff
+%global with_tests   0%{!?_without_tests:1}
 
 Name:           php-horde-content
-Version:        2.0.4
+Version:        2.0.5
 Release:        1%{?dist}
 Summary:        Tagging application
 
@@ -70,6 +65,7 @@ Requires:       php-pcre
 Requires:       php-spl
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(horde/content) = %{version}
 
 
 %description
@@ -119,10 +115,8 @@ ln -s %{_sysconfdir}/horde/%{pear_name} %{buildroot}%{pear_hordedir}/%{pear_name
 
 %check
 %if %{with_tests}
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/Content
 phpunit \
-    --include-path=$src/lib \
     -d date.timezone=Europe/Paris \
     .
 %else
@@ -163,6 +157,10 @@ fi
 
 
 %changelog
+* Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- Update to 2.0.5
+- add provides php-composer(horde/content)
+
 * Tue Jun 03 2014 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4
 - run test suite during build
