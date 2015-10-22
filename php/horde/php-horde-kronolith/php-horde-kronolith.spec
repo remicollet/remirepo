@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-kronolith
-Version:        4.2.10
+Version:        4.2.11
 Release:        1%{?dist}
 Summary:        A web based calendar
 
@@ -29,6 +29,7 @@ BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Core) >= 2.5.0
+BuildRequires:  php-pear(%{pear_channel}/content) >= 2.0.5
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -210,8 +211,6 @@ cd %{pear_name}-%{version}/test/Kronolith
 # Timezone issue (need investigation, fail in mock only)
 rm Integration/ToIcalendarTest.php
 rm Integration/FromIcalendarTest.php
-# Ignore, autoloader issue with Content_Types_Manager (content 2.0.5)
-rm Integration/Driver/Sql/Pdo/SqliteTest.php
 
 phpunit .
 
@@ -259,6 +258,9 @@ fi
 
 
 %changelog
+* Thu Oct 22 2015 Remi Collet <remi@fedoraproject.org> - 4.2.11-1
+- Update to 4.2.11
+
 * Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 4.2.10-1
 - Update to 4.2.10
 
