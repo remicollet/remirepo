@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-turba
-Version:        4.2.9
+Version:        4.2.10
 Release:        1%{?dist}
 Summary:        A web based address book
 
@@ -29,6 +29,7 @@ BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Core) >= 2.12.0
+BuildRequires:  php-pear(%{pear_channel}/content) >= 2.0.5
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -180,8 +181,6 @@ cd %{pear_name}-%{version}/test/Turba
 # disable as this test use Horde_ActiveSync (non-free)
 sed -e 's/function testDuplicateDetectionFromAsWithNoEmail/function SKIP_testDuplicateDetectionFromAsWithNoEmail/' \
     -i Unit/Driver/Base.php
-# Ignore, autoloader issue with Content_Types_Manager (content 2.0.5)
-rm Unit/Driver/Sql/Pdo/SqliteTest.php
 
 phpunit .
 
@@ -228,6 +227,9 @@ fi
 
 
 %changelog
+* Thu Oct 22 2015 Remi Collet <remi@fedoraproject.org> - 4.2.10-1
+- Update to 4.2.10
+
 * Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 4.2.9-1
 - Update to 4.2.9
 
