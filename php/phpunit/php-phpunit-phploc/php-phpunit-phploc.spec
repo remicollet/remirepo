@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    6cdf01336c06d20825831fe8cee70764fe373585
+%global gh_commit    50e063abd41833b3a5d29a2e8fbef5859ac28bdc
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phploc
@@ -17,7 +17,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-phploc
-Version:        2.1.4
+Version:        2.1.5
 Release:        1%{?dist}
 Summary:        A tool for quickly measuring the size of a PHP project
 
@@ -26,18 +26,15 @@ License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
-# Autoload template
-Source1:        autoload.php.in
-
 # Fix for RPM, use autoload
 Patch0:         %{gh_project}-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php-composer(theseer/autoload)
 %if %{with_tests}
-BuildRequires:  %{_bindir}/phpunit
+BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php-composer(sebastian/finder-facade) >= 1.1
 BuildRequires:  php-composer(sebastian/finder-facade) <  2
 BuildRequires:  php-composer(sebastian/git) >= 2.0
@@ -94,10 +91,19 @@ need to get a quick understanding of a project's size.
 
 
 %build
-phpab \
+%{_bindir}/phpab \
   --output   src/autoload.php \
-  --template %{SOURCE1} \
   src
+
+cat << 'EOF' | tee -a src/autoload.php
+// Dependencies
+$vendorDir = '/usr/share/php';
+require_once $vendorDir . '/SebastianBergmann/FinderFacade/autoload.php';
+require_once $vendorDir . '/SebastianBergmann/Git/autoload.php';
+require_once $vendorDir . '/SebastianBergmann/Version/autoload.php';
+require_once $vendorDir . '/TheSeer/fDOMDocument/autoload.php';
+require_once $vendorDir . '/Symfony/Component/Console/autoloader.php';
+EOF
 
 
 %install
@@ -110,7 +116,7 @@ install -D -p -m 755 phploc %{buildroot}%{_bindir}/phploc
 
 %if %{with_tests}
 %check
-phpunit \
+%{_bindir}/phpunit \
    --bootstrap %{buildroot}%{php_home}/PHPLOC/autoload.php \
    --verbose tests
 %endif
@@ -138,6 +144,10 @@ fi
 
 
 %changelog
+* Thu Oct 22 2015 Remi Collet <remi@fedoraproject.org> - 2.1.5-1
+- update to 2.1.5
+- simplify autoloader
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
 - update to 2.1.4
 
