@@ -32,7 +32,7 @@
 
 Summary:        A effective,fast,stable log extension for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.4.4
+Version:        1.4.6
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        ASL 2.0
 Group:          Development/Languages
@@ -229,6 +229,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 23 2015 Remi Collet <remi@fedoraproject.org> - 1.4.6-1
+- Update to 1.4.6
+
 * Wed Sep 23 2015 Remi Collet <remi@fedoraproject.org> - 1.4.4-1
 - Update to 1.4.4 (stable)
 

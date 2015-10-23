@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #149 SeasLog version 1.4.4 ] {
+Extension [ <persistent> extension #201 SeasLog version 1.4.6 ] {
 
   - INI {
     Entry [ seaslog.default_basepath <ALL> ]
@@ -33,8 +33,8 @@ Extension [ <persistent> extension #149 SeasLog version 1.4.4 ] {
     }
   }
 
-  - Constants [11] {
-    Constant [ string SEASLOG_VERSION ] { 1.4.4 }
+  - Constants [13] {
+    Constant [ string SEASLOG_VERSION ] { 1.4.6 }
     Constant [ string SEASLOG_AUTHOR ] { Chitao.Gao  [ neeke@php.net ] }
     Constant [ string SEASLOG_ALL ] { all }
     Constant [ string SEASLOG_DEBUG ] { debug }
@@ -45,6 +45,8 @@ Extension [ <persistent> extension #149 SeasLog version 1.4.4 ] {
     Constant [ string SEASLOG_CRITICAL ] { critical }
     Constant [ string SEASLOG_ALERT ] { alert }
     Constant [ string SEASLOG_EMERGENCY ] { emergency }
+    Constant [ integer SEASLOG_DETAIL_ORDER_ASC ] { 1 }
+    Constant [ integer SEASLOG_DETAIL_ORDER_DESC ] { 2 }
   }
 
   - Functions {
@@ -65,7 +67,7 @@ Extension [ <persistent> extension #149 SeasLog version 1.4.4 ] {
         Property [ public static $seaslog_buffer_size ]
       }
 
-      - Static methods [16] {
+      - Static methods [17] {
         Method [ <internal:SeasLog> static public method setBasePath ] {
         }
 
@@ -85,6 +87,9 @@ Extension [ <persistent> extension #149 SeasLog version 1.4.4 ] {
         }
 
         Method [ <internal:SeasLog> static public method getBuffer ] {
+        }
+
+        Method [ <internal:SeasLog> static public method flushBuffer ] {
         }
 
         Method [ <internal:SeasLog> static public method log ] {
