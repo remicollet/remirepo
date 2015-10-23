@@ -22,7 +22,7 @@
 %endif
 
 Name: phpMyAdmin
-Version: 4.5.0.2
+Version: 4.5.1
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -76,7 +76,7 @@ Requires:  php-php-gettext
 Requires:  php-tcpdf
 Requires:  php-tcpdf-dejavu-sans-fonts
 Requires:  php-composer(phpseclib/phpseclib) >= 2.0.0
-Requires:  php-composer(udan11/sql-parser)
+Requires:  php-composer(udan11/sql-parser) >= 3.0.3
 # optional and ignored php-gmp (as bcmath is enough)
 
 Provides:  phpmyadmin = %{version}-%{release}
@@ -220,6 +220,10 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Fri Sep 25 2015 Remi Collet <remi@remirepo.net> 4.5.1-1
+- update to 4.5.1 (2015-10-23, bugfix)
+- raise dependency on udan11/sql-parser >= 3.0.3
+
 * Fri Sep 25 2015 Remi Collet <remi@remirepo.net> 4.5.0.2-1
 - update to 4.5.0.2 (2015-09-25, regression fix)
 
