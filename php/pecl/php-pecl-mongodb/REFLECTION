@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #126 mongodb version 1.0.0beta2 ] {
+Extension [ <persistent> extension #126 mongodb version 1.0.0RC0 ] {
 
   - INI {
     Entry [ mongodb.debug <ALL> ]
@@ -7,7 +7,7 @@ Extension [ <persistent> extension #126 mongodb version 1.0.0beta2 ] {
   }
 
   - Constants [3] {
-    Constant [ string MONGODB_VERSION ] { 1.0.0beta2 }
+    Constant [ string MONGODB_VERSION ] { 1.0.0RC0 }
     Constant [ string MONGODB_STABILITY ] { beta }
     Constant [ string BSON_NAMESPACE ] { MongoDB\BSON }
   }
@@ -39,7 +39,7 @@ Extension [ <persistent> extension #126 mongodb version 1.0.0beta2 ] {
     }
   }
 
-  - Classes [38] {
+  - Classes [36] {
     Class [ <internal:mongodb> final class MongoDB\Driver\Command ] {
 
       - Constants [0] {
@@ -164,7 +164,7 @@ Extension [ <persistent> extension #126 mongodb version 1.0.0beta2 ] {
       - Properties [0] {
       }
 
-      - Methods [12] {
+      - Methods [9] {
         Method [ <internal:mongodb, ctor> final public method __construct ] {
 
           - Parameters [3] {
@@ -198,36 +198,6 @@ Extension [ <persistent> extension #126 mongodb version 1.0.0beta2 ] {
             Parameter #0 [ <required> $namespace ]
             Parameter #1 [ <required> MongoDB\Driver\BulkWrite $zbulk ]
             Parameter #2 [ <optional> MongoDB\Driver\WriteConcern or NULL $writeConcern ]
-          }
-        }
-
-        Method [ <internal:mongodb> final public method executeInsert ] {
-
-          - Parameters [3] {
-            Parameter #0 [ <required> $namespace ]
-            Parameter #1 [ <required> $document ]
-            Parameter #2 [ <optional> MongoDB\Driver\WriteConcern or NULL $writeConcern ]
-          }
-        }
-
-        Method [ <internal:mongodb> final public method executeUpdate ] {
-
-          - Parameters [5] {
-            Parameter #0 [ <required> $namespace ]
-            Parameter #1 [ <required> $zquery ]
-            Parameter #2 [ <required> $newObj ]
-            Parameter #3 [ <optional> array or NULL $updateOptions ]
-            Parameter #4 [ <optional> MongoDB\Driver\WriteConcern or NULL $writeConcern ]
-          }
-        }
-
-        Method [ <internal:mongodb> final public method executeDelete ] {
-
-          - Parameters [4] {
-            Parameter #0 [ <required> $namespace ]
-            Parameter #1 [ <required> $query ]
-            Parameter #2 [ <optional> array or NULL $deleteOptions ]
-            Parameter #3 [ <optional> MongoDB\Driver\WriteConcern or NULL $writeConcern ]
           }
         }
 
@@ -474,7 +444,7 @@ Extension [ <persistent> extension #126 mongodb version 1.0.0beta2 ] {
         Method [ <internal:mongodb, ctor> public method __construct ] {
 
           - Parameters [1] {
-            Parameter #0 [ <optional> $ordered ]
+            Parameter #0 [ <optional> array or NULL $options ]
           }
         }
 
@@ -660,7 +630,7 @@ Extension [ <persistent> extension #126 mongodb version 1.0.0beta2 ] {
       - Properties [0] {
       }
 
-      - Methods [13] {
+      - Methods [12] {
         Method [ <internal:mongodb, ctor> final private method __construct ] {
         }
 
@@ -689,12 +659,6 @@ Extension [ <persistent> extension #126 mongodb version 1.0.0beta2 ] {
         }
 
         Method [ <internal:mongodb> final public method getUpsertedCount ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:mongodb> final public method getInfo ] {
 
           - Parameters [0] {
           }
@@ -1095,7 +1059,7 @@ Extension [ <persistent> extension #126 mongodb version 1.0.0beta2 ] {
       }
     }
 
-    Class [ <internal:mongodb> final class MongoDB\Driver\Exception\SSLConnectionException extends MongoDB\Driver\Exception\ConnectionException implements MongoDB\Driver\Exception\Exception ] {
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\SSLConnectionException extends MongoDB\Driver\Exception\ConnectionException implements MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -1152,7 +1116,7 @@ Extension [ <persistent> extension #126 mongodb version 1.0.0beta2 ] {
       }
     }
 
-    Class [ <internal:mongodb> class MongoDB\Driver\Exception\WriteException extends MongoDB\Driver\Exception\RuntimeException implements MongoDB\Driver\Exception\Exception ] {
+    Class [ <internal:mongodb> abstract class MongoDB\Driver\Exception\WriteException extends MongoDB\Driver\Exception\RuntimeException implements MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -1173,70 +1137,6 @@ Extension [ <persistent> extension #126 mongodb version 1.0.0beta2 ] {
 
       - Methods [11] {
         Method [ <internal:mongodb> final public method getWriteResult ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
-
-          - Parameters [3] {
-            Parameter #0 [ <optional> $message ]
-            Parameter #1 [ <optional> $code ]
-            Parameter #2 [ <optional> $previous ]
-          }
-        }
-
-        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
-        }
-      }
-    }
-
-    Class [ <internal:mongodb> class MongoDB\Driver\Exception\WriteConcernException extends MongoDB\Driver\Exception\WriteException implements MongoDB\Driver\Exception\Exception ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [5] {
-        Property [ <default> protected $message ]
-        Property [ <default> protected $code ]
-        Property [ <default> protected $file ]
-        Property [ <default> protected $line ]
-        Property [ <default> protected $writeResult ]
-      }
-
-      - Methods [11] {
-        Method [ <internal:mongodb, inherits MongoDB\Driver\Exception\WriteException> final public method getWriteResult ] {
 
           - Parameters [0] {
           }
@@ -1344,71 +1244,7 @@ Extension [ <persistent> extension #126 mongodb version 1.0.0beta2 ] {
       }
     }
 
-    Class [ <internal:mongodb> final class MongoDB\Driver\Exception\DuplicateKeyException extends MongoDB\Driver\Exception\WriteException implements MongoDB\Driver\Exception\Exception ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [5] {
-        Property [ <default> protected $message ]
-        Property [ <default> protected $code ]
-        Property [ <default> protected $file ]
-        Property [ <default> protected $line ]
-        Property [ <default> protected $writeResult ]
-      }
-
-      - Methods [11] {
-        Method [ <internal:mongodb, inherits MongoDB\Driver\Exception\WriteException> final public method getWriteResult ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
-
-          - Parameters [3] {
-            Parameter #0 [ <optional> $message ]
-            Parameter #1 [ <optional> $code ]
-            Parameter #2 [ <optional> $previous ]
-          }
-        }
-
-        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
-        }
-
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
-        }
-      }
-    }
-
-    Class [ <internal:mongodb> final class MongoDB\Driver\Exception\ExecutionTimeoutException extends MongoDB\Driver\Exception\RuntimeException implements MongoDB\Driver\Exception\Exception ] {
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\ExecutionTimeoutException extends MongoDB\Driver\Exception\RuntimeException implements MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -1465,7 +1301,7 @@ Extension [ <persistent> extension #126 mongodb version 1.0.0beta2 ] {
       }
     }
 
-    Class [ <internal:mongodb> final class MongoDB\Driver\Exception\ConnectionTimeoutException extends MongoDB\Driver\Exception\ConnectionException implements MongoDB\Driver\Exception\Exception ] {
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\ConnectionTimeoutException extends MongoDB\Driver\Exception\ConnectionException implements MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -1617,7 +1453,7 @@ Extension [ <persistent> extension #126 mongodb version 1.0.0beta2 ] {
       }
     }
 
-    Class [ <internal:mongodb> class MongoDB\BSON\Binary implements MongoDB\BSON\Type ] {
+    Class [ <internal:mongodb> final class MongoDB\BSON\Binary implements MongoDB\BSON\Type ] {
 
       - Constants [7] {
         Constant [ integer TYPE_GENERIC ] { 0 }
@@ -1638,7 +1474,7 @@ Extension [ <persistent> extension #126 mongodb version 1.0.0beta2 ] {
       - Properties [0] {
       }
 
-      - Methods [3] {
+      - Methods [4] {
         Method [ <internal:mongodb, ctor> public method __construct ] {
 
           - Parameters [2] {
@@ -1658,71 +1494,13 @@ Extension [ <persistent> extension #126 mongodb version 1.0.0beta2 ] {
           - Parameters [0] {
           }
         }
-      }
-    }
 
-    Class [ <internal:mongodb> class MongoDB\BSON\Javascript implements MongoDB\BSON\Type ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [1] {
-        Method [ <internal:mongodb, ctor> final public method __construct ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $javascript ]
-            Parameter #1 [ <optional> $scope ]
-          }
+        Method [ <internal:mongodb> public method __wakeUp ] {
         }
       }
     }
 
-    Class [ <internal:mongodb> class MongoDB\BSON\MaxKey implements MongoDB\BSON\Type ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [0] {
-      }
-    }
-
-    Class [ <internal:mongodb> class MongoDB\BSON\MinKey implements MongoDB\BSON\Type ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [0] {
-      }
-    }
-
-    Class [ <internal:mongodb> class MongoDB\BSON\ObjectID implements MongoDB\BSON\Type ] {
+    Class [ <internal:mongodb> final class MongoDB\BSON\Javascript implements MongoDB\BSON\Type ] {
 
       - Constants [0] {
       }
@@ -1737,22 +1515,20 @@ Extension [ <persistent> extension #126 mongodb version 1.0.0beta2 ] {
       }
 
       - Methods [2] {
-        Method [ <internal:mongodb, ctor> public method __construct ] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
 
-          - Parameters [1] {
-            Parameter #0 [ <optional> $id ]
+          - Parameters [2] {
+            Parameter #0 [ <required> $javascript ]
+            Parameter #1 [ <optional> $scope ]
           }
         }
 
-        Method [ <internal:mongodb> public method __toString ] {
-
-          - Parameters [0] {
-          }
+        Method [ <internal:mongodb> public method __wakeUp ] {
         }
       }
     }
 
-    Class [ <internal:mongodb> class MongoDB\BSON\Regex implements MongoDB\BSON\Type ] {
+    Class [ <internal:mongodb> final class MongoDB\BSON\MaxKey implements MongoDB\BSON\Type ] {
 
       - Constants [0] {
       }
@@ -1766,7 +1542,80 @@ Extension [ <persistent> extension #126 mongodb version 1.0.0beta2 ] {
       - Properties [0] {
       }
 
-      - Methods [4] {
+      - Methods [1] {
+        Method [ <internal:mongodb> public method __wakeUp ] {
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\MinKey implements MongoDB\BSON\Type ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:mongodb> public method __wakeUp ] {
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\ObjectID implements MongoDB\BSON\Type ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [3] {
+        Method [ <internal:mongodb, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $id ]
+          }
+        }
+
+        Method [ <internal:mongodb> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> public method __wakeUp ] {
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\Regex implements MongoDB\BSON\Type ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
         Method [ <internal:mongodb, ctor> public method __construct ] {
 
           - Parameters [2] {
@@ -1792,41 +1641,13 @@ Extension [ <persistent> extension #126 mongodb version 1.0.0beta2 ] {
           - Parameters [0] {
           }
         }
-      }
-    }
 
-    Class [ <internal:mongodb> class MongoDB\BSON\Timestamp implements MongoDB\BSON\Type ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [2] {
-        Method [ <internal:mongodb, ctor> final public method __construct ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $increment ]
-            Parameter #1 [ <required> $timestamp ]
-          }
-        }
-
-        Method [ <internal:mongodb> final public method __toString ] {
-
-          - Parameters [0] {
-          }
+        Method [ <internal:mongodb> public method __wakeUp ] {
         }
       }
     }
 
-    Class [ <internal:mongodb> class MongoDB\BSON\UTCDateTime implements MongoDB\BSON\Type ] {
+    Class [ <internal:mongodb> final class MongoDB\BSON\Timestamp implements MongoDB\BSON\Type ] {
 
       - Constants [0] {
       }
@@ -1841,6 +1662,40 @@ Extension [ <persistent> extension #126 mongodb version 1.0.0beta2 ] {
       }
 
       - Methods [3] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $increment ]
+            Parameter #1 [ <required> $timestamp ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> public method __wakeUp ] {
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\UTCDateTime implements MongoDB\BSON\Type ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
         Method [ <internal:mongodb, ctor> final public method __construct ] {
 
           - Parameters [1] {
@@ -1858,6 +1713,9 @@ Extension [ <persistent> extension #126 mongodb version 1.0.0beta2 ] {
 
           - Parameters [0] {
           }
+        }
+
+        Method [ <internal:mongodb> public method __wakeUp ] {
         }
       }
     }
