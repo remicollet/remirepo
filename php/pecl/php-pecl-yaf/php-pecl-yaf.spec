@@ -78,7 +78,7 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 The Yet Another Framework (Yaf) extension is a PHP framework that is used
 to develop web applications. 
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{scl_vendor})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep

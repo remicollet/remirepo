@@ -19,11 +19,11 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit   aeb6457cb0ac64dc0524a793c3020e3283789a5e
+%global gh_commit   7d5d696d5e7e58977eaf9b0a8aa8d0de18af0e45
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    laruence
 %global gh_project  yaf
-%global gh_date     20150914
+#global gh_date     20150914
 %global with_zts    0%{?__ztsphp:1}
 %global pecl_name   yaf
 %if "%{php_version}" < "5.6"
@@ -47,7 +47,7 @@ Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}
 Source1:       %{pecl_name}.ini
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: %{?scl_prefix}php-devel >= 5.2.0
+BuildRequires: %{?scl_prefix}php-devel >= 7
 BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: pcre-devel
 
@@ -91,7 +91,7 @@ Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 The Yet Another Framework (Yaf) extension is a PHP framework that is used
 to develop web applications. 
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{scl_vendor})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -223,6 +223,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- update to 3.0.0 (php 7)
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.8.20150914gitaeb6457
 - rebuild for PHP 7.0.0RC5 new API version
 - new snapshot
