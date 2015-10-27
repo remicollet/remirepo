@@ -19,12 +19,12 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit  87e485061a8e46b47830667763f226063ad7123d
+%global gh_commit  0e04a6a92347f7e95c9ddf8bbbad36b6286ed87f
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   laruence
 %global gh_project yar
-%global gh_date    20150914
-%global with_zts   0%{?__ztsphp:1}
+#global gh_date    20150914
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  yar
 %global with_tests %{?_without_tests:0}%{!?_without_tests:1}
 %if "%{php_version}" < "5.6"
@@ -37,7 +37,7 @@
 
 Summary:        Light, concurrent RPC framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.2.5
+Version:        2.0.0
 %if 0%{?gh_date:1}
 Release:        0.10.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
@@ -265,6 +265,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 %{_bindir}/yar_debug
@@ -277,6 +278,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- update to 2.0.0 (beta, php 7)
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.2.5-0.10.20150914git87e4850
 - rebuild for PHP 7.0.0RC5 new API version
 - new snapshot

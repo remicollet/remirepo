@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #92 yar version 1.2.5-dev ] {
+Extension [ <persistent> extension #106 yar version 2.0.0 ] {
 
   - Dependencies {
     Dependency [ json (Required) ]
@@ -33,7 +33,7 @@ Extension [ <persistent> extension #92 yar version 1.2.5-dev ] {
   }
 
   - Constants [18] {
-    Constant [ string YAR_VERSION ] { 1.2.5-dev }
+    Constant [ string YAR_VERSION ] { 2.0.0 }
     Constant [ integer YAR_OPT_PACKAGER ] { 1 }
     Constant [ integer YAR_OPT_PERSISTENT ] { 2 }
     Constant [ integer YAR_OPT_TIMEOUT ] { 4 }
@@ -188,7 +188,7 @@ Extension [ <persistent> extension #92 yar version 1.2.5-dev ] {
       }
     }
 
-    Class [ <internal:yar> class Yar_Server_Exception extends Exception ] {
+    Class [ <internal:yar> class Yar_Server_Exception extends Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -207,11 +207,11 @@ Extension [ <persistent> extension #92 yar version 1.2.5-dev ] {
         Property [ <default> protected $_type ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:yar> public method getType ] {
         }
 
-        Method [ <internal:Core, inherits BaseException, ctor> public method __construct ] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $message ]
@@ -220,33 +220,36 @@ Extension [ <persistent> extension #92 yar version 1.2.5-dev ] {
           }
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:yar> class Yar_Server_Request_Exception extends Yar_Server_Exception ] {
+    Class [ <internal:yar> class Yar_Server_Request_Exception extends Yar_Server_Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -264,11 +267,11 @@ Extension [ <persistent> extension #92 yar version 1.2.5-dev ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:yar, inherits Yar_Server_Exception> public method getType ] {
         }
 
-        Method [ <internal:Core, inherits BaseException, ctor> public method __construct ] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $message ]
@@ -277,33 +280,36 @@ Extension [ <persistent> extension #92 yar version 1.2.5-dev ] {
           }
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:yar> class Yar_Server_Protocol_Exception extends Yar_Server_Exception ] {
+    Class [ <internal:yar> class Yar_Server_Protocol_Exception extends Yar_Server_Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -321,11 +327,11 @@ Extension [ <persistent> extension #92 yar version 1.2.5-dev ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:yar, inherits Yar_Server_Exception> public method getType ] {
         }
 
-        Method [ <internal:Core, inherits BaseException, ctor> public method __construct ] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $message ]
@@ -334,33 +340,36 @@ Extension [ <persistent> extension #92 yar version 1.2.5-dev ] {
           }
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:yar> class Yar_Server_Packager_Exception extends Yar_Server_Exception ] {
+    Class [ <internal:yar> class Yar_Server_Packager_Exception extends Yar_Server_Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -378,11 +387,11 @@ Extension [ <persistent> extension #92 yar version 1.2.5-dev ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:yar, inherits Yar_Server_Exception> public method getType ] {
         }
 
-        Method [ <internal:Core, inherits BaseException, ctor> public method __construct ] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $message ]
@@ -391,33 +400,36 @@ Extension [ <persistent> extension #92 yar version 1.2.5-dev ] {
           }
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:yar> class Yar_Server_Output_Exception extends Yar_Server_Exception ] {
+    Class [ <internal:yar> class Yar_Server_Output_Exception extends Yar_Server_Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -435,11 +447,11 @@ Extension [ <persistent> extension #92 yar version 1.2.5-dev ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:yar, inherits Yar_Server_Exception> public method getType ] {
         }
 
-        Method [ <internal:Core, inherits BaseException, ctor> public method __construct ] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $message ]
@@ -448,33 +460,36 @@ Extension [ <persistent> extension #92 yar version 1.2.5-dev ] {
           }
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:yar> class Yar_Client_Exception extends Exception ] {
+    Class [ <internal:yar> class Yar_Client_Exception extends Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -492,11 +507,11 @@ Extension [ <persistent> extension #92 yar version 1.2.5-dev ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:yar> public method getType ] {
         }
 
-        Method [ <internal:Core, inherits BaseException, ctor> public method __construct ] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $message ]
@@ -505,33 +520,36 @@ Extension [ <persistent> extension #92 yar version 1.2.5-dev ] {
           }
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:yar> class Yar_Client_Transport_Exception extends Yar_Client_Exception ] {
+    Class [ <internal:yar> class Yar_Client_Transport_Exception extends Yar_Client_Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -549,11 +567,11 @@ Extension [ <persistent> extension #92 yar version 1.2.5-dev ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:yar, inherits Yar_Client_Exception> public method getType ] {
         }
 
-        Method [ <internal:Core, inherits BaseException, ctor> public method __construct ] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $message ]
@@ -562,33 +580,36 @@ Extension [ <persistent> extension #92 yar version 1.2.5-dev ] {
           }
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:yar> class Yar_Client_Packager_Exception extends Yar_Client_Exception ] {
+    Class [ <internal:yar> class Yar_Client_Packager_Exception extends Yar_Client_Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -606,11 +627,11 @@ Extension [ <persistent> extension #92 yar version 1.2.5-dev ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:yar, inherits Yar_Client_Exception> public method getType ] {
         }
 
-        Method [ <internal:Core, inherits BaseException, ctor> public method __construct ] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $message ]
@@ -619,33 +640,36 @@ Extension [ <persistent> extension #92 yar version 1.2.5-dev ] {
           }
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:yar> class Yar_Client_Protocol_Exception extends Yar_Client_Exception ] {
+    Class [ <internal:yar> class Yar_Client_Protocol_Exception extends Yar_Client_Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -663,11 +687,11 @@ Extension [ <persistent> extension #92 yar version 1.2.5-dev ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:yar, inherits Yar_Client_Exception> public method getType ] {
         }
 
-        Method [ <internal:Core, inherits BaseException, ctor> public method __construct ] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $message ]
@@ -676,28 +700,31 @@ Extension [ <persistent> extension #92 yar version 1.2.5-dev ] {
           }
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits BaseException> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
