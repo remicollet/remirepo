@@ -7,15 +7,13 @@ Name:           %{libname}
 # Build for parallel install
 Name:           %{libname}-last
 %endif
-Version:        1.0.4
+Version:        1.0.5
 Release:        1%{?dist}
 Summary:        The Sodium crypto library
 Group:          System Environment/Libraries
 License:        ISC
 URL:            http://libsodium.org/
 Source0:        http://download.libsodium.org/libsodium/releases/%{libname}-%{version}.tar.gz
-
-Patch0:         %{libname}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -57,8 +55,6 @@ This package can't be installed with system %{libname}-devel.
 
 %prep
 %setup -q -n %{libname}-%{version}
-
-%patch0 -p1 -b .upstream
 
 
 %build
@@ -103,6 +99,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
+- update to 1.0.5
+
 * Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
 - update to 1.0.4
 - add upstream patch for segfault on RHEL-6 i386
