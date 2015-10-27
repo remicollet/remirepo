@@ -6,10 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a54f84f05f915c6d42bed94de0cdcb4406a4707b
+%global gh_commit    a9f74803275a64273b73d7398a907d1a0e32c9a9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20151013
+%global gh_date      20151027
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
@@ -209,6 +209,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.13.20151027gita9f7480
+- new snapshot
+
 * Wed Oct 14 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.13.20151013gita54f84f
 - new snapshot
 - use autoloader from all dependencies
