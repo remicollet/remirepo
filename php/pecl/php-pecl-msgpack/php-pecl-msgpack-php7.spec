@@ -22,11 +22,11 @@
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
 
-%global gh_commit   75991cf1cd22b8a27f8e09e9a0ee6129473f3f21
+%global gh_commit   b29f3fd572b9d2ad8c053efa6279f93862f63657
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    msgpack
 %global gh_project  msgpack-php
-%global gh_date     20151014
+#global gh_date     20151014
 %global pecl_name   msgpack
 %global with_zts    0%{?__ztsphp:1}
 %if "%{php_version}" < "5.6"
@@ -55,7 +55,7 @@ URL:           http://pecl.php.net/package/msgpack
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: %{?scl_prefix}php-devel
+BuildRequires: %{?scl_prefix}php-devel >= 7
 BuildRequires: %{?scl_prefix}php-pear
 %if %{with_msgpack}
 BuildRequires: msgpack-devel
@@ -292,6 +292,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- update to 2.0.0 (php 7)
+
 * Wed Oct 14 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.1.20151014git75991cf
 - new snapshot, version bump to 2.0.0dev
 
