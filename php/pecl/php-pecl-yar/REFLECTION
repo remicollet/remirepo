@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #176 yar version 1.2.4 ] {
+Extension [ <persistent> extension #198 yar version 1.2.5 ] {
 
   - Dependencies {
     Dependency [ json (Required) ]
@@ -33,7 +33,7 @@ Extension [ <persistent> extension #176 yar version 1.2.4 ] {
   }
 
   - Constants [18] {
-    Constant [ string YAR_VERSION ] { 1.2.4 }
+    Constant [ string YAR_VERSION ] { 1.2.5 }
     Constant [ integer YAR_OPT_PACKAGER ] { 1 }
     Constant [ integer YAR_OPT_PERSISTENT ] { 2 }
     Constant [ integer YAR_OPT_TIMEOUT ] { 4 }
@@ -207,7 +207,7 @@ Extension [ <persistent> extension #176 yar version 1.2.4 ] {
         Property [ <default> protected $_type ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:yar> public method getType ] {
         }
 
@@ -218,6 +218,9 @@ Extension [ <persistent> extension #176 yar version 1.2.4 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -264,7 +267,7 @@ Extension [ <persistent> extension #176 yar version 1.2.4 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:yar, inherits Yar_Server_Exception> public method getType ] {
         }
 
@@ -275,6 +278,9 @@ Extension [ <persistent> extension #176 yar version 1.2.4 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -321,7 +327,7 @@ Extension [ <persistent> extension #176 yar version 1.2.4 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:yar, inherits Yar_Server_Exception> public method getType ] {
         }
 
@@ -332,6 +338,9 @@ Extension [ <persistent> extension #176 yar version 1.2.4 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -378,7 +387,7 @@ Extension [ <persistent> extension #176 yar version 1.2.4 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:yar, inherits Yar_Server_Exception> public method getType ] {
         }
 
@@ -389,6 +398,9 @@ Extension [ <persistent> extension #176 yar version 1.2.4 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -435,7 +447,7 @@ Extension [ <persistent> extension #176 yar version 1.2.4 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:yar, inherits Yar_Server_Exception> public method getType ] {
         }
 
@@ -446,6 +458,9 @@ Extension [ <persistent> extension #176 yar version 1.2.4 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -492,7 +507,7 @@ Extension [ <persistent> extension #176 yar version 1.2.4 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:yar> public method getType ] {
         }
 
@@ -503,6 +518,9 @@ Extension [ <persistent> extension #176 yar version 1.2.4 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -549,7 +567,7 @@ Extension [ <persistent> extension #176 yar version 1.2.4 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:yar, inherits Yar_Client_Exception> public method getType ] {
         }
 
@@ -560,6 +578,9 @@ Extension [ <persistent> extension #176 yar version 1.2.4 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -606,7 +627,7 @@ Extension [ <persistent> extension #176 yar version 1.2.4 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:yar, inherits Yar_Client_Exception> public method getType ] {
         }
 
@@ -617,6 +638,9 @@ Extension [ <persistent> extension #176 yar version 1.2.4 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -663,7 +687,7 @@ Extension [ <persistent> extension #176 yar version 1.2.4 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [10] {
+      - Methods [11] {
         Method [ <internal:yar, inherits Yar_Client_Exception> public method getType ] {
         }
 
@@ -674,6 +698,9 @@ Extension [ <persistent> extension #176 yar version 1.2.4 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {

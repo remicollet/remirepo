@@ -31,8 +31,8 @@
 
 Summary:        Light, concurrent RPC framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.2.4
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.2.5
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -91,7 +91,7 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 Yar (Yet another RPC framework) is a light, concurrent RPC framework,
 supports multi package protocols (json, msgpack).
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -234,6 +234,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 %{_bindir}/yar_debug
@@ -246,6 +247,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 1.2.5-1
+- update to 1.2.5 (stable, php 5)
+
 * Wed Jun 24 2015 Remi Collet <remi@fedoraproject.org> - 1.2.4-2
 - allow build against rh-php56 (as more-php56)
 - drop runtime dependency on pear, new scriptlets
