@@ -28,5 +28,8 @@
     "herrera-io\/phar-update": "php-herrera-io-phar-update",
     "herrera-io\/phpunit-test-case": "php-herrera-io-phpunit-test-case",
     "herrera-io\/version": "php-herrera-io-version",
+    "tedivm\/jshrink": "php-tedivm-jshrink",
+    "phine\/path": "php-phine-path",
+    "phine\/exception": "php-phine-exception",
     "theseer\/fxsl": "php-theseer-fxsl"
 }
