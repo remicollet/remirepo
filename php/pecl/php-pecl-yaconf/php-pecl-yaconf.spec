@@ -1,4 +1,4 @@
-# remirepo spec file for php-yaconf
+# remirepo spec file for php-pecl-yaconf
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
@@ -10,21 +10,17 @@
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__php:       %global __php        %{_bindir}/php}
 
-%global gh_commit   06cc6d07a3600d521fceafea85687427979cea28
+%global gh_commit   c46a63794aa4d177c228b14791c5591d1efcfeab
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    laruence
 %global gh_project  yaconf
-%global gh_date     20150910
-%global ext_name    yaconf
+#global gh_date     20150910
+%global pecl_name    yaconf
 %global with_zts    0%{?__ztsphp:1}
-%if "%{php_version}" < "5.6"
-%global ini_name  %{ext_name}.ini
-%else
-%global ini_name  40-%{ext_name}.ini
-%endif
+%global ini_name    40-%{pecl_name}.ini
 
 Summary:       Yet Another Configurations Container
-Name:          %{?scl_prefix}php-yaconf
+Name:          %{?scl_prefix}php-pecl-yaconf
 Version:       1.0.0
 %if 0%{?gh_date:1}
 Release:       0.7.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
@@ -38,30 +34,25 @@ Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 7
+BuildRequires: %{?scl_prefix}php-pear
 
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
-# Other third party repo stuff
-Obsoletes:     php53-%{gh_project}  <= %{version}
-Obsoletes:     php53u-%{gh_project} <= %{version}
-Obsoletes:     php54-%{gh_project}  <= %{version}
-Obsoletes:     php54w-%{gh_project} <= %{version}
-%if "%{php_version}" > "5.5"
-Obsoletes:     php55u-%{gh_project} <= %{version}
-Obsoletes:     php55w-%{gh_project} <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
-Obsoletes:     php56u-%{gh_project} <= %{version}
-Obsoletes:     php56w-%{gh_project} <= %{version}
-%endif
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-%{gh_project} <= %{version}
 Obsoletes:     php70w-%{gh_project} <= %{version}
 %endif
 %endif
+
+# Package have be renamed
+Obsoletes:      %{?scl_prefix}php-%{pecl_name} < 1.0.0-1
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
@@ -73,9 +64,7 @@ Obsoletes:     php70w-%{gh_project} <= %{version}
 %description
 A PHP Persistent Configurations Container.
 
-This extension is still EXPERIMENTAL.
-
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %package devel
@@ -91,10 +80,9 @@ These are the files needed to compile programs using %{name}.
 %prep
 %setup -qc
 mv %{gh_project}-%{gh_commit} NTS
+mv NTS/package.xml .
 
 cd NTS
-# When this file will be removed, clean the description.
-[ -f EXPERIMENTAL ] || exit 1
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define YACONF_VERSION/{s/.* "//;s/".*$//;p}' php_yaconf.h)
@@ -112,7 +100,7 @@ cp -pr NTS ZTS
 # Drop in the bit of configuration
 cat << 'EOF' | tee %{ini_name}
 ; Enable '%{summary}' extension module
-extension = %{ext_name}.so
+extension = %{pecl_name}.so
 
 ; Configuration options
 ;yaconf.directory=''
@@ -144,23 +132,31 @@ rm -rf %{buildroot}
 make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
+# Install XML package description
+install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+
 %if %{with_zts}
 # Install the ZTS stuff
 make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
+# Documentation
+for i in README.md $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do [ -f NTS/$i ] &&  install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %check
 cd NTS
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
-    --define extension=%{buildroot}%{php_extdir}/%{ext_name}.so \
-    --modules | grep %{ext_name}
+    --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
+    --modules | grep %{pecl_name}
 
 : Upstream test suite  for NTS extension
 TEST_PHP_EXECUTABLE=%{__php} \
-TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{ext_name}.so" \
+TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__php} -n run-tests.php --show-diff || : ignore
@@ -170,16 +166,34 @@ cd ../ZTS
 rm tests/004.phpt
 : Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
-    --define extension=%{buildroot}%{php_ztsextdir}/%{ext_name}.so \
-    --modules | grep %{ext_name}
+    --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
+    --modules | grep %{pecl_name}
 
 : Upstream test suite  for ZTS extension
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{ext_name}.so" \
+TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php --show-diff
 %endif
+
+
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
+
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
+
+%postun
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
+    %{pecl_uninstall} %{pecl_name} >/dev/null || :
+fi
 
 
 %clean
@@ -188,29 +202,33 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%{!?_licensedir:%global license %%doc}
-%license NTS/LICENSE NTS/CREDITS
-%doc NTS/README.md
+%{?_licensedir:%license NTS/LICENSE}
+%doc %{pecl_docdir}/%{pecl_name}
+%{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{ini_name}
-%{php_extdir}/%{ext_name}.so
+%{php_extdir}/%{pecl_name}.so
 
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
-%{php_ztsextdir}/%{ext_name}.so
+%{php_ztsextdir}/%{pecl_name}.so
 %endif
 
 
 %files devel
 %defattr(-,root,root,-)
-%{php_incldir}/ext/%{ext_name}
+%{php_incldir}/ext/%{pecl_name}
 
 %if %{with_zts}
-%{php_ztsincldir}/ext/%{ext_name}
+%{php_ztsincldir}/ext/%{pecl_name}
 %endif
 
 
 %changelog
+* Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- update to 1.0.0 (beta, php 7)
+- rename to php-pecl-yaconf
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.7.20150910git06cc6d0
 - rebuild for PHP 7.0.0RC5 new API version
 - new snapshot
