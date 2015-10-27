@@ -21,21 +21,27 @@
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  libsodium
-%global with_tests %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
 %if "%{php_version}" < "5.6"
 %global ini_name   %{pecl_name}.ini
 %else
 %global ini_name   40-%{pecl_name}.ini
 %endif
+%global buildver   %(pkg-config --silence-errors --modversion libsodium 2>/dev/null || echo 65536)
 
 Summary:        Wrapper for the Sodium cryptographic library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.0.0
-Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.0.1
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+# https://github.com/jedisct1/libsodium-php/pull/62 don't zero interned string
+Patch0:         %{pecl_name}-pr62.patch
+# https://github.com/jedisct1/libsodium-php/pull/63 build with old libsodium
+Patch1:         %{pecl_name}-pr63.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if "%{?vendor}" == "Remi Collet"
@@ -47,9 +53,12 @@ BuildRequires:  libsodium-devel >= 0.6.0
 %endif
 BuildRequires:  %{?scl_prefix}php-devel > 5.2
 BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  %{?scl_prefix}php-json
+BuildRequires:  pkgconfig
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+Requires:       libsodium%{?_isa} >= %{buildver}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
@@ -96,6 +105,8 @@ mv %{pecl_name}-%{version} NTS
 sed -e '/role="test"/d' -i package.xml
 
 cd NTS
+%patch0 -p1 -b .pr62
+%patch1 -p1 -b .pr63
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_LIBSODIUM_VERSION/{s/.* "//;s/".*$//;p}' php_libsodium.h)
@@ -184,7 +195,7 @@ cd NTS
 %if %{with_tests}
 : Upstream test suite  for NTS extension
 TEST_PHP_EXECUTABLE=%{__php} \
-TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
+TEST_PHP_ARGS="-n -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__php} -n run-tests.php --show-diff
@@ -200,7 +211,7 @@ cd ../ZTS
 %if %{with_tests}
 : Upstream test suite  for ZTS extension
 TEST_PHP_EXECUTABLE=%{_bindir}/zts-php \
-TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
+TEST_PHP_ARGS="-n -d extension=json.so -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/zts-php -n run-tests.php --show-diff
@@ -228,6 +239,14 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1
+- fix for old libsodium
+  https://github.com/jedisct1/libsodium-php/pull/63
+- don't zero interned string
+  https://github.com/jedisct1/libsodium-php/pull/62
+- add dependency on libsodium version used at build time
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-3
 - rebuild for PHP 7.0.0RC5 new API version
 
