@@ -59,7 +59,7 @@ Requires:       php-composer(doctrine/annotations) <  2
 # Autoloader
 Requires:       php-composer(symfony/class-loader)
 # from phpcompatinfo report for version 1.0.1
-Requires:       php-com
+Requires:       php-dom
 Requires:       php-spl
 
 Provides:       php-composer(%{c_vendor}/%{c_project}) = %{version}
