@@ -9,13 +9,12 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
     $fedoraClassLoader->register();
 }
 
-if (file_exists( $vendor . '/Monolog/autoload.php')) {
-    require_once $vendor . '/Monolog/autoload.php';
-
-} else if (is_dir($vendor . '/Monolog')) {
-    $fedoraClassLoader->addPrefix('Monolog',  $vendor);
-    $fedoraClassLoader->addPrefix('Psr\\Log', $vendor);
+if (is_dir($vendor . '/Monolog')) {
+	$fedoraClassLoader->addPrefix('Monolog',  $vendor);
+	$fedoraClassLoader->addPrefix('Psr\\Log', $vendor);
 }
 $fedoraClassLoader->addPrefix('Liuggio\\StatsdClient', dirname(dirname(__DIR__)));
 
 return $fedoraClassLoader;
+?>
+
