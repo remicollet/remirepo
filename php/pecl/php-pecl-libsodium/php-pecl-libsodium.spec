@@ -31,17 +31,12 @@
 
 Summary:        Wrapper for the Sodium cryptographic library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/jedisct1/libsodium-php/pull/62 don't zero interned string
-Patch0:         %{pecl_name}-pr62.patch
-# https://github.com/jedisct1/libsodium-php/pull/63 build with old libsodium
-Patch1:         %{pecl_name}-pr63.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if "%{?vendor}" == "Remi Collet"
@@ -105,8 +100,6 @@ mv %{pecl_name}-%{version} NTS
 sed -e '/role="test"/d' -i package.xml
 
 cd NTS
-%patch0 -p1 -b .pr62
-%patch1 -p1 -b .pr63
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_LIBSODIUM_VERSION/{s/.* "//;s/".*$//;p}' php_libsodium.h)
@@ -239,6 +232,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- Update to 1.0.2
+- drop all patches, merged upstream
+
 * Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1
 - fix for old libsodium
