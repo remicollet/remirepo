@@ -20,7 +20,7 @@
 
 Name:           php-%{c_vendor}-%{c_project}
 Version:        2.0.0
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        A library for self-updating Phars
 
@@ -91,15 +91,22 @@ cp %{SOURCE1} src/lib/%{ns_vendor}/%{ns_project}/autoload.php
 
 %install
 rm -rf                      %{buildroot}
+
+: library
 mkdir -p                    %{buildroot}%{php_home}
 cp -pr src/lib/%{ns_vendor} %{buildroot}%{php_home}/%{ns_vendor}
-# yes, ugly
-cp res/schema.json            %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/
+
+: resources
+mkdir -p                    %{buildroot}%{_datadir}/%{name}
+cp -pr res                  %{buildroot}%{_datadir}/%{name}/res
+
 
 %check
 %if %{with_tests}
 cat << 'EOF' | tee src/tests/bootstrap.php
 <?php
+// Resources in build tree
+define('PHAR_UPDATE_MANIFEST_SCHEMA', '%{buildroot}%{_datadir}/%{name}/res/schema.json');
 // This library
 require_once '%{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php';
 // Dependencies
@@ -131,10 +138,14 @@ rm -rf %{buildroot}
 %license LICENSE
 %doc README.md
 %doc composer.json
+%{_datadir}/%{name}/res
 %dir %{php_home}/%{ns_vendor}/Phar
      %{php_home}/%{ns_vendor}/%{ns_project}
 
 
 %changelog
+* Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 1.0.3-2
+- fix resources installation
+
 * Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - initial package

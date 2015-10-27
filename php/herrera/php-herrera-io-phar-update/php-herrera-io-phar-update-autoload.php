@@ -20,5 +20,5 @@ require_once $vendorDir . '/Herrera/Version/autoload.php';
 
 // Adpated from upstream constants.php
 if (!defined('PHAR_UPDATE_MANIFEST_SCHEMA')) {
-    define('PHAR_UPDATE_MANIFEST_SCHEMA', __DIR__ . '/schema.json');
+    define('PHAR_UPDATE_MANIFEST_SCHEMA', '/usr/share/php-herrera-io-phar-update/res/schema.json');
 }
