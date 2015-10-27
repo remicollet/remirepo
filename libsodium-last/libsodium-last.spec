@@ -8,7 +8,7 @@ Name:           %{libname}
 Name:           %{libname}-last
 %endif
 Version:        1.0.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The Sodium crypto library
 Group:          System Environment/Libraries
 License:        ISC
@@ -16,6 +16,10 @@ URL:            http://libsodium.org/
 Source0:        http://download.libsodium.org/libsodium/releases/%{libname}-%{version}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+%if "%{libname}" != "%{name}"
+Provides:       %{libname}         = %{version}-%{release}
+Provides:       %{libname}%{?_isa} = %{version}-%{release}
+%endif
 
 
 %description
@@ -99,6 +103,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 1.0.5-2
+- update to 1.0.5
+- provide libsodium
+
 * Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
 - update to 1.0.5
 
