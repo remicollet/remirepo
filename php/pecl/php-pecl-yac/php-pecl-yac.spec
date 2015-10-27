@@ -93,7 +93,7 @@ chance you will get a wrong data(depends on how many key slots are
 allocated and how many keys are stored), so you'd better make sure
 that your product is not very sensitive to that.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep

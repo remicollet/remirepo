@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #89 yac version 0.9.3-dev ] {
+Extension [ <persistent> extension #96 yac version 2.0.0 ] {
 
   - INI {
     Entry [ yac.enable <SYSTEM> ]
@@ -22,7 +22,7 @@ Extension [ <persistent> extension #89 yac version 0.9.3-dev ] {
   }
 
   - Constants [5] {
-    Constant [ string YAC_VERSION ] { 0.9.3-dev }
+    Constant [ string YAC_VERSION ] { 2.0.0 }
     Constant [ integer YAC_MAX_KEY_LEN ] { 48 }
     Constant [ integer YAC_MAX_VALUE_RAW_LEN ] { 67108863 }
     Constant [ integer YAC_MAX_RAW_COMPRESSED_LEN ] { 1048576 }
@@ -45,7 +45,7 @@ Extension [ <persistent> extension #89 yac version 0.9.3-dev ] {
         Property [ <default> protected $_prefix ]
       }
 
-      - Methods [8] {
+      - Methods [10] {
         Method [ <internal:yac, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -71,10 +71,25 @@ Extension [ <persistent> extension #89 yac version 0.9.3-dev ] {
           }
         }
 
+        Method [ <internal:yac> public method __set ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
         Method [ <internal:yac> public method get ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $keys ]
+          }
+        }
+
+        Method [ <internal:yac> public method __get ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
           }
         }
 
