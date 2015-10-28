@@ -1,4 +1,4 @@
-# remirepo spec file for php56-php
+# remirepo spec file for php70-php
 # with SCL and backport stuff, adapted from
 #
 # Fedora spec file for php
@@ -130,8 +130,8 @@
 #global gh_date      20150623
 #global gh_owner     php
 #global gh_project   php-src
-%global rcver        RC5
-%global rpmrel       21
+%global rcver        RC6
+%global rpmrel       22
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1803,6 +1803,9 @@ fi
 
 
 %changelog
+* Wed Oct 28 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.22.RC6
+- Update to 7.0.0RC6
+
 * Mon Oct 19 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.21.RC5
 - php-config: reports all built sapis
 
@@ -1810,7 +1813,7 @@ fi
 - rebuild as retagged
 
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.19.RC5
-- Update to 7.0.0RC4
+- Update to 7.0.0RC5
 - update php-fpm.d/www.conf comments
 - API and Zend API are now set to 20151012
 
