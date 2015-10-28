@@ -6,15 +6,15 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a897a7b02f42d278ac2381f4cd19b0d2b3b6f478
+%global gh_commit    36635a903bdeb54899d7407bc95610501fd98559
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpspec
 %global gh_project   phpspec
-%global prever       beta3
+#global prever       beta3
 
 Name:           php-phpspec
 Version:        2.3.0
-Release:        0.1.%{prever}%{?dist}
+Release:        1%{?dist}
 Summary:        Specification-oriented BDD framework for PHP
 
 Group:          Development/Libraries
@@ -150,6 +150,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct 28 2015 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
+- update to 2.3.0
+
 * Thu Aug 13 2015 Remi Collet <remi@fedoraproject.org> - 2.3.0-0.1.beta1
 - update to 2.3.0beta3
 
