@@ -95,7 +95,11 @@ php7src:
 	spectool -g -S $(NAME)-php7.spec
 
 php7build:
-	time rpmbuild $(RPMDEFINES) --define "scl php70" --without zts -bb $(NAME)-php7.spec
+	@if test -f $(NAME)-php7.spec ; then \
+		time rpmbuild $(RPMDEFINES) --define "scl php70" --without zts -bb $(NAME)-php7.spec ; \
+	else \
+		time rpmbuild $(RPMDEFINES) --define "scl php70" --without zts -bb $(NAME).spec ; \
+	fi
 
 php7srpm:
 	rpmbuild $(RPMDEFINES) $(SRCDEFINES) -bs $(NAME)-php7.spec
