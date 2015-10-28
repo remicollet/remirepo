@@ -20,7 +20,7 @@
 
 Name:           php-phpspec-prophecy
 Version:        1.5.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Highly opinionated mocking framework for PHP
 
 Group:          Development/Libraries
@@ -88,7 +88,7 @@ cp -pr src/* %{buildroot}%{_datadir}/php
 %check
 %if %{with_tests}
 %{_bindir}/php \
-  -d include_path=.:%{buildroot}%{_datadir}/php:/usr/share/php \
+  -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
   %{_bindir}/phpspec \
   run --format pretty --verbose --no-ansi
 %else
@@ -110,6 +110,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct 28 2015 Remi Collet <remi@fedoraproject.org> - 1.5.0-2
+- fix autolaoder, rely on include_path for symfony/class-loader
+
 * Thu Aug 13 2015 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
 - update to 1.5.0
 
