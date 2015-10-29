@@ -17,13 +17,14 @@
 %global gh_date     20151021
 %global pecl_name   ast
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
+# After 20-tokenizer.ini
 %global ini_name    40-%{pecl_name}.ini
 
 Summary:       Abstract Syntax Tree
 Name:          %{?scl_prefix}php-ast
 Version:       0.1.0
 %if 0%{?gh_date:1}
-Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -34,9 +35,11 @@ Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 7
+BuildRequires: %{?scl_prefix}php-tokenizer
 
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
+Requires:      %{?scl_prefix}php-tokenizer%{?_isa}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
@@ -134,9 +137,9 @@ cd NTS
 
 : Upstream test suite  for NTS extension
 TEST_PHP_EXECUTABLE=%{__php} \
-TEST_PHP_ARGS="-n -d error_reporting=32759 -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
+TEST_PHP_ARGS="-n -d extension=tokenizer.so -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so" \
 NO_INTERACTION=1 \
-REPORT_EXIT_STATUS=0 \
+REPORT_EXIT_STATUS=1 \
 %{__php} -n run-tests.php --show-diff || : ignore
 
 %if %{with_zts}
@@ -148,9 +151,9 @@ cd ../ZTS
 
 : Upstream test suite  for ZTS extension
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-TEST_PHP_ARGS="-n -d error_reporting=32759 -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
+TEST_PHP_ARGS="-n -d extension=tokenizer.so -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so" \
 NO_INTERACTION=1 \
-REPORT_EXIT_STATUS=0 \
+REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php --show-diff
 %endif
 
@@ -178,5 +181,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 29 2015 Remi Collet <remi@fedoraproject.org> - 0.1.0-0.2.20151021gitac969d7
+- add dependency on php-tokenizer, fix test suite
+
 * Wed Oct 28 2015 Remi Collet <remi@fedoraproject.org> - 0.1.0-0.1.20151021gitac969d7
 - new package, version 0.1.0dev
