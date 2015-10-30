@@ -12,7 +12,7 @@ php-nette-security           2.3.3  (utils ; di, http, tester)
 php-nette-mail               2.3.3  (utils ; di, tester)
 php-nette-robot-loader       2.3.1  (caching, finder, utils ; tester)
 php-nette-safe-stream        2.3.1  (; tester)
+php-nette-forms                     (component-model, http, utils ; di, tester, latte, tracy)
 
 php-nette-application               (component-model, http, reflection, security, utils ; tester, di, forms, robot-loader, latte)
 php-nette-bootstrap
-php-nette-forms

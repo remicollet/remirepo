@@ -17,6 +17,7 @@
     "nette\/component-model": "php-nette-component-model",
     "nette\/di": "php-nette-di",
     "nette\/finder": "php-nette-finder",
+    "nette\/forms": "php-nette-forms",
     "nette\/http": "php-nette-http",
     "nette\/mail": "php-nette-mail",
     "nette\/neon": "php-nette-neon",
