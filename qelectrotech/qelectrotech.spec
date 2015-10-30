@@ -6,8 +6,8 @@
 # Please, preserve the changelog entries
 #
 #global svnrel 4080
-%global rdate  20151004
-%global upver  0.5b
+%global rdate  20151030
+%global upver  0.5rc1
 
 Name:        qelectrotech
 
@@ -34,7 +34,7 @@ Version:     0.50
 %if 0%{?svnrel}
 Release:     0.1.svn%{svnrel}%{?dist}
 %else
-Release:     0.2.beta%{?dist}
+Release:     0.3.rc1%{?dist}
 %endif
 
 Group:       Applications/Engineering
@@ -259,6 +259,9 @@ fi
 
 
 %changelog
+* Fri Oct 30 2015 Remi Collet <remi@fedoraproject.org> - 0.50-0.3.rc1
+- update to 0.5rc1
+
 * Sun Oct  4 2015 Remi Collet <remi@fedoraproject.org> - 0.50-0.2.beta
 - update to 0.5b (beta)
 
