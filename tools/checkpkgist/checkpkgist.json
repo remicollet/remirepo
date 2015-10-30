@@ -23,6 +23,7 @@
     "nette\/php-generator": "php-nette-php-generator",
     "nette\/reflection": "php-nette-reflection",
     "nette\/robot-loader": "php-nette-robot-loader",
+    "nette\/safe-stream": "php-nette-safe-stream",
     "nette\/security": "php-nette-security",
     "nette\/tester": "php-nette-tester",
     "nette\/utils": "php-nette-utils",
