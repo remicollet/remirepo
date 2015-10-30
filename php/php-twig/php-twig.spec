@@ -14,8 +14,8 @@
 
 %global github_owner     twigphp
 %global github_name      Twig
-%global github_version   1.22.3
-%global github_commit    ebfc36b7e77b0c1175afe30459cf943010245540
+%global github_version   1.23.0
+%global github_commit    5868cd822fd6cf626d5f805439575f9c323cee2a
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 
@@ -256,9 +256,10 @@ EXT_VERSION=`grep PHP_TWIG_VERSION ext/NTS/php_twig.h | awk '{print $3}' | sed '
 
 %if %{with_tests}
 : Skip tests known to fail
-sed -e 's#function testGetAttributeExceptions#function SKIP_testGetAttributeExceptions#' \
-    -e 's/function testGetAttributeWithTemplateAsObject/function skip_testGetAttributeWithTemplateAsObject/' \
+%if 0%{?rhel} == 5 || 0%{?rhel} == 6
+sed -e 's/function testGetAttributeWithTemplateAsObject/function skip_testGetAttributeWithTemplateAsObject/' \
     -i test/Twig/Tests/TemplateTest.php
+%endif
 
 : Test suite without extension
 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php --verbose
@@ -294,6 +295,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 30 2015 Remi Collet <remi@fedoraproject.org> - 1.23.0-1
+- Update to 1.23.0
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.22.3-1
 - Update to 1.22.3
 
