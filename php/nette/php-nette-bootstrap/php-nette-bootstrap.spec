@@ -18,7 +18,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.3.3
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Bootstrap
 
@@ -53,7 +53,15 @@ BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.2
 #        "latte/latte": "~2.2",
 #        "tracy/tracy": "~2.3"
 # ignore not yet available components
+BuildRequires:  php-composer(%{gh_owner}/application) >= 2.3
 BuildRequires:  php-composer(%{gh_owner}/caching) >= 2.3
+BuildRequires:  php-composer(%{gh_owner}/database) >= 2.3
+BuildRequires:  php-composer(%{gh_owner}/forms) >= 2.3
+BuildRequires:  php-composer(%{gh_owner}/http) >= 2.3
+BuildRequires:  php-composer(%{gh_owner}/mail) >= 2.3
+BuildRequires:  php-composer(%{gh_owner}/robot-loader) >= 2.2
+BuildRequires:  php-composer(%{gh_owner}/safe-stream) >= 2.2
+BuildRequires:  php-composer(%{gh_owner}/security) >= 2.3
 BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.3
 BuildRequires:  php-composer(latte/latte) >= 2.2
 BuildRequires:  php-composer(tracy/tracy) >= 2.3
@@ -113,15 +121,6 @@ cp -pr src/* %{buildroot}%{php_home}/%{ns_vendor}/
 
 %check
 %if %{with_tests}
-: Ignore test for not yet available components
-rm tests/Bootstrap/Configurator.inheritance1.phpt
-rm tests/Bootstrap/Configurator.inheritance2.phpt
-rm tests/Bootstrap/Configurator.inheritance4.phpt
-rm tests/Bootstrap/Configurator.presentersDecoration.phpt
-rm tests/Bootstrap/Configurator.robotLoader.phpt
-rm tests/Bootstrap/Configurator.minimalContainer.phpt
-rm tests/Bootstrap/Configurator.developmentContainer.phpt
-
 : Generate configuration
 cat /etc/php.ini /etc/php.d/*ini >php.ini
 export LANG=fr_FR.utf8
@@ -133,7 +132,15 @@ cat << 'EOF' | tee vendor/autoload.php
 require_once '%{php_home}/Tester/autoload.php';
 require_once '%{php_home}/Latte/autoload.php';
 require_once '%{php_home}/Tracy/autoload.php';
+require_once '%{php_home}/%{ns_vendor}/Application/autoload.php';
 require_once '%{php_home}/%{ns_vendor}/Caching/autoload.php';
+require_once '%{php_home}/%{ns_vendor}/Database/autoload.php';
+require_once '%{php_home}/%{ns_vendor}/Forms/autoload.php';
+require_once '%{php_home}/%{ns_vendor}/Http/autoload.php';
+require_once '%{php_home}/%{ns_vendor}/Mail/autoload.php';
+require_once '%{php_home}/%{ns_vendor}/RobotLoader/autoload.php';
+require_once '%{php_home}/%{ns_vendor}/SafeStream/autoload.php';
+require_once '%{php_home}/%{ns_vendor}/Security/autoload.php';
 require_once '%{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php';
 EOF
 
@@ -159,5 +166,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 30 2015 Remi Collet <remi@fedoraproject.org> - 2.3.3-2
+- more tests
+
 * Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
 - initial package

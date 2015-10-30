@@ -17,5 +17,4 @@ php-nette-safe-stream        2.3.1  (; tester)
 php-nette-forms              2.3.6  (component-model, http, utils ; di, tester, latte, tracy)
 php-nette-application        2.3.7  (component-model, http, reflection, security, utils ; tester, di, forms, robot-loader, latte)
 php-nette-database           2.3.7  (caching, utils ; tester, di)
-
-php-nette-bootstrap                 (di, utils ; application, caching, database, forms, http, mail, robot-loader, safe-stream, security, tester, latte, tracy)
+php-nette-bootstrap          2.3.3  (di, utils ; application, caching, database, forms, http, mail, robot-loader, safe-stream, security, tester, latte, tracy)
