@@ -12,8 +12,8 @@
 
 %global github_owner     composer
 %global github_name      installers
-%global github_version   1.0.21
-%global github_commit    d64e23fce42a4063d63262b19b8e7c0f3b5e4c45
+%global github_version   1.0.22
+%global github_commit    bd9b14f094c89c8b5804a4e41edeb7853bb85046
 
 %global composer_vendor  composer
 %global composer_project installers
@@ -32,10 +32,6 @@ Group:         Development/Libraries
 License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
-
-# Fix PHPUnit check in CakePHPInstallerTest
-# https://github.com/composer/installers/pull/226
-Patch0:        %{name}-pr226.patch
 
 BuildArch:     noarch
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -79,8 +75,6 @@ installer to handle it.
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
-
-%patch0 -p1
 
 : Create autoloader
 cat <<'AUTOLOAD' | tee src/Composer/Installers/autoload.php
@@ -151,6 +145,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 30 2015 Remi Collet <remi@remirepo.net> - 1.0.22-1
+- update to 1.0.22
+
 * Tue Aug 25 2015 Remi Collet <remi@remirepo.net> - 1.0.21-1
 - backport for #remirepo
 
