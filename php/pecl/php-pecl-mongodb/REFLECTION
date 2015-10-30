@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #126 mongodb version 1.0.0RC0 ] {
+Extension [ <persistent> extension #126 mongodb version 1.0.0 ] {
 
   - INI {
     Entry [ mongodb.debug <ALL> ]
@@ -7,8 +7,8 @@ Extension [ <persistent> extension #126 mongodb version 1.0.0RC0 ] {
   }
 
   - Constants [3] {
-    Constant [ string MONGODB_VERSION ] { 1.0.0RC0 }
-    Constant [ string MONGODB_STABILITY ] { beta }
+    Constant [ string MONGODB_VERSION ] { 1.0.0 }
+    Constant [ string MONGODB_STABILITY ] { stable }
     Constant [ string BSON_NAMESPACE ] { MongoDB\BSON }
   }
 

@@ -19,12 +19,12 @@
 %else
 %global ini_name   40-%{pecl_name}.ini
 %endif
-%global prever     RC0
+#global prever     RC0
 
 Summary:        MongoDB driver for PHP
 Name:           php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        0.6.%{prever}%{?dist}
+Release:        1%{?dist}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -190,6 +190,9 @@ cd ../ZTS
 
 
 %changelog
+* Fri Oct 30 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- update to 1.0.0 (stable)
+
 * Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.6.RC0
 - Update to 1.0.0RC0 (beta)
 
