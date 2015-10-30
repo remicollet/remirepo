@@ -5,6 +5,8 @@ php-nette-finder             2.3.1  (utils ; tester)
 php-nette-php-generator      2.3.4  (utils ; tester)
 php-nette-component-model    2.2.4  (utils ; tester)
 php-nette-di                 2.3.6  (neon, php-generator, utils ; tester)
+php-tracy                    2.3.6  (; di, tester)
+php-latte                    2.3.6  (; tester)
 php-nette-caching            2.3.3  (finder, utils ; di, tester)
 php-nette-reflection         2.3.1  (caching, utils ; di, tester)
 php-nette-http               2.3.3  (finder, utils ; di, tester)
@@ -13,6 +15,7 @@ php-nette-mail               2.3.3  (utils ; di, tester)
 php-nette-robot-loader       2.3.1  (caching, finder, utils ; tester)
 php-nette-safe-stream        2.3.1  (; tester)
 php-nette-forms                     (component-model, http, utils ; di, tester, latte, tracy)
-
 php-nette-application               (component-model, http, reflection, security, utils ; tester, di, forms, robot-loader, latte)
-php-nette-bootstrap
+
+php-nette-database                  (caching, utils ; tester, di)
+php-nette-bootstrap                 (di, utils ; application, caching, database, forms, http, mail, robot-loader, safe-stream, security, tester, latte, tracy)
