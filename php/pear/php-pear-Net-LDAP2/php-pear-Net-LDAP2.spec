@@ -1,4 +1,4 @@
-# spec file for php-pear-Net-LDAP2
+# remirepo/fedora spec file for php-pear-Net-LDAP2
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
@@ -6,14 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name Net_LDAP2
 
 # Test suite requires a LDAP server, so are not run during build
 
 Name:           php-pear-Net-LDAP2
-Version:        2.1.0
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        Object oriented interface for searching and manipulating LDAP-entries
 
@@ -26,12 +25,13 @@ Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-pear(PEAR)
+BuildRequires:  php-pear(PEAR) >= 1.10.1
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 # From package.xml
-Requires:       php-pear(PEAR)
+Requires:       php-pear(PEAR) >= 1.10.1
+Requires:       php(language)  >= 5.4
 Requires:       php-ldap
 # From phpcompatinfo report
 Requires:       php-date
@@ -39,6 +39,7 @@ Requires:       php-pcre
 Requires:       php-spl
 
 Provides:       php-pear(%{pear_name}) = %{version}
+Provides:       php-composer(pear/net_ldap2) = %{version}
 
 
 %description
@@ -105,6 +106,10 @@ fi
 
 
 %changelog
+* Sat Oct 31 2015 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+- provide php-composer(pear/net_ldap2)
+
 * Sun Feb 22 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Version 2.1.0 (stable), API 2.0.0 (stable)
 - Initial package
