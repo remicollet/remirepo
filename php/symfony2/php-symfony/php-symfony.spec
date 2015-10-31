@@ -14,8 +14,8 @@
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.7.5
-%global github_commit    619528a274647cffc1792063c3ea04c4fa8266a0
+%global github_version   2.7.6
+%global github_commit    66b2e9662c44d478b69e48278aa54079a006eb42
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -90,7 +90,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       1%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -529,6 +529,7 @@ Group:    Development/Libraries
 
 # composer.json
 Requires: php-composer(%{composer_vendor}/asset)           = %{version}
+Requires: php-composer(%{composer_vendor}/finder)          = %{version}
 Requires: php-composer(%{composer_vendor}/http-foundation) = %{version}
 Requires: php-composer(%{composer_vendor}/http-kernel)     = %{version}
 Requires: php-composer(%{composer_vendor}/twig-bridge)     = %{version}
@@ -1790,11 +1791,17 @@ BOOTSTRAP
 RET=0
 for PKG in %{buildroot}%{phpdir}/Symfony/*/*; do
     echo -e "\n>>>>>>>>>>>>>>>>>>>>>>> ${PKG}\n"
+    case $PKG in
+       */Bridge/Twig)  RETIFFAIL=0
+         ;;
+       *)              RETIFFAIL=1
+         ;;
+       esac
     %{_bindir}/php -d include_path=.:%{buildroot}%{phpdir}:%{phpdir} \
     %{_bindir}/phpunit \
         --exclude-group benchmark,intl-data,tty \
         --bootstrap bootstrap.php \
-        $PKG || RET=1
+        $PKG || RET=$RETIFFAIL
 done
 exit $RET
 %else
@@ -2494,6 +2501,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Fri Oct 30 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.7.6-1
+- Updated to 2.7.6 (RHBZ #1275826)
+
 * Fri Oct 16 2015 Remi Collet <remi@fedoraproject.org> - 2.7.5-2
 - fix autoloader for recent swiftmailer
 
