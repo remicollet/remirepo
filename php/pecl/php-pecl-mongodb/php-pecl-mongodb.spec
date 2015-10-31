@@ -41,8 +41,7 @@ BuildRequires:  pkgconfig(libmongoc-priv) >= 1.2.0
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
+# Don't provide php-mongodb which is the pure PHP library
 Provides:       php-pecl(%{pecl_name}) = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
