@@ -17,6 +17,7 @@
     "nette\/caching": "php-nette-caching",
     "nette\/component-model": "php-nette-component-model",
     "nette\/database": "php-nette-database",
+    "nette\/deprecated": "php-nette-deprecated",
     "nette\/di": "php-nette-di",
     "nette\/finder": "php-nette-finder",
     "nette\/forms": "php-nette-forms",
