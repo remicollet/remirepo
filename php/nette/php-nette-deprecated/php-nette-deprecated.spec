@@ -12,12 +12,13 @@
 %global gh_owner     nette
 %global gh_project   deprecated
 %global ns_vendor    Nette
+%global ns_project   Deprecated
 %global php_home     %{_datadir}/php
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.3.1
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        APIs and features removed from Nette Framework
 
@@ -78,16 +79,16 @@ To use this library, you just have to add, in your project:
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-# Move classes to match their namespace (and avoid conflicts)
-mv src/Utils/{IFreezable,FreezableObject,Callback}.php src/
+# Move classes to avoid conflicts
+mv src/Utils src/%{ns_project}
 
 
 %build
 : Generate a classmap autoloader
-phpab --output src/autoload.php src
+phpab --output src/%{ns_project}/autoload.php src
 
-cat << 'EOF' | tee -a src/autoload.php
-require_once __DIR__ . '/loader.php';
+cat << 'EOF' | tee -a src/%{ns_project}/autoload.php
+require_once dirname(__DIR__) . '/loader.php';
 EOF
 
 
@@ -119,7 +120,7 @@ require_once '%{php_home}/%{ns_vendor}/Utils/autoload.php';
 require_once '%{php_home}/Latte/autoload.php';
 require_once '%{php_home}/Tracy/autoload.php';
 require_once '%{php_home}/Tester/autoload.php';
-require_once '%{buildroot}%{php_home}/%{ns_vendor}/autoload.php';
+require_once '%{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php';
 EOF
 
 php -r 'require "vendor/autoload.php";'
@@ -145,5 +146,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov  1 2015 Remi Collet <remi@fedoraproject.org> - 2.3.1-2
+- improve installation tree to avoid file conflicts
+  with nette/utils and nette/nette
+
 * Sat Oct 31 2015 Remi Collet <remi@fedoraproject.org> - 2.3.1-1
 - initial package
