@@ -22,3 +22,4 @@ php-nette-bootstrap          2.3.3  (di, utils ; application, caching, database,
 php-nette-deprecated         2.3.1  (; application, bootstrap, caching, forms, mail, robot-loader, safe-stream, utils, latte, tracy, tester)
 php-nette                    2.3.7  (everything)
 php-kdyby-events             2.4.0  (di, utils ; nette, tester)
+apigen                       4.1.1

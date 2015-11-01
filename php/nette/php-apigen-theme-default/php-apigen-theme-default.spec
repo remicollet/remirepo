@@ -6,6 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
+%global bootstrap    1
 %global gh_commit    51648cf83645d9ae6c655fe46bcd26a347d45336
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150717
@@ -33,8 +34,9 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:      php-composer(latte/latte) >= 2.2
 Requires:      php-composer(latte/latte) <  3
 # For tree ownership
+%if ! %{bootstrap}
 Requires:      php-composer(%{composer_vendor}/apigen)
-
+%endif
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -69,6 +71,10 @@ rm -rf %{buildroot}
 %license LICENSE
 %doc *.md
 %doc composer.json
+%if %{bootstrap}
+%dir %{_datadir}/%{composer_vendor}
+%dir %{_datadir}/%{composer_vendor}/themes
+%endif
 %{_datadir}/%{composer_vendor}/themes/%{composer_project}
 
 

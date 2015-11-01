@@ -1,0 +1,106 @@
+diff -ruN ApiGen-e9aff53d56d2b74104dee2b88396eb614e9717d5-old/bin/apigen ApiGen-e9aff53d56d2b74104dee2b88396eb614e9717d5/bin/apigen
+--- ApiGen-e9aff53d56d2b74104dee2b88396eb614e9717d5-old/bin/apigen	2015-10-30 13:44:43.000000000 +0100
++++ ApiGen-e9aff53d56d2b74104dee2b88396eb614e9717d5/bin/apigen	2015-11-01 10:01:25.000000000 +0100
+@@ -1,7 +1,7 @@
+ #!/usr/bin/env php
+ <?php
+ 
+-require __DIR__ . '/bootstrap.php';
++require '/usr/share/php/ApiGen/autoload.php';
+ 
+ 
+ // Create temp dir
+@@ -26,8 +26,8 @@
+ $configurator = new Nette\Configurator;
+ $configurator->setDebugMode( ! Tracy\Debugger::$productionMode);
+ $configurator->setTempDirectory($tempDir);
+-$configurator->addConfig(__DIR__ . '/../src/DI/config.neon');
+-$configurator->addParameters(['rootDir' => __DIR__ . '/..']);
++$configurator->addConfig('/usr/share/php/ApiGen/DI/config.neon');
++$configurator->addParameters(['rootDir' => '/usr/share/php/ApiGen']);
+ $container = $configurator->createContainer();
+ 
+ 
+diff -ruN ApiGen-e9aff53d56d2b74104dee2b88396eb614e9717d5-old/src/autoload.php ApiGen-e9aff53d56d2b74104dee2b88396eb614e9717d5/src/autoload.php
+--- ApiGen-e9aff53d56d2b74104dee2b88396eb614e9717d5-old/src/autoload.php	1970-01-01 01:00:00.000000000 +0100
++++ ApiGen-e9aff53d56d2b74104dee2b88396eb614e9717d5/src/autoload.php	2015-11-01 09:32:57.000000000 +0100
+@@ -0,0 +1,32 @@
++<?php
++// Autoloader for apigen/apigen and its dependencies
++$vendor = '/usr/share/php';
++
++if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
++    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
++        require_once $vendor . '/Symfony/Component/ClassLoader/ClassLoader.php';
++    }
++
++    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
++    $fedoraClassLoader->register();
++}
++
++$fedoraClassLoader->addPrefix('ApiGen\\', dirname(__DIR__));
++
++// Dependencies
++$fedoraClassLoader->addPrefix('Symfony\\Component\\', $vendor);
++$fedoraClassLoader->addPrefix('TokenReflection\\', $vendor);
++$fedoraClassLoader->addPrefix('Michelf\\', $vendor);
++
++require_once $vendor . '/Nette/Application/autoload.php';
++require_once $vendor . '/Nette/Bootstrap/autoload.php';
++require_once $vendor . '/Nette/DI/autoload.php';
++require_once $vendor . '/Nette/Neon/autoload.php';
++require_once $vendor . '/Nette/Mail/autoload.php';
++require_once $vendor . '/Nette/RobotLoader/autoload.php';
++require_once $vendor . '/Nette/SafeStream/autoload.php';
++require_once $vendor . '/Latte/autoload.php';
++require_once $vendor . '/Tracy/autoload.php';
++require_once $vendor . '/FSHL/autoload.php';
++require_once $vendor . '/Kdyby/Events/autoload.php';
++require_once $vendor . '/Herrera/Phar/Update/autoload.php';
+diff -ruN ApiGen-e9aff53d56d2b74104dee2b88396eb614e9717d5-old/src/Configuration/ConfigurationOptionsResolver.php ApiGen-e9aff53d56d2b74104dee2b88396eb614e9717d5/src/Configuration/ConfigurationOptionsResolver.php
+--- ApiGen-e9aff53d56d2b74104dee2b88396eb614e9717d5-old/src/Configuration/ConfigurationOptionsResolver.php	2015-10-30 13:44:43.000000000 +0100
++++ ApiGen-e9aff53d56d2b74104dee2b88396eb614e9717d5/src/Configuration/ConfigurationOptionsResolver.php	2015-11-01 09:45:20.000000000 +0100
+@@ -231,10 +231,10 @@
+ 	private function getTemplateConfigPathFromTheme($theme)
+ 	{
+ 		if ($theme === self::TEMPLATE_THEME_DEFAULT) {
+-			return $this->themeConfigPathResolver->resolve('/vendor/apigen/theme-default/src/config.neon');
++			return $this->themeConfigPathResolver->resolve('/themes/theme-default/config.neon');
+ 
+ 		} elseif ($theme === self::TEMPLATE_THEME_BOOTSTRAP) {
+-			return $this->themeConfigPathResolver->resolve('/vendor/apigen/theme-bootstrap/src/config.neon');
++			return $this->themeConfigPathResolver->resolve('/themes/theme-bootstrap/config.neon');
+ 		}
+ 
+ 		throw new ConfigurationException(CO::TEMPLATE_THEME . ' ' . $theme . ' is not supported.');
+diff -ruN ApiGen-e9aff53d56d2b74104dee2b88396eb614e9717d5-old/src/Theme/ThemeConfigPathResolver.php ApiGen-e9aff53d56d2b74104dee2b88396eb614e9717d5/src/Theme/ThemeConfigPathResolver.php
+--- ApiGen-e9aff53d56d2b74104dee2b88396eb614e9717d5-old/src/Theme/ThemeConfigPathResolver.php	2015-10-30 13:44:43.000000000 +0100
++++ ApiGen-e9aff53d56d2b74104dee2b88396eb614e9717d5/src/Theme/ThemeConfigPathResolver.php	2015-11-01 10:02:31.000000000 +0100
+@@ -38,7 +38,7 @@
+ 	{
+ 		$allowedPaths = [
+ 			$this->rootDir,
+-			$this->rootDir . '/../../..'
++			'/usr/share/apigen'
+ 		];
+ 
+ 		foreach ($allowedPaths as $allowedPath) {
+diff -ruN ApiGen-e9aff53d56d2b74104dee2b88396eb614e9717d5-old/tests/bootstrap.php ApiGen-e9aff53d56d2b74104dee2b88396eb614e9717d5/tests/bootstrap.php
+--- ApiGen-e9aff53d56d2b74104dee2b88396eb614e9717d5-old/tests/bootstrap.php	2015-10-30 13:44:43.000000000 +0100
++++ ApiGen-e9aff53d56d2b74104dee2b88396eb614e9717d5/tests/bootstrap.php	2015-11-01 09:49:31.000000000 +0100
+@@ -1,7 +1,14 @@
+ <?php
+ 
+-include __DIR__ . '/../vendor/autoload.php';
++include '@BUILDROOT@/usr/share/php/ApiGen/autoload.php';
+ 
++require_once $vendor . '/Symfony/Component/ClassLoader/Psr4ClassLoader.php';
++$Loader = new \Symfony\Component\ClassLoader\Psr4ClassLoader();
++$Loader->addPrefix("ApiGen\\Tests\\", __DIR__);
++$Loader->register();
++
++require_once $vendor . '/Mockery/autoload.php';
++require_once $vendor . '/Herrera/Box/autoload.php';
+ 
+ $tempDir = __DIR__ . '/temp/' . getmypid();
+ define('TEMP_DIR', $tempDir);
