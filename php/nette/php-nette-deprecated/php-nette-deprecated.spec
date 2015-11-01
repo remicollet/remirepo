@@ -73,7 +73,7 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 %{summary}.
 
 To use this library, you just have to add, in your project:
-  require_once '%{php_home}/%{ns_vendor}/autoload.php';
+  require_once '%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php';
 
 
 %prep

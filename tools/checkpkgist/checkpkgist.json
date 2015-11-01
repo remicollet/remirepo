@@ -24,6 +24,7 @@
     "nette\/http": "php-nette-http",
     "nette\/mail": "php-nette-mail",
     "nette\/neon": "php-nette-neon",
+    "nette\/nette": "php-nette",
     "nette\/php-generator": "php-nette-php-generator",
     "nette\/reflection": "php-nette-reflection",
     "nette\/robot-loader": "php-nette-robot-loader",

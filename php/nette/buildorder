@@ -20,3 +20,4 @@ php-nette-application        2.3.7  (component-model, http, reflection, security
 php-nette-database           2.3.7  (caching, utils ; tester, di)
 php-nette-bootstrap          2.3.3  (di, utils ; application, caching, database, forms, http, mail, robot-loader, safe-stream, security, tester, latte, tracy)
 php-nette-deprecated         2.3.1  (; application, bootstrap, caching, forms, mail, robot-loader, safe-stream, utils, latte, tracy, tester)
+php-nette                    2.3.7  (everything)
