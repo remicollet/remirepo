@@ -30,6 +30,7 @@
     "nette\/safe-stream": "php-nette-safe-stream",
     "nette\/security": "php-nette-security",
     "nette\/tester": "php-nette-tester",
+    "nette\/tokenizer": "php-nette-tokenizer",
     "nette\/utils": "php-nette-utils",
     "latte\/latte": "php-latte",
     "tracy\/tracy": "php-tracy",

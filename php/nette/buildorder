@@ -1,6 +1,7 @@
 php-nette-tester             1.6.1  ()
 php-nette-neon               2.3.3  (; tester)
 php-nette-utils              2.3.6  (; tester)
+php-nette-tokenizer          2.2.1  (; tester)
 php-nette-finder             2.3.1  (utils ; tester)
 php-nette-php-generator      2.3.4  (utils ; tester)
 php-nette-component-model    2.2.4  (utils ; tester)
