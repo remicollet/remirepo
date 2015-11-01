@@ -36,6 +36,7 @@
     "latte\/latte": "php-latte",
     "tracy\/tracy": "php-tracy",
     "kukulich\/fshl": "php-kukulich-fshl",
+    "kdyby\/events": "php-kdyby-events",
     "herrera-io\/box": "php-herrera-io-box",
     "herrera-io\/json": "php-herrera-io-json",
     "herrera-io\/phar-update": "php-herrera-io-phar-update",
