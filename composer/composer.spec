@@ -6,10 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a9f74803275a64273b73d7398a907d1a0e32c9a9
+%global gh_commit    5a5088eb342e4876cb28472ba1fc3f1da7a14852
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20151027
+%global gh_date      20151030
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
@@ -17,7 +17,7 @@
 
 Name:           composer
 Version:        1.0.0
-Release:        0.13.%{gh_date}git%{gh_short}%{?dist}
+Release:        0.14.%{gh_date}git%{gh_short}%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -46,8 +46,8 @@ BuildRequires:  php-composer(symfony/filesystem)        >= 2.5
 BuildRequires:  php-composer(symfony/process)           >= 2.1
 BuildRequires:  php-zip
 # From composer.json, "require-dev": {
-#        "phpunit/phpunit": "~4.5|^5.0.5",
-#        "phpunit/phpunit-mock-objects": "2.3.0|~3.0"
+#        "phpunit/phpunit": "^4.5 || ^5.0.5",
+#        "phpunit/phpunit-mock-objects": "2.3.0 || ^3.0"
 BuildRequires:  php-composer(phpunit/phpunit)           >= 4.5
 # For autoloader
 BuildRequires:  php-composer(symfony/class-loader)
@@ -58,17 +58,17 @@ BuildRequires:  php-jsonlint        >= 1.3.1-3
 %endif
 
 # From composer.json, "require": {
-#        "php": ">=5.3.2",
+#        "php": "^5.3.2 || ^7.0",
 #        "justinrainbow/json-schema": "^1.4.4",
 #        "composer/spdx-licenses": "^1.0",
 #        "composer/semver": "^1.0",
 #        "seld/jsonlint": "~1.0",
-#        "symfony/console": "~2.5",
-#        "symfony/finder": "~2.2",
-#        "symfony/process": "~2.1",
-#        "symfony/filesystem": "~2.5",
-#        "seld/phar-utils": "~1.0",
-#        "seld/cli-prompt": "~1.0"
+#        "symfony/console": "^2.5 || ^3.0",
+#        "symfony/finder": "^2.2 || ^3.0",
+#        "symfony/process": "^2.1 || ^3.0",
+#        "symfony/filesystem": "^2.5 || ^3.0",
+#        "seld/phar-utils": "^1.0",
+#        "seld/cli-prompt": "^1.0"
 Requires:       php(language)                           >= 5.3.2
 Requires:       php-cli
 Requires:       php-composer(justinrainbow/json-schema) >= 1.4.4
@@ -84,13 +84,13 @@ Requires:       php-composer(seld/phar-utils)           <  2
 Requires:       php-composer(seld/cli-prompt)           >= 1.0
 Requires:       php-composer(seld/cli-prompt)           <  2
 Requires:       php-composer(symfony/console)           >= 2.5
-Requires:       php-composer(symfony/console)           <  3
+Requires:       php-composer(symfony/console)           <  4
 Requires:       php-composer(symfony/finder)            >= 2.2
-Requires:       php-composer(symfony/finder)            <  3
+Requires:       php-composer(symfony/finder)            <  4
 Requires:       php-composer(symfony/process)           >= 2.1
-Requires:       php-composer(symfony/process)           <  3
+Requires:       php-composer(symfony/process)           <  4
 Requires:       php-composer(symfony/filesystem)        >= 2.5
-Requires:       php-composer(symfony/filesystem)        <  3
+Requires:       php-composer(symfony/filesystem)        <  4
 # From composer.json, suggest
 #        "ext-zip": "Enabling the zip extension allows you to unzip archives, and allows gzip compression of all internet traffic",
 #        "ext-openssl": "Enabling the openssl extension allows you to access https URLs for repositories and packages"
@@ -209,6 +209,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov  2 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.14.20151030git5a5088e
+- new snapshot
+- allow symfony 3
+
 * Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.13.20151027gita9f7480
 - new snapshot
 
