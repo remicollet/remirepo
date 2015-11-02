@@ -1,0 +1,13 @@
+diff -up tests/PedantryTest.php.rpm tests/PedantryTest.php
+--- tests/PedantryTest.php.rpm	2015-11-02 17:58:41.319791130 +0100
++++ tests/PedantryTest.php	2015-11-02 17:58:45.599811089 +0100
+@@ -65,6 +65,9 @@ class PedantryTest extends \PHPUnit_Fram
+             if ($file->getFilename() === 'functions.php') {
+                 continue;
+             }
++            if ($file->getFilename() === 'autoload.php') {
++                continue;
++            }
+ 
+             $classNames[][] = 'MongoDB\\' . str_replace(DIRECTORY_SEPARATOR, '\\', substr($file->getRealPath(), strlen($srcDir) + 1, -4));
+         }
