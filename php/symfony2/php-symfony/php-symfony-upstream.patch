@@ -1,0 +1,25 @@
+From 1bdd127938058a1f34fd0bc883ebb9e4d6ccf67d Mon Sep 17 00:00:00 2001
+From: Fabien Potencier <fabien.potencier@gmail.com>
+Date: Sat, 24 Oct 2015 22:25:19 +0200
+Subject: [PATCH] fixed Twig deprecation notices
+
+---
+ composer.json                                       | 2 +-
+ src/Symfony/Bridge/Twig/Extension/FormExtension.php | 2 +-
+ src/Symfony/Bridge/Twig/composer.json               | 2 +-
+ src/Symfony/Bundle/SecurityBundle/composer.json     | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/Symfony/Bridge/Twig/Extension/FormExtension.php b/src/Symfony/Bridge/Twig/Extension/FormExtension.php
+index 9c7339f..e972ac4 100644
+--- a/src/Symfony/Bridge/Twig/Extension/FormExtension.php
++++ b/src/Symfony/Bridge/Twig/Extension/FormExtension.php
+@@ -21,7 +21,7 @@
+  * @author Fabien Potencier <fabien@symfony.com>
+  * @author Bernhard Schussek <bschussek@gmail.com>
+  */
+-class FormExtension extends \Twig_Extension
++class FormExtension extends \Twig_Extension implements \Twig_Extension_InitRuntimeInterface
+ {
+     /**
+      * This property is public so that it can be accessed directly from compiled

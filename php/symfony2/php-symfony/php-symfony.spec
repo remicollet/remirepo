@@ -70,8 +70,8 @@
 #     src/Symfony/Bridge/Swiftmailer/composer.json
 #     NOTE: Max version ignored on purpose
 %global swiftmailer_min_ver 4.2.0
-# "twig/twig": "~1.20|~2.0"
-%global twig_min_ver 1.20
+# "twig/twig": "~1.23|~2.0"
+%global twig_min_ver 1.23
 %global twig_max_ver 3
 
 %if 0%{?fedora} < 21 && 0%{?rhel} < 7
@@ -90,7 +90,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -98,7 +98,10 @@ License:       MIT
 URL:           http://symfony.com
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_short}.tar.gz
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+# https://github.com/symfony/symfony/commit/1bdd127938058a1f34fd0bc883ebb9e4d6ccf67d
+Patch0:        %{name}-upstream.patch
+
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -1638,6 +1641,8 @@ The YAML Component loads and dumps YAML files.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+%patch0 -p1
+
 : Remove unnecessary files
 find src -name '.git*' -delete
 
@@ -1791,17 +1796,11 @@ BOOTSTRAP
 RET=0
 for PKG in %{buildroot}%{phpdir}/Symfony/*/*; do
     echo -e "\n>>>>>>>>>>>>>>>>>>>>>>> ${PKG}\n"
-    case $PKG in
-       */Bridge/Twig)  RETIFFAIL=0
-         ;;
-       *)              RETIFFAIL=1
-         ;;
-       esac
     %{_bindir}/php -d include_path=.:%{buildroot}%{phpdir}:%{phpdir} \
     %{_bindir}/phpunit \
         --exclude-group benchmark,intl-data,tty \
         --bootstrap bootstrap.php \
-        $PKG || RET=$RETIFFAIL
+        $PKG || RET=1
 done
 exit $RET
 %else
@@ -2501,6 +2500,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Mon Nov  2 2015 Remi Collet <remi@fedoraproject.org> - 2.7.6-2
+- add upstream patch for twig 1.23
+
 * Fri Oct 30 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.7.6-1
 - Updated to 2.7.6 (RHBZ #1275826)
 
