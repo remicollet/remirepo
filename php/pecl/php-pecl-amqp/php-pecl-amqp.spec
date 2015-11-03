@@ -35,7 +35,7 @@
 Summary:       Communicate with any AMQP compliant server
 Name:          %{?sub_prefix}php-pecl-amqp
 Version:       1.6.0
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
@@ -123,7 +123,7 @@ extension = %{pecl_name}.so
 ; Whether calls to AMQPQueue::get() and AMQPQueue::consume()
 ; should require that the client explicitly acknowledge messages. 
 ; Setting this value to 1 will pass in the AMQP_AUTOACK flag to
-: the above method calls if the flags field is omitted. 
+; the above method calls if the flags field is omitted.
 ;amqp.auto_ack = 0
 
 ; The host to which to connect.
@@ -288,8 +288,9 @@ fi
 
 
 %changelog
-* Tue Nov  3 2015 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
+* Tue Nov  3 2015 Remi Collet <remi@fedoraproject.org> - 1.6.0-2
 - update to 1.6.0 (stable)
+- fix typo in config file
 
 * Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.6.0-0.4.beta4
 - open https://github.com/pdezwart/php-amqp/pull/178 - librabbitmq 0.5
