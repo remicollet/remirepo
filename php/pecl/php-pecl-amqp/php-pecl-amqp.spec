@@ -30,28 +30,23 @@
 %else
 %global ini_name    40-%{pecl_name}.ini
 %endif
-%global prever      beta4
+#global prever      beta4
 
 Summary:       Communicate with any AMQP compliant server
 Name:          %{?sub_prefix}php-pecl-amqp
 Version:       1.6.0
-Release:       0.4.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
-# https://github.com/pdezwart/php-amqp/pull/178
-Patch0:        %{pecl_name}-178.patch
-# https://github.com/pdezwart/php-amqp/pull/179
-Patch1:        %{pecl_name}-179.patch
-
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 5.2.0
 BuildRequires: %{?scl_prefix}php-pear
 %if "%{?vendor}" == "Remi Collet"
-# Upstream requires 0.5.2, set 0.6.0 to ensure "last" is used.
-BuildRequires: librabbitmq-devel >= 0.6.0
+# Upstream requires 0.5.2, set 0.7.0 to ensure "last" is used.
+BuildRequires: librabbitmq-devel >= 0.7.0
 %else
 BuildRequires: librabbitmq-devel >= 0.5.2
 %endif
@@ -112,8 +107,6 @@ sed -e 's/role="test"/role="src"/' -i package.xml
 
 mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
-%patch0 -p1 -b .pr178
-%patch1 -p1 -b .pr179
 
 # Upstream often forget to change this
 extver=$(sed -n '/#define PHP_AMQP_VERSION/{s/.* "//;s/".*$//;p}' php_amqp.h)
@@ -295,6 +288,9 @@ fi
 
 
 %changelog
+* Tue Nov  3 2015 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
+- update to 1.6.0 (stable)
+
 * Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.6.0-0.4.beta4
 - open https://github.com/pdezwart/php-amqp/pull/178 - librabbitmq 0.5
 - open https://github.com/pdezwart/php-amqp/pull/179 --with-libdir

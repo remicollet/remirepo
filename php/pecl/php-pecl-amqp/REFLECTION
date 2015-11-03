@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #74 amqp version 1.6.0beta4 ] {
+Extension [ <persistent> extension #74 amqp version 1.6.0 ] {
 
   - INI {
     Entry [ amqp.host <ALL> ]
