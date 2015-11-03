@@ -1,4 +1,4 @@
-# remirepo spec/Fedora file for php-apigen-theme-default
+# remirepo/fedora spec file for php-apigen-theme-default
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
