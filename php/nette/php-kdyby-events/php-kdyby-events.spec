@@ -69,6 +69,7 @@ BuildRequires:  php-composer(symfony/class-loader)
 # The framework is enough as it requires everything
 BuildRequires:  php-composer(nette/nette) >= 2.3
 BuildRequires:  php-composer(nette/tester) >= 1.4
+BuildRequires:  php-composer(symfony/event-dispatcher) >= 2.5
 %endif
 
 # from composer.json, "require": {
