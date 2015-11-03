@@ -33,27 +33,28 @@ BuildArch:      noarch
 BuildRequires:  php-composer(theseer/autoload)
 %if %{with_tests}
 BuildRequires:  php-cli
-BuildRequires:  php-composer(%{gh_owner}/application)     >= 2.3.7
-BuildRequires:  php-composer(%{gh_owner}/bootstrap)       >= 2.3.3
-BuildRequires:  php-composer(%{gh_owner}/caching)         >= 2.3.3
-BuildRequires:  php-composer(%{gh_owner}/component-model) >= 2.2.4
-BuildRequires:  php-composer(%{gh_owner}/database)        >= 2.3.7
-BuildRequires:  php-composer(%{gh_owner}/deprecated)      >= 2.3.1
-BuildRequires:  php-composer(%{gh_owner}/di)              >= 2.3.6
-BuildRequires:  php-composer(%{gh_owner}/finder)          >= 2.3.1
-BuildRequires:  php-composer(%{gh_owner}/forms)           >= 2.3.5
-BuildRequires:  php-composer(%{gh_owner}/http)            >= 2.3.3
-BuildRequires:  php-composer(%{gh_owner}/mail)            >= 2.3.3
-BuildRequires:  php-composer(%{gh_owner}/neon)            >= 2.3.3
-BuildRequires:  php-composer(%{gh_owner}/php-generator)   >= 2.3.4
-BuildRequires:  php-composer(%{gh_owner}/reflection)      >= 2.3.1
-BuildRequires:  php-composer(%{gh_owner}/robot-loader)    >= 2.3.1
-BuildRequires:  php-composer(%{gh_owner}/safe-stream)     >= 2.3.1
-BuildRequires:  php-composer(%{gh_owner}/security)        >= 2.3.1
-BuildRequires:  php-composer(%{gh_owner}/tokenizer)       >= 2.2.1
-BuildRequires:  php-composer(%{gh_owner}/utils)           >= 2.3.6
-BuildRequires:  php-composer(latte/latte)                 >= 2.3.6
-BuildRequires:  php-composer(tracy/tracy)                 >= 2.3.5
+# Only required for autoloader test, so no version constraint
+BuildRequires:  php-composer(%{gh_owner}/application)
+BuildRequires:  php-composer(%{gh_owner}/bootstrap)
+BuildRequires:  php-composer(%{gh_owner}/caching)
+BuildRequires:  php-composer(%{gh_owner}/component-model)
+BuildRequires:  php-composer(%{gh_owner}/database)
+BuildRequires:  php-composer(%{gh_owner}/deprecated)
+BuildRequires:  php-composer(%{gh_owner}/di)
+BuildRequires:  php-composer(%{gh_owner}/finder)
+BuildRequires:  php-composer(%{gh_owner}/forms)
+BuildRequires:  php-composer(%{gh_owner}/http)
+BuildRequires:  php-composer(%{gh_owner}/mail)
+BuildRequires:  php-composer(%{gh_owner}/neon)
+BuildRequires:  php-composer(%{gh_owner}/php-generator)
+BuildRequires:  php-composer(%{gh_owner}/reflection)
+BuildRequires:  php-composer(%{gh_owner}/robot-loader)
+BuildRequires:  php-composer(%{gh_owner}/safe-stream)
+BuildRequires:  php-composer(%{gh_owner}/security)
+BuildRequires:  php-composer(%{gh_owner}/tokenizer)
+BuildRequires:  php-composer(%{gh_owner}/utils)
+BuildRequires:  php-composer(latte/latte)
+BuildRequires:  php-composer(tracy/tracy)
 %endif
 # from composer.json, "require": {
 #        "nette/application": "2.3.7",
