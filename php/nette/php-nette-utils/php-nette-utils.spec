@@ -30,9 +30,9 @@ Source1:        makesrc.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3.1
 BuildRequires:  php-composer(theseer/autoload)
 %if %{with_tests}
+BuildRequires:  php(language) >= 5.3.1
 BuildRequires:  php-iconv
 BuildRequires:  php-intl
 BuildRequires:  php-mbstring
@@ -107,7 +107,7 @@ cp -pr src/* %{buildroot}%{php_home}/%{ns_vendor}/
 
 %check
 %if %{with_tests}
-: Ignore failed tests
+: Ignore failed tests under investigation
 rm tests/Utils/Image.alpha1.phpt
 rm tests/Utils/Json.decode\(\).phpt
 rm tests/Utils/Image.drawing.phpt
