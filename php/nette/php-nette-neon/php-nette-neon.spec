@@ -1,4 +1,4 @@
-# remirepo/fedora spec file for php-nette-php-generator
+# remirepo/fedora spec file for php-nette-neon
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
@@ -31,9 +31,9 @@ Source1:        makesrc.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3.1
 BuildRequires:  php-composer(theseer/autoload)
 %if %{with_tests}
+BuildRequires:  php(language) >= 5.3.1
 BuildRequires:  php-iconv
 BuildRequires:  php-date
 BuildRequires:  php-json
