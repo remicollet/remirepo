@@ -1,4 +1,4 @@
-# remirepo/fedora spec file for php-nette-caching
+# remirepo/fedora spec file for php-nette-forms
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
@@ -148,5 +148,5 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
+* Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 2.3.6-1
 - initial package
