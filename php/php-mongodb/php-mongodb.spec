@@ -6,10 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a3c0b97b23ea8b111e332055cfd5d072312fd9e1
+%global gh_commit    34b74f852af43fc70f49308bfbd3555f91db593c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     mongodb
-%global gh_date      20151102
+#global gh_date      20151102
 %global gh_project   mongo-php-library
 %if 0%{?fedora} >= 21 || 0%{?rhel} >= 6
 %global with_tests   0%{!?_without_tests:1}
@@ -17,14 +17,14 @@
 %global with_tests   0%{?_with_tests:1}
 %endif
 %global psr0         MongoDB
-#global prever       alpha1
+%global prever       beta1
 
 Name:           php-%{gh_owner}
 Version:        1.0.0
 %if 0%{?gh_date}
 Release:        0.2.%{gh_date}git%{gh_short}%{?dist}
 %else
-Release:        0.1.%{prever}%{?dist}
+Release:        0.3.%{prever}%{?dist}
 %endif
 Summary:        MongoDB driver library
 
@@ -154,6 +154,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov  3 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.beta1
+- update to 1.0.0beta1
+
 * Mon Nov  2 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.20151102gita3c0b97
 - git snapshot
 
