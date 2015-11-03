@@ -23,7 +23,7 @@ Summary:        PHP source code API generator
 
 Group:          Development/Libraries
 License:        MIT
-URL:            https://github.com/%{gh_owner}/%{gh_project}
+URL:            http://www.apigen.org/
 Source0:        %{name}-%{version}-%{gh_short}.tgz
 # pull a git snapshot to get test sutie
 Source1:        makesrc.sh
@@ -155,6 +155,11 @@ rm -r src/Herrera
 rm    src/Command/SelfUpdateCommand.php
 
 find src -name \*rpm -exec rm {} \;
+
+if grep -ri herrera src ; then
+  : Herrera libraries still used review the patch
+  exit 1
+fi
 
 
 %build
