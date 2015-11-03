@@ -18,9 +18,9 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.2.4
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
-Summary:        Nette Caching Component
+Summary:        Nette Component Model
 
 Group:          Development/Libraries
 License:        BSD or GPLv2 or GPLv3
@@ -59,8 +59,15 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 
 %description
-Cache accelerates your application by storing data, once hardly retrieved,
-for future use.
+Components are the foundation of reusable code. They make your work easier
+and allow you to profit from community work. Components are wonderful.
+Nette Framework introduces several classes and interfaces for all these
+types of components.
+
+Object inheritance allows us to have a hierarchic structure of classes like
+in real world. We can create new classes by extending. These extended classes
+are descendants of the original class and inherit its parameters and methods.
+Extended class can add its own parameters and methods to the inherited ones.
 
 To use this library, you just have to add, in your project:
   require_once '%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php';
@@ -121,5 +128,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov  3 2015 Remi Collet <remi@fedoraproject.org> - 2.2.4-2
+- fix package description and summary
+
 * Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 2.2.4-1
 - initial package
