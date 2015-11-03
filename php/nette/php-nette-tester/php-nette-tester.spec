@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    e4cd7409ee25b6c16bc80717ef58abe4cb589cff
+%global gh_commit    b0f312e7ab9a70bbd5c92568e2a20dd46be9a529
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-nette-tester
-Version:        1.6.0
+Version:        1.6.1
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        An easy-to-use PHP unit testing framework
@@ -27,9 +27,9 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3
 BuildRequires:  php-composer(theseer/autoload)
 %if %{with_tests}
+BuildRequires:  php(language) >= 5.3
 BuildRequires:  php-cli
 BuildRequires:  php-date
 BuildRequires:  php-dom
@@ -46,7 +46,7 @@ BuildRequires:  php-tokenizer
 # from composer.json
 #        "php": ">=5.3.0"
 Requires:       php(language) >= 5.3
-# from phpcompatinfo report for version 1.0.0: nothing
+# from phpcompatinfo report for version 1.6.1
 Requires:       php-cli
 Requires:       php-date
 Requires:       php-dom
@@ -118,5 +118,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov  3 2015 Remi Collet <remi@fedoraproject.org> - 1.6.1-1
+- update to 1.6.1
+
 * Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
 - initial package
