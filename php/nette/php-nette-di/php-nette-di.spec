@@ -1,4 +1,4 @@
-# remirepo/fedora spec file for php-nette-php-di
+# remirepo/fedora spec file for php-nette-di
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA

@@ -30,9 +30,9 @@ Source1:        makesrc.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3.1
 BuildRequires:  php-composer(theseer/autoload)
 %if %{with_tests}
+BuildRequires:  php(language) >= 5.3.1
 BuildRequires:  php-tokenizer
 BuildRequires:  php-date
 BuildRequires:  php-fileinfo
@@ -44,7 +44,7 @@ BuildRequires:  php-reflection
 BuildRequires:  php-spl
 # From composer.json, "require-dev": {
 #        "nette/tester": "~1.3"
-BuildRequires:  php-composer(%{gh_owner}/tester)
+BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.3
 %endif
 
 # from composer.json, "require": {
