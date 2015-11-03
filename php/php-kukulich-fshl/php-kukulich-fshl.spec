@@ -21,7 +21,7 @@ Summary:        FSHL: fast syntax highlighter
 
 Group:          Development/Libraries
 License:        MIT
-URL:            https://github.com/%{gh_owner}/%{gh_project}
+URL:            http://fshl.kukulich.cz/
 # git snashop to get upstream test suite
 Source0:        %{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
