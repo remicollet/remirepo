@@ -18,9 +18,9 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.3.1
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
-Summary:        Nette Caching Component
+Summary:        Nette RobotLoader: comfortable autoloading
 
 Group:          Development/Libraries
 License:        BSD or GPLv2 or GPLv3
@@ -133,5 +133,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov  3 2015 Remi Collet <remi@fedoraproject.org> - 2.3.1-2
+- fix package summary
+
 * Fri Oct 30 2015 Remi Collet <remi@fedoraproject.org> - 2.3.1-1
 - initial package
