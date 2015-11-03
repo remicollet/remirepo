@@ -1,4 +1,4 @@
-# remirepo/fedora spec file for php-nette-reflection
+# remirepo/fedora spec file for php-nette-bootstrap
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
@@ -31,9 +31,9 @@ Source1:        makesrc.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3.1
 BuildRequires:  php-composer(theseer/autoload)
 %if %{with_tests}
+BuildRequires:  php(language) >= 5.3.1
 BuildRequires:  php-tokenizer
 BuildRequires:  php-pcre
 BuildRequires:  php-reflection
@@ -78,7 +78,7 @@ Requires:       php-composer(%{gh_owner}/di) >= 2.3
 Requires:       php-composer(%{gh_owner}/di) <  3
 Requires:       php-composer(%{gh_owner}/utils) >= 2.2
 Requires:       php-composer(%{gh_owner}/utils) <  3
-# from phpcompatinfo report for version 2.3.1
+# from phpcompatinfo report for version 2.3.3
 Requires:       php-reflection
 Requires:       php-pcre
 %if 0%{?fedora} > 21
