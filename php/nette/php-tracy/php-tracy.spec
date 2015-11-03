@@ -30,9 +30,9 @@ Source1:        makesrc.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3.1
 BuildRequires:  php-composer(theseer/autoload)
 %if %{with_tests}
+BuildRequires:  php(language) >= 5.3.1
 BuildRequires:  php-date
 BuildRequires:  php-iconv
 BuildRequires:  php-json
