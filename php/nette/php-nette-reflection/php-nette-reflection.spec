@@ -31,9 +31,9 @@ Source1:        makesrc.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3.1
 BuildRequires:  php-composer(theseer/autoload)
 %if %{with_tests}
+BuildRequires:  php(language) >= 5.3.1
 BuildRequires:  php-tokenizer
 BuildRequires:  php-pcre
 BuildRequires:  php-reflection
@@ -60,9 +60,6 @@ Requires:       php-composer(%{gh_owner}/utils) <  3
 # from phpcompatinfo report for version 2.3.1
 Requires:       php-reflection
 Requires:       php-pcre
-%if 0%{?fedora} > 21
-Suggests:       php-pecl(memcache)
-%endif
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
