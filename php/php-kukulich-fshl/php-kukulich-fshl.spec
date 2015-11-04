@@ -16,11 +16,11 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        FSHL: fast syntax highlighter
 
 Group:          Development/Libraries
-License:        MIT
+License:        GPLv2+
 URL:            http://fshl.kukulich.cz/
 # git snashop to get upstream test suite
 Source0:        %{name}-%{version}-%{gh_short}.tgz
@@ -99,5 +99,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov  4 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-2
+- License is GPLv2+, from review #1277487
+
 * Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - initial package, version 2.1.0
