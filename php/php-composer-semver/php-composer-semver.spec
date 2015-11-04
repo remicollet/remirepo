@@ -1,4 +1,4 @@
-# remirepo spec/Fedora file for php-composer-semver
+# remirepo/fedora spec file for php-composer-semver
 #
 # Copyright (c) 2015 Remi Collet
 # License: CC-BY-SA
@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    d0e1ccc6d44ab318b758d709e19176037da6b1ba
+%global gh_commit    7486d83e924729a2cb7d90a7337da1b291adb706
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150717
 %global gh_owner     composer
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-composer-semver
-Version:        1.0.0
+Version:        1.1.0
 Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
 Summary:        Semver library that offers utilities, version constraint parsing and validation
 
@@ -36,8 +36,8 @@ BuildRequires:  php-json
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
 # From composer.json,     "require-dev": {
-#        "phpunit/phpunit": "~4.5",
-#        "phpunit/phpunit-mock-objects": "~2.3"
+#        "phpunit/phpunit": "^4.5 || ^5.0.5",
+#        "phpunit/phpunit-mock-objects": "2.3.0 || ^3.0"
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.5
 BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 2.3
 # Autoloader
@@ -45,7 +45,7 @@ BuildRequires:  php-composer(symfony/class-loader)
 %endif
 
 # From composer.json, "require": {
-#        "php": ">=5.3.2",
+#        "php": "^5.3.2 || ^7.0",
 Requires:       php(language) >= 5.3.2
 # From phpcompatinfo report for version 1.0.0 (SpdxLicenses.php only)
 Requires:       php-pcre
@@ -110,5 +110,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov  4 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- update to 1.1.0
+
 * Sun Oct  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package, version 1.0.0
