@@ -1,14 +1,27 @@
+# remirepo spec file for libsodium-last
+# renamed for parallel installation, from:
+#
+# Fedora spec file for libsodium
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 %global libname libsodium
 
-%if 0%{?fedora} >= 21 || 0%{?rhel} >= 7
+# soname 13 since 1.0.0
+# soname 17 since 1.0.6
+
+%if 0
 # Standard build
 Name:           %{libname}
 %else
 # Build for parallel install
 Name:           %{libname}-last
 %endif
-Version:        1.0.5
-Release:        2%{?dist}
+Version:        1.0.6
+Release:        1%{?dist}
 Summary:        The Sodium crypto library
 Group:          System Environment/Libraries
 License:        ISC
@@ -90,7 +103,7 @@ rm -rf %{buildroot}
 %defattr (-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%{_libdir}/%{libname}.so.13*
+%{_libdir}/%{libname}.so.17*
 
 %files devel
 %defattr (-,root,root,-)
@@ -103,6 +116,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
+- update to 1.0.6
+- soname bump to 17
+
 * Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 1.0.5-2
 - update to 1.0.5
 - provide libsodium
