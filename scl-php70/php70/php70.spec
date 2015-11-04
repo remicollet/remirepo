@@ -19,7 +19,7 @@
 Summary:       Package that installs PHP 7.0
 Name:          %scl_name
 Version:       1.0
-Release:       0.5%{?dist}
+Release:       1%{?dist}
 Group:         Development/Languages
 License:       GPLv2+
 
@@ -50,7 +50,8 @@ the development version of PHP 7.0.
 Summary:   Package that handles %scl Software Collection.
 Group:     Development/Languages
 Requires:  scl-utils
-Requires(post): policycoreutils-python libselinux-utils
+Requires(post): %{_root_sbindir}/semanage
+Requires(post): %{_root_sbindir}/selinuxenabled
 Provides:  %{?scl_name}-runtime(%{scl_vendor})
 Provides:  %{?scl_name}-runtime(%{scl_vendor})%{?_isa}
 
@@ -202,6 +203,10 @@ restorecon -R %{_localstatedir} &>/dev/null || :
 
 
 %changelog
+* Wed Nov  4 2015 Remi Collet <remi@fedoraproject.org> 1.0-1
+- requires semanage and selinuxenabled commands
+  instead of packages
+
 * Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> 1.0-0.5
 - F23 rebuild with rh_layout
 
