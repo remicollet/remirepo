@@ -32,7 +32,7 @@
 Summary:        Wrapper for the Sodium cryptographic library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.2
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -41,7 +41,7 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if "%{?vendor}" == "Remi Collet"
 # Ensure libsodium-last is used
-BuildRequires:  libsodium-devel >= 1.0.0
+BuildRequires:  libsodium-devel >= 1.0.6
 %else
 # Per upstream documentation
 BuildRequires:  libsodium-devel >= 0.6.0
@@ -81,7 +81,7 @@ Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
-# Filter shared private
+# Filter shared private - always as libsodium.so is a bad name
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
 
@@ -232,6 +232,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-2
+- rebuild against libsodium 1.0.6
+
 * Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Update to 1.0.2
 - drop all patches, merged upstream
