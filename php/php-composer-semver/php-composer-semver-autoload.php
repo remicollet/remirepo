@@ -1,5 +1,5 @@
 <?php
-/* Autoloader for composer/spdx-licenses and its dependencies */
+/* Autoloader for composer/semver and its dependencies */
 
 $vendorDir = '/usr/share/php';
 // Use Symfony autoloader
