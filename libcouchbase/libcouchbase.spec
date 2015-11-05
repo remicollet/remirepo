@@ -1,4 +1,4 @@
-# spec file for libcouchbase
+# remirepo spec file for libcouchbase
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -20,7 +20,7 @@
 %endif
 
 Name:          libcouchbase
-Version:       2.4.9
+Version:       2.5.3
 Release:       1%{?dist}
 Summary:       Couchbase client library
 Group:         System Environment/Libraries
@@ -100,7 +100,7 @@ rm -f %{buildroot}%{_libdir}/*.la
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%{_libdir}/%{name}.so.*
+%{_libdir}/%{name}.so.2*
 # Backends
 %{_libdir}/%{name}_libevent.so
 %{_libdir}/%{name}_libev.so
@@ -130,6 +130,9 @@ make check
 
 
 %changelog
+* Thu Nov  5 2015 Remi Collet <remi@feoraproject.org> - 2.5.3-1
+- update to 2.5.3
+
 * Wed Apr 22 2015 Remi Collet <remi@feoraproject.org> - 2.4.9-1
 - update to 2.4.9
 - switch to cmake
