@@ -8,7 +8,7 @@
 # Please preserve changelog entries
 #
 Name:           owncloud
-Version:        8.0.8
+Version:        8.0.9
 Release:        1%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
@@ -501,6 +501,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 04 2015 Adam Williamson <awilliam@redhat.com> - 8.0.9-1
+- new release 8.0.9 (with security fixes)
+
 * Fri Sep 18 2015 Adam Williamson <awilliam@redhat.com> - 8.0.8-1
 - new release 8.0.8
 
