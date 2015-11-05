@@ -21,7 +21,7 @@
 %global with_zts    0%{?__ztsphp:1}
 %global gh_commit   2d2bdbc7948aa72143df0c5fc0eb684078732bf9
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
-%global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests  0%{?_with_tests:1}
 
 # XDebug should be loaded after opcache
 %if "%{php_version}" < "5.6"
@@ -33,7 +33,7 @@
 Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.3.3
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 
 # The Xdebug License, version 1.01
@@ -101,7 +101,7 @@ Xdebug also provides:
 * code coverage analysis
 * capabilities to debug your scripts interactively with a debug client
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep

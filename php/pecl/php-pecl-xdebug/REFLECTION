@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #199 xdebug version 2.3.3 ] {
+Extension [ <persistent> extension #206 xdebug version 2.4.0beta1 ] {
 
   - INI {
     Entry [ xdebug.auto_trace <ALL> ]
@@ -65,6 +65,9 @@ Extension [ <persistent> extension #199 xdebug version 2.3.3 ] {
       Current = '-1'
     }
     Entry [ xdebug.overload_var_dump <ALL> ]
+      Current = '1'
+    }
+    Entry [ xdebug.show_error_trace <ALL> ]
       Current = '1'
     }
     Entry [ xdebug.show_exception_trace <ALL> ]
@@ -160,6 +163,9 @@ Extension [ <persistent> extension #199 xdebug version 2.3.3 ] {
     Entry [ xdebug.remote_cookie_expire_time <ALL> ]
       Current = '3600'
     }
+    Entry [ xdebug.remote_addr_header <ALL> ]
+      Current = ''
+    }
     Entry [ xdebug.var_display_max_children <ALL> ]
       Current = '128'
     }
@@ -244,6 +250,12 @@ Extension [ <persistent> extension #199 xdebug version 2.3.3 ] {
     Function [ <internal:xdebug> function xdebug_stop_error_collection ] {
     }
     Function [ <internal:xdebug> function xdebug_get_collected_errors ] {
+    }
+    Function [ <internal:xdebug> function xdebug_start_function_monitor ] {
+    }
+    Function [ <internal:xdebug> function xdebug_stop_function_monitor ] {
+    }
+    Function [ <internal:xdebug> function xdebug_get_monitored_functions ] {
     }
     Function [ <internal:xdebug> function xdebug_start_code_coverage ] {
     }

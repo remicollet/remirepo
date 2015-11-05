@@ -18,10 +18,11 @@
 %{!?__php:       %global __php        %{_bindir}/php}
 
 %global pecl_name   xdebug
-%global with_zts    0%{?__ztsphp:1}
-%global gh_commit   2d2bdbc7948aa72143df0c5fc0eb684078732bf9
+%global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
+%global gh_commit   982cee15eef0e1b65fb62be2470e6f2015917a65
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
-%global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests  0%{?_with_tests:1}
+%global prever      beta1
 
 # XDebug should be loaded after opcache
 %if "%{php_version}" < "5.6"
@@ -32,9 +33,14 @@
 
 Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
-Version:        2.3.3
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
-Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
+Version:        2.4.0
+Release:        0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{gh_commit}/%{pecl_name}-%{version}%{?prever}-%{gh_short}.tar.gz
+
+# https://github.com/xdebug/xdebug/pull/217
+Patch1:         217.patch
+# https://github.com/xdebug/xdebug/pull/221
+Patch2:         221.patch
 
 # The Xdebug License, version 1.01
 # (Based on "The PHP License", version 3.0)
@@ -74,6 +80,10 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -101,7 +111,7 @@ Xdebug also provides:
 * code coverage analysis
 * capabilities to debug your scripts interactively with a debug client
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -110,6 +120,8 @@ mv %{pecl_name}-%{gh_commit} NTS
 mv NTS/package.xml .
 
 cd NTS
+%patch1 -p1 -b .pr217
+%patch2 -p1 -b .pr221
 
 # Check extension version
 ver=$(sed -n '/XDEBUG_VERSION/{s/.* "//;s/".*$//;p}' php_xdebug.h)
@@ -220,21 +232,21 @@ done
 %if %{with_tests}
 cd NTS
 # ignore kwown failed tests
-rm tests/bug00623.phpt
-rm tests/bug00687.phpt
-rm tests/bug00778.phpt
-rm tests/bug00806.phpt
-rm tests/bug00840.phpt
-rm tests/bug00886.phpt
-rm tests/bug00913.phpt
-rm tests/bug01059.phpt
-rm tests/bug01104.phpt
-rm tests/dbgp-context-get.phpt
-rm tests/dbgp-property-get-constants.phpt
+#rm tests/bug00623.phpt
+#rm tests/bug00687.phpt
+#rm tests/bug00778.phpt
+#rm tests/bug00806.phpt
+#rm tests/bug00840.phpt
+#rm tests/bug00886.phpt
+#rm tests/bug00913.phpt
+#rm tests/bug01059.phpt
+#rm tests/bug01104.phpt
+#rm tests/dbgp-context-get.phpt
+#rm tests/dbgp-property-get-constants.phpt
 
 : Upstream test suite NTS extension
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
-TEST_PHP_ARGS="-n -d extension=soap.so -d zend_extension=$PWD/modules/%{pecl_name}.so" \
+TEST_PHP_ARGS="-n -d extension=soap.so -d zend_extension=%{buildroot}%{php_extdir}/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__php} -n run-tests.php --show-diff
@@ -282,6 +294,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 5 2015 Remi Collet <remi@fedoraproject.org> - 2.4.0-0.1.beta1
+- update to 2.4.0beta1
+
 * Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
 - update to 2.3.3
 - drop all patches, merged upstream

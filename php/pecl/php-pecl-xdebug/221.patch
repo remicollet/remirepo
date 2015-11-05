@@ -1,0 +1,22 @@
+From 7d540886765540e593c2dc89d63e41504697f1b2 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 5 Nov 2015 19:13:33 +0100
+Subject: [PATCH] fix build on i686
+
+---
+ xdebug_code_coverage.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/xdebug_code_coverage.c b/xdebug_code_coverage.c
+index 6c52f81..8745b04 100644
+--- a/xdebug_code_coverage.c
++++ b/xdebug_code_coverage.c
+@@ -554,7 +554,7 @@ static zend_brk_cont_element* xdebug_find_brk_cont(zend_uint nest_levels, int ar
+ 
+ static int xdebug_find_jump(zend_op_array *opa, unsigned int position, long *jmp1, long *jmp2)
+ {
+-#if PHP_VERSION_ID < 70000
++#if defined(ZEND_USE_ABS_JMP_ADDR) || PHP_VERSION_ID < 70000
+ 	zend_op *base_address = &(opa->opcodes[0]);
+ #endif
+ 

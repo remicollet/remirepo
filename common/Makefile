@@ -101,6 +101,13 @@ php7build:
 		time rpmbuild $(RPMDEFINES) --define "scl php70" --without zts -bb $(NAME).spec ; \
 	fi
 
+php7test:
+	@if test -f $(NAME)-php7.spec ; then \
+		time rpmbuild $(RPMDEFINES) --define "scl php70" --without zts -bb --with tests $(NAME)-php7.spec ; \
+	else \
+		time rpmbuild $(RPMDEFINES) --define "scl php70" --without zts -bb --with tests $(NAME).spec ; \
+	fi
+
 php7srpm:
 	rpmbuild $(RPMDEFINES) $(SRCDEFINES) -bs $(NAME)-php7.spec
 
