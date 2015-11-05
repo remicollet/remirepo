@@ -17,7 +17,7 @@
 
 Name:           %{c_project}
 Version:        4.1.1
-%global specrel 2
+%global specrel 3
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        PHP source code API generator
 
@@ -31,6 +31,9 @@ Source1:        makesrc.sh
 # Use RPM autoloader
 # and drop Herrera dependencies (only used for phar selfupdate command)
 Patch0:         %{name}-rpm.patch
+
+# From upstream git repo
+Patch1:         %{name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -150,6 +153,7 @@ Smart and Readable Documentation for your PHP project.
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
+%patch1 -p1
 rm -r tests/Herrera
 rm -r src/Herrera
 rm    src/Command/SelfUpdateCommand.php
@@ -201,6 +205,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov  5 2015 Remi Collet <remi@fedoraproject.org> - 4.1.1-3
+- add upstream patch: add condition for expected type
+  https://github.com/ApiGen/ApiGen/issues/631
+
 * Tue Nov  3 2015 Remi Collet <remi@fedoraproject.org> - 4.1.1-2
 - drop herrera from dependencies (only used for phar
   selfupdate command)
