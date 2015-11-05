@@ -1,4 +1,4 @@
-# spec file for php-pecl-couchbase2
+# remirepo spec file for php-pecl-couchbase2
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -25,16 +25,21 @@
 
 Summary:       Couchbase Server PHP extension
 Name:          %{?scl_prefix}php-pecl-couchbase2
-Version:       2.0.7
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:       2.1.0
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           pecl.php.net/package/couchbase
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?svnrev:-dev}.tgz
 
+# Build with system fastlz
+Patch0:        %{pecl_name}-fastlz.patch
+
 BuildRequires: %{?scl_prefix}php-devel >= 5.3.0
 BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: libcouchbase-devel
+BuildRequires: fastlz-devel
+BuildRequires: zlib-devel
 # to ensure compatibility with XDebug
 BuildRequires: %{?scl_prefix}php-pecl-xdebug
 
@@ -90,7 +95,7 @@ This package provides API version 2.
 Documentation:
 http://docs.couchbase.com/prebuilt/php-sdk-2.0/topics/overview.html
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -99,6 +104,11 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
+# Drop bundled library
+sed -e '/fastlz/d' -i ../package.xml
+rm -r fastlz
+%patch0 -p1 -b .sysfast
+
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_COUCHBASE_VERSION/{s/.* "//;s/".*$//;p}' php_couchbase.h)
 if test "x${extver}" != "x%{version}"; then
@@ -123,6 +133,7 @@ cp -pr NTS ZTS
 %build
 peclconf() {
 %configure \
+     --with-system-fastlz \
      --with-php-config=$1
 }
 
@@ -162,13 +173,13 @@ done
 
 %check
 : minimal NTS load test
-%{__php} \
+%{__php} -n \
    -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
    -m | grep %{pecl_name}
 
 %if %{with_zts}
 : minimal ZTS load test
-%{__ztsphp} \
+%{__ztsphp} -n \
    -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
    -m | grep %{pecl_name}
 %endif
@@ -208,6 +219,11 @@ fi
 
 
 %changelog
+* Thu Nov 05 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+- add patch to use system fastlz library
+  from https://github.com/couchbase/php-couchbase/pull/10
+
 * Wed Apr 22 2015 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
 - Update to 2.0.7
 

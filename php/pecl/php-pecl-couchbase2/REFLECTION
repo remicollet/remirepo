@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #181 couchbase version 2.0.7 ] {
+Extension [ <persistent> extension #186 couchbase version 2.1.0 ] {
 
   - Constants [57] {
     Constant [ integer COUCHBASE_PERSISTTO_MASTER ] { 1 }
@@ -60,6 +60,17 @@ Extension [ <persistent> extension #181 couchbase version 2.0.7 ] {
     Constant [ integer COUCHBASE_KEYNOTFOUND ] { 13 }
   }
 
+  - Functions {
+    Function [ <internal:couchbase> function couchbase_fastlz_compress ] {
+    }
+    Function [ <internal:couchbase> function couchbase_fastlz_decompress ] {
+    }
+    Function [ <internal:couchbase> function couchbase_zlib_compress ] {
+    }
+    Function [ <internal:couchbase> function couchbase_zlib_decompress ] {
+    }
+  }
+
   - Classes [4] {
     Class [ <internal:couchbase> class CouchbaseException extends Exception ] {
 
@@ -79,7 +90,7 @@ Extension [ <persistent> extension #181 couchbase version 2.0.7 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -87,6 +98,9 @@ Extension [ <persistent> extension #181 couchbase version 2.0.7 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -177,7 +191,7 @@ Extension [ <persistent> extension #181 couchbase version 2.0.7 ] {
       - Properties [0] {
       }
 
-      - Methods [17] {
+      - Methods [18] {
         Method [ <internal:couchbase, ctor> public method __construct ] {
         }
 
@@ -212,6 +226,9 @@ Extension [ <persistent> extension #181 couchbase version 2.0.7 ] {
         }
 
         Method [ <internal:couchbase> public method unlock ] {
+        }
+
+        Method [ <internal:couchbase> public method n1ql_request ] {
         }
 
         Method [ <internal:couchbase> public method http_request ] {
