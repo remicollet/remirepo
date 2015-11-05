@@ -12,8 +12,8 @@
 
 %global github_owner     guzzle
 %global github_name      psr7
-%global github_version   1.2.0
-%global github_commit    4ef919b0cf3b1989523138b60163bbcb7ba1ff7e
+%global github_version   1.2.1
+%global github_commit    4d0bdbe1206df7440219ce14c972aa57cc5e4982
 
 %global composer_vendor  guzzlehttp
 %global composer_project psr7
@@ -145,6 +145,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 04 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.1-1
+- Updated to 1.2.1 (RHBZ #1277467)
+
 * Sun Aug 16 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.0-1
 - Updated to 1.2.0 (RHBZ #1253997)
 - Updated autoloader to load dependencies after self registration
