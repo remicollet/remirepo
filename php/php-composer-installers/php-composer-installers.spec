@@ -18,6 +18,12 @@
 %global composer_vendor  composer
 %global composer_project installers
 
+# "composer-plugin-api": "1.0.0"
+%global composer_plugin_min_ver 1.0.0
+%global composer_plugin_max_ver 1.0.1
+# "composer/composer": "1.0.*@dev"
+%global composer_min_ver 1.0
+
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
 
@@ -25,7 +31,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}
 Summary:       A multi-framework Composer library installer
 
 Group:         Development/Libraries
@@ -38,8 +44,9 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # Tests
 %if %{with_tests}
 ## composer.json
-BuildRequires: %{_bindir}/phpunit
-BuildRequires: php-composer(composer/composer)
+BuildRequires: php-composer(composer-plugin-api) >= %{composer_plugin_min_ver}
+BuildRequires: php-composer(composer/composer)   >= %{composer_min_ver}
+BuildRequires: php-composer(phpunit/phpunit)
 ## phpcompatinfo (computed from version 1.0.21)
 BuildRequires: php(language) >= 5.3.0
 BuildRequires: php-pcre
@@ -48,7 +55,9 @@ BuildRequires: php-spl
 BuildRequires: php-composer(symfony/class-loader)
 %endif
 
-Requires:      php-composer(composer/composer)
+# composer.json
+Requires:      php-composer(composer-plugin-api) >= %{composer_plugin_min_ver}
+Requires:      php-composer(composer-plugin-api) <  %{composer_plugin_max_ver}
 # phpcompatinfo (computed from version 1.0.21)
 Requires:      php(language) >= 5.3.0
 Requires:      php-pcre
@@ -145,6 +154,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 04 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.22-2
+- Dependency updates
+
+* Wed Nov 04 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.22-1
+- Updated to 1.0.22 (RHBZ #1276816)
+
 * Fri Oct 30 2015 Remi Collet <remi@remirepo.net> - 1.0.22-1
 - update to 1.0.22
 
