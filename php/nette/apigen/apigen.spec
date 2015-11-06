@@ -141,8 +141,10 @@ Requires:       php-zip
 # Autoloader
 Requires:       php-composer(symfony/class-loader)
 
-# provides latte/latte
+# composer name
 Provides:       php-composer(%{c_project}/%{c_project}) = %{version}
+# php namespaced name, used in other distro
+Provides:       php-%{c_project} = %{version}
 
 
 %description
