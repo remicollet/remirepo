@@ -24,24 +24,20 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit  e032e7b207cb7ac22fbfb0ece02e9c04e273a13e
+%global gh_commit  ffb4fc8e811e62efa0e05b36faf857b427c572b0
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   krakjoe
 %global gh_project apcu
 %global gh_date    20151106
 %global pecl_name  apcu
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
-%if "%{php_version}" < "5.6"
-%global ini_name   %{pecl_name}.ini
-%else
 %global ini_name   40-%{pecl_name}.ini
-%endif
 
 Name:           %{?sub_prefix}php-pecl-apcu
 Summary:        APC User Cache
 Version:        5.0.0
 %if 0%{?gh_date:1}
-Release:        0.5.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.6.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -243,7 +239,7 @@ install -D -m 644 -p %{SOURCE3} \
 # Test & Documentation
 cd NTS
 for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
-do [ -f $i ] && install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+do install -Dpm 644 tests/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/tests/$i
 done
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
@@ -348,6 +344,9 @@ fi
 
 
 %changelog
+* Fri Nov  6 2015 Remi Collet <remi@fedoraproject.org> - 5.0.0-0.6.20151106gitffb4fc8
+- new snapshot
+
 * Fri Nov  6 2015 Remi Collet <remi@fedoraproject.org> - 5.0.0-0.5.20151106gite032e7b
 - new snapshot
 

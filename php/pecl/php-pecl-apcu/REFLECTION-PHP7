@@ -48,22 +48,16 @@ Extension [ <persistent> extension #71 apcu version 5.0.0-dev ] {
     }
   }
 
-  - Constants [1] {
-    Constant [ boolean APCU_APC_FULL_BC ] { 1 }
-  }
-
   - Functions {
     Function [ <internal:apcu> function apcu_cache_info ] {
 
-      - Parameters [2] {
-        Parameter #0 [ <optional> $type ]
-        Parameter #1 [ <optional> $limited ]
+      - Parameters [1] {
+        Parameter #0 [ <optional> $limited ]
       }
     }
     Function [ <internal:apcu> function apcu_clear_cache ] {
 
-      - Parameters [1] {
-        Parameter #0 [ <optional> $cache ]
+      - Parameters [0] {
       }
     }
     Function [ <internal:apcu> function apcu_sma_info ] {
