@@ -24,13 +24,13 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit  9c361d2627676c910ec0c1a5d13c9031f3143bf9
+%global gh_commit  e032e7b207cb7ac22fbfb0ece02e9c04e273a13e
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   krakjoe
 %global gh_project apcu
-%global gh_date    20151014
+%global gh_date    20151106
 %global pecl_name  apcu
-%global with_zts   0%{?__ztsphp:1}
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 %global ini_name   %{pecl_name}.ini
 %else
@@ -41,7 +41,7 @@ Name:           %{?sub_prefix}php-pecl-apcu
 Summary:        APC User Cache
 Version:        5.0.0
 %if 0%{?gh_date:1}
-Release:        0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.5.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -63,38 +63,37 @@ Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Obsoletes:      %{?scl_prefix}php-apcu < 4.0.0-1
-Provides:       %{?scl_prefix}php-apcu = %{version}
-Provides:       %{?scl_prefix}php-apcu%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(apcu) = %{version}
+Obsoletes:      %{?scl_prefix}php-apcu               < 4.0.0-1
+Provides:       %{?scl_prefix}php-apcu               = %{version}
+Provides:       %{?scl_prefix}php-apcu%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(apcu)         = %{version}
 Provides:       %{?scl_prefix}php-pecl(apcu)%{?_isa} = %{version}
-%if "%{php_version}" < "5.5"
-Conflicts:      %{?scl_prefix}php-pecl-apc < 4
-%else
-Obsoletes:      %{?scl_prefix}php-pecl-apc < 4
-%endif
 # Same provides than APC, this is a drop in replacement
-Provides:       %{?scl_prefix}php-apc = %{version}
-Provides:       %{?scl_prefix}php-apc%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl-apc = %{version}
-Provides:       %{?scl_prefix}php-pecl-apc%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(APC) = %{version}
-Provides:       %{?scl_prefix}php-pecl(APC)%{?_isa} = %{version}
+Obsoletes:      %{?scl_prefix}php-pecl-apc           < 4
+Provides:       %{?scl_prefix}php-apc                = %{version}
+Provides:       %{?scl_prefix}php-apc%{?_isa}        = %{version}
+Provides:       %{?scl_prefix}php-pecl-apc           = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-apc%{?_isa}   = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl(APC)          = %{version}
+Provides:       %{?scl_prefix}php-pecl(APC)%{?_isa}  = %{version}
+# For "more" SCL
+Provides:       %{?scl_prefix}php-pecl-apcu          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-apcu%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:      php53-pecl-%{pecl_name} <= %{version}
+Obsoletes:      php53-pecl-apc          <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-apc          <= %{version}
+Obsoletes:      php54-pecl-%{pecl_name} <= %{version}
+Obsoletes:      php54-pecl-apc          <= %{version}
 Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
-%if "%{php_version}" > "5.5"
+Obsoletes:     php54w-pecl-apc          <= %{version}
 Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
-%endif
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
@@ -136,13 +135,13 @@ Summary:       APCu developer files (header)
 Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 Requires:      %{?scl_prefix}php-devel%{?_isa}
-%if "%{php_version}" < "5.5"
-Conflicts:     %{?scl_prefix}php-pecl-apc-devel < 4
-%else
-Obsoletes:     %{?scl_prefix}php-pecl-apc-devel < 4
-%endif
-Provides:      %{?scl_prefix}php-pecl-apc-devel = %{version}-%{release}
-Provides:      %{?scl_prefix}php-pecl-apc-devel%{?_isa} = %{version}-%{release}
+
+Obsoletes:     %{?scl_prefix}php-pecl-apc-devel          < 4
+Provides:      %{?scl_prefix}php-pecl-apc-devel          = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-apc-devel%{?_isa}  = %{version}-%{release}
+# For "more" SCL
+Provides:      %{?scl_prefix}php-pecl-apcu-devel         = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-apcu-devel%{?_isa} = %{version}-%{release}
 
 %description devel
 These are the files needed to compile programs using APCu.
@@ -159,11 +158,8 @@ Requires:      %{name} = %{version}-%{release}
 Requires:      mod_php
 Requires:      php-gd
 Requires:      httpd
-%if "%{php_version}" < "5.5"
-Conflicts:     apc-panel < 4
-%else
+
 Obsoletes:     apc-panel < 4
-%endif
 Provides:      apc-panel = %{version}-%{release}
 
 %description -n apcu-panel
@@ -352,6 +348,9 @@ fi
 
 
 %changelog
+* Fri Nov  6 2015 Remi Collet <remi@fedoraproject.org> - 5.0.0-0.5.20151106gite032e7b
+- new snapshot
+
 * Wed Oct 14 2015 Remi Collet <remi@fedoraproject.org> - 5.0.0-0.4.20151014git9c361d2
 - new snapshot (with apcu and apc extensions)
 
