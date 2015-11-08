@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    169acddcc088bf74eb5b3c14d17f19b26d486b52
+%global gh_commit    9e3cac96c0796c2404f7da0fb8537c78815b55e5
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,8 +17,8 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.1
-%global specrel 2
+Version:        2.3.2
+%global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        APIs and features removed from Nette Framework
 
@@ -37,17 +37,17 @@ BuildRequires:  php-fileinfo
 BuildRequires:  php-spl
 BuildRequires:  php-tokenizer
 # From composer.json, "require-dev": {
-#        "nette/application": "~2.2",
-#        "nette/bootstrap": "~2.2, >=2.2.1",
-#        "nette/caching": "~2.2",
-#        "nette/forms": "~2.2",
-#        "nette/mail": "~2.2",
-#        "nette/robot-loader": "~2.2",
-#        "nette/safe-stream": "~2.2",
-#        "nette/utils": "~2.2",
-#        "latte/latte": "~2.2",
-#        "tracy/tracy": "~2.2",
-#        "nette/tester": "~1.1"
+#        "nette/application": "^2.2",
+#        "nette/bootstrap": "^2.2.1",
+#        "nette/caching": "^2.2",
+#        "nette/forms": "^2.2",
+#        "nette/mail": "^2.2",
+#        "nette/robot-loader": "^2.2",
+#        "nette/safe-stream": "^2.2",
+#        "nette/utils": "^2.2",
+#        "latte/latte": "^2.2",
+#        "tracy/tracy": "^2.2",
+#        "nette/tester": "^1.1"
 BuildRequires:  php-composer(%{gh_owner}/application) >= 2.2
 BuildRequires:  php-composer(%{gh_owner}/bootstrap) >= 2.2.1
 BuildRequires:  php-composer(%{gh_owner}/caching) >= 2.2
@@ -61,7 +61,7 @@ BuildRequires:  php-composer(tracy/tracy) >= 2.2
 BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.1
 %endif
 
-# from phpcompatinfo report for version 2.3.1
+# from phpcompatinfo report for version 2.3.2
 Requires:       php-fileinfo
 Requires:       php-spl
 Requires:       php-tokenizer
@@ -79,8 +79,7 @@ To use this library, you just have to add, in your project:
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-# Move classes to avoid conflicts
-mv src/Utils src/%{ns_project}
+mkdir src/%{ns_project}
 
 
 %build
@@ -146,6 +145,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov  8 2015 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
+- update to 2.3.2
+
 * Sun Nov  1 2015 Remi Collet <remi@fedoraproject.org> - 2.3.1-2
 - improve installation tree to avoid file conflicts
   with nette/utils and nette/nette
