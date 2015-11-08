@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    91b1381c8b3a55517819be07baf2bdb888c5eb1e
+%global gh_commit    b6e090e461c9cd88d60ae79a7713990b17b1531c
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -16,7 +16,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_project}
-Version:        2.3.6
+Version:        2.3.7
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Latte: the amazing template engine for PHP
@@ -137,5 +137,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov  8 2015 Remi Collet <remi@fedoraproject.org> - 2.3.7-1
+- update to 2.3.7
+
 * Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 2.3.6-1
 - initial package
