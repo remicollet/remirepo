@@ -18,7 +18,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.3.1
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette SafeStream: Atomic Operations
 
@@ -26,7 +26,7 @@ Group:          Development/Libraries
 License:        BSD or GPLv2 or GPLv3
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        %{name}-%{version}-%{gh_short}.tgz
-# pull a git snapshot to get test sutie
+# pull a git snapshot to get test suite
 Source1:        makesrc.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -109,9 +109,13 @@ rm -rf %{buildroot}
 %license license.md
 %doc readme.md contributing.md
 %doc composer.json
-%{php_home}/%{ns_vendor}/%{ns_project}
+%dir %{php_home}/%{ns_vendor}
+     %{php_home}/%{ns_vendor}/%{ns_project}
 
 
 %changelog
+* Mon Nov  9 2015 Remi Collet <remi@fedoraproject.org> - 2.3.1-2
+- fix directory ownership, from review #1277441
+
 * Fri Oct 30 2015 Remi Collet <remi@fedoraproject.org> - 2.3.1-1
 - initial package
