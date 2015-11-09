@@ -34,13 +34,15 @@
 Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.4.0
-Release:        0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{gh_commit}/%{pecl_name}-%{version}%{?prever}-%{gh_short}.tar.gz
 
 # https://github.com/xdebug/xdebug/pull/217
 Patch1:         217.patch
 # https://github.com/xdebug/xdebug/pull/221
 Patch2:         221.patch
+# Upstream patches
+Patch3:         %{pecl_name}-upstream.patch
 
 # The Xdebug License, version 1.01
 # (Based on "The PHP License", version 3.0)
@@ -122,6 +124,7 @@ mv NTS/package.xml .
 cd NTS
 %patch1 -p1 -b .pr217
 %patch2 -p1 -b .pr221
+%patch3 -p1 -b .upstream
 
 # Check extension version
 ver=$(sed -n '/XDEBUG_VERSION/{s/.* "//;s/".*$//;p}' php_xdebug.h)
@@ -294,6 +297,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 9 2015 Remi Collet <remi@fedoraproject.org> - 2.4.0-0.2.beta1
+- add 1 upstream patch (segfault in code coverage)
+  http://bugs.xdebug.org/view.php?id=1195
+
 * Thu Nov 5 2015 Remi Collet <remi@fedoraproject.org> - 2.4.0-0.1.beta1
 - update to 2.4.0beta1
 
