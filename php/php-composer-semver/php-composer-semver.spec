@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    7486d83e924729a2cb7d90a7337da1b291adb706
+%global gh_commit    0faeb6e433f6b352f0dc55ec1faf5c6b605a35d3
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150717
 %global gh_owner     composer
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-composer-semver
-Version:        1.1.0
+Version:        1.2.0
 Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
 Summary:        Semver library that offers utilities, version constraint parsing and validation
 
@@ -110,6 +110,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 10 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- update to 1.2.0
+
 * Wed Nov  4 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - update to 1.1.0
 
