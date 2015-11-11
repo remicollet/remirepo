@@ -130,8 +130,8 @@
 #global gh_date      20150623
 #global gh_owner     php
 #global gh_project   php-src
-%global rcver        RC6
-%global rpmrel       22
+%global rcver        RC7
+%global rpmrel       23
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1803,6 +1803,9 @@ fi
 
 
 %changelog
+* Wed Nov 11 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.23.RC7
+- Update to 7.0.0RC7
+
 * Wed Oct 28 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.22.RC6
 - Update to 7.0.0RC6
 
