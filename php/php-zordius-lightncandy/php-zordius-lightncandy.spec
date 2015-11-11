@@ -11,7 +11,7 @@
 %global	mustache_git 83b0721610a4e11832e83df19c73ace3289972b9
 
 Name:		php-zordius-lightncandy
-Version:	0.22
+Version:	0.23
 Release:	1%{?dist}
 Summary:	An extremely fast PHP implementation of handlebars and mustache
 Group:		Development/Libraries
@@ -62,7 +62,11 @@ cp -p src/lightncandy.php %{buildroot}%{_datadir}/php/zordius/lightncandy
 
 
 %check
-phpunit -v --filter test
+%{_bindir}/phpunit -v --filter test
+
+if which php70; then
+  php70 %{_bindir}/phpunit -v --filter test || exit 0
+fi
 
 
 %clean
@@ -78,6 +82,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 11 2015 Remi Collet <remi@remirepo.net> - 0.23-1
+- update to 0.23 (backported from Fedora)
+- run test suite against PHP 7 (broken for now)
+
+* Wed Nov 11 2015 Michael Cronenworth <mike@cchtml.com> - 0.23-1
+- version update
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 0.22-1
 - backport for remi repo, add EL-5 stuff
 
