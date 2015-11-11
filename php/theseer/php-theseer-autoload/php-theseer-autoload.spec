@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    f07aed0cac16879dcab19efb0f2dc65c5df666c6
+%global gh_commit    19513be5913ed780836e3df5e68bfb5655630612
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     theseer
 %global gh_project   Autoload
@@ -15,7 +15,7 @@
 %global pear_channel pear.netpirates.net
 
 Name:           php-theseer-autoload
-Version:        1.20.3
+Version:        1.21.0
 Release:        1%{?dist}
 Summary:        A tool and library to generate autoload code
 
@@ -46,7 +46,7 @@ Requires:       php-composer(theseer/directoryscanner) >= 1.3
 Requires:       php-composer(theseer/directoryscanner) <  2
 Requires:       php-composer(zetacomponents/console-tools) >= 1.7
 Requires:       php-composer(zetacomponents/console-tools) <  2
-# From phpcompatinfo report for version 1.20.3
+# From phpcompatinfo report for version 1.21
 Requires:       php-cli
 Requires:       php-date
 Requires:       php-json
@@ -130,6 +130,9 @@ fi
 
 
 %changelog
+* Wed Nov 11 2015 Remi Collet <remi@fedoraproject.org> - 1.21.0-1
+- update to 1.21.0
+
 * Sun Oct  4 2015 Remi Collet <remi@fedoraproject.org> - 1.20.3-1
 - update to 1.20.3
 
