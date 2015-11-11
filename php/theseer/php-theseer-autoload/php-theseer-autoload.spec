@@ -108,6 +108,10 @@ EOF
 : Run upstream test suite
 phpunit --verbose
 
+if which php70; then
+  php70 %{_bindir}/phpunit --verbose
+fi
+
 
 %clean
 rm -rf %{buildroot}
