@@ -27,7 +27,7 @@
 %global pdover      20080721
 # Extension version
 %global opcachever  7.0.6-dev
-%global oci8ver     2.0.9
+%global oci8ver     2.0.10
 
 # Use for first build of PHP (before pecl/zip and pecl/jsonc)
 %global php_bootstrap   0
@@ -137,12 +137,12 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver  RC1
+%global rcver  RC1
 %global rpmrel 1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.6.15
+Version: 5.6.16
 %if 0%{?rcver:1}
 Release: 0.%{rpmrel}.%{rcver}%{?dist}
 %else
@@ -1786,6 +1786,9 @@ fi
 
 
 %changelog
+* Thu Nov 12 2015 Remi Collet <remi@fedoraproject.org> 5.6.16-0.1.RC1
+- update to 5.6.16RC1
+
 * Thu Oct 29 2015 Remi Collet <remi@fedoraproject.org> 5.6.15-1
 - Update to 5.6.15
   http://www.php.net/releases/5_6_15.php
