@@ -1,0 +1,43 @@
+From b5f8ad6da275665dfb871e478a676969bda02d3c Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 12 Nov 2015 10:41:54 +0100
+Subject: [PATCH] fix build with old gcc
+
+---
+ php_amqp.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/php_amqp.h b/php_amqp.h
+index 49afd55..ef13d44 100644
+--- a/php_amqp.h
++++ b/php_amqp.h
+@@ -118,7 +118,7 @@ typedef struct _amqp_channel_object {
+ #endif
+ } amqp_channel_object;
+ 
+-typedef struct _amqp_connection_resource {
++struct _amqp_connection_resource {
+ 	zend_bool is_connected;
+ 	zend_bool is_persistent;
+ 	zend_bool is_dirty;
+@@ -131,9 +131,9 @@ typedef struct _amqp_connection_resource {
+ 	PHP5to7_param_str_len_type_t resource_key_len;
+ 	amqp_connection_state_t connection_state;
+ 	amqp_socket_t *socket;
+-} amqp_connection_resource;
++};
+ 
+-typedef struct _amqp_connection_object {
++struct _amqp_connection_object {
+ #if PHP_MAJOR_VERSION >= 7
+ 	amqp_connection_resource *connection_resource;
+ 	zend_object zo;
+@@ -141,7 +141,7 @@ typedef struct _amqp_connection_object {
+ 	zend_object zo;
+ 	amqp_connection_resource *connection_resource;
+ #endif
+-} amqp_connection_object;
++};
+ 
+ #define DEFAULT_PORT						"5672"		/* default AMQP port */
+ #define DEFAULT_HOST						"localhost"
