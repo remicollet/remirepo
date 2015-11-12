@@ -131,7 +131,7 @@
 #global gh_owner     php
 #global gh_project   php-src
 %global rcver        RC7
-%global rpmrel       23
+%global rpmrel       24
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1803,6 +1803,9 @@ fi
 
 
 %changelog
+* Thu Nov 12 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.24.RC7
+- Update to 7.0.0RC7 (retagged)
+
 * Wed Nov 11 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.23.RC7
 - Update to 7.0.0RC7
 

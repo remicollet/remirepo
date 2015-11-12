@@ -133,7 +133,7 @@
 %endif
 
 %global rcver         RC7
-%global rpmrel        10
+%global rpmrel        11
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -2001,6 +2001,9 @@ fi
 
 
 %changelog
+* Thu Nov 12 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.11.RC7
+- Update to 7.0.0RC7 (retagged)
+
 * Wed Nov 11 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.10.RC7
 - Update to 7.0.0RC7
 
