@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    c84f05be256cd7c9d2340b26f7995b4afbf8787b
+%global gh_commit    f7bb5cddf4ffe113eeb737b05241adb947b43f9d
 #global gh_date      20150924
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHP_CodeCoverage
 %global pear_channel pear.phpunit.de
 %global major        3.0
-%global minor        1
+%global minor        2
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
@@ -119,6 +119,14 @@ sed -e '/log/d' phpunit.xml.dist >phpunit.xml
     %{_bindir}/phpunit \
         --bootstrap %{buildroot}%{php_home}/PHP/CodeCoverage/Autoload.php \
         --verbose
+
+if which php70 ; then
+  php70 \
+    -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+    %{_bindir}/phpunit \
+        --bootstrap %{buildroot}%{php_home}/PHP/CodeCoverage/Autoload.php \
+        --verbose
+fi
 %endif
 
 
@@ -144,6 +152,10 @@ fi
 
 
 %changelog
+* Fri Nov 13 2015 Remi Collet <remi@fedoraproject.org> - 3.0.2-1
+- Update to 3.0.2
+- run test suite with both PHP 5 and 7 when available
+
 * Wed Oct  7 2015 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
 - Update to 3.0.1
 
