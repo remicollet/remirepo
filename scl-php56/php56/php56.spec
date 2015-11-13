@@ -16,7 +16,7 @@
 Summary:       Package that installs PHP 5.6
 Name:          %scl_name
 Version:       2.1
-Release:       1%{?dist}
+Release:       2%{?dist}
 Group:         Development/Languages
 License:       GPLv2+
 
@@ -30,9 +30,9 @@ BuildRequires: help2man
 # Temporary work-around
 BuildRequires: iso-codes
 
-Requires:      %{?scl_prefix}php-common%{?_isa} >= 5.6.7
+Requires:      %{?scl_prefix}php-common%{?_isa} >= 5.6.15
 Requires:      %{?scl_prefix}php-cli%{?_isa}
-Requires:      %{?scl_prefix}php-pear           >= 1:1.9.5-9
+Requires:      %{?scl_prefix}php-pear           >= 1:1.10
 Requires:      %{?scl_name}-runtime%{?_isa}      = %{version}-%{release}
 
 %description
@@ -44,6 +44,8 @@ that install PHP 5.6 language.
 Summary:   Package that handles %scl Software Collection.
 Group:     Development/Languages
 Requires:  scl-utils
+Requires(post): %{_root_sbindir}/semanage
+Requires(post): %{_root_sbindir}/selinuxenabled
 Provides:  %{?scl_name}-runtime(%{scl_vendor})
 Provides:  %{?scl_name}-runtime(%{scl_vendor})%{?_isa}
 
@@ -148,6 +150,13 @@ if [ "%{_root_sysconfdir}/rpm" != "%{macrosdir}" ]; then
 fi
 
 
+%post runtime
+# Simple copy of context from system root to SCL root.
+semanage fcontext -a -e / %{?_scl_root}  &>/dev/null || :
+selinuxenabled && load_policy || :
+restorecon -R %{?_scl_root}  &>/dev/null || :
+
+
 %{!?_licensedir:%global license %%doc}
 
 %files
@@ -178,6 +187,9 @@ fi
 
 
 %changelog
+* Fri Nov 13 2015 Remi Collet <remi@fedoraproject.org> 2.1-2
+- fix selinux context
+
 * Wed Mar 25 2015 Remi Collet <remi@fedoraproject.org> 2.1-1
 - fix licenses location
 - own directories for pecl packages
