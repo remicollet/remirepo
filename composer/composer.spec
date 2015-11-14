@@ -6,18 +6,19 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5a5088eb342e4876cb28472ba1fc3f1da7a14852
+%global gh_commit    cd9054ce2abd1d06ed0eb1244eba1b2c2af633b6
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_branch    1.0-dev
-%global gh_date      20151030
+#global gh_branch    1.0-dev
+#global gh_date      20151114
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 %global api_version  1.0.0
+%global prever       alpha11
 
 Name:           composer
 Version:        1.0.0
-Release:        0.14.%{gh_date}git%{gh_short}%{?dist}
+Release:        0.15.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -144,12 +145,17 @@ cp -p %{SOURCE2} tests/bootstrap.php
 rm src/bootstrap.php
 
 : fix reported version
+%if 0%{?gh_date}
 DATE=%{gh_date}
 DATE=${DATE:0:4}-${DATE:4:2}-${DATE:6:2}
 sed -e '/VERSION/s/@package_version@/%{gh_commit}/' \
     -e '/BRANCH_ALIAS_VERSION/s/@package_branch_alias_version@/%{gh_branch}/' \
     -e "/RELEASE_DATE/s/@release_date@/$DATE/" \
     -i src/Composer/Composer.php
+%else
+sed -e '/BRANCH_ALIAS_VERSION/s/@package_branch_alias_version@//' \
+    -i src/Composer/Composer.php
+%endif
 
 : check Plugin API version
 php -r '
@@ -188,6 +194,10 @@ install -Dpm 755 bin/%{name} %{buildroot}%{_bindir}/%{name}
 : Run test suite
 export BUILDROOT=%{buildroot}
 %{_bindir}/phpunit --include-path %{buildroot}%{_datadir}/php --verbose
+
+if which php70; then
+   php70 %{_bindir}/phpunit --include-path %{buildroot}%{_datadir}/php --verbose
+fi
 %else
 : Test suite disabled
 %endif
@@ -209,6 +219,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Nov 14 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.15.alpha1
+- update to 1.0.0alpha11
+- run test suite with both PHP 5 and 7 when available
+
 * Mon Nov  2 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.14.20151030git5a5088e
 - new snapshot
 - allow symfony 3
