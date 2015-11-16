@@ -6,6 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-crypto}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -21,7 +29,7 @@
 %endif
 
 Summary:        Wrapper for OpenSSL Crypto Library
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        0.2.1
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
@@ -235,6 +243,7 @@ rm -rf %{buildroot}
 - drop runtime dependency on pear, new scriptlets
 - improve skip check for CCM test when not available
   open https://github.com/bukka/php-crypto/pull/13
+- allow to build as more-php56 for rh-php56
 
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 0.1.1-3.1
 - Fedora 21 SCL mass rebuild
