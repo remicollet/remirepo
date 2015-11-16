@@ -1,7 +1,8 @@
+# remirepo spec file for php-PsrLog, from Fedora:
 #
 # RPM spec file for php-PsrLog
 #
-# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -14,9 +15,11 @@
 %global github_version 1.0.0
 %global github_commit  fe0936ee26643249e916849d48e3a51d5f5e278b
 
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
+
 Name:      php-PsrLog
 Version:   %{github_version}
-Release:   6%{?dist}
+Release:   8%{?dist}
 Summary:   Common interface for logging libraries
 
 Group:     Development/Libraries
@@ -35,15 +38,40 @@ Requires:  php-spl
 Provides:  php-composer(psr/log) = %{version}
 
 %description
-This package holds all interfaces/classes/traits related to PSR-3
-(https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md).
+This package holds all interfaces/classes/traits related to PSR-3 [1].
 
 Note that this is not a logger of its own. It is merely an interface that
 describes a logger. See the specification for more details.
 
+[1] http://www.php-fig.org/psr/psr-3/
+
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
+
+: Create autoloader
+cat <<'AUTOLOAD' | tee Psr/Log/autoload.php
+<?php
+/**
+ * Autoloader for %{name} and its' dependencies
+ * (created by %{name}-%{version}-%{release})
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('Psr\\Log\\', dirname(dirname(__DIR__)));
+
+return $fedoraClassLoader;
+AUTOLOAD
 
 
 %build
@@ -63,6 +91,9 @@ cp -rp Psr %{buildroot}%{_datadir}/php/
 
 
 %changelog
+* Mon Nov 16 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.0-8
+- Added autoloader
+
 * Sun Jun  8 2014 Remi Collet <remi@fedoraproject.org> 1.0.0-6
 - backport rawhide changes.
 
