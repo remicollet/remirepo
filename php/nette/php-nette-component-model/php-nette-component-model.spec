@@ -36,7 +36,7 @@ BuildRequires:  php-composer(theseer/autoload)
 BuildRequires:  php(language) >= 5.3.1
 BuildRequires:  php-pcre
 BuildRequires:  php-reflection
-BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.2
+BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.3.5
 # From composer.json, "require-dev": {
 #        "nette/tester": "~1.4"
 BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.4
@@ -44,16 +44,13 @@ BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.4
 
 # from composer.json, "require": {
 #        "php": ">=5.3.1"
-#        "nette/utils": "~2.2"
+#        "nette/utils": "^2.3.5"
 Requires:       php(language) >= 5.3.1
-Requires:       php-composer(%{gh_owner}/utils) >= 2.2
+Requires:       php-composer(%{gh_owner}/utils) >= 2.3.5
 Requires:       php-composer(%{gh_owner}/utils) <  3
 # from phpcompatinfo report for version 2.2.4
 Requires:       php-pcre
 Requires:       php-spl
-%if 0%{?fedora} > 21
-Suggests:       php-pecl(memcache)
-%endif
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
