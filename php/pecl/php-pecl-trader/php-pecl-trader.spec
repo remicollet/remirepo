@@ -6,6 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
 %{?scl:          %scl_package        php-pecl-trader}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -13,7 +21,7 @@
 
 #### TODO : bundle ta-lib
 
-%global with_zts   0%{?__ztsphp:1}
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  trader
 %global with_tests %{?_without_tests:0}%{!?_without_tests:1}
 %if "%{php_version}" < "5.6"
@@ -23,9 +31,9 @@
 %endif
 
 Summary:        Technical Analysis for traders
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        0.4.0
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 # PHP ext is BSD-2, ta-lib is BSD-3
 License:        BSD
 Group:          Development/Languages
@@ -44,6 +52,9 @@ Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+# For morephp SCLs
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -58,6 +69,10 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -76,7 +91,7 @@ analysis of financial market data. Alongside many indicators like ADX, MACD,
 RSI, Stochastic, TRIX the candlestick pattern recognition and several vector
 arithmetic and algebraic functions are present.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -221,5 +236,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 17 2015 Remi Collet <remi@fedoraproject.org> - 0.4.0-2
+- cleanup and build for PHP 7
+
 * Mon Feb 16 2015 Remi Collet <remi@fedoraproject.org> - 0.4.0-1
 - initial package, version 0.4.0 (stable)
