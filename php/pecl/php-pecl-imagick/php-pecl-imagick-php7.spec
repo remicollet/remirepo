@@ -19,11 +19,11 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit   fccdde36a87643ea21006fad2dc9ebcdafe51035
+%global gh_commit   a806b85e0bbb4314af3bdfb8477121d4d2d50248
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    mkoppanen
 %global gh_project  imagick
-%global gh_date     20150930
+%global gh_date     20151115
 %global pecl_name   imagick
 %global prever      dev
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
@@ -40,7 +40,7 @@ Summary:       Extension to create and modify images using ImageMagick
 Name:          %{?sub_prefix}php-pecl-imagick
 Version:       3.3.0
 %if 0%{?gh_date}
-Release:       0.6.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.7.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
 Release:       0.5.RC2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
@@ -307,6 +307,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 17 2015 Remi Collet <remi@fedoraproject.org> - 3.3.0-0.7.20151115gita806b85
+- update for test against IM 6.9.2-6
+
 * Tue Nov  3 2015 Remi Collet <remi@fedoraproject.org> - 3.3.0-0.6.20150930gitfccdde3
 - git snapshot for PHP 7
 
