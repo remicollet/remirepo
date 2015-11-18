@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c19b4f8dc4b363fe4d64b0aa1214b1c962e3c019
+%global gh_commit    d9fd8aa676c6db76876785be3b9fdfc86b9935ab
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.1.7
+Version:        1.1.8
 Release:        1%{?dist}
 Summary:        PHP library containing PDF page formats and definitions
 
@@ -78,6 +78,10 @@ require '%{buildroot}%{php_project}/autoload.php';
 EOF
 
 %{_bindir}/phpunit --verbose
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose
+fi
 %else
 : Test suite disabled
 %endif
@@ -100,6 +104,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 18 2015 Remi Collet <remi@fedoraproject.org> - 1.1.8-1
+- update to 1.1.8 (no change)
+- run test suite with both PHP 5 and 7 when available
+
 * Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 1.1.7-1
 - update to 1.1.7 (no change)
 
