@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    382c729a52b7ef682e94c73fd6868f5ee8116ba7
+%global gh_commit    b28b029356e65091dfbf8c2bc4ef106ffece509e
 #global gh_date      20150902
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -16,7 +16,7 @@
 %global pear_name    PHPUnit_MockObject
 %global pear_channel pear.phpunit.de
 %global major        3.0
-%global minor        3
+%global minor        4
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
@@ -123,6 +123,11 @@ EOF
 : Run tests - set include_path to ensure PHPUnit autoloader use it
 %{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
 %{_bindir}/phpunit --no-coverage
+
+if which php70; then
+  php70 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+  %{_bindir}/phpunit --no-coverage
+fi
 %endif
 
 
@@ -148,6 +153,9 @@ fi
 
 
 %changelog
+* Wed Nov 18 2015 Remi Collet <remi@fedoraproject.org> - 3.0.4-1
+- Update to 3.0.4
+
 * Sun Oct 18 2015 Remi Collet <remi@fedoraproject.org> - 3.0.3-1
 - Update to 3.0.3
 
