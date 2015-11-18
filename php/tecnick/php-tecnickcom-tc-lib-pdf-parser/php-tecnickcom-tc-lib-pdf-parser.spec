@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    03e7abeca8911ebae287b2dfc2a4889d99e9f67f
+%global gh_commit    46473995ef0a89ecc925da55e3bed33390d27f34
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.1.7
+Version:        2.1.8
 Release:        1%{?dist}
 Summary:        PHP library to parse PDF documents
 
@@ -90,6 +90,10 @@ require '%{php_project}/../Filter/autoload.php';
 EOF
 
 %{_bindir}/phpunit --verbose
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose
+fi
 %else
 : Test suite disabled
 %endif
@@ -109,6 +113,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 18 2015 Remi Collet <remi@fedoraproject.org> - 2.1.8-1
+- update to 2.1.8 (no change)
+- run test suite with both PHP 5 and 7 when available
+
 * Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 2.1.7-1
 - update to 2.1.7 (no change)
 
