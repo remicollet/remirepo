@@ -5,9 +5,9 @@
 #
 # Please, preserve the changelog entries
 #
-#global svnrel 4080
+%global svnrel 4266
 %global rdate  20151030
-%global upver  0.5rc1
+%global upver  0.5
 
 Name:        qelectrotech
 
@@ -32,7 +32,7 @@ Summary(ru): Редактор электрических схем
 # Remember to check rdate and upver macro on each update
 Version:     0.50
 %if 0%{?svnrel}
-Release:     0.1.svn%{svnrel}%{?dist}
+Release:     0.4.svn%{svnrel}%{?dist}
 %else
 Release:     0.3.rc1%{?dist}
 %endif
@@ -44,9 +44,9 @@ License:    GPLv2+
 
 Url:        http://qelectrotech.org/
 %if 0%{?svnrel}
-# svn export -r 2287 svn://svn.tuxfamily.org/svnroot/qet/qet/trunk qelectrotech-0.3-svn2287
-# tar czf qelectrotech-0.3a-svn2287.tgz qelectrotech-0.3a-svn2287
+# run mksrc.sh <revision>
 Source0:    qelectrotech-%{upver}-svn%{?svnrel}.tgz
+Source1:    mksrc.sh
 %else
 Source0:    http://download.tuxfamily.org/qet/tags/%{rdate}/qelectrotech-%{upver}-src.tar.gz
 %endif
@@ -259,6 +259,9 @@ fi
 
 
 %changelog
+* Wed Nov 18 2015 Remi Collet <remi@fedoraproject.org> - 0.50-0.4.svn4266
+- Update to 0.5 snapshot revision 4266
+
 * Fri Oct 30 2015 Remi Collet <remi@fedoraproject.org> - 0.50-0.3.rc1
 - update to 0.5rc1
 
