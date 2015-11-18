@@ -19,10 +19,11 @@
 
 %global pecl_name   xdebug
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
-%global gh_commit   982cee15eef0e1b65fb62be2470e6f2015917a65
+%global gh_commit   34a1c7056a9fd8f4cea6a4909d8b19825877ec70
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_date     20151117
 %global with_tests  0%{?_with_tests:1}
-%global prever      beta1
+%global prever      rc1-dev
 
 # XDebug should be loaded after opcache
 %if "%{php_version}" < "5.6"
@@ -34,15 +35,8 @@
 Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.4.0
-Release:        0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.3.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{gh_commit}/%{pecl_name}-%{version}%{?prever}-%{gh_short}.tar.gz
-
-# https://github.com/xdebug/xdebug/pull/217
-Patch1:         217.patch
-# https://github.com/xdebug/xdebug/pull/221
-Patch2:         221.patch
-# Upstream patches
-Patch3:         %{pecl_name}-upstream.patch
 
 # The Xdebug License, version 1.01
 # (Based on "The PHP License", version 3.0)
@@ -122,9 +116,6 @@ mv %{pecl_name}-%{gh_commit} NTS
 mv NTS/package.xml .
 
 cd NTS
-%patch1 -p1 -b .pr217
-%patch2 -p1 -b .pr221
-%patch3 -p1 -b .upstream
 
 # Check extension version
 ver=$(sed -n '/XDEBUG_VERSION/{s/.* "//;s/".*$//;p}' php_xdebug.h)
@@ -297,7 +288,10 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Mon Nov 9 2015 Remi Collet <remi@fedoraproject.org> - 2.4.0-0.2.beta1
+* Wed Nov 18 2015 Remi Collet <remi@fedoraproject.org> - 2.4.0-0.3.20151117git34a1c70
+- git snapshot
+
+* Mon Nov  9 2015 Remi Collet <remi@fedoraproject.org> - 2.4.0-0.2.beta1
 - add 1 upstream patch (segfault in code coverage)
   http://bugs.xdebug.org/view.php?id=1195
 
