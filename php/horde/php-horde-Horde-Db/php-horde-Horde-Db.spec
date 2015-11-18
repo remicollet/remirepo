@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Db
-Version:        2.2.3
+Version:        2.3.0
 Release:        1%{?dist}
 Summary:        Horde Database Libraries
 
@@ -87,7 +87,11 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 
 
 %post
@@ -112,6 +116,9 @@ fi
 
 
 %changelog
+* Wed Nov 18 2015 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
+- Update to 2.3.0
+
 * Wed Apr 29 2015 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
 - Update to 2.2.3
 - add provides php-composer(horde/horde-db)
