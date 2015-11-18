@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    56b10ec513f7eef598fcf0654a14688ed8a6b8d6
+%global gh_commit    ba1b6cbd97649877f06c357b8d9e3866a6e88f0f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.5.0
+Version:        1.5.2
 Release:        1%{?dist}
 Summary:        PHP library to generate linear and bidimensional barcodes
 
@@ -103,6 +103,10 @@ require '%{php_project}/../Color/autoload.php';
 EOF
 
 %{_bindir}/phpunit --verbose
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose
+fi
 %else
 : Test suite disabled
 %endif
@@ -122,6 +126,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 18 2015 Remi Collet <remi@fedoraproject.org> - 1.5.2-1
+- update to 1.5.2 (no change)
+- run test suite with both PHP 5 and 7 when available
+
 * Wed Nov  4 2015 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
 - update to 1.5.0
 
