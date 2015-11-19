@@ -148,6 +148,10 @@ require_once __DIR__ . '/test/TestAsset/SapiResponse.php';
 BOOTSTRAP
 
 %{_bindir}/phpunit --verbose --bootstrap ./bootstrap.php
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose --bootstrap ./bootstrap.php
+fi
 %else
 : Tests skipped
 %endif

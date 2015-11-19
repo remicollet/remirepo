@@ -134,8 +134,12 @@ Zend\\Loader\\AutoloaderFactory::factory(array(
 ))));
 require_once '%{php_home}/Zend/autoload.php';
 EOF
-%{_bindir}/php -r 'require "vendor/autoload.php"; var_dump(Zend\Loader\AutoloaderFactory::getRegisteredAutoloaders());'
+
 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+
+if which php70; then
+   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+fi
 %else
 : Test suite disabled
 %endif

@@ -145,7 +145,12 @@ EOF
 # sqlite is too old
 rm test/PubSubHubbub/Model/SubscriptionTest.php
 %endif
+
 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+
+if which php70; then
+   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+fi
 %else
 : Test suite disabled
 %endif
