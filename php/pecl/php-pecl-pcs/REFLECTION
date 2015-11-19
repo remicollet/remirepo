@@ -1,0 +1,77 @@
+Extension [ <persistent> extension #132 pcs version 1.1.0 ] {
+
+  - Classes [1] {
+    Class [ <internal:pcs> class PCS\Mgr ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [7] {
+        Method [ <internal:pcs> static public method autoloadHook ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $symbol ]
+            Parameter #1 [ <optional> $type ]
+          }
+        }
+
+        Method [ <internal:pcs> static public method getFunction ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg1 ]
+          }
+        }
+
+        Method [ <internal:pcs> static public method getConstant ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg1 ]
+          }
+        }
+
+        Method [ <internal:pcs> static public method getClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg1 ]
+          }
+        }
+
+        Method [ <internal:pcs> static public method requireFunction ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg1 ]
+          }
+        }
+
+        Method [ <internal:pcs> static public method requireConstant ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg1 ]
+          }
+        }
+
+        Method [ <internal:pcs> static public method requireClass ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $arg1 ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:pcs, ctor> private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+  }
+}
+
