@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    a97ef49f82496fabc3b7379b37f6bbff925b58b8
+%global gh_commit    2a69bd42bddf9a955f3747af9e06b6d26e7c41ba
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-code
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.2
+Version:        2.5.3
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -42,11 +42,9 @@ BuildRequires:  php-tokenizer
 BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
 # From composer, "require-dev": {
 #        "doctrine/common": ">=2.1",
-#        "zendframework/zend-stdlib": "~2.5",
 #        "zendframework/zend-version": "~2.5",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0"
-BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-version)          >= 2.5
 BuildRequires:  php-composer(doctrine/common)                   >= 2.1
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
@@ -122,7 +120,12 @@ Zend\\Loader\\AutoloaderFactory::factory(array(
 ))));
 require_once '%{php_home}/Zend/autoload.php';
 EOF
+
 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+
+if which php70; then
+   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+fi
 %else
 : Test suite disabled
 %endif
@@ -142,6 +145,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 19 2015 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
+- update to 2.5.3
+- run test suite with both PHP 5 and 7 when available
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - initial package
 - open https://github.com/zendframework/zend-code/pull/5
