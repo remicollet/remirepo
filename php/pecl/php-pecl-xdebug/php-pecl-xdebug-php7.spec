@@ -19,9 +19,9 @@
 
 %global pecl_name   xdebug
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
-%global gh_commit   34a1c7056a9fd8f4cea6a4909d8b19825877ec70
+%global gh_commit   7e4523e00d4f950e222954ae75484beb86e35655
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date     20151117
+%global gh_date     20151118
 %global with_tests  0%{?_with_tests:1}
 %global prever      rc1-dev
 
@@ -35,7 +35,7 @@
 Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.4.0
-Release:        0.3.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{gh_commit}/%{pecl_name}-%{version}%{?prever}-%{gh_short}.tar.gz
 
 # The Xdebug License, version 1.01
@@ -288,8 +288,8 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Wed Nov 18 2015 Remi Collet <remi@fedoraproject.org> - 2.4.0-0.3.20151117git34a1c70
-- git snapshot
+* Thu Nov 19 2015 Remi Collet <remi@fedoraproject.org> - 2.4.0-0.4.20151118git7e4523e
+- git snapshot, fix segfault with create_function
 
 * Mon Nov  9 2015 Remi Collet <remi@fedoraproject.org> - 2.4.0-0.2.beta1
 - add 1 upstream patch (segfault in code coverage)
