@@ -24,11 +24,11 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit  ba683bc0ff8732aa4a8122ebcb8632da5796cb34
+%global gh_commit  ccd50c3b3ab773452bcec60fc4b8931c75233f8a
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   krakjoe
 %global gh_project apcu
-%global gh_date    20151120
+#global gh_date    20151120
 %global pecl_name  apcu
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global ini_name   40-%{pecl_name}.ini
@@ -38,10 +38,11 @@ Summary:        APC User Cache
 Version:        5.1.0
 %if 0%{?gh_date:1}
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 Source1:        %{pecl_name}-5.0.0.ini
 Source2:        %{pecl_name}-panel.conf
 Source3:        %{pecl_name}.conf.php
@@ -166,8 +167,12 @@ configuration, available on http://localhost/apcu-panel/
 
 %prep
 %setup -qc
+%if 0%{?gh_date:1}
 mv %{gh_project}-%{gh_commit} NTS
 mv NTS/package.xml .
+%else
+mv %{pecl_name}-%{version} NTS
+%endif
 
 cd NTS
 # Sanity check, really often broken
@@ -239,7 +244,7 @@ install -D -m 644 -p %{SOURCE3} \
 # Test & Documentation
 cd NTS
 for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 tests/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/tests/$i
+do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
 done
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
@@ -344,6 +349,9 @@ fi
 
 
 %changelog
+* Fri Nov 20 2015 Remi Collet <remi@fedoraproject.org> - 5.1.0-1
+- Update to 5.1.0 (beta)
+
 * Fri Nov 20 2015 Remi Collet <remi@fedoraproject.org> - 5.1.0-0.1.20151120gitba683bc
 - test build for upcoming 5.1.0
 

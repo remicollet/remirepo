@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #108 apcu version 5.0.0-dev ] {
+Extension [ <persistent> extension #70 apcu version 5.1.0 ] {
 
   - INI {
     Entry [ apc.enabled <SYSTEM> ]
@@ -23,7 +23,7 @@ Extension [ <persistent> extension #108 apcu version 5.0.0-dev ] {
       Current = '0'
     }
     Entry [ apc.mmap_file_mask <SYSTEM> ]
-      Current = '/tmp/apc.j1DyUf'
+      Current = '/tmp/apc.PaEi1m'
     }
     Entry [ apc.enable_cli <SYSTEM> ]
       Current = '1'
@@ -49,7 +49,7 @@ Extension [ <persistent> extension #108 apcu version 5.0.0-dev ] {
   }
 
   - Constants [16] {
-    Constant [ integer  ] { 140428353469648 }
+    Constant [ integer  ] { 139697376948720 }
     Constant [ integer APC_LIST_ACTIVE ] { 1 }
     Constant [ integer APC_LIST_DELETED ] { 2 }
     Constant [ integer APC_ITER_TYPE ] { 1 }
@@ -155,10 +155,18 @@ Extension [ <persistent> extension #108 apcu version 5.0.0-dev ] {
         Parameter #0 [ <required> $keys ]
       }
     }
+    Function [ <internal:apcu> function apcu_entry ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $key ]
+        Parameter #1 [ <required> callable $generator ]
+        Parameter #2 [ <optional> integer $ttl ]
+      }
+    }
   }
 
   - Classes [1] {
-    Class [ <internal:apcu> <iterateable> class APCIterator implements Iterator, Traversable ] {
+    Class [ <internal:apcu> <iterateable> class APCuIterator implements Iterator, Traversable ] {
 
       - Constants [0] {
       }
@@ -176,7 +184,7 @@ Extension [ <persistent> extension #108 apcu version 5.0.0-dev ] {
         Method [ <internal:apcu, ctor> public method __construct ] {
 
           - Parameters [4] {
-            Parameter #0 [ <required> $search ]
+            Parameter #0 [ <optional> $search ]
             Parameter #1 [ <optional> $format ]
             Parameter #2 [ <optional> $chunk_size ]
             Parameter #3 [ <optional> $list ]
@@ -235,7 +243,11 @@ Extension [ <persistent> extension #108 apcu version 5.0.0-dev ] {
   }
 }
 
-Extension [ <persistent> extension #109 apc version 5.0.0-dev ] {
+Extension [ <persistent> extension #71 apc version 5.1.0 ] {
+
+  - Dependencies {
+    Dependency [ apcu (Required) ]
+  }
 
   - Functions {
     Function [ <internal:apc> function apc_cache_info ] {
@@ -319,6 +331,84 @@ Extension [ <persistent> extension #109 apc version 5.0.0-dev ] {
 
       - Parameters [1] {
         Parameter #0 [ <required> $keys ]
+      }
+    }
+  }
+
+  - Classes [1] {
+    Class [ <internal:apc> <iterateable> class APCIterator extends APCuIterator implements Traversable, Iterator ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [9] {
+        Method [ <internal:apc, overwrites APCuIterator, ctor> public method __construct ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $ignored ]
+            Parameter #1 [ <optional> $search ]
+            Parameter #2 [ <optional> $format ]
+            Parameter #3 [ <optional> $chunk_size ]
+            Parameter #4 [ <optional> $list ]
+          }
+        }
+
+        Method [ <internal:apcu, inherits APCuIterator, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:apcu, inherits APCuIterator, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:apcu, inherits APCuIterator, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:apcu, inherits APCuIterator, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:apcu, inherits APCuIterator, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:apcu, inherits APCuIterator> public method getTotalHits ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:apcu, inherits APCuIterator> public method getTotalSize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:apcu, inherits APCuIterator> public method getTotalCount ] {
+
+          - Parameters [0] {
+          }
+        }
       }
     }
   }
