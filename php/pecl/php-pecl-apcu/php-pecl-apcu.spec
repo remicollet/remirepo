@@ -23,11 +23,11 @@
 %{!?php_incldir: %global php_incldir %{_includedir}/php}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
-%global gh_commit  0911f48ddfc26d8012fe57b967ba11066183432f
+%global gh_commit  d7b65bf289e7dd3cd22350554b5eb99fc3bb2a9c
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   krakjoe
 %global gh_project apcu
-%global gh_date    20151120
+#global gh_date    20151120
 %global pecl_name  apcu
 %global with_zts   0%{?__ztsphp:1}
 %if "%{php_version}" < "5.6"
@@ -41,10 +41,11 @@ Summary:        APC User Cache
 Version:        4.0.8
 %if 0%{?gh_date:1}
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 Source1:        %{pecl_name}.ini
 Source2:        %{pecl_name}-panel.conf
 Source3:        %{pecl_name}.conf.php
@@ -169,8 +170,12 @@ configuration, available on http://localhost/apcu-panel/
 
 %prep
 %setup -qc
+%if 0%{?gh_date:1}
 mv %{gh_project}-%{gh_commit} NTS
 mv NTS/package.xml .
+%else
+mv %{pecl_name}-%{version} NTS
+%endif
 
 cd NTS
 
@@ -334,6 +339,9 @@ fi
 
 
 %changelog
+* Fri Nov 20 2015 Remi Collet <remi@fedoraproject.org> - 4.0.8-1
+- Update to 4.0.8 (stable)
+
 * Fri Nov 20 2015 Remi Collet <remi@fedoraproject.org> - 4.0.8-0.1.20151120git0911f48
 - test build for upcoming 4.0.8
 - sources from github
