@@ -7,12 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global pecl_name eio
-%if "%{php_version}" > "7.0"
-# https://bitbucket.org/osmanov/pecl-eio/issues/3
-%global with_zts  0
-%else
 %global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
-%endif
 %if "%{php_version}" < "5.6"
 # After sockets
 %global ini_name  z-%{pecl_name}.ini
@@ -44,11 +39,14 @@ Provides: %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 Summary:        Provides interface to the libeio library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        2.0.0
-Release:        0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
+
+# https://bitbucket.org/osmanov/pecl-eio/pull-requests/4
+Patch0:         %{pecl_name}-pr4.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -121,6 +119,7 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd NTS
+%patch0 -p1 -b .pr4
 
 # Sanity check, really often broken
 extver=$(sed -n '/define PHP_EIO_VERSION/{s/.* "//;s/".*$//;p}' php%(%{__php} -r 'echo PHP_MAJOR_VERSION;')/php_eio.h)
@@ -267,6 +266,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 20 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.2.RC1
+- fix PHP 7 and ZTS build
+  open https://bitbucket.org/osmanov/pecl-eio/issues/3
+  open https://bitbucket.org/osmanov/pecl-eio/pull-requests/4
+
 * Thu Nov 19 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.1.RC1
 - Update to 2.0.0RC1
 
