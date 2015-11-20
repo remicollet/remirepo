@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    d9fd8aa676c6db76876785be3b9fdfc86b9935ab
+%global gh_commit    92085ae22c456378a33ba96252ed13d3d122b972
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.1.8
+Version:        1.1.10
 Release:        1%{?dist}
 Summary:        PHP library containing PDF page formats and definitions
 
@@ -104,6 +104,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 20 2015 Remi Collet <remi@fedoraproject.org> - 1.1.10-1
+- update to 1.1.10 (no change)
+
 * Wed Nov 18 2015 Remi Collet <remi@fedoraproject.org> - 1.1.8-1
 - update to 1.1.8 (no change)
 - run test suite with both PHP 5 and 7 when available
