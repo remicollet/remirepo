@@ -24,20 +24,20 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit  ffb4fc8e811e62efa0e05b36faf857b427c572b0
+%global gh_commit  ba683bc0ff8732aa4a8122ebcb8632da5796cb34
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   krakjoe
 %global gh_project apcu
-%global gh_date    20151106
+%global gh_date    20151120
 %global pecl_name  apcu
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global ini_name   40-%{pecl_name}.ini
 
 Name:           %{?sub_prefix}php-pecl-apcu
 Summary:        APC User Cache
-Version:        5.0.0
+Version:        5.1.0
 %if 0%{?gh_date:1}
-Release:        0.6.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -259,7 +259,7 @@ cd NTS
 
 # Upstream test suite for NTS extension
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
-TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
+TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=apcu.so -d extension=apc.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php --show-diff
@@ -344,6 +344,9 @@ fi
 
 
 %changelog
+* Fri Nov 20 2015 Remi Collet <remi@fedoraproject.org> - 5.1.0-0.1.20151120gitba683bc
+- test build for upcoming 5.1.0
+
 * Fri Nov  6 2015 Remi Collet <remi@fedoraproject.org> - 5.0.0-0.6.20151106gitffb4fc8
 - new snapshot
 
