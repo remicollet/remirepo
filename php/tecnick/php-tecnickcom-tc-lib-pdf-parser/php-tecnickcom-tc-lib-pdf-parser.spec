@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c1d0a6109e325429cef4fa508af82d828f3b943f
+%global gh_commit    e56e4c527834cc87b2737b7a0fdcf70e3f92c909
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.1.10
+Version:        2.1.12
 Release:        1%{?dist}
 Summary:        PHP library to parse PDF documents
 
@@ -106,13 +106,16 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license LICENSE.TXT
+%license LICENSE
 %doc composer.json
 %doc README.md example
 %{php_project}
 
 
 %changelog
+* Fri Nov 20 2015 Remi Collet <remi@fedoraproject.org> - 2.1.12-1
+- update to 2.1.12 (no change)
+
 * Fri Nov 20 2015 Remi Collet <remi@fedoraproject.org> - 2.1.10-1
 - update to 2.1.10 (no change)
 
