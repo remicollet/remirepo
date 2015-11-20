@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    3e9a5d6115d82c2d541b7b0be4ac6b7d5cb6d938
+%global gh_commit    0f173b846ba09c006d64475ea7668f49ffb40d6d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.1.12
+Version:        1.1.14
 Release:        1%{?dist}
 Summary:        PHP library to decode PDF compression and encryption filters
 
@@ -97,7 +97,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license LICENSE.TXT
+%license LICENSE
 %doc composer.json
 %doc README.md
 %dir %{_datadir}/php/Com
@@ -107,6 +107,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 20 2015 Remi Collet <remi@fedoraproject.org> - 1.1.14-1
+- update to 1.1.14 (no change)
+
 * Fri Nov 20 2015 Remi Collet <remi@fedoraproject.org> - 1.1.12-1
 - update to 1.1.12 (no change)
 
