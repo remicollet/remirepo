@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    46473995ef0a89ecc925da55e3bed33390d27f34
+%global gh_commit    c1d0a6109e325429cef4fa508af82d828f3b943f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.1.8
+Version:        2.1.10
 Release:        1%{?dist}
 Summary:        PHP library to parse PDF documents
 
@@ -113,6 +113,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 20 2015 Remi Collet <remi@fedoraproject.org> - 2.1.10-1
+- update to 2.1.10 (no change)
+
 * Wed Nov 18 2015 Remi Collet <remi@fedoraproject.org> - 2.1.8-1
 - update to 2.1.8 (no change)
 - run test suite with both PHP 5 and 7 when available
