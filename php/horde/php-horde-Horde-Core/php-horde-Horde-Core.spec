@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-Horde-Core
-Version:        2.22.1
+Version:        2.22.2
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -235,7 +235,11 @@ rm -rf %{buildroot}
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 
 
 %post
@@ -281,6 +285,9 @@ fi
 
 
 %changelog
+* Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 2.22.2-1
+- Update to 2.22.2
+
 * Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 2.22.1-1
 - Update to 2.22.1
 
