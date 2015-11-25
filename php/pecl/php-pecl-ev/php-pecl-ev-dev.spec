@@ -26,12 +26,12 @@
 # After 20-sockets
 %global ini_name  40-%{pecl_name}.ini
 %endif
-%global prever    RC1
+%global prever    RC2
 
 Summary:        Provides interface to libev library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -202,9 +202,6 @@ REPORT_EXIT_STATUS=1 \
 : Minimal load test for ZTS extension
 cd ../ZTS
 
-# See https://bitbucket.org/osmanov/pecl-ev/issues/16
-rm tests/bug64788.phpt
-
 %{__ztsphp} --no-php-ini \
     $DEPMOD \
     --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
@@ -239,6 +236,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.RC2
+- Update to 1.0.0RC2
+
 * Fri Nov 20 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.RC1
 - Update to 1.0.0RC1
 - open https://bitbucket.org/osmanov/pecl-ev/issues/16 - ZTS segfault
