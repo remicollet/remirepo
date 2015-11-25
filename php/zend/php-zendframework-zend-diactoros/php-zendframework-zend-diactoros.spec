@@ -52,7 +52,7 @@ BuildArch:     noarch
 BuildRequires: php(language)                  >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(psr/http-message) >= %{psr_http_message_min_ver}
-## phpcompatinfo (computed from version 1.1.3)
+## phpcompatinfo (computed from version 1.1.4)
 ### NOTE: curl, gd, gmp, and shmop are all optional for
 ###       ZendTest\Diactoros\StreamTest::getResourceFor67()
 ###       (test/StreamTest.php) but the first one found wins
@@ -70,7 +70,7 @@ BuildRequires: php-composer(symfony/class-loader)
 Requires:      php(language)                  >= %{php_min_ver}
 Requires:      php-composer(psr/http-message) >= %{psr_http_message_min_ver}
 Requires:      php-composer(psr/http-message) <  %{psr_http_message_max_ver}
-# phpcompatinfo (computed from version 1.1.3)
+# phpcompatinfo (computed from version 1.1.4)
 Requires:      php-json
 Requires:      php-pcre
 Requires:      php-spl
@@ -174,6 +174,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 26 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.4-1
+- Updated to 1.1.4 (RHBZ #1272627)
+
 * Sun Oct 18 2015 Remi Collet <remi@remirepo.net> - 1.1.4-1
 - update to 1.1.4
 
