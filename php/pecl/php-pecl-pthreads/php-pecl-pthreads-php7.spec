@@ -12,15 +12,11 @@
 %{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name pthreads
-%if "%{php_version}" < "5.6"
-%global ini_name  %{pecl_name}.ini
-%else
 %global ini_name  40-%{pecl_name}.ini
-%endif
 
 Summary:        Threading API
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        3.0.8
+Version:        3.1.3
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
@@ -46,14 +42,12 @@ Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
-%if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
-%endif
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -145,6 +139,10 @@ fi
 
 %check
 cd %{pecl_name}-%{version}
+%ifnarch x86_64
+# https://github.com/krakjoe/pthreads/issues/523
+rm tests/return-types.phpt
+%endif
 
 : Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
@@ -174,6 +172,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 3.1.3-1
+- Update to 3.1.3 (stable)
+- open https://github.com/krakjoe/pthreads/issues/523 segfault on i386
+
 * Wed Oct  7 2015 Remi Collet <remi@fedoraproject.org> - 3.0.8-1
 - Update to 3.0.8 (stable)
 
