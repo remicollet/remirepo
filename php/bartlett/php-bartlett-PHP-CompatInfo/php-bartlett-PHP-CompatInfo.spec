@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
-%global gh_commit    e4c5d42dce0820f59939bc7fbd2a8995bac66000
+%global gh_commit    4fc02f5dc9e07039e3baafe53a287547dd8675bd
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20151005
 %global gh_owner     llaville
@@ -16,7 +16,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        4.5.1
+Version:        4.5.2
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
@@ -170,6 +170,9 @@ fi
 
 
 %changelog
+* Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 4.5.2-1
+- update to 4.5.2
+
 * Sun Oct 11 2015 Remi Collet <remi@fedoraproject.org> - 4.5.1-1
 - update to 4.5.1
 
