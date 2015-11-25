@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #194 phalcon version 2.0.8 ] {
+Extension [ <persistent> extension #192 phalcon version 2.0.9 ] {
 
   - INI {
     Entry [ phalcon.db.escape_identifiers <ALL> ]
@@ -20615,7 +20615,7 @@ Extension [ <persistent> extension #194 phalcon version 2.0.8 ] {
         Method [ <internal:phalcon> public method setSqlVariables ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> $sqlVariables ]
+            Parameter #0 [ <required> array $sqlVariables ]
           }
         }
 
@@ -20625,7 +20625,7 @@ Extension [ <persistent> extension #194 phalcon version 2.0.8 ] {
         Method [ <internal:phalcon> public method setSqlBindTypes ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> $sqlBindTypes ]
+            Parameter #0 [ <required> array $sqlBindTypes ]
           }
         }
 

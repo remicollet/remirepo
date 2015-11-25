@@ -18,7 +18,7 @@
 %{!?scl:         %global pkg_name         %{name}}
 %{!?__php:       %global __php            %{_bindir}/php}
 
-%global gh_commit    c8d4916bbfd0cb18395fe25d8c5a663fc5077d8f
+%global gh_commit    7cd81ef3c04f660f2d901aa285c051ec8f44c0a1
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phalcon
 %global gh_project   cphalcon
@@ -34,7 +34,7 @@
 %endif
 
 Name:           %{?sub_prefix}php-phalcon2
-Version:        2.0.8
+Version:        2.0.9
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Phalcon Framework
 
@@ -239,6 +239,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 2.0.9-1
+- update to 2.0.9
+
 * Sat Sep 26 2015 Remi Collet <remi@fedoraproject.org> - 2.0.8-1
 - update to 2.0.8
 - allow build against rh-php56 (as more-php56)
