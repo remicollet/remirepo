@@ -58,10 +58,10 @@ fi
 
 echo "+ Génération repoview"
 nom=${PWD#/home/rpmbuild/site/rpms/}
-echo repoview --url http://rpms.famillecollet.com/$nom \
+echo repoview --url http://rpms.remirepo.net/$nom \
 	--template-dir /home/rpmbuild/site/rpms/repotmpl \
 	--title "Les RPM de Remi - ${nom//\// - }" .
-LANG=C repoview --url http://rpms.famillecollet.com/$nom \
+LANG=C repoview --url http://rpms.remirepo.net/$nom \
 	--template-dir /home/rpmbuild/site/rpms/repotmpl \
 	--title "Les RPM de Remi - ${nom//\// - }" .
 
