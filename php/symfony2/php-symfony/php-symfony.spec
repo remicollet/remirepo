@@ -14,8 +14,8 @@
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.7.6
-%global github_commit    66b2e9662c44d478b69e48278aa54079a006eb42
+%global github_version   2.7.7
+%global github_commit    cc69dbd24b4b2e6de60b2414ef95da2794f459a2
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -97,9 +97,6 @@ Group:         Development/Libraries
 License:       MIT
 URL:           http://symfony.com
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_short}.tar.gz
-
-# https://github.com/symfony/symfony/commit/1bdd127938058a1f34fd0bc883ebb9e4d6ccf67d
-Patch0:        %{name}-upstream.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -1641,12 +1638,33 @@ The YAML Component loads and dumps YAML files.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-%patch0 -p1
-
 : Remove unnecessary files
 find src -name '.git*' -delete
 
-: Create autoloader
+: Create autoloaders
+cat << 'AUTOLOAD' | tee src/Symfony/Component/autoload.php
+<?php
+/**
+ * Autoloader for all Symfony components and their dependencies.
+ *
+ * Created by %{name}-%{version}-%{release}
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once __DIR__ . '/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+$fedoraClassLoader->addPrefix('Symfony\\Component\\', dirname(dirname(__DIR__)));
+
+return $fedoraClassLoader;
+AUTOLOAD
+
 cat << 'AUTOLOAD' | tee src/Symfony/autoload.php
 <?php
 /**
@@ -1659,6 +1677,10 @@ cat << 'AUTOLOAD' | tee src/Symfony/autoload.php
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
+
+require_once __DIR__ . '/Component/autoload.php';
+
+$fedoraClassLoader->addPrefix('Symfony\\', dirname(__DIR__));
 
 // Dependency autoloaders
 foreach (array(
@@ -1682,19 +1704,6 @@ foreach (array(
     }
 }
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once __DIR__ . '/Component/ClassLoader/ClassLoader.php';
-    }
-
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-if (!array_key_exists('Symfony\\', $fedoraClassLoader->getPrefixes())) {
-    $fedoraClassLoader->addPrefix('Symfony\\', dirname(__DIR__));
-}
-
 if (!interface_exists('SessionHandlerInterface', false) && file_exists(__DIR__ . '/Component/HttpFoundation/Resources/stubs/SessionHandlerInterface.php')) {
     require_once __DIR__ . '/Component/HttpFoundation/Resources/stubs/SessionHandlerInterface.php';
 }
@@ -1709,11 +1718,17 @@ return $fedoraClassLoader;
 AUTOLOAD
 
 : Create autoloader softlinks for each bridge/bundle/component
-for PKG in src/Symfony/*/*
+for PKG in src/Symfony/Component/*
+do
+  if [ -d $PKG ]; then
+    ln -s ../autoload.php $PKG/autoload.php
+    # PEAR compat
+    ln -s ../autoload.php $PKG/autoloader.php
+  fi
+done
+for PKG in src/Symfony/{Bridge,Bundle}/*
 do
     ln -s ../../autoload.php $PKG/autoload.php
-    # PEAR compat
-    ln -s ../../autoload.php $PKG/autoloader.php
 done
 
 %if %{with_tests}
@@ -1795,12 +1810,14 @@ BOOTSTRAP
 : Run tests
 RET=0
 for PKG in %{buildroot}%{phpdir}/Symfony/*/*; do
+  if [ -d $PKG ]; then
     echo -e "\n>>>>>>>>>>>>>>>>>>>>>>> ${PKG}\n"
     %{_bindir}/php -d include_path=.:%{buildroot}%{phpdir}:%{phpdir} \
     %{_bindir}/phpunit \
         --exclude-group benchmark,intl-data,tty \
         --bootstrap bootstrap.php \
         $PKG || RET=1
+  fi
 done
 exit $RET
 %else
@@ -1832,6 +1849,7 @@ exit $RET
 %dir %{symfony_dir}/Bridge
 %dir %{symfony_dir}/Bundle
 %dir %{symfony_dir}/Component
+     %{symfony_dir}/Component/autoload.php
 
 # ------------------------------------------------------------------------------
 
@@ -2500,6 +2518,10 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 2.7.7-1
+- Update to 2.7.7
+- lighter autoloader for components
+
 * Mon Nov  2 2015 Remi Collet <remi@fedoraproject.org> - 2.7.6-2
 - add upstream patch for twig 1.23
 
