@@ -12,8 +12,8 @@
 
 %global github_owner     guzzle
 %global github_name      promises
-%global github_version   1.0.2
-%global github_commit    97fe7210def29451ec74923b27e552238defd75a
+%global github_version   1.0.3
+%global github_commit    b1e1c0d55f8083c71eda2c28c12a228d708294ea
 
 %global composer_vendor  guzzlehttp
 %global composer_project promises
@@ -43,7 +43,7 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 1.0.2)
+## phpcompatinfo (computed from version 1.0.3)
 BuildRequires: php-json
 BuildRequires: php-spl
 ## Autoloader
@@ -52,7 +52,7 @@ BuildRequires: php-composer(symfony/class-loader)
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.0.2)
+# phpcompatinfo (computed from version 1.0.3)
 Requires:      php-json
 Requires:      php-spl
 # Autoloader
@@ -117,6 +117,9 @@ sed "s#require.*autoload.*#require '%{buildroot}%{phpdir}/GuzzleHttp/Promise/aut
     -i tests/bootstrap.php
 
 %{_bindir}/phpunit --verbose
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose
+fi
 %else
 : Tests skipped
 %endif
@@ -137,6 +140,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 26 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.3-1
+- Updated to 1.0.3 (RHBZ #1272280)
+
 * Sun Aug 16 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.2-1
 - Updated to 1.0.2 (RHBZ #1253996)
 
