@@ -132,8 +132,8 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver         RC7
-%global rpmrel        11
+%global rcver         RC8
+%global rpmrel        12
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -1104,6 +1104,9 @@ echo "d /run/php-fpm 755 root root" >php-fpm.tmpfiles
 
 # Some extensions have their own configuration file
 cp %{SOURCE50} 10-opcache.ini
+%ifarch x86_64
+sed -e '/opcache.huge_code_pages/s/0/1/' -i 10-opcache.ini
+%endif
 cp %{SOURCE52} 20-oci8.ini
 
 # Regenerated bison files
@@ -2001,6 +2004,10 @@ fi
 
 
 %changelog
+* Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.12.RC8
+- Update to 7.0.0RC8
+- set opcache.huge_code_pages=1 on x86_64
+
 * Thu Nov 12 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.11.RC7
 - Update to 7.0.0RC7 (retagged)
 

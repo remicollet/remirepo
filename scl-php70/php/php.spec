@@ -130,8 +130,8 @@
 #global gh_date      20150623
 #global gh_owner     php
 #global gh_project   php-src
-%global rcver        RC7
-%global rpmrel       24
+%global rcver        RC8
+%global rpmrel       25
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1027,6 +1027,9 @@ sed -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
 
 # Some extensions have their own configuration file
 cp %{SOURCE50} 10-opcache.ini
+%ifarch x86_64
+sed -e '/opcache.huge_code_pages/s/0/1/' -i 10-opcache.ini
+%endif
 cp %{SOURCE51} .
 sed -e 's:%{_root_sysconfdir}:%{_sysconfdir}:' \
     -i 10-opcache.ini
@@ -1803,6 +1806,10 @@ fi
 
 
 %changelog
+* Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.25.RC8
+- Update to 7.0.0RC8
+- set opcache.huge_code_pages=1 on x86_64
+
 * Thu Nov 12 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.24.RC7
 - Update to 7.0.0RC7 (retagged)
 
