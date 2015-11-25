@@ -12,7 +12,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.29.3
+Version:        2.29.4
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -138,7 +138,12 @@ done | tee ../%{pear_name}.lang
 %if %{with_tests}
 export LANG=fr_FR.utf8
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit --verbose .
+
+%{_bindir}/phpunit --verbose .
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose .
+fi
 %else
 : bootstrap build with test suite disabled
 %endif
@@ -169,6 +174,9 @@ fi
 
 
 %changelog
+* Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 2.29.4-1
+- Update to 2.29.4
+
 * Tue Sep 08 2015 Remi Collet <remi@fedoraproject.org> - 2.29.3-1
 - Update to 2.29.3
 
