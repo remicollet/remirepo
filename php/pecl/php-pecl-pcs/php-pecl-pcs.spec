@@ -30,7 +30,7 @@
 
 Summary:        PHP Code Service
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.1.0
+Version:        1.1.1
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
@@ -259,5 +259,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- Update to 1.1.1
+
 * Thu Nov 19 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - initial package, version 1.1.0 (beta)
