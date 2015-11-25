@@ -1,4 +1,4 @@
-# spec file for php-pecl-crypto
+# remirepo spec file for php-pecl-crypto
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -30,15 +30,12 @@
 
 Summary:        Wrapper for OpenSSL Crypto Library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        0.2.1
+Version:        0.2.2
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/bukka/php-crypto/pull/13
-Patch0:         %{pecl_name}-ccm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -102,7 +99,6 @@ mv %{pecl_name}-%{version} NTS
 sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd NTS
-%patch0 -p1 -b .ccm
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_CRYPTO_VERSION/{s/.* "//;s/".*$//;p}' php_crypto.h)
@@ -237,6 +233,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 0.2.2-1
+- Update to 0.2.2
+
 * Mon Nov 16 2015 Remi Collet <remi@fedoraproject.org> - 0.2.1-1
 - Update to 0.2.1
 - don't install/register tests
