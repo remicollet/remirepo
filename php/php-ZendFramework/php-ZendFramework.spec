@@ -9,13 +9,13 @@
 #
 
 %global php_name ZendFramework
-%global with_extras   1
-%global with_firebird 1
+%global with_extras   0
+%global with_firebird 0
 #define posttag .PL1
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.12.16
+Version:         1.12.17
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -854,6 +854,11 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 
 
 %changelog
+* Wed Nov 25 2015 Remi Collet <remi@remirepo.net> - 1.12.17-1
+- update to 1.12.17
+- extras and Db-Adapter-Firebird sub packages are no
+  more provided (by upstream, again)
+
 * Wed Sep 16 2015 Remi Collet <remi@remirepo.net> - 1.12.16-1
 - update to 1.12.16
 
