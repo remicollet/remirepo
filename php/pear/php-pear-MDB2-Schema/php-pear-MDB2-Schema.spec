@@ -1,19 +1,24 @@
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# remirepo spec file for php-pear-DB, from
+#
+# Fedora spec file for php-pear-DB
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
+%{!?__pear: %global __pear %{_bindir}/pear}
 %global ClassName MDB2_Schema
 
 Name:           php-pear-MDB2-Schema
-Version:        0.8.5
-Release:        8%{?dist}
+Version:        0.8.6
+Release:        1%{?dist}
 Summary:        Database Abstraction Layer
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://pear.php.net/package/MDB2_Schema
 Source0:        http://pear.php.net/get/%{ClassName}-%{version}.tgz
-
-# Remove files we don't need to ship
-Patch0:         %{ClassName}-install.patch
 
 BuildArch:      noarch
 BuildRequires:  php-pear-MDB2
@@ -32,6 +37,7 @@ Requires:       php-xml
 Requires:       php-pear(PEAR)
 
 Provides:       php-pear(%{ClassName}) = %{version}
+Provides:       php-composer(pear/mdb2_schema) = %{version}
 
 
 %description
@@ -39,10 +45,11 @@ XML based database schema manager
 
 %prep
 %setup -qc
-%patch0 -p0 -b .install
 
 cd %{ClassName}-%{version}
-mv ../package.xml %{name}.xml
+sed -e 's/role="www"/role="doc"/' \
+    -e 's/role="data"/role="doc"/' \
+    ../package.xml >%{name}.xml
 
 
 %build
@@ -52,14 +59,14 @@ cd %{ClassName}-%{version}
 
 %install
 cd %{ClassName}-%{version}
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-install -d $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+install -d %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %post
@@ -77,12 +84,16 @@ fi
 %doc %{pear_docdir}/%{ClassName}
 %{pear_xmldir}/%{name}.xml
 %{pear_testdir}/%{ClassName}
-%{pear_phpdir}/MDB2/Schema.php
-%dir %{pear_phpdir}/MDB2/Schema
-%{pear_phpdir}/MDB2/Schema/*
+%{pear_phpdir}/MDB2/Schema*
+%{_bindir}/mdb2_*
 
 
 %changelog
+* Thu Nov 26 2015 Remi Collet <remi@fedoraproject.org> - 0.8.6-1
+- Update to 0.8.6
+- add composer provide
+- add mdb2_schematool command
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.5-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
