@@ -34,9 +34,12 @@
 %global ini_name    40-%{pecl_name}.ini
 %endif
 
+# We don't really rely on upstream ABI
+%global buildver %(pkg-config --silence-errors --modversion cassandra 2>/dev/null || echo 65536)
+
 Summary:      DataStax PHP Driver for Apache Cassandra
 Name:         %{?sub_prefix}php-pecl-%{pecl_name}
-Version:      1.0.0
+Version:      1.0.1
 Release:      1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      ASL 2.0
 Group:        Development/Languages
@@ -56,6 +59,7 @@ BuildRequires: cassandra-cpp-driver-devel
 BuildRequires: libuv-devel
 BuildRequires: gmp-devel
 
+Requires:     cassandra-cpp-driver-devel%{?_isa}  >= %{buildver}
 Requires:     %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:     %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
@@ -243,6 +247,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Thu Nov 26 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1
+
 * Tue Sep 15 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - update to 1.0.0 (stable)
 
