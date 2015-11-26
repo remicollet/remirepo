@@ -36,7 +36,7 @@
 %global with_lsws     1
 
 # Regression tests take a long time, you can skip 'em with this
-#global runselftest 0
+%global runselftest 0
 %{!?runselftest: %global runselftest 1}
 
 # Use the arch-specific mysql_config binary to avoid mismatch with the
@@ -133,7 +133,7 @@
 %endif
 
 %global rcver         RC8
-%global rpmrel        12
+%global rpmrel        14
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -192,6 +192,7 @@ Patch47: php-5.6.3-phpinfo.patch
 Patch91: php-5.6.3-oci8conf.patch
 
 # Upstream fixes (100+)
+Patch100: php-upstream.patch
 
 # Security fixes (200+)
 
@@ -968,6 +969,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
+%patch100 -p1 -b .upstream
 
 # security patches
 
@@ -2004,6 +2006,9 @@ fi
 
 
 %changelog
+* Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.14.RC8
+- test build
+
 * Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.12.RC8
 - Update to 7.0.0RC8
 - set opcache.huge_code_pages=1 on x86_64
