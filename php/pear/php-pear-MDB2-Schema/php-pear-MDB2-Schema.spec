@@ -20,6 +20,7 @@ License:        BSD
 URL:            http://pear.php.net/package/MDB2_Schema
 Source0:        http://pear.php.net/get/%{ClassName}-%{version}.tgz
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear-MDB2
 
@@ -30,7 +31,9 @@ Requires:       php-pear(MDB2) >= 2.5.0
 Requires:       php-pear(XML_Parser) >= 1.2.8
 # from package.xml, optional
 Requires:       php-pear(XML_Serializer) >= 0.18.0
+Requires:       php-pear(HTML_Template_IT) >= 1.3.0
 # not available php-pear(XML_DTD) >= 0.5.1
+
 # from phpcompatinfo
 Requires:       php-pcre
 Requires:       php-xml
@@ -58,6 +61,8 @@ cd %{ClassName}-%{version}
 
 
 %install
+rm -rf %{buildroot}
+
 cd %{ClassName}-%{version}
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
@@ -80,7 +85,12 @@ if [ "$1" -eq "0" ]; then
 fi
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %doc %{pear_docdir}/%{ClassName}
 %{pear_xmldir}/%{name}.xml
 %{pear_testdir}/%{ClassName}
