@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 
-%global gh_commit   2c97015988e0a9e9342b233db5f37ca9386e4d7d
+%global gh_commit   f19b1abee4627a45df7b2873d45136d4706c8e07
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    datastax
 %global gh_project  cpp-driver
@@ -16,7 +16,7 @@
 
 Name:          cassandra-cpp-driver
 Summary:       DataStax C/C++ Driver for Apache Cassandra
-Version:       2.1.0
+Version:       2.2.1
 Release:       1%{?dist}
 License:       ASL 2.0
 Group:         System Environment/Libraries
@@ -98,5 +98,8 @@ rm %{buildroot}%{_libdir}/%{libname}_static.a
 
 
 %changelog
+* Thu Nov 26 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
+- update to 2.2.1
+
 * Thu Aug 13 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - initial package
