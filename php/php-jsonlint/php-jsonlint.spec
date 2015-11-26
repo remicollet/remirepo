@@ -13,18 +13,18 @@
 
 %global github_owner   Seldaek
 %global github_name    jsonlint
-%global github_version 1.3.1
-%global github_commit  863ae85c6d3ef60ca49cb12bd051c4a0648c40c4
+%global github_version 1.4.0
+%global github_commit  66834d3e3566bb5798db7294619388786ae99394
 
-# "php": ">=5.3.0"
-%global php_min_ver    5.3.0
+# "php": "^5.3 || ^7.0"
+%global php_min_ver    5.3
 
 # Build using "--without tests" to disable tests
 %global with_tests     %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:          php-%{github_name}
 Version:       %{github_version}
-Release:       3%{?dist}
+Release:       1%{?dist}
 Summary:       JSON Lint for PHP
 
 Group:         Development/Libraries
@@ -96,6 +96,12 @@ install -pm 0755 bin/jsonlint %{buildroot}%{_bindir}/
 %{_bindir}/phpunit \
   --bootstrap %{buildroot}%{_datadir}/php/Seld/JsonLint/autoload.php \
   --verbose
+
+if which php70; then
+  php70 %{_bindir}/phpunit \
+    --bootstrap %{buildroot}%{_datadir}/php/Seld/JsonLint/autoload.php \
+    --verbose
+fi
 %else
 : Tests skipped
 %endif
@@ -112,6 +118,10 @@ install -pm 0755 bin/jsonlint %{buildroot}%{_bindir}/
 
 
 %changelog
+* Thu Nov 26 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
+- Updated to 1.4.0
+- run test suite with both PHP 5 and 7 when available
+
 * Wed Oct 14 2015 Remi Collet <remi@fedoraproject.org> - 1.3.1-3
 - add autoloader
 
