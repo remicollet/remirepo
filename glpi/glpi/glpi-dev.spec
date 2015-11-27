@@ -27,7 +27,7 @@
 %endif
 
 Name:           glpi
-Version:        0.90
+Version:        0.90.1
 Release:        1%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
@@ -317,6 +317,9 @@ fi
 
 
 %changelog
+* Fri Nov 27 2015 Remi Collet <remi@fedoraproject.org> - 0.90.1-1
+- update to 0.90.1
+
 * Thu Oct  8 2015 Remi Collet <remi@fedoraproject.org> - 0.90-1
 - update to 0.90
 
