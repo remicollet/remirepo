@@ -36,7 +36,7 @@
 %global with_lsws     1
 
 # Regression tests take a long time, you can skip 'em with this
-%global runselftest 0
+#global runselftest 0
 %{!?runselftest: %global runselftest 1}
 
 # Use the arch-specific mysql_config binary to avoid mismatch with the
@@ -133,7 +133,7 @@
 %endif
 
 %global rcver         RC8
-%global rpmrel        14
+%global rpmrel        15
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -2006,7 +2006,7 @@ fi
 
 
 %changelog
-* Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.14.RC8
+* Fri Nov 27 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.15.RC8
 - test build
 
 * Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.12.RC8
