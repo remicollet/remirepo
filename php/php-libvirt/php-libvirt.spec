@@ -24,7 +24,7 @@
 %{!?__php:       %global __php       %{_bindir}/php}
 %{!?_pkgdocdir:  %global _pkgdocdir  %{_docdir}/%{name}-%{version}}
 
-%global  req_libvirt_version 0.6.2
+%global  req_libvirt_version 1.2.8
 %global  extname             libvirt-php
 %if "%{php_version}" < "5.6"
 %global ini_name             %{extname}.ini
@@ -32,31 +32,30 @@
 %global ini_name             40-%{extname}.ini
 %endif
 
-Name:		%{?sub_prefix}php-libvirt
-Version:	0.4.8
-Release:	3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
-Summary:	PHP language binding for Libvirt
+Name:          %{?sub_prefix}php-libvirt
+Version:       0.5.1
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Summary:       PHP language binding for Libvirt
 
-Group:		Development/Libraries
-License:	PHP
-URL:		http://libvirt.org/php
-Source0:	http://libvirt.org/sources/php/libvirt-php-%{version}.tar.gz
+Group:         Development/Libraries
+License:       PHP
+URL:           http://libvirt.org/php
+Source0:       http://libvirt.org/sources/php/libvirt-php-%{version}.tar.gz
 
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires:	%{?scl_prefix}php-devel
-BuildRequires:	libvirt-devel >= %{req_libvirt_version}
-BuildRequires:	libxml2-devel
-BuildRequires:	libxslt
-BuildRequires:	xhtml1-dtds
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: %{?scl_prefix}php-devel
+BuildRequires: libvirt-devel >= %{req_libvirt_version}
+BuildRequires: libxml2-devel
+BuildRequires: libxslt
+BuildRequires: xhtml1-dtds
 
-Requires:	libvirt >= %{req_libvirt_version}
-Requires:	%{?scl_prefix}php(zend-abi) = %{php_zend_api}
-Requires:	%{?scl_prefix}php(api) = %{php_core_api}
+Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 ## Compat SCL (rh-php56)
-Provides:	%{?scl_prefix}php-libvirt         = %{version}-%{release}
-Provides:	%{?scl_prefix}php-libvirt%{?_isa} = %{version}-%{release}
+Provides:      %{?scl_prefix}php-libvirt         = %{version}-%{release}
+Provides:      %{?scl_prefix}php-libvirt%{?_isa} = %{version}-%{release}
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
@@ -69,18 +68,21 @@ Provides:	%{?scl_prefix}php-libvirt%{?_isa} = %{version}-%{release}
 PHP language bindings for Libvirt API. 
 For more details see: http://www.libvirt.org/php/
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %package doc
-Summary:	Document of php-libvirt
-Group:		Development/Libraries
+Summary:       Document of php-libvirt
+Group:         Development/Libraries
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
-BuildArch:	noarch
-Requires:	%{name} = %{version}-%{release}
+BuildArch:     noarch
+Requires:      %{name} = %{version}-%{release}
 %else
-Requires:	%{name}%{_isa} = %{version}-%{release}
+Requires:      %{name}%{_isa} = %{version}-%{release}
 %endif
+## Compat SCL (rh-php56)
+Provides:      %{?scl_prefix}php-libvirt-doc         = %{version}-%{release}
+Provides:      %{?scl_prefix}php-libvirt-doc%{?_isa} = %{version}-%{release}
 
 %description doc
 PHP language bindings for Libvirt API. 
@@ -92,6 +94,11 @@ This package contain the document for php-libvirt.
 %prep
 %setup -q -n libvirt-php-%{version}
 
+if ! pkg-config libvirt  --atleast-version=1.2.9
+then
+  sed -e '/VIR_DOMAIN_BLOCK_JOB_SPEED_BANDWIDTH_BYTES/d' \
+      -i src/libvirt-php.c
+fi
 
 %build
 %{?scl:. %{_scl_scripts}/enable}
@@ -107,12 +114,17 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 install -pm 644 COPYING %{buildroot}%{_pkgdocdir}
-chmod +x %{buildroot}%{php_extdir}/%{extname}.so
 
 if [ "%{extname}.ini" != "%{ini_name}" ]; then
   mv %{buildroot}%{php_inidir}/%{extname}.ini \
      %{buildroot}%{php_inidir}/%{ini_name}
 fi
+
+: Fix installation
+rm %{buildroot}%{php_extdir}/%{extname}.la
+rm %{buildroot}%{php_extdir}/%{extname}.so
+rm %{buildroot}%{php_extdir}/%{extname}.so.0
+mv %{buildroot}%{php_extdir}/%{extname}.so.0.0.0 %{buildroot}%{php_extdir}/%{extname}.so
 
 
 %check
@@ -130,10 +142,10 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %dir %{_pkgdocdir}
-%{_pkgdocdir}/COPYING
+%{!?_licensedir:%global license %%doc}
+%license %{_pkgdocdir}/COPYING
 %{php_extdir}/%{extname}.so
 %config(noreplace) %{php_inidir}/%{ini_name}
-
 
 %files doc
 %defattr(-,root,root,-)
@@ -141,6 +153,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 27 2015 Remi Collet <remi@fedoraproject.org> - 0.5.1-1
+- update to 0.5.1
+- raise dependency on libvirt 1.2.8
+
 * Tue Jun 23 2015 Remi Collet <rcollet@redhat.com> - 0.4.8-3
 - allow build against rh-php56 (as more-php56)
 

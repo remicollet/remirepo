@@ -1,0 +1,484 @@
+Extension [ <persistent> extension #117 libvirt version 0.5.1 ] {
+
+  - INI {
+    Entry [ libvirt.longlong_to_string <ALL> ]
+      Current = '1'
+    }
+    Entry [ libvirt.iso_path <ALL> ]
+      Current = '/var/lib/libvirt/images'
+    }
+    Entry [ libvirt.image_path <ALL> ]
+      Current = '/var/lib/libvirt/images'
+    }
+    Entry [ libvirt.max_connections <ALL> ]
+      Current = '5'
+    }
+  }
+
+  - Constants [137] {
+    Constant [ integer VIR_DOMAIN_XML_SECURE ] { 1 }
+    Constant [ integer VIR_DOMAIN_XML_INACTIVE ] { 2 }
+    Constant [ integer VIR_DOMAIN_XML_UPDATE_CPU ] { 4 }
+    Constant [ integer VIR_DOMAIN_XML_MIGRATABLE ] { 8 }
+    Constant [ integer VIR_NODE_CPU_STATS_ALL_CPUS ] { -1 }
+    Constant [ integer VIR_DOMAIN_NOSTATE ] { 0 }
+    Constant [ integer VIR_DOMAIN_RUNNING ] { 1 }
+    Constant [ integer VIR_DOMAIN_BLOCKED ] { 2 }
+    Constant [ integer VIR_DOMAIN_PAUSED ] { 3 }
+    Constant [ integer VIR_DOMAIN_SHUTDOWN ] { 4 }
+    Constant [ integer VIR_DOMAIN_SHUTOFF ] { 5 }
+    Constant [ integer VIR_DOMAIN_CRASHED ] { 6 }
+    Constant [ integer VIR_DOMAIN_PMSUSPENDED ] { 7 }
+    Constant [ integer VIR_STORAGE_VOL_RESIZE_ALLOCATE ] { 1 }
+    Constant [ integer VIR_STORAGE_VOL_RESIZE_DELTA ] { 2 }
+    Constant [ integer VIR_STORAGE_VOL_RESIZE_SHRINK ] { 4 }
+    Constant [ integer VIR_DOMAIN_VCPU_CONFIG ] { 2 }
+    Constant [ integer VIR_DOMAIN_VCPU_CURRENT ] { 0 }
+    Constant [ integer VIR_DOMAIN_VCPU_LIVE ] { 1 }
+    Constant [ integer VIR_DOMAIN_VCPU_MAXIMUM ] { 4 }
+    Constant [ integer VIR_DOMAIN_VCPU_GUEST ] { 8 }
+    Constant [ integer VIR_SNAPSHOT_DELETE_CHILDREN ] { 1 }
+    Constant [ integer VIR_SNAPSHOT_DELETE_METADATA_ONLY ] { 2 }
+    Constant [ integer VIR_SNAPSHOT_DELETE_CHILDREN_ONLY ] { 4 }
+    Constant [ integer VIR_SNAPSHOT_CREATE_REDEFINE ] { 1 }
+    Constant [ integer VIR_SNAPSHOT_CREATE_CURRENT ] { 2 }
+    Constant [ integer VIR_SNAPSHOT_CREATE_NO_METADATA ] { 4 }
+    Constant [ integer VIR_SNAPSHOT_CREATE_HALT ] { 8 }
+    Constant [ integer VIR_SNAPSHOT_CREATE_DISK_ONLY ] { 16 }
+    Constant [ integer VIR_SNAPSHOT_CREATE_REUSE_EXT ] { 32 }
+    Constant [ integer VIR_SNAPSHOT_CREATE_QUIESCE ] { 64 }
+    Constant [ integer VIR_SNAPSHOT_CREATE_ATOMIC ] { 128 }
+    Constant [ integer VIR_SNAPSHOT_CREATE_LIVE ] { 256 }
+    Constant [ integer VIR_SNAPSHOT_LIST_DESCENDANTS ] { 1 }
+    Constant [ integer VIR_SNAPSHOT_LIST_ROOTS ] { 1 }
+    Constant [ integer VIR_SNAPSHOT_LIST_METADATA ] { 2 }
+    Constant [ integer VIR_SNAPSHOT_LIST_LEAVES ] { 4 }
+    Constant [ integer VIR_SNAPSHOT_LIST_NO_LEAVES ] { 8 }
+    Constant [ integer VIR_SNAPSHOT_LIST_NO_METADATA ] { 16 }
+    Constant [ integer VIR_SNAPSHOT_LIST_INACTIVE ] { 32 }
+    Constant [ integer VIR_SNAPSHOT_LIST_ACTIVE ] { 64 }
+    Constant [ integer VIR_SNAPSHOT_LIST_DISK_ONLY ] { 128 }
+    Constant [ integer VIR_SNAPSHOT_LIST_INTERNAL ] { 256 }
+    Constant [ integer VIR_SNAPSHOT_LIST_EXTERNAL ] { 512 }
+    Constant [ integer VIR_SNAPSHOT_REVERT_RUNNING ] { 1 }
+    Constant [ integer VIR_SNAPSHOT_REVERT_PAUSED ] { 2 }
+    Constant [ integer VIR_SNAPSHOT_REVERT_FORCE ] { 4 }
+    Constant [ integer VIR_MEMORY_VIRTUAL ] { 1 }
+    Constant [ integer VIR_MEMORY_PHYSICAL ] { 2 }
+    Constant [ integer VIR_VERSION_BINDING ] { 1 }
+    Constant [ integer VIR_VERSION_LIBVIRT ] { 2 }
+    Constant [ integer VIR_NETWORKS_ACTIVE ] { 1 }
+    Constant [ integer VIR_NETWORKS_INACTIVE ] { 2 }
+    Constant [ integer VIR_NETWORKS_ALL ] { 3 }
+    Constant [ integer VIR_CRED_USERNAME ] { 1 }
+    Constant [ integer VIR_CRED_AUTHNAME ] { 2 }
+    Constant [ integer VIR_CRED_LANGUAGE ] { 3 }
+    Constant [ integer VIR_CRED_CNONCE ] { 4 }
+    Constant [ integer VIR_CRED_PASSPHRASE ] { 5 }
+    Constant [ integer VIR_CRED_ECHOPROMPT ] { 6 }
+    Constant [ integer VIR_CRED_NOECHOPROMP ] { 7 }
+    Constant [ integer VIR_CRED_REALM ] { 8 }
+    Constant [ integer VIR_CRED_EXTERNAL ] { 9 }
+    Constant [ integer VIR_DOMAIN_MEMORY_STAT_SWAP_IN ] { 0 }
+    Constant [ integer VIR_DOMAIN_MEMORY_STAT_SWAP_OUT ] { 1 }
+    Constant [ integer VIR_DOMAIN_MEMORY_STAT_MAJOR_FAULT ] { 2 }
+    Constant [ integer VIR_DOMAIN_MEMORY_STAT_MINOR_FAULT ] { 3 }
+    Constant [ integer VIR_DOMAIN_MEMORY_STAT_UNUSED ] { 4 }
+    Constant [ integer VIR_DOMAIN_MEMORY_STAT_AVAILABLE ] { 5 }
+    Constant [ integer VIR_DOMAIN_MEMORY_STAT_ACTUAL_BALLOON ] { 6 }
+    Constant [ integer VIR_DOMAIN_MEMORY_STAT_RSS ] { 7 }
+    Constant [ integer VIR_DOMAIN_MEMORY_STAT_NR ] { 8 }
+    Constant [ integer VIR_DOMAIN_JOB_NONE ] { 0 }
+    Constant [ integer VIR_DOMAIN_JOB_BOUNDED ] { 1 }
+    Constant [ integer VIR_DOMAIN_JOB_UNBOUNDED ] { 2 }
+    Constant [ integer VIR_DOMAIN_JOB_COMPLETED ] { 3 }
+    Constant [ integer VIR_DOMAIN_JOB_FAILED ] { 4 }
+    Constant [ integer VIR_DOMAIN_JOB_CANCELLED ] { 5 }
+    Constant [ integer VIR_DOMAIN_BLOCK_JOB_ABORT_ASYNC ] { 1 }
+    Constant [ integer VIR_DOMAIN_BLOCK_JOB_ABORT_PIVOT ] { 2 }
+    Constant [ integer VIR_DOMAIN_BLOCK_JOB_SPEED_BANDWIDTH_BYTES ] { 1 }
+    Constant [ integer VIR_MIGRATE_LIVE ] { 1 }
+    Constant [ integer VIR_MIGRATE_PEER2PEER ] { 2 }
+    Constant [ integer VIR_MIGRATE_TUNNELLED ] { 4 }
+    Constant [ integer VIR_MIGRATE_PERSIST_DEST ] { 8 }
+    Constant [ integer VIR_MIGRATE_UNDEFINE_SOURCE ] { 16 }
+    Constant [ integer VIR_MIGRATE_PAUSED ] { 32 }
+    Constant [ integer VIR_MIGRATE_NON_SHARED_DISK ] { 64 }
+    Constant [ integer VIR_MIGRATE_NON_SHARED_INC ] { 128 }
+    Constant [ integer VIR_MIGRATE_CHANGE_PROTECTION ] { 256 }
+    Constant [ integer VIR_MIGRATE_UNSAFE ] { 512 }
+    Constant [ integer VIR_MIGRATE_OFFLINE ] { 1024 }
+    Constant [ integer VIR_MIGRATE_COMPRESSED ] { 2048 }
+    Constant [ integer VIR_MIGRATE_ABORT_ON_ERROR ] { 4096 }
+    Constant [ integer VIR_MIGRATE_AUTO_CONVERGE ] { 8192 }
+    Constant [ integer VIR_DOMAIN_DEVICE_MODIFY_CURRENT ] { 0 }
+    Constant [ integer VIR_DOMAIN_DEVICE_MODIFY_LIVE ] { 1 }
+    Constant [ integer VIR_DOMAIN_DEVICE_MODIFY_CONFIG ] { 2 }
+    Constant [ integer VIR_DOMAIN_DEVICE_MODIFY_FORCE ] { 4 }
+    Constant [ integer VIR_STORAGE_POOL_BUILD_NEW ] { 0 }
+    Constant [ integer VIR_STORAGE_POOL_BUILD_REPAIR ] { 1 }
+    Constant [ integer VIR_STORAGE_POOL_BUILD_RESIZE ] { 2 }
+    Constant [ integer VIR_DOMAIN_FLAG_FEATURE_ACPI ] { 1 }
+    Constant [ integer VIR_DOMAIN_FLAG_FEATURE_APIC ] { 2 }
+    Constant [ integer VIR_DOMAIN_FLAG_FEATURE_PAE ] { 4 }
+    Constant [ integer VIR_DOMAIN_FLAG_CLOCK_LOCALTIME ] { 8 }
+    Constant [ integer VIR_DOMAIN_FLAG_TEST_LOCAL_VNC ] { 16 }
+    Constant [ integer VIR_DOMAIN_FLAG_SOUND_AC97 ] { 32 }
+    Constant [ integer VIR_DOMAIN_DISK_FILE ] { 1 }
+    Constant [ integer VIR_DOMAIN_DISK_BLOCK ] { 2 }
+    Constant [ integer VIR_DOMAIN_DISK_ACCESS_ALL ] { 4 }
+    Constant [ integer VIR_DOMAIN_METADATA_DESCRIPTION ] { 0 }
+    Constant [ integer VIR_DOMAIN_METADATA_TITLE ] { 1 }
+    Constant [ integer VIR_DOMAIN_METADATA_ELEMENT ] { 2 }
+    Constant [ integer VIR_DOMAIN_AFFECT_CURRENT ] { 0 }
+    Constant [ integer VIR_DOMAIN_AFFECT_LIVE ] { 1 }
+    Constant [ integer VIR_DOMAIN_AFFECT_CONFIG ] { 2 }
+    Constant [ integer VIR_DOMAIN_STATS_STATE ] { 1 }
+    Constant [ integer VIR_DOMAIN_STATS_CPU_TOTAL ] { 2 }
+    Constant [ integer VIR_DOMAIN_STATS_BALLOON ] { 4 }
+    Constant [ integer VIR_DOMAIN_STATS_VCPU ] { 8 }
+    Constant [ integer VIR_DOMAIN_STATS_INTERFACE ] { 16 }
+    Constant [ integer VIR_DOMAIN_STATS_BLOCK ] { 32 }
+    Constant [ integer VIR_CONNECT_GET_ALL_DOMAINS_STATS_ACTIVE ] { 1 }
+    Constant [ integer VIR_CONNECT_GET_ALL_DOMAINS_STATS_INACTIVE ] { 2 }
+    Constant [ integer VIR_CONNECT_GET_ALL_DOMAINS_STATS_OTHER ] { 128 }
+    Constant [ integer VIR_CONNECT_GET_ALL_DOMAINS_STATS_PAUSED ] { 32 }
+    Constant [ integer VIR_CONNECT_GET_ALL_DOMAINS_STATS_PERSISTENT ] { 4 }
+    Constant [ integer VIR_CONNECT_GET_ALL_DOMAINS_STATS_RUNNING ] { 16 }
+    Constant [ integer VIR_CONNECT_GET_ALL_DOMAINS_STATS_SHUTOFF ] { 64 }
+    Constant [ integer VIR_CONNECT_GET_ALL_DOMAINS_STATS_TRANSIENT ] { 8 }
+    Constant [ integer VIR_CONNECT_GET_ALL_DOMAINS_STATS_ENFORCE_STATS ] { -2147483648 }
+    Constant [ integer VIR_DOMAIN_MEM_CONFIG ] { 2 }
+    Constant [ integer VIR_DOMAIN_MEM_CURRENT ] { 0 }
+    Constant [ integer VIR_DOMAIN_MEM_LIVE ] { 1 }
+    Constant [ integer VIR_DOMAIN_MEM_MAXIMUM ] { 4 }
+    Constant [ integer VIR_CONNECT_FLAG_SOUNDHW_GET_NAMES ] { 1 }
+  }
+
+  - Functions {
+    Function [ <internal:libvirt> function libvirt_get_last_error ] {
+    }
+    Function [ <internal:libvirt> function libvirt_connect ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <optional> $url ]
+        Parameter #1 [ <optional> $readonly ]
+      }
+    }
+    Function [ <internal:libvirt> function libvirt_connect_get_uri ] {
+    }
+    Function [ <internal:libvirt> function libvirt_connect_get_hostname ] {
+    }
+    Function [ <internal:libvirt> function libvirt_connect_get_capabilities ] {
+    }
+    Function [ <internal:libvirt> function libvirt_connect_get_emulator ] {
+    }
+    Function [ <internal:libvirt> function libvirt_connect_get_nic_models ] {
+    }
+    Function [ <internal:libvirt> function libvirt_connect_get_soundhw_models ] {
+    }
+    Function [ <internal:libvirt> function libvirt_connect_get_information ] {
+    }
+    Function [ <internal:libvirt> function libvirt_connect_get_machine_types ] {
+    }
+    Function [ <internal:libvirt> function libvirt_connect_get_hypervisor ] {
+    }
+    Function [ <internal:libvirt> function libvirt_connect_get_sysinfo ] {
+    }
+    Function [ <internal:libvirt> function libvirt_connect_get_maxvcpus ] {
+    }
+    Function [ <internal:libvirt> function libvirt_connect_get_encrypted ] {
+    }
+    Function [ <internal:libvirt> function libvirt_connect_get_secure ] {
+    }
+    Function [ <internal:libvirt> function libvirt_connect_get_all_domain_stats ] {
+    }
+    Function [ <internal:libvirt> function libvirt_stream_create ] {
+    }
+    Function [ <internal:libvirt> function libvirt_stream_close ] {
+    }
+    Function [ <internal:libvirt> function libvirt_stream_abort ] {
+    }
+    Function [ <internal:libvirt> function libvirt_stream_finish ] {
+    }
+    Function [ <internal:libvirt> function libvirt_stream_send ] {
+    }
+    Function [ <internal:libvirt> function libvirt_stream_recv ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_new ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_new_get_vnc ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_get_counts ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_is_persistent ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_lookup_by_name ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_get_xml_desc ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_get_disk_devices ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_get_interface_devices ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_change_vcpus ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_change_memory ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_change_boot_devices ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_disk_add ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_disk_remove ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_nic_add ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_nic_remove ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_get_info ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_get_name ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_get_uuid ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_get_uuid_string ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_get_id ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_lookup_by_id ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_lookup_by_uuid ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_lookup_by_uuid_string ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_destroy ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_create ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_resume ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_core_dump ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_shutdown ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_suspend ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_managedsave ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_undefine ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_reboot ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_define_xml ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_create_xml ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_memory_peek ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_memory_stats ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_set_memory ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_set_max_memory ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_set_memory_flags ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_block_stats ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_block_resize ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_block_job_abort ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_block_job_set_speed ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_interface_stats ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_get_connect ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_migrate ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_migrate_to_uri ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_migrate_to_uri2 ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_get_job_info ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_xml_xpath ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_get_block_info ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_get_network_info ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_get_autostart ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_set_autostart ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_get_metadata ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_set_metadata ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_is_active ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_get_next_dev_ids ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_get_screenshot ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_get_screenshot_api ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_get_screen_dimensions ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_send_keys ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_send_pointer_event ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_update_device ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_has_current_snapshot ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_snapshot_create ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_snapshot_get_xml ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_snapshot_revert ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_snapshot_delete ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_snapshot_lookup_by_name ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagepool_lookup_by_name ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagepool_lookup_by_volume ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagepool_get_info ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagevolume_lookup_by_name ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagevolume_lookup_by_path ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagevolume_get_name ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagevolume_get_path ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagevolume_get_info ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagevolume_get_xml_desc ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagevolume_create_xml ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagevolume_create_xml_from ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagevolume_delete ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagevolume_download ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagevolume_upload ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagevolume_resize ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagepool_get_uuid_string ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagepool_get_name ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagepool_lookup_by_uuid_string ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagepool_get_xml_desc ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagepool_define_xml ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagepool_undefine ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagepool_create ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagepool_destroy ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagepool_is_active ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagepool_get_volume_count ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagepool_refresh ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagepool_set_autostart ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagepool_get_autostart ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagepool_build ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagepool_delete ] {
+    }
+    Function [ <internal:libvirt> function libvirt_network_define_xml ] {
+    }
+    Function [ <internal:libvirt> function libvirt_network_undefine ] {
+    }
+    Function [ <internal:libvirt> function libvirt_network_get ] {
+    }
+    Function [ <internal:libvirt> function libvirt_network_get_xml_desc ] {
+    }
+    Function [ <internal:libvirt> function libvirt_network_get_bridge ] {
+    }
+    Function [ <internal:libvirt> function libvirt_network_get_information ] {
+    }
+    Function [ <internal:libvirt> function libvirt_network_get_active ] {
+    }
+    Function [ <internal:libvirt> function libvirt_network_set_active ] {
+    }
+    Function [ <internal:libvirt> function libvirt_node_get_info ] {
+    }
+    Function [ <internal:libvirt> function libvirt_node_get_cpu_stats ] {
+    }
+    Function [ <internal:libvirt> function libvirt_node_get_cpu_stats_for_each_cpu ] {
+    }
+    Function [ <internal:libvirt> function libvirt_node_get_mem_stats ] {
+    }
+    Function [ <internal:libvirt> function libvirt_nodedev_get ] {
+    }
+    Function [ <internal:libvirt> function libvirt_nodedev_capabilities ] {
+    }
+    Function [ <internal:libvirt> function libvirt_nodedev_get_xml_desc ] {
+    }
+    Function [ <internal:libvirt> function libvirt_nodedev_get_information ] {
+    }
+    Function [ <internal:libvirt> function libvirt_list_domains ] {
+    }
+    Function [ <internal:libvirt> function libvirt_list_domain_snapshots ] {
+    }
+    Function [ <internal:libvirt> function libvirt_list_domain_resources ] {
+    }
+    Function [ <internal:libvirt> function libvirt_list_nodedevs ] {
+    }
+    Function [ <internal:libvirt> function libvirt_list_networks ] {
+    }
+    Function [ <internal:libvirt> function libvirt_list_storagepools ] {
+    }
+    Function [ <internal:libvirt> function libvirt_list_active_storagepools ] {
+    }
+    Function [ <internal:libvirt> function libvirt_list_inactive_storagepools ] {
+    }
+    Function [ <internal:libvirt> function libvirt_storagepool_list_volumes ] {
+    }
+    Function [ <internal:libvirt> function libvirt_list_active_domains ] {
+    }
+    Function [ <internal:libvirt> function libvirt_list_active_domain_ids ] {
+    }
+    Function [ <internal:libvirt> function libvirt_list_inactive_domains ] {
+    }
+    Function [ <internal:libvirt> function libvirt_version ] {
+    }
+    Function [ <internal:libvirt> function libvirt_check_version ] {
+    }
+    Function [ <internal:libvirt> function libvirt_has_feature ] {
+    }
+    Function [ <internal:libvirt> function libvirt_get_iso_images ] {
+    }
+    Function [ <internal:libvirt> function libvirt_image_create ] {
+    }
+    Function [ <internal:libvirt> function libvirt_image_remove ] {
+    }
+    Function [ <internal:libvirt> function libvirt_logfile_set ] {
+    }
+    Function [ <internal:libvirt> function libvirt_print_binding_resources ] {
+    }
+    Function [ <internal:libvirt> function libvirt_domain_qemu_agent_command ] {
+    }
+  }
+}
+
