@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    27498251df85bdeecbe2cf213f934dce638a769c
+%global gh_commit    c24046554b8e05138f2be2214057f4162b03aa40
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.6.14
+Version:        1.6.15
 Release:        1%{?dist}
 Summary:        PHP library to manipulate various color representations
 
@@ -110,6 +110,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 27 2015 Remi Collet <remi@fedoraproject.org> - 1.6.15-1
+- update to 1.6.15 (no change)
+
 * Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 1.6.14-1
 - update to 1.6.14 (no change)
 
