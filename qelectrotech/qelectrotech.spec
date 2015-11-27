@@ -5,8 +5,8 @@
 #
 # Please, preserve the changelog entries
 #
-%global svnrel 4266
-%global rdate  20151030
+#global svnrel 4266
+%global rdate  20151127
 %global upver  0.5
 
 Name:        qelectrotech
@@ -34,7 +34,7 @@ Version:     0.50
 %if 0%{?svnrel}
 Release:     0.4.svn%{svnrel}%{?dist}
 %else
-Release:     0.3.rc1%{?dist}
+Release:     1%{?dist}
 %endif
 
 Group:       Applications/Engineering
@@ -259,6 +259,9 @@ fi
 
 
 %changelog
+* Fri Nov 27 2015 Remi Collet <remi@fedoraproject.org> - 0.50-1
+- update to 0.5
+
 * Wed Nov 18 2015 Remi Collet <remi@fedoraproject.org> - 0.50-0.4.svn4266
 - Update to 0.5 snapshot revision 4266
 
