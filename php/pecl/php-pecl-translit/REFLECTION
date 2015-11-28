@@ -1,0 +1,10 @@
+Extension [ <persistent> extension #165 translit version 0.6.2 ] {
+
+  - Functions {
+    Function [ <internal:translit> function transliterate ] {
+    }
+    Function [ <internal:translit> function transliterate_filters_get ] {
+    }
+  }
+}
+
