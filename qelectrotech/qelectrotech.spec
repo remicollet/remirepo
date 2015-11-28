@@ -1,3 +1,4 @@
+# fedora/remirepo spec file for qelectrotech
 #
 # Copyright (c) 2009-2015 Remi Collet
 # License: CC-BY-SA
@@ -21,8 +22,8 @@ Summary(el): Επεξεργασία ηλεκτρικών διαγραμμάτω�
 Summary(es): Un editor de esquemas eléctricos
 Summary(fr): Un éditeur de schémas électriques
 Summary(hr): Uredi elektro sheme
-Summary(nl): Elektrische schema editor
 Summary(it): Un programma per disegnare schemi elettrici
+Summary(nl): Elektrische schema editor
 Summary(pl): Edytor schematów elektrycznych
 Summary(pt): Um editor de esquemas eléctricos
 Summary(ru): Редактор электрических схем
