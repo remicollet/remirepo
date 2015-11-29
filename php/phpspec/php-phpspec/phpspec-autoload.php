@@ -1,7 +1,8 @@
 <?php
 /* Autoloader for phpspec/phpspec and its dependencies */
 
-$vendorDir = '/usr/share/php';
+$vendorDir = stream_resolve_include_path('Symfony/Component/ClassLoader/ClassLoader.php');
+$vendorDir = dirname(dirname(dirname(dirname($vendorDir))));
 // Use Symfony autoloader
 if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
     if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
