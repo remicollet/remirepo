@@ -63,7 +63,7 @@ Requires:       php-session
 Requires:       php-spl
 Requires:       php-xml
 
-# provides latte/latte
+# provides tracy/tracy
 Provides:       php-composer(%{gh_project}/%{gh_project}) = %{version}
 
 
