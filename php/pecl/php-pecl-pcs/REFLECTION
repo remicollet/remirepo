@@ -1,4 +1,9 @@
-Extension [ <persistent> extension #132 pcs version 1.1.0 ] {
+Extension [ <persistent> extension #131 pcs version 1.2.0 ] {
+
+  - Dependencies {
+    Dependency [ tokenizer (Required) ]
+    Dependency [ SPL (Required) ]
+  }
 
   - Classes [1] {
     Class [ <internal:pcs> class PCS\Mgr ] {
@@ -9,7 +14,7 @@ Extension [ <persistent> extension #132 pcs version 1.1.0 ] {
       - Static properties [0] {
       }
 
-      - Static methods [7] {
+      - Static methods [10] {
         Method [ <internal:pcs> static public method autoloadHook ] {
 
           - Parameters [2] {
@@ -57,6 +62,24 @@ Extension [ <persistent> extension #132 pcs version 1.1.0 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $arg1 ]
+          }
+        }
+
+        Method [ <internal:pcs> static public method fileCount ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:pcs> static public method fileInfos ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:pcs> static public method symbolInfos ] {
+
+          - Parameters [0] {
           }
         }
       }

@@ -25,21 +25,28 @@
 %if "%{php_version}" < "5.6"
 %global ini_name   %{pecl_name}.ini
 %else
+# After 20-spl.ini and 20-tokenizer.so
 %global ini_name   40-%{pecl_name}.ini
 %endif
 
 Summary:        PHP Code Service
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.1.1
+Version:        1.2.0
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
+# https://github.com/flaupretre/pecl-pcs/issues/1
+# https://github.com/flaupretre/pecl-pcs/pull/2
+Patch0:         %{pecl_name}-pr2.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
 BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  %{?scl_prefix}php-tokenizer
+BuildRequires:  %{?scl_prefix}php-spl
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
@@ -111,6 +118,7 @@ sed -e '\:examples:s/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
+%patch0 -p1 -b .pr2
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PCS_VERSION/{s/.* "//;s/".*$//;p}' php_pcs.h)
@@ -196,16 +204,22 @@ fi
 
 
 %check
+[ -f %{php_extdir}/tokenizer.so ] && MODDEP="-d extension=tokenizer.so"
+
+# We don't want to run tests in examples folder
+rm -r ?TS/examples
+
 cd NTS
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
+    $MODDEP \
     --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 %if %{with_tests}
 : Upstream test suite for NTS extension
 TEST_PHP_EXECUTABLE=%{__php} \
-TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
+TEST_PHP_ARGS="-n $MODDEP -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__php} -n run-tests.php --show-diff
@@ -215,13 +229,14 @@ REPORT_EXIT_STATUS=1 \
 cd ../ZTS
 : Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
+    $MODDEP \
     --define extension=%{buildroot}%{php_ztsextdir}//%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 %if %{with_tests}
 : Upstream test suite for ZTS extension
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
+TEST_PHP_ARGS="-n $MODDEP -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php --show-diff
@@ -259,6 +274,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov 29 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- Update to 1.2.0
+- add patch for tokenizer dependency
+  open https://github.com/flaupretre/pecl-pcs/issues/1
+  open https://github.com/flaupretre/pecl-pcs/pull/2
+
 * Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - Update to 1.1.1
 
