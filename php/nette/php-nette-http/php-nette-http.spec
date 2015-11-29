@@ -52,9 +52,9 @@ BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.4
 
 # from composer.json, "require": {
 #        "php": ">=5.3.1"
-#        "nette/utils": "~2.2"
+#        "nette/utils": "~2.2, >=2.2.2"
 Requires:       php(language) >= 5.3.1
-Requires:       php-composer(%{gh_owner}/utils) >= 2.2
+Requires:       php-composer(%{gh_owner}/utils) >= 2.2.2
 Requires:       php-composer(%{gh_owner}/utils) <  3
 # from composer.json, "suggest": {
 #        "ext-fileinfo": "to detect type of uploaded files"
