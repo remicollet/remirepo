@@ -33,7 +33,7 @@ Summary:        Wrapper for the Sodium cryptographic library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.2
 Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
-License:        PHP
+License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
@@ -88,6 +88,8 @@ Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 
 %description
 A simple, low-level PHP extension for libsodium.
+
+Documentation: https://paragonie.com/book/pecl-libsodium
 
 Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{scl_vendor})}.
 
