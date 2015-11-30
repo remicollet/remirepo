@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    4ea303d96c6a80ffe357baf59d387f4fe2cfd412
+%global gh_commit    3b8ba96407029d94d83177086bcb5e1fe0046929
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.3
+Version:        2.3.4
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Mail: Sending E-mails
@@ -127,5 +127,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 30 2015 Remi Collet <remi@fedoraproject.org> - 2.3.4-1
+- update to 2.3.4
+
 * Fri Oct 30 2015 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
 - initial package
