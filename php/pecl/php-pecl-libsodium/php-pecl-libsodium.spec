@@ -32,6 +32,9 @@ Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
+# See https://github.com/jedisct1/libsodium-php/pull/70
+Patch0:         %{pecl_name}-pr70.patch
+
 BuildRequires:  libsodium-devel >= 0.6.0
 BuildRequires:  php-devel > 5.2
 BuildRequires:  php-pear
@@ -66,6 +69,7 @@ mv %{pecl_name}-%{version} NTS
 sed -e '/role="test"/d' -i package.xml
 
 cd NTS
+%patch0 -p1 -b .pr70
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_LIBSODIUM_VERSION/{s/.* "//;s/".*$//;p}' php_libsodium.h)
