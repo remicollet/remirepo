@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    ed084be6b5b912f11c3559e17110f8d8a1e3a8a1
+%global gh_commit    9104a4e2f6a3ebdc4eb036624949a1a2849373dd
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.0
-%global minor        9
+%global minor        10
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -188,6 +188,10 @@ install -D -p -m 755 phpunit %{buildroot}%{_bindir}/phpunit
 %check
 ./phpunit --testsuite=small --no-coverage --verbose
 
+if which php70; then
+   php70 ./phpunit --testsuite=small --no-coverage --verbose
+fi
+
 
 %clean
 rm -rf %{buildroot}
@@ -211,6 +215,10 @@ fi
 
 
 %changelog
+* Mon Nov 30 2015 Remi Collet <remi@fedoraproject.org> - 5.0.10-1
+- Update to 5.0.10
+- run test suite with both PHP 5 and 7 when available
+
 * Wed Nov 11 2015 Remi Collet <remi@fedoraproject.org> - 5.0.9-1
 - Update to 5.0.9
 
