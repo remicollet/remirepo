@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c9dfaec788eb65d5ef10cefed0ae63bc76febaa8
+%global gh_commit    6f1ed73088c28a24acc9657ca14b3418a270e24b
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -16,7 +16,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-nette-utils
-Version:        2.3.6
+Version:        2.3.7
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Utility Classes
@@ -147,5 +147,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 30 2015 Remi Collet <remi@fedoraproject.org> - 2.3.7-1
+- update to 2.3.7
+
 * Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 2.3.6-1
 - initial package
