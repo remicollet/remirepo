@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    d4be13806d70c02d53b72cc63e93de6cf813f50f
+%global gh_commit    a588a12f4faace29fc2a5d8775f01ecf36a7ae10
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.3
+Version:        2.3.4
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Caching Component
@@ -40,10 +40,10 @@ BuildRequires:  php-reflection
 BuildRequires:  php-composer(%{gh_owner}/finder) >= 2.2
 BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.2
 # From composer.json, "require-dev": {
-#        "nette/tester": "~1.4"
+#        "nette/tester": "~1.6"
 #        "nette/di": "~2.3",
 #        "latte/latte": "~2.3.0"
-BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.4
+BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.6
 BuildRequires:  php-composer(%{gh_owner}/di) >= 2.3
 BuildRequires:  php-composer(latte/latte) >= 2.3
 %endif
@@ -100,7 +100,7 @@ cp -pr src/* %{buildroot}%{php_home}/%{ns_vendor}/
 %check
 %if %{with_tests}
 : Ignore tests which require memcache
-rm tests/Caching/Memcache*
+rm tests/Storages/Memcache*
 
 : Generate configuration
 cat /etc/php.ini /etc/php.d/*ini >php.ini
@@ -138,5 +138,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 30 2015 Remi Collet <remi@fedoraproject.org> - 2.3.4-1
+- update to 2.3.4
+
 * Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
 - initial package
