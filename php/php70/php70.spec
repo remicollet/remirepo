@@ -133,7 +133,7 @@
 %endif
 
 %global rcver         RC8
-%global rpmrel        15
+%global rpmrel        16
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -192,7 +192,6 @@ Patch47: php-5.6.3-phpinfo.patch
 Patch91: php-5.6.3-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch100: php-upstream.patch
 
 # Security fixes (200+)
 
@@ -969,7 +968,6 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch100 -p1 -b .upstream
 
 # security patches
 
@@ -1107,7 +1105,9 @@ echo "d /run/php-fpm 755 root root" >php-fpm.tmpfiles
 # Some extensions have their own configuration file
 cp %{SOURCE50} 10-opcache.ini
 %ifarch x86_64
+%if 0%{?rhel} != 6
 sed -e '/opcache.huge_code_pages/s/0/1/' -i 10-opcache.ini
+%endif
 %endif
 cp %{SOURCE52} 20-oci8.ini
 
@@ -2006,8 +2006,9 @@ fi
 
 
 %changelog
-* Fri Nov 27 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.15.RC8
-- test build
+* Mon Nov 30 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.16.RC8
+- set opcache.huge_code_pages=0 on EL-6
+  see  https://bugs.php.net/70973 and https://bugs.php.net/70977
 
 * Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.12.RC8
 - Update to 7.0.0RC8
