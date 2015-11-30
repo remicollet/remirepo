@@ -28,6 +28,9 @@ Source0:        %{name}-%{version}-%{gh_short}.tgz
 # pull a git snapshot to get test sutie
 Source1:        makesrc.sh
 
+# https://github.com/nette/utils/pull/91
+Patch0:         %{name}-pr91.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-composer(theseer/autoload)
@@ -93,6 +96,8 @@ To use this library, you just have to add, in your project:
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+%patch0 -p1
+
 
 %build
 : Generate a classmap autoloader
@@ -116,6 +121,9 @@ rm tests/Utils/Image.drawing.phpt
 cat /etc/php.ini /etc/php.d/*ini >php.ini
 export LANG=fr_FR.utf8
 
+: For PHP 5.3.3 on RHEL-6
+sed -e 's/50303/99999/' -i tests/Utils/Object.magicMethod.errors.phpt
+
 : Generate autoloader
 mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
@@ -125,6 +133,7 @@ require_once '%{buildroot}%{php_home}/%{ns_vendor}/Utils/autoload.php';
 EOF
 
 : Run test suite in sources tree
+SKIP_ONLINE_TESTS=1 \
 nette-tester --colors 0 -p php -c ./php.ini tests -s
 %else
 : Test suite disabled
