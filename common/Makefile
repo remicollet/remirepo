@@ -16,6 +16,9 @@ clean:
 	@echo Clean $(NAME) in $(SRCDIR)
 	@rm -rfv *~ noarch x86_64 *.src.rpm
 
+fedsrpm:
+	rpmbuild $(RPMDEFINES) --define "dist .fedora" -bs $(NAME).spec
+
 srpm:
 	rpmbuild $(RPMDEFINES) $(SRCDEFINES) -bs $(NAME).spec
 
