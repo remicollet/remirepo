@@ -132,13 +132,13 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver         RC8
-%global rpmrel        16
+#global rcver         RC8
+%global rpmrel        1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 7.0.0
-Release: 0.%{rpmrel}.%{rcver}%{?dist}
+Release: %{rpmrel}%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -2006,6 +2006,10 @@ fi
 
 
 %changelog
+* Tue Dec  1 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-1
+- Update to 7.0.0
+  http://www.php.net/releases/7_0_0.php
+
 * Mon Nov 30 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.16.RC8
 - set opcache.huge_code_pages=0 on EL-6
   see  https://bugs.php.net/70973 and https://bugs.php.net/70977

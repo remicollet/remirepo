@@ -130,8 +130,8 @@
 #global gh_date      20150623
 #global gh_owner     php
 #global gh_project   php-src
-%global rcver        RC8
-%global rpmrel       26
+#global rcver        RC8
+%global rpmrel       1
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -140,7 +140,7 @@ Version: 7.0.0
 %if 0%{?rcver:1}
 Release: 0.%{rpmrel}.%{rcver}%{?dist}
 %else
-Release: 0.%{rpmrel}.%{gh_date}git%{gh_short}%{?dist}
+Release: %{rpmrel}%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1808,6 +1808,10 @@ fi
 
 
 %changelog
+* Tue Dec  1 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-1
+- Update to 7.0.0
+  http://www.php.net/releases/7_0_0.php
+
 * Mon Nov 30 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-0.26.RC8
 - set opcache.huge_code_pages=0 on EL-6
   see  https://bugs.php.net/70973 and https://bugs.php.net/70977
