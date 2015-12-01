@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #160 swoole version 1.7.20 ] {
+Extension [ <persistent> extension #160 swoole version 1.7.21 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -42,7 +42,7 @@ Extension [ <persistent> extension #160 swoole version 1.7.20 ] {
     Constant [ integer SWOOLE_KEEP ] { 4096 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.7.20 }
+    Constant [ string SWOOLE_VERSION ] { 1.7.21 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_GCC ] { 1 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 2 }
@@ -298,7 +298,7 @@ Extension [ <persistent> extension #160 swoole version 1.7.20 ] {
       - Properties [0] {
       }
 
-      - Methods [34] {
+      - Methods [35] {
         Method [ <internal:swoole, ctor> public method __construct ] {
 
           - Parameters [4] {
@@ -521,6 +521,9 @@ Extension [ <persistent> extension #160 swoole version 1.7.20 ] {
         Method [ <internal:swoole> public method stats ] {
         }
 
+        Method [ <internal:swoole> public method getSocket ] {
+        }
+
         Method [ <internal:swoole> public method bind ] {
 
           - Parameters [2] {
@@ -600,7 +603,7 @@ Extension [ <persistent> extension #160 swoole version 1.7.20 ] {
         Property [ <default> public $sock ]
       }
 
-      - Methods [13] {
+      - Methods [16] {
         Method [ <internal:swoole, ctor> public method __construct ] {
         }
 
@@ -625,6 +628,12 @@ Extension [ <persistent> extension #160 swoole version 1.7.20 ] {
         Method [ <internal:swoole> public method sendto ] {
         }
 
+        Method [ <internal:swoole> public method sleep ] {
+        }
+
+        Method [ <internal:swoole> public method wakeup ] {
+        }
+
         Method [ <internal:swoole> public method isConnected ] {
         }
 
@@ -638,6 +647,9 @@ Extension [ <persistent> extension #160 swoole version 1.7.20 ] {
         }
 
         Method [ <internal:swoole> public method on ] {
+        }
+
+        Method [ <internal:swoole> public method getSocket ] {
         }
       }
     }
@@ -934,7 +946,7 @@ Extension [ <persistent> extension #160 swoole version 1.7.20 ] {
         Property [ <default> private $global ]
       }
 
-      - Methods [35] {
+      - Methods [36] {
         Method [ <internal:swoole, overwrites swoole_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
@@ -1157,6 +1169,9 @@ Extension [ <persistent> extension #160 swoole version 1.7.20 ] {
         Method [ <internal:swoole, inherits swoole_server> public method stats ] {
         }
 
+        Method [ <internal:swoole, inherits swoole_server> public method getSocket ] {
+        }
+
         Method [ <internal:swoole, inherits swoole_server> public method bind ] {
 
           - Parameters [2] {
@@ -1181,7 +1196,7 @@ Extension [ <persistent> extension #160 swoole version 1.7.20 ] {
       - Properties [0] {
       }
 
-      - Methods [7] {
+      - Methods [8] {
         Method [ <internal:swoole> public method cookie ] {
         }
 
@@ -1201,6 +1216,9 @@ Extension [ <persistent> extension #160 swoole version 1.7.20 ] {
         }
 
         Method [ <internal:swoole> public method end ] {
+        }
+
+        Method [ <internal:swoole> public method sendfile ] {
         }
       }
     }
@@ -1280,7 +1298,7 @@ Extension [ <persistent> extension #160 swoole version 1.7.20 ] {
       - Properties [0] {
       }
 
-      - Methods [36] {
+      - Methods [37] {
         Method [ <internal:swoole, overwrites swoole_http_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
@@ -1511,6 +1529,9 @@ Extension [ <persistent> extension #160 swoole version 1.7.20 ] {
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method stats ] {
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method getSocket ] {
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method bind ] {

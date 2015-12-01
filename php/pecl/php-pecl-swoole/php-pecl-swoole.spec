@@ -19,7 +19,7 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global with_zts   0%{?__ztsphp:1}
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  swoole
 %if "%{php_version}" < "5.6"
 # After sockets
@@ -31,7 +31,7 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.7.20
+Version:        1.7.21
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
@@ -253,6 +253,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec 01 2015 Remi Collet <remi@fedoraproject.org> - 1.7.21-1
+- Update to 1.7.21
+
 * Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 1.7.20-1
 - Update to 1.7.20
 
