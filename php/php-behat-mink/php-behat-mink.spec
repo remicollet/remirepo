@@ -1,3 +1,4 @@
+# remirepo spec for php-guzzlehttp-ringphp, from Fedora:
 #
 # Fedora spec file for php-behat-mink
 #
@@ -43,6 +44,7 @@ Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{githu
 # Modify driver testsuite bootstrap
 Patch0:        %{name}-driver-testsuite-bootstrap.patch
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -100,6 +102,7 @@ Autoloader: %{phpdir}/Behat/Mink/autoload.php
 %package driver-testsuite
 
 Summary:   Mink driver testsuite
+Group:     Development/Libraries
 
 Requires:  %{name} = %{version}-%{release}
 # phpcompatinfo (computed from version 1.7.0)
@@ -184,6 +187,8 @@ AUTOLOAD
 
 
 %install
+rm -rf %{buildroot}
+
 : Library
 mkdir -p  %{buildroot}%{phpdir}/Behat/Mink
 cp -pr src/* %{buildroot}%{phpdir}/Behat/Mink/
@@ -206,24 +211,29 @@ $fedoraClassLoader = require_once '%{buildroot}%{phpdir}/Behat/Mink/autoload.php
 $fedoraClassLoader->addPrefix('Behat\\Mink\\Tests\\', __DIR__);
 AUTOLOAD
 
-%if 0%{?el6}
-: Skip tests requiring PHPUnit with the "willReturn" function
-sed 's/function testCreateNodeElements/function SKIP_testCreateNodeElements/' \
-    -i tests/Driver/CoreDriverTest.php
-sed 's/function testGetResponseHeader/function SKIP_testGetResponseHeader/' \
-    -i tests/SessionTest.php
-sed 's/function testAddressEqualsEmptyPath/function SKIP_testAddressEqualsEmptyPath/' \
-    -i tests/WebAssertTest.php
+%if 0%{?el5}
+sed -e 's/function testEscapedSelectors/function SKIP_testEscapedSelectors/' \
+    -e 's/function testSelectors/function SKIP_testSelectors/' \
+    -i tests/Selector/NamedSelectorTest.php
 %endif
 
 : Run tests
 %{_bindir}/phpunit --verbose --bootstrap tests-psr0/autoload.php
+
+if which php70; then
+  php70 %{_bindir}/phpunit --verbose --bootstrap tests-psr0/autoload.php
+fi
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -237,5 +247,8 @@ sed 's/function testAddressEqualsEmptyPath/function SKIP_testAddressEqualsEmptyP
 
 
 %changelog
+* Tue Dec  1 2015 Remi Collet <remi@fedoraproject.org> - 1.7.0-1
+- backport for remi repository
+
 * Wed Nov 25 2015 Shawn Iwinski <shawn@iwin.ski> - 1.7.0-1
 - Initial package
