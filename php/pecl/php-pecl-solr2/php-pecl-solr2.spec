@@ -34,22 +34,21 @@
 %global ini_name  50-%{pecl_name}.ini
 %endif
 # For full test (using localhost server) use --with tests
-# create:  docker run -d -p 8983:8983 --name solr5 -t omars/solr53
-# cleanup: docker stop solr5 && docker rm solr5
+# retrieve: docker pull omars/solr53
+# create:   docker run -d -p 8983:8983 --name solr5 -t omars/solr53
+# cleanup:  docker stop solr5 && docker rm solr5
 %global with_tests 0%{?_with_tests:1}
 
 Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
 Name:           %{?sub_prefix}php-pecl-solr2
-Version:        2.2.1
-Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        2.3.0
+Release:        0%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
 
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
-
-Patch0:         %{pecl_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -136,7 +135,6 @@ sed -e 's/role="test"/role="src"/' -i package.xml
 mv %{pecl_name}-%{version}%{?prever} NTS
 
 cd NTS
-%patch0 -p1 -b .upstream
 
 # Check version
 extver=$(sed -n '/#define PHP_SOLR_VERSION /{s/.* "//;s/".*$//;p}' php_solr_version.h)
@@ -289,6 +287,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 01 2015 Remi Collet <remi@fedoraproject.org> - 2.3.0-0
+- test build for upcoming 2.3.0
+
 * Mon Sep 28 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-3
 - add upstream patch for zpp calls (fix broken ppc64)
 

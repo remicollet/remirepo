@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #198 solr version 2.2.1 ] {
+Extension [ <persistent> extension #197 solr version 2.3.0 ] {
 
   - Dependencies {
     Dependency [ libxml (Required) ]
@@ -7,9 +7,9 @@ Extension [ <persistent> extension #198 solr version 2.2.1 ] {
 
   - Constants [4] {
     Constant [ integer SOLR_MAJOR_VERSION ] { 2 }
-    Constant [ integer SOLR_MINOR_VERSION ] { 2 }
-    Constant [ integer SOLR_PATCH_VERSION ] { 1 }
-    Constant [ string SOLR_EXTENSION_VERSION ] { 2.2.1 }
+    Constant [ integer SOLR_MINOR_VERSION ] { 3 }
+    Constant [ integer SOLR_PATCH_VERSION ] { 0 }
+    Constant [ string SOLR_EXTENSION_VERSION ] { 2.3.0 }
   }
 
   - Functions {
@@ -106,7 +106,7 @@ Extension [ <persistent> extension #198 solr version 2.2.1 ] {
         Property [ <default> private $_hashtable_index ]
       }
 
-      - Methods [30] {
+      - Methods [33] {
         Method [ <internal:solr, ctor> public method __construct ] {
 
           - Parameters [0] {
@@ -300,6 +300,24 @@ Extension [ <persistent> extension #198 solr version 2.2.1 ] {
           - Parameters [0] {
           }
         }
+
+        Method [ <internal:solr> public method getChildDocumentsCount ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method hasChildDocuments ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method getChildDocuments ] {
+
+          - Parameters [0] {
+          }
+        }
       }
     }
 
@@ -356,7 +374,7 @@ Extension [ <persistent> extension #198 solr version 2.2.1 ] {
         Property [ <default> private $_hashtable_index ]
       }
 
-      - Methods [20] {
+      - Methods [25] {
         Method [ <internal:solr, ctor> public method __construct ] {
 
           - Parameters [0] {
@@ -482,6 +500,38 @@ Extension [ <persistent> extension #198 solr version 2.2.1 ] {
           - Parameters [2] {
             Parameter #0 [ <required> SolrInputDocument &$sourceDoc ]
             Parameter #1 [ <optional> $overwrite ]
+          }
+        }
+
+        Method [ <internal:solr> public method addChildDocument ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> SolrInputDocument &$child ]
+          }
+        }
+
+        Method [ <internal:solr> public method getChildDocuments ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method hasChildDocuments ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method getChildDocumentsCount ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> public method &addChildDocuments ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array &$docs ]
           }
         }
       }
@@ -3981,7 +4031,7 @@ Extension [ <persistent> extension #198 solr version 2.2.1 ] {
         Method [ <internal:solr> public method setMax ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> $value ]
+            Parameter #0 [ <required> $max ]
           }
         }
 
@@ -3994,7 +4044,7 @@ Extension [ <persistent> extension #198 solr version 2.2.1 ] {
         Method [ <internal:solr> public method setMin ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> $value ]
+            Parameter #0 [ <required> $min ]
           }
         }
 
@@ -4007,7 +4057,7 @@ Extension [ <persistent> extension #198 solr version 2.2.1 ] {
         Method [ <internal:solr> public method setSize ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> $value ]
+            Parameter #0 [ <required> $size ]
           }
         }
 
@@ -4020,7 +4070,7 @@ Extension [ <persistent> extension #198 solr version 2.2.1 ] {
         Method [ <internal:solr> public method setHint ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> $value ]
+            Parameter #0 [ <required> $hint ]
           }
         }
 
