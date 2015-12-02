@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    6324c907ce7a52478eeeaede764f48733ef5ae44
+%global gh_commit    6e7133793a8e5a5714a551a8324337374be209df
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   environment
@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-phpunit-environment
-Version:        1.3.2
+Version:        1.3.3
 Release:        1%{?dist}
 Summary:        Handle HHVM/PHP environments
 
@@ -77,6 +77,11 @@ cp -pr                           SebastianBergmann/Environment \
 : Run tests - set include_path to ensure PHPUnit autoloader use it
 %{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
 %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/SebastianBergmann/Environment/autoload.php
+
+if which php70; then
+  php70 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+  %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/SebastianBergmann/Environment/autoload.php
+fi
 %endif
 
 
@@ -94,6 +99,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec  2 2015 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
+- update to 1.3.3 (no change on linux)
+- run test suite with both php 5 and 7 when available
+
 * Mon Aug  3 2015 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
 - update to 1.3.2
 
