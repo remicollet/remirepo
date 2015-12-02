@@ -16,7 +16,7 @@
 
 Summary:        Threading API
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        3.1.3
+Version:        3.1.4
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
@@ -172,6 +172,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec  2 2015 Remi Collet <remi@fedoraproject.org> - 3.1.4-1
+- Update to 3.1.4 (stable)
+
 * Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 3.1.3-1
 - Update to 3.1.3 (stable)
 - open https://github.com/krakjoe/pthreads/issues/523 segfault on i386
