@@ -1,6 +1,3 @@
-# Fedora repo spec file for php-pecl-libsodium
-# with SCL compatibility removed, from
-#
 # remirepo spec file for php-pecl-libsodium
 #
 # Copyright (c) 2014-2015 Remi Collet
@@ -9,6 +6,15 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
+%{?scl:          %scl_package        php-pecl-libsodium}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
@@ -24,31 +30,56 @@
 %global buildver   %(pkg-config --silence-errors --modversion libsodium 2>/dev/null || echo 65536)
 
 Summary:        Wrapper for the Sodium cryptographic library
-Name:           php-pecl-%{pecl_name}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-# See https://github.com/jedisct1/libsodium-php/pull/70
-Patch0:         %{pecl_name}-pr70.patch
-
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+%if "%{?vendor}" == "Remi Collet"
+# Ensure libsodium-last is used
+BuildRequires:  libsodium-devel >= 1.0.6
+%else
+# Per upstream documentation
 BuildRequires:  libsodium-devel >= 0.6.0
-BuildRequires:  php-devel > 5.2
-BuildRequires:  php-pear
-BuildRequires:  php-json
+%endif
+BuildRequires:  %{?scl_prefix}php-devel > 5.2
+BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  %{?scl_prefix}php-json
 BuildRequires:  pkgconfig
 
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires:       libsodium%{?_isa} >= %{buildver}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%endif
 
 # Filter shared private - always as libsodium.so is a bad name
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
@@ -60,6 +91,8 @@ A simple, low-level PHP extension for libsodium.
 
 Documentation: https://paragonie.com/book/pecl-libsodium
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{scl_vendor})}.
+
 
 %prep
 %setup -q -c
@@ -69,7 +102,6 @@ mv %{pecl_name}-%{version} NTS
 sed -e '/role="test"/d' -i package.xml
 
 cd NTS
-%patch0 -p1 -b .pr70
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_LIBSODIUM_VERSION/{s/.* "//;s/".*$//;p}' php_libsodium.h)
@@ -108,6 +140,8 @@ make %{?_smp_mflags}
 
 
 %install
+rm -rf %{buildroot}
+
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
@@ -129,7 +163,7 @@ done
 
 
 # when pear installed alone, after us
-%triggerin -- php-pear
+%triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
     %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
 fi
@@ -180,7 +214,12 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
 %{?_licensedir:%license NTS/LICENSE}
 %{pecl_xmldir}/%{name}.xml
@@ -195,9 +234,6 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
-* Mon Nov 30 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
-- cleanup for fedora review
-
 * Wed Nov  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-2
 - rebuild against libsodium 1.0.6
 
