@@ -133,7 +133,7 @@
 %endif
 
 #global rcver         RC8
-%global rpmrel        1
+%global rpmrel        2
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -1223,6 +1223,9 @@ build --libdir=%{_libdir}/php \
       --enable-pcntl \
       --enable-opcache \
       --enable-opcache-file \
+%if 0%{?rhel} == 6
+      --disable-huge-code-pages \
+%endif
       --enable-phpdbg \
       --with-imap=shared --with-imap-ssl \
       --enable-mbstring=shared \
@@ -1367,6 +1370,9 @@ build --includedir=%{_includedir}/php-zts \
       --enable-pcntl \
       --enable-opcache \
       --enable-opcache-file \
+%if 0%{?rhel} == 6
+      --disable-huge-code-pages \
+%endif
       --with-imap=shared --with-imap-ssl \
       --enable-mbstring=shared \
       --enable-mbregex \
@@ -2006,6 +2012,9 @@ fi
 
 
 %changelog
+* Thu Dec  3 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-2
+- build with --disable-huge-code-pages on EL-6
+
 * Tue Dec  1 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-1
 - Update to 7.0.0
   http://www.php.net/releases/7_0_0.php
