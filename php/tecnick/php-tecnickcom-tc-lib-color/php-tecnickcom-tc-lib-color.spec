@@ -110,7 +110,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Fri Dec  3 2015 Remi Collet <remi@fedoraproject.org> - 1.6.16-1
+* Thu Dec  3 2015 Remi Collet <remi@fedoraproject.org> - 1.6.16-1
 - update to 1.6.16 (no change)
 
 * Fri Nov 27 2015 Remi Collet <remi@fedoraproject.org> - 1.6.15-1
