@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    efa1d13f016b58b4a9200802c9c5b14d10d72e85
+%global gh_commit    7595c0bc17125b6ac3bb8f857b7c9b1be743c762
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.6
+Version:        2.3.7
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Dependency Injection Component
@@ -40,23 +40,23 @@ BuildRequires:  php-spl
 BuildRequires:  php-tokenizer
 BuildRequires:  php-composer(%{gh_owner}/neon) >= 2.3.3
 BuildRequires:  php-composer(%{gh_owner}/php-generator) >= 2.3.3
-BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.2
+BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.3.5
 # From composer.json, "require-dev": {
-#        "nette/tester": "~1.3"
-BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.3
+#        "nette/tester": "~1.6"
+BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.6
 %endif
 
 # from composer.json, "require": {
 #        "php": ">=5.3.1"
 #        "nette/neon": "^2.3.3",
 #        "nette/php-generator": "^2.3.3",
-#        "nette/utils": "~2.3"
+#        "nette/utils": "^2.3.5"
 Requires:       php(language) >= 5.3.1
 Requires:       php-composer(%{gh_owner}/neon) >= 2.3.3
 Requires:       php-composer(%{gh_owner}/neon) <  3
 Requires:       php-composer(%{gh_owner}/php-generator) >= 2.3.3
 Requires:       php-composer(%{gh_owner}/php-generator) <  3
-Requires:       php-composer(%{gh_owner}/utils) >= 2.2
+Requires:       php-composer(%{gh_owner}/utils) >= 2.3.5
 Requires:       php-composer(%{gh_owner}/utils) <  3
 # from phpcompatinfo report for version 2.3.6
 Requires:       php-pcre
@@ -108,6 +108,9 @@ cp -pr src/* %{buildroot}%{php_home}/%{ns_vendor}/
 cat /etc/php.ini /etc/php.d/*ini >php.ini
 export LANG=fr_FR.utf8
 
+: See https://github.com/nette/di/commit/0b83ea7a788cef9d2bceafd543201aa309790ed3
+sed -e 's/file_put_contents/@mkdir(TEMP_DIR,0777,true); file_put_contents/' -i tests/bootstrap.php
+
 : Generate autoloader
 mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
@@ -117,7 +120,12 @@ require_once '%{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php';
 EOF
 
 : Run test suite in sources tree
-nette-tester --colors 0 -p php -c ./php.ini tests -s
+%{_bindir}/nette-tester --colors 0 -p php -c ./php.ini tests -s
+
+if which php70; then
+  cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
+  php70 %{_bindir}/nette-tester --colors 0 -p php70 -c ./php.ini tests -s
+fi
 %else
 : Test suite disabled
 %endif
@@ -138,5 +146,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec  3 2015 Remi Collet <remi@fedoraproject.org> - 2.3.7-1
+- update to 2.3.7
+- run test suite with both php 5 and 7 when available
+
 * Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 2.3.6-1
 - initial package

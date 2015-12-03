@@ -175,6 +175,7 @@ rm -rf %{buildroot}
 %changelog
 * Thu Dec  3 2015 Remi Collet <remi@fedoraproject.org> - 2.3.8-1
 - update to 2.3.8
+- run test suite with both php 5 and 7 when available
 
 * Fri Oct 30 2015 Remi Collet <remi@fedoraproject.org> - 2.3.7-1
 - initial package
