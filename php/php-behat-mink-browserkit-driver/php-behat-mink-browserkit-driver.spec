@@ -1,3 +1,4 @@
+# remirepo spec file for php-behat-mink-browserkit-driver, from
 #
 # Fedora spec file for php-behat-mink-browserkit-driver
 #
@@ -47,6 +48,7 @@ License:       MIT
 URL:           http://mink.behat.org/en/latest/drivers/browserkit.html
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -131,6 +133,8 @@ AUTOLOAD
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p  %{buildroot}%{phpdir}/Behat/Mink/Driver
 cp -pr src/* %{buildroot}%{phpdir}/Behat/Mink/Driver/
 
@@ -158,12 +162,21 @@ BOOTSTRAP
 
 : Run tests
 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+
+if which php70; then
+  php70 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+fi
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -173,5 +186,9 @@ BOOTSTRAP
 
 
 %changelog
+* Thu Dec  3 2015 Remi Collet <remi@remirepo.net> - 1.3.0-1
+- backport for remi repository
+- run test suite with both php 5 and 7 when available
+
 * Wed Nov 25 2015 Shawn Iwinski <shawn@iwin.ski> - 1.3.0-1
 - Initial package
