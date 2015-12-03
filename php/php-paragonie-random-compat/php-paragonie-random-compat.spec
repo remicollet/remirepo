@@ -1,3 +1,4 @@
+# remirepo spec file for php-paragonie-random-compat, from
 #
 # Fedora spec file for php-paragonie-random-compat
 #
@@ -35,6 +36,7 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -79,6 +81,8 @@ ln -s random.php lib/autoload.php
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}/random_compat
 cp -rp lib/* %{buildroot}%{phpdir}/random_compat/
 
@@ -87,12 +91,22 @@ cp -rp lib/* %{buildroot}%{phpdir}/random_compat/
 %if %{with_tests}
 %{_bindir}/phpunit --verbose \
     --bootstrap %{buildroot}%{phpdir}/random_compat/autoload.php
+
+if which php70; then
+  php70 %{_bindir}/phpunit --verbose \
+    --bootstrap %{buildroot}%{phpdir}/random_compat/autoload.php
+fi
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -101,6 +115,10 @@ cp -rp lib/* %{buildroot}%{phpdir}/random_compat/
 
 
 %changelog
+* Thu Dec  3 2015 Remi Collet <remi@remirepo.net> - 1.1.0-2
+- backport for remi repository
+- run test suite with both php 5 and 7 when available
+
 * Tue Dec 01 2015 Shawn Iwinski <shawn@iwin.ski> - 1.1.0-2
 - Renamed from "php-paragonie-random_compat" ("_" => "-")
 - Removed php-mcrypt suggest
