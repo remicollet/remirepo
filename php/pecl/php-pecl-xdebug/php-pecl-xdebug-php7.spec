@@ -19,11 +19,11 @@
 
 %global pecl_name   xdebug
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
-%global gh_commit   b1d281f612d3b14abce0b090bfaedbfc8680c0cc
+%global gh_commit   587416c8146bf2aec785ff3fa16ea55d04a30c4b
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date     20151118
 %global with_tests  0%{?_with_tests:1}
-%global prever      rc1
+%global prever      RC2
 
 # XDebug should be loaded after opcache
 %if "%{php_version}" < "5.6"
@@ -35,7 +35,7 @@
 Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.4.0
-Release:        0.5.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.6.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{gh_commit}/%{pecl_name}-%{version}%{?prever}-%{gh_short}.tar.gz
 
 # The Xdebug License, version 1.01
@@ -288,6 +288,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec  3 2015 Remi Collet <remi@fedoraproject.org> - 2.4.0-0.6.RC2
+- update to 2.4.0RC1
+
 * Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 2.4.0-0.5.RC1
 - update to 2.4.0RC1
 
