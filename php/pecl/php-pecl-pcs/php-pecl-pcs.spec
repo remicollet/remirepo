@@ -31,16 +31,12 @@
 
 Summary:        PHP Code Service
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.2.0
+Version:        1.2.1
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/flaupretre/pecl-pcs/issues/1
-# https://github.com/flaupretre/pecl-pcs/pull/2
-Patch0:         %{pecl_name}-pr2.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -118,7 +114,6 @@ sed -e '\:examples:s/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-%patch0 -p1 -b .pr2
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PCS_VERSION/{s/.* "//;s/".*$//;p}' php_pcs.h)
@@ -274,14 +269,17 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec 03 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- Update to 1.2.1 (beta)
+
 * Sun Nov 29 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
-- Update to 1.2.0
+- Update to 1.2.0 (beta)
 - add patch for tokenizer dependency
   open https://github.com/flaupretre/pecl-pcs/issues/1
   open https://github.com/flaupretre/pecl-pcs/pull/2
 
 * Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
-- Update to 1.1.1
+- Update to 1.1.1 (beta)
 
 * Thu Nov 19 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - initial package, version 1.1.0 (beta)

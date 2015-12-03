@@ -1,7 +1,8 @@
-Extension [ <persistent> extension #131 pcs version 1.2.0 ] {
+Extension [ <persistent> extension #131 pcs version 1.2.1 ] {
 
   - Dependencies {
     Dependency [ tokenizer (Required) ]
+    Dependency [ pcre (Required) ]
     Dependency [ SPL (Required) ]
   }
 
