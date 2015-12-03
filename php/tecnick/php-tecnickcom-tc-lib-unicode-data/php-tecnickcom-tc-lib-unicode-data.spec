@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    2be4145940b3889d1db77e31a37008a3b8a84a18
+%global gh_commit    75a395c672856c061b7586335819b63dcd891d98
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.4.18
+Version:        1.4.19
 Release:        1%{?dist}
 Summary:        PHP library containing UTF-8 font definitions
 
@@ -106,6 +106,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec  3 2015 Remi Collet <remi@fedoraproject.org> - 1.4.19-1
+- update to 1.4.19 (no change)
+
 * Fri Nov 27 2015 Remi Collet <remi@fedoraproject.org> - 1.4.18-1
 - update to 1.4.18 (no change)
 
