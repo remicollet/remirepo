@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #78 imagick version 3.3.1dev ] {
+Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
 
   - Dependencies {
     Dependency [ spl (Required) ]
@@ -315,8 +315,8 @@ Extension [ <persistent> extension #78 imagick version 3.3.1dev ] {
         Constant [ integer COLOR_OPACITY ] { 18 }
         Constant [ integer COLOR_ALPHA ] { 19 }
         Constant [ integer COLOR_FUZZ ] { 20 }
-        Constant [ integer IMAGICK_EXTNUM ] { 30300 }
-        Constant [ string IMAGICK_EXTVER ] { 3.3.1dev }
+        Constant [ integer IMAGICK_EXTNUM ] { 30400 }
+        Constant [ string IMAGICK_EXTVER ] { 3.4.0RC2 }
         Constant [ integer QUANTUM_RANGE ] { 65535 }
         Constant [ integer USE_ZEND_MM ] { 0 }
         Constant [ integer COMPOSITE_DEFAULT ] { 40 }

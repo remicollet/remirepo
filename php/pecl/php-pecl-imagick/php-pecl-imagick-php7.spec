@@ -23,9 +23,9 @@
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    mkoppanen
 %global gh_project  imagick
-%global gh_date     20151204
+#global gh_date     20151204
 %global pecl_name   imagick
-%global prever      dev
+%global prever      RC2
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 %global ini_name  %{pecl_name}.ini
@@ -38,20 +38,20 @@
 
 Summary:       Extension to create and modify images using ImageMagick
 Name:          %{?sub_prefix}php-pecl-imagick
-Version:       3.3.1
+Version:       3.4.0
 %if 0%{?gh_date}
 Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       0.5.RC2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
-Source:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
+Release:       0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: %{?scl_prefix}php-devel
+BuildRequires: %{?scl_prefix}php-devel > 5.4
 BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: pcre-devel
 %if "%{?vendor}" == "Remi Collet"
@@ -63,7 +63,7 @@ BuildRequires: ImageMagick-last-devel >= 6.9.2
 Requires:      ImageMagick-last-libs%{?_isa}  >= %{imbuildver}
 %endif
 %else
-BuildRequires: ImageMagick-devel >= 6.2.4
+BuildRequires: ImageMagick-devel >= 6.5.3
 %endif
 
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
@@ -238,17 +238,10 @@ fi
 
 
 %check
-%if 0%{?fedora} == 19 || 0%{?rhel} == 7
-# 001- success
-# 001+ php: unable to acquire cache view `No such file or directory' @ fatal/cache-view.c/AcquireAuthenticCacheView/121.
-# See https://bugzilla.redhat.com/1228034
-: ignore failed test with ImageMagick 6.7.8
-rm ?TS/tests/bug20636.phpt
-%endif
-# https://github.com/mkoppanen/imagick/issues/97
-#rm ?TS/tests/024-ispixelsimilar.phpt
+%if 0%{?fedora} > 20
 %ifnarch x86_64
 rm ?TS/tests/025-get-color.phpt
+%endif
 %endif
 
 : simple module load test for NTS extension
@@ -311,6 +304,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec  4 2015 Remi Collet <remi@fedoraproject.org> - 3.4.0-0.2.RC2
+- update to 3.4.0RC2
+
+* Fri Dec  4 2015 Remi Collet <remi@fedoraproject.org> - 3.4.0-0.1.RC1
+- update to 3.4.0RC1
+
 * Fri Dec  4 2015 Remi Collet <remi@fedoraproject.org> - 3.3.1-0.1.20151204git623a3ac
 - rebuild as 3.3.1dev
 
