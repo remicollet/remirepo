@@ -294,7 +294,7 @@ executing PHP scripts, /usr/bin/php, and the CGI interface.
 Group: Development/Languages
 Summary: The interactive PHP debugger
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: php56u-dbg, php56w-dbg
+Obsoletes: php56u-dbg, php56w-dbg, php70u-dbg, php70w-phpdbg
 
 %description dbg
 The php-dbg package contains the interactive PHP debugger.
@@ -824,7 +824,7 @@ Requires: php-pdo%{?_isa} = %{version}-%{release}
 BuildRequires: freetds-devel >= 0.91
 Provides: php-pdo_dblib, php-pdo_dblib%{?_isa}
 Obsoletes: php-mssql < %{version}-%{release}
-Obsoletes: php53-mssql, php53u-mssql, php54-mssql, php54w-mssql, php55u-mssql, php55w-mssql, php56u-mssql, php56w-mssql, php70u-pdo-dblib, php70w-pdo-dblib
+Obsoletes: php53-mssql, php53u-mssql, php54-mssql, php54w-mssql, php55u-mssql, php55w-mssql, php56u-mssql, php56w-mssql, php70u-pdo-dblib, php70w-pdo_dblib
 
 %description pdo-dblib
 The php-pdo-dblib package contains a dynamic shared object
