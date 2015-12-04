@@ -15,7 +15,7 @@
 
 Summary:       A project build system based on Apache Ant
 Name:          php-pear-phing
-Version:       2.12.0
+Version:       2.13.0
 Release:       1%{?dist}
 
 License:       LGPLv2
@@ -64,6 +64,8 @@ Requires:      php-phpunit-phpcpd
 
 Provides:      php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Provides:      php-composer(phing/phing) = %{version}
+# The project/command
+Provides:      phing = %{version}
 
 
 %description
@@ -120,6 +122,10 @@ fi
 
 
 %changelog
+* Fri Dec 04 2015 Remi Collet <remi@fedoraproject.org> - 2.13.0-1
+- Update to 2.13.0
+- provide phing
+
 * Tue Aug 25 2015 Remi Collet <remi@fedoraproject.org> - 2.12.0-1
 - Update to 2.12.0
 
