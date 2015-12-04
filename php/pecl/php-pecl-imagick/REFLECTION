@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #102 imagick version 3.3.0RC2 ] {
+Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
 
   - Dependencies {
     Dependency [ spl (Required) ]
@@ -35,7 +35,7 @@ Extension [ <persistent> extension #102 imagick version 3.3.0RC2 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -43,6 +43,9 @@ Extension [ <persistent> extension #102 imagick version 3.3.0RC2 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -89,7 +92,7 @@ Extension [ <persistent> extension #102 imagick version 3.3.0RC2 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -97,6 +100,9 @@ Extension [ <persistent> extension #102 imagick version 3.3.0RC2 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -143,7 +149,7 @@ Extension [ <persistent> extension #102 imagick version 3.3.0RC2 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -151,6 +157,9 @@ Extension [ <persistent> extension #102 imagick version 3.3.0RC2 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -197,7 +206,7 @@ Extension [ <persistent> extension #102 imagick version 3.3.0RC2 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -205,6 +214,9 @@ Extension [ <persistent> extension #102 imagick version 3.3.0RC2 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -251,7 +263,7 @@ Extension [ <persistent> extension #102 imagick version 3.3.0RC2 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -259,6 +271,9 @@ Extension [ <persistent> extension #102 imagick version 3.3.0RC2 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -301,7 +316,7 @@ Extension [ <persistent> extension #102 imagick version 3.3.0RC2 ] {
         Constant [ integer COLOR_ALPHA ] { 19 }
         Constant [ integer COLOR_FUZZ ] { 20 }
         Constant [ integer IMAGICK_EXTNUM ] { 30300 }
-        Constant [ string IMAGICK_EXTVER ] { 3.3.0RC2 }
+        Constant [ string IMAGICK_EXTVER ] { 3.3.0 }
         Constant [ integer QUANTUM_RANGE ] { 65535 }
         Constant [ integer USE_ZEND_MM ] { 0 }
         Constant [ integer COMPOSITE_DEFAULT ] { 40 }

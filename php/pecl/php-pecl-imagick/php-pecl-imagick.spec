@@ -15,15 +15,17 @@
 %endif
 
 %{?scl:          %scl_package        php-pecl-imagick}
+%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
+%{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name   imagick
-#global prever      b2
+#global prever      RC2
 %global with_zts    0%{?__ztsphp:1}
 %if "%{php_version}" < "5.6"
-%global ini_name    %{pecl_name}.ini
+%global ini_name  %{pecl_name}.ini
 %else
-%global ini_name    40-%{pecl_name}.ini
+%global ini_name  40-%{pecl_name}.ini
 %endif
 
 # We don't really rely on upstream ABI
@@ -31,30 +33,29 @@
 
 Summary:       Extension to create and modify images using ImageMagick
 Name:          %{?sub_prefix}php-pecl-imagick
-Version:       3.1.2
-Release:       6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:       3.3.0
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/imagick
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: %{?scl_prefix}php-devel >= 5.1.3
+BuildRequires: %{?scl_prefix}php-devel
 BuildRequires: %{?scl_prefix}php-pear
+BuildRequires: pcre-devel
 %if "%{?vendor}" == "Remi Collet"
 %if 0%{?fedora} > 20
 BuildRequires: ImageMagick-devel >= 6.8.8
 Requires:      ImageMagick-libs%{?_isa}  >= %{imbuildver}
 %else
-BuildRequires: ImageMagick-last-devel >= 6.8.9
+BuildRequires: ImageMagick-last-devel >= 6.9.2
 Requires:      ImageMagick-last-libs%{?_isa}  >= %{imbuildver}
 %endif
 %else
 BuildRequires: ImageMagick-devel >= 6.2.4
 %endif
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
@@ -87,16 +88,27 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %{?filter_setup}
 %endif
 
+
 %description
 Imagick is a native php extension to create and modify images
 using the ImageMagick API.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
+
+
+%package devel
+Summary:       %{pecl_name} extension developer files (header)
+Group:         Development/Libraries
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+Requires:      %{?scl_prefix}php-devel%{?_isa}
+
+%description devel
+These are the files needed to compile programs using %{pecl_name} extension.
 
 
 %prep
 echo TARGET is %{name}-%{version}-%{release}
-%setup -q -c 
+%setup -q -c
 
 mv %{pecl_name}-%{version}%{?prever} NTS
 
@@ -107,9 +119,6 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 sed -e '/anonymous_pro_minus.ttf/d' \
     -e '/015-imagickdrawsetresolution.phpt/d' \
     -e '/OFL.txt/d' \
-    -e '/INSTALL/d' \
-    -e '/d41d8cd98f00b204e9800998ecf8427e/d' \
-    -e '/name="tests/s/role="doc"/role="test"/' \
     -i package.xml
 
 if grep '\.ttf' package.xml
@@ -118,6 +127,7 @@ then : "Font files detected!"
 fi
 
 cd NTS
+
 extver=$(sed -n '/#define PHP_IMAGICK_VERSION/{s/.* "//;s/".*$//;p}' php_imagick.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
    : Error: Upstream version is ${extver}, expecting %{version}%{?prever}.
@@ -130,6 +140,9 @@ cat > %{ini_name} << 'EOF'
 extension = %{pecl_name}.so
 
 ; Documentation: http://php.net/imagick
+
+; Don't check builtime and runtime versions of ImageMagick
+imagick.skip_version_check=1
 
 ; Fixes a drawing bug with locales that use ',' as float separators.
 ;imagick.locale_fix=0
@@ -167,32 +180,52 @@ make install INSTALL_ROOT=%{buildroot} -C NTS
 # Drop in the bit of configuration
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
+# Install XML package description
+install -D -p -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+
 %if %{with_zts}
 make install INSTALL_ROOT=%{buildroot} -C ZTS
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Install XML package description
-mkdir -p %{buildroot}%{pecl_xmldir}
-install -pm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
-
-# Documentation
+# Test & Documentation
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+done
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
 
 %check
+%if 0%{?fedora} == 19 || 0%{?rhel} == 7
+# 001- success
+# 001+ php: unable to acquire cache view `No such file or directory' @ fatal/cache-view.c/AcquireAuthenticCacheView/121.
+# See https://bugzilla.redhat.com/1228034
+: ignore failed test with ImageMagick 6.7.8
+rm ?TS/tests/bug20636.phpt
+%endif
+# https://github.com/mkoppanen/imagick/issues/97
+#rm ?TS/tests/024-ispixelsimilar.phpt
+
 : simple module load test for NTS extension
 cd NTS
 %{__php} --no-php-ini \
@@ -201,22 +234,11 @@ cd NTS
     --modules | grep %{pecl_name}
 
 : upstream test suite for NTS extension
-export TEST_PHP_EXECUTABLE=%{__php}
-export REPORT_EXIT_STATUS=1
-export NO_INTERACTION=1
-if ! %{__php} run-tests.php \
-    -n -q \
-    -d extension_dir=%{buildroot}%{php_extdir} \
-    -d extension=%{pecl_name}.so
-then
-  for i in tests/*diff
-  do
-    echo "---- FAILURE in $i"
-    cat $i
-    echo -n "\n----"
-  done
-  exit 1
-fi
+TEST_PHP_EXECUTABLE=%{__php} \
+TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
+REPORT_EXIT_STATUS=1 \
+NO_INTERACTION=1 \
+%{__php} -n run-tests.php --show-diff
 
 %if %{with_zts}
 : simple module load test for ZTS extension
@@ -228,8 +250,8 @@ cd ../ZTS
 
 : upstream test suite for ZTS extension
 export TEST_PHP_EXECUTABLE=%{__ztsphp}
-%{__ztsphp} run-tests.php \
-    -n -q \
+%{__ztsphp} -n run-tests.php \
+    -n -q --show-diff \
     -d extension_dir=%{buildroot}%{php_ztsextdir} \
     -d extension=%{pecl_name}.so
 %endif
@@ -240,33 +262,75 @@ rm -rf %{buildroot}
 
 
 %files
-%defattr(-, root, root, 0755)
+%defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
-%{php_incldir}/ext/%{pecl_name}
 
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
+%endif
+
+%files devel
+%defattr(-,root,root,-)
+%doc %{pecl_testdir}/%{pecl_name}
+%{php_incldir}/ext/%{pecl_name}
+
+%if %{with_zts}
 %{php_ztsincldir}/ext/%{pecl_name}
 %endif
 
 
 %changelog
-* Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 3.1.2-6
+* Fri Dec  4 2015 Remi Collet <remi@fedoraproject.org> - 3.3.0-1
+- update to 3.3.0
+
+* Thu Aug 13 2015 Remi Collet <remi@fedoraproject.org> - 3.3.0-0.5.RC2
+- rebuild
+
+* Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 3.3.0-0.4.RC2
 - allow build against rh-php56 (as more-php56)
 
-* Thu Jun 11 2015 Remi Collet <remi@fedoraproject.org> - 3.1.2-5
-- adapt for SCL
+* Tue Jun  2 2015 Remi Collet <remi@fedoraproject.org> - 3.3.0-0.3.RC2
+- update to 3.3.0RC2
 
-* Mon Aug 25 2014 Remi Collet <rpms@famillecollet.com> - 3.1.2-4
+* Mon Mar 30 2015 Remi Collet <remi@fedoraproject.org> - 3.3.0-0.2.RC1
+- update to 3.3.0RC1
+- drop runtime dependency on pear, new scriptlets
+- set imagick.skip_version_check=1 in default configuration
+
+* Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.10.RC1
+- Fedora 21 SCL mass rebuild
+
+* Mon Aug 25 2014 Remi Collet <rpms@famillecollet.com> - 3.2.0-0.9.RC1
 - rebuild against new ImageMagick-last version 6.8.7-4
 
-* Mon Apr 14 2014 Remi Collet <remi@fedoraproject.org> - 3.1.2-3
+* Mon Aug 25 2014 Remi Collet <rcollet@redhat.com> - 3.2.0-0.8.RC1
+- improve SCL build
+
+* Wed Jul 23 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.7.RC1
+- ignore tests/bug20636.phpt with IM 6.7.8.9
+- add fix for php 5.6 https://github.com/mkoppanen/imagick/pull/35
+
+* Mon Apr 14 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.6.RC1
 - rebuild for ImageMagick
+
+* Wed Apr  9 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.5.RC1
+- add numerical prefix to extension configuration file
+
+* Wed Mar 19 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.4.RC1
+- allow SCL build
+
+* Mon Mar 10 2014 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.3.RC1
+- cleanups for Copr
+
+* Tue Nov 26 2013 Remi Collet <remi@fedoraproject.org> - 3.2.0-0.2.RC1
+- Update to 3.2.0RC1 (beta)
+- add devel sub-package
 
 * Sat Nov  2 2013 Remi Collet <rpms@famillecollet.com> - 3.1.2-2
 - rebuild against new ImageMagick-last version 6.8.7-4
