@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Perms
-Version:        2.1.5
+Version:        2.1.6
 Release:        1%{?dist}
 Summary:        Horde Permissions System
 
@@ -103,7 +103,11 @@ done | tee ../%{pear_name}.lang
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit --verbose .
+%{_bindir}/phpunit --verbose .
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose .
+fi
 
 
 %post
@@ -130,6 +134,9 @@ fi
 
 
 %changelog
+* Fri Dec 04 2015 Remi Collet <remi@fedoraproject.org> - 2.1.6-1
+- Update to 2.1.6
+
 * Thu Jun 25 2015 Remi Collet <remi@fedoraproject.org> - 2.1.5-1
 - Update to 2.1.5
 
