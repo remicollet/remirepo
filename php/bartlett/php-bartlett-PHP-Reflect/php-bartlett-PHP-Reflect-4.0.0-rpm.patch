@@ -71,7 +71,7 @@ diff -up ./bin/phpreflect.rpm ./bin/phpreflect
  
  Environment::setScanDir();
  
--$application = new Application($appName, '3.1');
+-$application = new Application($appName, '4.0');
 +$application = new Application($appName, '@package_version@');
  $application->run();
 diff -up ./src/Bartlett/Reflect/Console/Application.php.rpm ./src/Bartlett/Reflect/Console/Application.php
