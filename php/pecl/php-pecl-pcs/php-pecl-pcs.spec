@@ -31,7 +31,7 @@
 
 Summary:        PHP Code Service
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.2.1
+Version:        1.3.0
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
@@ -107,11 +107,6 @@ These are the files needed to compile programs using PCS.
 %prep
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
-
-# Don't install/register tests, nor example doc
-sed -e '\:examples:s/role="test"/role="src"/' \
-    -e '\:/README:s/role="doc"/role="src"/' \
-    -i package.xml
 
 cd NTS
 
@@ -269,6 +264,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Dec 05 2015 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- Update to 1.3.0
+
 * Thu Dec 03 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - Update to 1.2.1 (beta)
 
