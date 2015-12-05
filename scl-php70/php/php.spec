@@ -1037,6 +1037,11 @@ sed -e 's:%{_root_sysconfdir}:%{_sysconfdir}:' \
     -i 10-opcache.ini
 cp %{SOURCE52} 20-oci8.ini
 
+%if 0%{!?scl:1}
+: SCL macro not defined
+exit 1
+%endif
+
 
 %build
 # aclocal workaround - to be improved

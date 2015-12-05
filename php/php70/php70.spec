@@ -133,7 +133,7 @@
 %endif
 
 #global rcver         RC8
-%global rpmrel        2
+%global rpmrel        3
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -2012,6 +2012,9 @@ fi
 
 
 %changelog
+* Sat Dec  5 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-3
+- EL-6 rebuild
+
 * Thu Dec  3 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-2
 - build with --disable-huge-code-pages on EL-6
 
