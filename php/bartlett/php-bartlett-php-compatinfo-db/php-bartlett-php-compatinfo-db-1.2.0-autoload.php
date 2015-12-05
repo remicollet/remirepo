@@ -15,3 +15,5 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
     $fedoraClassLoader->register();
 }
 $fedoraClassLoader->addPrefix('Bartlett\\CompatInfoDb\\', dirname(dirname(__DIR__)));
+
+require_once $vendorDir . '/Composer/Semver/autoload.php';

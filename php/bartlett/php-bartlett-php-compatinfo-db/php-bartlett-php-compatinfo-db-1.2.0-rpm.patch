@@ -1,6 +1,6 @@
 diff -up ./data/handleDB.php.rpm ./data/handleDB.php
---- ./data/handleDB.php.rpm	2015-11-04 09:31:27.320112762 +0100
-+++ ./data/handleDB.php	2015-11-04 09:32:05.209285133 +0100
+--- ./data/handleDB.php.rpm	2015-12-04 21:15:12.000000000 +0100
++++ ./data/handleDB.php	2015-12-05 16:55:03.461056102 +0100
 @@ -12,7 +12,8 @@
   * @since    Release 1.0.0alpha1 of PHP_CompatInfo_Db
   */
@@ -12,8 +12,8 @@ diff -up ./data/handleDB.php.rpm ./data/handleDB.php
  
  use Bartlett\CompatInfoDb\ExtensionFactory;
 diff -up ./src/Bartlett/CompatInfoDb/Environment.php.rpm ./src/Bartlett/CompatInfoDb/Environment.php
---- ./src/Bartlett/CompatInfoDb/Environment.php.rpm	2015-11-04 09:38:03.048913082 +0100
-+++ ./src/Bartlett/CompatInfoDb/Environment.php	2015-11-04 09:39:39.974354034 +0100
+--- ./src/Bartlett/CompatInfoDb/Environment.php.rpm	2015-12-04 21:15:12.000000000 +0100
++++ ./src/Bartlett/CompatInfoDb/Environment.php	2015-12-05 16:55:03.461056102 +0100
 @@ -37,6 +37,12 @@ class Environment
       */
      public static function initRefDb()
@@ -28,9 +28,9 @@ diff -up ./src/Bartlett/CompatInfoDb/Environment.php.rpm ./src/Bartlett/CompatIn
          $tempDir  = sys_get_temp_dir() . '/bartlett';
  
 diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
---- ./tests/bootstrap.php.rpm	2015-11-04 09:34:12.089862363 +0100
-+++ ./tests/bootstrap.php	2015-11-04 09:34:49.361031923 +0100
-@@ -1,7 +1,7 @@
+--- ./tests/bootstrap.php.rpm	2015-12-05 16:55:03.461056102 +0100
++++ ./tests/bootstrap.php	2015-12-05 16:56:06.693323039 +0100
+@@ -1,6 +1,7 @@
  <?php
  
  $baseDir   = dirname(__DIR__);
@@ -38,4 +38,4 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 +$vendorDir = 'Bartlett/CompatInfoDb'; // tests use include_path
  
  require_once $vendorDir . '/autoload.php';
- 
++require_once __DIR__ . '/Reference/GenericTest.php';

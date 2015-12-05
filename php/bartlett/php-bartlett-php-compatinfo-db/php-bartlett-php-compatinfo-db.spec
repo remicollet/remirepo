@@ -6,13 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
-# Github
-%global gh_commit    b65b06ba30abba8e85c6afc40c8c9ea7921dc434
+# See https://github.com/llaville/php-compatinfo-db/releases
+%global gh_commit    5b30bfeff39cc87b3ea75289b63a6ba8608dda6f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20151031
+#global gh_date      20151031
 %global gh_owner     llaville
 %global gh_project   php-compatinfo-db
-%global prever       alpha1
+#global prever       alpha1
 # Namespace
 %global ns_vendor    Bartlett
 %global ns_project   CompatInfoDb
@@ -23,7 +23,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{c_vendor}-%{c_project}
-Version:        1.0.0
+Version:        1.2.0
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Reference Database to be used with php-compatinfo library
@@ -34,14 +34,15 @@ URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
 
 # Autoloader for RPM
-Source1:        %{name}-autoload.php
+Source1:        %{name}-1.2.0-autoload.php
 
 # Autoload and sqlite database path
-Patch0:         %{name}-1.0.0-rpm.patch
+Patch0:         %{name}-1.2.0-rpm.patch
 
 BuildArch:      noarch
 # Needed to build the database from sources
 BuildRequires:  php(language) >= 5.4.0
+BuildRequires:  php-composer(composer/semver) >= 1.0
 BuildRequires:  php-curl
 BuildRequires:  php-intl
 BuildRequires:  php-libxml
@@ -65,6 +66,7 @@ BuildRequires:  php-composer(phpunit/phpunit)
 
 # From composer.json, "require"
 #        "php": ">=5.4.0",
+#        "composer/semver": "~1.0",
 #        "ext-curl": "*",
 #        "ext-intl": "*",
 #        "ext-libxml": "*",
@@ -74,6 +76,8 @@ BuildRequires:  php-composer(phpunit/phpunit)
 #        "ext-json": "*",
 #        "ext-pdo_sqlite": "*"
 Requires:       php(language) >= 5.4.0
+Requires:       php-composer(composer/semver) >= 1.0
+Requires:       php-composer(composer/semver) <  2
 Requires:       php-curl
 Requires:       php-intl
 Requires:       php-libxml
@@ -137,5 +141,9 @@ export BARTLETT_COMPATINFO_DB=%{buildroot}%{_datadir}/%{name}/compatinfo.sqlite
 
 
 %changelog
+* Sat Dec  5 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- update to 1.2.0
+- add dependency on composer/semver
+
 * Wed Nov  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.alpha1
 - Initial package
