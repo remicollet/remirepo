@@ -420,6 +420,8 @@ Requires: php-cli%{?_isa} = %{version}-%{release}, autoconf, automake
 Requires: pcre-devel%{?_isa}
 %endif
 Obsoletes: php-pecl-pdo-devel
+Obsoletes: php-pecl-json-devel  < %{jsonver}
+Obsoletes: php-pecl-jsonc-devel < %{jsonver}
 %if %{with_zts}
 Provides: php-zts-devel = %{version}-%{release}
 Provides: php-zts-devel%{?_isa} = %{version}-%{release}
@@ -2012,6 +2014,9 @@ fi
 
 
 %changelog
+*
+- php-devel obsoletes php-pecl-jsonc-devel
+
 * Sat Dec  5 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-3
 - EL-6 rebuild
 
