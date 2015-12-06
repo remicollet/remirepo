@@ -1,4 +1,4 @@
-# spec file for php-phpunit-diff
+# remirepo/fedora spec file for php-phpunit-diff
 #
 # Copyright (c) 2013-2015 Remi Collet
 # License: CC-BY-SA
@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    863df9687835c62aa423a22412d26fa2ebde3fd3
+%global gh_commit    2b0112e42c338afa9ad9dfeb94d66f6d84c2f828
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   diff
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-phpunit-diff
-Version:        1.3.0
+Version:        1.4.0
 Release:        1%{?dist}
 Summary:        Diff implementation
 
@@ -36,8 +36,9 @@ BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
 # from composer.json, "require-dev": {
-#        "phpunit/phpunit": "~4.2"
-BuildRequires:  php-composer(phpunit/phpunit) >= 4.2
+#        "phpunit/phpunit": "~5"
+# min version ignored
+BuildRequires:  php-composer(phpunit/phpunit)
 %endif
 
 # from composer.json
@@ -107,6 +108,9 @@ fi
 
 
 %changelog
+* Sun Dec  6 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
+- update to 1.4.0
+
 * Fri Apr  3 2015 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - update to 1.3.0
 
