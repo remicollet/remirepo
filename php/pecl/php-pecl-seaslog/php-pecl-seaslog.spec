@@ -20,7 +20,7 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global with_zts   0%{?__ztsphp:1}
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global proj_name  SeasLog
 %global pecl_name  seaslog
 %global with_tests 0%{!?_without_tests:1}
@@ -32,7 +32,7 @@
 
 Summary:        A effective,fast,stable log extension for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.4.8
+Version:        1.5.0
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        ASL 2.0
 Group:          Development/Languages
@@ -229,6 +229,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 06 2015 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
+- Update to 1.5.0
+
 * Tue Nov 10 2015 Remi Collet <remi@fedoraproject.org> - 1.4.8-1
 - Update to 1.4.8 (stable)
 
