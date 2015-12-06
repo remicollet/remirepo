@@ -16,14 +16,12 @@
 
 Summary:        Threading API
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        3.1.4
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        3.1.5
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-Patch0:         %{pecl_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-zts-devel > 7
@@ -76,7 +74,6 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd %{pecl_name}-%{version}
-%patch0 -p1 -b .upstream
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PTHREADS_VERSION/{s/.* "//;s/".*$//;p}' php_pthreads.h)
@@ -171,6 +168,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec  6 2015 Remi Collet <remi@fedoraproject.org> - 3.1.5-1
+- Update to 3.1.5 (stable)
+
 * Wed Dec  2 2015 Remi Collet <remi@fedoraproject.org> - 3.1.4-2
 - add upstream patch to fix segfault on i386
   https://github.com/krakjoe/pthreads/issues/523
