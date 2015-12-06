@@ -16,3 +16,4 @@ $fedoraClassLoader->addPrefix('SuperClosure\\', dirname(__DIR__));
 
 // Dependencies
 require_once $vendorDir . '/PhpParser/autoload.php';
+require_once $vendorDir . '/Symfony/Polyfill/autoload.php';
