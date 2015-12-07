@@ -20,3 +20,4 @@ $fedoraClassLoader->addPrefixes(array(
 
 // Dependencies
 require_once $vendorDir . '/Bartlett/Reflect/autoload.php';
+require_once $vendorDir . '/Bartlett/CompatInfoDb/autoload.php';

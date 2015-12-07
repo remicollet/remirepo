@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
-%global gh_commit    4fc02f5dc9e07039e3baafe53a287547dd8675bd
+%global gh_commit    1b65ee36ac475e2ce3a20fae612659ea933338c6
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20151005
 %global gh_owner     llaville
@@ -16,7 +16,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        4.5.2
+Version:        5.0.0
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
@@ -30,41 +30,44 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 Source1:        fedora-review-check
 
 # Autoloader for RPM - die composer !
-Source2:        %{name}-autoload.php
+Source2:        %{name}-5.0.0-autoload.php
 
 # Autoload and sqlite database path
-Patch0:         %{name}-4.5.0-rpm.patch
+Patch0:         %{name}-5.0.0-rpm.patch
 
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3.2
+BuildRequires:  php(language) >= 5.4.0
 %if %{with_tests}
 # to run test suite
 BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php-pdo_sqlite
-BuildRequires:  php-composer(bartlett/php-reflect) >= 3.1
+BuildRequires:  php-composer(bartlett/php-reflect) >= 4.0
+BuildRequires:  php-composer(bartlett/php-compatinfo-db) >= 1.0
 # For our patch / autoloader
 BuildRequires:  php-composer(symfony/class-loader)
-BuildRequires:  php-bartlett-PHP-Reflect >= 3.1.1-3
 %endif
 
 # From composer.json, "require"
-#        "php": ">=5.3.2",
+#        "php": ">=5.4.0",
 #        "ext-libxml": "*",
 #        "ext-pcre": "*",
 #        "ext-spl": "*",
 #        "ext-json": "*",
 #        "ext-pdo_sqlite": "*",
 #        "symfony/console": "~2.5",
-#        "bartlett/php-reflect": "~3.1",
-Requires:       php(language) >= 5.3.2
+#        "bartlett/php-reflect": "~4.0",
+#        "bartlett/php-compatinfo-db": "~1.0"
+Requires:       php(language) >= 5.4.0
 Requires:       php-cli
 Requires:       php-json
 Requires:       php-libxml
 Requires:       php-pcre
 Requires:       php-pdo_sqlite
 Requires:       php-spl
-Requires:       php-composer(bartlett/php-reflect) >= 3.1
-Requires:       php-composer(bartlett/php-reflect) <  4
+Requires:       php-composer(bartlett/php-reflect) >= 4.0
+Requires:       php-composer(bartlett/php-reflect) <  5
+Requires:       php-composer(bartlett/php-compatinfo-db) >= 1.0
+Requires:       php-composer(bartlett/php-compatinfo-db) <  2
 Requires:       php-composer(symfony/console)      >= 2.5
 Requires:       php-composer(symfony/console)      <  3
 # From composer.json, "require-dev": {
@@ -118,8 +121,7 @@ sed -e 's/@package_version@/%{version}%{?prever}/' \
 
 
 %build
-: Generate the references database
-%{_bindir}/php -d date.timezone=Europe/Paris data/handleDB.php db:init
+# Nothing
 
 
 %install
@@ -129,21 +131,14 @@ cp -pr src/Bartlett %{buildroot}%{_datadir}/php/Bartlett
 install -D -p -m 755 bin/phpcompatinfo           %{buildroot}%{_bindir}/phpcompatinfo
 install -D -p -m 644 bin/phpcompatinfo.json.dist %{buildroot}%{_sysconfdir}/phpcompatinfo.json
 install -D -p -m 644 bin/phpcompatinfo.1         %{buildroot}%{_mandir}/man1/phpcompatinfo.1
-install -D -p -m 644 data/compatinfo.sqlite      %{buildroot}%{_datadir}/%{name}/compatinfo.sqlite
 
 install -D -p -m 755 %{SOURCE1}                  %{buildroot}%{_datadir}/%{name}/fedora-review-check
 
 
 %if %{with_tests}
 %check
-# drop some test because of RC version
-rm tests/Reference/Extension/AmqpExtensionTest.php
-rm tests/Reference/Extension/SphinxExtensionTest.php
-
-%if 0%{?fedora} < 21 && 0%{?rhel} < 7
-rm tests/Reference/Extension/CurlExtensionTest.php
-rm tests/Reference/Extension/LibxmlExtensionTest.php
-%endif
+mkdir vendor
+ln -s %{buildroot}%{_datadir}/php/Bartlett/CompatInfo/autoload.php vendor/
 
 %{_bindir}/phpunit \
     --include-path %{buildroot}%{_datadir}/php \
@@ -166,12 +161,14 @@ fi
 %{_bindir}/phpcompatinfo
 %{_datadir}/php/Bartlett/CompatInfo
 %{_mandir}/man1/phpcompatinfo.1*
-%{_datadir}/%{name}
 
 
 %changelog
 * Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 4.5.2-1
 - update to 4.5.2
+- raise dependency on bartlett/php-reflect ~4.0
+- raise minimal php version to 5.4
+- add dependency on bartlett/php-compatinfo-db
 
 * Sun Oct 11 2015 Remi Collet <remi@fedoraproject.org> - 4.5.1-1
 - update to 4.5.1
