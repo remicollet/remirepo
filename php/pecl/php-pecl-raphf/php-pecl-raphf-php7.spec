@@ -51,8 +51,8 @@ Version:        2.0.0
 Release:        0.3.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 Release:        0.4.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:        BSD
 Group:          Development/Languages
@@ -283,6 +283,7 @@ rm -rf %{buildroot}
 %changelog
 * Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.4.RC1
 - Update to 2.0.0RC1 (beta)
+- sources from pecl tarball
 
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.3.20150930gitb07c6f3
 - rebuild for PHP 7.0.0RC5 new API version

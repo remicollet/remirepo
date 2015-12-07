@@ -262,6 +262,7 @@ rm -rf %{buildroot}
 %changelog
 * Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.2.RC1
 - Update to 2.0.0RC1 (beta)
+- sources from pecl tarball
 
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.1.20150930git55c3639
 - rebuild for PHP 7.0.0RC5 new API version

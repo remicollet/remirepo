@@ -23,10 +23,10 @@
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   m6w6
 %global gh_project ext-pq
-%global gh_date    20150819
-%global with_zts   0%{?__ztsphp:1}
+#global gh_date    20150819
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  pq
-%global rcver      dev
+%global prever     RC1
 %if %{?runselftest}%{!?runselftest:1}
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
@@ -47,17 +47,18 @@ Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        2.0.0
 %if 0%{?gh_date:1}
 Release:        0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.5.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  postgresql-devel > 9
-BuildRequires:  %{?scl_prefix}php-devel > 5.4
+BuildRequires:  %{?scl_prefix}php-devel > 7
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-json
 BuildRequires:  %{?sub_prefix}php-pecl-raphf-devel >= 1.1.0
@@ -120,8 +121,12 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -q -c
+%if 0%{?ghdate}
 mv %{gh_project}-%{gh_commit} NTS
 mv NTS/package.xml .
+%else
+mv %{pecl_name}-%{version}%{?prever} NTS
+%endif
 
 # Don't install tests
 sed -e '/role="test"/d' -i package.xml
@@ -130,8 +135,8 @@ cd NTS
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PQ_VERSION/{s/.* "//;s/".*$//;p}' php_pq.h)
-if test "x${extver}" != "x%{version}%{?rcver}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?rcver}.
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
 cd ..
@@ -296,6 +301,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.5.RC1
+- Update to 2.0.0RC1 (beta)
+- sources from pecl tarball
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.4.20150819gite381164
 - rebuild for PHP 7.0.0RC5 new API version
 
