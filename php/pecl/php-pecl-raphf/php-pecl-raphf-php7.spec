@@ -27,9 +27,10 @@
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   m6w6
 %global gh_project ext-raphf
-%global gh_date    20150930
-%global with_zts   0%{?__ztsphp:1}
+#global gh_date    20150930
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  raphf
+%global prever     RC1
 # tests disabled because of circular dependency on pecl/http
 # tests requires pecl/http 2.0.0
 %global with_tests %{?_with_tests:1}%{!?_with_tests:0}
@@ -46,11 +47,16 @@
 Summary:        Resource and persistent handles factory
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        2.0.0
+%if 0%{?ghdate}
 Release:        0.3.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
+%else
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
+Release:        0.4.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+%endif
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -114,14 +120,18 @@ These are the files needed to compile programs using %{name}.
 
 %prep
 %setup -qc
+%if 0%{?ghdate}
 mv %{gh_project}-%{gh_commit} NTS
 mv NTS/package.xml .
+%else
+mv %{pecl_name}-%{version}%{?prever} NTS
+%endif
 
 cd NTS
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_RAPHF_VERSION/{s/.* "//;s/".*$//;p}' php_raphf.h)
-if test "x${extver}" != "x%{version}%{?prever:-%{prever}}%{?gh_date:dev}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}%{?gh_date:dev}.
+if test "x${extver}" != "x%{version}%{?prever}%{?gh_date:dev}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}%{?gh_date:dev}.
    exit 1
 fi
 cd ..
@@ -178,7 +188,8 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 # Test & Documentation
 for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 NTS/tests/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/tests/$i
+do [ -f NTS/tests/$i ] && install -Dpm 644 NTS/tests/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/tests/$i
+   [ -f NTS/$i ]       && install -Dpm 644 NTS/$i       %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
 done
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
@@ -270,6 +281,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.4.RC1
+- Update to 2.0.0RC1 (beta)
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.3.20150930gitb07c6f3
 - rebuild for PHP 7.0.0RC5 new API version
 - new snapshot
