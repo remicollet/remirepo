@@ -38,7 +38,7 @@
 
 Name:           %{?sub_prefix}php-pecl-apcu
 Summary:        APC User Cache
-Version:        4.0.8
+Version:        4.0.10
 %if 0%{?gh_date:1}
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
@@ -339,6 +339,9 @@ fi
 
 
 %changelog
+* Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 4.0.10-1
+- Update to 4.0.10 (stable)
+
 * Fri Nov 20 2015 Remi Collet <remi@fedoraproject.org> - 4.0.8-1
 - Update to 4.0.8 (stable)
 
