@@ -21,7 +21,7 @@
 
 Name:           php-bartlett-umlwriter
 Version:        1.0.1
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Create UML class diagrams from your PHP source
 
@@ -69,7 +69,7 @@ Requires:       php-composer(sebastian/version)                 <  2
 #        "andrewsville/php-token-reflection": "Reverse-engine, alternative solution"
 %if ! %{bootstrap}
 Requires:       php-composer(bartlett/php-reflect)              >= 3.0
-Requires:       php-composer(bartlett/php-reflect)              <  4
+#Requires:       php-composer(bartlett/php-reflect)              <  4
 %endif
 Requires:       php-composer(andrewsville/php-token-reflection) >= 1.4
 Requires:       php-composer(andrewsville/php-token-reflection) <  2
@@ -134,6 +134,9 @@ install -D -p -m 755 bin/umlwriter  %{buildroot}%{_bindir}/umlwriter
 
 
 %changelog
+* Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
+- ignore php-reflect max version
+
 * Tue Sep 29 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - update to 1.0.1
 
