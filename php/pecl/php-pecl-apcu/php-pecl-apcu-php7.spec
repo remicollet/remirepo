@@ -24,26 +24,27 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit  ccd50c3b3ab773452bcec60fc4b8931c75233f8a
+%global bootstrap  0
+%global gh_commit  e7a67846c2806cd70f4ea28c3aef4fe04430ad98
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   krakjoe
 %global gh_project apcu
-#global gh_date    20151120
+#global gh_date    20151205
 %global pecl_name  apcu
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global ini_name   40-%{pecl_name}.ini
 
 Name:           %{?sub_prefix}php-pecl-apcu
 Summary:        APC User Cache
-Version:        5.1.0
+Version:        5.1.2
 %if 0%{?gh_date:1}
-Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
-Source1:        %{pecl_name}-5.0.0.ini
+Source1:        %{pecl_name}-5.1.2.ini
 Source2:        %{pecl_name}-panel.conf
 Source3:        %{pecl_name}.conf.php
 
@@ -52,27 +53,23 @@ Group:          Development/Languages
 URL:            http://pecl.php.net/package/APCu
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-devel > 7
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  pcre-devel
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
+%if ! %{bootstrap}
+# For user experience
+Requires:       %{?scl_prefix}php-pecl-apcu-bc%{?_isa}
+%endif
 
 Obsoletes:      %{?scl_prefix}php-apcu               < 4.0.0-1
 Provides:       %{?scl_prefix}php-apcu               = %{version}
 Provides:       %{?scl_prefix}php-apcu%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(apcu)         = %{version}
 Provides:       %{?scl_prefix}php-pecl(apcu)%{?_isa} = %{version}
-# Same provides than APC, this is a drop in replacement
-Obsoletes:      %{?scl_prefix}php-pecl-apc           < 4
-Provides:       %{?scl_prefix}php-apc                = %{version}
-Provides:       %{?scl_prefix}php-apc%{?_isa}        = %{version}
-Provides:       %{?scl_prefix}php-pecl-apc           = %{version}-%{release}
-Provides:       %{?scl_prefix}php-pecl-apc%{?_isa}   = %{version}-%{release}
-Provides:       %{?scl_prefix}php-pecl(APC)          = %{version}
-Provides:       %{?scl_prefix}php-pecl(APC)%{?_isa}  = %{version}
 # For "more" SCL
 Provides:       %{?scl_prefix}php-pecl-apcu          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-apcu%{?_isa}  = %{version}-%{release}
@@ -80,21 +77,15 @@ Provides:       %{?scl_prefix}php-pecl-apcu%{?_isa}  = %{version}-%{release}
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
 Obsoletes:      php53-pecl-%{pecl_name} <= %{version}
-Obsoletes:      php53-pecl-apc          <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php53u-pecl-apc          <= %{version}
 Obsoletes:      php54-pecl-%{pecl_name} <= %{version}
-Obsoletes:      php54-pecl-apc          <= %{version}
 Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php54w-pecl-apc          <= %{version}
 Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
-%if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
-%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -105,24 +96,12 @@ Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 
 
 %description
-APCu is userland caching: APC stripped of opcode caching in preparation
-for the deployment of Zend OPcache as the primary solution to opcode
-caching in future versions of PHP.
+APCu is userland caching: APC stripped of opcode caching.
 
-APCu has a revised and simplified codebase, by the time the PECL release
-is available, every part of APCu being used will have received review and
-where necessary or appropriate, changes.
+APCu only supports userland caching of variables.
 
-Simplifying and documenting the API of APCu completely removes the barrier
-to maintenance and development of APCu in the future, and additionally allows
-us to make optimizations not possible previously because of APC's inherent
-complexity.
-
-APCu only supports userland caching (and dumping) of variables, providing an
-upgrade path for the future. When O+ takes over, many will be tempted to use
-3rd party solutions to userland caching, possibly even distributed solutions;
-this would be a grave error. The tried and tested APC codebase provides far
-superior support for local storage of PHP variables.
+The %{?sub_prefix}php-pecl-apcu-bc package provides a drop
+in replacement for APC.
 
 Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
@@ -177,8 +156,8 @@ mv %{pecl_name}-%{version} NTS
 cd NTS
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APCU_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
-if test "x${extver}" != "x%{version}%{?prever}%{?gh_date:-dev}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}%{?gh_date:-dev}.
+if test "x${extver}" != "x%{version}%{?prever}%{?gh_date:dev}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}%{?gh_date:dev}.
    exit 1
 fi
 cd ..
@@ -197,7 +176,7 @@ sed -e s:apc.conf.php:%{_sysconfdir}/apcu-panel/conf.php:g \
 cd NTS
 %{_bindir}/phpize
 %configure \
-   --enable-apcu-bc \
+   --enable-apcu \
    --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
@@ -205,7 +184,7 @@ make %{?_smp_mflags}
 cd ../ZTS
 %{_bindir}/zts-phpize
 %configure \
-   --enable-apcu-bc \
+   --enable-apcu \
    --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 %endif
@@ -244,7 +223,8 @@ install -D -m 644 -p %{SOURCE3} \
 # Test & Documentation
 cd NTS
 for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+do [ -f $i ]       && install -Dpm 644 $i       %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
+   [ -f tests/$i ] && install -Dpm 644 tests/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/tests/$i
 done
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
@@ -253,18 +233,13 @@ done
 
 %check
 cd NTS
-# Check than both extensions are reported (BC mode)
 %{_bindir}/php -n \
-   -d extension=%{buildroot}%{php_extdir}/apcu.so \
+   -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
    -m | grep 'apcu'
-%{_bindir}/php -n \
-   -d extension=%{buildroot}%{php_extdir}/apcu.so \
-   -d extension=%{buildroot}%{php_extdir}/apc.so \
-   -m | grep 'apc$'
 
 # Upstream test suite for NTS extension
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
-TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=apcu.so -d extension=apc.so" \
+TEST_PHP_ARGS="-n -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php --show-diff
@@ -272,16 +247,12 @@ REPORT_EXIT_STATUS=1 \
 %if %{with_zts}
 cd ../ZTS
 %{__ztsphp} -n \
-   -d extension=%{buildroot}%{php_ztsextdir}/apcu.so \
+   -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
    -m | grep 'apcu'
-%{__ztsphp} -n \
-   -d extension=%{buildroot}%{php_ztsextdir}/apcu.so \
-   -d extension=%{buildroot}%{php_ztsextdir}/apc.so \
-   -m | grep 'apc$'
 
 # Upstream test suite for ZTS extension
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
+TEST_PHP_ARGS="-n -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php --show-diff
@@ -315,15 +286,16 @@ fi
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
+%if 0%{?scl:1}
+%doc NTS/apc.php
+%endif
 
 %config(noreplace) %{php_inidir}/%{ini_name}
-%{php_extdir}/apc.so
-%{php_extdir}/apcu.so
+%{php_extdir}/%{pecl_name}.so
 
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
-%{php_ztsextdir}/apc.so
-%{php_ztsextdir}/apcu.so
+%{php_ztsextdir}/%{pecl_name}.so
 %endif
 
 
@@ -349,6 +321,15 @@ fi
 
 
 %changelog
+* Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 5.1.2-1
+- Update to 5.1.2 (stable)
+
+* Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 5.1.2-0.2
+- test build of upcomming 5.1.2
+
+* Fri Dec  4 2015 Remi Collet <remi@fedoraproject.org> - 5.1.2-0.1.20151204gitba021db
+- test build of upcomming 5.1.2
+
 * Fri Nov 20 2015 Remi Collet <remi@fedoraproject.org> - 5.1.0-1
 - Update to 5.1.0 (beta)
 
