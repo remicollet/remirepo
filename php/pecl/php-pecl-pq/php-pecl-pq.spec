@@ -21,7 +21,7 @@
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  pq
-#global rcver      RC2
+%global rcver      RC1
 %if %{?runselftest}%{!?runselftest:1}
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
@@ -39,9 +39,9 @@
 
 Summary:        PostgreSQL client library (libpq) binding
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        0.6.0
+Version:        1.0.0
 %if 0%{?rcver:1}
-Release:        0.3.%{rcver}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.1.%{rcver}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -106,7 +106,7 @@ Highlights:
 * Fetching simple multi-dimensional array maps
 * Working Gateway implementation
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -286,6 +286,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.RC1
+- Update to 1.0.0RC1 (beta)
+
 * Sat Sep  5 2015 Remi Collet <remi@fedoraproject.org> - 0.6.0-1
 - Update to 0.6.0 (beta)
 
