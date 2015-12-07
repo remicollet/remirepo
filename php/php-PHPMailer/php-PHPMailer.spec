@@ -1,12 +1,21 @@
+# remirepo spec file for php-PHPMailer, from:
+#
+# Fedora spec file for php-PHPMailer
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 %global		github_user	PHPMailer
 %global		github_app	PHPMailer
-%global		github_tag	07005ecbb80d11ec8c0f067bb37e8909cc7fcbb7
+%global		github_tag	e774bc9152de85547336e22b8926189e582ece95
 
 %global		arch_name	%{github_app}-%{github_tag}
 
 Name:		php-PHPMailer
 Summary:	PHP email transport class with a lot of features
-Version:	5.2.10
+Version:	5.2.14
 Release:	1%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
@@ -129,6 +138,9 @@ rm -rf "${RPM_BUILD_ROOT}"
 
 
 %changelog
+* Mon Dec  7 2015 Patrick Monnerat <patrick.monnerat@dh.com> 5.2.14-1
+- New upstream release: fixes CVE-2015-8476.
+
 * Mon May  4 2015 Remi Collet <remi@fedoraproject.org> - 5.2.10-1
 - update to 5.2.10
 
