@@ -24,11 +24,12 @@
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
 
-# %global gh_commit   a84b499418ee7b8992fd9e7e2abc661735a869bd
+%global gh_commit   a84b499418ee7b8992fd9e7e2abc661735a869bd
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    m6w6
 %global gh_project  ext-http
-%global gh_date     20150928
+#global gh_date     20150928
+%global prever      RC1
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
 %global pecl_name http
@@ -45,17 +46,18 @@
 #global prever RC1
 Name:           %{?sub_prefix}php-pecl-http
 Version:        3.0.0
+%if 0%{?gh_date:1}
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
+%else
+Release:        0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
+%endif
 Summary:        Extended HTTP support
 
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/pecl_http
-%if 0%{?gh_short:1}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
-%else
-Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
-%endif
 
 # From http://www.php.net/manual/en/http.configuration.php
 Source1:        %{proj_name}.ini
@@ -178,7 +180,7 @@ These are the files needed to compile programs using HTTP extension.
 
 %prep
 %setup -c -q 
-%if 0%{?gh_short:1}
+%if 0%{?gh_date}
 mv %{gh_project}-%{gh_commit} NTS
 mv NTS/package.xml .
 %else
@@ -188,8 +190,8 @@ mv %{proj_name}-%{version}%{?prever} NTS
 cd NTS
 
 extver=$(sed -n '/#define PHP_PECL_HTTP_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
-if test "x${extver}" != "x%{version}%{?gh_date:dev}"; then
-   : Error: Upstream HTTP version is now ${extver}, expecting %{version}%{?gh_date:dev}.
+if test "x${extver}" != "x%{version}%{?prever}%{?gh_date:dev}"; then
+   : Error: Upstream HTTP version is now ${extver}, expecting %{version}%{?prever}%{?gh_date:dev}.
    : Update the pdover macro and rebuild.
    exit 1
 fi
@@ -257,6 +259,7 @@ done
 
 %check
 sed -e 's/134217960/1342179%d/' -i ?TS/tests/client026.phpt
+sed -e '/sha3-/d' -i ?TS/tests/etag001.phpt
 
 export REPORT_EXIT_STATUS=1
 
@@ -356,6 +359,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.2.RC1
+- Update to 3.0.0RC1 (beta)
+
 * Wed Oct 28 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.1.20150928gita84b499
 - update to 3.0.0dev for PHP 7
 
