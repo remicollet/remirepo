@@ -171,7 +171,7 @@ install -D -p -m 644 bin/phpreflect.1         %{buildroot}%{_mandir}/man1/phpref
 %check
 %if %{with_tests}
 # Version 4.0.0: OK, but incomplete, skipped, or risky tests!
-Tests: 122, Assertions: 123, Incomplete: 3.
+# Tests: 122, Assertions: 123, Incomplete: 3.
 %{_bindir}/phpunit \
     --include-path=%{buildroot}%{_datadir}/php \
     --verbose
