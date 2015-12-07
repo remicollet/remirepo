@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #137 raphf version 1.1.0 ] {
+Extension [ <persistent> extension #143 raphf version 1.1.1RC1 ] {
 
   - INI {
     Entry [ raphf.persistent_handle.limit <SYSTEM> ]

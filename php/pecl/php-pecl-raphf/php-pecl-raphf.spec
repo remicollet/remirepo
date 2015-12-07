@@ -33,15 +33,16 @@
 %else
 %global ini_name  40-%{pecl_name}.ini
 %endif
+%global prever    RC1
 
 Summary:        Resource and persistent handles factory
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.1.0
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.1.1
+Release:        0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -86,7 +87,7 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 A reusable split-off of pecl_http's persistent handle and resource
 factory API.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %package devel
@@ -101,13 +102,13 @@ These are the files needed to compile programs using %{name}.
 
 %prep
 %setup -q -c
-mv %{pecl_name}-%{version} NTS
+mv %{pecl_name}-%{version}%{?prever} NTS
 
 cd NTS
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_RAPHF_VERSION/{s/.* "//;s/".*$//;p}' php_raphf.h)
-if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
 cd ..
@@ -256,6 +257,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-0.1.RC1
+- Update to 1.1.1RC1 (beta)
+
 * Tue Jul 28 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - Update to 1.1.0 (stable)
 
