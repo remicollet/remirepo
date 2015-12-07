@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #115 propro version 1.0.0 ] {
+Extension [ <persistent> extension #138 propro version 1.0.2RC1 ] {
 
   - Classes [1] {
     Class [ <internal:propro> final class php\PropertyProxy ] {

@@ -30,15 +30,16 @@
 %else
 %global ini_name  40-%{pecl_name}.ini
 %endif
+%global prever    RC1
 
 Summary:        Property proxy
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.0.0
-Release:        5%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.0.2
+Release:        0.1.RC1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -79,7 +80,7 @@ Obsoletes:     php56w-pecl-%{pecl_name}
 %description
 A reusable split-off of pecl_http's property proxy API.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %package devel
@@ -94,13 +95,13 @@ These are the files needed to compile programs using %{name}.
 
 %prep
 %setup -q -c
-mv %{pecl_name}-%{version} NTS
+mv %{pecl_name}-%{version}%{?prever} NTS
 
 cd NTS
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PROPRO_VERSION/{s/.* "//;s/".*$//;p}' php_propro.h)
-if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
 cd ..
@@ -235,6 +236,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-0.1.RC1
+- Update to 1.0.2RC1 (beta)
+
 * Sun Jun 21 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-5
 - allow build against rh-php56 (as more-php56)
 
