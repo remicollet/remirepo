@@ -7,11 +7,11 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    aeee39e47e319dcc74594c21d6e4db96cd3f9bc3
+%global gh_commit    3b76b6f5086a58e0b6f7c89ba4e1882425853c13
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 
 Name:           atoum
-Version:        2.2.2
+Version:        2.4.1
 Release:        1%{?dist}
 Summary:        PHP Unit Testing framework
 
@@ -160,6 +160,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
+- update to 2.4.1
+
+* Fri Oct 23 2015 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
+- update to 2.3.0
+- drop patch merged upstream
+
 * Thu Sep 17 2015 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
 - update to 2.2.2
 
