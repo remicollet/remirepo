@@ -8,7 +8,7 @@
 # Please preserve changelog entries
 #
 Name:		php-cssjanus
-Version:	1.1.1
+Version:	1.1.2
 Release:	1%{?dist}
 Summary:	Convert CSS stylesheets between left-to-right and right-to-left
 Group:		Development/Libraries
@@ -49,7 +49,11 @@ cp -p src/CSSJanus.php %{buildroot}%{_datadir}/php/cssjanus
 
 
 %check
-phpunit --bootstrap src/CSSJanus.php test/
+%{_bindir}/phpunit --bootstrap src/CSSJanus.php test/
+
+if which php70; then
+  php70 %{_bindir}/phpunit --bootstrap src/CSSJanus.php test/
+fi
 
 
 %clean
@@ -65,6 +69,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec  7 2015 Remi Collet <remi@remirepo.net> - 1.1.2-1
+- update to 1.1.2 (backport from Fedora)
+- run test suite with both php 5 and 7 when available
+
+* Sun Dec 06 2015 Michael Cronenworth <mike@cchtml.com> - 1.1.2-1
+- Version update
+
 * Mon Oct  5 2015 Remi Collet <remi@remirepo.net> - 1.1.1-1
 - add backport stuff
 
