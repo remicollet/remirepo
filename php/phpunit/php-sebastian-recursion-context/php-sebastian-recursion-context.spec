@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    994d4a811bafe801fb06dccbee797863ba2792ba
+%global gh_commit    913401df809e99e4f47b27cdd781f4a258d58791
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   recursion-context
@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-sebastian-recursion-context
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        Recursively process PHP variables
 
@@ -41,8 +41,7 @@ BuildRequires:  php-composer(phpunit/phpunit) >= 4.4
 # from composer.json
 #        "php": ">=5.3.3"
 Requires:       php(language) >= 5.3.3
-# from phpcompatinfo report for version 1.0.0
-Requires:       php-hash
+# from phpcompatinfo report for version 1.0.2
 Requires:       php-spl
 
 Provides:       php-composer(sebastian/recursion-context) = %{version}
@@ -71,6 +70,11 @@ cp -pr src %{buildroot}%{php_home}/SebastianBergmann/RecursionContext
 %if %{with_tests}
 %{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
 %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/SebastianBergmann/RecursionContext/autoload.php
+
+if which php70; then
+  %{_bindir}/php70 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+  %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/SebastianBergmann/RecursionContext/autoload.php
+fi
 %else
 : bootstrap build with test suite disabled
 %endif
@@ -90,6 +94,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec  8 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- update to 1.0.2
+- drop dependency on hash extension
+- run test suite with both php 5 and 7 when available
+
 * Sun Jul 26 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - update to 1.0.1 (only CS)
 
