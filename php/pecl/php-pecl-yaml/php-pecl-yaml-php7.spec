@@ -29,12 +29,12 @@
 %else
 %global ini_name   40-%{pecl_name}.ini
 %endif
-%global prever     RC5
+%global prever     RC6
 
 Summary:       PHP Bindings for yaml
 Name:          %{?sub_prefix}php-pecl-yaml
 Version:       2.0.0
-Release:       0.4.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.5.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaml
@@ -246,6 +246,9 @@ fi
 
 
 %changelog
+* Tue Dec  8 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.5.RC6
+- update to 2.0.0RC6
+
 * Sun Oct 18 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.4.RC5
 - update to 2.0.0RC5
 
