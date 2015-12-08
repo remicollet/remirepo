@@ -18,7 +18,7 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.3.0
+Version:   1.2.3
 %if 0%{?gh_date}
 Release:   0.6.%{gh_date}git%{gh_short}%{?dist}
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
@@ -83,6 +83,7 @@ autoreconf -fvi -I build/autotools
 %else
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
 install -m 0755 %{SOURCE1} doc/
+mkdir doc/man
 %endif
 
 # Ensure we are using system library
@@ -109,9 +110,9 @@ rm    %{buildroot}%{_libdir}/*la
 rm -r %{buildroot}%{_datadir}/doc/
 # drop "generic" man pages, avoid conflicts
 # https://jira.mongodb.org/browse/CDRIVER-1039
-rm    %{buildroot}/%{_mandir}/man3/[a-l]*
-rm    %{buildroot}/%{_mandir}/man3/ma*
-rm    %{buildroot}/%{_mandir}/man3/[t-u]*
+#rm    %{buildroot}/%{_mandir}/man3/[a-l]*
+#rm    %{buildroot}/%{_mandir}/man3/ma*
+#rm    %{buildroot}/%{_mandir}/man3/[t-u]*
 
 
 %check
@@ -167,6 +168,9 @@ exit $ret
 
 
 %changelog
+* Tue Dec  8 2015 Remi Collet <remi@fedoraproject.org> - 1.2.3-1
+- Update to 1.2.3
+
 * Tue Dec  8 2015 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - Update to 1.3.0
 - open https://jira.mongodb.org/browse/CDRIVER-1040 - ABI breaks
