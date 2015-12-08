@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    2b0112e42c338afa9ad9dfeb94d66f6d84c2f828
+%global gh_commit    13edfd8706462032c2f52b4b862974dd46b71c9e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   diff
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-phpunit-diff
-Version:        1.4.0
+Version:        1.4.1
 Release:        1%{?dist}
 Summary:        Diff implementation
 
@@ -36,7 +36,7 @@ BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
 # from composer.json, "require-dev": {
-#        "phpunit/phpunit": "~5"
+#        "phpunit/phpunit": "~4.8"
 # min version ignored
 BuildRequires:  php-composer(phpunit/phpunit)
 %endif
@@ -83,7 +83,11 @@ cp -pr                           SebastianBergmann/Diff \
 
 %if %{with_tests}
 %check
-phpunit --bootstrap SebastianBergmann/Diff/autoload.php
+%{_bindir}/phpunit --bootstrap SebastianBergmann/Diff/autoload.php
+
+if which php70; then
+  php70 %{_bindir}/phpunit --bootstrap SebastianBergmann/Diff/autoload.php
+fi
 %endif
 
 
@@ -109,7 +113,8 @@ fi
 
 %changelog
 * Sun Dec  6 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
-- update to 1.4.0
+- update to 1.4.1 (no change)
+- run test suite with both php 5 and 7 when available
 
 * Fri Apr  3 2015 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - update to 1.3.0
