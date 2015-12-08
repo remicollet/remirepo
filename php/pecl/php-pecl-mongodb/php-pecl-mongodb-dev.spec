@@ -22,7 +22,7 @@
 
 Summary:        MongoDB driver for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.0.0
+Version:        1.0.1
 Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
@@ -37,6 +37,7 @@ BuildRequires:  openssl-devel
 BuildRequires:  pkgconfig(libbson-1.0)    >= 1.2.0
 BuildRequires:  pkgconfig(libmongoc-1.0)  >= 1.2.0
 BuildRequires:  pkgconfig(libmongoc-priv) >= 1.2.0
+BuildRequires:  pkgconfig(libmongoc-priv) <  1.3
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
@@ -219,6 +220,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec  8 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
+- update to 1.0.1 (stable)
+- ensure libmongoc >= 1.2.0 and < 1.3 is used
+
 * Fri Oct 30 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
 - update to 1.0.0 (stable)
 
