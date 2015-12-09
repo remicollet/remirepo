@@ -132,13 +132,13 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver         RC8
-%global rpmrel        3
+%global rcver         RC1
+%global rpmrel        1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 7.0.0
-Release: %{rpmrel}%{?dist}
+Version: 7.0.1
+Release: %{?rcver:0.}%{rpmrel}%{?rcver:.%{rcver}}%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1225,9 +1225,6 @@ build --libdir=%{_libdir}/php \
       --enable-pcntl \
       --enable-opcache \
       --enable-opcache-file \
-%if 0%{?rhel} == 6
-      --disable-huge-code-pages \
-%endif
       --enable-phpdbg \
       --with-imap=shared --with-imap-ssl \
       --enable-mbstring=shared \
@@ -1372,9 +1369,6 @@ build --includedir=%{_includedir}/php-zts \
       --enable-pcntl \
       --enable-opcache \
       --enable-opcache-file \
-%if 0%{?rhel} == 6
-      --disable-huge-code-pages \
-%endif
       --with-imap=shared --with-imap-ssl \
       --enable-mbstring=shared \
       --enable-mbregex \
@@ -2014,7 +2008,10 @@ fi
 
 
 %changelog
-*
+* Wed Dec  9 2015 Remi Collet <remi@fedoraproject.org> 7.0.1-0.1.0RC1
+- Update to 7.0.1RC1
+- drop --disable-huge-code-pages build option on EL-6,
+  but keep it disabled in default configuration
 - php-devel obsoletes php-pecl-jsonc-devel
 
 * Sat Dec  5 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-3
