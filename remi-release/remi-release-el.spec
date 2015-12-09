@@ -1,11 +1,11 @@
 Name:           remi-release
 %if %{rhel} == 7
 Version:        7.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 %endif
 %if %{rhel} == 6
 Version:        6.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 %if %{rhel} == 5
 Version:        5.10
@@ -33,17 +33,22 @@ Requires:       epel-release >= %{rhel}
 %description
 This package contains yum configuration for the Remi's RPM Repository,
 as well as the public GPG keys used to sign them.
-%if %{rhel} == 7
+%if %{rhel} >= 6
 Only the "remi-safe" repository is enabled after installation.
 %else
 The repository is not enabled after installation.
 %endif
-For PHP 5.4 you must use --enablerepo=remi yum option.
-For PHP 5.5 you must use --enablerepo=remi,remi-php55 yum option.
-For PHP 5.6 you must use --enablerepo=remi,remi-php56 yum option.
-For PHP 7.0 you must use --enablerepo=remi,remi-php70 yum option.
+For PHP 5.5 you must use enable remi-php55 repository:
+    yum-config-manager --enable remi-php55
+
+For PHP 5.6 you must use enable remi-php56 repository:
+    yum-config-manager --enable remi-php56
+
+For PHP 7.0 you must use enable remi-php70 repository:
+    yum-config-manager --enable remi-php70
+
 %if %{rhel} >= 6
-Software Collections are in the main "remi" repository.
+Software Collections are in the "remi-safe" repository.
 %endif
 FAQ:   http://blog.remirepo.net/pages/English-FAQ
 Forum: http://forum.remirepo.net/
@@ -51,17 +56,22 @@ Forum: http://forum.remirepo.net/
 %description -l fr
 Ce paquetage contient le fichier de configuration de YUM pour utiliser
 les RPM du dépôt de Remi ainsi que la clé GPG utilisée pour les signer.
-%if %{rhel} == 7
+%if %{rhel} >= 6
 Seul le dépôt "remi-safe" est activé après l'installation.
 %else
 Le dépôt n'est pas activé après l'installation.
 %endif
-Pour PHP 5.4 vous devez utiliser l'option --enablerepo=remi
-Pour PHP 5.5 vous devez utiliser l'option --enablerepo=remi,remi-php55
-Pour PHP 5.6 vous devez utiliser l'option --enablerepo=remi,remi-php56
-Pour PHP 7.0 vous devez utiliser l'option --enablerepo=remi,remi-php70
+Pour PHP 5.5 vous devez activer le dépôt remi-php55
+    yum-config-manager --enable remi-php55
+
+Pour PHP 5.6 vous devez activer le dépôt remi-php56
+    yum-config-manager --enable remi-php56
+
+Pour PHP 7.0 vous devez activer le dépôt remi-php70
+    yum-config-manager --enable remi-php70
+
 %if %{rhel} >= 6
-Les "Software Collections" sont dans le dépôt principal "remi".
+Les "Software Collections" sont dans le dépôt "remi-safe".
 %endif
 FAQ:   http://blog.remirepo.net/pages/FAQ-en-Francais
 Forum: http://forum.remirepo.net/
@@ -105,6 +115,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec  9 2015 Remi Collet <remmi@remirepo.net> - 6.6-2 and 7.1-3
+- add remi-php70-test repository
+- fix information, remi is not more required by remi-phpxx
+
 * Fri Jul 24 2015 Remi Collet <remmi@remirepo.net> - 6.6-1
 - add remi-safe repository
 

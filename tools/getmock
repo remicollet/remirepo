@@ -148,6 +148,10 @@ if [ $1 = test ]; then
 	opt=test
 	shift
 fi
+if [ $1 = test70 ]; then
+	opt=test70
+	shift
+fi
 if [ $1 = php55 ]; then
 	opt=php55
 	shift
