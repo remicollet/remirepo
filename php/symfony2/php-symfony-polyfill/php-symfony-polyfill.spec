@@ -28,7 +28,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       3%{?github_release}%{?dist}
 Summary:       Symfony polyfills backporting features to lower PHP versions
 
 Group:         Development/Libraries
@@ -36,13 +36,8 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
-# See https://github.com/symfony/polyfill/pull/15
-Patch0:        %{name}-pr15.patch
-
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
-# PHP_VERSION_ID
-BuildRequires: php-cli
 # Autoloader
 BuildRequires: php-composer(theseer/autoload)
 # Tests
@@ -82,7 +77,6 @@ Provides:      php-composer(%{composer_vendor}/%{composer_project}-php55) = %{ve
 Provides:      php-composer(%{composer_vendor}/%{composer_project}-php56) = %{version}
 Provides:      php-composer(%{composer_vendor}/%{composer_project}-php70) = %{version}
 
-
 %description
 %{summary}.
 
@@ -92,59 +86,57 @@ Autoloader: %{phpdir}/Symfony/Polyfill/autoload.php
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-%patch0 -p1
-
 : Docs
-mkdir docs
+mkdir -p docs/{Php54,Php55,Php56,Php70,Util}
 mv *.md composer.json docs/
+mv src/Php54/{*.md,composer.json} docs/Php54/
+mv src/Php55/{*.md,composer.json} docs/Php55/
+mv src/Php56/{*.md,composer.json} docs/Php56/
+mv src/Php70/{*.md,composer.json} docs/Php70/
+mv src/Util/{*.md,composer.json}  docs/Util/
 
 : Remove unneeded polyfills
 rm -rf {src,tests}/{Iconv,Intl,Mbstring,Xml}
 
-: Php54
-: Docs
-mkdir docs/Php54
-cp -p src/Php54/{*.md,composer.json} docs/Php54/
 
-: Php55
-: Docs
-mkdir docs/Php55
-cp -p src/Php55/{*.md,composer.json} docs/Php55/
-
-: Php56
-: Docs
-mkdir docs/Php56
-cp -p src/Php56/{*.md,composer.json} docs/Php56/
-
-: Php70
-: Docs
-mkdir docs/Php70
-cp -p src/Php70/{*.md,composer.json} docs/Php70/
-
-: Util
-: Docs
-mkdir docs/Util
-cp -p src/Util/{*.md,composer.json} docs/Php70/
 
 
 %build
-: Create autoloader
-%{_bindir}/phpab --nolower --tolerant --output src/autoload.php src/
-cat <<'AUTOLOAD' >> src/autoload.php
+: Create autoloader classmap
+%{_bindir}/phpab --nolower --tolerant --output src/autoload.classmap.php src/
+cat src/autoload.classmap.php
 
+: Create autoloader
+cat <<'AUTOLOAD' | tee src/autoload.php
+<?php
+/**
+ * Autoloader for %{name} and its' dependencies
+ * (created by %{name}-%{version}-%{release}).
+ */
+
+// Classmap
+require_once __DIR__ . '/autoload.classmap.php';
+
+// Php54
 require_once __DIR__ . '/Php54/bootstrap.php';
+
+// Php55
 require_once '%{phpdir}/password_compat/password.php';
 require_once __DIR__ . '/Php55/bootstrap.php';
+
+// Php56
 require_once __DIR__ . '/Php56/bootstrap.php';
+
+// Php70
 require_once '%{phpdir}/random_compat/autoload.php';
 require_once __DIR__ . '/Php70/bootstrap.php';
 AUTOLOAD
-cat src/autoload.php
 
 
 %install
 rm -rf     %{buildroot}
 
+: Library
 mkdir -p %{buildroot}%{phpdir}/Symfony/Polyfill
 cp -rp src/* %{buildroot}%{phpdir}/Symfony/Polyfill/
 
@@ -172,13 +164,19 @@ rm -rf %{buildroot}
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc docs/*
-%{phpdir}/Symfony/Polyfill
-%exclude %{phpdir}/Symfony/Polyfill/*/*.md
-%exclude %{phpdir}/Symfony/Polyfill/*/composer.json
+%dir %{phpdir}/Symfony
+     %{phpdir}/Symfony/Polyfill
 %exclude %{phpdir}/Symfony/Polyfill/*/LICENSE
 
 
 %changelog
+* Mon Dec 07 2015 Shawn Iwinski <shawn@iwin.ski> - 1.0.0-3
+- Fixed Util docs
+- Added "%%dir %%{phpdir}/Symfony" to %%files
+
+* Sun Dec 06 2015 Shawn Iwinski <shawn@iwin.ski> - 1.0.0-2
+- Always include ALL polyfills
+
 * Sun Dec  6 2015 Remi Collet <remi@remirepo.net> - 1.0.0-1
 - provide everything for all PHP version
 - add backport stuff
