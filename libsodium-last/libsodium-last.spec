@@ -9,9 +9,11 @@
 # Please preserve changelog entries
 #
 %global libname libsodium
+%global soname  18
 
 # soname 13 since 1.0.0
 # soname 17 since 1.0.6
+# soname 18 since 1.0.7
 
 %if 0
 # Standard build
@@ -20,7 +22,7 @@ Name:           %{libname}
 # Build for parallel install
 Name:           %{libname}-last
 %endif
-Version:        1.0.6
+Version:        1.0.7
 Release:        1%{?dist}
 Summary:        The Sodium crypto library
 Group:          System Environment/Libraries
@@ -103,7 +105,7 @@ rm -rf %{buildroot}
 %defattr (-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%{_libdir}/%{libname}.so.17*
+%{_libdir}/%{libname}.so.%{soname}*
 
 %files devel
 %defattr (-,root,root,-)
@@ -116,6 +118,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec  9 2015 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
+- update to 1.0.7
+- soname bump to 18
+
 * Wed Nov  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
 - update to 1.0.6
 - soname bump to 17
