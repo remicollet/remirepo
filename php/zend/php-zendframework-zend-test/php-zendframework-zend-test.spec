@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    da3b3b2a70385c11a382477b18d68cb3f16624ea
+%global gh_commit    1d91603556b678b9c7962c1d7c8b74366a95db5b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-test
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.1
-Release:        2%{?dist}
+Version:        2.5.2
+Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -34,7 +34,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.3.23
+BuildRequires:  php(language) >= 5.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 BuildRequires:  php-pcre
 BuildRequires:  php-composer(%{gh_owner}/zend-console)          >= 2.5
@@ -65,8 +65,8 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.3.23",
-#        "phpunit/PHPUnit": "~4.0",
+#        "php": ">=5.5",
+#        "phpunit/PHPUnit": "~4.0|~5.0",
 #        "zendframework/zend-console": "~2.5",
 #        "zendframework/zend-dom": "~2.5",
 #        "zendframework/zend-eventmanager": "~2.5",
@@ -76,10 +76,9 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 #        "zendframework/zend-stdlib": "~2.5",
 #        "zendframework/zend-uri": "~2.5",
 #        "zendframework/zend-view": "~2.5"
-Requires:       php(language) >= 5.3.23
+Requires:       php(language) >= 5.5
 Requires:       php-composer(phpunit/phpunit)                   >= 4.0
-# Max version gnored, as test suite pass with 5.0
-# Requires:       php-composer(phpunit/phpunit)                 <  5
+Requires:       php-composer(phpunit/phpunit)                   <  6
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-console)          >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-console)          <  3
@@ -99,11 +98,6 @@ Requires:       php-composer(%{gh_owner}/zend-uri)              >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-uri)              <  3
 Requires:       php-composer(%{gh_owner}/zend-view)             >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-view)             <  3
-# From composer, "suggest": {
-#        "zendframework/zend-console": "Zend\\Console component"
-%if 0%{?fedora} >= 21
-# https://github.com/zendframework/zend-test/pull/2
-%endif
 %endif
 # From phpcompatinfo report for version 2.5.1
 Requires:       php-pcre
@@ -175,6 +169,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec  9 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
+- update to 2.5.2
+- raise dependency on PHP >= 5.5
+- allow PHPUnit 5
+
 * Fri Oct  2 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-2
 - ignore phpunit upstream recommended max version
 
