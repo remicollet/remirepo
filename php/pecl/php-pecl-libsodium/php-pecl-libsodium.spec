@@ -44,7 +44,7 @@ Patch0:         %{pecl_name}-pr70.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if "%{?vendor}" == "Remi Collet"
 # Ensure libsodium-last is used
-BuildRequires:  libsodium-devel >= 1.0.6
+BuildRequires:  libsodium-devel >= 1.0.7
 %else
 # Per upstream documentation
 BuildRequires:  libsodium-devel >= 0.6.0
