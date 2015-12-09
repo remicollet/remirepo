@@ -130,13 +130,13 @@
 #global gh_date      20150623
 #global gh_owner     php
 #global gh_project   php-src
-#global rcver        RC8
-%global rpmrel       2
+%global rcver        RC1
+%global rpmrel       1
 
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 7.0.0
+Version: 7.0.1
 %if 0%{?rcver:1}
 Release: 0.%{rpmrel}.%{rcver}%{?dist}
 %else
@@ -1140,9 +1140,6 @@ build --libdir=%{_libdir}/php \
       --enable-pcntl \
       --enable-opcache \
       --enable-opcache-file \
-%if 0%{?rhel} == 6
-      --disable-huge-code-pages \
-%endif
       --enable-phpdbg \
 %if %{with_imap}
       --with-imap=shared --with-imap-ssl \
@@ -1816,6 +1813,11 @@ fi
 
 
 %changelog
+* Wed Dec  9 2015 Remi Collet <remi@fedoraproject.org> 7.0.1-0.1.0RC1
+- Update to 7.0.1RC1
+- drop --disable-huge-code-pages build option on EL-6,
+  but keep it disabled in default configuration
+
 * Thu Dec  3 2015 Remi Collet <remi@fedoraproject.org> 7.0.0-2
 - build with --disable-huge-code-pages on EL-6
 
