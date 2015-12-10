@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    d6805ccea1c0e90c35904456e5ad79a0a7a5ab8c
+%global gh_commit    8b952840a317988b10b4f0c51a3dcec80e8f35dc
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150331
 %global gh_owner     llaville
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-bartlett-umlwriter
-Version:        1.0.1
-%global specrel 2
+Version:        1.1.0
+%global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Create UML class diagrams from your PHP source
 
@@ -37,7 +37,7 @@ Source1:        %{name}-autoload.php
 Patch0:         %{name}-rpm.patch
 
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3.0
+BuildRequires:  php(language) >= 5.4.0
 %if %{with_tests}
 BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php-composer(symfony/console)                   >= 2.5
@@ -51,7 +51,7 @@ BuildRequires:   php-bartlett-PHP-Reflect >= 3.1.1-3
 
 # From composer.json
 #    "require": {
-#        "php": ">=5.3.0"
+#        "php": ">=5.4.0"
 #        "symfony/console": "~2.5",
 #        "sebastian/version": "~1.0"
 Requires:       php(language) >= 5.3.0
@@ -62,14 +62,15 @@ Requires:       php-composer(symfony/console)                   <  3
 Requires:       php-composer(sebastian/version)                 >= 1.0
 Requires:       php-composer(sebastian/version)                 <  2
 #    "require-dev": {
-#        "bartlett/php-reflect": "3.0.*@dev",
+#        "bartlett/php-reflect": "~4.0",
 #        "andrewsville/php-token-reflection": "~1.4"
 #    "suggest": {
 #        "bartlett/php-reflect": "Reverse-engine, default solution",
 #        "andrewsville/php-token-reflection": "Reverse-engine, alternative solution"
 %if ! %{bootstrap}
+# No code change in 1.0.1/1.1.0, so ignore min version
 Requires:       php-composer(bartlett/php-reflect)              >= 3.0
-#Requires:       php-composer(bartlett/php-reflect)              <  4
+Requires:       php-composer(bartlett/php-reflect)              <  5
 %endif
 Requires:       php-composer(andrewsville/php-token-reflection) >= 1.4
 Requires:       php-composer(andrewsville/php-token-reflection) <  2
@@ -134,8 +135,10 @@ install -D -p -m 755 bin/umlwriter  %{buildroot}%{_bindir}/umlwriter
 
 
 %changelog
-* Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
-- ignore php-reflect max version
+* Thu Dec 10 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- update to 1.0.1
+- raise dependency on php >= 5.4.0
+- allow php-reflect 4
 
 * Tue Sep 29 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - update to 1.0.1
