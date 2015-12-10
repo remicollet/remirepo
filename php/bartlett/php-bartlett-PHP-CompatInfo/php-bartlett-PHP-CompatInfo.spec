@@ -161,6 +161,7 @@ fi
 %{_bindir}/phpcompatinfo
 %{_datadir}/php/Bartlett/CompatInfo
 %{_mandir}/man1/phpcompatinfo.1*
+%{_datadir}/%{name}
 
 
 %changelog
