@@ -24,7 +24,7 @@
 
 Name:           php-%{c_vendor}-%{c_project}
 Version:        1.2.0
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Reference Database to be used with php-compatinfo library
 
@@ -109,6 +109,42 @@ find src -name \*rpm -delete -print
 
 
 %build
+: Ensure current version is known by reference
+OPT=$(php -r '
+  require "src/%{ns_vendor}/%{ns_project}/autoload.php";
+
+  switch (PHP_MAJOR_VERSION . PHP_MINOR_VERSION) {
+    case "54":
+      $max = Bartlett\CompatInfoDb\ExtensionFactory::LATEST_PHP_5_4;
+      break;
+    case "55":
+      $max = Bartlett\CompatInfoDb\ExtensionFactory::LATEST_PHP_5_5;
+      break;
+    case "56":
+      $max = Bartlett\CompatInfoDb\ExtensionFactory::LATEST_PHP_5_6;
+      break;
+    case "70":
+      $max = Bartlett\CompatInfoDb\ExtensionFactory::LATEST_PHP_7_0;
+      break;
+    default:
+      exit(0);
+  }
+  if (version_compare(PHP_VERSION, $max, ">")) {
+    fputs(STDERR, "Current: " . PHP_VERSION . " > Known: $max\n\n");
+    echo "/LATEST_PHP_" . PHP_MAJOR_VERSION . "_" . PHP_MINOR_VERSION .
+         "/s/" . PHP_MAJOR_VERSION . "\." .PHP_MINOR_VERSION . "\.[0-9]*/" . PHP_VERSION . "/";
+  } else {
+    fputs(STDERR, "Current: " . PHP_VERSION . " = Known: $max\n\n");
+  }
+')
+if [ -n "$OPT" ]; then
+  sed -e "$OPT" -i  src/Bartlett/CompatInfoDb/ExtensionFactory.php
+fi
+grep " LATEST" src/Bartlett/CompatInfoDb/ExtensionFactory.php
+
+: Fix references database
+%{_bindir}/php -d date.timezone=Europe/Paris data/handleDB.php db:release:php
+
 : Generate the references database
 %{_bindir}/php -d date.timezone=Europe/Paris data/handleDB.php db:init
 
@@ -141,6 +177,10 @@ export BARTLETT_COMPATINFO_DB=%{buildroot}%{_datadir}/%{name}/compatinfo.sqlite
 
 
 %changelog
+* Thu Dec 10 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-2
+- fix reference to ensure current version is known
+  as we usually build RC version in rawhide.
+
 * Sat Dec  5 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - update to 1.2.0
 - add dependency on composer/semver
