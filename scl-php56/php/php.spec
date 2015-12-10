@@ -137,12 +137,12 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver  RC1
+%global rcver  RC1
 %global rpmrel 1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.6.16
+Version: 5.6.17
 %if 0%{?rcver:1}
 Release: 0.%{rpmrel}.%{rcver}%{?dist}
 %else
@@ -176,7 +176,7 @@ Source51: opcache-default.blacklist
 Patch5: php-5.6.3-includedir.patch
 Patch6: php-5.6.3-embed.patch
 Patch7: php-5.3.0-recode.patch
-Patch8: php-5.6.3-libdb.patch
+Patch8: php-5.6.17-libdb.patch
 
 # Fixes for extension modules
 # https://bugs.php.net/63171 no odbc call during timeout
@@ -1786,6 +1786,9 @@ fi
 
 
 %changelog
+* Thu Dec 10 2015 Remi Collet <remi@fedoraproject.org> 5.6.17-0.1.RC1
+- update to 5.6.17RC1
+
 * Thu Nov 26 2015 Remi Collet <remi@fedoraproject.org> 5.6.16-1
 - Update to 5.6.16
   http://www.php.net/releases/5_6_16.php

@@ -1,6 +1,7 @@
---- php-5.4.7/ext/dba/config.m4.orig	2012-09-20 12:23:00.548322754 +0200
-+++ php-5.4.7/ext/dba/config.m4	2012-09-20 12:28:07.656380829 +0200
-@@ -312,57 +312,13 @@
+diff -up php-5.6.17RC1/ext/dba/config.m4.libdb php-5.6.17RC1/ext/dba/config.m4
+--- php-5.6.17RC1/ext/dba/config.m4.libdb	2015-12-10 10:42:34.643252975 +0100
++++ php-5.6.17RC1/ext/dba/config.m4	2015-12-10 10:44:27.924729361 +0100
+@@ -312,61 +312,13 @@ if test "$PHP_DB4" != "no"; then
    dbdp4="/usr/local/BerkeleyDB.4."
    dbdp5="/usr/local/BerkeleyDB.5."
    for i in $PHP_DB4 ${dbdp5}1 ${dbdp5}0 ${dbdp4}8 ${dbdp4}7 ${dbdp4}6 ${dbdp4}5 ${dbdp4}4 ${dbdp4}3 ${dbdp4}2 ${dbdp4}1 ${dbdp}0 /usr/local /usr; do
@@ -11,6 +12,10 @@
 -    elif test -f "$i/db4/db.h"; then
 -      THIS_PREFIX=$i
 -      THIS_INCLUDE=$i/db4/db.h
+-      break
+-    elif test -f "$i/include/db5.3/db.h"; then
+-      THIS_PREFIX=$i
+-      THIS_INCLUDE=$i/include/db5.3/db.h
 -      break
 -    elif test -f "$i/include/db5.1/db.h"; then
 -      THIS_PREFIX=$i
@@ -55,13 +60,14 @@
        break
      fi
    done
--  PHP_DBA_DB_CHECK(4, db-5.1 db-5.0 db-4.8 db-4.7 db-4.6 db-4.5 db-4.4 db-4.3 db-4.2 db-4.1 db-4.0 db-4 db4 db, [(void)db_create((DB**)0, (DB_ENV*)0, 0)])
+-  PHP_DBA_DB_CHECK(4, db-5.3 db-5.1 db-5.0 db-4.8 db-4.7 db-4.6 db-4.5 db-4.4 db-4.3 db-4.2 db-4.1 db-4.0 db-4 db4 db, [(void)db_create((DB**)0, (DB_ENV*)0, 0)])
 +  PHP_DBA_DB_CHECK(4, db, [(void)db_create((DB**)0, (DB_ENV*)0, 0)])
  fi
  PHP_DBA_STD_RESULT(db4,Berkeley DB4)
  
---- php-5.4.7/ext/dba/dba.c.old	2012-09-19 14:55:23.868456900 +0200
-+++ php-5.4.7/ext/dba/dba.c	2012-09-19 15:02:42.796009320 +0200
+diff -up php-5.6.17RC1/ext/dba/dba.c.libdb php-5.6.17RC1/ext/dba/dba.c
+--- php-5.6.17RC1/ext/dba/dba.c.libdb	2015-12-10 01:36:02.000000000 +0100
++++ php-5.6.17RC1/ext/dba/dba.c	2015-12-10 10:42:34.644252979 +0100
 @@ -52,6 +52,10 @@
  #include "php_qdbm.h"
  #include "php_tcadb.h"
@@ -73,7 +79,7 @@
  /* {{{ arginfo */
  ZEND_BEGIN_ARG_INFO_EX(arginfo_dba_popen, 0, 0, 2)
  	ZEND_ARG_INFO(0, path)
-@@ -535,6 +539,10 @@
+@@ -535,6 +539,10 @@ PHP_MINFO_FUNCTION(dba)
  
  	php_info_print_table_start();
   	php_info_print_table_row(2, "DBA support", "enabled");
