@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5451aced73ab361c2d874d69269444ec449583ca
+%global gh_commit    0ce42d43ae6f512d9367a1867ce9b4f02fb48518
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.4.23
+Version:        1.5.0
 Release:        1%{?dist}
 Summary:        PHP library containing UTF-8 font definitions
 
@@ -29,12 +29,12 @@ BuildArch:      noarch
 %if %{with_tests}
 # For tests
 BuildRequires:  php-composer(phpunit/phpunit)
-BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  php(language) >= 5.4
 %endif
 
 # From composer.json, "require": {
-#        "php": ">=5.3.3"
-Requires:       php(language) >= 5.3.3
+#        "php": ">=5.4"
+Requires:       php(language) >= 5.4
 # From phpcompatinfo report for version 1.1.1
 # Only Core
 
@@ -108,6 +108,7 @@ rm -rf %{buildroot}
 %changelog
 * Fri Dec 11 2015 Remi Collet <remi@fedoraproject.org> - 1.4.23-1
 - update to 1.4.23 (no change)
+- raise dependency on php >= 5.4
 
 * Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 1.4.21-1
 - update to 1.4.21 (no change)
