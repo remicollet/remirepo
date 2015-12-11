@@ -1,10 +1,17 @@
+# remirepo/fedora spec file for ImageMagick
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 %{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name Console_CommandLine
 
 Name:           php-pear-Console-CommandLine
-Version:        1.2.0
-Release:        2%{?dist}
+Version:        1.2.1
+Release:        1%{?dist}
 Summary:        A full featured command line options and arguments parser
 
 Group:          Development/Libraries
@@ -12,25 +19,23 @@ License:        MIT
 URL:            http://pear.php.net/package/%{pear_name}
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
 
-# columnWrap() in Default Renderer eats up lines with only a EOL
-# https://pear.php.net/bugs/18682
-Patch1:         %{pear_name}-bug18682.patch
-# Unit tests are broken
-# https://pear.php.net/bugs/19683
-Patch2:         %{pear_name}-bug19683.patch
+# https://github.com/pear/Console_CommandLine/pull/8
+Patch1:         %{pear_name}-pr8.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear
-BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
+BuildRequires:  php-dom
 
 Requires:       php-dom
+Requires:       php-xml
 Requires:       php-pcre
-Requires:       php-spl
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 
 Provides:       php-pear(%{pear_name}) = %{version}
+Provides:       php-composer(pear/console_commandline) = %{version}
+
 
 %description
 Console_CommandLine is a full featured package for managing command-line
@@ -54,8 +59,7 @@ sed -e 's/md5sum=.*name/name/' -i package.xml
 cd %{pear_name}-%{version}
 mv ../package.xml %{name}.xml
 
-%patch1 -p1 -b .bug18682
-%patch2 -p1 -b .bug19683
+%patch1 -p1 -b .pr8
 
 
 %build
@@ -65,24 +69,25 @@ cd %{pear_name}-%{version}
 
 %install
 cd %{pear_name}-%{version}
-rm -rf $RPM_BUILD_ROOT docdir
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{name}.xml
+rm -rf %{buildroot} docdir
+%{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-install -d $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+install -d %{buildroot}%{pear_xmldir}
+install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
 cd %{pear_name}-%{version}
-%{_bindir}/phpunit tests
+%{__pear} run-tests tests | tee ../tests.log
+grep "FAILED TESTS" ../tests.log && exit 1
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
@@ -106,6 +111,12 @@ fi
 
 
 %changelog
+* Fri Dec 11 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- Update to 1.2.1
+- provide php-composer(pear/console_commandline)
+- run test suite with pear instead of phpunit
+- fix test suite https://github.com/pear/Console_CommandLine/pull/8
+
 * Sun Dec 30 2012 Remi Collet <remi@fedoraproject.org> - 1.2.0-2
 - fix for https://pear.php.net/bugs/18682
   columnWrap() in Default Renderer eats up lines with only a EOL
