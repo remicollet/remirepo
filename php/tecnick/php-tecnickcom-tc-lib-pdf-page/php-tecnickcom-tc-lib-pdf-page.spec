@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    e2322d7df4d36cfaa70e2bc6feca77bfbb41a713
+%global gh_commit    53646c2fe03cc6461f2ba895db153037e7abb18b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.1.23
+Version:        1.2.0
 Release:        1%{?dist}
 Summary:        PHP library containing PDF page formats and definitions
 
@@ -29,12 +29,12 @@ BuildArch:      noarch
 %if %{with_tests}
 # For tests
 BuildRequires:  php-composer(phpunit/phpunit)
-BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  php(language) >= 5.4
 %endif
 
 # From composer.json, "require": {
-#        "php": ">=5.3.3"
-Requires:       php(language) >= 5.3.3
+#        "php": ">=5.4"
+Requires:       php(language) >= 5.4
 # From phpcompatinfo report for version 1.1.1
 # Nothing
 
@@ -104,6 +104,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec 11 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- update to 1.2.0 (no change)
+- raise dependency on php >= 5.4
+
 * Fri Dec 11 2015 Remi Collet <remi@fedoraproject.org> - 1.1.23-1
 - update to 1.1.23 (no change)
 
