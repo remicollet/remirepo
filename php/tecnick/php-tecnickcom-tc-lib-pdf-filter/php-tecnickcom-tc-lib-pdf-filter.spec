@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0e6e9a0b72a166ca7b9aa2d04494ebf21d44cea5
+%global gh_commit    c47b2c2f1989a1f7da8aabdb67336b1a04634383
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.1.24
+Version:        1.2.0
 Release:        1%{?dist}
 Summary:        PHP library to decode PDF compression and encryption filters
 
@@ -29,14 +29,14 @@ BuildArch:      noarch
 %if %{with_tests}
 # For tests
 BuildRequires:  php-composer(phpunit/phpunit)
-BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  php(language) >= 5.4
 Requires:       php-pcre
 Requires:       php-zlib
 %endif
 
 # From composer.json, "require": {
-#        "php": ">=5.3.3"
-Requires:       php(language) >= 5.3.3
+#        "php": ">=5.4"
+Requires:       php(language) >= 5.4
 # From phpcompatinfo report for version 1.1.0
 Requires:       php-pcre
 Requires:       php-zlib
@@ -107,6 +107,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec 11 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- update to 1.2.0 (no change)
+- raise dependency on php >= 5.4
+
 * Fri Dec 11 2015 Remi Collet <remi@fedoraproject.org> - 1.1.24-1
 - update to 1.1.24 (no change)
 
