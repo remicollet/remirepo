@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    6772a04face3c4af160bf51349a3c4d4d7a00c48
+%global gh_commit    cfc51116e3c6b93764950ab23bd6fada62f8f293
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.7.2
+Version:        1.8.0
 Release:        1%{?dist}
 Summary:        PHP library to manipulate various color representations
 
@@ -29,13 +29,13 @@ BuildArch:      noarch
 %if %{with_tests}
 # For tests
 BuildRequires:  php-composer(phpunit/phpunit)
-BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  php(language) >= 5.4
 Requires:       php-pcre
 %endif
 
 # From composer.json, "require": {
-#        "php": ">=5.3.3"
-Requires:       php(language) >= 5.3.3
+#        "php": ">=5.4"
+Requires:       php(language) >= 5.4
 # From phpcompatinfo report for version 1.4.5
 Requires:       php-pcre
 
@@ -110,6 +110,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec 11 2015 Remi Collet <remi@fedoraproject.org> - 1.8.0-1
+- update to 1.8.0 (no change)
+- raise dependency on php >= 5.4
+
 * Fri Dec 11 2015 Remi Collet <remi@fedoraproject.org> - 1.7.2-1
 - update to 1.7.2
 
