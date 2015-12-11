@@ -81,23 +81,11 @@
 
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
-# systemd to manage the service
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+# systemd to manage the service, with notify mode, with additional service config
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %global with_systemd 1
 %else
 %global with_systemd 0
-%endif
-# systemd with notify mode
-%if 0%{?fedora} >= 16 || 0%{?rhel} >= 7
-%global with_systemdfull 1
-%else
-%global with_systemdfull 0
-%endif
-# systemd with additional service config
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
-%global with_systemdmax 1
-%else
-%global with_systemdmax 0
 %endif
 # httpd 2.4.10 with httpd-filesystem and sethandler support
 %if 0%{?fedora} >= 21
@@ -310,10 +298,8 @@ License: PHP and Zend and BSD
 BuildRequires: libacl-devel
 Requires: php-common%{?_isa} = %{version}-%{release}
 Requires(pre): /usr/sbin/useradd
-%if %{with_systemdfull}
-BuildRequires: systemd-devel
-%endif
 %if %{with_systemd}
+BuildRequires: systemd-devel
 BuildRequires: systemd-units
 Requires: systemd-units
 Requires(post): systemd-units
@@ -1337,7 +1323,7 @@ popd
 # Build php-fpm
 pushd build-fpm
 build --enable-fpm \
-%if %{with_systemdfull}
+%if %{with_systemd}
       --with-fpm-systemd \
 %endif
       --with-fpm-acl \
@@ -1586,18 +1572,10 @@ install -m 755 -d $RPM_BUILD_ROOT/run/php-fpm
 install -m 755 -d $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d
 install -m 644 php-fpm.tmpfiles $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d/php-fpm.conf
 # install systemd unit files and scripts for handling server startup
-%if %{with_systemdmax}
 # this folder requires systemd >= 204
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/systemd/system/php-fpm.service.d
-%endif
 install -m 755 -d $RPM_BUILD_ROOT%{_unitdir}
 install -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{_unitdir}/
-%if ! %{with_systemdfull}
-# PrivateTmp and Notif mode only work on fedora >= 16
-sed -e '/^PrivateTmp/s/true/false/' \
-    -e '/^Type/s/notify/simple/' \
-    -i ${RPM_BUILD_ROOT}%{_unitdir}/php-fpm.service
-%endif
 %else
 sed  -ne '1,2p' -i $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/run/php-fpm
@@ -1768,32 +1746,23 @@ exit 0
 %endif
 
 %post fpm
-%if 0%{?systemd_post:1}
+%if %{with_systemd}
 %systemd_post php-fpm.service
 %else
 if [ $1 = 1 ]; then
     # Initial installation
-%if 0%{?fedora} >= 15
-    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
-%else
     /sbin/chkconfig --add php-fpm
-%endif
 fi
 %endif
 
 %preun fpm
-%if 0%{?systemd_preun:1}
+%if %{with_systemd}
 %systemd_preun php-fpm.service
 %else
 if [ $1 = 0 ]; then
     # Package removal, not upgrade
-%if 0%{?fedora} >= 15
-    /bin/systemctl --no-reload disable php-fpm.service >/dev/null 2>&1 || :
-    /bin/systemctl stop php-fpm.service >/dev/null 2>&1 || :
-%else
     /sbin/service php-fpm stop >/dev/null 2>&1
     /sbin/chkconfig --del php-fpm
-%endif
 fi
 %endif
 
@@ -1920,9 +1889,7 @@ fi
 %if %{with_systemd}
 %{_prefix}/lib/tmpfiles.d/php-fpm.conf
 %{_unitdir}/php-fpm.service
-%if %{with_systemdmax}
 %dir %{_sysconfdir}/systemd/system/php-fpm.service.d
-%endif
 %dir /run/php-fpm
 %else
 %{_initrddir}/php-fpm

@@ -1574,32 +1574,23 @@ exit 0
 %endif
 
 %post fpm
-%if 0%{?systemd_post:1}
+%if %{with_systemd}
 %systemd_post %{?scl:%{scl}-}php-fpm.service
 %else
 if [ $1 = 1 ]; then
     # Initial installation
-%if %{with_systemd}
-    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
-%else
     /sbin/chkconfig --add %{?scl_prefix}php-fpm
-%endif
 fi
 %endif
 
 %preun fpm
-%if 0%{?systemd_preun:1}
+%if %{with_systemd}
 %systemd_preun %{?scl:%{scl}-}php-fpm.service
 %else
 if [ $1 = 0 ]; then
     # Package removal, not upgrade
-%if %{with_systemd}
-    /bin/systemctl --no-reload disable %{?scl_prefix}php-fpm.service >/dev/null 2>&1 || :
-    /bin/systemctl stop %{?scl_prefix}php-fpm.service >/dev/null 2>&1 || :
-%else
     /sbin/service %{?scl_prefix}php-fpm stop >/dev/null 2>&1
     /sbin/chkconfig --del %{?scl_prefix}php-fpm
-%endif
 fi
 %endif
 
