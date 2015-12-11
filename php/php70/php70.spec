@@ -1767,20 +1767,12 @@ fi
 %endif
 
 %postun fpm
-%if 0%{?systemd_postun_with_restart:1}
+%if %{with_systemd}
 %systemd_postun_with_restart php-fpm.service
-%else
-%if 0%{?fedora} >= 15
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ $1 -ge 1 ]; then
-    # Package upgrade, not uninstall
-    /bin/systemctl try-restart php-fpm.service >/dev/null 2>&1 || :
-fi
 %else
 if [ $1 -ge 1 ]; then
     /sbin/service php-fpm condrestart >/dev/null 2>&1 || :
 fi
-%endif
 %endif
 
 # Handle upgrading from SysV initscript to native systemd unit.
