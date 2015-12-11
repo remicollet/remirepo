@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    30c8e50aa34163d3a070b27d47ab89b32d2909e5
+%global gh_commit    e2322d7df4d36cfaa70e2bc6feca77bfbb41a713
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.1.21
+Version:        1.1.23
 Release:        1%{?dist}
 Summary:        PHP library containing PDF page formats and definitions
 
@@ -104,6 +104,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec 11 2015 Remi Collet <remi@fedoraproject.org> - 1.1.23-1
+- update to 1.1.23 (no change)
+
 * Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 1.1.21-1
 - update to 1.1.21 (no change)
 
