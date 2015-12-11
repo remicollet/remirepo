@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5fe978357447851ba245f250b8977cac2c786ca6
+%global gh_commit    c1d9f4f80e376c46f89234369e21f1845737bdcf
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.1.22
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        PHP library to parse PDF documents
 
@@ -29,16 +29,17 @@ BuildArch:      noarch
 %if %{with_tests}
 # For tests
 BuildRequires:  php-composer(phpunit/phpunit)
-BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  php-composer(%{c_vendor}/tc-lib-pdf-filter)
+BuildRequires:  php(language) >= 5.4
+BuildRequires:  php-composer(%{c_vendor}/tc-lib-pdf-filter) >= 1.2.0
 BuildRequires:  php-pcre
 %endif
 
 # From composer.json, "require": {
-#        "php": ">=5.3.3"
-#        "tecnick.com/tc-lib-pdf-filter": "dev-master"
-Requires:       php(language) >= 5.3.3
-Requires:       php-composer(%{c_vendor}/tc-lib-pdf-filter)
+#        "php": ">=5.4"
+#        "tecnick.com/tc-lib-pdf-filter": "^1.2.0"
+Requires:       php(language) >= 5.4
+Requires:       php-composer(%{c_vendor}/tc-lib-pdf-filter) >= 1.2.0
+Requires:       php-composer(%{c_vendor}/tc-lib-pdf-filter) <  2
 # From phpcompatinfo report for version 2.1.0
 Requires:       php-pcre
 
@@ -113,6 +114,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec 11 2015 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- update to 2.2.0 (no change)
+- raise dependency on php >= 5.4
+- raise dependency on tecnickcom/tc-lib-pdf-filter ^1.2.0
+
 * Fri Dec 11 2015 Remi Collet <remi@fedoraproject.org> - 2.1.22-1
 - update to 2.1.22 (no change)
 
