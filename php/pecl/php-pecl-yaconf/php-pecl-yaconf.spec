@@ -10,18 +10,18 @@
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__php:       %global __php        %{_bindir}/php}
 
-%global gh_commit   c46a63794aa4d177c228b14791c5591d1efcfeab
+%global gh_commit   dbbb2f1bcab98b8b72e2a9f7954c4ddd87755cda
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    laruence
 %global gh_project  yaconf
 #global gh_date     20150910
-%global pecl_name    yaconf
-%global with_zts    0%{?__ztsphp:1}
+%global pecl_name   yaconf
+%global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global ini_name    40-%{pecl_name}.ini
 
 Summary:       Yet Another Configurations Container
 Name:          %{?scl_prefix}php-pecl-yaconf
-Version:       1.0.0
+Version:       1.0.1
 %if 0%{?gh_date:1}
 Release:       0.7.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
@@ -41,10 +41,8 @@ Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
-%if "%{php_version}" > "7.0"
 Obsoletes:     php70u-%{gh_project} <= %{version}
 Obsoletes:     php70w-%{gh_project} <= %{version}
-%endif
 %endif
 
 # Package have be renamed
@@ -85,7 +83,7 @@ mv NTS/package.xml .
 cd NTS
 
 # Sanity check, really often broken
-extver=$(sed -n '/#define YACONF_VERSION/{s/.* "//;s/".*$//;p}' php_yaconf.h)
+extver=$(sed -n '/#define PHP_YACONF_VERSION/{s/.* "//;s/".*$//;p}' php_yaconf.h)
 if test "x${extver}" != "x%{version}%{?gh_date:-dev}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?gh_date:-dev}.
    exit 1
@@ -225,6 +223,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Dec 12 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1 (beta, php 7)
+
 * Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - update to 1.0.0 (beta, php 7)
 - rename to php-pecl-yaconf
