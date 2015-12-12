@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    7438c43bc2bbb2febe1723eb595b1c49283a26ad
+%global gh_commit    ea76b17bced0500a28098626b84eda12dbcf119c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -16,7 +16,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        4.8
-%global minor        20
+%global minor        21
 
 Name:           php-phpunit-PHPUnit
 Version:        %{major}.%{minor}
@@ -58,7 +58,7 @@ BuildRequires:  php-composer(symfony/class-loader) >= 2.0
 BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 
 # From composer.json
-#        "php": "~5.3.3|~5.4|~5.5|~5.6",
+#        "php": ">=5.3.3",
 #        "phpunit/php-file-iterator": "~1.4",
 #        "phpunit/php-text-template": "~1.2",
 #        "phpunit/php-code-coverage": "~2.1",
@@ -206,6 +206,9 @@ fi
 
 
 %changelog
+* Sat Dec 12 2015 Remi Collet <remi@fedoraproject.org> - 4.8.21-1
+- Update to 4.8.21
+
 * Thu Dec 10 2015 Remi Collet <remi@fedoraproject.org> - 4.8.20-1
 - Update to 4.8.20
 
