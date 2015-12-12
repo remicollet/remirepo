@@ -26,7 +26,7 @@ fi
 
 echo "+ Nettoyage des anciens ($old)"
 
-repomanage --old --keep=$old . | tee $TMP
+dnf repomanage --old --keep=$old . | tee $TMP
 LST=$(cat $TMP)
 
 if [ -z "$LST" ]
