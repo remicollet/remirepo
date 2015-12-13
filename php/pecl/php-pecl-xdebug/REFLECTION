@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #207 xdebug version 2.4.0RC2 ] {
+Extension [ <persistent> extension #224 xdebug version 2.4.0RC3 ] {
 
   - INI {
     Entry [ xdebug.auto_trace <ALL> ]
@@ -59,13 +59,13 @@ Extension [ <persistent> extension #207 xdebug version 2.4.0RC2 ] {
       Current = '0'
     }
     Entry [ xdebug.max_nesting_level <ALL> ]
-      Current = '1000'
+      Current = '256'
     }
     Entry [ xdebug.max_stack_frames <ALL> ]
       Current = '-1'
     }
     Entry [ xdebug.overload_var_dump <ALL> ]
-      Current = '1'
+      Current = '2'
     }
     Entry [ xdebug.show_error_trace <ALL> ]
       Current = '0'
