@@ -8,14 +8,14 @@
 # Please preserve changelog entries
 #
 
-%global gh_commit    4537d8aae6c4a26f5439bc3a05d3437d25c2c4d2
+%global gh_commit    d234f79203ca236093989c579c824a1a882d1153
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     smarty-php
 %global gh_project   smarty
 
 Name:           php-Smarty
 Summary:        Template/Presentation Framework for PHP
-Version:        3.1.27
+Version:        3.1.28
 Release:        1%{?dist}
 
 URL:            http://www.smarty.net
@@ -25,10 +25,12 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+# For tests
+BuildRequires:  php-cli
 
 # From composer.json
 Requires:       php(language) >= 5.2.0
-# From phpcompatinfo report for 3.1.21
+# From phpcompatinfo report for 3.1.28
 Requires:       php-ctype
 Requires:       php-date
 Requires:       php-mbstring
@@ -48,9 +50,17 @@ Although it can be used for such a simple purpose, its focus is on quick and
 painless development and deployment of your application, while maintaining
 high-performance, scalability, security and future growth.
 
+Autoloader: %{_datadir}/php/Smarty/autoload.php
+
 
 %prep
 %setup -qn %{gh_project}-%{gh_commit}
+
+cat << 'EOF' | tee libs/autoload.php
+<?php
+require_once __DIR__ . '/Autoloader.php';
+Smarty_Autoloader::register();
+EOF
 
 
 %build
@@ -58,15 +68,24 @@ high-performance, scalability, security and future growth.
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 # install smarty libs
-install -d $RPM_BUILD_ROOT%{_datadir}/php/Smarty
-cp -a libs/* $RPM_BUILD_ROOT%{_datadir}/php/Smarty/
+install -d %{buildroot}%{_datadir}/php/Smarty
+cp -a libs/* %{buildroot}%{_datadir}/php/Smarty/
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
+
+
+%check
+: Test autoloader and version
+php -r '
+require "%{buildroot}%{_datadir}/php/Smarty/autoload.php";
+printf("Smarty version \"%s\"\n", Smarty::SMARTY_VERSION);
+version_compare(Smarty::SMARTY_VERSION, "%{version}", "=") or exit(1);
+'
 
 
 %files
@@ -80,6 +99,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 13 2015 Remi Collet <remi@fedoraproject.org> - 3.1.28-1
+- update to 3.1.28
+- add an autoloader
+- add a test for autoloader and version
+
 * Thu Jun 18 2015 Remi Collet <remi@fedoraproject.org> - 3.1.27-1
 - update to 3.1.27
 
