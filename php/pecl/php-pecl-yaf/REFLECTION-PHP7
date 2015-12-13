@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #96 yaf version 3.0.0-dev ] {
+Extension [ <persistent> extension #56 yaf version 3.0.1 ] {
 
   - Dependencies {
     Dependency [ spl (Required) ]
@@ -40,7 +40,7 @@ Extension [ <persistent> extension #96 yaf version 3.0.0-dev ] {
   }
 
   - Constants [12] {
-    Constant [ string YAF_VERSION ] { 3.0.0-dev }
+    Constant [ string YAF_VERSION ] { 3.0.1 }
     Constant [ string YAF_ENVIRON ] { product }
     Constant [ integer YAF_ERR_STARTUP_FAILED ] { 512 }
     Constant [ integer YAF_ERR_ROUTE_FAILED ] { 513 }

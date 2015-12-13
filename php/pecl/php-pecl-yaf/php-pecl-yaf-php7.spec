@@ -19,22 +19,18 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global gh_commit   7d5d696d5e7e58977eaf9b0a8aa8d0de18af0e45
+%global gh_commit   51e458e9746d7061efc565d49baaca26feacd7ff
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    laruence
 %global gh_project  yaf
 #global gh_date     20150914
-%global with_zts    0%{?__ztsphp:1}
+%global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name   yaf
-%if "%{php_version}" < "5.6"
-%global ini_name    %{pecl_name}.ini
-%else
 %global ini_name    40-%{pecl_name}.ini
-%endif
 
 Summary:       Yet Another Framework
 Name:          %{?sub_prefix}php-pecl-yaf
-Version:       3.0.0
+Version:       3.0.1
 %if 0%{?gh_date:1}
 Release:       0.8.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
@@ -66,18 +62,12 @@ Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
-%if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
-%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -223,6 +213,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 13 2015 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
+- update to 3.0.1 (beta, php 7)
+
 * Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
 - update to 3.0.0 (php 7)
 
