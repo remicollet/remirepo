@@ -10,18 +10,18 @@
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__php:       %global __php        %{_bindir}/php}
 
-%global gh_commit   e7cc225bf212a72db3be492d53aa89ddbb18bfa1
+%global gh_commit   24b5e87988ce0b01098ee0b617a13f32264ee0be
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    laruence
 %global gh_project  taint
 #global gh_date     20150910
 %global pecl_name   taint
-%global with_zts    0%{?__ztsphp:1}
+%global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global ini_name    40-%{pecl_name}.ini
 
 Summary:       XSS code sniffer
 Name:          %{?scl_prefix}php-pecl-taint
-Version:       2.0.0
+Version:       2.0.1
 %if 0%{?gh_date:1}
 Release:       0.7.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
@@ -213,5 +213,8 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
-- new package, version 1.0.0 (beta, php 7)
+* Sun Dec 13 2015 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1 (php 7, beta)
+
+* Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- new package, version 2.0.0 (beta, php 7)

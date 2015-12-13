@@ -1,0 +1,39 @@
+Extension [ <persistent> extension #55 taint version 2.0.1 ] {
+
+  - Dependencies {
+    Dependency [ xdebug (Conflicts) ]
+  }
+
+  - INI {
+    Entry [ taint.enable <SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ taint.error_level <ALL> ]
+      Current = '512'
+    }
+  }
+
+  - Functions {
+    Function [ <internal:taint> function taint ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> &$string ]
+        Parameter #1 [ <optional> &$... ]
+      }
+    }
+    Function [ <internal:taint> function untaint ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> &$string ]
+        Parameter #1 [ <optional> &$... ]
+      }
+    }
+    Function [ <internal:taint> function is_tainted ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $string ]
+      }
+    }
+  }
+}
+
