@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
+Extension [ <persistent> extension #109 imagick version 3.4.0RC3 ] {
 
   - Dependencies {
     Dependency [ spl (Required) ]
@@ -17,7 +17,7 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
   }
 
   - Classes [10] {
-    Class [ <internal:imagick> final class ImagickException extends Exception implements Throwable ] {
+    Class [ <internal:imagick> class ImagickException extends Exception ] {
 
       - Constants [0] {
       }
@@ -48,33 +48,33 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:imagick> final class ImagickDrawException extends Exception implements Throwable ] {
+    Class [ <internal:imagick> class ImagickDrawException extends Exception ] {
 
       - Constants [0] {
       }
@@ -105,33 +105,33 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:imagick> final class ImagickPixelIteratorException extends Exception implements Throwable ] {
+    Class [ <internal:imagick> class ImagickPixelIteratorException extends Exception ] {
 
       - Constants [0] {
       }
@@ -162,33 +162,33 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:imagick> final class ImagickPixelException extends Exception implements Throwable ] {
+    Class [ <internal:imagick> class ImagickPixelException extends Exception ] {
 
       - Constants [0] {
       }
@@ -219,33 +219,33 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:imagick> final class ImagickKernelException extends Exception implements Throwable ] {
+    Class [ <internal:imagick> class ImagickKernelException extends Exception ] {
 
       - Constants [0] {
       }
@@ -276,35 +276,35 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
         }
       }
     }
 
     Class [ <internal:imagick> <iterateable> class Imagick implements Iterator, Traversable, Countable ] {
 
-      - Constants [552] {
+      - Constants [566] {
         Constant [ integer COLOR_BLACK ] { 11 }
         Constant [ integer COLOR_BLUE ] { 12 }
         Constant [ integer COLOR_CYAN ] { 13 }
@@ -316,7 +316,7 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
         Constant [ integer COLOR_ALPHA ] { 19 }
         Constant [ integer COLOR_FUZZ ] { 20 }
         Constant [ integer IMAGICK_EXTNUM ] { 30400 }
-        Constant [ string IMAGICK_EXTVER ] { 3.4.0RC2 }
+        Constant [ string IMAGICK_EXTVER ] { 3.4.0RC3 }
         Constant [ integer QUANTUM_RANGE ] { 65535 }
         Constant [ integer USE_ZEND_MM ] { 0 }
         Constant [ integer COMPOSITE_DEFAULT ] { 40 }
@@ -392,6 +392,7 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
         Constant [ integer COMPOSITE_MINUSSRC ] { 65 }
         Constant [ integer COMPOSITE_DARKENINTENSITY ] { 66 }
         Constant [ integer COMPOSITE_LIGHTENINTENSITY ] { 67 }
+        Constant [ integer COMPOSITE_HARDMIX ] { 68 }
         Constant [ integer MONTAGEMODE_FRAME ] { 1 }
         Constant [ integer MONTAGEMODE_UNFRAME ] { 2 }
         Constant [ integer MONTAGEMODE_CONCATENATE ] { 3 }
@@ -541,6 +542,7 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
         Constant [ integer METRIC_ROOTMEANSQUAREDERROR ] { 7 }
         Constant [ integer METRIC_NORMALIZEDCROSSCORRELATIONERRORMETRIC ] { 8 }
         Constant [ integer METRIC_FUZZERROR ] { 9 }
+        Constant [ integer METRIC_PERCEPTUALHASH_ERROR ] { 255 }
         Constant [ integer PIXEL_CHAR ] { 1 }
         Constant [ integer PIXEL_DOUBLE ] { 2 }
         Constant [ integer PIXEL_FLOAT ] { 3 }
@@ -580,6 +582,7 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
         Constant [ integer EVALUATE_EXPONENTIAL ] { 29 }
         Constant [ integer EVALUATE_MEDIAN ] { 30 }
         Constant [ integer EVALUATE_SUM ] { 31 }
+        Constant [ integer EVALUATE_ROOT_MEAN_SQUARE ] { 32 }
         Constant [ integer COLORSPACE_UNDEFINED ] { 0 }
         Constant [ integer COLORSPACE_RGB ] { 1 }
         Constant [ integer COLORSPACE_GRAY ] { 2 }
@@ -614,6 +617,7 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
         Constant [ integer COLORSPACE_YDBDR ] { 33 }
         Constant [ integer COLORSPACE_REC601YCBCR ] { 18 }
         Constant [ integer COLORSPACE_REC709YCBCR ] { 20 }
+        Constant [ integer COLORSPACE_XYY ] { 34 }
         Constant [ integer VIRTUALPIXELMETHOD_UNDEFINED ] { 0 }
         Constant [ integer VIRTUALPIXELMETHOD_BACKGROUND ] { 1 }
         Constant [ integer VIRTUALPIXELMETHOD_CONSTANT ] { 2 }
@@ -697,6 +701,8 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
         Constant [ integer RESOURCETYPE_TIME ] { 7 }
         Constant [ integer RESOURCETYPE_THROTTLE ] { 8 }
         Constant [ integer RESOURCETYPE_THREAD ] { 6 }
+        Constant [ integer RESOURCETYPE_WIDTH ] { 9 }
+        Constant [ integer RESOURCETYPE_HEIGHT ] { 10 }
         Constant [ integer DISPOSE_UNRECOGNIZED ] { 0 }
         Constant [ integer DISPOSE_UNDEFINED ] { 0 }
         Constant [ integer DISPOSE_NONE ] { 1 }
@@ -711,6 +717,11 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
         Constant [ integer INTERPOLATE_MESH ] { 6 }
         Constant [ integer INTERPOLATE_NEARESTNEIGHBOR ] { 7 }
         Constant [ integer INTERPOLATE_SPLINE ] { 8 }
+        Constant [ integer INTERPOLATE_AVERAGE_9 ] { 9 }
+        Constant [ integer INTERPOLATE_AVERAGE_16 ] { 10 }
+        Constant [ integer INTERPOLATE_BLEND ] { 11 }
+        Constant [ integer INTERPOLATE_BACKGROUND_COLOR ] { 12 }
+        Constant [ integer INTERPOLATE_CATROM ] { 13 }
         Constant [ integer LAYERMETHOD_UNDEFINED ] { 0 }
         Constant [ integer LAYERMETHOD_COALESCE ] { 1 }
         Constant [ integer LAYERMETHOD_COMPAREANY ] { 2 }
@@ -767,6 +778,8 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
         Constant [ integer ALPHACHANNEL_OPAQUE ] { 6 }
         Constant [ integer ALPHACHANNEL_SHAPE ] { 9 }
         Constant [ integer ALPHACHANNEL_TRANSPARENT ] { 10 }
+        Constant [ integer ALPHACHANNEL_ASSOCIATE ] { 13 }
+        Constant [ integer ALPHACHANNEL_DISSOCIATE ] { 14 }
         Constant [ integer SPARSECOLORMETHOD_UNDEFINED ] { 0 }
         Constant [ integer SPARSECOLORMETHOD_BARYCENTRIC ] { 1 }
         Constant [ integer SPARSECOLORMETHOD_BILINEAR ] { 7 }
@@ -794,6 +807,7 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
         Constant [ integer STATISTIC_MODE ] { 6 }
         Constant [ integer STATISTIC_NONPEAK ] { 7 }
         Constant [ integer STATISTIC_STANDARD_DEVIATION ] { 8 }
+        Constant [ integer STATISTIC_ROOT_MEAN_SQUARE ] { 9 }
         Constant [ integer MORPHOLOGY_CONVOLVE ] { 1 }
         Constant [ integer MORPHOLOGY_CORRELATE ] { 2 }
         Constant [ integer MORPHOLOGY_ERODE ] { 3 }
@@ -862,7 +876,7 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
       - Static properties [0] {
       }
 
-      - Static methods [19] {
+      - Static methods [20] {
         Method [ <internal:imagick> static public method queryformats ] {
 
           - Parameters [1] {
@@ -874,6 +888,17 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $pattern ]
+          }
+        }
+
+        Method [ <internal:imagick> static public method calculatecrop ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $orig_width ]
+            Parameter #1 [ <required> $orig_height ]
+            Parameter #2 [ <required> $desired_width ]
+            Parameter #3 [ <required> $desired_height ]
+            Parameter #4 [ <optional> $legacy ]
           }
         }
 
@@ -991,7 +1016,7 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
       - Properties [0] {
       }
 
-      - Methods [344] {
+      - Methods [346] {
         Method [ <internal:imagick> public method optimizeimagelayers ] {
 
           - Parameters [0] {
@@ -1077,10 +1102,11 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
 
         Method [ <internal:imagick> public method adaptiveresizeimage ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $columns ]
             Parameter #1 [ <required> $rows ]
             Parameter #2 [ <optional> $bestfit ]
+            Parameter #3 [ <optional> $legacy ]
           }
         }
 
@@ -1757,10 +1783,11 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
 
         Method [ <internal:imagick> public method scaleimage ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $width ]
             Parameter #1 [ <required> $height ]
             Parameter #2 [ <optional> $bestfit ]
+            Parameter #3 [ <optional> $legacy ]
           }
         }
 
@@ -1790,19 +1817,21 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
 
         Method [ <internal:imagick> public method thumbnailimage ] {
 
-          - Parameters [4] {
+          - Parameters [5] {
             Parameter #0 [ <required> $width ]
             Parameter #1 [ <required> $height ]
             Parameter #2 [ <optional> $bestfit ]
             Parameter #3 [ <optional> $fill ]
+            Parameter #4 [ <optional> $legacy ]
           }
         }
 
         Method [ <internal:imagick> public method cropthumbnailimage ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $width ]
             Parameter #1 [ <required> $height ]
+            Parameter #2 [ <optional> $legacy ]
           }
         }
 
@@ -2145,12 +2174,13 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
 
         Method [ <internal:imagick> public method resizeimage ] {
 
-          - Parameters [5] {
+          - Parameters [6] {
             Parameter #0 [ <required> $x ]
             Parameter #1 [ <required> $y ]
             Parameter #2 [ <optional> $filter ]
             Parameter #3 [ <optional> $blur ]
             Parameter #4 [ <optional> $bestfit ]
+            Parameter #5 [ <optional> $legacy ]
           }
         }
 
@@ -2523,9 +2553,10 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
 
         Method [ <internal:imagick> public method colorizeimage ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $colorize_color ]
             Parameter #1 [ <required> $opacity ]
+            Parameter #2 [ <optional> $legacy ]
           }
         }
 
@@ -3238,9 +3269,10 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
 
         Method [ <internal:imagick> public method tintimage ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $tint_color ]
             Parameter #1 [ <required> $opacity ]
+            Parameter #2 [ <optional> $legacy ]
           }
         }
 
@@ -3495,6 +3527,14 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
           }
         }
 
+        Method [ <internal:imagick> public method rotationalblurimage ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $angle ]
+            Parameter #1 [ <optional> $CHANNEL ]
+          }
+        }
+
         Method [ <internal:imagick> public method statisticimage ] {
 
           - Parameters [4] {
@@ -3506,6 +3546,15 @@ Extension [ <persistent> extension #78 imagick version 3.4.0RC2 ] {
         }
 
         Method [ <internal:imagick> public method subimagematch ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> Imagick $Imagick ]
+            Parameter #1 [ <optional> &$offset ]
+            Parameter #2 [ <optional> &$similarity ]
+          }
+        }
+
+        Method [ <internal:imagick> public method similarityimage ] {
 
           - Parameters [3] {
             Parameter #0 [ <required> Imagick $Imagick ]
