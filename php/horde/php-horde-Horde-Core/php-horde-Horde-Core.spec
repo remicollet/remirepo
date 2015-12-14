@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-Horde-Core
-Version:        2.22.3
+Version:        2.22.4
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -148,8 +148,6 @@ Requires:       php-pear(%{pear_channel}/Horde_Editor) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Editor) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_ElasticSearch) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_ElasticSearch) <  2.0.0
-#Requires:       php-pear(%{pear_channel}/Horde_Form) >= 2.0.0
-#Requires:       php-pear(%{pear_channel}/Horde_Form) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Kolab_Server) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Kolab_Server) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Kolab_Session) >= 2.0.0
@@ -285,6 +283,9 @@ fi
 
 
 %changelog
+* Mon Dec 14 2015 Remi Collet <remi@fedoraproject.org> - 2.22.4-1
+- Update to 2.22.4
+
 * Fri Dec 04 2015 Remi Collet <remi@fedoraproject.org> - 2.22.3-1
 - Update to 2.22.3
 
