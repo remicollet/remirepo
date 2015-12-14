@@ -177,6 +177,7 @@ Patch5: php-5.6.3-includedir.patch
 Patch6: php-5.6.3-embed.patch
 Patch7: php-5.3.0-recode.patch
 Patch8: php-5.6.17-libdb.patch
+Patch9: php-5.5.30-curl.patch
 
 # Fixes for extension modules
 # https://bugs.php.net/63171 no odbc call during timeout
@@ -877,6 +878,9 @@ support for using the enchant library to PHP.
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
 %patch8 -p1 -b .libdb
+%if 0%{?rhel}
+%patch9 -p1 -b .curltls
+%endif
 
 %patch21 -p1 -b .odbctimer
 
@@ -1691,7 +1695,7 @@ fi
 %config(noreplace) %{_sysconfdir}/php-fpm.d/www.conf
 %config(noreplace) %{_root_sysconfdir}/logrotate.d/%{?scl_prefix}php-fpm
 %config(noreplace) %{_sysconfdir}/sysconfig/php-fpm
-# %{_prefix}/lib/tmpfiles.d/php-fpm.conf
+# {_prefix}/lib/tmpfiles.d/php-fpm.conf
 %if %{with_systemd}
 %{_unitdir}/%{?scl_prefix}php-fpm.service
 %dir %{_root_sysconfdir}/systemd/system/%{?scl_prefix}php-fpm.service.d
@@ -1786,6 +1790,9 @@ fi
 
 
 %changelog
+* Mon Dec 14 2015 Remi Collet <remi@fedoraproject.org> 5.6.17-0.2.RC1
+- curl: add CURL_SSLVERSION_TLSv1_x constant
+
 * Thu Dec 10 2015 Remi Collet <remi@fedoraproject.org> 5.6.17-0.1.RC1
 - update to 5.6.17RC1
 

@@ -1,0 +1,14 @@
+diff -up php-5.5.30/ext/curl/interface.c.old php-5.5.30/ext/curl/interface.c
+--- php-5.5.30/ext/curl/interface.c.old	2015-12-14 13:58:27.911676702 +0100
++++ php-5.5.30/ext/curl/interface.c	2015-12-14 14:08:04.581124497 +0100
+@@ -1213,7 +1213,9 @@ PHP_MINIT_FUNCTION(curl)
+ 	REGISTER_CURL_CONSTANT(CURLSSLOPT_ALLOW_BEAST);
+ #endif
+ 
+-#if LIBCURL_VERSION_NUM >= 0x072200 /* Available since 7.34.0 */
++#if LIBCURL_VERSION_NUM >= 0x071300 /* Available since 7.19.0 (in upstream curl 7.34)
++    backported in RHEL-7 curl-7.29.0-16.el7 rhbz#1012136
++    backported in RHEL-6 curl-7.19.7-43.el6 rhbz#1036789  */
+ 	REGISTER_CURL_CONSTANT(CURL_SSLVERSION_TLSv1_0);
+ 	REGISTER_CURL_CONSTANT(CURL_SSLVERSION_TLSv1_1);
+ 	REGISTER_CURL_CONSTANT(CURL_SSLVERSION_TLSv1_2);

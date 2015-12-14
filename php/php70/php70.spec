@@ -159,6 +159,7 @@ Patch5: php-7.0.0-includedir.patch
 Patch6: php-5.6.3-embed.patch
 Patch7: php-5.3.0-recode.patch
 Patch8: php-7.0.0-libdb.patch
+Patch9: php-5.5.30-curl.patch
 
 # Fixes for extension modules
 # https://bugs.php.net/63171 no odbc call during timeout
@@ -219,7 +220,7 @@ BuildRequires: libtool-ltdl-devel
 %if %{with_dtrace}
 BuildRequires: systemtap-sdt-devel
 %endif
-BuildRequires: bison
+#BuildRequires: bison
 
 Obsoletes: php53, php53u, php54w, php55u, php55w, php56u, php56w, php70u, php70w
 # Avoid obsoleting php54 from RHSCL
@@ -939,6 +940,9 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
 %patch8 -p1 -b .libdb
+%if 0%{?rhel}
+%patch9 -p1 -b .curltls
+%endif
 
 %patch21 -p1 -b .odbctimer
 
@@ -1967,6 +1971,9 @@ fi
 
 
 %changelog
+* Mon Dec 14 2015 Remi Collet <remi@fedoraproject.org> 7.0.1-0.2.0RC1
+- curl: add CURL_SSLVERSION_TLSv1_x constant
+
 * Wed Dec  9 2015 Remi Collet <remi@fedoraproject.org> 7.0.1-0.1.0RC1
 - Update to 7.0.1RC1
 - drop --disable-huge-code-pages build option on EL-6,

@@ -161,8 +161,8 @@ URL: http://www.php.net/
 Source0: http://snaps.php.net/php5.6-%{snapdate}.tar.xz
 %else
 # Need to download official tarball and strip non-free stuff
-# wget http://www.php.net/distributions/php-%{version}%{?rcver}.tar.xz
-# ./strip.sh %{version}
+# wget http://www.php.net/distributions/php-%%{version}%%{?rcver}.tar.xz
+# ./strip.sh %%{version}
 Source0: php-%{version}%{?rcver}-strip.tar.xz
 %endif
 Source1: php.conf
@@ -189,6 +189,7 @@ Patch5: php-5.6.3-includedir.patch
 Patch6: php-5.6.3-embed.patch
 Patch7: php-5.3.0-recode.patch
 Patch8: php-5.6.3-libdb.patch
+Patch9: php-5.5.30-curl.patch
 
 # Fixes for extension modules
 # https://bugs.php.net/63171 no odbc call during timeout
@@ -956,6 +957,9 @@ rm -rf ext/json
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
 %patch8 -p1 -b .libdb
+%if 0%{?rhel}
+%patch9 -p1 -b .curltls
+%endif
 
 %patch21 -p1 -b .odbctimer
 
@@ -1984,6 +1988,9 @@ fi
 
 
 %changelog
+* Mon Dec 14 2015 Remi Collet <remi@fedoraproject.org> 5.6.16-1.1
+- curl: add CURL_SSLVERSION_TLSv1_x constant
+
 * Thu Nov 26 2015 Remi Collet <remi@fedoraproject.org> 5.6.16-1
 - Update to 5.6.16
   http://www.php.net/releases/5_6_16.php

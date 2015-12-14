@@ -125,11 +125,6 @@
 %global db_devel  libdb-devel
 %endif
 
-#global gh_commit    9876b2c2cf65fbe6aeb0edccbaa421d3d92c345e
-#global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-#global gh_date      20150623
-#global gh_owner     php
-#global gh_project   php-src
 %global rcver        RC1
 %global rpmrel       1
 
@@ -175,6 +170,7 @@ Patch5: php-7.0.0-includedir.patch
 Patch6: php-5.6.3-embed.patch
 Patch7: php-5.3.0-recode.patch
 Patch8: php-7.0.0-libdb.patch
+Patch9: php-5.5.30-curl.patch
 
 # Fixes for extension modules
 # https://bugs.php.net/63171 no odbc call during timeout
@@ -231,7 +227,7 @@ BuildRequires: libtool-ltdl-devel
 %if %{with_dtrace}
 BuildRequires: systemtap-sdt-devel
 %endif
-BuildRequires: bison
+#BuildRequires: bison
 Requires: httpd-mmn = %{_httpd_mmn}
 Provides: %{?scl_prefix}mod_php = %{version}-%{release}
 Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
@@ -391,7 +387,7 @@ Provides: %{?scl_prefix}php-zlib, %{?scl_prefix}php-zlib%{?_isa}
 %{?scl:Requires: %{scl}-runtime}
 # For user experience, those extensions were part of php-common
 Requires: %{?scl_prefix}php-json%{?_isa}
-#Requires: %{?scl_prefix}php-zip%{?_isa}
+#Requires: %%{?scl_prefix}php-zip%%{?_isa}
 
 %description common
 The %{?scl_prefix}php-common package contains files used by both
@@ -888,6 +884,9 @@ support for JavaScript Object Notation (JSON) to PHP.
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
 %patch8 -p1 -b .libdb
+%if 0%{?rhel}
+%patch9 -p1 -b .curltls
+%endif
 
 %patch21 -p1 -b .odbctimer
 
@@ -1697,7 +1696,7 @@ fi
 %config(noreplace) %{_sysconfdir}/php-fpm.d/www.conf
 %config(noreplace) %{_root_sysconfdir}/logrotate.d/%{?scl_prefix}php-fpm
 %config(noreplace) %{_sysconfdir}/sysconfig/php-fpm
-# %{_prefix}/lib/tmpfiles.d/php-fpm.conf
+# {_prefix}/lib/tmpfiles.d/php-fpm.conf
 %if %{with_systemd}
 %{_unitdir}/%{?scl_prefix}php-fpm.service
 %dir %{_root_sysconfdir}/systemd/system/%{?scl_prefix}php-fpm.service.d
@@ -1796,6 +1795,9 @@ fi
 
 
 %changelog
+* Mon Dec 14 2015 Remi Collet <remi@fedoraproject.org> 7.0.1-0.2.0RC1
+- curl: add CURL_SSLVERSION_TLSv1_x constant
+
 * Wed Dec  9 2015 Remi Collet <remi@fedoraproject.org> 7.0.1-0.1.0RC1
 - Update to 7.0.1RC1
 - drop --disable-huge-code-pages build option on EL-6,
