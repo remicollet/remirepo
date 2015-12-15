@@ -10,12 +10,12 @@
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     solariumphp
 %global gh_project   solarium
-%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_project}
 Summary:        Solarium PHP Solr client library
 Version:        3.5.0
-Release:        1%{?dist}
+Release:        1%{?dist}.1
 
 URL:            http://www.solarium-project.org/
 License:        BSD
@@ -104,10 +104,13 @@ fi
 
 
 %changelog
-* Mon Jun 15 2015 Remi Collet <remi@fedoraproject.org> - 3.4.1-1
-- update to 3.4.1
+* Tue Dec 15 2015 Remi Collet <remi@fedoraproject.org> - 3.5.0-1.1
+- update to 3.5.0
 - add autoloader
 - run test suite with both php 5 and 7 when available
+
+* Mon Jun 15 2015 Remi Collet <remi@fedoraproject.org> - 3.4.1-1
+- update to 3.4.1
 
 * Tue Nov 18 2014 Remi Collet <remi@fedoraproject.org> - 3.3.0-2
 - provide php-composer(solarium/solarium)
