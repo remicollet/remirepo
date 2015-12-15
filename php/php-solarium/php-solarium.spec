@@ -8,7 +8,7 @@
 #
 %global gh_commit    0b51430cc3b8a975084435dada53a3c27940b2d6
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_owner     basdenooijer
+%global gh_owner     solariumphp
 %global gh_project   solarium
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
