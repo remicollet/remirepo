@@ -190,6 +190,10 @@ install -Dpm 755 bin/%{name} %{buildroot}%{_bindir}/%{name}
 
 %check
 %if %{with_tests}
+%if 0%{?rhel} == 5
+rm tests/Composer/Test/Downloader/XzDownloaderTest.php
+%endif
+
 : Run test suite
 export BUILDROOT=%{buildroot}
 %{_bindir}/phpunit --include-path %{buildroot}%{_datadir}/php --verbose
