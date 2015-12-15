@@ -20,7 +20,7 @@ Release:        1%{?dist}
 URL:            http://www.solarium-project.org/
 License:        BSD
 Group:          Development/Libraries
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 Source1:        %{name}-autoload.php
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
