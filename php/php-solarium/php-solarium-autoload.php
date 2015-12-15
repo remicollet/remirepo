@@ -18,5 +18,5 @@ $fedoraClassLoader->addPrefix('Solarium\\', dirname(__DIR__));
 if (file_exists($vendorDir . '/Symfony/Component/autoload.php')) {
    require_once $vendorDir . '/Symfony/Component/autoload.php';
 } else {
-   require_once $vendorDir . '/Symfony/autoload.php';
+   $fedoraClassLoader->addPrefix('Symfony\\Component\\', $vendorDir);
 }
