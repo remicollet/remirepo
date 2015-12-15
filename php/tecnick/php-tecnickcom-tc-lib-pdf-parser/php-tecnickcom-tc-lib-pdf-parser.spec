@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c1d9f4f80e376c46f89234369e21f1845737bdcf
+%global gh_commit    707f448ab9479d1c888b34c26584f7eb74cd4f7d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.2.0
+Version:        2.2.1
 Release:        1%{?dist}
 Summary:        PHP library to parse PDF documents
 
@@ -114,6 +114,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec 15 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
+- update to 2.2.1 (no change)
+
 * Fri Dec 11 2015 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - update to 2.2.0 (no change)
 - raise dependency on php >= 5.4
