@@ -1,6 +1,6 @@
 diff -up ./bin/composer.rpm ./bin/composer
---- ./bin/composer.rpm	2015-09-20 20:44:55.000000000 +0200
-+++ ./bin/composer	2015-09-21 17:38:08.532640919 +0200
+--- ./bin/composer.rpm	2015-12-15 10:35:39.000000000 +0100
++++ ./bin/composer	2015-12-15 16:14:05.574860901 +0100
 @@ -5,7 +5,7 @@ if (PHP_SAPI !== 'cli') {
      echo 'Warning: Composer should be invoked via the CLI version of PHP, not the '.PHP_SAPI.' SAPI'.PHP_EOL;
  }
@@ -11,33 +11,21 @@ diff -up ./bin/composer.rpm ./bin/composer
  use Composer\Console\Application;
  
 diff -up ./src/Composer/Autoload/AutoloadGenerator.php.rpm ./src/Composer/Autoload/AutoloadGenerator.php
---- ./src/Composer/Autoload/AutoloadGenerator.php.rpm	2015-09-21 17:38:08.532640919 +0200
-+++ ./src/Composer/Autoload/AutoloadGenerator.php	2015-09-21 17:38:58.418873383 +0200
-@@ -290,7 +290,7 @@ EOF;
+--- ./src/Composer/Autoload/AutoloadGenerator.php.rpm	2015-12-15 16:14:05.575860906 +0100
++++ ./src/Composer/Autoload/AutoloadGenerator.php	2015-12-15 16:14:18.054913016 +0100
+@@ -287,7 +287,7 @@ EOF;
          file_put_contents($targetDir.'/autoload_real.php', $this->getAutoloadRealFile(true, (bool) $includePathFileContents, $targetDirLoader, (bool) $includeFilesFileContents, $vendorPathCode, $appBaseDirCode, $suffix, $useGlobalIncludePath, $prependAutoloader));
  
          $this->safeCopy(__DIR__.'/ClassLoader.php', $targetDir.'/ClassLoader.php');
 -        $this->safeCopy(__DIR__.'/../../../LICENSE', $targetDir.'/LICENSE');
 +        $this->safeCopy((getenv('BUILDROOT')?:'') . '/usr/share/composer/LICENSE', $targetDir.'/LICENSE');
  
-         $this->eventDispatcher->dispatchScript(ScriptEvents::POST_AUTOLOAD_DUMP, $this->devMode, array(), array(
-             'optimize' => (bool) $scanPsr0Packages,
-diff -up ./src/Composer/Json/JsonFile.php.rpm ./src/Composer/Json/JsonFile.php
---- ./src/Composer/Json/JsonFile.php.rpm	2015-09-20 20:44:55.000000000 +0200
-+++ ./src/Composer/Json/JsonFile.php	2015-09-21 17:38:08.532640919 +0200
-@@ -149,7 +149,7 @@ class JsonFile
-             self::validateSyntax($content, $this->path);
-         }
- 
--        $schemaFile = __DIR__ . '/../../../res/composer-schema.json';
-+        $schemaFile = (getenv('BUILDROOT')?:'') . '/usr/share/composer/res/composer-schema.json';
-         $schemaData = json_decode(file_get_contents($schemaFile));
- 
-         if ($schema === self::LAX_SCHEMA) {
+         if ($this->runScripts) {
+             $this->eventDispatcher->dispatchScript(ScriptEvents::POST_AUTOLOAD_DUMP, $this->devMode, array(), array(
 diff -up ./src/Composer/Command/DiagnoseCommand.php.rpm ./src/Composer/Command/DiagnoseCommand.php
---- ./src/Composer/Command/DiagnoseCommand.php.rpm	2015-10-07 12:05:33.000000000 +0200
-+++ ./src/Composer/Command/DiagnoseCommand.php	2015-10-11 19:45:58.427641279 +0200
-@@ -132,9 +132,6 @@
+--- ./src/Composer/Command/DiagnoseCommand.php.rpm	2015-12-15 10:35:39.000000000 +0100
++++ ./src/Composer/Command/DiagnoseCommand.php	2015-12-15 16:14:05.575860906 +0100
+@@ -132,9 +132,6 @@ EOT
          $io->write('Checking disk free space: ', false);
          $this->outputResult($this->checkDiskSpace($config));
  
@@ -47,3 +35,15 @@ diff -up ./src/Composer/Command/DiagnoseCommand.php.rpm ./src/Composer/Command/D
          return $this->failures;
      }
  
+diff -up ./src/Composer/Json/JsonFile.php.rpm ./src/Composer/Json/JsonFile.php
+--- ./src/Composer/Json/JsonFile.php.rpm	2015-12-15 10:35:39.000000000 +0100
++++ ./src/Composer/Json/JsonFile.php	2015-12-15 16:14:05.575860906 +0100
+@@ -149,7 +149,7 @@ class JsonFile
+             self::validateSyntax($content, $this->path);
+         }
+ 
+-        $schemaFile = __DIR__ . '/../../../res/composer-schema.json';
++        $schemaFile = (getenv('BUILDROOT')?:'') . '/usr/share/composer/res/composer-schema.json';
+         $schemaData = json_decode(file_get_contents($schemaFile));
+ 
+         if ($schema === self::LAX_SCHEMA) {

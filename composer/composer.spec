@@ -6,19 +6,19 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    cd9054ce2abd1d06ed0eb1244eba1b2c2af633b6
+%global gh_commit    f25446e507a3f420b2b88e6dedc47787d42ea7e9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-#global gh_branch    1.0-dev
-#global gh_date      20151114
+%global gh_branch    1.0-dev
+%global gh_date      20151215
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 %global api_version  1.0.0
-%global prever       alpha11
+#global prever       alpha11
 
 Name:           composer
 Version:        1.0.0
-Release:        0.15.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}%{?dist}
+Release:        0.16.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -38,7 +38,7 @@ BuildRequires:  php-cli
 BuildRequires:  php-composer(justinrainbow/json-schema) >= 1.4.4
 BuildRequires:  php-composer(composer/spdx-licenses)    >= 1.0
 BuildRequires:  php-composer(composer/semver)           >= 1.0
-BuildRequires:  php-composer(seld/jsonlint)             >= 1.0
+BuildRequires:  php-composer(seld/jsonlint)             >= 1.4
 BuildRequires:  php-composer(seld/phar-utils)           >= 1.0
 BuildRequires:  php-composer(seld/cli-prompt)           >= 1.0
 BuildRequires:  php-composer(symfony/console)           >= 2.5
@@ -54,7 +54,6 @@ BuildRequires:  php-composer(phpunit/phpunit)           >= 4.5
 BuildRequires:  php-composer(symfony/class-loader)
 BuildRequires:  php-seld-phar-utils >= 1.0.1
 BuildRequires:  php-seld-cli-prompt >= 1.0.0-3
-BuildRequires:  php-jsonlint        >= 1.3.1-3
 
 %endif
 
@@ -63,7 +62,7 @@ BuildRequires:  php-jsonlint        >= 1.3.1-3
 #        "justinrainbow/json-schema": "^1.4.4",
 #        "composer/spdx-licenses": "^1.0",
 #        "composer/semver": "^1.0",
-#        "seld/jsonlint": "~1.0",
+#        "seld/jsonlint": "~1.4",
 #        "symfony/console": "^2.5 || ^3.0",
 #        "symfony/finder": "^2.2 || ^3.0",
 #        "symfony/process": "^2.1 || ^3.0",
@@ -78,7 +77,7 @@ Requires:       php-composer(composer/spdx-licenses)    >= 1.0
 Requires:       php-composer(composer/spdx-licenses)    <  2
 Requires:       php-composer(composer/semver)           >= 1.0
 Requires:       php-composer(composer/semver)           <  2
-Requires:       php-composer(seld/jsonlint)             >= 1.0
+Requires:       php-composer(seld/jsonlint)             >= 1.4
 Requires:       php-composer(seld/jsonlint)             <  2
 Requires:       php-composer(seld/phar-utils)           >= 1.0
 Requires:       php-composer(seld/phar-utils)           <  2
@@ -101,7 +100,6 @@ Requires:       php-openssl
 Requires:       php-composer(symfony/class-loader)
 Requires:       php-seld-phar-utils >= 1.0.1
 Requires:       php-seld-cli-prompt >= 1.0.0-3
-Requires:       php-jsonlint        >= 1.3.1-3
 # From phpcompatinfo
 Requires:       php-curl
 Requires:       php-date
@@ -138,7 +136,8 @@ Documentation: https://getcomposer.org/doc/
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-%patch0 -p1
+%patch0 -p1 -b .rpm
+find . -name \*.rpm -exec rm {} \; -print
 
 cp -p %{SOURCE1} src/Composer/autoload.php
 cp -p %{SOURCE2} tests/bootstrap.php
@@ -219,6 +218,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec 15 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.16.20151215gitf25446e
+- new snapshot
+- raise dependency on seld/jsonlint ^1.4
+
 * Sat Nov 14 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.15.alpha1
 - update to 1.0.0alpha11
 - run test suite with both PHP 5 and 7 when available
