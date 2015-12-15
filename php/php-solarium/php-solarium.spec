@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    90d006c65efffcbcbfa8a31920e93c10d0657b96
+%global gh_commit    0b51430cc3b8a975084435dada53a3c27940b2d6
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     basdenooijer
 %global gh_project   solarium
@@ -14,13 +14,14 @@
 
 Name:           php-%{gh_project}
 Summary:        Solarium PHP Solr client library
-Version:        3.4.1
+Version:        3.5.0
 Release:        1%{?dist}
 
 URL:            http://www.solarium-project.org/
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 License:        BSD
 Group:          Development/Libraries
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source1:        %{name}-autoload.php
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -28,20 +29,22 @@ BuildArch:      noarch
 # For tests
 BuildRequires:  php(language) >= 5.3.2
 BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
-BuildRequires:  php-symfony-eventdispatcher > 2.1
-BuildRequires:  php-symfony-eventdispatcher < 3
+BuildRequires:  php-composer(symfony/event-dispatcher) > 2.3
+BuildRequires:  php-composer(symfony/class-loader)
 %endif
 
 # From composer.json
 Requires:       php(language) >= 5.3.2
-Requires:       php-symfony-eventdispatcher > 2.1
-Requires:       php-symfony-eventdispatcher < 3
+Requires:       php-composer(symfony/event-dispatcher) > 2.3
+Requires:       php-composer(symfony/event-dispatcher) < 3
 # From phpcompatinfo report for version 3.4.1
 Requires:       php-curl
 Requires:       php-date
 Requires:       php-json
 Requires:       php-pcre
 Requires:       php-spl
+# For our autoloader
+Requires:       php-composer(symfony/class-loader)
 
 Provides:       php-composer(solarium/solarium) = %{version}
 
@@ -53,6 +56,8 @@ Where many other Solr libraries only handle the communication with Solr,
 Solarium also relieves you of handling all the complex Solr query parameters
 using a well documented API.
 
+Autoloader: %{_datadir}/php/Solarium/autoload.php
+
 Documentation: http://wiki.solarium-project.org/
 
 
@@ -61,26 +66,7 @@ Documentation: http://wiki.solarium-project.org/
 
 rm examples/.gitignore
 
-: Create trivial PSR0 autoloader
-cat <<EOF | tee psr0.php
-<?php
-spl_autoload_register(function (\$class) {
-    \$file = str_replace('\\\\', '/', \$class).'.php';
-    @include \$file;
-});
-EOF
-
-: Create phpunit configuration file
-cat <<EOF | tee phpunit.xml
-<?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="psr0.php">
-    <testsuites>
-       <testsuite name="Solarium">
-         <directory suffix="Test.php">tests</directory>
-       </testsuite>
-    </testsuites>
-</phpunit>
-EOF
+cp %{SOURCE1} library/Solarium/autoload.php
 
 
 %build
@@ -94,10 +80,16 @@ cp -pr library/Solarium %{buildroot}%{_datadir}/php/Solarium
 
 %check
 %if %{with_tests}
+: Autoloader
+mkdir vendor
+ln -s %{buildroot}%{_datadir}/php/Solarium/autoload.php vendor/autoload.php
+
 : Run upstream test suite against installed library
-phpunit \
-  --include-path=%{buildroot}%{_datadir}/php:./tests \
-  --verbose
+%{_bindir}/phpunit --verbose
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose
+fi
 %else
 : Skip upstream test suite
 %endif
@@ -114,6 +106,8 @@ phpunit \
 %changelog
 * Mon Jun 15 2015 Remi Collet <remi@fedoraproject.org> - 3.4.1-1
 - update to 3.4.1
+- add autoloader
+- run test suite with both php 5 and 7 when available
 
 * Tue Nov 18 2014 Remi Collet <remi@fedoraproject.org> - 3.3.0-2
 - provide php-composer(solarium/solarium)
