@@ -258,11 +258,11 @@ fi
 
 if [ -f "$1" ]; then
   echo -n "$(date +%X) 70 fc23 "
-  setarch i686    mock $quiet --configdir=$mocketc -r fc21i70 --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
+  setarch i686    mock $quiet --configdir=$mocketc -r fc23i70 --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
   echo -n "$(date +%X) 70 fc22 "
   setarch i686    mock $quiet --configdir=$mocketc -r fc22i70 --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
   echo -n "$(date +%X) 70 fc21 "
-  setarch i686    mock $quiet --configdir=$mocketc -r fc23i70 --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
+  setarch i686    mock $quiet --configdir=$mocketc -r fc21i70 --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
   echo -n "$(date +%X) 70 el6  "
   setarch i686    mock $quiet --configdir=$mocketc -r el6i70  --arch i686 rebuild $1 && echo " Ok." || echo " Error !"
   date +%X

@@ -125,7 +125,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver        RC1
+#global rcver        RC1
 %global rpmrel       1
 
 
@@ -1806,8 +1806,10 @@ fi
 
 
 %changelog
-* Mon Dec 14 2015 Remi Collet <remi@fedoraproject.org> 7.0.1-0.2.0RC1
-- curl: add CURL_SSLVERSION_TLSv1_x constant
+* Wed Dec 16 2015 Remi Collet <remi@fedoraproject.org> 7.0.1-1
+- Update to 7.0.1
+  http://www.php.net/releases/7_0_1.php
+- curl: add CURL_SSLVERSION_TLSv1_x constant (EL)
 - fpm: switch to UDS on Fedora >= 21
 
 * Wed Dec  9 2015 Remi Collet <remi@fedoraproject.org> 7.0.1-0.1.0RC1

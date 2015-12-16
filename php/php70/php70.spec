@@ -120,7 +120,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver         RC1
+#global rcver         RC1
 %global rpmrel        1
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -222,7 +222,7 @@ BuildRequires: systemtap-sdt-devel
 %endif
 #BuildRequires: bison
 
-Obsoletes: php53, php53u, php54w, php55u, php55w, php56u, php56w, php70u, php70w
+Obsoletes: php53, php53u, php54w, php55u, php55w, php56u, php56w, php70u, php70w, mod_php70u
 # Avoid obsoleting php54 from RHSCL
 Obsoletes: php54 > 5.4
 %if %{with_zts}
@@ -387,7 +387,7 @@ Provides: php-tokenizer, php-tokenizer%{?_isa}
 Provides: php-zlib, php-zlib%{?_isa}
 # For user experience, those extensions were part of php-common
 Requires:  php-json%{?_isa}
-#Requires:  php-zip%{?_isa}
+#Requires:  php-zip%%{?_isa}
 
 Obsoletes: php-pecl-phar < 1.2.4
 Obsoletes: php-pecl-Fileinfo < 1.0.5
@@ -1971,8 +1971,10 @@ fi
 
 
 %changelog
-* Mon Dec 14 2015 Remi Collet <remi@fedoraproject.org> 7.0.1-0.2.0RC1
-- curl: add CURL_SSLVERSION_TLSv1_x constant
+* Wed Dec 16 2015 Remi Collet <remi@fedoraproject.org> 7.0.1-1
+- Update to 7.0.1
+  http://www.php.net/releases/7_0_1.php
+- curl: add CURL_SSLVERSION_TLSv1_x constant (EL)
 
 * Wed Dec  9 2015 Remi Collet <remi@fedoraproject.org> 7.0.1-0.1.0RC1
 - Update to 7.0.1RC1
