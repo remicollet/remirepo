@@ -1379,11 +1379,11 @@ sed -e '/php-fpm.pid/s:/var:%{_localstatedir}:' \
 %if %{with_httpd2410}
 # Switch to UDS
 # FPM
-sed -e 's@127.0.0.1:9000@/run/php-fpm/www.sock@' \
+sed -e 's@127.0.0.1:9000@%{_localstatedir}/run/php-fpm/www.sock@' \
     -e 's@^;listen.acl_users@listen.acl_users@' \
     -i $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d/www.conf
 # Apache
-sed -e 's@proxy:fcgi://127.0.0.1:9000@proxy:unix:/run/php-fpm/www.sock|fcgi://localhost@' \
+sed -e 's@proxy:fcgi://127.0.0.1:9000@proxy:unix:%{_localstatedir}/run/php-fpm/www.sock|fcgi://localhost@' \
     -i $RPM_BUILD_ROOT%{_httpd_confdir}/%{name}.conf
 %endif
 
