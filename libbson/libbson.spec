@@ -19,14 +19,14 @@
 
 Name:      libbson
 Summary:   Library to build, parse, and iterate BSON documents
-Version:   1.2.3
+Version:   1.3.0
 Release:   1%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
 # https://jira.mongodb.org/browse/CDRIVER-1039
-#Source1:   https://raw.githubusercontent.com/mongodb/libbson/master/doc/mallard2man.py
+Source1:   https://raw.githubusercontent.com/mongodb/libbson/master/doc/mallard2man.py
 
 BuildRequires: python
 
@@ -54,7 +54,7 @@ for %{name}.
 %prep
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
 
-#install -m 0755 %{SOURCE1} doc/
+install -m 0755 %{SOURCE1} doc/
 
 
 %build
@@ -71,7 +71,7 @@ rm    %{buildroot}%{_libdir}/*la
 rm -r %{buildroot}%{_datadir}/doc
 # drop "generic" man pages, avoid conflicts
 # https://jira.mongodb.org/browse/CDRIVER-1039
-#rm    %{buildroot}/%{_mandir}/man3/[c-v]*
+rm    %{buildroot}/%{_mandir}/man3/[c-v]*
 
 
 %check
@@ -99,6 +99,9 @@ make check
 
 
 %changelog
+* Wed Dec 16 2015 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- Update to 1.3.0
+
 * Tue Dec  8 2015 Remi Collet <remi@fedoraproject.org> - 1.2.3-1
 - Update to 1.2.3 (1.3.0 not compatible with pecl/mongodb)
 
