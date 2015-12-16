@@ -9,7 +9,7 @@
 %global gh_owner     mongodb
 %global gh_project   mongo-c-driver
 #global gh_commit    495cd3ffa9beade31c2b410eb5e9555c7db240e1
-#global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+#global gh_short     %%(c=%%{gh_commit}; echo ${c:0:7})
 #global gh_date      20151001
 %global with_tests   0%{!?_without_tests:1}
 %global libname      libmongoc
@@ -18,7 +18,7 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.2.3
+Version:   1.3.0
 %if 0%{?gh_date}
 Release:   0.6.%{gh_date}git%{gh_short}%{?dist}
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
@@ -52,28 +52,21 @@ BuildRequires: python
 %description
 %{name} is a client library written in C for MongoDB.
 
-Documentation: http://api.mongodb.org/c/%{version}/
-
 
 %package devel
 Summary:    Header files and development libraries for %{name}
 Group:      Development/Libraries
 Requires:   %{name}%{?_isa} = %{version}-%{release}
 Requires:   pkgconfig
+# Sub package removed
+Obsoletes:  %{name}-tools < 1.3.0
+
 
 %description devel
 This package contains the header files and development libraries
 for %{name}.
 
-
-%package tools
-Summary:    MongoDB tools
-Group:      Applications/System
-Requires:   %{name}%{?_isa} = %{version}-%{release}
-
-%description tools
-The %{name}-tools package contains some command line tools to manage
-a MongoDB Server.
+Documentation: http://api.mongodb.org/c/%{version}/
 
 
 %prep
@@ -83,7 +76,7 @@ autoreconf -fvi -I build/autotools
 %else
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
 install -m 0755 %{SOURCE1} doc/
-mkdir doc/man
+#mkdir doc/man
 %endif
 
 # Ensure we are using system library
@@ -110,9 +103,9 @@ rm    %{buildroot}%{_libdir}/*la
 rm -r %{buildroot}%{_datadir}/doc/
 # drop "generic" man pages, avoid conflicts
 # https://jira.mongodb.org/browse/CDRIVER-1039
-#rm    %{buildroot}/%{_mandir}/man3/[a-l]*
-#rm    %{buildroot}/%{_mandir}/man3/ma*
-#rm    %{buildroot}/%{_mandir}/man3/[t-u]*
+rm    %{buildroot}/%{_mandir}/man3/[a-l]*
+rm    %{buildroot}/%{_mandir}/man3/ma*
+rm    %{buildroot}/%{_mandir}/man3/[t-u]*
 
 
 %check
@@ -154,10 +147,6 @@ exit $ret
 %{_libdir}/%{libname}-%{libver}.so.*
 %{_libdir}/%{libname}-priv.so.*
 
-
-%files tools
-%{_bindir}/mongoc-stat
-
 %files devel
 %doc NEWS README*
 %{_includedir}/%{libname}-%{libver}
@@ -165,9 +154,14 @@ exit $ret
 %{_libdir}/%{libname}-priv.so
 %{_libdir}/pkgconfig/%{libname}-*.pc
 %{_mandir}/man3/mongoc*
+%{_bindir}/mongoc-stat
 
 
 %changelog
+* Wed Dec 16 2015 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- Update to 1.3.0
+- move tools in devel package
+
 * Tue Dec  8 2015 Remi Collet <remi@fedoraproject.org> - 1.2.3-1
 - Update to 1.2.3
 
