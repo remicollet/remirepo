@@ -1259,17 +1259,6 @@ sed -e '/php-fpm.pid/s:/var:%{_localstatedir}:' \
     -i $RPM_BUILD_ROOT%{_root_initddir}/%{?scl_prefix}php-fpm
 %endif
 
-%if %{with_httpd2410}
-# Switch to UDS
-# FPM
-sed -e 's@127.0.0.1:9000@%{_localstatedir}/run/php-fpm/www.sock@' \
-    -e 's@^;listen.acl_users@listen.acl_users@' \
-    -i $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d/www.conf
-# Apache
-sed -e 's@proxy:fcgi://127.0.0.1:9000@proxy:unix:%{_localstatedir}/run/php-fpm/www.sock|fcgi://localhost@' \
-    -i $RPM_BUILD_ROOT%{_httpd_confdir}/%{name}.conf
-%endif
-
 # LogRotate
 install -m 755 -d $RPM_BUILD_ROOT%{_root_sysconfdir}/logrotate.d
 install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_root_sysconfdir}/logrotate.d/%{?scl_prefix}php-fpm
@@ -1642,9 +1631,6 @@ EOF
 
 
 %changelog
-* Wed Dec 16 2015 Remi Collet <remi@fedoraproject.org> 5.4.45-2.1
-- fpm: switch to UDS on Fedora >= 21
-
 * Wed Sep 30 2015 Remi Collet <remi@fedoraproject.org> 5.4.45-2
 - Fix bug #70433 - Uninitialized pointer in phar_make_dirstream
   when zip entry filename is "/"

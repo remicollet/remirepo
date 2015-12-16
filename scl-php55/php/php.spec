@@ -1376,17 +1376,6 @@ sed -e '/php-fpm.pid/s:/var:%{_localstatedir}:' \
     -i $RPM_BUILD_ROOT%{_root_initddir}/%{?scl_prefix}php-fpm
 %endif
 
-%if %{with_httpd2410}
-# Switch to UDS
-# FPM
-sed -e 's@127.0.0.1:9000@%{_localstatedir}/run/php-fpm/www.sock@' \
-    -e 's@^;listen.acl_users@listen.acl_users@' \
-    -i $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d/www.conf
-# Apache
-sed -e 's@proxy:fcgi://127.0.0.1:9000@proxy:unix:%{_localstatedir}/run/php-fpm/www.sock|fcgi://localhost@' \
-    -i $RPM_BUILD_ROOT%{_httpd_confdir}/%{name}.conf
-%endif
-
 # LogRotate
 install -m 755 -d $RPM_BUILD_ROOT%{_root_sysconfdir}/logrotate.d
 install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_root_sysconfdir}/logrotate.d/%{?scl_prefix}php-fpm
@@ -1774,7 +1763,6 @@ fi
 %changelog
 * Mon Dec 14 2015 Remi Collet <remi@fedoraproject.org> 5.5.30-1.1
 - curl: add CURL_SSLVERSION_TLSv1_x constant
-- fpm: switch to UDS on Fedora >= 21
 
 * Thu Oct  1 2015 Remi Collet <remi@fedoraproject.org> 5.5.30-1
 - Update to 5.5.30
