@@ -19,11 +19,12 @@
 %else
 %global ini_name   40-%{pecl_name}.ini
 %endif
-#global prever     RC0
+# Still needed because of some private API
+%global buildver %(pkg-config --silence-errors --modversion libmongoc-priv 2>/dev/null || echo 65536)
 
 Summary:        MongoDB driver for PHP
 Name:           php-pecl-%{pecl_name}
-Version:        1.0.1
+Version:        1.1.0
 Release:        1%{?dist}
 License:        BSD
 Group:          Development/Languages
@@ -34,13 +35,14 @@ BuildRequires:  php-devel > 5.4
 BuildRequires:  php-pear
 BuildRequires:  cyrus-sasl-devel
 BuildRequires:  openssl-devel
-BuildRequires:  pkgconfig(libbson-1.0)    >= 1.2.0
-BuildRequires:  pkgconfig(libmongoc-1.0)  >= 1.2.0
-BuildRequires:  pkgconfig(libmongoc-priv) >= 1.2.0
-BuildRequires:  pkgconfig(libmongoc-priv) <  1.3
+BuildRequires:  pkgconfig(libbson-1.0)    >= 1.3.0
+BuildRequires:  pkgconfig(libmongoc-1.0)  >= 1.3.0
+BuildRequires:  pkgconfig(libmongoc-priv) >= 1.3.0
+BuildRequires:  pkgconfig(libmongoc-priv) <  1.4
 
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
+Requires:       mongo-c-driver%{?_isa} >= %{buildver}
 
 # Don't provide php-mongodb which is the pure PHP library
 Provides:       php-pecl(%{pecl_name}) = %{version}
@@ -190,6 +192,10 @@ cd ../ZTS
 
 
 %changelog
+* Wed Dec 16 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- Update to 1.1.0 (stable)
+- raise dependency on libmongoc >= 1.3.0
+
 * Tue Dec  8 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - update to 1.0.1 (stable)
 - ensure libmongoc >= 1.2.0 and < 1.3 is used

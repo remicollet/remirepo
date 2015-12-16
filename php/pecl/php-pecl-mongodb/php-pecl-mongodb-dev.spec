@@ -19,10 +19,12 @@
 %global ini_name   40-%{pecl_name}.ini
 %endif
 #global prever     RC0
+# Still needed because of some private API
+%global buildver %(pkg-config --silence-errors --modversion libmongoc-priv 2>/dev/null || echo 65536)
 
 Summary:        MongoDB driver for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.0.1
+Version:        1.1.0
 Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
@@ -34,13 +36,14 @@ BuildRequires:  %{?scl_prefix}php-devel > 5.4
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  cyrus-sasl-devel
 BuildRequires:  openssl-devel
-BuildRequires:  pkgconfig(libbson-1.0)    >= 1.2.0
-BuildRequires:  pkgconfig(libmongoc-1.0)  >= 1.2.0
-BuildRequires:  pkgconfig(libmongoc-priv) >= 1.2.0
-BuildRequires:  pkgconfig(libmongoc-priv) <  1.3
+BuildRequires:  pkgconfig(libbson-1.0)    >= 1.3.0
+BuildRequires:  pkgconfig(libmongoc-1.0)  >= 1.3.0
+BuildRequires:  pkgconfig(libmongoc-priv) >= 1.3.0
+BuildRequires:  pkgconfig(libmongoc-priv) <  1.4
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+Requires:       mongo-c-driver%{?_isa} >= %{buildver}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 # Don't provide php-mongodb which is the pure PHP library
@@ -220,6 +223,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 16 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- Update to 1.1.0 (stable)
+- raise dependency on libmongoc >= 1.3.0
+
 * Tue Dec  8 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
 - update to 1.0.1 (stable)
 - ensure libmongoc >= 1.2.0 and < 1.3 is used

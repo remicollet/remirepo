@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #126 mongodb version 1.0.1 ] {
+Extension [ <persistent> extension #130 mongodb version 1.1.0 ] {
 
   - INI {
     Entry [ mongodb.debug <ALL> ]
@@ -7,7 +7,7 @@ Extension [ <persistent> extension #126 mongodb version 1.0.1 ] {
   }
 
   - Constants [3] {
-    Constant [ string MONGODB_VERSION ] { 1.0.1 }
+    Constant [ string MONGODB_VERSION ] { 1.1.0 }
     Constant [ string MONGODB_STABILITY ] { stable }
     Constant [ string BSON_NAMESPACE ] { MongoDB\BSON }
   }
@@ -39,7 +39,7 @@ Extension [ <persistent> extension #126 mongodb version 1.0.1 ] {
     }
   }
 
-  - Classes [36] {
+  - Classes [37] {
     Class [ <internal:mongodb> final class MongoDB\Driver\Command ] {
 
       - Constants [0] {
@@ -164,11 +164,11 @@ Extension [ <persistent> extension #126 mongodb version 1.0.1 ] {
       - Properties [0] {
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:mongodb, ctor> final public method __construct ] {
 
           - Parameters [3] {
-            Parameter #0 [ <required> $uri ]
+            Parameter #0 [ <optional> $uri ]
             Parameter #1 [ <optional> array $options ]
             Parameter #2 [ <optional> array $driverOptions ]
           }
@@ -198,6 +198,12 @@ Extension [ <persistent> extension #126 mongodb version 1.0.1 ] {
             Parameter #0 [ <required> $namespace ]
             Parameter #1 [ <required> MongoDB\Driver\BulkWrite $zbulk ]
             Parameter #2 [ <optional> MongoDB\Driver\WriteConcern or NULL $writeConcern ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getReadConcern ] {
+
+          - Parameters [0] {
           }
         }
 
@@ -255,6 +261,38 @@ Extension [ <persistent> extension #126 mongodb version 1.0.1 ] {
         }
 
         Method [ <internal:mongodb> public method __wakeUp ] {
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\Driver\ReadConcern ] {
+
+      - Constants [2] {
+        Constant [ string LOCAL ] { local }
+        Constant [ string MAJORITY ] { majority }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $level ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getLevel ] {
+
+          - Parameters [0] {
+          }
         }
       }
     }
