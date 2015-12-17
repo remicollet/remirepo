@@ -1,0 +1,122 @@
+From c4a5aca865ada6cedd48c30d29dacf3d8133ce1c Mon Sep 17 00:00:00 2001
+From: uwetews <uwe.tews@googlemail.com>
+Date: Wed, 16 Dec 2015 04:54:34 +0100
+Subject: [PATCH] - bugfix direct access $smarty->template_dir = 'foo'; should
+ call Smarty::setTemplateDir() https://github.com/smarty-php/smarty/issues/121
+
+---
+ change_log.txt        |  1 +
+ libs/Smarty.class.php | 20 ++++++++++++--------
+ 2 files changed, 13 insertions(+), 8 deletions(-)
+
+diff --git a/libs/Smarty.class.php b/libs/Smarty.class.php
+index 628e22d..d95ef95 100644
+--- a/libs/Smarty.class.php
++++ b/libs/Smarty.class.php
+@@ -683,9 +683,13 @@ class Smarty extends Smarty_Internal_TemplateBase
+                                                'direct_access_security', '_dir_perms', '_file_perms',
+                                                'plugin_search_order', 'inheritance_merge_compiled_includes');
+ 
+-    private static $accessMap = array('template_dir' => 'getTemplateDir', 'config_dir' => 'getConfigDir',
+-                                      'plugins_dir'  => 'getPluginsDir', 'compile_dir' => 'getCompileDir',
+-                                      'cache_dir'    => 'getCacheDir',);
++    private static $accessMapGet = array('template_dir' => 'getTemplateDir', 'config_dir' => 'getConfigDir',
++                                         'plugins_dir'  => 'getPluginsDir', 'compile_dir' => 'getCompileDir',
++                                         'cache_dir'    => 'getCacheDir',);
++
++    private static $accessMapSet = array('template_dir' => 'setTemplateDir', 'config_dir' => 'setConfigDir',
++                                         'plugins_dir'  => 'setPluginsDir', 'compile_dir' => 'setCompileDir',
++                                         'cache_dir'    => 'setCacheDir',);
+ 
+     /**#@-*/
+ 
+@@ -1343,8 +1347,8 @@ public function __destruct()
+     public function __get($name)
+     {
+ 
+-        if (isset(self::$accessMap[$name])) {
+-            return $this->{self::$accessMap[$name]}();
++        if (isset(self::$accessMapGet[$name])) {
++            return $this->{self::$accessMapGet[$name]}();
+         } elseif (in_array($name, self::$obsoleteProperties)) {
+             return null;
+         } else {
+@@ -1362,8 +1366,8 @@ public function __get($name)
+      */
+     public function __set($name, $value)
+     {
+-        if (isset(self::$accessMap[$name])) {
+-            $this->{self::$accessMap[$name]}($value);
++        if (isset(self::$accessMapSet[$name])) {
++            $this->{self::$accessMapSet[$name]}($value);
+         } elseif (in_array($name, self::$obsoleteProperties)) {
+             return;
+         } else {
+From b7118b6bebe696aeb280b6c2d5f1b4b07b1bfed3 Mon Sep 17 00:00:00 2001
+From: uwetews <uwe.tews@googlemail.com>
+Date: Wed, 16 Dec 2015 22:32:07 +0100
+Subject: [PATCH] - optimize direct access $smarty->template_dir = 'foo';
+ should call Smarty::setTemplateDir()
+ https://github.com/smarty-php/smarty/issues/121
+
+---
+ libs/Smarty.class.php | 27 +++++++++++++++------------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
+
+diff --git a/libs/Smarty.class.php b/libs/Smarty.class.php
+index d95ef95..d54f1b3 100644
+--- a/libs/Smarty.class.php
++++ b/libs/Smarty.class.php
+@@ -677,19 +677,20 @@ class Smarty extends Smarty_Internal_TemplateBase
+     /**
+      * removed properties
+      *
+-     * @var array
++     * @var string[]
+      */
+     private static $obsoleteProperties = array('resource_caching', 'template_resource_caching',
+                                                'direct_access_security', '_dir_perms', '_file_perms',
+                                                'plugin_search_order', 'inheritance_merge_compiled_includes');
+ 
+-    private static $accessMapGet = array('template_dir' => 'getTemplateDir', 'config_dir' => 'getConfigDir',
+-                                         'plugins_dir'  => 'getPluginsDir', 'compile_dir' => 'getCompileDir',
+-                                         'cache_dir'    => 'getCacheDir',);
+-
+-    private static $accessMapSet = array('template_dir' => 'setTemplateDir', 'config_dir' => 'setConfigDir',
+-                                         'plugins_dir'  => 'setPluginsDir', 'compile_dir' => 'setCompileDir',
+-                                         'cache_dir'    => 'setCacheDir',);
++    /**
++     * List of private properties which will call getter/setter ona direct access
++     *
++     * @var array
++     */
++    private static $accessMap = array('template_dir' => 'TemplateDir', 'config_dir' => 'ConfigDir',
++                                      'plugins_dir'  => 'PluginsDir', 'compile_dir' => 'CompileDir',
++                                      'cache_dir'    => 'CacheDir',);
+ 
+     /**#@-*/
+ 
+@@ -1347,8 +1348,9 @@ public function __destruct()
+     public function __get($name)
+     {
+ 
+-        if (isset(self::$accessMapGet[$name])) {
+-            return $this->{self::$accessMapGet[$name]}();
++        if (isset(self::$accessMap[$name])) {
++            $method = 'get' . self::$accessMap[$name];
++            return $this->{$method}();
+         } elseif (in_array($name, self::$obsoleteProperties)) {
+             return null;
+         } else {
+@@ -1366,8 +1368,9 @@ public function __get($name)
+      */
+     public function __set($name, $value)
+     {
+-        if (isset(self::$accessMapSet[$name])) {
+-            $this->{self::$accessMapSet[$name]}($value);
++        if (isset(self::$accessMap[$name])) {
++            $method = 'set' . self::$accessMap[$name];
++            $this->{$method}($value);
+         } elseif (in_array($name, self::$obsoleteProperties)) {
+             return;
+         } else {

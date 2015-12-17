@@ -16,12 +16,15 @@
 Name:           php-Smarty
 Summary:        Template/Presentation Framework for PHP
 Version:        3.1.28
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 URL:            http://www.smarty.net
 License:        LGPLv2+
 Group:          Development/Libraries
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+
+# https://github.com/smarty-php/smarty/issues/121
+Patch0:         %{name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -55,6 +58,8 @@ Autoloader: %{_datadir}/php/Smarty/autoload.php
 
 %prep
 %setup -qn %{gh_project}-%{gh_commit}
+
+%patch0 -p1
 
 cat << 'EOF' | tee libs/autoload.php
 <?php
@@ -99,6 +104,10 @@ version_compare(Smarty::SMARTY_VERSION, "%{version}", "=") or exit(1);
 
 
 %changelog
+* Thu Dec 17 2015 Remi Collet <remi@fedoraproject.org> - 3.1.28-2
+- add upstream patch, fix regression in 3.1.28, unable to load
+  template file, https://github.com/smarty-php/smarty/issues/121
+
 * Sun Dec 13 2015 Remi Collet <remi@fedoraproject.org> - 3.1.28-1
 - update to 3.1.28
 - add an autoloader
