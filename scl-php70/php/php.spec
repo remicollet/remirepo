@@ -1026,11 +1026,19 @@ sed -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
 
 # Some extensions have their own configuration file
 cp %{SOURCE50} 10-opcache.ini
-%ifarch x86_64
 %if 0%{?rhel} != 6
+cat << EOF >>10-opcache.ini
+
+; Enables or disables copying of PHP code (text segment) into HUGE PAGES.
+; This should improve performance, but requires appropriate OS configuration.
+opcache.huge_code_pages=0
+EOF
+%ifarch x86_64
 sed -e '/opcache.huge_code_pages/s/0/1/' -i 10-opcache.ini
 %endif
 %endif
+tail -n 5 10-opcache.ini
+
 cp %{SOURCE51} .
 sed -e 's:%{_root_sysconfdir}:%{_sysconfdir}:' \
     -i 10-opcache.ini
@@ -1139,6 +1147,9 @@ build --libdir=%{_libdir}/php \
       --enable-pcntl \
       --enable-opcache \
       --enable-opcache-file \
+%if 0%{?rhel} == 6
+      --disable-huge-code-pages \
+%endif
       --enable-phpdbg \
 %if %{with_imap}
       --with-imap=shared --with-imap-ssl \
@@ -1806,6 +1817,9 @@ fi
 
 
 %changelog
+* Thu Dec 17 2015 Remi Collet <remi@fedoraproject.org> 7.0.1-1.1
+- opcache: build with --disable-huge-code-pages on EL-6
+
 * Wed Dec 16 2015 Remi Collet <remi@fedoraproject.org> 7.0.1-1
 - Update to 7.0.1
   http://www.php.net/releases/7_0_1.php
