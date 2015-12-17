@@ -1,9 +1,27 @@
-Extension [ <persistent> extension #131 pcs version 1.3.0 ] {
+Extension [ <persistent> extension #137 pcs version 1.3.1 ] {
 
   - Dependencies {
     Dependency [ tokenizer (Required) ]
     Dependency [ pcre (Required) ]
     Dependency [ SPL (Required) ]
+  }
+
+  - Functions {
+    Function [ <internal:pcs> function _pcs_autoload ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $symbol ]
+        Parameter #1 [ <optional> $type ]
+      }
+    }
+    Function [ <internal:pcs> function _pcs_autoload_register ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <optional> $autoload_function ]
+        Parameter #1 [ <optional> $throw ]
+        Parameter #2 [ <optional> $prepend ]
+      }
+    }
   }
 
   - Classes [1] {
@@ -15,15 +33,7 @@ Extension [ <persistent> extension #131 pcs version 1.3.0 ] {
       - Static properties [0] {
       }
 
-      - Static methods [10] {
-        Method [ <internal:pcs> static public method autoloadHook ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $symbol ]
-            Parameter #1 [ <optional> $type ]
-          }
-        }
-
+      - Static methods [9] {
         Method [ <internal:pcs> static public method getFunction ] {
 
           - Parameters [1] {

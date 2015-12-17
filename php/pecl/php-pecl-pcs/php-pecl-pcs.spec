@@ -31,7 +31,7 @@
 
 Summary:        PHP Code Service
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.3.0
+Version:        1.3.1
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
@@ -127,6 +127,9 @@ cp -pr NTS ZTS
 cat << 'EOF' | tee %{ini_name}
 ; Enable '%{summary}' extension module
 extension=%{pecl_name}.so
+
+; For compatibility with Suhosin
+suhosin.executor.include.whitelist=pcs://
 EOF
 
 
@@ -264,8 +267,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec 17 2015 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
+- Update to 1.3.1 (beta)
+- add suhosin.executor.include.whitelist=pcs://
+
 * Sat Dec 05 2015 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
-- Update to 1.3.0
+- Update to 1.3.0 (beta)
 
 * Thu Dec 03 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - Update to 1.2.1 (beta)
