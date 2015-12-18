@@ -1,6 +1,6 @@
 Summary:    A portable abstraction library for DVD decryption
 Name:       libdvdcss
-Version:    1.3.0
+Version:    1.4.0
 Release:    1%{?dist}
 License:    GPLv2+
 Group:      System Environment/Libraries
@@ -58,7 +58,7 @@ rm -rf %{buildroot}
 %doc AUTHORS ChangeLog README
 %exclude %{_libdir}/%{name}.a
 %exclude %{_libdir}/%{name}.la
-%{_libdir}/%{name}.so.*
+%{_libdir}/%{name}.so.2*
 
 %files devel
 %defattr(-,root,root,-)
@@ -69,22 +69,25 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Sun Aug 17 2014 Remi Collet <RPMS@famillecollet.com> - 1.3.0-1
+* Fri Dec 18 2015 Remi Collet <remi@remirepo.net> - 1.4.0-1
+- Update to 1.4.0
+
+* Sun Aug 17 2014 Remi Collet <remi@remirepo.net> - 1.3.0-1
 - Update to 1.3.0
 
-* Wed Feb 27 2013 Remi Collet <RPMS@famillecollet.com> - 1.2.13-1
+* Wed Feb 27 2013 Remi Collet <remi@remirepo.net> - 1.2.13-1
 - Update to 1.2.13
 
-* Mon Mar 12 2012 Remi Collet <RPMS@famillecollet.com> - 1.2.12-1
+* Mon Mar 12 2012 Remi Collet <remi@remirepo.net> - 1.2.12-1
 - Update to 1.2.12
 
-* Sat Feb 18 2012 Remi Collet <RPMS@famillecollet.com> - 1.2.11-2
+* Sat Feb 18 2012 Remi Collet <remi@remirepo.net> - 1.2.11-2
 - If unsure, assume the drive is of RPC-I type
 
-* Mon Nov 21 2011 Remi Collet <RPMS@famillecollet.com> - 1.2.11-1
+* Mon Nov 21 2011 Remi Collet <remi@remirepo.net> - 1.2.11-1
 - Update to 1.2.11
 
-* Sat Oct 16 2010 Remi Collet <RPMS@famillecollet.com> - 1.2.10-1
+* Sat Oct 16 2010 Remi Collet <remi@remirepo.net> - 1.2.10-1
 - F-14 rebuild
 
 * Sun Sep 28 2008 Axel Thimm <Axel.Thimm@ATrpms.net> - 1.2.10-4
