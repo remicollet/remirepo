@@ -8,23 +8,20 @@
 # Please preserve changelog entries
 #
 
-%global gh_commit    d234f79203ca236093989c579c824a1a882d1153
+%global gh_commit    35480f10e7ce9b0fdaf23d3799d7b79463919b1e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     smarty-php
 %global gh_project   smarty
 
 Name:           php-Smarty
 Summary:        Template/Presentation Framework for PHP
-Version:        3.1.28
-Release:        2%{?dist}
+Version:        3.1.29
+Release:        1%{?dist}
 
 URL:            http://www.smarty.net
 License:        LGPLv2+
 Group:          Development/Libraries
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
-
-# https://github.com/smarty-php/smarty/issues/121
-Patch0:         %{name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -58,8 +55,6 @@ Autoloader: %{_datadir}/php/Smarty/autoload.php
 
 %prep
 %setup -qn %{gh_project}-%{gh_commit}
-
-%patch0 -p1
 
 cat << 'EOF' | tee libs/autoload.php
 <?php
@@ -104,6 +99,9 @@ version_compare(Smarty::SMARTY_VERSION, "%{version}", "=") or exit(1);
 
 
 %changelog
+* Sat Dec 26 2015 Remi Collet <remi@fedoraproject.org> - 3.1.29-1
+- update to 3.1.29
+
 * Thu Dec 17 2015 Remi Collet <remi@fedoraproject.org> - 3.1.28-2
 - add upstream patch, fix regression in 3.1.28, unable to load
   template file, https://github.com/smarty-php/smarty/issues/121
