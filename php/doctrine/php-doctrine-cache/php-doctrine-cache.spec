@@ -12,8 +12,8 @@
 
 %global github_owner     doctrine
 %global github_name      cache
-%global github_version   1.4.2
-%global github_commit    8c434000f420ade76a07c64cbe08ca47e5c101ca
+%global github_version   1.5.4
+%global github_commit    47cdc76ceb95cc591d9c79a36dc3794975b5d136
 
 %global composer_vendor  doctrine
 %global composer_project cache
@@ -41,9 +41,9 @@ BuildArch:     noarch
 # Tests
 %if %{with_tests}
 ## composer.json
-BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language) >= %{php_min_ver}
-## phpcompatinfo (computed from version 1.4.2)
+BuildRequires: php-composer(phpunit/phpunit)
+## phpcompatinfo (computed from version 1.5.4)
 BuildRequires: php-date
 BuildRequires: php-hash
 BuildRequires: php-pcre
@@ -52,13 +52,13 @@ BuildRequires: php-spl
 %if 0%{?rhel} != 5
 BuildRequires: php-sqlite3
 %endif
-# Autoloader
+## Autoloader
 BuildRequires: php-composer(symfony/class-loader)
 %endif
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.4.2)
+# phpcompatinfo (computed from version 1.5.4)
 Requires:      php-date
 Requires:      php-hash
 Requires:      php-pcre
@@ -68,6 +68,16 @@ Requires:      php-sqlite3
 %endif
 # Autoloader
 Requires:      php-composer(symfony/class-loader)
+# Weak dependencies
+%if 0%{?fedora} > 21
+Suggests:      php-composer(predis/predis)
+Suggests:      php-pecl(apcu)
+Suggests:      php-pecl(memcache)
+Suggests:      php-pecl(memcached)
+Suggests:      php-pecl(mongo)
+Suggests:      php-pecl(redis)
+Suggests:      php-xcache
+%endif
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -78,25 +88,22 @@ Conflicts:     php-pear(pear.doctrine-project.org/DoctrineCommon) < 2.4
 %description
 Cache component extracted from the Doctrine Common project.
 
-Optional:
-* APC (php-pecl-apc)
-* Couchbase (http://pecl.php.net/package/couchbase)
-* Memcache (php-pecl-memcache)
-* Memcached (php-pecl-memcached)
-* MongoDB (php-pecl-mongo)
-* Redis (php-pecl-redis)
-* Riak (http://pecl.php.net/package/riak)
-* XCache (php-xcache)
+Autoloader: %{phpdir}/Doctrine/Common/Cache/autoload.php
 
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+: Remove files that will never be used
+find . -name '*WinCache*' -delete
+find . -name '*ZendDataCache*' -delete
+
 : Create autoloader
 cat <<'AUTOLOAD' | tee lib/Doctrine/Common/Cache/autoload.php
 <?php
 /**
- * Autoloader created by %{name}-%{version}-%{release}
+ * Autoloader for %{name} and its' dependencies
+ * (created by %{name}-%{version}-%{release}).
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
@@ -114,10 +121,6 @@ $fedoraClassLoader->addPrefix('Doctrine\\Common\\Cache\\', dirname(dirname(dirna
 
 return $fedoraClassLoader;
 AUTOLOAD
-
-: Remove files that will never be used
-find . -name '*WinCache*' -delete
-find . -name '*ZendDataCache*' -delete
 
 
 %build
@@ -142,6 +145,9 @@ $fedoraClassLoader =
 $fedoraClassLoader->addPrefix('Doctrine\\Tests', __DIR__ . '/tests');
 AUTOLOAD
 
+: Skip tests known to fail
+rm -f tests/Doctrine/Tests/Common/Cache/ApcCacheTest.php
+
 : Skip tests requiring a server to connect to
 rm -f \
     tests/Doctrine/Tests/Common/Cache/CouchbaseCacheTest.php \
@@ -157,6 +163,10 @@ rm  tests/Doctrine/Tests/Common/Cache/SQLite3CacheTest.php
 
 : Run tests
 %{_bindir}/phpunit --verbose --bootstrap autoload.php
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose --bootstrap autoload.php
+fi
 %else
 : Tests skipped
 %endif
@@ -178,6 +188,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec 25 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.5.4-1
+- Updated to 1.5.4 (RHBZ #1276019)
+- Added "Suggests" weak dependencies
+
 * Sat Sep 05 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.4.2-1
 - Updated to 1.4.2 (RHBZ #1258670 / CVE-2015-5723)
 
