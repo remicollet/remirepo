@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #109 imagick version 3.4.0RC3 ] {
+Extension [ <persistent> extension #106 imagick version 3.4.0RC4 ] {
 
   - Dependencies {
     Dependency [ spl (Required) ]
@@ -304,7 +304,7 @@ Extension [ <persistent> extension #109 imagick version 3.4.0RC3 ] {
 
     Class [ <internal:imagick> <iterateable> class Imagick implements Iterator, Traversable, Countable ] {
 
-      - Constants [566] {
+      - Constants [567] {
         Constant [ integer COLOR_BLACK ] { 11 }
         Constant [ integer COLOR_BLUE ] { 12 }
         Constant [ integer COLOR_CYAN ] { 13 }
@@ -316,7 +316,7 @@ Extension [ <persistent> extension #109 imagick version 3.4.0RC3 ] {
         Constant [ integer COLOR_ALPHA ] { 19 }
         Constant [ integer COLOR_FUZZ ] { 20 }
         Constant [ integer IMAGICK_EXTNUM ] { 30400 }
-        Constant [ string IMAGICK_EXTVER ] { 3.4.0RC3 }
+        Constant [ string IMAGICK_EXTVER ] { 3.4.0RC4 }
         Constant [ integer QUANTUM_RANGE ] { 65535 }
         Constant [ integer USE_ZEND_MM ] { 0 }
         Constant [ integer COMPOSITE_DEFAULT ] { 40 }
@@ -514,7 +514,7 @@ Extension [ <persistent> extension #109 imagick version 3.4.0RC3 ] {
         Constant [ integer NOISE_RANDOM ] { 7 }
         Constant [ integer CHANNEL_UNDEFINED ] { 0 }
         Constant [ integer CHANNEL_RED ] { 1 }
-        Constant [ integer CHANNEL_GRAY ] { 128 }
+        Constant [ integer CHANNEL_GRAY ] { 1 }
         Constant [ integer CHANNEL_CYAN ] { 1 }
         Constant [ integer CHANNEL_GREEN ] { 2 }
         Constant [ integer CHANNEL_MAGENTA ] { 2 }
@@ -530,6 +530,7 @@ Extension [ <persistent> extension #109 imagick version 3.4.0RC3 ] {
         Constant [ integer CHANNEL_RGBA ] { 15 }
         Constant [ integer CHANNEL_TRUEALPHA ] { 64 }
         Constant [ integer CHANNEL_RGBS ] { 128 }
+        Constant [ integer CHANNEL_GRAY_CHANNELS ] { 128 }
         Constant [ integer CHANNEL_SYNC ] { 256 }
         Constant [ integer CHANNEL_COMPOSITES ] { 47 }
         Constant [ integer METRIC_UNDEFINED ] { 0 }
@@ -735,9 +736,6 @@ Extension [ <persistent> extension #109 imagick version 3.4.0RC3 ] {
         Constant [ integer LAYERMETHOD_OPTIMIZEIMAGE ] { 7 }
         Constant [ integer LAYERMETHOD_REMOVEDUPS ] { 10 }
         Constant [ integer LAYERMETHOD_REMOVEZERO ] { 11 }
-        Constant [ integer LAYERMETHOD_MERGE ] { 13 }
-        Constant [ integer LAYERMETHOD_FLATTEN ] { 14 }
-        Constant [ integer LAYERMETHOD_MOSAIC ] { 15 }
         Constant [ integer LAYERMETHOD_TRIMBOUNDS ] { 16 }
         Constant [ integer ORIENTATION_UNDEFINED ] { 0 }
         Constant [ integer ORIENTATION_TOPLEFT ] { 1 }
@@ -760,20 +758,23 @@ Extension [ <persistent> extension #109 imagick version 3.4.0RC3 ] {
         Constant [ integer DISTORTION_POLAR ] { 10 }
         Constant [ integer DISTORTION_DEPOLAR ] { 11 }
         Constant [ integer DISTORTION_BARREL ] { 14 }
-        Constant [ integer DISTORTION_BARRELINVERSE ] { 15 }
         Constant [ integer DISTORTION_SHEPARDS ] { 16 }
         Constant [ integer DISTORTION_SENTINEL ] { 18 }
+        Constant [ integer DISTORTION_BARRELINVERSE ] { 15 }
         Constant [ integer DISTORTION_BILINEARFORWARD ] { 6 }
         Constant [ integer DISTORTION_BILINEARREVERSE ] { 7 }
         Constant [ integer DISTORTION_RESIZE ] { 17 }
         Constant [ integer DISTORTION_CYLINDER2PLANE ] { 12 }
         Constant [ integer DISTORTION_PLANE2CYLINDER ] { 13 }
+        Constant [ integer LAYERMETHOD_MERGE ] { 13 }
+        Constant [ integer LAYERMETHOD_FLATTEN ] { 14 }
+        Constant [ integer LAYERMETHOD_MOSAIC ] { 15 }
         Constant [ integer ALPHACHANNEL_ACTIVATE ] { 1 }
-        Constant [ integer ALPHACHANNEL_DEACTIVATE ] { 4 }
         Constant [ integer ALPHACHANNEL_RESET ] { 7 }
         Constant [ integer ALPHACHANNEL_SET ] { 8 }
         Constant [ integer ALPHACHANNEL_UNDEFINED ] { 0 }
         Constant [ integer ALPHACHANNEL_COPY ] { 3 }
+        Constant [ integer ALPHACHANNEL_DEACTIVATE ] { 4 }
         Constant [ integer ALPHACHANNEL_EXTRACT ] { 5 }
         Constant [ integer ALPHACHANNEL_OPAQUE ] { 6 }
         Constant [ integer ALPHACHANNEL_SHAPE ] { 9 }
