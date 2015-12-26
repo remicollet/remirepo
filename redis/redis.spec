@@ -25,7 +25,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             redis
-Version:          3.0.5
+Version:          3.0.6
 Release:          1%{?dist}
 Summary:          A persistent key-value database
 
@@ -258,6 +258,10 @@ fi
 
 
 %changelog
+* Sat Dec 26 2015 Remi Collet <remi@fedoraproject.org> - 3.0.6-1
+- Redis 3.0.6 - Release date: 18 Dec 2015
+- Upgrade urgency: MODERATE
+
 * Fri Oct 16 2015 Remi Collet <remi@fedoraproject.org> - 3.0.5-1
 - Redis 3.0.5 - Release date: 15 Oct 2015
 - Upgrade urgency: MODERATE
