@@ -25,30 +25,20 @@
 %{!?__php:       %global __php        %{_bindir}/php}
 
 %global pecl_name mailparse
-%global with_zts  0%{?__ztsphp:1}
-%if "%{php_version}" < "5.6"
-# After mbstring
-%global ini_name  z-%{pecl_name}.ini
-%else
-# After 20-mbstring
+%global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
 %global ini_name  40-%{pecl_name}.ini
-%endif
 
 Summary:   PHP PECL package for parsing and working with email messages
 Name:      %{?sub_prefix}php-pecl-mailparse
-Version:   2.1.6
-Release:   9%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:   3.0.0
+Release:   1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:   PHP
 Group:     Development/Languages
 URL:       http://pecl.php.net/package/mailparse
 Source0:   http://pecl.php.net/get/mailparse-%{version}.tgz
 
-# https://bugs.php.net/65861 - Please Provides LICENSE file
-# URL from mailparse.c header
-Source1:   http://www.php.net/license/2_02.txt
-
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: %{?scl_prefix}php-devel
+BuildRequires: %{?scl_prefix}php-devel > 7
 BuildRequires: %{?scl_prefix}php-pear
 # mbstring need for tests
 BuildRequires: %{?scl_prefix}php-mbstring
@@ -71,13 +61,15 @@ Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php54-pecl-%{pecl_name}
 Obsoletes:     php54w-pecl-%{pecl_name}
-%if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
 Obsoletes:     php55w-pecl-%{pecl_name}
-%endif
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name}
 Obsoletes:     php56w-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name}
+Obsoletes:     php70w-pecl-%{pecl_name}
 %endif
 %endif
 
@@ -104,7 +96,6 @@ mv %{pecl_name}-%{version} NTS
 sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd NTS
-cp %{SOURCE1} LICENSE
 extver=$(sed -n '/#define PHP_MAILPARSE_VERSION/{s/.* "//;s/".*$//;p}' php_mailparse.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream version is ${extver}, expecting %{version}.
@@ -157,7 +148,7 @@ install -Dpm 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # Documentation
-for i in LICENSE $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -234,6 +225,9 @@ fi
 
 
 %changelog
+* Sat Dec 26 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- update to 3.0.0 for PHP 7
+
 * Tue Jun 23 2015 Remi Collet <rcollet@redhat.com> - 2.1.6-9
 - allow build against rh-php56 (as more-php56)
 - don't install/register tests
