@@ -30,19 +30,16 @@
 %else
 %global ini_name    40-%{pecl_name}.ini
 %endif
-%global prever      alpha1
+%global prever      alpha2
 
 Summary:       Communicate with any AMQP compliant server
 Name:          %{?sub_prefix}php-pecl-amqp
 Version:       1.7.0
-Release:       0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
-
-# https://github.com/pdezwart/php-amqp/pull/182
-Patch0:        %{pecl_name}-pr182.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 5.2.0
@@ -110,7 +107,6 @@ sed -e 's/role="test"/role="src"/' -i package.xml
 
 mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
-%patch0 -p1 -b .pr182
 
 # Upstream often forget to change this
 extver=$(sed -n '/#define PHP_AMQP_VERSION/{s/.* "//;s/".*$//;p}' php_amqp.h)
@@ -292,6 +288,9 @@ fi
 
 
 %changelog
+* Sat Dec 26 2015 Remi Collet <remi@fedoraproject.org> - 1.7.0-0.2.alpha2
+- update to 1.7.0alpha2
+
 * Thu Nov 12 2015 Remi Collet <remi@fedoraproject.org> - 1.7.0-0.1.alpha1
 - update to 1.7.0alpha1
 

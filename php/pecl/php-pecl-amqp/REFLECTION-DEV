@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #71 amqp version 1.7.0alpha1 ] {
+Extension [ <persistent> extension #74 amqp version 1.7.0alpha2 ] {
 
   - INI {
     Entry [ amqp.host <ALL> ]
@@ -918,7 +918,7 @@ Extension [ <persistent> extension #71 amqp version 1.7.0alpha1 ] {
       }
     }
 
-    Class [ <internal:amqp> class AMQPException extends Exception implements Throwable ] {
+    Class [ <internal:amqp> class AMQPException extends Exception ] {
 
       - Constants [0] {
       }
@@ -949,33 +949,33 @@ Extension [ <persistent> extension #71 amqp version 1.7.0alpha1 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:amqp> class AMQPConnectionException extends AMQPException implements Throwable ] {
+    Class [ <internal:amqp> class AMQPConnectionException extends AMQPException ] {
 
       - Constants [0] {
       }
@@ -1006,33 +1006,33 @@ Extension [ <persistent> extension #71 amqp version 1.7.0alpha1 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:amqp> class AMQPChannelException extends AMQPException implements Throwable ] {
+    Class [ <internal:amqp> class AMQPChannelException extends AMQPException ] {
 
       - Constants [0] {
       }
@@ -1063,33 +1063,33 @@ Extension [ <persistent> extension #71 amqp version 1.7.0alpha1 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:amqp> class AMQPQueueException extends AMQPException implements Throwable ] {
+    Class [ <internal:amqp> class AMQPQueueException extends AMQPException ] {
 
       - Constants [0] {
       }
@@ -1120,33 +1120,33 @@ Extension [ <persistent> extension #71 amqp version 1.7.0alpha1 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:amqp> class AMQPExchangeException extends AMQPException implements Throwable ] {
+    Class [ <internal:amqp> class AMQPExchangeException extends AMQPException ] {
 
       - Constants [0] {
       }
@@ -1177,28 +1177,28 @@ Extension [ <persistent> extension #71 amqp version 1.7.0alpha1 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        Method [ <internal:Core, inherits Exception> public method __toString ] {
         }
       }
     }
