@@ -1,0 +1,33 @@
+From c6cc67b5721acf927d712267bebe9d5180e31fc1 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sat, 26 Dec 2015 17:30:16 +0100
+Subject: [PATCH] Fix PHP 7 / 32bits build
+
+---
+ phongo_compat.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/phongo_compat.h b/phongo_compat.h
+index da4aed1..adbf21c 100644
+--- a/phongo_compat.h
++++ b/phongo_compat.h
+@@ -99,7 +99,8 @@
+ 		int tmp_len; \
+ 		mongoc_log(MONGOC_LOG_LEVEL_WARNING, MONGOC_LOG_DOMAIN, "Integer overflow detected on your platform: %lld", value); \
+ 		tmp_len = spprintf(&tmp, 0, "%lld", value); \
+-		add_index_stringl(zval, index, tmp, tmp_len, 0); \
++		ADD_ASSOC_STRINGL(zval, index, tmp, tmp_len); \
++		efree(tmp); \
+ 	} else { \
+ 		add_index_long(zval, index, val); \
+ 	}
+@@ -109,7 +110,8 @@
+ 		int tmp_len; \
+ 		mongoc_log(MONGOC_LOG_LEVEL_WARNING, MONGOC_LOG_DOMAIN, "Integer overflow detected on your platform: %lld", value); \
+ 		tmp_len = spprintf(&tmp, 0, "%lld", value); \
+-		add_assoc_stringl(zval, key, tmp, tmp_len, 0); \
++		ADD_ASSOC_STRINGL(zval, key, tmp, tmp_len); \
++		efree(tmp); \
+ 	} else { \
+ 		add_assoc_long(zval, key, value); \
+ 	}

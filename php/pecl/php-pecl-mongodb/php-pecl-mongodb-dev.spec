@@ -11,7 +11,7 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global with_zts   0%{?__ztsphp:1}
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  mongodb
 %if "%{php_version}" < "5.6"
 %global ini_name   %{pecl_name}.ini
@@ -24,12 +24,15 @@
 
 Summary:        MongoDB driver for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.1.0
+Version:        1.1.1
 Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
+
+# https://github.com/mongodb/mongo-php-driver/pull/185
+Patch0:         %{pecl_name}-pr185.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.4
@@ -93,6 +96,7 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd NTS
+%patch0 -p1 -b .pr185
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define MONGODB_VERSION_S/{s/.* "//;s/".*$//;p}' php_phongo.h)
@@ -223,6 +227,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Dec 26 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- Update to 1.1.1 (stable)
+- add patch for 32bits build,
+  open https://github.com/mongodb/mongo-php-driver/pull/185
+
 * Wed Dec 16 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - Update to 1.1.0 (stable)
 - raise dependency on libmongoc >= 1.3.0
