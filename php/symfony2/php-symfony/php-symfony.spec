@@ -14,8 +14,8 @@
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.7.7
-%global github_commit    cc69dbd24b4b2e6de60b2414ef95da2794f459a2
+%global github_version   2.7.8
+%global github_commit    ad264021e44a5aaa132f16aef69f92e56795683e
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -90,7 +90,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       1%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -449,6 +449,7 @@ Requires: php-composer(%{composer_vendor}/config)               =  %{version}
 Requires: php-composer(%{composer_vendor}/dependency-injection) =  %{version}
 Requires: php-composer(%{composer_vendor}/event-dispatcher)     =  %{version}
 Requires: php-composer(%{composer_vendor}/filesystem)           =  %{version}
+Requires: php-composer(%{composer_vendor}/finder)               =  %{version}
 Requires: php-composer(%{composer_vendor}/http-foundation)      =  %{version}
 Requires: php-composer(%{composer_vendor}/http-kernel)          =  %{version}
 Requires: php-composer(%{composer_vendor}/routing)              =  %{version}
@@ -461,8 +462,8 @@ Requires: php-composer(doctrine/annotations)                    >= %{doctrine_an
 Requires: php-composer(doctrine/annotations)                    <  %{doctrine_annotations_max_ver}
 # composer.json: optional
 Requires: php-composer(%{composer_vendor}/console)              =  %{version}
-Requires: php-composer(%{composer_vendor}/finder)               =  %{version}
 Requires: php-composer(%{composer_vendor}/form)                 =  %{version}
+Requires: php-composer(%{composer_vendor}/process)              =  %{version}
 Requires: php-composer(%{composer_vendor}/serializer)           =  %{version}
 Requires: php-composer(%{composer_vendor}/validator)            =  %{version}
 Requires: php-composer(%{composer_vendor}/yaml)                 =  %{version}
@@ -1746,9 +1747,7 @@ sed -e 's#function testFormatWithTimezoneFromEnvironmentVariable#function SKIP_t
     -i src/Symfony/Component/Intl/Tests/DateFormatter/Verification/IntlDateFormatterTest.php
 sed -e 's#function testTTYCommand#function SKIP_testTTYCommand#' \
     -e 's#function testTTYCommandExitCode#function SKIP_testTTYCommandExitCode#' \
-    -i src/Symfony/Component/Process/Tests/AbstractProcessTest.php
-sed -e 's#function testTTYCommandExitCode#function SKIP_testTTYCommandExitCode#' \
-    -i src/Symfony/Component/Process/Tests/SigchildDisabledProcessTest.php
+    -i src/Symfony/Component/Process/Tests/ProcessTest.php
 sed -e 's#function testSpecialVars56#function SKIP_testSpecialVars56#' \
     -e 's#function testGlobalsNoExt#function SKIP_testGlobalsNoExt#' \
     -e 's#function testBuggyRefs#function SKIP_testBuggyRefs#' \
@@ -2397,7 +2396,7 @@ exit $RET
 %exclude %{symfony_dir}/Component/Security/composer.json
 %exclude %{symfony_dir}/Component/Security/phpunit.*
 %exclude %{symfony_dir}/Component/Security/*/phpunit.*
-#exclude %{symfony_dir}/Component/Security/Tests
+#exclude %%{symfony_dir}/Component/Security/Tests
 %exclude %{symfony_dir}/Component/Security/*/Tests
 %exclude %{symfony_dir}/Component/Security/*/LICENSE
 %exclude %{symfony_dir}/Component/Security/*/*.md
@@ -2518,6 +2517,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Sun Dec 27 2015 Remi Collet <remi@fedoraproject.org> - 2.7.8-1
+- Update to 2.7.8
+
 * Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 2.7.7-1
 - Update to 2.7.7
 - lighter autoloader for components
