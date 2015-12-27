@@ -18,7 +18,7 @@
 %define roundcubedir %{_datadir}/roundcubemail
 %global _logdir /var/log  
 Name: roundcubemail
-Version:  1.1.3
+Version:  1.1.4
 Release:  1%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
@@ -80,20 +80,20 @@ Requires: php-simplexml
 Requires: php-sockets
 Requires: php-spl
 Requires: php-xml
-# From composer.json, require
+# From composer.json-dist, require
 #        "php": ">=5.3.7",
 #        "roundcube/plugin-installer": "~0.1.6",
 #        "pear-pear.php.net/auth_sasl": "~1.0.6",
 #        "pear-pear.php.net/net_idna2": "~0.1.1",
 #        "pear-pear.php.net/net_sieve": "~1.3.4",
 #        "pear-pear.php.net/mail_mime": "~1.9.0",
-#        "pear-pear.php.net/net_smtp": "~1.6.3",
+#        "pear-pear.php.net/net_smtp": "~1.7.1",
 #        "patchwork/utf8": "~1.2.3"
 #   not available and optional patchwork/utf8
 #   not available and doesn't make sense roundcube/plugin-installer
 Requires: php-pear(Auth_SASL)       >= 1.0.6
 Requires: php-pear(Mail_Mime)       >= 1.9.0
-Requires: php-pear(Net_SMTP)        >= 1.6.3
+Requires: php-pear(Net_SMTP)        >= 1.7.1
 Requires: php-pear(Net_Sieve)       >= 1.3.4
 Requires: php-pear(Net_IDNA2)       >= 0.1.1
 # From composer.json, require-dev
@@ -224,9 +224,9 @@ touch %{buildroot}%{_sysconfdir}/roundcubemail/config.inc.php
 mv %{buildroot}%{roundcubedir}/config/* %{buildroot}%{_sysconfdir}/roundcubemail/
 
 # clean up the buildroot
-rm -rf %{buildroot}%{roundcubedir}/{config,logs,temp}
-rm -rf %{buildroot}%{roundcubedir}/{CHANGELOG,INSTALL,LICENSE,README,UPGRADING}
-rm     %{buildroot}%{roundcubedir}/{composer.json-dist,Dockerfile}
+rm -r %{buildroot}%{roundcubedir}/{config,logs,temp}
+rm -r %{buildroot}%{roundcubedir}/{CHANGELOG,INSTALL,LICENSE,README.md,UPGRADING}
+rm    %{buildroot}%{roundcubedir}/composer.json-dist
 
 
 %pre
@@ -270,6 +270,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 27 2015 Remi Collet <remi@fedoraproject.org> - 1.1.4-1
+- update to 1.1.4
+- raise dependency on Net_SMTP 1.7.1
+
 * Tue Sep 15 2015 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
 - update to 1.1.3
 - raise dependencies on Mail_Mime 1.9.0, Net_Sieve 1.3.4,
