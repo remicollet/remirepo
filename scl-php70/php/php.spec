@@ -125,13 +125,13 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver        RC1
+%global rcver        RC1
 %global rpmrel       1
 
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 7.0.1
+Version: 7.0.2
 %if 0%{?rcver:1}
 Release: 0.%{rpmrel}.%{rcver}%{?dist}
 %else
@@ -169,7 +169,7 @@ Source52: 20-oci8.ini
 Patch5: php-7.0.0-includedir.patch
 Patch6: php-5.6.3-embed.patch
 Patch7: php-5.3.0-recode.patch
-Patch8: php-7.0.0-libdb.patch
+Patch8: php-7.0.2-libdb.patch
 Patch9: php-5.5.30-curl.patch
 
 # Fixes for extension modules
@@ -1817,7 +1817,8 @@ fi
 
 
 %changelog
-* Thu Dec 17 2015 Remi Collet <remi@fedoraproject.org> 7.0.1-1.1
+* Sun Dec 27 2015 Remi Collet <remi@fedoraproject.org> 7.0.2-0.1.0RC1
+- Update to 7.0.2RC1
 - opcache: build with --disable-huge-code-pages on EL-6
 
 * Wed Dec 16 2015 Remi Collet <remi@fedoraproject.org> 7.0.1-1
