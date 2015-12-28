@@ -30,16 +30,17 @@
 
 Summary:       Yet Another Framework
 Name:          %{?sub_prefix}php-pecl-yaf
-Version:       3.0.1
+Version:       3.0.2
 %if 0%{?gh_date:1}
 Release:       0.8.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaf
-Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 Source1:       %{pecl_name}.ini
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -86,8 +87,12 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -qc
+%if 0%{?gh_date:1}
 mv %{gh_project}-%{gh_commit} NTS
 mv NTS/package.xml .
+%else
+mv %{pecl_name}-%{version} NTS
+%endif
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' -i package.xml
@@ -213,6 +218,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 28 2015 Remi Collet <remi@fedoraproject.org> - 3.0.2-1
+- update to 3.0.2 (beta, php 7)
+
 * Sun Dec 13 2015 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
 - update to 3.0.1 (beta, php 7)
 
