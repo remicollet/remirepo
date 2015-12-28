@@ -16,7 +16,7 @@
 %endif
 %global prever      beta
 
-%define roundcubedir %{_datadir}/roundcubemail
+%global roundcubedir %{_datadir}/roundcubemail
 %global _logdir /var/log  
 Name: roundcubemail
 Version:  1.2
@@ -96,10 +96,9 @@ Requires: php-xml
 #        "roundcube/net_sieve": "~1.5.0"
 #   not available and doesn't make sense roundcube/plugin-installer
 Requires: php-pear(Auth_SASL)       >= 1.0.6
+Requires: php-pear(Net_IDNA2)       >= 0.1.1
 Requires: php-pear(Mail_Mime)       >= 1.10.0
 Requires: php-pear(Net_SMTP)        >= 1.7.1
-Requires: php-pear(Net_Sieve)       >= 1.3.4
-Requires: php-pear(Net_IDNA2)       >= 0.1.1
 Requires: php-pear(Crypt_GPG)       >= 1.4.0
 Requires: php-composer(roundcube/net_sieve) >= 1.5.0
 # From composer.json-dist, suggest

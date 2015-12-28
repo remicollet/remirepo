@@ -15,7 +15,7 @@
 %global with_phpfpm 0
 %endif
 
-%define roundcubedir %{_datadir}/roundcubemail
+%global roundcubedir %{_datadir}/roundcubemail
 %global _logdir /var/log  
 Name: roundcubemail
 Version:  1.1.4
