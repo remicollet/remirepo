@@ -1,0 +1,22 @@
+From e8e951098db781422f7ed557d97b1b218d7529de Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Mon, 28 Dec 2015 08:47:37 +0100
+Subject: [PATCH] add .log suffix to all log file names
+
+---
+ program/lib/Roundcube/rcube.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/program/lib/Roundcube/rcube.php b/program/lib/Roundcube/rcube.php
+index 7388472..c2fc70f 100644
+--- a/program/lib/Roundcube/rcube.php
++++ b/program/lib/Roundcube/rcube.php
+@@ -1184,7 +1184,7 @@ public static function write_log($name, $line)
+         }
+ 
+         // try to open specific log file for writing
+-        $logfile = $log_dir.'/'.$name;
++        $logfile = $log_dir.'/'.$name.'.log';
+ 
+         if ($fp = @fopen($logfile, 'a')) {
+             fwrite($fp, $line);

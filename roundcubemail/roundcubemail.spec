@@ -19,7 +19,7 @@
 %global _logdir /var/log  
 Name: roundcubemail
 Version:  1.1.4
-Release:  1%{?dist}
+Release:  2%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
 Group: Applications/System
@@ -47,6 +47,10 @@ Patch0: roundcubemail-1.1.1-no_swf.patch
 
 # Non-upstreamable: Adjusts config path to Fedora policy
 Patch1: roundcubemail-1.1.0-confpath.patch
+
+# add .log prefix to all log file names
+# see https://github.com/roundcube/roundcubemail/pull/313
+Patch2: roundcubemail-pr313.patch
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root%(%{__id_u} -n)
@@ -140,6 +144,7 @@ CSS 2.
 %setup -q -n roundcubemail-%{version}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 # fix permissions and remove any .htaccess files
 find . -type f -print | xargs chmod a-x
@@ -264,12 +269,16 @@ rm -rf %{buildroot}
 %if %{with_phpfpm}
 %config(noreplace) %{_sysconfdir}/nginx/default.d/%{name}.conf
 %endif
-%attr(0775,root,apache) %dir /var/log/roundcubemail
-%attr(0775,root,apache) %dir /var/lib/roundcubemail
+%attr(0770,root,apache) %dir /var/log/roundcubemail
+%attr(0770,root,apache) %dir /var/lib/roundcubemail
 %config(noreplace) %{_sysconfdir}/logrotate.d/roundcubemail
 
 
 %changelog
+* Mon Dec 28 2015 Remi Collet <remi@fedoraproject.org> - 1.1.4-2
+- add .log suffix to all log files, and rotate all #1269164
+- more secure permissions on /var/log and /var/lib #1269155
+
 * Sun Dec 27 2015 Remi Collet <remi@fedoraproject.org> - 1.1.4-1
 - update to 1.1.4
 - raise dependency on Net_SMTP 1.7.1
