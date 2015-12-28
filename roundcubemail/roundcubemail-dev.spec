@@ -14,12 +14,13 @@
 %else
 %global with_phpfpm 0
 %endif
+%global prever      beta
 
 %define roundcubedir %{_datadir}/roundcubemail
 %global _logdir /var/log  
 Name: roundcubemail
-Version:  1.1.4
-Release:  2%{?dist}
+Version:  1.2
+Release:  0.1.%{prever}%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
 Group: Applications/System
@@ -36,14 +37,14 @@ Group: Applications/System
 # http://www.tinymce.com/
 License: GPLv3+ with exceptions and GPLv3+ and GPLv2 and LGPLv2+ and CC-BY-SA and (MIT or GPLv2)
 URL: http://www.roundcube.net
-Source0: https://downloads.sourceforge.net/roundcubemail/roundcubemail-%{version}.tar.gz
+Source0: https://downloads.sourceforge.net/roundcubemail/roundcubemail-%{version}%{?prever:-%{prever}}.tar.gz
 Source1: roundcubemail.httpd
 Source3: roundcubemail.nginx
 Source2: roundcubemail.logrotate
 Source4: roundcubemail-README.rpm
 # Elegantly handle removal of moxieplayer Flash binary in tinymce
 # media plugin (see "Drop precompiled flash" in %%prep)
-Patch0: roundcubemail-1.1.1-no_swf.patch
+Patch0: roundcubemail-1.2-no_swf.patch
 
 # Non-upstreamable: Adjusts config path to Fedora policy
 Patch1: roundcubemail-1.1.0-confpath.patch
@@ -89,22 +90,19 @@ Requires: php-xml
 #        "roundcube/plugin-installer": "~0.1.6",
 #        "pear-pear.php.net/auth_sasl": "~1.0.6",
 #        "pear-pear.php.net/net_idna2": "~0.1.1",
-#        "pear-pear.php.net/net_sieve": "~1.3.4",
-#        "pear-pear.php.net/mail_mime": "~1.9.0",
+#        "pear-pear.php.net/mail_mime": "~1.10.0",
 #        "pear-pear.php.net/net_smtp": "~1.7.1",
-#        "patchwork/utf8": "~1.2.3"
-#   not available and optional patchwork/utf8
+#        "pear-pear.php.net/crypt_gpg": "~1.4.0",
+#        "roundcube/net_sieve": "~1.5.0"
 #   not available and doesn't make sense roundcube/plugin-installer
 Requires: php-pear(Auth_SASL)       >= 1.0.6
-Requires: php-pear(Mail_Mime)       >= 1.9.0
+Requires: php-pear(Mail_Mime)       >= 1.10.0
 Requires: php-pear(Net_SMTP)        >= 1.7.1
 Requires: php-pear(Net_Sieve)       >= 1.3.4
 Requires: php-pear(Net_IDNA2)       >= 0.1.1
-# From composer.json, require-dev
-#        "pear-pear.php.net/crypt_gpg": "*",
-#        "phpunit/phpunit": "*"
-#   not available (but only for dev) php-pear(Crypt_GPG) >= 1.2.0
-# From composer.json, suggest
+Requires: php-pear(Crypt_GPG)       >= 1.4.0
+Requires: php-composer(roundcube/net_sieve) >= 1.5.0
+# From composer.json-dist, suggest
 Requires: php-pear(Net_LDAP2)       >= 2.0.12
 Requires: php-composer(kolab/Net_LDAP3)
 # mailcap for /etc/mime.types
@@ -141,7 +139,7 @@ CSS 2.
 
 
 %prep
-%setup -q -n roundcubemail-%{version}
+%setup -q -n roundcubemail-%{version}%{?prever:-%{prever}}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -159,10 +157,10 @@ sed -e '/^#!/s:/usr/bin/env php:/usr/bin/php:' \
 sed -i 's/\r//' SQL/mssql.initial.sql
 
 # Drop precompiled flash
-find . -type f -name '*.swf' | xargs rm -f
+find . -type f -name '*.swf'  -exec rm {} \; -print
 
 # drop file from patch
-find . -type f -name '*.orig' | xargs rm -f
+find . -type f -name '*.orig' -exec rm {} \; -print
 
 # Wipe bbcode plugin from bundled TinyMCE to make doubleplus sure we cannot
 # be vulnerable to CVE-2012-4230, unaddressed upstream
@@ -275,6 +273,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 28 2015 Remi Collet <remi@fedoraproject.org> - 1.2-0.1.beta
+- update to 1.2-beta
+- raise dependency to Mail_Mime ~1.10.0
+- add dependency on roundcube/net_sieve ~1.5.0
+- add dependency on Crypt_GPG ~1.4.0
+
 * Mon Dec 28 2015 Remi Collet <remi@fedoraproject.org> - 1.1.4-2
 - add .log suffix to all log files, and rotate all #1269164
 - more secure permissions on /var/log and /var/lib #1269155
