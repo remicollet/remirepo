@@ -19,7 +19,7 @@
 
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        2.0.0
+Version:        2.0.1
 Release:        0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Libraries
@@ -29,7 +29,6 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-devel >= 7.0.1
-# Upstream says 1.3.22, but 1.3.20 seems ok.
 BuildRequires:  GraphicsMagick-devel >= 1.3.20
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
@@ -202,6 +201,10 @@ export TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so"
 
 
 %changelog
+* Tue Dec 29 2015 Remi Collet <remi@fedoraproject.org> - 2.0.1-0.1.RC1
+- Update to 2.0.1RC1 (php 7, beta)
+- lower dependency on GraphicsMagick >= 1.3.20
+
 * Tue Dec 29 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.1.RC1
 - Update to 2.0.0RC1 (php 7, beta)
 - raise dependency on GraphicsMagick >= 1.3.22
