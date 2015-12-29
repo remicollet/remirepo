@@ -5,7 +5,7 @@ if [ "$1" = "" ]; then
    exit 1
 fi
 REV=$1
-VER=${2-0.5}
+VER=${2-0.51}
 RPM=$(php -r "printf('%.2f', $VER);")
 
 svn export -r $REV svn://svn.tuxfamily.org/svnroot/qet/qet/trunk qelectrotech-${VER}-svn${REV}

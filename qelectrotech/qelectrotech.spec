@@ -6,9 +6,9 @@
 #
 # Please, preserve the changelog entries
 #
-#global svnrel 4266
+%global svnrel 4292
 %global rdate  20151127
-%global upver  0.5
+%global upver  0.51
 
 Name:        qelectrotech
 
@@ -31,7 +31,7 @@ Summary(ru): Редактор электрических схем
 # Upstream version is a float so 0.11 < 0.2 < 0.21 < 0.3
 # So use %.2f with upstream acknowledgment
 # Remember to check rdate and upver macro on each update
-Version:     0.50
+Version:     0.51
 %if 0%{?svnrel}
 Release:     0.4.svn%{svnrel}%{?dist}
 %else
@@ -260,6 +260,9 @@ fi
 
 
 %changelog
+* Tue Dec 29 2015 Remi Collet <remi@fedoraproject.org> - 0.51-0.1.svn4292
+- Update to 0.51 snapshot revision 4292
+
 * Fri Nov 27 2015 Remi Collet <remi@fedoraproject.org> - 0.50-1
 - update to 0.5
 
