@@ -54,7 +54,7 @@ BuildRequires:   php-bartlett-PHP-Reflect >= 3.1.1-3
 #        "php": ">=5.4.0"
 #        "symfony/console": "~2.5",
 #        "sebastian/version": "~1.0"
-Requires:       php(language) >= 5.3.0
+Requires:       php(language) >= 5.4.0
 Requires:       php-cli
 Requires:       php-spl
 Requires:       php-composer(symfony/console)                   >= 2.5
@@ -136,7 +136,7 @@ install -D -p -m 755 bin/umlwriter  %{buildroot}%{_bindir}/umlwriter
 
 %changelog
 * Thu Dec 10 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
-- update to 1.0.1
+- update to 1.1.0
 - raise dependency on php >= 5.4.0
 - allow php-reflect 4
 
