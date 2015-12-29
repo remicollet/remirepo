@@ -165,11 +165,14 @@ fi
 
 
 %changelog
-* Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 4.5.2-1
-- update to 4.5.2
+* Thu Dec 10 2015 Remi Collet <remi@fedoraproject.org> - 5.0.0-1
+- update to 5.0.0
 - raise dependency on bartlett/php-reflect ~4.0
 - raise minimal php version to 5.4
 - add dependency on bartlett/php-compatinfo-db
+
+* Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 4.5.2-1
+- update to 4.5.2
 
 * Sun Oct 11 2015 Remi Collet <remi@fedoraproject.org> - 4.5.1-1
 - update to 4.5.1
