@@ -12,8 +12,8 @@
 
 %global github_owner     symfony
 %global github_name      polyfill
-%global github_version   1.0.0
-%global github_commit    fef21adc706d3bb8f31d37c503ded2160c76c64a
+%global github_version   1.0.1
+%global github_commit    dd9db1dc4013821a63f7afbd8340dd57939fe674
 
 %global composer_vendor  symfony
 %global composer_project polyfill
@@ -28,7 +28,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       3%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       Symfony polyfills backporting features to lower PHP versions
 
 Group:         Development/Libraries
@@ -170,6 +170,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec 29 2015 Shawn Iwinski <shawn@iwin.ski> - 1.0.1-1
+- update to 1.0.1
+
 * Mon Dec 07 2015 Shawn Iwinski <shawn@iwin.ski> - 1.0.0-3
 - Fixed Util docs
 - Added "%%dir %%{phpdir}/Symfony" to %%files
