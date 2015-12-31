@@ -25,7 +25,7 @@
 Summary:        MongoDB driver for PHP
 Name:           php-pecl-%{pecl_name}
 Version:        1.1.1
-Release:        1%{?dist}
+Release:        3%{?dist}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -196,6 +196,10 @@ cd ../ZTS
 
 
 %changelog
+* Thu Dec 31 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-3
+- fix patch for 32bits build
+  open https://github.com/mongodb/mongo-php-driver/pull/191
+
 * Sat Dec 26 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - Update to 1.1.1 (stable)
 - add patch for 32bits build,
