@@ -1,0 +1,25 @@
+From 2a506ab42328dc8d9d1ad7ecb9cec23f1c04e2a2 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 31 Dec 2015 09:11:21 +0100
+Subject: [PATCH] Use concat_function with PHP 7, fix #461
+
+---
+ swoole_http_client.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/swoole_http_client.c b/swoole_http_client.c
+index 8197d56..a6b358f 100644
+--- a/swoole_http_client.c
++++ b/swoole_http_client.c
+@@ -1024,7 +1024,11 @@ static int http_client_parser_on_body(php_http_parser *parser, const char *at, s
+     zval *tmp;
+     SW_MAKE_STD_ZVAL(tmp);
+     SW_ZVAL_STRINGL(tmp, at, length, 1);
++#if PHP_MAJOR_VERSION < 7
+     add_string_to_string(body, body, tmp);
++#else
++    concat_function(body, body, tmp);
++#endif
+     sw_zval_ptr_dtor(&tmp);
+ 
+     return 0;

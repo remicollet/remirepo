@@ -31,12 +31,15 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.7.21
+Version:        1.7.22
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+# see https://github.com/swoole/swoole-src/pull/462
+Patch0:         %{pecl_name}-pr462.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel >= 5.3.10
@@ -116,6 +119,7 @@ sed -e 's/role="test"/role="src"/' \
 
 
 cd NTS
+%patch0 -p1 -b .pr462
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_SWOOLE_VERSION/{s/.* "//;s/".*$//;p}' php_swoole.h)
@@ -253,6 +257,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec 31 2015 Remi Collet <remi@fedoraproject.org> - 1.7.22-1
+- Update to 1.7.22
+- add patch to fix PHP 7 build
+  open https://github.com/swoole/swoole-src/pull/462
+  open https://github.com/swoole/swoole-src/issues/461
+
 * Tue Dec 01 2015 Remi Collet <remi@fedoraproject.org> - 1.7.21-1
 - Update to 1.7.21
 
