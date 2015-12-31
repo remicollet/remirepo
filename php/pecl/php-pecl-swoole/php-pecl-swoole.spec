@@ -32,7 +32,7 @@
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.7.22
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -257,6 +257,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec 31 2015 Remi Collet <remi@fedoraproject.org> - 1.7.22-2
+- Update to 1.7.22 (new sources)
+
 * Thu Dec 31 2015 Remi Collet <remi@fedoraproject.org> - 1.7.22-1
 - Update to 1.7.22
 - add patch to fix PHP 7 build

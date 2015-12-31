@@ -296,7 +296,7 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
     }
   }
 
-  - Classes [14] {
+  - Classes [13] {
     Class [ <internal:swoole> class swoole_server ] {
 
       - Constants [0] {
@@ -667,46 +667,6 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
         }
 
         Method [ <internal:swoole> public method getSocket ] {
-        }
-      }
-    }
-
-    Class [ <internal:swoole> class swoole_http_client ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [2] {
-        Property [ <default> public $errCode ]
-        Property [ <default> public $sock ]
-      }
-
-      - Methods [7] {
-        Method [ <internal:swoole, ctor> public method __construct ] {
-        }
-
-        Method [ <internal:swoole, dtor> public method __destruct ] {
-        }
-
-        Method [ <internal:swoole> public method set ] {
-        }
-
-        Method [ <internal:swoole> public method execute ] {
-        }
-
-        Method [ <internal:swoole> public method isConnected ] {
-        }
-
-        Method [ <internal:swoole> public method close ] {
-        }
-
-        Method [ <internal:swoole> public method on ] {
         }
       }
     }
