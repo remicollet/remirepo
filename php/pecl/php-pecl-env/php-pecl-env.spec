@@ -29,13 +29,15 @@
 
 Summary:       Load environment variables
 Name:          %{?sub_prefix}php-pecl-%{pecl_name}
-Version:       0.1.0
+Version:       0.2.0
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/%{pecl_name}
 
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+Patch0:        %{pecl_name}-pr2.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # ignore min PHP version 5.5 (as work with 5.4)
@@ -91,6 +93,8 @@ mv %{pecl_name}-%{version} NTS
 sed -e '/role="test"/d' -i package.xml
 
 cd NTS
+%patch0 -p1 -b .pr2
+
 # Check upstream version (often broken)
 extver=$(sed -n '/#define PHP_ENV_VERSION/{s/.* "//;s/".*$//;p}' php_env.h)
 if test "x${extver}" != "x%{version}"; then
@@ -156,29 +160,29 @@ done
 cd NTS
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
-    --define extension=modules/%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 : Upstream test suite for NTS extension
 TEST_PHP_EXECUTABLE=%{__php} \
-TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
+TEST_PHP_ARGS="-n -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__php} -n run-tests.php
+%{__php} -n run-tests.php --show-diff
 
 %if %{with_zts}
 cd ../ZTS
 : Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
-    --define extension=modules/%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 : Upstream test suite for ZTS extension
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
+TEST_PHP_ARGS="-n -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__ztsphp} -n run-tests.php
+%{__ztsphp} -n run-tests.php --show-diff
 
 %endif
 
@@ -221,5 +225,10 @@ fi
 
 
 %changelog
+* Fri Jan 01 2016 Remi Collet <remi@fedoraproject.org> - 0.2.0-1
+- Update to 0.2.0 (beta)
+- fix strange php 5.5 / i386 / ZTS
+  open https://github.com/beberlei/env/pull/2
+
 * Thu Dec 31 2015 Remi Collet <remi@fedoraproject.org> - 0.1.0-1
 - initial RPM, version 0.1.0 (beta)
