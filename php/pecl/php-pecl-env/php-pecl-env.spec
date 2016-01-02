@@ -19,7 +19,7 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global with_zts   0%{?__ztsphp:1}
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  env
 %if "%{php_version}" < "5.6"
 %global ini_name   %{pecl_name}.ini
@@ -29,7 +29,7 @@
 
 Summary:       Load environment variables
 Name:          %{?sub_prefix}php-pecl-%{pecl_name}
-Version:       0.2.0
+Version:       0.2.1
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
@@ -37,7 +37,7 @@ URL:           http://pecl.php.net/package/%{pecl_name}
 
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-Patch0:        %{pecl_name}-pr2.patch
+Patch0:        %{pecl_name}-pr4.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # ignore min PHP version 5.5 (as work with 5.4)
@@ -93,7 +93,7 @@ mv %{pecl_name}-%{version} NTS
 sed -e '/role="test"/d' -i package.xml
 
 cd NTS
-%patch0 -p1 -b .pr2
+%patch0 -p1 -b .pr4
 
 # Check upstream version (often broken)
 extver=$(sed -n '/#define PHP_ENV_VERSION/{s/.* "//;s/".*$//;p}' php_env.h)
@@ -225,6 +225,11 @@ fi
 
 
 %changelog
+* Sat Jan 02 2016 Remi Collet <remi@fedoraproject.org> - 0.2.1-1
+- Update to 0.2.1 (beta)
+- fix broken PHP 7 build
+  open https://github.com/beberlei/env/pull/4
+
 * Fri Jan 01 2016 Remi Collet <remi@fedoraproject.org> - 0.2.0-1
 - Update to 0.2.0 (beta)
 - fix strange php 5.5 / i386 / ZTS
