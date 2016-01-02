@@ -1,19 +1,19 @@
 # remirepo/fedora spec file for php-phpspec
 #
-# Copyright (c) 2015 Remi Collet
+# Copyright (c) 2015-2016 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    1d3938e6d9ffb1bd4805ea8ddac62ea48767f358
+%global gh_commit    5528ce1e93a1efa090c9404aba3395c329b4e6ed
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpspec
 %global gh_project   phpspec
 #global prever       beta3
 
 Name:           php-phpspec
-Version:        2.4.0
+Version:        2.4.1
 Release:        1%{?dist}
 Summary:        Specification-oriented BDD framework for PHP
 
@@ -169,6 +169,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jan  2 2016 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
+- update to 2.4.1
+
 * Sun Nov 29 2015 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
 - update to 2.4.0
 - allow to use symfony 3.0

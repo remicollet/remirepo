@@ -23,7 +23,7 @@ if (is_dir(getcwd().'/spec')) {
     $fedoraClassLoader->addPrefix('spec', getcwd());
 }
 
-// Depdencies (Rely on include_path as in PHPUnit dependencies + circular dependencies)
+// Dependencies (Rely on include_path as in PHPUnit dependencies + circular dependencies)
 require_once 'phpspec/php-diff/autoload.php';
 require_once 'Prophecy/autoload.php';
 require_once 'SebastianBergmann/Exporter/autoload.php';
