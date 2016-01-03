@@ -15,7 +15,7 @@
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global ini_name    40-%{pecl_name}.ini
 
-Name:           %{?sub_prefix}php-pecl-oauth
+Name:           %{?scl_prefix}php-pecl-oauth
 Version:        2.0.0
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        PHP OAuth consumer extension
