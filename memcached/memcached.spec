@@ -1,3 +1,13 @@
+# remirepo spec file for memcached
+# lastest version with SASL support enabled, from:
+#
+# Fedora spec file for memcached
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 %global username   memcached
 %global groupname  memcached
 
@@ -13,7 +23,7 @@
 %{!?runselftest: %global runselftest 1}
 
 Name:           memcached
-Version:        1.4.22
+Version:        1.4.25
 Release:        1%{?dist}
 Epoch:          0
 Summary:        High Performance, Distributed Memory Object Cache
@@ -28,13 +38,7 @@ Source1:        memcached.service
 # custom init script
 Source2:        memcached.sysv
 
-# Patches
-Patch001:       memcached-manpages.patch
-
-# Fixes
-
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 %if "%{?vendor}" == "Remi Collet"
 BuildRequires:  libevent-devel > 2
 %else
@@ -81,7 +85,6 @@ access to the memcached binary include files.
 
 %prep
 %setup -q
-%patch001 -p1 -b .manpages
 
 
 %build
@@ -171,11 +174,7 @@ exit 0
 %else
 if [ $1 = 1 ]; then
     # Initial installation
-%if %{with_systemd}
-    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
-%else
     /sbin/chkconfig --add %{name}
-%endif
 fi
 %endif
 
@@ -186,13 +185,8 @@ fi
 %else
 if [ "$1" = 0 ] ; then
     # Package removal, not upgrade
-%if %{with_systemd}
-    /bin/systemctl --no-reload disable %{name}.service >/dev/null 2>&1 || :
-    /bin/systemctl stop %{name}.service >/dev/null 2>&1 || :
-%else
     /sbin/service %{name} stop > /dev/null 2>&1
     /sbin/chkconfig --del %{name}
-%endif
 fi
 exit 0
 %endif
@@ -202,18 +196,10 @@ exit 0
 %if 0%{?systemd_postun_with_restart:1}
 %systemd_postun_with_restart %{name}.service
 %else
-%if %{with_systemd}
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ $1 -ge 1 ]; then
-    # Package upgrade, not uninstall
-    /bin/systemctl try-restart %{name}.service >/dev/null 2>&1 || :
-fi
-%else
 if [ "$1" -ge 1 ]; then
     /sbin/service %{name} condrestart > /dev/null 2>&1
 fi
 exit 0
-%endif
 %endif
 
 %triggerun -- memcached
@@ -255,6 +241,9 @@ fi
 
 
 %changelog
+* Sun Jan  3 2016 Remi Collet <rpms@famillecollet.com> - 0:1.4.25-1
+- Update to 1.4.25
+
 * Mon Jan  5 2015 Remi Collet <rpms@famillecollet.com> - 0:1.4.22-1
 - Update to 1.4.22
 
