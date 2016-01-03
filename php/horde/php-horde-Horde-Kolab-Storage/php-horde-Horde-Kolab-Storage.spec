@@ -1,6 +1,6 @@
 # remirepo/fedora spec file for php-horde-Horde-Kolab-Storage
 #
-# Copyright (c) 2013-2015 Remi Collet
+# Copyright (c) 2013-2016 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #
@@ -17,7 +17,7 @@
 %endif
 
 Name:           php-horde-Horde-Kolab-Storage
-Version:        2.1.4
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        A package for handling Kolab data stored on an IMAP server
 
@@ -141,7 +141,11 @@ sed -e "s/Horde_Kolab_Format_Xml-@version@/Horde_Kolab_Format_Xml-${VER}/" \
     -i ComponentTest/Data/Object/Message/ModifiedTest.php \
        ComponentTest/Data/Object/Message/NewTest.php
 
-phpunit .
+%{_bindir}/phpunit .
+
+#if which php70; then
+#   php70 %%{_bindir}/phpunit .
+#fi
 %else
 : Test disabled, bootstrap build
 %endif
@@ -174,6 +178,9 @@ fi
 
 
 %changelog
+* Sun Jan 03 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+
 * Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
 - Update to 2.1.4
 
