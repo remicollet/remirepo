@@ -11,10 +11,15 @@
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
 
+%global gh_commit   fdbd46bbc6f53ed6e024521895e142cbfc9b3340
+%global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner    websupport-sk
+%global gh_project  pecl-memcache
+%global gh_date     20151130
 %global pecl_name  memcache
 # Not ready, some failed UDP tests. Neded investigation.
-%global with_tests %{?_with_tests:1}%{!?_with_tests:0}
-%global with_zts   0%{?__ztsphp:1}
+%global with_tests 0%{?_with_tests:1}
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 %global ini_name  %{pecl_name}.ini
 %else
@@ -23,18 +28,21 @@
 
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?scl_prefix}php-pecl-memcache
-Version:      3.0.8
-Release:      7%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:      3.0.9
+%if 0%{?gh_date:1}
+Release:      0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+%else
+Release:      1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+%endif
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
-Source:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-# Missing in official archive
-# http://svn.php.net/viewvc/pecl/memcache/branches/NON_BLOCKING_IO/tests/connect.inc?view=co
-Source3:      connect.inc
-
-Patch0: %{pecl_name}-gcc5.patch
+%if 0%{?gh_date:1}
+Source0:      https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
+%else
+Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+%endif
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel
@@ -44,8 +52,6 @@ BuildRequires: zlib-devel
 BuildRequires: memcached
 %endif
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:     %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:     %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
@@ -69,6 +75,10 @@ Obsoletes:     php55w-pecl-%{pecl_name}
 Obsoletes:     php56u-pecl-%{pecl_name}
 Obsoletes:     php56w-pecl-%{pecl_name}
 %endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name}
+Obsoletes:     php70w-pecl-%{pecl_name}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -88,18 +98,29 @@ handy OO and procedural interfaces.
 
 Memcache can be used as a PHP session handler.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
+
 
 %prep 
 %setup -c -q
-
+%if 0%{?gh_date:1}
+mv %{gh_project}-%{gh_commit} NTS
+mv NTS/package.xml .
+sed -e '/release/s/3.0.9/%{version}dev/' -i package.xml
+%else
 mv %{pecl_name}-%{version} NTS
+%endif
+
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
+
 pushd NTS
-%patch0 -p1 -b .gcc5
 
 # Chech version as upstream often forget to update this
-extver=$(sed -n '/#define PHP_MEMCACHE_VERSION/{s/.* "//;s/".*$//;p}' php_memcache.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream version is now ${extver}, expecting %{version}.
+dir=php$(%{__php} -r 'echo PHP_MAJOR_VERSION;')
+extver=$(sed -n '/#define PHP_MEMCACHE_VERSION/{s/.* "//;s/".*$//;p}' $dir/php_memcache.h)
+if test "x${extver}" != "x%{version}%{?gh_date:-dev}"; then
+   : Error: Upstream version is now ${extver}, expecting %{version}%{?gh_date:-dev}.
    : Update the pdover macro and rebuild.
    exit 1
 fi
@@ -181,11 +202,8 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 # Install XML package description
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
-# Test & Documentation
-for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
-for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+# Documentation
+for i in $(grep '<file .* role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -236,23 +254,33 @@ exit $ret
 rm -rf %{buildroot}
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
 
 %files
 %defattr(-, root, root, -)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
+
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
@@ -260,6 +288,12 @@ fi
 
 
 %changelog
+* Sun Jan  3 2016 Remi Collet <rcollet@redhat.com> - 3.0.9-0.1.20151130gitfdbd46b
+- git snapshopt for PHP 7
+- sources from https://github.com/websupport-sk/pecl-memcache (for PHP 7)
+- drop runtime dependency on pear, new scriptlets
+- don't install/register tests
+
 * Tue Feb 10 2015 Remi Collet <rcollet@redhat.com> - 3.0.8-7
 - fix gcc 5 FTBFS
 
