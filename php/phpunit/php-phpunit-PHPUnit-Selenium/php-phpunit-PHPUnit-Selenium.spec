@@ -6,9 +6,9 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c84dd7ca214563868ce216123b7ae9c792beb262
+%global gh_commit    5e13bfe60ccf8b487f25ccc5d84eaeb89f4e7189
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_owner     sebastianbergmann
+%global gh_owner     giorgiosironi
 %global gh_project   phpunit-selenium
 %global php_home     %{_datadir}/php
 %global pear_name    PHPUnit_Selenium
@@ -16,14 +16,14 @@
 # No test, as test suite requires a Selenium server
 
 Name:           php-phpunit-PHPUnit-Selenium
-Version:        1.4.2
+Version:        2.0.0
 Release:        1%{?dist}
 Summary:        Selenium RC integration for PHPUnit
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -31,13 +31,13 @@ BuildRequires:  php(language) >= 5.3.3
 
 # From composer.json
 #        "php": ">=5.3.3",
-#        "phpunit/phpunit": "~3.7|~4.0",
+#        "phpunit/phpunit": ">=4.8,<=6.0",
 #        "sebastian/comparator": "~1.0",
 #        "ext-curl": "*",
 #        "ext-dom": "*"
 Requires:       php(language) >= 5.3.3
-Requires:       php-composer(phpunit/phpunit) >= 3.7
-Requires:       php-composer(phpunit/phpunit) <  5
+Requires:       php-composer(phpunit/phpunit) >= 4.8
+Requires:       php-composer(phpunit/phpunit) <= 6.0
 Requires:       php-composer(sebastian/comparator) >= 1.0
 Requires:       php-composer(sebastian/comparator) <  2
 Requires:       php-curl
@@ -105,10 +105,15 @@ fi
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc ChangeLog.markdown README.md
+%doc composer.json
 %{php_home}/PHPUnit/Extensions/Selenium*
 
 
 %changelog
+* Mon Jan  4 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- update to 2.0.0
+- raise dependency on PHPUnit >=4.8,<=6.0
+
 * Sun Nov  2 2014 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
 - Update to 1.4.2
 - fix license handling
