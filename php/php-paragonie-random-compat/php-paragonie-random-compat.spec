@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-paragonie-random-compat
 #
-# Copyright (c) 2015 Shawn Iwinski <shawn@iwin.ski>
+# Copyright (c) 2015-2016 Shawn Iwinski <shawn@iwin.ski>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,8 +12,8 @@
 
 %global github_owner     paragonie
 %global github_name      random_compat
-%global github_version   1.1.0
-%global github_commit    19f765b66c6fbb56ee3b11bc16d52e38eebdc295
+%global github_version   1.1.4
+%global github_commit    d762ee5b099a29044603cd4649851e81aa66cb47
 
 %global composer_vendor  paragonie
 %global composer_project random_compat
@@ -28,7 +28,7 @@
 
 Name:          php-%{composer_vendor}-random-compat
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       PHP 5.x polyfill for random_bytes() and random_int() from PHP 7
 
 Group:         Development/Libraries
@@ -43,13 +43,13 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 1.1.0)
+## phpcompatinfo (computed from version 1.1.4)
 ##     <none except weak dependencies>
 %endif
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.1.0)
+# phpcompatinfo (computed from version 1.1.4)
 #     <none except weak dependencies>
 # Weak dependencies
 %if 0%{?fedora} > 21
@@ -115,6 +115,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan 03 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.4-1
+- Updated to 1.1.4 (RHBZ #1290629)
+
 * Thu Dec  3 2015 Remi Collet <remi@remirepo.net> - 1.1.0-2
 - backport for remi repository
 - run test suite with both php 5 and 7 when available
