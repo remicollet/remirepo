@@ -8,8 +8,8 @@
 #
 # Please preserve changelog entries
 #
-%global VER        6.9.2
-%global Patchlevel 10
+%global VER        6.9.3
+%global Patchlevel 0
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -455,6 +455,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jan  4 2016 Remi Collet <remi@remirepo.net> - 6.9.3.0-1
+- update to 6.9.3-0
+
 * Sat Dec 26 2015 Remi Collet <remi@remirepo.net> - 6.9.2.10-1
 - update to 6.9.2-10
 
