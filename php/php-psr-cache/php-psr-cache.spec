@@ -1,3 +1,4 @@
+# remirepo spec file for php-psr-cache, from:
 #
 # Fedora spec file for php-psr-cache
 #
@@ -32,6 +33,7 @@ License:   MIT
 URL:       https://github.com/%{github_owner}/%{github_name}
 Source0:   %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
 # composer.json
@@ -89,6 +91,7 @@ AUTOLOAD
 
 
 %install
+rm -rf   %{buildroot}
 mkdir -p %{buildroot}%{phpdir}/Psr/Cache
 cp -rp src/* %{buildroot}%{phpdir}/Psr/Cache/
 
@@ -97,7 +100,12 @@ cp -rp src/* %{buildroot}%{phpdir}/Psr/Cache/
 : No tests provided upstream
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE.txt
 %doc *.md
@@ -107,5 +115,8 @@ cp -rp src/* %{buildroot}%{phpdir}/Psr/Cache/
 
 
 %changelog
+* Mon Jan 04 2016 Remi Collet <remi@remirepo.net> - 1.0.0-1
+- backport for #remirepo
+
 * Sun Jan 03 2016 Shawn Iwinski <shawn@iwin.ski> - 1.0.0-1
 - Initial package
