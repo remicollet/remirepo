@@ -1,3 +1,4 @@
+# remirepo spec file for php-container-interop, from:
 #
 # Fedora spec file for php-container-interop
 #
@@ -29,6 +30,7 @@ License:   MIT
 URL:       https://github.com/%{github_owner}/%{github_name}
 Source0:   %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
 # composer.json
@@ -100,6 +102,7 @@ AUTOLOAD
 
 
 %install
+rm -rf   %{buildroot}
 mkdir -p %{buildroot}%{phpdir}
 cp -rp src/* %{buildroot}%{phpdir}/
 
@@ -108,7 +111,12 @@ cp -rp src/* %{buildroot}%{phpdir}/
 : No tests provided upstream
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -119,5 +127,8 @@ cp -rp src/* %{buildroot}%{phpdir}/
 
 
 %changelog
+* Mon Jan 04 2016 Remi Collet <remi@remirepo.net> - 1.1.0-1
+- backport for #remirepo
+
 * Sun Jan 03 2016 Shawn Iwinski <shawn@iwin.ski> - 1.1.0-1
 - Initial package
