@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-symfony-polyfill
 #
-# Copyright (c) 2015 Shawn Iwinski <shawn@iwin.ski>
+# Copyright (c) 2015-2016 Shawn Iwinski <shawn@iwin.ski>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -47,7 +47,7 @@ BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(ircmaxell/password-compat)
 BuildRequires: php-composer(paragonie/random_compat)
-## phpcompatinfo (computed from version 1.0.0)
+## phpcompatinfo (computed from version 1.0.1)
 BuildRequires: php-hash
 BuildRequires: php-json
 BuildRequires: php-ldap
@@ -61,7 +61,7 @@ BuildRequires: php-spl
 Requires:      php(language) >= %{php_min_ver}
 Requires:      php-composer(ircmaxell/password-compat)
 Requires:      php-composer(paragonie/random_compat)
-# phpcompatinfo (computed from version 1.0.0)
+# phpcompatinfo (computed from version 1.0.1)
 Requires:      php-hash
 Requires:      php-json
 Requires:      php-mbstring
