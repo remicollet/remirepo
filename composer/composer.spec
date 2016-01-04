@@ -6,10 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    f25446e507a3f420b2b88e6dedc47787d42ea7e9
+%global gh_commit    72cd6afdfce16f36a9fd786bc1b2f32b851e764f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20151215
+%global gh_date      20151228
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
@@ -222,6 +222,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan  4 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.16.20151228git72cd6af
+- new snapshot
+
 * Tue Dec 15 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.16.20151215gitf25446e
 - new snapshot
 - raise dependency on seld/jsonlint ^1.4
