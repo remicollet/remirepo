@@ -1,6 +1,6 @@
 # remirepo spec file for php-pecl-runkit
 #
-# Copyright (c) 2012-2015 Remi Collet
+# Copyright (c) 2012-2016 Remi Collet
 #
 # with SCL compatibility from:
 

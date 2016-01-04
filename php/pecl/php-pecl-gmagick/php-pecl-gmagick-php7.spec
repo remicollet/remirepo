@@ -1,6 +1,6 @@
 # spec file for php-pecl-gmagick
 #
-# Copyright (c) 2010-2015 Remi Collet
+# Copyright (c) 2010-2016 Remi Collet
 # Copyright (c) 2009-2010 Pavel Alexeev
 # License: MIT
 # http://opensource.org/licenses/MIT
