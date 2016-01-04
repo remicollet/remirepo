@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-doctrine-inflector
 #
-# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,8 +12,8 @@
 
 %global github_owner     doctrine
 %global github_name      inflector
-%global github_version   1.0.1
-%global github_commit    0bcb2e79d8571787f18b7eb036ed3d004908e604
+%global github_version   1.1.0
+%global github_commit    90b2128806bfde671b6952ab8bea493942c1fdae
 
 %global composer_vendor  doctrine
 %global composer_project inflector
@@ -28,7 +28,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       5%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       Common string manipulations with regard to casing and singular/plural rules
 
 Group:         Development/Libraries
@@ -43,7 +43,7 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language) >= %{php_min_ver}
-## phpcompatinfo (computed from version 1.0.1)
+## phpcompatinfo (computed from version 1.1.0)
 BuildRequires: php-pcre
 BuildRequires: php-spl
 # Autoloader
@@ -52,7 +52,7 @@ BuildRequires: php-composer(symfony/class-loader)
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.0.1)
+# phpcompatinfo (computed from version 1.1.0)
 Requires:      php-pcre
 # Autoloader
 Requires:      php-composer(symfony/class-loader)
@@ -64,15 +64,18 @@ Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 Doctrine Inflector is a small library that can perform string manipulations
 with regard to upper-/lowercase and singular/plural forms of words.
 
+Autoloader: %{phpdir}/Doctrine/Common/Inflector/autoload.php
+
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
 : Create autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee lib/Doctrine/Common/Inflector/autoload.php
 <?php
 /**
- * Autoloader created by %{name}-%{version}-%{release}
+ * Autoloader for %{name} and its' dependencies
+ * (created by %{name}-%{version}-%{release}).
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
@@ -90,7 +93,6 @@ $fedoraClassLoader->addPrefix('Doctrine\\Common\\Inflector\\', dirname(dirname(d
 
 return $fedoraClassLoader;
 AUTOLOAD
-) | tee lib/Doctrine/Common/Inflector/autoload.php
 
 
 %build
@@ -106,7 +108,7 @@ cp -rp lib/* %{buildroot}%{phpdir}/
 %check
 %if %{with_tests}
 : Create tests autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee autoload.php
 <?php
 
 $fedoraClassLoader =
@@ -114,10 +116,13 @@ $fedoraClassLoader =
 
 $fedoraClassLoader->addPrefix('Doctrine\\Tests', __DIR__ . '/tests');
 AUTOLOAD
-) | tee autoload.php
 
 : Run tests
 %{_bindir}/phpunit -v --bootstrap autoload.php
+
+if which php70; then
+   php70 %{_bindir}/phpunit -v --bootstrap autoload.php
+fi
 %else
 : Tests skipped
 %endif
@@ -131,13 +136,17 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc *.md composer.json
+%doc *.md
+%doc composer.json
 %dir %{phpdir}/Doctrine
 %dir %{phpdir}/Doctrine/Common
      %{phpdir}/Doctrine/Common/Inflector
 
 
 %changelog
+* Sun Jan 03 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.0-1
+- Updated to 1.1.0 (RHBZ #1279884)
+
 * Sat Jun 27 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.1-5
 - Updated autoloader with trailing separator
 
