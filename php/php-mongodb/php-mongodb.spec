@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    34b74f852af43fc70f49308bfbd3555f91db593c
+%global gh_commit    e8177e87efe74437b812915887d416f5b68b4e30
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     mongodb
 #global gh_date      20151102
@@ -17,14 +17,14 @@
 %global with_tests   0%{?_with_tests:1}
 %endif
 %global psr0         MongoDB
-%global prever       beta1
+%global prever       beta2
 
 Name:           php-%{gh_owner}
 Version:        1.0.0
 %if 0%{?gh_date}
 Release:        0.2.%{gh_date}git%{gh_short}%{?dist}
 %else
-Release:        0.3.%{prever}%{?dist}
+Release:        0.4.%{prever}%{?dist}
 %endif
 Summary:        MongoDB driver library
 
@@ -35,7 +35,6 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 # Autoloader
 Source1:        %{name}-autoload.php
-Patch0:         %{name}-autoload.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -52,9 +51,9 @@ BuildRequires:  php-composer(symfony/class-loader)
 
 # From composer.json, "require": {
 #        "php": ">=5.4"
-#        "ext-mongodb": "^1.0.0"
+#        "ext-mongodb": "^1.1.1"
 Requires:       php(language) >= 5.4
-Requires:       php-pecl(mongodb)
+Requires:       php-pecl(mongodb) >= 1.1.1
 # From phpcompatinfo report for 1.0.0alpha1
 Requires:       php-reflection
 Requires:       php-spl
@@ -83,7 +82,6 @@ To use this library, you just have to add, in your project:
 %setup -q -n %{gh_project}-%{gh_commit}
 
 cp %{SOURCE1} src/autoload.php
-%patch0 -p0
 
 
 %build
@@ -128,6 +126,10 @@ EOF
 : Run the test suite
 %{_bindir}/phpunit --verbose || RET=1
 
+if which php70; then
+  php70 %{_bindir}/phpunit --verbose || RET=1
+fi
+
 : Cleanup
 [ -s server.pid ] && kill $(cat server.pid)
 
@@ -154,6 +156,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan  4 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.4.beta2
+- update to 1.0.0beta2
+- raise dependency on pecl/mongodb ^1.1.1
+- run test suite with both PHP 5 and 7 when available
+
 * Tue Nov  3 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.beta1
 - update to 1.0.0beta1
 
