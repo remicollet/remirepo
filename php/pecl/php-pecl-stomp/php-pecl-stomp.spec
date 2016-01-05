@@ -12,8 +12,8 @@
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
 
-%global with_zts   0%{?__ztsphp:1}
-%global pecl_name  stomp
+%global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
+%global pecl_name   stomp
 %if "%{php_version}" < "5.6"
 # After sockets
 %global ini_name    %{pecl_name}.ini
@@ -24,7 +24,7 @@
 
 Summary:        Stomp client extension
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.0.8
+Version:        1.0.9
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -75,7 +75,7 @@ and procedural interfaces.
 
 Documentation: http://php.net/stomp
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -162,9 +162,6 @@ do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
-# Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
-
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -219,6 +216,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 05 2016 Remi Collet <remi@fedoraproject.org> - 1.0.9-1
+- Update to 1.0.9 (stable)
+
 * Tue May 19 2015 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
 - Update to 1.0.8 (stable, no change)
 
