@@ -19,9 +19,9 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global with_zts   0%{?__ztsphp:1}
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  hprose
-%global with_tests %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
 %if "%{php_version}" < "5.6"
 %global ini_name   %{pecl_name}.ini
 %else
@@ -30,8 +30,8 @@
 
 Summary:        Hprose for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.6.1
-Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.6.2
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        MIT
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -104,6 +104,9 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
+# see https://github.com/hprose/hprose-pecl/pull/12
+sed -e s/zend_error_noreturn/zend_error/ -i hprose_reader.h
+
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_HPROSE_VERSION/{s/.* "//;s/".*$//;p}' php_hprose.h)
 if test "x${extver}" != "x%{version}"; then
@@ -186,14 +189,6 @@ fi
 
 
 %check
-%if "%{php_version}" > "7"
-# These tests strangly fail "only" in mock
-%if 0%{?rhel} < 7 && 0%{?fedora} < 20
-[ "$(id -nu)" == "remi" ] || rm ?TS/tests/{class_manager,raw_reader,reader}.phpt
-%endif
-[ "$(id -nu)" == "remi" ] || rm ?TS/tests/formatter.phpt
-%endif
-
 cd NTS
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
@@ -247,6 +242,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 05 2016 Remi Collet <remi@fedoraproject.org> - 1.6.2-1
+- Update to 1.6.2 (stable)
+- fix PHP 5 build
+  open https://github.com/hprose/hprose-pecl/pull/12
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.6.1-3
 - rebuild for PHP 7.0.0RC5 new API version
 
