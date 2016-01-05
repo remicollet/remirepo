@@ -20,7 +20,7 @@
 %{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name xxtea
-%global with_zts  0%{?__ztsphp:1}
+%global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 %global ini_name  %{pecl_name}.ini
 %else
@@ -29,8 +29,8 @@
 
 Summary:        XXTEA encryption algorithm extension for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.0.10
-Release:        6%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.0.11
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        MIT
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -231,6 +231,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 05 2016 Remi Collet <remi@fedoraproject.org> - 1.0.11-1
+- Update to 1.0.11 (stable)
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.0.10-6
 - rebuild for PHP 7.0.0RC5 new API version
 
