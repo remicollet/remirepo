@@ -19,7 +19,7 @@
 Summary:       Package that installs PHP 7.0
 Name:          %scl_name
 Version:       1.0
-Release:       1%{?dist}
+Release:       2%{?dist}
 Group:         Development/Languages
 License:       GPLv2+
 
@@ -35,7 +35,6 @@ BuildRequires: iso-codes
 
 Requires:      %{?scl_prefix}php-common%{?_isa}
 Requires:      %{?scl_prefix}php-cli%{?_isa}
-# Requires:      %{?scl_prefix}php-pear
 Requires:      %{?scl_name}-runtime%{?_isa}      = %{version}-%{release}
 
 %description
@@ -95,7 +94,7 @@ EOF
 cat << EOF | tee envmod
 #%%Module1.0
 prepend-path    X_SCLS              %{scl}
-prepend-path    PATH                %{_bindir}
+prepend-path    PATH                %{_bindir}:%{_sbindir}
 prepend-path    LD_LIBRARY_PATH     %{_libdir}
 prepend-path    MANPATH             %{_mandir}
 prepend-path    PKG_CONFIG_PATH     %{_libdir}/pkgconfig
@@ -203,6 +202,9 @@ restorecon -R %{_localstatedir} &>/dev/null || :
 
 
 %changelog
+* Tue Jan  5 2016 Remi Collet <remi@fedoraproject.org> 1.0-2
+- add missing "sbin" in PATH (Fedora)
+
 * Wed Nov  4 2015 Remi Collet <remi@fedoraproject.org> 1.0-1
 - requires semanage and selinuxenabled commands
   instead of packages

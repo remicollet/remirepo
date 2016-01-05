@@ -16,7 +16,7 @@
 Summary:       Package that installs PHP 5.6
 Name:          %scl_name
 Version:       2.1
-Release:       2%{?dist}
+Release:       3%{?dist}
 Group:         Development/Languages
 License:       GPLv2+
 
@@ -89,7 +89,7 @@ EOF
 cat << EOF | tee envmod
 #%%Module1.0
 prepend-path    X_SCLS              %{scl}
-prepend-path    PATH                %{_bindir}
+prepend-path    PATH                %{_bindir}:%{_sbindir}
 prepend-path    LD_LIBRARY_PATH     %{_libdir}
 prepend-path    MANPATH             %{_mandir}
 prepend-path    PKG_CONFIG_PATH     %{_libdir}/pkgconfig
@@ -187,6 +187,9 @@ restorecon -R %{?_scl_root}  &>/dev/null || :
 
 
 %changelog
+* Tue Jan  5 2016 Remi Collet <remi@fedoraproject.org> 2.1-3
+- add missing "sbin" in PATH (Fedora)
+
 * Fri Nov 13 2015 Remi Collet <remi@fedoraproject.org> 2.1-2
 - fix selinux context
 
