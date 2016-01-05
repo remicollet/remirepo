@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-zendframework-zend-diactoros
 #
-# Copyright (c) 2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2015-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,8 +12,8 @@
 
 %global github_owner     zendframework
 %global github_name      zend-diactoros
-%global github_version   1.1.4
-%global github_commit    3f0ce6c0ba2106e018fb514a9f09dbb91eb6bfd0
+%global github_version   1.3.3
+%global github_commit    4d54fde709664562eb63356f0250d527824d05de
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  zendframework
@@ -86,6 +86,8 @@ A PHP package containing implementations of the accepted PSR-7 HTTP message
 interfaces [1], as well as a "server" implementation similar to node's
 http.Server [2].
 
+Autoloader: %{phpdir}/Zend/Diactoros/autoload.php
+
 [1] http://www.php-fig.org/psr/psr-7/
 [2] http://nodejs.org/api/http.html
 
@@ -98,8 +100,7 @@ cat <<'AUTOLOAD' | tee src/autoload.php
 <?php
 /**
  * Autoloader for %{name} and its' dependencies
- *
- * Created by %{name}-%{version}-%{release}
+ * (created by %{name}-%{version}-%{release}).
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
@@ -115,6 +116,7 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('Zend\\Diactoros\\', dirname(dirname(__DIR__)));
 
+// Required dependency
 require_once '%{phpdir}/Psr/Http/Message/autoload.php';
 
 return $fedoraClassLoader;
@@ -174,6 +176,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan 04 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.3-1
+- Updated to 1.3.3 (RHBZ #1285581)
+
 * Mon Oct 26 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.4-1
 - Updated to 1.1.4 (RHBZ #1272627)
 
