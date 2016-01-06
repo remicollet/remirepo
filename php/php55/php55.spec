@@ -139,7 +139,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.5.30
+Version: 5.5.31
 Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1738,7 +1738,7 @@ echo -e "\nWARNING : These %{name}-* RPMs are not official Fedora / Red Hat buil
 echo -e "overrides the official ones. Don't file bugs on Fedora Project nor Red Hat.\n"
 echo -e "Use dedicated forum at http://forum.remirepo.net/\n"
 
-%if %{?fedora}%{!?fedora:99} < 19
+%if %{?fedora}%{!?fedora:99} < 22
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -1971,7 +1971,9 @@ fi
 
 
 %changelog
-* Mon Dec 14 2015 Remi Collet <remi@fedoraproject.org> 5.5.30-1.1
+* Wed Jan  6 2016 Remi Collet <remi@fedoraproject.org> 5.5.31-1
+- Update to 5.5.31
+  http://www.php.net/releases/5_5_31.php
 - curl: add CURL_SSLVERSION_TLSv1_x constant
 
 * Thu Oct  1 2015 Remi Collet <remi@fedoraproject.org> 5.5.30-1
