@@ -29,6 +29,7 @@
 %global proj_name  apcu_bc
 %global pecl_name  apcu-bc
 %global ext_name   apc
+%global apcver     %(php -r 'echo phpversion("apcu");' 2>/dev/null || echo 65536)
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 # After 40-apcu.ini
 %global ini_name   50-%{ext_name}.ini
@@ -36,7 +37,6 @@
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Summary:        APCu Backwards Compatibility Module
 # From APCU, to be greater that last APC version
-%global apcver  5.1.2
 Version:        1.0.1
 %if 0%{?gh_date:1}
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
@@ -129,6 +129,8 @@ cat << 'EOF' | tee %{ini_name}
 ; Enable %{summary}
 extension=%{ext_name}.so
 EOF
+
+: Build apcu_bc %{version} with apcu %{apcver}
 
 
 %build
