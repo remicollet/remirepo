@@ -144,7 +144,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.6.16
+Version: 5.6.17
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
@@ -188,7 +188,7 @@ Source99: php-fpm.init
 Patch5: php-5.6.3-includedir.patch
 Patch6: php-5.6.3-embed.patch
 Patch7: php-5.3.0-recode.patch
-Patch8: php-5.6.3-libdb.patch
+Patch8: php-5.6.17-libdb.patch
 Patch9: php-5.5.30-curl.patch
 
 # Fixes for extension modules
@@ -1740,7 +1740,7 @@ echo -e "\nWARNING : These %{name}-* RPMs are not official Fedora / Red Hat buil
 echo -e "overrides the official ones. Don't file bugs on Fedora Project nor Red Hat.\n"
 echo -e "Use dedicated forum at http://forum.remirepo.net/\n"
 
-%if %{?fedora}%{!?fedora:99} < 21
+%if %{?fedora}%{!?fedora:99} < 22
 echo -e "WARNING : Fedora %{fedora} is now EOL :"
 echo -e "You should consider upgrading to a supported release.\n"
 %endif
@@ -1988,8 +1988,10 @@ fi
 
 
 %changelog
-* Mon Dec 14 2015 Remi Collet <remi@fedoraproject.org> 5.6.16-1.1
-- curl: add CURL_SSLVERSION_TLSv1_x constant
+* Wed Jan  6 2016 Remi Collet <remi@fedoraproject.org> 5.6.17-1
+- Update to 5.6.17
+  http://www.php.net/releases/5_6_17.php
+- curl: add CURL_SSLVERSION_TLSv1_x constants
 
 * Thu Nov 26 2015 Remi Collet <remi@fedoraproject.org> 5.6.16-1
 - Update to 5.6.16
