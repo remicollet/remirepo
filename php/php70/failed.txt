@@ -1,4 +1,4 @@
-===== 7.0.1 (2015-12-17)
+===== 7.0.2 (2016-01-07)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
@@ -7,9 +7,9 @@ $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 /var/lib/mock/el7x/build.log:Tests failed    :    3 (  0.0%) (  0.0%)
 /var/lib/mock/fc21i/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 /var/lib/mock/fc21x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
-/var/lib/mock/fc22i/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/fc22i/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
 /var/lib/mock/fc22x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
-/var/lib/mock/fc23i/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
+/var/lib/mock/fc23i/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
 /var/lib/mock/fc23x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
 
 
@@ -21,7 +21,9 @@ el7x
     Bug #64438 proc_open hangs with stdin/out with 4097+ bytes [ext/standard/tests/streams/proc_open_bug64438.phpt]
 fc21x
     Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
-fc23i, fc23x
+fc23i
+    Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
+fc22i, fc23i, fc23x
     Backtracking limit [ext/pcre/tests/backtrack_limit.phpt]
 
 

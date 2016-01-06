@@ -125,7 +125,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver        RC1
+#global rcver        RC1
 %global rpmrel       1
 
 
@@ -1817,6 +1817,10 @@ fi
 
 
 %changelog
+* Wed Jan  6 2016 Remi Collet <remi@fedoraproject.org> 7.0.2-1
+- Update to 7.0.2
+  http://www.php.net/releases/7_0_2.php
+
 * Sun Dec 27 2015 Remi Collet <remi@fedoraproject.org> 7.0.2-0.1.0RC1
 - Update to 7.0.2RC1
 - opcache: build with --disable-huge-code-pages on EL-6
