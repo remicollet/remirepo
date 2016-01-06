@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Group
-Version:        2.0.5
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Horde User Groups System
 
@@ -38,9 +38,13 @@ Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Support) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Support) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # Optional
+Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Cache) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Db) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Ldap) >= 2.0.0
@@ -80,7 +84,12 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit .
+
+%{_bindir}/phpunit .
+
+if which php70; then
+  php70 %{_bindir}/phpunit .
+fi
 
 
 %post
@@ -104,6 +113,10 @@ fi
 
 
 %changelog
+* Wed Jan 06 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+- add dependencies on Horde_Support and Horde_Cache
+
 * Wed Mar 04 2015 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5
 - add provides php-composer(horde/horde-group)
