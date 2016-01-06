@@ -30,7 +30,7 @@
 
 Summary:        Hprose for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.6.2
+Version:        1.6.3
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        MIT
 Group:          Development/Languages
@@ -242,6 +242,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 06 2016 Remi Collet <remi@fedoraproject.org> - 1.6.3-1
+- Update to 1.6.3 (stable)
+
 * Tue Jan 05 2016 Remi Collet <remi@fedoraproject.org> - 1.6.2-1
 - Update to 1.6.2 (stable)
 - fix PHP 5 build
