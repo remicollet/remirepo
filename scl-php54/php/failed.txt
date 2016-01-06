@@ -1,20 +1,21 @@
-===== 5.5.45
+===== 5.5.45-3 (2016-01-06)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl54*/build.log
 
-/var/lib/mock/scl54fc19x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 /var/lib/mock/scl54fc20x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 /var/lib/mock/scl54fc21x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
 /var/lib/mock/scl54fc22x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
 /var/lib/mock/scl54fc23x/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
-/var/lib/mock/scl54el6x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
+/var/lib/mock/scl54el6x/build.log:Tests failed    :    3 (  0.0%) (  0.0%)
 /var/lib/mock/scl54el7x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 
 f23
-	Bug #64802: openssl_x509_parse fails to parse subject properly in some cases [ext/openssl/tests/bug64802.phpt]
+    Bug #64802: openssl_x509_parse fails to parse subject properly in some cases [ext/openssl/tests/bug64802.phpt]
 
 f21, f22, f23
-	Test strptime() function : basic functionality [ext/standard/tests/time/strptime_basic.phpt]
+    Test strptime() function : basic functionality [ext/standard/tests/time/strptime_basic.phpt]
 
 el6
-	Bug #32001 (xml_parse*() goes into infinite loop when autodetection in effect), using UTF-* [ext/xml/tests/bug32001.phpt]
+    IPv4 Loopback test [ext/sockets/tests/ipv4loop.phpt]
+    ext/sockets - socket_getpeername_ipv4loop - basic test [ext/sockets/tests/socket_getpeername_ipv4loop.phpt]
+    Bug #32001 (xml_parse*() goes into infinite loop when autodetection in effect), using UTF-* [ext/xml/tests/bug32001.phpt]

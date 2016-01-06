@@ -98,7 +98,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.4.45
-Release: 2%{?dist}
+Release: 3%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -146,6 +146,8 @@ Patch45: php-5.4.8-ldap_r.patch
 Patch46: php-5.4.9-fixheader.patch
 # drop "Configure command" from phpinfo output
 Patch47: php-5.4.9-phpinfo.patch
+# Add CURL_SSLVERSION_* constant
+Patch49: php-5.4.45-curltls.patch
 
 # Upstream fixes
 # Backported from 5.5.18 for https://bugs.php.net/65641
@@ -156,6 +158,10 @@ Patch102: php-5.4.39-bug50444.patch
 # Security fixes
 Patch200: bug69720.patch
 Patch201: bug70433.patch
+Patch202: bug70755.patch
+Patch203: bug70728.patch
+Patch204: bug70741.patch
+Patch205: bug70661.patch
 
 # Fixes for tests
 # no_NO issue
@@ -433,7 +439,11 @@ Provides: php_database
 Provides: php-mysqli = %{version}-%{release}
 Provides: php-mysqli%{?_isa} = %{version}-%{release}
 Provides: php-pdo_mysql, php-pdo_mysql%{?_isa}
+%if 0%{?fedora}
+BuildRequires: mariadb-devel >= 4.1.0
+%else
 BuildRequires: mysql-devel >= 4.1.0
+%endif
 Conflicts: php-mysqlnd
 Obsoletes: php53-mysql, php53u-mysql, php54-mysql, php54w-mysql
 
@@ -850,6 +860,7 @@ rm -f ext/json/utf8_to_utf16.*
 %endif
 %patch46 -p1 -b .fixheader
 %patch47 -p1 -b .phpinfo
+%patch49 -p1 -b .curltls
 
 %patch91 -p1 -b .remi-oci8
 
@@ -860,6 +871,10 @@ rm -f ext/json/utf8_to_utf16.*
 # security patches
 %patch200 -p1 -b .bug69720
 %patch201 -p1 -b .bug70433
+%patch202 -p1 -b .bug70755
+%patch203 -p1 -b .bug70728
+%patch204 -p1 -b .bug70741
+%patch205 -p1 -b .bug70661
 
 # Fixes for tests
 %patch301 -p1 -b .datetests2
@@ -1749,6 +1764,13 @@ fi
 
 
 %changelog
+* Wed Jan  6 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-3
+- Fix #70755: fpm_log.c memory leak and buffer overflow
+- Fix #70728: Type Confusion Vulnerability in PHP_to_XMLRPC_worker
+- Fix #70741: Session WDDX Packet Deserialization Type
+- Fix #70661: Use After Free Vulnerability in WDDX Packet Deserialization
+- curl: add CURL_SSLVERSION_TLSv1_x constants
+
 * Wed Sep 30 2015 Remi Collet <remi@fedoraproject.org> 5.4.45-2
 - Fix bug #70433 - Uninitialized pointer in phar_make_dirstream
   when zip entry filename is "/"
