@@ -35,12 +35,14 @@
 
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Summary:        APCu Backwards Compatibility Module
+# From APCU, to be greater that last APC version
+%global apcver  5.1.2
 Version:        1.0.1
 %if 0%{?gh_date:1}
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{proj_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        0%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 %endif
 
@@ -51,20 +53,20 @@ URL:            http://pecl.php.net/package/APCu
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 7
 BuildRequires:  %{?scl_prefix}php-pear
-BuildRequires:  %{?scl_prefix}php-pecl-apcu-devel
+BuildRequires:  %{?scl_prefix}php-pecl-apcu-devel >= 5.1.2
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
-Requires:       %{?scl_prefix}php-pecl-apcu%{?_isa}
+Requires:       %{?scl_prefix}php-pecl-apcu%{?_isa} >= 5.1.2
 
 Obsoletes:      %{?scl_prefix}php-pecl-apc              < 4
-Provides:       %{?scl_prefix}php-apc                   = %{version}
-Provides:       %{?scl_prefix}php-apc%{?_isa}           = %{version}
-Provides:       %{?scl_prefix}php-pecl-apc              = %{version}-%{release}
-Provides:       %{?scl_prefix}php-pecl-apc%{?_isa}      = %{version}-%{release}
-Provides:       %{?scl_prefix}php-pecl(APC)             = %{version}
-Provides:       %{?scl_prefix}php-pecl(APC)%{?_isa}     = %{version}
+Provides:       %{?scl_prefix}php-apc                   = %{apcver}
+Provides:       %{?scl_prefix}php-apc%{?_isa}           = %{apcver}
+Provides:       %{?scl_prefix}php-pecl-apc              = %{apcver}-%{release}
+Provides:       %{?scl_prefix}php-pecl-apc%{?_isa}      = %{apcver}-%{release}
+Provides:       %{?scl_prefix}php-pecl(APC)             = %{apcver}
+Provides:       %{?scl_prefix}php-pecl(APC)%{?_isa}     = %{apcver}
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})%{?_isa} = %{version}
 # For "more" SCL
@@ -238,6 +240,9 @@ fi
 
 
 %changelog
+* Wed Jan  6 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1 (beta)
+
 * Mon Jan  4 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-0
 - test build for upcoming 1.0.1
 
