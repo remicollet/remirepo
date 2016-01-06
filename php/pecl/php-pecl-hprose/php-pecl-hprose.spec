@@ -30,7 +30,7 @@
 
 Summary:        Hprose for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.6.3
+Version:        1.6.4
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        MIT
 Group:          Development/Languages
@@ -104,8 +104,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-# see https://github.com/hprose/hprose-pecl/pull/12
-sed -e s/zend_error_noreturn/zend_error/ -i hprose_reader.h
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_HPROSE_VERSION/{s/.* "//;s/".*$//;p}' php_hprose.h)
@@ -242,6 +240,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 06 2016 Remi Collet <remi@fedoraproject.org> - 1.6.4-1
+- Update to 1.6.4 (stable)
+  no change, only our patch merged
+
 * Wed Jan 06 2016 Remi Collet <remi@fedoraproject.org> - 1.6.3-1
 - Update to 1.6.3 (stable)
 
