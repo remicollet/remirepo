@@ -1,4 +1,6 @@
 <?php
+/* Autoloader for composer/composer and its dependencies */
+
 $vendorDir = '/usr/share/php';
 // Use Symfony autoloader
 if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
@@ -14,7 +16,6 @@ $fedoraClassLoader->addPrefixes(array(
     'Symfony\\Component\\'         => $vendorDir,
     'Composer\\'                   => dirname(__DIR__)
 ));
-$fedoraClassLoader->register();
 
 // Dependencies
 require_once $vendorDir . '/Seld/JsonLint/autoload.php';

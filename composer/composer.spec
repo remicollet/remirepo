@@ -1,15 +1,15 @@
 # remirepo/fedora spec file for composer
 #
-# Copyright (c) 2015 Remi Collet
+# Copyright (c) 2015-2016 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    72cd6afdfce16f36a9fd786bc1b2f32b851e764f
+%global gh_commit    64b0d721838cdceef679761c5cf69a0d070d14c9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20151228
+%global gh_date      20160106
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
@@ -18,7 +18,7 @@
 
 Name:           composer
 Version:        1.0.0
-Release:        0.16.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}%{?dist}
+Release:        0.17.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -222,6 +222,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan  7 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.17.20160106git64b0d72
+- new snapshot
+- cleanup autoloader
+
 * Mon Jan  4 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.16.20151228git72cd6af
 - new snapshot
 
