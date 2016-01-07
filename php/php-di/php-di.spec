@@ -100,7 +100,7 @@ Requires:      php-spl
 # Autoloader
 Requires:      php-composer(symfony/class-loader)
 # Weak dependencies
-%if 0%{?fedora} >= 20
+%if 0%{?fedora} >= 21
 Suggests:      php-composer(doctrine/annotations)                >= %{doctrine_annotations_min_ver}
 Suggests:      php-composer(doctrine/annotations)                <  %{doctrine_annotations_max_ver}
 Suggests:      php-composer(doctrine/cache)                      >= %{doctrine_cache_min_ver}
