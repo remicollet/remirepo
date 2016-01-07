@@ -12,8 +12,8 @@
 
 %global github_owner   justinrainbow
 %global github_name    json-schema
-%global github_version 1.5.0
-%global github_commit  a4bee9f4b344b66e0a0d96c7afae1e92edf385fe
+%global github_version 1.6.0
+%global github_commit  f9e27c3e202faf14fd581ef41355d83bb4b7eb7d
 %global github_short   %(c=%{github_commit}; echo ${c:0:7})
 
 %global php_min_ver    5.3.2
@@ -32,9 +32,12 @@ Summary:       PHP implementation of JSON schema
 Group:         Development/Libraries
 License:       BSD
 URL:           https://github.com/%{github_owner}/%{github_name}
-Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_short}.tar.gz
+# Use a git snapshot as upstream remove tests from distribution
+Source0:       %{name}-%{github_version}-%{github_short}.tgz
 # Autoloader
 Source1:       %{name}-autoload.php
+# Script to pull the git snapshot
+Source2:       %{name}-makesrc.sh
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -109,6 +112,10 @@ $fedoraClassLoader->addPrefix('%{lib_name}\\Tests\\', realpath(__DIR__.'/../test
 EOF
 
 %{_bindir}/phpunit --verbose
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose
+fi
 %else
 : Tests skipped
 %endif
@@ -124,6 +131,11 @@ EOF
 
 
 %changelog
+* Thu Jan  7 2016 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
+- update to 1.6.0
+- use a git snapshot as upstream drop tests from distribution
+- run test suite with both PHP 5 and 7 when available
+
 * Tue Sep 22 2015 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
 - update to 1.5.0
 
