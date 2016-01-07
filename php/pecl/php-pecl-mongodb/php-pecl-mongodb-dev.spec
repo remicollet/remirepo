@@ -24,15 +24,12 @@
 
 Summary:        MongoDB driver for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.1.1
-Release:        4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.1.2
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
-
-# https://github.com/mongodb/mongo-php-driver/pull/185
-Patch0:         %{pecl_name}-pr185.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.4
@@ -96,7 +93,6 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd NTS
-%patch0 -p1 -b .pr185
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define MONGODB_VERSION_S/{s/.* "//;s/".*$//;p}' php_phongo.h)
@@ -227,11 +223,14 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu Dec 31 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-2
+* Thu Jan 07 2016 Remi Collet <remi@fedoraproject.org> - 1.1.2-2
+- Update to 1.1.2 (stable)
+
+* Thu Dec 31 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-4
 - fix patch for 32bits build
   open https://github.com/mongodb/mongo-php-driver/pull/191
 
-* Sat Dec 26 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+* Sat Dec 26 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-2
 - Update to 1.1.1 (stable)
 - add patch for 32bits build,
   open https://github.com/mongodb/mongo-php-driver/pull/185
