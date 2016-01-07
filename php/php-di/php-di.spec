@@ -1,3 +1,4 @@
+# remirepo spec file for php-di, from:
 #
 # Fedora spec file for php-di
 #
@@ -60,6 +61,7 @@ URL:           http://php-di.org/
 Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
 Source1:       %{name}-get-source.sh
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -164,6 +166,7 @@ AUTOLOAD
 
 
 %install
+rm -rf   %{buildroot}
 mkdir -p %{buildroot}%{phpdir}
 cp -rp src/* %{buildroot}%{phpdir}/
 
@@ -187,12 +190,21 @@ BOOTSTRAP
 
 : Run tests
 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php  || :
+fi
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc change-log.md
@@ -202,5 +214,8 @@ BOOTSTRAP
 
 
 %changelog
+* Thu Jan  7 2016 Remi Collet <remi@remirepo.net> - 5.2.0-1
+- backport for #remirepo
+
 * Sun Jan 03 2016 Shawn Iwinski <shawn@iwin.ski> - 5.2.0-1
 - Initial package
