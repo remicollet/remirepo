@@ -10,11 +10,11 @@
 %{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
 %{!?__php:       %global __php        %{_bindir}/php}
 
-%global gh_commit   ac969d783a2cd33bca5b75ec647900f3abe23da3
+%global gh_commit   3b9abc7b6012d760de99e10edc99c9742dafd11a
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    nikic
 %global gh_project  php-ast
-%global gh_date     20151021
+#global gh_date     20151021
 %global pecl_name   ast
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 # After 20-tokenizer.ini
@@ -22,7 +22,7 @@
 
 Summary:       Abstract Syntax Tree
 Name:          %{?scl_prefix}php-ast
-Version:       0.1.0
+Version:       0.1.1
 %if 0%{?gh_date:1}
 Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
@@ -43,10 +43,8 @@ Requires:      %{?scl_prefix}php-tokenizer%{?_isa}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
-%if "%{php_version}" > "7.0"
 Obsoletes:     php70u-%{pecl_name} <= %{version}
 Obsoletes:     php70w-%{pecl_name} <= %{version}
-%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -181,6 +179,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan  7 2016 Remi Collet <remi@fedoraproject.org> - 0.1.1-1
+- update to 0.1.1
+
 * Thu Oct 29 2015 Remi Collet <remi@fedoraproject.org> - 0.1.0-0.2.20151021gitac969d7
 - add dependency on php-tokenizer, fix test suite
 

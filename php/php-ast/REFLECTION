@@ -1,6 +1,6 @@
-Extension [ <persistent> extension #74 ast version 0.1.0-dev ] {
+Extension [ <persistent> extension #56 ast version 0.1.1 ] {
 
-  - Constants [169] {
+  - Constants [180] {
     Constant [ integer ast\AST_FUNC_DECL ] { 66 }
     Constant [ integer ast\AST_CLOSURE ] { 67 }
     Constant [ integer ast\AST_METHOD ] { 68 }
@@ -170,6 +170,17 @@ Extension [ <persistent> extension #74 ast version 0.1.0-dev ] {
     Constant [ integer ast\flags\EXEC_INCLUDE_ONCE ] { 4 }
     Constant [ integer ast\flags\EXEC_REQUIRE ] { 8 }
     Constant [ integer ast\flags\EXEC_REQUIRE_ONCE ] { 16 }
+    Constant [ integer ast\flags\USE_NORMAL ] { 361 }
+    Constant [ integer ast\flags\USE_FUNCTION ] { 346 }
+    Constant [ integer ast\flags\USE_CONST ] { 347 }
+    Constant [ integer ast\flags\MAGIC_LINE ] { 370 }
+    Constant [ integer ast\flags\MAGIC_FILE ] { 371 }
+    Constant [ integer ast\flags\MAGIC_DIR ] { 372 }
+    Constant [ integer ast\flags\MAGIC_NAMESPACE ] { 389 }
+    Constant [ integer ast\flags\MAGIC_FUNCTION ] { 376 }
+    Constant [ integer ast\flags\MAGIC_METHOD ] { 375 }
+    Constant [ integer ast\flags\MAGIC_CLASS ] { 373 }
+    Constant [ integer ast\flags\MAGIC_TRAIT ] { 374 }
   }
 
   - Functions {
