@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b672918d992b84f8016bbe353a42516928393c63
+%global gh_commit    74fa01d4de396c40e239794123b3874cb594a30c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     true
 %global gh_project   php-punycode
@@ -15,7 +15,7 @@
 # Notice: single file / class, so no need to provide an autoloader for now
 
 Name:           php-true-punycode
-Version:        2.0.1
+Version:        2.0.2
 Release:        1%{?dist}
 Summary:        A Bootstring encoding of Unicode for IDNA
 
@@ -61,7 +61,11 @@ cp -pr src %{buildroot}%{_datadir}/php/TrueBV
 %check
 %if %{with_tests}
 : Run test suite
-phpunit --bootstrap src/Punycode.php
+%{_bindir}/phpunit --bootstrap src/Punycode.php
+
+if which php70; then
+   php70 %{_bindir}/phpunit --bootstrap src/Punycode.php
+fi
 %else
 : Test suite disabled
 %endif
@@ -81,6 +85,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan  8 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- update to version 2.0.2
+- run test suite with both PHP 5 and 7 when available
+
 * Wed Sep  2 2015 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - update to version 2.0.1 (no change)
 
