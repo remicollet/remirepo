@@ -85,6 +85,8 @@ cp -pr src %{buildroot}%{_datadir}/php/%{namespace}
 
 %check
 %if %{with_tests}
+: Ensure we use our autoloader
+sed -e '/^ZipStreamer.php/d' -i test/*php
 
 : Run test suite
 %{_bindir}/phpunit \
