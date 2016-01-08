@@ -18,7 +18,7 @@
 
 Name:           composer
 Version:        1.0.0
-Release:        0.17.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}%{?dist}
+Release:        0.18.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -30,6 +30,8 @@ Source2:        %{name}-bootstrap.php
 
 # Use our autoloader, resources path, fix for tests
 Patch0:         %{name}-rpm.patch
+# See https://github.com/composer/composer/pull/4756
+Patch1:         %{name}-pr4756.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -137,6 +139,7 @@ Documentation: https://getcomposer.org/doc/
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
+%patch1 -p1 -b .rpm
 find . -name \*.rpm -exec rm {} \; -print
 
 cp -p %{SOURCE1} src/Composer/autoload.php
@@ -222,6 +225,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan  8 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.18.20160106git64b0d72
+- add patch for json-schema 1.6
+  open https://github.com/composer/composer/pull/4756
+
 * Thu Jan  7 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.17.20160106git64b0d72
 - new snapshot
 - cleanup autoloader
