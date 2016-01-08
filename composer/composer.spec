@@ -56,7 +56,6 @@ BuildRequires:  php-composer(phpunit/phpunit)           >= 4.5
 BuildRequires:  php-composer(symfony/class-loader)
 BuildRequires:  php-seld-phar-utils >= 1.0.1
 BuildRequires:  php-seld-cli-prompt >= 1.0.0-3
-
 %endif
 
 # From composer.json, "require": {
@@ -226,7 +225,7 @@ rm -rf %{buildroot}
 
 %changelog
 * Fri Jan  8 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.18.20160106git64b0d72
-- add patch for json-schema 1.6
+- add patch for json-schema 1.6, FTBFS detected by Koschei
   open https://github.com/composer/composer/pull/4756
 
 * Thu Jan  7 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.17.20160106git64b0d72
