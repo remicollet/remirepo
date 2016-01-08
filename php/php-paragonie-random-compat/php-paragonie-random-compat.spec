@@ -12,8 +12,7 @@
 
 %global github_owner     paragonie
 %global github_name      random_compat
-%global github_version   1.1.4
-%global github_commit    d762ee5b099a29044603cd4649851e81aa66cb47
+%global github_commit    dd8998b7c846f6909f4e7a5f67fabebfc412a4f7
 
 %global composer_vendor  paragonie
 %global composer_project random_compat
@@ -27,14 +26,14 @@
 %{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-%{composer_vendor}-random-compat
-Version:       %{github_version}
+Version:       1.1.5
 Release:       1%{?github_release}%{?dist}
 Summary:       PHP 5.x polyfill for random_bytes() and random_int() from PHP 7
 
 Group:         Development/Libraries
 License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
-Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+Source0:       %{url}/archive/%{github_commit}/%{name}-%{version}-%{github_commit}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -115,6 +114,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan  8 2016 Remi Collet <remi@remirepo.net> - 1.1.5-1
+- update to 1.1.5
+
 * Sun Jan 03 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.4-1
 - Updated to 1.1.4 (RHBZ #1290629)
 
