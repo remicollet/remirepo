@@ -7,11 +7,11 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    3b76b6f5086a58e0b6f7c89ba4e1882425853c13
+%global gh_commit    21f1ed9847ac311a392f43eee12ec5f27c48bdad
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 
 Name:           atoum
-Version:        2.4.1
+Version:        2.5.0
 Release:        1%{?dist}
 Summary:        PHP Unit Testing framework
 
@@ -24,16 +24,21 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
 BuildRequires:       php(language) >= 5.3.3
-BuildRequires:       php-cli
-BuildRequires:       php-dom
-BuildRequires:       php-date
 BuildRequires:       php-hash
-BuildRequires:       php-pcre
-BuildRequires:       php-spl
-BuildRequires:       php-tokenizer
 BuildRequires:       php-json
-BuildRequires:       php-mbstring
+BuildRequires:       php-session
+BuildRequires:       php-tokenizer
 BuildRequires:       php-xml
+
+BuildRequires:       php-mbstring
+
+BuildRequires:       php-cli
+BuildRequires:       php-date
+BuildRequires:       php-dom
+BuildRequires:       php-pcre
+BuildRequires:       php-phar
+BuildRequires:       php-reflection
+BuildRequires:       php-spl
 
 # From composer.json, 	"require": {
 #        "php": ">=5.3.3",
@@ -51,11 +56,12 @@ Requires:       php-xml
 # From composer.json, 	"suggest": {
 #        "ext-mbstring": "Provides support for UTF-8 strings"
 Requires:       php-mbstring
-# From phpcompatinfo report for version 2.2.0
+# From phpcompatinfo report for version 2.5.0
 Requires:       php-cli
 Requires:       php-date
 Requires:       php-dom
 Requires:       php-pcre
+Requires:       php-phar
 Requires:       php-reflection
 Requires:       php-spl
 %if 0%{?fedora} >= 21
@@ -160,6 +166,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jan  8 2016 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
+- update to 2.5.0
+
 * Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
 - update to 2.4.1
 
