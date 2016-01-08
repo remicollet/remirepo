@@ -50,7 +50,7 @@ Provides:       php-composer(owncloud/tarstreamer) = %{version}%{?prever}
 A library for dynamically streaming dynamic tar files without
 the need to have the complete file stored on the server.
 
-Autoloader: %{_datadir}/php/%{ns_vendor}/%{ns_project}/autoload.php';
+Autoloader: %{_datadir}/php/%{ns_vendor}/%{ns_project}/autoload.php
 
 
 %prep
