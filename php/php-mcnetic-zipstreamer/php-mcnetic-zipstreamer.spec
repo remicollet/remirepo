@@ -15,7 +15,7 @@
 
 Name:           php-mcnetic-zipstreamer
 Version:        1.7
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Stream zip files without i/o overhead
 
 Group:          Development/Libraries
@@ -88,12 +88,17 @@ cp -pr src %{buildroot}%{_datadir}/php/%{namespace}
 : Ensure we use our autoloader
 sed -e '/^ZipStreamer.php/d' -i test/*php
 
-: Run test suite
-%{_bindir}/phpunit \
-  --bootstrap %{buildroot}%{_datadir}/php/%{namespace}/autoload.php \
-  --configuration test/phpunit.xml
+if [ $(php -r "echo PHP_INT_SIZE;") -eq 8 ]; then
+  : Run test suite
+  %{_bindir}/phpunit \
+    --bootstrap %{buildroot}%{_datadir}/php/%{namespace}/autoload.php \
+    --configuration test/phpunit.xml
+else
+  : Ignore test suite as Count64 do not support 32 bits overflow
+fi
 
 if which php70; then
+  : Run test suite with PHP 7.0 SCL
   php70 %{_bindir}/phpunit \
     --bootstrap %{buildroot}%{_datadir}/php/%{namespace}/autoload.php \
     --configuration test/phpunit.xml
@@ -117,6 +122,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan  8 2016 Remi Collet <remi@fedoraproject.org> - 1.7.2
+- ensure we use our autoloader during the test suite
+- ignore test suite on 32bits build
+
 * Fri Jan  8 2016 Remi Collet <remi@fedoraproject.org> - 1.7.1
 - initial package
 - add patch to workaround error raised by pecl_http
