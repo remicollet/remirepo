@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # See https://github.com/llaville/php-compatinfo-db/releases
-%global gh_commit    0a8fdbb697c5296c6ddb35316a739318e8569cd3
+%global gh_commit    c0bd579699ac3059547492e3745b859a72670de7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20151031
 %global gh_owner     llaville
@@ -23,7 +23,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{c_vendor}-%{c_project}
-Version:        1.3.0
+Version:        1.4.0
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Reference Database to be used with php-compatinfo library
@@ -38,6 +38,8 @@ Source1:        %{name}-1.2.0-autoload.php
 
 # Autoload and sqlite database path
 Patch0:         %{name}-1.2.0-rpm.patch
+# CURL_SSLVERSION constants have been backported
+Patch1:         %{name}-curltls.patch
 
 BuildArch:      noarch
 # Needed to build the database from sources
@@ -102,6 +104,8 @@ Conflicts:      php-bartlett-PHP-CompatInfo < 5
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
+%patch1 -p0 -b .old
+
 cp %{SOURCE1} src/%{ns_vendor}/%{ns_project}/autoload.php
 
 # Cleanup patched files
@@ -177,6 +181,9 @@ export BARTLETT_COMPATINFO_DB=%{buildroot}%{_datadir}/%{name}/compatinfo.sqlite
 
 
 %changelog
+* Sat Jan  9 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
+- update to 1.4.0
+
 * Tue Dec 29 2015 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - update to 1.3.0
 
