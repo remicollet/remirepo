@@ -41,12 +41,15 @@ Version:        5.1.2
 Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 Source1:        %{pecl_name}-5.1.2.ini
 Source2:        %{pecl_name}-panel.conf
 Source3:        %{pecl_name}.conf.php
+
+# Patch from master, for apcu_in / apcu_dec issues
+Patch1:         %{pecl_name}-upstream.patch
 
 License:        PHP
 Group:          Development/Languages
@@ -154,6 +157,8 @@ mv %{pecl_name}-%{version} NTS
 %endif
 
 cd NTS
+%patch1 -p1 -b .upstream
+
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APCU_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
 if test "x${extver}" != "x%{version}%{?prever}%{?gh_date:dev}"; then
@@ -321,6 +326,11 @@ fi
 
 
 %changelog
+* Sat Jan  9 2016 Remi Collet <remi@fedoraproject.org> - 5.1.2-2
+- add upstream patches to fix issues with apcu_inc / apcu_dec
+  https://github.com/krakjoe/apcu/issues/158 - negative step hangs
+  https://github.com/krakjoe/apcu/issues/164 - huge step performance
+
 * Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 5.1.2-1
 - Update to 5.1.2 (stable)
 
