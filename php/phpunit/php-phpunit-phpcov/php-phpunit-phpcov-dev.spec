@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9ef291483ff65eefd8639584d61bbfb044d747f3
+%global gh_commit    78cb486efff5c297d8b6a6f9091eb9211173785f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpcov
@@ -14,11 +14,11 @@
 %global pear_name    phpcov
 %global pear_channel pear.phpunit.de
 # not Ready
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests   0%{!?_without_tests:1}
 
 
 Name:           php-phpunit-phpcov
-Version:        2.0.2
+Version:        3.0.0
 Release:        1%{?dist}
 Summary:        TextUI front-end for PHP_CodeCoverage
 
@@ -35,39 +35,43 @@ Patch0:         %{gh_project}-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
-BuildRequires:  php-composer(phpunit/phpunit) >= 4.1
-BuildRequires:  php-composer(phpunit/php-code-coverage) >= 2.0
+BuildRequires:  php-composer(phpunit/phpunit) >= 5.0
+BuildRequires:  php-composer(phpunit/php-code-coverage) >= 3.0
 BuildRequires:  php-composer(sebastian/diff) >= 1.1
 BuildRequires:  php-composer(sebastian/diff) <  2
 BuildRequires:  php-composer(sebastian/finder-facade) >= 1.1
 BuildRequires:  php-composer(sebastian/finder-facade) <  2
 BuildRequires:  php-composer(sebastian/version) >= 1.0.3
 BuildRequires:  php-composer(sebastian/version) <  1.1
-BuildRequires:  php-symfony-console >= 2.2
+BuildRequires:  php-composer(symfony/console) >= 2.2
+BuildRequires:  php-pecl(Xdebug)
 %endif
 
 # from composer.json
-#        "php": ">=5.3.3",
-#        "phpunit/phpunit": ">=4.1",
-#        "phpunit/php-code-coverage": "~2.0",
+#        "php": ">=5.6",
+#        "phpunit/phpunit": "~5.0",
+#        "phpunit/php-code-coverage": "~3.0",
 #        "sebastian/diff": "~1.1",
 #        "sebastian/finder-facade": "~1.1",
 #        "sebastian/version": "~1.0",
-#        "symfony/console": "~2.2"
-Requires:       php(language) >= 5.3.3
-Requires:       php-composer(phpunit/phpunit) >= 4.1
-Requires:       php-composer(phpunit/php-code-coverage) >= 2.0
+#        "symfony/console": "~2|~3"
+Requires:       php(language) >= 5.6
+Requires:       php-composer(phpunit/phpunit) >= 5.0
+Requires:       php-composer(phpunit/phpunit) <  6
+Requires:       php-composer(phpunit/php-code-coverage) >= 3.0
+Requires:       php-composer(phpunit/php-code-coverage) <  4
 Requires:       php-composer(sebastian/diff) >= 1.1
 Requires:       php-composer(sebastian/diff) <  2
 Requires:       php-composer(sebastian/finder-facade) >= 1.1
 Requires:       php-composer(sebastian/finder-facade) <  2
 Requires:       php-composer(sebastian/version) >= 1.0
 Requires:       php-composer(sebastian/version) <  2
-Requires:       php-symfony-console >= 2.2
-# from phpcompatinfo report for version 1.1.0
+Requires:       php-composer(symfony/console) >= 2
+Requires:       php-composer(symfony/console) <  4
+# from phpcompatinfo report for version 3.0.0
 Requires:       php-reflection
 Requires:       php-spl
 
@@ -105,10 +109,15 @@ install -D -p -m 755 phpcov %{buildroot}%{_bindir}/phpcov
 
 %if %{with_tests}
 %check
-phpunit \
-   --bootstrap src/autoload.php \
-   -d date.timezone=UTC \
-   tests
+%{_bindir}/phpunit \
+    --bootstrap src/autoload.php \
+    tests
+
+if which php70; then
+  php70 %{_bindir}/phpunit \
+    --bootstrap src/autoload.php \
+    tests
+fi
 %endif
 
 
@@ -131,6 +140,13 @@ fi
 
 
 %changelog
+* Sat Jan  9 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- update to 3.0.0
+- raise minimal PHP version to 5.6
+- raise dependencies on phpunit ~5.0, php-code-coverage ~3.0
+- allow symfony 3
+- run test suite with both PHP 6 and 7 when available
+
 * Mon Oct  5 2015 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - update to 2.0.2
 - allow PHPUnit 5

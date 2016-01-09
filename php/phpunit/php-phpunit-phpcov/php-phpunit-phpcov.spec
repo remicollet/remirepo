@@ -60,6 +60,7 @@ BuildRequires:  php-symfony-console >= 2.2
 Requires:       php(language) >= 5.3.3
 Requires:       php-composer(phpunit/phpunit) >= 4.1
 Requires:       php-composer(phpunit/php-code-coverage) >= 2.0
+Requires:       php-composer(phpunit/php-code-coverage) <  3
 Requires:       php-composer(sebastian/diff) >= 1.1
 Requires:       php-composer(sebastian/diff) <  2
 Requires:       php-composer(sebastian/finder-facade) >= 1.1
