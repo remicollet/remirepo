@@ -11,8 +11,7 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-# https://github.com/arnaud-lb/php-rdkafka/issues/2
-%global with_zts   0
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  rdkafka
 %global with_tests %{?_without_tests:0}%{!?_without_tests:1}
 %if "%{php_version}" < "5.6"
@@ -23,17 +22,16 @@
 
 Summary:        Kafka client based on librdkafka
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.0.2
+Version:        0.9.0
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-# https://github.com/arnaud-lb/php-rdkafka/issues/3
-Source1:        https://raw.githubusercontent.com/arnaud-lb/php-rdkafka/master/LICENSE
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  librdkafka-devel
+BuildRequires:  librdkafka-devel > 0.8
+BuildRequires:  librdkafka-devel < 0.9
 BuildRequires:  %{?scl_prefix}php-devel > 5.4
 BuildRequires:  %{?scl_prefix}php-pear
 
@@ -80,11 +78,12 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
 
+mv package2.xml package.xml
+
 # Don't install tests
 sed -e '/role="test"/d' -i package.xml
 
 cd NTS
-cp %{SOURCE1} LICENSE
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_RDKAFKA_VERSION/{s/.* "//;s/".*$//;p}' php_rdkafka.h)
@@ -142,7 +141,7 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Documentation
-for i in LICENSE $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -201,6 +200,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jan 09 2016 Remi Collet <remi@fedoraproject.org> - 0.9.0-1
+- Update to 0.9.0 (beta)
+
 * Thu May 14 2015 Remi Collet <remi@fedoraproject.org> - 0.0.2-1
 - initial package, version 0.0.2 (alpha)
 - open https://github.com/arnaud-lb/php-rdkafka/pull/5 - ZTS build
