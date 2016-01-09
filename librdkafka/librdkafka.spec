@@ -1,19 +1,19 @@
 # remirepo/fedora spec file for librdkafka
 #
-# Copyright (c) 2015 Remi Collet
+# Copyright (c) 2015-2016 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
 %global libname      librdkafka
-%global gh_commit    25d879180d83f8789291d1a6fdb657ee7b50ec40
+%global gh_commit    0c15023708302c41a36e95f9650d69c453dfabba
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     edenhill
 %global gh_project   %{libname}
 
 Name:    %{libname}
-Version: 0.8.6
+Version: 0.9.0
 Release: 1%{?dist}
 Group:   System Environment/Libraries
 Summary: Apache Kafka C/C++ client library
@@ -26,8 +26,8 @@ Source0: https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_
 # i686 required
 ExcludeArch:    i386
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-# Needed to run the test suite
-# find regress/ -type f | /usr/lib/rpm/perl.req
+BuildRequires:  openssl-devel
+BuildRequires:  cyrus-sasl-devel
 BuildRequires:  zlib-devel
 BuildRequires:  libstdc++-devel
 BuildRequires:  gcc-c++
@@ -104,5 +104,8 @@ fi
 
 
 %changelog
+* Sat Jan  9 2016 Remi Collet <remi@fedoraproject.org> - 0.9.0-1
+- update to 0.9.0
+
 * Thu May 14 2015 Remi Collet <remi@fedoraproject.org> - 0.8.6-1
 - initial package
