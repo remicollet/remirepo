@@ -1,4 +1,4 @@
-# remirepo spec file for php-pecl-redis
+# remirepo spec file for php-pecl-xmldiff
 # adapted for scl, from
 #
 # Fedora spec file for php-pecl-redis
