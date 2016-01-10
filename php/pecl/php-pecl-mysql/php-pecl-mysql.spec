@@ -97,14 +97,14 @@ mv %{gh_project}-%{gh_commit} NTS
 # Don't install (register) the tests
 sed -e 's/role="test"/role="src"/' -i package.xml
 
-#cd NTS
+cd NTS
 # Check version as upstream often forget to update this
-#extver=$(sed -n '/#define PHP_YAC_VERSION/{s/.* "//;s/".*$//;p}' php_yac.h)
-#if test "x${extver}" != "x%{version}%{?prever}%{?gh_date:-dev}"; then
-#   : Error: Upstream YAC version is ${extver}, expecting %{version}%{?prever}%{?gh_date:-dev}.
-#   exit 1
-#fi
-#cd ..
+extver=$(sed -n '/#define PHP_MYSQL_VERSION/{s/.* "//;s/".*$//;p}' php_mysql.h)
+if test "x${extver}" != "x%{version}%{?prever}%{?gh_date:-dev}"; then
+   : Error: Upstream YAC version is ${extver}, expecting %{version}%{?prever}%{?gh_date:-dev}.
+   exit 1
+fi
+cd ..
 
 
 %if %{with_zts}
