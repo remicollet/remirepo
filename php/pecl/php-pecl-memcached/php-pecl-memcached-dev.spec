@@ -25,9 +25,10 @@
 
 %global with_fastlz 1
 %global with_igbin  0
-%global with_zts    0%{?__ztsphp:1}
+%global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 %global pecl_name   memcached
+# https://github.com/rlerdorf/php-memcached/commits/php7
 %global gh_commit   3c79a97aeb6e8c946116c536831816a36eb4eb0f
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_date     20150628
@@ -47,8 +48,8 @@
 
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?sub_prefix}php-pecl-memcached
-Version:      2.2.0
-Release:      11.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:      2.2.1
+Release:      0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -151,9 +152,15 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep 
 %setup -c -q
-
 mv %{gh_project}-%{gh_commit} NTS
-mv NTS/package.xml .
+sed -e '/PHP_MEMCACHED_VERSION/s/2.2.0/%{version}-dev/' -i NTS/php_memcached.h
+%{__php} -r '
+  $pkg = simplexml_load_file("NTS/package.xml");
+  $pkg->date = substr("%{gh_date}",0,4)."-".substr("%{gh_date}",4,2)."-".substr("%{gh_date}",6,2);
+  $pkg->version->release = "%{version}dev";
+  $pkg->stability->release = "devel";
+  $pkg->asXML("package.xml");
+'
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' -i package.xml
@@ -167,8 +174,8 @@ sed -e '/name=.fastlz/d' -i ../package.xml
 
 # Check version as upstream often forget to update this
 extver=$(sed -n '/#define PHP_MEMCACHED_VERSION/{s/.* "//;s/".*$//;p}' php_memcached.h)
-if test "x${extver}" != "x%{version}%{?intver}"; then
-   : Error: Upstream HTTP version is now ${extver}, expecting %{version}%{?prever}.
+if test "x${extver}" != "x%{version}%{?gh_date:-dev}%{?intver}"; then
+   : Error: Upstream HTTP version is now ${extver}, expecting %{version}%{?prever}%{?gh_date:-dev}.
    : Update the pdover macro and rebuild.
    exit 1
 fi
@@ -258,7 +265,7 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 # Documentation
 cd NTS
-for i in $(grep "role='doc'" ../package.xml | sed -e "s/^.*name='//;s/'.*$//")
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -356,6 +363,9 @@ exit $ret
 
 
 %changelog
+* Sun Jan 10 2016 Remi Collet <remi@fedoraproject.org> - 2.2.1-0.1.20150628git3c79a97
+- bump version to 2.2.1-dev, stability=devel
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 2.2.0-11.20150628git3c79a97
 - rebuild for PHP 7.0.0RC5 new API version
 
