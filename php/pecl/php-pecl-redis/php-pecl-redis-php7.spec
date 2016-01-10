@@ -43,7 +43,7 @@ Summary:       Extension for communicating with the Redis key-value store
 Name:          %{?sub_prefix}php-pecl-redis
 Version:       2.2.8
 %if 0%{?gh_date}
-Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
@@ -120,10 +120,14 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %if 0%{?gh_date}
 %setup -qc
 mv %{gh_project}-%{gh_commit} NTS
-sed -e '/release/s/2.2.7/%{version}dev/' -i NTS/package.xml
 sed -e '/PHP_REDIS_VERSION/s/2.2.5/%{version}-dev/' -i NTS/php_redis.h
-mv NTS/package.xml .
-
+%{__php} -r '
+  $pkg = simplexml_load_file("NTS/package.xml");
+  $pkg->date = substr("%{gh_date}",0,4)."-".substr("%{gh_date}",4,2)."-".substr("%{gh_date}",6,2);
+  $pkg->version->release = "%{version}dev";
+  $pkg->stability->release = "devel";
+  $pkg->asXML("package.xml");
+'
 %else
 %setup -q -c -a 1
 # rename source folder
@@ -209,7 +213,7 @@ install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # Documentation
 cd NTS
-for i in $(grep 'role=.doc.' ../package.xml | sed -e "s/^.*name='//;s/'.*\$//")
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -320,6 +324,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan 10 2016 Remi Collet <remi@fedoraproject.org> - 2.2.8-0.2.20160106git4a37e47
+- improve package.xml, set stability=devel
+
 * Sun Jan 10 2016 Remi Collet <remi@fedoraproject.org> - 2.2.8-0.1.20160106git4a37e47
 - update to 2.2.8-dev for PHP 7
 - use git snapshot
