@@ -11,26 +11,27 @@
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
 
+# https://github.com/websupport-sk/pecl-memcache/commits/NON_BLOCKING_IO_php7
 %global gh_commit   fdbd46bbc6f53ed6e024521895e142cbfc9b3340
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    websupport-sk
 %global gh_project  pecl-memcache
 %global gh_date     20151130
-%global pecl_name  memcache
+%global pecl_name   memcache
 # Not ready, some failed UDP tests. Neded investigation.
-%global with_tests 0%{?_with_tests:1}
-%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
+%global with_tests  0%{?_with_tests:1}
+%global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
-%global ini_name  %{pecl_name}.ini
+%global ini_name    %{pecl_name}.ini
 %else
-%global ini_name  40-%{pecl_name}.ini
+%global ini_name    40-%{pecl_name}.ini
 %endif
 
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?scl_prefix}php-pecl-memcache
 Version:      3.0.9
 %if 0%{?gh_date:1}
-Release:      0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:      0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:      1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -105,8 +106,13 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %setup -c -q
 %if 0%{?gh_date:1}
 mv %{gh_project}-%{gh_commit} NTS
-mv NTS/package.xml .
-sed -e '/release/s/3.0.9/%{version}dev/' -i package.xml
+%{__php} -r '
+  $pkg = simplexml_load_file("NTS/package.xml");
+  $pkg->date = substr("%{gh_date}",0,4)."-".substr("%{gh_date}",4,2)."-".substr("%{gh_date}",6,2);
+  $pkg->version->release = "%{version}dev";
+  $pkg->stability->release = "devel";
+  $pkg->asXML("package.xml");
+'
 %else
 mv %{pecl_name}-%{version} NTS
 %endif
@@ -288,6 +294,9 @@ fi
 
 
 %changelog
+* Sun Jan 10 2016 Remi Collet <rcollet@redhat.com> - 3.0.9-0.2.20151130gitfdbd46b
+- set stability = devel in package.xml
+
 * Sun Jan  3 2016 Remi Collet <rcollet@redhat.com> - 3.0.9-0.1.20151130gitfdbd46b
 - git snapshopt for PHP 7
 - sources from https://github.com/websupport-sk/pecl-memcache (for PHP 7)
