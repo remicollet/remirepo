@@ -6,14 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    fe114c7a6ac5cb0ce76932ae4017024d9842a49c
+%global gh_commit    b27db1514f7d7bb7a366ad95d4eb2b17140a0691
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     Seldaek
 %global gh_project   cli-prompt
 
 Name:           php-seld-cli-prompt
-Version:        1.0.0
-Release:        3%{?dist}
+Version:        1.0.1
+Release:        1%{?dist}
 Summary:        Allows you to prompt for user input on the command line
 
 Group:          Development/Libraries
@@ -94,6 +94,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan 10 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- update to 1.0.1
+
 * Wed Oct 14 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-3
 - add autoloader
 
