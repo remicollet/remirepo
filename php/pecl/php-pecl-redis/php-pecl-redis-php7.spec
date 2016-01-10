@@ -1,4 +1,4 @@
-# remirepo spec file for php-pecl-xmldiff
+# remirepo spec file for php-pecl-redis
 # adapted for scl, from
 #
 # Fedora spec file for php-pecl-redis
@@ -17,14 +17,20 @@
 %endif
 %endif
 
-%{?scl:          %scl_package        php-pecl-redis}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
-
+%{?scl:          %scl_package         php-pecl-redis}
+%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
+%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
+%{!?__php:       %global __php        %{_bindir}/php}
+%{!?scl:         %global _root_bindir %{_bindir}}
+%global gh_commit   4a37e47d0256581ce2f7a3b15b5bb932add09f36
+%global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner    phpredis
+%global gh_project  phpredis
+%global gh_date     20160106
 %global pecl_name   redis
-%global with_zts    0%{?__ztsphp:1}
-%global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
+%global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
+%global with_tests  0%{?_with_tests:1}
+%global with_igbin  0
 %if "%{php_version}" < "5.6"
 # after igbinary
 %global ini_name    %{pecl_name}.ini
@@ -35,28 +41,35 @@
 
 Summary:       Extension for communicating with the Redis key-value store
 Name:          %{?sub_prefix}php-pecl-redis
-Version:       2.2.7
-Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:       2.2.8
+%if 0%{?gh_date}
+Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
+%else
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+%endif
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/redis
-Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-# https://github.com/nicolasff/phpredis/issues/332 - missing tests
-Source1:       https://github.com/phpredis/phpredis/archive/%{version}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
 BuildRequires: %{?scl_prefix}php-pear
+%if %{with_igbin}
 BuildRequires: %{?sub_prefix}php-pecl-igbinary-devel
+%endif
 # to run Test suite
 %if %{with_tests}
-BuildRequires: redis >= 2.6
+BuildRequires: redis >= 3
 %endif
 
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
-# php-pecl-igbinary missing php-pecl(igbinary)%{?_isa}
+%if %{with_igbin}
+# php-pecl-igbinary missing php-pecl(igbinary)%%{?_isa}
 Requires:      %{?sub_prefix}php-pecl-igbinary%{?_isa}
+%endif
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Obsoletes:     %{?scl_prefix}php-redis < %{version}
@@ -79,6 +92,10 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -96,23 +113,32 @@ This Redis client implements most of the latest Redis API.
 As method only only works when also implemented on the server side,
 some doesn't work with an old redis server version.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
-%setup -q -c -a 1
+%if 0%{?gh_date}
+%setup -qc
+mv %{gh_project}-%{gh_commit} NTS
+sed -e '/release/s/2.2.7/%{version}dev/' -i NTS/package.xml
+sed -e '/PHP_REDIS_VERSION/s/2.2.5/%{version}-dev/' -i NTS/php_redis.h
+mv NTS/package.xml .
 
+%else
+%setup -q -c -a 1
 # rename source folder
 mv %{pecl_name}-%{version} NTS
 # tests folder from github archive
 mv phpredis-%{version}/tests NTS/tests
+%endif
+
 
 cd NTS
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_REDIS_VERSION/{s/.* "//;s/".*$//;p}' php_redis.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}.
+if test "x${extver}" != "x%{version}%{?gh_date:-dev}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?gh_date:-dev}.
    exit 1
 fi
 cd ..
@@ -145,7 +171,9 @@ cd NTS
 %configure \
     --enable-redis \
     --enable-redis-session \
+%if %{with_igbin}
     --enable-redis-igbinary \
+%endif
     --with-php-config=%{_bindir}/php-config
 make %{?_smp_mflags}
 
@@ -155,7 +183,9 @@ cd ../ZTS
 %configure \
     --enable-redis \
     --enable-redis-session \
+%if %{with_igbin}
     --enable-redis-igbinary \
+%endif
     --with-php-config=%{_bindir}/zts-php-config
 make %{?_smp_mflags}
 %endif
@@ -179,7 +209,7 @@ install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # Documentation
 cd NTS
-for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role=.doc.' ../package.xml | sed -e "s/^.*name='//;s/'.*\$//")
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -187,13 +217,17 @@ done
 %check
 # simple module load test
 %{__php} --no-php-ini \
+%if %{with_igbin}
     --define extension=igbinary.so \
+%endif
     --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 %if %{with_zts}
 %{__ztsphp} --no-php-ini \
+%if %{with_igbin}
     --define extension=igbinary.so \
+%endif
     --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 %endif
@@ -224,19 +258,21 @@ port=6382
 %endif
 %endif
 sed -e "s/6379/$port/" -i redis.conf
-sed -e "s/6379/$port/" -i TestRedis.php
-%{_bindir}/redis-server ./redis.conf
+sed -e "s/6379/$port/" -i RedisTest.php
+%{_root_bindir}/redis-server ./redis.conf
 
 # Run the test Suite
 ret=0
 %{__php} --no-php-ini \
+%if %{with_igbin}
     --define extension=igbinary.so \
+%endif
     --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     TestRedis.php || ret=1
 
 # Cleanup
 if [ -f run/redis.pid ]; then
-   %{_bindir}/redis-cli -p $port shutdown
+   %{_root_bindir}/redis-cli -p $port shutdown
 fi
 
 exit $ret
@@ -284,6 +320,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan 10 2016 Remi Collet <remi@fedoraproject.org> - 2.2.8-0.1.20160106git4a37e47
+- update to 2.2.8-dev for PHP 7
+- use git snapshot
+
 * Sat Jun 20 2015 Remi Collet <remi@fedoraproject.org> - 2.2.7-2
 - allow build against rh-php56 (as more-php56)
 
