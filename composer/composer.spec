@@ -6,10 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    64b0d721838cdceef679761c5cf69a0d070d14c9
+%global gh_commit    bda2c0f9b7dfc24616fe273d06f816a61abec9ef
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20160106
+%global gh_date      20160109
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
@@ -18,7 +18,7 @@
 
 Name:           composer
 Version:        1.0.0
-Release:        0.18.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}%{?dist}
+Release:        0.19.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -30,14 +30,12 @@ Source2:        %{name}-bootstrap.php
 
 # Use our autoloader, resources path, fix for tests
 Patch0:         %{name}-rpm.patch
-# See https://github.com/composer/composer/pull/4756
-Patch1:         %{name}-pr4756.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-cli
 %if %{with_tests}
-BuildRequires:  php-composer(justinrainbow/json-schema) >= 1.4.4
+BuildRequires:  php-composer(justinrainbow/json-schema) >= 1.6
 BuildRequires:  php-composer(composer/spdx-licenses)    >= 1.0
 BuildRequires:  php-composer(composer/semver)           >= 1.0
 BuildRequires:  php-composer(seld/jsonlint)             >= 1.4
@@ -60,7 +58,7 @@ BuildRequires:  php-seld-cli-prompt >= 1.0.0-3
 
 # From composer.json, "require": {
 #        "php": "^5.3.2 || ^7.0",
-#        "justinrainbow/json-schema": "^1.4.4",
+#        "justinrainbow/json-schema": "^1.6",
 #        "composer/spdx-licenses": "^1.0",
 #        "composer/semver": "^1.0",
 #        "seld/jsonlint": "~1.4",
@@ -72,7 +70,7 @@ BuildRequires:  php-seld-cli-prompt >= 1.0.0-3
 #        "seld/cli-prompt": "^1.0"
 Requires:       php(language)                           >= 5.3.2
 Requires:       php-cli
-Requires:       php-composer(justinrainbow/json-schema) >= 1.4.4
+Requires:       php-composer(justinrainbow/json-schema) >= 1.6
 Requires:       php-composer(justinrainbow/json-schema) <  2
 Requires:       php-composer(composer/spdx-licenses)    >= 1.0
 Requires:       php-composer(composer/spdx-licenses)    <  2
@@ -138,7 +136,6 @@ Documentation: https://getcomposer.org/doc/
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
-%patch1 -p1 -b .rpm
 find . -name \*.rpm -exec rm {} \; -print
 
 cp -p %{SOURCE1} src/Composer/autoload.php
@@ -224,6 +221,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan 10 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.19.20160109gitbda2c0f
+- new snapshot
+- raise dependency on justinrainbow/json-schema ^1.6
+
 * Fri Jan  8 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.18.20160106git64b0d72
 - add patch for json-schema 1.6, FTBFS detected by Koschei
   open https://github.com/composer/composer/pull/4756
