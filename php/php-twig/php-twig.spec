@@ -3,7 +3,7 @@
 #
 # Fedora spec file for php-twig
 #
-# Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2014-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #                         Remi Collet <remi@fedoraproject.org>
 #
 # License: MIT
@@ -14,8 +14,8 @@
 
 %global github_owner     twigphp
 %global github_name      Twig
-%global github_version   1.23.1
-%global github_commit    d9b6333ae8dd2c8e3fd256e127548def0bc614c6
+%global github_version   1.23.3
+%global github_commit    ae53fc2c312fdee63773b75cb570304f85388b08
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 
@@ -25,7 +25,7 @@
 
 # Ext
 %global ext_name twig
-%global with_zts 0%{?__ztsphp:1}
+%global with_zts 0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 %global ini_name %{ext_name}.ini
 %else
@@ -69,7 +69,7 @@ BuildRequires: %{?scl_prefix}php-devel >= %{php_min_ver}
 %if %{with_tests}
 # For tests
 BuildRequires: %{_bindir}/phpunit
-## phpcompatinfo (computed from version 1.22.2)
+## phpcompatinfo (computed from version 1.23.3)
 BuildRequires: %{?scl_prefix}php-ctype
 BuildRequires: %{?scl_prefix}php-date
 BuildRequires: %{?scl_prefix}php-dom
@@ -267,6 +267,10 @@ sed -e 's/function testGetAttributeWithTemplateAsObject/function skip_testGetAtt
 : Test suite with extension
 %{_bindir}/php --define extension=ext/NTS/modules/%{ext_name}.so \
     %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php --verbose
+
+if which php70; then
+   php70 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php --verbose
+fi
 %else
 : Tests skipped
 %endif
@@ -295,8 +299,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan 11 2016 Remi Collet <remi@fedoraproject.org> - 1.23.3-1
+- Update to 1.23.3
+- run test suite with both PHP 5 and 7 when available
+
 * Thu Nov 05 2015 Remi Collet <remi@fedoraproject.org> - 1.23.1-1
-- Update to 1.23.0
+- Update to 1.23.1
 
 * Fri Oct 30 2015 Remi Collet <remi@fedoraproject.org> - 1.23.0-1
 - Update to 1.23.0
