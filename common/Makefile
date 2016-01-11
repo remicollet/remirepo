@@ -128,3 +128,7 @@ REFLECTION: $(NAME).spec
 composer:
 	tar xf $(shell spectool -l $(NAME).spec | head -n 1 | sed -e 's:.*/::') --strip-components=1 '*/composer.json' && \
 	mv composer.json composer-$(shell sed -n '/^Version:/{s/[^0-9]*//;p}' $(NAME).spec).json
+
+devcomposer:
+	tar xf $(shell spectool -l $(NAME)-dev.spec | head -n 1 | sed -e 's:.*/::') --strip-components=1 '*/composer.json' && \
+	mv composer.json composer-$(shell sed -n '/^Version:/{s/[^0-9]*//;p}' $(NAME).spec).json

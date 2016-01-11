@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c047ff05d2279404af9a7e89e2a7151c32c88022
+%global gh_commit    676c25c4ac563869572c878fdaf3db21587f5f3b
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.1
-%global minor        3
+%global minor        4
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -217,6 +217,9 @@ fi
 
 
 %changelog
+* Mon Jan 11 2016 Remi Collet <remi@fedoraproject.org> - 5.1.4-1
+- Update to 5.1.4
+
 * Thu Dec 10 2015 Remi Collet <remi@fedoraproject.org> - 5.1.3-1
 - Update to 5.1.3
 - obsolete php-phpunit-PHPUnit-Selenium
