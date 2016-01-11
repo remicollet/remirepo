@@ -20,10 +20,11 @@ php-pear-File-Fstab                      Obso        2.0.3      !!    seems dead
 php-pear-File-Passwd                     Obso        1.1.7      !!    seems dead (used by inderfero, php-pear-Auth)
 php-pear-File-SMBPasswd                  -           1.0.3      !!    seens dead (used by php-pear-Auth-samba)
 php-pear-File-Util                       Obso        1.0.0      !!    seems dead (used by php-pear-File)
+php-pear-HTML-Common                     Obso        1.2.5      !!    seems dead (used by moodle, php-pear-HTML-QuickForm, php-pear-HTML-QuickForm-advmultiselect, php-pear-HTML-Table, php-pear-HTML_Javascript)
+php-pear-HTML-QuickForm                  Obso        3.2.14     !!    seems dead (used by moodle, php-pear-HTML-QuickForm-ElementGrid, php-pear-HTML-QuickForm-advmultiselect)
 php-pear-HTTP-OAuth                      -           0.3.2            OK
 php-pear-Net-Sieve                       forked      0.3.2            OK (used by horde / roundcubemail)
 php-pear-Services-Weather                Obso        1.4.7      !!    seems dead (Feb 2014, used by horde)
-
 ================= Retired ======================
 php-pear-Benchmark                       Obso        1.2.9    Y
 php-pear-Console-Color                   Obso        1.0.3    Y  
@@ -31,15 +32,13 @@ php-pear-Console-ProgressBar             -           0.5.2    Y
 php-pear-DB-DataObject-FormBuilder       Obso        1.0.2    Y
 php-pear-DB-QueryTool                    Obso        1.1.2    Y
 php-pear-Event-Dispatcher                -           1.1.0    Y
+php-pear-HTML-QuickForm-ElementGrid      Obso        0.1.2    Y
+php-pear-HTML-QuickForm-advmultiselect   Obso        1.5.1    Y
+php-pear-HTML-Table                      -           1.8.3    Y
 php-pear-PHP-Compat                      -           1.6.0a3  Y
 php-pear-PHP-CompatInfo                  Obso        1.9.0    Y
 
 =================== List =======================
-php-pear-HTML-Common -- Base class for other HTML classes ( master f23 f22 f21 epel7 el6 el5 )
-php-pear-HTML-QuickForm -- Class for creating, validating, processing HTML forms ( master f23 f22 f21 epel7 el6 el5 )
-php-pear-HTML-QuickForm-ElementGrid -- Meta-element which holds any other element in a grid ( master f23 f22 f21 epel7 el6 el5 )
-php-pear-HTML-QuickForm-advmultiselect -- Element for HTML_QuickForm that emulate a multi-select ( master f23 f22 f21 epel7 el6 el5 )
-php-pear-HTML-Table -- Class to easily design HTML tables ( master f23 f22 f21 epel7 el6 el5 )
 php-pear-HTTP -- Miscellaneous HTTP utilities ( master f23 f22 f21 epel7 el6 el5 )
 php-pear-HTTP-Client -- Easy way to perform multiple HTTP requests and process their results ( master f23 f22 f21 epel7 el6 el5 )
 php-pear-HTTP-Request -- Provides an easy way to perform HTTP requests ( master f23 f22 f21 epel7 el6 el5 )
