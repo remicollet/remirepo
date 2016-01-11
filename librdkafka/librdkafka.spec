@@ -23,6 +23,8 @@ License: BSD and MIT
 URL:     https://github.com/%{gh_owner}/%{gh_project}
 Source0: https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
+Patch1: %{name}-upstream.patch
+
 # i686 required
 ExcludeArch:    i386
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -54,6 +56,8 @@ developing applications that use %{name}.
 
 %prep
 %setup -qn %{gh_project}-%{gh_commit}
+
+%patch1 -p1 -b .upstream
 
 mkdir rpmdocs
 cp -pr examples rpmdocs/examples
@@ -106,6 +110,7 @@ fi
 %changelog
 * Sat Jan  9 2016 Remi Collet <remi@fedoraproject.org> - 0.9.0-1
 - update to 0.9.0
+- add upstream patch for old glibc (RHEL-5)
 
 * Thu May 14 2015 Remi Collet <remi@fedoraproject.org> - 0.8.6-1
 - initial package
