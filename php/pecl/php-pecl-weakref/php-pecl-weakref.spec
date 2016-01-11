@@ -1,4 +1,4 @@
-# spec file for php-pecl-weakref
+# remirepo spec file for php-pecl-weakref
 #
 # Copyright (c) 2014-2016 Remi Collet
 # License: CC-BY-SA

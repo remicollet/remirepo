@@ -1,4 +1,4 @@
-# spec file for php-pecl-weakref
+# remirepo spec file for php-pecl-weakref
 #
 # Copyright (c) 2014-2016 Remi Collet
 # License: CC-BY-SA
@@ -12,27 +12,28 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global with_zts   0%{?__ztsphp:1}
+%global gh_commit  faa99eef4c7333ec563e7c22afa152753d1bf3d5
+%global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner   colder
+%global gh_project php-weakref
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
+%global with_tests 0%{!?_without_tests:1}
 %global pecl_name  Weakref
 %global  ext_name  weakref
 #global versuf     -beta
-%if "%{php_version}" < "5.6"
-%global ini_name   %{ext_name}.ini
-%else
 %global ini_name   40-%{ext_name}.ini
-%endif
 
 Summary:        Implementation of weak references
 Name:           %{?scl_prefix}php-pecl-weakref
-Version:        0.2.6
+Version:        0.3.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel > 5.3
+BuildRequires:  %{?scl_prefix}php-devel > 7
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  Judy-devel
 BuildRequires:  pcre-devel
@@ -54,14 +55,12 @@ Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
-%if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
-%endif
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -75,15 +74,18 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 A weak reference provides a gateway to an object without preventing
 that object from being collected by the garbage collector (GC).
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
 %setup -q -c
-mv %{pecl_name}-%{version} NTS
+mv %{gh_project}-%{gh_commit} NTS
+mv NTS/package.xml .
+
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' -i package.xml
 
 cd NTS
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_WEAKREF_VERSION/{s/.* "//;s/".*$//;p}' php_weakref.h)
 if test "x${extver}" != "x%{version}%{?versuf}"; then
@@ -142,7 +144,7 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Documentation
-for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep "role='doc'" package.xml | sed -e "s/^.*name='//;s/'.*\$//")
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -158,16 +160,40 @@ fi
 
 
 %check
+cd NTS
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
     --define extension=%{buildroot}%{php_extdir}/%{ext_name}.so \
     --modules | grep %{pecl_name}
 
+%if %{with_tests}
+: Upstream test suite for NTS extension
+TEST_PHP_EXECUTABLE=%{__php} \
+TEST_PHP_ARGS="-n -d extension=%{buildroot}%{php_extdir}/%{ext_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{__php} -n run-tests.php --show-diff
+%else
+: Upstream test suite disabled
+%endif
+
 %if %{with_zts}
+cd ../ZTS
 : Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
     --define extension=%{buildroot}%{php_ztsextdir}/%{ext_name}.so \
     --modules | grep %{pecl_name}
+
+%if %{with_tests}
+: Upstream test suite for ZTS extension
+TEST_PHP_EXECUTABLE=%{__ztsphp} \
+TEST_PHP_ARGS="-n -d extension=%{buildroot}%{php_ztsextdir}/%{ext_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{__ztsphp} -n run-tests.php --show-diff
+%else
+: Upstream test suite disabled
+%endif
 %endif
 
 
@@ -191,6 +217,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan 11 2016 Remi Collet <remi@fedoraproject.org> - 0.3.1-1
+- update to 0.3.1
+- switch to github sources (for tests)
+- run test suite during the build
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 0.2.6-1.1
 - Fedora 21 SCL mass rebuild
 
