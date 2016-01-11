@@ -22,7 +22,7 @@
 
 Summary:        Kafka client based on librdkafka
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.9.0
+Version:        0.9.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
@@ -31,7 +31,6 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  librdkafka-devel > 0.8
-BuildRequires:  librdkafka-devel < 0.9
 BuildRequires:  %{?scl_prefix}php-devel > 5.4
 BuildRequires:  %{?scl_prefix}php-pear
 
@@ -69,9 +68,9 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 
 %description
 This extension is a librdkafka binding providing a working client
-for Kafka 0.8.
+for Kafka 0.8 and 0.9.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -200,6 +199,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan 11 2016 Remi Collet <remi@fedoraproject.org> - 0.9.1-1
+- Update to 0.9.1 (beta)
+
 * Sat Jan 09 2016 Remi Collet <remi@fedoraproject.org> - 0.9.0-1
 - Update to 0.9.0 (beta)
 
