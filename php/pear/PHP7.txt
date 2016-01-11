@@ -20,11 +20,12 @@ php-pear-File-Fstab                      Obso        2.0.3      !!    seems dead
 php-pear-File-Passwd                     Obso        1.1.7      !!    seems dead (used by inderfero, php-pear-Auth)
 php-pear-File-SMBPasswd                  -           1.0.3      !!    seens dead (used by php-pear-Auth-samba)
 php-pear-File-Util                       Obso        1.0.0      !!    seems dead (used by php-pear-File)
-php-pear-HTML-Common                     Obso        1.2.5      !!    seems dead (used by moodle, php-pear-HTML-QuickForm, php-pear-HTML-QuickForm-advmultiselect, php-pear-HTML-Table, php-pear-HTML_Javascript)
-php-pear-HTML-QuickForm                  Obso        3.2.14     !!    seems dead (used by moodle, php-pear-HTML-QuickForm-ElementGrid, php-pear-HTML-QuickForm-advmultiselect)
+php-pear-HTML-Common                     Obso        1.2.5      !!    seems dead (used by moodle, php-pear-HTML-QuickForm, php-pear-HTML_Javascript)
+php-pear-HTML-QuickForm                  Obso        3.2.14     !!    seems dead (used by moodle)
 php-pear-HTTP-OAuth                      -           0.3.2            OK
 php-pear-Net-Sieve                       forked      0.3.2            OK (used by horde / roundcubemail)
 php-pear-Services-Weather                Obso        1.4.7      !!    seems dead (Feb 2014, used by horde)
+
 ================= Retired ======================
 php-pear-Benchmark                       Obso        1.2.9    Y
 php-pear-Console-Color                   Obso        1.0.3    Y  
