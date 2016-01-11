@@ -25,6 +25,12 @@ php-pear-HTML-QuickForm                  Obso        3.2.14     !!    seems dead
 php-pear-HTTP-OAuth                      -           0.3.2            OK
 php-pear-Net-Sieve                       forked      0.3.2            OK (used by horde / roundcubemail)
 php-pear-Services-Weather                Obso        1.4.7      !!    seems dead (Feb 2014, used by horde)
+php-pear-HTTP                            Obso        1.4.1      !!    seems dead (used by fusionforge-web, fusionforge-plugin-compactpreview)
+php-pear-HTTP-Client                     Obso        1.2.1      !!    seems dead (used by php-pear-Auth)
+php-pear-HTTP-Request                    Obso        1.4.4      !!    seems dead (used by php-horde-Horde-Kolab-Storage, php-pear-Cache, php-pear-HTTP-Client, php-pear-SOAP, php-pear-Services-Weather, php-phpSmug)
+php-pear-HTTP-Request2                   -           2.2.1            OK (used by php-pear-HTTP-OAuth, php-pear-XML-RPC2, php-pear-phing)
+php-pear-HTTP-Upload                     Obso        0.9.1/1.0.0b3    OK
+php-pear-Image-Text                      -           0.7.0            OK (php 5, used by php-pear-Text-CAPTCHA)
 
 ================= Retired ======================
 php-pear-Benchmark                       Obso        1.2.9    Y
@@ -36,20 +42,14 @@ php-pear-Event-Dispatcher                -           1.1.0    Y
 php-pear-HTML-QuickForm-ElementGrid      Obso        0.1.2    Y
 php-pear-HTML-QuickForm-advmultiselect   Obso        1.5.1    Y
 php-pear-HTML-Table                      -           1.8.3    Y
+php-pear-Image-Canvas                    Obso        0.3.5    Y
+php-pear-Image-Color                     Obso        1.0.4    Y
+php-pear-Image-Graph                     Obso        0.8.0    Y
+php-pear-Image-GraphViz                  Obso        1.3.0    Y
 php-pear-PHP-Compat                      -           1.6.0a3  Y
 php-pear-PHP-CompatInfo                  Obso        1.9.0    Y
 
 =================== List =======================
-php-pear-HTTP -- Miscellaneous HTTP utilities ( master f23 f22 f21 epel7 el6 el5 )
-php-pear-HTTP-Client -- Easy way to perform multiple HTTP requests and process their results ( master f23 f22 f21 epel7 el6 el5 )
-php-pear-HTTP-Request -- Provides an easy way to perform HTTP requests ( master f23 f22 f21 epel7 el6 el5 )
-php-pear-HTTP-Request2 -- Provides an easy way to perform HTTP requests ( master f23 f22 f21 epel7 el6 el5 )
-php-pear-HTTP-Upload -- Secure managment of files submitted via HTML Forms ( master f23 f22 f21 epel7 el6 el5 )
-php-pear-Image-Canvas -- Common interface to image drawing ( master f23 f22 f21 epel7 el6 el5 )
-php-pear-Image-Color -- Manage and handles color data and conversions ( master f23 f22 f21 epel7 el6 el5 )
-php-pear-Image-Graph -- Displays numerical data as a graph/chart/plot ( master f23 f22 f21 epel7 el6 el5 )
-php-pear-Image-GraphViz -- Interface to AT&T's GraphViz tools ( master f23 f22 f21 epel7 el6 el5 )
-php-pear-Image-Text -- Advanced text manipulations in images ( master f23 f22 f21 epel7 el6 el5 )
 php-pear-Log -- Abstracted logging facility for PHP ( master f23 f22 f21 epel7 el6 el5 )
 php-pear-MDB2 -- Database Abstraction Layer ( master f23 f22 f21 epel7 el6 el5 )
 php-pear-MDB2-Driver-mysql -- MySQL MDB2 driver ( master f23 f22 f21 epel7 el6 el5 )
