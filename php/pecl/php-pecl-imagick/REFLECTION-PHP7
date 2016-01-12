@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #106 imagick version 3.4.0RC4 ] {
+Extension [ <persistent> extension #108 imagick version 3.4.0RC5 ] {
 
   - Dependencies {
     Dependency [ spl (Required) ]
@@ -316,7 +316,7 @@ Extension [ <persistent> extension #106 imagick version 3.4.0RC4 ] {
         Constant [ integer COLOR_ALPHA ] { 19 }
         Constant [ integer COLOR_FUZZ ] { 20 }
         Constant [ integer IMAGICK_EXTNUM ] { 30400 }
-        Constant [ string IMAGICK_EXTVER ] { 3.4.0RC4 }
+        Constant [ string IMAGICK_EXTVER ] { 3.4.0RC5 }
         Constant [ integer QUANTUM_RANGE ] { 65535 }
         Constant [ integer USE_ZEND_MM ] { 0 }
         Constant [ integer COMPOSITE_DEFAULT ] { 40 }
@@ -3548,19 +3548,23 @@ Extension [ <persistent> extension #106 imagick version 3.4.0RC4 ] {
 
         Method [ <internal:imagick> public method subimagematch ] {
 
-          - Parameters [3] {
+          - Parameters [5] {
             Parameter #0 [ <required> Imagick $Imagick ]
             Parameter #1 [ <optional> &$offset ]
             Parameter #2 [ <optional> &$similarity ]
+            Parameter #3 [ <optional> &$similarity_threshold ]
+            Parameter #4 [ <optional> &$metric ]
           }
         }
 
         Method [ <internal:imagick> public method similarityimage ] {
 
-          - Parameters [3] {
+          - Parameters [5] {
             Parameter #0 [ <required> Imagick $Imagick ]
             Parameter #1 [ <optional> &$offset ]
             Parameter #2 [ <optional> &$similarity ]
+            Parameter #3 [ <optional> &$similarity_threshold ]
+            Parameter #4 [ <optional> &$metric ]
           }
         }
 

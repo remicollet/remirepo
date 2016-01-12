@@ -25,7 +25,7 @@
 %global gh_project  imagick
 #global gh_date     20151204
 %global pecl_name   imagick
-%global prever      RC4
+%global prever      RC5
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 %global ini_name  %{pecl_name}.ini
@@ -43,7 +43,7 @@ Version:       3.4.0
 Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       0.4.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.5.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:       PHP
@@ -59,7 +59,7 @@ BuildRequires: pcre-devel
 BuildRequires: ImageMagick-devel >= 6.8.8
 Requires:      ImageMagick-libs%{?_isa}  >= %{imbuildver}
 %else
-BuildRequires: ImageMagick-last-devel >= 6.9.2
+BuildRequires: ImageMagick-last-devel >= 6.9.3
 Requires:      ImageMagick-last-libs%{?_isa}  >= %{imbuildver}
 %endif
 %else
@@ -304,6 +304,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 12 2016 Remi Collet <remi@fedoraproject.org> - 3.4.0-0.5.RC5
+- update to 3.4.0RC5
+
 * Sat Dec 26 2015 Remi Collet <remi@fedoraproject.org> - 3.4.0-0.4.RC4
 - update to 3.4.0RC4
 
