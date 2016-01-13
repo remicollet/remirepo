@@ -16,6 +16,7 @@
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   colder
 %global gh_project php-weakref
+#global gh_date    20160111
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global with_tests 0%{!?_without_tests:1}
 %global pecl_name  Weakref
@@ -26,11 +27,17 @@
 Summary:        Implementation of weak references
 Name:           %{?scl_prefix}php-pecl-weakref
 Version:        0.3.1
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+%if 0%{?gh_date}
+Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
+%else
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+%endif
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
+
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 7
@@ -79,8 +86,12 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -q -c
+%if 0%{?gh_date}
 mv %{gh_project}-%{gh_commit} NTS
 mv NTS/package.xml .
+%else
+mv %{pecl_name}-%{version} NTS
+%endif
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' -i package.xml
@@ -144,7 +155,7 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Documentation
-for i in $(grep "role='doc'" package.xml | sed -e "s/^.*name='//;s/'.*\$//")
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -219,8 +230,10 @@ rm -rf %{buildroot}
 %changelog
 * Mon Jan 11 2016 Remi Collet <remi@fedoraproject.org> - 0.3.1-1
 - update to 0.3.1
-- switch to github sources (for tests)
 - run test suite during the build
+- include patch to prevent segfault
+  open https://github.com/colder/php-weakref/pull/22
+- use generated tarball from master + pr22 to include tests
 
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 0.2.6-1.1
 - Fedora 21 SCL mass rebuild
