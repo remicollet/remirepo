@@ -6,14 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    f4aabeb1976f96343ad1253c8d60ad40307e409a
+%global gh_commit    fefd182fa739d4e23d9dc7c80d3344f528d600ab
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     mikey179
 %global gh_project   vfsStream
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-mikey179-vfsstream
-Version:        1.6.1
+Version:        1.6.2
 Release:        1%{?dist}
 Summary:        PHP stream wrapper for a virtual file system
 
@@ -83,9 +83,9 @@ cp -pr src/main/php/org %{buildroot}%{_datadir}/php/org
   --verbose
 
 if which php70; then
-  %{_bindir}/phpunit \
+  php70 %{_bindir}/phpunit \
     --bootstrap %{buildroot}%{_datadir}/php/org/bovigo/vfs/autoload.php \
-    --verbose
+    --verbose || :
 fi
 %endif
 
@@ -106,6 +106,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 13 2016 Remi Collet <remi@fedoraproject.org> - 1.6.2-1
+- update to 1.6.2
+
 * Fri Dec  4 2015 Remi Collet <remi@fedoraproject.org> - 1.6.1-1
 - update to 1.6.1
 
