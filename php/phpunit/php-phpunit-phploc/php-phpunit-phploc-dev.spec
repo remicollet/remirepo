@@ -1,6 +1,6 @@
 # remirepo/fedora spec file for php-phpunit-phploc
 #
-# Copyright (c) 2009-2015 Guillaume Kulakowski, Christof Damian, Remi Collet
+# Copyright (c) 2009-2016 Guillaume Kulakowski, Christof Damian, Remi Collet
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -31,10 +31,9 @@ Patch0:         %{gh_project}-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-composer(theseer/autoload)
 %if %{with_tests}
-BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php-composer(sebastian/finder-facade) >= 1.1
 BuildRequires:  php-composer(sebastian/finder-facade) <  2
 BuildRequires:  php-composer(sebastian/git) >= 2.0
@@ -42,18 +41,21 @@ BuildRequires:  php-composer(sebastian/git) <  3
 BuildRequires:  php-composer(sebastian/version) >= 1.0.3
 BuildRequires:  php-composer(sebastian/version) <  2
 BuildRequires:  php-composer(symfony/console) >= 2.5
-BuildRequires:  php-composer(symfony/console) <  3
+BuildRequires:  php-composer(symfony/console) <  4
 # For our autoloader
 BuildRequires:  php-composer(symfony/class-loader)
+# From composer.json, "require-dev": {
+#        "phpunit/phpunit": "~5"
+BuildRequires:  php-composer(phpunit/phpunit) >= 5
 %endif
 
-# From composer.json
-#      "php": ">=5.3.3",
+# From composer.json, "require": {
+#      "php": ">=5.6",
 #      "sebastian/finder-facade": "~1.1",
 #      "sebastian/git": "~2.0",
 #      "sebastian/version": "~1.0.3",
-#      "symfony/console": "~2.5"
-Requires:       php(language) >= 5.3.3
+#      "symfony/console": "~2.5|~3.0"
+Requires:       php(language) >= 5.6
 Requires:       php-cli
 Requires:       php-composer(sebastian/finder-facade) >= 1.1
 Requires:       php-composer(sebastian/finder-facade) <  2
@@ -62,7 +64,7 @@ Requires:       php-composer(sebastian/git) <  3
 Requires:       php-composer(sebastian/version) >= 1.0.3
 Requires:       php-composer(sebastian/version) <  2
 Requires:       php-composer(symfony/console) >= 2.5
-Requires:       php-composer(symfony/console) <  3
+Requires:       php-composer(symfony/console) <  4
 # From phpcompatinfo report for version 2.1.3
 Requires:       php-dom
 Requires:       php-spl
@@ -119,6 +121,12 @@ install -D -p -m 755 phploc %{buildroot}%{_bindir}/phploc
 %{_bindir}/phpunit \
    --bootstrap %{buildroot}%{php_home}/PHPLOC/autoload.php \
    --verbose tests
+
+if which php70; then
+   php70 %{_bindir}/phpunit \
+      --bootstrap %{buildroot}%{php_home}/PHPLOC/autoload.php \
+      --verbose tests
+fi
 %endif
 
 
@@ -144,6 +152,11 @@ fi
 
 
 %changelog
+* Wed Jan 13 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- raise minimal php version to 5.6
+- raise dependency on PHPUnit ~5
+- allow symfony 3
+
 * Thu Oct 22 2015 Remi Collet <remi@fedoraproject.org> - 2.1.5-1
 - update to 2.1.5
 - simplify autoloader
