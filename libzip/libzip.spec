@@ -17,7 +17,7 @@ Name:    %{libname}-last
 Name:    %{libname}
 %endif
 Version: 1.0.1
-Release: 1%{?dist}
+Release: 3%{?dist}
 Group:   System Environment/Libraries
 Summary: C library for reading, creating, and modifying zip archives
 
@@ -41,6 +41,9 @@ BuildRequires:  perl(Symbol)
 BuildRequires:  perl(UNIVERSAL)
 BuildRequires:  perl(strict)
 BuildRequires:  perl(warnings)
+%if "%{name}" == "%{libname}"
+Obsoletes:      %{libname}-last <= %{version}
+%endif
 
 
 %description
@@ -60,6 +63,8 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 %if "%{name}" != "%{libname}"
 Conflicts: %{libname}-devel < %{version}
 Provides:  %{libname}-devel = %{version}-%{release}
+%else
+Obsoletes: %{libname}-last-devel <= %{version}
 %endif
 
 %description devel
@@ -68,12 +73,14 @@ developing applications that use %{name}.
 
 
 %package tools
-Summary:  Command line tools from %{libname}
+Summary:  Command line tools from %{name}
 Group:    Applications/System
 Requires: %{name}%{?_isa} = %{version}-%{release}
 %if "%{name}" != "%{libname}"
 Conflicts: %{libname} < %{version}
 Provides:  %{libname} = %{version}-%{release}
+%else
+Obsoletes: %{libname}-last-tools <= %{version}
 %endif
 
 %description tools
@@ -157,6 +164,9 @@ make check
 
 
 %changelog
+* Thu Jan 14 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-3
+- libzip obsoletes libzip-last
+
 * Tue May  5 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - update to 1.0.1
 - soname bump from .2 to .4
