@@ -94,7 +94,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -1666,8 +1666,8 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 }
 $fedoraClassLoader->addPrefix('Symfony\\Component\\', dirname(dirname(__DIR__)));
 
-// Dependency
-require_once '%{_datadir}/php/random_compat/autoload.php';
+// Optional dependency
+@include_once '%{phpdir}/random_compat/autoload.php';
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -2523,6 +2523,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Thu Jan 14 2016 Remi Collet <remi@fedoraproject.org> - 2.7.9-2
+- fix autoloader for paragonie/random_compat, thanks Koschei
+
 * Thu Jan 14 2016 Remi Collet <remi@fedoraproject.org> - 2.7.9-1
 - Update to 2.7.9
 - security: add dependency on paragonie/random_compat
