@@ -1,4 +1,4 @@
-# spec file for php-ircmaxell-security-lib
+# remirepo/fedora spec file for php-ircmaxell-security-lib
 #
 # Copyright (c) 2014-2016 Remi Collet
 # License: CC-BY-SA
@@ -14,7 +14,7 @@
 
 Name:           php-ircmaxell-security-lib
 Version:        1.1.0
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        A Base Security Library
 
 Group:          Development/Libraries
@@ -30,9 +30,9 @@ BuildRequires:  php-bcmath
 BuildRequires:  php-hash
 BuildRequires:  %{_bindir}/phpab
 BuildRequires:  %{_bindir}/phpunit
-BuildRequires:  php-theseer-autoload
 #      "mikey179/vfsStream": "1.1.*", ignore max version on purpose
-BuildRequires:  php-composer(mikey179/vfsStream) >= 1.1
+# 1.6.0 is first version with autoloader
+BuildRequires:  php-composer(mikey179/vfsStream) >= 1.6
 %endif
 
 # From composer.json
@@ -42,7 +42,10 @@ Requires:       php(language) >= 5.3.2
 Requires:       php-hash
 Requires:       php-reflection
 Requires:       php-spl
-# optional php-bcmath or php-gmp
+%if 0%{?fedora} > 21
+Suggests:       php-bcmath
+Suggests:       php-gmp
+%endif
 
 Provides:       php-composer(ircmaxell/security-lib) = %{version}
 
@@ -53,6 +56,8 @@ This isn't useful on its own...
 
 Optional dependency: php-gmp or php-bcmath
 
+Autoloader: %{_datadir}/php/SecurityLib/autoload.php
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
@@ -61,7 +66,10 @@ rm lib/SecurityLib/composer.json
 
 
 %build
-# Nothing
+: Generate library autoloader
+%{_bindir}/phpab \
+    --output lib/SecurityLib/autoload.php \
+    lib/SecurityLib
 
 
 %install
@@ -72,20 +80,26 @@ cp -pr lib/* %{buildroot}%{_datadir}/php
 
 %check
 %if %{with_tests}
-if %{_bindir}/php -m | grep gmp; then
-  : Skip test with GMP load, BCMath expected
-else
-  : Generate autoloader
-  %{_bindir}/php -d date.timezone=UTC \
-  %{_bindir}/phpab \
-    --basedir $PWD \
-    --output autoload.php \
-    lib test %{_datadir}/php/org/bovigo/vfs
+: Generate test suite autoloader
+%{_bindir}/phpab \
+    --output test/autoload.php \
+    test
 
-  : Run test suite
-  %{_bindir}/phpunit \
-    --bootstrap autoload.php \
-    -d date.timezone=UTC
+mkdir vendor
+cat << 'EOF' | tee vendor/autoload.php
+<?php
+require_once __DIR__ . '/../test/autoload.php';
+require_once '%{_datadir}/php/org/bovigo/vfs/autoload.php';
+require_once '%{buildroot}%{_datadir}/php/SecurityLib/autoload.php';
+EOF
+
+: Run test suite
+cat /etc/php.ini /etc/php.d/*ini | grep -v gmp >php.ini
+php -n -c $PWD/php.ini %{_bindir}/phpunit --verbose
+
+if which php70; then
+   cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini | grep -v gmp >php.ini
+   php70 -n -c $PWD/php.ini %{_bindir}/phpunit --verbose
 fi
 %else
 : Test suite disabled
@@ -106,6 +120,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 14 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-3
+- add autoloader
+
 * Fri Mar 20 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - update to 1.1.0
 - add LICENSE file
