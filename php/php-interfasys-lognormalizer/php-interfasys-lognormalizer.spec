@@ -8,7 +8,7 @@
 #
 %global gh_commit    d5e4c95e0b0ecc886b78aafda3773b3bcf2ec116
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150801
+#global gh_date      20150801
 %global gh_owner     interfasys
 %global gh_project   lognormalizer
 %global with_tests   0%{!?_without_tests:1}
@@ -17,8 +17,8 @@
 
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        0
-Release:        0.1.%{gh_date}git%{gh_short}%{?dist}
+Version:        1.0
+Release:        1%{?dist}
 Summary:        Parses variables and converts them to string
 
 Group:          Development/Libraries
@@ -107,5 +107,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 14 2016 Remi Collet <remi@fedoraproject.org> - 1.0-1
+- version 1.0 (no change)
+
 * Thu Jan 14 2016 Remi Collet <remi@fedoraproject.org> - 0-0.1.20150801gitd5e4c95
 - initial package
