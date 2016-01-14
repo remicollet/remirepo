@@ -1,4 +1,4 @@
-# spec file for php-ircmaxell-random-lib
+# remirepo/fedora spec file for php-ircmaxell-random-lib
 #
 # Copyright (c) 2014-2016 Remi Collet
 # License: CC-BY-SA
