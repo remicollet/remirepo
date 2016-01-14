@@ -14,7 +14,7 @@
 
 Name:           php-ircmaxell-security-lib
 Version:        1.1.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A Base Security Library
 
 Group:          Development/Libraries
@@ -22,11 +22,15 @@ License:        MIT
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 
+# Upstream patches
+Patch0:         %{name}-upstream.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 BuildRequires:  php(language) >= 5.3.2
 BuildRequires:  php-bcmath
+BuildRequires:  php-gmp
 BuildRequires:  php-hash
 BuildRequires:  %{_bindir}/phpab
 BuildRequires:  %{_bindir}/phpunit
@@ -61,6 +65,7 @@ Autoloader: %{_datadir}/php/SecurityLib/autoload.php
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+%patch0 -p1
 
 rm lib/SecurityLib/composer.json
 
@@ -94,12 +99,10 @@ require_once '%{buildroot}%{_datadir}/php/SecurityLib/autoload.php';
 EOF
 
 : Run test suite
-cat /etc/php.ini /etc/php.d/*ini | grep -v gmp >php.ini
-php -n -c $PWD/php.ini %{_bindir}/phpunit --verbose
+%{_bindir}/phpunit --verbose
 
 if which php70; then
-   cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini | grep -v gmp >php.ini
-   php70 -n -c $PWD/php.ini %{_bindir}/phpunit --verbose
+   php70 %{_bindir}/phpunit --verbose
 fi
 %else
 : Test suite disabled
@@ -120,6 +123,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 14 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-4
+- add upstream patches to fix test suite
+
 * Thu Jan 14 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-3
 - add autoloader
 
