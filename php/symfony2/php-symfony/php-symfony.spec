@@ -1332,6 +1332,8 @@ Group:     Development/Libraries
 Requires:  php-composer(%{composer_vendor}/event-dispatcher)    =  %{version}
 Requires:  php-composer(%{composer_vendor}/http-foundation)     =  %{version}
 Requires:  php-composer(%{composer_vendor}/http-kernel)         =  %{version}
+Requires:  php-composer(paragonie/random_compat)                >= %{random_compat_min}
+Requires:  php-composer(paragonie/random_compat)                <  %{random_compat_max}
 # composer.json: optional
 Requires:  php-composer(%{composer_vendor}/class-loader)        =  %{version}
 Requires:  php-composer(%{composer_vendor}/expression-language) =  %{version}
@@ -1340,8 +1342,6 @@ Requires:  php-composer(%{composer_vendor}/routing)             =  %{version}
 Requires:  php-composer(%{composer_vendor}/validator)           =  %{version}
 Requires:  php-composer(doctrine/dbal)                          >= %{doctrine_dbal_min_ver}
 Requires:  php-composer(doctrine/dbal)                          <  %{doctrine_dbal_max_ver}
-Requires:  php-composer(paragonie/random_compat)                >= %{random_compat_min}
-Requires:  php-composer(paragonie/random_compat)                <  %{random_compat_max}
 Requires:  php-composer(ircmaxell/password-compat)              >= %{password_compat_min_ver}
 Requires:  php-composer(ircmaxell/password-compat)              <  %{password_compat_max_ver}
 # phpcompatinfo (computed from version 2.7.1)
@@ -2526,6 +2526,7 @@ exit $RET
 * Thu Jan 14 2016 Remi Collet <remi@fedoraproject.org> - 2.7.9-1
 - Update to 2.7.9
 - security: add dependency on paragonie/random_compat
+- require ircmaxell/password-compat instead of php-password-compat
 
 * Sun Dec 27 2015 Remi Collet <remi@fedoraproject.org> - 2.7.8-1
 - Update to 2.7.8
