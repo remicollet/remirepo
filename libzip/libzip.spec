@@ -1,3 +1,13 @@
+# remirepo spec file for libzip-last
+# renamed for parallel installation, from:
+#
+# Fedora spec file for libzip
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 %global multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9
 %global libname libzip
 %if 0%{?rhel} == 5
