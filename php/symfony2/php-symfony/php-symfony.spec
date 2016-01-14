@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-symfony
 #
-# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #                         Remi Collet <remi@fedoraproject.org>
 #
 # License: MIT
@@ -14,8 +14,8 @@
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.7.8
-%global github_commit    ad264021e44a5aaa132f16aef69f92e56795683e
+%global github_version   2.7.9
+%global github_commit    d3646cc6875c214d211001e0673ec9e91b5f2da7
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -73,6 +73,10 @@
 # "twig/twig": "~1.23|~2.0"
 %global twig_min_ver 1.23
 %global twig_max_ver 3
+# "paragonie/random_compat": "~1.0",
+%global random_compat_min 1.0
+%global random_compat_max 2
+
 
 %if 0%{?fedora} < 21 && 0%{?rhel} < 7
 # Build using "--with tests" to enable tests
@@ -118,9 +122,8 @@ BuildRequires: php-composer(monolog/monolog)          >= %{monolog_min_ver}
 BuildRequires: php-composer(ocramius/proxy-manager)   >= %{proxy_manager_min_ver}
 BuildRequires: php-composer(psr/log)                  >= %{psrlog_min_ver}
 BuildRequires: php-composer(twig/twig)                >= %{twig_min_ver}
-%if "%{php_version}" < "5.5"
-BuildRequires: php-password-compat                    >= %{password_compat_min_ver}
-%endif
+BuildRequires: php-composer(paragonie/random_compat)  >= %{random_compat_min}
+BuildRequires: php-composer(ircmaxell/password-compat) >= %{password_compat_min_ver}
 ## phpcompatinfo (computed from version 2.5.6)
 BuildRequires: php-ctype
 BuildRequires: php-curl
@@ -1337,10 +1340,10 @@ Requires:  php-composer(%{composer_vendor}/routing)             =  %{version}
 Requires:  php-composer(%{composer_vendor}/validator)           =  %{version}
 Requires:  php-composer(doctrine/dbal)                          >= %{doctrine_dbal_min_ver}
 Requires:  php-composer(doctrine/dbal)                          <  %{doctrine_dbal_max_ver}
-%if "%{php_version}" < "5.5"
-Requires:  php-password-compat >= %{password_compat_min_ver}
-Requires:  php-password-compat <  %{password_compat_max_ver}
-%endif
+Requires:  php-composer(paragonie/random_compat)                >= %{random_compat_min}
+Requires:  php-composer(paragonie/random_compat)                <  %{random_compat_max}
+Requires:  php-composer(ircmaxell/password-compat)              >= %{password_compat_min_ver}
+Requires:  php-composer(ircmaxell/password-compat)              <  %{password_compat_max_ver}
 # phpcompatinfo (computed from version 2.7.1)
 Requires:  php-date
 Requires:  php-hash
@@ -1662,6 +1665,9 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
     $fedoraClassLoader->register();
 }
 $fedoraClassLoader->addPrefix('Symfony\\Component\\', dirname(dirname(__DIR__)));
+
+// Dependency
+require_once '%{_datadir}/php/random_compat/autoload.php';
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -2517,6 +2523,10 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Thu Jan 14 2016 Remi Collet <remi@fedoraproject.org> - 2.7.9-1
+- Update to 2.7.9
+- security: add dependency on paragonie/random_compat
+
 * Sun Dec 27 2015 Remi Collet <remi@fedoraproject.org> - 2.7.8-1
 - Update to 2.7.8
 
