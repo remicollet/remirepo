@@ -1,0 +1,125 @@
+From a7e1a712ad94962692785a12a8656c9eb9b3004a Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 14 Jan 2016 08:51:41 +0100
+Subject: [PATCH] drop dep on deprecated prophecy-phpunit (since PHPUnit 4.5)
+ and allow PHPUnit 5
+
+---
+ composer.json                  | 5 ++---
+ tests/FilesystemTests.php      | 3 +--
+ tests/GetWithMetadataTests.php | 3 +--
+ tests/HandlerTests.php         | 3 +--
+ tests/ListFilesTests.php       | 3 +--
+ tests/ListPathsTests.php       | 3 +--
+ tests/ListWithTests.php        | 3 +--
+ 7 files changed, 8 insertions(+), 15 deletions(-)
+
+diff --git a/composer.json b/composer.json
+index 0b6721f..96a8f98 100644
+--- a/composer.json
++++ b/composer.json
+@@ -18,10 +18,9 @@
+     },
+     "require-dev": {
+         "ext-fileinfo": "*",
+-        "phpunit/phpunit": "~4.8",
++        "phpunit/phpunit": "~4.8 || ~5.0",
+         "mockery/mockery": "~0.9",
+-        "phpspec/phpspec": "^2.2",
+-        "phpspec/prophecy-phpunit": "~1.0"
++        "phpspec/phpspec": "^2.2"
+     },
+     "autoload": {
+         "psr-4": {
+diff --git a/tests/FilesystemTests.php b/tests/FilesystemTests.php
+index 133177e..bab76bc 100644
+--- a/tests/FilesystemTests.php
++++ b/tests/FilesystemTests.php
+@@ -4,10 +4,9 @@
+ use League\Flysystem\Util;
+ use Prophecy\Argument;
+ use Prophecy\Argument\Token\TypeToken;
+-use Prophecy\PhpUnit\ProphecyTestCase;
+ use Prophecy\Prophecy\ObjectProphecy;
+ 
+-class FilesystemTests extends ProphecyTestCase
++class FilesystemTests extends \PHPUnit_Framework_TestCase
+ {
+     /**
+      * @var ObjectProphecy
+diff --git a/tests/GetWithMetadataTests.php b/tests/GetWithMetadataTests.php
+index 4b43725..dd4e639 100644
+--- a/tests/GetWithMetadataTests.php
++++ b/tests/GetWithMetadataTests.php
+@@ -2,10 +2,9 @@
+ 
+ 
+ use League\Flysystem\Plugin\GetWithMetadata;
+-use Prophecy\PhpUnit\ProphecyTestCase;
+ use Prophecy\Prophecy\ObjectProphecy;
+ 
+-class GetWithMetadataTests extends ProphecyTestCase
++class GetWithMetadataTests extends \PHPUnit_Framework_TestCase
+ {
+     /**
+      * @var ObjectProphecy
+diff --git a/tests/HandlerTests.php b/tests/HandlerTests.php
+index d282c6b..9ec279b 100644
+--- a/tests/HandlerTests.php
++++ b/tests/HandlerTests.php
+@@ -3,9 +3,8 @@
+ 
+ use League\Flysystem\Directory;
+ use League\Flysystem\File;
+-use Prophecy\PhpUnit\ProphecyTestCase;
+ 
+-class HandlerTests extends ProphecyTestCase
++class HandlerTests extends \PHPUnit_Framework_TestCase
+ {
+     public function testFileRead()
+     {
+diff --git a/tests/ListFilesTests.php b/tests/ListFilesTests.php
+index c393461..7e42303 100644
+--- a/tests/ListFilesTests.php
++++ b/tests/ListFilesTests.php
+@@ -2,9 +2,8 @@
+ 
+ 
+ use League\Flysystem\Plugin\ListFiles;
+-use Prophecy\PhpUnit\ProphecyTestCase;
+ 
+-class ListFilesTests extends ProphecyTestCase
++class ListFilesTests extends \PHPUnit_Framework_TestCase
+ {
+     private $filesystem;
+     private $actualFilesystem;
+diff --git a/tests/ListPathsTests.php b/tests/ListPathsTests.php
+index 328f1da..160d6ba 100644
+--- a/tests/ListPathsTests.php
++++ b/tests/ListPathsTests.php
+@@ -2,9 +2,8 @@
+ 
+ 
+ use League\Flysystem\Plugin\ListPaths;
+-use Prophecy\PhpUnit\ProphecyTestCase;
+ 
+-class ListPathsTests extends ProphecyTestCase
++class ListPathsTests extends \PHPUnit_Framework_TestCase
+ {
+     private $filesystem;
+     private $actualFilesystem;
+diff --git a/tests/ListWithTests.php b/tests/ListWithTests.php
+index e9a2a26..3f5db84 100644
+--- a/tests/ListWithTests.php
++++ b/tests/ListWithTests.php
+@@ -3,9 +3,8 @@
+ namespace League\Flysystem\Adapter;
+ 
+ use League\Flysystem\Plugin\ListWith;
+-use Prophecy\PhpUnit\ProphecyTestCase;
+ 
+-class ListWithTests extends ProphecyTestCase
++class ListWithTests extends \PHPUnit_Framework_TestCase
+ {
+     public function testHandle()
+     {
