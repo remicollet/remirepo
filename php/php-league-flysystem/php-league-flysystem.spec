@@ -102,12 +102,13 @@ cp -pr src %{buildroot}%{_datadir}/php/%{ns_vendor}/%{ns_project}
 mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
-// Library
+// Installed library
 require '%{buildroot}%{_datadir}/php/%{ns_vendor}/%{ns_project}/autoload.php';
 
-// Test suite
-require_once '/%{_datadir}/php/Mockery/autoload.php';
+// Dependency
+require_once '%{_datadir}/php/Mockery/autoload.php';
 
+// Test suite
 require_once '%{_datadir}/php/Symfony/Component/ClassLoader/Psr4ClassLoader.php';
 $Loader = new \Symfony\Component\ClassLoader\Psr4ClassLoader();
 $Loader->addPrefix("League\\Flysystem\\Stub\\", dirname(__DIR__).'/stub');
