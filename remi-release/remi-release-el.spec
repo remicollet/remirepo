@@ -1,3 +1,11 @@
+# remirepo spec file for remi-release (RHEL, CentOS)
+#
+# Copyright (c) 2006-2016 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/4.0/
+#
+# Please, preserve the changelog entries
+#
 Name:           remi-release
 %if %{rhel} == 7
 Version:        7.1
@@ -38,13 +46,13 @@ Only the "remi-safe" repository is enabled after installation.
 %else
 The repository is not enabled after installation.
 %endif
-For PHP 5.5 you must use enable remi-php55 repository:
+For PHP 5.5 you must enable the remi-php55 repository:
     yum-config-manager --enable remi-php55
 
-For PHP 5.6 you must use enable remi-php56 repository:
+For PHP 5.6 you must enable the remi-php56 repository:
     yum-config-manager --enable remi-php56
 
-For PHP 7.0 you must use enable remi-php70 repository:
+For PHP 7.0 you must enable the remi-php70 repository:
     yum-config-manager --enable remi-php70
 
 %if %{rhel} >= 6

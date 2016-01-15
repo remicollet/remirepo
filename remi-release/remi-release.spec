@@ -1,18 +1,14 @@
+# remirepo spec file for remi-release (Fedora)
+#
+# Copyright (c) 2006-2016 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/4.0/
+#
+# Please, preserve the changelog entries
+#
 Name:           remi-release
 Version:        %{fedora}
-%if %{fedora} >= 23
-Release:        1%{?dist}
-%else
-%if %{fedora} >= 21
-Release:        2%{?dist}
-%else
-%if %{fedora} >= 18
 Release:        3%{?dist}
-%else
-Release:        7%{?dist}
-%endif
-%endif
-%endif
 Summary:        YUM configuration for remi repository
 Summary(fr):	Configuration de YUM pour le dépôt remi
 
@@ -24,6 +20,7 @@ Source1:        remi-fc.repo
 Source2:        remi-test-fc.repo
 Source3:        remi-php56-fc.repo
 Source4:        remi-php70-fc.repo
+Source5:        remi-php70-test-fc.repo
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}
 BuildArchitectures: noarch
@@ -42,6 +39,12 @@ as well as the public GPG keys used to sign them.
 
 The repository is not enabled after installation, so you must use
 the --enablerepo=remi option for yum.
+%if %{fedora} >= 21 && %{fedora} <= 23
+For PHP 7.0 you must enable the remi-php70 repository:
+    dnf config-manager --enable remi-php70
+%endif
+FAQ:   http://blog.remirepo.net/pages/English-FAQ
+Forum: http://forum.remirepo.net/
 
 %description -l fr
 Ce paquetage contient le fichier de configuration de YUM pour utiliser
@@ -49,6 +52,12 @@ les RPM du dépôt "remi" ainsi que la clé GPG utilisée pour les signer.
 
 Le dépôt n'est pas activé après l'installation, vous devez donc utiliser
 l'option --enablerepo=remi de yum.
+%if %{fedora} >= 21 && %{fedora} <= 23
+Pour PHP 7.0 vous devez activer le dépôt remi-php70
+    dnf config-manager --enable remi-php70
+%endif
+FAQ:   http://blog.remirepo.net/pages/FAQ-en-Francais
+Forum: http://forum.remirepo.net/
 
 
 %prep
@@ -73,6 +82,7 @@ install -Dp -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php56.
 %endif
 %if %{fedora} >= 21 && %{fedora} <= 23
 install -Dp -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php70.repo
+install -Dp -m 644 %{SOURCE5} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php70-test.repo
 %endif
 
 
@@ -87,6 +97,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan 15 2016 Remi Collet <remi@remirepo.net> - %{fedora}-3.fc%{fedora}.remi
+- add remi-php70-test repository
+
 * Fri Aug 28 2015 Remi Collet <RPMS@FamilleCollet.com> - 23-1.fc23.remi
 - Fedora release 23
 
