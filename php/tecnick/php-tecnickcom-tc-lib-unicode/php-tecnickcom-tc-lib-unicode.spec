@@ -1,4 +1,4 @@
-# remirepo/fedora spec file for php-tecnickcom-tc-lib-file
+# remirepo/fedora spec file for php-tecnickcom-tc-lib-unicode
 #
 # Copyright (c) 2016 Remi Collet
 # License: CC-BY-SA
@@ -6,18 +6,18 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    310d6897877cbf15724e2d31c57c745a5eb0a2da
+%global gh_commit    114a904e806d99001842e7c344cc1f7f080b4a0b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
-%global gh_project   tc-lib-file
-%global php_project  %{_datadir}/php/Com/Tecnick/File
+%global gh_project   tc-lib-unicode
+%global php_project  %{_datadir}/php/Com/Tecnick/Unicode
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.2.0
+Version:        1.2.1
 Release:        1%{?dist}
-Summary:        PHP library to read byte-level data from files
+Summary:        PHP library containing Unicode methods
 
 Group:          Development/Libraries
 License:        LGPLv3+
@@ -30,15 +30,19 @@ BuildArch:      noarch
 # For tests
 BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php(language) >= 5.4
-BuildRequires:  php-curl
+BuildRequires:  php-composer(%{c_vendor}/tc-lib-unicode-data) >= 1.5.0
+BuildRequires:  php-mbstring
 BuildRequires:  php-pcre
 %endif
 
 # From composer.json, "require": {
 #        "php": ">=5.4"
+#        "tecnickcom/tc-lib-unicode-data": "^1.5.0"
 Requires:       php(language) >= 5.4
-# From phpcompatinfo report for version 1.2.0
-Requires:       php-curl
+Requires:       php-composer(%{c_vendor}/tc-lib-unicode-data) >= 1.5.0
+Requires:       php-composer(%{c_vendor}/tc-lib-unicode-data) <  2
+# From phpcompatinfo report for version 1.2.1
+Requires:       php-mbstring
 Requires:       php-pcre
 
 # Composer
@@ -48,9 +52,10 @@ Provides:       php-%{gh_project} = %{version}
 
 
 %description
-This library includes utility classes to read byte-level data.
+PHP library containing Unicode and UTF-8 methods, including the
+Unicode Bidirectional Algorithm.
 
-The initial source code has been extracted from TCPDF (http://www.tcpdf.org).
+The initial source code has been derived from TCPDF (http://www.tcpdf.org/).
 
 
 %prep
@@ -78,9 +83,8 @@ mkdir vendor
 cat <<EOF | tee vendor/autoload.php
 <?php
 require '%{buildroot}%{php_project}/autoload.php';
+require '%{php_project}/Data/autoload.php';
 EOF
-
-sed -i 's:src:File:g' -i test/DirTest.php
 
 %{_bindir}/phpunit --verbose
 
@@ -102,11 +106,9 @@ rm -rf %{buildroot}
 %license LICENSE
 %doc composer.json
 %doc README.md
-%dir %{_datadir}/php/Com
-%dir %{_datadir}/php/Com/Tecnick
-%{php_project}
+%{php_project}/*
 
 
 %changelog
-* Fri Jan 15 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
-- initial package, version 1.2.0
+* Fri Jan 15 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- initial package, version 1.2.1

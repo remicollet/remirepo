@@ -10,6 +10,7 @@
     "tecnickcom\/tc-lib-pdf-encrypt": "php-tecnickcom-tc-lib-pdf-encrypt",
     "tecnickcom\/tc-lib-pdf-filter": "php-tecnickcom-tc-lib-pdf-filter",
     "tecnickcom\/tc-lib-pdf-page": "php-tecnickcom-tc-lib-pdf-page",
+    "tecnickcom\/tc-lib-unicode": "php-tecnickcom-tc-lib-unicode",
     "tecnickcom\/tc-lib-unicode-data": "php-tecnickcom-tc-lib-unicode-data",
     "nette\/bootstrap": "php-nette-bootstrap",
     "nette\/deprecated": "php-nette-deprecated",

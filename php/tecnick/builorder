@@ -6,3 +6,4 @@ tc-lib-unicode-data             1.5.0
 tc-lib-barcode                  1.7.1      tc-lib-color
 tc-lib-pdf-page                 2.0.1      tc-lib-pdf-encrypt, tc-lib-color
 tc-lib-pdf-parser               2.2.2      tc-lib-pdf-filter
+tc-lib-unicode                  1.2.1      tc-lib-unicode-data
