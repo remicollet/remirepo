@@ -10,11 +10,7 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
-%endif
 %endif
 
 %{?scl:          %scl_package        php-pecl-apcu}
@@ -36,20 +32,17 @@
 
 Name:           %{?sub_prefix}php-pecl-apcu
 Summary:        APC User Cache
-Version:        5.1.2
+Version:        5.1.3
 %if 0%{?gh_date:1}
 Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 Source1:        %{pecl_name}-5.1.2.ini
 Source2:        %{pecl_name}-panel.conf
 Source3:        %{pecl_name}.conf.php
-
-# Patch from master, for apcu_in / apcu_dec issues
-Patch1:         %{pecl_name}-upstream.patch
 
 License:        PHP
 Group:          Development/Languages
@@ -157,7 +150,6 @@ mv %{pecl_name}-%{version} NTS
 %endif
 
 cd NTS
-%patch1 -p1 -b .upstream
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APCU_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
@@ -326,6 +318,9 @@ fi
 
 
 %changelog
+* Fri Jan 15 2016 Remi Collet <remi@fedoraproject.org> - 5.1.3-1
+- Update to 5.1.3 (stable)
+
 * Sat Jan  9 2016 Remi Collet <remi@fedoraproject.org> - 5.1.2-2
 - add upstream patches to fix issues with apcu_inc / apcu_dec
   https://github.com/krakjoe/apcu/issues/158 - negative step hangs
