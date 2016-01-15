@@ -1,0 +1,36 @@
+diff -up ./redis.conf.rpmconf ./redis.conf
+--- ./redis.conf.rpmconf	2015-12-23 13:35:32.000000000 +0100
++++ ./redis.conf	2016-01-15 16:32:22.491355290 +0100
+@@ -140,7 +140,7 @@ loglevel notice
+ # Specify the log file name. Also the empty string can be used to force
+ # Redis to log on the standard output. Note that if you use standard
+ # output for logging but daemonize, logs will be sent to /dev/null
+-logfile ""
++logfile /var/log/redis/redis.log
+ 
+ # To enable logging to the system logger, just set 'syslog-enabled' to yes,
+ # and optionally update the other syslog parameters to suit your needs.
+@@ -224,7 +224,7 @@ dbfilename dump.rdb
+ # The Append Only File will also be created inside this directory.
+ #
+ # Note that you must specify a directory here, not a file name.
+-dir ./
++dir /var/lib/redis/
+ 
+ ################################# REPLICATION #################################
+ 
+diff -up ./sentinel.conf.rpmconf ./sentinel.conf
+--- ./sentinel.conf.rpmconf	2015-12-23 13:35:32.000000000 +0100
++++ ./sentinel.conf	2016-01-15 16:32:22.491355290 +0100
+@@ -4,6 +4,11 @@
+ # The port that this sentinel instance will run on
+ port 26379
+ 
++# Specify the log file name. Also the empty string can be used to force
++# Redis to log on the standard output. Note that if you use standard
++# output for logging but daemonize, logs will be sent to /dev/null
++logfile /var/log/redis/sentinel.log
++
+ # sentinel announce-ip <ip>
+ # sentinel announce-port <port>
+ #
