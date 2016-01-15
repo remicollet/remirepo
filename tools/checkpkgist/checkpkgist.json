@@ -6,6 +6,8 @@
     "sebastian\/phpcpd": "php-phpunit-phpcpd",
     "sebastian\/phpdcd": "php-phpunit-phpdcd",
     "tecnickcom\/tc-lib-pdf-parser": "php-tecnickcom-tc-lib-pdf-parser",
+    "tecnickcom\/tc-lib-file": "php-tecnickcom-tc-lib-file",
+    "tecnickcom\/tc-lib-pdf-encrypt": "php-tecnickcom-tc-lib-pdf-encrypt",
     "tecnickcom\/tc-lib-pdf-filter": "php-tecnickcom-tc-lib-pdf-filter",
     "tecnickcom\/tc-lib-pdf-page": "php-tecnickcom-tc-lib-pdf-page",
     "tecnickcom\/tc-lib-unicode-data": "php-tecnickcom-tc-lib-unicode-data",

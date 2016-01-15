@@ -1,5 +1,6 @@
 tc-lib-color                    1.10.0
 tc-lib-pdf-encrypt              1.3.0
+tc-lib-file                     1.2.0
 tc-lib-pdf-filter               1.2.0
 tc-lib-unicode-data             1.5.0
 tc-lib-barcode                  1.7.1      tc-lib-color
