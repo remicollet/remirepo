@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    53646c2fe03cc6461f2ba895db153037e7abb18b
+%global gh_commit    d048241090d5f38bd82870761d0574859a0df936
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.2.0
+Version:        2.0.1
 Release:        1%{?dist}
 Summary:        PHP library containing PDF page formats and definitions
 
@@ -30,13 +30,24 @@ BuildArch:      noarch
 # For tests
 BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php(language) >= 5.4
+BuildRequires:  php-composer(%{c_vendor}/tc-lib-pdf-encrypt) >= 1.3.0
+BuildRequires:  php-composer(%{c_vendor}/tc-lib-color) >= 1.9.0
+BuildRequires:  php-date
+BuildRequires:  php-zlib
 %endif
 
 # From composer.json, "require": {
 #        "php": ">=5.4"
+#        "tecnickcom/tc-lib-pdf-encrypt": "^1.3.0",
+#        "tecnickcom/tc-lib-color": "^1.9.0"
 Requires:       php(language) >= 5.4
-# From phpcompatinfo report for version 1.1.1
-# Nothing
+Requires:       php-composer(%{c_vendor}/tc-lib-pdf-encrypt) >= 1.3.0
+Requires:       php-composer(%{c_vendor}/tc-lib-pdf-encrypt) <  2
+Requires:       php-composer(%{c_vendor}/tc-lib-color) >= 1.9.0
+Requires:       php-composer(%{c_vendor}/tc-lib-color) <  2
+# From phpcompatinfo report for version 2.0.1
+Requires:       php-date
+Requires:       php-zlib
 
 # Composer
 Provides:       php-composer(%{c_vendor}/%{gh_project}) = %{version}
@@ -75,6 +86,7 @@ mkdir vendor
 cat <<EOF | tee vendor/autoload.php
 <?php
 require '%{buildroot}%{php_project}/autoload.php';
+require '%{php_project}/../../Color/autoload.php';
 EOF
 
 %{_bindir}/phpunit --verbose
@@ -97,13 +109,14 @@ rm -rf %{buildroot}
 %license LICENSE
 %doc composer.json
 %doc README.md
-%dir %{_datadir}/php/Com
-%dir %{_datadir}/php/Com/Tecnick
-%dir %{_datadir}/php/Com/Tecnick/Pdf
 %{php_project}
 
 
 %changelog
+* Fri Jan 15 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- update to 2.0.1
+- add dependencies on tc-lib-pdf-encrypt and tc-lib-color
+
 * Fri Dec 11 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - update to 1.2.0 (no change)
 - raise dependency on php >= 5.4
