@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #204 ionCube Loader version <no_version> ] {
+Extension [ <persistent> extension #219 ionCube Loader version <no_version> ] {
 
   - INI {
     Entry [ ic24.enable <SYSTEM> ]
@@ -22,11 +22,11 @@ Extension [ <persistent> extension #204 ionCube Loader version <no_version> ] {
     Entry [ ic24.api_check_ip <SYSTEM> ]
       Current = '1'
     }
+    Entry [ ic24.slt <SYSTEM> ]
+      Current = '7'
+    }
     Entry [ ic24.sec.enable <SYSTEM> ]
       Current = '1'
-    }
-    Entry [ ic24.sec.alert_action <SYSTEM> ]
-      Current = '–<Hñœò'
     }
     Entry [ ic24.sec.exclusion_key <SYSTEM> ]
       Current = ''
@@ -36,6 +36,12 @@ Extension [ <persistent> extension #204 ionCube Loader version <no_version> ] {
     }
     Entry [ ic24.home_dir <SYSTEM> ]
       Current = ''
+    }
+    Entry [ ic24.sec.block_stdin <SYSTEM> ]
+      Current = '1'
+    }
+    Entry [ ic24.update_domains_retry_interval <SYSTEM> ]
+      Current = '30'
     }
     Entry [ ic24.dump_cache <SYSTEM> ]
       Current = '0'
@@ -82,6 +88,8 @@ Extension [ <persistent> extension #204 ionCube Loader version <no_version> ] {
     Function [ <internal:ionCube Loader> function ioncube_licensed_servers ] {
     }
     Function [ <internal:ionCube Loader> function ioncube_server_data ] {
+    }
+    Function [ <internal:ionCube Loader> function ic24_get_cache_id ] {
     }
     Function [ <internal:ionCube Loader> function ic24_is_authenticated ] {
     }
@@ -130,6 +138,10 @@ Extension [ <persistent> extension #204 ionCube Loader version <no_version> ] {
     Function [ <internal:ionCube Loader> function ic24_set_pkv ] {
     }
     Function [ <internal:ionCube Loader> function ic24_get_pkv ] {
+    }
+    Function [ <internal:ionCube Loader> function ic24_update_domains ] {
+    }
+    Function [ <internal:ionCube Loader> function ic24_cache_status ] {
     }
     Function [ <internal:ionCube Loader> function _dyuweyrj4 ] {
     }

@@ -10,7 +10,12 @@
 %global extname       ioncube_loader
 %global debug_package %{nil}
 %global __debug_install_post /bin/true
+%if 0%{?rhel} == 5
+# http://forum.ioncube.com/viewtopic.php?p=10779 - ZTS module broken on EL-5
+%global with_zts      0
+%else
 %global with_zts      0%{?__ztsphp:1}
+%endif
 %if "%{php_version}" < "5.6"
 %global ininame       %{extname}.ini
 %else
@@ -19,20 +24,20 @@
 %endif
 
 # Open issues
-# http://forum.ioncube.com/viewtopic.php?t=4245 - Missing LICENSE file in tarball
 # http://forum.ioncube.com/viewtopic.php?t=4244 - No versio in Reflection
+# http://forum.ioncube.com/viewtopic.php?p=10779 - ZTS module broken on EL-5
+#
 
 Name:          %{?scl_prefix}php-ioncube-loader
 Summary:       Loader for ionCube Encoded Files with ionCube 24 support
-Version:       5.0.19
+Version:       5.0.20
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       Distribuable
 Group:         Development/Languages
 
 URL:           http://www.ioncube.com
-Source0:       http://downloads2.ioncube.com/loader_downloads/%{extname}s_lin_x86.tar.bz2
-Source1:       http://downloads2.ioncube.com/loader_downloads/%{extname}s_lin_x86-64.tar.bz2
-Source2:       LICENSE.txt
+Source0:       http://downloads2.ioncube.com/loader_downloads/%{extname}s_lin_x86.tar.gz
+Source1:       http://downloads2.ioncube.com/loader_downloads/%{extname}s_lin_x86-64.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
@@ -83,7 +88,7 @@ tar xvf %{SOURCE0}
 # Drop in the bit of configuration
 # Sometime file is missing
 # http://forum.ioncube.com/viewtopic.php?t=4245
-[ -f ioncube/LICENSE.txt ] || cp %{SOURCE2} ioncube
+[ -f ioncube/LICENSE.txt ] || exit 1
 sed -e 's/\r//' -i ioncube/*.txt
 
 cat << 'EOF' | tee %{extname}.nts
@@ -98,12 +103,14 @@ zend_extension = %{extname}.so
 ;ic24.sec.block_uploaded_files = 1
 ;ic24.api_access_key = ''
 ;ic24.api_check_ip = 1
-;ic24.sec.alert_action = '^E<96><H<F1><9C><F2>'
+;ic24.slt = '7'
 ;ic24.sec.enable=1
 ;ic24.sec.exclusion_key = ''
 ;ic24.cache_path = ''
 ;ic24.dump_cache=0
 ;ic24.home_dir = ''
+;ic24.sec.block_stdin = '1'
+;ic24.update_domains_retry_interval = '30'
 ;ioncube.loader.encoded_paths = ''
 ;phpd = 1
 ;phpd.t = 1
@@ -175,6 +182,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jan 16 2016 Remi Collet <remi@remirepo.net> - 5.0.20-1
+- update to 5.0.20 (Jan 20, 2016)
+- update configuration comments, remove sec.alert_action
+  add slt, sec.block_stdin, update_domains_retry_interval
+- drop broken ZTS module on EL-5
+  http://forum.ioncube.com/viewtopic.php?p=10779
+
 * Tue Oct 20 2015 Remi Collet <remi@remirepo.net> - 5.0.19-1
 - update to 5.0.19 (Oct 19, 2015)
 

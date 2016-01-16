@@ -240,4 +240,4 @@ This License Agreement and any issues relating thereto shall be construed and
 interpreted in accordance with the laws of England and subject to the
 exclusive jurisdiction of the English courts.
 
-Copyright (c) 2002-2015 ionCube Ltd.          Last revised 23-April-2015
+Copyright (c) 2002-2016 ionCube Ltd.          Last revised 23-April-2015
