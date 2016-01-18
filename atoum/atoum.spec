@@ -7,11 +7,11 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    21f1ed9847ac311a392f43eee12ec5f27c48bdad
+%global gh_commit    f49fcf0b9c5dc0fea30fff92e005a1bc0b2ea938
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 
 Name:           atoum
-Version:        2.5.0
+Version:        2.5.1
 Release:        1%{?dist}
 Summary:        PHP Unit Testing framework
 
@@ -145,7 +145,12 @@ rm tests/units/classes/reports/asynchronous/xunit.php
 cd tests/units
 echo "date.timezone=UTC" >php.ini
 export PHPRC=$(pwd)/php.ini
-php runner.php --directories .
+if which php70; then
+    php56 runner.php --directories .
+    php70 runner.php --directories .
+else
+    php runner.php --directories .
+fi
 %else
 : Tests skipped
 %endif
@@ -166,6 +171,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jan 18 2016 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
+- update to 2.5.1
+
 * Fri Jan  8 2016 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
 - update to 2.5.0
 
