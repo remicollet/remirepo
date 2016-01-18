@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        6.9.3
-%global Patchlevel 0
+%global Patchlevel 1
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -47,6 +47,12 @@
 
 %global with_gvc   1
 
+%ifarch x86_64
+%{!?__isa_bits:       %global __isa_bits 64}
+%else
+%{!?__isa_bits:       %global __isa_bits 32}
+%endif
+
 %global libname ImageMagick
 %if 0%{?fedora} > 20
 Name:           %{libname}
@@ -60,6 +66,8 @@ Group:          Applications/Multimedia
 License:        ImageMagick
 Url:            http://www.imagemagick.org/
 Source0:        ftp://ftp.ImageMagick.org/pub/ImageMagick/ImageMagick-%{VER}-%{Patchlevel}.tar.xz
+
+Patch0:         ImageMagick-6.9.2-7-multiarch-implicit-pkgconfig-dir.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  bzip2-devel, freetype-devel, libjpeg-devel, libpng-devel
@@ -258,12 +266,10 @@ however.
 
 
 %prep
-%setup -q -n ImageMagick-%{VER}-%{Patchlevel}
+%setup -q -n %{libname}-%{VER}-%{Patchlevel}
 
-sed -i 's/libltdl.la/libltdl.so/g' configure
-iconv -f ISO-8859-1 -t UTF-8 README.txt > README.txt.tmp
-touch -r README.txt README.txt.tmp
-mv README.txt.tmp README.txt
+%patch0 -p1 -b .multiarch-implicit-pkgconfig-dir
+
 # for %%doc
 mkdir Magick++/examples
 cp -p Magick++/demo/*.cpp Magick++/demo/*.miff Magick++/examples
@@ -314,9 +320,6 @@ cp -p Magick++/demo/*.cpp Magick++/demo/*.miff Magick++/examples
            --without-gcc-arch \
            --with-ltdl-lib=%{_libdir}
 
-# Disable rpath
-sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 # Do *NOT* use %%{?_smp_mflags}, this causes PerlMagick to be silently misbuild
 make
 
@@ -352,6 +355,40 @@ if [ -z perl-pkg-files ] ; then
     exit -1
 fi
 
+# fix multilib issues: Rename provided file with platform-bits in name.
+# Create platform independant file inplace of provided and conditionally include required.
+# $1 - filename.h to process.
+function multilibFileVersions(){
+mv $1 ${1%%.h}-%{__isa_bits}.h
+
+local basename=$(basename $1)
+
+cat >$1 <<EOF
+#include <bits/wordsize.h>
+
+#if __WORDSIZE == 32
+# include "${basename%%.h}-32.h"
+#elif __WORDSIZE == 64
+# include "${basename%%.h}-64.h"
+#else
+# error "unexpected value for __WORDSIZE macro"
+#endif
+EOF
+}
+
+multilibFileVersions %{buildroot}%{_includedir}/%{libname}-6/magick/magick-config.h
+multilibFileVersions %{buildroot}%{_includedir}/%{libname}-6/magick/magick-baseconfig.h
+multilibFileVersions %{buildroot}%{_includedir}/%{libname}-6/magick/version.h
+
+
+# Fonts must be packaged separately. It does not have matter and demos work without it.
+rm PerlMagick/demo/Generic.ttf
+
+
+%check
+export LD_LIBRARY_PATH=%{buildroot}/%{_libdir}
+make %{?_smp_mflags} check
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -378,7 +415,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc README.txt LICENSE NOTICE AUTHORS.txt NEWS.txt
 %{_libdir}/libMagickCore%{?libsuffixe}.so.2*
 %{_libdir}/libMagickWand%{?libsuffixe}.so.2*
-%{_libdir}/ImageMagick-%{VER}
+%{_libdir}/%{libname}-%{VER}
 %if "%{name}" != "%{libname}"
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/%{libname}%{?incsuffixe}
@@ -388,7 +425,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/%{name}%{?incsuffixe}
 %endif
 %if %{with_djvu}
-%exclude %{_libdir}/ImageMagick-%{VER}/modules-Q16/coders/djvu.*
+%exclude %{_libdir}/%{libname}-%{VER}/modules-Q16/coders/djvu.*
 %endif
 
 %files devel
@@ -401,15 +438,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libMagickWand%{?libsuffixe}.so
 %{_libdir}/pkgconfig/MagickCore%{?libsuffixe}.pc
 %{_libdir}/pkgconfig/MagickCore.pc
-%{_libdir}/pkgconfig/ImageMagick%{?libsuffixe}.pc
-%{_libdir}/pkgconfig/ImageMagick.pc
+%{_libdir}/pkgconfig/%{libname}%{?libsuffixe}.pc
+%{_libdir}/pkgconfig/%{libname}.pc
 %{_libdir}/pkgconfig/MagickWand%{?libsuffixe}.pc
 %{_libdir}/pkgconfig/MagickWand.pc
 %{_libdir}/pkgconfig/Wand%{?libsuffixe}.pc
 %{_libdir}/pkgconfig/Wand.pc
-%dir %{_includedir}/ImageMagick%{?incsuffixe}
-%{_includedir}/ImageMagick%{?incsuffixe}/magick
-%{_includedir}/ImageMagick%{?incsuffixe}/wand
+%dir %{_includedir}/%{libname}%{?incsuffixe}
+%{_includedir}/%{libname}%{?incsuffixe}/magick
+%{_includedir}/%{libname}%{?incsuffixe}/wand
 %{_mandir}/man1/Magick-config.*
 %{_mandir}/man1/MagickCore-config.*
 %{_mandir}/man1/Wand-config.*
@@ -418,7 +455,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with_djvu}
 %files djvu
 %defattr(-,root,root,-)
-%{_libdir}/ImageMagick-%{VER}/modules-Q16/coders/djvu.*
+%{_libdir}/%{libname}-%{VER}/modules-Q16/coders/djvu.*
 %endif
 
 %files doc
@@ -439,8 +476,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc Magick++/examples
 %{_bindir}/Magick++-config
-%{_includedir}/ImageMagick%{?incsuffixe}/Magick++
-%{_includedir}/ImageMagick%{?incsuffixe}/Magick++.h
+%{_includedir}/%{libname}%{?incsuffixe}/Magick++
+%{_includedir}/%{libname}%{?incsuffixe}/Magick++.h
 %{_libdir}/libMagick++%{?libsuffixe}.so
 %{_libdir}/pkgconfig/Magick++%{?libsuffixe}.pc
 %{_libdir}/pkgconfig/Magick++.pc
@@ -455,6 +492,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Jan 18 2016 Remi Collet <remi@remirepo.net> - 6.9.3.1-1
+- update to 6.9.3-1
+- various improvements from Fedora (multi-lib)
+- run "make check" during the build
+
 * Mon Jan  4 2016 Remi Collet <remi@remirepo.net> - 6.9.3.0-1
 - update to 6.9.3-0
 
