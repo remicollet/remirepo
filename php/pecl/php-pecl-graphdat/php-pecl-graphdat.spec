@@ -1,4 +1,4 @@
-# spec file for php-pecl-graphdat
+# remirepo spec file for php-pecl-graphdat
 #
 # Copyright (c) 2014-2016 Remi Collet
 # License: CC-BY-SA
@@ -18,7 +18,7 @@
 %else
 %global ini_name     40-%{pecl_name}.ini
 %endif
-%if 0%{?fedora} > 15 || 0%{?rhel} > 6
+%if 0%{?fedora} > 15 && 0%{?fedora} < 23 || 0%{?rhel} > 6
 %global with_msgpack 1
 %else
 %global with_msgpack 0
@@ -27,7 +27,7 @@
 Summary:       Troubleshoot application and server performance
 Name:          %{?scl_prefix}php-pecl-graphdat
 Version:       1.0.4
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 # https://github.com/alphashack/graphdat-sdk-php/issues/6
 License:       ASL 2.0
 Group:         Development/Languages
@@ -41,8 +41,6 @@ BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: msgpack-devel
 %endif
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
@@ -84,7 +82,7 @@ forwards that along to our servers. The data is then presented in a
 graph so that you can see performance spikes as they happen, and
 trends over time.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -197,12 +195,20 @@ done
 %endif
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
 
@@ -227,6 +233,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 19 2016 Remi Collet <remi@fedoraproject.org> - 1.0.4-2
+- rebuild with bundled msgpack on F23
+- open https://github.com/alphashack/graphdat-sdk-php/issues/8
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.0.4-1.1
 - Fedora 21 SCL mass rebuild
 
