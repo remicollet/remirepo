@@ -30,7 +30,7 @@
 #global gh_date    20150930
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  raphf
-%global prever     RC1
+#global prever     RC1
 # tests disabled because of circular dependency on pecl/http
 # tests requires pecl/http 2.0.0
 %global with_tests %{?_with_tests:1}%{!?_with_tests:0}
@@ -40,18 +40,14 @@
 %global ini_name  40-%{pecl_name}.ini
 %endif
 
-# PHP 7 package from phpng branch
-# git clone git@git.php.net:/pecl/php/raphf.git
-# cd raphf; git checkout phpng; pecl package
-
 Summary:        Resource and persistent handles factory
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        2.0.0
-%if 0%{?ghdate}
+%if 0%{?gh_date}
 Release:        0.3.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        0.4.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:        BSD
@@ -71,6 +67,8 @@ Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
@@ -80,18 +78,12 @@ Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
-%if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
-%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -113,6 +105,8 @@ Summary:       %{name} developer files (header)
 Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 Requires:      %{?scl_prefix}php-devel%{?_isa}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}-devel = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}-devel%{?_isa} = %{version}-%{release}
 
 %description devel
 These are the files needed to compile programs using %{name}.
@@ -120,7 +114,7 @@ These are the files needed to compile programs using %{name}.
 
 %prep
 %setup -qc
-%if 0%{?ghdate}
+%if 0%{?gh_date}
 mv %{gh_project}-%{gh_commit} NTS
 mv NTS/package.xml .
 %else
@@ -262,6 +256,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 
@@ -281,6 +276,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 19 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0 (stable)
+
 * Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.4.RC1
 - Update to 2.0.0RC1 (beta)
 - sources from pecl tarball
