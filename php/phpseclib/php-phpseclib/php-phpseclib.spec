@@ -3,7 +3,7 @@
 
 %global github_owner            phpseclib
 %global github_name             phpseclib
-%global github_commit           a74aa9efbe61430fcb60157c8e025a48ec8ff604
+%global github_commit           ba6fb78f727cd09f2a649113b95468019e490585
 %global github_short            %(c=%{github_commit}; echo ${c:0:7})
 %if 0%{?rhel} == 5
 %global with_tests              0%{?_with_tests:1}
@@ -12,18 +12,17 @@
 %endif
 
 Name:       php-%{composer_vendor}
-Version:    2.0.0
-Release:    4%{?dist}
+Version:    2.0.1
+Release:    1%{?dist}
 Summary:    PHP Secure Communications Library
 
 Group:      System Environment/Libraries
 License:    MIT
 URL:        https://github.com/%{github_owner}/%{github_name}
-Source0:    %{url}/archive/%{github_commit}/%{name}-%{version}-%{github_short}.tar.gz
+Source0:    %{name}-%{version}-%{github_short}.tgz
 Source1:    %{name}-autoload.php
-
-# https://github.com/phpseclib/phpseclib/commit/2b36d44ded043ac07ee470d0e1e7f785dadcf2c0
-Patch0:     %{name}-Remove-include-statement-from-BigInteger-TestCase.patch
+# Generate a full archive from git snapshot, with tests
+Source2:    makesrc.sh
 
 BuildArch:      noarch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -60,7 +59,6 @@ Rijndael, AES, Blowfish, Twofish, SSH-1, SSH-2, SFTP, and X.509
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
-%patch0 -p1
 cp %{SOURCE1} %{composer_vendor}/autoload.php
 
 %build
@@ -74,7 +72,12 @@ cp -pr %{composer_vendor} ${RPM_BUILD_ROOT}%{_datadir}/php
 %check
 %{_bindir}/phpab --output tests/bootstrap.php tests
 echo 'require "%{buildroot}%{_datadir}/php/%{composer_vendor}/autoload.php";' >> tests/bootstrap.php
+
 %{_bindir}/phpunit
+
+if which php70; then
+   php70 %{_bindir}/phpunit
+fi
 %endif
 
 %clean
@@ -88,6 +91,11 @@ rm -rf %{buildroot}
 %license LICENSE
 
 %changelog
+* Tue Jan 19 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- update to 1.0.1
+- sources from git snapshot for tests
+- run test suite with both PHP 5 and 7 when available
+
 * Sun Sep  6 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-4
 - change source0 to commit reference
 - add BR for better test coverage
