@@ -12,7 +12,7 @@
 %global pear_channel phpseclib.sourceforge.net
 
 Name:           php-phpseclib-file-asn1
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}
 Summary:        Pure-PHP ASN1 parser
 
@@ -87,6 +87,9 @@ fi
 
 
 %changelog
+* Tue Jan 19 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1 (no change)
+
 * Mon Aug 03 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - Update to 1.0.0
 
