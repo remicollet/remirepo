@@ -33,12 +33,12 @@
 %else
 %global ini_name  40-%{pecl_name}.ini
 %endif
-%global prever    RC1
+#global prever    RC1
 
 Summary:        Resource and persistent handles factory
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.1.1
-Release:        0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.1.2
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -257,6 +257,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 19 2016 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
+- Update to 1.1.2 (stable)
+
 * Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-0.1.RC1
 - Update to 1.1.1RC1 (beta)
 
