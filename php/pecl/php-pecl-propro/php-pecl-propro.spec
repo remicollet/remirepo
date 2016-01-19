@@ -51,6 +51,8 @@ Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
@@ -88,6 +90,8 @@ Summary:       %{name} developer files (header)
 Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 Requires:      %{?scl_prefix}php-devel%{?_isa}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}-devel = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}-devel%{?_isa} = %{version}-%{release}
 
 %description devel
 These are the files needed to compile programs using %{name}.

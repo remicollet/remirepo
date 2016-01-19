@@ -10,11 +10,7 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
-%endif
 %endif
 
 %{?scl:          %scl_package        php-pecl-raphf}
@@ -29,7 +25,7 @@
 %global gh_project  ext-propro
 #global gh_date     20150930
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
-%global prever      RC1
+#global prever      RC1
 %global pecl_name   propro
 %if "%{php_version}" < "5.6"
 %global ini_name    %{pecl_name}.ini
@@ -48,7 +44,7 @@ Version:        2.0.0
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:        BSD
@@ -65,6 +61,8 @@ Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
@@ -74,18 +72,12 @@ Obsoletes:     php53-pecl-%{pecl_name}
 Obsoletes:     php53u-pecl-%{pecl_name}
 Obsoletes:     php54-pecl-%{pecl_name}
 Obsoletes:     php54w-pecl-%{pecl_name}
-%if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name}
 Obsoletes:     php55w-pecl-%{pecl_name}
-%endif
-%if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name}
 Obsoletes:     php56w-pecl-%{pecl_name}
-%endif
-%if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name}
 Obsoletes:     php70w-pecl-%{pecl_name}
-%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -106,6 +98,8 @@ Summary:       %{name} developer files (header)
 Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 Requires:      %{?scl_prefix}php-devel%{?_isa}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}-devel = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}-devel%{?_isa} = %{version}-%{release}
 
 %description devel
 These are the files needed to compile programs using %{name}.
@@ -260,6 +254,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 19 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0 (stable)
+
 * Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.2.RC1
 - Update to 2.0.0RC1 (beta)
 - sources from pecl tarball
