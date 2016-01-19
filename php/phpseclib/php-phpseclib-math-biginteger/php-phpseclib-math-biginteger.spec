@@ -11,7 +11,7 @@
 %global pear_name Math_BigInteger
 
 Name:           php-phpseclib-math-biginteger
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}
 Summary:        Pure-PHP arbitrary precision integer arithmetic library
 
@@ -91,6 +91,9 @@ fi
 
 
 %changelog
+* Tue Jan 19 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1 (no change)
+
 * Mon Aug 03 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - Update to 1.0.0
 
