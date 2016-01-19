@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #106 http version 3.0.0RC1 ] {
+Extension [ <persistent> extension #77 http version 3.0.0 ] {
 
   - Dependencies {
     Dependency [ raphf (Required) ]
@@ -14,7 +14,7 @@ Extension [ <persistent> extension #106 http version 3.0.0RC1 ] {
     }
   }
 
-  - Constants [30] {
+  - Constants [31] {
     Constant [ integer http\Client\Curl\HTTP_VERSION_1_0 ] { 1 }
     Constant [ integer http\Client\Curl\HTTP_VERSION_1_1 ] { 2 }
     Constant [ integer http\Client\Curl\HTTP_VERSION_2_0 ] { 3 }
@@ -34,6 +34,7 @@ Extension [ <persistent> extension #106 http version 3.0.0RC1 ] {
     Constant [ integer http\Client\Curl\AUTH_DIGEST_IE ] { 16 }
     Constant [ integer http\Client\Curl\AUTH_NTLM ] { 8 }
     Constant [ integer http\Client\Curl\AUTH_GSSNEG ] { 4 }
+    Constant [ integer http\Client\Curl\AUTH_SPNEGO ] { 4 }
     Constant [ integer http\Client\Curl\AUTH_ANY ] { -17 }
     Constant [ integer http\Client\Curl\PROXY_SOCKS4 ] { 4 }
     Constant [ integer http\Client\Curl\PROXY_SOCKS4A ] { 5 }

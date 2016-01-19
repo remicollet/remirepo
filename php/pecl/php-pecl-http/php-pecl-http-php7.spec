@@ -10,11 +10,7 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
-%endif
 %endif
 
 %{?scl:          %scl_package         php-pecl-http}
@@ -29,7 +25,7 @@
 %global gh_owner    m6w6
 %global gh_project  ext-http
 #global gh_date     20150928
-%global prever      RC1
+#global prever      RC1
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
 %global pecl_name http
@@ -50,7 +46,7 @@ Version:        3.0.0
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 %endif
 Summary:        Extended HTTP support
@@ -72,8 +68,8 @@ BuildRequires:  pcre-devel
 BuildRequires:  zlib-devel >= 1.2.0.4
 BuildRequires:  curl-devel >= 7.18.2
 BuildRequires:  libidn-devel
-BuildRequires:  %{?sub_prefix}php-pecl-propro-devel >= 1.0.0
-BuildRequires:  %{?sub_prefix}php-pecl-raphf-devel  >= 1.1.0
+BuildRequires:  %{?scl_prefix}php-pecl-propro-devel >= 1.0.0
+BuildRequires:  %{?scl_prefix}php-pecl-raphf-devel  >= 1.1.0
 
 %if 0%{?scl:1} && 0%{?fedora} < 15 && 0%{?rhel} < 7 && "%{?scl_vendor}" != "remi"
 # Filter in the SCL collection
@@ -112,6 +108,8 @@ Requires:       %{?scl_prefix}php-pecl(apfd)%{?_isa}
 
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})         = %{version}%{?prever}
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})%{?_isa} = %{version}%{?prever}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}%{?prever}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}%{?prever}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}%{?prever}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
 Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}%{?prever}
@@ -173,6 +171,8 @@ Obsoletes:     %{?scl_prefix}php-pecl-http1-devel < 2
 # Can't install both versions of the same extension
 Conflicts:     %{?scl_prefix}php-pecl-http1-devel
 %endif
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}-devel          = %{version}%{?prever}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}-devel%{?_isa}  = %{version}%{?prever}
 
 %description devel
 These are the files needed to compile programs using HTTP extension.
@@ -258,9 +258,6 @@ done
 
 
 %check
-sed -e 's/134217960/1342179%d/' -i ?TS/tests/client026.phpt
-sed -e '/sha3-/d' -i ?TS/tests/etag001.phpt
-
 export REPORT_EXIT_STATUS=1
 
 user=$(id -un)
@@ -359,6 +356,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 19 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- Update to 3.0.0 (stable)
+
 * Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.2.RC1
 - Update to 3.0.0RC1 (beta)
 

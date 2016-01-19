@@ -118,6 +118,8 @@ Requires:       %{?scl_prefix}php-pecl(apfd)%{?_isa}
 
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})         = %{version}%{?prever}
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})%{?_isa} = %{version}%{?prever}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}%{?prever}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}%{?prever}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}%{?prever}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
 Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}%{?prever}
@@ -185,6 +187,8 @@ Obsoletes:     %{?scl_prefix}php-pecl-http1-devel < 2
 # Can't install both versions of the same extension
 Conflicts:     %{?scl_prefix}php-pecl-http1-devel
 %endif
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}-devel          = %{version}%{?prever}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}-devel%{?_isa}  = %{version}%{?prever}
 
 %description devel
 These are the files needed to compile programs using HTTP extension.
