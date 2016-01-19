@@ -21,7 +21,7 @@
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  pq
-%global rcver      RC1
+#global rcver      RC1
 %if %{?runselftest}%{!?runselftest:1}
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
@@ -274,8 +274,8 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
 %{?_licensedir:%license NTS/LICENSE}
-
 %{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 
@@ -286,6 +286,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 19 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- Update to 1.0.0 (stable)
+
 * Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.RC1
 - Update to 1.0.0RC1 (beta)
 
