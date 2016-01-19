@@ -7,11 +7,7 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
-%endif
 %endif
 
 %{?scl:          %scl_package        php-pecl-mogilefs}
@@ -24,26 +20,23 @@
 %global pecl_name  mogilefs
 # Running test suite requires a server
 %global with_tests 0%{?_with_tests:1}
-%if "%{php_version}" < "5.6"
-%global ini_name   %{pecl_name}.ini
-%else
 %global ini_name   40-%{pecl_name}.ini
-%endif
 
 Summary:        PHP client library to communicate with the MogileFS storage
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        0.9.2
+Version:        0.9.3
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 # https://github.com/lstrojny/pecl-mogilefs/issues/15
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source1:        https://raw.githubusercontent.com/lstrojny/pecl-mogilefs/master/LICENSE
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  libxml2-devel
 BuildRequires:  neon-devel
-BuildRequires:  %{?scl_prefix}php-devel > 5.2
+BuildRequires:  %{?scl_prefix}php-devel > 7
 BuildRequires:  %{?scl_prefix}php-pear
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
@@ -52,6 +45,8 @@ Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
@@ -61,18 +56,12 @@ Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
-%if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
-%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -99,8 +88,7 @@ mv %{pecl_name}-%{version} NTS
 sed -e '/role="test"/d' -i package.xml
 
 cd NTS
-: Fix version
-sed -e '/PHP_MOGILEFS_VERSION/s/0.9.2-dev/%{version}/' -i php_mogilefs.h
+cp %{SOURCE1} .
 
 : Sanity check, really often broken
 extver=$(sed -n '/#define PHP_MOGILEFS_VERSION/{s/.* "//;s/".*$//;p}' php_mogilefs.h)
@@ -222,7 +210,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
-#{?_licensedir:%license NTS/LICENSE}
+%{?_licensedir:%license NTS/LICENSE}
 
 %{pecl_xmldir}/%{name}.xml
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -235,6 +223,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 19 2016 Remi Collet <remi@fedoraproject.org> - 0.9.3-1
+- Update to 0.9.3 (php 7, beta)
+
 * Thu Sep  3 2015 Remi Collet <remi@fedoraproject.org> - 0.9.2-1
 - initial package, version 0.9.2 (beta)
 - missing license file
