@@ -25,7 +25,7 @@
 Summary:        PostgreSQL client library (libpq) binding
 Name:           php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -45,7 +45,7 @@ BuildRequires:  postgresql-contrib
 Requires:       php(zend-abi) = %{php_zend_api}
 Requires:       php(api) = %{php_core_api}
 Requires:       php-json%{?_isa}
-Requires:       php-pecl(raphf)%{?_isa}  >= 1.1.0
+Requires:       php-raphf%{?_isa}  >= 1.1.0
 
 Provides:       php-%{pecl_name} = %{version}
 Provides:       php-%{pecl_name}%{?_isa} = %{version}
@@ -248,7 +248,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Tue Jan 19 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+* Tue Jan 19 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
 - cleanup for Fedora review
 
 * Tue Jan 19 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
