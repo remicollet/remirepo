@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    32023ed31791cdf05be8816528ae5921dc841b5a
+%global gh_commit    84d309df061306b7dc47c9d75ee9926b570b76a0
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.8
+Version:        2.3.9
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Application MVC Component
@@ -47,12 +47,12 @@ BuildRequires:  php-spl
 #         "nette/di": "~2.3",
 #         "nette/forms": "~2.2",
 #         "nette/robot-loader": "~2.2",
-#         "latte/latte": "~2.3.0"
+#         "latte/latte": "~2.3.9"
 BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.3
 BuildRequires:  php-composer(%{gh_owner}/di) >= 2.3
 BuildRequires:  php-composer(%{gh_owner}/forms) >= 2.2
 BuildRequires:  php-composer(%{gh_owner}/robot-loader) >= 2.2
-BuildRequires:  php-composer(latte/latte) >= 2.3.0
+BuildRequires:  php-composer(latte/latte) >= 2.3.9
 %endif
 
 # from composer.json, "require": {
@@ -173,6 +173,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.9-1
+- update to 2.3.9
+- raise dependency on latte ~2.3.9
+
 * Thu Dec  3 2015 Remi Collet <remi@fedoraproject.org> - 2.3.8-1
 - update to 2.3.8
 - run test suite with both php 5 and 7 when available
