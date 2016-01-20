@@ -30,7 +30,7 @@
 
 Name:          %{?scl_prefix}php-ioncube-loader
 Summary:       Loader for ionCube Encoded Files with ionCube 24 support
-Version:       5.0.20
+Version:       5.0.21
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       Distribuable
 Group:         Development/Languages
@@ -182,8 +182,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 20 2016 Remi Collet <remi@remirepo.net> - 5.0.21-1
+- update to 5.0.21 (Jan 19, 2016)
+
 * Sat Jan 16 2016 Remi Collet <remi@remirepo.net> - 5.0.20-1
-- update to 5.0.20 (Jan 20, 2016)
+- update to 5.0.20 (Jan 16, 2016)
 - update configuration comments, remove sec.alert_action
   add slt, sec.block_stdin, update_domains_retry_interval
 - drop broken ZTS module on EL-5
