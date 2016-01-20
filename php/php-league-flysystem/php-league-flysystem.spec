@@ -75,7 +75,7 @@ Provides:       php-composer(%{pk_vendor}/%{pk_name}) = %{version}
 Flysystem is a filesystem abstraction which allows you to easily swap out
 a local filesystem for a remote one.
 
-Autoloader: '%{_datadir}/php/%{ns_vendor}/%{ns_project}/autoload.php';
+Autoloader: %{_datadir}/php/%{ns_vendor}/%{ns_project}/autoload.php
 
 
 %prep
