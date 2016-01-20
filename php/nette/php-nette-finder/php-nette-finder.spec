@@ -123,8 +123,8 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Wed Jan 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.4-1
-- update to 2.3.4
+* Wed Jan 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
+- update to 2.3.2
 - run test suite with both php 5 and 7 when available
 
 * Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 2.3.1-1
