@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5e07a7b7180e5e88db9d44e12f1677e36b4f164b
+%global gh_commit    a354b3f623272333a36d28c13db46f6af85ae1ed
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.6
+Version:        2.3.7
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Forms: greatly facilitates web forms
@@ -125,7 +125,12 @@ require_once '%{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php';
 EOF
 
 : Run test suite in sources tree
-nette-tester --colors 0 -p php -c ./php.ini tests -s
+%{_bindir}/nette-tester --colors 0 -p php -c ./php.ini tests -s
+
+if which php70; then
+  cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
+  php70 %{_bindir}/nette-tester --colors 0 -p php70 -c ./php.ini tests -s
+fi
 %else
 : Test suite disabled
 %endif
@@ -148,5 +153,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.7-1
+- update to 2.3.7
+- run test suite with both php 5 and 7 when available
+
 * Tue Oct 20 2015 Remi Collet <remi@fedoraproject.org> - 2.3.6-1
 - initial package
