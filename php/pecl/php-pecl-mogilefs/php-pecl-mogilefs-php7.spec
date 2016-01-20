@@ -24,14 +24,13 @@
 
 Summary:        PHP client library to communicate with the MogileFS storage
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        0.9.3
+Version:        0.9.3.1
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 # https://github.com/lstrojny/pecl-mogilefs/issues/15
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-Source1:        https://raw.githubusercontent.com/lstrojny/pecl-mogilefs/master/LICENSE
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  libxml2-devel
@@ -85,10 +84,11 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{pecl_name}-%{version} NTS
 
 # Don't install tests
-sed -e '/role="test"/d' -i package.xml
+sed -e '/role="test"/d' \
+    %{?_licensedir: -e '/LICENSE/s/role="doc"/role="test"/'} \
+    -i package.xml
 
 cd NTS
-cp %{SOURCE1} .
 
 : Sanity check, really often broken
 extver=$(sed -n '/#define PHP_MOGILEFS_VERSION/{s/.* "//;s/".*$//;p}' php_mogilefs.h)
@@ -223,6 +223,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 20 2016 Remi Collet <remi@fedoraproject.org> - 0.9.3.1-1
+- Update to 0.9.3.1 (php 7, beta, no change)
+
 * Tue Jan 19 2016 Remi Collet <remi@fedoraproject.org> - 0.9.3-1
 - Update to 0.9.3 (php 7, beta)
 

@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #62 mogilefs version 0.9.3 ] {
+Extension [ <persistent> extension #62 mogilefs version 0.9.3.1 ] {
 
   - Classes [2] {
     Class [ <internal:mogilefs> class MogileFs ] {
