@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    b3d31e7ba6d0c13a76afe5c8d914a8ff08616b0d
+%global gh_commit    f1b682652045b126e0eb0852a1c9fb76b21dfcdd
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-view
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.2
+Version:        2.5.3
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -93,7 +93,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.5",
+#        "php": "^5.5 || ^7.0",
 #        "zendframework/zend-eventmanager": "~2.5",
 #        "zendframework/zend-loader": "~2.5",
 #        "zendframework/zend-stdlib": "~2.5"
@@ -171,14 +171,14 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 %check
 %if %{with_tests}
 mkdir vendor
-cat << EOF | tee vendor/autoload.php
+cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
-Zend\\Loader\\AutoloaderFactory::factory(array(
-    'Zend\\Loader\\StandardAutoloader' => array(
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\StandardAutoloader' => array(
         'namespaces' => array(
-           'ZendTest\\\\%{library}' => dirname(__DIR__).'/test/',
-           'Zend\\\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
+           'ZendTest\\%{library}' => dirname(__DIR__).'/test/',
+           'Zend\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
 EOF
@@ -207,6 +207,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 20 2016 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
+- version 2.5.3
+
 * Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - version 2.5.2
 
