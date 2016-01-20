@@ -14,8 +14,9 @@
 %global namespace    ZipStreamer
 
 Name:           php-mcnetic-zipstreamer
-Version:        1.7
-Release:        2%{?dist}
+Epoch:          1
+Version:        0.7
+Release:        1%{?dist}
 Summary:        Stream zip files without i/o overhead
 
 Group:          Development/Libraries
@@ -122,6 +123,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 20 2016 Remi Collet <remi@fedoraproject.org> - 1:0.7.1
+- fix version, from review #1296901
+
 * Fri Jan  8 2016 Remi Collet <remi@fedoraproject.org> - 1.7.2
 - ensure we use our autoloader during the test suite
 - ignore test suite on 32bits build
