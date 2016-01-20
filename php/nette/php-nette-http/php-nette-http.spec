@@ -119,9 +119,6 @@ require_once '%{php_home}/%{ns_vendor}/DI/autoload.php';
 require_once '%{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php';
 EOF
 
-# TODO clean (work with newer dep versions)
-rm  tests/Http/Session.storage.phpt
-
 : Run test suite in sources tree
 %{_bindir}/nette-tester --colors 0 -p php -c ./php.ini tests -s
 
