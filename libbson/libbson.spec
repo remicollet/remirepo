@@ -1,6 +1,6 @@
-# spec file for libbson
+# remirepo spec file for libbson
 #
-# Copyright (c) 2015 Remi Collet
+# Copyright (c) 2015-2016 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #
@@ -19,14 +19,15 @@
 
 Name:      libbson
 Summary:   Library to build, parse, and iterate BSON documents
-Version:   1.3.0
+Version:   1.3.1
 Release:   1%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
-# https://jira.mongodb.org/browse/CDRIVER-1039
-Source1:   https://raw.githubusercontent.com/mongodb/libbson/master/doc/mallard2man.py
+
+# https://jira.mongodb.org/browse/CDRIVER-1068 - Man pages installation broken
+Patch0:    %{name}-issue1068.patch
 
 BuildRequires: python
 
@@ -54,7 +55,7 @@ for %{name}.
 %prep
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
 
-install -m 0755 %{SOURCE1} doc/
+%patch0 -p0 -b .orig
 
 
 %build
@@ -69,6 +70,11 @@ make install-man DESTDIR=%{buildroot}
 
 rm    %{buildroot}%{_libdir}/*la
 rm -r %{buildroot}%{_datadir}/doc
+
+# https://jira.mongodb.org/browse/CDRIVER-1069
+# Man pages are no more generated / installed
+install -pm 644 doc/man/bson*.3 %{buildroot}/%{_mandir}/man3
+
 # drop "generic" man pages, avoid conflicts
 # https://jira.mongodb.org/browse/CDRIVER-1039
 rm    %{buildroot}/%{_mandir}/man3/[c-v]*
@@ -99,6 +105,13 @@ make check
 
 
 %changelog
+* Thu Jan 21 2016 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
+- Update to 1.3.1
+- workaround for man pages are no more generated / installed
+  https://jira.mongodb.org/browse/CDRIVER-1069
+- workaround for man pages installation broken
+  https://jira.mongodb.org/browse/CDRIVER-1068
+
 * Wed Dec 16 2015 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - Update to 1.3.0
 
