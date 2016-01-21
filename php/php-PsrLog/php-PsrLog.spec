@@ -2,7 +2,7 @@
 #
 # RPM spec file for php-PsrLog
 #
-# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -10,16 +10,19 @@
 # Please preserve the changelog entries
 #
 
-%global github_owner   php-fig
-%global github_name    log
-%global github_version 1.0.0
-%global github_commit  fe0936ee26643249e916849d48e3a51d5f5e278b
+%global github_owner     php-fig
+%global github_name      log
+%global github_version   1.0.0
+%global github_commit    fe0936ee26643249e916849d48e3a51d5f5e278b
+
+%global composer_vendor  psr
+%global composer_project log
 
 %{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:      php-PsrLog
 Version:   %{github_version}
-Release:   8%{?dist}
+Release:   9%{?dist}
 Summary:   Common interface for logging libraries
 
 Group:     Development/Libraries
@@ -35,7 +38,10 @@ Requires:  php(language) >= 5.3.0
 Requires:  php-date
 Requires:  php-spl
 
-Provides:  php-composer(psr/log) = %{version}
+# php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}
+Provides:  php-%{composer_vendor}-%{composer_project}           = %{version}-%{release}
+# Composer
+Provides:  php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 %description
 This package holds all interfaces/classes/traits related to PSR-3 [1].
@@ -54,7 +60,7 @@ cat <<'AUTOLOAD' | tee Psr/Log/autoload.php
 <?php
 /**
  * Autoloader for %{name} and its' dependencies
- * (created by %{name}-%{version}-%{release})
+ * (created by %{name}-%{version}-%{release}).
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
@@ -79,18 +85,25 @@ AUTOLOAD
 
 
 %install
-mkdir -pm 0755 %{buildroot}%{_datadir}/php
+mkdir -p %{buildroot}%{_datadir}/php
 cp -rp Psr %{buildroot}%{_datadir}/php/
 
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README.md composer.json
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README.md
+%doc composer.json
 %dir %{_datadir}/php/Psr
      %{_datadir}/php/Psr/Log
 
 
 %changelog
+* Wed Jan 20 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.0-9
+- Added php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT} ("php-psr-log") virtual provide
+- %%license usage
+
 * Mon Nov 16 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.0-8
 - Added autoloader
 
