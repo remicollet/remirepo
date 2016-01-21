@@ -26,7 +26,7 @@
 #global gh_date    20150819
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  pq
-%global prever     RC1
+#global prever     RC1
 %if %{?runselftest}%{!?runselftest:1}
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
@@ -49,7 +49,7 @@ Version:        2.0.0
 Release:        0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        0.5.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:        BSD
@@ -77,6 +77,8 @@ Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -129,7 +131,9 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 %endif
 
 # Don't install tests
-sed -e '/role="test"/d' -i package.xml
+sed -e '/role="test"/d' \
+    %{?_licensedir: -e '/LICENSE/s/role="doc"/role="src"/' }\
+    -i package.xml
 
 cd NTS
 
@@ -301,6 +305,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 21 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0 (stable)
+
 * Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.5.RC1
 - Update to 2.0.0RC1 (beta)
 - sources from pecl tarball
