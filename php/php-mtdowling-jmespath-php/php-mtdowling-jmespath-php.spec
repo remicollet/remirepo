@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-mtdowling-jmespath-php
 #
-# Copyright (c) 2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2015-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,8 +12,8 @@
 
 %global github_owner     jmespath
 %global github_name      jmespath.php
-%global github_version   2.2.0
-%global github_commit    a7d99d0c836e69d27b7bfca1d33ca2759fba3289
+%global github_version   2.3.0
+%global github_commit    192f93e43c2c97acde7694993ab171b3de284093
 
 %global composer_vendor  mtdowling
 %global composer_project jmespath.php
@@ -41,9 +41,9 @@ BuildArch:     noarch
 # Tests
 %if %{with_tests}
 ## composer.json
-BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language) >= %{php_min_ver}
-## phpcompatinfo (computed from version 2.2.0)
+BuildRequires: php-composer(phpunit/phpunit)
+## phpcompatinfo (computed from version 2.3.0)
 BuildRequires: php-json
 BuildRequires: php-spl
 ## Autoloader
@@ -53,12 +53,14 @@ BuildRequires: php-composer(symfony/class-loader)
 Requires:      php-cli
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 2.1.0)
+# phpcompatinfo (computed from version 2.3.0)
 Requires:      php-json
 Requires:      php-spl
 # Autoloader
 Requires:      php-composer(symfony/class-loader)
 
+# php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}
+Provides:      php-%{composer_vendor}-%{composer_project}           = %{version}-%{release}
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
@@ -72,10 +74,11 @@ in PHP applications with PHP data structures.
 %setup -qn %{github_name}-%{github_commit}
 
 : Create autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee src/autoload.php
 <?php
 /**
- * Autoloader created by %{name}-%{version}-%{release}
+ * Autoloader for %{name} and its' dependencies
+ * (created by %{name}-%{version}-%{release}).
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
@@ -95,7 +98,6 @@ require_once __DIR__ . '/JmesPath.php';
 
 return $fedoraClassLoader;
 AUTOLOAD
-) | tee src/autoload.php
 
 : Modify bin script
 sed "s#.*require.*autoload.*#require_once '%{phpdir}/JmesPath/autoload.php';#" \
@@ -124,7 +126,13 @@ sed 's/function testTokenizesJsonNumbers/function SKIP_testTokenizesJsonNumbers/
     -i tests/LexerTest.php
 
 : Run tests
-%{_bindir}/phpunit -v --bootstrap %{buildroot}%{phpdir}/JmesPath/autoload.php
+%{_bindir}/phpunit --verbose \
+    --bootstrap %{buildroot}%{phpdir}/JmesPath/autoload.php
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose \
+      --bootstrap %{buildroot}%{phpdir}/JmesPath/autoload.php
+fi
 %else
 : Tests skipped
 %endif
@@ -146,6 +154,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jun 28 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.3.0-1
+- Updated to 2.3.0 (RHBZ #1295982)
+- Added "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" ("php-mtdowling-jmespath.php")
+  virtual provide
+
 * Sun Jun 28 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.2.0-1
 - Updated to 2.2.0 (RHBZ #1225677)
 - Changed autoloader from phpab to Symfony ClassLoader
