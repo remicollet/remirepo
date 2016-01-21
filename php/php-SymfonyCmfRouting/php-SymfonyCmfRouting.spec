@@ -1,7 +1,8 @@
+# remimrepo spec file for php-SymfonyCmfRouting, from:
 #
-# RPM spec file for php-SymfonyCmfRouting
+# Fedora spec file for php-SymfonyCmfRouting
 #
-# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -19,22 +20,24 @@
 
 # "php": ">=5.3.3"
 %global php_min_ver     5.3.3
-# "symfony/*": "~2.2"
-%global symfony_min_ver 2.2
+# "symfony/routing": "~2.2"
+# "symfony/http-kernel": "~2.2"
+## NOTE: Min version not 2.2 because autoloaders required
+%global symfony_min_ver 2.7.3
 %global symfony_max_ver 3.0
 # "psr/log": "~1.0"
-%global psr_log_min_ver 1.0
+## NOTE: Min version not 1.0 because autoloader required
+%global psr_log_min_ver 1.0.0-8
 %global psr_log_max_ver 2.0
 
 # Build using "--without tests" to disable tests
-%global with_tests  %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests  0%{!?_without_tests:1}
 
-%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
-%{!?phpdir:     %global phpdir     %{_datadir}/php}
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-SymfonyCmfRouting
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       4%{?dist}
 Summary:       Extends the Symfony2 routing component for dynamic routes and chaining
 
 Group:         Development/Libraries
@@ -44,42 +47,44 @@ Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Tests
 %if %{with_tests}
-# composer.json
-BuildRequires: php(language)                   >= %{php_min_ver}
-BuildRequires: php-composer(psr/log)           >= %{psr_log_min_ver}
-BuildRequires: php-composer(psr/log)           <  %{psr_log_max_ver}
-BuildRequires: php-phpunit-PHPUnit
-BuildRequires: php-symfony-config              >= %{symfony_min_ver}
-BuildRequires: php-symfony-config              <  %{symfony_max_ver}
-BuildRequires: php-symfony-dependencyinjection >= %{symfony_min_ver}
-BuildRequires: php-symfony-dependencyinjection <  %{symfony_max_ver}
-BuildRequires: php-symfony-eventdispatcher     >= %{symfony_min_ver}
-BuildRequires: php-symfony-eventdispatcher     <  %{symfony_max_ver}
-BuildRequires: php-symfony-httpkernel          >= %{symfony_min_ver}
-BuildRequires: php-symfony-httpkernel          <  %{symfony_max_ver}
-BuildRequires: php-symfony-routing             >= %{symfony_min_ver}
-BuildRequires: php-symfony-routing             <  %{symfony_max_ver}
-# phpcompatinfo (computed from version 1.3.0)
+BuildRequires: php-composer(phpunit/phpunit)
+## composer.json
+BuildRequires: php(language)                              >= %{php_min_ver}
+#BuildRequires: php-composer(psr/log)                      >= %%{psr_log_min_ver}
+BuildRequires: php-PsrLog                                 >= %{psr_log_min_ver}
+BuildRequires: php-composer(symfony/config)               >= %{symfony_min_ver}
+BuildRequires: php-composer(symfony/dependency-injection) >= %{symfony_min_ver}
+BuildRequires: php-composer(symfony/event-dispatcher)     >= %{symfony_min_ver}
+BuildRequires: php-composer(symfony/http-kernel)          >= %{symfony_min_ver}
+BuildRequires: php-composer(symfony/routing)              >= %{symfony_min_ver}
+## phpcompatinfo (computed from version 1.3.0)
 BuildRequires: php-pcre
 BuildRequires: php-spl
+## Autoloader
+BuildRequires: php-composer(symfony/class-loader)
 %endif
 
 # composer.json
-Requires:      php(language)               >= %{php_min_ver}
-Requires:      php-composer(psr/log)       >= %{psr_log_min_ver}
-Requires:      php-composer(psr/log)       <  %{psr_log_max_ver}
-Requires:      php-symfony-httpkernel      >= %{symfony_min_ver}
-Requires:      php-symfony-httpkernel      <  %{symfony_max_ver}
-Requires:      php-symfony-routing         >= %{symfony_min_ver}
-Requires:      php-symfony-routing         <  %{symfony_max_ver}
-# composer.json: optional
-Requires:      php-symfony-eventdispatcher >= %{symfony_min_ver}
-Requires:      php-symfony-eventdispatcher <  %{symfony_max_ver}
-# phpcompatinfo (computed from version 1.2.0)
+Requires:      php(language)                     >= %{php_min_ver}
+#Requires:      php-composer(psr/log)             >= %%{psr_log_min_ver}
+Requires:      php-PsrLog                        >= %{psr_log_min_ver}
+Requires:      php-composer(psr/log)             <  %{psr_log_max_ver}
+Requires:      php-composer(symfony/http-kernel) >= %{symfony_min_ver}
+Requires:      php-composer(symfony/http-kernel) <  %{symfony_max_ver}
+Requires:      php-composer(symfony/routing)     >= %{symfony_min_ver}
+Requires:      php-composer(symfony/routing)     <  %{symfony_max_ver}
+# phpcompatinfo (computed from version 1.3.0)
 Requires:      php-pcre
 Requires:      php-spl
+# composer.json: optional
+%if 0%{?fedora} > 21
+Suggests:      php-composer(symfony/event-dispatcher)
+%endif
 
+# php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}
+Provides:      php-%{composer_vendor}-%{composer_project}           = %{version}-%{release}
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
@@ -99,28 +104,74 @@ full Symfony2 Framework and can be used in standalone projects.
 
 
 %build
-# Empty build section, nothing to build
+: Create autoloader
+cat <<'AUTOLOAD' | tee autoload.php
+<?php
+/**
+ * Autoloader for %{name} and its' dependencies
+ * (created by %{name}-%{version}-%{release}).
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix(
+    'Symfony\\Cmf\\Component\\Routing\\',
+    dirname(dirname(dirname(dirname(__DIR__))))
+);
+
+// Required dependencies
+require_once '%{phpdir}/Psr/Log/autoload.php';
+require_once '%{phpdir}/Symfony/Component/HttpKernel/autoload.php';
+require_once '%{phpdir}/Symfony/Component/Routing/autoload.php';
+
+// Optional dependency
+@include_once '%{phpdir}/Symfony/Component/EventDispatcher/autoload.php';
+
+return $fedoraClassLoader;
+AUTOLOAD
 
 
 %install
-mkdir -pm 0755 %{buildroot}%{phpdir}/Symfony/Cmf/Component/Routing
+mkdir -p %{buildroot}%{phpdir}/Symfony/Cmf/Component/Routing
 cp -rp * %{buildroot}%{phpdir}/Symfony/Cmf/Component/Routing/
 
 
 %check
 %if %{with_tests}
-# Create autoloader
-mkdir vendor
-cat > vendor/autoload.php <<'AUTOLOAD'
+: Create tests bootstrap
+cat <<'BOOTSTRAP' | tee bootstrap.php
 <?php
+$fedoraClassLoader =
+    require_once '%{buildroot}%{phpdir}/Symfony/Cmf/Component/Routing/autoload.php';
 
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', $class).'.php';
-    @include_once $src;
-});
-AUTOLOAD
+$fedoraClassLoader->addPrefix(
+    'Symfony\\Cmf\\Component\\Routing\\Test\\',
+    '%{buildroot}%{phpdir}'
+);
 
-%{__phpunit} --include-path %{buildroot}%{phpdir}
+$fedoraClassLoader->addPrefix(
+    'Symfony\\Cmf\\Component\\Routing\\Tests\\',
+    '%{buildroot}%{phpdir}'
+);
+
+require_once '%{phpdir}/Symfony/Component/Config/autoload.php';
+require_once '%{phpdir}/Symfony/Component/DependencyInjection/autoload.php';
+BOOTSTRAP
+
+%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+fi
 %else
 : Tests skipped
 %endif
@@ -130,7 +181,9 @@ AUTOLOAD
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc CHANGELOG.md README.md composer.json
+%doc CHANGELOG.md
+%doc README.md
+%doc composer.json
 %dir %{phpdir}/Symfony/Cmf
 %dir %{phpdir}/Symfony/Cmf/Component
      %{phpdir}/Symfony/Cmf/Component/Routing
@@ -142,6 +195,22 @@ AUTOLOAD
 
 
 %changelog
+* Thu Jan 21 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-4
+- sync with Fedora
+- run test suite with both PHP 5 and 7 when available
+
+* Wed Jan 20 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.0-4
+- Added autoloader dependency to build requires
+
+* Wed Jan 20 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.0-3
+- php-composer(*) virtual provide dependencies instead of direct package names
+- Dropped max version build dependencies
+- Increased Symfony min version from 2.2 to 2.3.31/2.7.3 for autoloaders
+- Added "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" ("php-symfony-cmf-routing")
+  virtual provide
+- Suggest php-composer(symfony/event-dispatcher) instead of require
+- Added autoloader
+
 * Thu Nov 13 2014 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.0-1
 - Updated to 1.3.0 (BZ #1096125)
 
