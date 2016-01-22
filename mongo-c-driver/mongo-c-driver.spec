@@ -1,6 +1,6 @@
 # remirepo spec file for mongo-c-driver
 #
-# Copyright (c) 2015 Remi Collet
+# Copyright (c) 2015-2016 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #
@@ -18,7 +18,7 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.3.0
+Version:   1.3.1
 %if 0%{?gh_date}
 Release:   0.6.%{gh_date}git%{gh_short}%{?dist}
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
@@ -26,8 +26,6 @@ BuildRequires: libtool autoconf
 %else
 Release:   1%{?dist}
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
-# https://jira.mongodb.org/browse/CDRIVER-1039
-Source1:   https://raw.githubusercontent.com/mongodb/mongo-c-driver/master/doc/mallard2man.py
 %endif
 License:   ASL 2.0
 Group:     System Environment/Libraries
@@ -75,8 +73,6 @@ Documentation: http://api.mongodb.org/c/%{version}/
 autoreconf -fvi -I build/autotools
 %else
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
-install -m 0755 %{SOURCE1} doc/
-#mkdir doc/man
 %endif
 
 # Ensure we are using system library
@@ -158,6 +154,9 @@ exit $ret
 
 
 %changelog
+* Thu Jan 21 2016 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
+- Update to 1.3.1
+
 * Wed Dec 16 2015 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - Update to 1.3.0
 - move tools in devel package
