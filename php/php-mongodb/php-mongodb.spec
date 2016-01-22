@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    e8177e87efe74437b812915887d416f5b68b4e30
+%global gh_commit    851a560864281cbf91fe182aefed85bfc3395031
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     mongodb
 #global gh_date      20151102
@@ -17,14 +17,14 @@
 %global with_tests   0%{?_with_tests:1}
 %endif
 %global psr0         MongoDB
-%global prever       beta2
+#global prever       beta2
 
 Name:           php-%{gh_owner}
 Version:        1.0.0
 %if 0%{?gh_date}
 Release:        0.2.%{gh_date}git%{gh_short}%{?dist}
 %else
-Release:        0.4.%{prever}%{?dist}
+Release:        1%{?dist}
 %endif
 Summary:        MongoDB driver library
 
@@ -51,9 +51,9 @@ BuildRequires:  php-composer(symfony/class-loader)
 
 # From composer.json, "require": {
 #        "php": ">=5.4"
-#        "ext-mongodb": "^1.1.1"
+#        "ext-mongodb": "^1.1.0"
 Requires:       php(language) >= 5.4
-Requires:       php-pecl(mongodb) >= 1.1.1
+Requires:       php-pecl(mongodb) >= 1.1.0
 # From phpcompatinfo report for 1.0.0alpha1
 Requires:       php-reflection
 Requires:       php-spl
@@ -74,8 +74,7 @@ legacy PHP driver. It contains abstractions for client, database, and
 collection objects, and provides methods for CRUD operations and common
 commands (e.g. index and collection management).
 
-To use this library, you just have to add, in your project:
-  require_once '%{_datadir}/php/%{psr0}/autoload.php';
+Autoloader: %{_datadir}/php/%{psr0}/autoload.php
 
 
 %prep
@@ -156,6 +155,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan 22 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- update to 1.0.0
+
 * Mon Jan  4 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.4.beta2
 - update to 1.0.0beta2
 - raise dependency on pecl/mongodb ^1.1.1
