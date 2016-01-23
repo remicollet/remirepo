@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        6.9.3
-%global Patchlevel 1
+%global Patchlevel 2
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -492,6 +492,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Jan 23 2016 Remi Collet <remi@remirepo.net> - 6.9.3.2-1
+- update to 6.9.3-2
+
 * Mon Jan 18 2016 Remi Collet <remi@remirepo.net> - 6.9.3.1-1
 - update to 6.9.3-1
 - various improvements from Fedora (multi-lib)
