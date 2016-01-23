@@ -1,8 +1,17 @@
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+# remirepo spec file for php-pear-HTML_Template_PHPLIB, from:
+#
+# Fedora spec file for php-pear-HTML_Template_PHPLIB
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+%{!?__pear: %global __pear %{_bindir}/pear}
 %global pear_name HTML_Template_PHPLIB
 
 Name:		php-pear-HTML_Template_PHPLIB
-Version:	1.5.2
+Version:	1.6.0
 Release:	1%{?dist}
 Summary:	PHP template system based on preg_* 
 Group:		Development/Libraries
@@ -13,45 +22,60 @@ Source0:	http://pear.php.net/get/%{pear_name}-%{version}.tgz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:	noarch
 BuildRequires:	php-pear(PEAR)
+# For tests
+BuildRequires:  %{_bindir}/phpunit
 
-Requires:	php-pear(PEAR)
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
+Requires:	php-pear(PEAR)
+Requires:       php(language) >= 5.4.0
+# From phpcompatinfo report for version 1.6.0
+Requires:       php-pcre
 
 Provides:	php-pear(%{pear_name}) = %{version}
+Provides:       php-composer(pear/html_template_phplib) = %{version}
+
 
 %description
 This is the PEAR port of the popular PHPLIB template system. It
 contains some features not currently found in the original version.
 
+
 %prep
 %setup -q -c
-[ -f package2.xml ] || mv package.xml package2.xml
-mv package2.xml %{pear_name}-%{version}/%{pear_name}.xml
 cd %{pear_name}-%{version}
-
-sed -e '/README/s/role="data"/role="doc"/' \
-    -i %{pear_name}.xml
+mv ../package.xml %{pear_name}.xml
 
 
 %build
 # Empty build section nothing to do here
 
+
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 cd %{pear_name}-%{version}
-%{__pear} install --nodeps --packagingroot $RPM_BUILD_ROOT %{pear_name}.xml
+%{__pear} install --nodeps --packagingroot %{buildroot} %{pear_name}.xml
 
 # Clean up unnecessary files
-rm -rf $RPM_BUILD_ROOT%{pear_metadir}/.??*
+rm -rf %{buildroot}%{pear_metadir}/.??*
 
 # Install XML package description
-mkdir -p $RPM_BUILD_ROOT%{pear_xmldir}
-install -pm 644 %{pear_name}.xml $RPM_BUILD_ROOT%{pear_xmldir}
+mkdir -p %{buildroot}%{pear_xmldir}
+install -pm 644 %{pear_name}.xml %{buildroot}%{pear_xmldir}
+
+
+%check
+cd %{pear_name}-%{version}
+
+%{_bindir}/phpunit -v .
+
+if which php70; then
+   php70 %{_bindir}/phpunit -v .
+fi
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post
@@ -73,7 +97,15 @@ fi
 %{pear_phpdir}/HTML/Template
 %{_bindir}/*
 
+
 %changelog
+* Sat Jan 23 2016 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
+- Update to 1.6.0
+- raise PHP minimal version to 5.4
+- provide php-composer(pear/html_template_phplib)
+- run test suite during build
+- run test suite with both PHP 5 and 7 when available
+
 * Tue Aug 21 2012 Remi Collet <RPMS@FamilleCollet.com> - 1.5.2-1
 - update to 1.5.2
 
