@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package        php-pecl-judy}
+%{?scl:          %scl_package        php-pecl-weakref}
 %{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
 %{!?php_incldir: %global php_incldir %{_includedir}/php}
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
@@ -26,7 +26,7 @@
 
 Summary:        Implementation of weak references
 Name:           %{?scl_prefix}php-pecl-weakref
-Version:        0.3.1
+Version:        0.3.2
 %if 0%{?gh_date}
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
@@ -55,6 +55,8 @@ Provides:       %{?scl_prefix}php-%{ext_name} = %{version}
 Provides:       %{?scl_prefix}php-%{ext_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{ext_name} = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{ext_name}%{?_isa} = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -94,7 +96,9 @@ mv %{pecl_name}-%{version} NTS
 %endif
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
 # Sanity check, really often broken
@@ -228,6 +232,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan 24 2016 Remi Collet <remi@fedoraproject.org> - 0.3.2-1
+- update to 0.3.2
+
 * Mon Jan 11 2016 Remi Collet <remi@fedoraproject.org> - 0.3.1-1
 - update to 0.3.1
 - run test suite during the build
