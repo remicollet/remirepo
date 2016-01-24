@@ -34,7 +34,7 @@
 Summary:        ZeroMQ messaging
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.1.2
-Release:        6%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        7%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -43,14 +43,14 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.2
 BuildRequires:  %{?scl_prefix}php-pear
-%if 0%{?fedora} >= 22 || 0%{?rhel} == 5
-# v4 in Fedora22+
+%if 0%{?fedora} >= 22 || 0%{?rhel} == 5 || 0%{?rhel} == 7
+# v4 in Fedora22+, EPEL-7
 # v2 in EPEL-5
 BuildRequires:  zeromq-devel >= 2.0.7
 %else
 BuildRequires:  zeromq3-devel
 %endif
-BuildRequires: pkgconfig
+BuildRequires:  pkgconfig
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
@@ -63,6 +63,8 @@ Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -91,14 +93,16 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 ZeroMQ is a software library that lets you quickly design and implement
 a fast message-based applications.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
 %setup -q -c
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 mv %{pecl_name}-%{version} NTS
 
@@ -237,6 +241,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan 24 2016 Remi Collet <remi@fedoraproject.org> - 1.1.2-7
+- rebuild against zeromq 4 available in EPEL-7
+
 * Tue Jun 23 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-6
 - allow build against rh-php56 (as more-php56)
 
