@@ -46,20 +46,21 @@ BuildArch: noarch
 # For tests
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit) >= 3.7
-# For tests: phpcompatinfo (computed from v1.5.0)
+# For tests: phpcompatinfo (computed from v1.6.0)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
 BuildRequires: php-json
 BuildRequires: php-mbstring
 BuildRequires: php-pcre
+BuildRequires: php-reflection
 BuildRequires: php-spl
 # Autoloader
 BuildRequires: php-composer(symfony/class-loader)
 %endif
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from v1.5.0)
+# phpcompatinfo (computed from v1.6.0)
 Requires:      php-cli
 Requires:      php-curl
 Requires:      php-date
