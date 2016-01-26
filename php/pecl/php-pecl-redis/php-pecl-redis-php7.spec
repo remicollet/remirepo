@@ -22,11 +22,12 @@
 %{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
 %{!?scl:         %global _root_bindir %{_bindir}}
-%global gh_commit   4a37e47d0256581ce2f7a3b15b5bb932add09f36
+# See https://github.com/phpredis/phpredis/commits/php7
+%global gh_commit   7b3695768213910c9ce5535edd15785118848ca7
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    phpredis
 %global gh_project  phpredis
-%global gh_date     20160106
+%global gh_date     20160125
 %global pecl_name   redis
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global with_tests  0%{?_with_tests:1}
@@ -77,6 +78,8 @@ Provides:      %{?scl_prefix}php-redis = %{version}-%{release}
 Provides:      %{?scl_prefix}php-redis%{?_isa} = %{version}-%{release}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -324,6 +327,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 26 2016 Remi Collet <remi@fedoraproject.org> - 2.2.8-0.2.20160125git7b36957
+- refresh
+
 * Sun Jan 10 2016 Remi Collet <remi@fedoraproject.org> - 2.2.8-0.2.20160106git4a37e47
 - improve package.xml, set stability=devel
 
