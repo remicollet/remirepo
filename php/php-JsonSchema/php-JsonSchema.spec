@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-JsonSchema
 #
-# Copyright (c) 2012-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2012-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,10 +12,11 @@
 
 %global github_owner   justinrainbow
 %global github_name    json-schema
-%global github_version 1.6.0
-%global github_commit  f9e27c3e202faf14fd581ef41355d83bb4b7eb7d
+%global github_version 1.6.1
+%global github_commit  cc84765fb7317f6b07bd8ac78364747f95b86341
 %global github_short   %(c=%{github_commit}; echo ${c:0:7})
 
+# Upstream recommends 5.3.29, ignored as test suite pass with 5.3.3 in RHEL-6
 %global php_min_ver    5.3.2
 
 %global lib_name       JsonSchema
@@ -131,6 +132,9 @@ fi
 
 
 %changelog
+* Tue Jan 26 2016 Remi Collet <remi@fedoraproject.org> - 1.6.1-1
+- update to 1.6.1
+
 * Thu Jan  7 2016 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
 - update to 1.6.0
 - use a git snapshot as upstream drop tests from distribution
