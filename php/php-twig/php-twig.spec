@@ -14,8 +14,8 @@
 
 %global github_owner     twigphp
 %global github_name      Twig
-%global github_version   1.23.3
-%global github_commit    ae53fc2c312fdee63773b75cb570304f85388b08
+%global github_version   1.24.0
+%global github_commit    3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 
@@ -299,6 +299,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 26 2016 Remi Collet <remi@fedoraproject.org> - 1.24.0-1
+- Update to 1.24.0
+
 * Mon Jan 11 2016 Remi Collet <remi@fedoraproject.org> - 1.23.3-1
 - Update to 1.23.3
 - run test suite with both PHP 5 and 7 when available
