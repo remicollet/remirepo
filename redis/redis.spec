@@ -9,23 +9,18 @@
 #
 %global _hardened_build 1
 
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
+# systemd >= 204 with additional service config
+%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
 %global with_systemd 1
 %else
 %global with_systemd 0
-%endif
-# systemd >= 204 with additional service config
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 7
-%global with_systemdmax 1
-%else
-%global with_systemdmax 0
 %endif
 
 # Tests fail in mock, not in local build.
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:             redis
-Version:          3.0.6
+Version:          3.0.7
 Release:          1%{?dist}
 Summary:          A persistent key-value database
 
@@ -142,11 +137,9 @@ install -p -D -m 644 %{SOURCE3} %{buildroot}%{_unitdir}/%{name}.service
 install -p -D -m 644 %{SOURCE6} %{buildroot}%{_unitdir}/%{name}-sentinel.service
 # Install systemd tmpfiles config, _tmpfilesdir only defined in fedora >= 18
 install -p -D -m 644 %{SOURCE4} %{buildroot}%{_prefix}/lib/tmpfiles.d/%{name}.conf
-%if %{with_systemdmax}
 # this folder requires systemd >= 204
 install -p -D -m 644 %{SOURCE8} %{buildroot}%{_sysconfdir}/systemd/system/%{name}.service.d/limit.conf
 install -p -D -m 644 %{SOURCE8} %{buildroot}%{_sysconfdir}/systemd/system/%{name}-sentinel.service.d/limit.conf
-%endif
 %else
 install -p -D -m 755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
 install -p -D -m 755 %{SOURCE5} %{buildroot}%{_initrddir}/%{name}-sentinel
@@ -168,11 +161,8 @@ install -pDm755 %{SOURCE7} %{buildroot}%{_bindir}/%{name}-shutdown
 %if 0%{?systemd_post:1}
 %systemd_post redis.service
 %systemd_post redis-sentinel.service
-%endif
-# Initial installation (always, for new service)
-%if %{with_systemd}
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
 %else
+# Initial installation (always, for new service)
 /sbin/chkconfig --add redis
 /sbin/chkconfig --add redis-sentinel
 %endif
@@ -192,19 +182,11 @@ exit 0
 %else
 if [ $1 = 0 ]; then
   # Package removal, not upgrade
-%if %{with_systemd}
-  /bin/systemctl --no-reload disable redis-sentinel.service >/dev/null 2>&1 || :
-  /bin/systemctl stop redis-sentinel.service >/dev/null 2>&1 || :
-
-  /bin/systemctl --no-reload disable redis.service          >/dev/null 2>&1 || :
-  /bin/systemctl stop redis.service          >/dev/null 2>&1 || :
-%else
   /sbin/service redis-sentinel stop &> /dev/null
   /sbin/chkconfig --del redis-sentinel &> /dev/null
 
   /sbin/service redis stop &> /dev/null
   /sbin/chkconfig --del redis &> /dev/null
-%endif
 fi
 %endif
 
@@ -212,19 +194,10 @@ fi
 %systemd_postun_with_restart redis.service
 %systemd_postun_with_restart redis-sentinel.service
 %else
-%if %{with_systemd}
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ $1 -ge 1 ]; then
-  # Package upgrade, not uninstall
-  /bin/systemctl try-restart redis.service          >/dev/null 2>&1 || :
-  /bin/systemctl try-restart redis-sentinel.service >/dev/null 2>&1 || :
-fi
-%else
 if [ $1 -ge 1 ]; then
   /sbin/service redis          condrestart >/dev/null 2>&1 || :
   /sbin/service redis-sentinel condrestart >/dev/null 2>&1 || :
 fi
-%endif
 %endif
 
 
@@ -244,12 +217,10 @@ fi
 %{_prefix}/lib/tmpfiles.d/%{name}.conf
 %{_unitdir}/%{name}.service
 %{_unitdir}/%{name}-sentinel.service
-%if %{with_systemdmax}
 %dir %{_sysconfdir}/systemd/system/%{name}.service.d
 %config(noreplace) %{_sysconfdir}/systemd/system/%{name}.service.d/limit.conf
 %dir %{_sysconfdir}/systemd/system/%{name}-sentinel.service.d
 %config(noreplace) %{_sysconfdir}/systemd/system/%{name}-sentinel.service.d/limit.conf
-%endif
 %else
 %{_initrddir}/%{name}
 %{_initrddir}/%{name}-sentinel
@@ -258,6 +229,10 @@ fi
 
 
 %changelog
+* Tue Jan 26 2016 Remi Collet <remi@fedoraproject.org> - 3.0.7-1
+- Redis 3.0.7 - Release date: 25 jan 2016
+- Upgrade urgency: MODERATE
+
 * Sat Dec 26 2015 Remi Collet <remi@fedoraproject.org> - 3.0.6-1
 - Redis 3.0.6 - Release date: 18 Dec 2015
 - Upgrade urgency: MODERATE
