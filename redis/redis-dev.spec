@@ -20,15 +20,15 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 # Pre-version are only available in github
-%global prever       rc1
-%global gh_commit    3955fdee60524234b642c84d7bc88f179e6dea3c
+%global prever       rc2
+%global gh_commit    8a8fe56c3b0fbbd809aff045f60961d0e2d31bda
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     antirez
 %global gh_project   redis
 
 Name:             redis
 Version:          3.2
-Release:          0.1.%{prever}%{?dist}
+Release:          0.2.%{prever}%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -245,6 +245,9 @@ fi
 
 
 %changelog
+* Tue Jan 26 2016 Remi Collet <remi@fedoraproject.org> - 3.2-0.1.rc1
+- update to 3.2-rc2 (version 3.1.102)
+
 * Fri Jan 15 2016 Remi Collet <remi@fedoraproject.org> - 3.2-0.1.rc1
 - update to 3.2-rc1 (version 3.1.101)
   This is the first release candidate of Redis 3.2
