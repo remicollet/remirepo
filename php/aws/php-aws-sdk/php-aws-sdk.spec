@@ -2,7 +2,7 @@
 #
 # RPM spec file for php-aws-sdk
 #
-# Copyright (c) 2013-2015 Joseph Marrero <jmarrero@fedoraproject.org>
+# Copyright (c) 2013-2016 Joseph Marrero <jmarrero@fedoraproject.org>
 #                         Gregor Tätzner <brummbq@fedoraproject.org>
 #                         Shawn Iwinski <shawn.iwinski@gmail.com>
 #
@@ -14,8 +14,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   2.8.24
-%global github_commit    54b67f902bb2c5bbab481bc3c46537752a018830
+%global github_version   2.8.25
+%global github_commit    852cf2f712443cb6a42f92f365a06eff8997eaa6
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -189,6 +189,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 26 2016 Remi Collet <remi@fedoraproject.org> - 2.8.25-1
+- Update to 2.8.25
+
 * Tue Dec 15 2015 Remi Collet <remi@fedoraproject.org> - 2.8.24-1
 - Update to 2.8.24
 
