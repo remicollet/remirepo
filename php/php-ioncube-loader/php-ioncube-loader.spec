@@ -10,12 +10,7 @@
 %global extname       ioncube_loader
 %global debug_package %{nil}
 %global __debug_install_post /bin/true
-%if 0%{?rhel} == 5
-# http://forum.ioncube.com/viewtopic.php?p=10779 - ZTS module broken on EL-5
-%global with_zts      0
-%else
 %global with_zts      0%{?__ztsphp:1}
-%endif
 %if "%{php_version}" < "5.6"
 %global ininame       %{extname}.ini
 %else
@@ -30,7 +25,7 @@
 
 Name:          %{?scl_prefix}php-ioncube-loader
 Summary:       Loader for ionCube Encoded Files with ionCube 24 support
-Version:       5.0.22
+Version:       5.0.23
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       Distribuable
 Group:         Development/Languages
@@ -182,6 +177,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 27 2016 Remi Collet <remi@remirepo.net> - 5.0.23-1
+- update to 5.0.23 (Jan 26, 2016)
+- re-add ZTS module on EL-5
+
 * Thu Jan 21 2016 Remi Collet <remi@remirepo.net> - 5.0.22-1
 - update to 5.0.22 (Jan 20, 2016)
 
