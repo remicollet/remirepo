@@ -19,11 +19,11 @@
 
 %global pecl_name   xdebug
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
-%global gh_commit   c2346797d81bce4c0a710eb6e69c5d76af7d1269
+%global gh_commit   148ed8b2a9a8e8d1e19cca82b364f3bfb23cdf92
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date     20151118
 %global with_tests  0%{?_with_tests:1}
-%global prever      RC3
+%global prever      RC4
 
 # XDebug should be loaded after opcache
 %if "%{php_version}" < "5.6"
@@ -35,7 +35,7 @@
 Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.4.0
-Release:        0.7.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.8.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{gh_commit}/%{pecl_name}-%{version}%{?prever}-%{gh_short}.tar.gz
 
 # The Xdebug License, version 1.01
@@ -61,6 +61,8 @@ Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(Xdebug) = %{version}
 Provides:       %{?scl_prefix}php-pecl(Xdebug)%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -114,6 +116,8 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %setup -qc
 mv %{pecl_name}-%{gh_commit} NTS
 mv NTS/package.xml .
+
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
 
@@ -288,6 +292,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 27 2016 Remi Collet <remi@fedoraproject.org> - 2.4.0-0.8.RC4
+- update to 2.4.0RC4
+
 * Sun Dec 13 2015 Remi Collet <remi@fedoraproject.org> - 2.4.0-0.7.RC3
 - update to 2.4.0RC3
 
