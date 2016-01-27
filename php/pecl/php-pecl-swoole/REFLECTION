@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
+Extension [ <persistent> extension #167 swoole version 1.8.0 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -42,7 +42,7 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
     Constant [ integer SWOOLE_KEEP ] { 4096 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.7.22 }
+    Constant [ string SWOOLE_VERSION ] { 1.8.0 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_GCC ] { 1 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 2 }
@@ -67,145 +67,6 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
     Function [ <internal:swoole> function swoole_version ] {
     }
     Function [ <internal:swoole> function swoole_cpu_num ] {
-    }
-    Function [ <internal:swoole> function swoole_server_create ] {
-
-      - Parameters [4] {
-        Parameter #0 [ <required> $serv_host ]
-        Parameter #1 [ <required> $serv_port ]
-        Parameter #2 [ <optional> $serv_mode ]
-        Parameter #3 [ <optional> $sock_type ]
-      }
-    }
-    Function [ <internal:swoole> function swoole_server_set ] {
-
-      - Parameters [2] {
-        Parameter #0 [ <required> swoole_server $zobject ]
-        Parameter #1 [ <required> $zset ]
-      }
-    }
-    Function [ <internal:swoole> function swoole_server_start ] {
-
-      - Parameters [1] {
-        Parameter #0 [ <required> swoole_server $zobject ]
-      }
-    }
-    Function [ <internal:swoole> function swoole_server_send ] {
-
-      - Parameters [4] {
-        Parameter #0 [ <required> swoole_server $zobject ]
-        Parameter #1 [ <required> $conn_fd ]
-        Parameter #2 [ <required> $send_data ]
-        Parameter #3 [ <optional> $from_id ]
-      }
-    }
-    Function [ <internal:swoole> function swoole_server_sendfile ] {
-
-      - Parameters [3] {
-        Parameter #0 [ <required> swoole_server $zobject ]
-        Parameter #1 [ <required> $conn_fd ]
-        Parameter #2 [ <required> $filename ]
-      }
-    }
-    Function [ <internal:swoole> function swoole_server_close ] {
-
-      - Parameters [2] {
-        Parameter #0 [ <required> swoole_server $zobject ]
-        Parameter #1 [ <required> $fd ]
-      }
-    }
-    Function [ <internal:swoole> function swoole_server_handler ] {
-
-      - Parameters [3] {
-        Parameter #0 [ <required> swoole_server $zobject ]
-        Parameter #1 [ <required> $ha_name ]
-        Parameter #2 [ <required> $cb ]
-      }
-    }
-    Function [ <internal:swoole> function swoole_server_on ] {
-
-      - Parameters [3] {
-        Parameter #0 [ <required> swoole_server $zobject ]
-        Parameter #1 [ <required> $ha_name ]
-        Parameter #2 [ <required> $cb ]
-      }
-    }
-    Function [ <internal:swoole> function swoole_server_addlisten ] {
-
-      - Parameters [4] {
-        Parameter #0 [ <required> swoole_server $zobject ]
-        Parameter #1 [ <required> $host ]
-        Parameter #2 [ <required> $port ]
-        Parameter #3 [ <required> $sock_type ]
-      }
-    }
-    Function [ <internal:swoole> function swoole_server_addtimer ] {
-
-      - Parameters [2] {
-        Parameter #0 [ <required> swoole_server $zobject ]
-        Parameter #1 [ <required> $interval ]
-      }
-    }
-    Function [ <internal:swoole> function swoole_server_gettimer ] {
-    }
-    Function [ <internal:swoole> function swoole_server_task ] {
-
-      - Parameters [3] {
-        Parameter #0 [ <required> swoole_server $zobject ]
-        Parameter #1 [ <required> $data ]
-        Parameter #2 [ <optional> $worker_id ]
-      }
-    }
-    Function [ <internal:swoole> function swoole_server_taskwait ] {
-
-      - Parameters [4] {
-        Parameter #0 [ <required> swoole_server $zobject ]
-        Parameter #1 [ <required> $data ]
-        Parameter #2 [ <optional> $timeout ]
-        Parameter #3 [ <optional> $worker_id ]
-      }
-    }
-    Function [ <internal:swoole> function swoole_server_finish ] {
-
-      - Parameters [2] {
-        Parameter #0 [ <required> swoole_server $zobject ]
-        Parameter #1 [ <required> $data ]
-      }
-    }
-    Function [ <internal:swoole> function swoole_server_reload ] {
-
-      - Parameters [1] {
-        Parameter #0 [ <required> swoole_server $zobject ]
-      }
-    }
-    Function [ <internal:swoole> function swoole_server_shutdown ] {
-
-      - Parameters [1] {
-        Parameter #0 [ <required> swoole_server $zobject ]
-      }
-    }
-    Function [ <internal:swoole> function swoole_server_heartbeat ] {
-
-      - Parameters [2] {
-        Parameter #0 [ <required> swoole_server $zobject ]
-        Parameter #1 [ <required> $from_id ]
-      }
-    }
-    Function [ <internal:swoole> function swoole_connection_info ] {
-
-      - Parameters [3] {
-        Parameter #0 [ <required> swoole_server $zobject ]
-        Parameter #1 [ <required> $fd ]
-        Parameter #2 [ <optional> $from_id ]
-      }
-    }
-    Function [ <internal:swoole> function swoole_connection_list ] {
-
-      - Parameters [3] {
-        Parameter #0 [ <required> swoole_server $zobject ]
-        Parameter #1 [ <required> $start_fd ]
-        Parameter #2 [ <required> $find_count ]
-      }
     }
     Function [ <internal:swoole> function swoole_event_add ] {
 
@@ -239,46 +100,109 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
         Parameter #1 [ <required> $data ]
       }
     }
-    Function [ <internal:swoole> function swoole_timer_add ] {
-
-      - Parameters [2] {
-        Parameter #0 [ <required> $interval ]
-        Parameter #1 [ <required> $cb ]
-      }
-    }
-    Function [ <internal:swoole> function swoole_timer_del ] {
+    Function [ <internal:swoole> function swoole_event_defer ] {
 
       - Parameters [1] {
-        Parameter #0 [ <required> $interval ]
+        Parameter #0 [ <required> $callback ]
       }
     }
     Function [ <internal:swoole> function swoole_timer_after ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $ms ]
+        Parameter #1 [ <required> $callback ]
+        Parameter #2 [ <optional> $param ]
+      }
     }
     Function [ <internal:swoole> function swoole_timer_tick ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ms ]
+        Parameter #1 [ <required> $callback ]
+      }
     }
     Function [ <internal:swoole> function swoole_timer_clear ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $timer_id ]
+      }
     }
     Function [ <internal:swoole> function swoole_async_set ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $settings ]
+      }
     }
     Function [ <internal:swoole> function swoole_async_read ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <required> $callback ]
+        Parameter #2 [ <optional> $chunk_size ]
+        Parameter #3 [ <optional> $offset ]
+      }
     }
     Function [ <internal:swoole> function swoole_async_write ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <required> $content ]
+        Parameter #2 [ <optional> $offset ]
+        Parameter #3 [ <optional> $callback ]
+      }
     }
     Function [ <internal:swoole> function swoole_async_readfile ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <required> $callback ]
+      }
     }
     Function [ <internal:swoole> function swoole_async_writefile ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <required> $content ]
+        Parameter #2 [ <optional> $callback ]
+      }
     }
     Function [ <internal:swoole> function swoole_async_dns_lookup ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $domain_name ]
+        Parameter #1 [ <required> $content ]
+      }
     }
     Function [ <internal:swoole> function swoole_client_select ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $read_array ]
+        Parameter #1 [ <required> $write_array ]
+        Parameter #2 [ <required> $error_array ]
+        Parameter #3 [ <optional> $timeout ]
+      }
     }
     Function [ <internal:swoole> function swoole_set_process_name ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $process_name ]
+      }
     }
     Function [ <internal:swoole> function swoole_get_local_ip ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:swoole> function swoole_strerror ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $errno ]
+      }
     }
     Function [ <internal:swoole> function swoole_errno ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:swoole> function swoole_mysql_query ] {
 
@@ -296,7 +220,7 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
     }
   }
 
-  - Classes [13] {
+  - Classes [14] {
     Class [ <internal:swoole> class swoole_server ] {
 
       - Constants [0] {
@@ -311,7 +235,7 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
       - Properties [0] {
       }
 
-      - Methods [35] {
+      - Methods [32] {
         Method [ <internal:swoole, ctor> public method __construct ] {
 
           - Parameters [4] {
@@ -319,6 +243,32 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
             Parameter #1 [ <required> $serv_port ]
             Parameter #2 [ <optional> $serv_mode ]
             Parameter #3 [ <optional> $sock_type ]
+          }
+        }
+
+        Method [ <internal:swoole> public method listen ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $host ]
+            Parameter #1 [ <required> $port ]
+            Parameter #2 [ <required> $sock_type ]
+          }
+        }
+
+        Method [ <internal:swoole> public method addlistener ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $host ]
+            Parameter #1 [ <required> $port ]
+            Parameter #2 [ <required> $sock_type ]
+          }
+        }
+
+        Method [ <internal:swoole> public method on ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $cb ]
           }
         }
 
@@ -368,6 +318,14 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
           }
         }
 
+        Method [ <internal:swoole> public method protect ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $conn_fd ]
+            Parameter #1 [ <optional> $is_protected ]
+          }
+        }
+
         Method [ <internal:swoole> public method sendfile ] {
 
           - Parameters [2] {
@@ -407,24 +365,6 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
           }
         }
 
-        Method [ <internal:swoole> public method addlistener ] {
-
-          - Parameters [3] {
-            Parameter #0 [ <required> $host ]
-            Parameter #1 [ <required> $port ]
-            Parameter #2 [ <required> $sock_type ]
-          }
-        }
-
-        Method [ <internal:swoole> public method listen ] {
-
-          - Parameters [3] {
-            Parameter #0 [ <required> $host ]
-            Parameter #1 [ <required> $port ]
-            Parameter #2 [ <required> $sock_type ]
-          }
-        }
-
         Method [ <internal:swoole> public method reload ] {
 
           - Parameters [0] {
@@ -437,33 +377,10 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
           }
         }
 
-        Method [ <internal:swoole> public method hbcheck ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $from_id ]
-          }
-        }
-
         Method [ <internal:swoole> public method heartbeat ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $from_id ]
-          }
-        }
-
-        Method [ <internal:swoole> public method handler ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $ha_name ]
-            Parameter #1 [ <required> $cb ]
-          }
-        }
-
-        Method [ <internal:swoole> public method on ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $ha_name ]
-            Parameter #1 [ <required> $cb ]
           }
         }
 
@@ -499,30 +416,35 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
           }
         }
 
-        Method [ <internal:swoole> public method addtimer ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $interval ]
-          }
-        }
-
-        Method [ <internal:swoole> public method deltimer ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $interval ]
-          }
-        }
-
-        Method [ <internal:swoole> public method gettimer ] {
-        }
-
         Method [ <internal:swoole> public method after ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $ms ]
+            Parameter #1 [ <required> $callback ]
+            Parameter #2 [ <optional> $param ]
+          }
         }
 
         Method [ <internal:swoole> public method tick ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $ms ]
+            Parameter #1 [ <required> $callback ]
+          }
         }
 
         Method [ <internal:swoole> public method clearTimer ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $timer_id ]
+          }
+        }
+
+        Method [ <internal:swoole> public method defer ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $callback ]
+          }
         }
 
         Method [ <internal:swoole> public method sendmessage ] {
@@ -600,6 +522,32 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
       }
     }
 
+    Class [ <internal:swoole> class swoole_server_port ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [3] {
+        Method [ <internal:swoole, dtor> public method __destruct ] {
+        }
+
+        Method [ <internal:swoole> public method set ] {
+        }
+
+        Method [ <internal:swoole> public method on ] {
+        }
+      }
+    }
+
     Class [ <internal:swoole> class swoole_client ] {
 
       - Constants [4] {
@@ -615,9 +563,10 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
       - Static methods [0] {
       }
 
-      - Properties [2] {
+      - Properties [3] {
         Property [ <default> public $errCode ]
         Property [ <default> public $sock ]
+        Property [ <default> public $reuse ]
       }
 
       - Methods [16] {
@@ -699,7 +648,7 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
       - Properties [0] {
       }
 
-      - Methods [12] {
+      - Methods [13] {
         Method [ <internal:swoole, ctor> public method __construct ] {
         }
 
@@ -707,6 +656,9 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
         }
 
         Method [ <internal:swoole> public method useQueue ] {
+        }
+
+        Method [ <internal:swoole> public method freeQueue ] {
         }
 
         Method [ <internal:swoole> public method start ] {
@@ -969,7 +921,7 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
         Property [ <default> private $global ]
       }
 
-      - Methods [36] {
+      - Methods [33] {
         Method [ <internal:swoole, overwrites swoole_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
@@ -991,6 +943,24 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
             Parameter #1 [ <required> $serv_port ]
             Parameter #2 [ <optional> $serv_mode ]
             Parameter #3 [ <optional> $sock_type ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method listen ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $host ]
+            Parameter #1 [ <required> $port ]
+            Parameter #2 [ <required> $sock_type ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method addlistener ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $host ]
+            Parameter #1 [ <required> $port ]
+            Parameter #2 [ <required> $sock_type ]
           }
         }
 
@@ -1034,6 +1004,14 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
           }
         }
 
+        Method [ <internal:swoole, inherits swoole_server> public method protect ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $conn_fd ]
+            Parameter #1 [ <optional> $is_protected ]
+          }
+        }
+
         Method [ <internal:swoole, inherits swoole_server> public method sendfile ] {
 
           - Parameters [2] {
@@ -1073,24 +1051,6 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
           }
         }
 
-        Method [ <internal:swoole, inherits swoole_server> public method addlistener ] {
-
-          - Parameters [3] {
-            Parameter #0 [ <required> $host ]
-            Parameter #1 [ <required> $port ]
-            Parameter #2 [ <required> $sock_type ]
-          }
-        }
-
-        Method [ <internal:swoole, inherits swoole_server> public method listen ] {
-
-          - Parameters [3] {
-            Parameter #0 [ <required> $host ]
-            Parameter #1 [ <required> $port ]
-            Parameter #2 [ <required> $sock_type ]
-          }
-        }
-
         Method [ <internal:swoole, inherits swoole_server> public method reload ] {
 
           - Parameters [0] {
@@ -1103,25 +1063,10 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
           }
         }
 
-        Method [ <internal:swoole, inherits swoole_server> public method hbcheck ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $from_id ]
-          }
-        }
-
         Method [ <internal:swoole, inherits swoole_server> public method heartbeat ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $from_id ]
-          }
-        }
-
-        Method [ <internal:swoole, inherits swoole_server> public method handler ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $ha_name ]
-            Parameter #1 [ <required> $cb ]
           }
         }
 
@@ -1157,30 +1102,35 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
           }
         }
 
-        Method [ <internal:swoole, inherits swoole_server> public method addtimer ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $interval ]
-          }
-        }
-
-        Method [ <internal:swoole, inherits swoole_server> public method deltimer ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $interval ]
-          }
-        }
-
-        Method [ <internal:swoole, inherits swoole_server> public method gettimer ] {
-        }
-
         Method [ <internal:swoole, inherits swoole_server> public method after ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $ms ]
+            Parameter #1 [ <required> $callback ]
+            Parameter #2 [ <optional> $param ]
+          }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method tick ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $ms ]
+            Parameter #1 [ <required> $callback ]
+          }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method clearTimer ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $timer_id ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method defer ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $callback ]
+          }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method sendmessage ] {
@@ -1315,13 +1265,29 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
       - Static properties [0] {
       }
 
-      - Static methods [0] {
+      - Static methods [2] {
+        Method [ <internal:swoole> static public method pack ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $data ]
+            Parameter #1 [ <optional> $opcode ]
+            Parameter #2 [ <optional> $finish ]
+            Parameter #3 [ <optional> $mask ]
+          }
+        }
+
+        Method [ <internal:swoole> static public method unpack ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $data ]
+          }
+        }
       }
 
       - Properties [0] {
       }
 
-      - Methods [37] {
+      - Methods [34] {
         Method [ <internal:swoole, overwrites swoole_http_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
@@ -1363,6 +1329,24 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
           }
         }
 
+        Method [ <internal:swoole, inherits swoole_server> public method listen ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $host ]
+            Parameter #1 [ <required> $port ]
+            Parameter #2 [ <required> $sock_type ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method addlistener ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $host ]
+            Parameter #1 [ <required> $port ]
+            Parameter #2 [ <required> $sock_type ]
+          }
+        }
+
         Method [ <internal:swoole, inherits swoole_server> public method set ] {
 
           - Parameters [1] {
@@ -1393,6 +1377,14 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
           - Parameters [2] {
             Parameter #0 [ <required> $conn_fd ]
             Parameter #1 [ <required> $send_data ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method protect ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $conn_fd ]
+            Parameter #1 [ <optional> $is_protected ]
           }
         }
 
@@ -1435,24 +1427,6 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
           }
         }
 
-        Method [ <internal:swoole, inherits swoole_server> public method addlistener ] {
-
-          - Parameters [3] {
-            Parameter #0 [ <required> $host ]
-            Parameter #1 [ <required> $port ]
-            Parameter #2 [ <required> $sock_type ]
-          }
-        }
-
-        Method [ <internal:swoole, inherits swoole_server> public method listen ] {
-
-          - Parameters [3] {
-            Parameter #0 [ <required> $host ]
-            Parameter #1 [ <required> $port ]
-            Parameter #2 [ <required> $sock_type ]
-          }
-        }
-
         Method [ <internal:swoole, inherits swoole_server> public method reload ] {
 
           - Parameters [0] {
@@ -1465,25 +1439,10 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
           }
         }
 
-        Method [ <internal:swoole, inherits swoole_server> public method hbcheck ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $from_id ]
-          }
-        }
-
         Method [ <internal:swoole, inherits swoole_server> public method heartbeat ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $from_id ]
-          }
-        }
-
-        Method [ <internal:swoole, inherits swoole_server> public method handler ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $ha_name ]
-            Parameter #1 [ <required> $cb ]
           }
         }
 
@@ -1519,30 +1478,35 @@ Extension [ <persistent> extension #166 swoole version 1.7.22 ] {
           }
         }
 
-        Method [ <internal:swoole, inherits swoole_server> public method addtimer ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $interval ]
-          }
-        }
-
-        Method [ <internal:swoole, inherits swoole_server> public method deltimer ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $interval ]
-          }
-        }
-
-        Method [ <internal:swoole, inherits swoole_server> public method gettimer ] {
-        }
-
         Method [ <internal:swoole, inherits swoole_server> public method after ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $ms ]
+            Parameter #1 [ <required> $callback ]
+            Parameter #2 [ <optional> $param ]
+          }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method tick ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $ms ]
+            Parameter #1 [ <required> $callback ]
+          }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method clearTimer ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $timer_id ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method defer ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $callback ]
+          }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method sendmessage ] {

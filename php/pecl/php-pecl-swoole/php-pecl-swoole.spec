@@ -31,15 +31,12 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.7.22
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.8.0
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# see https://github.com/swoole/swoole-src/pull/462
-Patch0:         %{pecl_name}-pr462.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel >= 5.3.10
@@ -63,6 +60,8 @@ Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -115,11 +114,11 @@ mv %{pecl_name}-%{version} NTS
 # Don't install/register tests, install examples as doc
 sed -e 's/role="test"/role="src"/' \
     -e '/examples/s/role="src"/role="doc"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
     -i package.xml
 
 
 cd NTS
-%patch0 -p1 -b .pr462
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_SWOOLE_VERSION/{s/.* "//;s/".*$//;p}' php_swoole.h)
@@ -141,7 +140,7 @@ extension=%{pecl_name}.so
 
 ; Configuration
 ;swoole.aio_thread_num = 2
-;swoole.display_errors = 2
+;swoole.display_errors = On
 ;swoole.message_queue_key = 0
 ;swoole.unixsock_buffer_size = 8388608
 EOF
@@ -257,6 +256,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 27 2016 Remi Collet <remi@fedoraproject.org> - 1.8.0-1
+- Update to 1.8.0 (stable)
+
 * Thu Dec 31 2015 Remi Collet <remi@fedoraproject.org> - 1.7.22-2
 - Update to 1.7.22 (new sources)
 
