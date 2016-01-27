@@ -6,10 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    bda2c0f9b7dfc24616fe273d06f816a61abec9ef
+%global gh_commit    cd21505c8d58499a9b4d38573881cfec49c51ffd
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20160109
+%global gh_date      20160127
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
@@ -221,6 +221,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 27 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.19.20160127gitcd21505
+- new snapshot
+
 * Sun Jan 10 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.19.20160109gitbda2c0f
 - new snapshot
 - raise dependency on justinrainbow/json-schema ^1.6
