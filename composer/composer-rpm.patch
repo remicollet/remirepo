@@ -1,6 +1,6 @@
 diff -up ./bin/composer.rpm ./bin/composer
 --- ./bin/composer.rpm	2016-01-27 14:04:22.000000000 +0100
-+++ ./bin/composer	2016-01-27 15:38:59.527897212 +0100
++++ ./bin/composer	2016-01-27 16:32:11.313455545 +0100
 @@ -5,7 +5,7 @@ if (PHP_SAPI !== 'cli') {
      echo 'Warning: Composer should be invoked via the CLI version of PHP, not the '.PHP_SAPI.' SAPI'.PHP_EOL;
  }
@@ -12,7 +12,7 @@ diff -up ./bin/composer.rpm ./bin/composer
  
 diff -up ./src/Composer/Autoload/AutoloadGenerator.php.rpm ./src/Composer/Autoload/AutoloadGenerator.php
 --- ./src/Composer/Autoload/AutoloadGenerator.php.rpm	2016-01-27 14:04:22.000000000 +0100
-+++ ./src/Composer/Autoload/AutoloadGenerator.php	2016-01-27 15:38:59.528897217 +0100
++++ ./src/Composer/Autoload/AutoloadGenerator.php	2016-01-27 16:32:11.313455545 +0100
 @@ -287,7 +287,7 @@ EOF;
          file_put_contents($targetDir.'/autoload_real.php', $this->getAutoloadRealFile(true, (bool) $includePathFileContents, $targetDirLoader, (bool) $includeFilesFileContents, $vendorPathCode, $appBaseDirCode, $suffix, $useGlobalIncludePath, $prependAutoloader));
  
@@ -23,12 +23,15 @@ diff -up ./src/Composer/Autoload/AutoloadGenerator.php.rpm ./src/Composer/Autolo
          if ($this->runScripts) {
              $this->eventDispatcher->dispatchScript(ScriptEvents::POST_AUTOLOAD_DUMP, $this->devMode, array(), array(
 diff -up ./src/Composer/Command/DiagnoseCommand.php.rpm ./src/Composer/Command/DiagnoseCommand.php
---- ./src/Composer/Command/DiagnoseCommand.php.rpm	2016-01-27 15:38:59.528897217 +0100
-+++ ./src/Composer/Command/DiagnoseCommand.php	2016-01-27 15:40:12.809253563 +0100
-@@ -137,9 +137,6 @@ EOT
-         $io->write('Checking pubkeys: ', false);
-         $this->outputResult($this->checkPubKeys($config));
+--- ./src/Composer/Command/DiagnoseCommand.php.rpm	2016-01-27 14:04:22.000000000 +0100
++++ ./src/Composer/Command/DiagnoseCommand.php	2016-01-27 16:33:31.333845672 +0100
+@@ -134,12 +134,6 @@ EOT
+         $io->write('Checking disk free space: ', false);
+         $this->outputResult($this->checkDiskSpace($config));
  
+-        $io->write('Checking pubkeys: ', false);
+-        $this->outputResult($this->checkPubKeys($config));
+-
 -        $io->write('Checking composer version: ', false);
 -        $this->outputResult($this->checkVersion());
 -
@@ -37,7 +40,7 @@ diff -up ./src/Composer/Command/DiagnoseCommand.php.rpm ./src/Composer/Command/D
  
 diff -up ./src/Composer/Json/JsonFile.php.rpm ./src/Composer/Json/JsonFile.php
 --- ./src/Composer/Json/JsonFile.php.rpm	2016-01-27 14:04:22.000000000 +0100
-+++ ./src/Composer/Json/JsonFile.php	2016-01-27 15:38:59.528897217 +0100
++++ ./src/Composer/Json/JsonFile.php	2016-01-27 16:32:11.313455545 +0100
 @@ -155,7 +155,7 @@ class JsonFile
              self::validateSyntax($content, $this->path);
          }
