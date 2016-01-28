@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    6b0c8437c67153c5e81cdf1aaa147e5a126ed013
+%global gh_commit    75bcfb813571705032571e2b471519b924b86fde
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-log
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.2
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -43,6 +43,7 @@ BuildRequires:  php-pcre
 BuildRequires:  php-spl
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
+BuildRequires:  php-composer(psr/log)                           >= 1.0
 # From composer, "require-dev": {
 #        "zendframework/zend-console": "~2.5",
 #        "zendframework/zend-db": "~2.5",
@@ -70,13 +71,16 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 # From composer, "require": {
 #        "php": ">=5.5",
 #        "zendframework/zend-servicemanager": "~2.5",
-#        "zendframework/zend-stdlib": "~2.5"
+#        "zendframework/zend-stdlib": "~2.5",
+#        "psr/log": "~1.0"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-servicemanager)   <  3
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
+Requires:       php-composer(psr/log)                           >= 1.0
+Requires:       php-composer(psr/log)                           <  2
 # From composer, "suggest": {
 #        "ext-mongo": "mongodb extetension to use MongoDB writer",
 #        "zendframework/zend-console": "Zend\\Console component to use the RequestID log processor",
@@ -93,7 +97,7 @@ Suggests:       php-composer(%{gh_owner}/zend-mail)
 Suggests:       php-composer(%{gh_owner}/zend-validator)
 %endif
 %endif
-# From phpcompatinfo report for version 2.5.2
+# From phpcompatinfo report for version 2.6.0
 Requires:       php-ctype
 Requires:       php-date
 Requires:       php-dom
@@ -131,14 +135,14 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 %check
 %if %{with_tests}
 mkdir vendor
-cat << EOF | tee vendor/autoload.php
+cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
-Zend\\Loader\\AutoloaderFactory::factory(array(
-    'Zend\\Loader\\StandardAutoloader' => array(
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\StandardAutoloader' => array(
         'namespaces' => array(
-           'ZendTest\\\\%{library}' => dirname(__DIR__).'/test/',
-           'Zend\\\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
+           'ZendTest\\%{library}' => dirname(__DIR__).'/test/',
+           'Zend\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
 EOF
@@ -167,5 +171,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- update to 2.6.0
+- add dependency on psr/log
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - initial package
