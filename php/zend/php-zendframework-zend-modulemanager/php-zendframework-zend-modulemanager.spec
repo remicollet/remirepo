@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    afaf873a3b420ba017933c15eb2a93dff433a7d1
+%global gh_commit    5d11387829cfc68359da7ea600dea835acb31a22
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-modulemanager
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.3
+Version:        2.6.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -37,7 +37,7 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.5
 BuildRequires:  php-spl
 BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 # From composer, "require-dev": {
 #        "zendframework/zend-config": "~2.5",
 #        "zendframework/zend-console": "~2.5",
@@ -63,13 +63,13 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 # From composer, "require": {
 #        "php": ">=5.5",
 #        "zendframework/zend-eventmanager": "~2.5",
-#        "zendframework/zend-stdlib": ">=2.5.0,<2.7.0"
+#        "zendframework/zend-stdlib": "~2.7"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-eventmanager)     <  3
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  2.7
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
 # From composer, "suggest": {
 #        "zendframework/zend-config": "Zend\\Config component",
 #        "zendframework/zend-console": "Zend\\Console component",
@@ -84,7 +84,7 @@ Suggests:       php-composer(%{gh_owner}/zend-mvc)
 Suggests:       php-composer(%{gh_owner}/zend-servicemanager)
 %endif
 %endif
-# From phpcompatinfo report for version 2.5.1
+# From phpcompatinfo report for version 2.6.1
 Requires:       php-spl
 
 Obsoletes:      php-ZendFramework2-%{library} < 2.5
@@ -157,6 +157,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
+- update to 2.6.1
+- raise dependency on zend-stdlib ~2.7
+
 * Thu Sep 10 2015 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
 - update to 2.5.3
 - raise minimum php version to 5.5
