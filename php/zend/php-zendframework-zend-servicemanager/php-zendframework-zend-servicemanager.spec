@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    3b22c403e351d92526c642cba0bd810bc22e1c56
+%global gh_commit    846f8a4f9c2e438e45d2de5cec11509cb7e08d79
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-servicemanager
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.1
-Release:        2%{?dist}
+Version:        2.7.4
+Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -34,27 +34,31 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.3.23
+BuildRequires:  php(language) >= 5.5
+BuildRequires:  php-composer(container-interop/container-interop) >= 1.0
 BuildRequires:  php-spl
 # From composer, "require-dev": {
 #        "zendframework/zend-di": "~2.5",
 #        "zendframework/zend-mvc": "~2.5",
 #        "fabpot/php-cs-fixer": "1.7.*",
-#        "phpunit/PHPUnit": "~4.0"
+#        "phpunit/PHPUnit": "~4.0",
+#        "athletic/athletic": "dev-master"
 BuildRequires:  php-composer(%{gh_owner}/zend-di)               >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-mvc)              >= 2.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Because of bootstrap
-BuildRequires:  php-composer(%{gh_owner}/zend-code)              >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-code)             >= 2.5
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.3.23"
-Requires:       php(language) >= 5.3.23
-# From phpcompatinfo report for version 2.5.2
-Requires:       php-reflection
+#        "php": "^5.5 || ^7.0"
+#        "container-interop/container-interop": "~1.0"
+Requires:       php(language) >= 5.5
+Requires:       php-composer(container-interop/container-interop) >= 1.0
+Requires:       php-composer(container-interop/container-interop) <  2
+# From phpcompatinfo report for version 2.7.4
 Requires:       php-spl
 %if ! %{bootstrap}
 # From composer, "suggest": {
@@ -81,6 +85,9 @@ retrieving other objects.
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+
+# NOTICE container-interop/container-interop is PSR-0
+# so will be managed by the fallback_autoloader option
 
 
 %build
@@ -133,6 +140,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.7.4-2
+- update to 2.7.4
+- raise minimal php version to 5.5
+- add dependency on container-interop/container-interop ~1.0
+
 * Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-2
 - fix description
 
