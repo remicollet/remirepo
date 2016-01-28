@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    468a172b71f2b484d557cb8dc3fa33cd90d71c25
+%global gh_commit    8bf64e1ffe0cac8f7d7dd47ba2e94c78b4127ae6
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-form
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.3
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -40,7 +40,8 @@ BuildRequires:  php-intl
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
 BuildRequires:  php-composer(%{gh_owner}/zend-inputfilter)      >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-hydrator)         >= 1.0
+BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 # From composer, "require-dev": {
 #        "doctrine/annotations": "~1.0",
 #        "zendframework/zend-cache": "~2.5",
@@ -83,13 +84,16 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 # From composer, "require": {
 #        "php": ">=5.5",
 #        "zendframework/zend-inputfilter": "~2.5",
-#        "zendframework/zend-stdlib": ">=2.5.0,<2.7.0"
+#        "zendframework/zend-hydrator": "~1.0",
+#        "zendframework/zend-stdlib": "~2.7"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-inputfilter)      >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-inputfilter)      <  3
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  2.7
+Requires:       php-composer(%{gh_owner}/zend-hydrator)         >= 1.0
+Requires:       php-composer(%{gh_owner}/zend-hydrator)         <  2
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
 # From composer, "suggest": {
 #        "zendframework/zend-captcha": "Zend\\Captcha component",
 #        "zendframework/zend-code": "Zend\\Code component",
@@ -112,7 +116,7 @@ Suggests:       php-composer(%{gh_owner}/zend-view)
 #Suggests:       php-composer(%{gh_owner}/zendservice-recaptcha)
 %endif
 %endif
-# From phpcompatinfo report for version 2.5.1
+# From phpcompatinfo report for version 2.6.0
 Requires:       php-date
 Requires:       php-intl
 Requires:       php-pcre
@@ -184,6 +188,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- update to 2.6.0
+- raise dependency on zend-stdlib ~2.7
+- add dependency on zend-hydrator ~1.0
+
 * Wed Sep 23 2015 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
 - update to 2.5.3
 
