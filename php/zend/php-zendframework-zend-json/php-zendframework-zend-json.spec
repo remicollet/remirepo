@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    4a3add6505fd8618728239d8ce35f182dfbdac02
+%global gh_commit    e2945611a98e1fefcaaf69969350a0bfa6a8d574
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-json
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.2
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -40,15 +40,16 @@ BuildRequires:  php-mbstring
 BuildRequires:  php-pcre
 BuildRequires:  php-reflection
 BuildRequires:  php-spl
-BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 # From composer, "require-dev": {
 #        "zendframework/zend-http": "~2.5",
 #        "zendframework/zend-server": "~2.5",
+#        "zendframework/zend-stdlib": "~2.5",
 #        "zendframework/zendxml": "~1.0",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0"
 BuildRequires:  php-composer(%{gh_owner}/zend-http)             >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-server)           >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zendxml)               >= 1.0
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
@@ -57,22 +58,21 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 
 # From composer, "require": {
 #        "php": ">=5.5",
-#        "zendframework/zend-stdlib": "~2.5"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
 # From composer, "suggest": {
 #        "zendframework/zend-http": "Zend\\Http component",
 #        "zendframework/zend-server": "Zend\\Server component",
+#        "zendframework/zend-stdlib": "To use the cache for Zend\\Server",
 #        "zendframework/zendxml": "To support Zend\\Json\\Json::fromXml() usage"
 %if 0%{?fedora} >= 21
 Suggests:       php-composer(%{gh_owner}/zend-http)
 Suggests:       php-composer(%{gh_owner}/zend-server)
+Suggests:       php-composer(%{gh_owner}/zend-stdlib)
 Suggests:       php-composer(%{gh_owner}/zendxml)
 %endif
 %endif
-# From phpcompatinfo report for version 2.5.1
+# From phpcompatinfo report for version 2.6.0
 Requires:       php-json
 Requires:       php-mbstring
 Requires:       php-pcre
@@ -107,14 +107,14 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 %check
 %if %{with_tests}
 mkdir vendor
-cat << EOF | tee vendor/autoload.php
+cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
-Zend\\Loader\\AutoloaderFactory::factory(array(
-    'Zend\\Loader\\StandardAutoloader' => array(
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\StandardAutoloader' => array(
         'namespaces' => array(
-           'ZendTest\\\\%{library}' => dirname(__DIR__).'/test/',
-           'Zend\\\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
+           'ZendTest\\%{library}' => dirname(__DIR__).'/test/',
+           'Zend\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
 EOF
@@ -143,6 +143,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- version 2.6.0
+- zend-stdlib is now optional
+
 * Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - version 2.5.2
 
