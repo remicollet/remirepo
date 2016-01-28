@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    a5e17866ce6658667afe7b84d95cb68548a7bf20
+%global gh_commit    8bda58293d6baa3e1d8316300fce0fed55df8ea0
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-db
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.2
+Version:        2.6.2
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -39,18 +39,18 @@ BuildRequires:  php-date
 BuildRequires:  php-pcre
 BuildRequires:  php-pdo
 BuildRequires:  php-spl
-BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 # From composer, "require-dev": {
 #        "zendframework/zend-eventmanager": "~2.5",
+#        "zendframework/zend-hydrator": "~1.0",
 #        "zendframework/zend-mvc": "~2.5",
 #        "zendframework/zend-servicemanager": "~2.5",
-#        "zendframework/zend-stdlib": ">=2.5.0,<2.7.0",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0"
 BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-hydrator)         >= 1.0
 BuildRequires:  php-composer(%{gh_owner}/zend-mvc)              >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
@@ -58,20 +58,21 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 
 # From composer, "require": {
 #        "php": ">=5.5",
-#        "zendframework/zend-stdlib": "~2.5"
+#        "zendframework/zend-stdlib": "~2.7"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
 # From composer, "suggest": {
 #        "zendframework/zend-eventmanager": "Zend\\EventManager component",
 #        "zendframework/zend-servicemanager": "Zend\\ServiceManager component"
 %if 0%{?fedora} >= 21
 Suggests:       php-composer(%{gh_owner}/zend-eventmanager)
+Suggests:       php-composer(%{gh_owner}/zend-hydrator)
 Suggests:       php-composer(%{gh_owner}/zend-servicemanager)
 %endif
 %endif
-# From phpcompatinfo report for version 2.5.2
+# From phpcompatinfo report for version 2.6.2
 Requires:       php-date
 Requires:       php-pcre
 Requires:       php-pdo
@@ -143,6 +144,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.6.2-1
+- update to 2.6.2
+- rasie dependency on zend-stdlib ~2.7
+- add optional dependency on zend-hydrator
+
 * Wed Sep 23 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - update to 2.5.2
 - raise dependency on php 5.5
