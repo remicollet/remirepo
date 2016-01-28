@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global bootstrap    1
+%global bootstrap    0
 %global gh_commit    cdecf4f52019a5aeedcb6e8c867e2501b99616ca
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
@@ -232,9 +232,12 @@ rm -rf %{buildroot}
 
 %changelog
 * Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
-- update to 2.6.0, bootstrap build
+- update to 2.6.0
 - raise dependencies on zend-form ^2.6 and zend-stdlib ^2.7
 - add dependency on zend-hydrator ^1.0
+
+* Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-0
+- update to 2.6.0, bootstrap build
 
 * Thu Sep 24 2015 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
 - version 2.5.3
