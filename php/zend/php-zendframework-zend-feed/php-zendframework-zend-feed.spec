@@ -91,7 +91,7 @@ Suggests:       php-composer(%{gh_owner}/zend-servicemanager)
 Suggests:       php-composer(%{gh_owner}/zend-validator)
 %endif
 %endif
-# From phpcompatinfo report for version 2.5.2
+# From phpcompatinfo report for version 2.6.0
 Requires:       php-ctype
 Requires:       php-date
 Requires:       php-dom
