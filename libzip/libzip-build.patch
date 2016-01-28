@@ -1,0 +1,11 @@
+diff -up src/ziptool.c.old src/ziptool.c
+--- src/ziptool.c.old	2016-01-28 14:19:37.026356371 +0100
++++ src/ziptool.c	2016-01-28 14:19:43.394384005 +0100
+@@ -53,6 +53,7 @@
+ #include "compat.h"
+ 
+ zip_source_t *source_hole_create(const char *, int flags, zip_error_t *);
++extern int optopt;
+ 
+ typedef enum {
+     SOURCE_TYPE_NONE,
