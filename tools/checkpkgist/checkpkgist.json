@@ -20,6 +20,7 @@
     "tedivm\/jshrink": "php-tedivm-jshrink",
     "phine\/path": "php-phine-path",
     "phine\/exception": "php-phine-exception",
+    "zendframework\/zend-hydrator": "php-zendframework-zend-hydrator",
     "apigen\/apigen": "apigen",
     "theseer\/fxsl": "php-theseer-fxsl"
 }
