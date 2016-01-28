@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    2a69bd42bddf9a955f3747af9e06b6d26e7c41ba
+%global gh_commit    c4e8f976a772cfb14b47dabd69b5245a423082b4
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-code
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.3
+Version:        2.6.2
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -39,14 +39,16 @@ BuildRequires:  php-pcre
 BuildRequires:  php-reflection
 BuildRequires:  php-spl
 BuildRequires:  php-tokenizer
-BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6
 # From composer, "require-dev": {
-#        "doctrine/common": ">=2.1",
+#        "doctrine/annotations": "~1.0",
+#        "zendframework/zend-stdlib": "~2.7",
 #        "zendframework/zend-version": "~2.5",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0"
+BuildRequires:  php-composer(doctrine/annotations)              >= 1.0
+BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 BuildRequires:  php-composer(%{gh_owner}/zend-version)          >= 2.5
-BuildRequires:  php-composer(doctrine/common)                   >= 2.1
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
@@ -54,20 +56,20 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 
 # From composer, "require": {
 #        "php": ">=5.5",
-#        "zendframework/zend-eventmanager": "~2.5"
+#        "zendframework/zend-eventmanager": "^2.6|^3.0"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
-Requires:       php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-eventmanager)     <  3
+Requires:       php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6
+Requires:       php-composer(%{gh_owner}/zend-eventmanager)     <  4
 # From composer, "suggest": {
-#        "doctrine/common": "Doctrine\\Common >=2.1 for annotation features",
-#        "zendframework/zend-stdlib": "Zend\\Stdlib component"
+#         "doctrine/annotations": "Doctrine\\Common\\Annotations >=1.0 for annotation features",
+#         "zendframework/zend-stdlib": "Zend\\Stdlib component"
 %if 0%{?fedora} >= 21
-Suggests:       php-composer(doctrine/common)                   >= 2.1
+Suggests:       php-composer(doctrine/annotations)
 Suggests:       php-composer(%{gh_owner}/zend-stdlib)
 %endif
 %endif
-# From phpcompatinfo report for version 2.5.2
+# From phpcompatinfo report for version 2.6.2
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
@@ -145,6 +147,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.6.2-1
+- update to 2.6.2
+- dependency on doctrine/annotations instrad of doctrine/common
+- raise dependency on zend-stdlib ~2.7
+- raise dependency on zend-eventmanager ~2.6
+
 * Thu Nov 19 2015 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
 - update to 2.5.3
 - run test suite with both PHP 5 and 7 when available
