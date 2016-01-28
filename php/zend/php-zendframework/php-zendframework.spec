@@ -6,17 +6,17 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    099399441d4b9f8323ec458d8693f73212c9e404
+%global gh_commit    aeb432d59410cd9a4a68166738745387a9bf49ab
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zf2
 %global php_home     %{_datadir}/php
 
-%global minver       2.5.0
-%global maxver       2.6
+%global minver       2.5
+%global maxver       3
 
 Name:           php-%{gh_owner}
-Version:        2.5.2
+Version:        2.5.3
 Release:        1%{?dist}
 Summary:        Zend Framework
 
@@ -32,57 +32,57 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 
 # From composer, "require": {
-#        "php": ">=5.5",
-#        "zendframework/zend-authentication": "~2.5.0",
-#        "zendframework/zend-barcode": "~2.5.0",
-#        "zendframework/zend-cache": "~2.5.0",
-#        "zendframework/zend-captcha": "~2.5.0",
-#        "zendframework/zend-code": "~2.5.0",
-#        "zendframework/zend-config": "~2.5.0",
-#        "zendframework/zend-console": "~2.5.0",
-#        "zendframework/zend-crypt": "~2.5.0",
-#        "zendframework/zend-db": "~2.5.0",
-#        "zendframework/zend-debug": "~2.5.0",
-#        "zendframework/zend-di": "~2.5.0",
-#        "zendframework/zend-dom": "~2.5.0",
-#        "zendframework/zend-escaper": "~2.5.0",
-#        "zendframework/zend-eventmanager": "~2.5.0",
-#        "zendframework/zend-feed": "~2.5.0",
-#        "zendframework/zend-file": "~2.5.0",
-#        "zendframework/zend-filter": "~2.5.0",
-#        "zendframework/zend-form": "~2.5.0",
-#        "zendframework/zend-http": "~2.5.0",
-#        "zendframework/zend-i18n": "~2.5.0",
-#        "zendframework/zend-i18n-resources": "~2.5.0",
-#        "zendframework/zend-inputfilter": "~2.5.0",
-#        "zendframework/zend-json": "~2.5.0",
-#        "zendframework/zend-loader": "~2.5.0",
-#        "zendframework/zend-log": "~2.5.0",
-#        "zendframework/zend-mail": "~2.5.0",
-#        "zendframework/zend-math": "~2.5.0",
-#        "zendframework/zend-memory": "~2.5.0",
-#        "zendframework/zend-mime": "~2.5.0",
-#        "zendframework/zend-modulemanager": "~2.5.0",
-#        "zendframework/zend-mvc": "~2.5.0",
-#        "zendframework/zend-navigation": "~2.5.0",
-#        "zendframework/zend-paginator": "~2.5.0",
-#        "zendframework/zend-permissions-acl": "~2.5.0",
-#        "zendframework/zend-permissions-rbac": "~2.5.0",
-#        "zendframework/zend-progressbar": "~2.5.0",
-#        "zendframework/zend-serializer": "~2.5.0",
-#        "zendframework/zend-server": "~2.5.0",
-#        "zendframework/zend-servicemanager": "~2.5.0",
-#        "zendframework/zend-session": "~2.5.0",
-#        "zendframework/zend-soap": "~2.5.0",
-#        "zendframework/zend-stdlib": "~2.5.0",
-#        "zendframework/zend-tag": "~2.5.0",
-#        "zendframework/zend-test": "~2.5.0",
-#        "zendframework/zend-text": "~2.5.0",
-#        "zendframework/zend-uri": "~2.5.0",
-#        "zendframework/zend-validator": "~2.5.0",
-#        "zendframework/zend-version": "~2.5.0",
-#        "zendframework/zend-view": "~2.5.0",
-#        "zendframework/zend-xmlrpc": "~2.5.0",
+#        "php": "^5.5 || ^7.0",
+#        "zendframework/zend-authentication": "^2.5",
+#        "zendframework/zend-barcode": "^2.5",
+#        "zendframework/zend-cache": "^2.5",
+#        "zendframework/zend-captcha": "^2.5",
+#        "zendframework/zend-code": "^2.5",
+#        "zendframework/zend-config": "^2.5",
+#        "zendframework/zend-console": "^2.5",
+#        "zendframework/zend-crypt": "^2.5",
+#        "zendframework/zend-db": "^2.5",
+#        "zendframework/zend-debug": "^2.5",
+#        "zendframework/zend-di": "^2.5",
+#        "zendframework/zend-dom": "^2.5",
+#        "zendframework/zend-escaper": "^2.5",
+#        "zendframework/zend-eventmanager": "^2.5",
+#        "zendframework/zend-feed": "^2.5",
+#        "zendframework/zend-file": "^2.5",
+#        "zendframework/zend-filter": "^2.5",
+#        "zendframework/zend-form": "^2.5",
+#        "zendframework/zend-http": "^2.5",
+#        "zendframework/zend-i18n": "^2.5",
+#        "zendframework/zend-i18n-resources": "^2.5",
+#        "zendframework/zend-inputfilter": "^2.5",
+#        "zendframework/zend-json": "^2.5",
+#        "zendframework/zend-loader": "^2.5",
+#        "zendframework/zend-log": "^2.5",
+#        "zendframework/zend-mail": "^2.5",
+#        "zendframework/zend-math": "^2.5",
+#        "zendframework/zend-memory": "^2.5",
+#        "zendframework/zend-mime": "^2.5",
+#        "zendframework/zend-modulemanager": "^2.5",
+#        "zendframework/zend-mvc": "^2.5",
+#        "zendframework/zend-navigation": "^2.5",
+#        "zendframework/zend-paginator": "^2.5",
+#        "zendframework/zend-permissions-acl": "^2.5",
+#        "zendframework/zend-permissions-rbac": "^2.5",
+#        "zendframework/zend-progressbar": "^2.5",
+#        "zendframework/zend-serializer": "^2.5",
+#        "zendframework/zend-server": "^2.5",
+#        "zendframework/zend-servicemanager": "^2.5",
+#        "zendframework/zend-session": "^2.5",
+#        "zendframework/zend-soap": "^2.5",
+#        "zendframework/zend-stdlib": "^2.5",
+#        "zendframework/zend-tag": "^2.5",
+#        "zendframework/zend-test": "^2.5",
+#        "zendframework/zend-text": "^2.5",
+#        "zendframework/zend-uri": "^2.5",
+#        "zendframework/zend-validator": "^2.5",
+#        "zendframework/zend-version": "^2.5",
+#        "zendframework/zend-view": "^2.5",
+#        "zendframework/zend-xmlrpc": "^2.5",
 #        "zendframework/zendxml": "^1.0.1"
 Requires:       php(language) >= 5.5
 Requires:       php-composer(%{gh_owner}/zend-authentication)   >= %{minver}
@@ -188,7 +188,7 @@ Requires:       php-composer(%{gh_owner}/zend-xmlrpc)           <  %{maxver}
 Requires:       php-composer(%{gh_owner}/zendxml)               >= 1.0.1
 Requires:       php-composer(%{gh_owner}/zendxml)               <  2
 # From composer, "suggest": {
-#        "zendframework/zend-ldap": "zend-ldap component ~2.5.0, if you need LDAP features"
+#        "zendframework/zend-ldap": "zend-ldap component ^2.5, if you need LDAP features"
 %if 0%{?fedora} >= 21
 Suggests:       php-composer(%{gh_owner}/zend-ldap)             >= %{minver}
 Suggests:       php-composer(%{gh_owner}/zend-ldap)             <  %{maxver}
@@ -256,5 +256,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
+- update to 2.5.3
+- raise max components version from 2.6 to 3
+
 * Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - initial package
