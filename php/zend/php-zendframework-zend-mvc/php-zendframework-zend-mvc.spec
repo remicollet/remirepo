@@ -6,8 +6,8 @@
 #
 # Please, preserve the changelog entries
 #
-%global bootstrap    0
-%global gh_commit    bae0da8318323da7dd71d64aa8054f91f782951b
+%global bootstrap    1
+%global gh_commit    cdecf4f52019a5aeedcb6e8c867e2501b99616ca
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-mvc
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.3
-Release:        1%{?dist}
+Version:        2.6.0
+Release:        0%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -41,8 +41,9 @@ BuildRequires:  php-pcre
 BuildRequires:  php-spl
 BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-form)             >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-hydrator)         >= 1.0
+BuildRequires:  php-composer(%{gh_owner}/zend-form)             >= 2.6
+BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 # From composer, "require-dev": {
 #        "zendframework/zend-authentication": "~2.5",
 #        "zendframework/zend-cache": "~2.5",
@@ -74,7 +75,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-i18n)             >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-inputfilter)      >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-json)             >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-log)              >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-modulemanager)    >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-modulemanager)    >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-serializer)       >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-text)             >= 2.5
@@ -91,18 +92,21 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 #        "php": ">=5.5",
 #        "zendframework/zend-eventmanager": "~2.5",
 #        "zendframework/zend-servicemanager": "~2.5",
-#        "zendframework/zend-form": "~2.5",
-#        "zendframework/zend-stdlib": ">=2.5.0,<2.7.0"
+#        "zendframework/zend-hydrator": "~1.0",
+#        "zendframework/zend-form": "~2.6",
+#        "zendframework/zend-stdlib": "~2.7"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-eventmanager)     <  3
 Requires:       php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-servicemanager)   <  3
-Requires:       php-composer(%{gh_owner}/zend-form)             >= 2.5
+Requires:       php-composer(%{gh_owner}/zend-hydrator)         >= 1.0
+Requires:       php-composer(%{gh_owner}/zend-hydrator)         <  2
+Requires:       php-composer(%{gh_owner}/zend-form)             >= 2.6
 Requires:       php-composer(%{gh_owner}/zend-form)             <  3
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5.0
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  2.7
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
 # From composer, "suggest": {
 #        "zendframework/zend-authentication": "Zend\\Authentication component for Identity plugin",
 #        "zendframework/zend-config": "Zend\\Config component",
@@ -142,7 +146,7 @@ Suggests:       php-composer(%{gh_owner}/zend-version)
 Suggests:       php-composer(%{gh_owner}/zend-view)
 %endif
 %endif
-# From phpcompatinfo report for version 2.5.1
+# From phpcompatinfo report for version 2.6.0
 Requires:       php-reflection
 Requires:       php-intl
 Requires:       php-pcre
@@ -191,7 +195,7 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 rm test/Controller/Plugin/FilePostRedirectGetTest.php
 
 mkdir vendor
-cat << EOF | tee vendor/autoload.php
+cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
 Zend\Loader\AutoloaderFactory::factory(array(
@@ -227,6 +231,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- update to 2.6.0, bootstrap build
+- raise dependencies on zend-form ^2.6 and zend-stdlib ^2.7
+- add dependency on zend-hydrator ^1.0
+
 * Thu Sep 24 2015 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
 - version 2.5.3
 
