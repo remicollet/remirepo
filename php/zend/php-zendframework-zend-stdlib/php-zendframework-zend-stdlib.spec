@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    2e50c4e8f8d0ab928aa5beeb21644f30bf2cc8bf
+%global gh_commit    cae029346a33663b998507f94962eb27de060683
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-stdlib
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.2
+Version:        2.7.4
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -35,6 +35,7 @@ BuildArch:      noarch
 # Tests
 %if %{with_tests}
 BuildRequires:  php(language) >= 5.5
+BuildRequires:  php-composer(%{gh_owner}/zend-hydrator)         >= 1.0
 BuildRequires:  php-date
 BuildRequires:  php-iconv
 BuildRequires:  php-intl
@@ -50,7 +51,8 @@ BuildRequires:  php-spl
 #        "zendframework/zend-servicemanager": "~2.5",
 #        "zendframework/zend-filter": "~2.5",
 #        "fabpot/php-cs-fixer": "1.7.*",
-#        "phpunit/PHPUnit": "~4.0"
+#        "phpunit/PHPUnit": "~4.0",
+#        "athletic/athletic": "~0.1"
 BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-inputfilter)      >= 2.5
@@ -63,8 +65,11 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.5"
+#        "php": ">=5.5",
+#        "zendframework/zend-hydrator": "~1.0"
 Requires:       php(language) >= 5.5
+Requires:       php-composer(%{gh_owner}/zend-hydrator)         >= 1.0
+Requires:       php-composer(%{gh_owner}/zend-hydrator)         <  2
 %if ! %{bootstrap}
 # From composer, "suggest": {
 #        "zendframework/zend-eventmanager": "To support aggregate hydrator usage",
@@ -78,7 +83,7 @@ Suggests:       php-composer(%{gh_owner}/zend-servicemanager)
 Suggests:       php-composer(%{gh_owner}/zend-filter)
 %endif
 %endif
-# From phpcompatinfo report for version 2.5.2
+# From phpcompatinfo report for version 2.7.4
 Requires:       php-date
 Requires:       php-iconv
 Requires:       php-intl
@@ -123,14 +128,14 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 %check
 %if %{with_tests}
 mkdir vendor
-cat << EOF | tee vendor/autoload.php
+cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
-Zend\\Loader\\AutoloaderFactory::factory(array(
-    'Zend\\Loader\\StandardAutoloader' => array(
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\StandardAutoloader' => array(
         'namespaces' => array(
-           'ZendTest\\\\%{library}' => dirname(__DIR__).'/test/',
-           'Zend\\\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
+           'ZendTest\\%{library}' => dirname(__DIR__).'/test/',
+           'Zend\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
 EOF
@@ -159,5 +164,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.7.4-1
+- update to 2.7.4
+- add dependency on zendframework/zend-hydrator ^1.0.0
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - initial package
