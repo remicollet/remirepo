@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    0661345b82b51428619e05d3aadd3de65b57fa54
+%global gh_commit    f76da2bbba414ebf3bb00c81e9fdd65b04c66a7f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-feed
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.2
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -34,7 +34,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.3.23
+BuildRequires:  php(language) >= 5.5
 BuildRequires:  php-ctype
 BuildRequires:  php-date
 BuildRequires:  php-dom
@@ -49,16 +49,16 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 #        "zendframework/zend-db": "~2.5",
 #        "zendframework/zend-cache": "~2.5",
 #        "zendframework/zend-http": "~2.5",
-#        "zendframework/zend-servicemanager": "~2.5",
 #        "zendframework/zend-validator": "~2.5",
 #        "fabpot/php-cs-fixer": "1.7.*",
-#        "phpunit/PHPUnit": "~4.0"
+#        "phpunit/PHPUnit": "~4.0",
+#        "psr/http-message": "^1.0"
 BuildRequires:  php-composer(%{gh_owner}/zend-db)               >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-cache)            >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-http)             >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
+BuildRequires:  php-composer(psr/http-message)                  >= 1.0
 # Because of boostraped Db
 BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)   >= 2.5
 # Autoloader
@@ -66,22 +66,24 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.3.23",
+#        "php": ">=5.5",
 #        "zendframework/zend-escaper": "~2.5",
 #        "zendframework/zend-stdlib": "~2.5"
-Requires:       php(language) >= 5.3.23
+Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-escaper)          >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-escaper)          <  3
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
 # From composer, "suggest": {
-#        "zendframework/zend-cache": "Zend\\Cache component",
-#        "zendframework/zend-db": "Zend\\Db component",
+#        "psr/http-message": "PSR-7 ^1.0, if you wish to use Zend\\Feed\\Reader\\Http\\Psr7ResponseDecorator",
+#        "zendframework/zend-cache": "Zend\\Cache component, for optionally caching feeds between requests",
+#        "zendframework/zend-db": "Zend\\Db component, for use with PubSubHubbub",
 #        "zendframework/zend-http": "Zend\\Http for PubSubHubbub, and optionally for use with Zend\\Feed\\Reader",
-#        "zendframework/zend-servicemanager": "Zend\\ServiceManager component, for default/recommended ExtensionManager implementations",
-#        "zendframework/zend-validator": "Zend\\Validator component"
+#        "zendframework/zend-servicemanager": "Zend\\ServiceManager component, for easily extending ExtensionManager implementations",
+#        "zendframework/zend-validator": "Zend\\Validator component, for validating feeds and Atom entries in the Writer subcomponent"
 %if 0%{?fedora} >= 21
+Suggests:       php-composer(psr/http-message)
 Suggests:       php-composer(%{gh_owner}/zend-cache)
 Suggests:       php-composer(%{gh_owner}/zend-db)
 Suggests:       php-composer(%{gh_owner}/zend-http)
@@ -115,6 +117,9 @@ into XML.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+# NOTICE: psr/http-message is PSR-0 compliant
+# autoload will be managed by fallback_autoloader
+
 
 %build
 # Empty build section, nothing required
@@ -130,14 +135,14 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 %check
 %if %{with_tests}
 mkdir vendor
-cat << EOF | tee vendor/autoload.php
+cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
-Zend\\Loader\\AutoloaderFactory::factory(array(
-    'Zend\\Loader\\StandardAutoloader' => array(
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\StandardAutoloader' => array(
         'namespaces' => array(
-           'ZendTest\\\\%{library}' => dirname(__DIR__).'/test/',
-           'Zend\\\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
+           'ZendTest\\%{library}' => dirname(__DIR__).'/test/',
+           'Zend\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
 EOF
@@ -170,5 +175,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- update to 2.6.0
+- raise minimal php version to 5.5
+- drop build dependency on zend-servicemanager
+- add optional dependency on psr/http-message
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - initial package
