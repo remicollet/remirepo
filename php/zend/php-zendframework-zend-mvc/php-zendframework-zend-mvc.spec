@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.6.0
-Release:        0%{?dist}
+Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
