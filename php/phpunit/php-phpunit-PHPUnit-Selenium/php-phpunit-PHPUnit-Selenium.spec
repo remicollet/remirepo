@@ -17,7 +17,7 @@
 
 Name:           php-phpunit-PHPUnit-Selenium
 Version:        2.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Selenium RC integration for PHPUnit
 
 Group:          Development/Libraries
@@ -28,6 +28,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  %{_bindir}/phpab
 
 # From composer.json
 #        "php": ">=5.3.3",
@@ -72,15 +73,14 @@ rm PHPUnit/Extensions/SeleniumCommon/Autoload.php.in
 
 
 %build
-# Empty build section, most likely nothing required.
-
-# If upstream drop Autoload.php, command to generate it.
-# Also remember to fix the command to use it.
-
-#phpab \
-#  --output   PHPUnit/Extensions/SeleniumCommon/Autoload.php \
-#  --template PHPUnit/Extensions/SeleniumCommon/Autoload.php.in \
-#  PHPUnit
+# Regenerate Autoloader as upstream one is outdated
+%{_bindir}/phpab \
+  --output   PHPUnit/Extensions/SeleniumCommon/Autoload.php \
+  PHPUnit
+cat << 'EOF' >>PHPUnit/Extensions/SeleniumCommon/Autoload.php
+// Dependency
+require_once 'File/Iterator/Autoload.php';
+EOF
 
 
 %install
@@ -110,6 +110,9 @@ fi
 
 
 %changelog
+* Fri Jan 29 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
+- fix autoloader
+
 * Mon Jan  4 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - update to 2.0.0
 - raise dependency on PHPUnit >=4.8,<=6.0
