@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #70 apc version 5.1.2 ] {
+Extension [ <persistent> extension #78 apc version 5.1.3 ] {
 
   - Dependencies {
     Dependency [ apcu (Required) ]

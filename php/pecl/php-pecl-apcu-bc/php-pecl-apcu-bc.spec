@@ -7,11 +7,7 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
-%endif
 %endif
 
 %{?scl:          %scl_package        php-pecl-apcu-bc}
@@ -37,7 +33,7 @@
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Summary:        APCu Backwards Compatibility Module
 # From APCU, to be greater that last APC version
-Version:        1.0.1
+Version:        1.0.2
 %if 0%{?gh_date:1}
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{proj_name}-%{version}-%{gh_short}.tar.gz
@@ -83,10 +79,8 @@ Obsoletes:     php55u-pecl-%{ext_name}  <= %{version}
 Obsoletes:     php55w-pecl-%{ext_name}  <= %{version}
 Obsoletes:     php56u-pecl-%{ext_name}  <= %{version}
 Obsoletes:     php56w-pecl-%{ext_name}  <= %{version}
-%if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
-%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -110,6 +104,11 @@ mv NTS/package.xml .
 %else
 mv %{proj_name}-%{version} NTS
 %endif
+
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
 # Sanity check, really often broken
@@ -242,6 +241,9 @@ fi
 
 
 %changelog
+* Fri Jan 29 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- Update to 1.0.2 (beta)
+
 * Wed Jan  6 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1 (beta)
 
