@@ -126,7 +126,7 @@
 %endif
 
 %global rcver        RC1
-%global rpmrel       1
+%global rpmrel       2
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -201,6 +201,8 @@ Patch300: php-5.6.3-datetests.patch
 # Revert changes for pcre < 8.34
 Patch301: php-7.0.0-oldpcre.patch
 
+# WIP
+Patch401: php-bug62172.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -913,6 +915,9 @@ if ! pkg-config libpcre --atleast-version 8.34 ; then
 %patch301 -p1 -b .pcre834
 fi
 %endif
+
+# WIP patch
+%patch401 -p1 -b .bug62172
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1817,6 +1822,9 @@ fi
 
 
 %changelog
+* Fri Jan 29 2016 Remi Collet <remi@fedoraproject.org> 7.0.3-0.2.0RC1
+- FPM: test build for https://bugs.php.net/62172
+
 * Wed Jan 20 2016 Remi Collet <remi@fedoraproject.org> 7.0.3-0.1.0RC1
 - Update to 7.0.3RC1
 
