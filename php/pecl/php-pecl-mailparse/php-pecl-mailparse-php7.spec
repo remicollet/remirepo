@@ -12,11 +12,7 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
-%endif
 %endif
 
 %{?scl:          %scl_package         php-pecl-mailparse}
@@ -30,7 +26,7 @@
 
 Summary:   PHP PECL package for parsing and working with email messages
 Name:      %{?sub_prefix}php-pecl-mailparse
-Version:   3.0.0
+Version:   3.0.1
 Release:   1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:   PHP
 Group:     Development/Languages
@@ -63,14 +59,10 @@ Obsoletes:     php54-pecl-%{pecl_name}
 Obsoletes:     php54w-pecl-%{pecl_name}
 Obsoletes:     php55u-pecl-%{pecl_name}
 Obsoletes:     php55w-pecl-%{pecl_name}
-%if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name}
 Obsoletes:     php56w-pecl-%{pecl_name}
-%endif
-%if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name}
 Obsoletes:     php70w-pecl-%{pecl_name}
-%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -93,7 +85,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{pecl_name}-%{version} NTS
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
 extver=$(sed -n '/#define PHP_MAILPARSE_VERSION/{s/.* "//;s/".*$//;p}' php_mailparse.h)
@@ -110,8 +104,6 @@ extension = mailparse.so
 ; Set the default charset
 ;mailparse.def_charset = us-ascii
 EOF
-
-chmod -x NTS/*.{php,c,h}
 
 %if %{with_zts}
 cp -pr NTS ZTS
@@ -225,6 +217,9 @@ fi
 
 
 %changelog
+* Fri Jan 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
+- update to 3.0.1 (php 7, stable)
+
 * Sat Dec 26 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
 - update to 3.0.0 for PHP 7
 
