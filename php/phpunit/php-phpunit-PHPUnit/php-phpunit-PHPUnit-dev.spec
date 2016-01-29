@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    676c25c4ac563869572c878fdaf3db21587f5f3b
+%global gh_commit    728dcb190cb2961d1f4d2e7091d28861b89c013b
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.1
-%global minor        4
+%global minor        5
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -147,8 +147,6 @@ Obsoletes:      php-pear-PHPUnit < 4
 Provides:       php-pear-PHPUnit = %{version}-%{release}
 # Project
 Provides:       phpunit = %{version}-%{release}
-# Not yet compatible
-Obsoletes:      php-phpunit-PHPUnit-Selenium <= 1.4.2
 
 
 %description
@@ -217,6 +215,9 @@ fi
 
 
 %changelog
+* Fri Jan 29 2016 Remi Collet <remi@fedoraproject.org> - 5.1.5-1
+- Update to 5.1.5
+
 * Mon Jan 11 2016 Remi Collet <remi@fedoraproject.org> - 5.1.4-1
 - Update to 5.1.4
 
