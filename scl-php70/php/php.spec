@@ -125,17 +125,26 @@
 %global db_devel  libdb-devel
 %endif
 
+%global gh_commit    dd3d10cef16be8ee59e379a49841e581245cc5ba
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_date      20160129
+%global gh_owner     php
+%global gh_project   php-src
 %global rcver        RC1
-%global rpmrel       2
+%global rpmrel       3
 
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 7.0.3
+%if 0%{?gh_date}
+Release: 0.%{rpmrel}.%{gh_date}git%{gh_short}%{?dist}
+%else
 %if 0%{?rcver:1}
 Release: 0.%{rpmrel}.%{rcver}%{?dist}
 %else
 Release: %{rpmrel}%{?dist}
+%endif
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -229,7 +238,9 @@ BuildRequires: libtool-ltdl-devel
 %if %{with_dtrace}
 BuildRequires: systemtap-sdt-devel
 %endif
-#BuildRequires: bison
+%if 0%{?gh_date}
+BuildRequires: bison
+%endif
 Requires: httpd-mmn = %{_httpd_mmn}
 Provides: %{?scl_prefix}mod_php = %{version}-%{release}
 Requires: %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
@@ -1822,6 +1833,9 @@ fi
 
 
 %changelog
+* Fri Jan 29 2016 Remi Collet <remi@fedoraproject.org> 7.0.3-0.3.20160129gitdd3d10c
+- test build
+
 * Fri Jan 29 2016 Remi Collet <remi@fedoraproject.org> 7.0.3-0.2.0RC1
 - FPM: test build for https://bugs.php.net/62172
 
