@@ -31,8 +31,13 @@
 %global psr_log_min_ver  1.0.0-8
 %global psr_log_max_ver  2.0
 
+%if 0%{?rhel} == 5
+# no nodejs available in RHEL-5
+%global with_tests 0%{?_with_tests:1}
+%else
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
+%endif
 
 %{!?phpdir:    %global phpdir    %{_datadir}/php}
 %{!?testsdir:  %global testsdir  %{_datadir}/tests}
