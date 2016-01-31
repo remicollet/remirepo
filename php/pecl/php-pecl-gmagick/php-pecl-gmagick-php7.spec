@@ -13,23 +13,26 @@
 %{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name  gmagick
-%global prever     RC1
+%global prever     RC2
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global ini_name   40-%{pecl_name}.ini
 
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        2.0.1
-Release:        0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
+# https://github.com/vitoc/gmagick/issues/25
+Source1:        https://raw.githubusercontent.com/vitoc/gmagick/master/tests/hald_8.png
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-devel >= 7.0.1
-BuildRequires:  GraphicsMagick-devel >= 1.3.20
+BuildRequires:  GraphicsMagick-devel >= 1.3.17
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
@@ -75,10 +78,19 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %setup -qc
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
+
+# https://github.com/vitoc/gmagick/issues/25
+cp %{SOURCE1} tests/hald_8.png
+
+# https://github.com/vitoc/gmagick/issues/26
+sed -e 's/ifdef GMAGICK_HAVE_SET_IMAGE_PAGE/if 1/' \
+    -i php_gmagick.h gmagick_methods.c gmagick.c
 
 extver=$(sed -n '/#define PHP_GMAGICK_VERSION/{s/.* "//;s/".*$//;p}' php_gmagick.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -201,6 +213,12 @@ export TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so"
 
 
 %changelog
+* Sun Jan 31 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-0.2.RC2
+- Update to 2.0.1RC2 (php 7, beta)
+- lower dependency on GraphicsMagick >= 1.3.17
+- open https://github.com/vitoc/gmagick/issues/25
+- open https://github.com/vitoc/gmagick/issues/26
+
 * Tue Dec 29 2015 Remi Collet <remi@fedoraproject.org> - 2.0.1-0.1.RC1
 - Update to 2.0.1RC1 (php 7, beta)
 - lower dependency on GraphicsMagick >= 1.3.20
