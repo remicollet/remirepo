@@ -25,7 +25,7 @@
 %global gh_project  imagick
 #global gh_date     20151204
 %global pecl_name   imagick
-%global prever      RC5
+%global prever      RC6
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 %global ini_name  %{pecl_name}.ini
@@ -43,7 +43,7 @@ Version:       3.4.0
 Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       0.5.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.6.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:       PHP
@@ -74,6 +74,8 @@ Provides:      %{?scl_prefix}php-%{pecl_name} = %{version}%{?prever}
 Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}%{?prever}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}%{?prever}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 Conflicts:     %{?scl_prefix}php-pecl-gmagick
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
@@ -138,6 +140,7 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 sed -e '/anonymous_pro_minus.ttf/d' \
     -e '/015-imagickdrawsetresolution.phpt/d' \
     -e '/OFL.txt/d' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
     -i package.xml
 
 if grep '\.ttf' package.xml
@@ -304,6 +307,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jan 30 2016 Remi Collet <remi@fedoraproject.org> - 3.4.0-0.6.RC6
+- update to 3.4.0RC6
+
 * Tue Jan 12 2016 Remi Collet <remi@fedoraproject.org> - 3.4.0-0.5.RC5
 - update to 3.4.0RC5
 
