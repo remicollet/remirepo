@@ -1,3 +1,4 @@
+# remirepo spec file for php-guzzlehttp-guzzle6, from:
 #
 # Fedora spec file for php-guzzlehttp-guzzle6
 #
@@ -50,6 +51,7 @@ URL:           http://guzzlephp.org
 Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
 Source1:       %{name}-get-source.sh
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -152,6 +154,7 @@ AUTOLOAD
 
 
 %install
+rm -rf %{buildroot}
 mkdir -p %{buildroot}%{phpdir}/GuzzleHttp6
 cp -pr src/* %{buildroot}%{phpdir}/GuzzleHttp6/
 
@@ -167,12 +170,21 @@ $fedoraPsr4ClassLoader->addPrefix('GuzzleHttp\\Tests\\', __DIR__.'/tests');
 AUTOLOAD
 
 %{_bindir}/phpunit --verbose
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose
+fi
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -181,6 +193,9 @@ AUTOLOAD
 
 
 %changelog
+* Sun Jan 31 2016 Remi Collet <remi@remirepo.net> - 6.1.1-2
+- backport for remi repository
+
 * Thu Jan 28 2016 Shawn Iwinski <shawn@iwin.ski> - 6.1.1-2
 - Added min version of autoloader dependency
 - Fix directory ownership
