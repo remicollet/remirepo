@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Compress-Fast
-Version:        1.1.0
+Version:        1.1.1
 Release:        1%{?dist}
 Summary:        Fast Compression Library
 
@@ -75,7 +75,11 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 
 
 %clean
@@ -102,6 +106,11 @@ fi
 
 
 %changelog
+* Mon Feb 01 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- Update to 1.1.1
+- PHP 7 compatible version
+- run test suite with both PHP 5 and 7 when available
+
 * Thu Jan 08 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - Update to 1.1.0
 - add provides php-composer(horde/horde-compress-fast)
