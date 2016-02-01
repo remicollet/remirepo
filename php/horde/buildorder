@@ -1,5 +1,5 @@
 Build order
-	* Horde_Constraint          2.0.2       I: Horde_Test 
+	* Horde_Constraint          2.0.3       I: Horde_Test 
 	* horde_lz4                 1.0.8        
 	* Horde_Mongo               1.0.3        
 	* Horde_Queue               1.1.3        

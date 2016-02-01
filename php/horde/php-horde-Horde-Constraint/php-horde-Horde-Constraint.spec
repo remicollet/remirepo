@@ -18,7 +18,7 @@
 %endif
 
 Name:           php-horde-Horde-Constraint
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        Horde Constraint library
 
@@ -78,7 +78,11 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %check
 %if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -106,6 +110,11 @@ fi
 
 
 %changelog
+* Mon Feb 01 2016 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
+- PHP 7 compatible version
+- run test suite with both PHP 5 and 7 when available
+
 * Thu Jan 08 2015 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2 (no change)
 - add provides php-composer(horde/horde-constraint)
