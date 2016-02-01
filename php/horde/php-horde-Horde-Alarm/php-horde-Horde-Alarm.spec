@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Alarm
-Version:        2.2.5
+Version:        2.2.6
 Release:        1%{?dist}
 Summary:        Horde Alarm Libraries
 
@@ -111,7 +111,11 @@ done | tee ../%{pear_name}.lang
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 
 
 %post
@@ -138,6 +142,11 @@ fi
 
 
 %changelog
+* Mon Feb 01 2016 Remi Collet <remi@fedoraproject.org> - 2.2.6-1
+- Update to 2.2.6
+- PHP 7 compatible version
+- run test suite with both PHP 5 and 7 when available
+
 * Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 2.2.5-1
 - Update to 2.2.5
 
