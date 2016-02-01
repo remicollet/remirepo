@@ -22,7 +22,7 @@
 %{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
 
-%global with_zts   0%{?__ztsphp:1}
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  zmq
 %global with_tests %{?_without_tests:0}%{!?_without_tests:1}
 %if "%{php_version}" < "5.6"
@@ -33,15 +33,18 @@
 
 Summary:        ZeroMQ messaging
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.1.2
-Release:        7%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.1.3
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
+# https://github.com/mkoppanen/php-zmq/pull/170
+Patch0:         %{pecl_name}-build.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel > 5.2
+BuildRequires:  %{?scl_prefix}php-devel > 5.3
 BuildRequires:  %{?scl_prefix}php-pear
 %if 0%{?fedora} >= 22 || 0%{?rhel} == 5 || 0%{?rhel} == 7
 # v4 in Fedora22+, EPEL-7
@@ -80,6 +83,10 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -106,13 +113,24 @@ sed -e 's/role="test"/role="src"/' \
 
 mv %{pecl_name}-%{version} NTS
 
+cd NTS
+%patch0 -p1 -b .build
+
 if pkg-config libzmq --atleast-version=4
 then
 # fix new default of MAX_SOCKETS
 # Using current version, so this can be checked in next version and removed
 # if appropriate. (still not fixed in 1.1.2, maybe later)
-sed -i "s/int(1024)/int(1023)/g" NTS/tests/032-contextopt.phpt
+sed -i "s/int(1024)/int(1023)/g" tests/032-contextopt.phpt
 fi
+
+# Check reported version (phpinfo), as this is often broken
+extver=$(sed -n '/#define PHP_ZMQ_VERSION/{s/.* "//;s/".*$//;p}' php_zmq.h)
+if test "x${extver}" != "x%{version}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}.
+   exit 1
+fi
+cd ..
 
 %if %{with_zts}
 # Duplicate source tree for NTS / ZTS build
@@ -241,6 +259,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 01 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
+- Update to 1.1.3 (beta)
+- add patch to fix build with old GCC (EL-6)
+  open https://github.com/mkoppanen/php-zmq/pull/170
+
 * Sun Jan 24 2016 Remi Collet <remi@fedoraproject.org> - 1.1.2-7
 - rebuild against zeromq 4 available in EPEL-7
 

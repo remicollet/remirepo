@@ -1,9 +1,9 @@
-Extension [ <persistent> extension #152 zmq version 1.1.2 ] {
+Extension [ <persistent> extension #193 zmq version 1.1.3 ] {
 
   - Classes [10] {
     Class [ <internal:zmq> class ZMQ ] {
 
-      - Constants [61] {
+      - Constants [78] {
         Constant [ integer SOCKET_PAIR ] { 0 }
         Constant [ integer SOCKET_PUB ] { 1 }
         Constant [ integer SOCKET_SUB ] { 2 }
@@ -17,6 +17,7 @@ Extension [ <persistent> extension #152 zmq version 1.1.2 ] {
         Constant [ integer SOCKET_PULL ] { 7 }
         Constant [ integer SOCKET_DEALER ] { 5 }
         Constant [ integer SOCKET_ROUTER ] { 6 }
+        Constant [ integer SOCKET_STREAM ] { 11 }
         Constant [ integer SOCKET_UPSTREAM ] { 7 }
         Constant [ integer SOCKET_DOWNSTREAM ] { 8 }
         Constant [ integer POLL_IN ] { 1 }
@@ -32,7 +33,7 @@ Extension [ <persistent> extension #152 zmq version 1.1.2 ] {
         Constant [ integer ERR_ENOTSUP ] { 95 }
         Constant [ integer ERR_EFSM ] { 156384763 }
         Constant [ integer ERR_ETERM ] { 156384765 }
-        Constant [ string LIBZMQ_VER ] { 3.2.4 }
+        Constant [ string LIBZMQ_VER ] { 4.1.2 }
         Constant [ integer SOCKOPT_HWM ] { 201 }
         Constant [ integer SOCKOPT_SNDHWM ] { 23 }
         Constant [ integer SOCKOPT_RCVHWM ] { 24 }
@@ -64,7 +65,23 @@ Extension [ <persistent> extension #152 zmq version 1.1.2 ] {
         Constant [ integer SOCKOPT_TCP_ACCEPT_FILTER ] { 38 }
         Constant [ integer SOCKOPT_DELAY_ATTACH_ON_CONNECT ] { 39 }
         Constant [ integer SOCKOPT_XPUB_VERBOSE ] { 40 }
+        Constant [ integer SOCKOPT_ROUTER_MANDATORY ] { 33 }
+        Constant [ integer SOCKOPT_ROUTER_RAW ] { 41 }
+        Constant [ integer SOCKOPT_IPV6 ] { 42 }
+        Constant [ integer SOCKOPT_PLAIN_SERVER ] { 44 }
+        Constant [ integer SOCKOPT_PLAIN_USERNAME ] { 45 }
+        Constant [ integer SOCKOPT_PLAIN_PASSWORD ] { 46 }
+        Constant [ integer SOCKOPT_CURVE_SERVER ] { 47 }
+        Constant [ integer SOCKOPT_CURVE_PUBLICKEY ] { 48 }
+        Constant [ integer SOCKOPT_CURVE_SECRETKEY ] { 49 }
+        Constant [ integer SOCKOPT_CURVE_SERVERKEY ] { 50 }
+        Constant [ integer SOCKOPT_PROBE_ROUTER ] { 51 }
+        Constant [ integer SOCKOPT_REQ_CORRELATE ] { 52 }
+        Constant [ integer SOCKOPT_REQ_RELAXED ] { 53 }
+        Constant [ integer SOCKOPT_CONFLATE ] { 54 }
+        Constant [ integer SOCKOPT_ZAP_DOMAIN ] { 55 }
         Constant [ integer CTXOPT_MAX_SOCKETS ] { 2 }
+        Constant [ integer CTXOPT_MAX_SOCKETS_DEFAULT ] { 1023 }
       }
 
       - Static properties [0] {
@@ -463,7 +480,7 @@ Extension [ <persistent> extension #152 zmq version 1.1.2 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -471,6 +488,9 @@ Extension [ <persistent> extension #152 zmq version 1.1.2 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -517,7 +537,7 @@ Extension [ <persistent> extension #152 zmq version 1.1.2 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -525,6 +545,9 @@ Extension [ <persistent> extension #152 zmq version 1.1.2 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -571,7 +594,7 @@ Extension [ <persistent> extension #152 zmq version 1.1.2 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -579,6 +602,9 @@ Extension [ <persistent> extension #152 zmq version 1.1.2 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -625,7 +651,7 @@ Extension [ <persistent> extension #152 zmq version 1.1.2 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -633,6 +659,9 @@ Extension [ <persistent> extension #152 zmq version 1.1.2 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
@@ -679,7 +708,7 @@ Extension [ <persistent> extension #152 zmq version 1.1.2 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
@@ -687,6 +716,9 @@ Extension [ <persistent> extension #152 zmq version 1.1.2 ] {
             Parameter #1 [ <optional> $code ]
             Parameter #2 [ <optional> $previous ]
           }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
         Method [ <internal:Core, inherits Exception> final public method getMessage ] {
