@@ -35,7 +35,7 @@ php-pear-MDB2                            -           2.5.0b5          OK (PHP 5,
 php-pear-MDB2-Driver-mysql               -           1.5.0b4          OK (PHP 5, poweradmin)
 php-pear-MDB2-Driver-mysqli              -           1.5.0b4          OK (PHP 5)
 php-pear-MDB2-Driver-pgsql               -           1.5.0b4          OK (PHP 5, poweradmin)
-php-pear-Mail                            -           1.2.0      !!    activity (used by mrbs, php-pear-Log, php-pear-SOAP)
+php-pear-Mail                            -           1.3.0            OK (used by mrbs, php-pear-Log, php-pear-SOAP)
 php-pear-Mail-Mime                       -           1.10.0           OK (php 5, gallery2, php-pear-Mail-mimeDecode, php-pear-SOAP, roundcubemail)
 php-pear-Mail-mimeDecode                 -           1.5.5      !!    seems dead
 php-pear-Net-Curl                        Obso        1.2.5      !!    seems dead (used by php-pear-Auth-OpenID, php-pear-Payment-Process-)
