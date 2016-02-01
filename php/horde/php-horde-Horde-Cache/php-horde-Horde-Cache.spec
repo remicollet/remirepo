@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Cache
-Version:        2.5.1
+Version:        2.5.2
 Release:        1%{?dist}
 Summary:        Horde Caching API
 
@@ -26,6 +26,9 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
+# To run unit tests
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+BuildRequires:  php-pecl(APC)
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -85,6 +88,18 @@ mkdir -p %{buildroot}%{pear_xmldir}
 install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
+%check
+cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+# https://github.com/horde/horde/pull/171
+sed -e 's/\$reason/reason/' -i Sql/Pdo/SqliteTest.php
+
+php -d apc.enable_cli=1 %{_bindir}/phpunit .
+
+if which php70; then
+   php70 -d apc.enable_cli=1 %{_bindir}/phpunit .
+fi
+
+
 %post
 %{__pear} install --nodeps --soft --force --register-only \
     %{pear_xmldir}/%{name}.xml >/dev/null || :
@@ -103,9 +118,15 @@ fi
 %{pear_phpdir}/Horde/Cache
 %{pear_phpdir}/Horde/Cache.php
 %{pear_datadir}/%{pear_name}
+%{pear_testdir}/%{pear_name}
 
 
 %changelog
+* Mon Feb 01 2016 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
+- Update to 2.5.2
+- add and run upstream test suite
+- run test suite with both PHP 5 and 7 when available
+
 * Wed Jan 06 2016 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
 - Update to 2.5.1
 
