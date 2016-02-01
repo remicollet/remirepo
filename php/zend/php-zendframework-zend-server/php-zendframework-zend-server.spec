@@ -34,7 +34,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.6
+BuildRequires:  php(language) >= 5.5
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
 BuildRequires:  php-reflection
