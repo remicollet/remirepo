@@ -11,9 +11,11 @@
 %global pear_channel pear.horde.org
 # To use system js
 %global with_sysjs   0
+# no test for now (all skipped)
+%global with_tests   0%{?_with_tests:1}
 
 Name:           php-horde-Horde-Mime-Viewer
-Version:        2.1.1
+Version:        2.1.2
 Release:        1%{?dist}
 Summary:        Horde MIME Viewer Library
 
@@ -29,7 +31,10 @@ BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  gettext
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
-# no test for now (all skipped)
+%if %{with_tests}
+# To run unit tests
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -125,6 +130,20 @@ done | tee ../%{pear_name}.lang
 rm -rf %{buildroot}
 
 
+%check
+%if %{with_tests}
+cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
+%else
+: Test disabled, missing '--with tests' option.
+%endif
+
+
 %post
 %{__pear} install --nodeps --soft --force --register-only \
     %{pear_xmldir}/%{name}.xml >/dev/null || :
@@ -151,6 +170,10 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
+- Update to 2.1.2
+- PHP 7 compatible version
+
 * Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - Update to 2.1.1
 
