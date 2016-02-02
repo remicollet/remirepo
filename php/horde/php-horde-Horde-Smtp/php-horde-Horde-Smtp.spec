@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Smtp
-Version:        1.9.1
+Version:        1.9.2
 Release:        1%{?dist}
 Summary:        Horde SMTP Client
 
@@ -109,7 +109,11 @@ done | tee ../%{pear_name}.lang
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 
 
 %clean
@@ -139,6 +143,11 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 1.9.2-1
+- Update to 1.9.2
+- PHP 7 compatible version
+- run test suite with both PHP 5 and 7 when available
+
 * Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 1.9.1-1
 - Update to 1.9.1
 - add dependency on Horde_Util
