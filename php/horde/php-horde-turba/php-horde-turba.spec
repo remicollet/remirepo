@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-turba
-Version:        4.2.11
+Version:        4.2.12
 Release:        1%{?dist}
 Summary:        A web based address book
 
@@ -182,7 +182,11 @@ cd %{pear_name}-%{version}/test/Turba
 sed -e 's/function testDuplicateDetectionFromAsWithNoEmail/function SKIP_testDuplicateDetectionFromAsWithNoEmail/' \
     -i Unit/Driver/Base.php
 
-phpunit .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 
 
 %post
@@ -227,6 +231,10 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 4.2.12-1
+- Update to 4.2.12
+- run test suite with both PHP 5 and 7 when available
+
 * Thu Oct 29 2015 Remi Collet <remi@fedoraproject.org> - 4.2.11-1
 - Update to 4.2.11
 
