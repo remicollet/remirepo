@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-horde-Horde-Translation
-Version:        2.2.0
+Version:        2.2.1
 Release:        1%{?dist}
 Summary:        Horde translation library
 
@@ -89,9 +89,11 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %check
 %if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit\
-    -d date.timezone=UTC \
-    .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -119,6 +121,11 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
+- Update to 2.2.1
+- PHP 7 compatible version
+- run test suite with both PHP 5 and 7 when available
+
 * Thu Nov 06 2014 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - Update to 2.2.0
 - enable test suite
