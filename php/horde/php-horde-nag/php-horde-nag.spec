@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-nag
-Version:        4.2.6
+Version:        4.2.7
 Release:        1%{?dist}
 Summary:        A web based task list manager
 
@@ -113,7 +113,7 @@ light-weight project management.
 %setup -q -c
 
 cat <<EOF >httpd.conf
-<DirectoryMatch %{pear_hordedir}/%{pear_name}/(config|lib|locale)>
+<DirectoryMatch %{pear_hordedir}/%{pear_name}/(config|lib|locale|templates)>
      Deny from all
 </DirectoryMatch>
 EOF
@@ -169,7 +169,11 @@ done | tee ../%{pear_name}.lang
 
 %check
 cd %{pear_name}-%{version}/test/Nag
-phpunit .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 
 
 %post
@@ -214,6 +218,10 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 4.2.7-1
+- Update to 4.2.7
+- run test suite with both PHP 5 and 7 when available
+
 * Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 4.2.6-1
 - Update to 4.2.6
 
