@@ -13,7 +13,7 @@
 %global with_tests   0%{?_with_tests:1}
 
 Name:           php-horde-mnemo
-Version:        4.2.8
+Version:        4.2.9
 Release:        1%{?dist}
 Summary:        A web based notes manager
 
@@ -98,7 +98,7 @@ Framework and an SQL database or Kolab server for backend storage.
 %prep
 %setup -q -c
 cat <<EOF >httpd.conf
-<DirectoryMatch %{pear_hordedir}/%{pear_name}/(config|locale)>
+<DirectoryMatch %{pear_hordedir}/%{pear_name}/(config|locale|templates)>
      Deny from all
 </DirectoryMatch>
 EOF
@@ -159,7 +159,11 @@ rm -rf %{buildroot}
 %check
 %if %{with_tests}
 cd %{pear_name}-%{version}/test/Mnemo
-phpunit .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 %else
 : Test disabled
 %endif
@@ -205,6 +209,10 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 4.2.9-1
+- Update to 4.2.9
+- run test suite with both PHP 5 and 7 when available
+
 * Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 4.2.8-1
 - Update to 4.2.8
 
