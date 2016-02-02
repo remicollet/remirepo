@@ -12,7 +12,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Service-Gravatar
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}
 Summary:        API accessor for gravatar.com
 
@@ -80,12 +80,12 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 %if %{with_tests}
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -116,5 +116,10 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1
+- PHP 7 compatible version
+- run test suite with both PHP 5 and 7 when available
+
 * Thu Jul 10 2014 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package, version 1.0.0
