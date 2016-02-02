@@ -17,7 +17,7 @@
 %endif
 
 Name:           php-horde-Horde-Kolab-Storage
-Version:        2.2.0
+Version:        2.2.1
 Release:        1%{?dist}
 Summary:        A package for handling Kolab data stored on an IMAP server
 
@@ -143,9 +143,9 @@ sed -e "s/Horde_Kolab_Format_Xml-@version@/Horde_Kolab_Format_Xml-${VER}/" \
 
 %{_bindir}/phpunit .
 
-#if which php70; then
-#   php70 %%{_bindir}/phpunit .
-#fi
+if which php70; then
+   php70 %{_bindir}/phpunit . || :
+fi
 %else
 : Test disabled, bootstrap build
 %endif
@@ -178,6 +178,11 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
+- Update to 2.2.1
+- PHP 7 compatible version
+- run test suite with both PHP 5 and 7 when available
+
 * Sun Jan 03 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - Update to 2.2.0
 
