@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Crypt-Blowfish
-Version:        1.1.0
+Version:        1.1.1
 Release:        1%{?dist}
 Summary:        Blowfish Encryption Library
 
@@ -79,7 +79,11 @@ cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 %if 0%{?rhel} == 5
 phpunit . || exit 0
 %else
-phpunit .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 %endif
 
 
@@ -106,6 +110,11 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- Update to 1.1.1
+- PHP 7 compatible version
+- run test suite with both PHP 5 and 7 when available
+
 * Fri May 22 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - Update to 1.1.0
 
