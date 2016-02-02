@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Text-Filter
-Version:        2.3.2
+Version:        2.3.3
 Release:        1%{?dist}
 Summary:        Horde Text Filter API
 
@@ -118,7 +118,11 @@ sed -e 's/testXss/SKIP_testXss/' \
     -i XssTest.php
 %endif
 
-phpunit --verbose .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 
 
 %clean
@@ -148,6 +152,11 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
+- Update to 2.3.3
+- PHP 7 compatible version
+- run test suite with both PHP 5 and 7 when available
+
 * Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
 - Update to 2.3.2 (no change)
 
