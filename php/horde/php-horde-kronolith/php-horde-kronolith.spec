@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-kronolith
-Version:        4.2.11
+Version:        4.2.12
 Release:        1%{?dist}
 Summary:        A web based calendar
 
@@ -143,7 +143,7 @@ which handles arbitrary numbers of overlapping events.
 %setup -q -c
 
 cat <<EOF | tee httpd.conf
-<DirectoryMatch %{pear_hordedir}/%{pear_name}/(config|lib|locale)>
+<DirectoryMatch %{pear_hordedir}/%{pear_name}/(config|lib|locale|templates)>
      Deny from all
 </DirectoryMatch>
 
@@ -212,7 +212,11 @@ cd %{pear_name}-%{version}/test/Kronolith
 rm Integration/ToIcalendarTest.php
 rm Integration/FromIcalendarTest.php
 
-phpunit .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 
 
 %post
@@ -258,6 +262,10 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 4.2.12-1
+- Update to 4.2.12
+- run test suite with both PHP 5 and 7 when available
+
 * Thu Oct 22 2015 Remi Collet <remi@fedoraproject.org> - 4.2.11-1
 - Update to 4.2.11
 
