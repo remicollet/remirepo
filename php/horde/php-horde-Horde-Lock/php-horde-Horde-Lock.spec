@@ -15,7 +15,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Lock
-Version:        2.1.1
+Version:        2.1.2
 Release:        1%{?dist}
 Summary:        Horde Resource Locking System
 
@@ -82,12 +82,12 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 %if %{with_tests}
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit \
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit . || :
+fi
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -115,6 +115,11 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
+- Update to 2.1.2
+- PHP 7 compatible version
+- run test suite with both PHP 5 and 7 when available
+
 * Thu May 22 2014 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - Update to 2.1.1
 
