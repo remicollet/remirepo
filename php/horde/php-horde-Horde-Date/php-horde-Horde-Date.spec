@@ -18,7 +18,7 @@
 %endif
 
 Name:           php-horde-Horde-Date
-Version:        2.1.1
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        Horde Date package
 
@@ -110,7 +110,11 @@ done | tee ../%{pear_name}.lang
 %check
 %if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit --verbose .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -138,6 +142,11 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+- PHP 7 compatible version
+- run test suite with both PHP 5 and 7 when available
+
 * Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - Update to 2.1.1
 
