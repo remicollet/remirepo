@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    846f8a4f9c2e438e45d2de5cec11509cb7e08d79
+%global gh_commit    fb5b54db5ead533b38e311f14e9c01a79218bf2b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-servicemanager
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.4
+Version:        2.7.5
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -104,14 +104,14 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 %check
 %if %{with_tests}
 mkdir vendor
-cat << EOF | tee vendor/autoload.php
+cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
-Zend\\Loader\\AutoloaderFactory::factory(array(
-    'Zend\\Loader\\StandardAutoloader' => array(
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\StandardAutoloader' => array(
         'namespaces' => array(
-           'ZendTest\\\\%{library}' => dirname(__DIR__).'/test/',
-           'Zend\\\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
+           'ZendTest\\%{library}' => dirname(__DIR__).'/test/',
+           'Zend\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
 EOF
@@ -140,6 +140,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb  2 2016 Remi Collet <remi@fedoraproject.org> - 2.7.5-1
+- update to 2.7.5
+
 * Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.7.4-2
 - update to 2.7.4
 - raise minimal php version to 5.5
