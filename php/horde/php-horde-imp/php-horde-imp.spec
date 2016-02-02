@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-imp
-Version:        6.2.11
+Version:        6.2.12
 Release:        1%{?dist}
 Summary:        A web based webmail system
 
@@ -213,7 +213,11 @@ cd %{pear_name}-%{version}/test/Imp
 # Ignore this one - Need investigation
 rm Unit/Mime/Viewer/ItipTest.php
 
-phpunit --verbose .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 
 
 %clean
@@ -257,6 +261,10 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 6.2.12-1
+- Update to 6.2.12
+- run test suite with both PHP 5 and 7 when available
+
 * Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 6.2.11-1
 - Update to 6.2.11
 
