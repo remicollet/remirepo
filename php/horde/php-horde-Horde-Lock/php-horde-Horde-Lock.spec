@@ -86,7 +86,7 @@ cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 %{_bindir}/phpunit .
 
 if which php70; then
-   php70 %{_bindir}/phpunit . || :
+   php70 %{_bindir}/phpunit .
 fi
 %else
 : Test disabled, missing '--with tests' option.
