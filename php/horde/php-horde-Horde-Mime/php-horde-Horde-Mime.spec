@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-horde-Horde-Mime
-Version:        2.9.2
+Version:        2.9.3
 Release:        1%{?dist}
 Summary:        Horde MIME Library
 
@@ -135,7 +135,11 @@ cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 rm MdnTest.php
 %endif
 
-phpunit .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 %else
 : bootstrap build with test suite disabled
 %endif
@@ -165,6 +169,11 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.9.3-1
+- Update to 2.9.3
+- PHP 7 compatible version
+- run test suite with both PHP 5 and 7 when available
+
 * Wed Sep 02 2015 Remi Collet <remi@fedoraproject.org> - 2.9.2-1
 - Update to 2.9.2
 
