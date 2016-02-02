@@ -18,7 +18,7 @@
 %endif
 
 Name:           php-horde-Horde-Util
-Version:        2.5.6
+Version:        2.5.7
 Release:        1%{?dist}
 Summary:        Horde Utility Libraries
 
@@ -97,7 +97,11 @@ cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 %if 0%{?rhel} == 5
 phpunit . || : Test suite result ignored
 %else
-phpunit .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 %endif
 %else
 : Test disabled, bootstrap build
@@ -130,6 +134,11 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.5.7-1
+- Update to 2.5.7
+- PHP 7 compatible version
+- run test suite with both PHP 5 and 7 when available
+
 * Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 2.5.6-1
 - Update to 2.5.6
 
