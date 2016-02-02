@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Feed
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}
 Summary:        Horde Feed libraries
 
@@ -84,7 +84,11 @@ done
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 
 
 %clean
@@ -112,6 +116,11 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+- PHP 7 compatible version
+- run test suite with both PHP 5 and 7 when available
+
 * Thu Jan 08 2015 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3
 - add provides php-composer(horde/horde-feed)
