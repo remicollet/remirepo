@@ -39,8 +39,8 @@
 
 Summary:        Horde LZ4 Compression Extension
 Name:           %{?sub_prefix}php-horde-horde-lz4
-Version:        1.0.8
-Release:        6%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.0.9
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        MIT
 Group:          Development/Languages
 URL:            http://www.horde.org
@@ -65,6 +65,8 @@ Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_channel}/%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_channel}/%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-horde-horde-lz4 = %{version}-%{release}
+Provides:       %{?scl_prefix}php-horde-horde-lz4%{?_isa} = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -107,6 +109,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 # Don't install bundled libz4
 sed -e 's/role="test"/role="src"/' \
     -e '/name="lib/d' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
     -i package.xml
 
 mv %{pecl_name}-%{version} NTS
@@ -114,6 +117,9 @@ mv %{pecl_name}-%{version} NTS
 cd NTS
 # Use system library
 rm -r lib
+
+# Fix version
+sed -e 's/1.0.8/%{version}/' -i horde_lz4.h
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define HORDE_LZ4_EXT_VERSION/{s/.* "//;s/".*$//;p}' horde_lz4.h)
@@ -226,6 +232,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pear_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -239,6 +246,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 1.0.9-1
+- Update to 1.0.9
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.0.8-6
 - rebuild for PHP 7.0.0RC5 new API version
 
