@@ -45,7 +45,7 @@ Build order
 	* Horde_Oauth               2.0.3        R: Horde_Exception, Horde_Http, Horde_Util
 	* Horde_Pack                1.0.6      BR: Horde_Test, Horde_Compress_Fast, Horde_Exception  R: Horde_Compress_Fast, Horde_Exception
 	* Horde_Pdf                 2.0.7      BR: Horde_Test  R: Horde_Exception, Horde_Util
-	* Horde_Routes              2.0.4      BR: Horde_Test  R: Horde_Exception, Horde_Util
+	* Horde_Routes              2.0.5      BR: Horde_Test  R: Horde_Exception, Horde_Util
 	* Horde_Secret              2.0.5      BR: Horde_Test, Horde_Crypt_Blowfish  R: Horde_Exception, Horde_Support, Horde_Crypt_Blowfish
 	* Horde_Serialize           2.0.4      BR: Horde_Test I: Horde_Imap_Client, Horde_Mime R: Horde_Exception, Horde_Util
 	* Horde_Service_Gravatar    1.0.0      BR: Horde_Test, Horde_Http, Horde_Url  R: Horde_Http, Horde_Url
