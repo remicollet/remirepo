@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-HashTable
-Version:        1.2.3
+Version:        1.2.4
 Release:        1%{?dist}
 Summary:        Horde Hash Table Interface
 
@@ -80,7 +80,11 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-phpunit .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 
 
 %clean
@@ -107,6 +111,11 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 1.2.4-1
+- Update to 1.2.4
+- PHP 7 compatible version
+- run test suite with both PHP 5 and 7 when available
+
 * Wed Mar 04 2015 Remi Collet <remi@fedoraproject.org> - 1.2.3-1
 - Update to 1.2.3
 
