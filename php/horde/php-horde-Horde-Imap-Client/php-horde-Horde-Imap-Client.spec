@@ -12,7 +12,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.29.4
+Version:        2.29.5
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -69,7 +69,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 Requires:       php-mbstring
 Requires:       php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Cache) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Db) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Db) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Pack) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Pack) <  2.0.0
@@ -174,6 +174,10 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.29.5-1
+- Update to 2.29.5
+- PHP 7 compatible version
+
 * Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 2.29.4-1
 - Update to 2.29.4
 
