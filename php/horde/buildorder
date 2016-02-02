@@ -24,7 +24,7 @@ Build order
 	* Horde_Text_Flowed         2.0.3      BR: Horde_Test  R: Horde_Util
 	* Horde_Url                 2.2.5      BR: Horde_Test  R: Horde_Exception
 	* Horde_Xml_Element         2.0.4      BR: Horde_Test  R: Horde_Exception, Horde_Util
-	* Horde_Xml_Wbxml           2.0.2      BR: Horde_Test  R: Horde_Util
+	* Horde_Xml_Wbxml           2.0.3      BR: Horde_Test  R: Horde_Util
 	* Horde_Argv                2.0.12     BR: Horde_Test  R: Horde_Exception, Horde_Translation, Horde_Util
 	* Horde_Autoloader          2.1.2      BR: Horde_Test  
 	* Horde_Compress_Fast       1.1.1      BR: Horde_Test  R: Horde_Exception, horde_lz4
