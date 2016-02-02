@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Serialize
-Version:        2.0.4
+Version:        2.0.5
 Release:        1%{?dist}
 Summary:        Data Encapulation API
 
@@ -79,13 +79,11 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
-%if 0%{?fedora} < 24
-: Skip failed test with jsonc before 1.3.8
-sed -e 's/function testJsonInvalidUTF8Input/function SKIP_testJsonInvalidUTF8Input/' \
-    -i JsonTest.php
-%endif
+%{_bindir}/phpunit .
 
-phpunit --verbose .
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 
 
 %post
@@ -109,6 +107,11 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- Update to 2.0.5
+- PHP 7 compatible version
+- run test suite with both PHP 5 and 7 when available
+
 * Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4 (no change)
 
