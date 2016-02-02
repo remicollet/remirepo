@@ -12,7 +12,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-horde-ingo
-Version:        3.2.7
+Version:        3.2.8
 Release:        1%{?dist}
 Summary:        An email filter rules manager
 
@@ -98,7 +98,7 @@ supports both server-side (Sieve, Procmail, Maildrop) and client-side
 %setup -q -c
 
 cat <<EOF | tee httpd.conf
-<DirectoryMatch %{pear_hordedir}/%{pear_name}/(config|lib|locale)>
+<DirectoryMatch %{pear_hordedir}/%{pear_name}/(config|lib|locale|templates)>
      Deny from all
 </DirectoryMatch>
 EOF
@@ -156,7 +156,11 @@ done | tee ../%{pear_name}.lang
 %if %{with_tests}
 cd %{pear_name}-%{version}/test/Ingo
 if phpunit --atleast-version 4
-then phpunit .
+then %{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 else : PHPUnit is too old
 fi
 %else
@@ -205,6 +209,10 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 3.2.8-1
+- Update to 3.2.8
+- run test suite with both PHP 5 and 7 when available
+
 * Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 3.2.7-1
 - Update to 3.2.7
 
