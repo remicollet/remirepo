@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Xml-Element
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}
 Summary:        Horde Xml Element object
 
@@ -83,7 +83,11 @@ cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 sed -e 's/function testCustomGetterGet/function SKIP_testCustomGetterGet/' \
     -i ElementTest.php
 
-phpunit .
+%{_bindir}/phpunit .
+
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 
 
 %clean
@@ -112,6 +116,11 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+- PHP 7 compatible version
+- run test suite with both PHP 5 and 7 when available
+
 * Tue Apr 28 2015 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3
 - add dependency on Horde_Util
