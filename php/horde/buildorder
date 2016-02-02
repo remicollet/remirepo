@@ -35,7 +35,7 @@ Build order
 	* Horde_HashTable           1.2.4      BR: Horde_Test I: Horde_Vfs R: Horde_Exception, Horde_Log, Horde_Memcache
 	* Horde_Http                2.1.6      BR: Horde_Test  R: Horde_Exception, Horde_Support
 	* Horde_Idna                1.0.3      BR: Horde_Test  R: Horde_Exception, Horde_Util
-	* Horde_Injector            2.0.4      BR: Horde_Test  R: Horde_Exception
+	* Horde_Injector            2.0.5      BR: Horde_Test  R: Horde_Exception
 	* Horde_JavascriptMinify    1.1.2        R: Horde_Exception, Horde_Log, Horde_Util
 	* Horde_Kolab_Format        2.0.7      BR: Horde_Test  R: Horde_Exception, Horde_Util, Horde_Support
 	* Horde_Ldap                2.3.1      BR: Horde_Test  R: Horde_Exception, Horde_Util
