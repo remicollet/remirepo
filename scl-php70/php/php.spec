@@ -125,13 +125,8 @@
 %global db_devel  libdb-devel
 %endif
 
-%global gh_commit    dd3d10cef16be8ee59e379a49841e581245cc5ba
-%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20160129
-%global gh_owner     php
-%global gh_project   php-src
-%global rcver        RC1
-%global rpmrel       3
+#global rcver        RC1
+%global rpmrel       1
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1833,6 +1828,10 @@ fi
 
 
 %changelog
+* Wed Feb  3 2016 Remi Collet <remi@fedoraproject.org> 7.0.3-1
+- Update to 7.0.3
+  http://www.php.net/releases/7_0_3.php
+
 * Fri Jan 29 2016 Remi Collet <remi@fedoraproject.org> 7.0.3-0.3.20160129gitdd3d10c
 - test build
 
