@@ -1,4 +1,4 @@
-===== 5.6.17 (2016-01-07)
+===== 5.6.18 (2016-02-03)
 
 $ grep -r 'Tests failed' /var/lib/mock/56*/build.log
 
@@ -6,7 +6,7 @@ $ grep -r 'Tests failed' /var/lib/mock/56*/build.log
 /var/lib/mock/el5x/build.log:Tests failed    :    8 (  0.0%) (  0.0%)
 /var/lib/mock/el6i/build.log:Tests failed    :    6 (  0.0%) (  0.0%)
 /var/lib/mock/el6x/build.log:Tests failed    :    5 (  0.0%) (  0.0%)
-/var/lib/mock/el7x/build.log:Tests failed    :    6 (  0.0%) (  0.0%)
+/var/lib/mock/el7x/build.log:Tests failed    :    5 (  0.0%) (  0.0%)
 /var/lib/mock/fc20i/build.log:Tests failed    :    6 (  0.0%) (  0.0%)
 /var/lib/mock/fc20x/build.log:Tests failed    :    5 (  0.0%) (  0.0%)
 /var/lib/mock/fc21i/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
@@ -27,8 +27,6 @@ fc20i, fc21i, fc22i, fc23i
     Bug #53437 DateInterval unserialize bad data, 32 bit [ext/date/tests/bug53437_var3.phpt]
 el6x, el7x, fc20x
     strtotime() function (64 bit) [ext/date/tests/strtotime3-64bit.phpt]
-el7x
-    Bug #64438 proc_open hangs with stdin/out with 4097+ bytes [ext/standard/tests/streams/proc_open_bug64438.phpt]
 el6x, el7x, fc20i, fc20x
     Bug #33414 [2] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-2.phpt]
     Test date_sunrise() function : usage variation -  Passing high positive and negative float values to time argument. [ext/date/tests/date_sunrise_variation9.phpt]

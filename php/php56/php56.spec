@@ -144,11 +144,11 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.6.17
+Version: 5.6.18
 %if 0%{?snapdate:1}%{?rcver:1}
 Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
 %else
-Release: 2%{?dist}
+Release: 1%{?dist}
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1990,6 +1990,10 @@ fi
 
 
 %changelog
+* Wed Feb  3 2016 Remi Collet <remi@fedoraproject.org> 5.6.18-1
+- Update to 5.6.18
+  http://www.php.net/releases/5_6_18.php
+
 * Fri Jan 29 2016 Remi Collet <remi@fedoraproject.org> 5.6.17-2
 - FPM: test build for https://bugs.php.net/62172
 
