@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #167 swoole version 1.8.0 ] {
+Extension [ <persistent> extension #166 swoole version 1.8.1 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -6,6 +6,9 @@ Extension [ <persistent> extension #167 swoole version 1.8.0 ] {
     }
     Entry [ swoole.display_errors <ALL> ]
       Current = 'On'
+    }
+    Entry [ swoole.use_namespace <SYSTEM> ]
+      Current = 'Off'
     }
     Entry [ swoole.message_queue_key <ALL> ]
       Current = '0'
@@ -42,7 +45,7 @@ Extension [ <persistent> extension #167 swoole version 1.8.0 ] {
     Constant [ integer SWOOLE_KEEP ] { 4096 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.8.0 }
+    Constant [ string SWOOLE_VERSION ] { 1.8.1 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_GCC ] { 1 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 2 }
@@ -220,7 +223,7 @@ Extension [ <persistent> extension #167 swoole version 1.8.0 ] {
     }
   }
 
-  - Classes [14] {
+  - Classes [15] {
     Class [ <internal:swoole> class swoole_server ] {
 
       - Constants [0] {
@@ -469,6 +472,47 @@ Extension [ <persistent> extension #167 swoole version 1.8.0 ] {
       }
     }
 
+    Class [ <internal:swoole> class swoole_timer ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [3] {
+        Method [ <internal:swoole> static public method tick ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $ms ]
+            Parameter #1 [ <required> $callback ]
+            Parameter #2 [ <optional> $param ]
+          }
+        }
+
+        Method [ <internal:swoole> static public method after ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $ms ]
+            Parameter #1 [ <required> $callback ]
+          }
+        }
+
+        Method [ <internal:swoole> static public method clear ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $timer_id ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
     Class [ <internal:swoole> <iterateable> class swoole_connection_iterator implements Iterator, Traversable, Countable ] {
 
       - Constants [0] {
@@ -536,7 +580,10 @@ Extension [ <persistent> extension #167 swoole version 1.8.0 ] {
       - Properties [0] {
       }
 
-      - Methods [3] {
+      - Methods [4] {
+        Method [ <internal:swoole, ctor> private method __construct ] {
+        }
+
         Method [ <internal:swoole, dtor> public method __destruct ] {
         }
 

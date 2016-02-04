@@ -31,7 +31,7 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.8.0
+Version:        1.8.1
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
@@ -141,6 +141,7 @@ extension=%{pecl_name}.so
 ; Configuration
 ;swoole.aio_thread_num = 2
 ;swoole.display_errors = On
+;swoole.use_namespace = Off
 ;swoole.message_queue_key = 0
 ;swoole.unixsock_buffer_size = 8388608
 EOF
@@ -256,6 +257,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb  4 2016 Remi Collet <remi@fedoraproject.org> - 1.8.1-1
+- Update to 1.8.1 (stable)
+
 * Wed Jan 27 2016 Remi Collet <remi@fedoraproject.org> - 1.8.0-1
 - Update to 1.8.0 (stable)
 
