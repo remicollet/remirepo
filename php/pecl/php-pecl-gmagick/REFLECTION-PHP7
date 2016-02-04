@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #59 gmagick version 2.0.1RC2 ] {
+Extension [ <persistent> extension #59 gmagick version 2.0.1RC3 ] {
 
   - Classes [5] {
     Class [ <internal:gmagick> final class GmagickException extends Exception implements Throwable ] {
