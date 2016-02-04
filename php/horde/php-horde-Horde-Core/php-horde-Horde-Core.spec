@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-Horde-Core
-Version:        2.22.5
+Version:        2.22.6
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -30,10 +30,10 @@ BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-pear(%{pear_channel}/Horde_Role) >= 1.0.0
 # To run unit tests (minimal)
-BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.6.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Url) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Injector) >= 2.0.0
-BuildRequires:  php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Group) >= 2.1.0
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -86,7 +86,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Group) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Group) >= 2.1.0
 Requires:       php-pear(%{pear_channel}/Horde_Group) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_HashTable) >= 1.2.0
 Requires:       php-pear(%{pear_channel}/Horde_HashTable) <  2.0.0
@@ -283,8 +283,15 @@ fi
 
 
 %changelog
+* Thu Feb 04 2016 Remi Collet <remi@fedoraproject.org> - 2.22.6-1
+- Update to 2.22.6
+- raise dependency on Horde_Group >= 2.1.0
+- raise build dependency on Horde_Test >= 2.6.0
+- PHP 7 compatible version
+
 * Wed Jan 06 2016 Remi Collet <remi@fedoraproject.org> - 2.22.5-1
 - Update to 2.22.5
+- run test suite with both PHP 5 and 7 when available
 
 * Mon Dec 14 2015 Remi Collet <remi@fedoraproject.org> - 2.22.4-1
 - Update to 2.22.4
