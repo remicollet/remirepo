@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    64d40a593fc31a8abf4ce3d200147ddf8ca64e52
+%global gh_commit    92f5c61b5c64159faec5298325ffab0c7e59dcc8
 #global gh_date      20150924
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHP_CodeCoverage
 %global pear_channel pear.phpunit.de
 %global major        3.1
-%global minor        0
+%global minor        1
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
@@ -34,9 +34,6 @@ Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
-
-# Autoload template from version 1.2
-Source1:        Autoload.php.in
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -57,7 +54,7 @@ BuildRequires:  php-pecl-xdebug  >= 2.1.4
 #        "phpunit/php-token-stream": "~1.3",
 #        "phpunit/php-text-template": "~1.2",
 #        "sebastian/environment": "^1.3.2",
-#        "sebastian/version": "~1.0"
+#        "sebastian/version": "~1.0|~2.0"
 Requires:       php(language) >= 5.6
 Requires:       php-composer(phpunit/php-file-iterator) >= 1.3
 Requires:       php-composer(phpunit/php-file-iterator) <  2
@@ -68,7 +65,7 @@ Requires:       php-composer(phpunit/php-text-template) <  2
 Requires:       php-composer(sebastian/environment) >= 1.3.2
 Requires:       php-composer(sebastian/environment) <  2
 Requires:       php-composer(sebastian/version) >= 1.0
-Requires:       php-composer(sebastian/version) <  2
+Requires:       php-composer(sebastian/version) <  3
 # From composer.json, suggest
 #        "ext-dom": "*",
 #        "ext-xdebug": ">=2.2.1",
@@ -99,9 +96,16 @@ for PHP code coverage information.
 %build
 phpab \
   --output   src/CodeCoverage/Autoload.php \
-  --template %{SOURCE1} \
   src
 
+cat << 'EOF' | tee -a src/CodeCoverage/Autoload.php
+// Dependencies
+require_once 'File/Iterator/Autoload.php';
+require_once 'PHP/Token/Stream/Autoload.php';
+require_once 'Text/Template/Autoload.php';
+require_once 'SebastianBergmann/Environment/autoload.php';
+require_once 'SebastianBergmann/Version/autoload.php';
+EOF
 
 %install
 rm -rf     %{buildroot}
@@ -152,6 +156,11 @@ fi
 
 
 %changelog
+* Thu Feb  4 2016 Remi Collet <remi@fedoraproject.org> - 3.1.1-1
+- Update to 3.1.1
+- allow sebastian/version ~2.0
+- drop autoloader template
+
 * Mon Jan 11 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-1
 - Update to 3.1.0
 
