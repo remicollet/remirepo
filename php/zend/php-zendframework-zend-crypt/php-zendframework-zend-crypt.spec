@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    b7a5f99f530e7f77762e3eb4011ed1029ffc062f
+%global gh_commit    1b2f5600bf6262904167116fa67b58ab1457036d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-crypt
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.2
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -42,30 +42,28 @@ BuildRequires:  php-pcre
 BuildRequires:  php-spl
 BuildRequires:  php-composer(%{gh_owner}/zend-math)             >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
+BuildRequires:  php-composer(container-interop/container-interop) >= 1.0
 # From composer, "require-dev": {
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0",
-#        "zendframework/zend-config": "~2.5"
-BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.5",
-#        "zendframework/zend-math": "~2.5",
-#        "zendframework/zend-stdlib": "~2.5",
-#        "zendframework/zend-servicemanager": "~2.5"
+#        "php": "^5.5 || ^7.0",
+#        "zendframework/zend-math": "^2.6",
+#        "zendframework/zend-stdlib": "^2.7 || ^3.0",
+#        "container-interop/container-interop": "~1.0"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
-Requires:       php-composer(%{gh_owner}/zend-math)             >= 2.5
+Requires:       php-composer(%{gh_owner}/zend-math)             >= 2.6
 Requires:       php-composer(%{gh_owner}/zend-math)             <  3
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
-Requires:       php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-servicemanager)   <  3
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
+Requires:       php-composer(container-interop/container-interop) >= 1.0
+Requires:       php-composer(container-interop/container-interop) <  2
 # From composer, "suggest": {
 #        "ext-mcrypt": "Required for most features of Zend\\Crypt"
 # https://github.com/zendframework/zend-crypt/issues/3
@@ -154,6 +152,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb  4 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- update to 2.6.0
+- raise dependency on zend-math ~2.6
+- raise dependency on zend-stdlib ~2.7
+- drop dependency on zend-servicemanager
+- add dependency on container-interop/container-interop
+
 * Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - update to 2.5.2
 - raise dependency on PHP 5.5
