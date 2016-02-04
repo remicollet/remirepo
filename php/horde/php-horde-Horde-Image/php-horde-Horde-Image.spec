@@ -1,6 +1,6 @@
 # remirepo/fedora spec file for php-horde-Horde-Image
 #
-# Copyright (c) 2012-2015 Nick Bebout, Remi Collet
+# Copyright (c) 2012-2016 Nick Bebout, Remi Collet
 #
 # License: MIT
 # https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense
