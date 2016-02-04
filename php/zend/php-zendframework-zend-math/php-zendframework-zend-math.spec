@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    2648ee3cce39aa3876788c837e3b58f198dc8a78
+%global gh_commit    395ebb981e01f2fc708ba07d8ee0d86f6e3e9ed6
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-math
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.2
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -45,7 +45,6 @@ BuildRequires:  php-spl
 #        "ircmaxell/random-lib": "~1.1",
 #        "phpunit/PHPUnit": "~4.0",
 #        "zendframework/zend-servicemanager": "~2.5"
-BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
 BuildRequires:  php-composer(ircmaxell/random-lib)              >= 1.1
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
@@ -53,7 +52,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader) >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.5"
+#        "php": "^5.5 || ^7.0"
 Requires:       php(language) >= 5.5
 # From phpcompatinfo report for version 2.5.2
 Requires:       php-openssl
@@ -69,7 +68,6 @@ Requires:       php-bcmath
 Requires:       php-gmp
 %if 0%{?fedora} >= 21
 Suggests:       php-composer(ircmaxell/random-lib)
-Suggests:       php-composer(%{gh_owner}/zend-servicemanager)
 %endif
 # Autoloader
 Requires:       php-composer(%{gh_owner}/zend-loader)           >= 2.5
@@ -141,6 +139,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb  3 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- update to 2.6.0
+- drop dependency on zend-servicemanager
+
 * Thu Dec 17 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - update to 2.5.2
 - raise minimal php version to 5.5
