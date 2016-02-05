@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    54edb3875aba5b45f02824f65f311c9fb2743a38
+%global gh_commit    7b64507bc35d841c9c5802d67f6f87ef8e1a58c9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zendxml
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -41,7 +41,7 @@ BuildRequires:  php-libxml
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
 # From composer, "require-dev": {
-#        "phpunit/phpunit": "~3.7",
+#        "phpunit/phpunit": "^3.7 || ^4.0",
 #        "squizlabs/php_codesniffer": "~1.5"
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 3.7
 # Autoloader
@@ -49,7 +49,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.3.3"
+#        "php": "^5.3.3 || ^7.0"
 Requires:       php(language) >= 5.3.3
 # From phpcompatinfo report for version 1.0.1
 Requires:       php-simplexml
@@ -85,19 +85,23 @@ cp -pr library/%{library} %{buildroot}%{php_home}/%{library}
 %check
 %if %{with_tests}
 mkdir vendor
-cat << EOF | tee vendor/autoload.php
+cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
-Zend\\Loader\\AutoloaderFactory::factory(array(
-    'Zend\\Loader\\StandardAutoloader' => array(
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\StandardAutoloader' => array(
         'namespaces' => array(
-           'ZendTest\\\\Xml' => dirname(__DIR__).'/tests/ZendXmlTest',
+           'ZendTest\\Xml' => dirname(__DIR__).'/tests/ZendXmlTest',
            '%{library}'      => '%{buildroot}%{php_home}/%{library}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 cd tests
 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+
+if which php70; then
+   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+fi
 %else
 : Test suite disabled
 %endif
@@ -117,5 +121,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb  5 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- update to 1.0.2
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - initial package
