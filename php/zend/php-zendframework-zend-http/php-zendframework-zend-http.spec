@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    21174ba162cfda8d0b1d172d9f80a8bea0b767be
+%global gh_commit    7b920b4ec34b5ee58f76eb4e8c408b083121953c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-http
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.3
+Version:        2.5.4
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -58,9 +58,9 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.5",
+#        "php": "^5.5 || ^7.0",
 #        "zendframework/zend-loader": "~2.5",
-#        "zendframework/zend-stdlib": "~2.5",
+#        "zendframework/zend-stdlib": "^2.5 || ^3.0",
 #        "zendframework/zend-uri": "~2.5",
 #        "zendframework/zend-validator": "~2.5"
 Requires:       php(language) >= 5.5
@@ -68,7 +68,7 @@ Requires:       php(language) >= 5.5
 Requires:       php-composer(%{gh_owner}/zend-loader)           >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-loader)           <  3
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 Requires:       php-composer(%{gh_owner}/zend-uri)              >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-uri)              <  3
 Requires:       php-composer(%{gh_owner}/zend-validator)        >= 2.5
@@ -150,6 +150,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb  5 2016 Remi Collet <remi@fedoraproject.org> - 2.5.4-1
+- version 2.5.4
+
 * Tue Sep 15 2015 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
 - version 2.5.3
 
