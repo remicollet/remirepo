@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    e2945611a98e1fefcaaf69969350a0bfa6a8d574
+%global gh_commit    4c8705dbe4ad7d7e51b2876c5b9eea0ef916ba28
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-json
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.0
+Version:        2.6.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -41,10 +41,10 @@ BuildRequires:  php-pcre
 BuildRequires:  php-reflection
 BuildRequires:  php-spl
 # From composer, "require-dev": {
-#        "zendframework/zend-http": "~2.5",
-#        "zendframework/zend-server": "~2.5",
-#        "zendframework/zend-stdlib": "~2.5",
-#        "zendframework/zendxml": "~1.0",
+#        "zendframework/zend-http": "^2.5.4",
+#        "zendframework/zend-server": "^2.6.1",
+#        "zendframework/zend-stdlib": "^2.5 || ^3.0",
+#        "zendframework/zendxml": "^1.0.2",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0"
 BuildRequires:  php-composer(%{gh_owner}/zend-http)             >= 2.5
@@ -57,7 +57,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.5",
+#        "php": "^5.5 || ^7.0",
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
 # From composer, "suggest": {
@@ -143,6 +143,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb  5 2016 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
+- version 2.6.1
+
 * Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
 - version 2.6.0
 - zend-stdlib is now optional
