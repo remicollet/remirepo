@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    5c62e2c1ac21d1174a25ac63182659365fe73fbb
+%global gh_commit    d70b5e345a531a6b5138418cd6e9a13036d8f3da
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-server
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.0
+Version:        2.6.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -50,12 +50,12 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 
 # From composer, "require": {
 #        "php": "^5.5 || ^7.0",
-#        "zendframework/zend-stdlib": "~2.5",
+#        "zendframework/zend-stdlib": "^2.5 || ^3.0",
 #        "zendframework/zend-code": "~2.5"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 Requires:       php-composer(%{gh_owner}/zend-code)             >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-code)             <  3
 %endif
@@ -131,6 +131,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb  5 2016 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
+- update to 2.6.1
+
 * Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
 - update to 2.6.0
 - raise minimal php version to 5.5
