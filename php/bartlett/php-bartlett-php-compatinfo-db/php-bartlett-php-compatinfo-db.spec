@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # See https://github.com/llaville/php-compatinfo-db/releases
-%global gh_commit    c0bd579699ac3059547492e3745b859a72670de7
+%global gh_commit    56ccba3bb8ff80fad5e922ad9e5c8d2b5a241462
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20151031
 %global gh_owner     llaville
@@ -23,7 +23,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{c_vendor}-%{c_project}
-Version:        1.4.0
+Version:        1.5.0
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Reference Database to be used with php-compatinfo library
@@ -181,6 +181,9 @@ export BARTLETT_COMPATINFO_DB=%{buildroot}%{_datadir}/%{name}/compatinfo.sqlite
 
 
 %changelog
+* Sat Feb  6 2016 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
+- update to 1.5.0
+
 * Sat Jan  9 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - update to 1.4.0
 
