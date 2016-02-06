@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    d0f7ae467dcbe7a6ad050540c9d1d39a7aefff26
+%global gh_commit    40d32454fdad8a08ded0a2aafbc6d0e8f06a6b04
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -16,8 +16,8 @@
 %global php_home     %{_datadir}/php
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
-%global major        5.1
-%global minor        7
+%global major        5.2
+%global minor        1
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -42,7 +42,7 @@ BuildRequires:  php(language) >= 5.6
 BuildRequires:  %{_bindir}/phpab
 BuildRequires:  php-composer(phpunit/php-file-iterator) >= 1.3.2
 BuildRequires:  php-composer(phpunit/php-text-template) >= 1.2
-BuildRequires:  php-composer(phpunit/php-code-coverage) >= 3.0
+BuildRequires:  php-composer(phpunit/php-code-coverage) >= 3.1
 BuildRequires:  php-composer(phpunit/php-timer) >= 1.0.6
 BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 3.0
 BuildRequires:  php-composer(phpspec/prophecy) >= 1.3.1
@@ -63,7 +63,7 @@ BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 #        "php": ">=5.6",
 #        "phpunit/php-file-iterator": "~1.4",
 #        "phpunit/php-text-template": "~1.2",
-#        "phpunit/php-code-coverage": "~3.0",
+#        "phpunit/php-code-coverage": "~3.1",
 #        "phpunit/php-timer": ">=1.0.6",
 #        "phpunit/phpunit-mock-objects": "~3.0",
 #        "phpspec/prophecy": "^1.3.1",
@@ -75,7 +75,7 @@ BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 #        "sebastian/recursion-context": "~1.0",
 #        "sebastian/global-state": "~1.0",
 #        "sebastian/resource-operations": "~1.0",
-#        "sebastian/version": "~1.0",
+#        "sebastian/version": "~1.0|~2.0",
 #        "myclabs/deep-copy": "~1.3",
 #        "ext-dom": "*",
 #        "ext-json": "*",
@@ -88,7 +88,7 @@ Requires:       php-composer(phpunit/php-file-iterator) >= 1.4
 Requires:       php-composer(phpunit/php-file-iterator) <  2
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
-Requires:       php-composer(phpunit/php-code-coverage) >= 3.0
+Requires:       php-composer(phpunit/php-code-coverage) >= 3.1
 Requires:       php-composer(phpunit/php-code-coverage) <  4
 Requires:       php-composer(phpunit/php-timer) >= 1.0.6
 Requires:       php-composer(phpunit/php-timer) <  2
@@ -109,7 +109,7 @@ Requires:       php-composer(sebastian/global-state) <  2
 Requires:       php-composer(sebastian/resource-operations) >= 1.0
 Requires:       php-composer(sebastian/resource-operations) <  2
 Requires:       php-composer(sebastian/version) >= 1.0
-Requires:       php-composer(sebastian/version) <  2
+Requires:       php-composer(sebastian/version) <  3
 Requires:       php-composer(myclabs/deep-copy) >= 1.3
 Requires:       php-composer(myclabs/deep-copy) <  2
 Requires:       php-composer(symfony/yaml) >= 2.1
@@ -215,6 +215,13 @@ fi
 
 
 %changelog
+* Fri Feb  5 2016 Remi Collet <remi@fedoraproject.org> - 5.2.1-1
+- Update to 5.2.1
+
+* Fri Feb  5 2016 Remi Collet <remi@fedoraproject.org> - 5.2.0-1
+- Update to 5.2.0
+- raise dependency on phpunit/php-code-coverage >= 3.1
+
 * Tue Feb  2 2016 Remi Collet <remi@fedoraproject.org> - 5.1.7-1
 - Update to 5.1.7
 
