@@ -25,7 +25,7 @@
 
 Name:          %{?scl_prefix}php-ioncube-loader
 Summary:       Loader for ionCube Encoded Files with ionCube 24 support
-Version:       5.0.23
+Version:       5.1.0
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       Distribuable
 Group:         Development/Languages
@@ -33,6 +33,7 @@ Group:         Development/Languages
 URL:           http://www.ioncube.com
 Source0:       http://downloads2.ioncube.com/loader_downloads/%{extname}s_lin_x86.tar.gz
 Source1:       http://downloads2.ioncube.com/loader_downloads/%{extname}s_lin_x86-64.tar.gz
+Source2:       LICENSE.txt
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
@@ -83,7 +84,7 @@ tar xvf %{SOURCE0}
 # Drop in the bit of configuration
 # Sometime file is missing
 # http://forum.ioncube.com/viewtopic.php?t=4245
-[ -f ioncube/LICENSE.txt ] || exit 1
+[ -f ioncube/LICENSE.txt ] || cp %{SOURCE2} ioncube/
 sed -e 's/\r//' -i ioncube/*.txt
 
 cat << 'EOF' | tee %{extname}.nts
@@ -102,10 +103,12 @@ zend_extension = %{extname}.so
 ;ic24.sec.enable=1
 ;ic24.sec.exclusion_key = ''
 ;ic24.cache_path = ''
-;ic24.dump_cache=0
 ;ic24.home_dir = ''
 ;ic24.sec.block_stdin = '1'
 ;ic24.update_domains_retry_interval = '30'
+;ic24.dump_cache=0
+;ic24.phperr.enable=1
+;ic24.phperr.ignore=0
 ;ioncube.loader.encoded_paths = ''
 ;phpd = 1
 ;phpd.t = 1
@@ -165,7 +168,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license ioncube/LICENSE.txt
-%doc ioncube/{README,USER-GUIDE}.txt
+%doc ioncube/USER-GUIDE.*
 
 %config(noreplace) %{php_inidir}/%{ininame}
 %{php_extdir}/%{extname}.so
@@ -177,6 +180,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Feb  6 2016 Remi Collet <remi@remirepo.net> - 5.1.0-1
+- update to 5.1.0 (Feb 5, 2016)
+- add new options in configuration file
+- remove README.txt, add USER-GUIDE.pdf
+- add missing LICENSE file from previous version
+
 * Wed Jan 27 2016 Remi Collet <remi@remirepo.net> - 5.0.23-1
 - update to 5.0.23 (Jan 26, 2016)
 - re-add ZTS module on EL-5

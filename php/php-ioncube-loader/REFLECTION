@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #218 ionCube Loader version <no_version> ] {
+Extension [ <persistent> extension #217 ionCube Loader version <no_version> ] {
 
   - INI {
     Entry [ ic24.enable <SYSTEM> ]
@@ -44,6 +44,12 @@ Extension [ <persistent> extension #218 ionCube Loader version <no_version> ] {
       Current = '30'
     }
     Entry [ ic24.dump_cache <SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ ic24.phperr.enable <SYSTEM> ]
+      Current = '1'
+    }
+    Entry [ ic24.phperr.ignore <ALL> ]
       Current = '0'
     }
     Entry [ ioncube.loader.encoded_paths <ALL> ]
