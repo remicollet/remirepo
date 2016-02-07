@@ -18,7 +18,7 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.3.2
+Version:   1.3.3
 %if 0%{?gh_date}
 Release:   0.6.%{gh_date}git%{gh_short}%{?dist}
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
@@ -154,6 +154,9 @@ exit $ret
 
 
 %changelog
+* Sun Feb  7 2016 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
+- Update to 1.3.3
+
 * Tue Feb  2 2016 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
 - Update to 1.3.2
 
