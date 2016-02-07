@@ -18,7 +18,7 @@
 %{!?scl:         %global pkg_name         %{name}}
 %{!?__php:       %global __php            %{_bindir}/php}
 
-%global gh_commit    7cd81ef3c04f660f2d901aa285c051ec8f44c0a1
+%global gh_commit    cf3c1fe62184d36d24c543c0b4f9993ea8f2445b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phalcon
 %global gh_project   cphalcon
@@ -34,7 +34,7 @@
 %endif
 
 Name:           %{?sub_prefix}php-phalcon2
-Version:        2.0.9
+Version:        2.0.10
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Phalcon Framework
 
@@ -77,6 +77,10 @@ Requires:      %{?scl_prefix}php-pdo%{?_isa}
 Requires:      %{?scl_prefix}php-pecl(igbinary)%{?_isa}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
+Provides:      %{?scl_prefix}php-phalcon          = %{version}-%{release}
+Provides:      %{?scl_prefix}php-phalcon%{?_isa}  = %{version}-%{release}
+Provides:      %{?scl_prefix}php-phalcon2         = %{version}-%{release}
+Provides:      %{?scl_prefix}php-phalcon2%{?_isa} = %{version}-%{release}
 # Only one version can be installed
 Conflicts:     %{?scl_prefix}php-phalcon < 2
 
@@ -224,10 +228,10 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license docs/LICENSE.txt
+%license docs/LICENSE.md
 %doc CHANGELOG.md
 %doc CONTRIBUTING.md
-%doc docs/DOCUMENTATION.txt
+%doc docs/DOCUMENTATION.md
 
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{ext_name}.so
@@ -239,6 +243,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb  7 2016 Remi Collet <remi@fedoraproject.org> - 2.0.10-1
+- update to 2.0.10
+
 * Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 2.0.9-1
 - update to 2.0.9
 
