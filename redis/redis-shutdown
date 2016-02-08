@@ -17,6 +17,7 @@ CONFIG_FILE="/etc/$SERVICE_NAME.conf"
 # Use awk to retrieve host, port from config file
 HOST=`awk '/^[[:blank:]]*bind/ { print $2 }' $CONFIG_FILE | tail -n1`
 PORT=`awk '/^[[:blank:]]*port/ { print $2 }' $CONFIG_FILE | tail -n1`
+PASS=`awk '/^[[:blank:]]*requirepass/ { print $2 }' $CONFIG_FILE | tail -n1`
 
 # Just in case, use default host, port
 HOST=${HOST:-127.0.0.1}
@@ -26,5 +27,9 @@ else
     PORT=${PORT:-26739}
 fi
 
+# Setup additional parameters
+# e.g password-protected redis instances
+[ -z "$PASS"  ] || ADDITIONAL_PARAMS="-a $PASS"
+
 # shutdown the service properly
-$REDIS_CLI -h $HOST -p $PORT shutdown
+$REDIS_CLI -h $HOST -p $PORT $ADDITIONAL_PARAMS shutdown

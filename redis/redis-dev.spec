@@ -28,7 +28,7 @@
 
 Name:             redis
 Version:          3.2
-Release:          0.3.%{prever}%{?dist}
+Release:          0.4.%{prever}%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -245,6 +245,9 @@ fi
 
 
 %changelog
+* Mon Feb  8 2016 Haïkel Guémar <hguemar@fedoraproject.org> - 3.2-0.4.rc3
+- Fix redis-shutdown to handle password-protected instances shutdown
+
 * Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 3.2-0.3.rc3
 - update to 3.2-rc3 (version 3.1.103)
 

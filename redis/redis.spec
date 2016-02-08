@@ -21,7 +21,7 @@
 
 Name:             redis
 Version:          3.0.7
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -229,6 +229,9 @@ fi
 
 
 %changelog
+* Mon Feb  8 2016 Haïkel Guémar <hguemar@fedoraproject.org> - 3.0.7-2
+- Fix redis-shutdown to handle password-protected instances shutdown
+
 * Tue Jan 26 2016 Remi Collet <remi@fedoraproject.org> - 3.0.7-1
 - Redis 3.0.7 - Release date: 25 jan 2016
 - Upgrade urgency: MODERATE
