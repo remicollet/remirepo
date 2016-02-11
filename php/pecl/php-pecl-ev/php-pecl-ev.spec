@@ -1,4 +1,4 @@
-# spec file for php-pecl-ev
+# remirepo spec file for php-pecl-ev
 #
 # Copyright (c) 2013-2016 Remi Collet
 # License: CC-BY-SA

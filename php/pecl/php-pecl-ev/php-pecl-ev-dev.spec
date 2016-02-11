@@ -7,10 +7,6 @@
 # Please, preserve the changelog entries
 #
 %{?scl:          %scl_package        php-pecl-ev}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
-
 #
 # NOTE: bundled libev
 #
@@ -18,7 +14,6 @@
 %global pecl_name ev
 # failed test, so disabled for now
 %global with_zts  0%{?__ztsphp:1}
-
 %if "%{php_version}" < "5.6"
 # After sockets
 %global ini_name  z-%{pecl_name}.ini
@@ -26,12 +21,12 @@
 # After 20-sockets
 %global ini_name  40-%{pecl_name}.ini
 %endif
-%global prever    RC3
+%global prever    RC4
 
 Summary:        Provides interface to libev library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        0.3.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.4.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -53,6 +48,8 @@ Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -93,7 +90,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{pecl_name}-%{version}%{?prever} NTS
 
 # Don't register test files on install
-sed -e '/role="test"/d' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
 # Sanity check, really often broken
@@ -236,6 +235,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb 11 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.4.RC4
+- Update to 1.0.0RC4
+
 * Wed Dec 16 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.RC3
 - Update to 1.0.0RC3
 
