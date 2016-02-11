@@ -23,11 +23,11 @@
 %{!?__php:       %global __php        %{_bindir}/php}
 %{!?scl:         %global _root_bindir %{_bindir}}
 # See https://github.com/phpredis/phpredis/commits/php7
-%global gh_commit   7b3695768213910c9ce5535edd15785118848ca7
+%global gh_commit   0d4b42118c13d3ab1d925039b332526f7c96aaba
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    phpredis
 %global gh_project  phpredis
-%global gh_date     20160125
+%global gh_date     20160208
 %global pecl_name   redis
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global with_tests  0%{?_with_tests:1}
@@ -44,7 +44,7 @@ Summary:       Extension for communicating with the Redis key-value store
 Name:          %{?sub_prefix}php-pecl-redis
 Version:       2.2.8
 %if 0%{?gh_date}
-Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.3.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
@@ -139,6 +139,7 @@ mv %{pecl_name}-%{version} NTS
 mv phpredis-%{version}/tests NTS/tests
 %endif
 
+%{?_licensedir:sed -e '/COPYING/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
 
@@ -289,6 +290,7 @@ exit $ret
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -305,6 +307,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -327,6 +330,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb 11 2016 Remi Collet <remi@fedoraproject.org> - 2.2.8-0.3.20160208git0d4b421
+- refresh
+
 * Tue Jan 26 2016 Remi Collet <remi@fedoraproject.org> - 2.2.8-0.2.20160125git7b36957
 - refresh
 
