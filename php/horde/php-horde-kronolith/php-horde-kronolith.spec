@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-kronolith
-Version:        4.2.13
+Version:        4.2.14
 Release:        1%{?dist}
 Summary:        A web based calendar
 
@@ -262,6 +262,9 @@ fi
 
 
 %changelog
+* Thu Feb 11 2016 Remi Collet <remi@fedoraproject.org> - 4.2.14-1
+- Update to 4.2.14
+
 * Thu Feb 04 2016 Remi Collet <remi@fedoraproject.org> - 4.2.13-1
 - Update to 4.2.13
 
