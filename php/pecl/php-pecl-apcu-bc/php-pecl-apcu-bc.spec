@@ -12,10 +12,6 @@
 
 %{?scl:          %scl_package        php-pecl-apcu-bc}
 %{!?scl:         %global pkg_name    %{name}}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?php_incldir: %global php_incldir %{_includedir}/php}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global gh_commit  52b97a7ef7565509ff1db58ad95fb13c87ab2544
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
@@ -25,15 +21,14 @@
 %global proj_name  apcu_bc
 %global pecl_name  apcu-bc
 %global ext_name   apc
-%global apcver     %(php -r 'echo phpversion("apcu");' 2>/dev/null || echo 65536)
+%global apcver     %(%{_bindir}/php -r 'echo phpversion("apcu");' 2>/dev/null || echo 65536)
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 # After 40-apcu.ini
 %global ini_name   50-%{ext_name}.ini
 
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Summary:        APCu Backwards Compatibility Module
-# From APCU, to be greater that last APC version
-Version:        1.0.2
+Version:        1.0.3
 %if 0%{?gh_date:1}
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{proj_name}-%{version}-%{gh_short}.tar.gz
@@ -207,6 +202,7 @@ REPORT_EXIT_STATUS=1 \
 rm -rf %{buildroot}
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -223,6 +219,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %files
@@ -241,6 +238,9 @@ fi
 
 
 %changelog
+* Thu Feb 11 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3 (beta)
+
 * Fri Jan 29 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Update to 1.0.2 (beta)
 
