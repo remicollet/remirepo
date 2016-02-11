@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    dfb11aa5236376b4fc63853cf746af39fe780e72
+%global gh_commit    6e351261f9cd33daf205a131a1ba61c6d33bd483
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -16,7 +16,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        4.8
-%global minor        22
+%global minor        23
 
 Name:           php-phpunit-PHPUnit
 Version:        %{major}.%{minor}
@@ -206,6 +206,9 @@ fi
 
 
 %changelog
+* Thu Feb 11 2016 Remi Collet <remi@fedoraproject.org> - 4.8.23-1
+- Update to 4.8.23
+
 * Tue Feb  2 2016 Remi Collet <remi@fedoraproject.org> - 4.8.22-1
 - Update to 4.8.22
 

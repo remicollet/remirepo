@@ -224,6 +224,28 @@ elif [ $1 = all54 ]; then
 	n=7
 		getOneMock el${n}x remi
 
+elif [ $1 = for56 ]; then
+	i=20
+		getOneMock fc${i}x test
+	for i in 21 22 23
+	do
+		getOneMock fc${i}x remi
+	done
+	for i in 5 6 7
+	do
+		getOneMock el${i}x test
+	done
+
+elif [ $1 = for55 ]; then
+	for i in 20 21 22 23
+	do
+		getOneMock fc${i}x remi
+	done
+	for i in 5 6 7
+	do
+		getOneMock el${i}x test
+	done
+
 elif [ $1 = allx ]; then
 	for i in 20 21 22 23
 	do
