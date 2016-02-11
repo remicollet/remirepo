@@ -19,11 +19,8 @@
 
 %{?scl:          %scl_package         php-pecl-event}
 %{!?scl:         %global _root_prefix %{_prefix}}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
 
-%global with_tests  %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests  0%{!?_without_tests:1}
 %global pecl_name   event
 %global with_zts    0%{?__ztsphp:1}
 %if "%{php_version}" < "5.6"
@@ -36,8 +33,8 @@
 
 Summary:       Provides interface to libevent library
 Name:          %{?sub_prefix}php-pecl-%{pecl_name}
-Version:       1.11.1
-Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:       1.11.3
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/event
@@ -71,6 +68,8 @@ Provides:      %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -104,14 +103,16 @@ Version 1.0.0 introduces:
 * new OO API breaking backwards compatibility
 * support of libevent 2+ including HTTP, DNS, OpenSSL and the event listener.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
 %setup -q -c 
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 mv %{pecl_name}-%{version} NTS
 
@@ -227,6 +228,7 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -243,6 +245,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -251,6 +254,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-, root, root, 0755)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -264,6 +268,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb 11 2016 Remi Collet <remi@fedoraproject.org> - 1.11.3-1
+- Update to 1.11.3
+
 * Sun Jun 21 2015 Remi Collet <remi@fedoraproject.org> - 1.11.1-2
 - allow build against rh-php56 (as more-php56)
 - drop runtime dependency on pear, new scriptlets
