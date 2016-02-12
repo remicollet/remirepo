@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
+Extension [ <persistent> extension #82 cassandra version 1.1.0 ] {
 
   - Dependencies {
     Dependency [ spl (Required) ]
@@ -13,7 +13,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
     }
   }
 
-  - Classes [73] {
+  - Classes [86] {
     Interface [ <internal:cassandra> interface Cassandra\Exception ] {
 
       - Constants [0] {
@@ -1400,6 +1400,29 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       }
     }
 
+    Interface [ <internal:cassandra> interface Cassandra\Value ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:cassandra> abstract public method type ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
     Interface [ <internal:cassandra> interface Cassandra\Numeric ] {
 
       - Constants [0] {
@@ -1482,7 +1505,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       }
     }
 
-    Class [ <internal:cassandra> final class Cassandra\Bigint implements Cassandra\Numeric ] {
+    Class [ <internal:cassandra> final class Cassandra\Bigint implements Cassandra\Value, Cassandra\Numeric ] {
 
       - Constants [0] {
       }
@@ -1507,7 +1530,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       - Properties [0] {
       }
 
-      - Methods [13] {
+      - Methods [14] {
         Method [ <internal:cassandra, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -1516,6 +1539,12 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
         }
 
         Method [ <internal:cassandra> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Value> public method type ] {
 
           - Parameters [0] {
           }
@@ -1594,7 +1623,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       }
     }
 
-    Class [ <internal:cassandra> final class Cassandra\Blob ] {
+    Class [ <internal:cassandra> final class Cassandra\Blob implements Cassandra\Value ] {
 
       - Constants [0] {
       }
@@ -1608,7 +1637,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       - Properties [0] {
       }
 
-      - Methods [4] {
+      - Methods [5] {
         Method [ <internal:cassandra, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -1617,6 +1646,12 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
         }
 
         Method [ <internal:cassandra> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Value> public method type ] {
 
           - Parameters [0] {
           }
@@ -1636,7 +1671,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       }
     }
 
-    Class [ <internal:cassandra> final class Cassandra\Decimal implements Cassandra\Numeric ] {
+    Class [ <internal:cassandra> final class Cassandra\Decimal implements Cassandra\Value, Cassandra\Numeric ] {
 
       - Constants [0] {
       }
@@ -1650,7 +1685,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       - Properties [0] {
       }
 
-      - Methods [14] {
+      - Methods [15] {
         Method [ <internal:cassandra, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -1659,6 +1694,12 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
         }
 
         Method [ <internal:cassandra> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Value> public method type ] {
 
           - Parameters [0] {
           }
@@ -1743,7 +1784,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       }
     }
 
-    Class [ <internal:cassandra> final class Cassandra\Float implements Cassandra\Numeric ] {
+    Class [ <internal:cassandra> final class Cassandra\Float implements Cassandra\Value, Cassandra\Numeric ] {
 
       - Constants [0] {
       }
@@ -1768,7 +1809,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       - Properties [0] {
       }
 
-      - Methods [16] {
+      - Methods [17] {
         Method [ <internal:cassandra, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -1777,6 +1818,12 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
         }
 
         Method [ <internal:cassandra> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Value> public method type ] {
 
           - Parameters [0] {
           }
@@ -1873,7 +1920,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       }
     }
 
-    Class [ <internal:cassandra> final class Cassandra\Inet ] {
+    Class [ <internal:cassandra> final class Cassandra\Inet implements Cassandra\Value ] {
 
       - Constants [0] {
       }
@@ -1887,7 +1934,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       - Properties [0] {
       }
 
-      - Methods [3] {
+      - Methods [4] {
         Method [ <internal:cassandra, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -1901,6 +1948,12 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
           }
         }
 
+        Method [ <internal:cassandra, prototype Cassandra\Value> public method type ] {
+
+          - Parameters [0] {
+          }
+        }
+
         Method [ <internal:cassandra> public method address ] {
 
           - Parameters [0] {
@@ -1909,7 +1962,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       }
     }
 
-    Class [ <internal:cassandra> final class Cassandra\Timestamp ] {
+    Class [ <internal:cassandra> final class Cassandra\Timestamp implements Cassandra\Value ] {
 
       - Constants [0] {
       }
@@ -1923,12 +1976,18 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       - Properties [0] {
       }
 
-      - Methods [5] {
+      - Methods [6] {
         Method [ <internal:cassandra, ctor> public method __construct ] {
 
           - Parameters [2] {
             Parameter #0 [ <optional> $seconds ]
             Parameter #1 [ <optional> $microseconds ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Value> public method type ] {
+
+          - Parameters [0] {
           }
         }
 
@@ -1979,7 +2038,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       }
     }
 
-    Class [ <internal:cassandra> final class Cassandra\Timeuuid implements Cassandra\UuidInterface ] {
+    Class [ <internal:cassandra> final class Cassandra\Timeuuid implements Cassandra\Value, Cassandra\UuidInterface ] {
 
       - Constants [0] {
       }
@@ -1993,7 +2052,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       - Properties [0] {
       }
 
-      - Methods [6] {
+      - Methods [7] {
         Method [ <internal:cassandra, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -2002,6 +2061,12 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
         }
 
         Method [ <internal:cassandra> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Value> public method type ] {
 
           - Parameters [0] {
           }
@@ -2033,7 +2098,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       }
     }
 
-    Class [ <internal:cassandra> final class Cassandra\Uuid implements Cassandra\UuidInterface ] {
+    Class [ <internal:cassandra> final class Cassandra\Uuid implements Cassandra\Value, Cassandra\UuidInterface ] {
 
       - Constants [0] {
       }
@@ -2047,7 +2112,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       - Properties [0] {
       }
 
-      - Methods [4] {
+      - Methods [5] {
         Method [ <internal:cassandra, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -2056,6 +2121,12 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
         }
 
         Method [ <internal:cassandra> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Value> public method type ] {
 
           - Parameters [0] {
           }
@@ -2075,7 +2146,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       }
     }
 
-    Class [ <internal:cassandra> final class Cassandra\Varint implements Cassandra\Numeric ] {
+    Class [ <internal:cassandra> final class Cassandra\Varint implements Cassandra\Value, Cassandra\Numeric ] {
 
       - Constants [0] {
       }
@@ -2089,7 +2160,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       - Properties [0] {
       }
 
-      - Methods [13] {
+      - Methods [14] {
         Method [ <internal:cassandra, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -2098,6 +2169,12 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
         }
 
         Method [ <internal:cassandra> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Value> public method type ] {
 
           - Parameters [0] {
           }
@@ -2176,7 +2253,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       }
     }
 
-    Class [ <internal:cassandra> <iterateable> final class Cassandra\Set implements Countable, Iterator, Traversable ] {
+    Class [ <internal:cassandra> <iterateable> final class Cassandra\Set implements Cassandra\Value, Countable, Iterator, Traversable ] {
 
       - Constants [0] {
       }
@@ -2190,7 +2267,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       - Properties [0] {
       }
 
-      - Methods [11] {
+      - Methods [12] {
         Method [ <internal:cassandra, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -2198,7 +2275,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
           }
         }
 
-        Method [ <internal:cassandra> public method type ] {
+        Method [ <internal:cassandra, prototype Cassandra\Value> public method type ] {
 
           - Parameters [0] {
           }
@@ -2211,6 +2288,13 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
         }
 
         Method [ <internal:cassandra> public method add ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method has ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $value ]
@@ -2262,7 +2346,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       }
     }
 
-    Class [ <internal:cassandra> <iterateable> final class Cassandra\Map implements Countable, Iterator, Traversable, ArrayAccess ] {
+    Class [ <internal:cassandra> <iterateable> final class Cassandra\Map implements Cassandra\Value, Countable, Iterator, Traversable, ArrayAccess ] {
 
       - Constants [0] {
       }
@@ -2276,7 +2360,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       - Properties [0] {
       }
 
-      - Methods [19] {
+      - Methods [18] {
         Method [ <internal:cassandra, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -2284,19 +2368,13 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
           }
         }
 
-        Method [ <internal:cassandra> public method keyType ] {
+        Method [ <internal:cassandra, prototype Cassandra\Value> public method type ] {
 
           - Parameters [0] {
           }
         }
 
         Method [ <internal:cassandra> public method keys ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:cassandra> public method valueType ] {
 
           - Parameters [0] {
           }
@@ -2404,7 +2482,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       }
     }
 
-    Class [ <internal:cassandra> <iterateable> final class Cassandra\Collection implements Countable, Iterator, Traversable ] {
+    Class [ <internal:cassandra> <iterateable> final class Cassandra\Collection implements Cassandra\Value, Countable, Iterator, Traversable ] {
 
       - Constants [0] {
       }
@@ -2426,7 +2504,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
           }
         }
 
-        Method [ <internal:cassandra> public method type ] {
+        Method [ <internal:cassandra, prototype Cassandra\Value> public method type ] {
 
           - Parameters [0] {
           }
@@ -2504,9 +2582,181 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       }
     }
 
+    Class [ <internal:cassandra> <iterateable> final class Cassandra\Tuple implements Cassandra\Value, Countable, Iterator, Traversable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [11] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $type ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Value> public method type ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method values ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method set ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method get ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> <iterateable> final class Cassandra\UserTypeValue implements Cassandra\Value, Countable, Iterator, Traversable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [11] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $type ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Value> public method type ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method values ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method set ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method get ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $index ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Countable> public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method current ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method key ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method next ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method valid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Iterator> public method rewind ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
     Class [ <internal:cassandra> class Cassandra ] {
 
-      - Constants [41] {
+      - Constants [42] {
         Constant [ integer CONSISTENCY_ANY ] { 0 }
         Constant [ integer CONSISTENCY_ONE ] { 1 }
         Constant [ integer CONSISTENCY_TWO ] { 2 }
@@ -2547,7 +2797,8 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
         Constant [ string TYPE_VARINT ] { varint }
         Constant [ string TYPE_TIMEUUID ] { timeuuid }
         Constant [ string TYPE_INET ] { inet }
-        Constant [ string VERSION ] { 1.0.0 }
+        Constant [ string VERSION ] { 1.1.0 }
+        Constant [ string CPP_DRIVER_VERSION ] { 2.2.2 }
       }
 
       - Static properties [0] {
@@ -2619,7 +2870,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       - Properties [0] {
       }
 
-      - Methods [21] {
+      - Methods [24] {
         Method [ <internal:cassandra> public method build ] {
 
           - Parameters [0] {
@@ -2766,6 +3017,27 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $delay ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withRetryPolicy ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Cassandra\RetryPolicy $policy ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withTimestampGenerator ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Cassandra\TimestampGenerator $generator ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method withSchemaMetadata ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $enabled ]
           }
         }
       }
@@ -3292,7 +3564,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       - Properties [0] {
       }
 
-      - Methods [15] {
+      - Methods [16] {
         Method [ <internal:cassandra, ctor> public method __construct ] {
 
           - Parameters [0] {
@@ -3383,6 +3655,12 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
           }
         }
 
+        Method [ <internal:cassandra> public method pagingStateToken ] {
+
+          - Parameters [0] {
+          }
+        }
+
         Method [ <internal:cassandra> public method first ] {
 
           - Parameters [0] {
@@ -3465,7 +3743,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       - Properties [0] {
       }
 
-      - Methods [6] {
+      - Methods [8] {
         Method [ <internal:cassandra> abstract public method name ] {
 
           - Parameters [0] {
@@ -3502,6 +3780,19 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
           - Parameters [0] {
           }
         }
+
+        Method [ <internal:cassandra> abstract public method userType ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:cassandra> abstract public method userTypes ] {
+
+          - Parameters [0] {
+          }
+        }
       }
     }
 
@@ -3519,7 +3810,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       - Properties [0] {
       }
 
-      - Methods [6] {
+      - Methods [8] {
         Method [ <internal:cassandra, prototype Cassandra\Keyspace> public method name ] {
 
           - Parameters [0] {
@@ -3552,6 +3843,19 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
         }
 
         Method [ <internal:cassandra, prototype Cassandra\Keyspace> public method tables ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Keyspace> public method userType ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Keyspace> public method userTypes ] {
 
           - Parameters [0] {
           }
@@ -3961,7 +4265,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       - Static properties [0] {
       }
 
-      - Static methods [19] {
+      - Static methods [21] {
         Method [ <internal:cassandra> final static public method ascii ] {
 
           - Parameters [0] {
@@ -4079,6 +4383,20 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
             Parameter #1 [ <required> Cassandra\Type $valueType ]
           }
         }
+
+        Method [ <internal:cassandra> final static public method tuple ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $types ]
+          }
+        }
+
+        Method [ <internal:cassandra> final static public method userType ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $types ]
+          }
+        }
       }
 
       - Properties [0] {
@@ -4100,7 +4418,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
         Method [ <internal:cassandra> abstract public method create ] {
 
           - Parameters [1] {
-            Parameter #0 [ <optional> $value ]
+            Parameter #0 [ <optional> $values ]
           }
         }
       }
@@ -4114,7 +4432,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       - Static properties [0] {
       }
 
-      - Static methods [19] {
+      - Static methods [21] {
         Method [ <internal:cassandra, inherits Cassandra\Type> final static public method ascii ] {
 
           - Parameters [0] {
@@ -4232,12 +4550,32 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
             Parameter #1 [ <required> Cassandra\Type $valueType ]
           }
         }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method tuple ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $types ]
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method userType ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $types ]
+          }
+        }
       }
 
       - Properties [0] {
       }
 
-      - Methods [3] {
+      - Methods [4] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
         Method [ <internal:cassandra, prototype Cassandra\Type> public method name ] {
 
           - Parameters [0] {
@@ -4267,7 +4605,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       - Static properties [0] {
       }
 
-      - Static methods [19] {
+      - Static methods [21] {
         Method [ <internal:cassandra, inherits Cassandra\Type> final static public method ascii ] {
 
           - Parameters [0] {
@@ -4385,19 +4723,39 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
             Parameter #1 [ <required> Cassandra\Type $valueType ]
           }
         }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method tuple ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $types ]
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method userType ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $types ]
+          }
+        }
       }
 
       - Properties [0] {
       }
 
-      - Methods [4] {
+      - Methods [5] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
         Method [ <internal:cassandra, prototype Cassandra\Type> public method name ] {
 
           - Parameters [0] {
           }
         }
 
-        Method [ <internal:cassandra> public method type ] {
+        Method [ <internal:cassandra> public method valueType ] {
 
           - Parameters [0] {
           }
@@ -4426,7 +4784,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       - Static properties [0] {
       }
 
-      - Static methods [19] {
+      - Static methods [21] {
         Method [ <internal:cassandra, inherits Cassandra\Type> final static public method ascii ] {
 
           - Parameters [0] {
@@ -4544,19 +4902,39 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
             Parameter #1 [ <required> Cassandra\Type $valueType ]
           }
         }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method tuple ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $types ]
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method userType ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $types ]
+          }
+        }
       }
 
       - Properties [0] {
       }
 
-      - Methods [4] {
+      - Methods [5] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
         Method [ <internal:cassandra, prototype Cassandra\Type> public method name ] {
 
           - Parameters [0] {
           }
         }
 
-        Method [ <internal:cassandra> public method type ] {
+        Method [ <internal:cassandra> public method valueType ] {
 
           - Parameters [0] {
           }
@@ -4585,7 +4963,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       - Static properties [0] {
       }
 
-      - Static methods [19] {
+      - Static methods [21] {
         Method [ <internal:cassandra, inherits Cassandra\Type> final static public method ascii ] {
 
           - Parameters [0] {
@@ -4703,12 +5081,32 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
             Parameter #1 [ <required> Cassandra\Type $valueType ]
           }
         }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method tuple ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $types ]
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method userType ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $types ]
+          }
+        }
       }
 
       - Properties [0] {
       }
 
-      - Methods [5] {
+      - Methods [6] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
         Method [ <internal:cassandra, prototype Cassandra\Type> public method name ] {
 
           - Parameters [0] {
@@ -4742,7 +5140,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       }
     }
 
-    Class [ <internal:cassandra> final class Cassandra\Type\Custom implements Cassandra\Type ] {
+    Class [ <internal:cassandra> final class Cassandra\Type\Tuple implements Cassandra\Type ] {
 
       - Constants [0] {
       }
@@ -4750,7 +5148,7 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
       - Static properties [0] {
       }
 
-      - Static methods [19] {
+      - Static methods [21] {
         Method [ <internal:cassandra, inherits Cassandra\Type> final static public method ascii ] {
 
           - Parameters [0] {
@@ -4868,12 +5266,410 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
             Parameter #1 [ <required> Cassandra\Type $valueType ]
           }
         }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method tuple ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $types ]
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method userType ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $types ]
+          }
+        }
       }
 
       - Properties [0] {
       }
 
-      - Methods [3] {
+      - Methods [5] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Type> public method name ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Type> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method types ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Type> public method create ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $values ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\Type\UserType implements Cassandra\Type ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [21] {
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method ascii ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method bigint ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method blob ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method boolean ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method counter ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method decimal ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method double ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method float ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method int ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method text ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method timestamp ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method uuid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method varchar ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method varint ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method timeuuid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method inet ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method collection ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Cassandra\Type $type ]
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method set ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Cassandra\Type $type ]
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method map ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Cassandra\Type $keyType ]
+            Parameter #1 [ <required> Cassandra\Type $valueType ]
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method tuple ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $types ]
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method userType ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $types ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [8] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method withName ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Type> public method name ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method withKeyspace ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $keyspace ]
+          }
+        }
+
+        Method [ <internal:cassandra> public method keyspace ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Type> public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra> public method types ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, prototype Cassandra\Type> public method create ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $value ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\Type\Custom implements Cassandra\Type ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [21] {
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method ascii ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method bigint ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method blob ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method boolean ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method counter ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method decimal ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method double ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method float ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method int ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method text ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method timestamp ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method uuid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method varchar ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method varint ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method timeuuid ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method inet ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method collection ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Cassandra\Type $type ]
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method set ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Cassandra\Type $type ]
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method map ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Cassandra\Type $keyType ]
+            Parameter #1 [ <required> Cassandra\Type $valueType ]
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method tuple ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $types ]
+          }
+        }
+
+        Method [ <internal:cassandra, inherits Cassandra\Type> final static public method userType ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $types ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
         Method [ <internal:cassandra, prototype Cassandra\Type> public method name ] {
 
           - Parameters [0] {
@@ -4892,6 +5688,156 @@ Extension [ <persistent> extension #82 cassandra version 1.0.0 ] {
             Parameter #0 [ <optional> $value ]
           }
         }
+      }
+    }
+
+    Interface [ <internal:cassandra> interface Cassandra\RetryPolicy ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\RetryPolicy\DefaultPolicy implements Cassandra\RetryPolicy ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\RetryPolicy\DowngradingConsistency implements Cassandra\RetryPolicy ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\RetryPolicy\Fallthrough implements Cassandra\RetryPolicy ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\RetryPolicy\Logging implements Cassandra\RetryPolicy ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:cassandra, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Cassandra\RetryPolicy $childPolicy ]
+          }
+        }
+      }
+    }
+
+    Interface [ <internal:cassandra> interface Cassandra\TimestampGenerator ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\TimestampGenerator\Monotonic implements Cassandra\TimestampGenerator ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:cassandra> final class Cassandra\TimestampGenerator\ServerSide implements Cassandra\TimestampGenerator ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
       }
     }
   }

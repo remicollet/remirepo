@@ -15,19 +15,16 @@
 %endif
 
 %{?scl:          %scl_package        php-pecl-cassandra}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name   cassandra
-%global with_zts    0%{?__ztsphp:1}
+%global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 #global prever      RC
 # see https://github.com/datastax/php-driver/releases
 #global gh_commit   2b0642b1d6fc451f0481edaf0163e3e5bbf896ec
-#global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
+#global gh_short    %%(c=%%{gh_commit}; echo ${c:0:7})
 %global gh_owner    datastax
 %global gh_project  php-driver
-%global with_tests  0%{!?_without_tests:1}
+%global with_tests  0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 %global ini_name    %{pecl_name}.ini
 %else
@@ -39,7 +36,7 @@
 
 Summary:      DataStax PHP Driver for Apache Cassandra
 Name:         %{?sub_prefix}php-pecl-%{pecl_name}
-Version:      1.0.1
+Version:      1.1.0
 Release:      1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      ASL 2.0
 Group:        Development/Languages
@@ -53,7 +50,8 @@ Source:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: %{?scl_prefix}php-devel >= 5.2.6
+# Upstream recommends php >= 5.5
+BuildRequires: %{?scl_prefix}php-devel
 BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: cassandra-cpp-driver-devel
 BuildRequires: libuv-devel
@@ -68,6 +66,8 @@ Provides:     %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:     %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
+Provides:     %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -82,6 +82,10 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -110,7 +114,9 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 %endif
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
 # Sanity check, really often broken
@@ -179,6 +185,7 @@ done
 rm -rf %{buildroot}
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -195,6 +202,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %check
@@ -247,6 +255,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Fri Feb 12 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- Update to 1.1.0
+
 * Thu Nov 26 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1
 
