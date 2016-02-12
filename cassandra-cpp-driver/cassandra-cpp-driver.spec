@@ -1,13 +1,13 @@
 # remirepo spec file for cassandra-cpp-driver
 #
-# Copyright (c) 2015 Remi Collet
+# Copyright (c) 2015-2016 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
 
-%global gh_commit   f19b1abee4627a45df7b2873d45136d4706c8e07
+%global gh_commit   b4bb435129bab533612fa2caf194555fa943f925
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    datastax
 %global gh_project  cpp-driver
@@ -16,7 +16,7 @@
 
 Name:          cassandra-cpp-driver
 Summary:       DataStax C/C++ Driver for Apache Cassandra
-Version:       2.2.1
+Version:       2.2.2
 Release:       1%{?dist}
 License:       ASL 2.0
 Group:         System Environment/Libraries
@@ -98,6 +98,9 @@ rm %{buildroot}%{_libdir}/%{libname}_static.a
 
 
 %changelog
+* Fri Feb 12 2016 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
+- update to 2.2.2
+
 * Thu Nov 26 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - update to 2.2.1
 
