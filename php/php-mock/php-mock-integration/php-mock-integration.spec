@@ -37,7 +37,7 @@ BuildRequires:  php-composer(phpunit/phpunit) > 4
 #        "php": ">=5.5",
 #        "php-mock/php-mock": "^1",
 #        "phpunit/php-text-template": "^1"
-Requires:       php(language) >= 5.3.3
+Requires:       php(language) >= 5.5
 Requires:       php-composer(php-mock/php-mock)         >= 1
 Requires:       php-composer(php-mock/php-mock)         <  2
 Requires:       php-composer(phpunit/php-text-template) >= 1
@@ -74,7 +74,7 @@ cp -pr classes %{buildroot}%{_datadir}/php/phpmock/integration
 mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
-require_once '%{_datadir}/php/phpmock/autoload.php';
+require_once '%{_datadir}/tests/phpmock/autoload.php';
 $fedoraClassLoader->addPrefix('phpmock\\', '%{buildroot}%{_datadir}/php');
 EOF
 
