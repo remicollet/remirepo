@@ -6,10 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    cd21505c8d58499a9b4d38573881cfec49c51ffd
+%global gh_commit    25e089eee90799ed0f6046dfd17521804b113f25
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20160127
+%global gh_date      20160212
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
@@ -18,7 +18,7 @@
 
 Name:           composer
 Version:        1.0.0
-Release:        0.19.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}%{?dist}
+Release:        0.20.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -30,6 +30,10 @@ Source2:        %{name}-bootstrap.php
 
 # Use our autoloader, resources path, fix for tests
 Patch0:         %{name}-rpm.patch
+# See https://github.com/composer/composer/pull/4912
+Patch1:         %{name}-pr4912.patch
+# See https://github.com/composer/composer/pull/4913
+Patch2:         %{name}-pr4913.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -136,6 +140,8 @@ Documentation: https://getcomposer.org/doc/
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
+%patch1 -p1 -b .rpm
+%patch2 -p1 -b .rpm
 find . -name \*.rpm -exec rm {} \; -print
 
 cp -p %{SOURCE1} src/Composer/autoload.php
@@ -221,6 +227,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 12 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.20.20160212git25e089e
+- new snapshot
+- don't relying on result order which may vary
+  open https://github.com/composer/composer/pull/4912
+- restore compatiblity with symfony < 2.8
+  open https://github.com/composer/composer/pull/4913
+
 * Wed Jan 27 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.19.20160127gitcd21505
 - new snapshot
 

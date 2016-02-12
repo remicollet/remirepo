@@ -1,0 +1,29 @@
+From abe02595977ade2ec3f7588e5d026b2392757d4d Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Fri, 12 Feb 2016 19:04:43 +0100
+Subject: [PATCH] fix compat with symfony console < 2.8
+
+---
+ src/Composer/IO/ConsoleIO.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/Composer/IO/ConsoleIO.php b/src/Composer/IO/ConsoleIO.php
+index f97af2e..1742455 100644
+--- a/src/Composer/IO/ConsoleIO.php
++++ b/src/Composer/IO/ConsoleIO.php
+@@ -139,13 +139,13 @@ private function doWrite($messages, $newline, $stderr, $verbosity)
+         }
+ 
+         if (true === $stderr && $this->output instanceof ConsoleOutputInterface) {
+-            $this->output->getErrorOutput()->write($messages, $newline, $sfVerbosity);
++            $this->output->getErrorOutput()->write($messages, $newline);
+             $this->lastMessageErr = join($newline ? "\n" : '', (array) $messages);
+ 
+             return;
+         }
+ 
+-        $this->output->write($messages, $newline, $sfVerbosity);
++        $this->output->write($messages, $newline);
+         $this->lastMessage = join($newline ? "\n" : '', (array) $messages);
+     }
+ 

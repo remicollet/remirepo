@@ -1,0 +1,35 @@
+From ae5de98db110857b90f5ff0d62e1d9ea29ec9dd0 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Fri, 12 Feb 2016 17:02:19 +0100
+Subject: [PATCH] make this test more robust, not relying on result order which
+ may vary
+
+---
+ tests/Composer/Test/Repository/PathRepositoryTest.php | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/tests/Composer/Test/Repository/PathRepositoryTest.php b/tests/Composer/Test/Repository/PathRepositoryTest.php
+index e76be2b..ebed4ab 100644
+--- a/tests/Composer/Test/Repository/PathRepositoryTest.php
++++ b/tests/Composer/Test/Repository/PathRepositoryTest.php
+@@ -69,14 +69,18 @@ public function testLoadPackageFromFileSystemWithWildcard()
+         $repositoryUrl = implode(DIRECTORY_SEPARATOR, array(__DIR__, 'Fixtures', 'path', '*'));
+         $repository = new PathRepository(array('url' => $repositoryUrl), $ioInterface, $config, $loader);
+         $packages = $repository->getPackages();
++        $names = array();
+ 
+         $this->assertEquals(2, $repository->count());
+ 
+         $package = $packages[0];
+-        $this->assertEquals('test/path-versioned', $package->getName());
++        $names[] = $package->getName();
+ 
+         $package = $packages[1];
+-        $this->assertEquals('test/path-unversioned', $package->getName());
++        $names[] = $package->getName();
++
++        sort($names);
++        $this->assertEquals(array('test/path-unversioned', 'test/path-versioned'), $names);
+     }
+ 
+     /**
