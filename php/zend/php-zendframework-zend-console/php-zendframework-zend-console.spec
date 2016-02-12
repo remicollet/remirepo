@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    ad425c45444a76d6559df45df14291940c6883f1
+%global gh_commit    cbbdfdfa0564aa20d1c6c6ef3daeafe6aec02360
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-console
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.1
-Release:        2%{?dist}
+Version:        2.6.0
+Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -34,20 +34,20 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.3.23
+BuildRequires:  php(language) >= 5.5
 BuildRequires:  php-ctype
 BuildRequires:  php-dom
 BuildRequires:  php-pcre
 BuildRequires:  php-reflection
 BuildRequires:  php-spl
 BuildRequires:  php-xml
-BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 # From composer, "require-dev": {
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0",
-#        "zendframework/zend-filter": "~2.5",
-#        "zendframework/zend-json": "~2.5",
-#        "zendframework/zend-validator": "~2.5"
+#        "zendframework/zend-filter": "^2.6",
+#        "zendframework/zend-json": "^2.6",
+#        "zendframework/zend-validator": "^2.5"
 BuildRequires:  php-composer(%{gh_owner}/zend-filter)           >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-json)             >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.5
@@ -57,12 +57,12 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.3.23",
-#        "zendframework/zend-stdlib": "~2.5"
-Requires:       php(language) >= 5.3.23
+#        "php": "^5.5 || ^7.0",
+#        "zendframework/zend-stdlib": "^2.7 || ^3.0"
+Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 # From composer, "suggest": {
 #        "zendframework/zend-validator": "To support DefaultRouteMatcher usage",
 #        "zendframework/zend-filter": "To support DefaultRouteMatcher usage"
@@ -106,14 +106,14 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 %check
 %if %{with_tests}
 mkdir vendor
-cat << EOF | tee vendor/autoload.php
+cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
-Zend\\Loader\\AutoloaderFactory::factory(array(
-    'Zend\\Loader\\StandardAutoloader' => array(
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\StandardAutoloader' => array(
         'namespaces' => array(
-           'ZendTest\\\\%{library}' => dirname(__DIR__).'/test/',
-           'Zend\\\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
+           'ZendTest\\%{library}' => dirname(__DIR__).'/test/',
+           'Zend\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
 EOF
@@ -137,6 +137,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 12 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- update to 2.6.0
+- raise dependency on PHP >= 5.5
+- raise dependency on zend-stdlib >= 2.7
+
 * Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-2
 - fix description
 
