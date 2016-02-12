@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    292cd64ba28be9e420126a64e4ae3528effd1491
+%global gh_commit    07ad9388e4d4f12620ad37b52a5b0e4ee7845f92
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-text
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.1
-Release:        2%{?dist}
+Version:        2.6.0
+Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -43,23 +43,23 @@ BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
 # From composer, "require-dev": {
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0",
-#        "zendframework/zend-config": "~2.5"
-BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.5
+#        "zendframework/zend-config": "^2.6"
+BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.6
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.3.23",
-#        "zendframework/zend-stdlib": "~2.5",
-#        "zendframework/zend-servicemanager": "~2.5"
-Requires:       php(language) >= 5.3.23
+#        "php": "^5.5 || ^7.0",
+#        "zendframework/zend-stdlib": "^2.7 || ^3.0",
+#        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3"
+Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
-Requires:       php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-servicemanager)   <  3
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
+Requires:       php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
+Requires:       php-composer(%{gh_owner}/zend-servicemanager)   <  4
 %endif
 # From phpcompatinfo report for version 2.5.1
 Requires:       php-ctype
@@ -105,14 +105,14 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 %check
 %if %{with_tests}
 mkdir vendor
-cat << EOF | tee vendor/autoload.php
+cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
-Zend\\Loader\\AutoloaderFactory::factory(array(
-    'Zend\\Loader\\StandardAutoloader' => array(
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\StandardAutoloader' => array(
         'namespaces' => array(
-           'ZendTest\\\\%{library}' => dirname(__DIR__).'/test/',
-           'Zend\\\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
+           'ZendTest\\%{library}' => dirname(__DIR__).'/test/',
+           'Zend\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
 EOF
@@ -136,6 +136,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 12 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- update to 2.6.0
+- raise dependency on PHP >= 5.5
+- raise dependency on zend-stdlib >= 2.7
+- raise dependency on zend-servicemanager >= 2.7.5
+
 * Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-2
 - fix description
 
