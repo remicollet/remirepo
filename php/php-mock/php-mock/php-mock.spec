@@ -38,7 +38,7 @@ BuildRequires: php-composer(symfony/class-loader)
 # from composer.json, "require": {
 #        "php": ">=5.5",
 #        "phpunit/php-text-template": "^1"
-Requires:       php(language) >= 5.3.3
+Requires:       php(language) >= 5.5
 Requires:       php-composer(phpunit/php-text-template) >= 1
 Requires:       php-composer(phpunit/php-text-template) <  2
 # From phpcompatinfo report from version 1.0.1
@@ -77,9 +77,18 @@ cp %{SOURCE1} classes/autoload.php
 
 
 %install
-rm -rf         %{buildroot}
-mkdir -p       %{buildroot}%{_datadir}/php/
-cp -pr classes %{buildroot}%{_datadir}/php/phpmock
+rm -rf            %{buildroot}
+# Library
+mkdir -p          %{buildroot}%{_datadir}/php/
+cp -pr classes    %{buildroot}%{_datadir}/php/phpmock
+# Unit tests
+mkdir -p          %{buildroot}%{_datadir}/tests
+cp -pr tests/unit %{buildroot}%{_datadir}/tests/phpmock
+cat <<'EOF' | tee %{buildroot}%{_datadir}/tests/phpmock/autoload.php
+<?php
+require_once '%{_datadir}/php/phpmock/autoload.php';
+$fedoraClassLoader->addPrefix('phpmock\\', '%{_datadir}/tests');
+EOF
 
 
 %check
@@ -105,6 +114,7 @@ rm -rf %{buildroot}
 %doc composer.json
 %doc *.md
 %{_datadir}/php/phpmock
+%{_datadir}/tests/phpmock
 
 
 %changelog
