@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b0f312e7ab9a70bbd5c92568e2a20dd46be9a529
+%global gh_commit    efbc31ff4ee0bef28da712a726316e8b0b5bf262
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-nette-tester
-Version:        1.6.1
+Version:        1.7.0
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        An easy-to-use PHP unit testing framework
@@ -98,6 +98,11 @@ export LANG=fr_FR.utf8
 
 : Run test suite in sources tree
 php src/tester.php --colors 0 -p php -c ./php.ini tests -s
+
+if which php70; then
+    cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
+    php70 src/tester.php --colors 0 -p php70 -c ./php.ini tests -s
+fi
 %else
 : Test suite disabled
 %endif
@@ -118,6 +123,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 12 2016 Remi Collet <remi@fedoraproject.org> - 1.7.0-1
+- update to 1.7.0
+- run test suite with both PHP 5 and 7 when available
+
 * Tue Nov  3 2015 Remi Collet <remi@fedoraproject.org> - 1.6.1-1
 - update to 1.6.1
 
