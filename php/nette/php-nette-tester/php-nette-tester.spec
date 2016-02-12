@@ -46,7 +46,7 @@ BuildRequires:  php-tokenizer
 # from composer.json
 #        "php": ">=5.3.0"
 Requires:       php(language) >= 5.3
-# from phpcompatinfo report for version 1.6.1
+# from phpcompatinfo report for version 1.7.0
 Requires:       php-cli
 Requires:       php-date
 Requires:       php-dom
