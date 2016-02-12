@@ -1,4 +1,4 @@
-# remirepo/fedora spec file for php-mock
+# remirepo/fedora spec file for php-mock-integration
 #
 # Copyright (c) 2016 Remi Collet
 # License: CC-BY-SA
@@ -6,22 +6,21 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    bfa2d17d64dbf129073a7ba2051a96ce52749570
+%global gh_commit    e83fb65dd20cd3cf250d554cbd4682b96b684f4b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     php-mock
-%global gh_project   php-mock
+%global gh_project   php-mock-integration
 %global with_tests   0%{!?_without_tests:1}
 
-Name:           php-mock
-Version:        1.0.1
+Name:           php-mock-integration
+Version:        1.0.0
 Release:        1%{?dist}
-Summary:        PHP-Mock can mock built-in PHP functions
+Summary:        Integration package for PHP-Mock
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
-Source1:        %{name}-autoload.php
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -29,47 +28,34 @@ BuildRequires:  php(language) >= 5.5
 %if %{with_tests}
 # from composer.json, "require-dev": {
 #        "phpunit/phpunit": "^4|^5"
+BuildRequires:  php-composer(php-mock/php-mock)         >= 1
 BuildRequires:  php-composer(phpunit/php-text-template) >= 1
 BuildRequires:  php-composer(phpunit/phpunit) > 4
 %endif
-# For autoloader
-BuildRequires: php-composer(symfony/class-loader)
 
 # from composer.json, "require": {
 #        "php": ">=5.5",
+#        "php-mock/php-mock": "^1",
 #        "phpunit/php-text-template": "^1"
 Requires:       php(language) >= 5.3.3
+Requires:       php-composer(php-mock/php-mock)         >= 1
+Requires:       php-composer(php-mock/php-mock)         <  2
 Requires:       php-composer(phpunit/php-text-template) >= 1
 Requires:       php-composer(phpunit/php-text-template) <  2
 # From phpcompatinfo report from version 1.0.1
-Requires:       php-date
-Requires:       php-reflection
-Requires:       php-spl
-# For autoloader
-Requires:       php-composer(symfony/class-loader)
-%if 0%{?fedora} > 21
-# from composer.json, "suggest": {
-#        "php-mock/php-mock-phpunit": "Allows integration into PHPUnit testcase with the trait PHPMock.",
-#        "php-mock/php-mock-mockery": "Allows using PHPMockery for Mockery integration"
-Suggests:       php-composer(php-mock/php-mock-phpunit)
-Suggests:       php-composer(php-mock/php-mock-mockery)
-%endif
+# only standard
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 
 %description
-PHP-Mock can mock built-in PHP functions (e.g. time()).
-PHP-Mock relies on PHP's namespace fallback policy.
-No further extension is needed.
-
-Autoloader: %{_datadir}/php/phpmock/autoload.php
+This is a support package for PHP-Mock integration into other frameworks.
 
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-cp %{SOURCE1} classes/autoload.php
+# Same namespace than php-mock, not specific autoloader needed
 
 
 %build
@@ -79,15 +65,23 @@ cp %{SOURCE1} classes/autoload.php
 %install
 rm -rf         %{buildroot}
 mkdir -p       %{buildroot}%{_datadir}/php/
-cp -pr classes %{buildroot}%{_datadir}/php/phpmock
+mkdir -p       %{buildroot}%{_datadir}/php/phpmock
+cp -pr classes %{buildroot}%{_datadir}/php/phpmock/integration
 
 
 %check
 %if %{with_tests}
-%{_bindir}/phpunit --bootstrap %{buildroot}%{_datadir}/php/phpmock/autoload.php
+mkdir vendor
+cat << 'EOF' | tee vendor/autoload.php
+<?php
+require_once '%{_datadir}/php/phpmock/autoload.php';
+$fedoraClassLoader->addPrefix('phpmock\\', '%{buildroot}%{_datadir}/php');
+EOF
+
+%{_bindir}/phpunit
 
 if which php70; then
-   php70 %{_bindir}/phpunit --bootstrap %{buildroot}%{_datadir}/php/phpmock/autoload.php
+   php70 %{_bindir}/phpunit
 fi
 %else
 : bootstrap build with test suite disabled
@@ -104,7 +98,7 @@ rm -rf %{buildroot}
 %license LICENSE
 %doc composer.json
 %doc *.md
-%{_datadir}/php/phpmock
+%{_datadir}/php/phpmock/integration
 
 
 %changelog
