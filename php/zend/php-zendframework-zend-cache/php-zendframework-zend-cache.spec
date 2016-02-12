@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    7ff9d6b922ae29dbdc53f6a62b471fb6e58565df
+%global gh_commit    2196a5851f4618609c1afb3b9a29267b57ac7be6
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-cache
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.3
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -39,14 +39,16 @@ BuildRequires:  php-reflection
 BuildRequires:  php-date
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
-BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-serializer)       >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
+BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
+BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6.2
 # From composer, "require-dev": {
+#        "zendframework/zend-serializer": "^2.6",
+#        "zendframework/zend-session": "^2.5",
 #        "zendframework/zend-session": "~2.5",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0"
+BuildRequires:  php-composer(%{gh_owner}/zend-serializer)       >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
@@ -54,18 +56,18 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.5",
-#        "zendframework/zend-stdlib": "~2.5",
-#        "zendframework/zend-servicemanager": "~2.5",
-#        "zendframework/zend-eventmanager": "~2.5"
+#        "php": "^5.5 || ^7.0",
+#        "zendframework/zend-stdlib": "^2.7 || ^3.0",
+#        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
+#        "zendframework/zend-eventmanager": "^2.6.2 || ^3.0"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
-Requires:       php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-servicemanager)   <  3
-Requires:       php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-eventmanager)     <  3
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
+Requires:       php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
+Requires:       php-composer(%{gh_owner}/zend-servicemanager)   <  4
+Requires:       php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6.2
+Requires:       php-composer(%{gh_owner}/zend-eventmanager)     <  4
 # From composer, "suggest": {
 #        "zendframework/zend-serializer": "Zend\\Serializer component",
 #        "zendframework/zend-session": "Zend\\Session component",
@@ -167,9 +169,15 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 12 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- update to 2.6.0
+- raise dependency on zend-stdlib >= 2.7
+- raise dependency on zend-servicemanager >= 2.7.5
+- raise dependency on zend-eventmanager >= 2.6.2
+
 * Wed Sep 16 2015 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
 - update to 2.5.3
-- zend-serializer is optional
+- zend-serializer is    optional
 
 * Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-2
 - add missing obsoletes
