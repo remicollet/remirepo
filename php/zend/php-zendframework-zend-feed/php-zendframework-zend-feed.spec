@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    f76da2bbba414ebf3bb00c81e9fdd65b04c66a7f
+%global gh_commit    12b328d382aa5200f1de53d4147033b885776b67
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-feed
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.0
+Version:        2.7.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -46,16 +46,18 @@ BuildRequires:  php-tidy
 BuildRequires:  php-composer(%{gh_owner}/zend-escaper)          >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 # From composer, "require-dev": {
-#        "zendframework/zend-db": "~2.5",
-#        "zendframework/zend-cache": "~2.5",
-#        "zendframework/zend-http": "~2.5",
-#        "zendframework/zend-validator": "~2.5",
+#        "zendframework/zend-db": "^2.5",
+#        "zendframework/zend-cache": "^2.5",
+#        "zendframework/zend-http": "^2.5",
+#        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
+#        "zendframework/zend-validator": "^2.5",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0",
 #        "psr/http-message": "^1.0"
 BuildRequires:  php-composer(%{gh_owner}/zend-db)               >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-cache)            >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-http)             >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
 BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 BuildRequires:  php-composer(psr/http-message)                  >= 1.0
@@ -66,15 +68,15 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.5",
-#        "zendframework/zend-escaper": "~2.5",
-#        "zendframework/zend-stdlib": "~2.5"
+#        "php": "^5.5 || ^7.0",
+#        "zendframework/zend-escaper": "^2.5",
+#        "zendframework/zend-stdlib": "^2.7 || ^3.0"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-escaper)          >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-escaper)          <  3
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 # From composer, "suggest": {
 #        "psr/http-message": "PSR-7 ^1.0, if you wish to use Zend\\Feed\\Reader\\Http\\Psr7ResponseDecorator",
 #        "zendframework/zend-cache": "Zend\\Cache component, for optionally caching feeds between requests",
@@ -175,6 +177,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 12 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
+- update to 2.7.0
+- raise dependency on zend-stdlib >= 2.7
+
 * Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
 - update to 2.6.0
 - raise minimal php version to 5.5
