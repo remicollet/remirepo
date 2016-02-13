@@ -26,7 +26,7 @@ Name:    %{libname}-last
 %else
 Name:    %{libname}
 %endif
-Version: 1.1
+Version: 1.1.1
 Release: 1%{?dist}
 Group:   System Environment/Libraries
 Summary: C library for reading, creating, and modifying zip archives
@@ -36,9 +36,6 @@ URL:     http://www.nih.at/libzip/index.html
 Source0: http://www.nih.at/libzip/libzip-%{version}.tar.xz
 # to handle multiarch headers, ex from mysql-devel package
 Source1: zipconf.h
-
-# fix undefined optopt
-Patch0:  %{libname}-build.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  zlib-devel
@@ -105,8 +102,6 @@ The %{name}-tools package provides command line tools split off %{name}:
 
 %prep
 %setup -q -n %{libname}-%{version}
-
-%patch0 -p0 -b .build
 
 # Avoid lib64 rpaths (FIXME: recheck this on newer releases)
 %if "%{_libdir}" != "/usr/lib"
@@ -181,6 +176,9 @@ make check
 
 
 %changelog
+* Sat Feb 13 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- update to 1.1.1
+
 * Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 1.1-1
 - update to 1.1
 - new ziptool command
