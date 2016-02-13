@@ -45,7 +45,6 @@ BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6.2
 # From composer, "require-dev": {
 #        "zendframework/zend-serializer": "^2.6",
 #        "zendframework/zend-session": "^2.5",
-#        "zendframework/zend-session": "~2.5",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0"
 BuildRequires:  php-composer(%{gh_owner}/zend-serializer)       >= 2.6
