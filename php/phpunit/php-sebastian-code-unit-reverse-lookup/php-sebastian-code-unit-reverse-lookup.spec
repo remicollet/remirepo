@@ -19,7 +19,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 %endif
 
-Name:           php-%{gh_owner}-%{gh_project}
+Name:           php-sebastian-%{gh_project}
 Version:        1.0.0
 Release:        1%{?dist}
 Summary:        Looks up which function or method a line of code belongs to
@@ -46,11 +46,13 @@ Requires:       php(language) >= 5.6
 # From phpcompatinfo report for version 1.0.0
 Requires:       php-reflection
 
-Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
+Provides:       php-composer(sebastian/%{gh_project}) = %{version}
 
 
 %description
 Looks up which function or method a line of code belongs to.
+
+Autoloader: %{php_home}/%{ns_name}/autoload.php
 
 
 %prep
