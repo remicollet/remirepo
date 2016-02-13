@@ -7,16 +7,13 @@
 # Please, preserve the changelog entries
 #
 %{?scl:          %scl_package        php-pecl-pthreads}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name pthreads
 %global ini_name  40-%{pecl_name}.ini
 
 Summary:        Threading API
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        3.1.5
+Version:        3.1.6
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
@@ -35,6 +32,8 @@ Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -71,7 +70,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %setup -q -c
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd %{pecl_name}-%{version}
 
@@ -118,6 +119,7 @@ do sed -e 's/\r//' -i $i
 done
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -134,11 +136,14 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
-
+%endif
 
 
 %check
 cd %{pecl_name}-%{version}
+%ifnarch x86_64
+rm tests/trait-alias-bug.phpt
+%endif
 
 : Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
@@ -168,6 +173,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Feb 13 2016 Remi Collet <remi@fedoraproject.org> - 3.1.6-1
+- Update to 3.1.6 (stable)
+
 * Sun Dec  6 2015 Remi Collet <remi@fedoraproject.org> - 3.1.5-1
 - Update to 3.1.5 (stable)
 
