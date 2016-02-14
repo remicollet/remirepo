@@ -17,7 +17,7 @@
 
 Name:           php-%{gh_project}
 Version:        2.3.8
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Tracy: useful PHP debugger
 
@@ -27,6 +27,9 @@ URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        %{name}-%{version}-%{gh_short}.tgz
 # pull a git snapshot to get test sutie
 Source1:        makesrc.sh
+
+# Fix test for new PHP
+Patch1:         %{name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -81,6 +84,8 @@ To use this library, you just have to add, in your project:
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+
+%patch1 -p1 -b .upstream
 
 # drop upstream autoloader which is outside tree
 rm src/tracy.php
@@ -145,6 +150,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 14 2016 Remi Collet <remi@fedoraproject.org> - 2.3.8-2
+- add upstream patch for new PHP
+
 * Wed Jan 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.8-1
 - update to 2.3.8
 - run test suite with both php 5 and 7 when available
