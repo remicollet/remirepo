@@ -1,0 +1,127 @@
+From d28ddbaf85e4d24fc6b5a10ddb4ad0636f4a3594 Mon Sep 17 00:00:00 2001
+From: Christophe Robert <christophe.robert@babblecar.com>
+Date: Wed, 10 Feb 2016 17:38:50 +0100
+Subject: [PATCH 1/2] Merge property aliases instead of replacing
+
+---
+ src/Transfer/Adapter/FilterPluginManager.php | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
+
+diff --git a/src/Transfer/Adapter/FilterPluginManager.php b/src/Transfer/Adapter/FilterPluginManager.php
+index 3fa9456..a4a1bc3 100644
+--- a/src/Transfer/Adapter/FilterPluginManager.php
++++ b/src/Transfer/Adapter/FilterPluginManager.php
+@@ -10,6 +10,7 @@
+ namespace Zend\File\Transfer\Adapter;
+ 
+ use Zend\Filter\FilterPluginManager as BaseManager;
++use Zend\Filter\File;
+ 
+ /**
+  * Plugin manager implementation for the filter chain.
+@@ -20,16 +21,19 @@
+  */
+ class FilterPluginManager extends BaseManager
+ {
+-    /**
+-     * Default set of filters
+-     *
+-     * @var array
+-     */
+-    protected $aliases = [
+-        'decrypt'   => 'filedecrypt',
+-        'encrypt'   => 'fileencrypt',
+-        'lowercase' => 'filelowercase',
+-        'rename'    => 'filerename',
+-        'uppercase' => 'fileuppercase',
+-    ];
++
++    public function __construct($configOrContainerInstance = null, array $v3config = []) 
++    {
++	parent::__construct($configOrContainerInstance, $v3config);
++        
++	$this->aliases = array_merge(array(
++            'decrypt'       => File\Decrypt::class,
++            'encrypt'       => File\Encrypt::class,
++            'lowercase'     => File\LowerCase::class,
++            'rename'        => File\Rename::class,
++            'uppercase'     => File\UpperCase::class
++        ), $this->aliases);
++    }
++
+ }
++
+
+From 8c7ef68e2e4dd6127ea1a71e763a96005dbb240f Mon Sep 17 00:00:00 2001
+From: Christophe Robert <christophe.robert@babblecar.com>
+Date: Wed, 10 Feb 2016 17:40:18 +0100
+Subject: [PATCH 2/2] update teste
+
+---
+ composer.json                                 | 4 +++-
+ test/Transfer/Adapter/AbstractTest.php        | 2 +-
+ test/Transfer/Adapter/HttpTestMockAdapter.php | 6 ++++--
+ 3 files changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/composer.json b/composer.json
+index 1de3852..3a34854 100644
+--- a/composer.json
++++ b/composer.json
+@@ -17,10 +17,12 @@
+         "zendframework/zend-stdlib": "~2.5"
+     },
+     "require-dev": {
+-        "zendframework/zend-filter": "~2.5",
++        "zendframework/zend-filter": "~2.6",
+         "zendframework/zend-i18n": "~2.5",
+         "zendframework/zend-servicemanager": "~2.5",
+         "zendframework/zend-validator": "~2.5",
++        "zendframework/zend-progressbar": "~2.5",
++        "zendframework/zend-session": "~2.5",
+         "fabpot/php-cs-fixer": "1.7.*",
+         "phpunit/PHPUnit": "~4.0"
+     },
+diff --git a/test/Transfer/Adapter/AbstractTest.php b/test/Transfer/Adapter/AbstractTest.php
+index 294323b..976261a 100644
+--- a/test/Transfer/Adapter/AbstractTest.php
++++ b/test/Transfer/Adapter/AbstractTest.php
+@@ -301,7 +301,7 @@ public function testGetFilterShouldReturnNullWhenNoMatchingIdentifierExists()
+ 
+     public function testAdapterShouldAllowPullingFiltersByFile()
+     {
+-        $this->adapter->addFilter('Boolean', 1, 'foo');
++        $this->adapter->addFilter('Boolean', [1], 'foo');
+         $filters = $this->adapter->getFilters('foo');
+         $this->assertEquals(1, count($filters));
+         $filter = array_shift($filters);
+diff --git a/test/Transfer/Adapter/HttpTestMockAdapter.php b/test/Transfer/Adapter/HttpTestMockAdapter.php
+index ba0aa63..485a5a6 100644
+--- a/test/Transfer/Adapter/HttpTestMockAdapter.php
++++ b/test/Transfer/Adapter/HttpTestMockAdapter.php
+@@ -18,6 +18,8 @@
+  */
+ class HttpTestMockAdapter extends Adapter\Http
+ {
++    static $aa = true;
++
+     public function __construct()
+     {
+         self::$callbackApc = ['ZendTest\File\Transfer\Adapter\HttpTestMockAdapter', 'apcTest'];
+@@ -36,7 +38,7 @@ public function isValidParent($files = null)
+ 
+     public static function isApcAvailable()
+     {
+-        return true;
++        return static::$aa;
+     }
+ 
+     public static function apcTest($id)
+@@ -50,7 +52,7 @@ public static function uPTest($id)
+     }
+ 
+     public function switchApcToUP()
+-    {
++    {	static::$aa = false;
+         self::$callbackApc = null;
+         self::$callbackUploadProgress = ['ZendTest\File\Transfer\Adapter\HttpTestMockAdapter', 'uPTest'];
+     }

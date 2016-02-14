@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.5.1
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -29,6 +29,9 @@ License:        BSD
 URL:            http://framework.zend.com/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
+
+Patch1:         %{name}-upstream.patch
+Patch2:         %{name}-pr14.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -42,16 +45,20 @@ BuildRequires:  php-spl
 BuildRequires:  php-tokenizer
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 # From composer, "require-dev": {
-#        "zendframework/zend-filter": "~2.5",
+#        "zendframework/zend-filter": "~2.6",
 #        "zendframework/zend-i18n": "~2.5",
 #        "zendframework/zend-servicemanager": "~2.5",
 #        "zendframework/zend-validator": "~2.5",
+#        "zendframework/zend-progressbar": "~2.5",
+#        "zendframework/zend-session": "~2.5",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0"
 BuildRequires:  php-composer(%{gh_owner}/zend-filter)           >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-i18n)             >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-progressbar)      >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
@@ -92,6 +99,9 @@ Zend\File is a component used to manage file transfer and class autoloading.
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+
+%patch1 -p1
+%patch2 -p1
 
 
 %build
@@ -144,5 +154,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 14 2016 Remi Collet <remi@fedoraproject.org> - 2.5.1-3
+- add patch for newer zend-filter
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
 - initial package
