@@ -1,0 +1,22 @@
+From 854be70433bfff9b61d45216abd38c512ab16471 Mon Sep 17 00:00:00 2001
+From: David Grudl <david@grudl.com>
+Date: Mon, 8 Feb 2016 01:05:25 +0100
+Subject: [PATCH] tests: fixed for PHP 7.0.3
+
+---
+ tests/Tracy/Dumper.toText().phpt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/Tracy/Dumper.toText().phpt b/tests/Tracy/Dumper.toText().phpt
+index a3f6331..ef21093 100644
+--- a/tests/Tracy/Dumper.toText().phpt
++++ b/tests/Tracy/Dumper.toText().phpt
+@@ -58,7 +58,7 @@ Assert::match('array (5)
+    |  7 => 7
+ ', Dumper::toText(array(1, 'hello', array(), array(1, 2), array(1 => 1, 2, 3, 4, 5, 6, 7))));
+ 
+-Assert::match("stream resource #%d%\n   wrapper_type%A%", Dumper::toText(fopen(__FILE__, 'r')));
++Assert::match("stream resource #%d%\n   %S%%A%", Dumper::toText(fopen(__FILE__, 'r')));
+ 
+ Assert::match('stdClass #%a%', Dumper::toText(new stdClass));
+ 
