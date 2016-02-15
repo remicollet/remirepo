@@ -236,7 +236,7 @@ rm -rf %{buildroot}
 
 %changelog
 * Mon Feb 15 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
-- Update to 1.3.0
+- Update to 1.3.0 (stable)
 
 * Sat Jun 20 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-6
 - allow build against rh-php56 (as more-php56)
