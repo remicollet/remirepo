@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    4745ded9307786b730d7a60df5cb5a6c43cf95f7
+%global gh_commit    3c91bdf81797d725b14cb62906f9a4ce44235972
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpspec
 %global gh_project   prophecy
@@ -19,8 +19,8 @@
 %endif
 
 Name:           php-phpspec-prophecy
-Version:        1.5.0
-Release:        2%{?dist}
+Version:        1.6.0
+Release:        1%{?dist}
 Summary:        Highly opinionated mocking framework for PHP
 
 Group:          Development/Libraries
@@ -40,18 +40,22 @@ BuildRequires:  php-composer(symfony/class-loader)
 %endif
 
 # from composer.json, requires
+#        "php":                               "^5.3|^7.0",
 #        "phpdocumentor/reflection-docblock": "~2.0",
 #        "sebastian/comparator":              "~1.1",
-#        "doctrine/instantiator":             "^1.0.2"
+#        "doctrine/instantiator":             "^1.0.2",
+#        "sebastian/recursion-context":       "~1.0"
+Requires:       php(language) >= 5.3.0
 Requires:       php-composer(phpdocumentor/reflection-docblock) >= 2.0
 Requires:       php-composer(phpdocumentor/reflection-docblock) <  3
 Requires:       php-composer(sebastian/comparator)              >= 1.1
 Requires:       php-composer(sebastian/comparator)              <  2
+Requires:       php-composer(sebastian/recursion-context)       >= 1.0
+Requires:       php-composer(sebastian/recursion-context)       <  2
 # use 1.0.4 to ensure we have the autoloader
 Requires:       php-composer(doctrine/instantiator)             >= 1.0.4
 Requires:       php-composer(doctrine/instantiator)             <  2
 # From phpcompatinfo report for version 1.1.0
-Requires:       php(language) >= 5.3.0
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
@@ -91,6 +95,16 @@ cp -pr src/* %{buildroot}%{_datadir}/php
   -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
   %{_bindir}/phpspec \
   run --format pretty --verbose --no-ansi
+
+if which php70; then
+  # See https://github.com/phpspec/prophecy/issues/258
+  rm spec/Prophecy/Doubler/Generator/ClassMirrorSpec.php
+
+  php70 \
+    -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
+    %{_bindir}/phpspec \
+    run --format pretty --verbose --no-ansi || :
+fi
 %else
 : Test suite disabled
 %endif
@@ -110,6 +124,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 15 2016 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
+- update to 1.6.0
+- add dependency on sebastian/recursion-context
+- run test suite with both PHP 5 and 7 when available
+- ignore 1 failed spec with PHP 7
+  open https://github.com/phpspec/prophecy/issues/258
+
 * Wed Oct 28 2015 Remi Collet <remi@fedoraproject.org> - 1.5.0-2
 - fix autolaoder, rely on include_path for symfony/class-loader
 

@@ -18,4 +18,5 @@ $fedoraClassLoader->addPrefix('Prophecy\\', dirname(__DIR__));
 // Dependencies
 require_once 'Doctrine/Instantiator/autoload.php';
 require_once 'SebastianBergmann/Comparator/autoload.php';
+require_once 'SebastianBergmann/RecursionContext/autoload.php';
 require_once 'phpDocumentor/Reflection/DocBlock/autoload.php';
