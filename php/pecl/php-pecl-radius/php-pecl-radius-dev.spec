@@ -28,16 +28,17 @@
 %else
 %global ini_name  40-%{pecl_name}.ini
 %endif
+%global prever    b1
 
 Name:           %{?sub_prefix}php-pecl-radius
-Version:        1.3.0
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.4.0
+Release:        0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Radius client library
 
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/radius
-Source0:        http://pecl.php.net/get/radius-%{version}.tgz
+Source0:        http://pecl.php.net/get/radius-%{version}%{?prever}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -71,6 +72,10 @@ Obsoletes:     php55w-pecl-%{pecl_name}
 Obsoletes:     php56u-pecl-%{pecl_name}
 Obsoletes:     php56w-pecl-%{pecl_name}
 %endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name}
+Obsoletes:     php70w-pecl-%{pecl_name}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -98,12 +103,12 @@ sed -e 's/role="test"/role="src"/' \
     %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
     -i package.xml
 
-mv %{pecl_name}-%{version} NTS
+mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
 
 extver=$(sed -n '/#define PHP_RADIUS_VERSION/{s/.* "//;s/".*$//;p}' php_radius.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream version is ${extver}, expecting %{version}.
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
 cd ..
@@ -235,6 +240,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 15 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-0.1.b1
+- Update to 1.4.0b1 (beta)
+
 * Mon Feb 15 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - Update to 1.3.0 (stable)
 
