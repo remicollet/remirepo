@@ -1,12 +1,18 @@
-Extension [ <persistent> extension #119 radius version 1.2.7 ] {
+Extension [ <persistent> extension #147 radius version 1.3.0 ] {
 
-  - Constants [162] {
+  - Constants [187] {
     Constant [ integer RADIUS_ACCESS_REQUEST ] { 1 }
     Constant [ integer RADIUS_ACCESS_ACCEPT ] { 2 }
     Constant [ integer RADIUS_ACCESS_REJECT ] { 3 }
     Constant [ integer RADIUS_ACCOUNTING_REQUEST ] { 4 }
     Constant [ integer RADIUS_ACCOUNTING_RESPONSE ] { 5 }
     Constant [ integer RADIUS_ACCESS_CHALLENGE ] { 11 }
+    Constant [ integer RADIUS_DISCONNECT_REQUEST ] { 40 }
+    Constant [ integer RADIUS_DISCONNECT_ACK ] { 41 }
+    Constant [ integer RADIUS_DISCONNECT_NAK ] { 42 }
+    Constant [ integer RADIUS_COA_REQUEST ] { 43 }
+    Constant [ integer RADIUS_COA_ACK ] { 44 }
+    Constant [ integer RADIUS_COA_NAK ] { 45 }
     Constant [ integer RADIUS_USER_NAME ] { 1 }
     Constant [ integer RADIUS_USER_PASSWORD ] { 2 }
     Constant [ integer RADIUS_CHAP_PASSWORD ] { 3 }
@@ -92,6 +98,22 @@ Extension [ <persistent> extension #119 radius version 1.2.7 ] {
     Constant [ integer RADIUS_LOGIN_IPV6_HOST ] { 98 }
     Constant [ integer RADIUS_FRAMED_IPV6_ROUTE ] { 99 }
     Constant [ integer RADIUS_FRAMED_IPV6_POOL ] { 100 }
+    Constant [ integer RADIUS_ERROR_CAUSE ] { 101 }
+    Constant [ integer RADIUS_ERROR_CAUSE_RESIDUAL_SESSION_CONTEXT_REMOVED ] { 201 }
+    Constant [ integer RADIUS_ERROR_CAUSE_INVALID_EAP_PACKET ] { 202 }
+    Constant [ integer RADIUS_ERROR_CAUSE_UNSUPPORTED_ATTRIBUTE ] { 401 }
+    Constant [ integer RADIUS_ERROR_CAUSE_MISSING_ATTRIBUTE ] { 402 }
+    Constant [ integer RADIUS_ERROR_CAUSE_NAS_IDENTIFICATION_MISMATCH ] { 403 }
+    Constant [ integer RADIUS_ERROR_CAUSE_INVALID_REQUEST ] { 404 }
+    Constant [ integer RADIUS_ERROR_CAUSE_UNSUPPORTED_SERVICE ] { 405 }
+    Constant [ integer RADIUS_ERROR_CAUSE_UNSUPPORTED_EXCEPTION ] { 406 }
+    Constant [ integer RADIUS_ERROR_CAUSE_ADMINISTRATIVELY_PROHIBITED ] { 501 }
+    Constant [ integer RADIUS_ERROR_CAUSE_REQUEST_NOT_ROUTABLE ] { 502 }
+    Constant [ integer RADIUS_ERROR_CAUSE_SESSION_CONTEXT_NOT_FOUND ] { 503 }
+    Constant [ integer RADIUS_ERROR_CAUSE_SESSION_CONTEXT_NOT_REMOVABLE ] { 504 }
+    Constant [ integer RADIUS_ERROR_CAUSE_OTHER_PROXY_PROCESSING_ERROR ] { 505 }
+    Constant [ integer RADIUS_ERROR_CAUSE_RESOURCES_UNAVAILABLE ] { 506 }
+    Constant [ integer RADIUS_ERROR_CAUSE_REQUEST_INITIATED ] { 507 }
     Constant [ integer RADIUS_ACCT_STATUS_TYPE ] { 40 }
     Constant [ integer RADIUS_START ] { 1 }
     Constant [ integer RADIUS_STOP ] { 2 }
@@ -162,6 +184,9 @@ Extension [ <persistent> extension #119 radius version 1.2.7 ] {
     Constant [ integer RADIUS_MICROSOFT_MS_PRIMARY_NBNS_SERVER ] { 30 }
     Constant [ integer RADIUS_MICROSOFT_MS_SECONDARY_NBNS_SERVER ] { 31 }
     Constant [ integer RADIUS_MICROSOFT_MS_ARAP_CHALLENGE ] { 33 }
+    Constant [ integer RADIUS_OPTION_NONE ] { 0 }
+    Constant [ integer RADIUS_OPTION_TAGGED ] { 1 }
+    Constant [ integer RADIUS_OPTION_SALT ] { 2 }
     Constant [ integer RADIUS_MPPE_KEY_LEN ] { 16 }
   }
 
@@ -200,6 +225,10 @@ Extension [ <persistent> extension #119 radius version 1.2.7 ] {
     }
     Function [ <internal:radius> function radius_get_attr ] {
     }
+    Function [ <internal:radius> function radius_get_tagged_attr_data ] {
+    }
+    Function [ <internal:radius> function radius_get_tagged_attr_tag ] {
+    }
     Function [ <internal:radius> function radius_get_vendor_attr ] {
     }
     Function [ <internal:radius> function radius_cvt_addr ] {
@@ -207,6 +236,8 @@ Extension [ <persistent> extension #119 radius version 1.2.7 ] {
     Function [ <internal:radius> function radius_cvt_int ] {
     }
     Function [ <internal:radius> function radius_cvt_string ] {
+    }
+    Function [ <internal:radius> function radius_salt_encrypt_attr ] {
     }
     Function [ <internal:radius> function radius_request_authenticator ] {
     }

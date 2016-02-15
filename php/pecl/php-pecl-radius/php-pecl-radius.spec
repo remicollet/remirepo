@@ -20,12 +20,9 @@
 %endif
 
 %{?scl:          %scl_package         php-pecl-radius}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
 
-%global pecl_name  radius
-%global with_zts   0%{?__ztsphp:1}
+%global pecl_name radius
+%global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 %global ini_name  %{pecl_name}.ini
 %else
@@ -33,18 +30,14 @@
 %endif
 
 Name:           %{?sub_prefix}php-pecl-radius
-Version:        1.2.7
-Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.3.0
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Radius client library
 
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/radius
 Source0:        http://pecl.php.net/get/radius-%{version}.tgz
-
-# https://bugs.php.net/65156 ask license file
-# file created from the radius.c headers
-Source1:        LICENSE
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -57,10 +50,12 @@ Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -92,21 +87,19 @@ and extensions.  This PECL provides full support for RADIUS authentication
 Its an easy way to authenticate your users against the user-database of your
 OS (for example against Windows Active-Directory via IAS).
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
 %setup -qc
 
-sed -e '/CREDITS/s/role="src"/role="doc"/' -i package.xml
-
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 mv %{pecl_name}-%{version} NTS
 cd NTS
-
-cp %{SOURCE1} LICENSE
 
 extver=$(sed -n '/#define PHP_RADIUS_VERSION/{s/.* "//;s/".*$//;p}' php_radius.h)
 if test "x${extver}" != "x%{version}"; then
@@ -158,7 +151,7 @@ install -Dpm644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 # Documentation
 cd NTS
-for i in LICENSE  $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -202,6 +195,7 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -218,6 +212,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -226,6 +221,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -239,6 +235,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 15 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- Update to 1.3.0
+
 * Sat Jun 20 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-6
 - allow build against rh-php56 (as more-php56)
 - drop runtime dependency on pear, new scriptlets
