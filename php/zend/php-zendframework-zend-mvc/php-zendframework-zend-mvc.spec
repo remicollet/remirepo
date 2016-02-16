@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    cdecf4f52019a5aeedcb6e8c867e2501b99616ca
+%global gh_commit    9e103a9250dcad753d29bf22cafdaaec3483e22e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-mvc
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.0
+Version:        2.6.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -89,12 +89,12 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.5",
+#        "php": "^5.5 || ^7.0",
 #        "zendframework/zend-eventmanager": "~2.5",
 #        "zendframework/zend-servicemanager": "~2.5",
 #        "zendframework/zend-hydrator": "~1.0",
 #        "zendframework/zend-form": "~2.6",
-#        "zendframework/zend-stdlib": "~2.7"
+#        "zendframework/zend-stdlib": "^2.7.5"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
@@ -231,6 +231,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb 16 2016 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
+- update to 2.6.1
+- raise dependency on zend-stdlib ^2.7.5
+
 * Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
 - update to 2.6.0
 - raise dependencies on zend-form ^2.6 and zend-stdlib ^2.7
