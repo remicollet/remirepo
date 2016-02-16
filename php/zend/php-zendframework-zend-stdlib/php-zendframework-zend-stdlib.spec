@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    cae029346a33663b998507f94962eb27de060683
+%global gh_commit    b894a85f3ef8a52e7aa62c3c5aa245e383c70cca
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-stdlib
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.4
+Version:        2.7.5
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -65,7 +65,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.5",
+#        "php": "^5.5 || ^7.0",
 #        "zendframework/zend-hydrator": "~1.0"
 Requires:       php(language) >= 5.5
 Requires:       php-composer(%{gh_owner}/zend-hydrator)         >= 1.0
@@ -164,6 +164,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb 16 2016 Remi Collet <remi@fedoraproject.org> - 2.7.5-1
+- update to 2.7.5
+
 * Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.7.4-1
 - update to 2.7.4
 - add dependency on zendframework/zend-hydrator ^1.0.0
