@@ -98,7 +98,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.4.45
-Release: 3%{?dist}
+Release: 4%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -162,6 +162,14 @@ Patch202: bug70755.patch
 Patch203: bug70728.patch
 Patch204: bug70741.patch
 Patch205: bug70661.patch
+Patch206: bug71354.patch
+Patch207: bug71335.patch
+Patch208: bug71391.patch
+Patch209: bug71323.patch
+Patch210: bug71459.patch
+Patch211: bug71039.patch
+Patch212: bug71488.patch
+Patch213: pcre838.patch
 
 # Fixes for tests
 # no_NO issue
@@ -875,6 +883,14 @@ rm -f ext/json/utf8_to_utf16.*
 %patch203 -p1 -b .bug70728
 %patch204 -p1 -b .bug70741
 %patch205 -p1 -b .bug70661
+%patch206 -p1 -b .bug71354
+%patch207 -p1 -b .bug71335
+%patch208 -p1 -b .bug71391
+%patch209 -p1 -b .bug71323
+%patch210 -p1 -b .bug71459
+%patch211 -p1 -b .bug71039
+%patch212 -p1 -b .bug71488
+%patch213 -p1 -b .pcre838
 
 # Fixes for tests
 %patch301 -p1 -b .datetests2
@@ -1531,7 +1547,7 @@ rm -rf $RPM_BUILD_ROOT%{_libdir}/php/modules/*.a \
 rm -f README.{Zeus,QNX,CVS-RULES}
 
 
-%pre common
+%posttrans common
 cat << EOF
 ==========================================================================
 
@@ -1764,6 +1780,17 @@ fi
 
 
 %changelog
+* Tue Feb 16 2016 Remi Collet <remi@remirepo.net> 5.4.45-4
+- Fix #71354: phar, remove UMR when size is 0
+- Fix #71335: type confusion in WDDX packet deserialization
+- Fix #71391: NULL pointer dereference in phar_tar_setupmetadata()
+- Fix #71323: output of stream_get_meta_data can be falsified by its input
+- Fix #71459: integer overflow in iptcembed()
+- Fix #71039: exec functions ignore length but look for NULL termination
+- Fix #71720: heap bufferover flow in escapeshell functions
+- Fix #71488: Stack overflow when decompressing tar archives
+- upgrade bundled PCRE to 8.38
+
 * Wed Jan  6 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-3
 - Fix #70755: fpm_log.c memory leak and buffer overflow
 - Fix #70728: Type Confusion Vulnerability in PHP_to_XMLRPC_worker
