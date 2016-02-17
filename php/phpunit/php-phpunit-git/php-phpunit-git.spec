@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    2d5c139d0eedcb9e67e0e9ca08023be6e9b7b47b
+%global gh_commit    a50659f5dc0a4ea9c713c123043f3fb9125bc1b1
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   git
@@ -16,7 +16,7 @@
 %global with_tests   %{?_without_tests:1}%{!?_without_tests:0}
 
 Name:           php-phpunit-git
-Version:        2.0.1
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Simple wrapper for Git
 
@@ -34,7 +34,8 @@ Requires:       git
 # From composer.json
 #      "php": ">=5.3.3"
 Requires:       php(language) >= 5.3.3
-# From phpcompatinfo report for 1.2.0
+# From phpcompatinfo report for 2.1.0
+Requires:       php-date
 Requires:       php-spl
 
 Provides:       php-composer(sebastian/git) = %{version}
@@ -88,6 +89,9 @@ fi
 
 
 %changelog
+* Wed Feb 17 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- update to 2.1.0
+
 * Tue Apr  7 2015 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - update to 2.0.1
 
