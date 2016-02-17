@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a520dcc3dd39160eea480daa3426f4fd419a327b
+%global gh_commit    2a6f7f57efc0aa2d23297d9fd9e2a03111a8c0b9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   finder-facade
@@ -16,8 +16,8 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-FinderFacade
-Version:        1.2.0
-Release:        3%{?dist}
+Version:        1.2.1
+Release:        1%{?dist}
 Summary:        Wrapper for Symfony Finder component
 
 Group:          Development/Libraries
@@ -40,13 +40,13 @@ BuildRequires:  php-composer(symfony/class-loader)
 
 # From composer.json "require": {
 #        "theseer/fdomdocument": "~1.3",
-#        "symfony/finder": "~2.3"
+#        "symfony/finder": "~2.3|~3.0"
 Requires:       php(language) >= 5.3.3
 Requires:       php-composer(theseer/fdomdocument) >= 1.3
 Requires:       php-composer(theseer/fdomdocument) <  2
 Requires:       php-composer(symfony/finder) >=  2.3
-Requires:       php-composer(symfony/finder) <   3
-# From phpcompatinfo report for version 1.2.0
+Requires:       php-composer(symfony/finder) <   4
+# From phpcompatinfo report for version 1.2.1
 Requires:       php-ctype
 # For our autoloader
 Requires:       php-composer(symfony/class-loader)
@@ -79,9 +79,19 @@ cp -pr src %{buildroot}%{php_home}/SebastianBergmann/FinderFacade
 
 %if %{with_tests}
 %check
-phpunit \
-  --bootstrap %{buildroot}%{php_home}/SebastianBergmann/FinderFacade/autoload.php \
-  --verbose tests
+%{_bindir}/php \
+    -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+    %{_bindir}/phpunit \
+        --bootstrap %{buildroot}%{php_home}/SebastianBergmann/FinderFacade/autoload.php \
+        --verbose tests
+
+if which php70; then
+php70 \
+    -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+    %{_bindir}/phpunit \
+        --bootstrap %{buildroot}%{php_home}/SebastianBergmann/FinderFacade/autoload.php \
+        --verbose tests
+fi
 %endif
 
 
@@ -107,6 +117,10 @@ fi
 
 
 %changelog
+* Wed Feb 17 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- update to 1.2.1
+- run test suite with both PHP 5 and 7 when available
+
 * Mon Jun 29 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-3
 - switch to $fedoraClassLoader autoloader
 
