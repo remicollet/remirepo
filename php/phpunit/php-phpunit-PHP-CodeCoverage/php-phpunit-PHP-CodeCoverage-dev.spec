@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    85f5db2d0a0da79ad6a256eb54148ba383059ad9
+%global gh_commit    a58f95ae76fe201b571fad3e8370a50c4368678c
 #global gh_date      20150924
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHP_CodeCoverage
 %global pear_channel pear.phpunit.de
 %global major        3.2
-%global minor        0
+%global minor        1
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
@@ -50,9 +50,9 @@ BuildRequires:  php-pecl-xdebug  >= 2.1.4
 %endif
 
 # From composer.json, require
-#        "php": ">=5.6",
+#        "php": "^5.6 || ^7.0",
 #        "phpunit/php-file-iterator": "~1.3",
-#        "phpunit/php-token-stream": "~1.3",
+#        "phpunit/php-token-stream": "^1.4.2",
 #        "phpunit/php-text-template": "~1.2",
 #        "sebastian/code-unit-reverse-lookup": "~1.0",
 #        "sebastian/environment": "^1.3.2",
@@ -60,7 +60,7 @@ BuildRequires:  php-pecl-xdebug  >= 2.1.4
 Requires:       php(language) >= 5.6
 Requires:       php-composer(phpunit/php-file-iterator) >= 1.3
 Requires:       php-composer(phpunit/php-file-iterator) <  2
-Requires:       php-composer(phpunit/php-token-stream) >= 1.3
+Requires:       php-composer(phpunit/php-token-stream) >= 1.4.2
 Requires:       php-composer(phpunit/php-token-stream) <  2
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
@@ -161,6 +161,10 @@ fi
 
 
 %changelog
+* Thu Feb 18 2016 Remi Collet <remi@fedoraproject.org> - 3.2.1-1
+- Update to 3.2.1
+- raise dependency on php-token-stream >= 1.4.2
+
 * Sat Feb 13 2016 Remi Collet <remi@fedoraproject.org> - 3.2.0-1
 - Update to 3.2.0
 - add dependency on sebastian/code-unit-reverse-lookup
