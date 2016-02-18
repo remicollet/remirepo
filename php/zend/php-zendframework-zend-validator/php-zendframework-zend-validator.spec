@@ -176,10 +176,13 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Fri Sep  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
-- Update to 2.5.3
+* Thu Feb 18 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- Update to 2.6.0
 - raise dependency on zend-stdlib ^2.7
 - add dependency on container-interop/container-interop
+
+* Fri Sep  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
+- Update to 2.5.3
 
 * Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-2
 - fix description
