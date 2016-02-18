@@ -1,4 +1,4 @@
-===== 7.0.3 (2016-02-03)
+===== 7.0.4RC1 (2016-02-18)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
@@ -9,7 +9,7 @@ $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 /var/lib/mock/fc21x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 /var/lib/mock/fc22i/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 /var/lib/mock/fc22x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
-/var/lib/mock/fc23i/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
+/var/lib/mock/fc23i/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 /var/lib/mock/fc23x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 
 
@@ -17,8 +17,6 @@ el6i, el6x, el7x
     Bug #33414 [2] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-2.phpt]
 el6x, el7x
     strtotime() function (64 bit) [ext/date/tests/strtotime3-64bit.phpt]
-fc23i
-    Bug #55259 (openssl extension does not get the DH parameters from DH key resource) [ext/openssl/tests/bug55259.phpt]
 
 
 * proc_open give erratic test results :(

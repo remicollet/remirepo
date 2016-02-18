@@ -125,13 +125,13 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver        RC1
+%global rcver        RC1
 %global rpmrel       1
 
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 7.0.3
+Version: 7.0.4
 %if 0%{?gh_date}
 Release: 0.%{rpmrel}.%{gh_date}git%{gh_short}%{?dist}
 %else
@@ -206,7 +206,6 @@ Patch300: php-5.6.3-datetests.patch
 Patch301: php-7.0.0-oldpcre.patch
 
 # WIP
-Patch401: php-bug62172.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -923,7 +922,6 @@ fi
 %endif
 
 # WIP patch
-%patch401 -p1 -b .bug62172
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -1828,6 +1826,9 @@ fi
 
 
 %changelog
+* Thu Feb 18 2016 Remi Collet <remi@fedoraproject.org> 7.0.4-0.1.0RC1
+- Update to 7.0.4RC1
+
 * Wed Feb  3 2016 Remi Collet <remi@fedoraproject.org> 7.0.3-1
 - Update to 7.0.3
   http://www.php.net/releases/7_0_3.php
