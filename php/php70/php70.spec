@@ -13,6 +13,7 @@
 %global zendver     20151012
 %global pdover      20150127
 # Extension version
+%global fileinfover 1.0.5
 %global opcachever  7.0.6-dev
 %global oci8ver     2.1.0
 %global zipver      1.13.0
@@ -391,6 +392,8 @@ Requires:  php-json%{?_isa}
 
 Obsoletes: php-pecl-phar < 1.2.4
 Obsoletes: php-pecl-Fileinfo < 1.0.5
+Provides:  php-pecl-Fileinfo = %{fileinfover}, php-pecl-Fileinfo%{?_isa} = %{fileinfover}
+Provides:  php-pecl(Fileinfo) = %{fileinfover}, php-pecl(Fileinfo)%{?_isa} = %{fileinfover}
 Obsoletes: php-mhash < 5.3.0
 Obsoletes: php53-mhash, php53u-mhash
 Obsoletes: php53-common, php53u-common, php54-common, php54w-common, php55u-common, php55w-common, php56u-common, php56w-common, php70u-common, php70w-common
