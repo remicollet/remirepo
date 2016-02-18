@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    98f5f048c0c20b823a897eca14f0b57ca47d8066
+%global gh_commit    0b2946c107cd2d8f0ec1244edffc37fceed96f5f
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.2
-%global minor        6
+%global minor        8
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -60,10 +60,10 @@ BuildRequires:  php-composer(symfony/class-loader) >= 2.0
 BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 
 # From composer.json
-#        "php": ">=5.6",
+#        "php": "^5.6 || ^7.0",
 #        "phpunit/php-file-iterator": "~1.4",
 #        "phpunit/php-text-template": "~1.2",
-#        "phpunit/php-code-coverage": "~3.2",
+#        "phpunit/php-code-coverage": "^3.2.1",
 #        "phpunit/php-timer": ">=1.0.6",
 #        "phpunit/phpunit-mock-objects": "~3.0",
 #        "phpspec/prophecy": "^1.3.1",
@@ -88,7 +88,7 @@ Requires:       php-composer(phpunit/php-file-iterator) >= 1.4
 Requires:       php-composer(phpunit/php-file-iterator) <  2
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
-Requires:       php-composer(phpunit/php-code-coverage) >= 3.2
+Requires:       php-composer(phpunit/php-code-coverage) >= 3.2.1
 Requires:       php-composer(phpunit/php-code-coverage) <  4
 Requires:       php-composer(phpunit/php-timer) >= 1.0.6
 Requires:       php-composer(phpunit/php-timer) <  2
@@ -215,6 +215,10 @@ fi
 
 
 %changelog
+* Thu Feb 18 2016 Remi Collet <remi@fedoraproject.org> - 5.2.8-1
+- Update to 5.2.8
+- raise dependency on phpunit/php-code-coverage >= 3.2.1
+
 * Tue Feb 16 2016 Remi Collet <remi@fedoraproject.org> - 5.2.6-1
 - Update to 5.2.6
 
