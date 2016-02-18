@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    e2cb613512f5d1c82448601071e47df5c050e6af
+%global gh_commit    b937884a9fe14e0a354dbf02d50cf832a61176c0
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-file
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.2
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -42,18 +42,18 @@ BuildRequires:  php-spl
 BuildRequires:  php-tokenizer
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 # From composer, "require-dev": {
-#        "zendframework/zend-filter": "~2.6",
-#        "zendframework/zend-i18n": "~2.5",
-#        "zendframework/zend-servicemanager": "~2.5",
-#        "zendframework/zend-validator": "~2.5",
+#        "zendframework/zend-filter": "^2.6.1",
+#        "zendframework/zend-i18n": "^2.6",
+#        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
+#        "zendframework/zend-validator": "^2.6",
 #        "zendframework/zend-progressbar": "~2.5",
 #        "zendframework/zend-session": "~2.5",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0"
-BuildRequires:  php-composer(%{gh_owner}/zend-filter)           >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-i18n)             >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-filter)           >= 2.6.1
+BuildRequires:  php-composer(%{gh_owner}/zend-i18n)             >= 2.6
+BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
+BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-progressbar)      >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
@@ -63,11 +63,11 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 
 # From composer, "require": {
 #        "php": "^5.5 || ^7.0",
-#        "zendframework/zend-stdlib": "~2.5"
+#        "zendframework/zend-stdlib": "^2.7 || ^3.0"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 # From composer, "suggest": {
 #        "zendframework/zend-filter": "Zend\\Filter component",
 #        "zendframework/zend-i18n": "Zend\\I18n component",
@@ -78,10 +78,11 @@ Suggests:       php-composer(%{gh_owner}/zend-i18n)
 Suggests:       php-composer(%{gh_owner}/zend-validator)
 %endif
 %endif
-# From phpcompatinfo report for version 2.5.1
+# From phpcompatinfo report for version 2.6.0
 Requires:       php-fileinfo
 Requires:       php-hash
 Requires:       php-pcre
+Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-tokenizer
 
@@ -149,6 +150,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb 18 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- update to 2.6.0
+- raise dependency on zend-stdlib >= 2.7
+
 * Wed Feb 17 2016 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - update to 2.5.2
 - raise dependency on PHP >= 5.5
