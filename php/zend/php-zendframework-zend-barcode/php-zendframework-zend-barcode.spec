@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    f20a7afaf32045ea1623817d754d4b1e8a70aea0
+%global gh_commit    9201afb8a1356f149ddb955a3c9e017f47c0dd6c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-barcode
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.2
-Release:        2%{?dist}
+Version:        2.6.0
+Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -40,15 +40,15 @@ BuildRequires:  php-gd
 BuildRequires:  php-iconv
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
-BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
 # From composer, "require-dev": {
-#        "zendframework/zend-config": "~2.5",
+#        "zendframework/zend-config": "^2.6",
 #        "zendframework/zendpdf": "*",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0"
-BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.6
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Ommit zendpdf because of build order
 # Autoloader
@@ -56,25 +56,25 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.5",
-#        "zendframework/zend-stdlib": "~2.5",
-#        "zendframework/zend-validator": "~2.5",
-#        "zendframework/zend-servicemanager": "~2.5"
+#        "php": "^5.5 || ^7.0",
+#        "zendframework/zend-stdlib": "^2.7 || ^3.0",
+#        "zendframework/zend-validator": "^2.6",
+#        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
-Requires:       php-composer(%{gh_owner}/zend-validator)        >= 2.5
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
+Requires:       php-composer(%{gh_owner}/zend-validator)        >= 2.6
 Requires:       php-composer(%{gh_owner}/zend-validator)        <  3
-Requires:       php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-servicemanager)   <  3
+Requires:       php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
+Requires:       php-composer(%{gh_owner}/zend-servicemanager)   <  4
 # From composer, "suggest": {
 #        "zendframework/zendpdf": "ZendPdf component"
 %if 0%{?fedora} >= 21
 Suggests:       php-composer(%{gh_owner}/zendpdf)
 %endif
 %endif
-# From phpcompatinfo report for version 2.5.2
+# From phpcompatinfo report for version 2.6.0
 Requires:       php-dom
 Requires:       php-gd
 Requires:       php-iconv
@@ -111,14 +111,14 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 %check
 %if %{with_tests}
 mkdir vendor
-cat << EOF | tee vendor/autoload.php
+cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
-Zend\\Loader\\AutoloaderFactory::factory(array(
-    'Zend\\Loader\\StandardAutoloader' => array(
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\StandardAutoloader' => array(
         'namespaces' => array(
-           'ZendTest\\\\%{library}' => dirname(__DIR__).'/test/',
-           'Zend\\\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
+           'ZendTest\\%{library}' => dirname(__DIR__).'/test/',
+           'Zend\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
 EOF
@@ -147,6 +147,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb 18 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- update to 2.6.0
+- raise dependency on zend-stdlib ^2.7
+- raise dependency on zend-servicemanager ^2.7.5
+
 * Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-2
 - add optional dependency on zendframework/zendpdf
 
