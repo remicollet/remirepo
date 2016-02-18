@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    53e567a58c8952a03da0b8edf0f075303a5ac5d1
+%global gh_commit    1315fead53358054e3f5fcf440c1a4cd5f0724db
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-validator
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.3
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -42,28 +42,29 @@ BuildRequires:  php-hash
 BuildRequires:  php-intl
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
-BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)             >= 2.7
+Requires:       php-composer(container-interop/container-interop) > 1.1
 # From composer, "require-dev": {
-#        "zendframework/zend-cache": "~2.5",
-#        "zendframework/zend-config": "~2.5",
-#        "zendframework/zend-db": "~2.5",
-#        "zendframework/zend-filter": "~2.5",
-#        "zendframework/zend-http": "~2.5",
-#        "zendframework/zend-i18n": "~2.5",
-#        "zendframework/zend-math": "~2.5",
-#        "zendframework/zend-servicemanager": "~2.5",
-#        "zendframework/zend-session": "~2.5",
-#        "zendframework/zend-uri": "~2.5",
+#        "zendframework/zend-cache": "^2.6.1",
+#        "zendframework/zend-config": "^2.6",
+#        "zendframework/zend-db": "^2.5",
+#        "zendframework/zend-filter": "^2.6",
+#        "zendframework/zend-http": "^2.5.4",
+#        "zendframework/zend-i18n": "^2.6",
+#        "zendframework/zend-math": "^2.6",
+#        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
+#        "zendframework/zend-session": "^2.5",
+#        "zendframework/zend-uri": "^2.5",
 #        "fabpot/php-cs-fixer": "1.7.*",
-#        "phpunit/PHPUnit": "~4.0"
-BuildRequires:  php-composer(%{gh_owner}/zend-cache)            >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.5
+#        "phpunit/PHPUnit": "^4.0"
+BuildRequires:  php-composer(%{gh_owner}/zend-cache)            >= 2.6.1
+BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-db)               >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-filter)           >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-http)             >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-i18n)             >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-math)             >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-filter)           >= 2.6
+BuildRequires:  php-composer(%{gh_owner}/zend-http)             >= 2.5.4
+BuildRequires:  php-composer(%{gh_owner}/zend-i18n)             >= 2.6
+BuildRequires:  php-composer(%{gh_owner}/zend-math)             >= 2.6
+BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
 BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-uri)              >= 2.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
@@ -72,12 +73,15 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.5",
-#        "zendframework/zend-stdlib": "~2.5"
+#        "php": "^5.5 || ^7.0",
+#        "zendframework/zend-stdlib": "^2.7 || ^3.0",
+#        "container-interop/container-interop": "^1.1"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
+Requires:       php-composer(%{gh_owner}/zend-stdlib)             >= 2.7
+Requires:       php-composer(%{gh_owner}/zend-stdlib)             <  4
+Requires:       php-composer(container-interop/container-interop) > 1.1
+Requires:       php-composer(container-interop/container-interop) < 2
 # From composer, "suggest": {
 #        "zendframework/zend-db": "Zend\\Db component",
 #        "zendframework/zend-filter": "Zend\\Filter component, required by the Digits validator",
@@ -174,6 +178,8 @@ rm -rf %{buildroot}
 %changelog
 * Fri Sep  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
 - Update to 2.5.3
+- raise dependency on zend-stdlib ^2.7
+- add dependency on container-interop/container-interop
 
 * Thu Aug  6 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-2
 - fix description
