@@ -23,11 +23,11 @@
 %{!?__php:       %global __php        %{_bindir}/php}
 %{!?scl:         %global _root_bindir %{_bindir}}
 # See https://github.com/phpredis/phpredis/commits/php7
-%global gh_commit   0d4b42118c13d3ab1d925039b332526f7c96aaba
+%global gh_commit   2887ad1130aba5aee029a64140d111544e62d56d
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    phpredis
 %global gh_project  phpredis
-%global gh_date     20160208
+%global gh_date     20160215
 %global pecl_name   redis
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global with_tests  0%{?_with_tests:1}
@@ -44,7 +44,7 @@ Summary:       Extension for communicating with the Redis key-value store
 Name:          %{?sub_prefix}php-pecl-redis
 Version:       2.2.8
 %if 0%{?gh_date}
-Release:       0.3.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
@@ -123,7 +123,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %if 0%{?gh_date}
 %setup -qc
 mv %{gh_project}-%{gh_commit} NTS
-sed -e '/PHP_REDIS_VERSION/s/2.2.5/%{version}-dev/' -i NTS/php_redis.h
+sed -e '/PHP_REDIS_VERSION/s/2.2.8-devphp7/%{version}-dev/' -i NTS/php_redis.h
 %{__php} -r '
   $pkg = simplexml_load_file("NTS/package.xml");
   $pkg->date = substr("%{gh_date}",0,4)."-".substr("%{gh_date}",4,2)."-".substr("%{gh_date}",6,2);
@@ -330,6 +330,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 19 2016 Remi Collet <remi@fedoraproject.org> - 2.2.8-0.4.20160215git2887ad1
+- refresh
+
 * Thu Feb 11 2016 Remi Collet <remi@fedoraproject.org> - 2.2.8-0.3.20160208git0d4b421
 - refresh
 

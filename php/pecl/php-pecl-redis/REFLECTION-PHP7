@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #84 redis version 2.2.8-dev ] {
+Extension [ <persistent> extension #85 redis version 2.2.8-dev ] {
 
   - INI {
     Entry [ redis.arrays.names <ALL> ]
