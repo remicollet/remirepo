@@ -144,7 +144,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+* Fri Feb 19 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - update to 1.1.0
 - raise dependency on zend-stdlib >= 2.7
 
