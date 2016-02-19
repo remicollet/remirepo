@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    39688ca9903cf8b001b0b1849f4128268b9ce4e4
+%global gh_commit    fa6805bb6695d7b9542386600881b8fc81f82103
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-log
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.0
+Version:        2.7.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -171,6 +171,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 19 2016 Remi Collet <remi@fedoraproject.org> - 2.7.1-1
+- update to 2.7.1
+
 * Fri Feb 12 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
 - update to 2.7.0
 - raise dependency on zend-stdlib >= 2.7
