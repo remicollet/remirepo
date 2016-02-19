@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    68b1357c6389d476d80c050a75bf3091e873202c
+%global gh_commit    6dc8a3a262c9d70889ec846124482db3edab9b39
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-mail
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.2
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -46,41 +46,34 @@ BuildRequires:  php-composer(%{gh_owner}/zend-mime)             >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.5
 # From composer, "require-dev": {
-#        "zendframework/zend-config": "~2.5",
-#        "zendframework/zend-servicemanager": "~2.5",
+#        "zendframework/zend-config": "^2.6",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0"
-BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.6
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.5",
-#        "zendframework/zend-crypt": "~2.5",
-#        "zendframework/zend-loader": "~2.5",
-#        "zendframework/zend-mime": "~2.5",
-#        "zendframework/zend-stdlib": "~2.5",
-#        "zendframework/zend-validator": "~2.5"
+#        "php": "^5.5 || ^7.0",
+#        "zendframework/zend-crypt": "^2.6",
+#        "zendframework/zend-loader": "^2.5",
+#        "zendframework/zend-mime": "^2.5",
+#        "zendframework/zend-stdlib": "^2.7 || ^3.0",
+#        "zendframework/zend-validator": "^2.6"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
-Requires:       php-composer(%{gh_owner}/zend-crypt)            >= 2.5
+Requires:       php-composer(%{gh_owner}/zend-crypt)            >= 2.6
 Requires:       php-composer(%{gh_owner}/zend-crypt)            <  3
 Requires:       php-composer(%{gh_owner}/zend-loader)           >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-loader)           <  3
 Requires:       php-composer(%{gh_owner}/zend-mime)             >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-mime)             <  3
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
-Requires:       php-composer(%{gh_owner}/zend-validator)        >= 2.5
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
+Requires:       php-composer(%{gh_owner}/zend-validator)        >= 2.6
 Requires:       php-composer(%{gh_owner}/zend-validator)        <  3
-# From composer, "suggest": {
-#        "zendframework/zend-servicemanager": "Zend\\ServiceManager component"
-%if 0%{?fedora} >= 21
-Suggests:       php-composer(%{gh_owner}/zend-servicemanager)
-%endif
 %endif
 # From phpcompatinfo report for version 2.5.1
 Requires:       php-ctype
@@ -132,6 +125,12 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
+if %{_bindir}/phpunit --atleast-version 5
+then
+  : Skip test not compatible with PHPUnit 5
+  rm test/Header/SenderTest.php
+fi
+
 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
 
 if which php70; then
@@ -156,6 +155,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 19 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- update to 2.6.0
+- raise dependency on zend-crypt >= 2.6
+- raise dependency on zend-stdlib >= 2.7
+- raise dependency on zend-validator >= 2.6
+
 * Fri Sep 11 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - update to 2.5.2
 - raise minimum PHP version to 5.5
