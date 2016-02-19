@@ -128,9 +128,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 19 2016 Remi Collet <remi@fedoraproject.org> - 2.6.3-1
+- update to 2.6.3
+- raise dependency on zend-stdlib >= 2.7
+
 * Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.6.2-1
 - update to 2.6.2
-- raise dependency on zend-stdlib >= 2.7
 
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - initial package
