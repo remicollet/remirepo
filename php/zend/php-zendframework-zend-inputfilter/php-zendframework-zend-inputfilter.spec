@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    3208cddbb92df029230cde676a5c8e5a22b531c6
+%global gh_commit    b3b043284b7eec2ae5a3c51e1f81db06f2e167a1
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-inputfilter
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.5
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -40,30 +40,28 @@ BuildRequires:  php-composer(%{gh_owner}/zend-filter)           >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.5.3
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 # From composer, "require-dev": {
-#        "zendframework/zend-i18n": "~2.5",
-#        "zendframework/zend-servicemanager": "~2.5",
+#        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "^4.5"
-BuildRequires:  php-composer(%{gh_owner}/zend-i18n)             >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.5
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.5"
-#        "zendframework/zend-filter": "~2.5",
-#        "zendframework/zend-validator": "^2.5.3",
-#        "zendframework/zend-stdlib": "~2.5"
+#        "php": "^5.5 || ^7.0",
+#        "zendframework/zend-filter": "^2.6",
+#        "zendframework/zend-validator": "^2.6",
+#        "zendframework/zend-stdlib": "^2.7 || ^3.0"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
-Requires:       php-composer(%{gh_owner}/zend-filter)           >= 2.5
+Requires:       php-composer(%{gh_owner}/zend-filter)           >= 2.6
 Requires:       php-composer(%{gh_owner}/zend-filter)           <  3
-Requires:       php-composer(%{gh_owner}/zend-validator)        >= 2.5.3
+Requires:       php-composer(%{gh_owner}/zend-validator)        >= 2.6
 Requires:       php-composer(%{gh_owner}/zend-validator)        <  3
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 # From composer, "suggest": {
 #        "zendframework/zend-servicemanager": "To support plugin manager support"
 %if 0%{?fedora} >= 21
@@ -101,6 +99,12 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 
 %check
 %if %{with_tests}
+if %{_bindir}/phpunit --atleast-version 5
+then
+   : Skip test suite because PHPUnit is too recent
+   exit 0
+fi
+
 mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
@@ -138,6 +142,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- update to 2.6.0
+- raise dependency on zend-stdlib >= 2.7
+- skip test suite with PHPUnit >= 5
+
 * Fri Sep  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.5-1
 - update to 2.5.5
 - raise dependency on zend-validator ^2.5.3
