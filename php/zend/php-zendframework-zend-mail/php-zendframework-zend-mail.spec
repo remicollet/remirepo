@@ -125,12 +125,6 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-if %{_bindir}/phpunit --atleast-version 5
-then
-  : Skip test not compatible with PHPUnit 5
-  rm test/Header/SenderTest.php
-fi
-
 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
 
 if which php70; then
