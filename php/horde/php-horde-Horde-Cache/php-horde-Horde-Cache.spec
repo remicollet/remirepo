@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Cache
-Version:        2.5.2
+Version:        2.5.3
 Release:        1%{?dist}
 Summary:        Horde Caching API
 
@@ -90,8 +90,6 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-# https://github.com/horde/horde/pull/171
-sed -e 's/\$reason/reason/' -i Sql/Pdo/SqliteTest.php
 
 php -d apc.enable_cli=1 %{_bindir}/phpunit .
 
@@ -122,6 +120,10 @@ fi
 
 
 %changelog
+* Fri Feb 19 2016 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
+- Update to 2.5.3
+- PHP 7 compatible version
+
 * Mon Feb 01 2016 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - Update to 2.5.2
 - add and run upstream test suite
