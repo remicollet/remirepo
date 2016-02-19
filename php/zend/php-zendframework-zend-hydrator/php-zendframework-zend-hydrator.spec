@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    f3ed8b833355140350bbed98d8a7b8b66875903f
+%global gh_commit    22652e1661a5a10b3f564cf7824a2206cf5a4a65
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-hydrator
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.0.0
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -39,41 +39,41 @@ BuildRequires:  php-date
 BuildRequires:  php-reflection
 BuildRequires:  php-spl
 # From composer, "require-dev": {
-#        "zendframework/zend-eventmanager": "^2.5.1",
-#        "zendframework/zend-inputfilter": "^2.5.1",
-#        "zendframework/zend-serializer": "^2.5.1",
-#        "zendframework/zend-servicemanager": "^2.5.1",
-#        "zendframework/zend-filter": "^2.5.1",
+#        "zendframework/zend-eventmanager": "^2.6.2 || ^3.0",
+#        "zendframework/zend-inputfilter": "^2.6",
+#        "zendframework/zend-serializer": "^2.6.1",
+#        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
+#        "zendframework/zend-filter": "^2.6",
 #        "phpunit/PHPUnit": "~4.0",
 #        "squizlabs/php_codesniffer": "^2.0@dev"
-BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5.1
-BuildRequires:  php-composer(%{gh_owner}/zend-inputfilter)      >= 2.5.1
-BuildRequires:  php-composer(%{gh_owner}/zend-serializer)       >= 2.5.1
-BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5.1
-BuildRequires:  php-composer(%{gh_owner}/zend-filter)           >= 2.5.1
+BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6.2
+BuildRequires:  php-composer(%{gh_owner}/zend-inputfilter)      >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-serializer)       >= 2.6.1
+BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
+BuildRequires:  php-composer(%{gh_owner}/zend-filter)           >= 2.6
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.5",
-#        "zendframework/zend-stdlib": "^2.5.1"
+#        "php": "^5.5 || ^7.0",
+#        "zendframework/zend-stdlib": "^2.7 || ^3.0"
 Requires:       php(language) >= 5.5
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5.1
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 # From composer, "suggest": {
-#        "zendframework/zend-eventmanager": "^2.5.1, to support aggregate hydrator usage",
-#        "zendframework/zend-serializer": "^2.5.1, to use the SerializableStrategy",
-#        "zendframework/zend-servicemanager": "^2.5.1, to support hydrator plugin manager usage",
-#        "zendframework/zend-filter": "^2.5.1, to support naming strategy hydrator usage"
+#        "zendframework/zend-eventmanager": "^2.6.2 || ^3.0, to support aggregate hydrator usage",
+#        "zendframework/zend-serializer": "^2.6.1, to use the SerializableStrategy",
+#        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3, to support hydrator plugin manager usage",
+#        "zendframework/zend-filter": "^2.6, to support naming strategy hydrator usage"
 %if 0%{?fedora} >= 21
-Suggests:       php-composer(%{gh_owner}/zend-eventmanager)
-Suggests:       php-composer(%{gh_owner}/zend-serializer)
-Suggests:       php-composer(%{gh_owner}/zend-servicemanager)
-Suggests:       php-composer(%{gh_owner}/zend-filter)
+Suggests:       php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6.2
+Suggests:       php-composer(%{gh_owner}/zend-serializer)       >= 2.6.1
+Suggests:       php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
+Suggests:       php-composer(%{gh_owner}/zend-filter)           >= 2.6
 %endif
-# From phpcompatinfo report for version 1.0.0
+# From phpcompatinfo report for version 1.1.0
 Requires:       php-date
 Requires:       php-reflection
 Requires:       php-spl
@@ -144,5 +144,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- update to 1.1.0
+- raise dependency on zend-stdlib >= 2.7
+
 * Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - initial package
