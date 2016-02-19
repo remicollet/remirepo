@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0b2946c107cd2d8f0ec1244edffc37fceed96f5f
+%global gh_commit    b12b9c37e382c096b93c3f26e7395775f59a5eea
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.2
-%global minor        8
+%global minor        9
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -129,7 +129,7 @@ Requires:       php-composer(doctrine/instantiator) <  2
 Requires:       php-composer(symfony/class-loader) >= 2.0
 Requires:       php-composer(symfony/class-loader) <  3
 Requires:       php-composer(sebastian/recursion-context) >= 1.0
-# From phpcompatinfo report for version 5.0.0
+# From phpcompatinfo report for version 5.2.9
 Requires:       php-libxml
 Requires:       php-mbstring
 Requires:       php-openssl
@@ -215,6 +215,9 @@ fi
 
 
 %changelog
+* Fri Feb 19 2016 Remi Collet <remi@fedoraproject.org> - 5.2.9-1
+- Update to 5.2.9
+
 * Thu Feb 18 2016 Remi Collet <remi@fedoraproject.org> - 5.2.8-1
 - Update to 5.2.8
 - raise dependency on phpunit/php-code-coverage >= 3.2.1
