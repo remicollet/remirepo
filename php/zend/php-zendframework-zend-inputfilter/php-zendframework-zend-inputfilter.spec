@@ -142,7 +142,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+* Fri Feb 19 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
 - update to 2.6.0
 - raise dependency on zend-stdlib >= 2.7
 - skip test suite with PHPUnit >= 5
