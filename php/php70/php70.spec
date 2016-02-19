@@ -433,6 +433,7 @@ Provides:  php-pecl-zendopcache = %{opcachever}
 Provides:  php-pecl-zendopcache%{?_isa} = %{opcachever}
 Provides:  php-pecl(opcache) = %{opcachever}
 Provides:  php-pecl(opcache)%{?_isa} = %{opcachever}
+Obsoletes: php55u-opcache, php55w-opcache, php56u-opcache, php56w-opcache, php70u-opcache, php70w-opcache
 
 %description opcache
 The Zend OPcache provides faster PHP execution through opcode caching and
@@ -504,6 +505,7 @@ Provides: php-mysqli%{?_isa} = %{version}-%{release}
 Provides: php-pdo_mysql, php-pdo_mysql%{?_isa}
 Obsoletes: php-mysql < %{version}-%{release}
 Obsoletes: php53-mysqlnd, php53u-mysqlnd, php54-mysqlnd, php54w-mysqlnd, php55u-mysqlnd, php55w-mysqlnd, php56u-mysqlnd, php56w-mysqlnd, php70u-mysqlnd, php70w-mysqlnd
+Obsoletes: php53-mysql, php53u-mysql, php54-mysql, php54w-mysql, php55u-mysql, php55w-mysql, php56u-mysql, php56w-mysql, php70u-mysql, php70w-mysql
 
 %description mysqlnd
 The php-mysqlnd package contains a dynamic shared object that will add

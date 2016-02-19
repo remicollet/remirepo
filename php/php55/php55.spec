@@ -433,6 +433,7 @@ Provides:  php-pecl-zendopcache = %{opcachever}
 Provides:  php-pecl-zendopcache%{?_isa} = %{opcachever}
 Provides:  php-pecl(opcache) = %{opcachever}
 Provides:  php-pecl(opcache)%{?_isa} = %{opcachever}
+Obsoletes: php55u-opcache, php55w-opcache
 
 %description opcache
 The Zend OPcache provides faster PHP execution through opcode caching and
@@ -529,6 +530,7 @@ Provides: php-mysqli%{?_isa} = %{version}-%{release}
 Provides: php-pdo_mysql, php-pdo_mysql%{?_isa}
 %if ! %{with_libmysql}
 Obsoletes: php-mysql < %{version}-%{release}
+Obsoletes: php53-mysql, php53u-mysql, php54-mysql, php54w-mysql, php55u-mysql, php55w-mysql
 %endif
 Obsoletes: php53-mysqlnd, php53u-mysqlnd, php54-mysqlnd, php54w-mysqlnd, php55u-mysqlnd, php55w-mysqlnd
 
