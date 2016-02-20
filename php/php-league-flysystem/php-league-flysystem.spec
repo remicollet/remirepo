@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # Github
-%global gh_commit    183e1a610664baf6dcd6fceda415baf43cbdc031
+%global gh_commit    02f5b6c9a8b9278c8381e3361e7bd9d641c740ca
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     thephpleague
 %global gh_project   flysystem
@@ -19,7 +19,7 @@
 %global ns_project   Flysystem
 
 Name:           php-%{pk_vendor}-%{pk_name}
-Version:        1.0.16
+Version:        1.0.17
 Release:        1%{?dist}
 Summary:        Filesystem abstraction: Many filesystems, one API
 
@@ -32,9 +32,6 @@ Source1:        makesrc.sh
 # Autoloader
 Source2:        %{name}-autoload.php
 
-# https://github.com/thephpleague/flysystem/pull/592
-Patch1:         %{name}-pr592.patch
-
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.4
@@ -45,10 +42,9 @@ BuildRequires:  php-mbstring
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
 # From composer.json, "require-dev": {
-#        "phpunit/phpunit": "~4.8", => 5.x is ok
+#        "phpunit/phpunit": "~4.8 || ~5.0",
 #        "mockery/mockery": "~0.9",
-#        "phpspec/phpspec": "^2.2",
-#        "phpspec/prophecy-phpunit": "~1.0" => unneeded see our patch
+#        "phpspec/phpspec": "^2.2"
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.0
 BuildRequires:  php-composer(mockery/mockery) >= 0.9
 BuildRequires:  php-composer(phpspec/phpspec) >= 2.2
@@ -81,7 +77,6 @@ Autoloader: %{_datadir}/php/%{ns_vendor}/%{ns_project}/autoload.php
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-%patch1 -p1
 install -pm 644 %{SOURCE2} src/autoload.php
 
 
@@ -143,6 +138,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Feb 20 2016 Remi Collet <remi@fedoraproject.org> - 1.0.17-1
+- update to 1.0.17
+
 * Thu Jan 14 2016 Remi Collet <remi@fedoraproject.org> - 1.0.16-1
 - initial package
 - open https://github.com/thephpleague/flysystem/pull/592 - PHPUnit
