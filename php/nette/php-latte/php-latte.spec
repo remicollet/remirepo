@@ -108,6 +108,9 @@ rm 'tests/Latte/Helpers.optimizePhp().phpt'
 cat /etc/php.ini /etc/php.d/*ini >php.ini
 export LANG=fr_FR.utf8
 
+: For PHP 5.3.3 on RHEL-6
+sed -e 's/50303/99999/' -i tests/Latte/Object.phpt
+
 : Generate autoloader
 mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
