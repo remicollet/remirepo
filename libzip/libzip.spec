@@ -46,6 +46,7 @@ BuildRequires:  perl(Cwd)
 BuildRequires:  perl(Data::Dumper)
 BuildRequires:  perl(File::Copy)
 BuildRequires:  perl(File::Path)
+BuildRequires:  perl(Getopt::Long)
 BuildRequires:  perl(IPC::Open3)
 BuildRequires:  perl(Symbol)
 BuildRequires:  perl(UNIVERSAL)
@@ -62,7 +63,7 @@ can be added from data buffers, files, or compressed data copied directly from
 other zip archives. Changes made without closing the archive can be reverted. 
 The API is documented by man pages.
 %if "%{name}" != "%{libname}"
-%{name} is designed to be installed beside %{name}.
+%{name} is designed to be installed beside %{libname}.
 %endif
 
 
