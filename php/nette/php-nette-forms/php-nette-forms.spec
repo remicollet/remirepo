@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a354b3f623272333a36d28c13db46f6af85ae1ed
+%global gh_commit    0cb5a8534bd446824ed6f63af3b4479c11361768
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.7
+Version:        2.3.8
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Forms: greatly facilitates web forms
@@ -153,6 +153,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Feb 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.8-1
+- update to 2.3.8
+
 * Wed Jan 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.7-1
 - update to 2.3.7
 - run test suite with both php 5 and 7 when available
