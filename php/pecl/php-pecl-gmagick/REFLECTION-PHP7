@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #59 gmagick version 2.0.1RC3 ] {
+Extension [ <persistent> extension #59 gmagick version 2.0.2RC1 ] {
 
   - Classes [5] {
     Class [ <internal:gmagick> final class GmagickException extends Exception implements Throwable ] {
@@ -2680,7 +2680,7 @@ Extension [ <persistent> extension #59 gmagick version 2.0.1RC3 ] {
       - Properties [0] {
       }
 
-      - Methods [6] {
+      - Methods [8] {
         Method [ <internal:gmagick, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -2717,6 +2717,21 @@ Extension [ <persistent> extension #59 gmagick version 2.0.1RC3 ] {
         }
 
         Method [ <internal:gmagick> public method setcolorvalue ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $color ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:gmagick> public method getcolorvaluequantum ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $color ]
+          }
+        }
+
+        Method [ <internal:gmagick> public method setcolorvaluequantum ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $color ]
