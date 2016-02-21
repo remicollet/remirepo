@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # Github information
-%global gh_commit    9277bd20262a01b38a33cc7356e98055f2262d32
+%global gh_commit    acb94a0a85290d653cd64c883175b855ada5022f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     icewind1991
 %global gh_project   SMB
@@ -19,8 +19,8 @@
 %global ns_name      SMB
 # Test suite requires a Samba server and configuration file
 #   yum install samba
-#   service start smb
-#   service start nmb
+#   systemctl start smb
+#   systemctl start nmb
 #   useradd testsmb
 #   install -o testsmb -m 755 -d /home/testsmb/test
 #   smbpasswd -a testsmb
@@ -28,8 +28,8 @@
 %global with_tests   0%{?_with_tests:1}
 
 Name:           php-%{pk_vendor}-%{pk_name}
-Version:        1.0.4
-Release:        2%{?dist}
+Version:        1.0.5
+Release:        1%{?dist}
 Summary:        php wrapper for smbclient and libsmbclient-php
 
 Group:          Development/Libraries
@@ -53,8 +53,9 @@ BuildRequires:  php-mbstring
 BuildRequires:  php-pcre
 BuildRequires:  php-posix
 # From composer.json, "require-dev": {
-#       "satooshi/php-coveralls": "dev-master"
-BuildRequires:  php-composer(phpunit/phpunit)
+#		"satooshi/php-coveralls"  : "v1.0.0",
+#		"phpunit/phpunit": "^4.8"
+BuildRequires:  php-composer(phpunit/phpunit) >= 4.8
 BuildRequires:  php-composer(theseer/autoload)
 # Autoloader
 BuildRequires:  php-composer(symfony/class-loader)
@@ -137,6 +138,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 21 2016 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
+- update to 1.0.5
+
 * Sun Sep 20 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-2
 - don't own /usr/share/php/Icewind (review #1259172)
 
