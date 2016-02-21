@@ -110,7 +110,8 @@ rm -rf       %{buildroot}%{php_home}/%{ns_vendor}/assets
 %check
 %if %{with_tests}
 : Generate configuration
-cat /etc/php.ini /etc/php.d/*ini >php.ini
+cat /etc/php.ini /etc/php.d/*ini   >php.ini
+echo 'session.save_path = "/tmp"' >>php.ini
 export LANG=fr_FR.utf8
 
 : Generate autoloader
@@ -129,6 +130,7 @@ EOF
 
 if which php70; then
   cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
+  echo 'session.save_path = "/tmp"' >>php.ini
   php70 %{_bindir}/nette-tester --colors 0 -p php70 -c ./php.ini tests -s
 fi
 %else
