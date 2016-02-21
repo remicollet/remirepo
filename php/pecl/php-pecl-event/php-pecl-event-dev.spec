@@ -22,7 +22,7 @@
 
 %global with_tests  0%{!?_without_tests:1}
 %global pecl_name   event
-%global with_zts    0%{?__ztsphp:1}
+%global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 # After sockets.so
 %global ini_name  z-%{pecl_name}.ini
@@ -30,15 +30,16 @@
 # After 20-sockets.so
 %global ini_name  40-%{pecl_name}.ini
 %endif
+%global prever    RC1
 
 Summary:       Provides interface to libevent library
 Name:          %{?sub_prefix}php-pecl-%{pecl_name}
-Version:       1.11.3
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:       2.0.0
+Release:       0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/event
-Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel > 5.4
@@ -85,6 +86,10 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -114,14 +119,15 @@ sed -e 's/role="test"/role="src"/' \
     %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
     -i package.xml
 
-mv %{pecl_name}-%{version} NTS
+mv %{pecl_name}-%{version}%{?prever} NTS
 
 cd NTS
 
 # Sanity check, really often broken
-extver=$(sed -n '/#define PHP_EVENT_VERSION/{s/.* "//;s/".*$//;p}' php_event.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}.
+DIR=$(%{__php} -r 'echo "php" . PHP_MAJOR_VERSION;')
+extver=$(sed -n '/#define PHP_EVENT_VERSION/{s/.* "//;s/".*$//;p}' $DIR/php_event.h)
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
 cd ..
@@ -253,7 +259,7 @@ rm -rf %{buildroot}
 
 
 %files
-%defattr(-, root, root, 0755)
+%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -268,6 +274,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 21 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.1.RC1
+- Update to 2.0.0RC1 (php 5 and 7, beta)
+
 * Thu Feb 11 2016 Remi Collet <remi@fedoraproject.org> - 1.11.3-1
 - Update to 1.11.3
 
