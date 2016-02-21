@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a50659f5dc0a4ea9c713c123043f3fb9125bc1b1
+%global gh_commit    38638de3e94830a5cd7a5956135589b967609cd5
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   git
@@ -16,7 +16,7 @@
 %global with_tests   %{?_without_tests:1}%{!?_without_tests:0}
 
 Name:           php-phpunit-git
-Version:        2.1.0
+Version:        2.1.1
 Release:        1%{?dist}
 Summary:        Simple wrapper for Git
 
@@ -89,6 +89,9 @@ fi
 
 
 %changelog
+* Sun Feb 21 2016 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
+- update to 2.1.1
+
 * Wed Feb 17 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - update to 2.1.0
 
