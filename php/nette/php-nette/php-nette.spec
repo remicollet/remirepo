@@ -17,7 +17,7 @@
 
 Name:           php-%{gh_project}
 Version:        2.3.8
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Framework
 
@@ -179,10 +179,13 @@ rm -rf %{buildroot}
 %license license.md
 %doc readme.md contributing.md
 %doc composer.json
-%{php_home}/%{ns_vendor}
+%{php_home}/%{ns_vendor}/*
 
 
 %changelog
+* Thu Dec  3 2015 Remi Collet <remi@fedoraproject.org> - 2.3.8-2
+- fix directory ownership, review #1277484
+
 * Thu Dec  3 2015 Remi Collet <remi@fedoraproject.org> - 2.3.8-1
 - update to 2.3.8
 
