@@ -14,11 +14,11 @@
 
 Name:           php-mock-integration
 Version:        1.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Integration package for PHP-Mock
 
 Group:          Development/Libraries
-License:        BSD
+License:        WTFPL
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
@@ -102,5 +102,8 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Fri Feb 12 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+* Mon Feb 22 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- Fix: license is WTFPL
+
+* Fri Feb 12 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package

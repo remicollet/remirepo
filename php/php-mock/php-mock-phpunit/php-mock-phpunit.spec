@@ -14,11 +14,11 @@
 
 Name:           php-mock-phpunit
 Version:        1.1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Mock built-in PHP functions with PHPUnit.
 
 Group:          Development/Libraries
-License:        BSD
+License:        WTFPL
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
@@ -104,5 +104,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 22 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-2
+- Fix: license is WTFPL
+
 * Fri Feb 12 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - initial package

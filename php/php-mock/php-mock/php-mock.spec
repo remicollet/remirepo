@@ -14,11 +14,11 @@
 
 Name:           php-mock
 Version:        1.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        PHP-Mock can mock built-in PHP functions
 
 Group:          Development/Libraries
-License:        BSD
+License:        WTFPL
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 Source1:        %{name}-autoload.php
@@ -118,5 +118,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 22 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
+- Fix: license is WTFPL, from review #1306968
+
 * Fri Feb 12 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - initial package
