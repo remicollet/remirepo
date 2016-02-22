@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    059cff35c281125e5da0615a1cd0b10908ebb944
+%global gh_commit    39d79cae95d56ffcdb5417328f8ccbc1d53aafda
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -16,8 +16,8 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_project}
-Version:        2.3.8
-%global specrel 2
+Version:        2.3.9
+%global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Framework
 
@@ -55,18 +55,18 @@ BuildRequires:  php-composer(latte/latte)
 BuildRequires:  php-composer(tracy/tracy)
 %endif
 # from composer.json, "require": {
-#        "nette/application": "2.3.8",
+#        "nette/application": "2.3.11",
 #        "nette/bootstrap": "2.3.4",
-#        "nette/caching": "2.3.4",
+#        "nette/caching": "2.3.5",
 #        "nette/component-model": "2.2.4",
 #        "nette/database": "2.3.8",
 #        "nette/deprecated": "2.3.2",
-#        "nette/di": "2.3.7",
-#        "nette/finder": "2.3.1",
-#        "nette/forms": "2.3.6",
-#        "nette/http": "2.3.3",
+#        "nette/di": "2.3.9",
+#        "nette/finder": "2.3.2",
+#        "nette/forms": "2.3.8",
+#        "nette/http": "2.3.4",
 #        "nette/mail": "2.3.4",
-#        "nette/neon": "2.3.3",
+#        "nette/neon": "2.3.4",
 #        "nette/php-generator": "2.3.5",
 #        "nette/reflection": "2.3.1",
 #        "nette/robot-loader": "2.3.1",
@@ -74,21 +74,21 @@ BuildRequires:  php-composer(tracy/tracy)
 #        "nette/security": "2.3.1",
 #        "nette/tokenizer": "2.2.1",
 #        "nette/utils": "2.3.7",
-#        "latte/latte": "2.3.8",
-#        "tracy/tracy": "2.3.7"
+#        "latte/latte": "2.3.10",
+#        "tracy/tracy": "2.3.9"
 # Strict version ignored on purpose
-Requires:       php-composer(%{gh_owner}/application)     >= 2.3.8
+Requires:       php-composer(%{gh_owner}/application)     >= 2.3.11
 Requires:       php-composer(%{gh_owner}/bootstrap)       >= 2.3.4
-Requires:       php-composer(%{gh_owner}/caching)         >= 2.3.4
+Requires:       php-composer(%{gh_owner}/caching)         >= 2.3.5
 Requires:       php-composer(%{gh_owner}/component-model) >= 2.2.4
 Requires:       php-composer(%{gh_owner}/database)        >= 2.3.8
 Requires:       php-composer(%{gh_owner}/deprecated)      >= 2.3.2
-Requires:       php-composer(%{gh_owner}/di)              >= 2.3.7
-Requires:       php-composer(%{gh_owner}/finder)          >= 2.3.1
-Requires:       php-composer(%{gh_owner}/forms)           >= 2.3.6
-Requires:       php-composer(%{gh_owner}/http)            >= 2.3.3
+Requires:       php-composer(%{gh_owner}/di)              >= 2.3.9
+Requires:       php-composer(%{gh_owner}/finder)          >= 2.3.2
+Requires:       php-composer(%{gh_owner}/forms)           >= 2.3.8
+Requires:       php-composer(%{gh_owner}/http)            >= 2.3.4
 Requires:       php-composer(%{gh_owner}/mail)            >= 2.3.4
-Requires:       php-composer(%{gh_owner}/neon)            >= 2.3.3
+Requires:       php-composer(%{gh_owner}/neon)            >= 2.3.4
 Requires:       php-composer(%{gh_owner}/php-generator)   >= 2.3.5
 Requires:       php-composer(%{gh_owner}/reflection)      >= 2.3.1
 Requires:       php-composer(%{gh_owner}/robot-loader)    >= 2.3.1
@@ -96,8 +96,8 @@ Requires:       php-composer(%{gh_owner}/safe-stream)     >= 2.3.1
 Requires:       php-composer(%{gh_owner}/security)        >= 2.3.1
 Requires:       php-composer(%{gh_owner}/tokenizer)       >= 2.2.1
 Requires:       php-composer(%{gh_owner}/utils)           >= 2.3.7
-Requires:       php-composer(latte/latte)                 >= 2.3.8
-Requires:       php-composer(tracy/tracy)                 >= 2.3.7
+Requires:       php-composer(latte/latte)                 >= 2.3.10
+Requires:       php-composer(tracy/tracy)                 >= 2.3.9
 # from phpcompatinfo report for version 2.3.7: nothing
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
@@ -183,7 +183,10 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu Dec  3 2015 Remi Collet <remi@fedoraproject.org> - 2.3.8-2
+* Mon Feb 22 2016 Remi Collet <remi@fedoraproject.org> - 2.3.9-1
+- update to 2.3.9
+
+* Mon Feb 22 2016 Remi Collet <remi@fedoraproject.org> - 2.3.8-2
 - fix directory ownership, review #1277484
 
 * Thu Dec  3 2015 Remi Collet <remi@fedoraproject.org> - 2.3.8-1
