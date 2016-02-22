@@ -12,8 +12,7 @@
 #
 
 %global pecl_name ev
-# failed test, so disabled for now
-%global with_zts  0%{?__ztsphp:1}
+%global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 # After sockets
 %global ini_name  z-%{pecl_name}.ini
@@ -21,7 +20,7 @@
 # After 20-sockets
 %global ini_name  40-%{pecl_name}.ini
 %endif
-%global prever    RC6
+%global prever    RC8
 
 Summary:        Provides interface to libev library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
@@ -235,8 +234,8 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Mon Feb 22 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.5.RC6
-- Update to 1.0.0RC6
+* Mon Feb 22 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.5.RC8
+- Update to 1.0.0RC8
 
 * Thu Feb 11 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.4.RC4
 - Update to 1.0.0RC4
