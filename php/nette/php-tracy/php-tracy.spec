@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9aa0ade4444def3178aa808255ea326b9e3da9f2
+%global gh_commit    3db887daa2a7a120189da73e9cf8ff415adfd70e
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -16,8 +16,8 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_project}
-Version:        2.3.8
-%global specrel 2
+Version:        2.3.9
+%global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Tracy: useful PHP debugger
 
@@ -27,9 +27,6 @@ URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        %{name}-%{version}-%{gh_short}.tgz
 # pull a git snapshot to get test sutie
 Source1:        makesrc.sh
-
-# Fix test for new PHP
-Patch1:         %{name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -84,8 +81,6 @@ To use this library, you just have to add, in your project:
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
-
-%patch1 -p1 -b .upstream
 
 # drop upstream autoloader which is outside tree
 rm src/tracy.php
@@ -150,6 +145,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 22 2016 Remi Collet <remi@fedoraproject.org> - 2.3.9-1
+- update to 2.3.9
+
 * Sun Feb 14 2016 Remi Collet <remi@fedoraproject.org> - 2.3.8-2
 - add upstream patch for new PHP
 
