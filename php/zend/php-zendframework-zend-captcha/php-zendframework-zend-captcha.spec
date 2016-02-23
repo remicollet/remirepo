@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    3d4e9913244e7efd1f9816decf4b0506d7c0be00
+%global gh_commit    53ddb0e9d0a6d15b7405e2090419f4e11c1174d2
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-captcha
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.3
+Version:        2.5.4
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -41,15 +41,15 @@ BuildRequires:  php-spl
 BuildRequires:  php-composer(%{gh_owner}/zend-math)             >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 # From composer, "require-dev": {
-#        "zendframework/zend-session": "~2.5",
-#        "zendframework/zend-text": "~2.5",
-#        "zendframework/zend-validator": "~2.5",
+#        "zendframework/zend-session": "^2.6",
+#        "zendframework/zend-text": "^2.6",
+#        "zendframework/zend-validator": "^2.6",
 #        "zendframework/zendservice-recaptcha": "*",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0"
-BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-text)             >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.6
+BuildRequires:  php-composer(%{gh_owner}/zend-text)             >= 2.6
+BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.6
 #BuildRequires:  php-composer(%%{gh_owner}/zendservice-recaptcha) >= 2.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
@@ -57,15 +57,15 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.5",
-#        "zendframework/zend-math": "~2.5",
-#        "zendframework/zend-stdlib": "~2.5"
+#        "php": "^5.5 || ^7.0",
+#        "zendframework/zend-math": "^2.6",
+#        "zendframework/zend-stdlib": "^2.7 || ^3.0"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
-Requires:       php-composer(%{gh_owner}/zend-math)             >= 2.5
+Requires:       php-composer(%{gh_owner}/zend-math)             >= 2.6
 Requires:       php-composer(%{gh_owner}/zend-math)             <  3
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 # From composer, "suggest": {
 #        "zendframework/zend-i18n-resources": "Translations of captcha messages",
 #        "zendframework/zend-session": "Zend\\Session component",
@@ -153,6 +153,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb 23 2016 Remi Collet <remi@fedoraproject.org> - 2.5.4-1
+- update to 2.5.4
+- raise dependency on zend-math >= 2.6
+- raise dependency on zend-stdlib >= 2.7
+
 * Tue Feb 23 2016 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
 - update to 2.5.3
 
