@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    d3ae0d084d526cdc6c3f1b858fb7148de77b41c5
+%global gh_commit    9d816dfa565b9c47685057761acaf432c9e8066a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     pdepend
 %global gh_project   pdepend
@@ -18,7 +18,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-pdepend-PHP-Depend
-Version:        2.2.2
+Version:        2.2.3
 Release:        1%{?dist}
 Summary:        PHP_Depend design quality metrics for PHP package
 
@@ -36,7 +36,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 # From composer/json, "require-dev": {
-#        "phpunit/phpunit": "^4.0.0,<4.8",
+#        "phpunit/phpunit": "^4.4.0,<4.8",
 #        "squizlabs/php_codesniffer": "^2.0.0"
 # Test suite pass with PHPUnit 4.8.12 and PHPUnit 5.0.5
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.0.0
@@ -58,16 +58,16 @@ BuildRequires:  php-composer(symfony/class-loader)
 
 # From composer.json, "require": {
 #        "php": ">=5.3.7"
-#        "symfony/dependency-injection": "^2.3.0",
-#        "symfony/filesystem": "^2.3.0",
-#        "symfony/config": "^2.3.0"
+#        "symfony/dependency-injection": "^2.3.0|^3",
+#        "symfony/filesystem": "^2.3.0|^3",
+#        "symfony/config": "^2.3.0|^3"
 Requires:       php(language) >= 5.3.7
 Requires:       php-composer(symfony/dependency-injection) >= 2.3.0
-Requires:       php-composer(symfony/dependency-injection) <  3
+Requires:       php-composer(symfony/dependency-injection) <  4
 Requires:       php-composer(symfony/filesystem) >= 2.3.0
-Requires:       php-composer(symfony/filesystem) <  3
+Requires:       php-composer(symfony/filesystem) <  4
 Requires:       php-composer(symfony/config) >= 2.3.0
-Requires:       php-composer(symfony/config) <  3
+Requires:       php-composer(symfony/config) <  4
 # From phpcompatinfo report for version 2.1.0
 Requires:       php-bcmath
 Requires:       php-date
@@ -131,13 +131,17 @@ install -Dpm 0755 src/bin/pdepend %{buildroot}%{_bindir}/pdepend
 rm src/test/php/PDepend/Report/Jdepend/ChartTest.php
 %endif
 
-cat <<EOF | tee src/test/php/PDepend/bootstrap.php
+cat << 'EOF' | tee src/test/php/PDepend/bootstrap.php
 <?php
 require '%{buildroot}%{php_home}/autoload.php';
-\$fedoraClassLoader->addPrefix('PDepend\\\\', dirname(__DIR__));
+$fedoraClassLoader->addPrefix('PDepend\\', dirname(__DIR__));
 EOF
 
 %{_bindir}/phpunit -d memory_limit=1G --verbose
+
+if which php70; then
+   php70 %{_bindir}/phpunit -d memory_limit=1G --verbose
+fi
 %else
 : Test suite disabled
 %endif
@@ -166,6 +170,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb 23 2016 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
+- update to 2.2.3
+
 * Fri Oct 16 2015 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
 - update to 2.2.2
 
