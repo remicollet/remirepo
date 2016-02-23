@@ -193,6 +193,7 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 %if %{with_tests}
 # TODO need investigation
 rm test/Controller/Plugin/FilePostRedirectGetTest.php
+rm test/Service/FormAnnotationBuilderFactoryTest.php
 
 mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
