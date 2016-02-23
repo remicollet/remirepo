@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    43c276df6e94e498bf530538aea53876a24fc47c
+%global gh_commit    3d4e9913244e7efd1f9816decf4b0506d7c0be00
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-captcha
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.2
+Version:        2.5.3
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -50,7 +50,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-text)             >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.5
-#BuildRequires:  php-composer(%{gh_owner}/zendservice-recaptcha) >= 2.5
+#BuildRequires:  php-composer(%%{gh_owner}/zendservice-recaptcha) >= 2.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
@@ -77,7 +77,7 @@ Suggests:       php-composer(%{gh_owner}/zend-i18n-resources)
 Suggests:       php-composer(%{gh_owner}/zend-session)
 Suggests:       php-composer(%{gh_owner}/zend-text)
 Suggests:       php-composer(%{gh_owner}/zend-validator)
-#Suggests:       php-composer(%{gh_owner}/zendservice-recaptcha)
+#Suggests:       php-composer(%%{gh_owner}/zendservice-recaptcha)
 %endif
 %endif
 # From phpcompatinfo report for version 2.5.2
@@ -153,6 +153,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb 23 2016 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
+- update to 2.5.3
+
 * Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - update to 2.5.2
 - raise dependency on PHP 5.5
