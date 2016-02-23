@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    8bf64e1ffe0cac8f7d7dd47ba2e94c78b4127ae6
+%global gh_commit    7c46b6a2d04d12aacd9c32bb021d0d9d0354d5d5
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-form
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.0
+Version:        2.7.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -44,36 +44,32 @@ BuildRequires:  php-composer(%{gh_owner}/zend-hydrator)         >= 1.0
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 # From composer, "require-dev": {
 #        "doctrine/annotations": "~1.0",
-#        "zendframework/zend-cache": "~2.5",
-#        "zendframework/zend-captcha": "~2.5",
-#        "zendframework/zend-code": "~2.5",
-#        "zendframework/zend-di": "~2.5",
-#        "zendframework/zend-eventmanager": "~2.5",
-#        "zendframework/zend-filter": "~2.5",
-#        "zendframework/zend-i18n": "~2.5",
-#        "zendframework/zend-mvc": "~2.5",
-#        "zendframework/zend-servicemanager": "~2.5",
-#        "zendframework/zend-session": "~2.5",
-#        "zendframework/zend-text": "~2.5",
-#        "zendframework/zend-validator": "~2.5",
-#        "zendframework/zend-view": "~2.5",
+#        "zendframework/zend-cache": "^2.6.1",
+#        "zendframework/zend-captcha": "^2.5",
+#        "zendframework/zend-code": "^2.6",
+#        "zendframework/zend-eventmanager": "^2.6.2 || ^3.0",
+#        "zendframework/zend-filter": "^2.6",
+#        "zendframework/zend-i18n": "^2.6",
+#        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
+#        "zendframework/zend-session": "^2.5",
+#        "zendframework/zend-text": "^2.6",
+#        "zendframework/zend-validator": "^2.6",
+#        "zendframework/zend-view": "^2.6.2",
 #        "zendframework/zendservice-recaptcha": "*",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0"
 BuildRequires:  php-composer(doctrine/annotations)              >= 1.0
-BuildRequires:  php-composer(%{gh_owner}/zend-cache)            >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-cache)            >= 2.6.1
 BuildRequires:  php-composer(%{gh_owner}/zend-captcha)          >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-code)             >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-di)               >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-filter)           >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-i18n)             >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-mvc)              >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-code)             >= 2.6
+BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6.2
+BuildRequires:  php-composer(%{gh_owner}/zend-filter)           >= 2.6
+BuildRequires:  php-composer(%{gh_owner}/zend-i18n)             >= 2.6
+BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
 BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-text)             >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-view)             >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-text)             >= 2.6
+BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.6
+BuildRequires:  php-composer(%{gh_owner}/zend-view)             >= 2.6.2
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Missing
 BuildRequires:  php-composer(%{gh_owner}/zend-escaper)          >= 2.5
@@ -83,17 +79,17 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 
 # From composer, "require": {
 #        "php": ">=5.5",
-#        "zendframework/zend-inputfilter": "~2.5",
-#        "zendframework/zend-hydrator": "~1.0",
-#        "zendframework/zend-stdlib": "~2.7"
+#        "zendframework/zend-inputfilter": "^2.6",
+#        "zendframework/zend-hydrator": "^1.1 || ^2.1",
+#        "zendframework/zend-stdlib": "^2.7 || ^3.0"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
-Requires:       php-composer(%{gh_owner}/zend-inputfilter)      >= 2.5
+Requires:       php-composer(%{gh_owner}/zend-inputfilter)      >= 2.6
 Requires:       php-composer(%{gh_owner}/zend-inputfilter)      <  3
-Requires:       php-composer(%{gh_owner}/zend-hydrator)         >= 1.0
-Requires:       php-composer(%{gh_owner}/zend-hydrator)         <  2
+Requires:       php-composer(%{gh_owner}/zend-hydrator)         >= 1.1
+Requires:       php-composer(%{gh_owner}/zend-hydrator)         <  3
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 # From composer, "suggest": {
 #        "zendframework/zend-captcha": "Zend\\Captcha component",
 #        "zendframework/zend-code": "Zend\\Code component",
@@ -164,7 +160,7 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+%{_bindir}/phpunit -d memory_limit=1G --include-path=%{buildroot}%{php_home}
 
 if which php70; then
    php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
@@ -188,6 +184,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb 23 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
+- update to 2.7.0
+- raise dependency on zend-inputfilter >= 2.6
+- raise dependency on zend-hydrator >= 1.1
+
 * Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
 - update to 2.6.0
 - raise dependency on zend-stdlib ~2.7
