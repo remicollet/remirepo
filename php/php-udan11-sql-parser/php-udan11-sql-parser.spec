@@ -31,7 +31,7 @@ BuildRequires:  php(language) >= 5.3.0
 # For tests, from composer.json "require-dev": {
 #        "phpunit/php-code-coverage": "~2.0",
 #        "phpunit/phpunit": "~4.0|~5.0"
-BuildRequires:  php-composer(phpunit/phpunit) >= 4
+BuildRequires:  php-composer(phpunit/phpunit)
 %endif
 # For autoloader
 BuildRequires:  php-composer(theseer/autoload)
@@ -89,7 +89,9 @@ cat << 'EOF' | tee vendor/autoload.php
 require '%{buildroot}%{_datadir}/php/%{psr0}/autoload.php';
 EOF
 
-%{_bindir}/phpunit --verbose
+if %{_bindir}/phpunit --atleast-version 4.8; then
+   %{_bindir}/phpunit --verbose
+fi
 
 if which php70; then
   php70 %{_bindir}/phpunit --verbose
@@ -115,6 +117,7 @@ rm -rf %{buildroot}
 %changelog
 * Tue Feb 23 2016 Remi Collet <remi@fedoraproject.org> - 3.3.1-1
 - update to 3.3.1 (for phpMyAdmin 4.5.5)
+- don't run test with old PHPUnit (EPEL-6)
 
 * Sat Dec 26 2015 Remi Collet <remi@fedoraproject.org> - 3.0.8-1
 - update to 3.0.8 (for phpMyAdmin 4.5.3)
