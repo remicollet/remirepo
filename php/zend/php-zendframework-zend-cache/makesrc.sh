@@ -15,8 +15,8 @@ git clone https://github.com/$OWNER/$PROJECT.git $PROJECT-$COMMIT
 
 echo "Getting commit..."
 pushd $PROJECT-$COMMIT
-cp composer.json ../composer-$VERSION.json
 git checkout $COMMIT
+cp composer.json ../composer-$VERSION.json
 popd
 
 echo "Archiving..."
