@@ -6,10 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    7420265c0defbf70bcea598792ab6728216f73b3
+%global gh_commit    4c0e163977f8289288df7b37e0fd0469d3e8cbc6
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20160213
+%global gh_date      20160220
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
@@ -221,6 +221,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb 23 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.20.201602git4c0e163
+- new snapshot
+
 * Sat Feb 13 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.20.20160213git7420265
 - new snapshot
 
