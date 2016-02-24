@@ -1,6 +1,6 @@
 # remirepo spec file for glpi-reports
 #
-# Copyright (c) 2010-2015 Remi Collet
+# Copyright (c) 2010-2016 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #
@@ -9,7 +9,7 @@
 %global pluginname   reports
 
 Name:           glpi-reports
-Version:        1.9.0
+Version:        1.9.1
 Release:        1%{?dist}
 Summary:        GLPI Plugin providing additional reports
 Summary(fr):    Extension GLPI fournissant des rapports supplémentaires
@@ -18,11 +18,7 @@ Group:          Applications/Internet
 License:        GPLv2+
 URL:            https://forge.glpi-project.org/projects/reports
 
-Source0:        https://forge.glpi-project.org/attachments/download/2101/glpi-reports-1.9.0.tar.gz
-
-# Upstream patches
-Patch1:         changeset_r322.diff
-Patch2:         changeset_r323.diff
+Source0:        https://forge.glpi-project.org/attachments/download/2123/glpi-reports-1.9.1.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -54,13 +50,6 @@ Fonctionnalités principales :
 
 %prep
 %setup -q -c 
-
-pushd %{pluginname}
-%patch1 -p1
-%patch2 -p1
-
-rm -rf tools
-popd
 
 # Create link to LICENSE for standard doc folder
 ln -s %{_datadir}/glpi/plugins/%{pluginname}/LICENSE LICENSE
@@ -106,6 +95,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb 24 2016 Remi Collet <remi@fedoraproject.org> - 1.9.1-1
+- version 1.9.1 for GLPI 0.85 and 0.90
+
 * Sat Oct  3 2015 Remi Collet <remi@fedoraproject.org> - 1.9.0-1
 - version 1.9.0 for GLPI 0.85 and 0.90
   https://forge.glpi-project.org/versions/1152
