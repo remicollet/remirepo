@@ -10,7 +10,7 @@
 #global svnrelease   703
 
 Name:           glpi-data-injection
-Version:        2.3.1
+Version:        2.4.1
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -29,15 +29,15 @@ URL:            https://forge.indepnet.net/projects/datainjection
 Source0:        glpi-datainjection-2.2.0-%{svnrelease}.tar.gz
 %else
 # This change for each new version
-Source0:        https://forge.indepnet.net/attachments/download/1719/glpi-datainjection-2.3.1.tar.gz
+Source0:        https://forge.glpi-project.org/attachments/download/2081/glpi-datainjection-2.4.1.tar.gz
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
 Requires:       glpi >= 0.84
-Requires:       glpi <  0.85
-Requires:       glpi-pdf
+Requires:       glpi <  0.91
+#Requires:       glpi-pdf
 
 # This plugin have been renamed
 Provides:       glpi-%{pluginname} = %{version}-%{release}
@@ -121,6 +121,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb 24 2016 Remi Collet <Fedora@FamilleCollet.com> - 2.4.1-1
+- version 2.4.1 for GLPI 0.85/0.90
+
 * Mon Mar 31 2014 Remi Collet <Fedora@FamilleCollet.com> - 2.3.1-1
 - version 2.3.1 for GLPI 0.84
   https://forge.indepnet.net/projects/datainjection/versions/1004
