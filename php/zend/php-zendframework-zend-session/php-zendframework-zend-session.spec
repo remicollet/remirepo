@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    7feebb6a49d57362eb8b7e7e554297bf716c70ee
+%global gh_commit    da969762f16dc1e874eef79172284a9cd9e906ca
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-session
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.0
+Version:        2.6.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -121,6 +121,9 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 
 %check
 %if %{with_tests}
+# this test requires a running MongoDB server
+rm test/SaveHandler/MongoDBTest.php
+
 mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
@@ -162,6 +165,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Feb 24 2016 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
+- update to 2.6.1
+
 * Tue Feb 23 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
 - update to 2.6.0
 - raise dependency on zend-eventmanager >= 2.6.2
