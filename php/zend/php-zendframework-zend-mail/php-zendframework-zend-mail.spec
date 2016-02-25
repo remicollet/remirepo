@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    6dc8a3a262c9d70889ec846124482db3edab9b39
+%global gh_commit    3311e163de28dc3b41dfba642939132a16336143
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-mail
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.0
+Version:        2.6.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -34,22 +34,24 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.3.23
+BuildRequires:  php(language) >= 5.5
 BuildRequires:  php-ctype
 BuildRequires:  php-date
 BuildRequires:  php-iconv
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
-BuildRequires:  php-composer(%{gh_owner}/zend-crypt)            >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-crypt)            >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-mime)             >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
+BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.6
 # From composer, "require-dev": {
 #        "zendframework/zend-config": "^2.6",
+#        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0"
 BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.6
+BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
@@ -74,8 +76,13 @@ Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 Requires:       php-composer(%{gh_owner}/zend-validator)        >= 2.6
 Requires:       php-composer(%{gh_owner}/zend-validator)        <  3
+# From composer, "suggest": {
+#        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3 when using SMTP to deliver messages"
+%if 0%{?fedora} >= 21
+Suggests:       php-composer(%{gh_owner}/zend-servicemanager)
 %endif
-# From phpcompatinfo report for version 2.5.1
+%endif
+# From phpcompatinfo report for version 2.6.1
 Requires:       php-ctype
 Requires:       php-date
 Requires:       php-iconv
@@ -149,6 +156,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb 25 2016 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
+- update to 2.6.1
+
 * Fri Feb 19 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
 - update to 2.6.0
 - raise dependency on zend-crypt >= 2.6
