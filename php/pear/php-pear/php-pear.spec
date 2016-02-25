@@ -30,12 +30,14 @@
 
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_root_sysconfdir}/rpm; echo $d)
 
+%{!?pecl_xmldir: %global pecl_xmldir %{_sharedstatedir}/php/peclxml}
+
 #global pearprever dev3
 
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.10.1
-Release: 1%{?dist}
+Release: 3%{?dist}
 Epoch: 1
 # PEAR, PEAR_Manpages, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -50,6 +52,7 @@ Source10: pear.sh
 Source11: pecl.sh
 Source12: peardev.sh
 Source13: macros.pear
+Source14: macros-f24.pear
 Source21: http://pear.php.net/get/Archive_Tar-%{arctarver}.tgz
 Source22: http://pear.php.net/get/Console_Getopt-%{getoptver}.tgz
 Source23: http://pear.php.net/get/Structures_Graph-%{structver}.tgz
@@ -62,6 +65,8 @@ BuildRequires: %{?scl_prefix}php(language) > 5.4
 BuildRequires: %{?scl_prefix}php-cli
 BuildRequires: %{?scl_prefix}php-xml
 BuildRequires: gnupg
+# For pecl_xmldir macro
+BuildRequires: php-devel
 %if %{with_tests}
 BuildRequires:  %{_bindir}/phpunit
 %endif
@@ -155,7 +160,11 @@ sed -e 's/@SCL@/%{?scl:%{scl}_}/' \
     -e 's:@BINDIR@:%{_bindir}:' \
     -e 's:@ETCDIR@:%{_sysconfdir}:' \
     -e 's:@PREFIX@:%{_prefix}:' \
+%if 0%{?fedora} >= 24
+    %{SOURCE14} | tee macros.pear
+%else
     %{SOURCE13} | tee macros.pear
+%endif
 
 
 %build
@@ -282,6 +291,33 @@ echo 'Test suite disabled (missing "--with tests" option)'
 %endif
 
 
+%if 0%{?fedora} >= 24
+## TODO: silent the pecl commands
+
+# Register newly installed PECL packages
+%transfiletriggerin -- %{pecl_xmldir}
+while read file; do
+  %{_bindir}/pecl install --nodeps --soft --force --register-only --nobuild "$file" || :
+done
+
+# Unregister to be removed PECL packages
+# Reading the xml file to retrieve channel and package name
+%transfiletriggerun -- %{pecl_xmldir}
+%{_bindir}/php -r '
+while ($file=fgets(STDIN)) {
+  $file = trim($file);
+  $xml = simplexml_load_file($file);
+  if (isset($xml->channel) &&  isset($xml->name)) {
+    printf("%s/%s\n", $xml->channel, $xml->name);
+  } else {
+    fputs(STDERR, "Bad pecl package file ($file)\n");
+  }
+}' | while read  name; do
+  %{_bindir}/pecl uninstall --nodeps --ignore-errors --register-only "$name" || :
+done
+%endif
+
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 rm new-pear.conf
@@ -380,6 +416,10 @@ fi
 
 
 %changelog
+* Wed Feb 10 2016 Remi Collet <remi@fedoraproject.org> 1:1.10.1-3
+- use file triggers for pecl extensions (un)registration
+- define %%pecl_install and %%pecl_uninstall as noop macro
+
 * Sat Oct 17 2015 Remi Collet <remi@fedoraproject.org> 1:1.10.1-1
 - update PEAR to 1.10.1
 
