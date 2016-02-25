@@ -17,7 +17,7 @@
 %global metadir %{_localstatedir}/lib/pear
 
 %global getoptver 1.4.1
-%global arctarver 1.4.0
+%global arctarver 1.4.2
 # https://pear.php.net/bugs/bug.php?id=19367
 # Structures_Graph 1.0.4 - incorrect FSF address
 %global structver 1.1.1
@@ -37,7 +37,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.10.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 Epoch: 1
 # PEAR, PEAR_Manpages, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -416,6 +416,9 @@ fi
 
 
 %changelog
+* Thu Feb 25 2016 Remi Collet <remi@fedoraproject.org> 1:1.10.1-4
+- update Archive_Tar to 1.4.2
+
 * Wed Feb 10 2016 Remi Collet <remi@fedoraproject.org> 1:1.10.1-3
 - use file triggers for pecl extensions (un)registration
 - define %%pecl_install and %%pecl_uninstall as noop macro
