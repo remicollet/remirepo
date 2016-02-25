@@ -20,12 +20,12 @@
 # After 20-sockets
 %global ini_name  40-%{pecl_name}.ini
 %endif
-%global prever    RC8
+%global prever    RC9
 
 Summary:        Provides interface to libev library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        0.5.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.6.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -234,6 +234,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Feb 25 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.6.RC9
+- Update to 1.0.0RC9 (php 5 and 7, beta)
+
 * Mon Feb 22 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.5.RC8
 - Update to 1.0.0RC8
 
