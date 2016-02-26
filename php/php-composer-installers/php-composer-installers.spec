@@ -12,15 +12,15 @@
 
 %global github_owner     composer
 %global github_name      installers
-%global github_version   1.0.22
-%global github_commit    bd9b14f094c89c8b5804a4e41edeb7853bb85046
+%global github_version   1.0.23
+%global github_commit    6213d900e92647831f7a406d5c530ea1f3d4360e
 
 %global composer_vendor  composer
 %global composer_project installers
 
-# "composer-plugin-api": "1.0.0"
-%global composer_plugin_min_ver 1.0.0
-%global composer_plugin_max_ver 1.0.1
+# "composer-plugin-api": "^1.0"
+%global composer_plugin_min_ver 1.0
+%global composer_plugin_max_ver 2
 # "composer/composer": "1.0.*@dev"
 %global composer_min_ver 1.0
 
@@ -31,7 +31,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       A multi-framework Composer library installer
 
 Group:         Development/Libraries
@@ -135,6 +135,10 @@ BOOTSTRAP
 
 : Run tests
 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+fi
 %else
 : Tests skipped
 %endif
@@ -154,6 +158,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 26 2016 Remi Collet <remi@remirepo.net> - 1.0.23-1
+- update to 1.0.23
+- run test suite with both PHP 5 and 7 when available
+
 * Wed Nov 04 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.22-2
 - Dependency updates
 
