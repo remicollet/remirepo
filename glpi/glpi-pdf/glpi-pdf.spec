@@ -1,6 +1,6 @@
-# spec file for glpi-pdf
+# remirepo spec file for glpi-pdf
 #
-# Copyright (c) 2007-2015 Remi Collet
+# Copyright (c) 2007-2016 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #
@@ -10,7 +10,7 @@
 #global svnrelease   315
 
 Name:           glpi-pdf
-Version:        0.84.2
+Version:        1.0
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
@@ -28,15 +28,15 @@ URL:            https://forge.indepnet.net/projects/pdf
 # tar czf glpi-pdf-0.83-315.tar.gz pdf
 Source0:        glpi-pdf-0.83-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/1772/glpi-pdf-0.84.2.tar.gz
+Source0:        https://forge.glpi-project.org/attachments/download/2125/glpi-pdf-1.0.tar.gz
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
 
-Requires:       glpi >= 0.84
-Requires:       glpi <  0.85
+Requires:       glpi >= 0.85.3
+Requires:       glpi <  0.91
 
 
 %description
@@ -52,13 +52,8 @@ informations sur un équipement ou un logiciel de l'inventaire.
 %prep
 %setup -q -c
 
-# dos2unix to avoid rpmlint warnings
-mv %{pluginname}/trunk/docs docs
-for doc in docs/* ; do
-    sed -i -e 's/\r//' $doc
-done
-
-rm -r %{pluginname}/trunk
+# Create link to LICENSE for standard doc folder
+ln -s %{_datadir}/glpi/plugins/%{pluginname}/LICENSE LICENSE
 
 
 %build
@@ -88,7 +83,8 @@ rm -rf %{buildroot}
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc docs/* %{pluginname}/LICENSE
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
 %dir %{_datadir}/glpi/plugins/%{pluginname}
 %dir %{_datadir}/glpi/plugins/%{pluginname}/locales
 %{_datadir}/glpi/plugins/%{pluginname}/*.php
@@ -101,6 +97,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 26 2016 Remi Collet <remi@fedoraproject.org> - 1.0-1
+- version 1.0 for GLPI >= 0.85.3
+  https://forge.glpi-project.org/versions/1178
+
 * Sun Jun  8 2014 Remi Collet <remi@fedoraproject.org> - 0.84.2-1
 - version 0.84.2
   https://forge.indepnet.net/versions/1043
