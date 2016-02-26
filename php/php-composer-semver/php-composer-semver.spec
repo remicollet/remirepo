@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0faeb6e433f6b352f0dc55ec1faf5c6b605a35d3
+%global gh_commit    df4463baa9f44fe6cf0a6da4fde2934d4c0a2747
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150717
 %global gh_owner     composer
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-composer-semver
-Version:        1.2.0
+Version:        1.3.0
 Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
 Summary:        Semver library that offers utilities, version constraint parsing and validation
 
@@ -90,6 +90,12 @@ cp -pr src %{buildroot}%{php_home}/Composer/Semver
 %{_bindir}/phpunit \
     --bootstrap %{buildroot}%{php_home}/Composer/Semver/autoload.php \
     --verbose
+
+if which php70; then
+  php70 %{_bindir}/phpunit \
+    --bootstrap %{buildroot}%{php_home}/Composer/Semver/autoload.php \
+    --verbose
+fi
 %else
 : Test suite disabled
 %endif
@@ -110,6 +116,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Feb 26 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- update to 1.3.0
+- run test suite with both PHP 5 and 7 when available
+
 * Tue Nov 10 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - update to 1.2.0
 
