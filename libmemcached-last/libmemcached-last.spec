@@ -38,7 +38,7 @@ Name:      %{libname}-last
 
 Summary:   Client library and command line tools for memcached server
 Version:   1.0.18
-Release:   5%{?dist}
+Release:   6%{?dist}
 License:   BSD
 Group:     Applications/System
 URL:       http://libmemcached.org/
@@ -67,6 +67,7 @@ BuildRequires: %{sub_prefix}libevent-devel  > 2
 %else
 BuildRequires: libevent-devel > 2
 %if "%{libname}" != "%{name}"
+Obsoletes:     %{libname}10       < %{version}
 Conflicts:     %{libname}         < %{version}
 Provides:      %{libname}         = %{version}-%{release}
 Provides:      %{libname}%{?_isa} = %{version}-%{release}
@@ -111,6 +112,7 @@ Requires:   cyrus-sasl-devel%{?_isa}
 %endif
 %if ! 0%{?scl:1}
 %if "%{libname}" != "%{name}"
+Obsoletes:  %{libname}10-devel       < %{version}
 Conflicts:  %{libname}-devel         < %{version}
 Provides:   %{libname}-devel         = %{version}-%{release}
 Provides:   %{libname}-devel%{?_isa} = %{version}-%{release}
@@ -267,6 +269,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 28 2016 Remi Collet <remi@fedoraproject.org> - 1.0.18-6
+- obsolete libmemcached10
+
 * Tue Jun 23 2015 Remi Collet <remi@fedoraproject.org> - 1.0.18-5
 - allow build against rh-php56 (as more-php56)
 
