@@ -1,4 +1,4 @@
-# spec file for php-phpunit-PHPUnit-Selenium
+# remirepo/fedora spec file for php-phpunit-PHPUnit-Selenium
 #
 # Copyright (c) 2010-2016 Remi Collet
 # License: CC-BY-SA
@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    80a97c3caab00f7fa3eba1e8b75043cf7f4f7298
+%global gh_commit    c9f5c49944c057e2b3c6273e1b5b30d244e3aaeb
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     giorgiosironi
 %global gh_project   phpunit-selenium
@@ -16,7 +16,7 @@
 # No test, as test suite requires a Selenium server
 
 Name:           php-phpunit-PHPUnit-Selenium
-Version:        2.0.1
+Version:        3.0.0
 Release:        1%{?dist}
 Summary:        Selenium RC integration for PHPUnit
 
@@ -27,18 +27,18 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  %{_bindir}/phpab
 
 # From composer.json
-#        "php": ">=5.3.3",
-#        "phpunit/phpunit": "~4",
+#        "php": ">=5.6",
+#        "phpunit/phpunit": "~5",
 #        "sebastian/comparator": "~1.0",
 #        "ext-curl": "*",
 #        "ext-dom": "*"
-Requires:       php(language) >= 5.3.3
-Requires:       php-composer(phpunit/phpunit) >= 4
-Requires:       php-composer(phpunit/phpunit) <  5
+Requires:       php(language) >= 5.6
+Requires:       php-composer(phpunit/phpunit) >= 5
+Requires:       php-composer(phpunit/phpunit) <  6
 Requires:       php-composer(sebastian/comparator) >= 1.0
 Requires:       php-composer(sebastian/comparator) <  2
 Requires:       php-curl
@@ -110,6 +110,11 @@ fi
 
 
 %changelog
+* Sun Feb 28 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- update to 3.0.0
+- raise dependency on PHPUnit >= 5
+- raise dependency on PHP >= 5.6
+
 * Sun Feb 28 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - update to 2.0.1
 - only support PHP 5
