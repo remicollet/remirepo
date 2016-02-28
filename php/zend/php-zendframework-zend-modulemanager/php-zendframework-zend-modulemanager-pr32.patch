@@ -1,0 +1,24 @@
+From 34478c17ac6f9b94a3b9f4eaf68646682d8bdbea Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sun, 28 Feb 2016 17:53:09 +0100
+Subject: [PATCH] remove uneeded AutoloaderFactory::unregisterAutoloaders()
+
+---
+ test/ResetAutoloadFunctionsTrait.php | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/test/ResetAutoloadFunctionsTrait.php b/test/ResetAutoloadFunctionsTrait.php
+index 24e5e37..4a4d28c 100644
+--- a/test/ResetAutoloadFunctionsTrait.php
++++ b/test/ResetAutoloadFunctionsTrait.php
+@@ -52,7 +52,6 @@ trait ResetAutoloadFunctionsTrait
+      */
+     protected function restoreAutoloadFunctions()
+     {
+-        AutoloaderFactory::unregisterAutoloaders();
+         $loaders = spl_autoload_functions();
+         if (is_array($loaders)) {
+             foreach ($loaders as $loader) {
+-- 
+2.5.0
+

@@ -1,4 +1,4 @@
-# remirepo/Fedora spec file for php-zendframework-zend-modulemanager
+# remirepo/fedora spec file for php-zendframework-zend-modulemanager
 #
 # Copyright (c) 2015-2016 Remi Collet
 # License: CC-BY-SA
@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    5d11387829cfc68359da7ea600dea835acb31a22
+%global gh_commit    a2c3af17bd620028e8478a2e115e06623c4b6400
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-modulemanager
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.1
+Version:        2.7.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -29,6 +29,8 @@ License:        BSD
 URL:            http://framework.zend.com/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
+
+Patch0:         %{name}-pr32.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -39,37 +41,35 @@ BuildRequires:  php-spl
 BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 # From composer, "require-dev": {
-#        "zendframework/zend-config": "~2.5",
-#        "zendframework/zend-console": "~2.5",
-#        "zendframework/zend-di": "~2.5",
-#        "zendframework/zend-loader": "~2.5",
-#        "zendframework/zend-mvc": "~2.5",
-#        "zendframework/zend-servicemanager": "~2.5",
+#        "zendframework/zend-config": "^2.6",
+#        "zendframework/zend-console": "^2.6",
+#        "zendframework/zend-di": "^2.6",
+#        "zendframework/zend-loader": "^2.5",
+#        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0"
-BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-console)          >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-di)               >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.6
+BuildRequires:  php-composer(%{gh_owner}/zend-console)          >= 2.6
+BuildRequires:  php-composer(%{gh_owner}/zend-di)               >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-mvc)              >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Because of bootstrap
-BuildRequires:  php-composer(%{gh_owner}/zend-code)              >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-code)             >= 2.5
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.5",
-#        "zendframework/zend-eventmanager": "~2.5",
-#        "zendframework/zend-stdlib": "~2.7"
+#        "php": "^5.5 || ^7.0",
+#        "zendframework/zend-eventmanager": "^2.6.2 || ^3.0",
+#        "zendframework/zend-stdlib": "^2.7 || ^3.0"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
-Requires:       php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-eventmanager)     <  3
+Requires:       php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6.2
+Requires:       php-composer(%{gh_owner}/zend-eventmanager)     <  4
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 # From composer, "suggest": {
 #        "zendframework/zend-config": "Zend\\Config component",
 #        "zendframework/zend-console": "Zend\\Console component",
@@ -105,6 +105,8 @@ Zend\ModuleManager is the component that enables the design of a module architec
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+
+%patch0 -p1 -b .pr32
 
 
 %build
@@ -157,6 +159,14 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 28 2016 Remi Collet <remi@fedoraproject.org> - 2.7.1-1
+- update to 2.7.1
+- https://github.com/zendframework/zend-modulemanager/pull/32
+
+* Fri Feb 26 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
+- update to 2.7.0
+- raise dependency on zend-eventmanager >= 2.6.2
+
 * Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
 - update to 2.6.1
 - raise dependency on zend-stdlib ~2.7
