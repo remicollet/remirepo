@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    6e7133793a8e5a5714a551a8324337374be209df
+%global gh_commit    dc7a29032cf72b54f36dac15a1ca5b3a1b6029bf
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   environment
@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-phpunit-environment
-Version:        1.3.3
+Version:        1.3.5
 Release:        1%{?dist}
 Summary:        Handle HHVM/PHP environments
 
@@ -99,6 +99,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Feb 28 2016 Remi Collet <remi@fedoraproject.org> - 1.3.5-1
+- update to 1.3.5
+
 * Wed Dec  2 2015 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
 - update to 1.3.3 (no change on linux)
 - run test suite with both php 5 and 7 when available
