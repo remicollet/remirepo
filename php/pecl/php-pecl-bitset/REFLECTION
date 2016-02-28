@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #77 bitset version 2.0.1 ] {
+Extension [ <persistent> extension #80 bitset version 2.0.2 ] {
 
   - Functions {
     Function [ <internal:bitset> function bitset_empty ] {
@@ -122,7 +122,7 @@ Extension [ <persistent> extension #77 bitset version 2.0.1 ] {
       - Static properties [0] {
       }
 
-      - Static methods [2] {
+      - Static methods [3] {
         Method [ <internal:bitset> static public method fromArray ] {
 
           - Parameters [1] {
@@ -131,6 +131,13 @@ Extension [ <persistent> extension #77 bitset version 2.0.1 ] {
         }
 
         Method [ <internal:bitset> static public method fromString ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $str ]
+          }
+        }
+
+        Method [ <internal:bitset> static public method fromRawValue ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $str ]
