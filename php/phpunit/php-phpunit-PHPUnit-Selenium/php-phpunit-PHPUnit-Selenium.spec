@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5e13bfe60ccf8b487f25ccc5d84eaeb89f4e7189
+%global gh_commit    80a97c3caab00f7fa3eba1e8b75043cf7f4f7298
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     giorgiosironi
 %global gh_project   phpunit-selenium
@@ -16,8 +16,8 @@
 # No test, as test suite requires a Selenium server
 
 Name:           php-phpunit-PHPUnit-Selenium
-Version:        2.0.0
-Release:        2%{?dist}
+Version:        2.0.1
+Release:        1%{?dist}
 Summary:        Selenium RC integration for PHPUnit
 
 Group:          Development/Libraries
@@ -32,13 +32,13 @@ BuildRequires:  %{_bindir}/phpab
 
 # From composer.json
 #        "php": ">=5.3.3",
-#        "phpunit/phpunit": ">=4.8,<=6.0",
+#        "phpunit/phpunit": "~4",
 #        "sebastian/comparator": "~1.0",
 #        "ext-curl": "*",
 #        "ext-dom": "*"
 Requires:       php(language) >= 5.3.3
-Requires:       php-composer(phpunit/phpunit) >= 4.8
-Requires:       php-composer(phpunit/phpunit) <= 6.0
+Requires:       php-composer(phpunit/phpunit) >= 4
+Requires:       php-composer(phpunit/phpunit) <  5
 Requires:       php-composer(sebastian/comparator) >= 1.0
 Requires:       php-composer(sebastian/comparator) <  2
 Requires:       php-curl
@@ -110,6 +110,10 @@ fi
 
 
 %changelog
+* Sun Feb 28 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- update to 2.0.1
+- only support PHP 5
+
 * Fri Jan 29 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
 - fix autoloader
 
