@@ -14,8 +14,8 @@
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.7.9
-%global github_commit    d3646cc6875c214d211001e0673ec9e91b5f2da7
+%global github_version   2.7.10
+%global github_commit    9a3b6bf6ebee49370aaf15abc1bdeb4b1986a67d
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -60,9 +60,9 @@
 # "monolog/monolog": "~1.11"
 %global monolog_min_ver 1.11
 %global monolog_max_ver 2.0
-# "ocramius/proxy-manager": "~0.4|~1.0"
+# "ocramius/proxy-manager": "~0.4|~1.0|~2.0"
 %global proxy_manager_min_ver 1.0
-%global proxy_manager_max_ver 2.0
+%global proxy_manager_max_ver 3
 # "psr/log": "~1.0"
 %global psrlog_min_ver 1.0
 %global psrlog_max_ver 2.0
@@ -94,7 +94,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       1%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -699,6 +699,9 @@ Requires:  php-libxml
 Requires:  php-pcre
 Requires:  php-spl
 
+# composer.json: optional
+Requires:  php-composer(%{composer_vendor}/yaml)   = %{version}
+
 # Composer
 Provides:  php-composer(%{composer_vendor}/config) = %{version}
 # PEAR
@@ -1298,6 +1301,7 @@ URL:       http://symfony.com/doc/current/components/routing/index.html
 Group:     Development/Libraries
 
 # composer.json: optional
+Requires:  php-composer(%{composer_vendor}/http-foundation)     =  %{version}
 Requires:  php-composer(%{composer_vendor}/config)              =  %{version}
 Requires:  php-composer(%{composer_vendor}/expression-language) =  %{version}
 Requires:  php-composer(%{composer_vendor}/yaml)                =  %{version}
@@ -1959,14 +1963,14 @@ exit $RET
 
 #%%doc src/Symfony/Bundle/DebugBundle/*.md
 %doc src/Symfony/Bundle/DebugBundle/composer.json
-%license src/Symfony/Bundle/DebugBundle/Resources/meta/LICENSE
+%license src/Symfony/Bundle/DebugBundle/LICENSE
 
 %{symfony_dir}/Bundle/DebugBundle
 #%%exclude %%{symfony_dir}/Bundle/DebugBundle/*.md
 %exclude %{symfony_dir}/Bundle/DebugBundle/composer.json
 %exclude %{symfony_dir}/Bundle/DebugBundle/phpunit.*
 %exclude %{symfony_dir}/Bundle/DebugBundle/Tests
-%exclude %{symfony_dir}/Bundle/DebugBundle/Resources/meta/LICENSE
+%exclude %{symfony_dir}/Bundle/DebugBundle/LICENSE
 
 # ------------------------------------------------------------------------------
 
@@ -1975,14 +1979,14 @@ exit $RET
 
 %doc src/Symfony/Bundle/FrameworkBundle/*.md
 %doc src/Symfony/Bundle/FrameworkBundle/composer.json
-%license src/Symfony/Bundle/FrameworkBundle/Resources/meta/LICENSE
+%license src/Symfony/Bundle/FrameworkBundle/LICENSE
 
 %{symfony_dir}/Bundle/FrameworkBundle
 %exclude %{symfony_dir}/Bundle/FrameworkBundle/*.md
 %exclude %{symfony_dir}/Bundle/FrameworkBundle/composer.json
 %exclude %{symfony_dir}/Bundle/FrameworkBundle/phpunit.*
 %exclude %{symfony_dir}/Bundle/FrameworkBundle/Tests
-%exclude %{symfony_dir}/Bundle/FrameworkBundle/Resources/meta/LICENSE
+%exclude %{symfony_dir}/Bundle/FrameworkBundle/LICENSE
 
 # ------------------------------------------------------------------------------
 
@@ -1991,14 +1995,14 @@ exit $RET
 
 %doc src/Symfony/Bundle/SecurityBundle/*.md
 %doc src/Symfony/Bundle/SecurityBundle/composer.json
-%license src/Symfony/Bundle/SecurityBundle/Resources/meta/LICENSE
+%license src/Symfony/Bundle/SecurityBundle/LICENSE
 
 %{symfony_dir}/Bundle/SecurityBundle
 %exclude %{symfony_dir}/Bundle/SecurityBundle/*.md
 %exclude %{symfony_dir}/Bundle/SecurityBundle/composer.json
 %exclude %{symfony_dir}/Bundle/SecurityBundle/phpunit.*
 %exclude %{symfony_dir}/Bundle/SecurityBundle/Tests
-%exclude %{symfony_dir}/Bundle/SecurityBundle/Resources/meta/LICENSE
+%exclude %{symfony_dir}/Bundle/SecurityBundle/LICENSE
 
 # ------------------------------------------------------------------------------
 
@@ -2007,14 +2011,14 @@ exit $RET
 
 %doc src/Symfony/Bundle/TwigBundle/*.md
 %doc src/Symfony/Bundle/TwigBundle/composer.json
-%license src/Symfony/Bundle/TwigBundle/Resources/meta/LICENSE
+%license src/Symfony/Bundle/TwigBundle/LICENSE
 
 %{symfony_dir}/Bundle/TwigBundle
 %exclude %{symfony_dir}/Bundle/TwigBundle/*.md
 %exclude %{symfony_dir}/Bundle/TwigBundle/composer.json
 %exclude %{symfony_dir}/Bundle/TwigBundle/phpunit.*
 %exclude %{symfony_dir}/Bundle/TwigBundle/Tests
-%exclude %{symfony_dir}/Bundle/TwigBundle/Resources/meta/LICENSE
+%exclude %{symfony_dir}/Bundle/TwigBundle/LICENSE
 
 # ------------------------------------------------------------------------------
 
@@ -2024,7 +2028,7 @@ exit $RET
 %doc src/Symfony/Bundle/WebProfilerBundle/*.md
 %doc src/Symfony/Bundle/WebProfilerBundle/composer.json
 %license src/Symfony/Bundle/WebProfilerBundle/Resources/ICONS_LICENSE.txt
-%license src/Symfony/Bundle/WebProfilerBundle/Resources/meta/LICENSE
+%license src/Symfony/Bundle/WebProfilerBundle/LICENSE
 
 %{symfony_dir}/Bundle/WebProfilerBundle
 %exclude %{symfony_dir}/Bundle/WebProfilerBundle/*.md
@@ -2032,7 +2036,7 @@ exit $RET
 %exclude %{symfony_dir}/Bundle/WebProfilerBundle/phpunit.*
 %exclude %{symfony_dir}/Bundle/WebProfilerBundle/Tests
 %exclude %{symfony_dir}/Bundle/WebProfilerBundle/Resources/ICONS_LICENSE.txt
-%exclude %{symfony_dir}/Bundle/WebProfilerBundle/Resources/meta/LICENSE
+%exclude %{symfony_dir}/Bundle/WebProfilerBundle/LICENSE
 
 # ------------------------------------------------------------------------------
 
@@ -2402,7 +2406,7 @@ exit $RET
 %exclude %{symfony_dir}/Component/Security/composer.json
 %exclude %{symfony_dir}/Component/Security/phpunit.*
 %exclude %{symfony_dir}/Component/Security/*/phpunit.*
-#exclude %%{symfony_dir}/Component/Security/Tests
+%exclude %{symfony_dir}/Component/Security/Tests
 %exclude %{symfony_dir}/Component/Security/*/Tests
 %exclude %{symfony_dir}/Component/Security/*/LICENSE
 %exclude %{symfony_dir}/Component/Security/*/*.md
@@ -2523,6 +2527,12 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Mon Feb 29 2016 Remi Collet <remi@fedoraproject.org> - 2.7.10-1
+- Update to 2.7.10
+- config: add dependency on config (optional)
+- routing: add dependency on http-foundation (optional)
+- ignore dependency on symfony/polyfill-apcu
+
 * Thu Jan 14 2016 Remi Collet <remi@fedoraproject.org> - 2.7.9-2
 - fix autoloader for paragonie/random_compat, thanks Koschei
 
