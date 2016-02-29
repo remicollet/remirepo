@@ -30,7 +30,7 @@ URL:            http://framework.zend.com/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
 
-Patch0:         %{name}-pr32.patch
+Patch0:         %{name}-pr33.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -106,7 +106,7 @@ Zend\ModuleManager is the component that enables the design of a module architec
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-%patch0 -p1 -b .pr32
+%patch0 -p1 -b .pr33
 
 
 %build
@@ -161,7 +161,7 @@ rm -rf %{buildroot}
 %changelog
 * Sun Feb 28 2016 Remi Collet <remi@fedoraproject.org> - 2.7.1-1
 - update to 2.7.1
-- https://github.com/zendframework/zend-modulemanager/pull/32
+- https://github.com/zendframework/zend-modulemanager/pull/33
 
 * Fri Feb 26 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
 - update to 2.7.0
