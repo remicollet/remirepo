@@ -1,4 +1,4 @@
-# remirepo spec file for mongo-c-driver
+# remirepo/fedora spec file for mongo-c-driver
 #
 # Copyright (c) 2015-2016 Remi Collet
 # License: CC-BY-SA
@@ -8,25 +8,15 @@
 #
 %global gh_owner     mongodb
 %global gh_project   mongo-c-driver
-#global gh_commit    495cd3ffa9beade31c2b410eb5e9555c7db240e1
-#global gh_short     %%(c=%%{gh_commit}; echo ${c:0:7})
-#global gh_date      20151001
 %global with_tests   0%{!?_without_tests:1}
 %global libname      libmongoc
 %global libver       1.0
-#global prever       rc0
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.3.3
-%if 0%{?gh_date}
-Release:   0.6.%{gh_date}git%{gh_short}%{?dist}
-Source0:   https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
-BuildRequires: libtool autoconf
-%else
-Release:   1%{?dist}
+Release:   2%{?dist}
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
-%endif
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -46,9 +36,23 @@ BuildRequires: perl
 # From man pages
 BuildRequires: python
 
+Requires:   %{name}-libs%{?_isa} = %{version}-%{release}
+# Sub package removed
+Obsoletes:  %{name}-tools         < 1.3.0
+Provides:   %{name}-tools         = %{version}
+Provides:   %{name}-tools%{?_isa} = %{version}
+
 
 %description
 %{name} is a client library written in C for MongoDB.
+
+
+%package libs
+Summary:    Shared libraries for %{name}
+Group:      Development/Libraries
+
+%description libs
+This package contains the shared libraries for %{name}.
 
 
 %package devel
@@ -56,9 +60,6 @@ Summary:    Header files and development libraries for %{name}
 Group:      Development/Libraries
 Requires:   %{name}%{?_isa} = %{version}-%{release}
 Requires:   pkgconfig
-# Sub package removed
-Obsoletes:  %{name}-tools < 1.3.0
-
 
 %description devel
 This package contains the header files and development libraries
@@ -68,15 +69,8 @@ Documentation: http://api.mongodb.org/c/%{version}/
 
 
 %prep
-%if 0%{?gh_date}
-%setup -q -n %{gh_project}-%{gh_commit}
-autoreconf -fvi -I build/autotools
-%else
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
-%endif
 
-# Ensure we are using system library
-# Done after autoreconf because of m4_include
 rm -r src/libbson
 
 
@@ -84,9 +78,18 @@ rm -r src/libbson
 export LIBS=-lpthread
 
 %configure \
+  --enable-hardening \
+  --enable-debug-symbols\
+  --enable-shm-counters \
+%if %{with_tests}
+  --enable-tests \
+%else
+  --disable-tests \
+%endif
   --enable-sasl \
   --enable-ssl \
   --with-libbson=system \
+  --disable-html-docs \
   --enable-man-pages
 
 make %{_smp_mflags} V=1
@@ -122,22 +125,20 @@ make check || ret=1
 : Cleanup
 [ -s server.pid ] && kill $(cat server.pid)
 
-%if 0%{?gh_date}
-exit 0
-%else
 exit $ret
-%endif
 %else
 : check disabled, missing '--with tests' option
 %endif
 
 
-%post   -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
+%post   libs -p /sbin/ldconfig
+%postun libs -p /sbin/ldconfig
 
 
 %files
+%{_bindir}/mongoc-stat
+
+%files libs
 %{!?_licensedir:%global license %%doc}
 %license COPYING
 %{_libdir}/%{libname}-%{libver}.so.*
@@ -150,10 +151,13 @@ exit $ret
 %{_libdir}/%{libname}-priv.so
 %{_libdir}/pkgconfig/%{libname}-*.pc
 %{_mandir}/man3/mongoc*
-%{_bindir}/mongoc-stat
 
 
 %changelog
+* Mon Feb 29 2016 Remi Collet <remi@fedoraproject.org> - 1.3.3-2
+- cleanup for review
+- move libraries in "libs" sub-package
+
 * Sun Feb  7 2016 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
 - Update to 1.3.3
 
