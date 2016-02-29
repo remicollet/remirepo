@@ -22,14 +22,12 @@
 
 Summary:        BITSET library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        2.0.2
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Version:        2.0.3
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-Source1:        https://raw.githubusercontent.com/php/pecl-numbers-bitset/master/LICENSE
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -85,7 +83,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-cp %{SOURCE1} LICENSE
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_BITSET_VERSION/{s/.* "//;s/".*$//;p}' php_bitset.h)
@@ -220,6 +217,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Feb 29 2016 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
+
 * Sun Feb 28 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - update to 2.0.2
 - drop runtime dependency on pear, new scriptlets
