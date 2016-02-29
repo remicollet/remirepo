@@ -8,14 +8,20 @@
 #
 %global gh_owner     mongodb
 %global gh_project   mongo-c-driver
-%if 0%{?fedora} < 24
-%global with_tests   0%{!?_without_tests:1}
-%else
-# Borken for now, see #1313018
-%global with_tests   0%{?_with_tests:1}
-%endif
 %global libname      libmongoc
 %global libver       1.0
+
+%if 0%{?fedora} < 24
+%ifarch %{arm}
+# mongodb on arm is broken for now, see #1303864
+%global with_tests   0%{?_with_tests:1}
+%else
+%global with_tests   0%{!?_without_tests:1}
+%endif
+%else
+# mongodb on F24+ is broken for now, see #1313018
+%global with_tests   0%{?_with_tests:1}
+%endif
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
@@ -123,6 +129,8 @@ rm    %{buildroot}/%{_mandir}/man3/[t-u]*
 mkdir dbtest
 mongod \
   --journal \
+  --bind_ip     127.0.0.1 \
+  --unixSocketPrefix /tmp \
   --logpath     $PWD/server.log \
   --pidfilepath $PWD/server.pid \
   --dbpath      $PWD/dbtest \
@@ -171,6 +179,7 @@ exit $ret
 - add patch to skip online tests
   open https://github.com/mongodb/mongo-c-driver/pull/314
 - temporarily disable test suite on F24+ (#1313018)
+- temporarily disable test suite on arm  (#1303864)
 
 * Sun Feb  7 2016 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
 - Update to 1.3.3
