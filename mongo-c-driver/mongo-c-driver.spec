@@ -8,7 +8,12 @@
 #
 %global gh_owner     mongodb
 %global gh_project   mongo-c-driver
+%if 0%{?fedora} < 24
 %global with_tests   0%{!?_without_tests:1}
+%else
+# Borken for now, see #1313018
+%global with_tests   0%{?_with_tests:1}
+%endif
 %global libname      libmongoc
 %global libver       1.0
 
@@ -16,10 +21,14 @@ Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.3.3
 Release:   2%{?dist}
-Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
+
+Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
+
+# https://github.com/mongodb/mongo-c-driver/pull/314
+Patch0:    %{name}-pr314.patch
 
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libbson-1.0)
@@ -72,6 +81,7 @@ Documentation: http://api.mongodb.org/c/%{version}/
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
 
 rm -r src/libbson
+%patch0 -p1 -b .pr314
 
 
 %build
@@ -120,6 +130,7 @@ mongod \
 
 : Run the test suite
 ret=0
+export MONGOC_TEST_OFFLINE=1
 make check || ret=1
 
 : Cleanup
@@ -157,6 +168,9 @@ exit $ret
 * Mon Feb 29 2016 Remi Collet <remi@fedoraproject.org> - 1.3.3-2
 - cleanup for review
 - move libraries in "libs" sub-package
+- add patch to skip online tests
+  open https://github.com/mongodb/mongo-c-driver/pull/314
+- temporarily disable test suite on F24+ (#1313018)
 
 * Sun Feb  7 2016 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
 - Update to 1.3.3
