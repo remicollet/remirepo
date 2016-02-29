@@ -19,7 +19,7 @@
 
 Name:           php-horde-Horde-Util
 Version:        2.5.7
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Utility Libraries
 
 Group:          Development/Libraries
@@ -32,6 +32,12 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
+%if 0%{?fedora} > 24
+# Used as default LANG for the test suite
+BuildRequires:  glibc-langpack-fr
+# Used by some tests
+BuildRequires:  glibc-langpack-tr
+%endif
 %if %{with_tests}
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
@@ -97,10 +103,10 @@ cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 %if 0%{?rhel} == 5
 phpunit . || : Test suite result ignored
 %else
-%{_bindir}/phpunit .
+%{_bindir}/phpunit --verbose .
 
 if which php70; then
-   php70 %{_bindir}/phpunit .
+   php70 %{_bindir}/phpunit --verbose .
 fi
 %endif
 %else
@@ -134,6 +140,9 @@ fi
 
 
 %changelog
+* Mon Feb 29 2016 Remi Collet <remi@fedoraproject.org> - 2.5.7-2
+- add BR on glibc-langpack-fr, glibc-langpack-tr (F25+)
+
 * Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.5.7-1
 - Update to 2.5.7
 - PHP 7 compatible version
