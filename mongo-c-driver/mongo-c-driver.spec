@@ -19,8 +19,12 @@
 %global with_tests   0%{!?_without_tests:1}
 %endif
 %else
-# mongodb on F24+ is broken for now, see #1313018
+%ifarch x86_64
+%global with_tests   0%{!?_without_tests:1}
+%else
+# mongodb on i386/F24+ is broken for now, see #1313018
 %global with_tests   0%{?_with_tests:1}
+%endif
 %endif
 
 Name:      mongo-c-driver
@@ -178,8 +182,8 @@ exit $ret
 - move libraries in "libs" sub-package
 - add patch to skip online tests
   open https://github.com/mongodb/mongo-c-driver/pull/314
-- temporarily disable test suite on F24+ (#1313018)
 - temporarily disable test suite on arm  (#1303864)
+- temporarily disable test suite on i686/F24+ (#1313018)
 
 * Sun Feb  7 2016 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
 - Update to 1.3.3
