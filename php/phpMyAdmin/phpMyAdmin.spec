@@ -22,7 +22,7 @@
 %endif
 
 Name: phpMyAdmin
-Version: 4.4.15.4
+Version: 4.4.15.5
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -132,6 +132,11 @@ rm -r libraries/phpseclib
 rm -r js/jquery/src
 rm -r js/openlayers/src
 
+# Remove upstream test suite
+rm -r test
+rm    build.xml
+rm    phpunit.xml.dist
+
 
 %build
 # Nothing to do
@@ -214,6 +219,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Tue Mar  1 2016 Remi Collet <remi@remirepo.net> 4.4.15.5-1
+- update to 4.4.15.5 (2016-02-29, security)
+
 * Fri Jan 29 2016 Remi Collet <remi@remirepo.net> 4.4.15.4-1
 - update to 4.4.15.4 (2016-01-29, bugfix)
 
