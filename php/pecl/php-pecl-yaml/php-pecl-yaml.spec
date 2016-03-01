@@ -33,7 +33,7 @@
 Summary:       PHP Bindings for yaml
 Name:          %{?sub_prefix}php-pecl-yaml
 Version:       1.2.0
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaml
@@ -181,6 +181,9 @@ done
 
 
 %check
+# See https://bugs.php.net/71696
+rm ?TS/tests/yaml_002.phpt
+
 cd NTS
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
@@ -249,6 +252,9 @@ fi
 
 
 %changelog
+* Tue Mar  1 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-3
+- skip yaml_002.phpt, see https://bugs.php.net/71696
+
 * Tue Jun 23 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-2
 - allow build against rh-php56 (as more-php56)
 
