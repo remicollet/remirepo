@@ -22,7 +22,7 @@
 %endif
 
 Name: phpMyAdmin
-Version: 4.5.5
+Version: 4.5.5.1
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
@@ -76,7 +76,7 @@ Requires:  php-php-gettext
 Requires:  php-tcpdf
 Requires:  php-tcpdf-dejavu-sans-fonts
 Requires:  php-composer(phpseclib/phpseclib) >= 2.0.0
-Requires:  php-composer(udan11/sql-parser) >= 3.3.1
+Requires:  php-composer(udan11/sql-parser) >= 3.4.0
 # optional and ignored php-gmp (as bcmath is enough)
 
 Provides:  phpmyadmin = %{version}-%{release}
@@ -136,6 +136,11 @@ rm -r libraries/sql-parser
 # Remove sources of JavaScript librairies
 rm -r js/jquery/src
 rm -r js/openlayers/src
+
+# Remove upstream test suite
+rm -r test
+rm    build.xml
+rm    phpunit.xml.dist
 
 
 %build
@@ -220,6 +225,10 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Tue Mar  1 2016 Remi Collet <remi@remirepo.net> 4.5.5.1-1
+- update to 4.5.5.1 (2016-02-29, security and bugfix)
+- raise dependency on udan11/sql-parser >= 3.4.0
+
 * Tue Feb 23 2016 Remi Collet <remi@remirepo.net> 4.5.5-1
 - update to 4.5.5 (2016-02-22, bugfix)
 - raise dependency on udan11/sql-parser >= 3.3.1
