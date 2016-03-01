@@ -1,4 +1,7 @@
-# spec file for php-pecl-zip
+# remirepo spec file for php-pecl-zip
+# with SCL compatibility, from:
+#
+# fedora spec file for php-pecl-zip
 #
 # Copyright (c) 2013-2016 Remi Collet
 # License: CC-BY-SA
@@ -7,9 +10,8 @@
 # Please, preserve the changelog entries
 #
 %{?scl:     %scl_package       php-pecl-zip}
-%{!?__pecl: %global __pecl     %{_bindir}/pecl}
 
-%global with_zts       0%{?__ztsphp:1}
+%global with_zts       0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name      zip
 
 %if 0%{?rhel} != 5
@@ -28,8 +30,8 @@
 Summary:      A ZIP archive management extension
 Summary(fr):  Une extension de gestion des ZIP
 Name:         %{?scl_prefix}php-pecl-zip
-Version:      1.13.1
-Release:      3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:      1.13.2
+Release:      1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %if %{with_libzip}
 License:      PHP
 %else
@@ -104,7 +106,9 @@ Paquet construit pour PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VE
 %setup -c -q
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
@@ -219,6 +223,7 @@ TEST_PHP_EXECUTABLE=%{_bindir}/zts-php \
 %clean
 rm -rf %{buildroot}
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -235,10 +240,12 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %files
 %defattr(-, root, root, -)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -252,6 +259,10 @@ fi
 
 
 %changelog
+* Tue Mar  1 2016 Remi Collet <remi@fedoraproject.org> - 1.13.2-1
+- Update to 1.13.2
+- fix license management
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.13.1-3
 - rebuild for PHP 7.0.0RC5 new API version
 
