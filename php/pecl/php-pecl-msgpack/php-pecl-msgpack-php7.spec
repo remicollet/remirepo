@@ -10,17 +10,10 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
-%endif
 %endif
 
 %{?scl:          %scl_package         php-pecl-msgpack}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
 
 %global gh_commit   b29f3fd572b9d2ad8c053efa6279f93862f63657
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
@@ -28,12 +21,8 @@
 %global gh_project  msgpack-php
 #global gh_date     20151014
 %global pecl_name   msgpack
-%global with_zts    0%{?__ztsphp:1}
-%if "%{php_version}" < "5.6"
-%global ini_name  %{pecl_name}.ini
-%else
-%global ini_name  40-%{pecl_name}.ini
-%endif
+%global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
+%global ini_name    40-%{pecl_name}.ini
 
 %if 0
 %global        with_msgpack 1
@@ -43,16 +32,17 @@
 
 Summary:       API for communicating with MessagePack serialization
 Name:          %{?sub_prefix}php-pecl-msgpack
-Version:       2.0.0
+Version:       2.0.1
 %if 0%{?gh_date:1}
 Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 License:       BSD
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/msgpack
-Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel >= 7
@@ -71,6 +61,8 @@ Provides:      %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -78,18 +70,12 @@ Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
-%if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
-%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -129,10 +115,15 @@ These are the files needed to compile programs using MessagePack serializer.
 
 %prep
 %setup -qc
+%if 0%{?gh_date:1}
 mv %{gh_project}-%{gh_commit} NTS
 mv NTS/package.xml .
-
 sed -e '/release/s/0.5.6/%{version}%{?gh_date:dev}/' -i package.xml
+%else
+mv %{pecl_name}-%{version} NTS
+%endif
+
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml} \
 
 cd NTS
 
@@ -203,6 +194,7 @@ install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 cd NTS
 for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do [ -f tests/$i ] && install -Dpm 644 tests/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/tests/$i
+   [ -f $i ]       && install -Dpm 644 $i       %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
 done
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
@@ -211,7 +203,7 @@ done
 
 %check
 # Known by upstream as failed test (travis result)
-rm */tests/026.phpt
+rm */tests/041.phpt
 %ifnarch x86_64
 rm */tests/{040,040b,040d}.phpt
 %endif
@@ -245,6 +237,7 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -261,6 +254,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -269,6 +263,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -292,8 +287,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar  1 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- update to 2.0.1 (php 7, beta)
+- use sources from pecl
+
 * Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
-- update to 2.0.0 (php 7)
+- update to 2.0.0 (php 7, beta)
 
 * Wed Oct 14 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.1.20151014git75991cf
 - new snapshot, version bump to 2.0.0dev
