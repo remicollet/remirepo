@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    66b528dc0f3aa81c726bf928c01377ba9b048df0
+%global gh_commit    5c489d91f561cb0a63e0b63b29d6da71f626a137
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     udan11
 #global gh_date      20150820
@@ -15,7 +15,7 @@
 %global psr0         SqlParser
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        3.3.1
+Version:        3.4.0
 Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A validating SQL lexer and parser with a focus on MySQL dialect
 
@@ -24,21 +24,25 @@ License:        GPLv2+
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{?gh_short}.tar.gz
 
+# patch from phpMyAdmin 4.5.5.1
+# https://github.com/phpmyadmin/phpmyadmin/commit/3a6a9a807d99371ee126635e1a505fc1fe0df32c
+Patch0:         %{name}-pma.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.3.0
+BuildRequires:  php(language) >= 5.4.0
 # For tests, from composer.json "require-dev": {
-#        "phpunit/php-code-coverage": "~2.0",
-#        "phpunit/phpunit": "~4.0|~5.0"
+#        "phpunit/php-code-coverage": "~2.0 || ~3.0",
+#        "phpunit/phpunit": "~4.8 || ~5.1"
 BuildRequires:  php-composer(phpunit/phpunit)
 %endif
 # For autoloader
 BuildRequires:  php-composer(theseer/autoload)
 
 # From composer.json, "require": {
-#        "php": ">=5.3.0"
-Requires:       php(language) >= 5.3.0
+#        "php": ">=5.4.0"
+Requires:       php(language) >= 5.4
 # From phpcompatinfo report for 20150629
 Requires:       php-ctype
 Requires:       php-mbstring
@@ -66,6 +70,7 @@ To use this library, you just have to add, in your project:
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+%patch0 -p3
 
 
 %build
@@ -81,8 +86,6 @@ cp -pr src %{buildroot}%{_datadir}/php/%{psr0}
 
 %check
 %if %{with_tests}
-sed -e s/logging/nologging/ -i phpunit.xml
-
 mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
@@ -90,11 +93,11 @@ require '%{buildroot}%{_datadir}/php/%{psr0}/autoload.php';
 EOF
 
 if %{_bindir}/phpunit --atleast-version 4.8; then
-   %{_bindir}/phpunit --verbose
+   %{_bindir}/phpunit --no-coverage --verbose
 fi
 
 if which php70; then
-  php70 %{_bindir}/phpunit --verbose
+  php70 %{_bindir}/phpunit --no-coverage --verbose
 fi
 %else
 : Test suite disabled
@@ -115,6 +118,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar  1 2016 Remi Collet <remi@fedoraproject.org> - 3.4.0-1
+- update to 3.4.0 (for phpMyAdmin 4.5.5.1)
+- add patch from phpMyAdmin
+- raise dependency on php >= 5.4
+
 * Tue Feb 23 2016 Remi Collet <remi@fedoraproject.org> - 3.3.1-1
 - update to 3.3.1 (for phpMyAdmin 4.5.5)
 - don't run test with old PHPUnit (EPEL-6)
