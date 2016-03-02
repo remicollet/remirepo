@@ -66,6 +66,8 @@ Requires:       php-composer(%{gh_owner}/zend-diactoros)        <  2
 %endif
 # From phpcompatinfo report for version 0.2.1 => Nothing
 
+Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
+
 
 %description
 Code for converting PSR-7 messages to zend-http messages, and vice versa.
