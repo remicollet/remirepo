@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    1d91603556b678b9c7962c1d7c8b74366a95db5b
+%global gh_commit    ad5e7f307b3a18726fb65736e121fc257298ba7e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-test
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.2
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -36,67 +36,72 @@ BuildArch:      noarch
 %if %{with_tests}
 BuildRequires:  php(language) >= 5.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
+BuildRequires:  php-composer(sebastian/version)                 >= 1.0.4
 BuildRequires:  php-pcre
-BuildRequires:  php-composer(%{gh_owner}/zend-console)          >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-dom)              >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-http)             >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-console)          >= 2.6
+BuildRequires:  php-composer(%{gh_owner}/zend-dom)              >= 2.6
+BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6.2
+BuildRequires:  php-composer(%{gh_owner}/zend-http)             >= 2.5.4
+# 2.7 ignored as test passes with older
 BuildRequires:  php-composer(%{gh_owner}/zend-mvc)              >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
+BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 BuildRequires:  php-composer(%{gh_owner}/zend-uri)              >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-view)             >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-view)             >= 2.6.3
 # From composer, "require-dev": {
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "mikey179/vfsStream": "~1.2",
-#        "zendframework/zend-i18n": "~2.5",
-#        "zendframework/zend-log": "~2.5",
-#        "zendframework/zend-modulemanager": "~2.5",
-#        "zendframework/zend-serializer": "~2.5",
-#        "zendframework/zend-session": "~2.5"
+#        "zendframework/zend-i18n": "^2.6",
+#        "zendframework/zend-log": "^2.7.1",
+#        "zendframework/zend-modulemanager": "^2.7.1",
+#        "zendframework/zend-serializer": "^2.6.1",
+#        "zendframework/zend-session": "^2.6.2"
 BuildRequires:  php-composer(mikey179/vfsStream)                >= 1.2
-BuildRequires:  php-composer(%{gh_owner}/zend-i18n)             >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-log)              >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-modulemanager)    >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-serializer)       >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-i18n)             >= 2.6
+BuildRequires:  php-composer(%{gh_owner}/zend-log)              >= 2.7.1
+BuildRequires:  php-composer(%{gh_owner}/zend-modulemanager)    >= 2.7.1
+BuildRequires:  php-composer(%{gh_owner}/zend-serializer)       >= 2.6.1
+BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.6.2
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.5",
-#        "phpunit/PHPUnit": "~4.0|~5.0",
-#        "zendframework/zend-console": "~2.5",
-#        "zendframework/zend-dom": "~2.5",
-#        "zendframework/zend-eventmanager": "~2.5",
-#        "zendframework/zend-http": "~2.5",
-#        "zendframework/zend-mvc": "~2.5",
-#        "zendframework/zend-servicemanager": "~2.5",
-#        "zendframework/zend-stdlib": "~2.5",
-#        "zendframework/zend-uri": "~2.5",
-#        "zendframework/zend-view": "~2.5"
+#        "php": "^5.5 || ^7.0",
+#        "phpunit/phpunit": "^4.0 || ^5.0",
+#        "zendframework/zend-console": "^2.6",
+#        "zendframework/zend-dom": "^2.6",
+#        "zendframework/zend-eventmanager": "^2.6.2 || ^3.0",
+#        "zendframework/zend-http": "^2.5.4",
+#        "zendframework/zend-mvc": "^2.7",
+#        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
+#        "zendframework/zend-stdlib": "^2.7 || ^3.0",
+#        "zendframework/zend-uri": "^2.5",
+#        "zendframework/zend-view": "^2.6.3",
+#        "sebastian/version": "^1.0.4"
 Requires:       php(language) >= 5.5
 Requires:       php-composer(phpunit/phpunit)                   >= 4.0
 Requires:       php-composer(phpunit/phpunit)                   <  6
+Requires:       php-composer(sebastian/version)                 >= 1.0.4
+Requires:       php-composer(sebastian/version)                 <  2
 %if ! %{bootstrap}
-Requires:       php-composer(%{gh_owner}/zend-console)          >= 2.5
+Requires:       php-composer(%{gh_owner}/zend-console)          >= 2.6
 Requires:       php-composer(%{gh_owner}/zend-console)          <  3
-Requires:       php-composer(%{gh_owner}/zend-dom)              >= 2.5
+Requires:       php-composer(%{gh_owner}/zend-dom)              >= 2.6
 Requires:       php-composer(%{gh_owner}/zend-dom)              <  3
-Requires:       php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-eventmanager)     <  3
-Requires:       php-composer(%{gh_owner}/zend-http)             >= 2.5
+Requires:       php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6.2
+Requires:       php-composer(%{gh_owner}/zend-eventmanager)     <  4
+Requires:       php-composer(%{gh_owner}/zend-http)             >= 2.5.4
 Requires:       php-composer(%{gh_owner}/zend-http)             <  3
-Requires:       php-composer(%{gh_owner}/zend-mvc)              >= 2.5
+Requires:       php-composer(%{gh_owner}/zend-mvc)              >= 2.7
 Requires:       php-composer(%{gh_owner}/zend-mvc)              <  3
-Requires:       php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-servicemanager)   <  3
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
+Requires:       php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
+Requires:       php-composer(%{gh_owner}/zend-servicemanager)   <  4
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 Requires:       php-composer(%{gh_owner}/zend-uri)              >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-uri)              <  3
-Requires:       php-composer(%{gh_owner}/zend-view)             >= 2.5
+Requires:       php-composer(%{gh_owner}/zend-view)             >= 2.6.3
 Requires:       php-composer(%{gh_owner}/zend-view)             <  3
 %endif
 # From phpcompatinfo report for version 2.5.1
@@ -169,6 +174,18 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- update to 2.6.0
+- raise dependency on zend-console >= 2.6
+- raise dependency on zend-dom >= 2.6
+- raise dependency on zend-eventmanager >= 2.6.2
+- raise dependency on zend-http >= 2.5.4
+- raise dependency on zend-mvc >= 2.7
+- raise dependency on zend-servicemanager >= 2.7.5
+- raise dependency on zend-stdlib >= 2.7
+- raise dependency on zend-view >= 2.6.3
+- add dependency on sebastian/version
+
 * Wed Dec  9 2015 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - update to 2.5.2
 - raise dependency on PHP >= 5.5
