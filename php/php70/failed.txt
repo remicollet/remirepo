@@ -1,22 +1,30 @@
-===== 7.0.4RC1 (2016-02-18)
+===== 7.0.4 (2016-03-03)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
-/var/lib/mock/el6i/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
+/var/lib/mock/el6i/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
 /var/lib/mock/el6x/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
 /var/lib/mock/el7x/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
-/var/lib/mock/fc21i/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
-/var/lib/mock/fc21x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
-/var/lib/mock/fc22i/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/fc21i/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
+/var/lib/mock/fc21x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
+/var/lib/mock/fc22i/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
 /var/lib/mock/fc22x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
-/var/lib/mock/fc23i/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/fc23i/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
 /var/lib/mock/fc23x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 
 
 el6i, el6x, el7x
-    Bug #33414 [2] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-2.phpt]
+		Bug #33414 [2] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-2.phpt]
 el6x, el7x
-    strtotime() function (64 bit) [ext/date/tests/strtotime3-64bit.phpt]
+		strtotime() function (64 bit) [ext/date/tests/strtotime3-64bit.phpt]
+fc21x
+	*	php://input is empty when enable_post_data_reading=Off [tests/basic/bug67198.phpt]
+fc22i
+	*	Bug #70198 Checking liveness does not work as expected [ext/standard/tests/streams/bug70198.phpt]
+el6i, fc21i fc22i, fc23i
+	**	Test str_pad() function : usage variations - unexpected large value for '$pad_length' argument [ext/standard/tests/strings/str_pad_variation5.phpt]
 
 
-* proc_open give erratic test results :(
+*  proc_open give erratic test results :(
+** test fixed upstream
+

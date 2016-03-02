@@ -121,7 +121,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver         RC1
+#global rcver         RC1
 %global rpmrel        1
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1527,6 +1527,12 @@ install -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/php.ini
 install -m 755 -d $RPM_BUILD_ROOT%{_httpd_contentdir}/icons
 install -m 644 php.gif $RPM_BUILD_ROOT%{_httpd_contentdir}/icons/php.gif
 
+%if %{with_libpcre}
+if ! pkg-config libpcre --atleast-version 8.38 ; then
+   sed -e 's/;pcre.jit=1/pcre.jit=0/' -i $RPM_BUILD_ROOT%{_sysconfdir}/php.ini
+fi
+%endif
+
 # For third-party packaging:
 install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/php
 
@@ -1988,6 +1994,11 @@ fi
 
 
 %changelog
+* Wed Mar  2 2016 Remi Collet <remi@fedoraproject.org> 7.0.4-1
+- Update to 7.0.4
+  http://www.php.net/releases/7_0_4.php
+- pcre: disables JIT compilation of patterns with system pcre < 8.38
+
 * Thu Feb 18 2016 Remi Collet <remi@fedoraproject.org> 7.0.4-0.1.0RC1
 - Update to 7.0.4RC1
 
