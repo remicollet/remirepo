@@ -19,13 +19,10 @@
 %global gh_owner   eduardok
 %global gh_project libsmbclient-php
 #global gh_date    20150909
-%global prever     RC1
+#global prever     RC1
 
 %{?scl:          %scl_package         php-smbclient}
 %{!?scl:         %global pkg_name     %{name}}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
 
 %global pecl_name  smbclient
 %global with_zts   0%{?__ztsphp:1}
@@ -39,7 +36,7 @@
 
 Name:           %{?sub_prefix}php-smbclient
 Version:        0.8.0
-Release:        0.5.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        PHP wrapper for libsmbclient
 
 Group:          Development/Languages
@@ -127,7 +124,9 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 %endif
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
 # Check extension version
@@ -208,6 +207,7 @@ cp %{SOURCE2} phpunit.xml
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -224,10 +224,10 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %files
-%{!?_licensedir:%global license %%doc}
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -242,6 +242,9 @@ fi
 
 
 %changelog
+* Wed Mar  2 2016 Remi Collet <remi@fedoraproject.org> - 0.8.0-1
+- update to 0.8.0 (stable, no change)
+
 * Tue Dec  8 2015 Remi Collet <remi@fedoraproject.org> - 0.8.0-0.5.RC1
 - now available on PECL
 
