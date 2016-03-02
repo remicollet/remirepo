@@ -18,9 +18,6 @@
 %endif
 
 %{?scl:          %scl_package        php-pecl-igbinary}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global extname   igbinary
 %global with_zts  0%{?__ztsphp:1}
@@ -62,6 +59,8 @@ Provides:       %{?scl_prefix}php-%{extname} = %{version}
 Provides:       %{?scl_prefix}php-%{extname}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{extname}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{extname})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -108,7 +107,7 @@ Provides:      %{?scl_prefix}php-%{extname}-devel%{?_isa} = %{version}-%{release
 %description devel
 These are the files needed to compile programs using Igbinary
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -121,6 +120,8 @@ sed -e '/release/s/-dev/dev/' -i package.xml
 %else
 mv %{extname}-%{version} NTS
 %endif
+
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
 
@@ -232,6 +233,7 @@ REPORT_EXIT_STATUS=1 \
 rm -rf %{buildroot}
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -248,10 +250,12 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{extname} >/dev/null || :
 fi
+%endif
 
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/COPYING}
 %doc %{pecl_docdir}/%{extname}
 %config(noreplace) %{php_inidir}/%{ini_name}
 
