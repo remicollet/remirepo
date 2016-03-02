@@ -1,14 +1,14 @@
-Extension [ <persistent> extension #156 memcached version 2.2.0 ] {
+Extension [ <persistent> extension #85 memcached version 2.2.1-dev ] {
 
   - INI {
     Entry [ memcached.sess_locking <ALL> ]
       Current = '1'
     }
     Entry [ memcached.sess_consistent_hash <ALL> ]
-      Current = '0'
+      Current = ''
     }
     Entry [ memcached.sess_binary <ALL> ]
-      Current = '0'
+      Current = ''
     }
     Entry [ memcached.sess_lock_wait <ALL> ]
       Current = '150000'
@@ -26,10 +26,10 @@ Extension [ <persistent> extension #156 memcached version 2.2.0 ] {
       Current = '0'
     }
     Entry [ memcached.sess_randomize_replica_read <ALL> ]
-      Current = '0'
+      Current = ''
     }
     Entry [ memcached.sess_remove_failed <ALL> ]
-      Current = '0'
+      Current = '1'
     }
     Entry [ memcached.sess_connect_timeout <ALL> ]
       Current = '1000'
@@ -53,17 +53,17 @@ Extension [ <persistent> extension #156 memcached version 2.2.0 ] {
       Current = 'igbinary'
     }
     Entry [ memcached.use_sasl <SYSTEM> ]
-      Current = '0'
+      Current = ''
     }
     Entry [ memcached.store_retry_count <ALL> ]
       Current = '2'
     }
   }
 
-  - Classes [3] {
+  - Classes [2] {
     Class [ <internal:memcached> class Memcached ] {
 
-      - Constants [130] {
+      - Constants [99] {
         Constant [ integer LIBMEMCACHED_VERSION_HEX ] { 16777240 }
         Constant [ integer OPT_COMPRESSION ] { -1001 }
         Constant [ integer OPT_COMPRESSION_TYPE ] { -1004 }
@@ -162,37 +162,6 @@ Extension [ <persistent> extension #156 memcached version 2.2.0 ] {
         Constant [ integer COMPRESSION_FASTLZ ] { 2 }
         Constant [ integer COMPRESSION_ZLIB ] { 1 }
         Constant [ integer GET_PRESERVE_ORDER ] { 1 }
-        Constant [ integer ON_CONNECT ] { 0 }
-        Constant [ integer ON_ADD ] { 1 }
-        Constant [ integer ON_APPEND ] { 2 }
-        Constant [ integer ON_DECREMENT ] { 3 }
-        Constant [ integer ON_DELETE ] { 4 }
-        Constant [ integer ON_FLUSH ] { 5 }
-        Constant [ integer ON_GET ] { 6 }
-        Constant [ integer ON_INCREMENT ] { 7 }
-        Constant [ integer ON_NOOP ] { 8 }
-        Constant [ integer ON_PREPEND ] { 9 }
-        Constant [ integer ON_QUIT ] { 10 }
-        Constant [ integer ON_REPLACE ] { 11 }
-        Constant [ integer ON_SET ] { 12 }
-        Constant [ integer ON_STAT ] { 13 }
-        Constant [ integer ON_VERSION ] { 14 }
-        Constant [ integer RESPONSE_SUCCESS ] { 0 }
-        Constant [ integer RESPONSE_KEY_ENOENT ] { 1 }
-        Constant [ integer RESPONSE_KEY_EEXISTS ] { 2 }
-        Constant [ integer RESPONSE_E2BIG ] { 3 }
-        Constant [ integer RESPONSE_EINVAL ] { 4 }
-        Constant [ integer RESPONSE_NOT_STORED ] { 5 }
-        Constant [ integer RESPONSE_DELTA_BADVAL ] { 6 }
-        Constant [ integer RESPONSE_NOT_MY_VBUCKET ] { 7 }
-        Constant [ integer RESPONSE_AUTH_ERROR ] { 32 }
-        Constant [ integer RESPONSE_AUTH_CONTINUE ] { 33 }
-        Constant [ integer RESPONSE_UNKNOWN_COMMAND ] { 129 }
-        Constant [ integer RESPONSE_ENOMEM ] { 130 }
-        Constant [ integer RESPONSE_NOT_SUPPORTED ] { 131 }
-        Constant [ integer RESPONSE_EINTERNAL ] { 132 }
-        Constant [ integer RESPONSE_EBUSY ] { 133 }
-        Constant [ integer RESPONSE_ETMPFAIL ] { 134 }
         Constant [ boolean GET_ERROR_RETURN_VALUE ] {  }
       }
 
@@ -684,30 +653,7 @@ Extension [ <persistent> extension #156 memcached version 2.2.0 ] {
       }
     }
 
-    Class [ <internal:memcached> class MemcachedServer ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [2] {
-        Method [ <internal:memcached> public method run ] {
-        }
-
-        Method [ <internal:memcached> public method on ] {
-        }
-      }
-    }
-
-    Class [ <internal:memcached> class MemcachedException extends RuntimeException ] {
+    Class [ <internal:memcached> class MemcachedException extends RuntimeException implements Throwable ] {
 
       - Constants [0] {
       }
@@ -725,7 +671,7 @@ Extension [ <persistent> extension #156 memcached version 2.2.0 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
@@ -735,28 +681,31 @@ Extension [ <persistent> extension #156 memcached version 2.2.0 ] {
           }
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }

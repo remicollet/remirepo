@@ -24,7 +24,7 @@
 %{!?__php:       %global __php        %{_bindir}/php}
 
 %global with_fastlz 1
-%global with_igbin  0
+%global with_igbin  1
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 %global pecl_name   memcached
@@ -49,12 +49,15 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?sub_prefix}php-pecl-memcached
 Version:      2.2.1
-Release:      0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:      0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
 Source0:      https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
+
+# https://github.com/rlerdorf/php-memcached/pull/3
+Patch0:       %{pecl_name}-pr3.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # 5.2.10 required to HAVE_JSON enabled
@@ -163,9 +166,12 @@ sed -e '/PHP_MEMCACHED_VERSION/s/2.2.0/%{version}-dev/' -i NTS/php_memcached.h
 '
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
+%patch0 -p1 -b .pr3
 
 %if %{with_fastlz}
 rm -r fastlz
@@ -274,6 +280,7 @@ done
 rm -rf %{buildroot}
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -290,6 +297,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %check
@@ -316,6 +324,9 @@ ret=0
 : Launch the Memcached service
 memcached -p 11211 -U 11211      -d -P $PWD/memcached.pid
 
+rm ?TS/tests/experimental/serializer_json.phpt
+rm ?TS/tests/experimental/serializer_igbinary.phpt
+
 : Run the upstream test Suite for NTS extension
 pushd NTS
 rm tests/flush_buffers.phpt tests/touch_binary.phpt
@@ -323,7 +334,7 @@ TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="$OPT -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__php} -n run-tests.php || ret=1
+%{__php} -n run-tests.php --show-diff || ret=1
 popd
 
 %if %{with_zts}
@@ -334,7 +345,7 @@ TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="$OPT -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__ztsphp} -n run-tests.php || ret=1
+%{__ztsphp} -n run-tests.php --show-diff || ret=1
 popd
 %endif
 
@@ -363,6 +374,10 @@ exit $ret
 
 
 %changelog
+* Wed Mar  2 2016 Remi Collet <remi@fedoraproject.org> - 2.2.1-0.2.20150628git3c79a97
+- add patch for igbinary, see
+  https://github.com/rlerdorf/php-memcached/pull/3
+
 * Sun Jan 10 2016 Remi Collet <remi@fedoraproject.org> - 2.2.1-0.1.20150628git3c79a97
 - bump version to 2.2.1-dev, stability=devel
 
