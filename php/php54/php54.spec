@@ -98,7 +98,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.4.45
-Release: 4%{?dist}
+Release: 5%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -170,6 +170,8 @@ Patch210: bug71459.patch
 Patch211: bug71039.patch
 Patch212: bug71488.patch
 Patch213: pcre838.patch
+Patch214: bug71498.patch
+Patch215: bug71587.patch
 
 # Fixes for tests
 # no_NO issue
@@ -891,6 +893,8 @@ rm -f ext/json/utf8_to_utf16.*
 %patch211 -p1 -b .bug71039
 %patch212 -p1 -b .bug71488
 %patch213 -p1 -b .pcre838
+%patch214 -p1 -b .bug71498
+%patch215 -p1 -b .bug71587
 
 # Fixes for tests
 %patch301 -p1 -b .datetests2
@@ -1780,6 +1784,10 @@ fi
 
 
 %changelog
+* Wed Mar  2 2016 Remi Collet <remi@remirepo.net> 5.4.45-5
+- Fix #71498: Out-of-Bound Read in phar_parse_zipfile()
+- Fix #71587: Use-After-Free / Double-Free in WDDX Deserialize
+
 * Tue Feb 16 2016 Remi Collet <remi@remirepo.net> 5.4.45-4
 - Fix #71354: phar, remove UMR when size is 0
 - Fix #71335: type confusion in WDDX packet deserialization
