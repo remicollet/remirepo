@@ -121,7 +121,7 @@ sed -e '/release/s/-dev/dev/' -i package.xml
 mv %{extname}-%{version} NTS
 %endif
 
-%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
+%{?_licensedir:sed -e '/COPYING/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
 
@@ -185,7 +185,7 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 # Test & Documentation
 cd NTS
 for i in $(grep 'role="test"' ../package2.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{extname}/tests/$i
+do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{extname}/$i
 done
 for i in $(grep 'role="doc"' ../package2.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{extname}/$i
