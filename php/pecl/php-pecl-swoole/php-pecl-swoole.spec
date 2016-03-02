@@ -15,9 +15,6 @@
 %endif
 
 %{?scl:          %scl_package        php-pecl-swoole}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  swoole
@@ -29,9 +26,16 @@
 %global ini_name    40-%{pecl_name}.ini
 %endif
 
+%if 0%{?fedora} >= 22 || 0%{?rhel} >= 6
+%global with_nghttpd2 1
+%else
+%global with_nghttpd2 0
+%endif
+%global with_hiredis  1
+
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.8.1
+Version:        1.8.2
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
@@ -44,6 +48,13 @@ BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-sockets
 BuildRequires:  %{?scl_prefix}php-mysqli
 BuildRequires:  pcre-devel
+BuildRequires:  openssl-devel
+%if %{with_nghttpd2}
+BuildRequires:  libnghttp2-devel
+%endif
+%if %{with_hiredis}
+BuildRequires:  hiredis-devel
+%endif
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
@@ -91,18 +102,23 @@ Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 
 
 %description
-Asynchronous and concurrent and distributed networking framework for PHP.
+Event-driven asynchronous and concurrent networking engine with
+high performance for PHP.
 - event-driven
-- full asynchronous non-blocking
+- asynchronous non-blocking
 - multi-thread reactor
 - multi-process worker
+- multi-protocol
 - millisecond timer
-- async MySQL
+- async mysql client
+- built-in http/websocket/http2 server
+- async http/websocket client
+- async redis client
 - async task
 - async read/write file system
 - async dns lookup
 - support IPv4/IPv6/UnixSocket/TCP/UDP
-- SSL/TLS encrypted transmission
+- support SSL/TLS encrypted transmission</description>
 
 Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
@@ -153,10 +169,17 @@ EOF
 peclbuild() {
 %configure \
     --with-swoole \
-    --enable-msgqueue \
+    --enable-openssl \
     --enable-sockets \
 %if "%{php_version}" > "5.4"
     --enable-async-mysql \
+%endif
+    --enable-async-httpclient \
+%if %{with_nghttpd2}
+    --enable-http2 \
+%endif
+%if %{with_hiredis}
+    --enable-async-redis \
 %endif
     --with-php-config=$1
 
@@ -199,6 +222,7 @@ do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -215,6 +239,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %check
@@ -257,6 +282,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 02 2016 Remi Collet <remi@fedoraproject.org> - 1.8.2-1
+- Update to 1.8.2 (stable)
+- add --enable-openssl, --enable-async-httpclient
+  --enable-http2 and --enable-async-redis to build options
+
 * Thu Feb  4 2016 Remi Collet <remi@fedoraproject.org> - 1.8.1-1
 - Update to 1.8.1 (stable)
 

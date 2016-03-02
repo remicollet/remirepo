@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #166 swoole version 1.8.1 ] {
+Extension [ <persistent> extension #166 swoole version 1.8.2 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -18,7 +18,7 @@ Extension [ <persistent> extension #166 swoole version 1.8.1 ] {
     }
   }
 
-  - Constants [45] {
+  - Constants [64] {
     Constant [ integer SWOOLE_BASE ] { 4 }
     Constant [ integer SWOOLE_THREAD ] { 2 }
     Constant [ integer SWOOLE_PROCESS ] { 3 }
@@ -43,9 +43,28 @@ Extension [ <persistent> extension #166 swoole version 1.8.1 ] {
     Constant [ integer SWOOLE_SYNC ] { 2048 }
     Constant [ integer SWOOLE_ASYNC ] { 1024 }
     Constant [ integer SWOOLE_KEEP ] { 4096 }
+    Constant [ integer SWOOLE_SSL ] { 512 }
+    Constant [ integer SWOOLE_SSLv3_METHOD ] { 1 }
+    Constant [ integer SWOOLE_SSLv3_SERVER_METHOD ] { 2 }
+    Constant [ integer SWOOLE_SSLv3_CLIENT_METHOD ] { 3 }
+    Constant [ integer SWOOLE_SSLv23_METHOD ] { 0 }
+    Constant [ integer SWOOLE_SSLv23_SERVER_METHOD ] { 4 }
+    Constant [ integer SWOOLE_SSLv23_CLIENT_METHOD ] { 5 }
+    Constant [ integer SWOOLE_TLSv1_METHOD ] { 6 }
+    Constant [ integer SWOOLE_TLSv1_SERVER_METHOD ] { 7 }
+    Constant [ integer SWOOLE_TLSv1_CLIENT_METHOD ] { 8 }
+    Constant [ integer SWOOLE_TLSv1_1_METHOD ] { 9 }
+    Constant [ integer SWOOLE_TLSv1_1_SERVER_METHOD ] { 10 }
+    Constant [ integer SWOOLE_TLSv1_1_CLIENT_METHOD ] { 11 }
+    Constant [ integer SWOOLE_TLSv1_2_METHOD ] { 12 }
+    Constant [ integer SWOOLE_TLSv1_2_SERVER_METHOD ] { 13 }
+    Constant [ integer SWOOLE_TLSv1_2_CLIENT_METHOD ] { 14 }
+    Constant [ integer SWOOLE_DTLSv1_METHOD ] { 15 }
+    Constant [ integer SWOOLE_DTLSv1_SERVER_METHOD ] { 16 }
+    Constant [ integer SWOOLE_DTLSv1_CLIENT_METHOD ] { 17 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.8.1 }
+    Constant [ string SWOOLE_VERSION ] { 1.8.2 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_GCC ] { 1 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 2 }
@@ -223,7 +242,7 @@ Extension [ <persistent> extension #166 swoole version 1.8.1 ] {
     }
   }
 
-  - Classes [15] {
+  - Classes [17] {
     Class [ <internal:swoole> class swoole_server ] {
 
       - Constants [0] {
@@ -238,7 +257,7 @@ Extension [ <persistent> extension #166 swoole version 1.8.1 ] {
       - Properties [0] {
       }
 
-      - Methods [32] {
+      - Methods [33] {
         Method [ <internal:swoole, ctor> public method __construct ] {
 
           - Parameters [4] {
@@ -375,6 +394,12 @@ Extension [ <persistent> extension #166 swoole version 1.8.1 ] {
         }
 
         Method [ <internal:swoole> public method shutdown ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:swoole> public method stop ] {
 
           - Parameters [0] {
           }
@@ -663,6 +688,115 @@ Extension [ <persistent> extension #166 swoole version 1.8.1 ] {
         }
 
         Method [ <internal:swoole> public method getSocket ] {
+        }
+      }
+    }
+
+    Class [ <internal:swoole> class swoole_http_client ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [2] {
+        Property [ <default> public $errCode ]
+        Property [ <default> public $sock ]
+      }
+
+      - Methods [13] {
+        Method [ <internal:swoole, ctor> public method __construct ] {
+        }
+
+        Method [ <internal:swoole, dtor> public method __destruct ] {
+        }
+
+        Method [ <internal:swoole> public method set ] {
+        }
+
+        Method [ <internal:swoole> public method setHeaders ] {
+        }
+
+        Method [ <internal:swoole> public method setData ] {
+        }
+
+        Method [ <internal:swoole> public method execute ] {
+        }
+
+        Method [ <internal:swoole> public method push ] {
+        }
+
+        Method [ <internal:swoole> public method get ] {
+        }
+
+        Method [ <internal:swoole> public method post ] {
+        }
+
+        Method [ <internal:swoole> public method upgrade ] {
+        }
+
+        Method [ <internal:swoole> public method isConnected ] {
+        }
+
+        Method [ <internal:swoole> public method close ] {
+        }
+
+        Method [ <internal:swoole> public method on ] {
+        }
+      }
+    }
+
+    Class [ <internal:swoole> class swoole_redis ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:swoole, ctor> public method __construct ] {
+        }
+
+        Method [ <internal:swoole, dtor> public method __destruct ] {
+        }
+
+        Method [ <internal:swoole> public method on ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $event_name ]
+            Parameter #1 [ <required> $callback ]
+          }
+        }
+
+        Method [ <internal:swoole> public method connect ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $host ]
+            Parameter #1 [ <required> $port ]
+            Parameter #2 [ <required> $callback ]
+          }
+        }
+
+        Method [ <internal:swoole> public method close ] {
+        }
+
+        Method [ <internal:swoole> public method __call ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $command ]
+            Parameter #1 [ <required> $params ]
+          }
         }
       }
     }
@@ -968,7 +1102,7 @@ Extension [ <persistent> extension #166 swoole version 1.8.1 ] {
         Property [ <default> private $global ]
       }
 
-      - Methods [33] {
+      - Methods [34] {
         Method [ <internal:swoole, overwrites swoole_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
@@ -1105,6 +1239,12 @@ Extension [ <persistent> extension #166 swoole version 1.8.1 ] {
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method shutdown ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method stop ] {
 
           - Parameters [0] {
           }
@@ -1277,11 +1417,14 @@ Extension [ <persistent> extension #166 swoole version 1.8.1 ] {
       - Properties [0] {
       }
 
-      - Methods [8] {
+      - Methods [9] {
         Method [ <internal:swoole, ctor> public method __construct ] {
         }
 
         Method [ <internal:swoole, dtor> public method __destruct ] {
+        }
+
+        Method [ <internal:swoole> public method __toString ] {
         }
 
         Method [ <internal:swoole> public method substr ] {
@@ -1334,7 +1477,7 @@ Extension [ <persistent> extension #166 swoole version 1.8.1 ] {
       - Properties [0] {
       }
 
-      - Methods [34] {
+      - Methods [35] {
         Method [ <internal:swoole, overwrites swoole_http_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
@@ -1481,6 +1624,12 @@ Extension [ <persistent> extension #166 swoole version 1.8.1 ] {
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method shutdown ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method stop ] {
 
           - Parameters [0] {
           }
