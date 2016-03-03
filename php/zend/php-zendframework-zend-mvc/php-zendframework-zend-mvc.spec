@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    073d391a4996ff0ad338fff3f92cadf5aeecda9c
+%global gh_commit    c580db2b7c899f5c0a66971c7c58074a45307777
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-mvc
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.0
+Version:        2.7.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -236,6 +236,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar  3 2016 Remi Collet <remi@fedoraproject.org> - 2.7.1-1
+- update to 2.7.1
+
 * Wed Mar  2 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
 - update to 2.7.0
 - add dependency on zend-psr7bridge
