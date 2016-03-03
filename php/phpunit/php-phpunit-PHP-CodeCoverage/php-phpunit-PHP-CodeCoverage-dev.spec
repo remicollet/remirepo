@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    a58f95ae76fe201b571fad3e8370a50c4368678c
+%global gh_commit    fe33716763b604ade4cb442c0794f5bd5ad73004
 #global gh_date      20150924
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -16,8 +16,8 @@
 %global php_home     %{_datadir}/php
 %global pear_name    PHP_CodeCoverage
 %global pear_channel pear.phpunit.de
-%global major        3.2
-%global minor        1
+%global major        3.3
+%global minor        0
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
@@ -123,14 +123,18 @@ cp -pr src %{buildroot}%{php_home}/PHP
 %check
 sed -e '/log/d' phpunit.xml.dist >phpunit.xml
 
-%{_bindir}/php \
+if ! php -v | grep Xdebug
+then EXT="-d zend_extension=xdebug.so"
+fi
+
+%{_bindir}/php $EXT \
     -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
     %{_bindir}/phpunit \
         --bootstrap %{buildroot}%{php_home}/PHP/CodeCoverage/Autoload.php \
         --verbose
 
 if which php70 ; then
-  php70 \
+  php70 $EXT \
     -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
     %{_bindir}/phpunit \
         --bootstrap %{buildroot}%{php_home}/PHP/CodeCoverage/Autoload.php \
@@ -161,6 +165,9 @@ fi
 
 
 %changelog
+* Thu Mar  3 2016 Remi Collet <remi@fedoraproject.org> - 3.3.0-1
+- Update to 3.3.0
+
 * Thu Feb 18 2016 Remi Collet <remi@fedoraproject.org> - 3.2.1-1
 - Update to 3.2.1
 - raise dependency on php-token-stream >= 1.4.2
