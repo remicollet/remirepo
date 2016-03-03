@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    2e635526eb4486dbe6a362b5670fa0464d22af67
+%global gh_commit    5347f90525d9804de74766b29e2e723b5dd7a4c6
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-view
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.3
+Version:        2.6.4
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -55,13 +55,13 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 #        "zendframework/zend-i18n": "^2.6",
 #        "zendframework/zend-json": "^2.6.1",
 #        "zendframework/zend-log": "^2.7",
-#        "zendframework/zend-modulemanager": "^2.5",
-#        "zendframework/zend-mvc": "^2.6.1",
+#        "zendframework/zend-modulemanager": "^2.7.1",
+#        "zendframework/zend-mvc": "^2.7",
 #        "zendframework/zend-navigation": "^2.5",
 #        "zendframework/zend-paginator": "^2.5",
 #        "zendframework/zend-permissions-acl": "^2.6",
 #        "zendframework/zend-serializer": "^2.6.1",
-#        "zendframework/zend-session": "^2.5",
+#        "zendframework/zend-session": "^2.6.2",
 #        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
 #        "zendframework/zend-uri": "^2.5",
 #        "fabpot/php-cs-fixer": "1.7.*",
@@ -77,13 +77,13 @@ BuildRequires:  php-composer(%{gh_owner}/zend-http)             >= 2.5.4
 BuildRequires:  php-composer(%{gh_owner}/zend-i18n)             >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-json)             >= 2.6.1
 BuildRequires:  php-composer(%{gh_owner}/zend-log)              >= 2.7
-BuildRequires:  php-composer(%{gh_owner}/zend-modulemanager)    >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-mvc)              >= 2.6.1
+BuildRequires:  php-composer(%{gh_owner}/zend-modulemanager)    >= 2.7.1
+BuildRequires:  php-composer(%{gh_owner}/zend-mvc)              >= 2.7
 BuildRequires:  php-composer(%{gh_owner}/zend-navigation)       >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-paginator)        >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-permissions-acl)  >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-serializer)       >= 2.6.1
-BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.6.2
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
 BuildRequires:  php-composer(%{gh_owner}/zend-uri)              >= 2.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
@@ -206,6 +206,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar  3 2016 Remi Collet <remi@fedoraproject.org> - 2.6.4-1
+- version 2.6.4
+
 * Tue Feb 23 2016 Remi Collet <remi@fedoraproject.org> - 2.6.3-1
 - version 2.6.3
 
