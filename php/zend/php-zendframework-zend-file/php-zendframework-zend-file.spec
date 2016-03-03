@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    b937884a9fe14e0a354dbf02d50cf832a61176c0
+%global gh_commit    a5bccb3e36350e4b540d71cf0135871ae00dc707
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-file
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.0
+Version:        2.6.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -44,18 +44,18 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 # From composer, "require-dev": {
 #        "zendframework/zend-filter": "^2.6.1",
 #        "zendframework/zend-i18n": "^2.6",
+#        "zendframework/zend-progressbar": "^2.5.2",
 #        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
+#        "zendframework/zend-session": "^2.6.2",
 #        "zendframework/zend-validator": "^2.6",
-#        "zendframework/zend-progressbar": "~2.5",
-#        "zendframework/zend-session": "~2.5",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0"
 BuildRequires:  php-composer(%{gh_owner}/zend-filter)           >= 2.6.1
 BuildRequires:  php-composer(%{gh_owner}/zend-i18n)             >= 2.6
+BuildRequires:  php-composer(%{gh_owner}/zend-progressbar)      >= 2.5.2
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
+BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.6.2
 BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.6
-BuildRequires:  php-composer(%{gh_owner}/zend-progressbar)      >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
@@ -150,6 +150,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar  3 2016 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
+- update to 2.6.1
+
 * Thu Feb 18 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
 - update to 2.6.0
 - raise dependency on zend-stdlib >= 2.7
