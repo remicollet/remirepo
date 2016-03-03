@@ -28,13 +28,11 @@
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 %global pecl_name   memcached
-# https://github.com/rlerdorf/php-memcached/commits/php7
-%global gh_commit   3c79a97aeb6e8c946116c536831816a36eb4eb0f
+# https://github.com/php-memcached-dev/php-memcached/commits/php7
+%global gh_commit   6ace07da69a5ebc021e56a9d2f52cdc8897b4f23
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date     20150628
-#global gh_owner    php-memcached-dev
-# Temporarily use Rasmus fork
-%global gh_owner    rlerdorf
+%global gh_date     20160217
+%global gh_owner    php-memcached-dev
 %global gh_project  php-memcached
 #global prever      RC1
 #global intver      rc1
@@ -48,16 +46,13 @@
 
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?sub_prefix}php-pecl-memcached
-Version:      2.2.1
-Release:      0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:      3.0.0
+Release:      0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
 
 Source0:      https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
-
-# https://github.com/rlerdorf/php-memcached/pull/3
-Patch0:       %{pecl_name}-pr3.patch
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # 5.2.10 required to HAVE_JSON enabled
@@ -156,7 +151,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %prep 
 %setup -c -q
 mv %{gh_project}-%{gh_commit} NTS
-sed -e '/PHP_MEMCACHED_VERSION/s/2.2.0/%{version}-dev/' -i NTS/php_memcached.h
+sed -e '/PHP_MEMCACHED_VERSION/s/3.0.0b1/%{version}-dev/' -i NTS/php_memcached.h
 %{__php} -r '
   $pkg = simplexml_load_file("NTS/package.xml");
   $pkg->date = substr("%{gh_date}",0,4)."-".substr("%{gh_date}",4,2)."-".substr("%{gh_date}",6,2);
@@ -171,8 +166,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-%patch0 -p1 -b .pr3
-
 %if %{with_fastlz}
 rm -r fastlz
 sed -e '/name=.fastlz/d' -i ../package.xml
@@ -324,9 +317,6 @@ ret=0
 : Launch the Memcached service
 memcached -p 11211 -U 11211      -d -P $PWD/memcached.pid
 
-rm ?TS/tests/experimental/serializer_json.phpt
-rm ?TS/tests/experimental/serializer_igbinary.phpt
-
 : Run the upstream test Suite for NTS extension
 pushd NTS
 rm tests/flush_buffers.phpt tests/touch_binary.phpt
@@ -334,7 +324,7 @@ TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="$OPT -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__php} -n run-tests.php --show-diff || ret=1
+%{__php} -n run-tests.php --show-diff tests/*phpt || ret=1
 popd
 
 %if %{with_zts}
@@ -345,7 +335,7 @@ TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="$OPT -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__ztsphp} -n run-tests.php --show-diff || ret=1
+%{__ztsphp} -n run-tests.php --show-diff tests/*phpt  || ret=1
 popd
 %endif
 
@@ -374,6 +364,10 @@ exit $ret
 
 
 %changelog
+* Thu Mar  3 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.1.20160217git6ace07d
+- update to 3.0.0-dev
+- switch back to php-memcached-dev sources
+
 * Wed Mar  2 2016 Remi Collet <remi@fedoraproject.org> - 2.2.1-0.2.20150628git3c79a97
 - add patch for igbinary, see
   https://github.com/rlerdorf/php-memcached/pull/3
