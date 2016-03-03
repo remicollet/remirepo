@@ -9,69 +9,67 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
 %endif
-%endif
 
-#global gh_commit    f0683bf1d9d77e5532e637778107e20826b8d1af
-#global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_owner     stefanesser
-%global gh_project   suhosin
+%global gh_commit    6eb6633aa1816fc6774eaa8a77ae1d6e791760f3
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     sektioneins
+%global gh_project   suhosin7
+%global gh_date      20160303
+
 %{?scl:          %scl_package         php-suhosin}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
 
-%global ext_name  suhosin
-%global with_zts  0%{?__ztsphp:1}
-%if "%{php_version}" < "5.6"
-%global ini_name  %{ext_name}.ini
-%else
+%global ext_name  suhosin7
+# https://github.com/sektioneins/suhosin7/issues/4
+%global with_zts  0
 %global ini_name  40-%{ext_name}.ini
-%endif
 
 Name:           %{?sub_prefix}php-suhosin
-Version:        0.9.38
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        0.10.0
+%if 0%{?gh_date}
+Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+%else
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Source0:        http://download.suhosin.org/suhosin-%{version}.tar.gz
+%endif
+# From headers, see https://github.com/sektioneins/suhosin7/issues/1
+Source1:        http://php.net/license/3_01.txt
+
 Summary:        Suhosin is an advanced protection system for PHP installations
 
 Group:          Development/Languages
 License:        PHP
 URL:            http://www.hardened-php.net/suhosin/
-%if 0%{?gh_commit:1}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
-%else
-Source0:        http://download.suhosin.org/suhosin-%{version}.tar.gz
-%endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel > 5.4
+BuildRequires:  %{?scl_prefix}php-devel > 7
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 ## Compat SCL (rh-php56)
-Provides:       %{?scl_prefix}php-suhosin         = %{version}-%{release}
-Provides:       %{?scl_prefix}php-suhosin%{?_isa} = %{version}-%{release}
+Provides:       %{?scl_prefix}php-suhosin          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-suhosin%{?_isa}  = %{version}-%{release}
+Provides:       %{?scl_prefix}php-suhosin7         = %{version}-%{release}
+Provides:       %{?scl_prefix}php-suhosin7%{?_isa} = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-%{ext_name}  <= %{version}
-Obsoletes:     php53u-%{ext_name} <= %{version}
-Obsoletes:     php54-%{ext_name}  <= %{version}
-Obsoletes:     php54w-%{ext_name} <= %{version}
-%if "%{php_version}" > "5.5"
-Obsoletes:     php55u-%{ext_name} <= %{version}
-Obsoletes:     php55w-%{ext_name} <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
-Obsoletes:     php56u-%{ext_name} <= %{version}
-Obsoletes:     php56w-%{ext_name} <= %{version}
-%endif
+Obsoletes:     php53-%{ext_name}   <= %{version}
+Obsoletes:     php53u-%{ext_name}  <= %{version}
+Obsoletes:     php54-%{ext_name}   <= %{version}
+Obsoletes:     php54w-%{ext_name}  <= %{version}
+Obsoletes:     php55u-%{ext_name}  <= %{version}
+Obsoletes:     php55w-%{ext_name}  <= %{version}
+Obsoletes:     php56u-%{ext_name}  <= %{version}
+Obsoletes:     php56w-%{ext_name}  <= %{version}
+Obsoletes:     php70u-%{ext_name}  <= %{version}
+Obsoletes:     php70w-%{ext_name}  <= %{version}
+Obsoletes:     php70u-%{ext_name}7 <= %{version}
+Obsoletes:     php70w-%{ext_name}7 <= %{version}
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -86,7 +84,9 @@ Suhosin is an advanced protection system for PHP installations. It was designed
 to protect servers and users from known and unknown flaws in PHP applications
 and the PHP core.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+WARNING: THIS SOFTWARE IS PRE-ALPHA SOFTWARE. DO NOT ATTEMPT TO RUN IN PRODUCTION
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -97,20 +97,35 @@ mv %{ext_name}-%{gh_commit} NTS
 mv %{ext_name}-%{version} NTS
 %endif
 
+cd NTS
+cp %{SOURCE1} LICENSE
+
 # Check extension version
-ver=$(sed -n '/SUHOSIN_EXT_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_suhosin.h)
-if test "$ver" != "%{version}%{?gh_commit:-dev}"; then
-   : Error: Upstream SUHOSIN_EXT_VERSION version is ${ver}, expecting %{version}%{?gh_commit:-dev}.
+ver=$(sed -n '/SUHOSIN7_EXT_VERSION/{s/.* "//;s/".*$//;p}' php_suhosin7.h)
+if test "$ver" != "%{version}%{?gh_date:dev}"; then
+   : Error: Upstream SUHOSIN_EXT_VERSION version is ${ver}, expecting %{version}%{?gh_date:dev}.
    exit 1
 fi
+cd ..
 
 %if %{with_zts}
 # Duplicate source tree for NTS / ZTS build
 cp -pr NTS ZTS
 %endif
 
+cat << EOF | tee %{ini_name}
+; Enable %{summary}
+extension=%{ext_name}.so
+
+; Configuration options
+; See https://suhosin.org/stories/configuration.html
+EOF
+
 
 %build
+# https://github.com/sektioneins/suhosin7/issues/3
+export CFLAGS="$RPM_OPT_FLAGS -std=c99"
+
 cd NTS
 %{_bindir}/phpize
 %configure --with-php-config=%{_bindir}/php-config
@@ -130,13 +145,11 @@ rm -rf %{buildroot}
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install configuration
-sed -e 's/\;\(extension=suhosin.so\)/\1/' -i NTS/%{ext_name}.ini
-install -Dpm 644 NTS/%{ext_name}.ini %{buildroot}%{php_inidir}/%{ini_name}
+install -Dpm 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with_zts}
 make -C ZTS install INSTALL_ROOT=%{buildroot}
-sed -e 's/\;\(extension=suhosin.so\)/\1/' -i ZTS/%{ext_name}.ini
-install -Dpm 644 ZTS/%{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ini_name}
+install -Dpm 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 
@@ -144,46 +157,44 @@ install -Dpm 644 ZTS/%{ext_name}.ini %{buildroot}%{php_ztsinidir}/%{ini_name}
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
     --define extension=%{buildroot}%{php_extdir}/%{ext_name}.so \
-    --modules | grep -i suhosin
+    --modules | grep suhosin7
 
 %if %{with_zts}
 : Minimal load test for NTS extension
 %{__ztsphp} --no-php-ini \
     --define extension=%{buildroot}%{php_ztsextdir}/%{ext_name}.so \
-    --modules | grep -i suhosin
+    --modules 
 %endif
 
 : Upstream test suite for NTS extension
 cd NTS
 
 # drop known to fail tests
-%if "%{php_version}" < "5.5"
-rm tests/executor/function_blacklist_printf.phpt
-rm tests/executor/function_whitelist_call_user_func.phpt
-rm tests/executor/eval_blacklist.phpt
-rm tests/executor/eval_blacklist_printf.phpt
-rm tests/executor/eval_whitelist_call_user_func.phpt
-%endif
-rm tests/filter/suhosin_upload_disallow_binary_on.phpt
-
 TEST_PHP_EXECUTABLE=%{__php} \
+TEST_PHP_ARGS="-n -d extension=%{buildroot}%{php_extdir}/%{ext_name}.so" \
 REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
-%{__php} run-tests.php \
-    -n -q \
-    -d extension_dir=modules \
-    -d extension=%{ext_name}.so \
+%{__php} -n run-tests.php --show-diff
 
 
 %clean
 rm -rf %{buildroot}
 
 
+%posttrans
+cat << EOF
+==========================================================================
+ WARNING:
+ %{name} IS PRE-ALPHA SOFTWARE. DO NOT ATTEMPT TO RUN IN PRODUCTION
+==========================================================================
+EOF
+
+
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license NTS/LICENSE
-%doc NTS/{Changelog,CREDITS}
+%doc NTS/{CREDITS,*.md}
 
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{ext_name}.so
@@ -195,6 +206,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar  3 2016 Remi Collet <remi@fedoraproject.org> - 0.10.0-0.1.20160303git6eb6633
+- update to 0.10.0 for php 7
+- open https://github.com/sektioneins/suhosin7/issues/1 - License
+- open https://github.com/sektioneins/suhosin7/issues/2 - suhosin.ini
+- open https://github.com/sektioneins/suhosin7/issues/3 - gcc < 5
+- open https://github.com/sektioneins/suhosin7/issues/4 - ZTS
+
 * Mon Jun 22 2015 Remi Collet <rcollet@redhat.com> - 0.9.38-3
 - add virtual "rh-php56" provides
 
