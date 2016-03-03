@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #85 redis version 2.2.8-dev ] {
+Extension [ <persistent> extension #88 redis version 2.2.8-dev ] {
 
   - INI {
     Entry [ redis.arrays.names <ALL> ]
@@ -33,7 +33,7 @@ Extension [ <persistent> extension #85 redis version 2.2.8-dev ] {
   - Classes [5] {
     Class [ <internal:redis> class Redis ] {
 
-      - Constants [19] {
+      - Constants [20] {
         Constant [ integer REDIS_NOT_FOUND ] { 0 }
         Constant [ integer REDIS_STRING ] { 1 }
         Constant [ integer REDIS_SET ] { 2 }
@@ -51,6 +51,7 @@ Extension [ <persistent> extension #85 redis version 2.2.8-dev ] {
         Constant [ integer OPT_SCAN ] { 4 }
         Constant [ integer SCAN_RETRY ] { 1 }
         Constant [ integer SCAN_NORETRY ] { 0 }
+        Constant [ integer SERIALIZER_IGBINARY ] { 2 }
         Constant [ string AFTER ] { after }
         Constant [ string BEFORE ] { before }
       }
@@ -817,7 +818,7 @@ Extension [ <persistent> extension #85 redis version 2.2.8-dev ] {
 
     Class [ <internal:redis> class RedisCluster ] {
 
-      - Constants [22] {
+      - Constants [23] {
         Constant [ integer REDIS_NOT_FOUND ] { 0 }
         Constant [ integer REDIS_STRING ] { 1 }
         Constant [ integer REDIS_SET ] { 2 }
@@ -838,6 +839,7 @@ Extension [ <persistent> extension #85 redis version 2.2.8-dev ] {
         Constant [ integer FAILOVER_NONE ] { 0 }
         Constant [ integer FAILOVER_ERROR ] { 1 }
         Constant [ integer FAILOVER_DISTRIBUTE ] { 2 }
+        Constant [ integer SERIALIZER_IGBINARY ] { 2 }
         Constant [ string AFTER ] { after }
         Constant [ string BEFORE ] { before }
       }
