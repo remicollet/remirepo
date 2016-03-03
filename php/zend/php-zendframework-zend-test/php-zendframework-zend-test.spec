@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    ad5e7f307b3a18726fb65736e121fc257298ba7e
+%global gh_commit    0e2d81410af33c092a2916e77cbdfa3b6dc1bf1b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-test
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.0
+Version:        2.6.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -42,8 +42,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-console)          >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-dom)              >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6.2
 BuildRequires:  php-composer(%{gh_owner}/zend-http)             >= 2.5.4
-# 2.7 ignored as test passes with older
-BuildRequires:  php-composer(%{gh_owner}/zend-mvc)              >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-mvc)              >= 2.7.1
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 BuildRequires:  php-composer(%{gh_owner}/zend-uri)              >= 2.5
@@ -73,7 +72,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 #        "zendframework/zend-dom": "^2.6",
 #        "zendframework/zend-eventmanager": "^2.6.2 || ^3.0",
 #        "zendframework/zend-http": "^2.5.4",
-#        "zendframework/zend-mvc": "^2.7",
+#        "zendframework/zend-mvc": "^2.7.1",
 #        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
 #        "zendframework/zend-stdlib": "^2.7 || ^3.0",
 #        "zendframework/zend-uri": "^2.5",
@@ -93,7 +92,7 @@ Requires:       php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6.2
 Requires:       php-composer(%{gh_owner}/zend-eventmanager)     <  4
 Requires:       php-composer(%{gh_owner}/zend-http)             >= 2.5.4
 Requires:       php-composer(%{gh_owner}/zend-http)             <  3
-Requires:       php-composer(%{gh_owner}/zend-mvc)              >= 2.7
+Requires:       php-composer(%{gh_owner}/zend-mvc)              >= 2.7.1
 Requires:       php-composer(%{gh_owner}/zend-mvc)              <  3
 Requires:       php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
 Requires:       php-composer(%{gh_owner}/zend-servicemanager)   <  4
@@ -174,7 +173,11 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+* Thu Mar  3 2016 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
+- update to 2.6.1
+- raise dependency on zend-mvc >= 2.7.1
+
+* Wed Mar  2 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
 - update to 2.6.0
 - raise dependency on zend-console >= 2.6
 - raise dependency on zend-dom >= 2.6
