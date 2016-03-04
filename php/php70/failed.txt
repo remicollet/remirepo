@@ -11,6 +11,8 @@ $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 /var/lib/mock/fc22x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 /var/lib/mock/fc23i/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
 /var/lib/mock/fc23x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/fc24i/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
+/var/lib/mock/fc24x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
 
 
 el6i, el6x, el7x
@@ -21,7 +23,9 @@ fc21x
 	*	php://input is empty when enable_post_data_reading=Off [tests/basic/bug67198.phpt]
 fc22i
 	*	Bug #70198 Checking liveness does not work as expected [ext/standard/tests/streams/bug70198.phpt]
-el6i, fc21i fc22i, fc23i
+fc24x
+	*	Bug #64438 proc_open hangs with stdin/out with 4097+ bytes [ext/standard/tests/streams/proc_open_bug64438.phpt]
+el6i, fc21i fc22i, fc23i, fc24i
 	**	Test str_pad() function : usage variations - unexpected large value for '$pad_length' argument [ext/standard/tests/strings/str_pad_variation5.phpt]
 
 
