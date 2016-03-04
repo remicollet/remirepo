@@ -6,19 +6,19 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    4c0e163977f8289288df7b37e0fd0469d3e8cbc6
+%global gh_commit    5cb2b522637a941d608c58bd522f3b2a7bda4a1c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
-%global gh_date      20160220
+#global gh_date      20160220
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 %global api_version  1.0.0
-#global prever       alpha11
+%global prever       beta1
 
 Name:           composer
 Version:        1.0.0
-Release:        0.20.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}%{?dist}
+Release:        0.21.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -221,6 +221,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.21.beta1
+- update to 1.0.0beta1
+
 * Tue Feb 23 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.20.201602git4c0e163
 - new snapshot
 
