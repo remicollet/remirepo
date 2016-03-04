@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    e4bb3be94c480ad77cb86a22324e1c6a6129b069
+%global gh_commit    32d1e33a68daa3f578f0f8be50f5ad25bae9a8d4
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        PHP library containing PDF graphic and geometric methods
 
@@ -107,5 +107,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- update to 1.0.2 (no change)
+
 * Fri Jan 15 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - initial package, version 1.0.1
+
