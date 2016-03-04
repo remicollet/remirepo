@@ -15,9 +15,6 @@
 %endif
 
 %{?scl:          %scl_package        php-pecl-imagick}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global gh_commit   623a3ac0386c93d62c60cbfe610505f2e35780f3
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
@@ -25,7 +22,7 @@
 %global gh_project  imagick
 #global gh_date     20151204
 %global pecl_name   imagick
-%global prever      RC6
+#global prever      RC6
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 %global ini_name  %{pecl_name}.ini
@@ -43,7 +40,7 @@ Version:       3.4.0
 Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       0.6.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:       PHP
@@ -70,12 +67,12 @@ Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:      %{?scl_prefix}php-%{pecl_name} = %{version}%{?prever}
-Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}%{?prever}
-Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}%{?prever}
+Provides:      %{?scl_prefix}php-%{pecl_name}               = %{version}%{?prever}
+Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}%{?prever}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}%{?prever}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
-Provides:      %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
-Provides:      %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 Conflicts:     %{?scl_prefix}php-pecl-gmagick
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
@@ -222,6 +219,7 @@ do [ -f $i ]          &&  install -Dpm 644 $i          %{buildroot}%{pecl_docdir
 done
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -238,6 +236,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %check
@@ -307,6 +306,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 3.4.0-1
+- update to 3.4.0 (stable)
+
 * Sat Jan 30 2016 Remi Collet <remi@fedoraproject.org> - 3.4.0-0.6.RC6
 - update to 3.4.0RC6
 

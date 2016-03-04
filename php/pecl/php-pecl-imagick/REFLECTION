@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
+Extension [ <persistent> extension #108 imagick version 3.4.0 ] {
 
   - Dependencies {
     Dependency [ spl (Required) ]
@@ -304,7 +304,7 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
 
     Class [ <internal:imagick> <iterateable> class Imagick implements Iterator, Traversable, Countable ] {
 
-      - Constants [542] {
+      - Constants [567] {
         Constant [ integer COLOR_BLACK ] { 11 }
         Constant [ integer COLOR_BLUE ] { 12 }
         Constant [ integer COLOR_CYAN ] { 13 }
@@ -315,8 +315,8 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
         Constant [ integer COLOR_OPACITY ] { 18 }
         Constant [ integer COLOR_ALPHA ] { 19 }
         Constant [ integer COLOR_FUZZ ] { 20 }
-        Constant [ integer IMAGICK_EXTNUM ] { 30300 }
-        Constant [ string IMAGICK_EXTVER ] { 3.3.0 }
+        Constant [ integer IMAGICK_EXTNUM ] { 30400 }
+        Constant [ string IMAGICK_EXTVER ] { 3.4.0 }
         Constant [ integer QUANTUM_RANGE ] { 65535 }
         Constant [ integer USE_ZEND_MM ] { 0 }
         Constant [ integer COMPOSITE_DEFAULT ] { 40 }
@@ -392,6 +392,7 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
         Constant [ integer COMPOSITE_MINUSSRC ] { 65 }
         Constant [ integer COMPOSITE_DARKENINTENSITY ] { 66 }
         Constant [ integer COMPOSITE_LIGHTENINTENSITY ] { 67 }
+        Constant [ integer COMPOSITE_HARDMIX ] { 68 }
         Constant [ integer MONTAGEMODE_FRAME ] { 1 }
         Constant [ integer MONTAGEMODE_UNFRAME ] { 2 }
         Constant [ integer MONTAGEMODE_CONCATENATE ] { 3 }
@@ -483,8 +484,11 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
         Constant [ integer GRAVITY_SOUTHWEST ] { 7 }
         Constant [ integer GRAVITY_SOUTH ] { 8 }
         Constant [ integer GRAVITY_SOUTHEAST ] { 9 }
+        Constant [ integer GRAVITY_FORGET ] { 0 }
+        Constant [ integer GRAVITY_STATIC ] { 10 }
         Constant [ integer STRETCH_NORMAL ] { 1 }
         Constant [ integer STRETCH_ULTRACONDENSED ] { 2 }
+        Constant [ integer STRETCH_EXTRACONDENSED ] { 3 }
         Constant [ integer STRETCH_CONDENSED ] { 4 }
         Constant [ integer STRETCH_SEMICONDENSED ] { 5 }
         Constant [ integer STRETCH_SEMIEXPANDED ] { 6 }
@@ -510,7 +514,7 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
         Constant [ integer NOISE_RANDOM ] { 7 }
         Constant [ integer CHANNEL_UNDEFINED ] { 0 }
         Constant [ integer CHANNEL_RED ] { 1 }
-        Constant [ integer CHANNEL_GRAY ] { 128 }
+        Constant [ integer CHANNEL_GRAY ] { 1 }
         Constant [ integer CHANNEL_CYAN ] { 1 }
         Constant [ integer CHANNEL_GREEN ] { 2 }
         Constant [ integer CHANNEL_MAGENTA ] { 2 }
@@ -526,14 +530,20 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
         Constant [ integer CHANNEL_RGBA ] { 15 }
         Constant [ integer CHANNEL_TRUEALPHA ] { 64 }
         Constant [ integer CHANNEL_RGBS ] { 128 }
+        Constant [ integer CHANNEL_GRAY_CHANNELS ] { 128 }
         Constant [ integer CHANNEL_SYNC ] { 256 }
         Constant [ integer CHANNEL_COMPOSITES ] { 47 }
         Constant [ integer METRIC_UNDEFINED ] { 0 }
+        Constant [ integer METRIC_ABSOLUTEERRORMETRIC ] { 1 }
         Constant [ integer METRIC_MEANABSOLUTEERROR ] { 2 }
+        Constant [ integer METRIC_MEANERRORPERPIXELMETRIC ] { 3 }
         Constant [ integer METRIC_MEANSQUAREERROR ] { 4 }
         Constant [ integer METRIC_PEAKABSOLUTEERROR ] { 5 }
         Constant [ integer METRIC_PEAKSIGNALTONOISERATIO ] { 6 }
         Constant [ integer METRIC_ROOTMEANSQUAREDERROR ] { 7 }
+        Constant [ integer METRIC_NORMALIZEDCROSSCORRELATIONERRORMETRIC ] { 8 }
+        Constant [ integer METRIC_FUZZERROR ] { 9 }
+        Constant [ integer METRIC_PERCEPTUALHASH_ERROR ] { 255 }
         Constant [ integer PIXEL_CHAR ] { 1 }
         Constant [ integer PIXEL_DOUBLE ] { 2 }
         Constant [ integer PIXEL_FLOAT ] { 3 }
@@ -573,6 +583,7 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
         Constant [ integer EVALUATE_EXPONENTIAL ] { 29 }
         Constant [ integer EVALUATE_MEDIAN ] { 30 }
         Constant [ integer EVALUATE_SUM ] { 31 }
+        Constant [ integer EVALUATE_ROOT_MEAN_SQUARE ] { 32 }
         Constant [ integer COLORSPACE_UNDEFINED ] { 0 }
         Constant [ integer COLORSPACE_RGB ] { 1 }
         Constant [ integer COLORSPACE_GRAY ] { 2 }
@@ -605,6 +616,9 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
         Constant [ integer COLORSPACE_HSV ] { 31 }
         Constant [ integer COLORSPACE_HCLP ] { 32 }
         Constant [ integer COLORSPACE_YDBDR ] { 33 }
+        Constant [ integer COLORSPACE_REC601YCBCR ] { 18 }
+        Constant [ integer COLORSPACE_REC709YCBCR ] { 20 }
+        Constant [ integer COLORSPACE_XYY ] { 34 }
         Constant [ integer VIRTUALPIXELMETHOD_UNDEFINED ] { 0 }
         Constant [ integer VIRTUALPIXELMETHOD_BACKGROUND ] { 1 }
         Constant [ integer VIRTUALPIXELMETHOD_CONSTANT ] { 2 }
@@ -688,6 +702,8 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
         Constant [ integer RESOURCETYPE_TIME ] { 7 }
         Constant [ integer RESOURCETYPE_THROTTLE ] { 8 }
         Constant [ integer RESOURCETYPE_THREAD ] { 6 }
+        Constant [ integer RESOURCETYPE_WIDTH ] { 9 }
+        Constant [ integer RESOURCETYPE_HEIGHT ] { 10 }
         Constant [ integer DISPOSE_UNRECOGNIZED ] { 0 }
         Constant [ integer DISPOSE_UNDEFINED ] { 0 }
         Constant [ integer DISPOSE_NONE ] { 1 }
@@ -702,6 +718,11 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
         Constant [ integer INTERPOLATE_MESH ] { 6 }
         Constant [ integer INTERPOLATE_NEARESTNEIGHBOR ] { 7 }
         Constant [ integer INTERPOLATE_SPLINE ] { 8 }
+        Constant [ integer INTERPOLATE_AVERAGE_9 ] { 9 }
+        Constant [ integer INTERPOLATE_AVERAGE_16 ] { 10 }
+        Constant [ integer INTERPOLATE_BLEND ] { 11 }
+        Constant [ integer INTERPOLATE_BACKGROUND_COLOR ] { 12 }
+        Constant [ integer INTERPOLATE_CATROM ] { 13 }
         Constant [ integer LAYERMETHOD_UNDEFINED ] { 0 }
         Constant [ integer LAYERMETHOD_COALESCE ] { 1 }
         Constant [ integer LAYERMETHOD_COMPAREANY ] { 2 }
@@ -715,9 +736,6 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
         Constant [ integer LAYERMETHOD_OPTIMIZEIMAGE ] { 7 }
         Constant [ integer LAYERMETHOD_REMOVEDUPS ] { 10 }
         Constant [ integer LAYERMETHOD_REMOVEZERO ] { 11 }
-        Constant [ integer LAYERMETHOD_MERGE ] { 13 }
-        Constant [ integer LAYERMETHOD_FLATTEN ] { 14 }
-        Constant [ integer LAYERMETHOD_MOSAIC ] { 15 }
         Constant [ integer LAYERMETHOD_TRIMBOUNDS ] { 16 }
         Constant [ integer ORIENTATION_UNDEFINED ] { 0 }
         Constant [ integer ORIENTATION_TOPLEFT ] { 1 }
@@ -740,30 +758,36 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
         Constant [ integer DISTORTION_POLAR ] { 10 }
         Constant [ integer DISTORTION_DEPOLAR ] { 11 }
         Constant [ integer DISTORTION_BARREL ] { 14 }
-        Constant [ integer DISTORTION_BARRELINVERSE ] { 15 }
         Constant [ integer DISTORTION_SHEPARDS ] { 16 }
         Constant [ integer DISTORTION_SENTINEL ] { 18 }
+        Constant [ integer DISTORTION_BARRELINVERSE ] { 15 }
         Constant [ integer DISTORTION_BILINEARFORWARD ] { 6 }
         Constant [ integer DISTORTION_BILINEARREVERSE ] { 7 }
         Constant [ integer DISTORTION_RESIZE ] { 17 }
         Constant [ integer DISTORTION_CYLINDER2PLANE ] { 12 }
         Constant [ integer DISTORTION_PLANE2CYLINDER ] { 13 }
+        Constant [ integer LAYERMETHOD_MERGE ] { 13 }
+        Constant [ integer LAYERMETHOD_FLATTEN ] { 14 }
+        Constant [ integer LAYERMETHOD_MOSAIC ] { 15 }
         Constant [ integer ALPHACHANNEL_ACTIVATE ] { 1 }
-        Constant [ integer ALPHACHANNEL_DEACTIVATE ] { 4 }
         Constant [ integer ALPHACHANNEL_RESET ] { 7 }
         Constant [ integer ALPHACHANNEL_SET ] { 8 }
         Constant [ integer ALPHACHANNEL_UNDEFINED ] { 0 }
         Constant [ integer ALPHACHANNEL_COPY ] { 3 }
+        Constant [ integer ALPHACHANNEL_DEACTIVATE ] { 4 }
         Constant [ integer ALPHACHANNEL_EXTRACT ] { 5 }
         Constant [ integer ALPHACHANNEL_OPAQUE ] { 6 }
         Constant [ integer ALPHACHANNEL_SHAPE ] { 9 }
         Constant [ integer ALPHACHANNEL_TRANSPARENT ] { 10 }
+        Constant [ integer ALPHACHANNEL_ASSOCIATE ] { 13 }
+        Constant [ integer ALPHACHANNEL_DISSOCIATE ] { 14 }
         Constant [ integer SPARSECOLORMETHOD_UNDEFINED ] { 0 }
         Constant [ integer SPARSECOLORMETHOD_BARYCENTRIC ] { 1 }
         Constant [ integer SPARSECOLORMETHOD_BILINEAR ] { 7 }
         Constant [ integer SPARSECOLORMETHOD_POLYNOMIAL ] { 8 }
         Constant [ integer SPARSECOLORMETHOD_SPEPARDS ] { 16 }
         Constant [ integer SPARSECOLORMETHOD_VORONOI ] { 18 }
+        Constant [ integer SPARSECOLORMETHOD_INVERSE ] { 19 }
         Constant [ integer DITHERMETHOD_UNDEFINED ] { 0 }
         Constant [ integer DITHERMETHOD_NO ] { 1 }
         Constant [ integer DITHERMETHOD_RIEMERSMA ] { 2 }
@@ -784,6 +808,7 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
         Constant [ integer STATISTIC_MODE ] { 6 }
         Constant [ integer STATISTIC_NONPEAK ] { 7 }
         Constant [ integer STATISTIC_STANDARD_DEVIATION ] { 8 }
+        Constant [ integer STATISTIC_ROOT_MEAN_SQUARE ] { 9 }
         Constant [ integer MORPHOLOGY_CONVOLVE ] { 1 }
         Constant [ integer MORPHOLOGY_CORRELATE ] { 2 }
         Constant [ integer MORPHOLOGY_ERODE ] { 3 }
@@ -852,7 +877,7 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
       - Static properties [0] {
       }
 
-      - Static methods [16] {
+      - Static methods [20] {
         Method [ <internal:imagick> static public method queryformats ] {
 
           - Parameters [1] {
@@ -867,7 +892,31 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
           }
         }
 
+        Method [ <internal:imagick> static public method calculatecrop ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $orig_width ]
+            Parameter #1 [ <required> $orig_height ]
+            Parameter #2 [ <required> $desired_width ]
+            Parameter #3 [ <required> $desired_height ]
+            Parameter #4 [ <optional> $legacy ]
+          }
+        }
+
         Method [ <internal:imagick> static public method getcopyright ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:imagick> static public method getconfigureoptions ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $pattern ]
+          }
+        }
+
+        Method [ <internal:imagick> static public method getfeatures ] {
 
           - Parameters [0] {
           }
@@ -886,6 +935,12 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
         }
 
         Method [ <internal:imagick> static public method getquantum ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:imagick> static public method gethdrienabled ] {
 
           - Parameters [0] {
           }
@@ -962,7 +1017,7 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
       - Properties [0] {
       }
 
-      - Methods [343] {
+      - Methods [347] {
         Method [ <internal:imagick> public method optimizeimagelayers ] {
 
           - Parameters [0] {
@@ -1048,10 +1103,11 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
 
         Method [ <internal:imagick> public method adaptiveresizeimage ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $columns ]
             Parameter #1 [ <required> $rows ]
             Parameter #2 [ <optional> $bestfit ]
+            Parameter #3 [ <optional> $legacy ]
           }
         }
 
@@ -1728,10 +1784,11 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
 
         Method [ <internal:imagick> public method scaleimage ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $width ]
             Parameter #1 [ <required> $height ]
             Parameter #2 [ <optional> $bestfit ]
+            Parameter #3 [ <optional> $legacy ]
           }
         }
 
@@ -1761,19 +1818,21 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
 
         Method [ <internal:imagick> public method thumbnailimage ] {
 
-          - Parameters [4] {
+          - Parameters [5] {
             Parameter #0 [ <required> $width ]
             Parameter #1 [ <required> $height ]
             Parameter #2 [ <optional> $bestfit ]
             Parameter #3 [ <optional> $fill ]
+            Parameter #4 [ <optional> $legacy ]
           }
         }
 
         Method [ <internal:imagick> public method cropthumbnailimage ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $width ]
             Parameter #1 [ <required> $height ]
+            Parameter #2 [ <optional> $legacy ]
           }
         }
 
@@ -2116,12 +2175,13 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
 
         Method [ <internal:imagick> public method resizeimage ] {
 
-          - Parameters [5] {
+          - Parameters [6] {
             Parameter #0 [ <required> $x ]
             Parameter #1 [ <required> $y ]
             Parameter #2 [ <optional> $filter ]
             Parameter #3 [ <optional> $blur ]
             Parameter #4 [ <optional> $bestfit ]
+            Parameter #5 [ <optional> $legacy ]
           }
         }
 
@@ -2494,9 +2554,10 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
 
         Method [ <internal:imagick> public method colorizeimage ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $colorize_color ]
             Parameter #1 [ <required> $opacity ]
+            Parameter #2 [ <optional> $legacy ]
           }
         }
 
@@ -2590,6 +2651,13 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
             Parameter #0 [ <required> $EVALUATE ]
             Parameter #1 [ <required> $constant ]
             Parameter #2 [ <optional> $CHANNEL ]
+          }
+        }
+
+        Method [ <internal:imagick> public method evaluateimages ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $EVALUATE ]
           }
         }
 
@@ -3209,9 +3277,10 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
 
         Method [ <internal:imagick> public method tintimage ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $tint_color ]
             Parameter #1 [ <required> $opacity ]
+            Parameter #2 [ <optional> $legacy ]
           }
         }
 
@@ -3466,6 +3535,14 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
           }
         }
 
+        Method [ <internal:imagick> public method rotationalblurimage ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $angle ]
+            Parameter #1 [ <optional> $CHANNEL ]
+          }
+        }
+
         Method [ <internal:imagick> public method statisticimage ] {
 
           - Parameters [4] {
@@ -3478,10 +3555,23 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
 
         Method [ <internal:imagick> public method subimagematch ] {
 
-          - Parameters [3] {
+          - Parameters [5] {
             Parameter #0 [ <required> Imagick $Imagick ]
             Parameter #1 [ <optional> &$offset ]
             Parameter #2 [ <optional> &$similarity ]
+            Parameter #3 [ <optional> &$similarity_threshold ]
+            Parameter #4 [ <optional> &$metric ]
+          }
+        }
+
+        Method [ <internal:imagick> public method similarityimage ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> Imagick $Imagick ]
+            Parameter #1 [ <optional> &$offset ]
+            Parameter #2 [ <optional> &$similarity ]
+            Parameter #3 [ <optional> &$similarity_threshold ]
+            Parameter #4 [ <optional> &$metric ]
           }
         }
 
@@ -3513,6 +3603,13 @@ Extension [ <persistent> extension #104 imagick version 3.3.0 ] {
         Method [ <internal:imagick> public method getantialias ] {
 
           - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:imagick> public method colordecisionlistimage ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $antialias ]
           }
         }
       }
