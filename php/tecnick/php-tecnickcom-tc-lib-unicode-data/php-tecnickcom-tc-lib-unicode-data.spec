@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0ce42d43ae6f512d9367a1867ce9b4f02fb48518
+%global gh_commit    1597520e9e9771e5f9b82637fab476144f21f4c9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.5.0
+Version:        1.5.1
 Release:        1%{?dist}
 Summary:        PHP library containing UTF-8 font definitions
 
@@ -106,6 +106,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 1.5.1-1
+- update to 1.5.1 (no change)
+
 * Fri Dec 11 2015 Remi Collet <remi@fedoraproject.org> - 1.4.23-1
 - update to 1.4.23 (no change)
 - raise dependency on php >= 5.4
@@ -168,3 +171,4 @@ rm -rf %{buildroot}
 
 * Thu Jul  2 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - initial package, version 1.1.1
+

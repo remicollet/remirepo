@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    114a904e806d99001842e7c344cc1f7f080b4a0b
+%global gh_commit    a1341f719c678703207da0073719e28a9bbdacb5
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.2.1
+Version:        1.2.2
 Release:        1%{?dist}
 Summary:        PHP library containing Unicode methods
 
@@ -110,5 +110,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
+- update to 1.2.2 (no change)
+
 * Fri Jan 15 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - initial package, version 1.2.1
+
