@@ -18,9 +18,6 @@
 %endif
 
 %{?scl:          %scl_package        php-pecl-amqp}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global with_tests  0%{?_with_tests:1}
@@ -35,7 +32,7 @@
 Summary:       Communicate with any AMQP compliant server
 Name:          %{?sub_prefix}php-pecl-amqp
 Version:       1.7.0
-Release:       0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
@@ -103,7 +100,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %setup -q -c
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
@@ -255,6 +254,7 @@ exit $ret
 rm -rf %{buildroot}
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -271,10 +271,12 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -288,6 +290,9 @@ fi
 
 
 %changelog
+* Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 1.7.0-0.3.alpha2
+- adapt for F24
+
 * Sat Dec 26 2015 Remi Collet <remi@fedoraproject.org> - 1.7.0-0.2.alpha2
 - update to 1.7.0alpha2
 
