@@ -13,17 +13,14 @@
 #
 
 %{?scl:          %scl_package         php-pecl-xdebug}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
 
 %global pecl_name   xdebug
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
-%global gh_commit   148ed8b2a9a8e8d1e19cca82b364f3bfb23cdf92
+%global gh_commit   821c1fd2e09e65a9d33414ce7ce234e2ea6fdf83
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date     20151118
 %global with_tests  0%{?_with_tests:1}
-%global prever      RC4
+#global prever      RC4
 
 # XDebug should be loaded after opcache
 %if "%{php_version}" < "5.6"
@@ -35,12 +32,12 @@
 Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.4.0
-Release:        0.8.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{gh_commit}/%{pecl_name}-%{version}%{?prever}-%{gh_short}.tar.gz
 
 # The Xdebug License, version 1.01
 # (Based on "The PHP License", version 3.0)
-License:        PHP
+License:        BSD
 Group:          Development/Languages
 URL:            http://xdebug.org/
 
@@ -253,6 +250,7 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -269,6 +267,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -292,6 +291,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
+- update to 2.4.0
+
 * Wed Jan 27 2016 Remi Collet <remi@fedoraproject.org> - 2.4.0-0.8.RC4
 - update to 2.4.0RC4
 
