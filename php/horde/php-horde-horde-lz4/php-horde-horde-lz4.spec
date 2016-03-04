@@ -40,7 +40,7 @@
 Summary:        Horde LZ4 Compression Extension
 Name:           %{?sub_prefix}php-horde-horde-lz4
 Version:        1.0.9
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        MIT
 Group:          Development/Languages
 URL:            http://www.horde.org
@@ -182,6 +182,7 @@ do install -Dpm 644 NTS/$i %{buildroot}%{pear_docdir}/%{pecl_name}/$i
 done
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -198,6 +199,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_channel}/%{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %check
@@ -246,6 +248,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 1.0.9-2
+- adapt for F24
+
 * Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 1.0.9-1
 - Update to 1.0.9
 
