@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    d048241090d5f38bd82870761d0574859a0df936
+%global gh_commit    f75e460a062e8a3d604027088e8cad327e64e17f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.0.1
+Version:        2.0.2
 Release:        1%{?dist}
 Summary:        PHP library containing PDF page formats and definitions
 
@@ -113,6 +113,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- update to 2.0.2
+
 * Fri Jan 15 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - update to 2.0.1
 - add dependencies on tc-lib-pdf-encrypt and tc-lib-color
@@ -161,3 +164,4 @@ rm -rf %{buildroot}
 
 * Thu Jul  2 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - initial package, version 1.1.1
+
