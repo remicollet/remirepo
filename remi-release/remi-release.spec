@@ -6,11 +6,21 @@
 #
 # Please, preserve the changelog entries
 #
+%if %{fedora} >= 23
+%global pkgman dnf
+%else
+%global pkgman yum
+%endif
+
 Name:           remi-release
 Version:        %{fedora}
+%if %{fedora} >= 24
+Release:        1%{?dist}
+%else
 Release:        3%{?dist}
-Summary:        YUM configuration for remi repository
-Summary(fr):	Configuration de YUM pour le dépôt remi
+%endif
+Summary:        Configuration for remi repository
+Summary(fr):	Configuration pour le dépôt remi
 
 Group:          System Environment/Base
 License:        GPLv2+
@@ -34,27 +44,27 @@ Requires:       fedora-release >= %{fedora}
 
 
 %description
-This package contains yum configuration for the "remi" RPM Repository, 
+This package contains %{pkgman} configuration for the "remi" RPM Repository,
 as well as the public GPG keys used to sign them.
 
 The repository is not enabled after installation, so you must use
-the --enablerepo=remi option for yum.
-%if %{fedora} >= 21 && %{fedora} <= 23
+the --enablerepo=remi option for %{pkgman}.
+%if %{fedora} >= 21 && %{fedora} <= 24
 For PHP 7.0 you must enable the remi-php70 repository:
-    dnf config-manager --enable remi-php70
+    %{pkgman} config-manager --enable remi-php70
 %endif
 FAQ:   http://blog.remirepo.net/pages/English-FAQ
 Forum: http://forum.remirepo.net/
 
 %description -l fr
-Ce paquetage contient le fichier de configuration de YUM pour utiliser
+Ce paquetage contient le fichier de configuration de %{pkgman} pour utiliser
 les RPM du dépôt "remi" ainsi que la clé GPG utilisée pour les signer.
 
 Le dépôt n'est pas activé après l'installation, vous devez donc utiliser
-l'option --enablerepo=remi de yum.
-%if %{fedora} >= 21 && %{fedora} <= 23
+l'option --enablerepo=remi de %{pkgman}.
+%if %{fedora} >= 21 && %{fedora} <= 24
 Pour PHP 7.0 vous devez activer le dépôt remi-php70
-    dnf config-manager --enable remi-php70
+    %{pkgman} config-manager --enable remi-php70
 %endif
 FAQ:   http://blog.remirepo.net/pages/FAQ-en-Francais
 Forum: http://forum.remirepo.net/
@@ -80,7 +90,7 @@ install -Dp -m 644 %{SOURCE2} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-test.r
 %if %{fedora} >= 19 && %{fedora} <= 20
 install -Dp -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php56.repo
 %endif
-%if %{fedora} >= 21 && %{fedora} <= 23
+%if %{fedora} >= 21 && %{fedora} <= 24
 install -Dp -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php70.repo
 install -Dp -m 644 %{SOURCE5} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php70-test.repo
 %endif
@@ -97,6 +107,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar  4 2016 Remi Collet <remi@remirepo.net> - 24-1.fc24
+- Fedora release 24
+
 * Fri Jan 15 2016 Remi Collet <remi@remirepo.net> - %{fedora}-3.fc%{fedora}.remi
 - add remi-php70-test repository
 
