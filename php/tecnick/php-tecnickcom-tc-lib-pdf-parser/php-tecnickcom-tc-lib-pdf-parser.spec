@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    6e35159fb22dc0ac051d5d99ee5ff6fe9db7195a
+%global gh_commit    5c0a8fdccc17abb3c25ab3dadf752fab01b9ff4b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.2.2
+Version:        2.2.3
 Release:        1%{?dist}
 Summary:        PHP library to parse PDF documents
 
@@ -114,6 +114,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
+- update to 2.2.3 (no change)
+
 * Tue Jan 12 2016 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
 - update to 2.2.2
 
@@ -173,3 +176,4 @@ rm -rf %{buildroot}
   fix autoloader
 - open https://github.com/tecnickcom/tc-lib-pdf-parser/pull/2
   php < 5.5 compatibility
+
