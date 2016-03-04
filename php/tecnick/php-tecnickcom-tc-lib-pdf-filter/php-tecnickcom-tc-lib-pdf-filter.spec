@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c47b2c2f1989a1f7da8aabdb67336b1a04634383
+%global gh_commit    a9ad0b4a14555b29e8194be9d07c7a168acb3ba7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.2.0
+Version:        1.2.1
 Release:        1%{?dist}
 Summary:        PHP library to decode PDF compression and encryption filters
 
@@ -107,6 +107,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- update to 1.2.1 (no change)
+
 * Fri Dec 11 2015 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - update to 1.2.0 (no change)
 - raise dependency on php >= 5.4
@@ -157,3 +160,4 @@ rm -rf %{buildroot}
 - initial package, version 1.1.0
 - open https://github.com/tecnickcom/tc-lib-pdf-filter/pull/1
   fix autoloader
+
