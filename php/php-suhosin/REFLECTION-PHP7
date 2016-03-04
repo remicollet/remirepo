@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #77 suhosin7 version 0.10.0dev ] {
+Extension [ <persistent> extension #89 suhosin7 version 0.10.0dev ] {
 
   - INI {
     Entry [ suhosin.perdir <SYSTEM> ]
@@ -47,6 +47,9 @@ Extension [ <persistent> extension #77 suhosin7 version 0.10.0dev ] {
       Current = ''
     }
     Entry [ suhosin.executor.disable_emodifier <PERDIR,SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ suhosin.executor.allow_symlink <PERDIR,SYSTEM> ]
       Current = '0'
     }
     Entry [ suhosin.executor.max_depth <PERDIR,SYSTEM> ]
@@ -171,6 +174,9 @@ Extension [ <persistent> extension #77 suhosin7 version 0.10.0dev ] {
     }
     Entry [ suhosin.post.disallow_ws <PERDIR,SYSTEM> ]
       Current = '0'
+    }
+    Entry [ suhosin.session.cryptkey <ALL> ]
+      Current = ''
     }
     Entry [ suhosin.cookie.encrypt <PERDIR,SYSTEM> ]
       Current = '0'

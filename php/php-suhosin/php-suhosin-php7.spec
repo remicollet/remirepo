@@ -12,35 +12,35 @@
 %global sub_prefix %{scl_prefix}
 %endif
 
-%global gh_commit    6eb6633aa1816fc6774eaa8a77ae1d6e791760f3
+%global gh_commit    5c0b5f357fb9dc38e21513d4d19ea6925e81a3f4
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sektioneins
 %global gh_project   suhosin7
-%global gh_date      20160303
+%global gh_date      20160304
 
 %{?scl:          %scl_package         php-suhosin}
 
 %global ext_name  suhosin7
 # https://github.com/sektioneins/suhosin7/issues/4
-%global with_zts  0
+%global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
 %global ini_name  40-%{ext_name}.ini
 
 Name:           %{?sub_prefix}php-suhosin
 Version:        0.10.0
 %if 0%{?gh_date}
-Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 %else
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        http://download.suhosin.org/suhosin-%{version}.tar.gz
 %endif
-# From headers, see https://github.com/sektioneins/suhosin7/issues/1
-Source1:        http://php.net/license/3_01.txt
 
 Summary:        Suhosin is an advanced protection system for PHP installations
 
 Group:          Development/Languages
-License:        PHP
+# The Mersenne Twister random number generator is BSD
+# Suhosin is PHP variant, which is a BSD variant
+License:        BSD
 URL:            http://www.hardened-php.net/suhosin/
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -98,8 +98,6 @@ mv %{ext_name}-%{version} NTS
 %endif
 
 cd NTS
-cp %{SOURCE1} LICENSE
-
 # Check extension version
 ver=$(sed -n '/SUHOSIN7_EXT_VERSION/{s/.* "//;s/".*$//;p}' php_suhosin7.h)
 if test "$ver" != "%{version}%{?gh_date:dev}"; then
@@ -123,8 +121,8 @@ EOF
 
 
 %build
-# https://github.com/sektioneins/suhosin7/issues/3
-export CFLAGS="$RPM_OPT_FLAGS -std=c99"
+# https://github.com/sektioneins/suhosin7/pull/7
+sed -e s/c11/c99/ -i ?TS/config.m4
 
 cd NTS
 %{_bindir}/phpize
@@ -163,7 +161,7 @@ install -Dpm 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 : Minimal load test for NTS extension
 %{__ztsphp} --no-php-ini \
     --define extension=%{buildroot}%{php_ztsextdir}/%{ext_name}.so \
-    --modules 
+    --modules | grep suhosin7
 %endif
 
 : Upstream test suite for NTS extension
@@ -206,6 +204,11 @@ EOF
 
 
 %changelog
+* Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 0.10.0-0.2.20160304git5c0b5f3
+- refresh
+- open https://github.com/sektioneins/suhosin7/pull/7 - gcc < 4.8
+- enable ZTS build
+
 * Thu Mar  3 2016 Remi Collet <remi@fedoraproject.org> - 0.10.0-0.1.20160303git6eb6633
 - update to 0.10.0 for php 7
 - open https://github.com/sektioneins/suhosin7/issues/1 - License
