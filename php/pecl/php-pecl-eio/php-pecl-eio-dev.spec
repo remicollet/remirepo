@@ -24,29 +24,22 @@ Provides: %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 %global sub_prefix %{scl_prefix}
 %endif
 %endif
-%global prever    RC1
+%global prever    RC2
 
 %{?scl:          %scl_package        php-pecl-eio}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 #
 # NOTE: bundled libeio (which is retired from Fedora)
 #
 
-
 Summary:        Provides interface to the libeio library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        2.0.0
-Release:        0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
-
-# https://bitbucket.org/osmanov/pecl-eio/pull-requests/4
-Patch0:         %{pecl_name}-pr4.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -70,6 +63,8 @@ Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -116,10 +111,11 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{pecl_name}-%{version}%{?prever} NTS
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
-%patch0 -p1 -b .pr4
 
 # Sanity check, really often broken
 extver=$(sed -n '/define PHP_EIO_VERSION/{s/.* "//;s/".*$//;p}' php%(%{__php} -r 'echo PHP_MAJOR_VERSION;')/php_eio.h)
@@ -185,6 +181,7 @@ do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -201,10 +198,11 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %check
-# Need investigation (output order)
+# Need investigation (output order, erratic results)
 rm  ?TS/tests/eio_custom_basic.phpt
 %if 0%{?rhel} == 5
 rm  ?TS/tests/eio_fallocate_basic.phpt
@@ -266,6 +264,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.3.RC2
+- Update to 2.0.0RC2
+
 * Fri Nov 20 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.2.RC1
 - fix PHP 7 and ZTS build
   open https://bitbucket.org/osmanov/pecl-eio/issues/3
