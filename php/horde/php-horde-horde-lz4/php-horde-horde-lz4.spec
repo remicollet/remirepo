@@ -18,9 +18,6 @@
 %endif
 
 %{?scl:         %scl_package        php-horde-horde-lz4}
-%{!?php_inidir: %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:     %global __pecl      %{_bindir}/pecl}
-%{!?__php:      %global __php       %{_bindir}/php}
 
 %global with_zts     0%{?__ztsphp:1}
 %global pecl_name    horde_lz4
