@@ -15,9 +15,6 @@
 %endif
 
 %{?scl:          %scl_package        php-pecl-env}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  env
@@ -30,7 +27,7 @@
 Summary:       Load environment variables
 Name:          %{?sub_prefix}php-pecl-%{pecl_name}
 Version:       0.2.1
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/%{pecl_name}
@@ -90,7 +87,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{pecl_name}-%{version} NTS
 
 # Remove test file to avoid regsitration
-sed -e '/role="test"/d' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
 %patch0 -p1 -b .pr4
@@ -191,6 +190,7 @@ REPORT_EXIT_STATUS=1 \
 rm -rf %{buildroot}
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -207,6 +207,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %files
@@ -225,6 +226,9 @@ fi
 
 
 %changelog
+* Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 0.2.1-2
+- adapt for F24
+
 * Sat Jan 02 2016 Remi Collet <remi@fedoraproject.org> - 0.2.1-1
 - Update to 0.2.1 (beta)
 - fix broken PHP 7 build
@@ -237,3 +241,4 @@ fi
 
 * Thu Dec 31 2015 Remi Collet <remi@fedoraproject.org> - 0.1.0-1
 - initial RPM, version 0.1.0 (beta)
+
