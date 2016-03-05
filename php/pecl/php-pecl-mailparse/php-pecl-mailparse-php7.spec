@@ -16,9 +16,6 @@
 %endif
 
 %{?scl:          %scl_package         php-pecl-mailparse}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
 
 %global pecl_name mailparse
 %global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
@@ -27,7 +24,7 @@
 Summary:   PHP PECL package for parsing and working with email messages
 Name:      %{?sub_prefix}php-pecl-mailparse
 Version:   3.0.1
-Release:   1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:   2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:   PHP
 Group:     Development/Languages
 URL:       http://pecl.php.net/package/mailparse
@@ -46,10 +43,12 @@ Requires: %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires: %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides: %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides: %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides: %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
-Provides: %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -183,6 +182,7 @@ php run-tests.php \
 rm -rf %{buildroot}
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -199,6 +199,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %files
@@ -217,6 +218,9 @@ fi
 
 
 %changelog
+* Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-2
+- adapt for F24
+
 * Fri Jan 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
 - update to 3.0.1 (php 7, stable)
 
