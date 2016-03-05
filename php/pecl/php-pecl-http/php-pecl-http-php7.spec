@@ -15,10 +15,6 @@
 
 %{?scl:          %scl_package         php-pecl-http}
 %{!?scl:         %global _root_prefix %{_prefix}}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?php_incldir: %global php_incldir  %{_includedir}/php}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
 
 %global gh_commit   a84b499418ee7b8992fd9e7e2abc661735a869bd
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
@@ -46,7 +42,7 @@ Version:        3.0.0
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 %endif
 Summary:        Extended HTTP support
@@ -187,8 +183,9 @@ mv NTS/package.xml .
 mv %{proj_name}-%{version}%{?prever} NTS
 %endif
 
-cd NTS
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
+cd NTS
 extver=$(sed -n '/#define PHP_PECL_HTTP_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}%{?prever}%{?gh_date:dev}"; then
    : Error: Upstream HTTP version is now ${extver}, expecting %{version}%{?prever}%{?gh_date:dev}.
@@ -316,6 +313,7 @@ if [ -x %{__pecl} ] ; then
     %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
 fi
 
+%if 0%{?fedora} < 24
 # posttrans as pear can be installed after us
 %posttrans
 if [ -x %{__pecl} ] ; then
@@ -326,6 +324,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{proj_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -356,6 +355,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-2
+- adapt for F24
+
 * Tue Jan 19 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
 - Update to 3.0.0 (stable)
 
