@@ -15,9 +15,6 @@
 %endif
 
 %{?scl:          %scl_package        php-pecl-geospatial}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global gh_commit   27547d489d5b4fc41cce0a0d3118979d6c10c0cf
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
@@ -40,7 +37,7 @@ Version:        0.1.0
 %if 0%{?gh_date:1}
 Release:        0.6.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 
 License:        PHP
@@ -57,11 +54,13 @@ Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 # Package have be renamed
-Obsoletes:      %{?scl_prefix}php-%{pecl_name} < %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Obsoletes:      %{?scl_prefix}php-%{pecl_name}               < %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -107,8 +106,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{gh_project}-%{gh_commit} NTS
 mv NTS/package.xml .
 
-cd NTS
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
+cd NTS
 # Check version as upstream often forget to update this
 extver=$(sed -n '/#define PHP_GEOSPATIAL_VERSION/{s/.* "//;s/".*$//;p}' php_geospatial.h)
 if test "x${extver}" != "x%{version}%{?prever}%{?gh_date:-dev}"; then
@@ -210,6 +210,7 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -226,6 +227,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -235,7 +237,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-, root, root, 0755)
 %{?_licensedir:%license NTS/LICENSE}
-%doc %{pecl_docdir}/%{pecl_name}
+#doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -248,5 +250,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 0.1.0-2
+- adapt for F24
+
 * Sat Dec  5 2015 Remi Collet <remi@fedoraproject.org> - 0.1.0-1
 - initial package, version 0.1.0 (experimental)
+
