@@ -16,18 +16,14 @@
 
 %{?scl:          %scl_package        php-pecl-apm}
 %{!?scl:         %global pkg_name    %{name}}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?php_incldir: %global php_incldir %{_includedir}/php}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
-%global gh_commit   d08a5897c80c3a8dd812da35e05f84cd722ad59c
+%global gh_commit   c0bd339a94b7fe5da66c6b5ced286345a4b5410f
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    patrickallaert
 %global gh_project  php-apm
-%global gh_date     20150807
+%global gh_date     20151117
 %global pecl_name   apm
 %global proj_name   APM
-%global with_zts    0%{?__ztsphp:1}
+%global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 # after json.ini
 %global ini_name    z-%{pecl_name}.ini
@@ -46,7 +42,7 @@ Name:           %{?sub_prefix}php-pecl-apm
 Summary:        Alternative PHP Monitor
 Version:        2.0.5
 %if 0%{?gh_date:1}
-Release:        5.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        6.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -93,6 +89,10 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -119,13 +119,15 @@ NOTICE: the extension is disable, apm.ini configuration file needs to be edited.
 
 The optional %{?scl_prefix}apm-web package provides the web application.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
 %setup -qc
 mv %{gh_project}-%{gh_commit} NTS
 mv NTS/package.xml .
+
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
 %patch0 -p0 -b .rpm
@@ -225,6 +227,7 @@ cd ../ZTS
 rm -rf %{buildroot}
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -241,6 +244,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{proj_name} >/dev/null || :
 fi
+%endif
 
 
 %files
@@ -261,6 +265,9 @@ fi
 
 
 %changelog
+* Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 2.0.5-6.20151117gitc0bd339
+- refresh and adapt for F24
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 2.0.5-5.20150807gitd08a589
 - rebuild for PHP 7.0.0RC5 new API version
 
@@ -307,3 +314,4 @@ fi
   https://github.com/patrickallaert/php-apm/issues/11 - bad version
   https://github.com/patrickallaert/php-apm/issues/12 - bad roles
   https://github.com/patrickallaert/php-apm/issues/13 - zts broken
+
