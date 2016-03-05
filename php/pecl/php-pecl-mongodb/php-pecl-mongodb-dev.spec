@@ -7,9 +7,6 @@
 # Please, preserve the changelog entries
 #
 %{?scl:          %scl_package        php-pecl-mongodb}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  mongodb
@@ -24,7 +21,7 @@
 
 Summary:        MongoDB driver for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.1.2
+Version:        1.1.3
 Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
@@ -90,7 +87,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{pecl_name}-%{version}%{?prever} NTS
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
 
@@ -169,6 +168,7 @@ do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -185,6 +185,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %check
@@ -223,6 +224,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
+- Update to 1.1.3 (stable)
+
 * Thu Jan 07 2016 Remi Collet <remi@fedoraproject.org> - 1.1.2-2
 - Update to 1.1.2 (stable)
 
@@ -277,3 +281,4 @@ rm -rf %{buildroot}
 
 * Wed Apr 22 2015 Remi Collet <remi@fedoraproject.org> - 0.5.0-1
 - initial package, version 0.5.0 (alpha)
+

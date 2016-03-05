@@ -9,9 +9,6 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
-
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  mongodb
 %if "%{php_version}" < "5.6"
@@ -24,7 +21,7 @@
 
 Summary:        MongoDB driver for PHP
 Name:           php-pecl-%{pecl_name}
-Version:        1.1.2
+Version:        1.1.3
 Release:        1%{?dist}
 License:        BSD
 Group:          Development/Languages
@@ -66,7 +63,9 @@ components necessary to build a fully-functional MongoDB driver.
 mv %{pecl_name}-%{version}%{?prever} NTS
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
 
@@ -143,6 +142,7 @@ do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- php-pear
 if [ -x %{__pecl} ] ; then
@@ -159,6 +159,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %check
@@ -192,6 +193,9 @@ cd ../ZTS
 
 
 %changelog
+* Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
+- Update to 1.1.3 (stable)
+
 * Thu Jan 07 2016 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - Update to 1.1.2 (stable)
 
@@ -249,3 +253,4 @@ cd ../ZTS
 
 * Wed Apr 22 2015 Remi Collet <remi@fedoraproject.org> - 0.5.0-1
 - initial package, version 0.5.0 (alpha)
+
