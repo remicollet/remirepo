@@ -15,9 +15,6 @@
 %endif
 
 %{?scl:          %scl_package        php-pecl-gender}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  gender
@@ -31,7 +28,7 @@
 Summary:        Gender Extension
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.1.0
-Release:        6%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        7%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 # Code is BSD, nam_dict.txt is GFDL
 License:        BSD and GFDL
 Group:          Development/Languages
@@ -94,6 +91,7 @@ mv %{pecl_name}-%{version} NTS
 # Don't install tests
 sed -e 's/role="test"/role="src"/' \
     -e '/tasks:/d' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
     -i package.xml
 
 cd NTS
@@ -158,6 +156,7 @@ do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -174,6 +173,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %check
@@ -230,6 +230,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-7
+- adapt for F24
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-6
 - rebuild for PHP 7.0.0RC5 new API version
 
@@ -247,3 +250,4 @@ rm -rf %{buildroot}
 
 * Sat Feb 14 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - initial package, version 1.1.0 (stable)
+
