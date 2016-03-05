@@ -15,9 +15,6 @@
 %endif
 
 %{?scl:          %scl_package        php-pecl-crypto}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  crypto
@@ -31,7 +28,7 @@
 Summary:        Wrapper for OpenSSL Crypto Library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        0.2.2
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -96,7 +93,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{pecl_name}-%{version} NTS
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
 
@@ -161,6 +160,7 @@ do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -177,6 +177,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %check
@@ -233,6 +234,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 0.2.2-2
+- adapt for F24
+
 * Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 0.2.2-1
 - Update to 0.2.2
 
@@ -260,3 +264,4 @@ rm -rf %{buildroot}
 * Thu Jan  2 2014 Remi Collet <remi@fedoraproject.org> - 0.1.0-1
 - initial package, version 0.1.0 (devel)
 - patch for PHP 5.3.3, https://github.com/bukka/php-crypto/pull/6
+
