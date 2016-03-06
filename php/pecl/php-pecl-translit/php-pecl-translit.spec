@@ -15,9 +15,6 @@
 %endif
 
 %{?scl:          %scl_package        php-pecl-translit}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name   translit
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
@@ -38,7 +35,7 @@
 Summary:      Transliterates non-latin character sets to latin
 Name:         %{?sub_prefix}php-pecl-%{pecl_name}
 Version:      0.6.2
-Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      BSD
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -109,6 +106,8 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{gh_project}-%{gh_commit} NTS
 mv NTS/package.xml .
 
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
+
 cd NTS
 
 # Sanity check, really often broken
@@ -174,6 +173,7 @@ done
 rm -rf %{buildroot}
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -190,6 +190,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %check
@@ -234,7 +235,7 @@ REPORT_EXIT_STATUS=1 \
 
 %files
 %defattr(-, root, root, -)
-%doc %{pecl_docdir}/%{pecl_name}
+#doc %{pecl_docdir}/%{pecl_name}
 %{?_licensedir:%license NTS/LICENSE}
 %{pecl_xmldir}/%{name}.xml
 
@@ -248,5 +249,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 0.6.2-2
+- adapt for F24
+
 * Sat Nov 28 2015 Remi Collet <remi@fedoraproject.org> - 0.6.2-1
 - Initial package, version 0.6.2 (beta)
+
