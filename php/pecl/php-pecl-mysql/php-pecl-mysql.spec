@@ -11,9 +11,6 @@
 %endif
 
 %{?scl:          %scl_package        php-pecl-mysql}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 # https://github.com/php/pecl-database-mysql/commits/master
 %global gh_commit   294ce3b491ffb5ab2556b9f64ef6fb608d32e5c7
@@ -32,7 +29,7 @@ Summary:        MySQL database access functions
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
 %if 0%{?gh_date:1}
-Release:        0.9.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.10.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -54,12 +51,12 @@ Requires:       %{?scl_prefix}php-mysqlnd%{?_isa}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 # Set epoch so provides is > 0:7.0.0 (obsoleted by php-mysqlnd)
-Provides:       %{?scl_prefix}php-%{pecl_name} = 1:%{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = 1:%{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = 1:%{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = 1:%{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
-Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -181,6 +178,7 @@ cd ../ZTS
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -197,6 +195,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -219,6 +218,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.10.20150628git3c79a97
+- adapt for F24
+
 * Tue Jan 26 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.9.20150628git3c79a97
 - missing dep on php-mysqlnd
 
