@@ -15,10 +15,6 @@
 %endif
 
 %{?scl:          %scl_package        php-pecl-xmldiff}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?php_incldir: %global php_incldir %{_includedir}/php}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name xmldiff
@@ -33,7 +29,7 @@
 Summary:        XML diff and merge
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.1.2
-Release:        6%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        7%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -59,10 +55,12 @@ Requires:       %{?scl_prefix}php-libxml%{?_isa}
 %endif
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -115,6 +113,7 @@ These are the files needed to compile programs using %{name}.
 %setup -q -c
 
 sed -e '/name="diffmark/d' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
     -i package.xml
 
 mv %{pecl_name}-%{version} NTS
@@ -189,6 +188,7 @@ do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
 done
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -205,6 +205,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %check
@@ -267,6 +268,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 1.1.2-7
+- adapt for F24
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-6
 - rebuild for PHP 7.0.0RC5 new API version
 
@@ -327,3 +331,4 @@ rm -rf %{buildroot}
 
 * Sun Sep 29 2013 Remi Collet <remi@fedoraproject.org> - 0.8.0-1
 - initial package
+
