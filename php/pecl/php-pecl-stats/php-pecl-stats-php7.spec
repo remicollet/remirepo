@@ -7,9 +7,6 @@
 # Please, preserve the changelog entries
 #
 %{?scl:          %scl_package        php-pecl-stats}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name stats
@@ -18,7 +15,7 @@
 Summary:        Routines for statistical computation
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        2.0.1
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -32,10 +29,12 @@ Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -67,6 +66,11 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %prep
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
+
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
 
@@ -134,6 +138,7 @@ do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -150,6 +155,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %check
@@ -202,6 +208,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
+- adapt for F24
+
 * Sat Jan  2 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - update to 2.0.1 (php 7, stable)
 - don't install/register tests
