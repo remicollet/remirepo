@@ -10,9 +10,6 @@
 # Please, preserve the changelog entries
 #
 %{?scl:          %scl_package        php-pecl-rrd}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name rrd
@@ -22,7 +19,7 @@
 Summary:      PHP Bindings for rrdtool
 Name:         %{?scl_prefix}php-pecl-rrd
 Version:      2.0.0
-Release:      1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:      2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      BSD
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/rrd
@@ -40,10 +37,12 @@ Requires:     %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Conflicts:    %{?scl_prefix}rrdtool-php
-Provides:     %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}%{?pre}
-Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}%{?pre}
-Provides:     %{?scl_prefix}php-%{pecl_name} = %{version}%{?pre}
-Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}%{?pre}
+Provides:     %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:     %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
+Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:     %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:     %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -79,7 +78,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{pecl_name}-%{version}%{?prever} NTS
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
 
@@ -176,6 +177,7 @@ TEST_PHP_EXECUTABLE=%{_bindir}/php \
 rm -rf %{buildroot}
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -192,6 +194,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %files
@@ -210,6 +213,9 @@ fi
 
 
 %changelog
+* Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
+- adapt for F24
+
 * Mon Dec 28 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - update to 2.0.0
 
