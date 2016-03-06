@@ -17,9 +17,6 @@
 %endif
 
 %{?scl:          %scl_package        php-pecl-lzf}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %define pecl_name   LZF
 %define  ext_name   lzf
@@ -32,7 +29,7 @@
 
 Name:           %{?sub_prefix}php-pecl-lzf
 Version:        1.6.3
-Release:        6%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        7%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Extension to handle LZF de/compression
 Group:          Development/Languages
 License:        PHP
@@ -48,9 +45,11 @@ Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       %{?scl_prefix}php-%{ext_name} = %{version}
-Provides:       %{?scl_prefix}php-%{ext_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-%{ext_name}                = %{version}
+Provides:       %{?scl_prefix}php-%{ext_name}%{?_isa}        = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{ext_name}           = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{ext_name}%{?_isa}   = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
@@ -96,6 +95,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' \
     -e '/name="lib/d' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
     -i package.xml
 
 mv %{pecl_name}-%{version} NTS
@@ -171,7 +171,7 @@ cd NTS
 TEST_PHP_EXECUTABLE=%{__php} \
 REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
-%{__php} run-tests.php \
+%{__php} -n run-tests.php \
     -n -q \
     -d extension=%{buildroot}%{php_extdir}/%{ext_name}.so
 
@@ -185,7 +185,7 @@ cd ../ZTS
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
-%{__ztsphp} run-tests.php \
+%{__ztsphp} -n run-tests.php \
     -n -q \
     -d extension_dir=modules \
     -d extension=%{buildroot}%{php_ztsextdir}/%{ext_name}.so
@@ -195,9 +195,7 @@ NO_INTERACTION=1 \
 rm -rf %{buildroot}
 
 
-# Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
-
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -214,12 +212,12 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %files
 %defattr(-,root,root,-)
-%{!?_licensedir:%global license %%doc}
-%license NTS/LICENSE
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -233,6 +231,9 @@ fi
 
 
 %changelog
+* Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 1.6.3-7
+- adapt for F24
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.6.3-6
 - rebuild for PHP 7.0.0RC5 new API version
 
