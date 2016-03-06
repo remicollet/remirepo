@@ -18,9 +18,6 @@
 %endif
 
 %{?scl:          %scl_package        php-pecl-uuid}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name   uuid
 %global with_zts    0%{?__ztsphp:1}
@@ -34,7 +31,7 @@
 Summary:       Universally Unique Identifier extension for PHP
 Name:          %{?sub_prefix}php-pecl-uuid
 Version:       1.0.4
-Release:       6%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       7%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       LGPLv2+
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/uuid
@@ -52,10 +49,12 @@ Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 # both provides same extension, with different API
 Conflicts:     %{?scl_prefix}uuid-php
 
-Provides:      %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -94,7 +93,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %setup -q -c 
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
@@ -158,7 +159,7 @@ install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # Documentation
 cd NTS
-for i in LICENSE $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -183,6 +184,7 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -199,6 +201,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -221,6 +224,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 1.0.4-7
+- adapt for F24
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-6
 - rebuild for PHP 7.0.0RC5 new API version
 
@@ -275,3 +281,4 @@ rm -rf %{buildroot}
 
 * Tue Nov  6 2012 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - initial package, version 1.0.3 (stable)
+
