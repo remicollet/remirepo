@@ -16,9 +16,6 @@
 
 %{?scl:          %scl_package        php-pecl-seaslog}
 %{!?scl:         %global _root_libdir %{_libdir}}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global proj_name  SeasLog
@@ -33,7 +30,7 @@
 Summary:        A effective,fast,stable log extension for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.5.0
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        ASL 2.0
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{proj_name}
@@ -47,10 +44,12 @@ Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{proj_name}) = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{proj_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -96,7 +95,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{proj_name}-%{version} NTS
 
 # Don't install tests
-sed -e '/role="test"/d' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
 
@@ -191,6 +192,7 @@ cd ../ZTS
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -207,6 +209,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{proj_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -229,6 +232,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 1.5.0-2
+- adapt for F24
+
 * Sun Dec 06 2015 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
 - Update to 1.5.0
 
