@@ -7,8 +7,6 @@
 # Please, preserve the changelog entries
 #
 %{?scl:          %scl_package         php-yaconf}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__php:       %global __php        %{_bindir}/php}
 
 %global gh_commit   dbbb2f1bcab98b8b72e2a9f7954c4ddd87755cda
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
@@ -24,15 +22,15 @@ Name:          %{?scl_prefix}php-pecl-yaconf
 Version:       1.0.1
 %if 0%{?gh_date:1}
 Release:       0.7.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 License:       PHP
 Group:         Development/Languages
 URL:           https://github.com/%{gh_owner}/%{gh_project}
-Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 7
 BuildRequires: %{?scl_prefix}php-pear
 
@@ -46,11 +44,13 @@ Obsoletes:     php70w-%{gh_project} <= %{version}
 %endif
 
 # Package have be renamed
-Obsoletes:      %{?scl_prefix}php-%{pecl_name} < 1.0.0-1
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Obsoletes:      %{?scl_prefix}php-%{pecl_name}               < 1.0.0-1
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
@@ -77,8 +77,14 @@ These are the files needed to compile programs using %{name}.
 
 %prep
 %setup -qc
+%if 0%{?gh_date:1}
 mv %{gh_project}-%{gh_commit} NTS
 mv NTS/package.xml .
+%else
+mv %{pecl_name}-%{version} NTS
+%endif
+
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
 
@@ -125,7 +131,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
 # Install the NTS stuff
 make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
@@ -139,9 +144,12 @@ make -C ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
-# Documentation
-for i in README.md $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
-do [ -f NTS/$i ] &&  install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+# Test & Documentation
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+for i in $(grep 'role="test"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 NTS/$i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
 done
 
 
@@ -176,6 +184,7 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -192,14 +201,10 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
-
-
-%clean
-rm -rf %{buildroot}
+%endif
 
 
 %files
-%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -214,7 +219,7 @@ rm -rf %{buildroot}
 
 
 %files devel
-%defattr(-,root,root,-)
+%doc %{pecl_testdir}/%{pecl_name}
 %{php_incldir}/ext/%{pecl_name}
 
 %if %{with_zts}
@@ -223,6 +228,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
+- adapt for F24
+- sources from PECL
+- package test suite in devel
+
 * Sat Dec 12 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1 (beta, php 7)
 
@@ -253,3 +263,4 @@ rm -rf %{buildroot}
 
 * Fri Jun 12 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.20150612gitf3ca30d
 - new package
+
