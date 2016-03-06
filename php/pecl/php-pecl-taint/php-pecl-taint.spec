@@ -7,8 +7,6 @@
 # Please, preserve the changelog entries
 #
 %{?scl:          %scl_package         php-pecl-taint}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__php:       %global __php        %{_bindir}/php}
 
 %global gh_commit   24b5e87988ce0b01098ee0b617a13f32264ee0be
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
@@ -25,14 +23,12 @@ Version:       2.0.1
 %if 0%{?gh_date:1}
 Release:       0.7.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 License:       PHP
 Group:         Development/Languages
 URL:           https://github.com/%{gh_owner}/%{gh_project}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
-
-Source1:       https://raw.githubusercontent.com/laruence/taint/php7/LICENSE
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 7
@@ -49,10 +45,12 @@ Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
@@ -75,7 +73,10 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{gh_project}-%{gh_commit} NTS
 mv NTS/package2.xml package.xml
 
-cp %{SOURCE1} NTS/LICENSE
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
 # When this file will be removed, clean the description.
@@ -139,7 +140,7 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Documentation
-for i in README.md CREDITS LICENSE EXPERIMENTAL $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do [ -f NTS/$i ] &&  install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
@@ -175,6 +176,7 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -191,6 +193,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -213,8 +216,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
+- adapt for F24
+
 * Sun Dec 13 2015 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Update to 2.0.1 (php 7, beta)
 
 * Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - new package, version 2.0.0 (beta, php 7)
+
