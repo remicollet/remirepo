@@ -18,16 +18,13 @@
 %endif
 
 %{?scl:          %scl_package        php-yac}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global gh_commit   7e5a9edfcfb6ad064c165a0b6abf8d11218fe4b5
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    laruence
 %global gh_project  yac
 #global gh_date     20150908
-%global with_zts    0%{?__ztsphp:1}
+%global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name   yac
 %global with_tests  %{!?_without_tests:1}%{?_without_tests:0}
 %if "%{php_version}" < "5.6"
@@ -43,7 +40,7 @@ Version:        2.0.0
 %if 0%{?gh_date:1}
 Release:        0.6.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 
 License:        PHP
@@ -51,8 +48,7 @@ Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel > 5.2
+BuildRequires:  %{?scl_prefix}php-devel > 7
 BuildRequires:  %{?scl_prefix}php-pear
 %if %{with_fastlz}
 BuildRequires:  fastlz-devel
@@ -63,11 +59,13 @@ Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 # Package have be renamed
-Obsoletes:      %{?scl_prefix}php-%{pecl_name} < %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Obsoletes:      %{?scl_prefix}php-%{pecl_name}               < %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -75,18 +73,12 @@ Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
-%if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
-%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -115,7 +107,9 @@ mv %{gh_project}-%{gh_commit} NTS
 mv NTS/package.xml .
 
 # Don't install (register) the tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
 %if %{with_fastlz}
@@ -174,7 +168,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
 # Install the NTS stuff
 make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
@@ -234,6 +227,7 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -250,14 +244,10 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
-
-
-%clean
-rm -rf %{buildroot}
+%endif
 
 
 %files
-%defattr(-, root, root, 0755)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -272,6 +262,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
+- adapt for F24
+
 * Tue Oct 27 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - update to 2.0.0 (php 7)
 
@@ -330,3 +323,4 @@ rm -rf %{buildroot}
 
 * Sat Mar 23 2013 Remi Collet <remi@fedoraproject.org> - 0.1.0-0.1.git57fe00d
 - initial package, version 0.1.0 (experimental)
+
