@@ -1030,6 +1030,7 @@ sed -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
  -e "s:@SCL@:%{?scl:%{scl}_}:" \
  %{SOURCE3} | tee macros.php
 %if 0%{?fedora} >= 24
+# Will result as %%php70_pecl_xmldir, thanks to override
 echo '%pecl_xmldir   %{_localstatedir}/lib/php/peclxml' >>macros.php
 %endif
 
