@@ -3,7 +3,7 @@
 Name:       scl-utils
 Epoch:      1
 Version:    2.0.1
-Release:    7%{dist}
+Release:    8%{dist}
 Summary:    Utilities for alternative packaging
 
 License:    GPLv2+
@@ -13,6 +13,10 @@ Source0:    https://fedorahosted.org/released/scl-utils/%{name}-%{version}.tar.b
 Source1:    macros.scl-filesystem
 Buildrequires:  cmake
 Buildrequires:  rpm-devel
+%if 0%{?fedora} >= 24
+Buildrequires:  glibc-all-langpacks
+%endif
+
 Requires:   environment-modules
 
 Patch0:     %{name}-layout.patch
@@ -80,6 +84,9 @@ rm -rf %buildroot
 %{_rpmconfigdir}/brp-scl-python-bytecompile
 
 %changelog
+* Sun Mar  6 2016 Remi Collet <remi@remirepo.net> - 1:2.0.1-8
+- F24 build
+
 * Fri Sep 18 2015 Remi Collet <remi@remirepo.net> - 1:2.0.1-7
 - add "rh_layout" to remove /scls/ from _sysconfdir,
   _sharedstatedir and _localstatedir, in sync with RHEL version
