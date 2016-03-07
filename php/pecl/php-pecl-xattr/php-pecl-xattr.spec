@@ -13,12 +13,11 @@
 %global sub_prefix %{scl_prefix}
 %endif
 %endif
-%global prever  RC1
 
 %{?scl:          %scl_package        php-pecl-xattr}
 
 %global pecl_name xattr
-%global with_zts  0%{?__ztsphp:1}
+%global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 %global ini_name  %{pecl_name}.ini
 %else
@@ -28,7 +27,7 @@
 Summary:        Extended attributes
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.3.0
-Release:        0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -228,6 +227,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar  7 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- update to 1.3.0 (stable) - no change since RC1
+
 * Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-0.3.RC1
 - adapt for F24
 
