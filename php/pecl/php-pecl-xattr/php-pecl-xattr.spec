@@ -1,6 +1,3 @@
-# Fedora spec file for php-pecl-xattr
-# with SCL compatibility removed, from
-#
 # remirepo spec file for php-pecl-xattr
 #
 # Copyright (c) 2013-2016 Remi Collet
@@ -9,9 +6,16 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+%global prever  RC1
+
+%{?scl:          %scl_package        php-pecl-xattr}
 
 %global pecl_name xattr
 %global with_zts  0%{?__ztsphp:1}
@@ -22,25 +26,48 @@
 %endif
 
 Summary:        Extended attributes
-Name:           php-pecl-%{pecl_name}
-Version:        1.2.1
-Release:        1%{?dist}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
+Version:        1.3.0
+Release:        0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
-BuildRequires:  php-devel
-BuildRequires:  php-pear
-BuildRequires:  libattr-devel
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-pear
 
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared object
@@ -50,24 +77,28 @@ Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 
 %description
-This package allows to manipulate extended attributes on filesystems that
-support them. Requires libattr from Linux XFS project.
+This package allows to manipulate extended attributes on filesystems
+that support them.
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
 %setup -q -c
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
-mv %{pecl_name}-%{version} NTS
+mv %{pecl_name}-%{version}%{?prever} NTS
 
 cd NTS
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_XATTR_VERSION/{s/.* "//;s/".*$//;p}' php_xattr.h)
-if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
 cd ..
@@ -105,6 +136,8 @@ make %{?_smp_mflags}
 
 
 %install
+rm -rf %{buildroot}
+
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
@@ -125,8 +158,9 @@ do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
-%triggerin -- php-pear
+%triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
     %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
 fi
@@ -141,6 +175,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %check
@@ -173,7 +208,12 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -188,8 +228,18 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
-* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
-- drop SCL compatibility for Fedora review
+* Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-0.3.RC1
+- adapt for F24
+
+* Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.3.0-0.2.RC1
+- rebuild for PHP 7.0.0RC5 new API version
+
+* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.3.0-0.1.RC1
+- update to 1.3.0RC1
+- drop dependency on libxattr
+
+* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-5
+- F23 rebuild with rh_layout
 
 * Wed Jul 22 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-4
 - rebuild against php 7.0.0beta2
