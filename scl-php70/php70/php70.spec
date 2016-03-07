@@ -19,7 +19,7 @@
 Summary:       Package that installs PHP 7.0
 Name:          %scl_name
 Version:       1.0
-Release:       2%{?dist}
+Release:       3%{?dist}
 Group:         Development/Languages
 License:       GPLv2+
 
@@ -202,6 +202,9 @@ restorecon -R %{_localstatedir} &>/dev/null || :
 
 
 %changelog
+* Mon Mar  7 2016 Remi Collet <remi@fedoraproject.org> 1.0-3
+- fix override for pecl_xmldir
+
 * Tue Jan  5 2016 Remi Collet <remi@fedoraproject.org> 1.0-2
 - add missing "sbin" in PATH (Fedora)
 
