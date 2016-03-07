@@ -3,7 +3,7 @@
 Name:       scl-utils
 Epoch:      1
 Version:    2.0.1
-Release:    8%{dist}
+Release:    9%{dist}
 Summary:    Utilities for alternative packaging
 
 License:    GPLv2+
@@ -84,6 +84,9 @@ rm -rf %buildroot
 %{_rpmconfigdir}/brp-scl-python-bytecompile
 
 %changelog
+* Mon Mar  7 2016 Remi Collet <remi@remirepo.net> - 1:2.0.1-9
+- fix grep usage in macros.scl #1315051
+
 * Sun Mar  6 2016 Remi Collet <remi@remirepo.net> - 1:2.0.1-8
 - F24 build
 

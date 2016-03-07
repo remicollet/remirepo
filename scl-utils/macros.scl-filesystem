@@ -295,7 +295,7 @@ ln -snf usr/%{_lib} %{_lib}
 %endif
 sed -n -f %{buildroot}/iso_639.sed /usr/share/xml/iso-codes/iso_639.xml >%{buildroot}/iso_639.tab
 sed -n -f %{buildroot}/iso_3166.sed /usr/share/xml/iso-codes/iso_3166.xml >%{buildroot}/iso_3166.tab
-grep -v "^$" %{buildroot}/iso_639.tab | grep -v "^#" | while read a b c d ; do
+grep -av "^$" %{buildroot}/iso_639.tab | grep -av "^#" | while read a b c d ; do
     [[ "$d" =~ "^Reserved" ]] && continue
     [[ "$d" =~ "^No linguistic" ]] && continue
     locale=$c
