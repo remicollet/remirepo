@@ -15,7 +15,7 @@
 # soname 17 since 1.0.6
 # soname 18 since 1.0.7
 
-%if 0
+%if 0%{?fedora} >= 24
 # Standard build
 Name:           %{libname}
 %else
