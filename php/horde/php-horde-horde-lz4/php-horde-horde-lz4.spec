@@ -53,9 +53,7 @@ BuildRequires:  %{_bindir}/phpunit
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
-%if ! 0%{?scl:1}
 Requires:       %{?scl_prefix}php-channel(%{pecl_channel})
-%endif
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
