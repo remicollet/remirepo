@@ -17,3 +17,5 @@
 
 %__php         %{_bindir}/php
 %__ztsphp      %{_bindir}/zts-php
+
+

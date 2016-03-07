@@ -146,11 +146,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.19
-%if 0%{?snapdate:1}%{?rcver:1}
-Release: 0.1.%{?snapdate}%{?rcver}%{?dist}
-%else
-Release: 1%{?dist}
-%endif
+Release: 2%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -158,14 +154,10 @@ License: PHP and Zend and BSD
 Group: Development/Languages
 URL: http://www.php.net/
 
-%if 0%{?snapdate}
-Source0: http://snaps.php.net/php5.6-%{snapdate}.tar.xz
-%else
 # Need to download official tarball and strip non-free stuff
 # wget http://www.php.net/distributions/php-%%{version}%%{?rcver}.tar.xz
 # ./strip.sh %%{version}
 Source0: php-%{version}%{?rcver}-strip.tar.xz
-%endif
 Source1: php.conf
 Source2: php.ini
 Source3: macros.php
@@ -253,9 +245,6 @@ BuildRequires: libzip-devel >= 0.11
 %endif
 %if %{with_dtrace}
 BuildRequires: systemtap-sdt-devel
-%endif
-%if 0%{?snapdate}
-BuildRequires: bison
 %endif
 
 Obsoletes: php53, php53u, php54w, php55u, php55w, php56u, php56w
@@ -952,12 +941,7 @@ echo CIBLE = %{name}-%{version}-%{release} oci8=%{with_oci8} libzip=%{with_libzi
 # ensure than current httpd use prefork MPM.
 httpd -V  | grep -q 'threaded:.*yes' && exit 1
 
-%if 0%{?snapdate}
-%setup -q -n php5.6-%{snapdate}
-rm -rf ext/json
-%else
 %setup -q -n php-%{version}%{?rcver}
-%endif
 
 %patch5 -p1 -b .includedir
 %patch6 -p1 -b .embed
@@ -1038,8 +1022,8 @@ sed -e 's/64321/64322/' -i ext/openssl/tests/*.phpt
 
 # Safety check for API version change.
 pver=$(sed -n '/#define PHP_VERSION /{s/.* "//;s/".*$//;p}' main/php_version.h)
-if test "x${pver}" != "x%{version}%{?rcver}%{?snapdate:-dev}"; then
-   : Error: Upstream PHP version is now ${pver}, expecting %{version}%{?rcver}%{?snapdate:-dev}.
+if test "x${pver}" != "x%{version}%{?rcver}"; then
+   : Error: Upstream PHP version is now ${pver}, expecting %{version}%{?rcver}.
    : Update the version/rcver macros and rebuild.
    exit 1
 fi
@@ -1551,6 +1535,9 @@ install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/wsdlcache
+%if 0%{?fedora} >= 24
+install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/peclxml
+%endif
 
 %if %{with_lsws}
 install -m 755 build-apache/sapi/litespeed/php $RPM_BUILD_ROOT%{_bindir}/lsphp
@@ -1727,6 +1714,9 @@ sed -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
     -e "/zts/d" \
 %endif
     < %{SOURCE3} > macros.php
+%if 0%{?fedora} >= 24
+echo '%pecl_xmldir   %{_localstatedir}/lib/php/peclxml' >>macros.php
+%endif
 install -m 644 -D macros.php \
            $RPM_BUILD_ROOT%{macrosdir}/macros.php
 
@@ -1864,6 +1854,9 @@ fi
 %dir %{_libdir}/php-zts/modules
 %endif
 %dir %{_localstatedir}/lib/php
+%if 0%{?fedora} >= 24
+%dir %{_localstatedir}/lib/php/peclxml
+%endif
 %dir %{_datadir}/php
 
 %files cli
@@ -1994,6 +1987,9 @@ fi
 
 
 %changelog
+* Mon Mar  7 2016 Remi Collet <remi@fedoraproject.org> 5.6.19-2
+- adapt for F24: define %%pecl_xmldir and own it
+
 * Thu Mar  3 2016 Remi Collet <remi@fedoraproject.org> 5.6.19-1
 - Update to 5.6.19
   http://www.php.net/releases/5_6_19.php
