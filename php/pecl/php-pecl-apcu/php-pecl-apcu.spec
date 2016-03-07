@@ -19,10 +19,6 @@
 
 %{?scl:          %scl_package        php-pecl-apcu}
 %{!?scl:         %global pkg_name    %{name}}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?php_incldir: %global php_incldir %{_includedir}/php}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 %global gh_commit  d7b65bf289e7dd3cd22350554b5eb99fc3bb2a9c
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   krakjoe
@@ -43,7 +39,7 @@ Version:        4.0.10
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 Source1:        %{pecl_name}.ini
@@ -68,11 +64,15 @@ Provides:       %{?scl_prefix}php-apcu = %{version}
 Provides:       %{?scl_prefix}php-apcu%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(apcu) = %{version}
 Provides:       %{?scl_prefix}php-pecl(apcu)%{?_isa} = %{version}
+# For "more" SCL
+Provides:       %{?scl_prefix}php-pecl-apcu         = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-apcu%{?_isa} = %{version}-%{release}
 %if "%{php_version}" < "5.5"
 Conflicts:      %{?scl_prefix}php-pecl-apc < 4
 %else
 Obsoletes:      %{?scl_prefix}php-pecl-apc < 4
 %endif
+
 # Same provides than APC, this is a drop in replacement
 Provides:       %{?scl_prefix}php-apc = %{version}
 Provides:       %{?scl_prefix}php-apc%{?_isa} = %{version}
@@ -176,6 +176,8 @@ mv NTS/package.xml .
 %else
 mv %{pecl_name}-%{version} NTS
 %endif
+
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
 
@@ -284,6 +286,7 @@ REPORT_EXIT_STATUS=1 \
 rm -rf %{buildroot}
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -300,6 +303,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %files
@@ -339,6 +343,9 @@ fi
 
 
 %changelog
+* Mon Mar  7 2016 Remi Collet <remi@fedoraproject.org> - 4.0.10-2
+- adapt for F24
+
 * Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 4.0.10-1
 - Update to 4.0.10 (stable)
 
