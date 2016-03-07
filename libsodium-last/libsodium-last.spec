@@ -23,7 +23,7 @@ Name:           %{libname}
 Name:           %{libname}-last
 %endif
 Version:        1.0.8
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The Sodium crypto library
 Group:          System Environment/Libraries
 License:        ISC
@@ -34,6 +34,8 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if "%{libname}" != "%{name}"
 Provides:       %{libname}         = %{version}-%{release}
 Provides:       %{libname}%{?_isa} = %{version}-%{release}
+%else
+Obsoletes:      %{libname}-last   <= %{version}
 %endif
 
 
@@ -62,6 +64,8 @@ Requires:       %{name}%{?_isa}          = %{version}-%{release}
 Conflicts:      %{libname}-devel         < %{version}
 Provides:       %{libname}-devel         = %{version}-%{release}
 Provides:       %{libname}-devel%{?_isa} = %{version}-%{release}
+%else
+Obsoletes:      %{libname}-last-devel   <= %{version}
 %endif
 
 %description    devel
@@ -110,7 +114,8 @@ rm -rf %{buildroot}
 %files devel
 %defattr (-,root,root,-)
 %doc AUTHORS ChangeLog README.markdown THANKS
-%doc test/default/*.{c,h}
+%doc test/default/*.{c,exp,h}
+%doc test/quirks/quirks.h
 %{_includedir}/sodium.h
 %{_includedir}/sodium/
 %{_libdir}/%{libname}.so
@@ -118,6 +123,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar  7 2016 Remi Collet <remi@fedoraproject.org> - 1.0.8-2
+- obsolete libsodium-last in fedora
+
 * Sat Dec 26 2015 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
 - update to 1.0.8
 
