@@ -1,4 +1,4 @@
-# remirepo spec file for php-phpmd-PHP-PMD
+# remirepo spec file for php-phpmd-PHP-PMD, from
 #
 # Fedora spec file for php-phpmd-PHP-PMD
 #
@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    08b5bcd454a7148579b68931fc500d824afd3bb5
+%global gh_commit    e46a0999e0941a6b5677cfa4117e29e70b753de1
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpmd
 %global gh_project   phpmd
@@ -18,7 +18,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-phpmd-PHP-PMD
-Version:        2.3.2
+Version:        2.3.3
 Release:        1%{?dist}
 Summary:        PHPMD - PHP Mess Detector
 
@@ -117,6 +117,10 @@ require '%{buildroot}%{php_home}/autoload.php';
 EOF
 
 %{_bindir}/phpunit --verbose
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose
+fi
 %else
 : Test suite disabled
 %endif
@@ -146,6 +150,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
+- update to 2.3.3
+
 * Fri Sep 25 2015 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
 - update to 2.3.2
 - drop dependency on symfony
