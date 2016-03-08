@@ -15,10 +15,6 @@
 %endif
 
 %{?scl:          %scl_package        php-pecl-cairo}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?php_incldir: %global php_incldir  %{_includedir}/php}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
 
 %global proj_name  Cairo
 %global pecl_name  cairo
@@ -34,7 +30,7 @@
 
 Name:           %{?sub_prefix}php-pecl-cairo
 Version:        0.3.2
-Release:        10%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        11%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Cairo Graphics Library Extension
 Group:          Development/Languages
 License:        PHP
@@ -54,10 +50,12 @@ Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -105,6 +103,8 @@ These are the files needed to compile programs using cairo extension.
 
 %prep
 %setup -c -q
+
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 %patch0 -p0 -b .61882
 mv %{proj_name}-%{version} NTS
@@ -207,6 +207,7 @@ NO_INTERACTION=1 \
 rm  -rf %{buildroot}
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -223,10 +224,12 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{proj_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -248,6 +251,10 @@ fi
 
 
 %changelog
+* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 0.3.2-11
+- adapt for F24
+- fix license management
+
 * Sat Jun 20 2015 Remi Collet <remi@fedoraproject.org> - 0.3.2-10
 - allow build against rh-php56 (as more-php56)
 - drop runtime dependency on pear, new scriptlets
@@ -292,3 +299,4 @@ fi
 * Sat Apr 21 2012 Remi Collet <remi@fedoraproject.org> - 0.3.1-1
 - Initial RPM package
 - request for LICENSE https://bugs.php.net/61794
+
