@@ -1,4 +1,4 @@
-# spec file for php-pecl-mosquitto
+# remirepo spec file for php-pecl-mosquitto
 #
 # Copyright (c) 2013-2016 Remi Collet
 # License: CC-BY-SA
@@ -15,9 +15,6 @@
 %endif
 
 %{?scl:          %scl_package        php-pecl-mosquitto}
-%{!?php_incldir: %global php_incldir %{_includedir}/php}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  mosquitto
@@ -31,7 +28,7 @@
 Summary:        Extension for libmosquitto
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        0.3.0
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{proj_name}
@@ -46,10 +43,12 @@ Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -78,7 +77,7 @@ Obsoletes:     php56w-pecl-%{pecl_name}
 Mosquitto provides support for the MQTT protocol, including publishing,
 subscribing, and an event loop.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -86,7 +85,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{proj_name}-%{version} NTS
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
 # Sanity check, really often broken
@@ -151,6 +152,7 @@ do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{proj_name}/$i
 done
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -167,6 +169,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %check
@@ -205,6 +208,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 0.3.0-2
+- adapt for F24
+
 * Thu Sep 03 2015 Remi Collet <remi@fedoraproject.org> - 0.3.0-1
 - Update to 0.3.0 (beta)
 - drop runtime dependency on pear, new scriptlets
@@ -224,3 +230,4 @@ rm -rf %{buildroot}
 
 * Wed Dec 11 2013 Remi Collet <remi@fedoraproject.org> - 0.2.1-1
 - initial package, version 0.2.1 (alpha)
+
