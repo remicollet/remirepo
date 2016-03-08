@@ -18,9 +18,6 @@
 %endif
 
 %{?scl:          %scl_package         php-pecl-msgpack}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
 
 %global pecl_name   msgpack
 %global with_zts    0%{?__ztsphp:1}
@@ -39,7 +36,7 @@
 Summary:       API for communicating with MessagePack serialization
 Name:          %{?sub_prefix}php-pecl-msgpack
 Version:       0.5.7
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       BSD
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/msgpack
@@ -58,10 +55,12 @@ Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:      %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -120,10 +119,11 @@ These are the files needed to compile programs using MessagePack serializer.
 
 %prep
 %setup -q -c 
-
 mv %{pecl_name}-%{version} NTS
-cd NTS
 
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
+
+cd NTS
 %if %{with_msgpack}
 # use system library
 rm -rf msgpack
@@ -231,6 +231,7 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -247,6 +248,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -255,6 +257,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -278,6 +281,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 0.5.7-2
+- adapt for F24
+- fix license management
+
 * Sun Aug 30 2015 Remi Collet <remi@fedoraproject.org> - 0.5.7-1
 - Update to 0.5.7 (beta)
 
