@@ -8,9 +8,6 @@
 #
 
 %{?scl:          %scl_package         php-pecl-couchbase2}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
 
 %global pecl_name couchbase
 %global with_zts  0%{?__ztsphp:1}
@@ -26,7 +23,7 @@
 Summary:       Couchbase Server PHP extension
 Name:          %{?scl_prefix}php-pecl-couchbase2
 Version:       2.1.0
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           pecl.php.net/package/couchbase
@@ -51,10 +48,12 @@ Requires:      %{?scl_prefix}php-igbinary%{?_isa}
 Requires:      %{?scl_prefix}php-json%{?_isa}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:      %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}2         = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}2%{?_isa} = %{version}-%{release}
 # Only 1 version can be installed
 Conflicts:     %{?scl_prefix}php-pecl-couchbase < 2
 
@@ -102,6 +101,8 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %setup -q -c
 
 mv %{pecl_name}-%{version} NTS
+
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
 # Drop bundled library
@@ -185,6 +186,7 @@ done
 %endif
 
 
+%if 0%{?fedora} < 24
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
     %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
@@ -200,6 +202,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %files
@@ -219,6 +222,9 @@ fi
 
 
 %changelog
+* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-2
+- adapt for F24
+
 * Thu Nov 05 2015 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0
 - add patch to use system fastlz library
@@ -284,3 +290,4 @@ fi
 
 * Fri Mar 22 2013 Remi Collet <remi@fedoraproject.org> - 1.1.14-1
 - initial package
+
