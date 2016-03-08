@@ -32,7 +32,7 @@
 Summary:       Support for JSON serialization
 Name:          %{?scl_prefix}php-pecl-%{proj_name}
 Version:       1.3.9
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 # PHP extension is PHP
 # jsonc-c is MIT
 # json-c/linkhask.c is Public Domain
@@ -54,15 +54,17 @@ Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:      %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
-Provides:      %{?scl_prefix}php-pecl(%{proj_name}) = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{proj_name})         = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{proj_name})%{?_isa} = %{version}
-Obsoletes:     %{?scl_prefix}php-pecl-json < 1.3.1-2
-Provides:      %{?scl_prefix}php-pecl-json = %{version}-%{release}
-Provides:      %{?scl_prefix}php-pecl-json%{?_isa} = %{version}-%{release}
+Obsoletes:     %{?scl_prefix}php-pecl-json                  < 1.3.1-2
+Provides:      %{?scl_prefix}php-pecl-json                  = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-json%{?_isa}          = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-jsonc                 = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-jsonc%{?_isa}         = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -120,6 +122,8 @@ Only used to be the best provider for php-json.
 
 %prep
 %setup -q -c 
+
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd %{proj_name}-%{version}%{?prever}
 
@@ -233,6 +237,7 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -249,6 +254,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{proj_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -290,6 +296,9 @@ rm -rf %{buildroot}
 # Note to remi : remember to always build in remi-php55(56) first
 #
 %changelog
+* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.3.9-3
+- adapt for F24
+
 * Tue Sep 15 2015 Remi Collet <remi@fedoraproject.org> - 1.3.9-1
 - release 1.3.9 (stable)
 
