@@ -16,10 +16,6 @@
 
 %{?scl:          %scl_package        php-pecl-apm}
 %{!?scl:         %global pkg_name    %{name}}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?php_incldir: %global php_incldir %{_includedir}/php}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 %global pecl_name apm
 %global proj_name APM
 # https://github.com/patrickallaert/php-apm/issues/13
@@ -41,7 +37,7 @@
 Name:           %{?sub_prefix}php-pecl-apm
 Summary:        Alternative PHP Monitor
 Version:        2.0.5
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 
 # Disable the extension and drivers by default
@@ -66,10 +62,12 @@ Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires:       %{?scl_prefix}php-json%{?_isa}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{proj_name}) = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{proj_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -117,6 +115,8 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %prep
 %setup -qc
 mv %{proj_name}-%{version} NTS
+
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
 %patch0 -p0 -b .rpm
@@ -216,6 +216,7 @@ cd ../ZTS
 rm -rf %{buildroot}
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -232,6 +233,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{proj_name} >/dev/null || :
 fi
+%endif
 
 
 %files
@@ -252,6 +254,9 @@ fi
 
 
 %changelog
+* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 2.0.5-3
+- adapt for F24
+
 * Tue Jun 23 2015 Remi Collet <rcollet@redhat.com> - 2.0.5-2
 - allow build against rh-php56 (as more-php56)
 
