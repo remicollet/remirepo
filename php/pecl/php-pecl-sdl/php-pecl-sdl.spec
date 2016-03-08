@@ -7,18 +7,15 @@
 # Please, preserve the changelog entries
 #
 %{?scl:          %scl_package        php-pecl-sdl}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
 %{!?__php:       %global __php       %{_bindir}/php}
-
 %global with_zts    0%{?__ztsphp:1}
-%global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests  0%{?_with_tests:1}
 %global pecl_name   sdl
 
 Summary:       Simple DirectMedia Layer for PHP
 Name:          %{?scl_prefix}php-pecl-sdl
 Version:       0.9.3
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/sdl
@@ -29,8 +26,6 @@ BuildRequires:    %{?scl_prefix}php-devel > 5.2.0
 BuildRequires:    %{?scl_prefix}php-pear
 BuildRequires:    SDL-devel
 
-Requires(post):   %{__pecl}
-Requires(postun): %{__pecl}
 Requires:         %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:         %{?scl_prefix}php(api) = %{php_core_api}
 Requires:         %{__php}
@@ -39,10 +34,12 @@ Requires:         %{__ztsphp}
 %endif
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:         %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:         %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:         %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:         %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:         %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:         %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:         %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:         %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:         %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -73,7 +70,7 @@ using the complete SDL library API.
 
 Use the "phpsdl" command to launch a SDL application.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -81,7 +78,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{pecl_name}-%{version} NTS
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cat << 'EOF' | tee phpsdl
 #!/bin/sh
@@ -157,14 +156,24 @@ done
 rm -rf %{buildroot}
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+%if 0%{?fedora} < 24
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %files
@@ -182,6 +191,10 @@ fi
 
 
 %changelog
+* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 0.9.3-2
+- adapt for F24
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Oct 08 2014 Remi Collet <remi@fedoraproject.org> - 0.9.3-1
 - Update to 0.9.3
 - don't install/register tests
