@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # Github
-%global gh_commit    02f5b6c9a8b9278c8381e3361e7bd9d641c740ca
+%global gh_commit    b334d6c5f95364948e06d2f620ab93d084074c6e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     thephpleague
 %global gh_project   flysystem
@@ -19,7 +19,7 @@
 %global ns_project   Flysystem
 
 Name:           php-%{pk_vendor}-%{pk_name}
-Version:        1.0.17
+Version:        1.0.18
 Release:        1%{?dist}
 Summary:        Filesystem abstraction: Many filesystems, one API
 
@@ -138,9 +138,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.0.18-1
+- update to 1.0.18
+
 * Sat Feb 20 2016 Remi Collet <remi@fedoraproject.org> - 1.0.17-1
 - update to 1.0.17
 
 * Thu Jan 14 2016 Remi Collet <remi@fedoraproject.org> - 1.0.16-1
 - initial package
 - open https://github.com/thephpleague/flysystem/pull/592 - PHPUnit
+
