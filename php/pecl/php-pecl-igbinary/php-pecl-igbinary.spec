@@ -37,7 +37,7 @@ Version:        1.2.1
 Release:        0.11.git%{short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        https://github.com/%{extname}/%{extname}/archive/%{commit}/%{extname}-%{version}-%{short}.tar.gz
 %else
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        http://pecl.php.net/get/%{extname}-%{version}.tgz
 %endif
 License:        BSD
@@ -54,12 +54,12 @@ Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Obsoletes:      %{?scl_prefix}php-%{extname} <= 1.1.1
-Provides:       %{?scl_prefix}php-%{extname} = %{version}
-Provides:       %{?scl_prefix}php-%{extname}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{extname}) = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{extname})%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
+Obsoletes:      %{?scl_prefix}php-%{extname}               <= 1.1.1
+Provides:       %{?scl_prefix}php-%{extname}                = %{version}
+Provides:       %{?scl_prefix}php-%{extname}%{?_isa}        = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{extname})          = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{extname})%{?_isa}  = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}         = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
@@ -279,6 +279,9 @@ fi
 
 
 %changelog
+* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-3
+- adapt for F24
+
 * Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-2
 - allow build against rh-php56 (as more-php56)
 - drop runtime dependency on pear, new scriptlets
