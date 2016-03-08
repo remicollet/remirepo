@@ -19,10 +19,6 @@
 
 %{?scl:          %scl_package         php-pecl-http}
 %{!?scl:         %global _root_prefix %{_prefix}}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?php_incldir: %global php_incldir  %{_includedir}/php}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
 
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
@@ -45,7 +41,7 @@
 #global prever RC1
 Name:           %{?sub_prefix}php-pecl-http
 Version:        2.5.5
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -91,15 +87,9 @@ BuildRequires: libevent-devel > 1.4
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
-%if "%{php_version}" < "5.4"
-# php 5.3.3 in EL-6 don't use arched virtual provides
-# so only requires real packages instead
-Requires:       %{?scl_prefix}php-common%{?_isa}
-%else
 Requires:       %{?scl_prefix}php-hash%{?_isa}
 Requires:       %{?scl_prefix}php-iconv%{?_isa}
 Requires:       %{?scl_prefix}php-spl%{?_isa}
-%endif
 Requires:       %{?scl_prefix}php-pecl(propro)%{?_isa} >= 1.0.0
 Requires:       %{?scl_prefix}php-pecl(raphf)%{?_isa}  >= 1.1.0
 %if "%{php_version}" > "5.6"
@@ -196,10 +186,11 @@ These are the files needed to compile programs using HTTP extension.
 
 %prep
 %setup -c -q 
-
 mv %{proj_name}-%{version}%{?prever} NTS
-cd NTS
 
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
+
+cd NTS
 extver=$(sed -n '/#define PHP_PECL_HTTP_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
    : Error: Upstream HTTP version is now ${extver}, expecting %{version}%{?prever}.
@@ -323,6 +314,7 @@ NO_INTERACTION=1 \
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -339,6 +331,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{proj_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -369,6 +362,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 2.5.5-2
+- adapt for F24
+
 * Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 2.5.5-1
 - Update to 2.5.5 (stable)
 
