@@ -15,9 +15,6 @@
 %endif
 
 %{?scl:          %scl_package         php-pecl-dom-varimport}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
 %{!?scl:         %global _root_prefix %{_prefix}}
 
 %define pecl_name   dom_varimport
@@ -32,7 +29,7 @@
 
 Name:           %{?sub_prefix}php-pecl-dom-varimport
 Version:        1.11.3
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Convert nested arrays into DOMDocument
 Group:          Development/Languages
 License:        PHP
@@ -50,10 +47,12 @@ Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires:       %{?scl_prefix}php-dom%{?_isa}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -107,8 +106,10 @@ These are the files needed to compile programs using %{name}.
 
 %prep
 %setup -c -q
-
 mv %{pecl_name}-%{version} NTS
+
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
+
 cd NTS
 
 extver=$(sed -n '/#define PHP_DOM_VARIMPORT_VERSION/{s/.* "//;s/".*$//;p}' php_dom_varimport.h)
@@ -204,6 +205,7 @@ make test
 rm -rf %{buildroot}
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -220,6 +222,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %files
@@ -249,6 +252,9 @@ fi
 
 
 %changelog
+* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.11.3-2
+- adapt for F24
+
 * Wed Aug 05 2015 Remi Collet <remi@fedoraproject.org> - 1.11.3-1
 - Update to 1.11.3
 
@@ -258,3 +264,4 @@ fi
   fix config.m4 + fix role for tests
 - open https://github.com/DmitryKoterov/dom_varimport/issues/6
   failed test with php 5.6 / 32bits
+
