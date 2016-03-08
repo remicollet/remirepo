@@ -8,8 +8,6 @@
 #
 %{?scl:          %scl_package         php-pecl-wxwidgets}
 %{!?scl:         %global _root_prefix %{_prefix}}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 %{!?__php:       %global __php        %{_bindir}/php}
 
 %global with_zts    0%{?__ztsphp:1}
@@ -18,7 +16,7 @@
 Summary:       Cross-platform widget toolkit
 Name:          %{?scl_prefix}php-pecl-wxwidgets
 Version:       3.0.2.0
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/wxwidgets
@@ -37,10 +35,12 @@ Requires:         %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:         %{?scl_prefix}php(api) = %{php_core_api}
 Requires:         %{__php}
 
-Provides:         %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:         %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:         %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:         %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:         %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:         %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:         %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:         %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:         %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet"
 # Other third party repo stuff
@@ -72,10 +72,14 @@ graphical components available to the different platforms.
 
 Use the "wxphp" command to launch an application.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
+
 
 %prep
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
+
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
 # Ensure no download will be done
@@ -157,6 +161,7 @@ done
 rm -rf %{buildroot}
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -173,10 +178,12 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -190,6 +197,10 @@ fi
 
 
 %changelog
+* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 3.0.2.0-2
+- adapt for F24
+- fix license management
+
 * Tue Jun 09 2015 Remi Collet <remi@fedoraproject.org> - 3.0.2.0-1
 - Update to 3.0.2.0
 - drop runtime dependency on pear, new scriptlets
