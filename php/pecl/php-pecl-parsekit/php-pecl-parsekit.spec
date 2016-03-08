@@ -1,3 +1,14 @@
+# remirepo spec file for php-pecl-parsekit
+# with SCL compatibility, from Fedora:
+#
+# Fedora spec file for php-pecl-parsekit
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
+
 %{?scl:          %scl_package     php-pecl-parsekit}
 %{!?__pecl:      %global __pecl   %{_bindir}/pecl}
 
@@ -12,7 +23,7 @@
 Summary:       PHP Opcode Analyser
 Name:          %{?scl_prefix}php-pecl-parsekit
 Version:       1.3.0
-Release:       7%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:       8%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # https://bugs.php.net/65937 - license file
 License:       PHP
 URL:           http://pecl.php.net/package/parsekit
@@ -28,16 +39,16 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: %{?scl_prefix}php-devel
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:      %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -69,6 +80,8 @@ compiler built into PHP.
 
 This extension is meant for development and debug purposes only and contains
 some code which is potentially non-threadsafe.
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -142,13 +155,24 @@ install -Dpm 0664 package2.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 %endif
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+%if 0%{?fedora} < 24
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
+
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
-   %{pecl_uninstall} %{pecl_name} >/dev/null || :
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
+    %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -171,6 +195,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-8
+- adapt for F24
+- drop runtime dependency on pear, new scriptlets
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.3.0-7.1
 - Fedora 21 SCL mass rebuild
 
