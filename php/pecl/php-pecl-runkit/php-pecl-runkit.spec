@@ -1,7 +1,4 @@
 # remirepo spec file for php-pecl-runkit
-#
-# Copyright (c) 2012-2016 Remi Collet
-#
 # with SCL compatibility from:
 
 # Fedora spec file for php-pecl-runkit
@@ -20,9 +17,6 @@
 %endif
 
 %{?scl:          %scl_package         php-pecl-runkit}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
 
 #global gh_owner    zenovich
 #global gh_commit   80160a2cf94b0377924a7d08f9318bef0c225214
@@ -39,7 +33,7 @@
 Summary:          Mangle with user defined functions and classes
 Name:             %{?sub_prefix}php-pecl-%{pecl_name}
 Version:          1.0.4
-Release:          2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:          3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:          PHP
 Group:            Development/Libraries
 # URL:            http://pecl.php.net/package/runkit/
@@ -60,10 +54,12 @@ Requires:         %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:         %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:         %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:         %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:         %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
-Provides:         %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -112,7 +108,9 @@ mv runkit-%{version} NTS
 %endif
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
 sed -e 's/-Werror//' -i config.m4
@@ -208,6 +206,7 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -224,6 +223,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -232,6 +232,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -245,6 +246,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.0.4-3
+- adapt for F24
+- fix license management
+
 * Mon Oct 19 2015 Remi Collet <remi@fedoraproject.org> - 1.0.4-2
 - switch to pecl sources
 
