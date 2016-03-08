@@ -7,9 +7,6 @@
 # Please, preserve the changelog entries
 #
 %{?scl:          %scl_package         php-pecl-blenc}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
 
 ##### bundled lib bf_algo.c (blowfish.c, Paul Kocher) #####
 
@@ -25,7 +22,7 @@
 Summary:        BLowfish ENCryption for PHP Scripts
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.1.4
-Release:        0.3.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.4.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 # blenc is PHP, bf_algo.c is LGPL
 License:        PHP and LGPL
@@ -42,16 +39,16 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -90,8 +87,13 @@ keep people out of your code and make reverse engineering difficult.
 
 %prep
 %setup -qc
-
 mv %{pecl_name}-%{version}%{?prever} NTS
+
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
+
 cd NTS
 
 %patch0 -p1 -b .rpm
@@ -159,11 +161,8 @@ install -Dpm644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 install -Dpm755 NTS/tools/blencode.php %{buildroot}%{_bindir}/blencode
 touch %{buildroot}%{_sysconfdir}/blenckeys
 
-# Test & Documentation
+# Documentation
 cd NTS
-for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{pecl_name}/$i
-done
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
@@ -216,14 +215,24 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+%if 0%{?fedora} < 24
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -232,8 +241,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
-%doc %{pecl_testdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 %{_bindir}/blencode
 %ghost %config(noreplace) %{_sysconfdir}/blenckeys
@@ -248,6 +257,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.1.4-0.4.b
+- adapt for F24
+- drop runtime dependency on pear, new scriptlets
+- fix license management
+- don't install/register tests
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.1.4-0.3.b
 - Fedora 21 SCL mass rebuild
 
@@ -256,3 +271,4 @@ rm -rf %{buildroot}
 
 * Mon Apr 28 2014 Remi Collet <remi@fedoraproject.org> - 1.1.4-0.1.b
 - initial package, version 1.1.4b (beta)
+
