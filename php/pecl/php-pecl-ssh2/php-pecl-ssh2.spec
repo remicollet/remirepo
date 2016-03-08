@@ -18,9 +18,6 @@
 %endif
 
 %{?scl:          %scl_package        php-pecl-ssh2}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name ssh2
@@ -32,7 +29,7 @@
 
 Name:           %{?sub_prefix}php-pecl-ssh2
 Version:        0.12
-Release:        6%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        7%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Bindings for the libssh2 library
 
 %global buildver %(pkg-config --silence-errors --modversion libssh2  2>/dev/null || echo 65536)
@@ -53,10 +50,12 @@ Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires:       libssh2%{?_isa}  >= %{buildver}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -95,14 +94,14 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %setup -c -q
 
 # http://git.php.net/?p=pecl/networking/ssh2.git;a=commit;h=febf5a78b761ad3c8da06dfb6e94ac54708d2fa1
-sed -e '/LICENSE/s/"src"/"doc"/' \
-    -i package.xml
+%{?_licensedir:sed  -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
+%{!?_licensedir:sed -e '/LICENSE/s/role="src"/role="doc"/' -i package.xml}
 
 mv %{pecl_name}-%{version} NTS
 
 extver=$(sed -n '/#define PHP_SSH2_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_ssh2.h)
 if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream PDO ABI version is now ${extver}, expecting %{version}.
+   : Error: Upstream version is now ${extver}, expecting %{version}.
    : Update the pdover macro and rebuild.
    exit 1
 fi
@@ -175,6 +174,7 @@ done
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -191,6 +191,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -213,6 +214,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 0.12-7
+- adapt for F24
+
 * Tue Jun 23 2015 Remi Collet <remi@fedoraproject.org> - 0.12-6
 - allow build against rh-php56 (as more-php56)
 - drop runtime dependency on pear, new scriptlets
