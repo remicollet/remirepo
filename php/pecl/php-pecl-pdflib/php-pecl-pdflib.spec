@@ -1,4 +1,4 @@
-# spec file for php-pecl-pdflib
+# remirepo spec file for php-pecl-pdflib
 #
 # Copyright (c) 2006-2016 Remi Collet
 # License: CC-BY-SA
@@ -7,9 +7,6 @@
 # Please, preserve the changelog entries
 #
 %{?scl:          %scl_package        php-pecl-pdflib}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name pdflib
@@ -21,10 +18,9 @@
 %endif
 
 Summary:        Package for generating PDF files
-Summary(fr):    Extension pour générer des fichiers PDF
 Name:           %{?scl_prefix}php-pecl-pdflib
 Version:        3.0.4
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:        4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # https://bugs.php.net/60396 ask license file
 License:        PHP
 Group:          Development/Languages
@@ -37,16 +33,16 @@ BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  pdflib-lite-devel
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}%{?prever}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}%{?prever}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}%{?prever}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared
@@ -70,14 +66,6 @@ Obsoletes:     php56w-pecl-%{pecl_name}
 %endif
 %endif
 
-# Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:     php54-pecl-%{pecl_name}
-%if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}
-%endif
-
 
 %description
 This PHP extension wraps the PDFlib programming library
@@ -86,13 +74,7 @@ for processing PDF on the fly.
 More info on how to use PDFlib with PHP can be found at
 http://www.pdflib.com/developer-center/technical-documentation/php-howto
 
-
-%description -l fr
-Cette extension PHP fournit une interface sur la bibliothèque de développement
-PDFlib pour générer des fichiers PDF à la volée.
-
-Plus d'informations sur l'utilisation de PDFlib avec PHP sur
-http://www.pdflib.com/developer-center/technical-documentation/php-howto
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -167,14 +149,24 @@ done
 %endif
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+%if 0%{?fedora} < 24
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -184,9 +176,10 @@ rm -rf %{buildroot}
 %files
 %defattr(-, root, root, -)
 %doc %{pecl_docdir}/%{pecl_name}
+%{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{extname}.so
-%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
@@ -195,6 +188,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 3.0.4-4
+- adapt for F24
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 3.0.4-3.1
 - Fedora 21 SCL mass rebuild
 
