@@ -19,9 +19,6 @@
 
 %{?scl:          %scl_package         php-pecl-memcached}
 %{!?scl:         %global _root_prefix %{_prefix}}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
 
 %global with_fastlz 1
 %global with_zts    0%{?__ztsphp:1}
@@ -40,7 +37,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?sub_prefix}php-pecl-memcached
 Version:      2.2.0
-Release:      7%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:      8%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -96,10 +93,12 @@ Requires:     %{?sub_prefix}php-pecl-msgpack%{?_isa}
 %endif
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:     %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:     %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:     %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:     %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:     %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:     %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -138,7 +137,7 @@ applications by alleviating database load.
 
 It also provides a session handler (memcached). 
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep 
@@ -147,7 +146,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{pecl_name}-%{version}%{?prever} NTS
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
 %patch0 -p1 -b .fastlz
@@ -347,6 +348,9 @@ exit $ret
 
 
 %changelog
+* Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-8
+- adapt for F24
+
 * Wed Aug 12 2015 Remi Collet <rcollet@redhat.com> - 2.2.0-7
 - add explicit dependency on fastlz for SCL on
   https://www.softwarecollections.org/
