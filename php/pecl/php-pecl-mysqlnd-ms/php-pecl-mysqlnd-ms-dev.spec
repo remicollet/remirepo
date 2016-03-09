@@ -7,10 +7,6 @@
 # Please, preserve the changelog entries
 #
 %{?scl:          %scl_package        php-pecl-mysqlnd-ms}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?php_incldir: %global php_incldir %{_includedir}/php}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name mysqlnd_ms
 %global with_zts  0%{?__ztsphp:1}
@@ -27,7 +23,7 @@
 Summary:      A replication and load balancing plugin for mysqlnd
 Name:         %{?scl_prefix}php-pecl-mysqlnd-ms
 Version:      1.6.0
-Release:      5.svn%{svnrev}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      6.svn%{svnrev}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 License:      PHP
 Group:        Development/Languages
@@ -53,33 +49,32 @@ BuildRequires: %{?scl_prefix}php-json
 BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: libxml2-devel
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
-
 Requires:     %{?scl_prefix}php-mysqlnd%{?_isa}
 Requires:     %{?scl_prefix}php-json%{?_isa}
 Requires:     %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:     %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:     %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:     %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:     %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:     %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:     %{?scl_prefix}php-pecl-mysqlnd-ms            = %{version}-%{release}
+Provides:     %{?scl_prefix}php-pecl-mysqlnd-ms%{?_isa}    = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-mysqlnd-ms
-Obsoletes:     php53u-pecl-mysqlnd-ms
-Obsoletes:     php54-pecl-mysqlnd-ms
-Obsoletes:     php54w-pecl-mysqlnd-ms
+Obsoletes:     php53-pecl-mysqlnd-ms  <= %{version}
+Obsoletes:     php53u-pecl-mysqlnd-ms <= %{version}
+Obsoletes:     php54-pecl-mysqlnd-ms  <= %{version}
+Obsoletes:     php54w-pecl-mysqlnd-ms <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-mysqlnd-ms
-Obsoletes:     php55w-pecl-mysqlnd-ms
+Obsoletes:     php55u-pecl-mysqlnd-ms <= %{version}
+Obsoletes:     php55w-pecl-mysqlnd-ms <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-mysqlnd-ms
-Obsoletes:     php56w-pecl-mysqlnd-ms
+Obsoletes:     php56u-pecl-mysqlnd-ms <= %{version}
+Obsoletes:     php56w-pecl-mysqlnd-ms <= %{version}
 %endif
 %endif
 
@@ -101,6 +96,8 @@ dependent on the usage scenario required.
 
 Documentation : http://www.php.net/mysqlnd_ms
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
+
 
 %package devel
 Summary:       Mysqlnd_ms developer files (header)
@@ -116,6 +113,8 @@ These are the files needed to compile programs using mysqlnd_ms extension.
 %setup -c -q
 
 cp %{SOURCE1} %{ini_name}
+
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 mv %{pecl_name}-%{version} NTS
 
@@ -188,14 +187,24 @@ done
 rm -rf %{buildroot}
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+%if 0%{?fedora} < 24
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %check
@@ -220,6 +229,7 @@ cd ../ZTS
 
 %files
 %defattr(-, root, root, -)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 #exclude %{pecl_docdir}/%{pecl_name}/examples
 %{pecl_xmldir}/%{name}.xml
@@ -245,6 +255,11 @@ cd ../ZTS
 
 
 %changelog
+* Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 1.6.0-6.svn333506
+- adapt for F24
+- drop runtime dependency on pear, new scriptlets
+- fix license management
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.6.0-5.svn333506
 - Fedora 21 SCL mass rebuild
 
