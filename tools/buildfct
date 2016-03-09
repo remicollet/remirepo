@@ -359,7 +359,7 @@ fi
 if [ -f "$1" ]; then
   date +%X
   pids=""
-  for i in 23 22 21
+  for i in 24 23 22 21
   do
     echo -n ""
     (mock $quiet --configdir=$mocketc -r fc${i}xt  rebuild $1 && echo "$(date +%X) (56) fc$i  Ok." || echo "fc$1 Error !")&

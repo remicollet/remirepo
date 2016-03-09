@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    c580db2b7c899f5c0a66971c7c58074a45307777
+%global gh_commit    90fbfbccf556b8f0dc1b182c3850ef7d04d23e68
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-mvc
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.1
+Version:        2.7.3
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -66,7 +66,8 @@ BuildRequires:  php-composer(container-interop/container-interop) >= 1.1
 #        "zendframework/zend-version": "^2.5",
 #        "zendframework/zend-view": "^2.6.3",
 #        "fabpot/php-cs-fixer": "1.7.*",
-#        "phpunit/PHPUnit": "~4.0"
+#        "phpunit/PHPUnit": "^4.5",
+#        "sebastian/version": "^1.0.4"
 BuildRequires:  php-composer(%{gh_owner}/zend-authentication)   >= 2.5.3
 BuildRequires:  php-composer(%{gh_owner}/zend-cache)            >= 2.6.1
 BuildRequires:  php-composer(%{gh_owner}/zend-console)          >= 2.6
@@ -85,7 +86,8 @@ BuildRequires:  php-composer(%{gh_owner}/zend-uri)              >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-version)          >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-view)             >= 2.6.3
-BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
+BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.5
+BuildRequires:  php-composer(sebastian/version)                 >= 1.0.4
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
@@ -236,6 +238,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 2.7.3-1
+- update to 2.7.3
+
 * Thu Mar  3 2016 Remi Collet <remi@fedoraproject.org> - 2.7.1-1
 - update to 2.7.1
 
