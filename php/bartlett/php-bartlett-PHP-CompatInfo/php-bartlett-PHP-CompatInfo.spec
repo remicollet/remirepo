@@ -17,7 +17,7 @@
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        5.0.0
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -143,6 +143,12 @@ ln -s %{buildroot}%{_datadir}/php/Bartlett/CompatInfo/autoload.php vendor/
 %{_bindir}/phpunit \
     --include-path %{buildroot}%{_datadir}/php \
     -d memory_limit=1G
+
+if which php70; then
+  php70 %{_bindir}/phpunit \
+    --include-path %{buildroot}%{_datadir}/php \
+    -d memory_limit=1G
+fi
 %endif
 
 
@@ -165,6 +171,9 @@ fi
 
 
 %changelog
+* Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 5.0.0-2
+- display DB version instead of build date
+
 * Thu Dec 10 2015 Remi Collet <remi@fedoraproject.org> - 5.0.0-1
 - update to 5.0.0
 - raise dependency on bartlett/php-reflect ~4.0
