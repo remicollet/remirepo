@@ -37,12 +37,12 @@
 
 #global prever RC1
 Name:           %{?sub_prefix}php-pecl-http
-Version:        3.0.0
+Version:        3.0.1
 %if 0%{?gh_date:1}
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 %endif
 Summary:        Extended HTTP support
@@ -145,10 +145,6 @@ capabilities.
 Also provided is a powerful request and parallel interface.
 
 Version 2 is completely incompatible to previous version.
-
-Note:
-. php-pecl-http1 provides API version 1
-. php-pecl-http  provides API version 2
 
 Documentation : http://devel-m6w6.rhcloud.com/mdref/http
 
@@ -355,6 +351,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
+- Update to 3.0.1 (php 7, stable)
+
 * Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-2
 - adapt for F24
 
