@@ -14,4 +14,3 @@
 
 %@SCL@__php        @BINDIR@/php
 
-
