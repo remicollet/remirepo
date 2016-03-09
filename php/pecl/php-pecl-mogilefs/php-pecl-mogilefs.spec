@@ -30,7 +30,7 @@
 Summary:        PHP client library to communicate with the MogileFS storage
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        0.9.2
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 # https://github.com/lstrojny/pecl-mogilefs/issues/15
 License:        BSD
 Group:          Development/Languages
