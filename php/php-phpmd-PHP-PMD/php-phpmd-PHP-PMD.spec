@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    e46a0999e0941a6b5677cfa4117e29e70b753de1
+%global gh_commit    1ce4c586f4071d27a82421e56ae0e9864c89094d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpmd
 %global gh_project   phpmd
@@ -18,7 +18,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-phpmd-PHP-PMD
-Version:        2.3.3
+Version:        2.4.1
 Release:        1%{?dist}
 Summary:        PHPMD - PHP Mess Detector
 
@@ -150,6 +150,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
+- update to 2.4.1
+
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
 - update to 2.3.3
 
