@@ -7,11 +7,11 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    391fb29e4c0b922a081727317da9d724402abc5a
+%global gh_commit    80a985ae02bb0028c6e9c658b1d862d01ad8e522
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 
 Name:           atoum
-Version:        2.5.2
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        PHP Unit Testing framework
 
@@ -171,6 +171,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- update to 2.6.0
+
 * Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - update to 2.5.2
 
