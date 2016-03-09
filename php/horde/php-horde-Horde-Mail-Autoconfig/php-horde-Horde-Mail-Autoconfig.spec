@@ -12,7 +12,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Mail-Autoconfig
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}
 Summary:        Horde Mail Autoconfiguration
 
@@ -87,10 +87,11 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
-# ignore this broken test for now
-rm AutoconfigTest.php
+%{_bindir}/phpunit .
 
-phpunit .
+if which php70; then
+   php70 %{_bindir}/phpunit .
+fi
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -121,6 +122,11 @@ fi
 
 
 %changelog
+* Wed Mar 09 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3 (no change)
+- PHP 7 compatible version
+- run test suite with both PHP 5 and 7 when available
+
 * Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Update to 1.0.2
 - add provides php-composer(horde/horde-mail-autoconfig)
