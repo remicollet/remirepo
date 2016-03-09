@@ -18,9 +18,6 @@
 %endif
 
 %{?scl:          %scl_package        php-pecl-redis}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global pecl_name   redis
 %global with_zts    0%{?__ztsphp:1}
@@ -36,7 +33,7 @@
 Summary:       Extension for communicating with the Redis key-value store
 Name:          %{?sub_prefix}php-pecl-redis
 Version:       2.2.7
-Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/redis
@@ -59,11 +56,13 @@ Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 Requires:      %{?sub_prefix}php-pecl-igbinary%{?_isa}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Obsoletes:     %{?scl_prefix}php-redis < %{version}
-Provides:      %{?scl_prefix}php-redis = %{version}-%{release}
-Provides:      %{?scl_prefix}php-redis%{?_isa} = %{version}-%{release}
-Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Obsoletes:     %{?scl_prefix}php-%{pecl_name}               < %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -101,6 +100,11 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -q -c -a 1
+
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/COPYING/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 # rename source folder
 mv %{pecl_name}-%{version} NTS
@@ -246,6 +250,7 @@ exit $ret
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -262,6 +267,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -284,6 +290,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 2.2.7-3
+- adapt for F24
+
 * Sat Jun 20 2015 Remi Collet <remi@fedoraproject.org> - 2.2.7-2
 - allow build against rh-php56 (as more-php56)
 
