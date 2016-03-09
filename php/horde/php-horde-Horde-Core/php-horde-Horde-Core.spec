@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-Horde-Core
-Version:        2.22.7
+Version:        2.23.0
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -34,6 +34,9 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.6.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Url) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Injector) >= 2.0.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Group) >= 2.1.0
+%if 0%{?fedora} >= 24
+BuildRequires:  glibc-langpack-en
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -283,6 +286,9 @@ fi
 
 
 %changelog
+* Wed Mar 09 2016 Remi Collet <remi@fedoraproject.org> - 2.23.0-1
+- Update to 2.23.0
+
 * Tue Feb 23 2016 Remi Collet <remi@fedoraproject.org> - 2.22.7-1
 - Update to 2.22.7
 
