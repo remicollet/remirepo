@@ -138,7 +138,7 @@
 %endif
 
 #global rcver  RC1
-%global rpmrel 1
+%global rpmrel 2
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
@@ -1017,6 +1017,9 @@ sed -e "s/@PHP_APIVER@/%{apiver}%{isasuffix}/" \
  -e "s:@BINDIR@:%{_bindir}:" \
  -e "s:@SCL@:%{?scl:%{scl}_}:" \
  %{SOURCE3} | tee macros.php
+%if 0%{?fedora} >= 24
+echo '%%%{?scl:%{scl}_}pecl_xmldir  %{_localstatedir}/lib/php/peclxml' | tee -a macros.php
+%endif
 
 # php-fpm configuration files for tmpfiles.d
 # TODO echo "d /run/php-fpm 755 root root" >php-fpm.tmpfiles
@@ -1344,6 +1347,9 @@ install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/wsdlcache
+%if 0%{?fedora} >= 24
+install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/peclxml
+%endif
 
 %if %{with_lsws}
 install -m 755 build-apache/sapi/litespeed/php $RPM_BUILD_ROOT%{_bindir}/lsphp
@@ -1666,6 +1672,9 @@ fi
 %dir %{_libdir}/php/modules
 %dir %{_localstatedir}/lib/php
 %dir %{_datadir}/php
+%if 0%{?fedora} >= 24
+%dir %{_localstatedir}/lib/php/peclxml
+%endif
 
 %files cli
 %defattr(-,root,root)
@@ -1804,6 +1813,9 @@ fi
 
 
 %changelog
+* Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> 5.6.19-2
+- adapt for F24: define %%pecl_xmldir and own it
+
 * Thu Mar  3 2016 Remi Collet <remi@fedoraproject.org> 5.6.19-1
 - Update to 5.6.19
   http://www.php.net/releases/5_6_19.php

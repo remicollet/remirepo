@@ -13,3 +13,4 @@
 %@SCL@php_incldir  @INCDIR@/php
 
 %@SCL@__php        @BINDIR@/php
+
