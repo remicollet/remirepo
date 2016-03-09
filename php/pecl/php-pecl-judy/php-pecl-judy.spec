@@ -18,10 +18,6 @@
 %endif
 
 %{?scl:          %scl_package        php-pecl-judy}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?php_incldir: %global php_incldir %{_includedir}/php}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  Judy
@@ -35,7 +31,7 @@
 Summary:        PHP Judy implements sparse dynamic arrays
 Name:           %{?sub_prefix}php-pecl-judy
 Version:        1.0.2
-Release:        4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        5%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -49,19 +45,15 @@ BuildRequires:  pcre-devel
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
-%if "%{php_version}" < "5.4"
-# php 5.3.3 in EL-6 don't use arched virtual provides
-# so only requires real packages instead
-Requires:       %{?scl_prefix}php-common%{?_isa}
-%else
 Requires:       %{?scl_prefix}php-spl%{?_isa}
-%endif
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       %{?scl_prefix}php-%{ext_name} = %{version}
-Provides:       %{?scl_prefix}php-%{ext_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-%{ext_name}                = %{version}
+Provides:       %{?scl_prefix}php-%{ext_name}%{?_isa}        = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{ext_name}           = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{ext_name}%{?_isa}   = %{version}-%{release}
 
 # Package have been renamed
 Obsoletes:      %{?scl_prefix}php-pecl-Judy < 1.0.1
@@ -69,17 +61,21 @@ Provides:       %{?scl_prefix}php-pecl-Judy = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:      php53-pecl-%{pecl_name}
-Obsoletes:      php53u-pecl-%{pecl_name}
-Obsoletes:      php54-pecl-%{pecl_name}
-Obsoletes:      php54w-pecl-%{pecl_name}
+Obsoletes:     php53-pecl-%{ext_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{ext_name} <= %{version}
+Obsoletes:     php54-pecl-%{ext_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{ext_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:      php55u-pecl-%{pecl_name}
-Obsoletes:      php55w-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{ext_name} <= %{version}
+Obsoletes:     php55w-pecl-%{ext_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:      php56u-pecl-%{pecl_name}
-Obsoletes:      php56w-pecl-%{pecl_name}
+Obsoletes:     php56u-pecl-%{ext_name} <= %{version}
+Obsoletes:     php56w-pecl-%{ext_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{ext_name} <= %{version}
+Obsoletes:     php70w-pecl-%{ext_name} <= %{version}
 %endif
 %endif
 
@@ -97,7 +93,7 @@ consumes memory only when it is populated, yet can grow to
 take advantage of all available memory if desired. Judy's key
 benefits are scalability, high performance, and memory efficiency.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %package devel
@@ -116,6 +112,8 @@ These are the files needed to compile programs using %{name}.
 %prep
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
+
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
 # Sanity check, really often broken
@@ -184,6 +182,7 @@ do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -200,6 +199,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %check
@@ -265,6 +265,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-5
+- adapt for F24
+
 * Tue Jun 23 2015 Remi Collet <rcollet@redhat.com> - 1.0.2-4
 - allow build against rh-php56 (as more-php56)
 - drop runtime dependency on pear, new scriptlets
