@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Perms
-Version:        2.1.6
+Version:        2.1.7
 Release:        1%{?dist}
 Summary:        Horde Permissions System
 
@@ -134,6 +134,10 @@ fi
 
 
 %changelog
+* Wed Mar 09 2016 Remi Collet <remi@fedoraproject.org> - 2.1.7-1
+- Update to 2.1.7 (no change)
+- PHP 7 compatible version
+
 * Fri Dec 04 2015 Remi Collet <remi@fedoraproject.org> - 2.1.6-1
 - Update to 2.1.6
 
