@@ -9,10 +9,6 @@
 %{?scl:          %scl_package             php-pecl-mysqlnd-ms}
 %{!?scl:         %global _root_prefix     %{_prefix}}
 %{!?scl:         %global _root_sysconfdir %{_sysconfdir}}
-%{!?php_inidir:  %global php_inidir       %{_sysconfdir}/php.d}
-%{!?php_incldir: %global php_incldir      %{_includedir}/php}
-%{!?__pecl:      %global __pecl           %{_bindir}/pecl}
-%{!?__php:       %global __php            %{_bindir}/php}
 
 %global pecl_name mysqlnd_qc
 %global prever    alpha
@@ -45,7 +41,7 @@
 Summary:      A query cache plugin for mysqlnd
 Name:         %{?scl_prefix}php-pecl-mysqlnd-qc
 Version:      1.2.0
-Release:      6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:      7%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/mysqlnd_qc
@@ -71,33 +67,32 @@ BuildRequires: libmemcached-devel >= 0.38
 BuildRequires: sqlite-devel >= 3.5.9
 %endif
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
-
 Requires:     %{?scl_prefix}php-mysqlnd%{?_isa}
 Requires:     %{?scl_prefix}php-sqlite3%{?_isa}
 Requires:     %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:     %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:     %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:     %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:     %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:     %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:     %{?scl_prefix}php-pecl-mysqlnd-qc            = %{version}-%{release}
+Provides:     %{?scl_prefix}php-pecl-mysqlnd-qc%{?_isa}    = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-mysqlnd-qc
-Obsoletes:     php53u-pecl-mysqlnd-qc
-Obsoletes:     php54-pecl-mysqlnd-qc
-Obsoletes:     php54w-pecl-mysqlnd-qc
+Obsoletes:     php53-pecl-mysqlnd-qc  <= %{version}
+Obsoletes:     php53u-pecl-mysqlnd-qc <= %{version}
+Obsoletes:     php54-pecl-mysqlnd-qc  <= %{version}
+Obsoletes:     php54w-pecl-mysqlnd-qc <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-mysqlnd-qc
-Obsoletes:     php55w-pecl-mysqlnd-qc
+Obsoletes:     php55u-pecl-mysqlnd-qc <= %{version}
+Obsoletes:     php55w-pecl-mysqlnd-qc <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-mysqlnd-qc
-Obsoletes:     php56w-pecl-mysqlnd-qc
+Obsoletes:     php56u-pecl-mysqlnd-qc <= %{version}
+Obsoletes:     php56w-pecl-mysqlnd-qc <= %{version}
 %endif
 %endif
 
@@ -116,6 +111,9 @@ It does not change the API of the MySQL extensions and thus it operates
 virtually transparent for applications.
 
 Documentation : http://www.php.net/mysqlnd_qc
+
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
+
 
 %package devel
 Summary:       Mysqlnd_qc developer files (header)
@@ -144,8 +142,10 @@ configuration, available on http://localhost/mysqlnd-qc/
 
 %prep 
 %setup -c -q
-
 mv %{pecl_name}-%{version} NTS
+
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
+
 cd NTS
 %patch0 -p3 -b .svn
 
@@ -239,14 +239,24 @@ done
 rm -rf %{buildroot}
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+%if 0%{?fedora} < 24
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %check
@@ -275,6 +285,7 @@ cd ../ZTS
 
 %files
 %defattr(-, root, root, -)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -304,6 +315,11 @@ cd ../ZTS
 
 
 %changelog
+* Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-7
+- adapt for F24
+- drop runtime dependency on pear, new scriptlets
+- fix license management
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.2.0-6.1
 - Fedora 21 SCL mass rebuild
 
