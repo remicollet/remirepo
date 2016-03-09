@@ -20,9 +20,6 @@
 %endif
 
 %{?scl:          %scl_package         php-pecl-mailparse}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
 
 %global pecl_name mailparse
 %global with_zts  0%{?__ztsphp:1}
@@ -37,7 +34,7 @@
 Summary:   PHP PECL package for parsing and working with email messages
 Name:      %{?sub_prefix}php-pecl-mailparse
 Version:   2.1.6
-Release:   9%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:   10%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:   PHP
 Group:     Development/Languages
 URL:       http://pecl.php.net/package/mailparse
@@ -60,24 +57,26 @@ Requires: %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires: %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides: %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides: %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides: %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides: %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides: %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides: %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides: %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides: %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides: %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:     php54-pecl-%{pecl_name}
-Obsoletes:     php54w-pecl-%{pecl_name}
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}
-Obsoletes:     php55w-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name}
-Obsoletes:     php56w-pecl-%{pecl_name}
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -157,9 +156,10 @@ install -Dpm 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 install -Dpm 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # Documentation
-for i in LICENSE $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
+%{!?_licensedir:install -Dpm 644 NTS/LICENSE %{buildroot}%{pecl_docdir}/%{pecl_name}/LICENSE}
 
 
 %check
@@ -173,7 +173,7 @@ done
 cd NTS
 TEST_PHP_EXECUTABLE=%{__php} \
 NO_INTERACTION=1 \
-%{__php} run-tests.php \
+%{__php} -n run-tests.php \
     -n -q \
     -d extension=mbstring.so \
     -d extension=$PWD/modules/%{pecl_name}.so
@@ -189,7 +189,7 @@ NO_INTERACTION=1 \
 cd ../ZTS
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 NO_INTERACTION=1 \
-php run-tests.php \
+php -n run-tests.php \
     -n -q \
     -d extension=mbstring.so \
     -d extension=$PWD/modules/%{pecl_name}.so
@@ -200,6 +200,7 @@ php run-tests.php \
 rm -rf %{buildroot}
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -216,6 +217,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %files
@@ -234,6 +236,9 @@ fi
 
 
 %changelog
+* Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 2.1.6-10
+- adapt for F24
+
 * Tue Jun 23 2015 Remi Collet <rcollet@redhat.com> - 2.1.6-9
 - allow build against rh-php56 (as more-php56)
 - don't install/register tests
