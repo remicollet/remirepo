@@ -29,15 +29,15 @@
 %endif
 %if 0%{?scl:1}
 # PHPUnit not available in SCL
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests   0%{?_with_tests:1}
 %else
-%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests   0%{!?_without_tests:1}
 %endif
 
 Summary:        Horde LZ4 Compression Extension
 Name:           %{?sub_prefix}php-horde-horde-lz4
-Version:        1.0.9
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.0.10
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        MIT
 Group:          Development/Languages
 URL:            http://www.horde.org
@@ -112,9 +112,6 @@ mv %{pecl_name}-%{version} NTS
 cd NTS
 # Use system library
 rm -r lib
-
-# Fix version
-sed -e 's/1.0.8/%{version}/' -i horde_lz4.h
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define HORDE_LZ4_EXT_VERSION/{s/.* "//;s/".*$//;p}' horde_lz4.h)
@@ -243,6 +240,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 09 2016 Remi Collet <remi@fedoraproject.org> - 1.0.10-1
+- Update to 1.0.10 (no change)
+
 * Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 1.0.9-2
 - adapt for F24
 

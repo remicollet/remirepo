@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #103 horde_lz4 version 1.0.9 ] {
+Extension [ <persistent> extension #103 horde_lz4 version 1.0.10 ] {
 
   - Functions {
     Function [ <internal:horde_lz4> function horde_lz4_compress ] {
