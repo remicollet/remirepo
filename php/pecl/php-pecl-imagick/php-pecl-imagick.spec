@@ -35,7 +35,7 @@
 
 Summary:       Extension to create and modify images using ImageMagick
 Name:          %{?sub_prefix}php-pecl-imagick
-Version:       3.4.0
+Version:       3.4.1
 %if 0%{?gh_date}
 Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
@@ -73,6 +73,7 @@ Provides:      %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}%{?preve
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+
 Conflicts:     %{?scl_prefix}php-pecl-gmagick
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
@@ -306,6 +307,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 09 2016 Remi Collet <remi@fedoraproject.org> - 3.4.1-1
+- Update to 3.4.1 (stable)
+
 * Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 3.4.0-1
 - update to 3.4.0 (stable)
 

@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #108 imagick version 3.4.0 ] {
+Extension [ <persistent> extension #108 imagick version 3.4.1 ] {
 
   - Dependencies {
     Dependency [ spl (Required) ]
@@ -304,7 +304,7 @@ Extension [ <persistent> extension #108 imagick version 3.4.0 ] {
 
     Class [ <internal:imagick> <iterateable> class Imagick implements Iterator, Traversable, Countable ] {
 
-      - Constants [567] {
+      - Constants [569] {
         Constant [ integer COLOR_BLACK ] { 11 }
         Constant [ integer COLOR_BLUE ] { 12 }
         Constant [ integer COLOR_CYAN ] { 13 }
@@ -315,8 +315,8 @@ Extension [ <persistent> extension #108 imagick version 3.4.0 ] {
         Constant [ integer COLOR_OPACITY ] { 18 }
         Constant [ integer COLOR_ALPHA ] { 19 }
         Constant [ integer COLOR_FUZZ ] { 20 }
-        Constant [ integer IMAGICK_EXTNUM ] { 30400 }
-        Constant [ string IMAGICK_EXTVER ] { 3.4.0 }
+        Constant [ integer IMAGICK_EXTNUM ] { 30401 }
+        Constant [ string IMAGICK_EXTVER ] { 3.4.1 }
         Constant [ integer QUANTUM_RANGE ] { 65535 }
         Constant [ integer USE_ZEND_MM ] { 0 }
         Constant [ integer COMPOSITE_DEFAULT ] { 40 }
@@ -868,6 +868,8 @@ Extension [ <persistent> extension #108 imagick version 3.4.0 ] {
         Constant [ integer KERNEL_EUCLIDEAN ] { 35 }
         Constant [ integer KERNEL_USER_DEFINED ] { 36 }
         Constant [ integer KERNEL_BINOMIAL ] { 37 }
+        Constant [ integer DIRECTION_LEFT_TO_RIGHT ] { 2 }
+        Constant [ integer DIRECTION_RIGHT_TO_LEFT ] { 1 }
         Constant [ integer NORMALIZE_KERNEL_NONE ] { 0 }
         Constant [ integer NORMALIZE_KERNEL_VALUE ] { 8192 }
         Constant [ integer NORMALIZE_KERNEL_CORRELATE ] { 65536 }
@@ -1017,7 +1019,7 @@ Extension [ <persistent> extension #108 imagick version 3.4.0 ] {
       - Properties [0] {
       }
 
-      - Methods [347] {
+      - Methods [351] {
         Method [ <internal:imagick> public method optimizeimagelayers ] {
 
           - Parameters [0] {
@@ -3612,6 +3614,36 @@ Extension [ <persistent> extension #108 imagick version 3.4.0 ] {
             Parameter #0 [ <required> $antialias ]
           }
         }
+
+        Method [ <internal:imagick> public method autogammaimage ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $CHANNEL ]
+          }
+        }
+
+        Method [ <internal:imagick> public method autoorient ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:imagick> public method compositeimagegravity ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> Imagick $Imagick ]
+            Parameter #1 [ <required> $COMPOSITE ]
+            Parameter #2 [ <required> $GRAVITY ]
+          }
+        }
+
+        Method [ <internal:imagick> public method localcontrastimage ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $radius ]
+            Parameter #1 [ <required> $strength ]
+          }
+        }
       }
     }
 
@@ -3629,7 +3661,7 @@ Extension [ <persistent> extension #108 imagick version 3.4.0 ] {
       - Properties [0] {
       }
 
-      - Methods [124] {
+      - Methods [132] {
         Method [ <internal:imagick> public method resetvectorgraphics ] {
 
           - Parameters [0] {
@@ -4535,6 +4567,59 @@ Extension [ <persistent> extension #108 imagick version 3.4.0 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $dashArray ]
+          }
+        }
+
+        Method [ <internal:imagick> public method getopacity ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:imagick> public method setopacity ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $opacity ]
+          }
+        }
+
+        Method [ <internal:imagick> public method getfontresolution ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:imagick> public method setfontresolution ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $x ]
+            Parameter #1 [ <required> $y ]
+          }
+        }
+
+        Method [ <internal:imagick> public method getbordercolor ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:imagick> public method setbordercolor ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $bordercolor ]
+          }
+        }
+
+        Method [ <internal:imagick> public method gettextdirection ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:imagick> public method settextdirection ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $direction ]
           }
         }
       }
