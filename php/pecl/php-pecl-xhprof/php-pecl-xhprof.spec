@@ -20,9 +20,6 @@
 %{?scl:          %scl_package             php-pecl-xhprof}
 %{!?scl:         %global _root_bindir     %{_bindir}}
 %{!?scl:         %global _root_sysconfdir %{_sysconfdir}}
-%{!?php_inidir:  %global php_inidir       %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl           %{_bindir}/pecl}
-%{!?__php:       %global __php            %{_bindir}/php}
 
 %global pecl_name xhprof
 %global with_zts  0%{?__ztsphp:1}
@@ -34,7 +31,7 @@
 
 Name:           %{?sub_prefix}php-pecl-xhprof
 Version:        0.9.4
-Release:        6%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        7%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 
 Summary:        PHP extension for XHProf, a Hierarchical Profiler
 Group:          Development/Languages
@@ -53,10 +50,12 @@ Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -93,7 +92,7 @@ implemented in C (as a PHP extension).
 
 The HTML based navigational interface is provided in the "xhprof" package.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %package -n %{?sub_prefix}xhprof
@@ -130,7 +129,9 @@ Documentation: %{pecl_docdir}/%{pecl_name}/xhprof_html/docs/index.html
 # Mark "php" files as "src" to avoid registration in pear file list
 # xhprof_html should be web, but www_dir is /var/www/html
 # xhprof_lib  should be php, really a lib
-sed -e 's/role="php"/role="src"/' -i package.xml
+sed -e 's/role="php"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 # Extension configuration file
 cat >%{ini_name} <<EOF
@@ -237,6 +238,7 @@ done
 rm -rf %{buildroot}
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -253,6 +255,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %files
@@ -282,6 +285,9 @@ fi
 
 
 %changelog
+* Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 0.9.4-7
+- adapt for F24
+
 * Tue Jun 23 2015 Remi Collet <remi@fedoraproject.org> - 0.9.4-6
 - allow build against rh-php56 (as more-php56)
 - drop runtime dependency on pear, new scriptlets
