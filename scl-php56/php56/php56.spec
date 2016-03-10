@@ -197,7 +197,7 @@ restorecon -R %{?_scl_root}  &>/dev/null || :
 - add module file for EL
 
 * Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> 2.1-4
-- fix override for pecl_xmldir
+- fix override for pecl_xmldir (F24)
 
 * Tue Jan  5 2016 Remi Collet <remi@fedoraproject.org> 2.1-3
 - add missing "sbin" in PATH (Fedora)
