@@ -16,7 +16,7 @@
 Summary:       Package that installs PHP 5.4
 Name:          %scl_name
 Version:       2.1
-Release:       3%{?dist}
+Release:       4%{?dist}
 Group:         Development/Languages
 License:       GPLv2+
 
@@ -190,6 +190,9 @@ restorecon -R %{?_scl_root}  &>/dev/null || :
 
 
 %changelog
+* Thu Mar 10 2016 Remi Collet <remi@fedoraproject.org> 2.1-4
+- fix override for pecl_xmldir
+
 * Tue Jan  5 2016 Remi Collet <remi@fedoraproject.org> 2.1-3
 - add missing "sbin" in PATH (Fedora)
 
