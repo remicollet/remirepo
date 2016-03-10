@@ -8,10 +8,6 @@
 #
 %{?scl:          %scl_package         php-pecl-http1}
 %{!?scl:         %global _root_prefix %{_prefix}}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?php_incldir: %global php_incldir  %{_includedir}/php}
-%{!?__php:       %global __php        %{_bindir}/php}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
 
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
@@ -21,7 +17,7 @@
 # php-pecl-http exists and is version 2
 Name:           %{?scl_prefix}php-pecl-http1
 Version:        1.7.6
-Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -54,22 +50,14 @@ BuildRequires: libevent-devel >= 2.0.2
 %global        _event_prefix %{_root_prefix}
 %endif
 
-Requires(post): %{__pecl}
-Requires(postun): %{__pecl}
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
-%if "%{php_version}" < "5.4"
-# php 5.3.3 in EL-6 don't use arched virtual provides
-# so only requires real packages instead
-Requires:       %{?scl_prefix}php-common%{?_isa}
-%else
 Requires:       %{?scl_prefix}php-hash%{?_isa}
 Requires:       %{?scl_prefix}php-iconv%{?_isa}
 Requires:       %{?scl_prefix}php-session%{?_isa}
 # From phpcompatinfo on the PHP extension (pgsql is optional)
 Requires:       %{?scl_prefix}php-date%{?_isa}
 Requires:       %{?scl_prefix}php-pcre%{?_isa}
-%endif
 Requires:       %{?scl_prefix}php-xmlrpc%{?_isa}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
@@ -82,6 +70,8 @@ Provides:       %{?scl_prefix}php-pecl(%{proj_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-http1                 = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-http1%{?_isa}         = %{version}-%{release}
 Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 
@@ -109,6 +99,8 @@ Note:
 . %{?scl_prefix}php-pecl-http1 provides API version 1
 . %{?scl_prefix}php-pecl-http  provides API version 2
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
+
 
 %package devel
 Summary:       Extended HTTP support developer files (header)
@@ -124,6 +116,8 @@ These are the files needed to compile programs using HTTP extension.
 
 %prep
 %setup -c -q 
+
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 mv %{proj_name}-%{version} NTS
 cd NTS
@@ -222,14 +216,24 @@ done
 %endif
 
 
-%post
-%{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+%if 0%{?fedora} < 24
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
 
 %postun
-if [ $1 -eq 0 ] ; then
-    %{pecl_uninstall} %{proj_name} >/dev/null || :
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
+    %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -238,6 +242,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc     %{pecl_docdir}/%{proj_name}
 %exclude %{pecl_docdir}/%{proj_name}/examples
 %config(noreplace) %{php_inidir}/z-%{pecl_name}.ini
@@ -264,6 +269,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar 10 2016 Remi Collet <remi@fedoraproject.org> - 1.7.6-6
+- adapt for F24
+- drop runtime dependency on pear, new scriptlets
+- fix license management
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.7.6-5.1
 - Fedora 21 SCL mass rebuild
 
