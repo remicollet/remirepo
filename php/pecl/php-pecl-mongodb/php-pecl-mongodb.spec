@@ -21,7 +21,7 @@
 
 Summary:        MongoDB driver for PHP
 Name:           php-pecl-%{pecl_name}
-Version:        1.1.3
+Version:        1.1.4
 Release:        1%{?dist}
 License:        BSD
 Group:          Development/Languages
@@ -42,7 +42,7 @@ Requires:       php(api) = %{php_core_api}
 Requires:       mongo-c-driver%{?_isa} >= %{buildver}
 
 # Don't provide php-mongodb which is the pure PHP library
-Provides:       php-pecl(%{pecl_name}) = %{version}
+Provides:       php-pecl(%{pecl_name})         = %{version}
 Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -193,6 +193,9 @@ cd ../ZTS
 
 
 %changelog
+* Thu Mar 10 2016 Remi Collet <remi@fedoraproject.org> - 1.1.4-1
+- Update to 1.1.4 (stable)
+
 * Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
 - Update to 1.1.3 (stable)
 

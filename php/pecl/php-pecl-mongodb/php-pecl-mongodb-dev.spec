@@ -21,14 +21,13 @@
 
 Summary:        MongoDB driver for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.1.3
+Version:        1.1.4
 Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.4
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  cyrus-sasl-devel
@@ -44,8 +43,10 @@ Requires:       mongo-c-driver%{?_isa} >= %{buildver}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 # Don't provide php-mongodb which is the pure PHP library
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -144,8 +145,6 @@ peclbuild zts-php
 
 
 %install
-rm -rf %{buildroot}
-
 make -C NTS \
      install INSTALL_ROOT=%{buildroot}
 
@@ -204,12 +203,7 @@ cd ../ZTS
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -224,6 +218,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar 10 2016 Remi Collet <remi@fedoraproject.org> - 1.1.4-1
+- Update to 1.1.4 (stable)
+
 * Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
 - Update to 1.1.3 (stable)
 
