@@ -15,7 +15,7 @@
 
 Name:          %{?scl_prefix}php-pecl-%{pecl_name}
 Version:       7.0.5
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       The Zend OPcache
 
 Group:         Development/Libraries
@@ -67,10 +67,17 @@ bytecode in the shared memory. This eliminates the stages of reading code from
 the disk and compiling it on future access. In addition, it applies a few
 bytecode optimization patterns that make code execution faster.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
+
 
 %prep
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
+
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 pushd NTS
 
@@ -169,6 +176,7 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -185,11 +193,12 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %files
 %defattr(-,root,root,-)
-%doc NTS/{LICENSE,README}
+%{?_licensedir:%license NTS/LICENSE}
 %config(noreplace) %{php_inidir}/%{plug_name}-default.blacklist
 %config(noreplace) %{php_inidir}/%{plug_name}.ini
 %{php_extdir}/%{plug_name}.so
@@ -204,6 +213,9 @@ fi
 
 
 %changelog
+* Thu Mar 10 2016 Remi Collet <remi@fedoraproject.org> - 7.0.5-2
+- adapt for F24
+
 * Tue Apr 14 2015 Remi Collet <remi@fedoraproject.org> - 7.0.5-1
 - Update to 7.0.5
 
