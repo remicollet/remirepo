@@ -8,10 +8,11 @@ $ grep -r 'Tests failed' /var/lib/mock/scl54*/build.log
 /var/lib/mock/scl54fc21x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
 /var/lib/mock/scl54fc22x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
 /var/lib/mock/scl54fc23x/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
+/var/lib/mock/scl54fc24x/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
 
-f23
+f23, f24
     Bug #64802: openssl_x509_parse fails to parse subject properly in some cases [ext/openssl/tests/bug64802.phpt]
-f21, f22, f23
+f21, f22, f23, f24
     Test strptime() function : basic functionality [ext/standard/tests/time/strptime_basic.phpt]
 el6
     Bug #32001 (xml_parse*() goes into infinite loop when autodetection in effect), using UTF-* [ext/xml/tests/bug32001.phpt]
