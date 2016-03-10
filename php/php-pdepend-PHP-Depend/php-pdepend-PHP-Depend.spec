@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9d816dfa565b9c47685057761acaf432c9e8066a
+%global gh_commit    b086687f3a01dc6bb92d633aef071d2c5dd0db06
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     pdepend
 %global gh_project   pdepend
@@ -18,7 +18,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-pdepend-PHP-Depend
-Version:        2.2.3
+Version:        2.2.4
 Release:        1%{?dist}
 Summary:        PHP_Depend design quality metrics for PHP package
 
@@ -137,10 +137,20 @@ require '%{buildroot}%{php_home}/autoload.php';
 $fedoraClassLoader->addPrefix('PDepend\\', dirname(__DIR__));
 EOF
 
-%{_bindir}/phpunit -d memory_limit=1G --verbose
-
+run=0
 if which php70; then
-   php70 %{_bindir}/phpunit -d memory_limit=1G --verbose
+   	php70 %{_bindir}/phpunit -d memory_limit=1G --verbose
+	run=1
+fi
+
+if which php56; then
+   	php56 %{_bindir}/phpunit -d memory_limit=1G --verbose
+	run=1
+fi
+
+if [ $run -eq 0 ]; then
+   # No SCL available, run using with default PHP
+   %{_bindir}/phpunit -d memory_limit=1G --verbose
 fi
 %else
 : Test suite disabled
@@ -170,6 +180,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar 10 2016 Remi Collet <remi@fedoraproject.org> - 2.2.4-1
+- update to 2.2.4
+
 * Tue Feb 23 2016 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
 - update to 2.2.3
 
