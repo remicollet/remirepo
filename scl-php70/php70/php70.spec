@@ -4,10 +4,11 @@
 %global macrosdir        %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_root_sysconfdir}/rpm; echo $d)
 %global install_scl      1
 %if 0%{?fedora} >= 20
-# Requires scl-utils v2
+# Requires scl-utils v2 for SCL integration
 %global with_modules     1
 %global rh_layout        1
 %else
+# Works with file installed in /usr/share/Modules/modulefiles/
 %global with_modules     0
 %global nfsmountable     1
 %endif
@@ -19,7 +20,7 @@
 Summary:       Package that installs PHP 7.0
 Name:          %scl_name
 Version:       1.0
-Release:       3%{?dist}
+Release:       4%{?dist}
 Group:         Development/Languages
 License:       GPLv2+
 
@@ -32,6 +33,7 @@ BuildRequires: scl-utils-build
 BuildRequires: help2man
 # Temporary work-around
 BuildRequires: iso-codes
+BuildRequires: environment-modules
 
 Requires:      %{?scl_prefix}php-common%{?_isa}
 Requires:      %{?scl_prefix}php-cli%{?_isa}
@@ -49,6 +51,7 @@ the development version of PHP 7.0.
 Summary:   Package that handles %scl Software Collection.
 Group:     Development/Languages
 Requires:  scl-utils
+Requires:  environment-modules
 Requires(post): %{_root_sbindir}/semanage
 Requires(post): %{_root_sbindir}/selinuxenabled
 Provides:  %{?scl_name}-runtime(%{scl_vendor})
@@ -88,7 +91,6 @@ export LD_LIBRARY_PATH=%{_libdir}\${LD_LIBRARY_PATH:+:\${LD_LIBRARY_PATH}}
 export MANPATH=%{_mandir}:\${MANPATH}
 EOF
 
-%if %{with_modules}
 # Broken: /usr/share/Modules/bin/createmodule.sh enable | tee envmod
 # See https://bugzilla.redhat.com/show_bug.cgi?id=1197321
 cat << EOF | tee envmod
@@ -99,7 +101,6 @@ prepend-path    LD_LIBRARY_PATH     %{_libdir}
 prepend-path    MANPATH             %{_mandir}
 prepend-path    PKG_CONFIG_PATH     %{_libdir}/pkgconfig
 EOF
-%endif
 
 # generate rpm macros file for depended collections
 cat << EOF | tee scldev
@@ -137,6 +138,8 @@ help2man -N --section 7 ./h2m_helper -o %{scl_name}.7
 install -D -m 644 enable %{buildroot}%{_scl_scripts}/enable
 %if %{with_modules}
 install -D -m 644 envmod %{buildroot}%{_scl_scripts}/%{scl_name}
+%else
+install -D -m 644 envmod %{buildroot}%{_root_datadir}/Modules/modulefiles/%{scl_name}
 %endif
 install -D -m 644 scldev %{buildroot}%{macrosdir}/macros.%{scl_name_base}-scldevel
 install -D -m 644 %{scl_name}.7 %{buildroot}%{_mandir}/man7/%{scl_name}.7
@@ -189,6 +192,9 @@ restorecon -R %{_localstatedir} &>/dev/null || :
 %{_mandir}/man7/%{scl_name}.*
 %{?_licensedir:%{_datadir}/licenses}
 %{_datadir}/tests
+%if ! %{with_modules}
+%{_root_datadir}/Modules/modulefiles/%{scl_name}
+%endif
 
 
 %files build
@@ -202,8 +208,11 @@ restorecon -R %{_localstatedir} &>/dev/null || :
 
 
 %changelog
+* Thu Mar 10 2016 Remi Collet <remi@fedoraproject.org> 1.0.4
+- add module file for EL
+
 * Mon Mar  7 2016 Remi Collet <remi@fedoraproject.org> 1.0-3
-- fix override for pecl_xmldir
+- fix override for pecl_xmldir (F24)
 
 * Tue Jan  5 2016 Remi Collet <remi@fedoraproject.org> 1.0-2
 - add missing "sbin" in PATH (Fedora)
