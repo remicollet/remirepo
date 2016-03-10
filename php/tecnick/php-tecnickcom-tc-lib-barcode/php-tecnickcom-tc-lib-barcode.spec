@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    71cee15bad8717418a7c40c21efd6a4781affec4
+%global gh_commit    33b248762ecf67af522139850b4d8b8ddabfa688
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.7.3
+Version:        1.8.0
 Release:        1%{?dist}
 Summary:        PHP library to generate linear and bidimensional barcodes
 
@@ -30,7 +30,7 @@ BuildArch:      noarch
 # For tests
 BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php(language) >= 5.4
-BuildRequires:  php-composer(%{c_vendor}/tc-lib-color) >= 1.8.0
+BuildRequires:  php-composer(%{c_vendor}/tc-lib-color) >= 1.10.0
 BuildRequires:  php-bcmath
 BuildRequires:  php-date
 BuildRequires:  php-gd
@@ -43,7 +43,7 @@ BuildRequires:  php-pecl-imagick
 #        "php": ">=5.4"
 #        "tecnickcom/tc-lib-color": "^1.8.0"
 Requires:       php(language) >= 5.4
-Requires:       php-composer(%{c_vendor}/tc-lib-color) >= 1.8.0
+Requires:       php-composer(%{c_vendor}/tc-lib-color) >= 1.10.0
 Requires:       php-composer(%{c_vendor}/tc-lib-color) <  2
 # From phpcompatinfo report for version 1.1.2
 Requires:       php-bcmath
@@ -127,6 +127,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar 10 2016 Remi Collet <remi@fedoraproject.org> - 1.8.0-1
+- update to 1.8.0
+- raise dependency on tecnickcom/tc-lib-color >= 1.10.0
+
 * Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 1.7.3-1
 - update to 1.7.3
 
