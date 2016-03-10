@@ -8,9 +8,6 @@
 #
 %{?scl:          %scl_package         php-pecl-oci8}
 %{!?scl:         %global _root_libdir %{_libdir}}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name oci8
@@ -31,7 +28,7 @@
 Summary:        Extension for Oracle Database
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        2.0.10
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 License:        PHP
 Group:          Development/Languages
@@ -54,11 +51,10 @@ Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 # Should requires libclntsh.so.12.1 but it's not provided by Oracle RPM.
 AutoReq:        0
 
-# Package have be renamed
-Obsoletes:      %{?scl_prefix}php-%{pecl_name} < %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Conflicts:      %{?scl_prefix}php-%{pecl_name}               < %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
@@ -109,7 +105,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{pecl_name}-%{version} NTS
 
 # don't install tests
-sed -e '/role="test"/d' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
 %patch0 -p0 -b .remi
@@ -270,6 +268,7 @@ make test
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -286,6 +285,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %clean
@@ -293,7 +293,8 @@ rm -rf %{buildroot}
 
 
 %files
-%defattr(-, root, root, 0755)
+%defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -307,6 +308,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar 10 2016 Remi Collet <remi@fedoraproject.org> - 2.0.10-2
+- adapt for F24
+- fix license management
+
 * Sat Dec 12 2015 Remi Collet <remi@fedoraproject.org> - 2.0.10-1
 - Update to 2.0.10
 - drop runtime dependency on pear, new scriptlets
