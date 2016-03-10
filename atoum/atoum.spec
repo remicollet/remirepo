@@ -121,7 +121,7 @@ sed -i bin/%{name} \
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 # create needed directories
 mkdir -p %{buildroot}%{_datadir}/%{name}
 mkdir -p %{buildroot}%{_bindir}
@@ -145,9 +145,12 @@ rm tests/units/classes/reports/asynchronous/xunit.php
 cd tests/units
 echo "date.timezone=UTC" >php.ini
 export PHPRC=$(pwd)/php.ini
+
 if which php70; then
-    php56 runner.php --directories .
     php70 runner.php --directories .
+fi
+if which php56; then
+    php56 runner.php --directories .
 else
     php runner.php --directories .
 fi
@@ -157,7 +160,7 @@ fi
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %files
