@@ -31,7 +31,7 @@ URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 # Autoload template, from version 3.7
-Source1:        %{gh_project}-3.0.0-Autoload.php.in
+Source1:        %{gh_project}-5.0.0-Autoload.php.in
 
 # Fix command for autoload
 Patch0:         %{gh_project}-rpm.patch
