@@ -9,14 +9,14 @@
 #
 %{?scl:          %scl_package        php-pecl-gmagick}
 %global pecl_name  gmagick
-%global prever     RC1
+%global prever     RC2
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global ini_name   40-%{pecl_name}.ini
 
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        2.0.2
-Release:        0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -203,6 +203,9 @@ export TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so"
 
 
 %changelog
+* Fri Mar 11 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-0.3.RC2
+- Update to 2.0.2RC2 (php 7, beta)
+
 * Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-0.2.RC1
 - adapt for F24
 
