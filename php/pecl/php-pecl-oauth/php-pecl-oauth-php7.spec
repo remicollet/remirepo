@@ -16,8 +16,8 @@
 %global ini_name    40-%{pecl_name}.ini
 
 Name:           %{?scl_prefix}php-pecl-oauth
-Version:        2.0.0
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        2.0.1
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        PHP OAuth consumer extension
 Group:          Development/Languages
 License:        BSD
@@ -65,6 +65,8 @@ Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 OAuth is an authorization protocol built on top of HTTP which allows 
 applications to securely access data without having to store
 user names and passwords.
+
+Documentation: http://php.net/oauth
 
 Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
@@ -181,6 +183,9 @@ fi
 
 
 %changelog
+* Fri Mar 11 2016 Remi Collet <rcollet@redhat.com> - 2.0.1-1
+- update to 2.0.1
+
 * Sun Mar  6 2016 Remi Collet <rcollet@redhat.com> - 2.0.0-2
 - adapt for F24
 
