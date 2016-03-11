@@ -1,6 +1,6 @@
 <?php
 /**
- * Autoloader for sabre/uri and its dependencies
+ * Autoloader for sabre/xml and its dependencies
  */
 
 $vendorDir = '/usr/share/php';
@@ -15,7 +15,12 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
     $fedoraClassLoader->register();
 }
 
-$fedoraClassLoader->addPrefix('Sabre\\Uri\\', dirname(dirname(__DIR__)));
+$fedoraClassLoader->addPrefix('Sabre\\Xml\\', dirname(dirname(__DIR__)));
 
 // Functions
-require_once __DIR__ . '/functions.php';
+require_once __DIR__ . '/Deserializer/functions.php';
+require_once __DIR__ . '/Serializer/functions.php';
+
+// Dependencies
+require_once $vendorDir . '/Sabre/Uri/autoload.php';
+
