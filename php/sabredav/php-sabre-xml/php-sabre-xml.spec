@@ -10,7 +10,12 @@
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-xml
+%if 0%{?rhel} == 5
+# Libxml seems too old
+%global with_tests   0%{?_with_tests:1}
+%else
 %global with_tests   0%{!?_without_tests:1}
+%endif
 
 Name:           php-%{gh_project}
 Summary:        XML library that you may not hate
