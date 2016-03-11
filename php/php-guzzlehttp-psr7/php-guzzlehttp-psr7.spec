@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-guzzlehttp-psr7
 #
-# Copyright (c) 2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2015-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,8 +12,8 @@
 
 %global github_owner     guzzle
 %global github_name      psr7
-%global github_version   1.2.1
-%global github_commit    4d0bdbe1206df7440219ce14c972aa57cc5e4982
+%global github_version   1.2.3
+%global github_commit    2e89629ff057ebb49492ba08e6995d3a6a80021b
 
 %global composer_vendor  guzzlehttp
 %global composer_project psr7
@@ -47,7 +47,7 @@ BuildArch:     noarch
 BuildRequires: php(language)                  >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(psr/http-message) >= %{psr_http_message_min_ver}
-## phpcompatinfo (computed from version 1.2.0)
+## phpcompatinfo (computed from version 1.2.3)
 BuildRequires: php-hash
 BuildRequires: php-pcre
 BuildRequires: php-spl
@@ -60,7 +60,7 @@ BuildRequires: php-composer(symfony/class-loader)
 Requires:      php(language)                  >= %{php_min_ver}
 Requires:      php-composer(psr/http-message) >= %{psr_http_message_min_ver}
 Requires:      php-composer(psr/http-message) <  %{psr_http_message_max_ver}
-# phpcompatinfo (computed from version 1.2.0)
+# phpcompatinfo (computed from version 1.2.3)
 Requires:      php-hash
 Requires:      php-pcre
 Requires:      php-spl
@@ -84,8 +84,7 @@ cat <<'AUTOLOAD' | tee src/autoload.php
 <?php
 /**
  * Autoloader for %{name} and its' dependencies
- *
- * Created by %{name}-%{version}-%{release}
+ * (created by %{name}-%{version}-%{release}).
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
@@ -125,6 +124,10 @@ sed "s#require.*autoload.*#require '%{buildroot}%{phpdir}/GuzzleHttp/Psr7/autolo
     -i tests/bootstrap.php
 
 %{_bindir}/phpunit --verbose
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose
+fi
 %else
 : Tests skipped
 %endif
@@ -145,6 +148,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar 11 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.3-1
+- Updated to 1.2.3 (RHBZ #1301276)
+
 * Wed Nov 04 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.1-1
 - Updated to 1.2.1 (RHBZ #1277467)
 
