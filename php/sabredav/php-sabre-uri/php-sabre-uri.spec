@@ -117,6 +117,6 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Fri Mar 11 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0
+* Fri Mar 11 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - Initial packaging
 
