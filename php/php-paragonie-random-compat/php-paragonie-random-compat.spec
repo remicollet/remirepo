@@ -34,6 +34,9 @@ Summary:       PHP 5.x polyfill for random_bytes() and random_int() from PHP 7
 Group:         Development/Libraries
 License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
+
+# GitHub export does not include tests.
+# Run makesrc.sh to create full source.
 Source0:       %{name}-%{version}-%{github_short}.tgz
 Source1:       makesrc.sh
 
@@ -44,14 +47,15 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 1.1.4)
-##     <none except weak dependencies>
+## phpcompatinfo (computed from version 1.2.1)
+BuildRequires: php-pcre
+BuildRequires: php-zlib
 %endif
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.1.4)
-#     <none except weak dependencies>
+# phpcompatinfo (computed from version 1.2.1)
+Requires:      php-pcre
 # Weak dependencies
 %if 0%{?fedora} > 21
 Suggests:      php-mbstring
@@ -116,6 +120,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar 11 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.1-1
+- Updated to 1.2.1 (RHBZ #1296738)
+
 * Thu Mar  3 2016 Remi Collet <remi@remirepo.net> - 1.2.1-1
 - update to 1.2.1
 - sources from git snapshot ro retrive tests
