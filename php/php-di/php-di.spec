@@ -12,8 +12,8 @@
 
 %global github_owner     PHP-DI
 %global github_name      PHP-DI
-%global github_version   5.2.0
-%global github_commit    e20ff1b465a15548e22efcea79e06df64d9e2068
+%global github_version   5.2.2
+%global github_commit    f574bcc841201ab04587b1c6da1234d4044f67d8
 
 %global composer_vendor  php-di
 %global composer_project php-di
@@ -75,7 +75,7 @@ BuildRequires: php-composer(ocramius/proxy-manager)              >= %{proxy_mana
 BuildRequires: php-composer(php-di/invoker)                      >= %{di_invoker_min_ver}
 BuildRequires: php-composer(php-di/phpdoc-reader)                >= %{di_phpdoc_reader_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 5.2.0)
+## phpcompatinfo (computed from version 5.2.2)
 BuildRequires: php-json
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -92,7 +92,7 @@ Requires:      php-composer(php-di/invoker)                      >= %{di_invoker
 Requires:      php-composer(php-di/invoker)                      <  %{di_invoker_max_ver}
 Requires:      php-composer(php-di/phpdoc-reader)                >= %{di_phpdoc_reader_min_ver}
 Requires:      php-composer(php-di/phpdoc-reader)                <  %{di_phpdoc_reader_max_ver}
-# phpcompatinfo (computed from version 5.2.0)
+# phpcompatinfo (computed from version 5.2.2)
 Requires:      php-json
 Requires:      php-pcre
 Requires:      php-reflection
@@ -124,6 +124,10 @@ Autoloader: %{phpdir}/DI/autoload.php
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
+
+: Remove executable bit
+: https://github.com/PHP-DI/PHP-DI/pull/392
+chmod a-x src/DI/Definition/Source/DefinitionArray.php
 
 : Create autoloader
 cat <<'AUTOLOAD' | tee src/DI/autoload.php
@@ -214,6 +218,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar 11 2016 Shawn Iwinski <shawn@iwin.ski> - 5.2.2-1
+- Updated to 5.2.2 (RHBZ #1298928)
+
 * Thu Jan  7 2016 Remi Collet <remi@remirepo.net> - 5.2.0-1
 - backport for #remirepo
 
