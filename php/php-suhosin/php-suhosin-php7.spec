@@ -12,11 +12,11 @@
 %global sub_prefix %{scl_prefix}
 %endif
 
-%global gh_commit    5c0b5f357fb9dc38e21513d4d19ea6925e81a3f4
+%global gh_commit    8a5f1a302a848b37ba737e7db3f618f309128700
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sektioneins
 %global gh_project   suhosin7
-%global gh_date      20160304
+%global gh_date      20160307
 
 %{?scl:          %scl_package         php-suhosin}
 
@@ -28,7 +28,7 @@
 Name:           %{?sub_prefix}php-suhosin
 Version:        0.10.0
 %if 0%{?gh_date}
-Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.3.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 %else
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
@@ -204,6 +204,9 @@ EOF
 
 
 %changelog
+* Fri Mar 11 2016 Remi Collet <remi@fedoraproject.org> - 0.10.0-0.3.20160307git8a5f1a3
+- refresh
+
 * Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 0.10.0-0.2.20160304git5c0b5f3
 - refresh
 - open https://github.com/sektioneins/suhosin7/pull/7 - gcc < 4.8
