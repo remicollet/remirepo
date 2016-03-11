@@ -1,6 +1,3 @@
-# Fedora spec file for php-pecl-pq
-# without SCL compatibility, from
-#
 # remirepo spec file for php-pecl-pq
 #
 # Copyright (c) 2014-2016 Remi Collet
@@ -9,11 +6,26 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%endif
+
+%{?scl:          %scl_package        php-pecl-pq}
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  pq
+#global rcver      RC1
+%if %{?runselftest}%{!?runselftest:1}
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
+%else
+# Build using "--with tests" to enable tests
+%global with_tests 0%{?_with_tests:1}
+%endif
 %if "%{php_version}" < "5.6"
 # After raph, json
 %global ini_name   z-%{pecl_name}.ini
@@ -23,9 +35,13 @@
 %endif
 
 Summary:        PostgreSQL client library (libpq) binding
-Name:           php-pecl-%{pecl_name}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        2%{?dist}
+%if 0%{?rcver:1}
+Release:        0.1.%{rcver}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+%else
+Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+%endif
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -33,24 +49,43 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?rcver}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  postgresql-devel > 9
-BuildRequires:  php-devel > 5.4
-BuildRequires:  php-pear
-BuildRequires:  php-json
-BuildRequires:  php-pecl-raphf-devel >= 1.1.0
+BuildRequires:  %{?scl_prefix}php-devel > 5.4
+BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  %{?scl_prefix}php-json
+BuildRequires:  %{?sub_prefix}php-pecl-raphf-devel >= 1.1.0
 %if %{with_tests}
 BuildRequires:  postgresql-server
 BuildRequires:  postgresql-contrib
 %endif
 
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
-Requires:       php-json%{?_isa}
-Requires:       php-raphf%{?_isa}  >= 1.1.0
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php-json%{?_isa}
+Requires:       %{?sub_prefix}php-raphf%{?_isa}  >= 1.1.0
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       php-%{pecl_name} = %{version}
-Provides:       php-%{pecl_name}%{?_isa} = %{version}
-Provides:       php-pecl(%{pecl_name}) = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+%endif
+%endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
@@ -70,17 +105,20 @@ Highlights:
 * Fetching simple multi-dimensional array maps
 * Working Gateway implementation
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
+
 
 %prep
 %setup -q -c
 mv %{pecl_name}-%{version}%{?rcver} NTS
 
-# Don't install tests nor LICENSE
-sed -e '/role="test"/d' \
-    -e '/LICENSE/s/role="doc"/role="src"/' \
+# Don't install tests
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
     -i package.xml
 
 cd NTS
+
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PQ_VERSION/{s/.* "//;s/".*$//;p}' php_pq.h)
 if test "x${extver}" != "x%{version}%{?rcver}"; then
@@ -142,8 +180,9 @@ do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
-%triggerin -- php-pear
+%triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
     %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
 fi
@@ -158,6 +197,7 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
+%endif
 
 
 %check
@@ -234,8 +274,9 @@ rm -rf %{buildroot}
 
 
 %files
+%defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
-%license NTS/LICENSE
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -248,8 +289,8 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Tue Jan 19 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
-- cleanup for Fedora review
+* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-3
+- adapt for F24
 
 * Tue Jan 19 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - Update to 1.0.0 (stable)
