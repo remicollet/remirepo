@@ -27,12 +27,12 @@
 %else
 %global ini_name   40-%{pecl_name}.ini
 %endif
-%global prever     RC1
+%global prever     RC2
 
 Summary:        Wrapper for FANN Library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.1.0
-Release:        0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -83,6 +83,8 @@ Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %description
 This package provides a PHP binding for FANN
 (Fast Artificial Neural Network) Library.
+
+Documentation: http://php.net/fann
 
 Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
@@ -223,6 +225,9 @@ fi
 
 
 %changelog
+* Mon Mar 14 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-0.2.RC2
+- update to 1.1.0RC2
+
 * Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-0.1.RC1
 - update to 1.1.0RC1
 
