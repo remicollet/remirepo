@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    37fa29b17b87a3e9f0a4d77c42f0aac5183b84d1
+%global gh_commit    94b953a53d92cc6024bcbaab39a73370fd2f267c
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.2
-%global minor        10
+%global minor        11
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -215,6 +215,9 @@ fi
 
 
 %changelog
+* Mon Mar 14 2016 Remi Collet <remi@fedoraproject.org> - 5.2.11-1
+- Update to 5.2.11
+
 * Thu Mar  3 2016 Remi Collet <remi@fedoraproject.org> - 5.2.10-1
 - Update to 5.2.10
 - raise dependency on phpunit/php-code-coverage >= 3.3.0
