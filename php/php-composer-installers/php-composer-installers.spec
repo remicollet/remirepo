@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-composer-installers
 #
-# Copyright (c) 2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2015-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -20,7 +20,7 @@
 
 # "composer-plugin-api": "^1.0"
 %global composer_plugin_min_ver 1.0
-%global composer_plugin_max_ver 2
+%global composer_plugin_max_ver 2.0
 # "composer/composer": "1.0.*@dev"
 %global composer_min_ver 1.0
 
@@ -47,7 +47,7 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-composer(composer-plugin-api) >= %{composer_plugin_min_ver}
 BuildRequires: php-composer(composer/composer)   >= %{composer_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 1.0.21)
+## phpcompatinfo (computed from version 1.0.23)
 BuildRequires: php(language) >= 5.3.0
 BuildRequires: php-pcre
 BuildRequires: php-spl
@@ -58,7 +58,7 @@ BuildRequires: php-composer(symfony/class-loader)
 # composer.json
 Requires:      php-composer(composer-plugin-api) >= %{composer_plugin_min_ver}
 Requires:      php-composer(composer-plugin-api) <  %{composer_plugin_max_ver}
-# phpcompatinfo (computed from version 1.0.21)
+# phpcompatinfo (computed from version 1.0.23)
 Requires:      php(language) >= 5.3.0
 Requires:      php-pcre
 Requires:      php-spl
@@ -90,8 +90,7 @@ cat <<'AUTOLOAD' | tee src/Composer/Installers/autoload.php
 <?php
 /**
  * Autoloader for %{name} and its' dependencies
- *
- * Created by %{name}-%{version}-%{release}
+ * (created by %{name}-%{version}-%{release}).
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
@@ -158,6 +157,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar 12 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.23-1
+- Updated to 1.0.23 (RHBZ #1302488)
+
 * Fri Feb 26 2016 Remi Collet <remi@remirepo.net> - 1.0.23-1
 - update to 1.0.23
 - run test suite with both PHP 5 and 7 when available
