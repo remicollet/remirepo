@@ -1,8 +1,8 @@
 # remirepo spec file for php-doctrine-dbal, from Fedora:
 #
-# RPM spec file for php-doctrine-dbal
+# Fedora spec file for php-doctrine-dbal
 #
-# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #                         Adam Williamson <awilliam@redhat.com>
 #
 # License: MIT
@@ -13,30 +13,30 @@
 
 %global github_owner     doctrine
 %global github_name      dbal
-%global github_version   2.5.1
-%global github_commit    628c2256b646ae2417d44e063bce8aec5199d48d
+%global github_version   2.5.4
+%global github_commit    abbdfd1cff43a7b99d027af3be709bc8fc7d4769
 
 %global composer_vendor  doctrine
 %global composer_project dbal
 
 # "php": ">=5.3.2"
-%global php_min_ver             5.3.2
-# "doctrine/common": ">=2.4,<2.6-dev"
-%global doctrine_common_min_ver 2.4
-%global doctrine_common_max_ver 2.6
+%global php_min_ver 5.3.2
+# "doctrine/common": ">=2.4,<2.7-dev"
+#     NOTE: Min version not 2.4 because autoloader required
+%global doctrine_common_min_ver 2.5.0
+%global doctrine_common_max_ver 2.7
 # "symfony/console": "2.*"
 %global symfony_console_min_ver 2.0
 %global symfony_console_max_ver 3.0
 
-%{!?phpdir:     %global phpdir     %{_datadir}/php}
-%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 %if 0%{?rhel} == 5
 # No test as no SQlite3 ext
 %global with_tests 0
 %else
 # Build using "--without tests" to disable tests
-%global with_tests %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
 %endif
 
 Name:          php-%{composer_vendor}-%{composer_project}
@@ -59,16 +59,17 @@ Patch0:        %{name}-bin.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
+# Tests
 %if %{with_tests}
-BuildRequires: php-phpunit-PHPUnit
-# composer.json
+BuildRequires: php-composer(phpunit/phpunit)
+## composer.json
 BuildRequires: php(language)                 >= %{php_min_ver}
 BuildRequires: php-composer(doctrine/common) >= %{doctrine_common_min_ver}
 BuildRequires: php-composer(doctrine/common) <  %{doctrine_common_max_ver}
-# composer.json (optional)
-BuildRequires: php-symfony-console           >= %{symfony_console_min_ver}
-BuildRequires: php-symfony-console           <  %{symfony_console_max_ver}
-# phpcompatinfo (computed from version 2.5.1)
+## composer.json (optional)
+BuildRequires: php-composer(symfony/console) >= %{symfony_console_min_ver}
+BuildRequires: php-composer(symfony/console) <  %{symfony_console_max_ver}
+## phpcompatinfo (computed from version 2.5.4)
 BuildRequires: php-date
 BuildRequires: php-json
 BuildRequires: php-pcre
@@ -82,9 +83,9 @@ Requires:      php(language)                 >= %{php_min_ver}
 Requires:      php-composer(doctrine/common) >= %{doctrine_common_min_ver}
 Requires:      php-composer(doctrine/common) <  %{doctrine_common_max_ver}
 # composer.json (optional)
-Requires:      php-symfony-console           >= %{symfony_console_min_ver}
-Requires:      php-symfony-console           <  %{symfony_console_max_ver}
-# phpcompatinfo (computed from version 2.5.1)
+Requires:      php-composer(symfony/console) >= %{symfony_console_min_ver}
+Requires:      php-composer(symfony/console) <  %{symfony_console_max_ver}
+# phpcompatinfo (computed from version 2.5.4)
 Requires:      php-date
 Requires:      php-json
 Requires:      php-pcre
@@ -111,15 +112,45 @@ to implement custom drivers that may use existing native or self-made APIs. For
 example, the DBAL ships with a driver for Oracle databases that uses the oci8
 extension under the hood.
 
+Autoloader: %{phpdir}/Doctrine/DBAL/autoload.php
+
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-# Patch bin script
+: Patch bin script
 %patch0 -p1
 
-# Remove empty file
+: Remove empty file
 rm -f lib/Doctrine/DBAL/README.markdown
+
+: Create autoloader
+cat <<'AUTOLOAD' | tee lib/Doctrine/DBAL/autoload.php
+<?php
+/**
+ * Autoloader for %{name} and its' dependencies
+ * (created by %{name}-%{version}-%{release}).
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('Doctrine\\DBAL\\', dirname(dirname(__DIR__)));
+
+// Required dependencies
+require_once '%{phpdir}/Doctrine/Common/autoload.php';
+require_once '%{phpdir}/Symfony/Component/Console/autoload.php';
+
+return $fedoraClassLoader;
+AUTOLOAD
 
 
 %build
@@ -138,18 +169,24 @@ install -pm 0755 bin/doctrine-dbal.php %{buildroot}/%{_bindir}/doctrine-dbal
 
 %check
 %if %{with_tests}
-# Rewrite "tests/Doctrine/Tests/TestInit.php"
+# Rewrite "tests/Doctrine/Tests/TestInit.php" (aka PHPUnit bootstrap)
 mv tests/Doctrine/Tests/TestInit.php tests/Doctrine/Tests/TestInit.php.dist
-cat > tests/Doctrine/Tests/TestInit.php <<'TEST_INIT'
+cat > tests/Doctrine/Tests/TestInit.php <<'BOOTSTRAP'
 <?php
+$fedoraClassLoader =
+    require_once '%{buildroot}/%{phpdir}/Doctrine/DBAL/autoload.php';
 
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', $class).'.php';
-    @include_once $src;
-});
-TEST_INIT
+$fedoraClassLoader->addPrefix(
+    'Doctrine\\Tests\\',
+    dirname(dirname(dirname(__DIR__))).'/tests'
+);
+BOOTSTRAP
 
-%{__phpunit} --include-path %{buildroot}%{phpdir}:./tests
+%{_bindir}/phpunit
+
+if which php70; then
+   php70 %{_bindir}/phpunit
+fi
 %else
 : Tests skipped
 %endif
@@ -163,12 +200,17 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc *.md composer.json
+%doc *.md
+%doc composer.json
 %{phpdir}/Doctrine/DBAL
 %{_bindir}/doctrine-dbal
 
 
 %changelog
+* Mon Mar 14 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.5.4-1
+- Updated to 2.5.4 (RHBZ #1153987)
+- Added autoloader
+
 * Wed Jan 14 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.5.1-1
 - Updated to 2.5.1 (BZ #1153987)
 
