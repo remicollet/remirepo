@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-guzzlehttp-promises
 #
-# Copyright (c) 2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2015-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,8 +12,8 @@
 
 %global github_owner     guzzle
 %global github_name      promises
-%global github_version   1.0.3
-%global github_commit    b1e1c0d55f8083c71eda2c28c12a228d708294ea
+%global github_version   1.1.0
+%global github_commit    bb9024c526b22f3fe6ae55a561fd70653d470aa8
 
 %global composer_vendor  guzzlehttp
 %global composer_project promises
@@ -43,7 +43,7 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 1.0.3)
+## phpcompatinfo (computed from version 1.1.0)
 BuildRequires: php-json
 BuildRequires: php-spl
 ## Autoloader
@@ -52,7 +52,7 @@ BuildRequires: php-composer(symfony/class-loader)
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.0.3)
+# phpcompatinfo (computed from version 1.1.0)
 Requires:      php-json
 Requires:      php-spl
 # Autoloader
@@ -66,6 +66,8 @@ Promises/A+ [1] implementation that handles promise chaining and resolution
 interactively, allowing for "infinite" promise chaining while keeping the
 stack size constant.
 
+Autoloader: %{phpdir}/GuzzleHttp/Promise/autoload.php
+
 [1] https://promisesaplus.com/
 
 
@@ -77,8 +79,7 @@ cat <<'AUTOLOAD' | tee src/autoload.php
 <?php
 /**
  * Autoloader for %{name} and its' dependencies
- *
- * Created by %{name}-%{version}-%{release}
+ * (created by %{name}-%{version}-%{release}).
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
@@ -117,6 +118,7 @@ sed "s#require.*autoload.*#require '%{buildroot}%{phpdir}/GuzzleHttp/Promise/aut
     -i tests/bootstrap.php
 
 %{_bindir}/phpunit --verbose
+
 if which php70; then
    php70 %{_bindir}/phpunit --verbose
 fi
@@ -140,6 +142,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 13 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.0-1
+- Updated to 1.1.0 (RHBZ #1315685)
+
 * Mon Oct 26 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.3-1
 - Updated to 1.0.3 (RHBZ #1272280)
 
