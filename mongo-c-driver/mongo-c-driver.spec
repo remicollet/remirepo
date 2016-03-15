@@ -29,16 +29,13 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.3.3
-Release:   2%{?dist}
+Version:   1.3.4
+Release:   1%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
-
-# https://github.com/mongodb/mongo-c-driver/pull/314
-Patch0:    %{name}-pr314.patch
 
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libbson-1.0)
@@ -91,7 +88,6 @@ Documentation: http://api.mongodb.org/c/%{version}/
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
 
 rm -r src/libbson
-%patch0 -p1 -b .pr314
 
 
 %build
@@ -142,7 +138,7 @@ mongod \
 
 : Run the test suite
 ret=0
-export MONGOC_TEST_OFFLINE=1
+export MONGOC_TEST_OFFLINE=on
 make check || ret=1
 
 : Cleanup
@@ -177,6 +173,10 @@ exit $ret
 
 
 %changelog
+* Tue Mar 15 2016 Remi Collet <remi@fedoraproject.org> - 1.3.4-1
+- update to 1.3.4
+- drop patch merged upstream
+
 * Mon Feb 29 2016 Remi Collet <remi@fedoraproject.org> - 1.3.3-2
 - cleanup for review
 - move libraries in "libs" sub-package
