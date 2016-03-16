@@ -1,4 +1,4 @@
-# Spec file for php-sabre-vobject
+# remirepo/fedora spec file for php-sabre-vobject
 #
 # Copyright (c) 2013-2016 Remi Collet
 # License: CC-BY-SA
@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a064447d7e76dc564ffcf3a830057c2f0c17bfbd
+%global gh_commit    c2606c5985aabd14f37d444e494d72f67b71d290
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-vobject
@@ -14,22 +14,31 @@
 
 Name:           php-%{gh_project}
 Summary:        Library to parse and manipulate iCalendar and vCard objects
-Version:        3.2.4
+Version:        3.4.6
 Release:        1%{?dist}
 
 URL:            http://sabre.io/vobject/
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 License:        BSD
 Group:          Development/Libraries
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+Source1:        %{name}-autoload.php
 
-# replace composer autloader by PSR-O trivial one
+# replace composer autloader
 Patch0:         %{gh_project}-bin.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
+BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php(language) >= 5.3.1
-BuildRequires:  php-phpunit-PHPUnit
+BuildRequires:  php-mbstring
+BuildRequires:  php-date
+BuildRequires:  php-json
+BuildRequires:  php-pcre
+BuildRequires:  php-spl
+BuildRequires:  php-xml
+# Autoloader
+BuildRequires:  php-composer(symfony/class-loader)
 %endif
 
 # From composer.json
@@ -37,12 +46,15 @@ BuildRequires:  php-phpunit-PHPUnit
 #        "ext-mbstring" : "*"
 Requires:       php(language) >= 5.3.1
 Requires:       php-mbstring
-# From phpcompatinfo report for version 3.2.0
+# From phpcompatinfo report for version 3.4.5
+Requires:       php-cli
 Requires:       php-date
 Requires:       php-json
 Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-xml
+# Autoloader
+Requires:       php-composer(symfony/class-loader)
 
 Provides:       php-composer(sabre/vobject) = %{version}
 
@@ -59,18 +71,8 @@ years. The VObject library has 100% unittest coverage.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-%patch0 -p0 -b .psr0
-
-: Create trivial PSR0 autoloader for tests
-cat <<EOF | tee psr0.php
-<?php
-spl_autoload_register(function (\$class) {
-    \$file = str_replace('\\\\', '/', \$class).'.php';
-    @include \$file;
-});
-define('SABRE_TEMPDIR', __DIR__ . '/temp/');
-mkdir(SABRE_TEMPDIR);
-EOF
+%patch0 -p1 -b .rpm
+cp %{SOURCE1} lib/autoload.php
 
 
 %build
@@ -79,22 +81,29 @@ EOF
 
 %install
 # Install as a PSR-0 library
-mkdir -p %{buildroot}%{_datadir}/php
-cp -pr lib/Sabre %{buildroot}%{_datadir}/php/Sabre
+mkdir -p %{buildroot}%{_datadir}/php/Sabre
+cp -pr lib %{buildroot}%{_datadir}/php/Sabre/VObject
 
-# Install the command
+# Install the commands
 install -Dpm 0755 bin/vobject \
          %{buildroot}/%{_bindir}/vobject
+install -Dpm 0755 bin/generate_vcards \
+         %{buildroot}/%{_bindir}/generate_vcards
 
 
 %check
 %if %{with_tests}
-: Run upstream test suite against installed library
+: Fix bootstrap
 cd tests
-phpunit \
-  --bootstrap=../psr0.php \
-  --include-path=%{buildroot}%{_datadir}/php \
-  -d date.timezone=UTC
+sed -e 's:@BUILDROOT@:%{buildroot}:' -i bootstrap.php
+
+: Run upstream test suite against installed library
+%{_bindir}/phpunit --verbose
+
+if which php70; then
+   rm VObject/Property/FloatTest.php
+   php70 %{_bindir}/phpunit --verbose || : ignore test results
+fi
 %else
 : Skip upstream test suite
 %endif
@@ -102,12 +111,19 @@ phpunit \
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog.md composer.json LICENSE README.md
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *md
+%doc composer.json
 %{_datadir}/php/Sabre
 %{_bindir}/vobject
+%{_bindir}/generate_vcards
 
 
 %changelog
+* Wed Feb 24 2016 Remi Collet <remi@fedoraproject.org> - 3.4.6-1
+- update to 3.4.6
+
 * Wed Jul 16 2014 Remi Collet <remi@fedoraproject.org> - 3.2.4-1
 - update to 3.2.4
 
