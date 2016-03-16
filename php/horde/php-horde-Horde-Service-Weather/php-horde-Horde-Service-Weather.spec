@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Service-Weather
-Version:        2.3.2
+Version:        2.3.3
 Release:        1%{?dist}
 Summary:        Horde Weather Provider
 
@@ -150,6 +150,9 @@ fi
 
 
 %changelog
+* Wed Mar 16 2016 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
+- Update to 2.3.3
+
 * Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
 - Update to 2.3.2
 - PHP 7 compatible version
