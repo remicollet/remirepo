@@ -39,8 +39,8 @@
 Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
 Name:           %{?sub_prefix}php-pecl-solr2
-Version:        2.3.0
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        2.3.1
+Release:        0%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
@@ -288,6 +288,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 16 2016 Remi Collet <remi@fedoraproject.org> - 2.3.1-0
+- test build for upcoming 2.3.1
+
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 2.3.0-2
 - adapt for F24
 
