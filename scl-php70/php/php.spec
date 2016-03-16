@@ -125,13 +125,13 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver        RC1
-%global rpmrel       2
+%global rcver        RC1
+%global rpmrel       1
 
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 7.0.4
+Version: 7.0.5
 %if 0%{?gh_date}
 Release: 0.%{rpmrel}.%{gh_date}git%{gh_short}%{?dist}
 %else
@@ -1841,6 +1841,9 @@ fi
 
 
 %changelog
+* Wed Mar 16 2016 Remi Collet <remi@fedoraproject.org> 7.0.5-0.1.0RC1
+- Update to 7.0.5RC1
+
 * Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> 7.0.4-2
 - adapt for F24: define %%pecl_xmldir and own it
 

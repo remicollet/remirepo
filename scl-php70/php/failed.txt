@@ -1,14 +1,13 @@
-===== 7.0.4 (2016-03-03)
+===== 7.0.5RC1 (2016-03-16)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl70*/build.log
 
-/var/lib/mock/scl70el6x/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
-/var/lib/mock/scl70el7x/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
-/var/lib/mock/scl70fc20x/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
-/var/lib/mock/scl70fc21x/build.log:Tests failed    :    0 (  0.0%) (  0.0%
-/var/lib/mock/scl70fc22x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
-/var/lib/mock/scl70fc23x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
-/var/lib/mock/scl70fc24x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/scl70el6x/build.log:Tests failed    :    2
+/var/lib/mock/scl70el7x/build.log:Tests failed    :    2
+/var/lib/mock/scl70fc21x/build.log:Tests failed    :    0
+/var/lib/mock/scl70fc22x/build.log:Tests failed    :    0
+/var/lib/mock/scl70fc23x/build.log:Tests failed    :    0
+/var/lib/mock/scl70fc24x/build.log:Tests failed    :    0
 
 el6x, el7x, fc20x
     Bug #33414 [2] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-2.phpt]
