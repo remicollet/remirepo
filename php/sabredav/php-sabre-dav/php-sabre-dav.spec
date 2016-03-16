@@ -1,4 +1,4 @@
-# Spec file for php-sabre-dav
+# remirepo/fedora spec file for php-sabre-dav
 #
 # Copyright (c) 2013-2016 Remi Collet
 # License: CC-BY-SA
@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    78b0a55ae126666b49ec9ac88582d453b971967d
+%global gh_commit    cab5ab4e9caa00ba12268aa5b35925dc65bd7d63
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-dav
@@ -14,42 +14,82 @@
 
 Name:           php-%{gh_project}
 Summary:        WebDAV Framework for PHP
-Version:        1.8.12
+Version:        2.1.6
 Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}.tar.gz
 License:        BSD
 Group:          Development/Libraries
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+Source1:        %{name}-autoload.php
 
-# replace composer autoloader with trivial PSR-0 one
-Patch0:         %{gh_project}-autoload.patch
+# replace composer autoloader
+Patch0:         %{name}-autoload.patch
+
+# Partial cherry pick of 4eff5d4  to fix the zero length event breaking the test
+Patch1:         %{name}-GetEventsByTimerangeTest-zerolength.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.3.1
-BuildRequires:  %{_bindir}/phpunit
-BuildRequires:  php-sabre-vobject > 2.1
+BuildRequires:  php(language) >= 5.4.1
+BuildRequires:  php-composer(phpunit/phpunit)
+BuildRequires:  php-composer(sabre/vobject) >= 3.3.4
+BuildRequires:  php-composer(sabre/event)   >= 2.0.0
+BuildRequires:  php-composer(sabre/http)    >= 3.0.0
+BuildRequires:  php-dom
+BuildRequires:  php-pcre
+BuildRequires:  php-spl
+BuildRequires:  php-simplexml
+BuildRequires:  php-mbstring
+BuildRequires:  php-ctype
+BuildRequires:  php-date
+BuildRequires:  php-iconv
+BuildRequires:  php-libxml
+BuildRequires:  php-curl
 BuildRequires:  php-pdo
+# Autoloader
+BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-pdo_sqlite
 %endif
 
-# From composer.json
-Requires:       php(language) >= 5.3.1
+# From composer.json,    "require": {
+#        "php": ">=5.4.1",
+#        "sabre/vobject": ">=3.3.4 <4",
+#        "sabre/event" : "~2.0.0",
+#        "sabre/http" : "~3.0.0",
+#        "ext-dom": "*",
+#        "ext-pcre": "*",
+#        "ext-spl": "*",
+#        "ext-simplexml": "*",
+#        "ext-mbstring" : "*",
+#        "ext-ctype" : "*",
+#        "ext-date" : "*",
+#        "ext-iconv" : "*",
+#        "ext-libxml" : "*"
+Requires:       php(language) >= 5.4.1
+Requires:       php-composer(sabre/vobject) >= 3.3.4
+Requires:       php-composer(sabre/vobject) <  4
+Requires:       php-composer(sabre/event)   >= 2.0.0
+Requires:       php-composer(sabre/event)   <  2.1
+Requires:       php-composer(sabre/http)    >= 3.0.0
+Requires:       php-composer(sabre/http)    <  3.1
+Requires:       php-dom
+Requires:       php-pcre
+Requires:       php-spl
+Requires:       php-simplexml
+Requires:       php-mbstring
 Requires:       php-ctype
 Requires:       php-date
-Requires:       php-dom
 Requires:       php-iconv
 Requires:       php-libxml
-Requires:       php-mbstring
-Requires:       php-pcre
-Requires:       php-simplexml
-Requires:       php-spl
-Requires:       php-sabre-vobject > 2.1
-# From phpcompatinfo report for version 1.8.7
+# From composer.json, "suggest" : {
+#        "ext-curl" : "*",
+#        "ext-pdo" : "*"
 Requires:       php-curl
 Requires:       php-pdo
-Requires:       php-xml
+# Autoloader
+Requires:       php-composer(symfony/class-loader)
 
 
 %description
@@ -76,19 +116,8 @@ Feature list:
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p0
-
-: Create trivial PSR0 autoloader for tests
-cat <<EOF | tee psr0.php
-<?php
-define('SABRE_HASSQLITE', 1);
-define('SABRE_HASMYSQL', 0);
-define("SABRE_TEMPDIR", __DIR__ . '/temp/');
-
-spl_autoload_register(function (\$class) {
-    \$file = str_replace('\\\\', '/', \$class).'.php';
-    @include \$file;
-});
-EOF
+%patch1 -p1
+cp %{SOURCE1} lib/DAV/autoload.php
 
 # drop executable as only provided as doc
 chmod -x bin/*
@@ -101,24 +130,27 @@ chmod -x bin/*
 %install
 # Install as a PSR-0 library
 mkdir -p %{buildroot}%{_datadir}/php
-cp -pr lib/Sabre %{buildroot}%{_datadir}/php/Sabre
+cp -pr lib %{buildroot}%{_datadir}/php/Sabre
 
 
 
 %check
-: Check that our autoloader is working
-php -d include_path=%{buildroot}%{_datadir}/php \
-    -r 'include "Sabre/autoload.php"; echo Sabre\DAV\Version::VERSION."\n";' \
-    | grep %{version}
-
 %if %{with_tests}
-: Run upstream test suite against installed library
-mkdir temp
+%if 0%{?rhel} == 5
+sed -e 's/testMove/SKIP_testMove/' \
+    -i tests/Sabre/DAV/PropertyStorage/Backend/AbstractPDOTest.php
+%endif
+
+: Fix bootstrap
 cd tests
-phpunit \
-  --bootstrap=../psr0.php \
-  --include-path=%{buildroot}%{_datadir}/php \
-  -d date.timezone=GMT
+sed -e 's:@BUILDROOT@:%{buildroot}:' -i bootstrap.php
+
+: Run upstream test suite against installed library
+%{_bindir}/phpunit --verbose
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose || : ignore test results
+fi
 %else
 : Skip upstream test suite
 %endif
@@ -126,12 +158,24 @@ phpunit \
 
 %files
 %defattr(-,root,root,-)
-%doc ChangeLog composer.json LICENSE README.md
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc *md
+%doc composer.json
 %doc examples bin
-%{_datadir}/php/Sabre
+%{_datadir}/php/Sabre/DAV
+%{_datadir}/php/Sabre/DAVACL
+%{_datadir}/php/Sabre/CalDAV
+%{_datadir}/php/Sabre/CardDAV
 
 
 %changelog
+* Wed Feb 24 2016 James Hogarth <james.hogarth@gmail.com> - 2.1.6-1
+- update to 2.1.6
+
+* Wed Feb 24 2016 Remi Collet <remi@fedoraproject.org> - 2.1.5-1
+- update to 2.1.5
+
 * Fri Mar 06 2015 Adam Williamson <awilliam@redhat.com> - 1.8.12-1
 - update to 1.8.12 (bugfix release, no bc breaks)
 
