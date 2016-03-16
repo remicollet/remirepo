@@ -1,0 +1,27 @@
+diff --git a/apps/files_external/ajax/google.php b/apps/files_external/ajax/google.php
+index e094367..8f2638b 100644
+--- a/apps/files_external/ajax/google.php
++++ b/apps/files_external/ajax/google.php
+@@ -26,7 +26,7 @@
+  */
+ set_include_path(get_include_path().PATH_SEPARATOR.
+ 	\OC_App::getAppPath('files_external').'/3rdparty/google-api-php-client/src');
+-require_once 'Google/Client.php';
++require_once 'Google/autoload.php';
+ 
+ OCP\JSON::checkAppEnabled('files_external');
+ OCP\JSON::checkLoggedIn();
+diff --git a/apps/files_external/lib/google.php b/apps/files_external/lib/google.php
+index 8199d97..4bec351 100644
+--- a/apps/files_external/lib/google.php
++++ b/apps/files_external/lib/google.php
+@@ -34,8 +34,7 @@ namespace OC\Files\Storage;
+ 
+ set_include_path(get_include_path().PATH_SEPARATOR.
+ 	\OC_App::getAppPath('files_external').'/3rdparty/google-api-php-client/src');
+-require_once 'Google/Client.php';
+-require_once 'Google/Service/Drive.php';
++require_once 'Google/autoload.php';
+ 
+ class Google extends \OC\Files\Storage\Common {
+ 

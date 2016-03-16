@@ -1,0 +1,49 @@
+diff --git a/lib/private/setup.php b/lib/private/setup.php
+index 50bf0dc..d216675 100644
+--- a/lib/private/setup.php
++++ b/lib/private/setup.php
+@@ -350,12 +350,6 @@ class Setup {
+ 			// out that this is indeed an ownCloud data directory
+ 			file_put_contents($config->getSystemValue('datadirectory', \OC::$SERVERROOT.'/data').'/.ocdata', '');
+ 
+-			// Update htaccess files for apache hosts
+-			if (isset($_SERVER['SERVER_SOFTWARE']) && strstr($_SERVER['SERVER_SOFTWARE'], 'Apache')) {
+-				self::updateHtaccess();
+-				self::protectDataDirectory();
+-			}
+-
+ 			//try to write logtimezone
+ 			if (date_default_timezone_get()) {
+ 				\OC_Config::setValue('logtimezone', date_default_timezone_get());
+diff --git a/lib/private/updater.php b/lib/private/updater.php
+index 8f4b81c..22a4861 100644
+--- a/lib/private/updater.php
++++ b/lib/private/updater.php
+@@ -54,10 +54,10 @@ class Updater extends BasicEmitter {
+ 
+ 	/** @var ILogger $log */
+ 	private $log;
+-	
++
+ 	/** @var \OC\HTTPHelper $helper */
+ 	private $httpHelper;
+-	
++
+ 	/** @var IConfig */
+ 	private $config;
+ 
+@@ -287,14 +287,6 @@ class Updater extends BasicEmitter {
+ 			throw new \Exception('Updates between multiple major versions and downgrades are unsupported.');
+ 		}
+ 
+-		// Update .htaccess files
+-		try {
+-			Setup::updateHtaccess();
+-			Setup::protectDataDirectory();
+-		} catch (\Exception $e) {
+-			throw new \Exception($e->getMessage());
+-		}
+-
+ 		// FIXME: Some users do not upload the new ca-bundle.crt, let's catch this
+ 		// in the update. For a newer release we shall use an integrity check after
+ 		// the update.

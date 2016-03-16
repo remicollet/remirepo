@@ -1,20 +1,20 @@
 diff --git a/apps/files_external/ajax/dropbox.php b/apps/files_external/ajax/dropbox.php
-index db417de..a752ca1 100644
+index 55dc417..fe834c0 100644
 --- a/apps/files_external/ajax/dropbox.php
 +++ b/apps/files_external/ajax/dropbox.php
-@@ -1,7 +1,5 @@
- <?php
- 
+@@ -23,7 +23,6 @@
+  * along with this program.  If not, see <http://www.gnu.org/licenses/>
+  *
+  */
 -require_once __DIR__ . '/../3rdparty/Dropbox/autoload.php';
--
+ 
  OCP\JSON::checkAppEnabled('files_external');
  OCP\JSON::checkLoggedIn();
- OCP\JSON::callCheck();
 diff --git a/apps/files_external/lib/dropbox.php b/apps/files_external/lib/dropbox.php
-index cc1e628..586efd6 100644
+index 78219f8..b332c0a 100644
 --- a/apps/files_external/lib/dropbox.php
 +++ b/apps/files_external/lib/dropbox.php
-@@ -22,8 +22,6 @@
+@@ -29,8 +29,6 @@
  
  namespace OC\Files\Storage;
  

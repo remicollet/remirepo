@@ -8,7 +8,7 @@
 # Please preserve changelog entries
 #
 Name:           owncloud
-Version:        8.0.10
+Version:        8.1.5
 Release:        1%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
@@ -51,32 +51,29 @@ Patch1:         %{name}-6.0.2-videoviewer_noplugins.patch
 # and *test* if changing this; test with all versions of all Sabre packages
 # installed to make sure it DTRT. Keep an eye on upstream for future changes
 # also.
-Patch2:        %{name}-8.0.1-autoloader_paths.patch
+Patch2:        %{name}-8.1.5-autoloader_paths.patch
 # Turn on include path usage for the Composer autoloader (so it'll find
 # systemwide PSR-0 and PSR-4 compliant libraries)
 # Upstream wouldn't likely take this, they probably only care about their
 # bundled copies
-Patch3:        %{name}-8.0.1-composer_includepath.patch
+Patch3:        %{name}-8.1.5-composer_includepath.patch
 # Drop use of dropbox's unnecessary autoloader (composer will find the
 # systemwide copy). This is not upstreamable, but see
 # https://github.com/owncloud/core/pull/12113 with similar effect for 8.1+
-Patch4:        %{name}-8.0.0-drop-dropbox-autoloader.patch
-# Submitted upstream: https://github.com/owncloud/core/pull/11056
-# Be less heavy-handed about clearing the opcache after editing config.php
-# Avoids triggering a crash in php-opcache: https://github.com/owncloud/core/issues/9885
-Patch5:        %{name}-7.0.3-opcache_invalidate.patch
+Patch4:        %{name}-8.1.5-drop-dropbox-autoloader.patch
 # Drop use of aws-sdk's dead autoloader (composer will find the systemwide copy)
 Patch6:        0001-drop-AWS-autoloader.patch
 # Disable JS minification (uses non-free JSMin minifier)
 Patch7:        owncloud-8.0.0-disable_minify.patch
 # Stop OC from trying to do stuff to .htaccess files. Just calm down, OC.
 # Distributors are on the case.
-Patch8:         owncloud-8.0.3-dont_update_htacess.patch
+Patch8:         owncloud-8.1.5-dont_update_htacess.patch
 # Use Google autoloader instead of including particular files. Upstream
 # no longer has each file include all others it needs, they expect you
 # to use the autoloader. Can't go upstream until upstream bumps to a
 # version of the lib that actually includes the autoloader...
-Patch9:         owncloud-8.0.4-google_autoload.patch
+Patch9:         owncloud-8.1.5-google_autoload.patch
+
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -114,8 +111,6 @@ Requires:       php-filter
 Requires:       php-composer(kriswallsmith/assetic) >= 1.2
 Requires:       php-composer(kriswallsmith/assetic) < 1.3
 Requires:       php-getid3
-# states 5.2.8 exactly, but will work with 5.2.9 or later
-Requires:       php-composer(phpmailer/phpmailer)
 # "pimple/pimple": "~3.0"
 Requires:       php-composer(pimple/pimple) >= 3.0
 Requires:       php-composer(pimple/pimple) < 4.0
@@ -146,11 +141,13 @@ Requires:       php-composer(ircmaxell/random-lib) >= 1.0.0
 Requires:       php-composer(natxet/CssMin) >= 3.0.2
 
 ## SabreDAV
-#Requires:       php-composer(sabre/dav) >= 1.8.0
-Requires:       php-sabre-dav >= 1.8.0
-# OwnCloud uses vobject directly as well as dav, and it is not at all compatible
-# with 3.x; calendar 'rework' branch will fix this when it lands, probably 9.x
-Requires:       php-pear(pear.sabredav.org/Sabre_VObject) >= 2.0.0
+Requires:       php-sabre-dav >= 2.1.5
+Requires:       php-composer(sabre/event) >= 2.0
+Requires:       php-composer(sabre/event) < 3.0
+Requires:       php-composer(sabre/vobject) >= 3.3.4
+Requires:       php-composer(sabre/vobject) < 4.0
+Requires:       php-composer(sabre/http) >= 3.0
+Requires:       php-composer(sabre/http) < 4.0
 
 ## apps/files_external
 Requires:       php-pear(pear.dropbox-php.com/Dropbox)
@@ -254,14 +251,10 @@ work with an SQLite 3 database stored on the local system.
 
 %prep
 %setup -q -n %{name}
-# Fix line endings of a file we're about to patch
-sed -i 's/\r$//' apps/files_encryption/lib/crypt.php
-#patch1
 %patch1 -p0
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
@@ -274,7 +267,7 @@ cp %{SOURCE5} README.postgresql
 
 
 # Strip bundled libraries from global 3rdparty dir
-rm -r 3rdparty/{bantu,doctrine,guzzle,ircmaxell/random-lib,ircmaxell/security-lib,james-heinrich,kriswallsmith,natxet,pear,phpmailer/phpmailer/*,phpseclib,pimple,rackspace,sabre,symfony}
+rm -r 3rdparty/{bantu,doctrine,guzzle,ircmaxell/random-lib,ircmaxell/security-lib,james-heinrich,kriswallsmith,natxet,pear,phpseclib,pimple,rackspace,sabre,symfony}
 rm 3rdparty/{PEAR,PEAR5}.php
 # we need to symlink some annoying files back here, though...direct file
 # autoloading sucks. "files" sections of "autoload" statements in
@@ -378,11 +371,14 @@ for f in {*.php,*.xml,*.html,occ,robots.txt}; do
     install -pm 644 "$f" %{buildroot}%{_datadir}/%{name} 
 done
 
-# set default config
-install -pm 644 %{SOURCE7}    %{buildroot}%{_sysconfdir}/%{name}/config.php
-
 # symlink config dir
 ln -sf %{_sysconfdir}/%{name} %{buildroot}%{_datadir}/%{name}/config
+
+# Owncloud looks for ca-bundle.crt in config dir
+ln -sf %{_sysconfdir}/pki/tls/certs/ca-bundle.crt %{buildroot}%{_sysconfdir}/%{name}/ca-bundle.crt
+
+# set default config
+install -pm 644 %{SOURCE7}    %{buildroot}%{_sysconfdir}/%{name}/config.php
 
 # httpd config
 install -Dpm 644 %{SOURCE1} \
@@ -398,7 +394,6 @@ install -Dpm 644 %{SOURCE6} \
 
 # symlink 3rdparty libs - if possible
 # global
-ln -s %{_datadir}/php/PHPMailer/class.{phpmailer.php,pop3.php,smtp.php}    %{buildroot}%{_datadir}/%{name}/3rdparty/phpmailer/phpmailer
 ln -s %{_datadir}/php/Assetic/functions.php %{buildroot}%{_datadir}/%{name}/3rdparty/kriswallsmith/assetic/src/functions.php
 ln -s %{_datadir}/pear/Crypt/Random.php %{buildroot}%{_datadir}/%{name}/3rdparty/phpseclib/phpseclib/phpseclib/Crypt/Random.php
 ln -s %{_datadir}/php/natxet/CssMin/src/CssMin.php %{buildroot}%{_datadir}/%{name}/3rdparty/natxet/CssMin/src/
@@ -470,6 +465,8 @@ rm -rf %{buildroot}
 %dir %attr(-,apache,apache) %{_sysconfdir}/%{name}
 # contains sensitive data (dbpassword, passwordsalt)
 %config(noreplace) %attr(0600,apache,apache) %{_sysconfdir}/%{name}/config.php
+# need the symlink in confdir but it's not config
+%{_sysconfdir}/%{name}/ca-bundle.crt
 
 %{_datadir}/%{name}
 %dir %attr(0755,apache,apache) %{_localstatedir}/lib/%{name}
@@ -501,6 +498,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Feb 20 2016 James Hogarth <james.hogarth@gmail.com> - 8.1.5-1
+- Update to 8.1.5
+
 * Mon Jan 11 2016 Adam Williamson <awilliam@redhat.com> - 8.0.10-1
 - new release 8.0.10 (multiple security fixes)
 
