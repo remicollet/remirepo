@@ -34,7 +34,7 @@
 
 Summary:       Provides interface to libevent library
 Name:          %{?sub_prefix}php-pecl-%{pecl_name}
-Version:       2.0.0
+Version:       2.0.1
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
@@ -107,6 +107,8 @@ platform. This is a port of libevent to the PHP infrastructure.
 Version 1.0.0 introduces:
 * new OO API breaking backwards compatibility
 * support of libevent 2+ including HTTP, DNS, OpenSSL and the event listener.
+
+Documentation: http://php.net/event
 
 Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
@@ -274,6 +276,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar 17 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1 (php 5 and 7, stable)
+
 * Mon Feb 29 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Update to 2.0.0 (php 5 and 7, stable)
 
