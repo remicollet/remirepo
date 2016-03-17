@@ -85,6 +85,9 @@ echo "require '%{buildroot}%{_datadir}/php/%{ns_vendor}/%{ns_name}/autoload.php'
 : Run the test suite
 %{_bindir}/phpunit --verbose
 
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose
+fi
 
 %clean
 rm -rf %{buildroot}
