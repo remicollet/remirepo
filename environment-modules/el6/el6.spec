@@ -1,6 +1,7 @@
+%global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 Name:           environment-modules
 Version:        3.2.10
-Release:        10%{?dist}
+Release:        0%{?dist}
 Summary:        Provides dynamic modification of a user's environment
 
 Group:          System Environment/Base
@@ -11,21 +12,15 @@ Source1:        modules.sh
 Source2:        createmodule.sh
 Source3:        createmodule.py
 Patch0:         environment-modules-3.2.7-bindir.patch
-# Comment out stray module use in modules file when not using versioning
-# https://bugzilla.redhat.com/show_bug.cgi?id=895555
-Patch1:         environment-modules-versioning.patch
-# Fix module clear command
-# https://bugzilla.redhat.com/show_bug.cgi?id=895551
-Patch2:         environment-modules-clear.patch
-# Patch from modules list to add completion to avail command
-Patch3:         environment-modules-avail.patch
-Patch4:         environment-modules-3.2.9-call-test-by-full-path-in-csh.patch
-Patch5:         environment-modules-3.2.10-ignore-nested-dirs.patch
-Patch6:         environment-modules-3.2.10-unload-from-module.patch
+Patch1:         environment-modules-3.2.9-clear.patch
+Patch3:         environment-modules-3.2.9-module-path.patch
+Patch4:         environment-modules-3.2.9-gcc-no-strict.patch
+Patch5:         environment-modules-3.2.9-call-test-by-full-path-in-csh.patch
+Patch6:         environment-modules-3.2.10-ignore-nested-dirs.patch
+Patch7:         environment-modules-3.2.10-unload-from-module.patch
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  tcl-devel, tclx-devel, libX11-devel
-BuildRequires:  dejagnu
-BuildRequires:  man
 #For ps in startup script
 Requires:       procps
 
@@ -57,25 +52,26 @@ have access to the module alias.
 %prep
 %setup -q -n modules-%{version}
 %patch0 -p1 -b .bindir
-%patch1 -p1 -b .versioning
-%patch2 -p1 -b .clear
-%patch3 -p1 -b .avail
-%patch4 -p1 -b .call-test-by-full-path-in-csh
-%patch5 -p1 -b .ignore-nested-dirs
-%patch6 -p1 -b .unload-from-module
+%patch1 -p1 -b .clear
+%patch3 -p1 -b .module-path
+%patch4 -p1 -b .gcc-no-strict
+%patch5 -p1 -b .call-test-by-full-path-in-csh
+%patch6 -p1 -b .ignore-nested-dirs
+%patch7 -p1 -b .unload-from-module
 
 
 %build
 %configure --disable-versioning \
            --prefix=%{_datadir} \
            --exec-prefix=%{_datadir}/Modules \
-           --with-man-path=$(manpath) \
            --with-module-path=%{_sysconfdir}/modulefiles
+
 #           --with-debug=42 --with-log-facility-debug=stderr
 make %{?_smp_mflags}
 
 
 %install
+rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/profile.d
 cp -p %SOURCE1 $RPM_BUILD_ROOT%{_sysconfdir}/profile.d/modules.sh
@@ -84,19 +80,23 @@ ln -s %{_datadir}/Modules/init/csh $RPM_BUILD_ROOT%{_sysconfdir}/profile.d/modul
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/modulefiles
 
 
-%check
-make test
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 
 %files
+%defattr(-,root,root,-)
 %doc LICENSE.GPL README TODO
 %{_sysconfdir}/modulefiles
 %config(noreplace) %{_sysconfdir}/profile.d/*
+# as %{_sysconfdir}/profile.d/modules.csh is a symlink to this file, it has to
+# be marked as config(noreplace) as well if we want to preserve the changes
+%config(noreplace) %{_datadir}/Modules/init/csh
 %{_bindir}/modulecmd
 %dir %{_datadir}/Modules
 %{_datadir}/Modules/bin/
 %dir %{_datadir}/Modules/init
-%config(noreplace) %{_datadir}/Modules/init/*
+%{_datadir}/Modules/init/*
 %config(noreplace) %{_datadir}/Modules/init/.modulespath
 %{_datadir}/Modules/modulefiles
 %{_mandir}/man1/module.1.gz
@@ -104,88 +104,52 @@ make test
 
 
 %changelog
-* Mon Jun 22 2015 Jan Synáček <jsynacek@redhat.com> - 3.2.10-10
-- fix: createmodule scripts incorrectly handles env vars prefixed/suffixed without colon (#1233223)
+* Thu Mar 17 2016 Remi Collet <remi@remirepo.net> - 3.2.10-0.el6
+- build for remirepo for amazon users
+  with NEVR < official packages
 
-* Wed Apr 29 2015 Jan Synáček <jsynacek@redhat.com> - 3.2.10-9
-- fix: SourceVers wrongly sets version in nested directory (#1180652)
-- fix: unload from loaded modulefile broken (#1117327)
+* Mon Nov  2 2015 Jan Synáček <jsynacek@redhat.com> - 3.2.10-3
+- fix: createmodule scripts incorrectly handles env vars prefixed/suffixed without colon (#1180139)
 
-* Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 3.2.10-8
-- Mass rebuild 2014-01-24
+* Thu Nov 27 2014 Jan Synáček <jsynacek@redhat.com> - 3.2.10-2
+- fix: SourceVers wrongly sets version in nested directory (#979789)
+- fix: unload from loaded modulefile broken (#1117307)
 
-* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 3.2.10-7
-- Mass rebuild 2013-12-27
+* Thu Mar 13 2014 Jan Synáček <jsynacek@redhat.com> - 3.2.10-1
+- Rebase to 3.2.10
+- Drop regexp patch
+- Resolves: #976369
 
-* Thu Aug  8 2013 Jan Synáček <jsynacek@redhat.com> - 3.2.10-6
-- Call test command in csh alias by its full path (bug #977331)
+* Tue May 14 2013 Jan Synáček <jsynacek@redhat.com> - 3.2.9c-6
+- Call test command in csh alias by its full path (bug #929007)
+- Correctly preserve the target file that the config symlink points to
+  (this change makes the previous fix for bug #953198 whole)
 
-* Tue May 14 2013 Orion Poplawski <orion@cora.nwra.com> - 3.2.10-5
-- Really do not replace modified profile.d scripts (bug #962762)
-- Specfile cleanup
+* Mon May 13 2013 Jan Synáček <jsynacek@redhat.com> - 3.2.9c-5
+- Make .modulespath a config file (bug #918540)
+- Do not replace modified profile.d scripts (bug #953198)
+- Remove use of test command in csh alias (bug #929007)
 
-* Wed Apr 17 2013 Orion Poplawski <orion@cora.nwra.com> - 3.2.10-4
-- Do not replace modified profile.d scripts (bug #953199)
+* Wed Sep 12 2012 Jan Synáček <jsynacek@redhat.com> - 3.2.9c-4
+- Revert timestamps fix attempt
+- Prevent rpm from bytecompiling the internal python file
+- Related: #848865
 
-* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.10-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+* Wed Sep 12 2012 Jan Synáček <jsynacek@redhat.com> - 3.2.9c-3
+- Add -fno-strict-aliasing to silence gcc warnings
+- Fix timestamps to silence multilib test
+- Related: #848865
 
-* Tue Jan 15 2013 Orion Poplawski <orion@cora.nwra.com> - 3.2.10-2
-- Add patch to comment out stray module use in modules file when not using
-  versioning (bug #895555)
-- Add patch to fix module clear command (bug #895551)
-- Add patch from modules list to add completion to avail command
+* Tue Sep 11 2012 Jan Synáček <jsynacek@redhat.com> - 3.2.9c-2
+- Bump build version, rebuild with the new patch
+- Related: #848865
 
-* Fri Dec 21 2012 Orion Poplawski <orion@cora.nwra.com> - 3.2.10-1
-- Update to 3.2.10
-- Drop regex patch
+* Wed Jun 27 2012 Jan Synáček <jsynacek@redhat.com> - 3.2.9c-1
+- Rebase to 3.2.9c (bug #765630, #818177)
+  + Fix 'module clear'
+- Fix memory problems with 'modules switch' (bug #818177)
+- Fix "module use" path in default modules file (bug #848865)
 
-* Wed Oct 31 2012 Orion Poplawski <orion@cora.nwra.com> - 3.2.9c-5
-- Updated createmodule.sh, added createmodule.py, can handle path prefixes
-
-* Fri Aug 24 2012 Orion Poplawski <orion@cora.nwra.com> - 3.2.9c-4
-- Add patch to fix segfault from Tcl RexExp handling (bug 834580)
-
-* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.9c-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
-
-* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.9c-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
-
-* Tue Nov 29 2011 Orion Poplawski <orion@cora.nwra.com> - 3.2.9c-1
-- Update to 3.2.9c (fixes bug 753760)
-
-* Tue Nov 22 2011 Orion Poplawski <orion@cora.nwra.com> - 3.2.9b-2
-- Make .modulespath a config file
-
-* Tue Nov 15 2011 Orion Poplawski <orion@cora.nwra.com> - 3.2.9b-1
-- Update to 3.2.9b
-
-* Fri Nov 11 2011 Orion Poplawski <orion@cora.nwra.com> - 3.2.9a-2
-- Add %%check section
-
-* Fri Nov 11 2011 Orion Poplawski <orion@cora.nwra.com> - 3.2.9a-1
-- Update to 3.2.9a
-- Drop strcpy patch
-
-* Thu Sep 22 2011 Orion Poplawski <orion@cora.nwra.com> - 3.2.8a-3
-- Add patch to fix overlapping strcpy() in Remove_Path, hopefully fixes
-  bug 737043
-
-* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.8a-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
-
-* Mon Oct 4 2010 Orion Poplawski <orion@cora.nwra.com> - 3.2.8a-1
-- Update to 3.2.8a, changes --with-def-man-path to --with-man-path
-
-* Mon Oct 4 2010 Orion Poplawski <orion@cora.nwra.com> - 3.2.8-1
-- Update to 3.2.8
-- Drop mandir patch, use --with-def-man-path
-
-* Thu Jan 7 2010 Orion Poplawski <orion@cora.nwra.com> - 3.2.7b-7
-- Add patch to set a sane default MANPATH
-- Add createmodule.sh utility script for creating modulefiles
- 
 * Mon Nov 30 2009 Orion Poplawski <orion@cora.nwra.com> - 3.2.7b-6
 - Add Requires: propcs (bug #54272)
 
