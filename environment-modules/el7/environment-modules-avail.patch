@@ -1,0 +1,12 @@
+diff -up modules-3.2.10/init/bash_completion.in.avail modules-3.2.10/init/bash_completion.in
+--- modules-3.2.10/init/bash_completion.in.avail	2012-10-25 13:33:34.000000000 -0600
++++ modules-3.2.10/init/bash_completion.in	2013-01-15 12:05:37.247309733 -0700
+@@ -56,7 +56,7 @@ _module() {
+ 	unuse)		COMPREPLY=( $(IFS=: compgen -W "${MODULEPATH}" -- "$cur") );;
+ 	use|*-a*)	;;			# let readline handle the completion
+ 	-u|--userlvl)	COMPREPLY=( $(compgen -W "novice expert advanced" -- "$cur") );;
+-	display|help|show|whatis)
++	av*|disp*|help|show|whatis)
+ 			COMPREPLY=( $(compgen -W "$(_module_avail)" -- "$cur") );;
+ 	*) if test $COMP_CWORD -gt 2
+ 	   then

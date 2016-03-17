@@ -1,0 +1,10 @@
+diff -up modules-3.2.10/modulefiles/modules.in.versioning modules-3.2.10/modulefiles/modules.in
+--- modules-3.2.10/modulefiles/modules.in.versioning	2012-10-25 13:33:34.000000000 -0600
++++ modules-3.2.10/modulefiles/modules.in	2013-01-15 11:30:22.046031158 -0700
+@@ -26,5 +26,5 @@ setenv		MODULESHOME	$prefix
+ prepend-path    PATH   		@bindir@
+ prepend-path    MANPATH		@mandir@
+ 
+-module		use		@VERSIONPATH@
++@VERSIONING@module		use		@VERSIONPATH@
+ 
