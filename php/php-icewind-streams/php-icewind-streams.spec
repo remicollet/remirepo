@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # Github information
-%global gh_commit    1cca87c499b0a50056468b94479effd5b4b390cb
+%global gh_commit    9ca40274645a967ecc3408b0ca2e6255ead1d1d3
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     icewind1991
 %global gh_project   Streams
@@ -19,7 +19,7 @@
 %global ns_name      Streams
 
 Name:           php-%{pk_vendor}-%{pk_name}
-Version:        0.3.0
+Version:        0.4.0
 Release:        1%{?dist}
 Summary:        A set of generic stream wrappers
 
@@ -34,8 +34,9 @@ BuildArch:      noarch
 # For tests
 BuildRequires:  php(language) >= 5.3
 # From composer.json, "require-dev": {
-#       "satooshi/php-coveralls": "dev-master"
-BuildRequires:  php-composer(phpunit/phpunit)
+#		"satooshi/php-coveralls": "v1.0.0",
+#		"phpunit/phpunit": "^4.8"
+BuildRequires:  php-composer(phpunit/phpunit) >= 4.8
 BuildRequires:  php-composer(theseer/autoload)
 # Autoloader
 BuildRequires:  php-composer(symfony/class-loader)
@@ -104,6 +105,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar 17 2016 Remi Collet <remi@fedoraproject.org> - 0.4.0-1
+- update to 0.4.0
+
 * Wed Sep  9 2015 Remi Collet <remi@fedoraproject.org> - 0.3.0-1
 - version 0.3.0
 
