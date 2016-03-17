@@ -1,4 +1,4 @@
-# remirepo spec/Fedora file for php-icewind-smb
+# remirepo/fedora spec file for php-icewind-smb
 #
 # Copyright (c) 2015-2016 Remi Collet
 # License: CC-BY-SA
@@ -74,6 +74,9 @@ Requires:       php-pcre
 Requires:       php-posix
 # Autoloader
 Requires:       php-composer(symfony/class-loader)
+%if 0%{?fedora} > 21
+Recommends:     php-smbclient
+%endif
 
 Provides:       php-composer(%{pk_vendor}/%{pk_name}) = %{version}
 
@@ -145,6 +148,7 @@ rm -rf %{buildroot}
 * Thu Mar 17 2016 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
 - update to 1.0.6
 - raise dependency on icewind/streams >= 0.3
+- add optional dependency on php-smbclient
 
 * Sun Feb 21 2016 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
 - update to 1.0.5

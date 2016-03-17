@@ -1,4 +1,4 @@
-# remirepo spec/Fedora file for php-icewind-streams
+# remirepo/fedora spec file for php-icewind-streams
 #
 # Copyright (c) 2015-2016 Remi Collet
 # License: CC-BY-SA
