@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # Github information
-%global gh_commit    424cf346e2651c278bb467b513f1483b1e02c4d5
+%global gh_commit    b9364a984e9667416406c6f21c1bc5ac7ad86aa1
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     icewind1991
 %global gh_project   SMB
@@ -28,7 +28,7 @@
 %global with_tests   0%{?_with_tests:1}
 
 Name:           php-%{pk_vendor}-%{pk_name}
-Version:        1.0.6
+Version:        1.0.7
 Release:        1%{?dist}
 Summary:        php wrapper for smbclient and libsmbclient-php
 
@@ -47,7 +47,7 @@ BuildArch:      noarch
 %if %{with_tests}
 # For tests
 BuildRequires:  php(language) >= 5.3
-BuildRequires:  php-composer(%{pk_vendor}/streams) >= 0.3
+BuildRequires:  php-composer(%{pk_vendor}/streams) >= 0.2
 BuildRequires:  php-date
 BuildRequires:  php-mbstring
 BuildRequires:  php-pcre
@@ -63,10 +63,9 @@ BuildRequires:  php-composer(symfony/class-loader)
 
 # From composer.json, "require": {
 #      "php": ">=5.3"
-#      "icewind/streams": "0.3.*"
+#      "icewind/streams": ">=0.2.0"
 Requires:       php(language) >= 5.3
-Requires:       php-composer(%{pk_vendor}/streams) >= 0.3
-Requires:       php-composer(%{pk_vendor}/streams) <  0.4
+Requires:       php-composer(%{pk_vendor}/streams) >= 0.2
 # From phpcompatinfo report for version 1.0.4
 Requires:       php-date
 Requires:       php-mbstring
@@ -145,6 +144,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar 17 2016 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
+- update to 1.0.7
+- lower dependency on icewind/streams >= 0.2
+
 * Thu Mar 17 2016 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
 - update to 1.0.6
 - raise dependency on icewind/streams >= 0.3
