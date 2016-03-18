@@ -33,7 +33,7 @@ Summary(ru): Редактор электрических схем
 # Remember to check rdate and upver macro on each update
 Version:     0.51
 %if 0%{?svnrel}
-Release:     0.4.svn%{svnrel}%{?dist}
+Release:     0.5.svn%{svnrel}%{?dist}
 %else
 Release:     1%{?dist}
 %endif
@@ -179,7 +179,7 @@ sed -e s,/usr/local/,%{_prefix}/, \
     -e /QET_MIME/s,../,, \
     -i %{name}.pro
 
-qmake-qt5 \
+%{qmake_qt5} \
   'QMAKE_COPY_DIR = cp -f -r --preserve=timestamps' \
   qelectrotech.pro
 
@@ -260,10 +260,11 @@ fi
 
 
 %changelog
-* Fri Mar 18 2016 Remi Collet <remi@fedoraproject.org> - 0.51-0.1.svn4383
+* Fri Mar 18 2016 Remi Collet <remi@fedoraproject.org> - 0.51-0.5.svn4383
 - Update to 0.51 snapshot revision 4383
+- use %%{qmake_qt5} macro to ensure proper build flags
 
-* Tue Dec 29 2015 Remi Collet <remi@fedoraproject.org> - 0.51-0.1.svn4292
+* Tue Dec 29 2015 Remi Collet <remi@fedoraproject.org> - 0.51-0.4.svn4292
 - Update to 0.51 snapshot revision 4292
 
 * Fri Nov 27 2015 Remi Collet <remi@fedoraproject.org> - 0.50-1

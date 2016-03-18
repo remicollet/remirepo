@@ -21,6 +21,6 @@ rm -rf qelectrotech-${VER}-svn${REV}
 vendor="Remi Collet <remi@fedoraproject.org>"
 rpmdate=$(LC_ALL="C" date +"%a %b %d %Y")
 
-sed -e "s/%changelog/%changelog\n* $rpmdate $vendor - ${RPM}-0.1.svn${REV}\n- Update to ${VER} snapshot revision ${REV}\n/" \
+sed -e "s/%changelog/%changelog\n* $rpmdate $vendor - ${RPM}-0.5.svn${REV}\n- Update to ${VER} snapshot revision ${REV}\n/" \
     -e "/global svnrel/s/svnrel.*/svnrel $1/" \
     -i *spec
