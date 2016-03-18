@@ -1797,6 +1797,7 @@ fi
 - Fix #71039: exec functions ignore length but look for NULL termination
 - Fix #71720: heap bufferover flow in escapeshell functions
 - Fix #71488: Stack overflow when decompressing tar archives
+  CVE-2016-2554
 - upgrade bundled PCRE to 8.38
 
 * Wed Jan  6 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-3
@@ -1808,8 +1809,9 @@ fi
 
 * Wed Sep 30 2015 Remi Collet <remi@fedoraproject.org> 5.4.45-2
 - Fix bug #70433 - Uninitialized pointer in phar_make_dirstream
-  when zip entry filename is "/"
+  when zip entry filename is "/" CVE-2015-7804
 - Fix bug #69720: Null pointer dereference in phar_get_fp_offset()
+  CVE-2015-7803
 
 * Wed Sep  2 2015 Remi Collet <remi@fedoraproject.org> 5.4.45-1
 - Update to 5.4.45
