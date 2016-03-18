@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # Github information
-%global gh_commit    b9364a984e9667416406c6f21c1bc5ac7ad86aa1
+%global gh_commit    764f3fc793a904eb937d619ad097fb076ff199cd
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     icewind1991
 %global gh_project   SMB
@@ -28,7 +28,7 @@
 %global with_tests   0%{?_with_tests:1}
 
 Name:           php-%{pk_vendor}-%{pk_name}
-Version:        1.0.7
+Version:        1.0.8
 Release:        1%{?dist}
 Summary:        php wrapper for smbclient and libsmbclient-php
 
@@ -144,6 +144,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar 17 2016 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
+- update to 1.0.8
+
 * Thu Mar 17 2016 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
 - update to 1.0.7
 - lower dependency on icewind/streams >= 0.2
