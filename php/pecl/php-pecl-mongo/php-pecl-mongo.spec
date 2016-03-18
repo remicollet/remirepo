@@ -16,8 +16,8 @@
 %global pecl_name   mongo
 %global with_zts    0%{?__ztsphp:1}
 #global prever      RC3
-# see https://github.com/mongodb/mongo-php-driver/releases
-%global gh_commit   0eda9d118cf40017bc442b9bf32ad5d60b9ec11f
+# see https://github.com/mongodb/mongo-php-driver-legacy/releases
+%global gh_commit   74311ca47770e979adb712e0f4b01b380f9f1ecb
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    mongodb
 %global gh_project  mongo-php-driver-legacy
@@ -32,8 +32,8 @@
 
 Summary:      PHP MongoDB database driver
 Name:         %{?scl_prefix}php-pecl-mongo
-Version:      1.6.12
-Release:      2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:      1.6.13
+Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      ASL 2.0
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -250,6 +250,9 @@ rm -rf data
 
 
 %changelog
+* Fri Mar 18 2016 Remi Collet <remi@fedoraproject.org> - 1.6.13-1
+- update to 1.6.13 (stable)
+
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.6.12-2
 - adapt for F24
 - fix license management
