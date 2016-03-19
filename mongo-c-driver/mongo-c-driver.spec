@@ -30,7 +30,7 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.3.4
-Release:   1%{?dist}
+Release:   2%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -92,6 +92,9 @@ rm -r src/libbson
 
 %build
 export LIBS=-lpthread
+# See https://jira.mongodb.org/browse/CDRIVER-1160
+# and https://jira.mongodb.org/browse/CDRIVER-1165
+export CFLAGS="$RPM_OPT_FLAGS -DMONGOC_NO_AUTOMATIC_GLOBALS"
 
 %configure \
   --enable-hardening \
@@ -173,6 +176,9 @@ exit $ret
 
 
 %changelog
+* Sat Mar 19 2016 Remi Collet <remi@fedoraproject.org> - 1.3.4-2
+- build with MONGOC_NO_AUTOMATIC_GLOBALS
+
 * Tue Mar 15 2016 Remi Collet <remi@fedoraproject.org> - 1.3.4-1
 - update to 1.3.4
 - drop patch merged upstream
