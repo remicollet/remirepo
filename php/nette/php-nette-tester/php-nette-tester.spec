@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    efbc31ff4ee0bef28da712a726316e8b0b5bf262
+%global gh_commit    d97534578e8cf66eabe081e7d5eaa4dd527ab0c8
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-nette-tester
-Version:        1.7.0
+Version:        1.7.1
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        An easy-to-use PHP unit testing framework
@@ -23,7 +23,8 @@ Summary:        An easy-to-use PHP unit testing framework
 Group:          Development/Libraries
 License:        BSD or GPLv2 or GPLv3
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+Source0:        %{name}-%{version}-%{gh_short}.tgz
+Source1:        makesrc.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -41,6 +42,9 @@ BuildRequires:  php-reflection
 BuildRequires:  php-simplexml
 BuildRequires:  php-spl
 BuildRequires:  php-tokenizer
+%if 0%{?fedora} >= 24
+BuildRequires:  glibc-langpack-fr
+%endif
 %endif
 
 # from composer.json
@@ -123,6 +127,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 20 2016 Remi Collet <remi@fedoraproject.org> - 1.7.1-1
+- update to 1.7.1
+- sources from git snapshot
+  open https://github.com/nette/tester/issues/297
+- add BR glibc-langpack-fr on F24+
+
 * Fri Feb 12 2016 Remi Collet <remi@fedoraproject.org> - 1.7.0-1
 - update to 1.7.0
 - run test suite with both PHP 5 and 7 when available
