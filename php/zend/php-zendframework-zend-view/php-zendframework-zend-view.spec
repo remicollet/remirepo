@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    5347f90525d9804de74766b29e2e723b5dd7a4c6
+%global gh_commit    b6cbad62a95ba9bf1ce8814bbd4a1d2316041cb9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-view
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.4
-Release:        2%{?dist}
+Version:        2.6.5
+Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -29,8 +29,6 @@ License:        BSD
 URL:            http://framework.zend.com/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
-
-Patch0:         %{name}-pr55.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -67,7 +65,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 #        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
 #        "zendframework/zend-uri": "^2.5",
 #        "fabpot/php-cs-fixer": "1.7.*",
-#        "phpunit/PHPUnit": "~4.0"
+#        "phpunit/PHPUnit": "^4.5"
 BuildRequires:  php-composer(%{gh_owner}/zend-authentication)   >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-cache)            >= 2.6.1
 BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.6
@@ -88,7 +86,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-serializer)       >= 2.6.1
 BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.6.2
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
 BuildRequires:  php-composer(%{gh_owner}/zend-uri)              >= 2.5
-BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
+BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.5
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
@@ -157,8 +155,6 @@ substitution, and more.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-%patch0 -p1
-
 
 %build
 # Empty build section, nothing required
@@ -210,6 +206,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.6.5-1
+- version 2.6.5
+
 * Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.6.4-2
 - add patch for zend-navigation issue, see:
   https://github.com/zendframework/zend-navigation/issues/23
