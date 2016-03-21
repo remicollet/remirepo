@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Mapi
-Version:        1.0.7
+Version:        1.0.8
 Release:        1%{?dist}
 Summary:        MAPI utility library
 
@@ -115,8 +115,8 @@ fi
 
 
 %changelog
-* Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
-- Update to 1.0.7
+* Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
+- Update to 1.0.8
 - raise dependency on Horde_Date >= 2.3.0
 
 * Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
