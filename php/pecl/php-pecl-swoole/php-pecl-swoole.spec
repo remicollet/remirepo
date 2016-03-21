@@ -35,7 +35,7 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.8.2
+Version:        1.8.3
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
@@ -58,21 +58,17 @@ BuildRequires:  hiredis-devel
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
-%if "%{php_version}" < "5.4"
-# php 5.3.3 in EL-6 don't use arched virtual provides
-# so only requires real packages instead
-Requires:       %{?scl_prefix}php-common%{?_isa}
-%else
 Requires:       %{?scl_prefix}php-sockets%{?_isa}
-%endif
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -282,6 +278,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 1.8.3-1
+- Update to 1.8.3 (stable)
+
 * Wed Mar 02 2016 Remi Collet <remi@fedoraproject.org> - 1.8.2-1
 - Update to 1.8.2 (stable)
 - add --enable-openssl, --enable-async-httpclient

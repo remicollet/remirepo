@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #166 swoole version 1.8.2 ] {
+Extension [ <persistent> extension #166 swoole version 1.8.3 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -64,7 +64,7 @@ Extension [ <persistent> extension #166 swoole version 1.8.2 ] {
     Constant [ integer SWOOLE_DTLSv1_CLIENT_METHOD ] { 17 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.8.2 }
+    Constant [ string SWOOLE_VERSION ] { 1.8.3 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_GCC ] { 1 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 2 }
@@ -257,7 +257,7 @@ Extension [ <persistent> extension #166 swoole version 1.8.2 ] {
       - Properties [0] {
       }
 
-      - Methods [33] {
+      - Methods [34] {
         Method [ <internal:swoole, ctor> public method __construct ] {
 
           - Parameters [4] {
@@ -405,6 +405,12 @@ Extension [ <persistent> extension #166 swoole version 1.8.2 ] {
           }
         }
 
+        Method [ <internal:swoole> public method getLastError ] {
+
+          - Parameters [0] {
+          }
+        }
+
         Method [ <internal:swoole> public method heartbeat ] {
 
           - Parameters [1] {
@@ -475,10 +481,10 @@ Extension [ <persistent> extension #166 swoole version 1.8.2 ] {
           }
         }
 
-        Method [ <internal:swoole> public method sendmessage ] {
+        Method [ <internal:swoole> public method sendMessage ] {
         }
 
-        Method [ <internal:swoole> public method addprocess ] {
+        Method [ <internal:swoole> public method addProcess ] {
         }
 
         Method [ <internal:swoole> public method stats ] {
@@ -708,7 +714,7 @@ Extension [ <persistent> extension #166 swoole version 1.8.2 ] {
         Property [ <default> public $sock ]
       }
 
-      - Methods [13] {
+      - Methods [15] {
         Method [ <internal:swoole, ctor> public method __construct ] {
         }
 
@@ -718,7 +724,13 @@ Extension [ <persistent> extension #166 swoole version 1.8.2 ] {
         Method [ <internal:swoole> public method set ] {
         }
 
+        Method [ <internal:swoole> public method setMethod ] {
+        }
+
         Method [ <internal:swoole> public method setHeaders ] {
+        }
+
+        Method [ <internal:swoole> public method setCookies ] {
         }
 
         Method [ <internal:swoole> public method setData ] {
@@ -1102,7 +1114,7 @@ Extension [ <persistent> extension #166 swoole version 1.8.2 ] {
         Property [ <default> private $global ]
       }
 
-      - Methods [34] {
+      - Methods [35] {
         Method [ <internal:swoole, overwrites swoole_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
@@ -1250,6 +1262,12 @@ Extension [ <persistent> extension #166 swoole version 1.8.2 ] {
           }
         }
 
+        Method [ <internal:swoole, inherits swoole_server> public method getLastError ] {
+
+          - Parameters [0] {
+          }
+        }
+
         Method [ <internal:swoole, inherits swoole_server> public method heartbeat ] {
 
           - Parameters [1] {
@@ -1320,10 +1338,10 @@ Extension [ <persistent> extension #166 swoole version 1.8.2 ] {
           }
         }
 
-        Method [ <internal:swoole, inherits swoole_server> public method sendmessage ] {
+        Method [ <internal:swoole, inherits swoole_server> public method sendMessage ] {
         }
 
-        Method [ <internal:swoole, inherits swoole_server> public method addprocess ] {
+        Method [ <internal:swoole, inherits swoole_server> public method addProcess ] {
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method stats ] {
@@ -1477,7 +1495,7 @@ Extension [ <persistent> extension #166 swoole version 1.8.2 ] {
       - Properties [0] {
       }
 
-      - Methods [35] {
+      - Methods [36] {
         Method [ <internal:swoole, overwrites swoole_http_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
@@ -1635,6 +1653,12 @@ Extension [ <persistent> extension #166 swoole version 1.8.2 ] {
           }
         }
 
+        Method [ <internal:swoole, inherits swoole_server> public method getLastError ] {
+
+          - Parameters [0] {
+          }
+        }
+
         Method [ <internal:swoole, inherits swoole_server> public method heartbeat ] {
 
           - Parameters [1] {
@@ -1705,10 +1729,10 @@ Extension [ <persistent> extension #166 swoole version 1.8.2 ] {
           }
         }
 
-        Method [ <internal:swoole, inherits swoole_server> public method sendmessage ] {
+        Method [ <internal:swoole, inherits swoole_server> public method sendMessage ] {
         }
 
-        Method [ <internal:swoole, inherits swoole_server> public method addprocess ] {
+        Method [ <internal:swoole, inherits swoole_server> public method addProcess ] {
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method stats ] {
