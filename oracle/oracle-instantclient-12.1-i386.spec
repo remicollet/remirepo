@@ -13,7 +13,7 @@
 
 Summary: 	Instant Client for Oracle Database 11g
 Name: 		oracle-instantclient-i386
-Version: 	12.1.0.1.0
+Version: 	12.1.0.2.0
 Release:	1%{?dist}
 License:	Oracle
 Group:		Applications/File
@@ -266,7 +266,7 @@ rm -rf %{buildroot}
 
 %files -n oracle-instantclient-odbc
 %defattr(-,root,root)
-%doc %{topdir}/ODBC_IC_Readme_Unix.html %{topdir}/ODBCRelnotesJA.htm %{topdir}/ODBCRelnotesUS.htm
+%doc %{topdir}/ODBC_IC_Readme_Unix.html
 %doc %{topdir}/odbc_update_ini.sh
 %doc %{topdir}/help
 %{oradir}/lib/libsqora.so.%{mainver}
@@ -294,6 +294,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 21 2016 Remi Collet <remi@remirepo.net> 12.1.0.2.0-1
+- update to 12.1.0.2.0
+
 * Fri Jul 26 2013 Remi Collet <RPMS@famillecollet.com> 12.1.0.1.0-1
 - update to 12.1.0.1.0
 

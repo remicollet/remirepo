@@ -13,7 +13,7 @@
 
 Summary: 	Instant Client for Oracle Database 11g
 Name: 		oracle-instantclient-x86_64
-Version: 	12.1.0.1.0
+Version: 	12.1.0.2.0
 Release:	1%{?dist}
 License:	Oracle
 Group:		Applications/File
@@ -145,6 +145,8 @@ install -p libclntshcore.so.%{mainver}	%{buildroot}%{oradir}/lib
 install -p libclntsh.so.%{mainver}	%{buildroot}%{oradir}/lib
 install -p libnnz%{major}.so		%{buildroot}%{oradir}/lib
 install -p libocci.so.%{mainver}	%{buildroot}%{oradir}/lib
+install -p libipc1.so				%{buildroot}%{oradir}/lib
+install -p libmql1.so				%{buildroot}%{oradir}/lib
 install -p libociei.so				%{buildroot}%{oradir}/lib
 install -p libocijdbc%{major}.so	%{buildroot}%{oradir}/lib
 install -p libons.so				%{buildroot}%{oradir}/lib
@@ -219,6 +221,8 @@ rm -rf %{buildroot}
 %{oradir}/lib/libclntsh.so.%{mainver}
 %{oradir}/lib/libnnz%{major}.so
 %{oradir}/lib/libocci.so.%{mainver}
+%{oradir}/lib/libipc1.so
+%{oradir}/lib/libmql1.so
 %{oradir}/lib/libociei.so
 %{oradir}/lib/libocijdbc%{major}.so
 %{oradir}/lib/libons.so
@@ -266,7 +270,7 @@ rm -rf %{buildroot}
 
 %files -n oracle-instantclient-odbc
 %defattr(-,root,root)
-%doc %{topdir}/ODBC_IC_Readme_Unix.html %{topdir}/ODBCRelnotesJA.htm %{topdir}/ODBCRelnotesUS.htm
+%doc %{topdir}/ODBC_IC_Readme_Unix.html
 %doc %{topdir}/odbc_update_ini.sh
 %doc %{topdir}/help
 %{oradir}/lib/libsqora.so.%{mainver}
