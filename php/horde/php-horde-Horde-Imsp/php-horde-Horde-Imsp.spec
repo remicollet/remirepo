@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Imsp
-Version:        2.0.8
+Version:        2.0.9
 Release:        1%{?dist}
 Summary:        IMSP API
 
@@ -117,6 +117,9 @@ fi
 
 
 %changelog
+* Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.0.9-1
+- Update to 2.0.9
+
 * Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 2.0.8-1
 - Update to 2.0.8
 
