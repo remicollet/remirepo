@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-horde-Horde-Mime
-Version:        2.9.3
+Version:        2.9.4
 Release:        1%{?dist}
 Summary:        Horde MIME Library
 
@@ -169,6 +169,9 @@ fi
 
 
 %changelog
+* Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.9.4-1
+- Update to 2.9.4
+
 * Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.9.3-1
 - Update to 2.9.3
 - PHP 7 compatible version
