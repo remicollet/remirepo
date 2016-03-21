@@ -14,7 +14,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-wicked
-Version:        2.0.4
+Version:        2.0.5
 Release:        1%{?dist}
 Summary:        Wiki application
 
@@ -109,7 +109,7 @@ Wicked is a wiki application for Horde.
 %setup -q -c
 
 cat <<EOF | tee httpd.conf
-<DirectoryMatch %{pear_hordedir}/%{pear_name}/(config|lib|locale)>
+<DirectoryMatch %{pear_hordedir}/%{pear_name}/(config|lib|locale|templates)>
      Deny from all
 </DirectoryMatch>
 
@@ -225,6 +225,9 @@ fi
 
 
 %changelog
+* Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- Update to 2.0.5
+
 * Sat Aug 01 2015 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4
 
