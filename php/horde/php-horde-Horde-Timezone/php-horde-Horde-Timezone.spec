@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Timezone
-Version:        1.0.10
+Version:        1.0.11
 Release:        1%{?dist}
 Summary:        Timezone library
 
@@ -27,7 +27,7 @@ BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
-BuildRequires:  php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
+BuildRequires:  php-pear(%{pear_channel}/Horde_Date) >= 2.3.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Icalendar) >= 2.0.0
 
 Requires(post): %{__pear}
@@ -36,7 +36,7 @@ Requires:       php(language) >= 5.3.0
 Requires:       php-pcre
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
-Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.3.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Icalendar) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Icalendar) <  3.0.0
@@ -106,6 +106,10 @@ fi
 
 
 %changelog
+* Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 1.0.11-1
+- Update to 1.0.11
+- raise dependency on Horde_Date >= 2.3.0
+
 * Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 1.0.10-1
 - Update to 1.0.10
 - PHP 7 compatible version
