@@ -8,7 +8,7 @@
 # Please preserve changelog entries
 #
 Name:           owncloud
-Version:        8.1.5
+Version:        8.1.6
 Release:        1%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
@@ -45,9 +45,8 @@ Source42:       %{name}-delete-nonfree.sh
 # 'plugins:["youtube","vimeo"]'
 Patch1:         %{name}-6.0.2-videoviewer_noplugins.patch
 # Ugly way to deal with Pimple 1.x's lack of PSR-0 compliance. Also forces the
-# paths to Sabre deps: /usr/share/php for most of Sabre (to ensure php-sabre-dav
-# package, 1.8 version, is used), /usr/share/pear for Sabre\VObject (to ensure
-# php-sabredav-Sabre_VObject package, 2.1 version, is used). Please be careful
+# paths to Sabre deps: /usr/share/php for all of Sabre (to ensure php-sabre-dav
+# package, 2.1 version, is used). Please be careful
 # and *test* if changing this; test with all versions of all Sabre packages
 # installed to make sure it DTRT. Keep an eye on upstream for future changes
 # also.
@@ -141,7 +140,8 @@ Requires:       php-composer(ircmaxell/random-lib) >= 1.0.0
 Requires:       php-composer(natxet/CssMin) >= 3.0.2
 
 ## SabreDAV
-Requires:       php-sabre-dav >= 2.1.5
+Requires:       php-composer(sabre/dav)   >= 2.1.6
+Requires:       php-composer(sabre/dav)   <  3
 Requires:       php-composer(sabre/event) >= 2.0
 Requires:       php-composer(sabre/event) < 3.0
 Requires:       php-composer(sabre/vobject) >= 3.3.4
@@ -498,6 +498,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 8.1.6-1
+- Update to 8.1.6
+- fix autoloader to ensure sabre/vobject 3.4 is used
+
 * Sat Feb 20 2016 James Hogarth <james.hogarth@gmail.com> - 8.1.5-1
 - Update to 8.1.5
 
