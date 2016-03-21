@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Compress
-Version:        2.1.4
+Version:        2.1.5
 Release:        1%{?dist}
 Summary:        Horde Compression API
 
@@ -134,6 +134,9 @@ fi
 
 
 %changelog
+* Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.1.5-1
+- Update to 2.1.5
+
 * Mon Feb 01 2016 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
 - Update to 2.1.4
 - PHP 7 compatible version
