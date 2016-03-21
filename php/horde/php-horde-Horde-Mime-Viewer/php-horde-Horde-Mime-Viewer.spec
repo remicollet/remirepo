@@ -15,7 +15,7 @@
 %global with_tests   0%{?_with_tests:1}
 
 Name:           php-horde-Horde-Mime-Viewer
-Version:        2.1.2
+Version:        2.1.3
 Release:        1%{?dist}
 Summary:        Horde MIME Viewer Library
 
@@ -170,6 +170,9 @@ fi
 
 
 %changelog
+* Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
+- Update to 2.1.3
+
 * Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.1.2-1
 - Update to 2.1.2
 - PHP 7 compatible version
