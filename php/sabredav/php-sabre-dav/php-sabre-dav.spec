@@ -15,7 +15,7 @@
 Name:           php-%{gh_project}
 Summary:        WebDAV Framework for PHP
 Version:        2.1.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 License:        BSD
@@ -90,6 +90,8 @@ Requires:       php-curl
 Requires:       php-pdo
 # Autoloader
 Requires:       php-composer(symfony/class-loader)
+
+Provides:       php-composer(sabre/dav) = %{version}
 
 
 %description
@@ -170,6 +172,9 @@ fi
 
 
 %changelog
+* Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.1.6-2
+- provide missing php-composer(sabre/dav)
+
 * Wed Feb 24 2016 James Hogarth <james.hogarth@gmail.com> - 2.1.6-1
 - update to 2.1.6
 
