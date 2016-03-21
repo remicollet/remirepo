@@ -13,7 +13,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Image
-Version:        2.3.4
+Version:        2.3.5
 Release:        1%{?dist}
 Summary:        Horde Image API
 
@@ -154,6 +154,9 @@ fi
 
 
 %changelog
+* Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.3.5-1
+- Update to 2.3.5
+
 * Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.3.4-1
 - Update to 2.3.4
 - PHP 7 compatible version
