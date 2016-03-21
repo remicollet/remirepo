@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.6.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -29,6 +29,8 @@ License:        BSD
 URL:            http://framework.zend.com/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
+
+Patch0:         %{name}-pr55.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -155,6 +157,8 @@ substitution, and more.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+%patch0 -p1
+
 
 %build
 # Empty build section, nothing required
@@ -206,7 +210,11 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Tue Mar  3 2016 Remi Collet <remi@fedoraproject.org> - 2.6.4-1
+* Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.6.4-2
+- add patch for zend-navigation issue, see:
+  https://github.com/zendframework/zend-navigation/issues/23
+
+* Thu Mar  3 2016 Remi Collet <remi@fedoraproject.org> - 2.6.4-1
 - version 2.6.4
 
 * Tue Feb 23 2016 Remi Collet <remi@fedoraproject.org> - 2.6.3-1

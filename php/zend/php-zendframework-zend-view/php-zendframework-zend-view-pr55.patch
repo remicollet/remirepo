@@ -1,0 +1,159 @@
+From fed4b7ad72b0dbdf475310fa73ecf84d477f5c0e Mon Sep 17 00:00:00 2001
+From: Matthew Weier O'Phinney <matthew@zend.com>
+Date: Mon, 21 Mar 2016 11:52:49 -0500
+Subject: [PATCH 1/2] Fix zendframework/zend-navigation#23
+
+Running tests of zend-navigation against all v2 components (no v3 components)
+revealed a circular dependency condition in the navigation helpers related to
+`getEventManager()`.
+
+In v2, `getEventManager()` has lazy-loaded an EM instance, and an initializer
+was checking the returned instance to see if its `SharedEventManager` instance
+was present and/or the same as the one in the container; if not, it was
+re-injecting the EM instance from the container.  Unfortunately, this fails now,
+as the call to `setEventManager()` now attaches the default listeners, and
+requires that a shared manager is present.
+
+This patch changes the behavior to the following:
+
+- `getEventManager()` now *never* lazy-loads an instance. This ensures that the
+  initializer doesn't lead to lazy-population of the shared manager.
+- `setEventManager()` was updated to check that we have a shared manager before
+  attempting to call `setDefaultListeners()`.
+- Internally, if an EM instance is needed, it now lazy-creates one, *with a
+  shared manager*, and calls `setEventManager()` with the new EM instance.
+- The EM initializer in the helper plugin amanger was updated to first check
+  that we have an `EventManager` instance before attempting to inject one.
+---
+ src/Helper/Navigation/AbstractHelper.php      | 34 ++++++++++++++++++---------
+ src/HelperPluginManager.php                   |  5 ++++
+ test/Helper/Navigation/AbstractHelperTest.php |  5 ++++
+ test/Helper/Navigation/AbstractTest.php       |  5 ----
+ 4 files changed, 33 insertions(+), 16 deletions(-)
+
+diff --git a/src/Helper/Navigation/AbstractHelper.php b/src/Helper/Navigation/AbstractHelper.php
+index 5503b10..823c43e 100644
+--- a/src/Helper/Navigation/AbstractHelper.php
++++ b/src/Helper/Navigation/AbstractHelper.php
+@@ -342,7 +342,8 @@ public function accept(AbstractPage $page, $recursive = true)
+      */
+     protected function isAllowed($params)
+     {
+-        $results = $this->getEventManager()->trigger(__FUNCTION__, $this, $params);
++        $events = $this->getEventManager() ?: $this->createEventManager();
++        $results = $events->trigger(__FUNCTION__, $this, $params);
+         return $results->last();
+     }
+ 
+@@ -513,22 +514,23 @@ public function setEventManager(EventManagerInterface $events)
+ 
+         $this->events = $events;
+ 
+-        $this->setDefaultListeners();
++        if ($events->getSharedManager()) {
++            $this->setDefaultListeners();
++        }
+ 
+         return $this;
+     }
+ 
+     /**
+-     * Get the event manager.
++     * Get the event manager, if present.
++     *
++     * Internally, the helper will lazy-load an EM instance the first time it
++     * requires one, but ideally it should be injected during instantiation.
+      *
+-     * @return  EventManagerInterface
++     * @return  null|EventManagerInterface
+      */
+     public function getEventManager()
+     {
+-        if (null === $this->events) {
+-            $this->setEventManager($this->createEventManager());
+-        }
+-
+         return $this->events;
+     }
+ 
+@@ -956,7 +958,13 @@ protected function setDefaultListeners()
+             return;
+         }
+ 
+-        $this->getEventManager()->getSharedManager()->attach(
++        $events = $this->getEventManager() ?: $this->createEventManager();
++
++        if (! $events->getSharedManager()) {
++            return;
++        }
++
++        $events->getSharedManager()->attach(
+             'Zend\View\Helper\Navigation\AbstractHelper',
+             'isAllowed',
+             ['Zend\View\Helper\Navigation\Listener\AclListener', 'accept']
+@@ -975,9 +983,13 @@ private function createEventManager()
+     {
+         $r = new ReflectionClass(EventManager::class);
+         if ($r->hasMethod('setSharedManager')) {
+-            return new EventManager();
++            $events = new EventManager();
++            $events->setSharedManager(new SharedEventManager());
++        } else {
++            $events = new EventManager(new SharedEventManager());
+         }
+ 
+-        return new EventManager(new SharedEventManager());
++        $this->setEventManager($events);
++        return $events;
+     }
+ }
+diff --git a/src/HelperPluginManager.php b/src/HelperPluginManager.php
+index 8d97b6c..daf9190 100644
+--- a/src/HelperPluginManager.php
++++ b/src/HelperPluginManager.php
+@@ -375,6 +375,11 @@ public function injectEventManager($first, $second)
+             return;
+         }
+ 
++        if (! $container->has('EventManager')) {
++            // If the container doesn't have an EM service, do nothing.
++            return;
++        }
++
+         $events = $helper->getEventManager();
+         if (! $events || ! $events->getSharedManager() instanceof SharedEventManagerInterface) {
+             $helper->setEventManager($container->get('EventManager'));
+diff --git a/test/Helper/Navigation/AbstractHelperTest.php b/test/Helper/Navigation/AbstractHelperTest.php
+index e53f877..37262a7 100644
+--- a/test/Helper/Navigation/AbstractHelperTest.php
++++ b/test/Helper/Navigation/AbstractHelperTest.php
+@@ -76,4 +76,9 @@ public function testHasRoleChecksMemberVariable()
+         $this->_helper->setRole($role);
+         $this->assertEquals(true, $this->_helper->hasRole());
+     }
++
++    public function testEventManagerIsNullByDefault()
++    {
++        $this->assertNull($this->_helper->getEventManager());
++    }
+ }
+diff --git a/test/Helper/Navigation/AbstractTest.php b/test/Helper/Navigation/AbstractTest.php
+index 693e965..874e581 100644
+--- a/test/Helper/Navigation/AbstractTest.php
++++ b/test/Helper/Navigation/AbstractTest.php
+@@ -23,14 +23,9 @@
+ 
+ /**
+  * Base class for navigation view helper tests
+- *
+- * @group      Zend_View
+- * @group      Zend_View_Helper
+  */
+ abstract class AbstractTest extends \PHPUnit_Framework_TestCase
+ {
+-    const REGISTRY_KEY = 'Zend_Navigation';
+-
+     /**
+      * @var
+      */
+
