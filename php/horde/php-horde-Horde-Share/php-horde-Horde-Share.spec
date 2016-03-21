@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Share
-Version:        2.0.9
+Version:        2.0.10
 Release:        1%{?dist}
 Summary:        Horde Shared Permissions System
 
@@ -141,6 +141,9 @@ fi
 
 
 %changelog
+* Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.0.10-1
+- Update to 2.0.10
+
 * Tue Feb 23 2016 Remi Collet <remi@fedoraproject.org> - 2.0.9-1
 - Update to 2.0.9
 
