@@ -1,27 +1,37 @@
-%global date 20141218
-
+# remirepo spec file for php-getid3, from:
+#
+# Fedora spec file for php-getid3
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 Name:      php-getid3
-Version:   1.9.9
+Version:   1.9.12
 Release:   1%{?dist}
 Epoch:     1
 License:   LGPLv3+
 Summary:   The PHP media file parser
 Group:     Development/Libraries
 URL:       http://getid3.sourceforge.net/
-Source0:   http://downloads.sourceforge.net/getid3/getID3-%{version}-%{date}.zip
+Source0:   http://downloads.sourceforge.net/getid3/getID3-%{version}.zip
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires: %{_bindir}/phpab
 
 # from composer.json
 #        "php": ">=5.3.0"
 Requires:  php(language) >= 5.3.0
-# from phpcompatinfo for version 1.9.8
+# from phpcompatinfo for version 1.9.12
+Requires:  php-simplexml
 Requires:  php-ctype
 Requires:  php-date
 Requires:  php-exif
 Requires:  php-gd
 Requires:  php-iconv
+Requires:  php-libxml
 Requires:  php-pcre
 Requires:  php-xml
 # Optional: dba, mysql, sqlite3, rar
@@ -34,6 +44,8 @@ getID3() is a PHP script that extracts useful information
 (such as ID3 tags, bitrate, playtime, etc.) from MP3s & 
 other multimedia file formats (Ogg, WMA, WMV, ASF, WAV, AVI, 
 AAC, VQF, FLAC, MusePack, Real, QuickTime, Monkey's Audio, MIDI and more).
+
+Autoloader: %{_datadir}/php/getid3/autoload.php
 
 
 %prep
@@ -49,6 +61,9 @@ sed -i 's/\r//' changelog.txt
 
 
 %build
+# From composer.json, "autoload": {
+#        "classmap": ["getid3/getid3.php"]
+%{_bindir}/phpab --output getid3/autoload.php getid3/getid3.php
 
 
 %install
@@ -61,6 +76,7 @@ cp -a getid3 %{buildroot}%{_datadir}/php/
 %clean
 rm -rf %{buildroot}
 
+
 %files
 %defattr(-,root,root,-)
 %doc changelog.txt dependencies.txt readme.txt structure.txt demos
@@ -71,6 +87,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 1:1.9.12-1
+- update to 1.9.12
+- add simple classmap autoloader
+
 * Fri Dec 19 2014 Remi Collet <remi@fedoraproject.org> - 1:1.9.9-1
 - new release 1.9.9
 
