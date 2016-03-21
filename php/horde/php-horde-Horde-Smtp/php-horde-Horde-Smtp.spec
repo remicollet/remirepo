@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Smtp
-Version:        1.9.2
+Version:        1.9.3
 Release:        1%{?dist}
 Summary:        Horde SMTP Client
 
@@ -143,6 +143,9 @@ fi
 
 
 %changelog
+* Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 1.9.3-1
+- Update to 1.9.3
+
 * Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 1.9.2-1
 - Update to 1.9.2
 - PHP 7 compatible version
