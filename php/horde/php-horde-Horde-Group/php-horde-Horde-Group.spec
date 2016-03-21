@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Group
-Version:        2.1.0
+Version:        2.1.1
 Release:        1%{?dist}
 Summary:        Horde User Groups System
 
@@ -113,6 +113,10 @@ fi
 
 
 %changelog
+* Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
+- Update to 2.1.1 (no change)
+- PHP 7 compatible version
+
 * Wed Jan 06 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0
 - add dependencies on Horde_Support and Horde_Cache
