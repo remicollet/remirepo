@@ -116,6 +116,8 @@ sed -e 's/testBug9567/SKIP_testBug9567/' \
     -i XssTest.php
 sed -e 's/testXss/SKIP_testXss/' \
     -i XssTest.php
+sed -e 's/testOfficeNamespace/SKIP_testOfficeNamespace/' \
+    -i MsofficeTest.php
 %endif
 
 %{_bindir}/phpunit .
