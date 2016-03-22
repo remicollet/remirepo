@@ -14,11 +14,9 @@
     "tecnickcom\/tc-lib-unicode": "php-tecnickcom-tc-lib-unicode",
     "tecnickcom\/tc-lib-unicode-data": "php-tecnickcom-tc-lib-unicode-data",
     "mongodb\/mongodb": "php-mongodb",
-    "kdyby\/events": "php-kdyby-events",
     "tedivm\/jshrink": "php-tedivm-jshrink",
     "phine\/path": "php-phine-path",
     "phine\/exception": "php-phine-exception",
     "apigen\/apigen": "apigen",
-    "zendframework\/zend-psr7bridge": "php-zendframework-zend-psr7bridge",
     "theseer\/fxsl": "php-theseer-fxsl"
 }
