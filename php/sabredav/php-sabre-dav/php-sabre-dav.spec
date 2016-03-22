@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    cab5ab4e9caa00ba12268aa5b35925dc65bd7d63
+%global gh_commit    9f8c1939a3f66eb7170489fc48579ffd1461af62
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-dav
@@ -14,8 +14,8 @@
 
 Name:           php-%{gh_project}
 Summary:        WebDAV Framework for PHP
-Version:        2.1.6
-Release:        2%{?dist}
+Version:        2.1.10
+Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 License:        BSD
@@ -25,9 +25,6 @@ Source1:        %{name}-autoload.php
 
 # replace composer autoloader
 Patch0:         %{name}-autoload.patch
-
-# Partial cherry pick of 4eff5d4  to fix the zero length event breaking the test
-Patch1:         %{name}-GetEventsByTimerangeTest-zerolength.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -55,9 +52,9 @@ BuildRequires:  php-pdo_sqlite
 
 # From composer.json,    "require": {
 #        "php": ">=5.4.1",
-#        "sabre/vobject": ">=3.3.4 <4",
-#        "sabre/event" : "~2.0.0",
-#        "sabre/http" : "~3.0.0",
+#        "sabre/vobject": "^3.3.4",
+#        "sabre/event" : "^2.0.0",
+#        "sabre/http" : "^3.0.0",
 #        "ext-dom": "*",
 #        "ext-pcre": "*",
 #        "ext-spl": "*",
@@ -118,7 +115,6 @@ Feature list:
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p0
-%patch1 -p1
 cp %{SOURCE1} lib/DAV/autoload.php
 
 # drop executable as only provided as doc
@@ -141,6 +137,8 @@ cp -pr lib %{buildroot}%{_datadir}/php/Sabre
 %if 0%{?rhel} == 5
 sed -e 's/testMove/SKIP_testMove/' \
     -i tests/Sabre/DAV/PropertyStorage/Backend/AbstractPDOTest.php
+sed -e 's/testCalendarQueryReportWindowsPhone/SKIP_testCalendarQueryReportWindowsPhone/' \
+    -i tests/Sabre/CalDAV/PluginTest.php
 %endif
 
 : Fix bootstrap
@@ -172,6 +170,9 @@ fi
 
 
 %changelog
+* Tue Mar 22 2016 Remi Collet <remi@fedoraproject.org> - 2.1.10-1
+- update to 2.1.10
+
 * Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.1.6-2
 - provide missing php-composer(sabre/dav)
 
