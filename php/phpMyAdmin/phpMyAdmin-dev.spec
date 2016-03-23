@@ -9,7 +9,7 @@
 #
 # Please, preserve the changelog entries
 #
-#global prever rc1
+#global prever rc2
 %{!?_pkgdocdir: %global _pkgdocdir %{_datadir}/doc/%{name}-%{version}}
 %if 0%{?fedora} >= 21
 # nginx 1.6 with nginx-filesystem
@@ -22,12 +22,12 @@
 %endif
 
 Name: phpMyAdmin
-Version: 4.5.5.1
+Version: 4.6.0
 Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
-# MIT (js/jquery/, js/canvg/, js/codemirror/),
+# MIT (js/jquery/, js/codemirror/),
 # BSD (libraries/plugins/auth/recaptcha/),
 # GPLv2+ (the rest)
 License: GPLv2+ and MIT and BSD
@@ -177,7 +177,6 @@ rm -rf %{buildroot}%{_datadir}/%{name}/libraries/php-gettext
 rm -rf %{buildroot}%{_datadir}/%{name}/libraries/tcpdf
 
 mv -f $RPM_BUILD_ROOT%{_datadir}/%{name}/js/jquery/MIT-LICENSE.txt LICENSE-jquery
-mv -f $RPM_BUILD_ROOT%{_datadir}/%{name}/js/canvg/MIT-LICENSE.txt LICENSE-canvg
 mv -f $RPM_BUILD_ROOT%{_datadir}/%{name}/js/codemirror/LICENSE LICENSE-codemirror
 mv -f $RPM_BUILD_ROOT%{_datadir}/%{name}/libraries/plugins/auth/recaptcha/LICENSE LICENSE-recaptcha
 
@@ -225,6 +224,12 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Tue Mar 22 2016 Remi Collet <remi@remirepo.net> 4.6.0-1
+- update to 4.6.0 (2016-03-22, features release)
+
+* Thu Mar  3 2016 Remi Collet <remi@remirepo.net> 4.6.0-0.1.rc2
+- update to 4.6.0-rc2
+
 * Tue Mar  1 2016 Remi Collet <remi@remirepo.net> 4.5.5.1-1
 - update to 4.5.5.1 (2016-02-29, security and bugfix)
 - raise dependency on udan11/sql-parser >= 3.4.0
