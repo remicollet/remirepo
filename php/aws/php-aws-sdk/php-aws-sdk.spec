@@ -1,6 +1,6 @@
 # remirepo spec file for php-aws-sdk, from Fedora:
 #
-# RPM spec file for php-aws-sdk
+# Fedora spec file for php-aws-sdk
 #
 # Copyright (c) 2013-2016 Joseph Marrero <jmarrero@fedoraproject.org>
 #                         Gregor Tätzner <brummbq@fedoraproject.org>
@@ -26,7 +26,8 @@
 # "php": ">=5.3.3"
 %global php_min_ver      5.3.3
 # "guzzle/guzzle": "~3.7"
-%global guzzle_min_ver   3.7
+# 3.9.3 for autoloader
+%global guzzle_min_ver   3.9.3
 %global guzzle_max_ver   4.0
 # "doctrine/cache": "~1.0"
 %global cache_min_ver    1.0
@@ -42,7 +43,7 @@
 
 Name:      php-aws-sdk
 Version:   %{github_version}
-Release:   1%{?dist}
+Release:   2%{?dist}
 Summary:   Amazon Web Services framework for PHP
 
 Group:     Development/Libraries
@@ -52,6 +53,10 @@ Source0:   https://github.com/%{github_owner}/%{github_name}/archive/%{github_co
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
+# For test
+BuildRequires: php-cli
+BuildRequires: php-composer(guzzle/guzzle) >= %{guzzle_min_ver}
+
 
 # composer.json
 Requires:  php(language)               >= %{php_min_ver}
@@ -59,7 +64,7 @@ Requires:  php-composer(guzzle/guzzle) >= %{guzzle_min_ver}
 Requires:  php-composer(guzzle/guzzle) <  %{guzzle_max_ver}
 # composer.json: optional
 Requires:  php-openssl
-# phpcompatinfo (computed from version 2.8.20)
+# phpcompatinfo (computed from version 2.8.27)
 Requires:  php-curl
 Requires:  php-date
 Requires:  php-hash
@@ -105,6 +110,8 @@ Optional:
       Eases the ability to write manifests for creating jobs in AWS
       Import/Export
 
+Autoloader: %{phpdir}/AWSSDKforPHP/Aws/autoload.php
+
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
@@ -131,6 +138,7 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('Aws\\', dirname(__DIR__));
 
+// optional dependencies
 foreach (array(
     '%{phpdir}/Doctrine/Common/Cache/autoload.php',
     '%{phpdir}/Monolog/autoload.php',
@@ -141,9 +149,8 @@ foreach (array(
     }
 }
 
-// Not all dependency autoloaders exist or are in every dist yet so fallback
-// to using include path for dependencies for now
-$fedoraClassLoader->setUseIncludePath(true);
+// mandatory dependencies
+require_once '%{phpdir}/Guzzle/autoload.php';
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -158,13 +165,20 @@ rm -rf %{buildroot}
 
 mkdir -p %{buildroot}%{phpdir}/AWSSDKforPHP
 cp -pr src/* %{buildroot}%{phpdir}/
-# Compat directory structure with old PEAR pkg
+: Compat directory structure with old PEAR pkg
 ln -s ../Aws %{buildroot}%{phpdir}/AWSSDKforPHP/Aws
 
 
 %check
 # Tests skipped because "Guzzle\Tests\GuzzleTestCase" is not provided by the
 # php-guzzle-Guzzle package
+: Minimal check to ensure autoloader work + version
+php -r '
+ require_once "%{buildroot}%{phpdir}/AWSSDKforPHP/Aws/autoload.php";
+ $v = Aws\Common\Aws::VERSION;
+ echo "Version is $v (expected %{version})\n";
+ exit ($v=="%{version}" ? 0 : 1);
+'
 
 
 %post
@@ -189,6 +203,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 23 2016 Remi Collet <remi@fedoraproject.org> - 2.8.27-2
+- use php-guzzle-Guzzle autoloader
+- add minimal check
+
 * Sun Feb 21 2016 Remi Collet <remi@fedoraproject.org> - 2.8.27-1
 - Update to 2.8.27
 
