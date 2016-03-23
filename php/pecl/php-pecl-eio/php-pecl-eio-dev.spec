@@ -24,7 +24,7 @@ Provides: %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 %global sub_prefix %{scl_prefix}
 %endif
 %endif
-%global prever    RC2
+%global prever    RC3
 
 %{?scl:          %scl_package        php-pecl-eio}
 
@@ -35,7 +35,7 @@ Provides: %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 Summary:        Provides interface to the libeio library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        2.0.0
-Release:        0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.4.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -63,8 +63,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -264,6 +266,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 23 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.4.RC3
+- Update to 2.0.0RC3 (no change)
+
 * Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.3.RC2
 - Update to 2.0.0RC2
 
