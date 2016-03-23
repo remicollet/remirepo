@@ -1,4 +1,4 @@
-# remirepo spec file for php-swiftmailer
+# remirepo/fedora spec file for php-swiftmailer
 #
 # Copyright (c) 2016 Remi Collet
 # License: CC-BY-SA
