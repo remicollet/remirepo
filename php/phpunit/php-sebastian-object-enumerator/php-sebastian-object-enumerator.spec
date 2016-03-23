@@ -1,0 +1,116 @@
+# remirepo/fedora spec file for php-sebastian-object-enumerator
+#
+# Copyright (c) 2015-2016 Remi Collet
+# License: CC-BY-SA
+# http://creativecommons.org/licenses/by-sa/4.0/
+#
+# Please, preserve the changelog entries
+#
+%global bootstrap    0
+%global gh_commit    d4ca2fb70344987502567bc50081c03e6192fb26
+#global gh_date      20150728
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     sebastianbergmann
+%global gh_project   object-enumerator
+%global php_home     %{_datadir}/php
+%global ns_vendor    SebastianBergmann
+%global ns_project   ObjectEnumerator
+%if %{bootstrap}
+%global with_tests   0%{?_with_tests:1}
+%else
+%global with_tests   0%{!?_without_tests:1}
+%endif
+
+Name:           php-sebastian-%{gh_project}
+Version:        1.0.0
+%global specrel 1
+Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
+Summary:        Traverses array and object to enumerate all referenced objects
+
+Group:          Development/Libraries
+License:        BSD
+URL:            https://github.com/%{gh_owner}/%{gh_project}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildArch:      noarch
+BuildRequires:  php(language) >= 5.6
+BuildRequires:  %{_bindir}/phpab
+%if %{with_tests}
+BuildRequires:  php-composer(sebastian/recursion-context) >= 1.0
+# From composer.json"require-dev": {
+#        "phpunit/phpunit": "~5"
+BuildRequires:  php-composer(phpunit/phpunit) >= 5
+%endif
+
+# from composer.json
+#        "php": ">=5.6.0"
+#        "sebastian/recursion-context": "~1.0"
+Requires:       php(language) >= 5.6
+Requires:       php-composer(sebastian/recursion-context) >= 1.0
+Requires:       php-composer(sebastian/recursion-context) <  2
+# from phpcompatinfo report for version 1.0.0:
+Requires:       php-reflection
+Requires:       php-spl
+
+Provides:       php-composer(sebastian/%{gh_project}) = %{version}
+
+
+%description
+Traverses array structures and object graphs to enumerate all
+referenced objects.
+
+Autoloader: %{php_home}/%{ns_vendor}/%{ns_project}/autoload.php
+
+
+%prep
+%setup -q -n %{gh_project}-%{gh_commit}
+
+
+%build
+# Generate the Autoloader, from composer.json "autoload": {
+#        "classmap": [
+#            "src/"
+phpab --output src/autoload.php src
+cat << 'EOF' | tee -a src/autoload.php
+// Dependencies
+require_once 'SebastianBergmann/RecursionContext/autoload.php';
+EOF
+
+
+%install
+rm -rf     %{buildroot}
+mkdir -p   %{buildroot}%{php_home}/%{ns_vendor}
+cp -pr src %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}
+
+
+%check
+%if %{with_tests}
+%{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+%{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php tests
+
+if which php70; then
+   php70 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+   %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php tests
+fi
+%else
+: bootstrap build with test suite disabled
+%endif
+
+
+%clean
+rm -rf %{buildroot}
+
+
+%files
+%defattr(-,root,root,-)
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc README.md composer.json
+%{php_home}/%{ns_vendor}/%{ns_project}
+
+
+%changelog
+* Wed Mar 23 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- initial package
+
