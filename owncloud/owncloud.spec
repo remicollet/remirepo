@@ -8,19 +8,24 @@
 # Please preserve changelog entries
 #
 Name:           owncloud
-Version:        8.1.6
-Release:        1%{?dist}
+Version:        8.2.3
+Release:        2%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
 
 License:        AGPLv3+ and MIT and BSD and CC-BY and CC-BY-SA and GPLv3 and Public Domain and (MPLv1.1 or GPLv2+ or LGPLv2+) and (MIT or GPL+) and (MIT or GPLv2) and ASL 2.0 and LGPLv3
 URL:            http://owncloud.org
+
 # Tarball with non-free sources stripped. To generate:
 # ./owncloud-delete-nonfree.sh %%{name}-%%{version}.tar.bz2
 Source0:        %{name}-%{version}-repack.tar.bz2
 # orig source:  https://download.owncloud.org/community/%%{name}-%%{version}.tar.bz2
 # sha256sum: https://download.owncloud.org/community/%%{name}-%%{version}.tar.bz2.sha256
-# snapshot source: https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{github_name}-%{github_commit}.tar.gz
+
+# used to repack the source tarball
+Source42:       %{name}-delete-nonfree.sh
+
+
 Source1:        %{name}-httpd.conf
 Source2:        %{name}-access-httpd.conf.avail
 Source6:        %{name}-nginx.conf
@@ -37,42 +42,35 @@ Source5:        %{name}-postgresql.txt
 # initial setup will fill out other settings appropriately
 Source7:        %{name}-config.php
 
-# used to repack the source tarball
-Source42:       %{name}-delete-nonfree.sh
-
 # Adjust mediaelement not to use its SWF and Silverlight plugins. This
 # changes 'plugins:["flash,"silverlight","youtube","vimeo"]' to
 # 'plugins:["youtube","vimeo"]'
-Patch1:         %{name}-6.0.2-videoviewer_noplugins.patch
-# Ugly way to deal with Pimple 1.x's lack of PSR-0 compliance. Also forces the
-# paths to Sabre deps: /usr/share/php for all of Sabre (to ensure php-sabre-dav
-# package, 2.1 version, is used). Please be careful
-# and *test* if changing this; test with all versions of all Sabre packages
-# installed to make sure it DTRT. Keep an eye on upstream for future changes
-# also.
-Patch2:        %{name}-8.1.5-autoloader_paths.patch
+Patch1:         %{name}-8.2.3-videoviewer_noplugins.patch
 # Turn on include path usage for the Composer autoloader (so it'll find
 # systemwide PSR-0 and PSR-4 compliant libraries)
 # Upstream wouldn't likely take this, they probably only care about their
 # bundled copies
-Patch3:        %{name}-8.1.5-composer_includepath.patch
+Patch2:        %{name}-8.2.3-composer_include_path.patch
 # Drop use of dropbox's unnecessary autoloader (composer will find the
 # systemwide copy). This is not upstreamable, but see
 # https://github.com/owncloud/core/pull/12113 with similar effect for 8.1+
-Patch4:        %{name}-8.1.5-drop-dropbox-autoloader.patch
+Patch3:        %{name}-8.2.3-drop-dropbox-autoloader.patch
 # Drop use of aws-sdk's dead autoloader (composer will find the systemwide copy)
-Patch6:        0001-drop-AWS-autoloader.patch
-# Disable JS minification (uses non-free JSMin minifier)
-Patch7:        owncloud-8.0.0-disable_minify.patch
+Patch4:        %{name}-8.2.2-drop-AWS-autoloader.patch
 # Stop OC from trying to do stuff to .htaccess files. Just calm down, OC.
 # Distributors are on the case.
-Patch8:         owncloud-8.1.5-dont_update_htacess.patch
+Patch5:         %{name}-8.2.2-dont_update_htacess.patch
 # Use Google autoloader instead of including particular files. Upstream
 # no longer has each file include all others it needs, they expect you
 # to use the autoloader. Can't go upstream until upstream bumps to a
 # version of the lib that actually includes the autoloader...
-Patch9:         owncloud-8.1.5-google_autoload.patch
+Patch6:         %{name}-8.2.2-google_autoload.patch
 
+# Owncloud should use the system libraries with psr
+Patch7:        %{name}-8.2.3-use_system_psr_libraries.patch
+
+# Owncloud shoudl use the system autoloaded react-promise and nitic-phpParser
+Patch8:         %{name}-8.2.3-use_system_phpparser.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -109,11 +107,9 @@ Requires:       php-filter
 # "kriswallsmith/assetic": "1.2.*@dev"
 Requires:       php-composer(kriswallsmith/assetic) >= 1.2
 Requires:       php-composer(kriswallsmith/assetic) < 1.3
-Requires:       php-getid3
 # "pimple/pimple": "~3.0"
 Requires:       php-composer(pimple/pimple) >= 3.0
 Requires:       php-composer(pimple/pimple) < 4.0
-Requires:       php-opencloud
 Requires:       php-composer(doctrine/dbal) >= 2.5.0
 Requires:       php-composer(doctrine/dbal) < 2.6
 # "symfony/console": "~2.5"
@@ -122,6 +118,33 @@ Requires:       php-composer(symfony/console) < 3.0
 # "symfony/routing": "~2.5"
 Requires:       php-composer(symfony/routing) >= 2.5.0
 Requires:       php-composer(symfony/routing) < 3.0
+
+Requires:       php-composer(guzzlehttp/guzzle) >= 5.0
+Requires:       php-composer(guzzlehttp/guzzle) < 6.0
+Requires:       php-composer(guzzlehttp/ringphp) >= 1.1
+Requires:       php-composer(guzzlehttp/ringphp) < 2.0
+Requires:       php-composer(guzzlehttp/streams) >= 3.0
+Requires:       php-composer(guzzlehttp/streams) < 4.0
+
+Requires:       php-composer(icewind/smb)     >= 1.0
+Requires:       php-composer(icewind/streams) >= 0.2
+# This makes smb external storage usable and doesn't break things like encryption
+Requires:       php-pecl(smbclient) >= 0.8.0
+# Requiring so that the shipped external smb storage works
+%if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
+Requires:       samba-common-tools
+Requires:       samba-client
+%endif
+
+Requires:       php-composer(jeremeamia/superclosure) >= 2.0
+
+Requires:       php-composer(nikic/php-parser) >= 1.0
+Requires:       php-composer(nikic/php-parser) < 2.0
+
+Requires:       php-composer(react/promise) >= 2.0
+Requires:       php-composer(react/promise) < 3.0
+
+Requires:       php-composer(james-heinrich/getid3)
 
 # NB: this will also pull in php-compose(guzzle/guzzle), which is in OC's
 # 3rdparty directory. OC sort of has a direct dependency on it but in fact
@@ -136,11 +159,18 @@ Requires:       php-composer(bantu/ini-get-wrapper) >= 1.0.1
 # "ircmaxell/random-lib": "v1.0.0"
 # Also pulls in ircmaxell/security-lib which is a dep
 Requires:       php-composer(ircmaxell/random-lib) >= 1.0.0
+Requires:       php-composer(ircmaxell/password-compat) >= 1.0.0
 # "natxet/CssMin": "dev-master"
 Requires:       php-composer(natxet/CssMin) >= 3.0.2
 
+# Patchwork should now work from system
+Requires:       php-composer(patchwork/utf8)
+Requires:       php-composer(patchwork/jsqueeze)
+
+Requires:       php-composer(punic/punic)
+
 ## SabreDAV
-Requires:       php-composer(sabre/dav)   >= 2.1.6
+Requires:       php-composer(sabre/dav)   >= 2.1.9
 Requires:       php-composer(sabre/dav)   <  3
 Requires:       php-composer(sabre/event) >= 2.0
 Requires:       php-composer(sabre/event) < 3.0
@@ -151,14 +181,29 @@ Requires:       php-composer(sabre/http) < 4.0
 
 ## apps/files_external
 Requires:       php-pear(pear.dropbox-php.com/Dropbox)
-Requires:       php-pear(phpseclib.sourceforge.net/Net_SFTP)
+Requires:       php-composer(phpseclib/phpseclib)
 # Not pulled via Composer but manually dumped into files_external/3rdparty
 Requires:       php-google-apiclient >= 1.0.3
 Requires:       php-aws-sdk >= 2.7.0
 
+Requires:       php-composer(league/flysystem)
+Requires:       php-composer(interfasys/lognormalizer)
+Requires:       php-composer(owncloud/tarstreamer)
+Requires:       php-composer(mcnetic/zipstreamer)
+Requires:       php-composer(pear/console_getopt)
+Requires:       php-composer(pear/pear-core-minimal)
+Requires:       php-composer(pear/archive_tar)
+# fedora have pear version 5.0, remirepo have version 5.4
+Requires:       php-composer(swiftmailer/swiftmailer) >= 5.3.1
+
 %if 0%{?rhel}
 Requires(post): policycoreutils-python
 Requires(postun): policycoreutils-python
+%endif
+
+# Suggest as requirement for optional conversion in documents app
+%if 0%{?fedora} >= 21
+Suggests: unoconv
 %endif
 
 %description
@@ -251,14 +296,14 @@ work with an SQLite 3 database stored on the local system.
 
 %prep
 %setup -q -n %{name}
-%patch1 -p0
+%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
-%patch9 -p1
 
 # prepare package doc
 cp %{SOURCE3} README.fedora
@@ -267,8 +312,8 @@ cp %{SOURCE5} README.postgresql
 
 
 # Strip bundled libraries from global 3rdparty dir
-rm -r 3rdparty/{bantu,doctrine,guzzle,ircmaxell/random-lib,ircmaxell/security-lib,james-heinrich,kriswallsmith,natxet,pear,phpseclib,pimple,rackspace,sabre,symfony}
-rm 3rdparty/{PEAR,PEAR5}.php
+find  3rdparty -mindepth 1 -maxdepth 1 -type d ! -name composer -exec rm -r "{}" \;
+
 # we need to symlink some annoying files back here, though...direct file
 # autoloading sucks. "files" sections of "autoload" statements in
 # composer.json files cause composer to basically hardcode the path to a
@@ -280,56 +325,19 @@ rm 3rdparty/{PEAR,PEAR5}.php
 # $vendorDir in the composer loader files to be /usr/share/php.
 mkdir -p 3rdparty/kriswallsmith/assetic/src
 mkdir -p 3rdparty/natxet/CssMin/src
-mkdir -p 3rdparty/phpseclib/phpseclib/phpseclib/Crypt
 mkdir -p 3rdparty/james-heinrich/getid3/getid3
+mkdir -p 3rdparty/swiftmailer/swiftmailer/lib
+mkdir -p 3rdparty/ircmaxell/password-compat/lib
+mkdir -p 3rdparty/react/promise/src
 
 # individual core apps now bundle libs as well - yay
-#rm -r apps/search_lucene/3rdparty/Zend
-rm -r apps/files_external/3rdparty/{Dropbox,google-api-php-client,aws-sdk-php}
-
-# ===== BUNDLING NOTES =====
-
-## 3rdparty/patchwork - https://github.com/nicolas-grekas/Patchwork-UTF8
-# "patchwork/utf8": "~1.1"
-#
-# Used to set a UTF-8 locale (function isSetLocaleWorking does not
-# just test whether setlocale works, it actually asks Patchwork to
-# set a locale) and for its pure PHP implementation of the Normalizer
-# class otherwise found in php-intl. See lib/private/util.php
-# Patch from adamw to use php-intl's if available:
-# https://github.com/owncloud/core/pull/6620
-# We'd also have to set a UTF-8 locale some other way to entirely
-# replace OC's use of Patchwork.
-
-## 3rdparty/mcnetic/phpzipstreamer - https://github.com/McNetic/PHPZipStreamer
-# "mcnetic/phpzipstreamer": "dev-master"
-#
-# OC's copy is somewhat behind upstream, and slightly forked: they imported
-# it on 2014-02-20, and added a downstream patch to make it work with
-# PHP 5.3 on 2014-03-17:
-# https://github.com/owncloud/3rdparty/commit/da3c9f651a26cf076249ebf25c477e3791e69ca3
-# Upstream implemented a different fix against PHP 5.3 on 2014-03-14:
-# https://github.com/McNetic/PHPZipStreamer/commit/0af57cc0d113b27e44455be4be690908c4909d78
-# but OC has never synced with that fix. See:
-# https://github.com/owncloud/core/pull/3439
-
-## apps/files_external/3rdparty/smb4php - forked php class from
-# http://www.phpclasses.org/package/4129-PHP-Stream-wrapper-to-access-Windows-shared-files.html
-# Replaced by https://github.com/icewind1991/SMB post-8.0
-
-## 3rdparty/punic - https://github.com/punic/punic
-# "punic/punic": "1.1.0"
-#
-# Used in date localization: lib/private/l10n.php
-# Should be straightforward to unbundle
-
-# ===== END BUNDLING NOTES =====
+rm -rf apps/files_external/3rdparty/{icewind,Dropbox,google-api-php-client,aws-sdk-php}
 
 # clean up content
 for f in {l10n.pl,init.sh,setup_owncloud.sh,image-optimization.sh,install_dependencies.sh}; do
     find . -name "$f" -exec rm {} \;
 done
-find . -size 0 -exec rm {} \;
+find . -size 0 -type f -exec rm {} \;
 
 # Drop pre-compiled binary lumps: Flash and Silverlight
 # This means that Flash/Silverlight video/audio fallbacks in the
@@ -395,9 +403,11 @@ install -Dpm 644 %{SOURCE6} \
 # symlink 3rdparty libs - if possible
 # global
 ln -s %{_datadir}/php/Assetic/functions.php %{buildroot}%{_datadir}/%{name}/3rdparty/kriswallsmith/assetic/src/functions.php
-ln -s %{_datadir}/pear/Crypt/Random.php %{buildroot}%{_datadir}/%{name}/3rdparty/phpseclib/phpseclib/phpseclib/Crypt/Random.php
 ln -s %{_datadir}/php/natxet/CssMin/src/CssMin.php %{buildroot}%{_datadir}/%{name}/3rdparty/natxet/CssMin/src/
 ln -s %{_datadir}/php/getid3/getid3.php %{buildroot}%{_datadir}/%{name}/3rdparty/james-heinrich/getid3/getid3/
+ln -s %{_datadir}/php/Swift/swift_required.php %{buildroot}%{_datadir}/%{name}/3rdparty/swiftmailer/swiftmailer/lib/swift_required.php
+ln -s %{_datadir}/php/password_compat/password.php %{buildroot}%{_datadir}/%{name}/3rdparty/ircmaxell/password-compat/lib/password.php
+ln -s %{_datadir}/php/React/Promise/functions_include.php  %{buildroot}%{_datadir}/%{name}/3rdparty/react/promise/src/functions_include.php
 
 
 %if 0%{?rhel} < 7
@@ -498,7 +508,19 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 8.1.6-1
+* Wed Mar 23 2016 Remi Collet <remi@fedoraproject.org> - 8.2.3-2
+- use php-swift-Swift 5.4 in /usr/share/php
+- fix patch to not update .htaccess
+- drop samba dependency on old EL
+
+* Tue Mar 22 2016 James Hogarth <james.hogarth@gmail.com> - 8.2.3-2
+- Add smbclient dependency so that shipped external storage works as expected
+- Add some data to the Fedora readme
+
+* Mon Mar 14 2016 James Hogarth <james.hogarth@gmail.com> - 8.2.3-1
+- new release 8.2.3
+
+* Mon Mar 14 2016 Remi Collet <remi@fedoraproject.org> - 8.1.6-1
 - Update to 8.1.6
 - fix autoloader to ensure sabre/vobject 3.4 is used
 

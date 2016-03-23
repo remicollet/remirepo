@@ -1,6 +1,8 @@
---- apps/files_videoviewer/js/mediaelement-and-player.min.js.orig	2014-03-04 21:35:13.921783071 +0100
-+++ apps/files_videoviewer/js/mediaelement-and-player.min.js	2014-03-04 21:39:40.528053899 +0100
-@@ -38,7 +38,7 @@
+diff --git a/apps/files_videoviewer/js/mediaelement-and-player.min.js b/apps/files_videoviewer/js/mediaelement-and-player.min.js
+index 7547c3c..df35ec9 100644
+--- a/apps/files_videoviewer/js/mediaelement-and-player.min.js
++++ b/apps/files_videoviewer/js/mediaelement-and-player.min.js
+@@ -38,7 +38,7 @@ this.setFullscreen(false)},addEventListener:function(a,b){this.events[a]=this.ev
  this.attributes},removeAttribute:function(a){delete this.attributes[a]},getAttribute:function(a){if(this.hasAttribute(a))return this.attributes[a];return""},setAttribute:function(a,b){this.attributes[a]=b},remove:function(){mejs.Utility.removeSwf(this.pluginElement.id);mejs.MediaPluginBridge.unregisterPluginElement(this.pluginElement.id)}};
  mejs.MediaPluginBridge={pluginMediaElements:{},htmlMediaElements:{},registerPluginElement:function(a,b,c){this.pluginMediaElements[a]=b;this.htmlMediaElements[a]=c},unregisterPluginElement:function(a){delete this.pluginMediaElements[a];delete this.htmlMediaElements[a]},initPlugin:function(a){var b=this.pluginMediaElements[a],c=this.htmlMediaElements[a];if(b){switch(b.pluginType){case "flash":b.pluginElement=b.pluginApi=document.getElementById(a);break;case "silverlight":b.pluginElement=document.getElementById(b.id);
  b.pluginApi=b.pluginElement.Content.MediaElementJS}b.pluginApi!=null&&b.success&&b.success(b,c)}},fireEvent:function(a,b,c){var d,e;if(a=this.pluginMediaElements[a]){b={type:b,target:a};for(d in c){a[d]=c[d];b[d]=c[d]}e=c.bufferedTime||0;b.target.buffered=b.buffered={start:function(){return 0},end:function(){return e},length:1};a.dispatchEvent(b.type,b)}}};

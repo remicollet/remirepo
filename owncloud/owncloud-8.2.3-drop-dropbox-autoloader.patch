@@ -1,7 +1,7 @@
-diff --git a/apps/files_external/ajax/dropbox.php b/apps/files_external/ajax/dropbox.php
-index 55dc417..fe834c0 100644
---- a/apps/files_external/ajax/dropbox.php
-+++ b/apps/files_external/ajax/dropbox.php
+diff --git a/apps/files_external/ajax/oauth1.php b/apps/files_external/ajax/oauth1.php
+index 3d6736b..028d21a 100644
+--- a/apps/files_external/ajax/oauth1.php
++++ b/apps/files_external/ajax/oauth1.php
 @@ -23,7 +23,6 @@
   * along with this program.  If not, see <http://www.gnu.org/licenses/>
   *
@@ -11,12 +11,12 @@ index 55dc417..fe834c0 100644
  OCP\JSON::checkAppEnabled('files_external');
  OCP\JSON::checkLoggedIn();
 diff --git a/apps/files_external/lib/dropbox.php b/apps/files_external/lib/dropbox.php
-index 78219f8..b332c0a 100644
+index 6a822c3..b8e7f27 100644
 --- a/apps/files_external/lib/dropbox.php
 +++ b/apps/files_external/lib/dropbox.php
-@@ -29,8 +29,6 @@
+@@ -31,8 +31,6 @@ namespace OC\Files\Storage;
  
- namespace OC\Files\Storage;
+ use Icewind\Streams\IteratorDirectory;
  
 -require_once __DIR__ . '/../3rdparty/Dropbox/autoload.php';
 -

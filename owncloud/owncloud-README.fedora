@@ -51,7 +51,7 @@ you first access the server it will be just a small stub containing settings
 that differ in this package from the upstream defaults. After you first access
 ownCloud, the initial setup process will populate it with some more settings.
 Other settings that can be provided in this file are documented at:
-https://doc.owncloud.org/server/8.0/admin_manual/configuration/config_sample_php_parameters.html
+https://doc.owncloud.org/server/8.2/admin_manual/configuration_server/config_sample_php_parameters.html
 
 User Data
 ---------
@@ -65,14 +65,29 @@ Logging
 -------
 As specified by the configuration file, ownCloud sends messages to the system
 logger, which means in a standard Fedora configuration it will log to the
-systemd journal: try "journalctl -b | grep ownCloud". You can also change the
+systemd journal: try "journalctl -b -t ownCloud". You can also change the
 loglevel or switch to the built-in log mechanism of ownCloud.
 
 App Store
 ---------
 If you install additional third party apps using the built-in app store, you
 can find them in the directory '/var/lib/owncloud/apps'. This functionality is
-enabled by default.
+enabled by default. If this is moved then it's important to configure httpd/nginx
+appropriately for the correct /owncloud/apps-appstore path to alias to the new location.
+
+Selinux Booleans
+----------------
+If you want to use external files (eg remote smb/cifs server) the httpd_can_network_connect
+selinux boolean should be toggled on. If you want to use libreoffice document conversion
+then the httpd_execmem should be toggled on and the unoconv package should be installed.
+
+Memory caching
+--------------
+For performance reasons a memory cache should be configured. In larger installs redis
+may be required but as a basic lightweight alternative edit config.php as per upstream
+documentation and install ACPu via:
+
+dnf install 'php-pecl(apcu)'
 
 
 For further information see http://owncloud.org/ and http://doc.owncloud.org/
