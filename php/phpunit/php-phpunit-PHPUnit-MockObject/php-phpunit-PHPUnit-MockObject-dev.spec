@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    49bc700750196c04dd6bc2c4c99cb632b893836b
+%global gh_commit    0a6d198af94d02956f2eb8bd59d5ab3166dc85da
 #global gh_date      20150902
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -15,8 +15,8 @@
 %global php_home     %{_datadir}/php
 %global pear_name    PHPUnit_MockObject
 %global pear_channel pear.phpunit.de
-%global major        3.0
-%global minor        6
+%global major        3.1
+%global minor        0
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
@@ -65,7 +65,7 @@ Requires:       php-composer(sebastian/exporter) <  2
 # From composer.json, "suggest": {
 #        "ext-soap": "*"
 Requires:       php-soap
-# From phpcompatinfo report for version 3.0.0
+# From phpcompatinfo report for version 3.1.0
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
@@ -153,6 +153,9 @@ fi
 
 
 %changelog
+* Wed Mar 23 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-1
+- Update to 3.1.0
+
 * Tue Dec  8 2015 Remi Collet <remi@fedoraproject.org> - 3.0.6-1
 - Update to 3.0.6
 
