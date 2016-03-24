@@ -27,8 +27,8 @@
 %endif
 
 Name:           glpi
-Version:        0.85.5
-Release:        1%{?dist}
+Version:        0.90.1
+Release:        3%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
@@ -36,15 +36,17 @@ Group:          Applications/Internet
 License:        GPLv2+ and GPLv3+
 URL:            http://www.glpi-project.org/
 # Upstream sources (not the github auto-generated archive)
-Source0:        https://github.com/glpi-project/%{name}/releases/download/%{version}/glpi-%{version}.tar.gz
+Source0:        https://github.com/glpi-project/%{name}/releases/download/%{version}%{?prever}/glpi-%{version}%{?prever}.tar.gz
 
 Source1:        glpi-httpd.conf
-Source2:        glpi-0.85-config_path.php
+Source2:        glpi-0.90-config_path.php
 Source3:        glpi-logrotate
 Source4:        glpi-nginx.conf
 
 # Switch all internal cron tasks to system
-Patch0:         glpi-0.85-cron.patch
+Patch0:         glpi-0.90-cron.patch
+# Fix autoloader
+Patch1:         glpi-0.90-autoload.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -62,7 +64,7 @@ Requires:       php(httpd)
 %else
 Requires:       httpd, mod_php
 %endif
-Requires:       php(language) >= 5.3
+Requires:       php(language) >= 5.4
 Requires:       php-date
 Requires:       php-gd
 Requires:       php-fileinfo
@@ -79,13 +81,10 @@ Requires:       php-tcpdf
 Requires:       php-pear-CAS >= 1.2.0
 Requires:       php-htmLawed
 Requires:       php-simplepie
-Requires:       php-ZendFramework2-Cache
-Requires:       php-ZendFramework2-Cache-apc
-Requires:       php-ZendFramework2-I18n
-Requires:       php-ZendFramework2-Loader
-Requires:       php-ZendFramework2-ServiceManager
-Requires:       php-ZendFramework2-Stdlib
-Requires:       php-ZendFramework2-Version
+Requires:       php-composer(zendframework/zend-cache)
+Requires:       php-composer(zendframework/zend-i18n)
+Requires:       php-composer(zendframework/zend-loader)
+Requires:       php-composer(zendframework/zend-version)
 Requires:       php-composer(ircmaxell/password-compat)
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 Requires:       php-composer(zetacomponents/graph)
@@ -127,6 +126,7 @@ techniciens grâce à une maintenance plus cohérente.
 %setup -q -n glpi
 
 %patch0 -p0
+%patch1 -p0
 
 find . -name \*.orig -exec rm {} \; -print
 
@@ -287,7 +287,7 @@ fi
 %defattr(-,root,root,-)
 %doc *.txt LICENSE.*
 
-%attr(750,apache,root) %dir %{_sysconfdir}/%{name}
+%attr(770,root,apache) %dir %{_sysconfdir}/%{name}
 %ghost %config(noreplace,missingok) %{_sysconfdir}/%{name}/config_db.php
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/glpi.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
@@ -298,7 +298,7 @@ fi
 
 # This folder can contain private information (sessions, docs, ...)
 %dir %_localstatedir/lib/%{name}
-%attr(750,apache,root) %{_localstatedir}/lib/%{name}/files
+%attr(770,root,apache) %{_localstatedir}/lib/%{name}/files
 
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/*.php
@@ -315,11 +315,23 @@ fi
 %{_datadir}/%{name}/pics
 %{_datadir}/%{name}/plugins
 %{_datadir}/%{name}/scripts
-%attr(750,apache,root) %dir %{_localstatedir}/log/%{name}
+%attr(770,root,apache) %dir %{_localstatedir}/log/%{name}
 %dir %{_datadir}/%{name}/locales
 
 
 %changelog
+* Thu Feb 18 2016 Remi Collet <remi@fedoraproject.org> - 0.90.1-3
+- fix Zend autoloader (to allow ZF 2.5)
+
+* Fri Nov 27 2015 Remi Collet <remi@fedoraproject.org> - 0.90.1-1
+- update to 0.90.1
+
+* Thu Oct  8 2015 Remi Collet <remi@fedoraproject.org> - 0.90-1
+- update to 0.90
+
+* Tue Oct  6 2015 Remi Collet <remi@fedoraproject.org> - 0.90-0.1.RC2
+- update to 0.90-RC2
+
 * Wed Sep 16 2015 Remi Collet <remi@fedoraproject.org> - 0.85.5-1
 - update to 0.85.5
   https://github.com/glpi-project/glpi/issues?q=milestone:0.85.5
