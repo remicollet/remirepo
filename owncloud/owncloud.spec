@@ -9,7 +9,7 @@
 #
 Name:           owncloud
 Version:        8.2.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
 
@@ -103,107 +103,155 @@ Requires:       php-zip
 Requires:       php-filter
 %endif
 
-# External PHP libs required by OC core
-# "kriswallsmith/assetic": "1.2.*@dev"
-Requires:       php-composer(kriswallsmith/assetic) >= 1.2
-Requires:       php-composer(kriswallsmith/assetic) < 1.3
+### External PHP libs required by OC core
+
+# Ordering requires to match composer.json
+
+# "sabre/dav" : "2.1.9"
+# pulls in sabre event, http and vobject as deps
+Requires:       php-composer(sabre/dav)  >= 2.1.9
+Requires:       php-composer(sabre/dav)  < 2.2
+
+# "doctrine/dbal": "2.5.1"
+Requires:       php-composer(doctrine/dbal) >= 2.5.1
+Requires:       php-composer(doctrine/dbal) < 2.6
+
+#"mcnetic/zipstreamer": "v0.7"
+Requires:       php-composer(mcnetic/zipstreamer) >= 0.7
+
+# "phpseclib/phpseclib": "~2.0@dev"
+Requires:       php-composer(phpseclib/phpseclib) >= 2.0
+Requires:       php-composer(phpseclib/phpseclib) < 3.0
+
+#Requires:       php-composer(rackspace/php-opencloud) >= 1.9.2
+# pulls in guzzle/guzzle as a dep
+Requires:       php-opencloud >= 1.9.2
+
+#"james-heinrich/getid3": "dev-master"
+# fedora has 1.9.8 but current release 1.9.12
+# bug filed for update: bz#1319676
+Requires:       php-composer(james-heinrich/getid3)
+
+# "jeremeamia/superclosure": "2.0.0"
+Requires:       php-composer(jeremeamia/superclosure) >= 2.0
+
+# "ircmaxell/random-lib": "~1.1"
+# Also pulls in ircmaxell/security-lib which is a dep
+Requires:       php-composer(ircmaxell/random-lib) >= 1.1
+Requires:       php-composer(ircmaxell/random-lib) < 2.0
+
+# "bantu/ini-get-wrapper": "v1.0.1"
+Requires:       php-composer(bantu/ini-get-wrapper) >= 1.0.1
+
+# "natxet/CssMin": "dev-master"
+# 3.0.4 is the current release and 3.0.3 in fedora
+# ticket for update bz#1266491
+Requires:       php-composer(natxet/CssMin) >= 3.0.2
+
+# "punic/punic": "1.1.0"
+Requires:       php-composer(punic/punic) >= 1.1.0
+
+# "pear/archive_tar": "~1.4"
+Requires:       php-composer(pear/archive_tar) >= 1.4
+Requires:       php-composer(pear/archive_tar) < 2.0
+
+# "patchwork/utf8": "~1.1"
+Requires:       php-composer(patchwork/utf8) >= 1.1
+Requires:       php-composer(patchwork/utf8) < 2.0
+
+# "symfony/console": "2.6.4"
+# pulls in symfony/event-dispatcher as a dep
+# pulls in symfony/event-process as a dep
+Requires:       php-composer(symfony/console) >= 2.6.4
+
+# "symfony/routing": "2.6.4"
+Requires:       php-composer(symfony/routing) >= 2.6.4
+
 # "pimple/pimple": "~3.0"
 Requires:       php-composer(pimple/pimple) >= 3.0
 Requires:       php-composer(pimple/pimple) < 4.0
-Requires:       php-composer(doctrine/dbal) >= 2.5.0
-Requires:       php-composer(doctrine/dbal) < 2.6
-# "symfony/console": "~2.5"
-Requires:       php-composer(symfony/console) >= 2.5.0
-Requires:       php-composer(symfony/console) < 3.0
-# "symfony/routing": "~2.5"
-Requires:       php-composer(symfony/routing) >= 2.5.0
-Requires:       php-composer(symfony/routing) < 3.0
 
+# "ircmaxell/password-compat": "1.0.*"
+Requires:       php-composer(ircmaxell/password-compat) >= 1.0.0
+
+# "nikic/php-parser": "~1.1"
+Requires:       php-composer(nikic/php-parser) >= 1.0
+Requires:       php-composer(nikic/php-parser) < 2.0
+
+# "icewind/Streams": "0.2.0"
+Requires:       php-composer(icewind/streams) >= 0.2
+
+# "swiftmailer/swiftmailer": "@stable"
+Requires:       php-composer(swiftmailer/swiftmailer) >= 5.4.1
+
+# "guzzlehttp/guzzle": "~5.0"
+# pulls in guzzlehttp/ringphp as a dep
+# ringphp pulls in guzzlehttp/streams and react/promise
 Requires:       php-composer(guzzlehttp/guzzle) >= 5.0
 Requires:       php-composer(guzzlehttp/guzzle) < 6.0
-Requires:       php-composer(guzzlehttp/ringphp) >= 1.1
-Requires:       php-composer(guzzlehttp/ringphp) < 2.0
-Requires:       php-composer(guzzlehttp/streams) >= 3.0
-Requires:       php-composer(guzzlehttp/streams) < 4.0
 
-Requires:       php-composer(icewind/smb)     >= 1.0
-Requires:       php-composer(icewind/streams) >= 0.2
-# This makes smb external storage usable and doesn't break things like encryption
+# "league/flysystem": "1.0.4"
+Requires:       php-composer(league/flysystem) >= 1.0.4
+
+# "pear/pear-core-minimal": "v1.10.0alpha2"
+# this includes pear/console_getopt and pear/PEAR 
+# which is not listed in composer.json unlike archive_tar
+Requires:       php-composer(pear/pear-core-minimal) > 1.10
+
+# "interfasys/lognormalizer": "dev-master@dev"
+Requires:       php-composer(interfasys/lognormalizer) >= 1.0
+
+# "deepdiver1975/TarStreamer": "v0.1-beta3"
+# Despite the difference in name this is correct
+# https://github.com/owncloud/3rdparty/tree/master/deepdiver1975/tarstreamer
+Requires:       php-composer(owncloud/tarstreamer) >= 0.1
+
+# "patchwork/jsqueeze": "^2.0"
+Requires:       php-composer(patchwork/jsqueeze) >= 2.0
+Requires:       php-composer(patchwork/jsqueeze) < 3.0
+
+# "kriswallsmith/assetic": "^1.3"
+# Only 1.2 is in Fedora right now and testing oC appears to work with that
+# Ticket open for the update is bz#1153986
+Requires:       php-composer(kriswallsmith/assetic) >= 1.2
+Requires:       php-composer(kriswallsmith/assetic) < 2.0
+
+
+
+### For dependencies of apps/files_external
+
+## SMB/CIFS external storage stuff
+
+#"icewind/smb": "1.0.4"
+# note that streams is a dep but already required by core anyway
+Requires:       php-composer(icewind/smb)     >= 1.0.4
+# This makes smb external storage usable iin performance
+# and doesn't break things like encryption due to timeouts
 Requires:       php-pecl(smbclient) >= 0.8.0
+
+
 # Requiring so that the shipped external smb storage works
+# The net command is needed and enabling smb tests for smbclient command
 %if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
 Requires:       samba-common-tools
 Requires:       samba-client
 %endif
 
-Requires:       php-composer(jeremeamia/superclosure) >= 2.0
+## Note these next bits are not listed in composer but manually dropped in place
 
-Requires:       php-composer(nikic/php-parser) >= 1.0
-Requires:       php-composer(nikic/php-parser) < 2.0
-
-Requires:       php-composer(react/promise) >= 2.0
-Requires:       php-composer(react/promise) < 3.0
-
-Requires:       php-composer(james-heinrich/getid3)
-
-# NB: this will also pull in php-compose(guzzle/guzzle), which is in OC's
-# 3rdparty directory. OC sort of has a direct dependency on it but in fact
-# it's innately tied to the use of php-opencloud and php-aws-sdk and would
-# drop out without those.
-# NB 2: also required by apps/files_external
-#Requires:       php-composer(rackspace/php-opencloud) >= 1.9.2
-Requires:       php-opencloud >= 1.9.2
-
-# "bantu/ini-get-wrapper": "v1.0.1"
-Requires:       php-composer(bantu/ini-get-wrapper) >= 1.0.1
-# "ircmaxell/random-lib": "v1.0.0"
-# Also pulls in ircmaxell/security-lib which is a dep
-Requires:       php-composer(ircmaxell/random-lib) >= 1.0.0
-Requires:       php-composer(ircmaxell/password-compat) >= 1.0.0
-# "natxet/CssMin": "dev-master"
-Requires:       php-composer(natxet/CssMin) >= 3.0.2
-
-# Patchwork should now work from system
-Requires:       php-composer(patchwork/utf8)
-Requires:       php-composer(patchwork/jsqueeze)
-
-Requires:       php-composer(punic/punic)
-
-## SabreDAV
-Requires:       php-composer(sabre/dav)   >= 2.1.9
-Requires:       php-composer(sabre/dav)   <  3
-Requires:       php-composer(sabre/event) >= 2.0
-Requires:       php-composer(sabre/event) < 3.0
-Requires:       php-composer(sabre/vobject) >= 3.3.4
-Requires:       php-composer(sabre/vobject) < 4.0
-Requires:       php-composer(sabre/http) >= 3.0
-Requires:       php-composer(sabre/http) < 4.0
-
-## apps/files_external
+## Dropbox external storage
 Requires:       php-pear(pear.dropbox-php.com/Dropbox)
-Requires:       php-composer(phpseclib/phpseclib)
-# Not pulled via Composer but manually dumped into files_external/3rdparty
+
+## Google Drive external storage
 Requires:       php-google-apiclient >= 1.0.3
+
+## AWS S3 external storage
 Requires:       php-aws-sdk >= 2.7.0
 
-Requires:       php-composer(league/flysystem)
-Requires:       php-composer(interfasys/lognormalizer)
-Requires:       php-composer(owncloud/tarstreamer)
-Requires:       php-composer(mcnetic/zipstreamer)
-Requires:       php-composer(pear/console_getopt)
-Requires:       php-composer(pear/pear-core-minimal)
-Requires:       php-composer(pear/archive_tar)
-# fedora have pear version 5.0, remirepo have version 5.4
-Requires:       php-composer(swiftmailer/swiftmailer) >= 5.3.1
 
 %if 0%{?rhel}
 Requires(post): policycoreutils-python
 Requires(postun): policycoreutils-python
-%endif
-
-# Suggest as requirement for optional conversion in documents app
-%if 0%{?fedora} >= 21
-Suggests: unoconv
 %endif
 
 %description
@@ -508,6 +556,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Mar 24 2016 James Hogarth <james.hogarth@gmail.com> - 8.2.3-3
+- Add typical appstore issue to readme
+- Clean up spec to make it easier to follow the requires from unbundling
+
 * Wed Mar 23 2016 Remi Collet <remi@fedoraproject.org> - 8.2.3-2
 - use php-swift-Swift 5.4 in /usr/share/php
 - fix patch to not update .htaccess

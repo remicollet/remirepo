@@ -75,6 +75,11 @@ can find them in the directory '/var/lib/owncloud/apps'. This functionality is
 enabled by default. If this is moved then it's important to configure httpd/nginx
 appropriately for the correct /owncloud/apps-appstore path to alias to the new location.
 
+The app store URL is coded into the core php and does not need to be listed in config.php
+
+If there are any empty proxy entries in config.php this will prevent connectivity to the store.
+If not using a proxy it is important to remove any proxy entries from config.php, not just be ""
+
 Selinux Booleans
 ----------------
 If you want to use external files (eg remote smb/cifs server) the httpd_can_network_connect
