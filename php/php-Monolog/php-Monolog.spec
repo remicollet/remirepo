@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-Monolog
 #
-# Copyright (c) 2012-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2012-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -50,7 +50,7 @@ License:   MIT
 URL:       https://github.com/%{github_owner}/%{github_name}
 Source0:   %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
-# https://github.com/Seldaek/monolog/pull/756
+# https://github.com/Seldaek/monolog/pull/757
 Patch0:    %{name}-pr756.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -126,8 +126,8 @@ Conflicts:     php-aws-sdk <  %{aws_min_ver}
 Conflicts:     php-aws-sdk >= %{aws_max_ver}
 Conflicts:     php-Raven   <  %{raven_min_ver}
 Conflicts:     php-Raven   >= %{raven_max_ver}
-Conflicts:     php-composer(swiftmailer/swiftmailer) <  %{swift_min_ver}
-Conflicts:     php-composer(swiftmailer/swiftmailer) >= %{swift_max_ver}
+Conflicts:     php-swiftmailer <  %{swift_min_ver}
+Conflicts:     php-swiftmailer >= %{swift_max_ver}
 
 
 %description
@@ -283,6 +283,10 @@ rm -rf %{buildroot}
 %changelog
 * Fri Mar 25 2016 Remi Collet <remi@remirepo.net> - 1.18.1-1
 - update to 1.18.1
+- use php-swiftmailer instead of old php-swift-Swift
+- install optional dependencies during the build for tests
+- add patch for missing property, breaking test suite
+  open https://github.com/Seldaek/monolog/pull/757
 
 * Thu Oct 15 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.17.2-1
 - Updated to 1.17.2 (RHBZ #1271882)
