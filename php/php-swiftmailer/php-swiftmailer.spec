@@ -15,7 +15,7 @@
 
 Name:           php-%{gh_project}
 Version:        5.4.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Free Feature-rich PHP Mailer
 
 Group:          Development/Libraries
@@ -57,12 +57,10 @@ Requires:       php-simplexml
 Requires:       php-spl
 
 # Removal for official repo not yet planed
-%if 0%{?fedora} > 99
 Obsoletes:      php-swift-Swift   <= 5.4.1
 # Single package in this channel
 Obsoletes:      php-channel-swift <= 1.3
 Provides:       php-pear(pear.swiftmailer.org/Swift) = %{version}
-%endif
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
@@ -116,17 +114,29 @@ define('SWIFT_TMP_DIR', '$TMPDIR');
 EOF
 
 ret=0
+run=0
+
+# with mockobject 3.1.0
+# PHPUnit_Framework_MockObject_RuntimeException: Trying to configure method "sendPerformed"
+# which cannot be configured because it does not exist, has not been specified, is final, or is static
 
 : Run upstream test suite
-%{_bindir}/phpunit --exclude smoke --verbose || ret=1
-
+if which php56; then
+   php56 %{_bindir}/phpunit --exclude smoke --verbose || ret=1
+   run=1
+fi
 if which php70; then
    php70 %{_bindir}/phpunit --exclude smoke --verbose || : ignore PHP 7 test results
+   run=1
 fi
-%endif
+if [ $run -eq 0 ]; then
+   %{_bindir}/phpunit --exclude smoke --verbose || ret=1
+fi
 
 # Cleanup
 rm -r $TMPDIR
+exit $ret
+%endif
 
 
 %clean
@@ -144,6 +154,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar 25 2016 Remi Collet <remi@fedoraproject.org> - 5.4.1-2
+- rebuild for remi repository
+
 * Fri Oct 16 2015 Remi Collet <remi@fedoraproject.org> - 5.4.1-1
 - initial rpm, version 5.4.1
 - sources from github, pear channel is dead
