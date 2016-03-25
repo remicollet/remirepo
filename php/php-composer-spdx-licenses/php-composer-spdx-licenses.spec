@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9e1c3926bb0842812967213d7c92827bc5883671
+%global gh_commit    547659c3cacd3ccfe1b4714c2ff88cafc6b6793b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150717
 %global gh_owner     composer
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-composer-spdx-licenses
-Version:        1.1.2
+Version:        1.1.3
 Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
 Summary:        SPDX licenses list and validation library
 
@@ -39,8 +39,8 @@ BuildRequires:  php-json
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
 # From composer.json, "require-dev": {
-#        "phpunit/phpunit": "~4.5",
-#        "phpunit/phpunit-mock-objects": "~2.3"
+#        "phpunit/phpunit": "phpunit/phpunit": "^4.5 || ^5.0.5",
+#        "phpunit/phpunit-mock-objects": "2.3.0 || ^3.0"
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.5
 BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 2.3
 # Autoloader
@@ -48,7 +48,7 @@ BuildRequires:  php-composer(symfony/class-loader)
 %endif
 
 # From composer.json, "require": {
-#        "php": ">=5.3.2",
+#        "php": "^5.3.2 || ^7.0",
 Requires:       php(language) >= 5.3.2
 # From phpcompatinfo report for version 1.0.0 (SpdxLicenses.php only)
 Requires:       php-json
@@ -101,6 +101,12 @@ export BUILDROOT_SPDX=%{buildroot}
 %{_bindir}/phpunit \
     --bootstrap %{buildroot}%{php_home}/Composer/Spdx/autoload.php \
     --verbose
+
+if which php70; then
+  php70 %{_bindir}/phpunit \
+    --bootstrap %{buildroot}%{php_home}/Composer/Spdx/autoload.php \
+    --verbose
+fi
 %else
 : Test suite disabled
 %endif
@@ -122,6 +128,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar 25 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
+- version 1.1.3 (new licenses)
+- run test suite with both PHP 5 and 7 when available
+
 * Mon Oct  5 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - version 1.1.2 (new licenses)
 
