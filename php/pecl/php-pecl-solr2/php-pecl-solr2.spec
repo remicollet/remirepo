@@ -11,6 +11,7 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
+%scl_package       php-pecl-solr2
 %if "%{scl}" == "rh-php56"
 %global sub_prefix more-php56-
 %else
@@ -18,11 +19,9 @@
 %endif
 %endif
 
-%{?scl:          %scl_package         php-pecl-solr2}
-
 %global pecl_name solr
 #global prever    b
-%global with_zts  0%{?__ztsphp:1}
+%global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 # After curl, json
 %global ini_name  %{pecl_name}.ini
@@ -39,7 +38,7 @@
 Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
 Name:           %{?sub_prefix}php-pecl-solr2
-Version:        2.3.1
+Version:        2.4.0
 Release:        0%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
@@ -66,13 +65,20 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
-%if 0%{?fedora} < 25
-# Only one version of the extension
-Conflicts:      %{?sub_prefix}php-pecl-solr < 2
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}2         = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}2%{?_isa} = %{version}-%{release}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:      %{?sub_prefix}php-pecl-%{pecl_name}          < 2
+Provides:       %{?sub_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?sub_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 %else
-Obsoletes:      %{?sub_prefix}php-pecl-solr < 2
+# Only one version of the extension
+Conflicts:      %{?sub_prefix}php-pecl-%{pecl_name}          < 2
+Conflicts:      %{?scl_prefix}php-pecl-%{pecl_name}          < 2
 %endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
@@ -87,6 +93,12 @@ Obsoletes:     php55w-pecl-%{pecl_name}2 <= %{version}
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name}2 <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name}2 <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php70u-pecl-%{pecl_name}2 <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name}2 <= %{version}
 %endif
 %endif
 
@@ -136,7 +148,8 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
 
 # Check version
-extver=$(sed -n '/#define PHP_SOLR_VERSION /{s/.* "//;s/".*$//;p}' php_solr_version.h)
+DIR=src/php$(%{__php} -r 'echo PHP_MAJOR_VERSION;')
+extver=$(sed -n '/#define PHP_SOLR_VERSION /{s/.* "//;s/".*$//;p}' $DIR/php_solr_version.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
    : Error: Upstream version is ${extver}, expecting %{version}%{?prever}.
    exit 1
@@ -288,6 +301,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar 25 2016 Remi Collet <remi@fedoraproject.org> - 2.4.0-0
+- test build for upcoming 2.4.0
+
 * Wed Mar 16 2016 Remi Collet <remi@fedoraproject.org> - 2.3.1-0
 - test build for upcoming 2.3.1
 
