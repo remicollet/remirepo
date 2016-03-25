@@ -1,4 +1,4 @@
-# remirepo spec/Fedora file for php-composer-spdx-licenses
+# remirepo/fedora spec file for php-composer-spdx-licenses
 #
 # Copyright (c) 2015-2016 Remi Collet
 # License: CC-BY-SA
