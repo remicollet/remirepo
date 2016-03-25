@@ -1,8 +1,8 @@
 # remirepo spec file for php-guzzle-Guzzle, from Fedora:
 #
-# RPM spec file for php-guzzle-Guzzle
+# Fedora spec file for php-guzzle-Guzzle
 #
-# Copyright (c) 2012-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2012-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -29,23 +29,29 @@
 
 # "php": ">=5.3.3"
 %global php_min_ver 5.3.3
-# "doctrine/cache": "~1.3"
-%global doctrine_cache_min_ver 1.3
+# "doctrine/cache": "~1.4"
+#     NOTE: Min version not 1.4 because:
+#         1) autoloader required
+#         2) original patch required >= 1.4.3 (see patch below for details)
+%global doctrine_cache_min_ver 1.4.3
 %global doctrine_cache_max_ver 2.0
 # "monolog/monolog": "~1.0"
-%global monolog_min_ver 1.0
+#     NOTE: Min version not 1.0 because autoloader required
+%global monolog_min_ver 1.15.0
 %global monolog_max_ver 2.0
 # "psr/log": "~1.0"
-%global psr_log_min_ver 1.0
+#     NOTE: Min version not 1.0 because autoloader required
+%global psr_log_min_ver 1.0.0-8
 %global psr_log_max_ver 2.0
 # "symfony/class-loader": "~2.1"
 # "symfony/event-dispatcher": "~2.1"
-%global symfony_min_ver 2.1
+%global symfony_min_ver 2.7.1
 %global symfony_max_ver 3.0
 # "zendframework/zend-cache": "2.*,<2.3",
 # "zendframework/zend-log": "2.*,<2.3"
+#     NOTE: Min version not 2.0 because autoloader required
 #     NOTE: Max version 3 instead of 2.3 because tests pass
-%global zend_min_ver 2.0
+%global zend_min_ver 2.4.7
 %global zend_max_ver 3
 
 %if 0%{?fedora} < 18 && 0%{?rhel} < 6
@@ -60,7 +66,7 @@
 
 Name:          php-guzzle-%{pear_name}
 Version:       %{github_version}
-Release:       7%{?dist}
+Release:       8%{?dist}
 Summary:       PHP HTTP client library and framework for building RESTful web service clients
 
 Group:         Development/Libraries
@@ -68,17 +74,22 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+# Update tests to allow for Doctrine Cache >= 1.6.0 internal changes
+# https://github.com/guzzle/guzzle3/pull/77
+Patch0:        %{name}-doctrine-cache-gte-1-6-0.patch
+
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
 BuildRequires: nodejs
 ## composer.json
-BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language)                          >= %{php_min_ver}
 BuildRequires: php-composer(doctrine/cache)           >= %{doctrine_cache_min_ver}
 BuildRequires: php-composer(monolog/monolog)          >= %{monolog_min_ver}
-BuildRequires: php-composer(psr/log)                  >= %{psr_log_min_ver}
+BuildRequires: php-composer(phpunit/phpunit)
+#BuildRequires: php-composer(psr/log)                  >= %%{psr_log_min_ver}
+BuildRequires: php-PsrLog                             >= %{psr_log_min_ver}
 BuildRequires: php-composer(symfony/class-loader)     >= %{symfony_min_ver}
 BuildRequires: php-composer(symfony/event-dispatcher) >= %{symfony_min_ver}
 BuildRequires: php-composer(zendframework/zend-cache) >= %{zend_min_ver}
@@ -127,48 +138,54 @@ Requires:      ca-certificates
 Requires:      php-composer(symfony/class-loader)
 
 # Standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming
-Provides:      php-%{composer_vendor}-%{composer_project} = %{version}-%{release}
-Provides:      php-%{composer_project} = %{version}-%{release}
+Provides:      php-%{composer_vendor}-%{composer_project}             = %{version}-%{release}
+Provides:      php-%{composer_project}                                = %{version}-%{release}
 # Composer
-Provides:  php-composer(%{composer_vendor}/%{composer_project})   = %{version}
+Provides:      php-composer(%{composer_vendor}/%{composer_project})   = %{version}
 ## Sub-packages
-Provides:  php-composer(%{composer_vendor}/batch)                 = %{version}
-Provides:  php-composer(%{composer_vendor}/cache)                 = %{version}
-Provides:  php-composer(%{composer_vendor}/common)                = %{version}
-Provides:  php-composer(%{composer_vendor}/http)                  = %{version}
-Provides:  php-composer(%{composer_vendor}/inflection)            = %{version}
-Provides:  php-composer(%{composer_vendor}/iterator)              = %{version}
-Provides:  php-composer(%{composer_vendor}/log)                   = %{version}
-Provides:  php-composer(%{composer_vendor}/parser)                = %{version}
-Provides:  php-composer(%{composer_vendor}/plugin)                = %{version}
-Provides:  php-composer(%{composer_vendor}/plugin-async)          = %{version}
-Provides:  php-composer(%{composer_vendor}/plugin-backoff)        = %{version}
-Provides:  php-composer(%{composer_vendor}/plugin-cache)          = %{version}
-Provides:  php-composer(%{composer_vendor}/plugin-cookie)         = %{version}
-Provides:  php-composer(%{composer_vendor}/plugin-curlauth)       = %{version}
-Provides:  php-composer(%{composer_vendor}/plugin-error-response) = %{version}
-Provides:  php-composer(%{composer_vendor}/plugin-history)        = %{version}
-Provides:  php-composer(%{composer_vendor}/plugin-log)            = %{version}
-Provides:  php-composer(%{composer_vendor}/plugin-md5)            = %{version}
-Provides:  php-composer(%{composer_vendor}/plugin-mock)           = %{version}
-Provides:  php-composer(%{composer_vendor}/plugin-oauth)          = %{version}
-Provides:  php-composer(%{composer_vendor}/service)               = %{version}
-Provides:  php-composer(%{composer_vendor}/stream)                = %{version}
+Provides:      php-composer(%{composer_vendor}/batch)                 = %{version}
+Provides:      php-composer(%{composer_vendor}/cache)                 = %{version}
+Provides:      php-composer(%{composer_vendor}/common)                = %{version}
+Provides:      php-composer(%{composer_vendor}/http)                  = %{version}
+Provides:      php-composer(%{composer_vendor}/inflection)            = %{version}
+Provides:      php-composer(%{composer_vendor}/iterator)              = %{version}
+Provides:      php-composer(%{composer_vendor}/log)                   = %{version}
+Provides:      php-composer(%{composer_vendor}/parser)                = %{version}
+Provides:      php-composer(%{composer_vendor}/plugin)                = %{version}
+Provides:      php-composer(%{composer_vendor}/plugin-async)          = %{version}
+Provides:      php-composer(%{composer_vendor}/plugin-backoff)        = %{version}
+Provides:      php-composer(%{composer_vendor}/plugin-cache)          = %{version}
+Provides:      php-composer(%{composer_vendor}/plugin-cookie)         = %{version}
+Provides:      php-composer(%{composer_vendor}/plugin-curlauth)       = %{version}
+Provides:      php-composer(%{composer_vendor}/plugin-error-response) = %{version}
+Provides:      php-composer(%{composer_vendor}/plugin-history)        = %{version}
+Provides:      php-composer(%{composer_vendor}/plugin-log)            = %{version}
+Provides:      php-composer(%{composer_vendor}/plugin-md5)            = %{version}
+Provides:      php-composer(%{composer_vendor}/plugin-mock)           = %{version}
+Provides:      php-composer(%{composer_vendor}/plugin-oauth)          = %{version}
+Provides:      php-composer(%{composer_vendor}/service)               = %{version}
+Provides:      php-composer(%{composer_vendor}/stream)                = %{version}
 # PEAR
-Provides:  php-pear(%{pear_channel}/%{pear_name})                 = %{version}
+Provides:      php-pear(%{pear_channel}/%{pear_name})                 = %{version}
 
 # This pkg was the only one in this channel so the channel is no longer needed
 Obsoletes: php-channel-guzzle
 
-# Optional dependency version conflicts
-Conflicts: php-composer(doctrine/cache)           <  %{doctrine_cache_min_ver}
-Conflicts: php-composer(doctrine/cache)           >= %{doctrine_cache_max_ver}
-Conflicts: php-composer(monolog/monolog)          <  %{monolog_min_ver}
-Conflicts: php-composer(monolog/monolog)          >= %{monolog_max_ver}
-Conflicts: php-composer(zendframework/zend-cache) <  %{zend_min_ver}
-Conflicts: php-composer(zendframework/zend-cache) >= %{zend_max_ver}
-Conflicts: php-composer(zendframework/zend-log)   <  %{zend_min_ver}
-Conflicts: php-composer(zendframework/zend-log)   >= %{zend_max_ver}
+# Weak dependencies
+%if 0%{?fedora} >= 21
+Suggests:      php-composer(doctrine/cache)
+Suggests:      php-composer(monolog/monolog)
+Suggests:      php-composer(zendframework/zend-cache)
+Suggests:      php-composer(zendframework/zend-log)
+%endif
+Conflicts:     php-composer(doctrine/cache)           <  %{doctrine_cache_min_ver}
+Conflicts:     php-composer(doctrine/cache)           >= %{doctrine_cache_max_ver}
+Conflicts:     php-composer(monolog/monolog)          <  %{monolog_min_ver}
+Conflicts:     php-composer(monolog/monolog)          >= %{monolog_max_ver}
+Conflicts:     php-composer(zendframework/zend-cache) <  %{zend_min_ver}
+Conflicts:     php-composer(zendframework/zend-cache) >= %{zend_max_ver}
+Conflicts:     php-composer(zendframework/zend-log)   <  %{zend_min_ver}
+Conflicts:     php-composer(zendframework/zend-log)   >= %{zend_max_ver}
 
 %description
 Guzzle takes the pain out of sending HTTP requests and the redundancy out
@@ -208,6 +225,9 @@ some point in late 2015.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+: Update tests to allow for Doctrine Cache >= 1.6.0 internal changes
+%patch0 -p1
+
 %if %{with_cacert}
 : Unbundle CA certificate
 sed -e "s#__DIR__\s*.\s*'/Resources/cacert.pem'#'%{_sysconfdir}/pki/tls/cert.pem'#" \
@@ -221,8 +241,7 @@ cat <<'AUTOLOAD' | tee src/Guzzle/autoload.php
 <?php
 /**
  * Autoloader for %{name} and its' dependencies
- *
- * Created by %{name}-%{version}-%{release}
+ * (created by %{name}-%{version}-%{release}).
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
@@ -238,9 +257,13 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('Guzzle\\', dirname(__DIR__));
 
-// Not all dependency autoloaders exist or are in every dist yet so fallback
-// to using include path for dependencies for now
-$fedoraClassLoader->setUseIncludePath(true);
+// Required dependencies
+require_once '%{phpdir}/Symfony/Component/EventDispatcher/autoload.php';
+
+// Optional dependencies
+@include_once '%{phpdir}/Doctrine/Common/Cache/autoload.php';
+@include_once '%{phpdir}/Monolog/autoload.php';
+@include_once '%{phpdir}/Zend/autoload.php';
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -267,6 +290,8 @@ $fedoraClassLoader =
     require_once '%{buildroot}%{phpdir}/Guzzle/autoload.php';
 
 $fedoraClassLoader->addPrefix('Guzzle\\Tests', __DIR__);
+
+require_once '%{phpdir}/Symfony/Component/ClassLoader/autoload.php';
 AUTOLOAD
 
 : Modify tests bootstrap
@@ -274,8 +299,8 @@ sed "s#require.*autoload.*#require __DIR__ . '/autoload.php';#" \
     -i tests/bootstrap.php
 
 : Skip tests known to fail
-sed 's/function testPurgeRemovesAllMethodCaches/function SKIP_testPurgeRemovesAllMethodCaches/' \
-    -i tests/Guzzle/Tests/Plugin/Cache/DefaultCacheStorageTest.php
+#sed 's/function testPurgeRemovesAllMethodCaches/function SKIP_testPurgeRemovesAllMethodCaches/' \
+#    -i tests/Guzzle/Tests/Plugin/Cache/DefaultCacheStorageTest.php
 sed 's/function testAddsBody/function SKIP_testAddsBody/' \
     -i tests/Guzzle/Tests/Stream/PhpStreamRequestFactoryTest.php
 %if 0%{?rhel} == 6 || 0%{?rhel} == 5
@@ -300,6 +325,10 @@ sed 's/function testMustReturnRequest/function SKIP_testMustReturnRequest/' \
 %endif
 
 %{_bindir}/phpunit --verbose
+
+if which php70; then
+   %{_bindir}/phpunit --verbose
+fi
 %else
 : Tests skipped
 %endif
@@ -335,6 +364,10 @@ fi
 %exclude %{phpdir}/Guzzle/*/*/composer.json
 
 %changelog
+* Thu Mar 24 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.9.3-8
+- Add patches for tests
+- Use actual dependency autoloaders instead of failover include path
+
 * Sun Feb 28 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.9.3-7
 - Skip additional tests known to fail (RHBZ #1307858)
 
