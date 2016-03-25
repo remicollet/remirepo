@@ -69,7 +69,8 @@
 # "swiftmailer/swiftmailer": ">=4.2.0,<6.0-dev"
 #     src/Symfony/Bridge/Swiftmailer/composer.json
 #     NOTE: Max version ignored on purpose
-%global swiftmailer_min_ver 4.2.0
+# Force version to 5.4.1 for autoloader
+%global swiftmailer_min_ver 5.4.1
 # "twig/twig": "~1.23|~2.0"
 %global twig_min_ver 1.23
 %global twig_max_ver 3
@@ -94,7 +95,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -124,6 +125,7 @@ BuildRequires: php-composer(psr/log)                  >= %{psrlog_min_ver}
 BuildRequires: php-composer(twig/twig)                >= %{twig_min_ver}
 BuildRequires: php-composer(paragonie/random_compat)  >= %{random_compat_min}
 BuildRequires: php-composer(ircmaxell/password-compat) >= %{password_compat_min_ver}
+BuildRequires: php-composer(swiftmailer/swiftmailer)  >= %{swiftmailer_min_ver}
 ## phpcompatinfo (computed from version 2.5.6)
 BuildRequires: php-ctype
 BuildRequires: php-curl
@@ -356,7 +358,7 @@ Summary:  Symfony Swiftmailer Bridge
 Group:    Development/Libraries
 
 # composer.json
-Requires: php-swift-Swift >= %{swiftmailer_min_ver}
+Requires: php-composer(swiftmailer/swiftmailer) >= %{swiftmailer_min_ver}
 # composer.json: optional
 Requires: php-composer(%{composer_vendor}/http-kernel) = %{version}
 # phpcompatinfo (computed from version 2.7.1)
@@ -1719,10 +1721,6 @@ if (!interface_exists('SessionHandlerInterface', false) && file_exists(__DIR__ .
     require_once __DIR__ . '/Component/HttpFoundation/Resources/stubs/SessionHandlerInterface.php';
 }
 
-if (file_exists('%{pear_phpdir}/Swift') && !array_key_exists('Swift_', $fedoraClassLoader->getPrefixes())) {
-    $fedoraClassLoader->addPrefix('Swift_', '%{pear_phpdir}/Swift');
-}
-
 $fedoraClassLoader->setUseIncludePath(true);
 
 return $fedoraClassLoader;
@@ -2527,6 +2525,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Fri Mar 25 2016 Remi Collet <remi@fedoraproject.org> - 2.7.10-2
+- use php-swiftmailer 5.4.1 instead of old php-swift-Swift
+
 * Mon Feb 29 2016 Remi Collet <remi@fedoraproject.org> - 2.7.10-1
 - Update to 2.7.10
 - config: add dependency on config (optional)
