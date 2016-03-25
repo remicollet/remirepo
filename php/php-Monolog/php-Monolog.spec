@@ -12,8 +12,8 @@
 
 %global github_owner     Seldaek
 %global github_name      monolog
-%global github_version   1.17.2
-%global github_commit    bee7f0dc9c3e0b69a6039697533dca1e845c8c24
+%global github_version   1.18.1
+%global github_commit    a5f2734e8c16f3aa21b3da09715d10e15b4d2d45
 
 %global composer_vendor  monolog
 %global composer_project monolog
@@ -30,6 +30,10 @@
 #     NOTE: Min version not 2.4.9 because autoloader required
 %global aws_min_ver     2.8.13
 %global aws_max_ver     3.0
+# "swiftmailer/swiftmailer": "~5.3",
+%global swift_min_ver   5.3
+%global swift_max_ver   6
+
 
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
@@ -46,6 +50,9 @@ License:   MIT
 URL:       https://github.com/%{github_owner}/%{github_name}
 Source0:   %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+# https://github.com/Seldaek/monolog/pull/756
+Patch0:    %{name}-pr756.patch
+
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # %%{pear_phpdir} macro
@@ -57,6 +64,10 @@ BuildRequires: php(language)         >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(psr/log) >= %{psrlog_min_ver}
 BuildRequires: php-composer(psr/log) <  %{psrlog_max_ver}
+## optional
+BuildRequires: php-composer(swiftmailer/swiftmailer) >= %{swift_min_ver}
+BuildRequires: php-composer(raven/raven) >= %{raven_min_ver}
+BuildRequires: php-composer(aws/aws-sdk-php) >= %{aws_min_ver}
 ## phpcompatinfo (computed from version 1.17.2)
 BuildRequires: php-curl
 BuildRequires: php-date
@@ -115,6 +126,9 @@ Conflicts:     php-aws-sdk <  %{aws_min_ver}
 Conflicts:     php-aws-sdk >= %{aws_max_ver}
 Conflicts:     php-Raven   <  %{raven_min_ver}
 Conflicts:     php-Raven   >= %{raven_max_ver}
+Conflicts:     php-composer(swiftmailer/swiftmailer) <  %{swift_min_ver}
+Conflicts:     php-composer(swiftmailer/swiftmailer) >= %{swift_max_ver}
+
 
 %description
 Monolog sends your logs to files, sockets, inboxes, databases and various web
@@ -130,11 +144,11 @@ Optional:
       Allow sending log messages to AWS services like DynamoDB
 * php-pecl-amqp
       Allow sending log messages to an AMQP server (1.0+ required)
-* php-pecl-mongo
+* php-pecl-mongo or php-mongodb
       Allow sending log messages to a MongoDB server
 * php-Raven (>= %{raven_min_ver}, < %{raven_max_ver})
       Allow sending log messages to a Sentry server
-* php-swift-Swift
+* php-swiftmailer
       Allow sending log messages through Swiftmailer
 * https://github.com/doctrine/couchdb-client
       Allow sending log messages to a CouchDB server
@@ -156,6 +170,8 @@ Optional:
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
+
+%patch0 -p1
 
 : Create autoloader
 cat <<'AUTOLOAD' | tee src/Monolog/autoload.php
@@ -182,14 +198,11 @@ $fedoraClassLoader->addPrefix('Monolog\\', dirname(__DIR__));
 foreach (array(
     '%{phpdir}/Raven/autoload.php',
     '%{phpdir}/Aws/autoload.php',
+    '%{phpdir}/Swift/swift_required.php',
 ) as $dependencyAutoloader) {
     if (file_exists($dependencyAutoloader)) {
         require_once $dependencyAutoloader;
     }
-}
-
-if (file_exists('%{pear_phpdir}/Swift')) {
-    $fedoraClassLoader->addPrefix('Swift_', '%{pear_phpdir}/Swift');
 }
 
 // Not all dependency autoloaders exist or are in every dist yet so fallback
@@ -233,7 +246,21 @@ sed 's/function testThrowsOnInvalidEncoding/function SKIP_testThrowsOnInvalidEnc
     -i tests/Monolog/Formatter/NormalizerFormatterTest.php
 %endif
 
-%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+ret=0
+run=0
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php || ret=1
+   run=1
+fi
+if which php56; then
+   php56 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+   %{_bindir}/phpunit --verbose --bootstrap bootstrap.php || ret =1
+fi
+
+exit $ret;
 %else
 : Tests skipped
 %endif
@@ -254,6 +281,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar 25 2016 Remi Collet <remi@remirepo.net> - 1.18.1-1
+- update to 1.18.1
+
 * Thu Oct 15 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.17.2-1
 - Updated to 1.17.2 (RHBZ #1271882)
 
