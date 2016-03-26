@@ -14,8 +14,8 @@
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.7.10
-%global github_commit    9a3b6bf6ebee49370aaf15abc1bdeb4b1986a67d
+%global github_version   2.7.11
+%global github_commit    66c99826ce3d4392aa1fd08564946cb4277e3897
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -95,7 +95,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       1%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -1651,6 +1651,9 @@ The YAML Component loads and dumps YAML files.
 : Remove unnecessary files
 find src -name '.git*' -delete
 
+: Remove unwanted components
+rm -r src/Symfony/Bridge/Propel1
+
 : Create autoloaders
 cat << 'AUTOLOAD' | tee src/Symfony/Component/autoload.php
 <?php
@@ -1781,6 +1784,9 @@ sed -e 's#function testCreateFromChoicesSameChoices#function SKIP_testCreateFrom
     -e 's#function testCreateFromFlippedChoicesSameChoices#function SKIP_testCreateFromFlippedChoicesSameChoices#' \
     -i src/Symfony/Component/Form/Tests/ChoiceList/Factory/CachingFactoryDecoratorTest.php
 %endif
+# See https://github.com/symfony/symfony/issues/18319
+rm src/Symfony/Component/Validator/Tests/Constraints/UrlValidatorTest.php
+rm src/Symfony/Component/Validator/Tests/Constraints/EmailValidatorTest.php
 %endif
 
 
@@ -1817,7 +1823,9 @@ BOOTSTRAP
 : Run tests
 RET=0
 for PKG in %{buildroot}%{phpdir}/Symfony/*/*; do
-  if [ -d $PKG ]; then
+  if [ "$(basename $PKG)" = "PhpUnit" ]; then
+    continue
+  elif [ -d $PKG ]; then
     echo -e "\n>>>>>>>>>>>>>>>>>>>>>>> ${PKG}\n"
     %{_bindir}/php -d include_path=.:%{buildroot}%{phpdir}:%{phpdir} \
     %{_bindir}/phpunit \
@@ -2525,6 +2533,13 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Sat Mar 26 2016 Remi Collet <remi@fedoraproject.org> - 2.7.11-1
+- Update to 2.7.11
+- ignore dependency on symfony/polyfill-mbstring
+- ignore Bridge/PhpUnit tests
+- ignore tests using DnsMock
+  open https://github.com/symfony/symfony/issues/18319
+
 * Fri Mar 25 2016 Remi Collet <remi@fedoraproject.org> - 2.7.10-2
 - use php-swiftmailer 5.4.1 instead of old php-swift-Swift
 
