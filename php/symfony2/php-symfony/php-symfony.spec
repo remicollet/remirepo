@@ -95,7 +95,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -1912,7 +1912,7 @@ exit $RET
 %exclude %{symfony_dir}/Bridge/PhpUnit/*.md
 %exclude %{symfony_dir}/Bridge/PhpUnit/composer.json
 %exclude %{symfony_dir}/Bridge/PhpUnit/phpunit.*
-#%%exclude %%{symfony_dir}/Bridge/PhpUnit/Tests
+%exclude %{symfony_dir}/Bridge/PhpUnit/Tests
 
 # ------------------------------------------------------------------------------
 
@@ -2533,12 +2533,13 @@ exit $RET
 # ##############################################################################
 
 %changelog
-* Sat Mar 26 2016 Remi Collet <remi@fedoraproject.org> - 2.7.11-1
+* Sat Mar 26 2016 Remi Collet <remi@fedoraproject.org> - 2.7.11-2
 - Update to 2.7.11
 - ignore dependency on symfony/polyfill-mbstring
 - ignore Bridge/PhpUnit tests
 - ignore tests using DnsMock
   open https://github.com/symfony/symfony/issues/18319
+- remove PhpUnit/Tests from package
 
 * Fri Mar 25 2016 Remi Collet <remi@fedoraproject.org> - 2.7.10-2
 - use php-swiftmailer 5.4.1 instead of old php-swift-Swift
