@@ -12,8 +12,8 @@
 
 %global github_owner     guzzle
 %global github_name      guzzle
-%global github_version   6.1.1
-%global github_commit    c6851d6e48f63b69357cbfa55bca116448140e0c
+%global github_version   6.2.0
+%global github_commit    d094e337976dff9d8e2424e8485872194e768662
 
 %global composer_vendor  guzzlehttp
 %global composer_project guzzle
@@ -44,7 +44,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}6
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       PHP HTTP client library
 
 Group:         Development/Libraries
@@ -68,7 +68,7 @@ BuildRequires: php-composer(guzzlehttp/psr7)     >= %{psr7_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
 #BuildRequires: php-composer(psr/log)             >= %%{psr_log_min_ver}
 BuildRequires: php-PsrLog                        >= %{psr_log_min_ver}
-## phpcompatinfo (computed from version 6.1.1)
+## phpcompatinfo (computed from version 6.2.0)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -80,7 +80,7 @@ BuildRequires: php-spl
 BuildRequires: php-zlib
 # Autoloader
 ## NOTE: Min version 2.5 because class
-## \Symfony\Component\ClassLoader\Psr4ClassLoader required
+##       \Symfony\Component\ClassLoader\Psr4ClassLoader required
 BuildRequires: php-composer(symfony/class-loader) >= 2.5
 %endif
 
@@ -94,7 +94,7 @@ Requires:      php-composer(guzzlehttp/psr7)     <  %{psr7_max_ver}
 #Requires:      php-composer(psr/log)             >= %%{psr_log_min_ver}
 Requires:      php-PsrLog                        >= %{psr_log_min_ver}
 Requires:      php-composer(psr/log)             <  %{psr_log_max_ver}
-# phpcompatinfo (computed from version 6.1.1)
+# phpcompatinfo (computed from version 6.2.0)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-filter
@@ -151,7 +151,7 @@ if (!isset($fedoraPsr4ClassLoader) || !($fedoraPsr4ClassLoader instanceof \Symfo
 
 $fedoraPsr4ClassLoader->addPrefix('GuzzleHttp\\', __DIR__);
 
-require_once __DIR__ . '/functions_include.php';
+require_once __DIR__.'/functions_include.php';
 require_once '%{phpdir}/GuzzleHttp/Promise/autoload.php';
 require_once '%{phpdir}/GuzzleHttp/Psr7/autoload.php';
 require_once '%{phpdir}/Psr/Log/autoload.php';
@@ -198,6 +198,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 27 2016 Shawn Iwinski <shawn@iwin.ski> - 6.2.0-1
+- Updated to 6.2.0 (RHBZ #1319960)
+
 * Sun Jan 31 2016 Remi Collet <remi@remirepo.net> - 6.1.1-2
 - backport for remi repository
 
