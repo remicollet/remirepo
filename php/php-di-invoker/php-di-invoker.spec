@@ -12,8 +12,8 @@
 
 %global github_owner     PHP-DI
 %global github_name      Invoker
-%global github_version   1.2.0
-%global github_commit    9949fff87fcf14e8f2ccfbe36dac1e5921944c48
+%global github_version   1.3.0
+%global github_commit    c5c50237115803d7410d13d9d6afb5afe6526fac
 
 %global composer_vendor  php-di
 %global composer_project invoker
@@ -51,7 +51,7 @@ BuildArch:     noarch
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(container-interop/container-interop) >= %{container_interop_min_ver}
-## phpcompatinfo (computed from version 1.2.0)
+## phpcompatinfo (computed from version 1.3.0)
 BuildRequires: php-reflection
 ## Autoloader
 BuildRequires: php-composer(symfony/class-loader)
@@ -61,7 +61,7 @@ BuildRequires: php-composer(symfony/class-loader)
 Requires:      php(language)                                     >= %{php_min_ver}
 Requires:      php-composer(container-interop/container-interop) >= %{container_interop_min_ver}
 Requires:      php-composer(container-interop/container-interop) <  %{container_interop_max_ver}
-# phpcompatinfo (computed from version 1.2.0)
+# phpcompatinfo (computed from version 1.3.0)
 Requires:      php-reflection
 # Autoloader
 Requires:      php-composer(symfony/class-loader)
@@ -156,6 +156,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 27 2016 Shawn Iwinski <shawn@iwin.ski> - 1.3.0-1
+- Updated to 1.3.0 (RHBZ #1319537)
+
 * Tue Jan  5 2016 Remi Collet <remi@remirepo.net> - 1.2.0-1
 - backport for #remirepo
 
