@@ -1,7 +1,8 @@
+# remirepo spec file for php-opencloud, from
 #
-# RPM spec file for php-egulias-email-validator
+# Fedora spec file for php-opencloud
 #
-# Copyright (c) 2013-2014 Gregor Tätzner <brummbq@fedoraproject.org>
+# Copyright (c) 2013-2016 Gregor Tätzner <brummbq@fedoraproject.org>
 #                         Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
@@ -12,26 +13,27 @@
 
 %global github_owner     rackspace
 %global github_name      php-opencloud
-%global github_version   1.12.1
-%global github_commit    23105f00eb648c10cc360cbc04231018117b0302
+%global github_version   1.12.2
+%global github_commit    9c0ade232ddd1ae23994349406171ffea1127b5d
 
 %global composer_vendor  rackspace
 %global composer_project php-opencloud
 
 # "php" : ">=5.3.3"
-%global php_min_ver      5.3.3
+%global php_min_ver 5.3.3
 # "guzzle/http" : "~3.8"
-%global guzzle_min_ver   3.8
-%global guzzle_max_ver   4.0
+#     NOTE: Min version not 3.8 because autoloader required
+%global guzzle_min_ver 3.9.3
+%global guzzle_max_ver 4.0
 # "psr/log": "~1.0"
-%global psr_log_min_ver  1.0
-%global psr_log_max_ver  2.0
+#     NOTE: Min version not 1.0 because autoloader required
+%global psr_log_min_ver 1.0.0-8
+%global psr_log_max_ver 2.0
 
 # Build using "--without tests" to disable tests
-%global with_tests       %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
 
-%{!?phpdir:     %global phpdir     %{_datadir}/php}
-%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-opencloud
 Version:       %{github_version}
@@ -40,20 +42,20 @@ Summary:       PHP SDK for OpenStack/Rackspace APIs
 Group:         Development/Libraries
 
 License:       ASL 2.0
-URL:           http://php-opencloud.com/
+URL:           http://docs.php-opencloud.com/
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Tests
 %if %{with_tests}
-BuildRequires: php-phpunit-PHPUnit
-# composer.json
-BuildRequires: php(language)         >= %{php_min_ver}
-BuildRequires: php-composer(psr/log) >= %{psr_log_min_ver}
-BuildRequires: php-composer(psr/log) <  %{psr_log_max_ver}
-BuildRequires: php-guzzle-Guzzle     >= %{guzzle_min_ver}
-BuildRequires: php-guzzle-Guzzle     <  %{guzzle_max_ver}
-# phpcompatinfo (computed from version 1.12.1)
+BuildRequires: php-composer(phpunit/phpunit)
+## composer.json
+BuildRequires: php(language)               >= %{php_min_ver}
+#BuildRequires: php-composer(psr/log)       >= %%{psr_log_min_ver}
+BuildRequires: php-PsrLog                  >= %{psr_log_min_ver}
+BuildRequires: php-composer(guzzle/guzzle) >= %{guzzle_min_ver}
+## phpcompatinfo (computed from version 1.12.2)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-hash
@@ -61,20 +63,25 @@ BuildRequires: php-json
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
+## Autoloader
+BuildRequires: php-composer(symfony/class-loader)
 %endif
 
 # composer.json
-Requires:      php(language)         >= %{php_min_ver}
-Requires:      php-composer(psr/log) >= %{psr_log_min_ver}
-Requires:      php-composer(psr/log) <  %{psr_log_max_ver}
-Requires:      php-guzzle-Guzzle     >= %{guzzle_min_ver}
-Requires:      php-guzzle-Guzzle     <  %{guzzle_max_ver}
+Requires:      php(language)               >= %{php_min_ver}
+#Requires:      php-composer(psr/log)       >= %%{psr_log_min_ver}
+Requires:      php-PsrLog                  >= %{psr_log_min_ver}
+Requires:      php-composer(psr/log)       <  %{psr_log_max_ver}
+Requires:      php-composer(guzzle/guzzle) >= %{guzzle_min_ver}
+Requires:      php-composer(guzzle/guzzle) <  %{guzzle_max_ver}
 # phpcompatinfo (computed from version 1.12.1)
 Requires:      php-date
 Requires:      php-hash
 Requires:      php-json
 Requires:      php-pcre
 Requires:      php-spl
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -103,7 +110,33 @@ Documentation for PHP SDK for OpenStack/Rackspace APIs.
 
 
 %build
-# Empty build section, nothing required
+: Create autoloader
+cat <<'AUTOLOAD' | tee lib/OpenCloud/autoload.php
+<?php
+/**
+ * Autoloader for %{name} and its' dependencies
+ * (created by %{name}-%{version}-%{release}).
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('OpenCloud\\', dirname(__DIR__));
+
+// Required dependencies
+require_once '%{phpdir}/Guzzle/autoload.php';
+require_once '%{phpdir}/Psr/Log/autoload.php';
+
+return $fedoraClassLoader;
+AUTOLOAD
 
 
 %install
@@ -118,38 +151,50 @@ rm -rf %{buildroot}
 
 %check
 %if %{with_tests}
-# Create autoloader
+: Create mock Composer autoloader
 mkdir vendor
-cat > vendor/autoload.php <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee vendor/autoload.php
 <?php
-
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', $class).'.php';
-    @include_once $src;
-});
+$fedoraClassLoader = require '%{buildroot}%{phpdir}/OpenCloud/autoload.php';
+$fedoraClassLoader->addPrefix('OpenCloud\\', dirname(__DIR__).'/tests');
 AUTOLOAD
 
-# Create PHPUnit config with no coverage-clover logging
+: Remove coverage-clover logging from PHPUnit config
 sed -e '/coverage-clover/d' phpunit.xml.dist > phpunit.xml
 
-%{__phpunit} --include-path %{buildroot}%{phpdir}:./tests
+%{_bindir}/phpunit --verbose
+
+if which php70; then
+  #php70 %{_bindir}/phpunit --verbose
+  : not yet compatible
+fi
 %else
 : Tests skipped
 %endif
 
 
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc *.md composer.json
+%doc *.md
+%doc composer.json
 %{phpdir}/OpenCloud
 
 
 %files doc
-%doc samples docs
+%defattr(-,root,root,-)
+%doc docs
+%doc samples
 
 
 %changelog
+* Sat Mar 26 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.12.2-1
+- Updated to 1.12.2
+- Updated URL
+- Updated dependencies to use php-composer(*)
+- Added autoloader (and bumped dependency versions for their autoloaders)
+
 * Fri Jan 02 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.12.1-1
 - Updated to 1.12.1 (BZ #1172637)
 - Added php-composer(rackspace/php-opencloud) virtual provide
