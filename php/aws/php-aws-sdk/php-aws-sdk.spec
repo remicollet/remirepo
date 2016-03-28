@@ -24,26 +24,29 @@
 %global pear_name        sdk
 
 # "php": ">=5.3.3"
-%global php_min_ver      5.3.3
+%global php_min_ver 5.3.3
 # "guzzle/guzzle": "~3.7"
-# 3.9.3 for autoloader
-%global guzzle_min_ver   3.9.3
-%global guzzle_max_ver   4.0
+#     NOTE: Min version not 3.7 because autoloader required
+%global guzzle_min_ver 3.9.3
+%global guzzle_max_ver 4.0
 # "doctrine/cache": "~1.0"
-%global cache_min_ver    1.0
-%global cache_max_ver    2.0
+#     NOTE: Min version not 1.0 because autoloader required
+%global doctrine_cache_min_ver 1.4.1
+%global doctrine_cache_max_ver 2.0
 # "monolog/monolog": "~1.4"
-%global monolog_min_ver  1.4
+#     NOTE: Min version not 1.4 because autoloader required
+%global monolog_min_ver  1.15.0
 %global monolog_max_ver  2.0
 # "symfony/yaml": "~2.1"
-%global yaml_min_ver     2.1
-%global yaml_max_ver     3.0
+#     NOTE: Min version not 2.1 because autoloader required
+%global symfony_min_ver 2.7.1
+%global symfony_max_ver 3.0
 
 %{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:      php-aws-sdk
 Version:   %{github_version}
-Release:   2%{?dist}
+Release:   3%{?dist}
 Summary:   Amazon Web Services framework for PHP
 
 Group:     Development/Libraries
@@ -53,10 +56,10 @@ Source0:   https://github.com/%{github_owner}/%{github_name}/archive/%{github_co
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
-# For test
+# Library version value and autoloader check
 BuildRequires: php-cli
 BuildRequires: php-composer(guzzle/guzzle) >= %{guzzle_min_ver}
-
+BuildRequires: php-composer(symfony/class-loader)
 
 # composer.json
 Requires:  php(language)               >= %{php_min_ver}
@@ -77,13 +80,19 @@ Requires:  php-spl
 # Autoloader
 Requires:  php-composer(symfony/class-loader)
 
-# Optional package version checks
-Conflicts: php-composer(doctrine/cache)  <  %{cache_min_ver}
-Conflicts: php-composer(doctrine/cache)  >= %{cache_max_ver}
+# Weak dependencies
+%if 0%{?fedora} >= 21
+Suggests:  php-composer(doctrine/cache)
+Suggests:  php-composer(monolog/monolog)
+Suggests:  php-composer(symfony/yaml)
+Suggests:  php-pecl(apcu)
+%endif
+Conflicts: php-composer(doctrine/cache)  <  %{doctrine_cache_min_ver}
+Conflicts: php-composer(doctrine/cache)  >= %{doctrine_cache_max_ver}
 Conflicts: php-composer(monolog/monolog) <  %{monolog_min_ver}
 Conflicts: php-composer(monolog/monolog) >= %{monolog_max_ver}
-Conflicts: php-composer(symfony/yaml)    <  %{yaml_min_ver}
-Conflicts: php-composer(symfony/yaml)    >= %{yaml_max_ver}
+Conflicts: php-composer(symfony/yaml)    <  %{symfony_min_ver}
+Conflicts: php-composer(symfony/yaml)    >= %{symfony_max_ver}
 
 # Composer
 Provides:  php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -98,19 +107,7 @@ Amazon Web Services SDK for PHP enables developers to build solutions for
 Amazon Simple Storage Service (Amazon S3), Amazon Elastic Compute Cloud
 (Amazon EC2), Amazon SimpleDB, and more.
 
-Optional:
-* APC (php-pecl-apcu):
-      Allows service description opcode caching, request and response caching,
-      and credentials caching
-* Doctrine Cache (php-doctrine-cache):
-      Adds support for caching of credentials and responses
-* Monolog (php-Monolog):
-      Adds support for logging HTTP requests and responses
-* Symfony YAML (php-symfony-yaml):
-      Eases the ability to write manifests for creating jobs in AWS
-      Import/Export
-
-Autoloader: %{phpdir}/AWSSDKforPHP/Aws/autoload.php
+Autoloader: %{phpdir}/Aws/autoload.php
 
 
 %prep
@@ -121,8 +118,7 @@ cat <<'AUTOLOAD' | tee src/Aws/autoload.php
 <?php
 /**
  * Autoloader for %{name} and its' dependencies
- *
- * Created by %{name}-%{version}-%{release}
+ * (created by %{name}-%{version}-%{release}).
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
@@ -138,19 +134,13 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('Aws\\', dirname(__DIR__));
 
-// optional dependencies
-foreach (array(
-    '%{phpdir}/Doctrine/Common/Cache/autoload.php',
-    '%{phpdir}/Monolog/autoload.php',
-    '%{phpdir}/Symfony/Component/Yaml/autoload.php',
-) as $dependencyAutoloader) {
-    if (file_exists($dependencyAutoloader)) {
-        require_once $dependencyAutoloader;
-    }
-}
-
-// mandatory dependencies
+// Required dependency
 require_once '%{phpdir}/Guzzle/autoload.php';
+
+// Optional dependencies
+@include_once '%{phpdir}/Doctrine/Common/Cache/autoload.php';
+@include_once '%{phpdir}/Monolog/autoload.php';
+@include_once '%{phpdir}/Symfony/Component/Yaml/autoload.php';
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -170,15 +160,16 @@ ln -s ../Aws %{buildroot}%{phpdir}/AWSSDKforPHP/Aws
 
 
 %check
+: Library version value and autoloader check
+%{_bindir}/php -r '
+    require_once "%{buildroot}%{phpdir}/Aws/autoload.php";
+    $version = \Aws\Common\Aws::VERSION;
+    echo "Version $version (expected %{version})\n";
+    exit(version_compare("%{version}", "$version", "=") ? 0 : 1);
+'
+
 # Tests skipped because "Guzzle\Tests\GuzzleTestCase" is not provided by the
 # php-guzzle-Guzzle package
-: Minimal check to ensure autoloader work + version
-php -r '
- require_once "%{buildroot}%{phpdir}/AWSSDKforPHP/Aws/autoload.php";
- $v = Aws\Common\Aws::VERSION;
- echo "Version is $v (expected %{version})\n";
- exit ($v=="%{version}" ? 0 : 1);
-'
 
 
 %post
@@ -203,6 +194,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Mar 27 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.8.27-3
+- Updated to 2.8.27 (RHBZ #1320697)
+- Added weak dependencies
+- Autoloader updated to use dependencies' autoloaders
+- Added library version value and autoloader check
+
 * Wed Mar 23 2016 Remi Collet <remi@fedoraproject.org> - 2.8.27-2
 - use php-guzzle-Guzzle autoloader
 - add minimal check
