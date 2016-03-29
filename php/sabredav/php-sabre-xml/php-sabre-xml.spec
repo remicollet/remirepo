@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    fb07d78e232ec37f5760f579e15694d150ff0da6
+%global gh_commit    59998046db252634259a878baf1af18159f508f3
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-xml
@@ -19,7 +19,7 @@
 
 Name:           php-%{gh_project}
 Summary:        XML library that you may not hate
-Version:        1.4.0
+Version:        1.4.1
 Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
@@ -128,6 +128,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Mar 29 2016 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
+- update to 1.4.1
+
 * Fri Mar 11 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - Initial packaging
 
