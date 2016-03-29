@@ -139,8 +139,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.5.33
-Release: 2%{?dist}
+Version: 5.5.34
+Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1770,6 +1770,10 @@ fi
 
 
 %changelog
+* Tue Mar 29 2016 Remi Collet <remi@fedoraproject.org> 5.5.34-1
+- Update to 5.5.34
+  http://www.php.net/releases/5_5_34.php
+
 * Thu Mar 10 2016 Remi Collet <remi@fedoraproject.org> 5.5.33-2
 - adapt for F24: define %%pecl_xmldir and own it
 
