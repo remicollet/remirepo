@@ -8,19 +8,20 @@
 #
 %if 0%{?scl:1}
 %if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
+%global sub_prefix  more-php56-
 %else
-%global sub_prefix %{scl_prefix}
+%global sub_prefix  %{scl_prefix}
 %endif
+%scl_package        php-pecl-apm
+%else
+%global pkg_name    %{name}
 %endif
 
-%{?scl:          %scl_package        php-pecl-apm}
-%{!?scl:         %global pkg_name    %{name}}
 %global gh_commit   c0bd339a94b7fe5da66c6b5ced286345a4b5410f
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    patrickallaert
 %global gh_project  php-apm
-%global gh_date     20151117
+#global gh_date     20151117
 %global pecl_name   apm
 %global proj_name   APM
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
@@ -40,16 +41,20 @@
 
 Name:           %{?sub_prefix}php-pecl-apm
 Summary:        Alternative PHP Monitor
-Version:        2.0.5
+Version:        2.1.0
 %if 0%{?gh_date:1}
 Release:        6.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
-%else
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
-%endif
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
+%else
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
+%endif
 
 # Disable the extension and drivers by default
 Patch0:         %{proj_name}-config.patch
+
+# See https://github.com/patrickallaert/php-apm/pull/38
+Patch1:         %{proj_name}-pr38.patch
 
 License:        PHP
 Group:          Development/Languages
@@ -74,8 +79,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -126,14 +133,19 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -qc
+%if 0%{?gh_date:1}
 mv %{gh_project}-%{gh_commit} NTS
 mv NTS/package.xml .
+%else
+mv %{proj_name}-%{version} NTS
+%endif
 
 %{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
 %patch0 -p0 -b .rpm
 sed -e 's:/var/php/apm/db:%{_localstatedir}/lib/php/apm/db:' -i apm.ini
+%patch1 -p1 -b .pr38
 
 : Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APM_VERSION/{s/.* "//;s/".*$//;p}' php_apm.h)
@@ -267,6 +279,11 @@ fi
 
 
 %changelog
+* Tue Mar 29 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+- add patch to fix ZTS build
+  open https://github.com/patrickallaert/php-apm/pull/38
+
 * Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 2.0.5-6.20151117gitc0bd339
 - refresh and adapt for F24
 

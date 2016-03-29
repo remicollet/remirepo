@@ -1,0 +1,75 @@
+From ba6e8150b4d90220d89f77d5188918960bf0b3b4 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Tue, 29 Mar 2016 13:29:03 +0200
+Subject: [PATCH] fix php5/ZTS build
+
+---
+ apm.c            | 2 +-
+ driver_mysql.c   | 2 +-
+ driver_socket.c  | 2 +-
+ driver_sqlite3.c | 2 +-
+ php_apm.h        | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/apm.c b/apm.c
+index 5c64e67..624369c 100644
+--- a/apm.c
++++ b/apm.c
+@@ -566,7 +566,7 @@ static void process_event(int event_type, int type, char * error_filename, uint
+ #define FETCH_HTTP_GLOBALS(name) (tmp = PG(http_globals)[TRACK_VARS_##name])
+ #endif
+ 
+-void extract_data()
++void extract_data(TSRMLS_D)
+ {
+ 	zval *tmp;
+ 
+diff --git a/driver_mysql.c b/driver_mysql.c
+index d8f3a30..1f2390b 100644
+--- a/driver_mysql.c
++++ b/driver_mysql.c
+@@ -140,7 +140,7 @@ static void apm_driver_mysql_insert_request(TSRMLS_D)
+ 	struct in_addr ip_addr;
+ 	MYSQL *connection;
+ 
+-	extract_data();
++	extract_data(TSRMLS_C);
+ 
+ 	APM_DEBUG("[MySQL driver] Begin insert request\n");
+ 	if (APM_G(mysql_is_request_created)) {
+diff --git a/driver_socket.c b/driver_socket.c
+index a614bd0..97261be 100644
+--- a/driver_socket.c
++++ b/driver_socket.c
+@@ -143,7 +143,7 @@ int apm_driver_socket_rshutdown(TSRMLS_D)
+ 		return SUCCESS;
+ 	}
+ 	
+-	extract_data();
++	extract_data(TSRMLS_C);
+ 
+ 	sd_it = 0;
+ 
+diff --git a/driver_sqlite3.c b/driver_sqlite3.c
+index 3050c33..049e5e1 100644
+--- a/driver_sqlite3.c
++++ b/driver_sqlite3.c
+@@ -191,7 +191,7 @@ static void apm_driver_sqlite3_insert_request(TSRMLS_D)
+ 	struct in_addr ip_addr;
+ 	sqlite3 *connection;
+ 
+-	extract_data();
++	extract_data(TSRMLS_C);
+ 
+ 	APM_DEBUG("[SQLite driver] Begin insert request\n");
+ 	if (APM_G(sqlite3_is_request_created)) {
+diff --git a/php_apm.h b/php_apm.h
+index 9bad594..775d158 100644
+--- a/php_apm.h
++++ b/php_apm.h
+@@ -378,4 +378,4 @@ length);
+ 
+ #endif
+ 
+-void extract_data();
++void extract_data(TSRMLS_D);
