@@ -1,7 +1,6 @@
 {
     "swiftmailer\/swiftmailer": "php-swift-Swift",
     "zendframework\/zendframework1": "php-ZendFramework",
-    "sabre\/dav": "php-sabre-dav",
     "phpunit\/phpunit-story": "php-phpunit-PHPUnit-Story",
     "sebastian\/phpcpd": "php-phpunit-phpcpd",
     "sebastian\/phpdcd": "php-phpunit-phpdcd",
@@ -13,7 +12,7 @@
     "tecnickcom\/tc-lib-pdf-page": "php-tecnickcom-tc-lib-pdf-page",
     "tecnickcom\/tc-lib-unicode": "php-tecnickcom-tc-lib-unicode",
     "tecnickcom\/tc-lib-unicode-data": "php-tecnickcom-tc-lib-unicode-data",
-	"sebastian\/object-enumerator": "php-sebastian-object-enumerator",
+    "sebastian\/object-enumerator": "php-sebastian-object-enumerator",
     "mongodb\/mongodb": "php-mongodb",
     "tedivm\/jshrink": "php-tedivm-jshrink",
     "phine\/path": "php-phine-path",
