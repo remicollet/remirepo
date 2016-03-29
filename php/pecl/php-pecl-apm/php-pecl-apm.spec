@@ -16,16 +16,20 @@
 
 %{?scl:          %scl_package        php-pecl-apm}
 %{!?scl:         %global pkg_name    %{name}}
-%global pecl_name apm
-%global proj_name APM
-# https://github.com/patrickallaert/php-apm/issues/13
-%global with_zts  0%{?__ztsphp:1}
+%global gh_commit   c0bd339a94b7fe5da66c6b5ced286345a4b5410f
+%global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner    patrickallaert
+%global gh_project  php-apm
+%global gh_date     20151117
+%global pecl_name   apm
+%global proj_name   APM
+%global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 # after json.ini
-%global ini_name  z-%{pecl_name}.ini
+%global ini_name    z-%{pecl_name}.ini
 %else
 # after 40-json.ini
-%global ini_name  50-%{pecl_name}.ini
+%global ini_name    50-%{pecl_name}.ini
 %endif
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 %global with_sqlite 1
@@ -37,8 +41,12 @@
 Name:           %{?sub_prefix}php-pecl-apm
 Summary:        Alternative PHP Monitor
 Version:        2.0.5
-Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
-Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
+%if 0%{?gh_date:1}
+Release:        6.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+%else
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+%endif
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 
 # Disable the extension and drivers by default
 Patch0:         %{proj_name}-config.patch
@@ -83,6 +91,10 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -109,12 +121,13 @@ NOTICE: the extension is disable, apm.ini configuration file needs to be edited.
 
 The optional %{?scl_prefix}apm-web package provides the web application.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl})}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
 %setup -qc
-mv %{proj_name}-%{version} NTS
+mv %{gh_project}-%{gh_commit} NTS
+mv NTS/package.xml .
 
 %{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
@@ -254,8 +267,18 @@ fi
 
 
 %changelog
-* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 2.0.5-3
-- adapt for F24
+* Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 2.0.5-6.20151117gitc0bd339
+- refresh and adapt for F24
+
+* Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 2.0.5-5.20150807gitd08a589
+- rebuild for PHP 7.0.0RC5 new API version
+
+* Fri Sep 18 2015 Remi Collet <remi@fedoraproject.org> - 2.0.5-4.20150807gitd08a589
+- F23 rebuild with rh_layout
+
+* Fri Aug  7 2015 Remi Collet <rcollet@redhat.com> - 2.0.5-3.20150807gitd08a589
+- sources from github
+- git snapshot for php 7
 
 * Tue Jun 23 2015 Remi Collet <rcollet@redhat.com> - 2.0.5-2
 - allow build against rh-php56 (as more-php56)
@@ -293,3 +316,4 @@ fi
   https://github.com/patrickallaert/php-apm/issues/11 - bad version
   https://github.com/patrickallaert/php-apm/issues/12 - bad roles
   https://github.com/patrickallaert/php-apm/issues/13 - zts broken
+

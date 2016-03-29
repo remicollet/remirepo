@@ -119,7 +119,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.4.45
-Release: 6%{?dist}
+Release: 7%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -195,6 +195,8 @@ Patch212: bug71488.patch
 Patch213: pcre838.patch
 Patch214: bug71498.patch
 Patch215: bug71587.patch
+Patch216: bug71860.patch
+Patch217: bug71906.patch
 
 # Fixes for tests (300+)
 # Backported from 5.5
@@ -848,6 +850,8 @@ support for using the enchant library to PHP.
 %patch213 -p1 -b .pcre838
 %patch214 -p1 -b .bug71498
 %patch215 -p1 -b .bug71587
+%patch216 -p1 -b .bug71860
+%patch217 -p1 -b .bug71906
 
 # Fixes for tests
 %patch300 -p1 -b .datetests1
@@ -1671,6 +1675,10 @@ EOF
 
 
 %changelog
+* Tue Mar 29 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-7
+- Fix #71860: Require valid paths for phar filenames
+- Fix #71906: AddressSanitizer: negative-size-param in mbfl_strcut
+
 * Thu Mar 10 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-6
 - adapt for F24: define %%pecl_xmldir and own it
 
