@@ -197,6 +197,9 @@ Patch214: bug71498.patch
 Patch215: bug71587.patch
 Patch216: bug71860.patch
 Patch217: bug71906.patch
+Patch218: bug71798.patch
+Patch219: bug71704.patch
+Patch220: bug71527.patch
 
 # Fixes for tests (300+)
 # Backported from 5.5
@@ -852,6 +855,9 @@ support for using the enchant library to PHP.
 %patch215 -p1 -b .bug71587
 %patch216 -p1 -b .bug71860
 %patch217 -p1 -b .bug71906
+%patch218 -p1 -b .bug71798
+%patch219 -p1 -b .bug71704
+%patch220 -p1 -b .bug71527
 
 # Fixes for tests
 %patch300 -p1 -b .datetests1
@@ -1678,6 +1684,9 @@ EOF
 * Tue Mar 29 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-7
 - Fix #71860: Require valid paths for phar filenames
 - Fix #71906: AddressSanitizer: negative-size-param in mbfl_strcut
+- Fix #71798: Integer Overflow in php_raw_url_encode
+- Fix #71704: php_snmp_error() Format String Vulnerability
+- Fix #71527: Buffer over-write in finfo_open with malformed magic file
 
 * Thu Mar 10 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-6
 - adapt for F24: define %%pecl_xmldir and own it
