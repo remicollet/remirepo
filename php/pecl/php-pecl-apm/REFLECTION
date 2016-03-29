@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #181 apm version 2.0.5 ] {
+Extension [ <persistent> extension #195 apm version 2.1.0 ] {
 
   - INI {
     Entry [ apm.enabled <SYSTEM> ]
