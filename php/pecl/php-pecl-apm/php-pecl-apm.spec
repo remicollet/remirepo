@@ -41,7 +41,7 @@
 
 Name:           %{?sub_prefix}php-pecl-apm
 Summary:        Alternative PHP Monitor
-Version:        2.1.0
+Version:        2.1.1
 %if 0%{?gh_date:1}
 Release:        6.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
@@ -52,9 +52,6 @@ Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 
 # Disable the extension and drivers by default
 Patch0:         %{proj_name}-config.patch
-
-# See https://github.com/patrickallaert/php-apm/pull/38
-Patch1:         %{proj_name}-pr38.patch
 
 License:        PHP
 Group:          Development/Languages
@@ -145,7 +142,6 @@ mv %{proj_name}-%{version} NTS
 cd NTS
 %patch0 -p0 -b .rpm
 sed -e 's:/var/php/apm/db:%{_localstatedir}/lib/php/apm/db:' -i apm.ini
-%patch1 -p1 -b .pr38
 
 : Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APM_VERSION/{s/.* "//;s/".*$//;p}' php_apm.h)
@@ -279,6 +275,9 @@ fi
 
 
 %changelog
+* Tue Mar 29 2016 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
+- Update to 2.1.1 (no change, only patch merged upstream)
+
 * Tue Mar 29 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - Update to 2.1.0
 - add patch to fix ZTS build
