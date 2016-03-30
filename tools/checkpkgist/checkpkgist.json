@@ -1,5 +1,4 @@
 {
-    "swiftmailer\/swiftmailer": "php-swift-Swift",
     "zendframework\/zendframework1": "php-ZendFramework",
     "phpunit\/phpunit-story": "php-phpunit-PHPUnit-Story",
     "sebastian\/phpcpd": "php-phpunit-phpcpd",
