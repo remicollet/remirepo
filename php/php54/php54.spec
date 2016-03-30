@@ -98,7 +98,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.4.45
-Release: 5%{?dist}
+Release: 7%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -172,6 +172,11 @@ Patch212: bug71488.patch
 Patch213: pcre838.patch
 Patch214: bug71498.patch
 Patch215: bug71587.patch
+Patch216: bug71860.patch
+Patch217: bug71906.patch
+Patch218: bug71798.patch
+Patch219: bug71704.patch
+Patch220: bug71527.patch
 
 # Fixes for tests
 # no_NO issue
@@ -895,6 +900,11 @@ rm -f ext/json/utf8_to_utf16.*
 %patch213 -p1 -b .pcre838
 %patch214 -p1 -b .bug71498
 %patch215 -p1 -b .bug71587
+%patch216 -p1 -b .bug71860
+%patch217 -p1 -b .bug71906
+%patch218 -p1 -b .bug71798
+%patch219 -p1 -b .bug71704
+%patch220 -p1 -b .bug71527
 
 # Fixes for tests
 %patch301 -p1 -b .datetests2
@@ -1784,6 +1794,13 @@ fi
 
 
 %changelog
+* Tue Mar 29 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-7
+- Fix #71860: Require valid paths for phar filenames
+- Fix #71906: AddressSanitizer: negative-size-param in mbfl_strcut
+- Fix #71798: Integer Overflow in php_raw_url_encode
+- Fix #71704: php_snmp_error() Format String Vulnerability
+- Fix #71527: Buffer over-write in finfo_open with malformed magic file
+
 * Wed Mar  2 2016 Remi Collet <remi@remirepo.net> 5.4.45-5
 - Fix #71498: Out-of-Bound Read in phar_parse_zipfile()
 - Fix #71587: Use-After-Free / Double-Free in WDDX Deserialize

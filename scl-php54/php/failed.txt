@@ -1,10 +1,9 @@
-===== 5.5.45-5 (2016-03-02)
+===== 5.5.45-7 (2016-03-30)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl54*/build.log
 
 /var/lib/mock/scl54el6x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
 /var/lib/mock/scl54el7x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
-/var/lib/mock/scl54fc20x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
 /var/lib/mock/scl54fc21x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
 /var/lib/mock/scl54fc22x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
 /var/lib/mock/scl54fc23x/build.log:Tests failed    :    2 (  0.0%) (  0.0%)

@@ -1,0 +1,64 @@
+Backported from 5.5 for 5.4 by Remi Collet
+
+From fe13566c93f118a15a96320a546c7878fd0cfc5e Mon Sep 17 00:00:00 2001
+From: Anatol Belski <ab@php.net>
+Date: Mon, 28 Mar 2016 00:45:19 +0200
+Subject: [PATCH] Fixed bug #71527 Buffer over-write in finfo_open with
+ malformed magic file
+
+The actual fix is applying the upstream patch from
+https://github.com/file/file/commit/6713ca45e7757297381f4b4cdb9cf5e624a9ad36
+---
+ ext/fileinfo/libmagic/funcs.c     |  2 +-
+ ext/fileinfo/tests/bug71527.magic |  1 +
+ ext/fileinfo/tests/bug71527.phpt  | 19 +++++++++++++++++++
+ 3 files changed, 21 insertions(+), 1 deletion(-)
+ create mode 100644 ext/fileinfo/tests/bug71527.magic
+ create mode 100644 ext/fileinfo/tests/bug71527.phpt
+
+diff --git a/ext/fileinfo/libmagic/funcs.c b/ext/fileinfo/libmagic/funcs.c
+index 011ca42..def2f7b 100644
+--- a/ext/fileinfo/libmagic/funcs.c
++++ b/ext/fileinfo/libmagic/funcs.c
+@@ -414,7 +414,7 @@ file_check_mem(struct magic_set *ms, unsigned int level)
+ 	size_t len;
+ 
+ 	if (level >= ms->c.len) {
+-		len = (ms->c.len += 20) * sizeof(*ms->c.li);
++		len = (ms->c.len += 20 + level) * sizeof(*ms->c.li);
+ 		ms->c.li = CAST(struct level_info *, (ms->c.li == NULL) ?
+ 		    emalloc(len) :
+ 		    erealloc(ms->c.li, len));
+diff --git a/ext/fileinfo/tests/bug71527.magic b/ext/fileinfo/tests/bug71527.magic
+new file mode 100644
+index 0000000..14d7781
+--- /dev/null
++++ b/ext/fileinfo/tests/bug71527.magic
+@@ -0,0 +1 @@
++>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+\ No newline at end of file
+diff --git a/ext/fileinfo/tests/bug71527.phpt b/ext/fileinfo/tests/bug71527.phpt
+new file mode 100644
+index 0000000..f5b1d86
+--- /dev/null
++++ b/ext/fileinfo/tests/bug71527.phpt
+@@ -0,0 +1,19 @@
++--TEST--
++Bug #71527 Buffer over-write in finfo_open with malformed magic file
++--SKIPIF--
++<?php
++if (!class_exists('finfo'))
++	die('skip no fileinfo extension');
++--ENV--
++USE_ZEND_ALLOC=0
++--FILE--
++<?php
++	$finfo = finfo_open(FILEINFO_NONE, dirname(__FILE__) . DIRECTORY_SEPARATOR . "bug71527.magic");
++	$info = finfo_file($finfo, __FILE__);
++	var_dump($info);
++?>
++--EXPECTF--
++Warning: finfo_open(): Failed to load magic database at '%sbug71527.magic'. in %sbug71527.php on line %d
++
++Warning: finfo_file() expects parameter 1 to be resource, boolean given in %sbug71527.php on line %d
++bool(false)
