@@ -51,7 +51,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       1%{dist}
+Release:       2%{dist}
 Summary:       PHP micro-framework based on the Symfony components
 
 Group:         Development/Libraries
@@ -303,6 +303,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Mar 30 2016 Remi Collet <remi@fedoraproject.org> - 1.3.5-2
+- fix swiftmailer autoloader path
+- run test suite with both PHP 5 and 7 when available
+
 * Tue Mar 29 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.5-1
 - Updated to 1.3.5 (RHBZ #1296756)
 - Updated dependency versions for their autoloaders and updated autoloader
