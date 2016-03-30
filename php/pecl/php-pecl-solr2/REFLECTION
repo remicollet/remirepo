@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #197 solr version 2.3.0 ] {
+Extension [ <persistent> extension #207 solr version 2.4.0 ] {
 
   - Dependencies {
     Dependency [ libxml (Required) ]
@@ -7,9 +7,9 @@ Extension [ <persistent> extension #197 solr version 2.3.0 ] {
 
   - Constants [4] {
     Constant [ integer SOLR_MAJOR_VERSION ] { 2 }
-    Constant [ integer SOLR_MINOR_VERSION ] { 3 }
+    Constant [ integer SOLR_MINOR_VERSION ] { 4 }
     Constant [ integer SOLR_PATCH_VERSION ] { 0 }
-    Constant [ string SOLR_EXTENSION_VERSION ] { 2.3.0 }
+    Constant [ string SOLR_EXTENSION_VERSION ] { 2.4.0 }
   }
 
   - Functions {
@@ -4018,7 +4018,7 @@ Extension [ <persistent> extension #197 solr version 2.3.0 ] {
         Method [ <internal:solr> public method setField ] {
 
           - Parameters [1] {
-            Parameter #0 [ <optional> $field ]
+            Parameter #0 [ <required> $fieldName ]
           }
         }
 
@@ -4684,7 +4684,7 @@ Extension [ <persistent> extension #197 solr version 2.3.0 ] {
       - Static properties [0] {
       }
 
-      - Static methods [5] {
+      - Static methods [6] {
         Method [ <internal:solr> static public method escapeQueryChars ] {
 
           - Parameters [1] {
@@ -4715,6 +4715,12 @@ Extension [ <persistent> extension #197 solr version 2.3.0 ] {
         }
 
         Method [ <internal:solr> static public method getSolrVersion ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:solr> static public method getSolrStats ] {
 
           - Parameters [0] {
           }
