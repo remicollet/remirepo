@@ -9,7 +9,7 @@
 #
 
 Name:       libbson
-Version:    1.3.4
+Version:    1.3.5
 Release:    1%{?dist}
 Summary:    Building, parsing, and iterating BSON documents
 Group:      System Environment/Libraries
@@ -137,6 +137,9 @@ make %{?_smp_mflags} check
 
 
 %changelog
+* Thu Mar 31 2016 Petr Pisar <ppisar@redhat.com> - 1.3.5-1
+- 1.3.5 bump
+
 * Tue Mar 15 2016 Remi Collet <remi@fedoraproject.org> - 1.3.4-1
 - switch to Fedora spec file
 - tweak install for EL-6 (don't run autoconf)
