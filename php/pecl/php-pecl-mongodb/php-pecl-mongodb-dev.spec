@@ -11,9 +11,10 @@
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  mongodb
 %if "%{php_version}" < "5.6"
-%global ini_name   %{pecl_name}.ini
+%global ini_name   z-%{pecl_name}.ini
 %else
-%global ini_name   40-%{pecl_name}.ini
+# After 40-smbclient.ini, see https://jira.mongodb.org/browse/PHPC-658
+%global ini_name   50-%{pecl_name}.ini
 %endif
 #global prever     RC0
 # Still needed because of some private API
@@ -22,7 +23,7 @@
 Summary:        MongoDB driver for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.1.5
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -218,13 +219,17 @@ cd ../ZTS
 
 
 %changelog
-* Fri Mar 18 2016 Remi Collet <remi@fedoraproject.org> - 1.1.5-1
+* Thu Mar 31 2016 Remi Collet <remi@fedoraproject.org> - 1.1.5-4
+- load after smbclient to workaround
+  https://jira.mongodb.org/browse/PHPC-658
+
+* Fri Mar 18 2016 Remi Collet <remi@fedoraproject.org> - 1.1.5-2
 - Update to 1.1.5 (stable)
 
-* Thu Mar 10 2016 Remi Collet <remi@fedoraproject.org> - 1.1.4-1
+* Thu Mar 10 2016 Remi Collet <remi@fedoraproject.org> - 1.1.4-2
 - Update to 1.1.4 (stable)
 
-* Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
+* Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-2
 - Update to 1.1.3 (stable)
 
 * Thu Jan 07 2016 Remi Collet <remi@fedoraproject.org> - 1.1.2-2

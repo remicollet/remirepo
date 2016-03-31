@@ -12,9 +12,10 @@
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  mongodb
 %if "%{php_version}" < "5.6"
-%global ini_name   %{pecl_name}.ini
+%global ini_name   z-%{pecl_name}.ini
 %else
-%global ini_name   40-%{pecl_name}.ini
+# After 40-smbclient.ini, see https://jira.mongodb.org/browse/PHPC-658
+%global ini_name   50-%{pecl_name}.ini
 %endif
 # Still needed because of some private API
 %global buildver %(pkg-config --silence-errors --modversion libmongoc-priv 2>/dev/null || echo 65536)
@@ -22,7 +23,7 @@
 Summary:        MongoDB driver for PHP
 Name:           php-pecl-%{pecl_name}
 Version:        1.1.5
-Release:        1%{?dist}
+Release:        3%{?dist}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -193,6 +194,10 @@ cd ../ZTS
 
 
 %changelog
+* Thu Mar 31 2016 Remi Collet <remi@fedoraproject.org> - 1.1.5-3
+- load after smbclient to workaround
+  https://jira.mongodb.org/browse/PHPC-658
+
 * Fri Mar 18 2016 Remi Collet <remi@fedoraproject.org> - 1.1.5-1
 - Update to 1.1.5 (stable)
 
