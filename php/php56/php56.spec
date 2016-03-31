@@ -145,8 +145,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.6.19
-Release: 2%{?dist}
+Version: 5.6.20
+Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1987,6 +1987,10 @@ fi
 
 
 %changelog
+* Thu Mar 31 2016 Remi Collet <remi@fedoraproject.org> 5.6.20-1
+- Update to 5.6.20
+  http://www.php.net/releases/5_6_20.php
+
 * Mon Mar  7 2016 Remi Collet <remi@fedoraproject.org> 5.6.19-2
 - adapt for F24: define %%pecl_xmldir and own it
 
