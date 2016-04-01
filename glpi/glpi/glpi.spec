@@ -27,8 +27,8 @@
 %endif
 
 Name:           glpi
-Version:        0.90.1
-Release:        4%{?dist}
+Version:        0.90.2
+Release:        1%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
@@ -47,8 +47,6 @@ Source4:        glpi-nginx.conf
 Patch0:         glpi-0.90-cron.patch
 # Fix autoloader
 Patch1:         glpi-0.90-autoload.patch
-# Upstream patch for ZF 2.5
-Patch2:         glpi-0.90-zf25.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -132,7 +130,6 @@ techniciens grâce à une maintenance plus cohérente.
 
 %patch0 -p0
 %patch1 -p0
-%patch2 -p1
 
 find . -name \*.orig -exec rm {} \; -print
 
@@ -326,6 +323,9 @@ fi
 
 
 %changelog
+* Fri Apr  1 2016 Remi Collet <remi@fedoraproject.org> - 0.90.2-1
+- update to 0.90.2
+
 * Thu Mar 24 2016 Remi Collet <remi@fedoraproject.org> - 0.90.1-4
 - add upstream patch to fix compatibility with ZF 2.5
 - recommend APCu
