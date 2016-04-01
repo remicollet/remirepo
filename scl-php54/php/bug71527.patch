@@ -62,3 +62,25 @@ index 0000000..f5b1d86
 +
 +Warning: finfo_file() expects parameter 1 to be resource, boolean given in %sbug71527.php on line %d
 +bool(false)
+From 4b0b1cec00d5c261a5eb4032862da917f93e87b7 Mon Sep 17 00:00:00 2001
+From: Anatol Belski <ab@php.net>
+Date: Thu, 31 Mar 2016 01:33:38 +0200
+Subject: [PATCH] fix borked mainstream patch
+
+---
+ ext/fileinfo/libmagic/funcs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ext/fileinfo/libmagic/funcs.c b/ext/fileinfo/libmagic/funcs.c
+index def2f7b..b976ac9 100644
+--- a/ext/fileinfo/libmagic/funcs.c
++++ b/ext/fileinfo/libmagic/funcs.c
+@@ -414,7 +414,7 @@ file_check_mem(struct magic_set *ms, unsigned int level)
+ 	size_t len;
+ 
+ 	if (level >= ms->c.len) {
+-		len = (ms->c.len += 20 + level) * sizeof(*ms->c.li);
++		len = (ms->c.len = 20 + level) * sizeof(*ms->c.li);
+ 		ms->c.li = CAST(struct level_info *, (ms->c.li == NULL) ?
+ 		    emalloc(len) :
+ 		    erealloc(ms->c.li, len));
