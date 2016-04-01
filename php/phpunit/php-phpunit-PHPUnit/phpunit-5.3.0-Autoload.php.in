@@ -48,6 +48,7 @@ require_once 'SebastianBergmann/Exporter/autoload.php';
 require_once 'SebastianBergmann/Version/autoload.php';
 require_once 'SebastianBergmann/Comparator/autoload.php';
 require_once 'SebastianBergmann/GlobalState/autoload.php';
+require_once 'SebastianBergmann/ObjectEnumerator/autoload.php';
 require_once 'Doctrine/Instantiator/autoload.php';
 require_once 'Prophecy/autoload.php';
 require_once 'SebastianBergmann/ResourceOperations/autoload.php';
