@@ -11,20 +11,13 @@
 %global libname      libmongoc
 %global libver       1.0
 
-%if 0%{?fedora} < 24
-%ifarch %{arm}
-# mongodb on arm is broken for now, see #1303864
-%global with_tests   0%{?_with_tests:1}
-%else
-%global with_tests   0%{!?_without_tests:1}
-%endif
-%else
 %ifarch x86_64
 %global with_tests   0%{!?_without_tests:1}
 %else
-# mongodb on i386/F24+ is broken for now, see #1313018
+# See https://jira.mongodb.org/browse/CDRIVER-1186
+# 32-bit MongoDB support was officially deprecated
+# in MongoDB 3.2, and support is being removed in 3.4.
 %global with_tests   0%{?_with_tests:1}
-%endif
 %endif
 
 Name:      mongo-c-driver
