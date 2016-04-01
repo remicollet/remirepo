@@ -15,10 +15,10 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package         php-pecl-event
+%else
+%global _root_prefix %{_prefix}
 %endif
-
-%{?scl:          %scl_package         php-pecl-event}
-%{!?scl:         %global _root_prefix %{_prefix}}
 
 %global with_tests  0%{!?_without_tests:1}
 %global pecl_name   event
@@ -34,7 +34,7 @@
 
 Summary:       Provides interface to libevent library
 Name:          %{?sub_prefix}php-pecl-%{pecl_name}
-Version:       2.0.1
+Version:       2.0.2
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
@@ -69,8 +69,10 @@ Provides:      %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -276,6 +278,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr 01 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- Update to 2.0.2 (php 5 and 7, stable)
+
 * Thu Mar 17 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Update to 2.0.1 (php 5 and 7, stable)
 
