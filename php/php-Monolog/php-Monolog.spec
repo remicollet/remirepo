@@ -21,7 +21,8 @@
 # "php": ">=5.3.0"
 %global php_min_ver     5.3.0
 # "psr/log": "~1.0"
-%global psrlog_min_ver  1.0
+#     NOTE: Min version not 1.0 because autoloader required
+%global psrlog_min_ver  1.0.0-8
 %global psrlog_max_ver  2.0
 # "raven/raven": "^0.13"
 %global raven_min_ver   0.13
@@ -30,10 +31,9 @@
 #     NOTE: Min version not 2.4.9 because autoloader required
 %global aws_min_ver     2.8.13
 %global aws_max_ver     3.0
-# "swiftmailer/swiftmailer": "~5.3",
+# "swiftmailer/swiftmailer": "~5.3"
 %global swift_min_ver   5.3
 %global swift_max_ver   6
-
 
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
@@ -42,7 +42,7 @@
 
 Name:      php-Monolog
 Version:   %{github_version}
-Release:   1%{?dist}
+Release:   2%{?dist}
 Summary:   Sends your logs to files, sockets, inboxes, databases and various web services
 
 Group:     Development/Libraries
@@ -50,25 +50,25 @@ License:   MIT
 URL:       https://github.com/%{github_owner}/%{github_name}
 Source0:   %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+# missing property
 # https://github.com/Seldaek/monolog/pull/757
 Patch0:    %{name}-pr756.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
-# %%{pear_phpdir} macro
-BuildRequires: php-pear
 # Tests
 %if %{with_tests}
 ## composer.json
-BuildRequires: php(language)         >= %{php_min_ver}
+BuildRequires: php(language)                         >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-BuildRequires: php-composer(psr/log) >= %{psrlog_min_ver}
-BuildRequires: php-composer(psr/log) <  %{psrlog_max_ver}
+#BuildRequires: php-composer(psr/log)                 >= %%{psrlog_min_ver}
+BuildRequires: php-PsrLog                            >= %{psrlog_min_ver}
+BuildRequires: php-composer(psr/log)                 <  %{psrlog_max_ver}
 ## optional
 BuildRequires: php-composer(swiftmailer/swiftmailer) >= %{swift_min_ver}
-BuildRequires: php-composer(raven/raven) >= %{raven_min_ver}
-BuildRequires: php-composer(aws/aws-sdk-php) >= %{aws_min_ver}
-## phpcompatinfo (computed from version 1.17.2)
+BuildRequires: php-composer(raven/raven)             >= %{raven_min_ver}
+BuildRequires: php-composer(aws/aws-sdk-php)         >= %{aws_min_ver}
+## phpcompatinfo (computed from version 1.18.1)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -87,9 +87,10 @@ BuildRequires: php-composer(symfony/class-loader)
 
 # composer.json
 Requires:      php(language)         >= %{php_min_ver}
-Requires:      php-composer(psr/log) >= %{psrlog_min_ver}
+#Requires:      php-composer(psr/log) >= %%{psrlog_min_ver}
+Requires:      php-PsrLog            >= %{psrlog_min_ver}
 Requires:      php-composer(psr/log) <  %{psrlog_max_ver}
-# phpcompatinfo (computed from version 1.17.2)
+# phpcompatinfo (computed from version 1.18.1)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-filter
@@ -121,14 +122,18 @@ Provides:      %{name}-mongo  = %{version}-%{release}
 Obsoletes:     %{name}-raven  < %{version}-%{release}
 Provides:      %{name}-raven  = %{version}-%{release}
 
-# Optional dependencies
-Conflicts:     php-aws-sdk <  %{aws_min_ver}
-Conflicts:     php-aws-sdk >= %{aws_max_ver}
-Conflicts:     php-Raven   <  %{raven_min_ver}
-Conflicts:     php-Raven   >= %{raven_max_ver}
+# Weak dependencies
+%if 0%{?fedora} >= 21
+Suggests:      php-composer(aws/aws-sdk-php)
+Suggests:      php-composer(raven/raven)
+Suggests:      php-composer(swiftmailer/swiftmailer)
+%endif
+Conflicts:     php-aws-sdk     <  %{aws_min_ver}
+Conflicts:     php-aws-sdk     >= %{aws_max_ver}
+Conflicts:     php-Raven       <  %{raven_min_ver}
+Conflicts:     php-Raven       >= %{raven_max_ver}
 Conflicts:     php-swiftmailer <  %{swift_min_ver}
 Conflicts:     php-swiftmailer >= %{swift_max_ver}
-
 
 %description
 Monolog sends your logs to files, sockets, inboxes, databases and various web
@@ -138,32 +143,6 @@ This library implements the PSR-3 [1] interface that you can type-hint against
 in your own libraries to keep a maximum of interoperability. You can also use it
 in your applications to make sure you can always use another compatible logger
 at a later time.
-
-Optional:
-* php-aws-sdk (>= %{aws_min_ver}, < %{aws_max_ver})
-      Allow sending log messages to AWS services like DynamoDB
-* php-pecl-amqp
-      Allow sending log messages to an AMQP server (1.0+ required)
-* php-pecl-mongo or php-mongodb
-      Allow sending log messages to a MongoDB server
-* php-Raven (>= %{raven_min_ver}, < %{raven_max_ver})
-      Allow sending log messages to a Sentry server
-* php-swiftmailer
-      Allow sending log messages through Swiftmailer
-* https://github.com/doctrine/couchdb-client
-      Allow sending log messages to a CouchDB server
-* https://github.com/Graylog2/gelf-php
-      Allow sending log messages to a GrayLog2 server
-* https://docs.newrelic.com/docs/php/new-relic-for-php
-      Allow sending log messages to a New Relic application
-* https://github.com/phpconsole/phpconsole
-      Allow sending log messages to Google Chrome
-* https://github.com/rollbar/rollbar-php
-      Allow sending log messages to Rollbar
-* https://github.com/ruflin/Elastica
-      Allow sending log messages to an Elastic Search server
-* https://github.com/videlalvaro/php-amqplib
-      Allow sending log messages to an AMQP server using php-amqplib
 
 [1] http://www.php-fig.org/psr/psr-3/
 
@@ -178,8 +157,7 @@ cat <<'AUTOLOAD' | tee src/Monolog/autoload.php
 <?php
 /**
  * Autoloader for %{name} and its' dependencies
- *
- * Created by %{name}-%{version}-%{release}
+ * (created by %{name}-%{version}-%{release}).
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
@@ -195,19 +173,13 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('Monolog\\', dirname(__DIR__));
 
-foreach (array(
-    '%{phpdir}/Raven/autoload.php',
-    '%{phpdir}/Aws/autoload.php',
-    '%{phpdir}/Swift/swift_required.php',
-) as $dependencyAutoloader) {
-    if (file_exists($dependencyAutoloader)) {
-        require_once $dependencyAutoloader;
-    }
-}
+// Required dependency
+require_once '%{phpdir}/Psr/Log/autoload.php';
 
-// Not all dependency autoloaders exist or are in every dist yet so fallback
-// to using include path for dependencies for now
-$fedoraClassLoader->setUseIncludePath(true);
+// Optional dependencies
+@include_once '%{phpdir}/Aws/autoload.php';
+@include_once '%{phpdir}/Raven/autoload.php';
+@include_once '%{phpdir}/Swift/swift_required.php';
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -231,7 +203,7 @@ cat <<'BOOTSTRAP' | tee bootstrap.php
 <?php
 
 $fedoraClassLoader = require_once '%{buildroot}%{phpdir}/Monolog/autoload.php';
-$fedoraClassLoader->addPrefix(false, __DIR__ . '/tests');
+$fedoraClassLoader->addPrefix(false, __DIR__.'/tests');
 BOOTSTRAP
 
 : Remove MongoDBHandlerTest because it requires a running MongoDB server
@@ -281,6 +253,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr 01 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.18.1-2
+- Increased PSR log min version for autoloader
+- Updated autoloader
+- Added weak dependencies
+
 * Fri Mar 25 2016 Remi Collet <remi@remirepo.net> - 1.18.1-1
 - update to 1.18.1
 - use php-swiftmailer instead of old php-swift-Swift
