@@ -22,8 +22,8 @@ Name:           %{libname}
 # Build for parallel install
 Name:           %{libname}-last
 %endif
-Version:        1.0.8
-Release:        2%{?dist}
+Version:        1.0.9
+Release:        1%{?dist}
 Summary:        The Sodium crypto library
 Group:          System Environment/Libraries
 License:        ISC
@@ -81,7 +81,11 @@ This package can't be installed with system %{libname}-devel.
 
 
 %build
-%configure --disable-static --disable-silent-rules
+%configure \
+  --disable-static \
+  --disable-silent-rules \
+  --disable-opt
+
 make %{_smp_mflags}
 
 
@@ -123,6 +127,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Apr  2 2016 Remi Collet <remi@fedoraproject.org> - 1.0.9-1
+- update to 1.0.9
+
 * Mon Mar  7 2016 Remi Collet <remi@fedoraproject.org> - 1.0.8-2
 - obsolete libsodium-last in fedora
 
