@@ -12,8 +12,8 @@
 
 %global github_owner     Seldaek
 %global github_name      monolog
-%global github_version   1.18.1
-%global github_commit    a5f2734e8c16f3aa21b3da09715d10e15b4d2d45
+%global github_version   1.18.2
+%global github_commit    064b38c16790249488e7a8b987acf1c9d7383c09
 
 %global composer_vendor  monolog
 %global composer_project monolog
@@ -42,17 +42,13 @@
 
 Name:      php-Monolog
 Version:   %{github_version}
-Release:   2%{?dist}
+Release:   1%{?dist}
 Summary:   Sends your logs to files, sockets, inboxes, databases and various web services
 
 Group:     Development/Libraries
 License:   MIT
 URL:       https://github.com/%{github_owner}/%{github_name}
 Source0:   %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
-
-# missing property
-# https://github.com/Seldaek/monolog/pull/757
-Patch0:    %{name}-pr756.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -149,8 +145,6 @@ at a later time.
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
-
-%patch0 -p1
 
 : Create autoloader
 cat <<'AUTOLOAD' | tee src/Monolog/autoload.php
@@ -253,6 +247,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Apr  2 2016 Remi Collet <remi@remirepo.net> - 1.18.2-1
+- update to 1.18.2
+
 * Fri Apr 01 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.18.1-2
 - Increased PSR log min version for autoloader
 - Updated autoloader
