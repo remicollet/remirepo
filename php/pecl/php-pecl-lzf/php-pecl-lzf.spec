@@ -14,13 +14,12 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package        php-pecl-lzf
 %endif
-
-%{?scl:          %scl_package        php-pecl-lzf}
 
 %define pecl_name   LZF
 %define  ext_name   lzf
-%global with_zts    0%{?__ztsphp:1}
+%global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 %global ini_name    %{ext_name}.ini
 %else
@@ -28,8 +27,8 @@
 %endif
 
 Name:           %{?sub_prefix}php-pecl-lzf
-Version:        1.6.3
-Release:        7%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.6.4
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Extension to handle LZF de/compression
 Group:          Development/Languages
 License:        PHP
@@ -47,8 +46,10 @@ Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 
 Provides:       %{?scl_prefix}php-%{ext_name}                = %{version}
 Provides:       %{?scl_prefix}php-%{ext_name}%{?_isa}        = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{ext_name}           = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{ext_name}%{?_isa}   = %{version}-%{release}
+%endif
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
@@ -85,6 +86,8 @@ library
 
 LZF is a very fast compression algorithm, ideal for saving space with a 
 slight speed cost.
+
+Documentation: http://php.net/lzf
 
 Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
@@ -231,6 +234,9 @@ fi
 
 
 %changelog
+* Sat Apr  2 2016 Remi Collet <remi@fedoraproject.org> - 1.6.4-1
+- update to 1.6.4 (stable)
+
 * Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 1.6.3-7
 - adapt for F24
 
