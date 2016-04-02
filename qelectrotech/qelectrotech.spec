@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global svnrel 4383
+%global svnrel 4417
 %global rdate  20151127
 %global upver  0.51
 
@@ -260,6 +260,9 @@ fi
 
 
 %changelog
+* Sat Apr 02 2016 Remi Collet <remi@fedoraproject.org> - 0.51-0.5.svn4417
+- Update to 0.51 snapshot revision 4417
+
 * Fri Mar 18 2016 Remi Collet <remi@fedoraproject.org> - 0.51-0.5.svn4383
 - Update to 0.51 snapshot revision 4383
 - use %%{qmake_qt5} macro to ensure proper build flags
