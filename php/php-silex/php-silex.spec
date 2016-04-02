@@ -51,7 +51,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       2%{dist}
+Release:       3%{dist}
 Summary:       PHP micro-framework based on the Symfony components
 
 Group:         Development/Libraries
@@ -134,6 +134,7 @@ Requires:      php-composer(symfony/class-loader)
 %if 0%{?fedora} >= 21
 Suggests:      php-composer(doctrine/dbal)
 Suggests:      php-composer(monolog/monolog)
+Suggests:      php-composer(psr/log)
 Suggests:      php-composer(swiftmailer/swiftmailer)
 Suggests:      php-composer(symfony/browser-kit)
 Suggests:      php-composer(symfony/debug)
@@ -149,18 +150,17 @@ Suggests:      php-composer(symfony/translation)
 Suggests:      php-composer(symfony/twig-bridge)
 Suggests:      php-composer(symfony/validator)
 Suggests:      php-composer(twig/twig)
-Suggests:      php-PsrLog
 %endif
-Conflicts: php-composer(doctrine/dbal)           <  %{doctrine_dbal_min_ver}
-Conflicts: php-composer(doctrine/dbal)           >= %{doctrine_dbal_max_ver}
-Conflicts: php-composer(monolog/monolog)         <  %{monolog_min_ver}
-Conflicts: php-composer(monolog/monolog)         >= %{monolog_max_ver}
-Conflicts: php-composer(swiftmailer/swiftmailer) <  %{swiftmailer_min_ver}
-Conflicts: php-composer(swiftmailer/swiftmailer) >= %{swiftmailer_max_ver}
-Conflicts: php-composer(twig/twig)               <  %{twig_min_ver}
-Conflicts: php-composer(twig/twig)               >= %{twig_max_ver}
-Conflicts: php-PsrLog                            <  1.0.0-8
-Conflicts: php-PsrLog                            >= 2.0
+Conflicts: php-doctrine-dbal <  %{doctrine_dbal_min_ver}
+Conflicts: php-doctrine-dbal >= %{doctrine_dbal_max_ver}
+Conflicts: php-Monolog       <  %{monolog_min_ver}
+Conflicts: php-Monolog       >= %{monolog_max_ver}
+Conflicts: php-PsrLog        <  1.0.0-8
+Conflicts: php-PsrLog        >= 2.0
+Conflicts: php-swiftmailer   <  %{swiftmailer_min_ver}
+Conflicts: php-swiftmailer   >= %{swiftmailer_max_ver}
+Conflicts: php-twig          <  %{twig_min_ver}
+Conflicts: php-twig          >= %{twig_max_ver}
 
 # php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}
 Provides:      php-%{composer_vendor}-%{composer_project} = %{version}-%{release}
@@ -303,6 +303,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr 01 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.5-3
+- Use actual package names (instead of virtual provides) for conflicts
+
 * Wed Mar 30 2016 Remi Collet <remi@fedoraproject.org> - 1.3.5-2
 - fix swiftmailer autoloader path
 - run test suite with both PHP 5 and 7 when available
