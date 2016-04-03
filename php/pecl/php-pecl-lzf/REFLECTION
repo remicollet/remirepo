@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #124 lzf version 1.6.4 ] {
+Extension [ <persistent> extension #124 lzf version 1.6.5 ] {
 
   - Functions {
     Function [ <internal:lzf> function lzf_compress ] {

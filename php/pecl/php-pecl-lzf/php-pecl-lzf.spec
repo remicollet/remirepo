@@ -27,7 +27,7 @@
 %endif
 
 Name:           %{?sub_prefix}php-pecl-lzf
-Version:        1.6.4
+Version:        1.6.5
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Extension to handle LZF de/compression
 Group:          Development/Languages
@@ -234,6 +234,9 @@ fi
 
 
 %changelog
+* Sun Apr  3 2016 Remi Collet <remi@fedoraproject.org> - 1.6.5-1
+- update to 1.6.5 (stable)
+
 * Sat Apr  2 2016 Remi Collet <remi@fedoraproject.org> - 1.6.4-1
 - update to 1.6.4 (stable)
 
