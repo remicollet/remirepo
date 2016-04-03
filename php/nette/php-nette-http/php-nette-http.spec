@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0cda6627163c940ee86e6a6021943d0dd7d12e37
+%global gh_commit    24459307b19456706febbff8dbd033e1ff56ba04
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.5
+Version:        2.3.6
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette HTTP Component
@@ -146,6 +146,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Apr  3 2016 Remi Collet <remi@fedoraproject.org> - 2.3.6-1
+- update to 2.3.6
+
 * Sat Apr  2 2016 Remi Collet <remi@fedoraproject.org> - 2.3.5-1
 - update to 2.3.5
 
