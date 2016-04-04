@@ -17,5 +17,9 @@
     "phine\/path": "php-phine-path",
     "phine\/exception": "php-phine-exception",
     "apigen\/apigen": "apigen",
+	"hoa\/event": "php-hoa-event",
+	"hoa\/exception": "php-hoa-exception",
+	"hoa\/consistency": "php-hoa-consistency",
+	"hoa\/test": "php-hoa-test",
     "theseer\/fxsl": "php-theseer-fxsl"
 }
