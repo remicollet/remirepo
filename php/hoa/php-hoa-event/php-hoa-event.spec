@@ -98,8 +98,7 @@ rm -rf %{buildroot}
 %license LICENSE
 %doc composer.json
 %doc *md
-%dir %{php_home}/%{ns_vendor}
-     %{php_home}/%{ns_vendor}/%{ns_project}
+%{php_home}/%{ns_vendor}/%{ns_project}
 
 
 %changelog
