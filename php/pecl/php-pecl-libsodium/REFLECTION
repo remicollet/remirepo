@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #121 libsodium version 1.0.3 ] {
+Extension [ <persistent> extension #121 libsodium version 1.0.4 ] {
 
   - Constants [54] {
     Constant [ integer Sodium\CRYPTO_AEAD_AES256GCM_KEYBYTES ] { 32 }
