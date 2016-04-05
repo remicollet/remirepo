@@ -28,7 +28,7 @@
 
 Name:           glpi
 Version:        0.90.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
@@ -220,6 +220,10 @@ mkdir -p %{buildroot}%{_localstatedir}/log
 mv %{buildroot}/%{_localstatedir}/lib/%{name}/files/_log %{buildroot}%{_localstatedir}/log/%{name}
 
 install -Dpm 0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
+%if 0%{?rhel} == 5 || 0%{?rhel} == 6
+: Remove "su" option from logrotate configuration file - requires logrotate 3.8+
+sed -e '/su /d' -i %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
+%endif
 
 # ====== Cron =====
 install -Dpm 0644 cron %{buildroot}%{_sysconfdir}/cron.d/%{name}
@@ -323,6 +327,9 @@ fi
 
 
 %changelog
+* Tue Apr  5 2016 Remi Collet <remi@fedoraproject.org> - 0.90.2-2
+- fix logrotate configuration for recent version
+
 * Fri Apr  1 2016 Remi Collet <remi@fedoraproject.org> - 0.90.2-1
 - update to 0.90.2
 
