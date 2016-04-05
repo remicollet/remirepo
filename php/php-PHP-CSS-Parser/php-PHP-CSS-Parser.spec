@@ -23,6 +23,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  %{_bindir}/phpab
 # For tests
 BuildRequires:  %{_bindir}/phpunit
 
@@ -39,13 +40,18 @@ PHP CSS Parser: a Parser for CSS Files written in PHP.
 Allows extraction of CSS files into a data structure, manipulation
 of said structure and output as (optimized) CSS.
 
+Autoloader: %{_datadir}/php/Sabberworm/CSS/autoload.php
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
 
 %build
-# nothing to build
+: Generate a simple autoloader
+%{_bindir}/phpab \
+    --output lib/Sabberworm/CSS/autoload.php \
+             lib/Sabberworm/CSS
 
 
 %install
@@ -70,9 +76,10 @@ fi
 
 
 %changelog
-* Tue Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 7.0.2-1
+* Tue Apr  5 2016 Remi Collet <remi@fedoraproject.org> - 7.0.2-1
 - update to 7.0.2
 - run test suite with both PHP 5 and 7 when available
+- add an simple autoloader
 
 * Tue Jan 13 2015 Remi Collet <remi@fedoraproject.org> - 6.0.0-1.20141009giteb29754
 - update to 6.0.0 + fix for PHP 5.3
