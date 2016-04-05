@@ -6,16 +6,15 @@
 #
 # Please, preserve the changelog entries
 #
-# 6.0.0 + 5 commits, 1 for php 5.3 fix (needed in EPEL-6)
-%global gh_commit  eb29754d1f82288911ca38dc52d62e307275288d
+%global gh_commit  546b2b93733165cb27c7cef0ccc8e66384d1d833
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   sabberworm
 %global gh_project PHP-CSS-Parser
 
 Name:           php-%{gh_project}
 Summary:        A Parser for CSS Files
-Version:        6.0.0
-Release:        1.20141009git%{gh_short}%{?dist}
+Version:        7.0.2
+Release:        1%{?dist}
 License:        MIT
 Group:          Development/Libraries
 
@@ -27,11 +26,10 @@ BuildArch:      noarch
 # For tests
 BuildRequires:  %{_bindir}/phpunit
 
-# From phpcompatinfo for version 6.0.0
+# From phpcompatinfo for version 7.0.2
 Requires:       php-iconv
 Requires:       php-mbstring
 Requires:       php-pcre
-Requires:       php-spl
 
 Provides:       php-composer(sabberworm/php-css-parser) = %{version}
 
@@ -57,7 +55,11 @@ cp -pr lib/Sabberworm %{buildroot}%{_datadir}/php/Sabberworm
 
 %check
 cd tests
-phpunit --bootstrap bootstrap.php .
+%{_bindir}/phpunit --bootstrap bootstrap.php .
+
+if which php70; then
+   php70 %{_bindir}/phpunit --bootstrap bootstrap.php .
+fi
 
 
 %files
@@ -68,6 +70,10 @@ phpunit --bootstrap bootstrap.php .
 
 
 %changelog
+* Tue Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 7.0.2-1
+- update to 7.0.2
+- run test suite with both PHP 5 and 7 when available
+
 * Tue Jan 13 2015 Remi Collet <remi@fedoraproject.org> - 6.0.0-1.20141009giteb29754
 - update to 6.0.0 + fix for PHP 5.3
 - add provides php-composer(sabberworm/php-css-parser)
