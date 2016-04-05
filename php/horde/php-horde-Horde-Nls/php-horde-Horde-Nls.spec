@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Nls
-Version:        2.1.1
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        Native Language Support (NLS)
 
@@ -115,6 +115,9 @@ fi
 
 
 %changelog
+* Tue Apr 05 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+
 * Fri Feb 19 2016 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - Update to 2.1.1
 - PHP 7 compatible version
