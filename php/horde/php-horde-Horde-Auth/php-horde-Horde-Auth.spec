@@ -119,10 +119,15 @@ done | tee ../%{pear_name}.lang
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:)
-%{_bindir}/phpunit .
 
-if which php70; then
-   php70 %{_bindir}/phpunit .
+# hex2bin is 5.4 only
+if php -r 'exit(function_exists("hex2bin") ? 0 : 1);'
+then %{_bindir}/phpunit .
+else : test ignored
+fi
+
+if which php70
+then php70 %{_bindir}/phpunit .
 fi
 
 
