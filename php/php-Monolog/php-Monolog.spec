@@ -64,7 +64,7 @@ BuildRequires: php-composer(psr/log)                 <  %{psrlog_max_ver}
 BuildRequires: php-composer(swiftmailer/swiftmailer) >= %{swift_min_ver}
 BuildRequires: php-composer(raven/raven)             >= %{raven_min_ver}
 BuildRequires: php-composer(aws/aws-sdk-php)         >= %{aws_min_ver}
-## phpcompatinfo (computed from version 1.18.1)
+## phpcompatinfo (computed from version 1.18.2)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -86,7 +86,7 @@ Requires:      php(language)         >= %{php_min_ver}
 #Requires:      php-composer(psr/log) >= %%{psrlog_min_ver}
 Requires:      php-PsrLog            >= %{psrlog_min_ver}
 Requires:      php-composer(psr/log) <  %{psrlog_max_ver}
-# phpcompatinfo (computed from version 1.18.1)
+# phpcompatinfo (computed from version 1.18.2)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-filter
@@ -123,6 +123,8 @@ Provides:      %{name}-raven  = %{version}-%{release}
 Suggests:      php-composer(aws/aws-sdk-php)
 Suggests:      php-composer(raven/raven)
 Suggests:      php-composer(swiftmailer/swiftmailer)
+Suggests:      php-pecl(amqp)
+Suggests:      php-pecl(mongo)
 %endif
 Conflicts:     php-aws-sdk     <  %{aws_min_ver}
 Conflicts:     php-aws-sdk     >= %{aws_max_ver}
@@ -247,6 +249,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Apr 04 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.18.2-1
+- Updated to 1.18.2 (RHBZ #1313579)
+- Removed patch (accepted upstream and applied to this version)
+- Added additional weak dependencies (AMQP and MongoDB)
+
 * Sat Apr  2 2016 Remi Collet <remi@remirepo.net> - 1.18.2-1
 - update to 1.18.2
 
