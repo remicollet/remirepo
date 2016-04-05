@@ -18,7 +18,7 @@
 %endif
 
 Name:           php-horde-Horde-Log
-Version:        2.1.3
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        Horde Logging library
 
@@ -124,6 +124,9 @@ fi
 
 
 %changelog
+* Tue Apr 05 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+
 * Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
 - Update to 2.1.3
 - PHP 7 compatible version
