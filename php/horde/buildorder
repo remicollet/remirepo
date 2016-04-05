@@ -29,7 +29,7 @@ Build order
 	* Horde_Autoloader          2.1.2      BR: Horde_Test  
 	* Horde_Compress_Fast       1.1.1      BR: Horde_Test  R: Horde_Exception, horde_lz4
 	* Horde_Crypt_Blowfish      1.1.1      BR: Horde_Test  R: Horde_Exception, Horde_Support
-	* Horde_Css_Parser          1.0.8      BR: Horde_Test  
+	* Horde_Css_Parser          1.0.9      BR: Horde_Test  
 	* Horde_Date                2.3.0      BR: Horde_Test I: Horde_Icalendar R: Horde_Nls, Horde_Translation, Horde_Exception, Horde_Util
 	* Horde_Date_Parser         2.0.5      BR: Horde_Test, Horde_Date  R: Horde_Date, Horde_Support, Horde_Util
 	* Horde_HashTable           1.2.4      BR: Horde_Test I: Horde_Vfs R: Horde_Exception, Horde_Log, Horde_Memcache

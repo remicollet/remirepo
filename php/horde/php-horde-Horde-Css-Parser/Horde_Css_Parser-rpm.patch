@@ -1,7 +1,7 @@
 diff -up Horde_Css_Parser-1.0.5/lib/Horde/Css/Parser.php.rpm Horde_Css_Parser-1.0.5/lib/Horde/Css/Parser.php
 --- Horde_Css_Parser-1.0.5/lib/Horde/Css/Parser.php.rpm	2015-01-08 16:55:01.000000000 +0100
 +++ Horde_Css_Parser-1.0.5/lib/Horde/Css/Parser.php	2015-01-08 16:55:09.000000000 +0100
-@@ -11,11 +11,6 @@
+@@ -11,11 +11,7 @@
   * @package   Css_Parser
   */
  
@@ -10,6 +10,7 @@ diff -up Horde_Css_Parser-1.0.5/lib/Horde/Css/Parser.php.rpm Horde_Css_Parser-1.
 -} else {
 -    require_once __DIR__ . '/../../../bundle/vendor/autoload.php';
 -}
++require_once '/usr/share/php/Sabberworm/CSS/autoload.php';
  
  /**
   * Horde interface to the Sabberworm CSS Parser library.

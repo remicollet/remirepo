@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Css-Parser
-Version:        1.0.8
+Version:        1.0.9
 Release:        1%{?dist}
 Summary:        Horde CSS Parser
 
@@ -26,22 +26,22 @@ Patch0:         %{pear_name}-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3.0
+BuildRequires:  php(language) >= 5.3.2
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
-BuildRequires:  php-composer(sabberworm/php-css-parser) >= 6
+BuildRequires:  php-composer(sabberworm/php-css-parser) >= 7.0.2
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 # From package.xml
-Requires:       php(language) >= 5.3.0
+Requires:       php(language) >= 5.3.2
 Requires:       php-mbstring
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 # Unbundled library
-Requires:       php-composer(sabberworm/php-css-parser) >= 6
+Requires:       php-composer(sabberworm/php-css-parser) >= 7.0.2
 # From phpcompatinfo report for 1.0.2
 Requires:       php-iconv
 Requires:       php-pcre
@@ -120,6 +120,11 @@ fi
 
 
 %changelog
+* Tue Apr 05 2016 Remi Collet <remi@fedoraproject.org> - 1.0.9-1
+- Update to 1.0.9
+- raise dependency on php-PHP-CSS-Parser >= 7.0.2
+- use php-PHP-CSS-Parser autoloader (instead of PSR-0)
+
 * Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
 - Update to 1.0.8
 - PHP 7 compatible version
