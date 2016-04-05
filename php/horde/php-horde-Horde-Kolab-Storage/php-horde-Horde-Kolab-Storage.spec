@@ -141,7 +141,10 @@ sed -e "s/Horde_Kolab_Format_Xml-@version@/Horde_Kolab_Format_Xml-${VER}/" \
     -i ComponentTest/Data/Object/Message/ModifiedTest.php \
        ComponentTest/Data/Object/Message/NewTest.php
 
-%{_bindir}/phpunit .
+if phpunit --atleast-version 4
+then %{_bindir}/phpunit .
+else : PHPUnit is too old
+fi
 
 if which php70; then
    php70 %{_bindir}/phpunit . || :
