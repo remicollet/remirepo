@@ -1,6 +1,6 @@
-Extension [ <persistent> extension #117 libsodium version 1.0.2 ] {
+Extension [ <persistent> extension #121 libsodium version 1.0.3 ] {
 
-  - Constants [46] {
+  - Constants [54] {
     Constant [ integer Sodium\CRYPTO_AEAD_AES256GCM_KEYBYTES ] { 32 }
     Constant [ integer Sodium\CRYPTO_AEAD_AES256GCM_NSECBYTES ] { 0 }
     Constant [ integer Sodium\CRYPTO_AEAD_AES256GCM_NPUBBYTES ] { 12 }
@@ -27,6 +27,14 @@ Extension [ <persistent> extension #117 libsodium version 1.0.2 ] {
     Constant [ integer Sodium\CRYPTO_GENERICHASH_KEYBYTES ] { 32 }
     Constant [ integer Sodium\CRYPTO_GENERICHASH_KEYBYTES_MIN ] { 16 }
     Constant [ integer Sodium\CRYPTO_GENERICHASH_KEYBYTES_MAX ] { 64 }
+    Constant [ integer Sodium\CRYPTO_PWHASH_SALTBYTES ] { 16 }
+    Constant [ string Sodium\CRYPTO_PWHASH_STRPREFIX ] { $argon2i$ }
+    Constant [ integer Sodium\CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE ] { 4 }
+    Constant [ integer Sodium\CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE ] { 33554432 }
+    Constant [ integer Sodium\CRYPTO_PWHASH_OPSLIMIT_MODERATE ] { 6 }
+    Constant [ integer Sodium\CRYPTO_PWHASH_MEMLIMIT_MODERATE ] { 6 }
+    Constant [ integer Sodium\CRYPTO_PWHASH_OPSLIMIT_SENSITIVE ] { 8 }
+    Constant [ integer Sodium\CRYPTO_PWHASH_MEMLIMIT_SENSITIVE ] { 8 }
     Constant [ integer Sodium\CRYPTO_PWHASH_SCRYPTSALSA208SHA256_SALTBYTES ] { 32 }
     Constant [ string Sodium\CRYPTO_PWHASH_SCRYPTSALSA208SHA256_STRPREFIX ] { $7$ }
     Constant [ integer Sodium\CRYPTO_PWHASH_SCRYPTSALSA208SHA256_OPSLIMIT_INTERACTIVE ] { 524288 }
@@ -208,6 +216,31 @@ Extension [ <persistent> extension #117 libsodium version 1.0.2 ] {
       - Parameters [2] {
         Parameter #0 [ <required> &$state ]
         Parameter #1 [ <optional> $length ]
+      }
+    }
+    Function [ <internal:libsodium> function Sodium\crypto_pwhash ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $length ]
+        Parameter #1 [ <required> $password ]
+        Parameter #2 [ <required> $salt ]
+        Parameter #3 [ <required> $opslimit ]
+        Parameter #4 [ <required> $memlimit ]
+      }
+    }
+    Function [ <internal:libsodium> function Sodium\crypto_pwhash_str ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $password ]
+        Parameter #1 [ <required> $opslimit ]
+        Parameter #2 [ <required> $memlimit ]
+      }
+    }
+    Function [ <internal:libsodium> function Sodium\crypto_pwhash_str_verify ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $hash ]
+        Parameter #1 [ <required> $password ]
       }
     }
     Function [ <internal:libsodium> function Sodium\crypto_pwhash_scryptsalsa208sha256 ] {
@@ -398,6 +431,13 @@ Extension [ <persistent> extension #117 libsodium version 1.0.2 ] {
 
       - Parameters [1] {
         Parameter #0 [ <required> $string ]
+      }
+    }
+    Function [ <internal:libsodium> function Sodium\add ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $string_1 ]
+        Parameter #1 [ <required> $string_2 ]
       }
     }
     Function [ <internal:libsodium> function Sodium\library_version_major ] {

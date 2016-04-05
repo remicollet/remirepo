@@ -12,11 +12,10 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package       php-pecl-libsodium
 %endif
 
-%{?scl:          %scl_package        php-pecl-libsodium}
-
-%global with_zts   0%{?__ztsphp:1}
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  libsodium
 %global with_tests 0%{!?_without_tests:1}
 %if "%{php_version}" < "5.6"
@@ -28,15 +27,12 @@
 
 Summary:        Wrapper for the Sodium cryptographic library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.0.2
-Release:        4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.0.3
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# See https://github.com/jedisct1/libsodium-php/pull/70
-Patch0:         %{pecl_name}-pr70.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if "%{?vendor}" == "Remi Collet"
@@ -46,7 +42,7 @@ BuildRequires:  libsodium-devel >= 1.0.7
 # Per upstream documentation
 BuildRequires:  libsodium-devel >= 0.6.0
 %endif
-BuildRequires:  %{?scl_prefix}php-devel > 5.2
+BuildRequires:  %{?scl_prefix}php-devel > 5.4
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-json
 BuildRequires:  pkgconfig
@@ -60,8 +56,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -106,7 +104,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-%patch0 -p1 -b .pr70
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_LIBSODIUM_VERSION/{s/.* "//;s/".*$//;p}' php_libsodium.h)
@@ -241,6 +238,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Apr  5 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3
+- raise minimal PHP version to 5.4
+- drop patch merged upstream
+
 * Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-4
 - adapt for F24
 
