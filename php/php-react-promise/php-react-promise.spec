@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-react-promise
 #
-# Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2014-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,8 +12,8 @@
 
 %global github_owner     reactphp
 %global github_name      promise
-%global github_version   2.2.1
-%global github_commit    3b6fca09c7d56321057fa8867c8dbe1abf648627
+%global github_version   2.4.0
+%global github_commit    f942da7b505d1a294284ab343d05df42d02ad6d9
 
 %global composer_vendor  react
 %global composer_project promise
@@ -28,7 +28,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       A lightweight implementation of CommonJS Promises/A for PHP
 
 Group:         Development/Libraries
@@ -43,7 +43,7 @@ BuildArch:     noarch
 BuildRequires: %{_bindir}/phpunit
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
-## phpcompatinfo (computed from version 2.2.0)
+## phpcompatinfo (computed from version 2.4.0)
 BuildRequires: php-json
 BuildRequires: php-reflection
 BuildRequires: php-spl
@@ -53,7 +53,7 @@ BuildRequires: php-composer(symfony/class-loader)
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 2.2.0)
+# phpcompatinfo (computed from version 2.4.0)
 Requires:      php-json
 Requires:      php-reflection
 Requires:      php-spl
@@ -77,8 +77,7 @@ cat <<'AUTOLOAD' | tee src/autoload.php
 <?php
 /**
  * Autoloader for %{name} and its' dependencies
- *
- * Created by %{name}-%{version}-%{release}
+ * (created by %{name}-%{version}-%{release}).
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
@@ -116,6 +115,7 @@ cp -rp src/* %{buildroot}%{phpdir}/React/Promise/
 mkdir -p psr-0/React/
 mv tests psr-0/React/Promise
 mv psr-0 tests
+mv tests/React/Promise/fixtures/* tests/React/Promise/
 
 : Create tests bootstrap
 cat <<'BOOTSTRAP' | tee bootstrap.php
@@ -127,6 +127,10 @@ $fedoraClassLoader->addPrefix(null, __DIR__ . '/tests');
 BOOTSTRAP
 
 %{_bindir}/phpunit --verbose --bootstrap ./bootstrap.php
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose --bootstrap ./bootstrap.php
+fi
 %else
 : Tests skipped
 %endif
@@ -147,6 +151,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Apr 04 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.4.0-1
+- Updated to 2.4.0 (RHBZ #1319558)
+
 * Wed Sep 23 2015 Remi Collet <remi@remirepo.net> - 2.2.1-2
 - clean from Fedora
 
