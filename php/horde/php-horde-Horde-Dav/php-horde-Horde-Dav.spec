@@ -14,8 +14,8 @@
 %global with_sabre   0
 
 Name:           php-horde-Horde-Dav
-Version:        1.1.2
-Release:        3%{?dist}
+Version:        1.1.3
+Release:        1%{?dist}
 Summary:        Horde library for WebDAV, CalDAV, CardDAV
 
 Group:          Development/Libraries
@@ -173,6 +173,9 @@ fi
 
 
 %changelog
+* Tue Apr 05 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
+- Update to 1.1.3
+
 * Thu Sep 24 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-3
 - bundle sabre/dav libraries (not vobject)
 
