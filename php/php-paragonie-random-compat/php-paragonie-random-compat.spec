@@ -12,7 +12,7 @@
 
 %global github_owner     paragonie
 %global github_name      random_compat
-%global github_commit    b3313b618f4edd76523572531d5d7e22fe747430
+%global github_commit    c7e26a21ba357863de030f0b9e701c7d04593774
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  paragonie
@@ -27,7 +27,7 @@
 %{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-%{composer_vendor}-random-compat
-Version:       1.2.2
+Version:       1.4.1
 Release:       1%{?github_release}%{?dist}
 Summary:       PHP 5.x polyfill for random_bytes() and random_int() from PHP 7
 
@@ -47,24 +47,24 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 1.2.1)
+## phpcompatinfo (computed from version 1.4.1)
 BuildRequires: php-pcre
 BuildRequires: php-zlib
 %endif
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.2.1)
+# phpcompatinfo (computed from version 1.4.1)
 Requires:      php-pcre
 # Weak dependencies
-%if 0%{?fedora} > 21
+%if 0%{?fedora} >= 21
 Suggests:      php-mbstring
 Suggests:      php-openssl
 Suggests:      php-pecl(libsodium)
 %endif
 
 # php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}
-Provides:      php-%{composer_vendor}-%{composer_project}           = %{version}-%{release}
+Provides:      php-%{composer_vendor}-%{composer_project} = %{version}-%{release}
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
@@ -120,6 +120,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Apr 04 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.4.1-1
+- Updated to 1.4.1 (RHBZ #1318836)
+
+* Sat Mar 12 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.2-1
+- Updated to 1.2.2 (RHBZ #1317102)
+
 * Sat Mar 12 2016 Remi Collet <remi@remirepo.net> - 1.2.2-1
 - update to 1.2.2
 
