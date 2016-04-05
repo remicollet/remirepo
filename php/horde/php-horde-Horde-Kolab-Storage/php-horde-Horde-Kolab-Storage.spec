@@ -17,7 +17,7 @@
 %endif
 
 Name:           php-horde-Horde-Kolab-Storage
-Version:        2.2.1
+Version:        2.2.2
 Release:        1%{?dist}
 Summary:        A package for handling Kolab data stored on an IMAP server
 
@@ -178,6 +178,9 @@ fi
 
 
 %changelog
+* Tue Apr 05 2016 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
+- Update to 2.2.2
+
 * Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - Update to 2.2.1
 - PHP 7 compatible version
