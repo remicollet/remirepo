@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-ListHeaders
-Version:        1.2.3
+Version:        1.2.4
 Release:        1%{?dist}
 Summary:        Horde List Headers Parsing Library
 
@@ -129,6 +129,9 @@ fi
 
 
 %changelog
+* Tue Apr 05 2016 Remi Collet <remi@fedoraproject.org> - 1.2.4-1
+- Update to 1.2.4
+
 * Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 1.2.3-1
 - Update to 1.2.3
 - PHP 7 compatible version
