@@ -21,6 +21,7 @@
 	"hoa\/exception": "php-hoa-exception",
 	"hoa\/consistency": "php-hoa-consistency",
 	"hoa\/protocol": "php-hoa-protocol",
+	"hoa\/stream": "php-hoa-stream",
 	"hoa\/test": "php-hoa-test",
     "theseer\/fxsl": "php-theseer-fxsl"
 }
