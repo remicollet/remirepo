@@ -78,7 +78,94 @@ hoa/cli								2.16.03.15
         "hoa/exception"  : "~1.0",
         "hoa/protocol"   : "~1.0",
         "hoa/router"     : "~3.0"
+hoa/visitor							2.16.01.11
+        "hoa/consistency": "~1.0"
+hoa/http
+        "hoa/consistency": "~1.0",
+        "hoa/exception"  : "~1.0",
+        "hoa/stream"     : "~1.0"
+hoa/locale
+        "hoa/consistency": "~1.0",
+        "hoa/exception"  : "~1.0",
+        "hoa/http"       : "~1.0"
+hoa/math
+        "hoa/compiler"   : "~3.0",
+        "hoa/consistency": "~1.0",
+        "hoa/exception"  : "~1.0",
+        "hoa/iterator"   : "~2.0",
+        "hoa/protocol"   : "~1.0",
+        "hoa/zformat"    : "~1.0"
+hoa/regex
+        "hoa/consistency": "~1.0",
+        "hoa/exception"  : "~1.0",
+        "hoa/math"       : "~1.0",
+        "hoa/protocol"   : "~1.0",
+        "hoa/ustring"    : "~4.0",
+        "hoa/visitor"    : "~2.0"
+hoa/compiler
+        "hoa/consistency": "~1.0",
+        "hoa/exception"  : "~1.0",
+        "hoa/file"       : "~1.0",
+        "hoa/iterator"   : "~2.0",
+        "hoa/math"       : "~1.0",
+        "hoa/protocol"   : "~1.0",
+        "hoa/regex"      : "~1.0",
+        "hoa/visitor"    : "~2.0"
+hoa/realdom
+        "hoa/compiler"   : "~3.0",
+        "hoa/consistency": "~1.0",
+        "hoa/exception"  : "~1.0",
+        "hoa/file"       : "~1.0",
+        "hoa/iterator"   : "~2.0",
+        "hoa/math"       : "~1.0",
+        "hoa/praspel"    : "~1.0",
+        "hoa/regex"      : "~1.0",
+        "hoa/ustring"    : "~4.0",
+        "hoa/visitor"    : "~2.0"
+hoa/praspel
+        "hoa/compiler"   : "~3.0",
+        "hoa/consistency": "~1.0",
+        "hoa/exception"  : "~1.0",
+        "hoa/file"       : "~1.0",
+        "hoa/iterator"   : "~2.0",
+        "hoa/protocol"   : "~1.0",
+        "hoa/realdom"    : "~1.0",
+        "hoa/ustring"    : "~4.0",
+        "hoa/visitor"    : "~2.0"
+hoa/stringbuffer
+        "hoa/consistency": "~1.0",
+        "hoa/exception"  : "~1.0",
+        "hoa/protocol"   : "~1.0",
+        "hoa/stream"     : "~1.0"
+hoa/xml
+        "hoa/consistency" : "~1.0",
+        "hoa/compiler"    : "~3.0",
+        "hoa/exception"   : "~1.0",
+        "hoa/file"        : "~1.0",
+        "hoa/stream"      : "~1.0",
+        "hoa/stringbuffer": "~1.0"
+hoa/xyl
+        "hoa/consistency" : "~1.0",
+        "hoa/event"       : "~1.0",
+        "hoa/exception"   : "~1.0",
+        "hoa/file"        : "~1.0",
+        "hoa/http"        : "~1.0",
+        "hoa/locale"      : "~2.0",
+        "hoa/praspel"     : "~1.0",
+        "hoa/protocol"    : "~1.0",
+        "hoa/realdom"     : "~1.0",
+        "hoa/router"      : "~3.0",
+        "hoa/stringbuffer": "~1.0",
+        "hoa/view"        : "~3.0",
+        "hoa/xml"         : "~1.0",
+        "hoa/zformat"     : "~1.0"
 hoa/devtools
+        "hoa/cli"        : "~2.0",
+        "hoa/consistency": "~1.0",
+        "hoa/file"       : "~1.0",
+        "hoa/protocol"   : "~1.0",
+        "hoa/router"     : "~3.0",
+        "hoa/xyl"        : "~1.0"
 hoa/test
         "atoum/atoum"               : "~2.5",
         "atoum/praspel-extension"   : "~0.16",
