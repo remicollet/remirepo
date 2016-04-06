@@ -101,7 +101,7 @@ hoa/math							1.16.01.29
         "hoa/zformat"    : "~1.0"
 		--
         "hoa/test"  : "~2.0",
-hoa/regex
+hoa/regex							1.16.01.15
         "hoa/consistency": "~1.0",
         "hoa/exception"  : "~1.0",
         "hoa/math"       : "~1.0",
