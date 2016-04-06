@@ -55,11 +55,10 @@ hoa/console							3.16.01.14
 hoa/zformat							1.16.03.15
         "hoa/consistency": "~1.0",
         "hoa/exception"  : "~1.0"
-hoa/router
+hoa/router							3.16.01.14
         "hoa/consistency": "~1.0",
         "hoa/exception"  : "~1.0",
         "hoa/zformat"    : "~1.0"
-		--
 hoa/dispatcher
         "hoa/consistency": "~1.0",
         "hoa/exception"  : "~1.0",
