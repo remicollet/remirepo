@@ -80,7 +80,9 @@ hoa/cli								2.16.03.15
         "hoa/router"     : "~3.0"
 hoa/visitor							2.16.01.11
         "hoa/consistency": "~1.0"
-hoa/http
+		--
+        "hoa/test"  : "~2.0",
+hoa/http							1.16.01.15
         "hoa/consistency": "~1.0",
         "hoa/exception"  : "~1.0",
         "hoa/stream"     : "~1.0"

@@ -28,6 +28,7 @@
 	"hoa\/protocol": "php-hoa-protocol",
 	"hoa\/router": "php-hoa-router",
 	"hoa\/stream": "php-hoa-stream",
+	"hoa\/http": "php-hoa-http",
 	"hoa\/test": "php-hoa-test",
 	"hoa\/ustring": "php-hoa-ustring",
 	"hoa\/view": "php-hoa-view",
