@@ -14,8 +14,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   2.8.27
-%global github_commit    c1605360b6624958a5397601ad5543cd45fcf8f7
+%global github_version   2.8.28
+%global github_commit    cdc2c4f55b7c89b9bfd9899c3116b369d2e6fe63
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -46,7 +46,7 @@
 
 Name:      php-aws-sdk
 Version:   %{github_version}
-Release:   3%{?dist}
+Release:   1%{?dist}
 Summary:   Amazon Web Services framework for PHP
 
 Group:     Development/Libraries
@@ -194,6 +194,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr  6 2016 Remi Collet <remi@fedoraproject.org> - 2.8.28-1
+- Update to 2.8.28
+
 * Sun Mar 27 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.8.27-3
 - Updated to 2.8.27 (RHBZ #1320697)
 - Added weak dependencies
