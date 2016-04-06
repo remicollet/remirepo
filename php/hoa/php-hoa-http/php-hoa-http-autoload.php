@@ -7,10 +7,10 @@ $vendor = '/usr/share/php';
 foreach ([
 	$vendor . '/Hoa/Consistency/autoload.php'    => true,
 	$vendor . '/Hoa/Exception/autoload.php'      => true,
-	$vendor . '/Hoa/Zformat/autoload.php'      => true,
+	$vendor . '/Hoa/Stream/autoload.php'      => true,
 	] as $dep => $mandatory) {
 	if ($mandatory || file_exists($dep)) require_once($dep);
 }
 
-$fedoraHoaLoader->addNamespace('Hoa\\Router\\', __DIR__, true);
+$fedoraHoaLoader->addNamespace('Hoa\\Http\\', __DIR__, true);
 
