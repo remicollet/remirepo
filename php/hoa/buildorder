@@ -52,8 +52,22 @@ hoa/console							3.16.01.14
         "hoa/ustring"    : "~4.0"
 		--
         "hoa/test": "~2.0",
-hoa/dispatcher
+hoa/zformat							1.16.03.15
+        "hoa/consistency": "~1.0",
+        "hoa/exception"  : "~1.0"
 hoa/router
+        "hoa/consistency": "~1.0",
+        "hoa/exception"  : "~1.0",
+        "hoa/zformat"    : "~1.0"
+		--
+hoa/dispatcher
+        "hoa/consistency": "~1.0",
+        "hoa/exception"  : "~1.0",
+        "hoa/zformat"    : "~1.0"
+		--
+        "hoa/router": "~3.0",
+        "hoa/test"  : "~2.0",
+        "hoa/view"  : "~3.0"
 hoa/cli
         "hoa/consistency": "~1.0",
         "hoa/console"    : "~3.0",
