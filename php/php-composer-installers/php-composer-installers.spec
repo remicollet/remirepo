@@ -12,8 +12,8 @@
 
 %global github_owner     composer
 %global github_name      installers
-%global github_version   1.0.23
-%global github_commit    6213d900e92647831f7a406d5c530ea1f3d4360e
+%global github_version   1.0.24
+%global github_commit    1cf7cc4b89d5e8549bbb7d6ab1de75da13d27988
 
 %global composer_vendor  composer
 %global composer_project installers
@@ -157,6 +157,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr  6 2016 Remi Collet <remi@remirepo.net> - 1.0.24-1
+- update to 1.0.24
+
 * Sat Mar 12 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.23-1
 - Updated to 1.0.23 (RHBZ #1302488)
 
