@@ -37,6 +37,11 @@ hoa/file							1.16.01.15
         "hoa/iterator"   : "~2.0"
 		--
         "hoa/test": "~2.0",
+hoa/ustring							4.16.01.11
+        "hoa/consistency": "~1.0",
+        "hoa/exception"  : "~1.0"
+		--
+        "hoa/test": "~2.0",
 hoa/console
         "hoa/consistency": "~1.0",
         "hoa/event"      : "~1.0",
@@ -57,7 +62,6 @@ hoa/cli
         "hoa/protocol"   : "~1.0",
         "hoa/router"     : "~3.0"
 hoa/devtools
-hoa/ustring
 hoa/test
         "atoum/atoum"               : "~2.5",
         "atoum/praspel-extension"   : "~0.16",

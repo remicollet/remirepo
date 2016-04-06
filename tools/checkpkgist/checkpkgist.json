@@ -25,5 +25,6 @@
 	"hoa\/protocol": "php-hoa-protocol",
 	"hoa\/stream": "php-hoa-stream",
 	"hoa\/test": "php-hoa-test",
+	"hoa\/ustring": "php-hoa-ustring",
     "theseer\/fxsl": "php-theseer-fxsl"
 }
