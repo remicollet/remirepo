@@ -12,14 +12,14 @@
 
 %global github_owner     zendframework
 %global github_name      zend-diactoros
-%global github_version   1.3.3
-%global github_commit    4d54fde709664562eb63356f0250d527824d05de
+%global github_version   1.3.5
+%global github_commit    b1d59735b672865dbeb930805029c24f226e3e77
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  zendframework
 %global composer_project zend-diactoros
 
-# "php": ">=5.4"
+# "php": "^5.4 || ^7.0"
 %global php_min_ver 5.4
 # "psr/http-message": "~1.0"
 %global psr_http_message_min_ver 1.0
@@ -176,6 +176,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr  6 2016 Remi Collet <remi@remirepo.net> - 1.3.5-1
+- update to 1.3.5
+
 * Mon Jan 04 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.3-1
 - Updated to 1.3.3 (RHBZ #1285581)
 
