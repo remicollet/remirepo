@@ -13,8 +13,8 @@
 %global gh_owner     hoaproject
 %global gh_project   Console
 %global php_home     %{_datadir}/php
-%global ns_vendor    Console
-%global ns_project   File
+%global ns_vendor    Hoa
+%global ns_project   Console
 %global pk_vendor    hoa
 %global pk_project   console
 %if %{bootstrap}
