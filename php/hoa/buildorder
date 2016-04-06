@@ -86,10 +86,12 @@ hoa/http							1.16.01.15
         "hoa/consistency": "~1.0",
         "hoa/exception"  : "~1.0",
         "hoa/stream"     : "~1.0"
-hoa/locale
+hoa/locale							2.16.01.14
         "hoa/consistency": "~1.0",
         "hoa/exception"  : "~1.0",
         "hoa/http"       : "~1.0"
+		--
+        "hoa/test"  : "~2.0",
 hoa/math
         "hoa/compiler"   : "~3.0",
         "hoa/consistency": "~1.0",
