@@ -20,6 +20,7 @@
 	"hoa\/event": "php-hoa-event",
 	"hoa\/exception": "php-hoa-exception",
 	"hoa\/cli": "php-hoa-cli",
+	"hoa\/compiler": "php-hoa-compiler",
 	"hoa\/consistency": "php-hoa-consistency",
 	"hoa\/console": "php-hoa-console",
 	"hoa\/dispatcher": "php-hoa-dispatcher",

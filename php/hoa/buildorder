@@ -108,7 +108,7 @@ hoa/regex							1.16.01.15
         "hoa/protocol"   : "~1.0",
         "hoa/ustring"    : "~4.0",
         "hoa/visitor"    : "~2.0"
-hoa/compiler
+hoa/compiler						3.16.01.14
         "hoa/consistency": "~1.0",
         "hoa/exception"  : "~1.0",
         "hoa/file"       : "~1.0",
@@ -117,6 +117,19 @@ hoa/compiler
         "hoa/protocol"   : "~1.0",
         "hoa/regex"      : "~1.0",
         "hoa/visitor"    : "~2.0"
+		--
+        "hoa/json": "~2.0",
+        "hoa/test": "~2.0"
+hoa/json
+        "hoa/consistency": "~1.0",
+        "hoa/protocol"   : "~1.0"
+		--
+        "hoa/compiler": "~3.0",
+        "hoa/file"    : "~1.0",
+        "hoa/iterator": "~2.0",
+        "hoa/math"    : "~1.0",
+        "hoa/regex"   : "~1.0",
+        "hoa/test"    : "~2.0"
 hoa/realdom
         "hoa/compiler"   : "~3.0",
         "hoa/consistency": "~1.0",

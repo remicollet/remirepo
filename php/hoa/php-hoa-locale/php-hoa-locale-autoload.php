@@ -1,5 +1,5 @@
 <?php
-/* Autoloader for hoa/router and its dependencies */
+/* Autoloader for hoa/locale and its dependencies */
 
 $vendor = '/usr/share/php';
 

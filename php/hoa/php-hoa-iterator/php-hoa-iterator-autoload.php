@@ -1,5 +1,5 @@
 <?php
-/* Autoloader for hoa/stream and its dependencies */
+/* Autoloader for hoa/iterator and its dependencies */
 
 $vendor = '/usr/share/php';
 
