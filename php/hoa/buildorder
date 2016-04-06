@@ -42,7 +42,7 @@ hoa/ustring							4.16.01.11
         "hoa/exception"  : "~1.0"
 		--
         "hoa/test": "~2.0",
-hoa/console
+hoa/console							3.16.01.14
         "hoa/consistency": "~1.0",
         "hoa/event"      : "~1.0",
         "hoa/exception"  : "~1.0",

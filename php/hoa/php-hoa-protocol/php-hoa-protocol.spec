@@ -78,7 +78,7 @@ cp %{SOURCE2} LICENSE
 rm -rf      %{buildroot}
 mkdir -p    %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}
 cp -pr *php %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/
-find . -mindepth 1 -maxdepth 1 -type d \! -name Test -print -exec \
+find . -mindepth 1 -maxdepth 1 -type d \! \( -name Test -o -name Documentation \) -print -exec \
   cp -pr {}  %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project} \; \
 
 
