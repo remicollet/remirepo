@@ -14,10 +14,18 @@ hoa/consistency	1.16.03.03
 		--
         "hoa/test": "~2.0",
         "hoa/stream": "~1.0",
+hoa/protocol
+        "hoa/consistency": "~1.0",
+        "hoa/exception"  : "~1.0"
+		--
+        "hoa/test": "~2.0",
 hoa/stream
+        "hoa/consistency": "~1.0",
+        "hoa/event"      : "~1.0",
+        "hoa/exception"  : "~1.0",
+        "hoa/protocol"   : "~1.0"
 hoa/console
 hoa/dispatcher
-hoa/protocol
 hoa/router
 hoa/cli
         "hoa/consistency": "~1.0",
