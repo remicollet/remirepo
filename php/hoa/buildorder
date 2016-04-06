@@ -63,7 +63,7 @@ hoa/view							3.16.01.11
         "hoa/consistency": "~1.0",
 		--
         "hoa/test": "~2.0",
-hoa/dispatcher
+hoa/dispatcher						1.16.01.15
         "hoa/consistency": "~1.0",
         "hoa/exception"  : "~1.0",
         "hoa/zformat"    : "~1.0"

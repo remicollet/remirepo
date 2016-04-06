@@ -21,6 +21,7 @@
 	"hoa\/exception": "php-hoa-exception",
 	"hoa\/consistency": "php-hoa-consistency",
 	"hoa\/console": "php-hoa-console",
+	"hoa\/dispatcher": "php-hoa-dispatcher",
 	"hoa\/iterator": "php-hoa-iterator",
 	"hoa\/file": "php-hoa-file",
 	"hoa\/protocol": "php-hoa-protocol",
