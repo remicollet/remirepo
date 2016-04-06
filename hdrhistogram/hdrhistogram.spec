@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 
-%global gh_commit   eb371a12b9d42b9a9a8c2497841d5fa0d44f6ca4
+%global gh_commit   581014321c66a5607fa0911e60815490c2f64650
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    HdrHistogram
 %global gh_project  HdrHistogram_c
@@ -16,7 +16,7 @@
 
 Name:          hdrhistogram
 Summary:       A High Dynamic Range (HDR) Histogram
-Version:       0.9.1
+Version:       0.9.3
 Release:       1%{?dist}
 License:       CC0 or BSD
 Group:         System Environment/Libraries
@@ -24,10 +24,11 @@ Group:         System Environment/Libraries
 URL:           https://github.com/%{gh_owner}/%{gh_project}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
-# See https://github.com/HdrHistogram/HdrHistogram_c/pull/28
-# honours LIB_SUFFIX option
-# set soname version
-Patch0:        %{name}-pr28.patch
+# build with fPIC
+Patch0:        %{name}-fpic.patch
+# See https://github.com/HdrHistogram/HdrHistogram_c/issues/31
+# fix soname version
+Patch1:        %{name}-sover.patch
 
 BuildRequires: cmake > 2.8
 BuildRequires: zlib-devel
@@ -71,9 +72,10 @@ This package contains the %{libname} library.
 mkdir docs
 cp -pr examples docs/examples
 
-%patch0 -p1 -b .pr28
+%patch0 -p1 -b .fpic
+%patch1 -p1 -b .pr28
 
-sed -e '/CMAKE_C_FLAGS/d' -i CMakeLists.txt
+grep CMAKE_C_FLAGS CMakeLists.txt
 
 
 %build
@@ -90,6 +92,9 @@ make %{_smp_mflags}
 
 %install
 make install DESTDIR="%{buildroot}"
+
+# https://github.com/HdrHistogram/HdrHistogram_c/issues/32
+install -p src/hdr_thread.h %{buildroot}%{_includedir}/hdr/hdr_thread.h
 
 rm %{buildroot}/%{_libdir}/%{libname}_static.a
 rm %{buildroot}/%{_bindir}/*test
