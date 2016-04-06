@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    2dd99fc2711812d4f538d4d3f74a31a4aa695e35
+%global gh_commit    bd834c6a97a86d384cb71a9f16d59d78990f61d8
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.11
+Version:        2.3.12
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Application MVC Component
@@ -176,6 +176,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr  6 2016 Remi Collet <remi@fedoraproject.org> - 2.3.12-1
+- update to 2.3.12
+
 * Sat Feb 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.11-1
 - update to 2.3.11
 
