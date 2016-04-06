@@ -26,6 +26,7 @@
 	"hoa\/iterator": "php-hoa-iterator",
 	"hoa\/file": "php-hoa-file",
 	"hoa\/locale": "php-hoa-locale",
+	"hoa\/math": "php-hoa-math",
 	"hoa\/protocol": "php-hoa-protocol",
 	"hoa\/router": "php-hoa-router",
 	"hoa\/stream": "php-hoa-stream",
