@@ -28,6 +28,7 @@
 	"hoa\/stream": "php-hoa-stream",
 	"hoa\/test": "php-hoa-test",
 	"hoa\/ustring": "php-hoa-ustring",
+	"hoa\/view": "php-hoa-view",
 	"hoa\/zformat": "php-hoa-zformat",
     "theseer\/fxsl": "php-theseer-fxsl"
 }

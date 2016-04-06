@@ -1,4 +1,4 @@
-# remirepo/fedora spec file for php-hoa-ustring
+# remirepo/fedora spec file for php-hoa-view
 #
 # Copyright (c) 2016 Remi Collet
 # License: CC-BY-SA
@@ -7,16 +7,16 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    1
-%global gh_commit    9f76b9aae5901b4f476ef854e29ccd746d6899d2
+%global gh_commit    aa3ed78ea12e797d741dd7890be1ca70a64759ac
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     hoaproject
-%global gh_project   Ustring
+%global gh_project   View
 %global php_home     %{_datadir}/php
 %global ns_vendor    Hoa
-%global ns_project   Ustring
+%global ns_project   View
 %global pk_vendor    hoa
-%global pk_project   ustring
+%global pk_project   view
 %if %{bootstrap}
 %global with_tests   0%{?_with_tests:1}
 %else
@@ -24,7 +24,7 @@
 %endif
 
 Name:           php-%{pk_vendor}-%{pk_project}
-Version:        4.16.01.11
+Version:        3.16.01.11
 %global specrel 0
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        The %{ns_vendor}\%{ns_project} library.
@@ -40,7 +40,6 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 BuildRequires:  php-composer(%{pk_vendor}/consistency)     >= 1.0
-BuildRequires:  php-composer(%{pk_vendor}/exception)       >= 1.0
 # From composer.json, "require-dev": {
 #        "hoa/test": "~2.0"
 BuildRequires:  php-composer(%{pk_vendor}/test)            >= 2.0
@@ -48,27 +47,23 @@ BuildRequires:  php-composer(%{pk_vendor}/test)            >= 2.0
 
 # from composer.json, "require": {
 #        "hoa/consistency": "~1.0",
-#        "hoa/exception"  : "~1.0"
 Requires:       php-composer(%{pk_vendor}/consistency)     >= 1.0
 Requires:       php-composer(%{pk_vendor}/consistency)     <  2
-Requires:       php-composer(%{pk_vendor}/exception)       >= 1.0
-Requires:       php-composer(%{pk_vendor}/exception)       <  2
-# from composer.json, "suggest": {
-#        "ext-iconv": "ext/iconv must be present (or a third implementation) to use Hoa\\Ustring::transcode().",
-#        "ext-intl" : "To get a better Hoa\\Ustring::toAscii() and Hoa\\Ustring::compareTo()."
-Requires:       php-iconv
-Requires:       php-intl
-# from phpcompatinfo report for version 4.16.01.11
-Requires:       php-mbstring
-Requires:       php-pcre
-Requires:       php-spl
+# from phpcompatinfo report for version 3.16.01.11
+# none
 
 Provides:       php-composer(%{pk_vendor}/%{pk_project}) = %{version}
 
 
 %description
-The %{ns_vendor}\%{ns_project} library allows to manipulate
-UTF-8 strings easily with some search algorithms.
+The %{ns_vendor}\%{ns_project} library defines a view interface:
+Hoa\View\Viewable.
+
+A view is defined by 4 methods:
+- getOutputStream: Where to write the view,
+- getData: What data we have,
+- render: To run the rendering,
+- getRouter: How do we locate resources and other documents.
 
 Autoloader: %{php_home}/%{ns_vendor}/%{ns_project}/autoload.php
 
@@ -110,7 +105,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Wed Apr  6 2016 Remi Collet <remi@fedoraproject.org> - 4.16.01.11-0
+* Wed Apr  6 2016 Remi Collet <remi@fedoraproject.org> - 3.16.01.11-0
 - initial package
 - bootstrap build
 
