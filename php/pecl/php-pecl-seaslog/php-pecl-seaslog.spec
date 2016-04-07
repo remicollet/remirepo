@@ -12,10 +12,10 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package       php-pecl-seaslog
+%else
+%global _root_libdir %{_libdir}
 %endif
-
-%{?scl:          %scl_package        php-pecl-seaslog}
-%{!?scl:         %global _root_libdir %{_libdir}}
 
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global proj_name  SeasLog
@@ -29,8 +29,8 @@
 
 Summary:        A effective,fast,stable log extension for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.5.0
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.5.3
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        ASL 2.0
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{proj_name}
@@ -48,8 +48,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -120,9 +122,10 @@ cat << 'EOF' | tee %{ini_name}
 extension=%{pecl_name}.so
 
 ; Configuration
-;seaslog.default_basepath = '/log'
+;seaslog.default_basepath = '/var/log/www'
 ;seaslog.default_logger = 'default'
 ;seaslog.logger = 'default'
+;seaslog.default_datetime_format = '%Y:%m:%d %H:%M:%S'
 ;seaslog.disting_type = 0
 ;seaslog.disting_by_hour = 0
 ;seaslog.use_buffer = 0
@@ -232,6 +235,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr 07 2016 Remi Collet <remi@fedoraproject.org> - 1.5.3-1
+- Update to 1.5.3
+
 * Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 1.5.0-2
 - adapt for F24
 

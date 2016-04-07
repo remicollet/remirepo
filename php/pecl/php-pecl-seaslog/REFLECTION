@@ -1,11 +1,14 @@
-Extension [ <persistent> extension #202 SeasLog version 1.5.0 ] {
+Extension [ <persistent> extension #212 SeasLog version 1.5.3 ] {
 
   - INI {
     Entry [ seaslog.default_basepath <ALL> ]
-      Current = '/log'
+      Current = '/var/log/www'
     }
     Entry [ seaslog.default_logger <ALL> ]
       Current = 'default'
+    }
+    Entry [ seaslog.default_datetime_format <ALL> ]
+      Current = '%Y:%m:%d %H:%M:%S'
     }
     Entry [ seaslog.logger <ALL> ]
       Current = 'default'
@@ -34,7 +37,7 @@ Extension [ <persistent> extension #202 SeasLog version 1.5.0 ] {
   }
 
   - Constants [13] {
-    Constant [ string SEASLOG_VERSION ] { 1.5.0 }
+    Constant [ string SEASLOG_VERSION ] { 1.5.3 }
     Constant [ string SEASLOG_AUTHOR ] { Chitao.Gao  [ neeke@php.net ] }
     Constant [ string SEASLOG_ALL ] { all }
     Constant [ string SEASLOG_DEBUG ] { debug }
@@ -67,7 +70,7 @@ Extension [ <persistent> extension #202 SeasLog version 1.5.0 ] {
         Property [ public static $seaslog_buffer_size ]
       }
 
-      - Static methods [17] {
+      - Static methods [19] {
         Method [ <internal:SeasLog> static public method setBasePath ] {
         }
 
@@ -78,6 +81,12 @@ Extension [ <persistent> extension #202 SeasLog version 1.5.0 ] {
         }
 
         Method [ <internal:SeasLog> static public method getLastLogger ] {
+        }
+
+        Method [ <internal:SeasLog> static public method setDatetimeFormat ] {
+        }
+
+        Method [ <internal:SeasLog> static public method getDatetimeFormat ] {
         }
 
         Method [ <internal:SeasLog> static public method analyzerCount ] {
