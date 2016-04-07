@@ -26,4 +26,5 @@
 */*/clog
 */*/*/clog
 package*.xml
-composer*.json
+composer-[0-9]*.json
+

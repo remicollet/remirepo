@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    dd3001822b2df8f5add266020e3d2fd3c5db3ae9
+%global gh_commit    34a3acb401ae79deb37bc6e5f5ec3d325b369b4c
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.3
-%global minor        0
+%global minor        1
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -65,7 +65,7 @@ BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 #        "phpunit/php-file-iterator": "~1.4",
 #        "phpunit/php-text-template": "~1.2",
 #        "phpunit/php-code-coverage": "^3.3.0",
-#        "phpunit/php-timer": ">=1.0.6",
+#        "phpunit/php-timer": "^1.0.6",
 #        "phpunit/phpunit-mock-objects": "^3.1",
 #        "phpspec/prophecy": "^1.3.1",
 #        "symfony/yaml": "~2.1|~3.0",
@@ -219,6 +219,9 @@ fi
 
 
 %changelog
+* Thu Apr  7 2016 Remi Collet <remi@fedoraproject.org> - 5.3.1-1
+- Update to 5.3.1
+
 * Fri Apr  1 2016 Remi Collet <remi@fedoraproject.org> - 5.3.0-1
 - Update to 5.3.0
 - add dependency on sebastian/object-enumerator
