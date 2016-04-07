@@ -29,10 +29,13 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 # For minimal test
 BuildRequires:  php-cli
+BuildRequires:  php-mbstring
 # To generate an autoloader
 BuildRequires:  %{_bindir}/phpab
 
+# From phpcompatinfo report for version 1.1.0
 Requires:       php(language)
+Requires:       php-mbstring
 Requires:       php-pcre
 
 Provides:       php-composer(phpspec/php-diff) = %{version}
@@ -90,6 +93,7 @@ rm -rf %{buildroot}
 %changelog
 * Thu Apr  7 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - update to 1.1.0
+- add dependency on mbstring
 
 * Tue Feb 17 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - initial package
