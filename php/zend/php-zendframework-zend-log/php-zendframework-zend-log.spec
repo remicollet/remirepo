@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    fa6805bb6695d7b9542386600881b8fc81f82103
+%global gh_commit    8a8cac425763b705ee95014cfc776081b789f5eb
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-log
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.1
+Version:        2.8.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -46,20 +46,20 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 BuildRequires:  php-composer(psr/log)                           >= 1.0
 # From composer, "require-dev": {
 #        "zendframework/zend-console": "^2.6",
-#        "zendframework/zend-db": "^2.5",
+#        "zendframework/zend-db": "^2.6",
 #        "zendframework/zend-escaper": "^2.5",
 #        "zendframework/zend-filter": "^2.5",
-#        "zendframework/zend-mail": "^2.5",
-#        "zendframework/zend-validator": "^2.5",
+#        "zendframework/zend-mail": "^2.6.1",
+#        "zendframework/zend-validator": "^2.6",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0",
 #        "mikey179/vfsStream": "^1.6"
 BuildRequires:  php-composer(%{gh_owner}/zend-console)          >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-db)               >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-db)               >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-escaper)          >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-filter)           >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-mail)             >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-mail)             >= 2.6.1
+BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.6
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 BuildRequires:  php-composer(mikey179/vfsStream)                >= 1.6
 # Optional dep
@@ -145,6 +145,8 @@ Zend\Loader\AutoloaderFactory::factory(array(
            'Zend\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
+
+require __DIR__ . '/../test/Writer/TestAsset/chmod.php';
 EOF
 
 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
@@ -171,6 +173,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr  7 2016 Remi Collet <remi@fedoraproject.org> - 2.8.1-1
+- update to 2.8.1
+
 * Fri Feb 19 2016 Remi Collet <remi@fedoraproject.org> - 2.7.1-1
 - update to 2.7.1
 
