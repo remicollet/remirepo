@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    b3b043284b7eec2ae5a3c51e1f81db06f2e167a1
+%global gh_commit    a6833aeabc9fcaf5bb17c3a33130ae79b3aa133a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-inputfilter
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.0
+Version:        2.6.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -142,6 +142,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr  7 2016 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
+- update to 2.6.1
+
 * Fri Feb 19 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
 - update to 2.6.0
 - raise dependency on zend-stdlib >= 2.7
