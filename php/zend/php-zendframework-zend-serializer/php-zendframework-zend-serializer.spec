@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    0d9556cb75045481de1869fd1962cacdaca7ef88
+%global gh_commit    1dc6fab0f5f21f92bba8c5e74e2878b6e22a2c16
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-serializer
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.1
+Version:        2.7.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -46,22 +46,22 @@ BuildRequires:  php-composer(%{gh_owner}/zend-math)             >= 2.5
 # From composer, "require-dev": {
 #        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
 #        "fabpot/php-cs-fixer": "1.7.*",
-#        "phpunit/PHPUnit": "~4.0"
+#        "phpunit/PHPUnit": "^4.5"
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
-BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
+BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.5
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
 #        "php": "^5.5 || ^7.0",
-#        "zendframework/zend-stdlib": "~2.7",
-#        "zendframework/zend-json": "~2.5",
-#        "zendframework/zend-math": "~2.6"
+#        "zendframework/zend-stdlib": "^2.7 || ^3.0",
+#        "zendframework/zend-json": "^2.5",
+#        "zendframework/zend-math": "^2.6"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 Requires:       php-composer(%{gh_owner}/zend-json)             >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-json)             <  3
 Requires:       php-composer(%{gh_owner}/zend-math)             >= 2.6
@@ -146,6 +146,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr  7 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
+- update to 2.7.0
+
 * Thu Feb  4 2016 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
 - update to 2.6.1
 
