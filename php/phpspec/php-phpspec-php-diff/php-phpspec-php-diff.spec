@@ -6,13 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    30e103d19519fe678ae64a60d77884ef3d71b28a
+%global gh_commit    0464787bfa7cd13576c5a1e318709768798bec6a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpspec
 %global gh_project   php-diff
 
 Name:           php-phpspec-php-diff
-Version:        1.0.2
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        A library for generating differences between two hashable objects
 
@@ -88,5 +88,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr  7 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- update to 1.1.0
+
 * Tue Feb 17 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - initial package
