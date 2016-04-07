@@ -22,8 +22,8 @@
 
 Summary:        MongoDB driver for PHP
 Name:           php-pecl-%{pecl_name}
-Version:        1.1.5
-Release:        3%{?dist}
+Version:        1.1.6
+Release:        1%{?dist}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -194,6 +194,9 @@ cd ../ZTS
 
 
 %changelog
+* Thu Apr 07 2016 Remi Collet <remi@fedoraproject.org> - 1.1.6-1
+- Update to 1.1.6
+
 * Thu Mar 31 2016 Remi Collet <remi@fedoraproject.org> - 1.1.5-3
 - load after smbclient to workaround
   https://jira.mongodb.org/browse/PHPC-658
