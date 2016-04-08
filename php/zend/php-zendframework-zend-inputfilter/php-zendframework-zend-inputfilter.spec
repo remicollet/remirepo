@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    a6833aeabc9fcaf5bb17c3a33130ae79b3aa133a
+%global gh_commit    3d6c8dab9780c63d14c5649f83a7fbbadc9d16c8
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-inputfilter
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.1
+Version:        2.7.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -99,12 +99,6 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 
 %check
 %if %{with_tests}
-if %{_bindir}/phpunit --atleast-version 5
-then
-   : Skip test suite because PHPUnit is too recent
-   exit 0
-fi
-
 mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
@@ -118,8 +112,19 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
+if %{_bindir}/phpunit --atleast-version 5
+then
+   # remirepo:3
+   if [ -x "$PHPUNIT" ]; then
+      $PHPUNIT --include-path=%{buildroot}%{php_home}
+   fi
+   : Skip test suite because PHPUnit is too recent
+   exit 0
+fi
+
 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
 
+# remirepo:3
 if which php70; then
    php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
 fi
@@ -142,6 +147,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr  8 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
+- update to 2.7.0
+
 * Thu Apr  7 2016 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
 - update to 2.6.1
 
