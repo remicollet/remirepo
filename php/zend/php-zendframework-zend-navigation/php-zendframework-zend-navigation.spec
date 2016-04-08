@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    8048625bd5cac2d427ce16094d3ee7f95bb1e313
+%global gh_commit    670812295242c29a890fbb4c2a68c2fed43f4dfa
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-navigation
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.1
+Version:        2.7.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -75,10 +75,10 @@ Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 # From composer, "suggest": {
 #        "zendframework/zend-config": "Zend\\Config component",
-#        "zendframework/zend-mvc": "Zend\\Mvc component",
-#        "zendframework/zend-permissions-acl": "Zend\\Permissions\\Acl component",
-#        "zendframework/zend-servicemanager": "Zend\\ServiceManager component",
-#        "zendframework/zend-view": "Zend\\View component"
+#        "zendframework/zend-mvc": "Zend\\Mvc component, to provide dynamic routing capabilities for navigation pages",
+#        "zendframework/zend-permissions-acl": "Zend\\Permissions\\Acl component, to allow restricting access to navigation pages",
+#        "zendframework/zend-servicemanager": "Zend\\ServiceManager component, to use the navigation factories",
+#        "zendframework/zend-view": "Zend\\View component, to use the navigation view helpers"
 %if 0%{?fedora} >= 21
 Suggests:       php-composer(%{gh_owner}/zend-config)
 Suggests:       php-composer(%{gh_owner}/zend-mvc)
@@ -157,6 +157,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr  8 2016 Remi Collet <remi@fedoraproject.org> - 2.7.1-1
+- update to 2.7.1
+
 * Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
 - update to 2.6.1
 

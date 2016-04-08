@@ -32,17 +32,21 @@
     },
     "suggest": {
         "zendframework/zend-config": "Zend\\Config component",
-        "zendframework/zend-mvc": "Zend\\Mvc component",
-        "zendframework/zend-permissions-acl": "Zend\\Permissions\\Acl component",
-        "zendframework/zend-servicemanager": "Zend\\ServiceManager component",
-        "zendframework/zend-view": "Zend\\View component"
+        "zendframework/zend-mvc": "Zend\\Mvc component, to provide dynamic routing capabilities for navigation pages",
+        "zendframework/zend-permissions-acl": "Zend\\Permissions\\Acl component, to allow restricting access to navigation pages",
+        "zendframework/zend-servicemanager": "Zend\\ServiceManager component, to use the navigation factories",
+        "zendframework/zend-view": "Zend\\View component, to use the navigation view helpers"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "2.6-dev",
-            "dev-develop": "2.7-dev"
+            "dev-master": "2.7-dev",
+            "dev-develop": "2.8-dev"
+        },
+        "zf": {
+            "component": "Zend\\Navigation",
+            "config-provider": "Zend\\Navigation\\ConfigProvider"
         }
     },
     "autoload-dev": {
