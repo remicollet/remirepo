@@ -1,6 +1,6 @@
-Extension [ <persistent> extension #121 libsodium version 1.0.4 ] {
+Extension [ <persistent> extension #121 libsodium version 1.0.5 ] {
 
-  - Constants [54] {
+  - Constants [58] {
     Constant [ integer Sodium\CRYPTO_AEAD_AES256GCM_KEYBYTES ] { 32 }
     Constant [ integer Sodium\CRYPTO_AEAD_AES256GCM_NSECBYTES ] { 0 }
     Constant [ integer Sodium\CRYPTO_AEAD_AES256GCM_NPUBBYTES ] { 12 }
@@ -9,6 +9,10 @@ Extension [ <persistent> extension #121 libsodium version 1.0.4 ] {
     Constant [ integer Sodium\CRYPTO_AEAD_CHACHA20POLY1305_NSECBYTES ] { 0 }
     Constant [ integer Sodium\CRYPTO_AEAD_CHACHA20POLY1305_NPUBBYTES ] { 8 }
     Constant [ integer Sodium\CRYPTO_AEAD_CHACHA20POLY1305_ABYTES ] { 16 }
+    Constant [ integer Sodium\CRYPTO_AEAD_CHACHA20POLY1305_IETF_KEYBYTES ] { 32 }
+    Constant [ integer Sodium\CRYPTO_AEAD_CHACHA20POLY1305_IETF_NSECBYTES ] { 0 }
+    Constant [ integer Sodium\CRYPTO_AEAD_CHACHA20POLY1305_IETF_NPUBBYTES ] { 12 }
+    Constant [ integer Sodium\CRYPTO_AEAD_CHACHA20POLY1305_IETF_ABYTES ] { 16 }
     Constant [ integer Sodium\CRYPTO_AUTH_BYTES ] { 32 }
     Constant [ integer Sodium\CRYPTO_AUTH_KEYBYTES ] { 32 }
     Constant [ integer Sodium\CRYPTO_BOX_SEALBYTES ] { 48 }
@@ -91,6 +95,24 @@ Extension [ <persistent> extension #121 libsodium version 1.0.4 ] {
       }
     }
     Function [ <internal:libsodium> function Sodium\crypto_aead_chacha20poly1305_encrypt ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $string ]
+        Parameter #1 [ <required> $ad ]
+        Parameter #2 [ <required> $nonce ]
+        Parameter #3 [ <required> $key ]
+      }
+    }
+    Function [ <internal:libsodium> function Sodium\crypto_aead_chacha20poly1305_ietf_decrypt ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $string ]
+        Parameter #1 [ <required> $ad ]
+        Parameter #2 [ <required> $nonce ]
+        Parameter #3 [ <required> $key ]
+      }
+    }
+    Function [ <internal:libsodium> function Sodium\crypto_aead_chacha20poly1305_ietf_encrypt ] {
 
       - Parameters [4] {
         Parameter #0 [ <required> $string ]
