@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    395ebb981e01f2fc708ba07d8ee0d86f6e3e9ed6
+%global gh_commit    f4358090d5d23973121f1ed0b376184b66d9edec
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-math
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.0
+Version:        2.7.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -40,6 +40,8 @@ BuildRequires:  php-gmp
 BuildRequires:  php-openssl
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
+# test suite hangs without (need investigation)
+BuildRequires:  php-mcrypt
 # From composer, "require-dev": {
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "ircmaxell/random-lib": "~1.1",
@@ -62,8 +64,7 @@ Requires:       php-spl
 # From composer, "suggest": {
 #        "ext-bcmath": "If using the bcmath functionality",
 #        "ext-gmp": "If using the gmp functionality",
-#        "ircmaxell/random-lib": "Fallback random byte generator for Zend\\Math\\Rand if OpenSSL/Mcrypt extensions are unavailable",
-#        "zendframework/zend-servicemanager": ">= current version, if using the BigInteger::factory functionality"
+#        "ircmaxell/random-lib": "Fallback random byte generator for Zend\\Math\\Rand if Mcrypt extensions is unavailable"
 Requires:       php-bcmath
 Requires:       php-gmp
 %if 0%{?fedora} >= 21
@@ -117,6 +118,7 @@ EOF
 
 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
 
+# remirepo:3
 if which php70; then
    php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
 fi
@@ -139,6 +141,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr  8 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
+- update to 2.7.0
+
 * Wed Feb  3 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
 - update to 2.6.0
 - drop dependency on zend-servicemanager
