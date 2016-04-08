@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    fe33716763b604ade4cb442c0794f5bd5ad73004
+%global gh_commit    2431befdd451fac43fbcde94d1a92fb3b8b68f86
 #global gh_date      20150924
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHP_CodeCoverage
 %global pear_channel pear.phpunit.de
 %global major        3.3
-%global minor        0
+%global minor        1
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
@@ -46,7 +46,7 @@ BuildRequires:  php-theseer-autoload >= 1.19
 BuildRequires:  php-composer(phpunit/phpunit) >= 5
 BuildRequires:  php-composer(sebastian/code-unit-reverse-lookup) >= 1
 BuildRequires:  php-composer(sebastian/environment) >= 1.3.2
-BuildRequires:  php-pecl-xdebug  >= 2.1.4
+BuildRequires:  php-pecl-xdebug  >= 2.4.0
 %endif
 
 # From composer.json, require
@@ -72,7 +72,7 @@ Requires:       php-composer(sebastian/version) >= 1.0
 Requires:       php-composer(sebastian/version) <  3
 # From composer.json, suggest
 #        "ext-dom": "*",
-#        "ext-xdebug": ">=2.2.1",
+#        "ext-xdebug": ">=2.4.0",
 #        "ext-xmlwriter": "*"
 Requires:       php-dom
 Requires:       php-xmlwriter
@@ -133,6 +133,7 @@ fi
         --bootstrap %{buildroot}%{php_home}/PHP/CodeCoverage/Autoload.php \
         --verbose
 
+# remirepo:7
 if which php70 ; then
   php70 $EXT \
     -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
@@ -165,6 +166,9 @@ fi
 
 
 %changelog
+* Fri Apr  8 2016 Remi Collet <remi@fedoraproject.org> - 3.3.1-1
+- Update to 3.3.1
+
 * Thu Mar  3 2016 Remi Collet <remi@fedoraproject.org> - 3.3.0-1
 - Update to 3.3.0
 
