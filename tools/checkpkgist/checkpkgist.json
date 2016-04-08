@@ -25,6 +25,7 @@
 	"hoa\/console": "php-hoa-console",
 	"hoa\/dispatcher": "php-hoa-dispatcher",
 	"hoa\/iterator": "php-hoa-iterator",
+	"hoa\/json": "php-hoa-json",
 	"hoa\/file": "php-hoa-file",
 	"hoa\/locale": "php-hoa-locale",
 	"hoa\/math": "php-hoa-math",

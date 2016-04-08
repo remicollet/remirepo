@@ -120,7 +120,7 @@ hoa/compiler						3.16.01.14
 		--
         "hoa/json": "~2.0",
         "hoa/test": "~2.0"
-hoa/json
+hoa/json							2.16.01.14
         "hoa/consistency": "~1.0",
         "hoa/protocol"   : "~1.0"
 		--
