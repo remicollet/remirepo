@@ -122,7 +122,7 @@
 %endif
 
 #global rcver         RC1
-%global rpmrel        1
+%global rpmrel        2
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -182,6 +182,7 @@ Patch47: php-5.6.3-phpinfo.patch
 Patch91: php-5.6.3-oci8conf.patch
 
 # Upstream fixes (100+)
+Patch100: bug71914.patch
 
 # Security fixes (200+)
 
@@ -965,6 +966,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
+%patch100 -p1 -b .bug71914
 
 # security patches
 
@@ -2003,6 +2005,9 @@ fi
 
 
 %changelog
+* Fri Apr  8 2016 Remi Collet <remi@fedoraproject.org> 7.0.5-2
+- Fixed bug #71914 (Reference is lost in "switch")
+
 * Wed Mar 30 2016 Remi Collet <remi@fedoraproject.org> 7.0.5-1
 - Update to 7.0.5
   http://www.php.net/releases/7_0_5.php
