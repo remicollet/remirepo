@@ -29,6 +29,7 @@
 	"hoa\/file": "php-hoa-file",
 	"hoa\/locale": "php-hoa-locale",
 	"hoa\/math": "php-hoa-math",
+	"hoa\/praspel": "php-hoa-praspel",
 	"hoa\/protocol": "php-hoa-protocol",
 	"hoa\/realdom": "php-hoa-realdom",
 	"hoa\/regex": "php-hoa-regex",

@@ -141,7 +141,7 @@ hoa/realdom							1.16.01.15
         "hoa/regex"      : "~1.0",
         "hoa/ustring"    : "~4.0",
         "hoa/visitor"    : "~2.0"
-hoa/praspel
+hoa/praspel							1.16.01.16
         "hoa/compiler"   : "~3.0",
         "hoa/consistency": "~1.0",
         "hoa/exception"  : "~1.0",
@@ -151,6 +151,8 @@ hoa/praspel
         "hoa/realdom"    : "~1.0",
         "hoa/ustring"    : "~4.0",
         "hoa/visitor"    : "~2.0"
+         ---
+        "hoa/math": "~1.0"
 hoa/stringbuffer
         "hoa/consistency": "~1.0",
         "hoa/exception"  : "~1.0",
