@@ -130,7 +130,7 @@ hoa/json							2.16.01.14
         "hoa/math"    : "~1.0",
         "hoa/regex"   : "~1.0",
         "hoa/test"    : "~2.0"
-hoa/realdom
+hoa/realdom							1.16.01.15
         "hoa/compiler"   : "~3.0",
         "hoa/consistency": "~1.0",
         "hoa/exception"  : "~1.0",

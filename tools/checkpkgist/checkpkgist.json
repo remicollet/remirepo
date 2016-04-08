@@ -30,6 +30,7 @@
 	"hoa\/locale": "php-hoa-locale",
 	"hoa\/math": "php-hoa-math",
 	"hoa\/protocol": "php-hoa-protocol",
+	"hoa\/realdom": "php-hoa-realdom",
 	"hoa\/regex": "php-hoa-regex",
 	"hoa\/router": "php-hoa-router",
 	"hoa\/stream": "php-hoa-stream",
