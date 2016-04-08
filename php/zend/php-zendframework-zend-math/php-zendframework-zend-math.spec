@@ -67,9 +67,8 @@ Requires:       php-spl
 #        "ircmaxell/random-lib": "Fallback random byte generator for Zend\\Math\\Rand if Mcrypt extensions is unavailable"
 Requires:       php-bcmath
 Requires:       php-gmp
-%if 0%{?fedora} >= 21
-Suggests:       php-composer(ircmaxell/random-lib)
-%endif
+# Mandatory as we don't want mcrypt
+Requires:       php-composer(ircmaxell/random-lib)
 # Autoloader
 Requires:       php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
@@ -143,6 +142,7 @@ rm -rf %{buildroot}
 %changelog
 * Fri Apr  8 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
 - update to 2.7.0
+- add mandatory dependency on ircmaxell/random-lib
 
 * Wed Feb  3 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
 - update to 2.6.0
