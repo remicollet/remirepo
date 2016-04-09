@@ -181,8 +181,8 @@ if which php70; then
    php70 %{_bindir}/phpunit --verbose || ret=1
    run=1
 fi
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose || ret=1
+if which php56; then
+   php56 %{_bindir}/phpunit --verbose || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
