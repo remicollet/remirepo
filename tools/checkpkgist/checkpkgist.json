@@ -42,6 +42,7 @@
 	"hoa\/view": "php-hoa-view",
 	"hoa\/visitor": "php-hoa-visitor",
 	"hoa\/xml": "php-hoa-xml",
+	"hoa\/xyl": "php-hoa-xyl",
 	"hoa\/zformat": "php-hoa-zformat",
 	"league\/plates": "php-league-plates",
     "theseer\/fxsl": "php-theseer-fxsl"
