@@ -153,7 +153,7 @@ hoa/praspel							1.16.01.16
         "hoa/visitor"    : "~2.0"
          ---
         "hoa/math": "~1.0"
-hoa/stringbuffer
+hoa/stringbuffer					1.16.01.15
         "hoa/consistency": "~1.0",
         "hoa/exception"  : "~1.0",
         "hoa/protocol"   : "~1.0",

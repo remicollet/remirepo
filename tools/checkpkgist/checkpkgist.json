@@ -35,6 +35,7 @@
 	"hoa\/regex": "php-hoa-regex",
 	"hoa\/router": "php-hoa-router",
 	"hoa\/stream": "php-hoa-stream",
+	"hoa\/stringbuffer": "php-hoa-stringbuffer",
 	"hoa\/http": "php-hoa-http",
 	"hoa\/test": "php-hoa-test",
 	"hoa\/ustring": "php-hoa-ustring",
