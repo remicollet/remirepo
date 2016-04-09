@@ -44,7 +44,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}6
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}
 Summary:       PHP HTTP client library
 
 Group:         Development/Libraries
@@ -146,7 +146,7 @@ if (!isset($fedoraPsr4ClassLoader) || !($fedoraPsr4ClassLoader instanceof \Symfo
     }
 
     $fedoraPsr4ClassLoader = new \Symfony\Component\ClassLoader\Psr4ClassLoader();
-    $fedoraPsr4ClassLoader->register();
+    $fedoraPsr4ClassLoader->register(true);
 }
 
 $fedoraPsr4ClassLoader->addPrefix('GuzzleHttp\\', __DIR__);
@@ -174,11 +174,22 @@ require_once '%{buildroot}%{phpdir}/GuzzleHttp6/autoload.php';
 $fedoraPsr4ClassLoader->addPrefix('GuzzleHttp\\Tests\\', __DIR__.'/tests');
 AUTOLOAD
 
-%{_bindir}/phpunit --verbose
+ret=0
+run=0
 
 if which php70; then
-   php70 %{_bindir}/phpunit --verbose
+   php70 %{_bindir}/phpunit --verbose || ret=1
+   run=1
 fi
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+   %{_bindir}/phpunit --verbose || ret=1
+fi
+
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -198,6 +209,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr 08 2016 Shawn Iwinski <shawn@iwin.ski> - 6.2.0-2
+- Prepend PSR-4 autoloader (fixes dual-install issue with
+  php-guzzlehttp-guzzle when other packages register PSR-0
+  autoloader first usually with include path failover)
+
 * Sun Mar 27 2016 Shawn Iwinski <shawn@iwin.ski> - 6.2.0-1
 - Updated to 6.2.0 (RHBZ #1319960)
 
