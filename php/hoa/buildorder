@@ -158,7 +158,7 @@ hoa/stringbuffer					1.16.01.15
         "hoa/exception"  : "~1.0",
         "hoa/protocol"   : "~1.0",
         "hoa/stream"     : "~1.0"
-hoa/xml
+hoa/xml								1.16.04.05
         "hoa/consistency" : "~1.0",
         "hoa/compiler"    : "~3.0",
         "hoa/exception"   : "~1.0",
