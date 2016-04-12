@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    6d8beb316a23e3ae2e0fd0370f47d2b5dc7207ca
+%global gh_commit    c8c2df90bc95e1c9240f58e3feb624cc696a1988
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-session
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.2
+Version:        2.7.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -49,6 +49,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 #        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
 #        "zendframework/zend-validator": "^2.6",
 #        "container-interop/container-interop": "^1.1",
+#        "mongodb/mongodb": "^1.0.1",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0"
 BuildRequires:  php-composer(%{gh_owner}/zend-cache)            >= 2.6.1
@@ -78,12 +79,15 @@ Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 #        "zendframework/zend-http": "Zend\\Http component",
 #        "zendframework/zend-servicemanager": "Zend\\ServiceManager component",
 #        "zendframework/zend-validator": "Zend\\Validator component"
+#        "zendframework/zend-validator": "Zend\\Validator component",
+#        "mongodb/mongodb": "If you want to use the MongoDB session save handler"
 %if 0%{?fedora} >= 21
 Suggests:       php-composer(%{gh_owner}/zend-cache)
 Suggests:       php-composer(%{gh_owner}/zend-db)
 Suggests:       php-composer(%{gh_owner}/zend-http)
 Suggests:       php-composer(%{gh_owner}/zend-servicemanager)
 Suggests:       php-composer(%{gh_owner}/zend-validator)
+Suggests:       php-composer(mongodb/mongodb)
 %endif
 %endif
 # From phpcompatinfo report for version 2.5.2
@@ -165,6 +169,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Apr 12 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
+- update to 2.7.0
+- add optional dependency on mongodb/mongodb
+
 * Fri Feb 26 2016 Remi Collet <remi@fedoraproject.org> - 2.6.2-1
 - update to 2.6.2
 
