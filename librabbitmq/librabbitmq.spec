@@ -10,12 +10,12 @@
 # Please, preserve the changelog entries
 #
 
-%global gh_commit   a5365166f57919aaca7265607aabd7159fe8a68a
+%global gh_commit   caad0ef1533783729c7644a226c989c79b4c497b
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    alanxz
 %global gh_project  rabbitmq-c
 %global libname     librabbitmq
-# soname 4 since 0.6.0 (Fedora 23)
+# soname 4 since 0.6.0 (Fedora 23) 0.7.0/4.1, 0.8.0/4.2
 # soname 1 up to 0.5.2
 %global soname      4
 
@@ -25,7 +25,7 @@ Name:      %{libname}-last
 Name:      %{libname}
 %endif
 Summary:   Client library for AMQP
-Version:   0.7.1
+Version:   0.8.0
 Release:   1%{?dist}
 License:   MIT
 Group:     System Environment/Libraries
@@ -45,6 +45,10 @@ BuildRequires: openssl-devel
 # For man page
 BuildRequires: xmlto
 
+%if "%{name}" == "%{libname}"
+Obsoletes:      %{libname}-last <= %{version}
+%endif
+
 
 %description
 This is a C-language AMQP client library for use with AMQP servers
@@ -61,6 +65,8 @@ Requires:   %{name}%{?_isa} = %{version}-%{release}
 %if "%{name}" != %{libname}
 Conflicts:  %{libname}-devel < %{version}
 Provides:   %{libname}-devel = %{version}-%{release}
+%else
+Obsoletes:  %{libname}-last-devel <= %{version}
 %endif
 
 %description devel
@@ -75,6 +81,8 @@ Requires:   %{name}%{?_isa} = %{version}
 %if "%{name}" != %{libname}
 Conflicts:  %{libname}-tools < %{version}
 Provides:   %{libname}-tools = %{version}-%{release}
+%else
+Obsoletes:  %{libname}-last-tools <= %{version}
 %endif
 
 %description tools
@@ -154,6 +162,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Apr 12 2016 Remi Collet <remi@fedoraproject.org> - 0.8.0-1
+- update to 0.8.0
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 0.7.1-1
 - update to 0.7.1
 
