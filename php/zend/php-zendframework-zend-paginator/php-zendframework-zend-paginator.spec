@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    15c82665abc668e6ddf955afc4b86cd3385efbad
+%global gh_commit    42211f3e1e8230953c641e91fec5aa9fe964eb95
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-paginator
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.0
+Version:        2.7.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -149,6 +149,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Apr 12 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
+- update to 2.7.0
+
 * Wed Feb 24 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
 - update to 2.6.0
 - raise dependency on PHP >= 5.5
