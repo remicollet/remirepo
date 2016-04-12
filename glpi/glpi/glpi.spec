@@ -27,8 +27,8 @@
 %endif
 
 Name:           glpi
-Version:        0.90.2
-Release:        2%{?dist}
+Version:        0.90.3
+Release:        1%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
@@ -327,6 +327,10 @@ fi
 
 
 %changelog
+* Tue Apr 12 2016 Remi Collet <remi@fedoraproject.org> - 0.90.3-1
+- update to 0.90.3
+  https://github.com/glpi-project/glpi/issues?q=milestone:0.90.3
+
 * Tue Apr  5 2016 Remi Collet <remi@fedoraproject.org> - 0.90.2-2
 - fix logrotate configuration for recent version
 
