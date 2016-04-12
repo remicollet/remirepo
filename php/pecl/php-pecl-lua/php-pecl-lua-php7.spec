@@ -6,38 +6,27 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package         php-pecl-lua}
-%{!?scl:         %global _root_prefix %{_prefix}}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
-
-%global with_zts   0%{?__ztsphp:1}
-%global pecl_name  lua
-%if "%{php_version}" < "5.6"
-%global ini_name   %{pecl_name}.ini
+%if 0%{?scl:1}
+%global sub_prefix %{scl_prefix}
+%scl_package         php-pecl-lua
 %else
-%global ini_name   40-%{pecl_name}.ini
+%global _root_prefix %{_prefix}
 %endif
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
+%global pecl_name  lua
+%global ini_name   40-%{pecl_name}.ini
 
 Summary:        Embedded lua interpreter
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.1.0
-Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
+Version:        2.0.1
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-# https://bugs.php.net/62621 config.m4
-# https://bugs.php.net/65953 LUA 5.1
-# https://github.com/laruence/php-lua/pull/6
-# https://github.com/laruence/php-lua/pull/7
-Patch0:         %{pecl_name}-build.patch
-
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  lua-devel
-BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-devel > 7
 BuildRequires:  %{?scl_prefix}php-pear
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
@@ -48,8 +37,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -64,6 +55,10 @@ Obsoletes:     php55w-pecl-%{pecl_name}
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name}
 Obsoletes:     php56w-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name}
+Obsoletes:     php70w-pecl-%{pecl_name}
 %endif
 %endif
 
@@ -88,15 +83,12 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' \
-    -e '/CREDITS/s/role="src"/role="doc"/' \
-    -e '/LICENSE/s/role="src"/role="doc"/' \
     %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
-    package2.xml >package.xml
+    -i package.xml
 
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
-%patch0 -p1 -b .fixbuild
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_LUA_VERSION/{s/.* "//;s/".*$//;p}' php_lua.h)
@@ -139,8 +131,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-
 make -C NTS \
      install INSTALL_ROOT=%{buildroot}
 
@@ -216,15 +206,11 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
+
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 
@@ -235,7 +221,10 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> -  - 1.1.0-6
+* Tue Apr 12 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- update to 2.0.1 for PHP 7
+
+* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-6
 - adapt for F24
 - drop runtime dependency on pear, new scriptlets
 - fix license management

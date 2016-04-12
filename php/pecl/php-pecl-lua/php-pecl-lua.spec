@@ -6,12 +6,16 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package         php-pecl-lua}
-%{!?scl:         %global _root_prefix %{_prefix}}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
-
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%scl_package         php-pecl-lua
+%else
+%global _root_prefix %{_prefix}
+%endif
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  lua
 %if "%{php_version}" < "5.6"
@@ -21,7 +25,7 @@
 %endif
 
 Summary:        Embedded lua interpreter
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.1.0
 Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
@@ -48,8 +52,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -235,7 +241,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> -  - 1.1.0-6
+* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-6
 - adapt for F24
 - drop runtime dependency on pear, new scriptlets
 - fix license management
