@@ -125,13 +125,13 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver        RC1
+%global rcver        RC1
 %global rpmrel       2
 
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 7.0.5
+Version: 7.0.6
 %if 0%{?gh_date}
 Release: 0.%{rpmrel}.%{gh_date}git%{gh_short}%{?dist}
 %else
@@ -176,10 +176,6 @@ Patch7: php-5.3.0-recode.patch
 Patch8: php-7.0.2-libdb.patch
 Patch9: php-5.5.30-curl.patch
 
-# Fixes for extension modules
-# https://bugs.php.net/63171 no odbc call during timeout
-Patch21: php-7.0.0-odbctimer.patch
-
 # Functional changes
 Patch40: php-7.0.0-dlopen.patch
 Patch42: php-7.0.0-systzdata-v13.patch
@@ -196,7 +192,6 @@ Patch47: php-5.6.3-phpinfo.patch
 Patch91: php-5.6.3-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch100: bug71914.patch
 
 # Security fixes (200+)
 
@@ -896,8 +891,6 @@ support for JavaScript Object Notation (JSON) to PHP.
 %patch9 -p1 -b .curltls
 %endif
 
-%patch21 -p1 -b .odbctimer
-
 %patch40 -p1 -b .dlopen
 %patch42 -p1 -b .systzdata
 %patch43 -p1 -b .headers
@@ -910,7 +903,6 @@ support for JavaScript Object Notation (JSON) to PHP.
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch100 -p1 -b .bug71914
 
 # security patches
 
@@ -1843,6 +1835,9 @@ fi
 
 
 %changelog
+* Tue Apr 12 2016 Remi Collet <remi@fedoraproject.org> 7.0.6-0.1.0RC1
+- Update to 7.0.6RC1
+
 * Fri Apr  8 2016 Remi Collet <remi@fedoraproject.org> 7.0.5-2
 - Fixed bug #71914 (Reference is lost in "switch")
 
