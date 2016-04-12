@@ -15,13 +15,10 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package         php-pecl-memcached
+%else
+%global _root_prefix %{_prefix}
 %endif
-
-%{?scl:          %scl_package         php-pecl-memcached}
-%{!?scl:         %global _root_prefix %{_prefix}}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
 
 %global with_fastlz 1
 %global with_igbin  1
@@ -82,6 +79,10 @@ BuildRequires: %{?sub_prefix}libevent-devel  > 2
 Requires:      %{?sub_prefix}libevent%{_isa} > 2
 BuildRequires: %{?sub_prefix}libmemcached-devel  > 1
 Requires:      %{?sub_prefix}libmemcached-libs%{_isa} > 1
+%if %{with_fastlz}
+Requires:      fastlz%{_isa}
+%endif
+Requires:      cyrus-sasl-lib%{_isa}
 %else
 BuildRequires: libevent-devel >= 2.0.2
 %if 0%{?rhel} == 5
@@ -107,6 +108,10 @@ Provides:     %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
+Provides:     %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:     %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff

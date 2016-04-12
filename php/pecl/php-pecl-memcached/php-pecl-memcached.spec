@@ -15,10 +15,10 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package         php-pecl-memcached
+%else
+%global _root_prefix %{_prefix}
 %endif
-
-%{?scl:          %scl_package         php-pecl-memcached}
-%{!?scl:         %global _root_prefix %{_prefix}}
 
 %global with_fastlz 1
 %global with_zts    0%{?__ztsphp:1}
@@ -37,7 +37,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?sub_prefix}php-pecl-memcached
 Version:      2.2.0
-Release:      8%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:      9%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -73,7 +73,10 @@ BuildRequires: %{?sub_prefix}libevent-devel  > 2
 Requires:      %{?sub_prefix}libevent%{_isa} > 2
 BuildRequires: %{?sub_prefix}libmemcached-devel  > 1
 Requires:      %{?sub_prefix}libmemcached-libs%{_isa} > 1
+%if %{with_fastlz}
 Requires:      fastlz%{_isa}
+%endif
+Requires:      cyrus-sasl-lib%{_isa}
 %else
 BuildRequires: libevent-devel >= 2.0.2
 %if 0%{?rhel} == 5
@@ -97,8 +100,10 @@ Provides:     %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:     %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:     %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -348,6 +353,9 @@ exit $ret
 
 
 %changelog
+* Tue Apr 12 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-9
+- fix dependencies for more-php5*
+
 * Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-8
 - adapt for F24
 
