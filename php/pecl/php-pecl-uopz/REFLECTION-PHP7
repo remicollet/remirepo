@@ -1,0 +1,56 @@
+Extension [ <persistent> extension #15 uopz version 5.0.0 ] {
+
+  - Constants [7] {
+    Constant [ integer ZEND_ACC_PUBLIC ] { 256 }
+    Constant [ integer ZEND_ACC_PRIVATE ] { 1024 }
+    Constant [ integer ZEND_ACC_PROTECTED ] { 512 }
+    Constant [ integer ZEND_ACC_PPP_MASK ] { 1792 }
+    Constant [ integer ZEND_ACC_STATIC ] { 1 }
+    Constant [ integer ZEND_ACC_FINAL ] { 4 }
+    Constant [ integer ZEND_ACC_ABSTRACT ] { 2 }
+  }
+
+  - Functions {
+    Function [ <internal:uopz> function uopz_set_return ] {
+    }
+    Function [ <internal:uopz> function uopz_get_return ] {
+    }
+    Function [ <internal:uopz> function uopz_unset_return ] {
+    }
+    Function [ <internal:uopz> function uopz_set_mock ] {
+    }
+    Function [ <internal:uopz> function uopz_get_mock ] {
+    }
+    Function [ <internal:uopz> function uopz_unset_mock ] {
+    }
+    Function [ <internal:uopz> function uopz_get_static ] {
+    }
+    Function [ <internal:uopz> function uopz_set_static ] {
+    }
+    Function [ <internal:uopz> function uopz_set_hook ] {
+    }
+    Function [ <internal:uopz> function uopz_get_hook ] {
+    }
+    Function [ <internal:uopz> function uopz_unset_hook ] {
+    }
+    Function [ <internal:uopz> function uopz_add_function ] {
+    }
+    Function [ <internal:uopz> function uopz_del_function ] {
+    }
+    Function [ <internal:uopz> function uopz_extend ] {
+    }
+    Function [ <internal:uopz> function uopz_implement ] {
+    }
+    Function [ <internal:uopz> function uopz_flags ] {
+    }
+    Function [ <internal:uopz> function uopz_redefine ] {
+    }
+    Function [ <internal:uopz> function uopz_undefine ] {
+    }
+    Function [ <internal:uopz> function uopz_set_property ] {
+    }
+    Function [ <internal:uopz> function uopz_get_property ] {
+    }
+  }
+}
+
