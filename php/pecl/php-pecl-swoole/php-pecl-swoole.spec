@@ -41,7 +41,6 @@ Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel >= 5.3.10
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-sockets
@@ -193,8 +192,6 @@ peclbuild %{_bindir}/zts-php-config
 
 
 %install
-rm -rf %{buildroot}
-
 make -C NTS \
      install INSTALL_ROOT=%{buildroot}
 
@@ -257,12 +254,7 @@ cd ../ZTS
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
