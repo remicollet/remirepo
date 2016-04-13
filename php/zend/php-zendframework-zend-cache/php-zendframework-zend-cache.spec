@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    e2f62aaf4a8f884060483921a8d6d39d9087705d
+%global gh_commit    33211da0598e8f20a8d425945e3d452a87c50364
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-cache
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.1
+Version:        2.7.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -44,12 +44,12 @@ BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
 BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6.2
 # From composer, "require-dev": {
 #        "zendframework/zend-serializer": "^2.6",
-#        "zendframework/zend-session": "^2.5",
+#        "zendframework/zend-session": "^2.6.2",
 #        "fabpot/php-cs-fixer": "1.7.*",
-#        "phpunit/PHPUnit": "~4.0"
+#        "phpunit/PHPUnit": "~4.5"
 BuildRequires:  php-composer(%{gh_owner}/zend-serializer)       >= 2.6
-BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.5
-BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
+BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.6.2
+BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.5
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
@@ -71,6 +71,8 @@ Requires:       php-composer(%{gh_owner}/zend-eventmanager)     <  4
 #        "zendframework/zend-serializer": "Zend\\Serializer component",
 #        "zendframework/zend-session": "Zend\\Session component",
 #        "ext-apcu": "APCU, to use the APC storage adapter",
+#        "ext-apc": "APC or compatible extension, to use the APC storage adapter",
+#        "ext-apcu": "APCU >= 5.1.0, to use the APCu storage adapter",
 #        "ext-dba": "DBA, to use the DBA storage adapter",
 #        "ext-memcache": "Memcache >= 2.0.0 to use the Memcache storage adapter",
 #        "ext-memcached": "Memcached >= 1.0.0 to use the Memcached storage adapter",
@@ -168,6 +170,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 13 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
+- update to 2.7.0
+
 * Sat Feb 13 2016 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
 - update to 2.6.1
 
