@@ -247,6 +247,7 @@ rm -rf %{buildroot}
 %changelog
 * Wed Apr 13 2016 Remi Collet <remi@fedoraproject.org> - 5.0.0-1
 - update to 5.0.0 for PHP 7
+- sources from github (not yet released on pecl)
 
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 2.0.7-2
 - adapt for F24
