@@ -17,7 +17,7 @@
 
 Name:           %{c_project}
 Version:        4.1.2
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        PHP source code API generator
 
@@ -52,7 +52,7 @@ BuildRequires:  php-composer(michelf/php-markdown) >= 1.4
 BuildRequires:  php-composer(kdyby/events) >= 2.0
 BuildRequires:  php-composer(symfony/options-resolver) >= 2.6.1
 BuildRequires:  php-composer(symfony/console) >= 2.6
-BuildRequires:  php-composer(symfony/yaml) >= 2.3
+BuildRequires:  php-composer(symfony/yaml) >= 2.6
 BuildRequires:  php-composer(apigen/theme-default) >= 1.0.1
 BuildRequires:  php-composer(apigen/theme-bootstrap) >= 1.1.2
 BuildRequires:  php-iconv
@@ -123,13 +123,14 @@ Requires:       php-composer(symfony/options-resolver) >= 2.6.1
 Requires:       php-composer(symfony/options-resolver) <  3
 Requires:       php-composer(symfony/console) >= 2.6
 Requires:       php-composer(symfony/console) <  3
-Requires:       php-composer(symfony/yaml) >= 2.3
+Requires:       php-composer(symfony/yaml) >= 2.6
 Requires:       php-composer(symfony/yaml) <  3
 Requires:       php-composer(apigen/theme-default) >= 1.0.1
 Requires:       php-composer(apigen/theme-default) <  1.1
 Requires:       php-composer(apigen/theme-bootstrap) >= 1.1.2
 Requires:       php-composer(apigen/theme-bootstrap) <  1.2
 # from phpcompatinfo report for version 4.1.1
+Requires:       php-cli
 Requires:       php-iconv
 Requires:       php-mbstring
 Requires:       php-pcre
@@ -172,7 +173,6 @@ fi
 
 %install
 rm -rf     %{buildroot}
-mkdir -p   %{buildroot}%{_datadir}/%{name}/themes
 mkdir -p   %{buildroot}%{_datadir}/php
 cp -pr src %{buildroot}%{_datadir}/php/%{ns_vendor}
 
@@ -204,11 +204,18 @@ rm -rf %{buildroot}
 %doc composer.json
 %{_bindir}/%{name}
 %{_datadir}/php/%{ns_vendor}
-%dir %{_datadir}/%{name}
-%dir %{_datadir}/%{name}/themes
 
 
 %changelog
+* Wed Apr 13 2016 Remi Collet <remi@fedoraproject.org> - 4.1.2-2
+- fix from review #1277504:
+- drop /usr/share/apigen directory ownership
+- add dependency on php-cli
+- raise dependency on symfony/yaml >= 2.6
+
+* Mon Nov 30 2015 Remi Collet <remi@fedoraproject.org> - 4.1.2-1
+- update to 4.1.2
+
 * Thu Nov  5 2015 Remi Collet <remi@fedoraproject.org> - 4.1.1-3
 - add upstream patch: add condition for expected type
   https://github.com/ApiGen/ApiGen/issues/631
