@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #166 swoole version 1.8.3 ] {
+Extension [ <persistent> extension #165 swoole version 1.8.4 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -64,7 +64,7 @@ Extension [ <persistent> extension #166 swoole version 1.8.3 ] {
     Constant [ integer SWOOLE_DTLSv1_CLIENT_METHOD ] { 17 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.8.3 }
+    Constant [ string SWOOLE_VERSION ] { 1.8.4 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_GCC ] { 1 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 2 }
