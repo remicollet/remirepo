@@ -6,14 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    fefd182fa739d4e23d9dc7c80d3344f528d600ab
+%global gh_commit    c19925cd0390d3c436a0203ae859afa460d0474b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     mikey179
 %global gh_project   vfsStream
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-mikey179-vfsstream
-Version:        1.6.2
+Version:        1.6.3
 Release:        1%{?dist}
 Summary:        PHP stream wrapper for a virtual file system
 
@@ -106,6 +106,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 13 2016 Remi Collet <remi@fedoraproject.org> - 1.6.3-1
+- update to 1.6.3
+
 * Wed Jan 13 2016 Remi Collet <remi@fedoraproject.org> - 1.6.2-1
 - update to 1.6.2
 
