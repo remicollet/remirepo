@@ -12,8 +12,8 @@
 
 %global github_owner     symfony
 %global github_name      polyfill
-%global github_version   1.0.1
-%global github_commit    dd9db1dc4013821a63f7afbd8340dd57939fe674
+%global github_version   1.1.1
+%global github_commit    3dc21aeff3e1f8cb708421ed02cf1a8901d7b535
 
 %global composer_vendor  symfony
 %global composer_project polyfill
@@ -47,7 +47,7 @@ BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(ircmaxell/password-compat)
 BuildRequires: php-composer(paragonie/random_compat)
-## phpcompatinfo (computed from version 1.0.1)
+## phpcompatinfo (computed from version 1.1.1)
 BuildRequires: php-hash
 BuildRequires: php-json
 BuildRequires: php-ldap
@@ -61,7 +61,7 @@ BuildRequires: php-spl
 Requires:      php(language) >= %{php_min_ver}
 Requires:      php-composer(ircmaxell/password-compat)
 Requires:      php-composer(paragonie/random_compat)
-# phpcompatinfo (computed from version 1.0.1)
+# phpcompatinfo (computed from version 1.1.1)
 Requires:      php-hash
 Requires:      php-json
 Requires:      php-mbstring
@@ -96,9 +96,7 @@ mv src/Php70/{*.md,composer.json} docs/Php70/
 mv src/Util/{*.md,composer.json}  docs/Util/
 
 : Remove unneeded polyfills
-rm -rf {src,tests}/{Iconv,Intl,Mbstring,Xml}
-
-
+rm -rf {src,tests}/{Apcu,Iconv,Intl,Mbstring,Xml}
 
 
 %build
@@ -170,6 +168,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Apr 12 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.1-1
+- Updated to 1.1.1 (RHBZ #1301791)
+
 * Tue Dec 29 2015 Shawn Iwinski <shawn@iwin.ski> - 1.0.1-1
 - update to 1.0.1
 
