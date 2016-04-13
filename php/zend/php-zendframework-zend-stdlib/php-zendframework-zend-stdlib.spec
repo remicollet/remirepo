@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    4499760badfada27ee600f5c2cfd47d5263ccf1b
+%global gh_commit    0e44eb46788f65e09e077eb7f44d2659143bcc1f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-stdlib
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.6
+Version:        2.7.7
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -164,6 +164,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 13 2016 Remi Collet <remi@fedoraproject.org> - 2.7.7-1
+- update to 2.7.7
+
 * Fri Feb 19 2016 Remi Collet <remi@fedoraproject.org> - 2.7.6-1
 - update to 2.7.6
 - raise dependency on zendframework/zend-hydrator >= 1.1
