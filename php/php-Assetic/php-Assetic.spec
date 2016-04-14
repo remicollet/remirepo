@@ -74,7 +74,7 @@
 
 Name:          php-Assetic
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       3%{?dist}
 Summary:       Asset Management for PHP
 
 Group:         Development/Libraries
@@ -241,14 +241,15 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 $fedoraClassLoader->addPrefix('Assetic\\', dirname(__DIR__));
 require_once __DIR__.'/functions.php';
 
-// Required dependencies
-require_once '%{phpdir}/Symfony/Component/Process/autoload.php';
-
-// Optional dependencies
-@include_once '%{phpdir}/Leafo/ScssPhp/autoload.php';
-@include_once '%{phpdir}/lessphp/lessc.inc.php';
-@include_once '%{phpdir}/Patchwork/JSqueeze.php';
-@include_once '%{phpdir}/Twig/autoload.php';
+foreach (array(
+        '%{phpdir}/Symfony/Component/Process/autoload.php' => true,
+        '%{phpdir}/Leafo/ScssPhp/autoload.php'             => false,
+        '%{phpdir}/lessphp/lessc.inc.php'                  => false,
+        '%{phpdir}/Patchwork/JSqueeze.php'                 => false,
+        '%{phpdir}/Twig/autoload.php'                      => false,
+        ) as $dep => $mandatory) {
+        if ($mandatory || file_exists($dep)) require_once($dep);
+}
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -302,6 +303,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 13 2016 James Hogarth <james.hogarth@gmail.com> - 1.3.2-3
+- Change to using array() in autoloader to be php5.3 compatible for el6
+
+* Wed Apr 13 2016 James Hogarth <james.hogarth@gmail.com> - 1.3.2-2
+- Check if file exists and then require in the Fedora autoloader (RHBZ #1326825)
+
 * Sat Mar 26 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.2-1
 - Updated to 1.3.2 (RHBZ #1153986)
 - Added additional non-PHP build dependencies
