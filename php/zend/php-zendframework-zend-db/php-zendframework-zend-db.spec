@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    fcb6d07d0816c955da6232aa709f15fb90a2b1f7
+%global gh_commit    c9fa8fdab194093fff58e4f1180c7e15d80a2cb5
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-db
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.8.0
+Version:        2.8.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -105,11 +105,6 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 
 %check
 %if %{with_tests}
-rm -r test/Sql/Platform/IbmDb2
-rm    test/Adapter/Platform/SqlServerTest.php
-rm    test/Adapter/Platform/IbmDb2Test.php
-rm    test/Adapter/Driver/Pgsql/ConnectionTest.php
-
 mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
@@ -147,8 +142,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr 14 2016 Remi Collet <remi@fedoraproject.org> - 2.8.1-1
+- update to 2.8.1
+
 * Wed Apr 13 2016 Remi Collet <remi@fedoraproject.org> - 2.8.0-1
 - update to 2.8.0
+- ignore failed tests when no sql server configured
+  open https://github.com/zendframework/zend-db/issues/97
 
 * Tue Feb 23 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
 - update to 2.7.0
