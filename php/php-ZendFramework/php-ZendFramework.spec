@@ -9,13 +9,13 @@
 #
 
 %global php_name ZendFramework
-%global with_extras   0
-%global with_firebird 0
+%global with_extras   1
+%global with_firebird 1
 #define posttag .PL1
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.12.17
+Version:         1.12.18
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
@@ -673,7 +673,8 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 %files extras
 %defattr(-,root,root,-)
 %{_datadir}/php/ZendX
-%exclude %{_datadir}/php/ZendX/Db
+%exclude %{_datadir}/php/ZendX/Db/Adapter/*
+%exclude %{_datadir}/php/ZendX/Db/Statement/*
 %license LICENSE.txt
 %endif
 
@@ -854,6 +855,11 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 
 
 %changelog
+* Thu Apr 14 2016 Remi Collet <remi@remirepo.net> - 1.12.18-1
+- update to 1.12.18
+- extras and Db-Adapter-Firebird sub packages are back
+- Youtube support is dropped
+
 * Wed Nov 25 2015 Remi Collet <remi@remirepo.net> - 1.12.17-1
 - update to 1.12.17
 - extras and Db-Adapter-Firebird sub packages are no
