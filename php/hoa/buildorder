@@ -180,7 +180,7 @@ hoa/xyl								1.16.01.15
         "hoa/view"        : "~3.0",
         "hoa/xml"         : "~1.0",
         "hoa/zformat"     : "~1.0"
-hoa/devtools
+hoa/devtools						1.16.01.15
         "hoa/cli"        : "~2.0",
         "hoa/consistency": "~1.0",
         "hoa/file"       : "~1.0",

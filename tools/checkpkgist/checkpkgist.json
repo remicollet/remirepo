@@ -23,6 +23,7 @@
 	"hoa\/compiler": "php-hoa-compiler",
 	"hoa\/consistency": "php-hoa-consistency",
 	"hoa\/console": "php-hoa-console",
+	"hoa\/devtools": "php-hoa-devtools",
 	"hoa\/dispatcher": "php-hoa-dispatcher",
 	"hoa\/iterator": "php-hoa-iterator",
 	"hoa\/json": "php-hoa-json",
