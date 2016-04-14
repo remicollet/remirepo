@@ -31,7 +31,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 %global php_parser_commit  1e5e280ae88a27effa2ae4aa2bd088494ed8594f
 %global php_parser_version 0.9.4
 Source1:        https://github.com/%{php_parser_owner}/%{php_parser_project}/archive/%{php_parser_commit}/%{php_parser_project}-%{php_parser_version}.tar.gz
-Provides:       bundled(nikik/php-parser) = %{php_parser_version}
+Provides:       bundled(nikic/php-parser) = %{php_parser_version}
 %endif
 
 # Temporary, missing in old versions
@@ -183,5 +183,4 @@ rm -rf %{buildroot}
 %changelog
 * Thu Apr 14 2016 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
 - initial package, version 1.0.7
-- bundle nikik/php-parser 0.9.4
-
+- bundle nikic/php-parser 0.9.4
