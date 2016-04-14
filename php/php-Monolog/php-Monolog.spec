@@ -12,8 +12,8 @@
 
 %global github_owner     Seldaek
 %global github_name      monolog
-%global github_version   1.18.2
-%global github_commit    064b38c16790249488e7a8b987acf1c9d7383c09
+%global github_version   1.19.0
+%global github_commit    5f56ed5212dc509c8dc8caeba2715732abb32dbf
 
 %global composer_vendor  monolog
 %global composer_project monolog
@@ -169,13 +169,17 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('Monolog\\', dirname(__DIR__));
 
-// Required dependency
-require_once '%{phpdir}/Psr/Log/autoload.php';
-
-// Optional dependencies
-@include_once '%{phpdir}/Aws/autoload.php';
-@include_once '%{phpdir}/Raven/autoload.php';
-@include_once '%{phpdir}/Swift/swift_required.php';
+// Dependencies (autoloader => required)
+foreach(array(
+    '%{phpdir}/Psr/Log/autoload.php'     => true,
+    '%{phpdir}/Aws/autoload.php'         => false,
+    '%{phpdir}/Raven/autoload.php'       => false,
+    '%{phpdir}/Swift/swift_required.php' => false,
+) as $dependencyAutoloader => $required) {
+    if ($required || file_exists($dependencyAutoloader)) {
+        require_once $dependencyAutoloader;
+    }
+}
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -249,6 +253,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr 14 2016 Remi Collet <remi@remirepo.net> - 1.19.0-1
+- update to 1.19.0
+- updated autoloader dependency loading
+
 * Mon Apr 04 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.18.2-1
 - Updated to 1.18.2 (RHBZ #1313579)
 - Removed patch (accepted upstream and applied to this version)
