@@ -18,7 +18,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.3.12
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Application MVC Component
 
@@ -110,14 +110,18 @@ phpab --output src/%{ns_project}/autoload.php src
 
 cat << 'EOF' | tee -a src/%{ns_project}/autoload.php
 // Dependencies
-require_once  '%{php_home}/%{ns_vendor}/ComponentModel/autoload.php';
-require_once  '%{php_home}/%{ns_vendor}/Http/autoload.php';
-require_once  '%{php_home}/%{ns_vendor}/Reflection/autoload.php';
-require_once  '%{php_home}/%{ns_vendor}/Security/autoload.php';
-require_once  '%{php_home}/%{ns_vendor}/Utils/autoload.php';
-// Optional
-@include_once '%{php_home}/%{ns_vendor}/Forms/autoload.php';
-@include_once '%{php_home}/Latte/autoload.php';
+foreach (array(
+    '%{php_home}/%{ns_vendor}/ComponentModel/autoload.php' => true,
+    '%{php_home}/%{ns_vendor}/Http/autoload.php'           => true,
+    '%{php_home}/%{ns_vendor}/Reflection/autoload.php'     => true,
+    '%{php_home}/%{ns_vendor}/Security/autoload.php'       => true,
+    '%{php_home}/%{ns_vendor}/Utils/autoload.php'          => true,
+    // Optional
+    '%{php_home}/%{ns_vendor}/Forms/autoload.php'          => false,
+    '%{php_home}/Latte/autoload.php'                       => false,
+    ) as $dep => $mandatory) {
+    if ($mandatory || file_exists($dep)) require_once($dep);
+}
 EOF
 
 
@@ -176,6 +180,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr 14 2016 Remi Collet <remi@fedoraproject.org> - 2.3.12-2
+- don't use include_once in autoloader
+
 * Wed Apr  6 2016 Remi Collet <remi@fedoraproject.org> - 2.3.12-1
 - update to 2.3.12
 
