@@ -29,10 +29,7 @@
 
 # "php": ">=5.3.3"
 %global php_min_ver 5.3.3
-# "doctrine/cache": "~1.4"
-#     NOTE: Min version not 1.4 because:
-#         1) autoloader required
-#         2) original patch required >= 1.4.3 (see patch below for details)
+# "doctrine/cache": "~1.4,>=1.4.3"
 %global doctrine_cache_min_ver 1.4.3
 %global doctrine_cache_max_ver 2.0
 # "monolog/monolog": "~1.0"
@@ -66,7 +63,7 @@
 
 Name:          php-guzzle-%{pear_name}
 Version:       %{github_version}
-Release:       8%{?dist}
+Release:       9%{?dist}
 Summary:       PHP HTTP client library and framework for building RESTful web service clients
 
 Group:         Development/Libraries
@@ -257,13 +254,17 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('Guzzle\\', dirname(__DIR__));
 
-// Required dependencies
-require_once '%{phpdir}/Symfony/Component/EventDispatcher/autoload.php';
-
-// Optional dependencies
-@include_once '%{phpdir}/Doctrine/Common/Cache/autoload.php';
-@include_once '%{phpdir}/Monolog/autoload.php';
-@include_once '%{phpdir}/Zend/autoload.php';
+// Dependencies (autoloader => required)
+foreach(array(
+    '%{phpdir}/Doctrine/Common/Cache/autoload.php'             => false,
+    '%{phpdir}/Monolog/autoload.php'                           => false,
+    '%{phpdir}/Symfony/Component/EventDispatcher/autoload.php' => true,
+    '%{phpdir}/Zend/autoload.php'                              => false,
+) as $dependencyAutoloader => $required) {
+    if ($required || file_exists($dependencyAutoloader)) {
+        require_once $dependencyAutoloader;
+    }
+}
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -364,6 +365,10 @@ fi
 %exclude %{phpdir}/Guzzle/*/*/composer.json
 
 %changelog
+* Wed Apr 13 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.9.3-9
+- Re-rolled patch
+- Updated autoloader dependency loading
+
 * Thu Mar 24 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.9.3-8
 - Add patches for tests
 - Use actual dependency autoloaders instead of failover include path

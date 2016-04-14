@@ -1,7 +1,7 @@
 From b19a1edb61244df53e532cade85bd3e16fef338d Mon Sep 17 00:00:00 2001
 From: Shawn Iwinski <siwinski@redhat.com>
 Date: Mon, 21 Mar 2016 11:53:07 -0400
-Subject: [PATCH 1/4] Update tests to allow for Doctrine Cache >= 1.6.0
+Subject: [PATCH 1/5] Update tests to allow for Doctrine Cache >= 1.6.0
  internal changes
 
 ---
@@ -87,7 +87,7 @@ index 701a015..987c4a3 100644
 From 9312343b4cd020a57f73ca985828ecb4e360b410 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?David=20Pr=C3=A9vot?= <david@tilapin.org>
 Date: Thu, 26 Nov 2015 14:07:41 -0400
-Subject: [PATCH 2/4] Match latest (>= 1.4.3) Doctrine Cache behaviour
+Subject: [PATCH 2/5] Match latest (>= 1.4.3) Doctrine Cache behaviour
 
 Bug: https://github.com/guzzle/guzzle3/issues/67
 Bug-Debian: https://bugs.debian.org/804583
@@ -112,7 +112,7 @@ index 987c4a3..dbfd810 100644
 From f3041fb232862b4c449a23497cc70225574bfcc0 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?David=20Pr=C3=A9vot?= <david@tilapin.org>
 Date: Thu, 26 Nov 2015 14:17:15 -0400
-Subject: [PATCH 3/4] Bump doctrine/cache version
+Subject: [PATCH 3/5] Bump doctrine/cache version
 
 ---
  composer.json | 2 +-
@@ -135,7 +135,7 @@ index 59424b3..f2040cf 100644
 From ad90c2d4471aaf9a591df207c3cdbe5c531371e2 Mon Sep 17 00:00:00 2001
 From: Shawn Iwinski <siwinski@redhat.com>
 Date: Thu, 24 Mar 2016 08:19:05 -0400
-Subject: [PATCH 4/4] Modify doctrine/cache dependency from ~1.4.3 to ~1.4 per
+Subject: [PATCH 4/5] Modify doctrine/cache dependency from ~1.4.3 to ~1.4 per
  #69
 
 ---
@@ -152,6 +152,30 @@ index f2040cf..f0bfdb6 100644
      "require-dev": {
 -        "doctrine/cache": "~1.4.3",
 +        "doctrine/cache": "~1.4",
+         "symfony/class-loader": "~2.1",
+         "monolog/monolog": "~1.0",
+         "psr/log": "~1.0",
+
+From 2ddcdd7646fc7756468fd63b71d7d0d9545dc76e Mon Sep 17 00:00:00 2001
+From: Shawn Iwinski <siwinski@redhat.com>
+Date: Thu, 24 Mar 2016 14:17:56 -0400
+Subject: [PATCH 5/5] Modify doctrine/cache dependency from ~1.4 to
+ ~1.4,>=1.4.3
+
+---
+ composer.json | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/composer.json b/composer.json
+index f0bfdb6..ebf5dde 100644
+--- a/composer.json
++++ b/composer.json
+@@ -65,7 +65,7 @@
+     },
+ 
+     "require-dev": {
+-        "doctrine/cache": "~1.4",
++        "doctrine/cache": "~1.4,>=1.4.3",
          "symfony/class-loader": "~2.1",
          "monolog/monolog": "~1.0",
          "psr/log": "~1.0",
