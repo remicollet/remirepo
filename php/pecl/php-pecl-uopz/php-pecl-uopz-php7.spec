@@ -16,14 +16,14 @@
 %global ini_name   05-%{pecl_name}.ini
 
 # see https://github.com/krakjoe/uopz/releases
-%global gh_commit  c335700be4dc4350605bc4fb1efd8e96ba51b733
-%global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_owner   krakjoe
-%global gh_project uopz
+#global gh_commit  c335700be4dc4350605bc4fb1efd8e96ba51b733
+#global gh_short   %%(c=µ%{gh_commit}; echo ${c:0:7})
+#global gh_owner   krakjoe
+#global gh_project uopz
 
 Summary:        User Operations for Zend
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        5.0.0
+Version:        5.0.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -245,6 +245,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 13 2016 Remi Collet <remi@fedoraproject.org> - 5.0.1-1
+- update to 5.0.1
+
 * Wed Apr 13 2016 Remi Collet <remi@fedoraproject.org> - 5.0.0-1
 - update to 5.0.0 for PHP 7
 - sources from github (not yet released on pecl)

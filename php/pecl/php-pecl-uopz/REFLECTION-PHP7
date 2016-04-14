@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #15 uopz version 5.0.0 ] {
+Extension [ <persistent> extension #15 uopz version 5.0.1 ] {
 
   - Constants [7] {
     Constant [ integer ZEND_ACC_PUBLIC ] { 256 }

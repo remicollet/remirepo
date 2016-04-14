@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    39d79cae95d56ffcdb5417328f8ccbc1d53aafda
+%global gh_commit    79d539fee7e927e5774492b0774044a0456cd50b
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -16,7 +16,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_project}
-Version:        2.3.9
+Version:        2.3.10
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Framework
@@ -183,6 +183,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr 14 2016 Remi Collet <remi@fedoraproject.org> - 2.3.10-1
+- update to 2.3.10
+
 * Mon Feb 22 2016 Remi Collet <remi@fedoraproject.org> - 2.3.9-1
 - update to 2.3.9
 
