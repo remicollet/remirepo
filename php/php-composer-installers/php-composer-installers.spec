@@ -12,8 +12,8 @@
 
 %global github_owner     composer
 %global github_name      installers
-%global github_version   1.0.24
-%global github_commit    1cf7cc4b89d5e8549bbb7d6ab1de75da13d27988
+%global github_version   1.0.25
+%global github_commit    36e5b5843203d7f1cf6ffb0305a97e014387bd8e
 
 %global composer_vendor  composer
 %global composer_project installers
@@ -157,6 +157,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr 14 2016 Remi Collet <remi@remirepo.net> - 1.0.25-1
+- update to 1.0.25
+
 * Wed Apr  6 2016 Remi Collet <remi@remirepo.net> - 1.0.24-1
 - update to 1.0.24
 
