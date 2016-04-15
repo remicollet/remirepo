@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Css-Parser
-Version:        1.0.9
+Version:        1.0.10
 Release:        1%{?dist}
 Summary:        Horde CSS Parser
 
@@ -20,8 +20,7 @@ License:        LGPLv2
 URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
-# Sabberworm/CSS is PSR-0 compliant
-# Default Horde autoloader will find it
+# Use fedora autoloader instead of composer one
 Patch0:         %{pear_name}-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -120,6 +119,9 @@ fi
 
 
 %changelog
+* Fri Apr 15 2016 Remi Collet <remi@fedoraproject.org> - 1.0.10-1
+- Update to 1.0.10
+
 * Tue Apr 05 2016 Remi Collet <remi@fedoraproject.org> - 1.0.9-1
 - Update to 1.0.9
 - raise dependency on php-PHP-CSS-Parser >= 7.0.2
