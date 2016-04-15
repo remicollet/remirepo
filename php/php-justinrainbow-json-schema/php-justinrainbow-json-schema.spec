@@ -87,10 +87,11 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 %description
 A PHP Implementation for validating JSON Structures against a given Schema.
 %if %{eolv1}
-This package provides the validate-json command.
+This package provides the library version 2 and the validate-json command.
 %else
-The validate-json command is provided by the php-JsonSchema package
-with the JsonSchema library version 1.x.
+This package provides the library version 2.
+The php-JsonSchema package provides the library version 1
+and the validate-json command.
 %endif
 See http://json-schema.org/
 
