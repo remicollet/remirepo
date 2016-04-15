@@ -1,0 +1,22 @@
+From 352125814fe223a18f89510b55989c36f92f4ee0 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Fri, 15 Apr 2016 13:53:04 +0200
+Subject: [PATCH] make autoloader more PSR-4
+
+---
+ lib/PhpParser/Autoloader.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/PhpParser/Autoloader.php b/lib/PhpParser/Autoloader.php
+index 560a8d9..809a06e 100644
+--- a/lib/PhpParser/Autoloader.php
++++ b/lib/PhpParser/Autoloader.php
+@@ -31,7 +31,7 @@ static public function register($prepend = false) {
+      */
+     static public function autoload($class) {
+         if (0 === strpos($class, 'PhpParser\\')) {
+-            $fileName = dirname(__DIR__) . '/' . strtr($class, '\\', '/') . '.php';
++            $fileName = __DIR__ . strtr(substr($class, 9), '\\', '/') . '.php';
+             if (file_exists($fileName)) {
+                 require $fileName;
+             }

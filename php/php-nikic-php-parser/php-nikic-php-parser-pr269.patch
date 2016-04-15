@@ -1,0 +1,32 @@
+From 7fe074c38c7e7d5359e92d8ed43ed3a5cdf65266 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Fri, 15 Apr 2016 13:58:42 +0200
+Subject: [PATCH] support -h and --help standard options
+
+---
+ bin/php-parse | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/bin/php-parse b/bin/php-parse
+index db6c411..f6ce166 100755
+--- a/bin/php-parse
++++ b/bin/php-parse
+@@ -101,6 +101,7 @@ Operations is a list of the following options (--dump by default):
+         --var-dump          var_dump() nodes (for exact structure)
+     -N, --resolve-names     Resolve names using NodeVisitor\NameResolver
+     -c, --with-column-info  Show column-numbers for errors (if available)
++    -h, --help              Display this page
+ 
+ Example:
+     php-parse -d -p -N -d file.php
+@@ -150,6 +151,10 @@ function parseArgs($args) {
+             case '-c';
+                 $attributes['with-column-info'] = true;
+                 break;
++            case '--help':
++            case '-h';
++                showHelp('');
++                break;
+             case '--':
+                 $parseOptions = false;
+                 break;

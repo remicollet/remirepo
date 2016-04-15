@@ -1,0 +1,40 @@
+diff -up ./bin/php-parse.rpm ./bin/php-parse
+--- ./bin/php-parse.rpm	2016-02-28 20:48:28.000000000 +0100
++++ ./bin/php-parse	2016-04-15 13:26:30.804687996 +0200
+@@ -1,12 +1,7 @@
+ #!/usr/bin/env php
+ <?php
+ 
+-foreach ([__DIR__ . '/../../../autoload.php', __DIR__ . '/../vendor/autoload.php'] as $file) {
+-    if (file_exists($file)) {
+-        require $file;
+-        break;
+-    }
+-}
++require '/usr/share/php/PhpParser2/autoload.php';
+ 
+ ini_set('xdebug.max_nesting_level', 3000);
+ 
+diff -up ./lib/bootstrap.php.rpm ./lib/bootstrap.php
+--- ./lib/bootstrap.php.rpm	2016-02-28 20:48:28.000000000 +0100
++++ ./lib/bootstrap.php	2016-04-15 13:26:30.804687996 +0200
+@@ -1,6 +1,6 @@
+ <?php
+ 
+ if (!class_exists('PhpParser\Autoloader')) {
+-    require __DIR__ . '/PhpParser/Autoloader.php';
++    require __DIR__ . '/Autoloader.php';
+ }
+ PhpParser\Autoloader::register();
+diff -up ./test/bootstrap.php.rpm ./test/bootstrap.php
+--- ./test/bootstrap.php.rpm	2016-02-28 20:48:28.000000000 +0100
++++ ./test/bootstrap.php	2016-04-15 13:26:31.454690830 +0200
+@@ -2,7 +2,7 @@
+ 
+ namespace PhpParser;
+ 
+-require __DIR__ . '/../vendor/autoload.php';
++require '@BUILDROOT@/usr/share/php/PhpParser2/autoload.php';
+ 
+ function canonicalize($str) {
+     // trim from both sides
