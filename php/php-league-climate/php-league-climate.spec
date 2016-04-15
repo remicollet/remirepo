@@ -1,3 +1,4 @@
+# remirepo spec file for php-league-climate, from:
 #
 # Fedora spec file for php-league-climate
 #
@@ -50,6 +51,7 @@ URL:           http://climate.thephpleague.com/
 Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
 Source1:       %{name}-get-source.sh
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -132,6 +134,8 @@ AUTOLOAD
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}/League/CLImate
 cp -rp src/* %{buildroot}%{phpdir}/League/CLImate/
 
@@ -157,12 +161,21 @@ BOOTSTRAP
 sed '/require.*vendor\/mikey179/d' -i tests/FileTest.php
 
 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+fi
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE.md
 %doc CHANGELOG.md
@@ -173,5 +186,8 @@ sed '/require.*vendor\/mikey179/d' -i tests/FileTest.php
 
 
 %changelog
+* Fri Apr 15 2016 Remi Collet <remi@remirepo.net> - 3.2.1-1
+- backport for remi repository
+
 * Mon Apr 11 2016 Shawn Iwinski <shawn@iwin.ski> - 3.2.1-1
 - Initial package
