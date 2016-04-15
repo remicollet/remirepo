@@ -115,6 +115,7 @@ Autoloader: %{_datadir}/php/phpDocumentor/Reflection/autoload.php
 # Include PHPParser in this library, as old deprecated version required
 mv %{php_parser_project}-%{php_parser_commit}/lib/PHPParser \
     src/phpDocumentor/Reflection/PHPParser
+mv %{php_parser_project}-%{php_parser_commit}/LICENSE LICENSE-PHPParser
 %endif
 
 cp %{SOURCE2} LICENSE
@@ -174,7 +175,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license LICENSE
+%license LICENSE*
 %doc *.md
 %doc composer.json
 %{_datadir}/php/phpDocumentor/Reflection/*
