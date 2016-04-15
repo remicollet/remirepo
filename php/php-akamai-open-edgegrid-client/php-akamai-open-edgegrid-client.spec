@@ -1,3 +1,4 @@
+# remirepo spec file for php-akamai-open-edgegrid-client, from:
 #
 # Fedora spec file for php-akamai-open-edgegrid-client
 #
@@ -45,6 +46,7 @@ License:       ASL 2.0
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -137,6 +139,8 @@ AUTOLOAD
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}/Akamai/Open/EdgeGrid
 cp -rp src/* %{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/
 
@@ -156,12 +160,21 @@ $fedoraClassLoader->addPrefix('Akamai\\Open\\EdgeGrid\\Tests\\', __DIR__.'/tests
 BOOTSTRAP
 
 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+fi
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -172,5 +185,8 @@ BOOTSTRAP
 
 
 %changelog
+* Fri Apr 15 2016 Remi Collet <remi@remirepo.net> - 0.4.4-1
+- backport for remi repository
+
 * Tue Apr 12 2016 Shawn Iwinski <shawn@iwin.ski> - 0.4.4-1
 - Initial package
