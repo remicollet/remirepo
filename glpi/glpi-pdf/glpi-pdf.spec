@@ -7,15 +7,10 @@
 # Please, preserve the changelog entries
 #
 %global pluginname   pdf
-#global svnrelease   315
 
 Name:           glpi-pdf
-Version:        1.0
-%if 0%{?svnrelease}
-Release:        0.1.svn%{svnrelease}%{?dist}
-%else
+Version:        1.0.1
 Release:        1%{?dist}
-%endif
 Summary:        GLPI Plugin to print PDF of equipment
 Summary(fr):    Extension GLPI pour créer des PDF des matériels
 
@@ -23,13 +18,7 @@ Group:          Applications/Internet
 License:        GPLv2+
 URL:            https://forge.indepnet.net/projects/pdf
 
-%if 0%{?svnrelease}
-# svn export -r 315 https://forge.indepnet.net/svn/pdf/trunk pdf
-# tar czf glpi-pdf-0.83-315.tar.gz pdf
-Source0:        glpi-pdf-0.83-%{svnrelease}.tar.gz
-%else
-Source0:        https://forge.glpi-project.org/attachments/download/2125/glpi-pdf-1.0.tar.gz
-%endif
+Source0:        https://forge.glpi-project.org/attachments/download/2135/glpi-pdf-1.0.1.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -97,6 +86,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr 15 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- version 1.0.1 for GLPI >= 0.85.3
+  https://forge.glpi-project.org/versions/1193
+
 * Fri Feb 26 2016 Remi Collet <remi@fedoraproject.org> - 1.0-1
 - version 1.0 for GLPI >= 0.85.3
   https://forge.glpi-project.org/versions/1178
