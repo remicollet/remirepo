@@ -72,9 +72,10 @@ Provides:       php-composer(%{gh_owner}/%{pk_project}) = %{version}
 This is a PHP 5.2 to PHP 7.0 parser written in PHP.
 Its purpose is to simplify static code analysis and manipulation.
 %if %{eolv1}
-This package provides the php-parse command.
+This package provides the library version 2 and the php-parse command.
 %else
-The php-PHPParser package provides the library version 1.x
+This package provides the library version 2.
+The php-PHPParser package provides the library version 1
 and the  php-parse command.
 %endif
 Documentation: https://github.com/nikic/PHP-Parser/tree/master/doc
@@ -153,4 +154,8 @@ rm -rf %{buildroot}
 %changelog
 * Fri Apr 15 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - initial package, version 2.0.1
+- open https://github.com/nikic/PHP-Parser/pull/268
+  make the autoloader more PSR-4
+- open https://github.com/nikic/PHP-Parser/pull/269
+  support -h and --help standard options
 
