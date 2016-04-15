@@ -9,12 +9,6 @@
 #
 # Please preserve the changelog entries
 #
-%if 0%{?rhel} == 5
-%global with_cacert 0
-%else
-%global with_cacert 1
-%endif
-
 %global github_owner     getsentry
 %global github_name      raven-php
 %global github_version   0.13.0
@@ -35,7 +29,7 @@
 
 Name:          php-%{lib_name}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}.1
 Summary:       A PHP client for Sentry
 
 Group:         Development/Libraries
@@ -64,9 +58,8 @@ BuildRequires: php-spl
 BuildRequires: php-zlib
 %endif
 
-%if %{with_cacert}
-Requires:      ca-certificates
-%endif
+# use path as ca-certificates doesn't exists on EL-5
+Requires:      /etc/pki/tls/cert.pem
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
 # phpcompatinfo (computed from version 0.13.0)
@@ -93,12 +86,10 @@ Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-%if %{with_cacert}
 : Remove bundled cert
 rm -rf lib/Raven/data
 sed "/return.*cacert\.pem/s#.*#        return '%{_sysconfdir}/pki/tls/cert.pem';#" \
     -i lib/Raven/Client.php
-%endif
 
 : Create autoloader
 cat <<'AUTOLOAD' | tee lib/Raven/autoload.php
@@ -165,6 +156,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr 15 2016 Remi Collet <remi@remirepo.net> - 0.13.0-1.1
+- fix dep. on EL-5
+
 * Sun Sep 20 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.13.0-1
 - Updated to 0.13.0 (RHBZ #1261679)
 - Always run library version value check

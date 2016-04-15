@@ -10,12 +10,6 @@
 # Please preserve changelog entries
 #
 
-%if 0%{?rhel} == 5
-%global with_cacert 0
-%else
-%global with_cacert 1
-%endif
-
 %global github_owner     guzzle
 %global github_name      guzzle
 %global github_version   5.3.0
@@ -47,7 +41,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       4%{?github_release}%{?dist}
+Release:       4%{?github_release}%{?dist}.1
 Summary:       PHP HTTP client and webservice framework
 
 Group:         Development/Libraries
@@ -80,9 +74,8 @@ BuildRequires: php-spl
 BuildRequires: php-composer(symfony/class-loader)
 %endif
 
-%if %{with_cacert}
-Requires:      ca-certificates
-%endif
+# use path as ca-certificates doesn't exists on EL-5
+Requires:      /etc/pki/tls/certs/ca-bundle.crt
 # composer.json
 Requires:      php(language)                    >= %{php_min_ver}
 #Requires:      php-composer(guzzlehttp/ringphp) >= %%{ring_min_ver}
@@ -199,6 +192,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr 15 2016 Remi Collet <remi@remirepo.net> - 5.3.0-4.1
+- fix dep. on EL-5
+
 * Tue Sep 22 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 5.3.0-4
 - Updated autoloader to load dependencies after self registration
 - Minor cleanups

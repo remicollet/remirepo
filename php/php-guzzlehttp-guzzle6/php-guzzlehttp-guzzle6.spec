@@ -44,7 +44,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}6
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}.1
 Summary:       PHP HTTP client library
 
 Group:         Development/Libraries
@@ -84,7 +84,8 @@ BuildRequires: php-zlib
 BuildRequires: php-composer(symfony/class-loader) >= 2.5
 %endif
 
-Requires:      ca-certificates
+# use path as ca-certificates doesn't exists on EL-5
+Requires:      /etc/pki/tls/certs/ca-bundle.crt
 # composer.json
 Requires:      php(language)                     >= %{php_min_ver}
 Requires:      php-composer(guzzlehttp/promises) >= %{promises_min_ver}
@@ -209,6 +210,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr 15 2016 Remi Collet <remi@remirepo.net> - 6.2.0-2.1
+- fix dep. on EL-5
+
 * Fri Apr 08 2016 Shawn Iwinski <shawn@iwin.ski> - 6.2.0-2
 - Prepend PSR-4 autoloader (fixes dual-install issue with
   php-guzzlehttp-guzzle when other packages register PSR-0

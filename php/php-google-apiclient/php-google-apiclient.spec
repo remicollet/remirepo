@@ -29,7 +29,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       1%{?dist}.1
 Summary:       Client library for Google APIs
 
 Group:         Development/Libraries
@@ -56,7 +56,8 @@ BuildRequires: php-session
 BuildRequires: php-spl
 %endif
 
-Requires:      ca-certificates
+# use path as ca-certificates doesn't exists on EL-5
+Requires:      /etc/pki/tls/certs/ca-bundle.crt
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
 # phpcompatinfo (computed from version 1.1.5)
@@ -153,6 +154,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr 15 2016 Remi Collet <remi@remirepo.net> - 1.1.5-1.1
+- fix dep. on EL-5
+
 * Sun Oct 11 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.5-1
 - Updated to 1.1.5 (RHBZ #1266282)
 

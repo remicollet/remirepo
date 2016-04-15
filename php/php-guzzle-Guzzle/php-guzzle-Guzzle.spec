@@ -10,12 +10,6 @@
 # Please preserve changelog entries
 #
 
-%if 0%{?rhel} == 5
-%global with_cacert 0
-%else
-%global with_cacert 1
-%endif
-
 %global github_owner     guzzle
 %global github_name      guzzle3
 %global github_version   3.9.3
@@ -63,7 +57,7 @@
 
 Name:          php-guzzle-%{pear_name}
 Version:       %{github_version}
-Release:       9%{?dist}
+Release:       9%{?dist}.1
 Summary:       PHP HTTP client library and framework for building RESTful web service clients
 
 Group:         Development/Libraries
@@ -127,10 +121,8 @@ Requires:      php-reflection
 Requires:      php-simplexml
 Requires:      php-spl
 Requires:      php-xmlwriter
-%if %{with_cacert}
-# Unbundled CA certificate
-Requires:      ca-certificates
-%endif
+# use path as ca-certificates doesn't exists on EL-5
+Requires:      /etc/pki/tls/cert.pem
 # Autoloader
 Requires:      php-composer(symfony/class-loader)
 
@@ -225,13 +217,11 @@ some point in late 2015.
 : Update tests to allow for Doctrine Cache >= 1.6.0 internal changes
 %patch0 -p1
 
-%if %{with_cacert}
 : Unbundle CA certificate
 sed -e "s#__DIR__\s*.\s*'/Resources/cacert.pem'#'%{_sysconfdir}/pki/tls/cert.pem'#" \
     -e 's#$expectedMd5\s*=\s*.*#$expectedMd5 = $actualMd5;  // RPM NOTE: cacert.pem is managed by the ca-certificates package#' \
     -i src/Guzzle/Http/Client.php
 rm src/Guzzle/Http/Resources/cacert.pem
-%endif
 
 : Create autoloader
 cat <<'AUTOLOAD' | tee src/Guzzle/autoload.php
@@ -334,12 +324,10 @@ fi
 : Tests skipped
 %endif
 
-%if %{with_cacert}
 # Ensure bundled CA cert is not referenced
 grep -r "'/Resources/cacert.pem'" \
     %{buildroot}%{_datadir}/php/Guzzle \
     && exit 1
-%endif
 
 
 %clean
@@ -365,6 +353,9 @@ fi
 %exclude %{phpdir}/Guzzle/*/*/composer.json
 
 %changelog
+* Fri Apr 15 2016 Remi Collet <remi@remirepo.net> - 3.9.3-9
+- fix dep. on EL-5
+
 * Wed Apr 13 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.9.3-9
 - Re-rolled patch
 - Updated autoloader dependency loading
