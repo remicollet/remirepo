@@ -1,3 +1,4 @@
+# remirepo spec file for php-aws-php-sns-message-validator, from:
 #
 # Fedora spec file for php-aws-php-sns-message-validator
 #
@@ -35,6 +36,7 @@ License:       ASL 2.0
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -107,6 +109,8 @@ AUTOLOAD
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}/Aws/Sns
 cp -rp src/* %{buildroot}%{phpdir}/Aws/Sns/
 
@@ -125,12 +129,21 @@ $fedoraClassLoader->addPrefix('Aws\\Sns\\', __DIR__.'/tests-psr0');
 BOOTSTRAP
 
 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+fi
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE.md
 %doc composer.json
@@ -140,5 +153,8 @@ BOOTSTRAP
 
 
 %changelog
+* Sat Apr 16 2016 Remi Collet <remi@remirepo.net> - 1.1.0-1
+- backport for remi repository
+
 * Mon Apr 11 2016 Shawn Iwinski <shawn@iwin.ski> - 1.1.0-1
 - Initial package
