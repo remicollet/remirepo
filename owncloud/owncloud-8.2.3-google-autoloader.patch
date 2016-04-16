@@ -1,0 +1,29 @@
+diff --git a/apps/files_external/ajax/oauth2.php b/apps/files_external/ajax/oauth2.php
+index fbe60e1..bc7d285 100644
+--- a/apps/files_external/ajax/oauth2.php
++++ b/apps/files_external/ajax/oauth2.php
+@@ -25,9 +25,6 @@
+  * along with this program.  If not, see <http://www.gnu.org/licenses/>
+  *
+  */
+-set_include_path(get_include_path().PATH_SEPARATOR.
+-	\OC_App::getAppPath('files_external').'/3rdparty/google-api-php-client/src');
+-require_once 'Google/Client.php';
+ 
+ OCP\JSON::checkAppEnabled('files_external');
+ OCP\JSON::checkLoggedIn();
+diff --git a/apps/files_external/lib/google.php b/apps/files_external/lib/google.php
+index eba2ee7..9ed0de1 100644
+--- a/apps/files_external/lib/google.php
++++ b/apps/files_external/lib/google.php
+@@ -35,10 +35,6 @@ namespace OC\Files\Storage;
+ 
+ use Icewind\Streams\IteratorDirectory;
+ 
+-set_include_path(get_include_path().PATH_SEPARATOR.
+-	\OC_App::getAppPath('files_external').'/3rdparty/google-api-php-client/src');
+-require_once 'Google/Client.php';
+-require_once 'Google/Service/Drive.php';
+ 
+ class Google extends \OC\Files\Storage\Common {
+ 

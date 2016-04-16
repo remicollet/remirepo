@@ -9,7 +9,7 @@
 #
 Name:           owncloud
 Version:        8.2.3
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
 
@@ -42,36 +42,37 @@ Source5:        %{name}-postgresql.txt
 # initial setup will fill out other settings appropriately
 Source7:        %{name}-config.php
 
+# Our autoloader for core
+Source8:        %{name}-fedora-autoloader.php
+
 # Adjust mediaelement not to use its SWF and Silverlight plugins. This
 # changes 'plugins:["flash,"silverlight","youtube","vimeo"]' to
 # 'plugins:["youtube","vimeo"]'
 Patch1:         %{name}-8.2.3-videoviewer_noplugins.patch
-# Turn on include path usage for the Composer autoloader (so it'll find
-# systemwide PSR-0 and PSR-4 compliant libraries)
-# Upstream wouldn't likely take this, they probably only care about their
-# bundled copies
-Patch2:        %{name}-8.2.3-composer_include_path.patch
+
 # Stop OC from trying to do stuff to .htaccess files. Just calm down, OC.
 # Distributors are on the case.
-Patch3:         %{name}-8.2.2-dont_update_htacess.patch
+Patch2:         %{name}-8.2.2-dont_update_htacess.patch
 
-# Owncloud should use the system libraries with psr
-Patch4:        %{name}-8.2.3-use_system_psr_libraries.patch
+# Remove explicit load of dropbox
+Patch3:         %{name}-8.2.3-dropbox-autoloader.patch
 
-# Owncloud should use the system autoloaded react-promise and nitic-phpParser
-Patch5:         %{name}-8.2.3-use_system_phpparser.patch
+# Remove explicit load of google
+Patch4:         %{name}-8.2.3-google-autoloader.patch
 
-# Unbundle Google, Dropbox and AVS from app/files_external
-Patch6:         %{name}-8.2.3-unbundle-files-external.patch
-
-# unbundle php-Assetic to use the system autoloader
-Patch7:         %{name}-8.2.3-use_system_assetic.patch
+# Remove explicit load of aws
+Patch5:         %{name}-8.2.3-amazon-autoloader.patch
 
 # Display the appropriate upgrade command for fedora/epel users bz#1321417
-Patch8:         %{name}-8.2.3-correct-cli-upgrade-command.patch
+Patch6:         %{name}-8.2.3-correct-cli-upgrade-command.patch
+
+# Backport commit ca6bd5c and cfdf2b9 since icewind/streams added function in 0.3.0+
+# breaking interface from 0.2.0 and OC method spamming logs
+Patch7:         %{name}-8.2.3-icewind-streams-encryption.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+
 
 # expand pear macros on install
 BuildRequires:  php-pear
@@ -110,17 +111,13 @@ Requires:       php-filter
 # Ordering requires to match composer.json
 
 # "sabre/dav" : "2.1.9"
-# pulls in sabre event, http and vobject as deps
+# pulls in sabre event, http and vobject as strict requires
 Requires:       php-composer(sabre/dav)  >= 2.1.9
 Requires:       php-composer(sabre/dav)  < 2.2
-Requires:       php-composer(sabre/vobject) >= 3.3.4
-Requires:       php-composer(sabre/vobject) < 4.0.0
-Requires:       php-composer(sabre/event) >= 2.0.0
-Requires:       php-composer(sabre/event) < 3.0.0
-Requires:       php-composer(sabre/http)  >= 3.0.0
-Requires:       php-composer(sabre/http)  < 4.0.0
 
 # "doctrine/dbal": "2.5.1"
+# pulls in doctrine/common as a strict requires
+# which pulls in doctrine/{annotations,inflector,cache,collections,lexer} as strict requires
 Requires:       php-composer(doctrine/dbal) >= 2.5.1
 Requires:       php-composer(doctrine/dbal) < 2.6
 
@@ -132,10 +129,9 @@ Requires:       php-composer(phpseclib/phpseclib) >= 2.0
 Requires:       php-composer(phpseclib/phpseclib) < 3.0
 
 #Requires:       php-composer(rackspace/php-opencloud) >= 1.9.2
-# pulls in guzzle/http as a dep
+# pulls in guzzle/http as a strict requires
+# guzzle/http package include common, parser and stream too
 Requires:       php-opencloud >= 1.9.2
-Requires:       php-composer(guzzle/http) >= 3.8.0
-Requires:       php-composer(guzzle/http) < 4.0.0
 
 #"james-heinrich/getid3": "dev-master"
 # fedora has 1.9.8 but current release 1.9.12
@@ -146,10 +142,9 @@ Requires:       php-composer(james-heinrich/getid3)
 Requires:       php-composer(jeremeamia/superclosure) >= 2.0
 
 # "ircmaxell/random-lib": "~1.1"
-# Also pulls in ircmaxell/security-lib which is a dep
+# Also pulls in ircmaxell/security-lib which is a strict requires
 Requires:       php-composer(ircmaxell/random-lib) >= 1.1
 Requires:       php-composer(ircmaxell/random-lib) < 2.0
-Requires:       php-composer(ircmaxell/security-lib) >= 1.0
 
 # "bantu/ini-get-wrapper": "v1.0.1"
 Requires:       php-composer(bantu/ini-get-wrapper) >= 1.0.1
@@ -171,14 +166,13 @@ Requires:       php-composer(patchwork/utf8) >= 1.1
 Requires:       php-composer(patchwork/utf8) < 2.0
 
 # "symfony/console": "2.6.4"
-# pulls in symfony/event-dispatcher as a dep
-# pulls in symfony/process as a dep
 Requires:       php-composer(symfony/console) >= 2.6.4
+# "symfony/event-dispatcher": "2.6.4"
 Requires:       php-composer(symfony/event-dispatcher) >= 2.6.4
-Requires:       php-composer(symfony/process) >= 2.6.4
-
 # "symfony/routing": "2.6.4"
 Requires:       php-composer(symfony/routing) >= 2.6.4
+# "symfony/process": "2.6.4"
+Requires:       php-composer(symfony/process) >= 2.6.4
 
 # "pimple/pimple": "~3.0"
 Requires:       php-composer(pimple/pimple) >= 3.0
@@ -199,16 +193,10 @@ Requires:       php-composer(icewind/streams) >= 0.2
 Requires:       php-composer(swiftmailer/swiftmailer) >= 5.4.1
 
 # "guzzlehttp/guzzle": "~5.0"
-# pulls in guzzlehttp/ringphp as a dep
-# ringphp pulls in guzzlehttp/streams and react/promise
+# pulls in guzzlehttp/ringphp as strict requires
+# ringphp pulls in guzzlehttp/streams and react/promise as strict requires
 Requires:       php-composer(guzzlehttp/guzzle) >= 5.0
 Requires:       php-composer(guzzlehttp/guzzle) < 6.0
-Requires:       php-composer(guzzlehttp/ringphp) >= 1.1
-Requires:       php-composer(guzzlehttp/ringphp) < 2.0
-Requires:       php-composer(guzzlehttp/streams) >= 3.0
-Requires:       php-composer(guzzlehttp/streams) < 4.0
-Requires:       php-composer(react/promise) >= 2.2
-Requires:       php-composer(react/promise) < 3.0
 
 # "league/flysystem": "1.0.4"
 Requires:       php-composer(league/flysystem) >= 1.0.4
@@ -253,6 +241,9 @@ Requires:       php-pecl(smbclient) >= 0.8.0
 %if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
 Requires:       samba-common-tools
 Requires:       samba-client
+%else
+Requires:       %{_bindir}/net
+Requires:       %{_bindir}/smbclient
 %endif
 
 ## Note these next bits are not listed in composer but manually dropped in place
@@ -266,6 +257,10 @@ Requires:       php-google-apiclient >= 1.0.3
 ## AWS S3 external storage
 Requires:       php-aws-sdk >= 2.7.0
 
+## For dependency of apps/gallery 
+# "symfony/yaml": "~2.6"
+Requires:       php-composer(symfony/yaml) >= 2.6.0
+Requires:       php-composer(symfony/yaml) < 3.0.0
 
 %if 0%{?rhel}
 Requires(post): policycoreutils-python
@@ -369,7 +364,6 @@ work with an SQLite 3 database stored on the local system.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
 
 # prepare package doc
 cp %{SOURCE3} README.fedora
@@ -377,34 +371,79 @@ cp %{SOURCE4} README.mysql
 cp %{SOURCE5} README.postgresql
 
 
-# Strip bundled libraries from global 3rdparty dir
-find  3rdparty -mindepth 1 -maxdepth 1 -type d ! -name composer -exec rm -r "{}" \;
+# Explicitly remove the bundled libraries we're aware of
+pushd 3rdparty
+rm -r sabre/{dav,event,http,vobject}
+rm -r doctrine/{annotations,cache,collections,common,dbal,inflector,lexer}
+rm -r mcnetic/zipstreamer
+rm -r phpseclib/phpseclib
+rm -r rackspace/php-opencloud guzzle/{http,common,parser,stream}
+rm -r james-heinrich/getid3
+rm -r jeremeamia/SuperClosure
+rm -r ircmaxell/{random-lib,security-lib}
+rm -r bantu/ini-get-wrapper
+rm -r natxet/CssMin
+rm -r punic/punic
+rm -r pear/archive_tar
+rm -r patchwork/utf8
+rm -r symfony/console
+rm -r symfony/event-dispatcher
+rm -r symfony/routing
+rm -r symfony/process
+rm -r pimple/pimple
+rm -r ircmaxell/password-compat
+rm -r nikic/php-parser
+rm -r icewind/streams
+rm -r swiftmailer/swiftmailer
+rm -r guzzlehttp/{guzzle,ringphp,streams} react/promise
+rm -r league/flysystem
+rm -r pear/{pear-core-minimal,console_getopt,pear_exception}
+rm -r interfasys/lognormalizer
+rm -r deepdiver1975/tarstreamer
+rm -r patchwork/jsqueeze
+rm -r kriswallsmith/assetic
 
-# we need to symlink some annoying files back here, though...direct file
-# autoloading sucks. "files" sections of "autoload" statements in
-# composer.json files cause composer to basically hardcode the path to a
-# given file and require that exact path *every time the autoloader is
-# invoked*: I can't see an elegant way around that. "classmap" does much
-# the same. If we unbundle *all* of the 'files' or 'classmap' bundled
-# deps in such a way that they're laid out exactly the same as upstream
-# relative to /usr/share/php, then instead of doing this we could patch
-# $vendorDir in the composer loader files to be /usr/share/php.
-mkdir -p 3rdparty/natxet/CssMin/src
-mkdir -p 3rdparty/james-heinrich/getid3/getid3
-mkdir -p 3rdparty/swiftmailer/swiftmailer/lib
-mkdir -p 3rdparty/ircmaxell/password-compat/lib
-mkdir -p 3rdparty/react/promise/src
+# remove composer stuff
+rm -r composer*
 
-# individual core apps now bundle libs as well - yay
-rm -rf apps/files_external/3rdparty/{icewind,Dropbox,google-api-php-client,aws-sdk-php,composer*}
+# clean up any empty directories
+find -type d -empty  -delete
+
+# remove extraneous files now we've cleaned up
+rm "LICENSE INFO" patches.txt
+
+# add our Fedora autoloader 
+cp %{SOURCE8} ./autoload.php
+
+# Set the vendor directory to macro based datadir in our autoloader
+sed -i "s,##DATADIR##,%{_datadir}," autoload.php
+popd
+
+
+# remove files_external bundled libraries
+rm -r apps/files_external/3rdparty/{icewind,Dropbox,google-api-php-client,aws-sdk-php,composer*}
 
 # create autoloader, from composer.json, "require": {
 #                "icewind/smb": "1.0.4",
 #                "icewind/streams": "0.2"
+# include stuff required directly but not in composer too
 cat << 'EOF' | tee apps/files_external/3rdparty/autoload.php
 <?php
 require_once '%{_datadir}/php/Icewind/Streams/autoload.php';
 require_once '%{_datadir}/php/Icewind/SMB/autoload.php';
+require_once '%{_datadir}/pear/Dropbox/autoload.php';
+require_once '%{_datadir}/php/Google/autoload.php';
+require_once '%{_datadir}/php/Aws/autoload.php';
+EOF
+
+# remove gallery external bundled libraries 
+rm -r apps/gallery/vendor/{symfony,composer*}
+
+# create autoloader, from composer.json, "require": {
+#                "symfony/yaml": "_2.6"
+cat << 'EOF' | tee apps/gallery/vendor/autoload.php
+<?php
+require_once '%{_datadir}/php/Symfony/Component/Yaml/autoload.php';
 EOF
 
 # clean up content
@@ -429,6 +468,7 @@ rm -r apps/updater
 
 
 %check
+# files_external checks
 nb=$(ls %{buildroot}%{_datadir}/%{name}/apps/files_external/3rdparty | wc -l)
 if [ $nb -gt 1  ]; then
   false apps/files_external/3rdparty must only have autoload.php
@@ -439,8 +479,23 @@ if grep -r 3rdparty %{buildroot}%{_datadir}/%{name}/apps/files_external \
    false Patch needs to be adapted
 fi
 
-php %{buildroot}%{_datadir}/%{name}/apps/files_external/3rdparty/autoload.php
+#php %{buildroot}%{_datadir}/%{name}/apps/files_external/3rdparty/autoload.php
 
+# gallery checks
+nb=$(ls %{buildroot}%{_datadir}/%{name}/apps/gallery/vendor | wc -l)
+if [ $nb -gt 1  ]; then
+  false apps/gallery/vendor must only have autoload.php
+fi
+
+#php %{buildroot}%{_datadir}/%{name}/apps/gallery/vendor/autoload.php
+
+# core checks
+nb=$(ls %{buildroot}%{_datadir}/%{name}/3rdparty | wc -l)
+if [ $nb -gt 1  ]; then
+  false core 3rdparty must only have autoload.php
+fi
+
+#php %{buildroot}%{_datadir}/%{name}/3rdparty/autoload.php
 
 
 %build
@@ -488,14 +543,6 @@ install -Dpm 644 %{SOURCE100} %{SOURCE101} %{SOURCE102} %{SOURCE103} \
 # nginx config
 install -Dpm 644 %{SOURCE6} \
     %{buildroot}%{_sysconfdir}/nginx/conf.d/%{name}.conf
-
-# symlink 3rdparty libs - if possible
-# global
-ln -s %{_datadir}/php/natxet/CssMin/src/CssMin.php %{buildroot}%{_datadir}/%{name}/3rdparty/natxet/CssMin/src/
-ln -s %{_datadir}/php/getid3/getid3.php %{buildroot}%{_datadir}/%{name}/3rdparty/james-heinrich/getid3/getid3/
-ln -s %{_datadir}/php/Swift/swift_required.php %{buildroot}%{_datadir}/%{name}/3rdparty/swiftmailer/swiftmailer/lib/swift_required.php
-ln -s %{_datadir}/php/password_compat/password.php %{buildroot}%{_datadir}/%{name}/3rdparty/ircmaxell/password-compat/lib/password.php
-ln -s %{_datadir}/php/React/Promise/functions_include.php  %{buildroot}%{_datadir}/%{name}/3rdparty/react/promise/src/functions_include.php
 
 
 %if 0%{?rhel} < 7
@@ -596,6 +643,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Apr 12 2016 James Hogarth <james.hogarth@gmail.com> - 8.2.3-5
+- Add autoloader based external libraries for core and gallery
+- Add checks to catch future added dependencies
+- Backport encryption patches from 9.0.x to support php-icewind-streams > 0.3.0
+
 * Fri Apr 01 2016 James Hogarth <james.hogarth@gmail.com> - 8.2.3-4
 - Update to new dependency versions now packaged
 - Add fedora autoloader based external_files 
