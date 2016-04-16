@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global svnrel 4420
+%global svnrel 4440
 %global rdate  20151127
 %global upver  0.51
 
@@ -260,6 +260,9 @@ fi
 
 
 %changelog
+* Sat Apr 16 2016 Remi Collet <remi@fedoraproject.org> - 0.51-0.5.svn4440
+- Update to 0.51 snapshot revision 4440
+
 * Sun Apr 03 2016 Remi Collet <remi@fedoraproject.org> - 0.51-0.5.svn4420
 - Update to 0.51 snapshot revision 4420
 
