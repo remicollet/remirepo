@@ -15,7 +15,6 @@
     "tedivm\/jshrink": "php-tedivm-jshrink",
     "phine\/path": "php-phine-path",
     "phine\/exception": "php-phine-exception",
-    "apigen\/apigen": "apigen",
     "hoa\/event": "php-hoa-event",
     "hoa\/exception": "php-hoa-exception",
     "hoa\/cli": "php-hoa-cli",
