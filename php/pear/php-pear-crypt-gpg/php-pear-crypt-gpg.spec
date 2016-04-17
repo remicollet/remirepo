@@ -8,7 +8,6 @@
 #
 
 %{!?__pear:       %global __pear       %{_bindir}/pear}
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %global pear_name Crypt_GPG
 %if 0%{?rhel}
 # All features require GnuPG v1 (under investigation)
@@ -18,7 +17,7 @@
 %endif
 
 Name:           php-pear-crypt-gpg
-Version:        1.4.0
+Version:        1.4.1
 Release:        1%{?dist}
 Summary:        GNU Privacy Guard (GnuPG)
 
@@ -48,7 +47,7 @@ Requires:       %{_bindir}/gpg
 Requires:       php(language) >= 5.2.1
 Requires:       php-pear(Console_CommandLine) >= 1.1.10
 Requires:       php-mbstring
-# From phpcompatinfo report for version 1.4.0
+# From phpcompatinfo report for version 1.4.1
 Requires:       php-ctype
 Requires:       php-date
 Requires:       php-json
@@ -137,6 +136,9 @@ fi
 
 
 %changelog
+* Sun Apr 17 2016 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
+- Update to 1.4.1
+
 * Fri Dec 18 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - Initial package, version 1.4.0 (stable)
 - open https://github.com/pear/Crypt_GPG/pull/19 for fsf address
