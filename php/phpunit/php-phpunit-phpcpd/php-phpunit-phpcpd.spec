@@ -47,7 +47,6 @@ Requires:       php(language) >= 5.3.3
 Requires:       php-composer(sebastian/finder-facade) >= 1.1
 Requires:       php-composer(sebastian/finder-facade) <  2
 Requires:       php-composer(sebastian/version)       >= 1.0
-Requires:       php-composer(sebastian/version)       <  2
 Requires:       php-composer(symfony/console)         >= 2.7
 Requires:       php-composer(symfony/console)         <  4
 Requires:       php-composer(phpunit/php-timer)       >= 1.0.6
@@ -63,6 +62,7 @@ Requires:       php-xml
 
 # For compatibility with pear
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+Provides:       php-composer(sebastian/phpcpd) = %{version}
 
 
 %description
@@ -134,6 +134,7 @@ fi
 - raise dependency on Symfony >= 2.7
 - run test suite with both PHP 5 and 7 when available
 - allow to run with PHP from SCL
+- provide php-composer(sebastian/phpcpd)
 
 * Thu Mar 26 2015 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2
