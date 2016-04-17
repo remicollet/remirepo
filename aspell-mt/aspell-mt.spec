@@ -8,7 +8,7 @@
 Summary:       %{languageenglazy} files for aspell
 Name:          aspell-%{languagecode}
 Version:       0.50.0
-Release:       1
+Release:       1%{?dist}
 Group:         System/Internationalization
 Source:	       http://ftp.gnu.org/gnu/aspell/dict/%{languagecode}/aspell-%{languagecode}-%{src_ver}.tar.bz2
 URL:		   http://aspell.net/
@@ -39,6 +39,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Apr 17 2016 Remi Collet <remi@remirepo.net> 0.50.0-1
+- missing dist tag
+
 * Sat Apr 16 2016 Remi Collet <remi@remirepo.net> 0.50.0-1
 - port from mageia to Fedora / RHEL / CentOS
 
