@@ -1,4 +1,4 @@
-%global gh_commit    d3ad100fdf15805495f6ff19f473f4314c99390c
+%global gh_commit    6f868833a18de143d5733eafb5078b9801f8052b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpcpd
@@ -8,7 +8,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-phpcpd
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        Copy/Paste Detector (CPD) for PHP code
 
@@ -31,8 +31,8 @@ BuildRequires:  %{_bindir}/phpab
 BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php-composer(sebastian/finder-facade) >= 1.1
 BuildRequires:  php-composer(sebastian/version)       >= 1.0
-BuildRequires:  php-composer(symfony/console)         >= 2.2
-BuildRequires:  php-composer(phpunit/php-timer)       >= 1.0
+BuildRequires:  php-composer(symfony/console)         >= 2.7
+BuildRequires:  php-composer(phpunit/php-timer)       >= 1.0.6
 BuildRequires:  php-composer(theseer/fdomdocument)    >= 1.4
 %endif
 
@@ -40,21 +40,21 @@ BuildRequires:  php-composer(theseer/fdomdocument)    >= 1.4
 #        "php": ">=5.3.3",
 #        "sebastian/finder-facade": "~1.1",
 #        "sebastian/version": "~1.0",
-#        "symfony/console": "~2.2",
-#        "phpunit/php-timer": "~1.0",
+#        "symfony/console": "~2.7|^3.0",
+#        "phpunit/php-timer": ">=1.0.6",
 #        "theseer/fdomdocument": "~1.4"
 Requires:       php(language) >= 5.3.3
 Requires:       php-composer(sebastian/finder-facade) >= 1.1
 Requires:       php-composer(sebastian/finder-facade) <  2
 Requires:       php-composer(sebastian/version)       >= 1.0
 Requires:       php-composer(sebastian/version)       <  2
-Requires:       php-composer(symfony/console)         >= 2.2
-Requires:       php-composer(symfony/console)         <  3
-Requires:       php-composer(phpunit/php-timer)       >= 1.0
-Requires:       php-composer(phpunit/php-timer)       <  2
+Requires:       php-composer(symfony/console)         >= 2.7
+Requires:       php-composer(symfony/console)         <  4
+Requires:       php-composer(phpunit/php-timer)       >= 1.0.6
 Requires:       php-composer(theseer/fdomdocument)    >= 1.4
 Requires:       php-composer(theseer/fdomdocument)    <  2
 # From phpcompatinfo report for version 2.0.1
+Requires:       php-cli
 Requires:       php-dom
 Requires:       php-mbstring
 Requires:       php-spl
@@ -96,9 +96,15 @@ install -D -p -m 755 phpcpd %{buildroot}%{_bindir}/phpcpd
 
 %if %{with_tests}
 %check
-phpunit \
-   --bootstrap src/autoload.php \
-   tests
+%{_bindir}/phpunit \
+    --bootstrap src/autoload.php \
+    tests
+
+if which php70; then
+  php70 %{_bindir}/phpunit \
+    --bootstrap src/autoload.php \
+    tests
+fi
 %endif
 
 
@@ -123,6 +129,12 @@ fi
 
 
 %changelog
+* Sun Apr 17 2016 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- Update to 2.0.3
+- raise dependency on Symfony >= 2.7
+- run test suite with both PHP 5 and 7 when available
+- allow to run with PHP from SCL
+
 * Thu Mar 26 2015 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - Update to 2.0.2
 - use composer dependencies
