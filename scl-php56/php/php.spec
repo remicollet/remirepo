@@ -27,7 +27,7 @@
 %global pdover      20080721
 # Extension version
 %global opcachever  7.0.6-dev
-%global oci8ver     2.0.10
+%global oci8ver     2.0.11
 
 # Use for first build of PHP (before pecl/zip and pecl/jsonc)
 %global php_bootstrap   0
@@ -137,12 +137,12 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver  RC1
+%global rcver  RC1
 %global rpmrel 1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.6.20
+Version: 5.6.21
 %if 0%{?rcver:1}
 Release: 0.%{rpmrel}.%{rcver}%{?dist}
 %else
@@ -178,10 +178,6 @@ Patch6: php-5.6.3-embed.patch
 Patch7: php-5.3.0-recode.patch
 Patch8: php-5.6.17-libdb.patch
 Patch9: php-5.5.30-curl.patch
-
-# Fixes for extension modules
-# https://bugs.php.net/63171 no odbc call during timeout
-Patch21: php-5.4.7-odbctimer.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
@@ -882,8 +878,6 @@ support for using the enchant library to PHP.
 %if 0%{?rhel}
 %patch9 -p1 -b .curltls
 %endif
-
-%patch21 -p1 -b .odbctimer
 
 %patch40 -p1 -b .dlopen
 %patch42 -p1 -b .systzdata
@@ -1813,6 +1807,10 @@ fi
 
 
 %changelog
+* Mon Apr 18 2016 Remi Collet <remi@fedoraproject.org> 5.6.21-0.1.RC1
+- update to 5.6.21RC1
+- bump oci8 version to 2.0.11
+
 * Thu Mar 31 2016 Remi Collet <remi@fedoraproject.org> 5.6.20-1
 - Update to 5.6.20
   http://www.php.net/releases/5_6_20.php
