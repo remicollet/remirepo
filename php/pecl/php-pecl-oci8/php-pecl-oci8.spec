@@ -27,8 +27,8 @@
 
 Summary:        Extension for Oracle Database
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        2.0.10
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        2.0.11
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 License:        PHP
 Group:          Development/Languages
@@ -308,6 +308,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Apr 18 2016 Remi Collet <remi@fedoraproject.org> - 2.0.11-1
+- Update to 2.0.11
+
 * Thu Mar 10 2016 Remi Collet <remi@fedoraproject.org> - 2.0.10-2
 - adapt for F24
 - fix license management
