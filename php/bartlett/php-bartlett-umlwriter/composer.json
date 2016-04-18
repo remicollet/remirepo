@@ -1,0 +1,46 @@
+{
+    "name": "bartlett/umlwriter",
+    "description": "Create UML class diagrams from your PHP source.",
+    "keywords": ["UML", "Graphviz", "PlantUML"],
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "homepage": "http://php5.laurent-laville.org/umlwriter/",
+    "support": {
+        "source": "https://github.com/llaville/umlwriter",
+        "issues": "https://github.com/llaville/umlwriter/issues"
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "symfony/console": "~2.5",
+        "sebastian/version": "~1.0"
+    },
+    "require-dev": {
+        "bartlett/php-reflect": "~4.0",
+        "andrewsville/php-token-reflection": "~1.4"
+    },
+    "suggest": {
+        "bartlett/php-reflect": "Reverse-engine, default solution",
+        "andrewsville/php-token-reflection": "Reverse-engine, alternative solution"
+    },
+    "authors": [
+        {
+            "name": "Laurent Laville",
+            "email": "pear@laurent-laville.org",
+            "homepage": "https://github.com/llaville",
+            "role": "Lead"
+        }
+    ],
+    "bin": [
+        "bin/umlwriter"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Bartlett\\": "src/Bartlett"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Bartlett\\Tests\\UmlWriter\\": "tests/"
+        }
+    }
+}

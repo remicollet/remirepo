@@ -21,7 +21,7 @@
 
 Name:           php-bartlett-umlwriter
 Version:        1.1.0
-%global specrel 1
+%global specrel 3
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Create UML class diagrams from your PHP source
 
@@ -60,7 +60,7 @@ Requires:       php-spl
 Requires:       php-composer(symfony/console)                   >= 2.5
 Requires:       php-composer(symfony/console)                   <  3
 Requires:       php-composer(sebastian/version)                 >= 1.0
-Requires:       php-composer(sebastian/version)                 <  2
+Requires:       php-composer(sebastian/version)                 <  3
 #    "require-dev": {
 #        "bartlett/php-reflect": "~4.0",
 #        "andrewsville/php-token-reflection": "~1.4"
@@ -120,6 +120,12 @@ install -D -p -m 755 bin/umlwriter  %{buildroot}%{_bindir}/umlwriter
 %{_bindir}/phpunit \
   --bootstrap %{buildroot}%{_datadir}/php/Bartlett/UmlWriter/autoload.php \
   --verbose
+
+if which php70; then
+  php70 %{_bindir}/phpunit \
+    --bootstrap %{buildroot}%{_datadir}/php/Bartlett/UmlWriter/autoload.php \
+    --verbose
+fi
 %else
 : Test suite disabled
 %endif
@@ -135,6 +141,10 @@ install -D -p -m 755 bin/umlwriter  %{buildroot}%{_bindir}/umlwriter
 
 
 %changelog
+* Mon Apr 18 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-3
+- allow sebastian/version 2.0
+- run test suite with both PHP 5 and 7 when available
+
 * Thu Dec 10 2015 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - update to 1.1.0
 - raise dependency on php >= 5.4.0
