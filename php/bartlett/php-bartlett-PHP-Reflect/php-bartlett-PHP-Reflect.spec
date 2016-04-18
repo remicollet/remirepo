@@ -43,6 +43,7 @@ BuildRequires:  php(language) >= 5.4.0
 BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php-composer(sebastian/version)                 >= 1.0
 BuildRequires:  php-composer(nikic/php-parser)                  >= 1.4
+BuildRequires:  php-composer(nikic/php-parser)                  <  2
 BuildRequires:  php-composer(doctrine/collections)              >= 1.2
 BuildRequires:  php-composer(symfony/event-dispatcher)          >= 2.5
 BuildRequires:  php-composer(symfony/finder)                    >= 2.5
