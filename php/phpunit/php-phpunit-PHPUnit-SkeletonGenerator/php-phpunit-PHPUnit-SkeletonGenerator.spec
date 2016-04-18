@@ -17,7 +17,7 @@
 
 Name:           php-phpunit-PHPUnit-SkeletonGenerator
 Version:        2.0.1
-Release:        3%{?dist}
+Release:        5%{?dist}
 Summary:        Tool that can generate skeleton test classes
 
 Group:          Development/Libraries
@@ -57,7 +57,7 @@ Requires:       php(language) >= 5.3.3
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
 Requires:       php-composer(sebastian/version)         >= 1.0
-Requires:       php-composer(sebastian/version)         <  2
+Requires:       php-composer(sebastian/version)         <  3
 Requires:       php-composer(symfony/console)           >= 2.4
 Requires:       php-composer(symfony/console)           <  3
 # Need for our autoloader patch
@@ -106,9 +106,15 @@ rm -rf %{buildroot}
 %if %{with_tests}
 %check
 cd build
-phpunit \
+%{_bindir}/phpunit \
   --bootstrap %{buildroot}%{php_home}/SebastianBergmann/PHPUnit/SkeletonGenerator/autoload.php \
   --verbose
+
+if which php70; then
+  php70 %{_bindir}/phpunit \
+    --bootstrap %{buildroot}%{php_home}/SebastianBergmann/PHPUnit/SkeletonGenerator/autoload.php \
+    --verbose
+fi
 %endif
 
 
@@ -129,6 +135,9 @@ fi
 
 
 %changelog
+* Mon Apr 18 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-5
+- allow sebastian/version 2.0
+
 * Mon Jun 29 2015 Remi Collet <remi@fedoraproject.org> - 2.0.1-3
 - use $fedoraClassLoader autoloader
 
