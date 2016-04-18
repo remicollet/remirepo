@@ -18,7 +18,7 @@
 
 Name:           php-phpunit-phploc
 Version:        3.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A tool for quickly measuring the size of a PHP project
 
 Group:          Development/Libraries
@@ -39,7 +39,7 @@ BuildRequires:  php-composer(sebastian/finder-facade) <  2
 BuildRequires:  php-composer(sebastian/git) >= 2.0
 BuildRequires:  php-composer(sebastian/git) <  3
 BuildRequires:  php-composer(sebastian/version) >= 1.0.3
-BuildRequires:  php-composer(sebastian/version) <  2
+BuildRequires:  php-composer(sebastian/version) <  3
 BuildRequires:  php-composer(symfony/console) >= 2.5
 BuildRequires:  php-composer(symfony/console) <  4
 # For our autoloader
@@ -62,7 +62,7 @@ Requires:       php-composer(sebastian/finder-facade) <  2
 Requires:       php-composer(sebastian/git) >= 2.0
 Requires:       php-composer(sebastian/git) <  3
 Requires:       php-composer(sebastian/version) >= 1.0.3
-Requires:       php-composer(sebastian/version) <  2
+Requires:       php-composer(sebastian/version) <  3
 Requires:       php-composer(symfony/console) >= 2.5
 Requires:       php-composer(symfony/console) <  4
 # From phpcompatinfo report for version 2.1.3
@@ -152,6 +152,9 @@ fi
 
 
 %changelog
+* Mon Apr 18 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-2
+- allow sebastian/version 2.0
+
 * Wed Jan 13 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
 - raise minimal php version to 5.6
 - raise dependency on PHPUnit ~5

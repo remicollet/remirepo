@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.6.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -82,7 +82,7 @@ Requires:       php(language) >= 5.5
 Requires:       php-composer(phpunit/phpunit)                   >= 4.0
 Requires:       php-composer(phpunit/phpunit)                   <  6
 Requires:       php-composer(sebastian/version)                 >= 1.0.4
-Requires:       php-composer(sebastian/version)                 <  2
+Requires:       php-composer(sebastian/version)                 <  3
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-console)          >= 2.6
 Requires:       php-composer(%{gh_owner}/zend-console)          <  3
@@ -173,6 +173,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Apr 18 2016 Remi Collet <remi@fedoraproject.org> - 2.6.1-2
+- allow sebastian/version 2.0
+
 * Thu Mar  3 2016 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
 - update to 2.6.1
 - raise dependency on zend-mvc >= 2.7.1
