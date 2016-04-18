@@ -1,4 +1,4 @@
-%global gh_commit    6f868833a18de143d5733eafb5078b9801f8052b
+%global gh_commit    24d9a880deadb0b8c9680e9cfe78e30b704225db
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpcpd
@@ -8,7 +8,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-phpcpd
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}
 Summary:        Copy/Paste Detector (CPD) for PHP code
 
@@ -39,7 +39,7 @@ BuildRequires:  php-composer(theseer/fdomdocument)    >= 1.4
 # From composer.json, requires
 #        "php": ">=5.3.3",
 #        "sebastian/finder-facade": "~1.1",
-#        "sebastian/version": "~1.0",
+#        "sebastian/version": "~1.0|~2.0",
 #        "symfony/console": "~2.7|^3.0",
 #        "phpunit/php-timer": ">=1.0.6",
 #        "theseer/fdomdocument": "~1.4"
@@ -47,6 +47,7 @@ Requires:       php(language) >= 5.3.3
 Requires:       php-composer(sebastian/finder-facade) >= 1.1
 Requires:       php-composer(sebastian/finder-facade) <  2
 Requires:       php-composer(sebastian/version)       >= 1.0
+Requires:       php-composer(sebastian/version)       <  3
 Requires:       php-composer(symfony/console)         >= 2.7
 Requires:       php-composer(symfony/console)         <  4
 Requires:       php-composer(phpunit/php-timer)       >= 1.0.6
@@ -129,6 +130,10 @@ fi
 
 
 %changelog
+* Mon Apr 18 2016 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4  (no change)
+- allow sebastian/version 2.0
+
 * Sun Apr 17 2016 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3
 - raise dependency on Symfony >= 2.7
