@@ -19,7 +19,7 @@
 
 Name:           php-phpunit-phpcov
 Version:        3.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        TextUI front-end for PHP_CodeCoverage
 
 Group:          Development/Libraries
@@ -68,7 +68,7 @@ Requires:       php-composer(sebastian/diff) <  2
 Requires:       php-composer(sebastian/finder-facade) >= 1.1
 Requires:       php-composer(sebastian/finder-facade) <  2
 Requires:       php-composer(sebastian/version) >= 1.0
-Requires:       php-composer(sebastian/version) <  2
+Requires:       php-composer(sebastian/version) <  3
 Requires:       php-composer(symfony/console) >= 2
 Requires:       php-composer(symfony/console) <  4
 # from phpcompatinfo report for version 3.0.0
@@ -140,6 +140,9 @@ fi
 
 
 %changelog
+* Mon Apr 18 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-2
+- allow sebastian/version 2.0
+
 * Sat Jan  9 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
 - update to 3.0.0
 - raise minimal PHP version to 5.6
