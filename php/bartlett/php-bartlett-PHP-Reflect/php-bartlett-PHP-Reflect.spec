@@ -21,7 +21,7 @@
 
 Name:           php-bartlett-PHP-Reflect
 Version:        4.0.0
-%global specrel 1
+%global specrel 3
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -88,7 +88,7 @@ Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-tokenizer
 Requires:       php-composer(sebastian/version)                 >= 1.0
-Requires:       php-composer(sebastian/version)                 <  2
+Requires:       php-composer(sebastian/version)                 <  3
 Requires:       php-composer(nikic/php-parser)                  >= 1.4
 Requires:       php-composer(nikic/php-parser)                  <  2
 Requires:       php-composer(doctrine/collections)              >= 1.2
@@ -175,6 +175,12 @@ install -D -p -m 644 bin/phpreflect.1         %{buildroot}%{_mandir}/man1/phpref
 %{_bindir}/phpunit \
     --include-path=%{buildroot}%{_datadir}/php \
     --verbose
+
+if which php70; then
+  php70 %{_bindir}/phpunit \
+    --include-path=%{buildroot}%{_datadir}/php \
+    --verbose
+fi
 %else
 : Test suite disabled
 %endif
@@ -198,6 +204,10 @@ fi
 
 
 %changelog
+* Mon Apr 18 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-3
+- allow sebastian/version 2.0
+- run test suite with both PHP 5 and 7 when available
+
 * Sat Dec  5 2015 Remi Collet <remi@fedoraproject.org> - 4.0.0-1
 - update to 4.0.0
 - raise dependency on nikic/php-parser >= 1.4
