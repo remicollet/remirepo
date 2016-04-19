@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    b6cbad62a95ba9bf1ce8814bbd4a1d2316041cb9
+%global gh_commit    9993386447a618a39e6e8105026f5874720c7d3f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-view
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.5
+Version:        2.6.7
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -60,6 +60,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 #        "zendframework/zend-navigation": "^2.5",
 #        "zendframework/zend-paginator": "^2.5",
 #        "zendframework/zend-permissions-acl": "^2.6",
+#        "zendframework/zend-router": "^3.0.1",
 #        "zendframework/zend-serializer": "^2.6.1",
 #        "zendframework/zend-session": "^2.6.2",
 #        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
@@ -82,6 +83,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-mvc)              >= 2.7
 BuildRequires:  php-composer(%{gh_owner}/zend-navigation)       >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-paginator)        >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-permissions-acl)  >= 2.6
+#BuildRequires:  php-composer(%{gh_owner}/zend-router)           >= 3.0.1
 BuildRequires:  php-composer(%{gh_owner}/zend-serializer)       >= 2.6.1
 BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.6.2
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
@@ -169,6 +171,9 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 
 %check
 %if %{with_tests}
+# Ignore test which requires router v3
+rm test/Helper/UrlTest.php
+
 mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
@@ -182,7 +187,7 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+%{_bindir}/phpunit -d memory_limit=256M --include-path=%{buildroot}%{php_home}
 
 if which php70; then
    php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
@@ -206,6 +211,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Apr 19 2016 Remi Collet <remi@fedoraproject.org> - 2.6.7-1
+- version 2.6.7
+
 * Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.6.5-1
 - version 2.6.5
 
