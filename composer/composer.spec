@@ -54,6 +54,9 @@ BuildRequires:  php-seld-phar-utils >= 1.0.1
 BuildRequires:  php-seld-cli-prompt >= 1.0.0-3
 %endif
 
+# ca-certificates
+Requires:       %{_sysconfdir}/pki/tls/certs/ca-bundle.crt
+
 # From composer.json, "require": {
 #        "php": "^5.3.2 || ^7.0",
 #        "justinrainbow/json-schema": "^1.6",
@@ -136,6 +139,11 @@ Documentation: https://getcomposer.org/doc/
 %patch0 -p1 -b .rpm
 find . -name \*.rpm -exec rm {} \; -print
 
+if grep -r '\.\./res'; then
+	: Patch need to fixed
+	exit 1
+fi
+
 cp -p %{SOURCE1} src/Composer/autoload.php
 cp -p %{SOURCE2} tests/bootstrap.php
 rm src/bootstrap.php
@@ -191,6 +199,9 @@ install -Dpm 755 bin/%{name} %{buildroot}%{_bindir}/%{name}
 rm tests/Composer/Test/Downloader/XzDownloaderTest.php
 %endif
 
+: Ensure not used
+rm -rf res
+
 : Run test suite
 export BUILDROOT=%{buildroot}
 %{_bindir}/phpunit --include-path %{buildroot}%{_datadir}/php --verbose
@@ -221,6 +232,8 @@ rm -rf %{buildroot}
 %changelog
 * Tue Apr 19 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - update to 1.0.1
+- add dependency on ca-certificates
+- fix patch for RPM path
 
 * Tue Apr  5 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - update to 1.0.0
