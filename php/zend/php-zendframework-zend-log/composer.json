@@ -1,0 +1,61 @@
+{
+    "name": "zendframework/zend-log",
+    "description": "component for general purpose logging",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "zf2",
+        "log",
+        "logging"
+    ],
+    "homepage": "https://github.com/zendframework/zend-log",
+    "autoload": {
+        "psr-4": {
+            "Zend\\Log\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^5.5 || ^7.0",
+        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
+        "zendframework/zend-stdlib": "^2.7 || ^3.0",
+        "psr/log": "^1.0"
+    },
+    "require-dev": {
+        "zendframework/zend-console": "^2.6",
+        "zendframework/zend-db": "^2.6",
+        "zendframework/zend-escaper": "^2.5",
+        "zendframework/zend-filter": "^2.5",
+        "zendframework/zend-mail": "^2.6.1",
+        "zendframework/zend-validator": "^2.6",
+        "fabpot/php-cs-fixer": "1.7.*",
+        "phpunit/PHPUnit": "~4.0",
+        "mikey179/vfsStream": "^1.6"
+    },
+    "suggest": {
+        "ext-mongo": "mongodb extension to use MongoDB writer",
+        "zendframework/zend-console": "Zend\\Console component to use the RequestID log processor",
+        "zendframework/zend-db": "Zend\\Db component to use the database log writer",
+        "zendframework/zend-escaper": "Zend\\Escaper component, for use in the XML log formatter",
+        "zendframework/zend-mail": "Zend\\Mail component to use the email log writer",
+        "zendframework/zend-validator": "Zend\\Validator component to block invalid log messages"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.8-dev",
+            "dev-develop": "2.9-dev"
+        },
+        "zf": {
+            "component": "Zend\\Log",
+            "config-provider": "Zend\\Log\\ConfigProvider"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ZendTest\\Log\\": "test/"
+        },
+        "files": [
+            "test/Writer/TestAsset/chmod.php"
+        ]
+    }
+}
