@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    32df3aa8cdbdaa16df9491b5e672e81c87f94c78
+%global gh_commit    de0e25b0d494ace6b571a9205b82d017e5cb9257
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
 %global gh_owner     composer
@@ -15,7 +15,7 @@
 %global api_version  1.0.0
 
 Name:           composer
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}
 Summary:        Dependency Manager for PHP
 
@@ -219,6 +219,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Apr 19 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- update to 1.0.1
+
 * Tue Apr  5 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - update to 1.0.0
 
