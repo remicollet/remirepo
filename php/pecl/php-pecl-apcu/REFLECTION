@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #75 apcu version 4.0.8 ] {
+Extension [ <persistent> extension #75 apcu version 4.0.11 ] {
 
   - INI {
     Entry [ apc.enabled <SYSTEM> ]
@@ -23,7 +23,7 @@ Extension [ <persistent> extension #75 apcu version 4.0.8 ] {
       Current = '0'
     }
     Entry [ apc.mmap_file_mask <SYSTEM> ]
-      Current = '/tmp/apc.f6neye'
+      Current = '/tmp/apc.kbxxpZ'
     }
     Entry [ apc.enable_cli <SYSTEM> ]
       Current = '1'
@@ -64,7 +64,7 @@ Extension [ <persistent> extension #75 apcu version 4.0.8 ] {
   }
 
   - Constants [19] {
-    Constant [ integer  ] { 140442458532240 }
+    Constant [ integer  ] { 140239091571008 }
     Constant [ integer APC_LIST_ACTIVE ] { 1 }
     Constant [ integer APC_LIST_DELETED ] { 2 }
     Constant [ integer APC_ITER_TYPE ] { 1 }

@@ -34,12 +34,12 @@
 
 Name:           %{?sub_prefix}php-pecl-apcu
 Summary:        APC User Cache
-Version:        4.0.10
+Version:        4.0.11
 %if 0%{?gh_date:1}
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 Source1:        %{pecl_name}.ini
@@ -64,9 +64,10 @@ Provides:       %{?scl_prefix}php-apcu = %{version}
 Provides:       %{?scl_prefix}php-apcu%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(apcu) = %{version}
 Provides:       %{?scl_prefix}php-pecl(apcu)%{?_isa} = %{version}
-# For "more" SCL
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-apcu         = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-apcu%{?_isa} = %{version}-%{release}
+%endif
 %if "%{php_version}" < "5.5"
 Conflicts:      %{?scl_prefix}php-pecl-apc < 4
 %else
@@ -343,6 +344,9 @@ fi
 
 
 %changelog
+* Wed Apr 20 2016 Remi Collet <remi@fedoraproject.org> - 4.0.11-1
+- Update to 4.0.11 (stable)
+
 * Mon Mar  7 2016 Remi Collet <remi@fedoraproject.org> - 4.0.10-2
 - adapt for F24
 
