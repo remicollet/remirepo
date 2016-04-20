@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    ce5be709d59b32dd8a88c80259028759991a4206
+%global gh_commit    47b254ea51f1d6d5dc04b9b299e88346bf2369e3
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nikic
 %global gh_project   PHP-Parser
@@ -17,7 +17,7 @@
 %global eolv1   0
 
 Name:           php-%{gh_owner}-%{pk_project}
-Version:        2.0.1
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        A PHP parser written in PHP
 
@@ -28,10 +28,6 @@ Source:         https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 # Autoloader
 Patch0:         %{name}-rpm.patch
-# https://github.com/nikic/PHP-Parser/pull/268 - PSR-4 autoloader
-Patch1:         %{name}-pr268.patch
-# https://github.com/nikic/PHP-Parser/pull/269 - --help option
-Patch2:         %{name}-pr269.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -87,11 +83,6 @@ Autoloader: %{php_home}/PhpParser2/autoload.php
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
-%patch1 -p1 -b .pr268
-%patch2 -p1 -b .pr269
-
-: Cleanup to not install backup files
-find lib/PhpParser -name \*.pr268 -exec rm {} \; -print
 
 
 %build
@@ -114,6 +105,9 @@ install -Dpm 0755 bin/php-parse %{buildroot}%{_bindir}/php-parse
 
 %check
 %if %{with_tests}
+# See https://github.com/nikic/PHP-Parser/issues/271
+sed -e '\:^//:d' -i test/code/parser/expr/new.test
+
 : Test the command
 sed -e 's:%{php_home}:%{buildroot}%{php_home}:' \
     bin/php-parse > bin/php-parse-test
@@ -152,7 +146,11 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Fri Apr 15 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+* Wed Apr 20 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- initial package, version 2.1.0
+- drop patches merged upstream
+
+* Fri Apr 15 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - initial package, version 2.0.1
 - open https://github.com/nikic/PHP-Parser/pull/268
   make the autoloader more PSR-4
