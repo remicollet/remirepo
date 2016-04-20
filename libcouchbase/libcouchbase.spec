@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global gh_owner    couchbase
-%global gh_commit   6d032d3d01eedd6034b364db29b2e865d8f78511
+%global gh_commit   03cd355b5007c3f8ffd0e131575b62f36e7127e7
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 
 # Tests require some need which are downloaded during make
@@ -20,7 +20,7 @@
 %endif
 
 Name:          libcouchbase
-Version:       2.5.3
+Version:       2.5.8
 Release:       1%{?dist}
 Summary:       Couchbase client library
 Group:         System Environment/Libraries
