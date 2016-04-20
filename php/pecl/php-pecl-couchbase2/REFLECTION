@@ -1,4 +1,8 @@
-Extension [ <persistent> extension #186 couchbase version 2.1.0 ] {
+Extension [ <persistent> extension #195 couchbase version 2.2.0beta2 ] {
+
+  - Dependencies {
+    Dependency [ json (Required) ]
+  }
 
   - Constants [57] {
     Constant [ integer COUCHBASE_PERSISTTO_MASTER ] { 1 }
