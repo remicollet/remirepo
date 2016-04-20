@@ -18,7 +18,7 @@
 
 Name:           php-%{gh_owner}-%{pk_project}
 Version:        2.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A PHP parser written in PHP
 
 Group:          Development/Libraries
@@ -28,6 +28,8 @@ Source:         https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 # Autoloader
 Patch0:         %{name}-rpm.patch
+
+Patch1:         %{name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -83,6 +85,7 @@ Autoloader: %{php_home}/PhpParser2/autoload.php
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
+%patch1 -p1 -b .upstream
 
 
 %build
@@ -105,9 +108,6 @@ install -Dpm 0755 bin/php-parse %{buildroot}%{_bindir}/php-parse
 
 %check
 %if %{with_tests}
-# See https://github.com/nikic/PHP-Parser/issues/271
-sed -e '\:^//:d' -i test/code/parser/expr/new.test
-
 : Test the command
 sed -e 's:%{php_home}:%{buildroot}%{php_home}:' \
     bin/php-parse > bin/php-parse-test
@@ -146,9 +146,14 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 20 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-2
+- fix test suite, add upstream patch
+
 * Wed Apr 20 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - initial package, version 2.1.0
 - drop patches merged upstream
+- open https://github.com/nikic/PHP-Parser/issues/271
+  issue with test/code/parser/expr/new.test
 
 * Fri Apr 15 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - initial package, version 2.0.1
