@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #117 libvirt version 0.5.1 ] {
+Extension [ <persistent> extension #122 libvirt version 0.5.2 ] {
 
   - INI {
     Entry [ libvirt.longlong_to_string <ALL> ]
@@ -15,7 +15,7 @@ Extension [ <persistent> extension #117 libvirt version 0.5.1 ] {
     }
   }
 
-  - Constants [137] {
+  - Constants [167] {
     Constant [ integer VIR_DOMAIN_XML_SECURE ] { 1 }
     Constant [ integer VIR_DOMAIN_XML_INACTIVE ] { 2 }
     Constant [ integer VIR_DOMAIN_XML_UPDATE_CPU ] { 4 }
@@ -32,6 +32,8 @@ Extension [ <persistent> extension #117 libvirt version 0.5.1 ] {
     Constant [ integer VIR_STORAGE_VOL_RESIZE_ALLOCATE ] { 1 }
     Constant [ integer VIR_STORAGE_VOL_RESIZE_DELTA ] { 2 }
     Constant [ integer VIR_STORAGE_VOL_RESIZE_SHRINK ] { 4 }
+    Constant [ integer VIR_STORAGE_VOL_CREATE_PREALLOC_METADATA ] { 1 }
+    Constant [ integer VIR_STORAGE_VOL_CREATE_REFLINK ] { 2 }
     Constant [ integer VIR_DOMAIN_VCPU_CONFIG ] { 2 }
     Constant [ integer VIR_DOMAIN_VCPU_CURRENT ] { 0 }
     Constant [ integer VIR_DOMAIN_VCPU_LIVE ] { 1 }
@@ -63,6 +65,12 @@ Extension [ <persistent> extension #117 libvirt version 0.5.1 ] {
     Constant [ integer VIR_SNAPSHOT_REVERT_RUNNING ] { 1 }
     Constant [ integer VIR_SNAPSHOT_REVERT_PAUSED ] { 2 }
     Constant [ integer VIR_SNAPSHOT_REVERT_FORCE ] { 4 }
+    Constant [ integer VIR_DOMAIN_NONE ] { 0 }
+    Constant [ integer VIR_DOMAIN_START_PAUSED ] { 1 }
+    Constant [ integer VIR_DOMAIN_START_AUTODESTROY ] { 2 }
+    Constant [ integer VIR_DOMAIN_START_BYPASS_CACHE ] { 4 }
+    Constant [ integer VIR_DOMAIN_START_FORCE_BOOT ] { 8 }
+    Constant [ integer VIR_DOMAIN_START_VALIDATE ] { 16 }
     Constant [ integer VIR_MEMORY_VIRTUAL ] { 1 }
     Constant [ integer VIR_MEMORY_PHYSICAL ] { 2 }
     Constant [ integer VIR_VERSION_BINDING ] { 1 }
@@ -94,9 +102,31 @@ Extension [ <persistent> extension #117 libvirt version 0.5.1 ] {
     Constant [ integer VIR_DOMAIN_JOB_COMPLETED ] { 3 }
     Constant [ integer VIR_DOMAIN_JOB_FAILED ] { 4 }
     Constant [ integer VIR_DOMAIN_JOB_CANCELLED ] { 5 }
+    Constant [ integer VIR_DOMAIN_BLOCK_COMMIT_SHALLOW ] { 1 }
+    Constant [ integer VIR_DOMAIN_BLOCK_COMMIT_DELETE ] { 2 }
+    Constant [ integer VIR_DOMAIN_BLOCK_COMMIT_ACTIVE ] { 4 }
+    Constant [ integer VIR_DOMAIN_BLOCK_COMMIT_RELATIVE ] { 8 }
+    Constant [ integer VIR_DOMAIN_BLOCK_COMMIT_BANDWIDTH_BYTES ] { 16 }
+    Constant [ integer VIR_DOMAIN_BLOCK_COPY_SHALLOW ] { 1 }
+    Constant [ integer VIR_DOMAIN_BLOCK_COPY_REUSE_EXT ] { 2 }
     Constant [ integer VIR_DOMAIN_BLOCK_JOB_ABORT_ASYNC ] { 1 }
     Constant [ integer VIR_DOMAIN_BLOCK_JOB_ABORT_PIVOT ] { 2 }
     Constant [ integer VIR_DOMAIN_BLOCK_JOB_SPEED_BANDWIDTH_BYTES ] { 1 }
+    Constant [ integer VIR_DOMAIN_BLOCK_JOB_INFO_BANDWIDTH_BYTES ] { 1 }
+    Constant [ integer VIR_DOMAIN_BLOCK_JOB_TYPE_UNKNOWN ] { 0 }
+    Constant [ integer VIR_DOMAIN_BLOCK_JOB_TYPE_PULL ] { 1 }
+    Constant [ integer VIR_DOMAIN_BLOCK_JOB_TYPE_COPY ] { 2 }
+    Constant [ integer VIR_DOMAIN_BLOCK_JOB_TYPE_COMMIT ] { 3 }
+    Constant [ integer VIR_DOMAIN_BLOCK_JOB_TYPE_ACTIVE_COMMIT ] { 4 }
+    Constant [ integer VIR_DOMAIN_BLOCK_PULL_BANDWIDTH_BYTES ] { 64 }
+    Constant [ integer VIR_DOMAIN_BLOCK_REBASE_SHALLOW ] { 1 }
+    Constant [ integer VIR_DOMAIN_BLOCK_REBASE_REUSE_EXT ] { 2 }
+    Constant [ integer VIR_DOMAIN_BLOCK_REBASE_COPY_RAW ] { 4 }
+    Constant [ integer VIR_DOMAIN_BLOCK_REBASE_COPY ] { 8 }
+    Constant [ integer VIR_DOMAIN_BLOCK_REBASE_RELATIVE ] { 16 }
+    Constant [ integer VIR_DOMAIN_BLOCK_REBASE_COPY_DEV ] { 32 }
+    Constant [ integer VIR_DOMAIN_BLOCK_REBASE_BANDWIDTH_BYTES ] { 64 }
+    Constant [ integer VIR_DOMAIN_BLOCK_RESIZE_BYTES ] { 1 }
     Constant [ integer VIR_MIGRATE_LIVE ] { 1 }
     Constant [ integer VIR_MIGRATE_PEER2PEER ] { 2 }
     Constant [ integer VIR_MIGRATE_TUNNELLED ] { 4 }
@@ -157,327 +187,1136 @@ Extension [ <persistent> extension #117 libvirt version 0.5.1 ] {
 
   - Functions {
     Function [ <internal:libvirt> function libvirt_get_last_error ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:libvirt> function libvirt_connect ] {
 
-      - Parameters [2] {
+      - Parameters [3] {
         Parameter #0 [ <optional> $url ]
         Parameter #1 [ <optional> $readonly ]
+        Parameter #2 [ <optional> $credentials ]
       }
     }
     Function [ <internal:libvirt> function libvirt_connect_get_uri ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_connect_get_hostname ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_connect_get_capabilities ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $xpath ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_connect_get_emulator ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $arch ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_connect_get_nic_models ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $arch ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_connect_get_soundhw_models ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $arch ]
+        Parameter #2 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_connect_get_information ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_connect_get_machine_types ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_connect_get_hypervisor ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_connect_get_sysinfo ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_connect_get_maxvcpus ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_connect_get_encrypted ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_connect_get_secure ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_connect_get_all_domain_stats ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $stats ]
+        Parameter #2 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_stream_create ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_stream_close ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_stream_abort ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_stream_finish ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_stream_send ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $data ]
+        Parameter #2 [ <optional> $len ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_stream_recv ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $data ]
+        Parameter #2 [ <optional> $len ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_new ] {
+
+      - Parameters [10] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $name ]
+        Parameter #2 [ <required> $arch ]
+        Parameter #3 [ <required> $memMB ]
+        Parameter #4 [ <required> $maxmemMB ]
+        Parameter #5 [ <required> $vcpus ]
+        Parameter #6 [ <required> $iso ]
+        Parameter #7 [ <required> $disks ]
+        Parameter #8 [ <required> $networks ]
+        Parameter #9 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_new_get_vnc ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_get_counts ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_is_persistent ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_lookup_by_name ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $name ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_get_xml_desc ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $xpath ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_get_disk_devices ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_get_interface_devices ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_change_vcpus ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $numCpus ]
+        Parameter #2 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_change_memory ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $allocMem ]
+        Parameter #2 [ <required> $allocMax ]
+        Parameter #3 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_change_boot_devices ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $first ]
+        Parameter #2 [ <required> $second ]
+        Parameter #3 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_disk_add ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $img ]
+        Parameter #2 [ <required> $dev ]
+        Parameter #3 [ <required> $type ]
+        Parameter #4 [ <required> $driver ]
+        Parameter #5 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_disk_remove ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $dev ]
+        Parameter #2 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_nic_add ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $mac ]
+        Parameter #2 [ <required> $network ]
+        Parameter #3 [ <required> $model ]
+        Parameter #4 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_nic_remove ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $dev ]
+        Parameter #2 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_get_info ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_get_name ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_get_uuid ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_get_uuid_string ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_get_id ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_lookup_by_id ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $id ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_lookup_by_uuid ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $uuid ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_lookup_by_uuid_string ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $uuid ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_destroy ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_create ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $xml ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_resume ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_core_dump ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $to ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_shutdown ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_suspend ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_managedsave ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_undefine ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_reboot ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_define_xml ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $xml ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_create_xml ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $xml ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_memory_peek ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $start ]
+        Parameter #2 [ <required> $size ]
+        Parameter #3 [ <required> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_memory_stats ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_set_memory ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $memory ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_set_max_memory ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $memory ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_set_memory_flags ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $memory ]
+        Parameter #2 [ <optional> $flags ]
+      }
+    }
+    Function [ <internal:libvirt> function libvirt_domain_block_commit ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $res ]
+        Parameter #1 [ <required> $disk ]
+        Parameter #2 [ <required> $base ]
+        Parameter #3 [ <optional> $top ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_block_stats ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $path ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_block_resize ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $path ]
+        Parameter #2 [ <required> $size ]
+        Parameter #3 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_block_job_abort ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $path ]
+        Parameter #2 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_block_job_set_speed ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $path ]
+        Parameter #2 [ <required> $bandwidth ]
+        Parameter #3 [ <optional> $flags ]
+      }
+    }
+    Function [ <internal:libvirt> function libvirt_domain_block_job_info ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $dom ]
+        Parameter #1 [ <required> $disk ]
+        Parameter #2 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_interface_stats ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $path ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_get_connect ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_migrate ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $res ]
+        Parameter #1 [ <required> $dest_conn ]
+        Parameter #2 [ <required> $flags ]
+        Parameter #3 [ <optional> $dname ]
+        Parameter #4 [ <optional> $bandwidth ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_migrate_to_uri ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $res ]
+        Parameter #1 [ <required> $dest_uri ]
+        Parameter #2 [ <required> $flags ]
+        Parameter #3 [ <optional> $dname ]
+        Parameter #4 [ <optional> $bandwidth ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_migrate_to_uri2 ] {
+
+      - Parameters [7] {
+        Parameter #0 [ <required> $res ]
+        Parameter #1 [ <optional> $dconn_uri ]
+        Parameter #2 [ <optional> $mig_uri ]
+        Parameter #3 [ <optional> $dxml ]
+        Parameter #4 [ <optional> $flags ]
+        Parameter #5 [ <optional> $dname ]
+        Parameter #6 [ <optional> $bandwidth ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_get_job_info ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_xml_xpath ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $res ]
+        Parameter #1 [ <required> $xpath ]
+        Parameter #2 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_get_block_info ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $res ]
+        Parameter #1 [ <required> $dev ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_get_network_info ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $res ]
+        Parameter #1 [ <required> $mac ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_get_autostart ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_set_autostart ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_get_metadata ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $type ]
+        Parameter #2 [ <required> $uri ]
+        Parameter #3 [ <required> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_set_metadata ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $type ]
+        Parameter #2 [ <required> $metadata ]
+        Parameter #3 [ <required> $key ]
+        Parameter #4 [ <required> $uri ]
+        Parameter #5 [ <required> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_is_active ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_get_next_dev_ids ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_get_screenshot ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $server ]
+        Parameter #2 [ <optional> $scancode ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_get_screenshot_api ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $screenID ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_get_screen_dimensions ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $server ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_send_keys ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $server ]
+        Parameter #2 [ <required> $scancode ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_send_pointer_event ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $server ]
+        Parameter #2 [ <required> $pos_x ]
+        Parameter #3 [ <required> $pox_y ]
+        Parameter #4 [ <required> $clicked ]
+        Parameter #5 [ <optional> $release ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_update_device ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $xml ]
+        Parameter #2 [ <required> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_has_current_snapshot ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_snapshot_create ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_snapshot_get_xml ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_snapshot_revert ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_snapshot_delete ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_snapshot_lookup_by_name ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $name ]
+        Parameter #2 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagepool_lookup_by_name ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $name ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagepool_lookup_by_volume ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagepool_get_info ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagevolume_lookup_by_name ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $name ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagevolume_lookup_by_path ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $path ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagevolume_get_name ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagevolume_get_path ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagevolume_get_info ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagevolume_get_xml_desc ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $xpath ]
+        Parameter #2 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagevolume_create_xml ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $xml ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagevolume_create_xml_from ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $pool ]
+        Parameter #1 [ <required> $xml ]
+        Parameter #2 [ <required> $original_volume ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagevolume_delete ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagevolume_download ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $stream ]
+        Parameter #2 [ <optional> $offset ]
+        Parameter #3 [ <optional> $length ]
+        Parameter #4 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagevolume_upload ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $stream ]
+        Parameter #2 [ <optional> $offset ]
+        Parameter #3 [ <optional> $length ]
+        Parameter #4 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagevolume_resize ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $capacity ]
+        Parameter #2 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagepool_get_uuid_string ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagepool_get_name ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagepool_lookup_by_uuid_string ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $uuid ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagepool_get_xml_desc ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $xpath ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagepool_define_xml ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $xml ]
+        Parameter #2 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagepool_undefine ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagepool_create ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagepool_destroy ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagepool_is_active ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagepool_get_volume_count ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagepool_refresh ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagepool_set_autostart ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagepool_get_autostart ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagepool_build ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagepool_delete ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_network_define_xml ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $xml ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_network_undefine ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_network_get ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $name ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_network_get_xml_desc ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $xpath ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_network_get_bridge ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_network_get_information ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_network_get_active ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_network_set_active ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_node_get_info ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_node_get_cpu_stats ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $cpunr ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_node_get_cpu_stats_for_each_cpu ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $time ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_node_get_mem_stats ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_nodedev_get ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_nodedev_capabilities ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_nodedev_get_xml_desc ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $xpath ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_nodedev_get_information ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_list_domains ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_list_domain_snapshots ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_list_domain_resources ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_list_nodedevs ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $cap ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_list_networks ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <optional> $flags ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_list_storagepools ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_list_active_storagepools ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_list_inactive_storagepools ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_storagepool_list_volumes ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_list_active_domains ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_list_active_domain_ids ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_list_inactive_domains ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $conn ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_version ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $type ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_check_version ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $major ]
+        Parameter #1 [ <required> $minor ]
+        Parameter #2 [ <required> $micro ]
+        Parameter #3 [ <optional> $type ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_has_feature ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $name ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_get_iso_images ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $path ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_image_create ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $name ]
+        Parameter #2 [ <required> $size ]
+        Parameter #3 [ <required> $format ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_image_remove ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $image ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_logfile_set ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <optional> $maxsize ]
+      }
     }
     Function [ <internal:libvirt> function libvirt_print_binding_resources ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:libvirt> function libvirt_domain_qemu_agent_command ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $conn ]
+        Parameter #1 [ <required> $cmd ]
+        Parameter #2 [ <optional> $timeout ]
+        Parameter #3 [ <optional> $flags ]
+      }
     }
   }
 }
