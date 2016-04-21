@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    920863c447f167f7f1e90f982bdc2532e7a8bf24
+%global gh_commit    78e9807f9d21effcab6264f9396e6b24779f212a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-ldap
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.0
-Release:        2%{?dist}
+Version:        2.6.1
+Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -144,6 +144,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr 21 2016 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
+- update to 2.6.1
+
 * Fri Feb 12 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-2
 - add build dependency on php-mock-phpunit
 
