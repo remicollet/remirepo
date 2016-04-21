@@ -1,7 +1,6 @@
 {
     "zendframework\/zendframework1": "php-ZendFramework",
     "phpunit\/phpunit-story": "php-phpunit-PHPUnit-Story",
-    "sebastian\/phpcpd": "php-phpunit-phpcpd",
     "sebastian\/phpdcd": "php-phpunit-phpdcd",
     "tecnickcom\/tc-lib-pdf-parser": "php-tecnickcom-tc-lib-pdf-parser",
     "tecnickcom\/tc-lib-file": "php-tecnickcom-tc-lib-file",
