@@ -17,14 +17,13 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package        php-libvirt
 %endif
 
-%{?scl:          %scl_package        php-libvirt}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__php:       %global __php       %{_bindir}/php}
 %{!?_pkgdocdir:  %global _pkgdocdir  %{_docdir}/%{name}-%{version}}
 
-%global  req_libvirt_version 1.2.8
+# from upstream 1.2.9 (but seems wrong, missing VIR_STORAGE_VOL_CREATE_REFLINK)
+%global  req_libvirt_version 1.2.10
 %global  extname             libvirt-php
 %if "%{php_version}" < "5.6"
 %global ini_name             %{extname}.ini
@@ -33,7 +32,7 @@
 %endif
 
 Name:          %{?sub_prefix}php-libvirt
-Version:       0.5.1
+Version:       0.5.2
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:       PHP language binding for Libvirt
 
@@ -42,7 +41,6 @@ License:       PHP
 URL:           http://libvirt.org/php
 Source0:       http://libvirt.org/sources/php/libvirt-php-%{version}.tar.gz
 
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
 BuildRequires: libvirt-devel >= %{req_libvirt_version}
 BuildRequires: libxml2-devel
@@ -54,14 +52,14 @@ Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 ## Compat SCL (rh-php56)
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:      %{?scl_prefix}php-libvirt         = %{version}-%{release}
 Provides:      %{?scl_prefix}php-libvirt%{?_isa} = %{version}-%{release}
+%endif
 
-%if 0%{?fedora} < 20 && 0%{?rhel} < 7
-# Filter shared private
+# Filter shared private - always as libvirt-php.so is a very bad name
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
-%endif
 
 
 %description
@@ -80,9 +78,10 @@ Requires:      %{name} = %{version}-%{release}
 %else
 Requires:      %{name}%{_isa} = %{version}-%{release}
 %endif
-## Compat SCL (rh-php56)
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:      %{?scl_prefix}php-libvirt-doc         = %{version}-%{release}
 Provides:      %{?scl_prefix}php-libvirt-doc%{?_isa} = %{version}-%{release}
+%endif
 
 %description doc
 PHP language bindings for Libvirt API. 
@@ -94,11 +93,6 @@ This package contain the document for php-libvirt.
 %prep
 %setup -q -n libvirt-php-%{version}
 
-if ! pkg-config libvirt  --atleast-version=1.2.9
-then
-  sed -e '/VIR_DOMAIN_BLOCK_JOB_SPEED_BANDWIDTH_BYTES/d' \
-      -i src/libvirt-php.c
-fi
 
 %build
 %{?scl:. %{_scl_scripts}/enable}
@@ -111,7 +105,6 @@ make %{?_smp_mflags}
 
 %install
 %{?scl:. %{_scl_scripts}/enable}
-rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 install -pm 644 COPYING %{buildroot}%{_pkgdocdir}
 
@@ -135,12 +128,7 @@ php --no-php-ini \
     --modules | grep libvirt
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %dir %{_pkgdocdir}
 %{!?_licensedir:%global license %%doc}
 %license %{_pkgdocdir}/COPYING
@@ -148,11 +136,14 @@ rm -rf %{buildroot}
 %config(noreplace) %{php_inidir}/%{ini_name}
 
 %files doc
-%defattr(-,root,root,-)
 %{_pkgdocdir}/html
 
 
 %changelog
+* Thu Apr 21 2016 Remi Collet <remi@fedoraproject.org> - 0.5.2-1
+- update to 0.5.2
+- raise dependency on libvirt 1.2.9
+
 * Fri Nov 27 2015 Remi Collet <remi@fedoraproject.org> - 0.5.1-1
 - update to 0.5.1
 - raise dependency on libvirt 1.2.8
