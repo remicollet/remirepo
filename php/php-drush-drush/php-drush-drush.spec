@@ -21,7 +21,7 @@
 
 Name:             php-drush-%{pear_name}
 Version:          6.2.0
-Release:          1%{?dist}
+Release:          6%{?dist}
 Summary:          Command line shell and Unix scripting interface for Drupal
 
 Group:            Development/Libraries
@@ -39,7 +39,7 @@ BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    php-pear(PEAR)
 BuildRequires:    php-channel(%{pear_channel})
-BuildRequires:    help2man
+#BuildRequires:    help2man
 %if %{with_tests}
 BuildRequires:    php-pear(pear.phpunit.de/PHPUnit) >= 3.5
 BuildRequires:    php-pear(Console_Table)
@@ -69,6 +69,7 @@ Requires:         php-posix
 Requires:         php-reflection
 Requires:         php-simplexml
 Requires:         php-spl
+Requires:         patch
 
 %description
 Drush is a command line shell and Unix scripting interface for Drupal.  If
@@ -139,6 +140,10 @@ sed -e '/<file.*name="drush.bat"/,/<\/file>/d' \
 sed 's/\r//' -i %{pear_name}-%{pear_version}/examples/sandwich.txt
 sed '/examples\/sandwich.txt/s/md5sum="[^"]*"//' -i package.xml
 
+# Use "which php" instead of "which php-cli"
+sed 's/which php-cli/which php/' -i %{pear_name}-%{pear_version}/drush
+sed '/name="drush"/s/md5sum=".*" name/name/' -i package.xml
+
 # package.xml is version 2.0
 mv package.xml %{pear_name}-%{pear_version}/%{name}.xml
 
@@ -154,7 +159,6 @@ mv package.xml %{pear_name}-%{pear_version}/%{name}.xml
 #sed -e 's/drush-help2man/drush/g' \
 #    -e 's/DRUSH-HELP2MAN/DRUSH/g' \
 #    -i drush.1
-
 
 %install
 cd %{pear_name}-%{pear_version}
@@ -212,6 +216,10 @@ fi
 
 
 %changelog
+* Tue Apr 19 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 6.2.0-6
+- Update bin to search for "php" rather than "php-cli"
+- No "help2man" BuildRequires since man page creation is disabled
+
 * Thu Dec 12 2013 Remi Collet <remi@fedoraproject.org> 6.2.0-1
 - backport 6.2.0 for remi repo.
 
