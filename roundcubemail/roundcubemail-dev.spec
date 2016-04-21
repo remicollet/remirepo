@@ -14,13 +14,13 @@
 %else
 %global with_phpfpm 0
 %endif
-%global prever      beta
+%global prever      rc
 
 %global roundcubedir %{_datadir}/roundcubemail
 %global _logdir /var/log  
 Name: roundcubemail
 Version:  1.2
-Release:  0.1.%{prever}%{?dist}
+Release:  0.2.%{prever}%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
 Group: Applications/System
@@ -37,7 +37,8 @@ Group: Applications/System
 # http://www.tinymce.com/
 License: GPLv3+ with exceptions and GPLv3+ and GPLv2 and LGPLv2+ and CC-BY-SA and (MIT or GPLv2)
 URL: http://www.roundcube.net
-Source0: https://downloads.sourceforge.net/roundcubemail/roundcubemail-%{version}%{?prever:-%{prever}}.tar.gz
+Source0: https://github.com/roundcube/roundcubemail/releases/download/%{version}%{?prever:-%{prever}}/roundcubemail-%{version}%{?prever:-%{prever}}.tar.gz
+
 Source1: roundcubemail.httpd
 Source3: roundcubemail.nginx
 Source2: roundcubemail.logrotate
@@ -88,6 +89,7 @@ Requires: php-xml
 # From composer.json-dist, require
 #        "php": ">=5.3.7",
 #        "roundcube/plugin-installer": "~0.1.6",
+#        "pear-pear.php.net/net_socket": "~1.0.12",
 #        "pear-pear.php.net/auth_sasl": "~1.0.6",
 #        "pear-pear.php.net/net_idna2": "~0.1.1",
 #        "pear-pear.php.net/mail_mime": "~1.10.0",
@@ -95,6 +97,7 @@ Requires: php-xml
 #        "pear-pear.php.net/crypt_gpg": "~1.4.0",
 #        "roundcube/net_sieve": "~1.5.0"
 #   not available and doesn't make sense roundcube/plugin-installer
+Requires: php-pear(Net_Socket)      >= 1.0.12
 Requires: php-pear(Auth_SASL)       >= 1.0.6
 Requires: php-pear(Net_IDNA2)       >= 0.1.1
 Requires: php-pear(Mail_Mime)       >= 1.10.0
@@ -102,7 +105,9 @@ Requires: php-pear(Net_SMTP)        >= 1.7.1
 Requires: php-pear(Crypt_GPG)       >= 1.4.0
 Requires: php-composer(roundcube/net_sieve) >= 1.5.0
 # From composer.json-dist, suggest
-Requires: php-pear(Net_LDAP2)       >= 2.0.12
+#        "pear-pear.php.net/net_ldap2": "~2.2.0 required for connecting to LDAP address books",
+#        "kolab/Net_LDAP3": "dev-master required for connecting to LDAP address books"
+Requires: php-pear(Net_LDAP2)       >= 2.2.0
 Requires: php-composer(kolab/Net_LDAP3)
 # mailcap for /etc/mime.types
 Requires: mailcap
@@ -272,6 +277,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr 21 2016 Remi Collet <remi@fedoraproject.org> - 1.2-0.2.rc
+- update to 1.2-rc
+- sources from github
+- raise dependency on Net_LDAP2 >= 2.2.0
+- add dependency on Net_Socket >= 1.0.12
+
 * Mon Dec 28 2015 Remi Collet <remi@fedoraproject.org> - 1.2-0.1.beta
 - update to 1.2-beta
 - raise dependency to Mail_Mime ~1.10.0
