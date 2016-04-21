@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    fccbdb6b222f6d7a6d35af1c396ba5435cec76a9
+%global gh_commit    2b9c2417a18696dfb578b38c116cd0ddc19b256e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpmd
 %global gh_project   phpmd
@@ -18,7 +18,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-phpmd-PHP-PMD
-Version:        2.4.2
+Version:        2.4.3
 Release:        1%{?dist}
 Summary:        PHPMD - PHP Mess Detector
 
@@ -41,7 +41,7 @@ BuildArch:      noarch
 #        "squizlabs/php_codesniffer": "^2.0"
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.0
 BuildRequires:  php(language) >= 5.3
-BuildRequires:  php-composer(pdepend/pdepend) >= 2.0
+BuildRequires:  php-composer(pdepend/pdepend) >= 2.0.4
 BuildRequires:  php-date
 BuildRequires:  php-libxml
 BuildRequires:  php-pcre
@@ -52,9 +52,9 @@ BuildRequires:  php-composer(symfony/class-loader)
 
 # From composer.json,     "require": {
 #        "php": ">=5.3.0",
-#        "pdepend/pdepend": "~2.0",
+#        "pdepend/pdepend": "^2.0.4",
 Requires:       php(language) >= 5.3
-Requires:       php-composer(pdepend/pdepend) >= 2.0
+Requires:       php-composer(pdepend/pdepend) >= 2.0.4
 Requires:       php-composer(pdepend/pdepend) <  3
 # From phpcompatinfo report for version 2.2.3
 Requires:       php-date
@@ -150,6 +150,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr 21 2016 Remi Collet <remi@fedoraproject.org> - 2.4.3-1
+- update to 2.4.3
+
 * Fri Mar 11 2016 Remi Collet <remi@fedoraproject.org> - 2.4.2-1
 - update to 2.4.2
 
