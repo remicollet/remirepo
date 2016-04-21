@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #212 event version 2.0.2 ] {
+Extension [ <persistent> extension #212 event version 2.0.3 ] {
 
   - Dependencies {
     Dependency [ sockets (Required) ]
