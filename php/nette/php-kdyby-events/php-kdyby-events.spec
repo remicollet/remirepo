@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    8049e0fc7abb48178b4a2a9af230eceebe1a83bc
+%global gh_commit    d8a0e8a64a59f501996f8f9591aa3f950208f091
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     kdyby
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.4.0
+Version:        2.4.1
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Events for Nette Framework
@@ -41,7 +41,6 @@ BuildRequires:  php-composer(nette/utils) >= 2.3
 BuildRequires:  php-composer(doctrine/common) >= 2.5.0
 BuildRequires:  php-composer(symfony/class-loader)
 # From composer.json, "require-dev": {
-#        "nette/nette": "~2.3@dev",
 #        "nette/application": "~2.3@dev",
 #        "nette/bootstrap": "~2.3@dev",
 #        "nette/caching": "~2.3@dev",
@@ -63,13 +62,12 @@ BuildRequires:  php-composer(symfony/class-loader)
 #        "latte/latte": "~2.3@dev",
 #        "tracy/tracy": "~2.3@dev",
 #        "nette/utils": "~2.3@dev",
-#        "symfony/event-dispatcher": "~2.5",
-#        "nette/tester": "~1.4@rc",
-#        "jakub-onderka/php-parallel-lint": "~0.7"
+#        "symfony/event-dispatcher": "~2.3",
+#        "nette/tester": "~1.4@",
 # The framework is enough as it requires everything
 BuildRequires:  php-composer(nette/nette) >= 2.3
 BuildRequires:  php-composer(nette/tester) >= 1.4
-BuildRequires:  php-composer(symfony/event-dispatcher) >= 2.5
+BuildRequires:  php-composer(symfony/event-dispatcher) >= 2.3
 %endif
 
 # from composer.json, "require": {
@@ -133,6 +131,11 @@ php -r 'require "%{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php
 
 : Run test suite in sources tree
 nette-tester --colors 0 -p php -c ./php.ini tests -s
+
+if which php70; then
+  cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
+  php70 %{_bindir}/nette-tester --colors 0 -p php70 -c ./php.ini tests -s
+fi
 %else
 : Test suite disabled
 %endif
@@ -152,5 +155,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr 21 2016 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
+- update to 2.4.1
+- run test suite with both PHP 5 and 7 when available
+
 * Sun Nov  1 2015 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
 - initial package
