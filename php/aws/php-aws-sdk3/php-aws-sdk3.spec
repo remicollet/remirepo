@@ -1,3 +1,4 @@
+# remirepo spec file for php-aws-sdk3, from
 #
 # Fedora spec file for php-aws-sdk3
 #
@@ -67,6 +68,7 @@ URL:           http://aws.amazon.com/sdkforphp
 Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
 Source1:       %{name}-get-source.sh
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Library version value and autoloader check
 BuildRequires: php-cli                              >= %{php_min_ver}
@@ -130,6 +132,7 @@ Requires:      php-composer(symfony/class-loader)
 
 # Weak dependencies
 ## composer.json: optional
+%if 0%{?fedora} >= 21
 Suggests:      php-curl
 Suggests:      php-openssl
 Suggests:      php-composer(doctrine/cache)
@@ -138,6 +141,7 @@ Conflicts:     php-doctrine-cache >= %{doctrine_cache_max_ver}
 Suggests:      php-composer(aws/aws-php-sns-message-validator)
 Conflicts:     php-aws-php-sns-message-validator <  %{aws_sns_message_validator_min_ver}
 Conflicts:     php-aws-php-sns-message-validator >= %{aws_sns_message_validator_max_ver}
+%endif
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -202,6 +206,8 @@ AUTOLOAD
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}/Aws3
 cp -pr src/* %{buildroot}%{phpdir}/Aws3/
 
@@ -246,13 +252,23 @@ rm -f \
 
 export AWS_ACCESS_KEY_ID=foo
 export AWS_SECRET_ACCESS_KEY=bar
+
 %{_bindir}/phpunit -d memory_limit=1G --verbose --bootstrap bootstrap.php
+
+if which php70; then
+   php70 %{_bindir}/phpunit -d memory_limit=1G --verbose --bootstrap bootstrap.php
+fi
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE.md
 %doc CHANGELOG.md
@@ -263,6 +279,9 @@ export AWS_SECRET_ACCESS_KEY=bar
 
 
 %changelog
+* Thu Apr 21 2016 Remi Collet <remi@remirepo.net> - 3.18.0-1
+- backport for remi repository
+
 * Wed Apr 20 2016 Shawn Iwinski <shawn@iwin.ski> - 3.18.0-1
 - Updated to 3.18.0
 - Modified autoloader to not use @include_once for optional dependencies
