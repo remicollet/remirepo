@@ -187,12 +187,12 @@ if (!$pkg2) {
 }
 
 $change = false;
-foreach ($pkg2 as $pkg => $rpm) {
-	if (isset($pkgs[$pkg])) {
-		unset($pkg2[$pkg]);
+foreach ($pkg2 as $rpm => $pkg) {
+	if (isset($pkgs[$rpm])) {
+		unset($pkg2[$rpm]);
 		$change = true;
 	} else {
-		$pkgs[$pkg] = $pkg2[$pkg];
+		$pkgs[$rpm] = $pkg2[$rpm];
 	}
 }
 if ($change) {
@@ -208,19 +208,18 @@ printf(" %-40s %15s %15s %15s\n", "Name", "Version", "Upstream", "Date");
 
 $tmp = array();
 for ($i=1 ; $i<$_SERVER['argc'] ; $i++) {
-	if (is_dir($_SERVER['argv'][$i])) {
-		$_SERVER['argv'][$i] = basename(realpath($_SERVER['argv'][$i]));
+	if (is_dir($rpm = $_SERVER['argv'][$i])) {
+		$rpm = basename(realpath($_SERVER['argv'][$i]));
 	}
-	$k = array_search($_SERVER['argv'][$i], $pkgs);
-	if ($k) {
-		$tmp[$k] = $pkgs[$k];
+	if (isset($pkgs[$rpm])) {
+		$tmp[$rpm] = $pkgs[$rpm];
 	}
 }
 if (count($tmp)) {
 	$verb = true;
 	$pkgs = $tmp;
 }
-foreach ($pkgs as $name => $rpm) {
+foreach ($pkgs as $rpm => $name) {
 	run($name, $rpm);
 }
 echo str_repeat(' ', 50)."\n";

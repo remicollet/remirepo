@@ -1,7 +1,7 @@
 #!/bin/sh
 
 mv rpmphp.json.prev /tmp
-if wget 'http://rpms.famillecollet.com/rpmphp/get.php?table=packagist' -O rpmphp.json.new
+if wget 'http://rpms.famillecollet.com/rpmphp/get.php?table=packagist2' -O rpmphp.json.new
 then
   mv rpmphp.json     rpmphp.json.prev && \
   mv rpmphp.json.new rpmphp.json      && \
