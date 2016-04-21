@@ -18,8 +18,8 @@
 %global roundcubedir %{_datadir}/roundcubemail
 %global _logdir /var/log  
 Name: roundcubemail
-Version:  1.1.4
-Release:  2%{?dist}
+Version:  1.1.5
+Release:  1%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
 Group: Applications/System
@@ -36,7 +36,7 @@ Group: Applications/System
 # http://www.tinymce.com/
 License: GPLv3+ with exceptions and GPLv3+ and GPLv2 and LGPLv2+ and CC-BY-SA and (MIT or GPLv2)
 URL: http://www.roundcube.net
-Source0: https://downloads.sourceforge.net/roundcubemail/roundcubemail-%{version}.tar.gz
+Source0: https://github.com/roundcube/roundcubemail/releases/download/%{version}/roundcubemail-%{version}.tar.gz
 Source1: roundcubemail.httpd
 Source3: roundcubemail.nginx
 Source2: roundcubemail.logrotate
@@ -87,6 +87,7 @@ Requires: php-xml
 # From composer.json-dist, require
 #        "php": ">=5.3.7",
 #        "roundcube/plugin-installer": "~0.1.6",
+#        "pear-pear.php.net/net_socket": "~1.0.12",
 #        "pear-pear.php.net/auth_sasl": "~1.0.6",
 #        "pear-pear.php.net/net_idna2": "~0.1.1",
 #        "pear-pear.php.net/net_sieve": "~1.3.4",
@@ -95,6 +96,7 @@ Requires: php-xml
 #        "patchwork/utf8": "~1.2.3"
 #   not available and optional patchwork/utf8
 #   not available and doesn't make sense roundcube/plugin-installer
+Requires: php-pear(Net_Socket)      >= 1.0.12
 Requires: php-pear(Auth_SASL)       >= 1.0.6
 Requires: php-pear(Mail_Mime)       >= 1.9.0
 Requires: php-pear(Net_SMTP)        >= 1.7.1
@@ -275,6 +277,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr 21 2016 Remi Collet <remi@fedoraproject.org> - 1.1.5-1
+- update to 1.1.5
+- sources from github
+- add dependency on Net_Socket >= 1.0.12
+
 * Mon Dec 28 2015 Remi Collet <remi@fedoraproject.org> - 1.1.4-2
 - add .log suffix to all log files, and rotate all #1269164
 - more secure permissions on /var/log and /var/lib #1269155
