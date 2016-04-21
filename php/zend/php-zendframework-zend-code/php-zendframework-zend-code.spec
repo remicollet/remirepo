@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    c4e8f976a772cfb14b47dabd69b5245a423082b4
+%global gh_commit    95033f061b083e16cdee60530ec260d7d628b887
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-code
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.2
+Version:        2.6.3
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -42,21 +42,21 @@ BuildRequires:  php-tokenizer
 BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6
 # From composer, "require-dev": {
 #        "doctrine/annotations": "~1.0",
-#        "zendframework/zend-stdlib": "~2.7",
+#        "zendframework/zend-stdlib": "^2.7 || ^3.0",
 #        "zendframework/zend-version": "~2.5",
 #        "fabpot/php-cs-fixer": "1.7.*",
-#        "phpunit/PHPUnit": "~4.0"
+#        "phpunit/PHPUnit": "^4.8.21"
 BuildRequires:  php-composer(doctrine/annotations)              >= 1.0
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 BuildRequires:  php-composer(%{gh_owner}/zend-version)          >= 2.5
-BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
+BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.8.21
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.5",
-#        "zendframework/zend-eventmanager": "^2.6|^3.0"
+#        "php": "^5.5 || 7.0.0 - 7.0.4 || ^7.0.6",
+#        "zendframework/zend-eventmanager": "^2.6 || ^3.0""
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6
@@ -106,19 +106,15 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 
 %check
 %if %{with_tests}
-# waiting for https://github.com/zendframework/zend-code/pull/5
-sed -s '/Version.php/s:filePath.*$:filePath = "%{php_home}/Zend/Version/Version.php";:' \
-    -i test/Reflection/FileReflectionTest.php
-
 mkdir vendor
-cat << EOF | tee vendor/autoload.php
+cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
-Zend\\Loader\\AutoloaderFactory::factory(array(
-    'Zend\\Loader\\StandardAutoloader' => array(
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\StandardAutoloader' => array(
         'namespaces' => array(
-           'ZendTest\\\\%{library}' => dirname(__DIR__).'/test/',
-           'Zend\\\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
+           'ZendTest\\%{library}' => dirname(__DIR__).'/test/',
+           'Zend\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
 EOF
@@ -147,6 +143,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr 21 2016 Remi Collet <remi@fedoraproject.org> - 2.6.3-1
+- update to 2.6.3
+
 * Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.6.2-1
 - update to 2.6.2
 - dependency on doctrine/annotations instrad of doctrine/common
