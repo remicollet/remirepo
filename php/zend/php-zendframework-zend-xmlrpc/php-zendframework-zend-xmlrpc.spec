@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    118a6776016e9e2c449faae6bb917700e056be28
+%global gh_commit    8d7016dfd5d10b8ca7d493917fd060114fe69591
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-xmlrpc
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.1
+Version:        2.5.2
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -34,7 +34,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.3.23
+BuildRequires:  php(language) >= 5.5
 BuildRequires:  php-simplexml
 BuildRequires:  php-date
 BuildRequires:  php-dom
@@ -43,39 +43,37 @@ BuildRequires:  php-libxml
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
 BuildRequires:  php-xmlwriter
-BuildRequires:  php-composer(%{gh_owner}/zend-http)             >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-math)             >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-server)           >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zendxml)               >= 1
+BuildRequires:  php-composer(%{gh_owner}/zend-http)             >= 2.5.4
+BuildRequires:  php-composer(%{gh_owner}/zend-math)             >= 2.7
+BuildRequires:  php-composer(%{gh_owner}/zend-server)           >= 2.6.1
+BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
+BuildRequires:  php-composer(%{gh_owner}/zendxml)               >= 1.0.2
 # From composer, "require-dev": {
-#        "fabpot/php-cs-fixer": "1.7.*",
-#        "phpunit/PHPUnit": "~4.0",
-#        "zendframework/zend-servicemanager": "~2.5"
-BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
-BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
+#        "phpunit/PHPUnit": "^4.8",
+#        "squizlabs/php_codesniffer": "^2.3.1"
+BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.8
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.3.23",
-#        "zendframework/zend-http": "~2.5",
-#        "zendframework/zend-math": "~2.5",
-#        "zendframework/zend-server": "~2.5",
-#        "zendframework/zend-stdlib": "~2.5",
-#        "zendframework/zendxml": "1.*"
-Requires:       php(language) >= 5.3.23
+#        "php": "^5.5 || ^7.0",
+#        "zendframework/zend-http": "^2.5.4",
+#        "zendframework/zend-math": "^2.7",
+#        "zendframework/zend-server": "^2.6.1",
+#        "zendframework/zend-stdlib": "^2.7 || ^3.0",
+#        "zendframework/zendxml": "^1.0.2"
+Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
-Requires:       php-composer(%{gh_owner}/zend-http)             >= 2.5
+Requires:       php-composer(%{gh_owner}/zend-http)             >= 2.5.4
 Requires:       php-composer(%{gh_owner}/zend-http)             <  3
-Requires:       php-composer(%{gh_owner}/zend-math)             >= 2.5
+Requires:       php-composer(%{gh_owner}/zend-math)             >= 2.7
 Requires:       php-composer(%{gh_owner}/zend-math)             <  3
-Requires:       php-composer(%{gh_owner}/zend-server)           >= 2.5
+Requires:       php-composer(%{gh_owner}/zend-server)           >= 2.6.1
 Requires:       php-composer(%{gh_owner}/zend-server)           <  3
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  3
-Requires:       php-composer(%{gh_owner}/zendxml)               >= 1
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
+Requires:       php-composer(%{gh_owner}/zendxml)               >= 1.0.2
 Requires:       php-composer(%{gh_owner}/zendxml)               <  2
 # From composer, "suggest": {
 #        "zendframework/zend-cache": "To support Zend\\XmlRpc\\Server\\Cache usage"
@@ -126,16 +124,17 @@ cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 %check
 %if %{with_tests}
 mkdir vendor
-cat << EOF | tee vendor/autoload.php
+cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
-Zend\\Loader\\AutoloaderFactory::factory(array(
-    'Zend\\Loader\\StandardAutoloader' => array(
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\StandardAutoloader' => array(
         'namespaces' => array(
-           'ZendTest\\\\%{library}' => dirname(__DIR__).'/test/',
-           'Zend\\\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
+           'ZendTest\\%{library}' => dirname(__DIR__).'/test/',
+           'Zend\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
+require_once 'test/TestAsset/functions.php';
 EOF
 
 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
@@ -162,5 +161,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr 22 2016 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
+- update to 2.5.2
+- raise dependency on PHP >= 5.5
+- raise dependency on zend-http >= 2.5.4
+- raise dependency on zend-math >= 2.7
+- raise dependency on zend-server >= 2.6.1
+- raise dependency on zend-stdlib >= 2.7
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
 - initial package
