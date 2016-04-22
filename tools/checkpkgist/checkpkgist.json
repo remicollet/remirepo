@@ -42,5 +42,6 @@
     "php-hoa-xml": "hoa\/xml",
     "php-hoa-xyl": "hoa\/xyl",
     "php-hoa-zformat": "hoa\/zformat",
+    "php-pimple-lib": "pimple\/pimple",
     "php-theseer-fxsl": "theseer\/fxsl"
 }
