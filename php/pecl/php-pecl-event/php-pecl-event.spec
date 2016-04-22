@@ -34,7 +34,7 @@
 
 Summary:       Provides interface to libevent library
 Name:          %{?sub_prefix}php-pecl-%{pecl_name}
-Version:       2.0.3
+Version:       2.0.4
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
@@ -128,6 +128,8 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
 
 # Sanity check, really often broken
+sed -e '/PHP_EVENT_VERSION/s/2.0.3/2.0.4/' -i php?/php_event.h
+
 DIR=$(%{__php} -r 'echo "php" . PHP_MAJOR_VERSION;')
 extver=$(sed -n '/#define PHP_EVENT_VERSION/{s/.* "//;s/".*$//;p}' $DIR/php_event.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -278,6 +280,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr 22 2016 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- Update to 2.0.4
+
 * Thu Apr 21 2016 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - Update to 2.0.3 (php 5 and 7, stable)
 
