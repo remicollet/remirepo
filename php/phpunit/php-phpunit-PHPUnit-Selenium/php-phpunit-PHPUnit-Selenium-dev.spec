@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    facc2c9421a5a784092e0471e30812e711299da7
+%global gh_commit    d3aa8984c31efcff7c8829b9bd9ad7ab4c94709c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     giorgiosironi
 %global gh_project   phpunit-selenium
@@ -16,7 +16,7 @@
 # No test, as test suite requires a Selenium server
 
 Name:           php-phpunit-PHPUnit-Selenium
-Version:        3.0.1
+Version:        3.0.2
 Release:        1%{?dist}
 Summary:        Selenium RC integration for PHPUnit
 
@@ -110,6 +110,9 @@ fi
 
 
 %changelog
+* Fri Apr 22 2016 Remi Collet <remi@fedoraproject.org> - 3.0.2-1
+- update to 3.0.2
+
 * Tue Mar 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
 - update to 3.0.1
 
