@@ -12,8 +12,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   3.18.0
-%global github_commit    4dce50189be0acac9d7b877c7439e2890937473c
+%global github_version   3.18.1
+%global github_commit    ed9bfdfd19b1e50a13f7ac772fd3d09a00ed8ed1
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -279,6 +279,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr 22 2016 Remi Collet <remi@remirepo.net> - 3.18.1-1
+- update to 3.18.1
+
 * Thu Apr 21 2016 Remi Collet <remi@remirepo.net> - 3.18.0-1
 - backport for remi repository
 
