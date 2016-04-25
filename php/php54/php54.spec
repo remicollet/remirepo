@@ -1796,10 +1796,15 @@ fi
 %changelog
 * Tue Mar 29 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-7
 - Fix #71860: Require valid paths for phar filenames
+  CVE-2016-4072
 - Fix #71906: AddressSanitizer: negative-size-param in mbfl_strcut
+  CVE-2016-4073
 - Fix #71798: Integer Overflow in php_raw_url_encode
+  CVE-2016-4070
 - Fix #71704: php_snmp_error() Format String Vulnerability
+  CVE-2016-4071
 - Fix #71527: Buffer over-write in finfo_open with malformed magic file
+  CVE-2015-8865
 
 * Wed Mar  2 2016 Remi Collet <remi@remirepo.net> 5.4.45-5
 - Fix #71498: Out-of-Bound Read in phar_parse_zipfile()
