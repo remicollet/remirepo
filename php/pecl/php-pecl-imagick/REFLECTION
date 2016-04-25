@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #108 imagick version 3.4.1 ] {
+Extension [ <persistent> extension #108 imagick version 3.4.2 ] {
 
   - Dependencies {
     Dependency [ spl (Required) ]
@@ -315,8 +315,8 @@ Extension [ <persistent> extension #108 imagick version 3.4.1 ] {
         Constant [ integer COLOR_OPACITY ] { 18 }
         Constant [ integer COLOR_ALPHA ] { 19 }
         Constant [ integer COLOR_FUZZ ] { 20 }
-        Constant [ integer IMAGICK_EXTNUM ] { 30401 }
-        Constant [ string IMAGICK_EXTVER ] { 3.4.1 }
+        Constant [ integer IMAGICK_EXTNUM ] { 30402 }
+        Constant [ string IMAGICK_EXTVER ] { 3.4.2 }
         Constant [ integer QUANTUM_RANGE ] { 65535 }
         Constant [ integer USE_ZEND_MM ] { 0 }
         Constant [ integer COMPOSITE_DEFAULT ] { 40 }
@@ -1019,7 +1019,7 @@ Extension [ <persistent> extension #108 imagick version 3.4.1 ] {
       - Properties [0] {
       }
 
-      - Methods [351] {
+      - Methods [350] {
         Method [ <internal:imagick> public method optimizeimagelayers ] {
 
           - Parameters [0] {
@@ -3636,14 +3636,6 @@ Extension [ <persistent> extension #108 imagick version 3.4.1 ] {
             Parameter #2 [ <required> $GRAVITY ]
           }
         }
-
-        Method [ <internal:imagick> public method localcontrastimage ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $radius ]
-            Parameter #1 [ <required> $strength ]
-          }
-        }
       }
     }
 
@@ -3661,7 +3653,7 @@ Extension [ <persistent> extension #108 imagick version 3.4.1 ] {
       - Properties [0] {
       }
 
-      - Methods [132] {
+      - Methods [130] {
         Method [ <internal:imagick> public method resetvectorgraphics ] {
 
           - Parameters [0] {
@@ -4567,19 +4559,6 @@ Extension [ <persistent> extension #108 imagick version 3.4.1 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $dashArray ]
-          }
-        }
-
-        Method [ <internal:imagick> public method getopacity ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:imagick> public method setopacity ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $opacity ]
           }
         }
 
