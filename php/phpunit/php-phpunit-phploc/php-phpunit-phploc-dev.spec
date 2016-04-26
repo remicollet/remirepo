@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    2917d010fbfd503d9e836cefff249cb3c1b3f17a
+%global gh_commit    74f917e6f80f291856989960d31afa44a4196859
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phploc
@@ -17,8 +17,8 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-phploc
-Version:        3.0.0
-Release:        2%{?dist}
+Version:        3.0.1
+Release:        1%{?dist}
 Summary:        A tool for quickly measuring the size of a PHP project
 
 Group:          Development/Libraries
@@ -35,13 +35,9 @@ BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-composer(theseer/autoload)
 %if %{with_tests}
 BuildRequires:  php-composer(sebastian/finder-facade) >= 1.1
-BuildRequires:  php-composer(sebastian/finder-facade) <  2
-BuildRequires:  php-composer(sebastian/git) >= 2.0
-BuildRequires:  php-composer(sebastian/git) <  3
+BuildRequires:  php-composer(sebastian/git) >= 2.1
 BuildRequires:  php-composer(sebastian/version) >= 1.0.3
-BuildRequires:  php-composer(sebastian/version) <  3
 BuildRequires:  php-composer(symfony/console) >= 2.5
-BuildRequires:  php-composer(symfony/console) <  4
 # For our autoloader
 BuildRequires:  php-composer(symfony/class-loader)
 # From composer.json, "require-dev": {
@@ -52,14 +48,14 @@ BuildRequires:  php-composer(phpunit/phpunit) >= 5
 # From composer.json, "require": {
 #      "php": ">=5.6",
 #      "sebastian/finder-facade": "~1.1",
-#      "sebastian/git": "~2.0",
-#      "sebastian/version": "~1.0.3",
+#      "sebastian/git": "~2.1",
+#      "sebastian/version": "~1.0.3|~2.0",
 #      "symfony/console": "~2.5|~3.0"
 Requires:       php(language) >= 5.6
 Requires:       php-cli
 Requires:       php-composer(sebastian/finder-facade) >= 1.1
 Requires:       php-composer(sebastian/finder-facade) <  2
-Requires:       php-composer(sebastian/git) >= 2.0
+Requires:       php-composer(sebastian/git) >= 2.1
 Requires:       php-composer(sebastian/git) <  3
 Requires:       php-composer(sebastian/version) >= 1.0.3
 Requires:       php-composer(sebastian/version) <  3
@@ -152,6 +148,10 @@ fi
 
 
 %changelog
+* Tue Apr 26 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
+- update to 3.0.1
+- raise dependency on sebastian/git >= 2.1
+
 * Mon Apr 18 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-2
 - allow sebastian/version 2.0
 
