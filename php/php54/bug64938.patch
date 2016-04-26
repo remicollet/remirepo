@@ -1,0 +1,42 @@
+Backported for 5.4 by Remi Collet
+
+
+From de31324c221c1791b26350ba106cc26bad23ace9 Mon Sep 17 00:00:00 2001
+From: Martin Jansen <martin@divbyzero.net>
+Date: Thu, 22 Jan 2015 20:58:15 +0100
+Subject: [PATCH] Fix bug #64938: libxml_disable_entity_loader setting is
+ shared between threads
+
+The availability of entity loading is stored in a module global which
+previously was only initialized in the GINIT constructor. This had the
+effect that disabling the entity loader in one request caused
+subsequent requests hitting the same Apache child process to  also have
+the loader disabled.
+
+With this change the loader is explicitely enabled in the request init
+phase.
+---
+ NEWS                | 4 ++++
+ ext/libxml/libxml.c | 6 ++++++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/ext/libxml/libxml.c b/ext/libxml/libxml.c
+index 4b7a36a..5f0da89 100644
+--- a/ext/libxml/libxml.c
++++ b/ext/libxml/libxml.c
+@@ -851,6 +851,12 @@ static PHP_RINIT_FUNCTION(libxml)
+ 		xmlSetGenericErrorFunc(NULL, php_libxml_error_handler);
+ 		xmlParserInputBufferCreateFilenameDefault(php_libxml_input_buffer_create_filename);
+ 		xmlOutputBufferCreateFilenameDefault(php_libxml_output_buffer_create_filename);
++
++		/* Enable the entity loader by default. This ensure that
++		 * other threads/requests that might have disable the loader
++		 * do not affect the current request.
++		 */
++		LIBXML(entity_loader_disabled) = 0;
+ 	}
+ 	return SUCCESS;
+ }
+-- 
+2.1.4
+

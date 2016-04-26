@@ -98,7 +98,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.4.45
-Release: 7%{?dist}
+Release: 8%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -177,6 +177,7 @@ Patch217: bug71906.patch
 Patch218: bug71798.patch
 Patch219: bug71704.patch
 Patch220: bug71527.patch
+Patch221: bug64938.patch
 
 # Fixes for tests
 # no_NO issue
@@ -905,6 +906,7 @@ rm -f ext/json/utf8_to_utf16.*
 %patch218 -p1 -b .bug71798
 %patch219 -p1 -b .bug71704
 %patch220 -p1 -b .bug71527
+%patch221 -p1 -b .bug64938
 
 # Fixes for tests
 %patch301 -p1 -b .datetests2
@@ -1794,6 +1796,10 @@ fi
 
 
 %changelog
+* Tue Apr 26 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-8
+- Fix #64938: libxml_disable_entity_loader setting is shared
+  between threads  CVE-2015-8866
+
 * Tue Mar 29 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-7
 - Fix #71860: Require valid paths for phar filenames
   CVE-2016-4072
