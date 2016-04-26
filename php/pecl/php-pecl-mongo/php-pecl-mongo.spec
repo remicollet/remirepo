@@ -17,7 +17,7 @@
 %global with_zts    0%{?__ztsphp:1}
 #global prever      RC3
 # see https://github.com/mongodb/mongo-php-driver-legacy/releases
-%global gh_commit   74311ca47770e979adb712e0f4b01b380f9f1ecb
+%global gh_commit   0b2945e4d96ad9407b68cd9ac403e5824b3f364e
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    mongodb
 %global gh_project  mongo-php-driver-legacy
@@ -32,7 +32,7 @@
 
 Summary:      PHP MongoDB database driver
 Name:         %{?scl_prefix}php-pecl-mongo
-Version:      1.6.13
+Version:      1.6.14
 Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      ASL 2.0
 Group:        Development/Languages
@@ -61,8 +61,10 @@ Provides:     %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:     %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:     %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -250,6 +252,9 @@ rm -rf data
 
 
 %changelog
+* Tue Apr 26 2016 Remi Collet <remi@fedoraproject.org> - 1.6.14-1
+- update to 1.6.14 (stable)
+
 * Fri Mar 18 2016 Remi Collet <remi@fedoraproject.org> - 1.6.13-1
 - update to 1.6.13 (stable)
 
