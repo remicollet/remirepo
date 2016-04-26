@@ -15,9 +15,8 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package        php-pecl-amqp
 %endif
-
-%{?scl:          %scl_package        php-pecl-amqp}
 
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global with_tests  0%{?_with_tests:1}
@@ -27,23 +26,22 @@
 %else
 %global ini_name    40-%{pecl_name}.ini
 %endif
-%global prever      alpha2
 
 Summary:       Communicate with any AMQP compliant server
 Name:          %{?sub_prefix}php-pecl-amqp
 Version:       1.7.0
-Release:       0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: %{?scl_prefix}php-devel > 5.2.0
+BuildRequires: %{?scl_prefix}php-devel > 5.3.0
 BuildRequires: %{?scl_prefix}php-pear
 %if "%{?vendor}" == "Remi Collet"
-# Upstream requires 0.5.2, set 0.7.0 to ensure "last" is used.
-BuildRequires: librabbitmq-devel >= 0.7.0
+# Upstream requires 0.5.2, set 0.8.0 to ensure "last" is used.
+BuildRequires: librabbitmq-devel >= 0.8.0
 %else
 BuildRequires: librabbitmq-devel >= 0.5.2
 %endif
@@ -59,8 +57,10 @@ Provides:         %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:         %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:         %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:         %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:         %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:         %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -108,6 +108,7 @@ sed -e 's/role="test"/role="src"/' \
 
 mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
+sed -e 's/CFLAGS="-I/CFLAGS="-fPIC -I/' -i config.m4
 
 # Upstream often forget to change this
 extver=$(sed -n '/#define PHP_AMQP_VERSION/{s/.* "//;s/".*$//;p}' php_amqp.h)
@@ -292,6 +293,9 @@ fi
 
 
 %changelog
+* Tue Apr 26 2016 Remi Collet <remi@fedoraproject.org> - 1.7.0-1
+- update to 1.7.0 (php 5 and 7, stable)
+
 * Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 1.7.0-0.3.alpha2
 - adapt for F24
 
