@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5b92c27399a31c860877b9c29f4fcbb241069679
+%global gh_commit    b7d6005b9f8e18bfe2b953d9847df0b3e4098441
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-vobject
@@ -14,7 +14,7 @@
 
 Name:           php-%{gh_project}
 Summary:        Library to parse and manipulate iCalendar and vCard objects
-Version:        3.5.1
+Version:        3.5.2
 Release:        1%{?dist}
 
 URL:            http://sabre.io/vobject/
@@ -120,6 +120,9 @@ fi
 
 
 %changelog
+* Tue Apr 26 2016 Remi Collet <remi@fedoraproject.org> - 3.5.2-1
+- update to 3.5.2
+
 * Thu Apr  7 2016 Remi Collet <remi@fedoraproject.org> - 3.5.1-1
 - update to 3.5.1
 
