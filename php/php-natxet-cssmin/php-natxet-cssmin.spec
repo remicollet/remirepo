@@ -24,7 +24,7 @@
 
 Name:           php-%{packagist_owner}-%{lcname}
 Version:        %{github_version}
-Release:        1%{?github_date:.%{github_date}git%{shortcommit}}%{?dist}
+Release:        2%{?github_date:.%{github_date}git%{shortcommit}}%{?dist}
 Summary:        Configurable CSS parser and minifier
 
 Group:          Development/Libraries
@@ -37,6 +37,7 @@ Source0:        https://github.com/%{github_owner}/%{github_name}/archive/%{gith
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  %{_bindir}/phpab
 
 Requires:       php(language) >= %{php_min_ver}
 Requires:       php-pcre
@@ -56,7 +57,9 @@ shorter notation if available. The minification is configurable.
 
 
 %build
-# Empty build section, nothing required
+# From composer.json, "autoload": {
+ #        "classmap": ["src/"]
+ %{_bindir}/phpab --quiet --nolower --output ./autoload.php ./
 
 
 %install
@@ -80,6 +83,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Apr 25 2016 James Hogarth <james.hogarth@gmail.com> - 3.0.4-1
+- new release 3.0.4
+- Add simple classmap autoloader
+
 * Thu Oct 15 2015 Remi Collet <remi@fedoraproject.org> - 3.0.4-1
 - update to 3.0.4
 
