@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #74 amqp version 1.6.1 ] {
+Extension [ <persistent> extension #74 amqp version 1.7.0alpha2 ] {
 
   - INI {
     Entry [ amqp.host <ALL> ]
@@ -82,7 +82,18 @@ Extension [ <persistent> extension #74 amqp version 1.6.1 ] {
       - Static methods [0] {
       }
 
-      - Properties [0] {
+      - Properties [11] {
+        Property [ <default> private $login ]
+        Property [ <default> private $password ]
+        Property [ <default> private $host ]
+        Property [ <default> private $vhost ]
+        Property [ <default> private $port ]
+        Property [ <default> private $read_timeout ]
+        Property [ <default> private $write_timeout ]
+        Property [ <default> private $connect_timeout ]
+        Property [ <default> private $channel_max ]
+        Property [ <default> private $frame_max ]
+        Property [ <default> private $heartbeat ]
       }
 
       - Methods [29] {
@@ -282,14 +293,17 @@ Extension [ <persistent> extension #74 amqp version 1.6.1 ] {
       - Static methods [0] {
       }
 
-      - Properties [0] {
+      - Properties [3] {
+        Property [ <default> private $connection ]
+        Property [ <default> private $prefetch_count ]
+        Property [ <default> private $prefetch_size ]
       }
 
       - Methods [13] {
         Method [ <internal:amqp, ctor> public method __construct ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> $amqp_connection ]
+            Parameter #0 [ <required> AMQPConnection $amqp_connection ]
           }
         }
 
@@ -383,14 +397,23 @@ Extension [ <persistent> extension #74 amqp version 1.6.1 ] {
       - Static methods [0] {
       }
 
-      - Properties [0] {
+      - Properties [9] {
+        Property [ <default> private $connection ]
+        Property [ <default> private $channel ]
+        Property [ <default> private $name ]
+        Property [ <default> private $consumer_tag ]
+        Property [ <default> private $passive ]
+        Property [ <default> private $durable ]
+        Property [ <default> private $exclusive ]
+        Property [ <default> private $auto_delete ]
+        Property [ <default> private $arguments ]
       }
 
-      - Methods [24] {
+      - Methods [25] {
         Method [ <internal:amqp, ctor> public method __construct ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> $amqp_channel ]
+            Parameter #0 [ <required> AMQPChannel $amqp_channel ]
           }
         }
 
@@ -445,6 +468,13 @@ Extension [ <persistent> extension #74 amqp version 1.6.1 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> array $arguments ]
+          }
+        }
+
+        Method [ <internal:amqp> public method hasArgument ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
           }
         }
 
@@ -569,14 +599,23 @@ Extension [ <persistent> extension #74 amqp version 1.6.1 ] {
       - Static methods [0] {
       }
 
-      - Properties [0] {
+      - Properties [9] {
+        Property [ <default> private $connection ]
+        Property [ <default> private $channel ]
+        Property [ <default> private $name ]
+        Property [ <default> private $type ]
+        Property [ <default> private $passive ]
+        Property [ <default> private $durable ]
+        Property [ <default> private $auto_delete ]
+        Property [ <default> private $internal ]
+        Property [ <default> private $arguments ]
       }
 
-      - Methods [19] {
+      - Methods [20] {
         Method [ <internal:amqp, ctor> public method __construct ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> $amqp_channel ]
+            Parameter #0 [ <required> AMQPChannel $amqp_channel ]
           }
         }
 
@@ -644,6 +683,13 @@ Extension [ <persistent> extension #74 amqp version 1.6.1 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> array $arguments ]
+          }
+        }
+
+        Method [ <internal:amqp> public method hasArgument ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $argument ]
           }
         }
 
@@ -720,10 +766,28 @@ Extension [ <persistent> extension #74 amqp version 1.6.1 ] {
       - Static methods [0] {
       }
 
-      - Properties [0] {
+      - Properties [18] {
+        Property [ <default> private $body ]
+        Property [ <default> private $delivery_tag ]
+        Property [ <default> private $is_redelivery ]
+        Property [ <default> private $exchange_name ]
+        Property [ <default> private $routing_key ]
+        Property [ <default> private $content_type ]
+        Property [ <default> private $content_encoding ]
+        Property [ <default> private $headers ]
+        Property [ <default> private $delivery_mode ]
+        Property [ <default> private $priority ]
+        Property [ <default> private $correlation_id ]
+        Property [ <default> private $reply_to ]
+        Property [ <default> private $expiration ]
+        Property [ <default> private $message_id ]
+        Property [ <default> private $timestamp ]
+        Property [ <default> private $type ]
+        Property [ <default> private $user_id ]
+        Property [ <default> private $app_id ]
       }
 
-      - Methods [20] {
+      - Methods [21] {
         Method [ <internal:amqp, ctor> public method __construct ] {
 
           - Parameters [0] {
@@ -840,7 +904,15 @@ Extension [ <persistent> extension #74 amqp version 1.6.1 ] {
 
         Method [ <internal:amqp> public method getHeader ] {
 
-          - Parameters [0] {
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:amqp> public method hasHeader ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $name ]
           }
         }
       }

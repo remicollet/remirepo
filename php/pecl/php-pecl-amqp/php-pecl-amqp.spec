@@ -19,7 +19,7 @@
 
 %{?scl:          %scl_package        php-pecl-amqp}
 
-%global with_zts    0%{?__ztsphp:1}
+%global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global with_tests  0%{?_with_tests:1}
 %global pecl_name   amqp
 %if "%{php_version}" < "5.6"
@@ -27,12 +27,12 @@
 %else
 %global ini_name    40-%{pecl_name}.ini
 %endif
-#global prever      beta4
+%global prever      alpha2
 
 Summary:       Communicate with any AMQP compliant server
 Name:          %{?sub_prefix}php-pecl-amqp
-Version:       1.6.1
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:       1.7.0
+Release:       0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
@@ -292,11 +292,14 @@ fi
 
 
 %changelog
-* Mon Mar  7 2016 Remi Collet <remi@fedoraproject.org> - 1.6.1-2
+* Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 1.7.0-0.3.alpha2
 - adapt for F24
 
-* Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 1.6.1-1
-- update to 1.6.1 (stable)
+* Sat Dec 26 2015 Remi Collet <remi@fedoraproject.org> - 1.7.0-0.2.alpha2
+- update to 1.7.0alpha2
+
+* Thu Nov 12 2015 Remi Collet <remi@fedoraproject.org> - 1.7.0-0.1.alpha1
+- update to 1.7.0alpha1
 
 * Tue Nov  3 2015 Remi Collet <remi@fedoraproject.org> - 1.6.0-2
 - update to 1.6.0 (stable)
