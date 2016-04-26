@@ -134,9 +134,7 @@ Requires:       php-composer(phpseclib/phpseclib) < 3.0
 Requires:       php-opencloud >= 1.9.2
 
 #"james-heinrich/getid3": "dev-master"
-# fedora has 1.9.8 but current release 1.9.12
-# bug filed for update: bz#1319676
-Requires:       php-composer(james-heinrich/getid3)
+Requires:       php-composer(james-heinrich/getid3) >= 1.9.12
 
 # "jeremeamia/superclosure": "2.0.0"
 Requires:       php-composer(jeremeamia/superclosure) >= 2.0
@@ -150,9 +148,7 @@ Requires:       php-composer(ircmaxell/random-lib) < 2.0
 Requires:       php-composer(bantu/ini-get-wrapper) >= 1.0.1
 
 # "natxet/CssMin": "dev-master"
-# 3.0.4 is the current release and 3.0.3 in fedora
-# ticket for update bz#1266491
-Requires:       php-composer(natxet/CssMin) >= 3.0.2
+Requires:       php-composer(natxet/CssMin) >= 3.0.4
 
 # "punic/punic": "1.1.0"
 Requires:       php-composer(punic/punic) >= 1.1.0
