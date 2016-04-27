@@ -178,6 +178,11 @@ Patch218: bug71798.patch
 Patch219: bug71704.patch
 Patch220: bug71527.patch
 Patch221: bug64938.patch
+Patch222: bug71912.patch
+Patch223: bug72061.patch
+Patch224: bug72093.patch
+Patch225: bug72094.patch
+Patch226: bug72099.patch
 
 # Fixes for tests
 # no_NO issue
@@ -907,6 +912,11 @@ rm -f ext/json/utf8_to_utf16.*
 %patch219 -p1 -b .bug71704
 %patch220 -p1 -b .bug71527
 %patch221 -p1 -b .bug64938
+%patch222 -p1 -b .bug71912
+%patch223 -p1 -b .bug72061
+%patch224 -p1 -b .bug72093
+%patch225 -p1 -b .bug72094
+%patch226 -p1 -b .bug72099
 
 # Fixes for tests
 %patch301 -p1 -b .datetests2
@@ -1799,6 +1809,14 @@ fi
 * Tue Apr 26 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-8
 - Fix #64938: libxml_disable_entity_loader setting is shared
   between threads  CVE-2015-8866
+- Fix #71912: libgd signedness vulnerability
+- Fix #72061: Out-of-bounds reads in zif_grapheme_stripos
+  with negative offset
+- Fix #72093: bcpowmod accepts negative scale and corrupts
+  _one_ definition
+- Fix #72094: Out of bounds heap read access in exif
+  header processing
+- Fix #72099: xml_parse_into_struct segmentation fault
 
 * Tue Mar 29 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-7
 - Fix #71860: Require valid paths for phar filenames
