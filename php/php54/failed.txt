@@ -1,12 +1,12 @@
-===== 5.5.45-7 (2016-03-30)
+===== 5.5.45-8 (2016-04-27)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
-/var/lib/mock/el5i/build.log:Tests failed    :    6 (  0.0%) (  0.1%)
-/var/lib/mock/el5x/build.log:Tests failed    :    2 (  0.0%) (  0.0%)
-/var/lib/mock/el6i/build.log:Tests failed    :    5 (  0.0%) (  0.1%)
-/var/lib/mock/el6x/build.log:Tests failed    :    1 (  0.0%) (  0.0%)
-/var/lib/mock/el7x/build.log:Tests failed    :    0 (  0.0%) (  0.0%)
+/var/lib/mock/el5i/build.log:Tests failed    :    6
+/var/lib/mock/el5x/build.log:Tests failed    :    2
+/var/lib/mock/el6i/build.log:Tests failed    :    5
+/var/lib/mock/el6x/build.log:Tests failed    :    1
+/var/lib/mock/el7x/build.log:Tests failed    :    0
 
 el5i, el5x
 	Bug #66501: EC private key support in openssl_sign [ext/openssl/tests/bug66501.phpt]
