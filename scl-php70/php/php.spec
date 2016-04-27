@@ -125,22 +125,14 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver        RC1
+#global rcver        RC1
 %global rpmrel       2
 
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 7.0.6
-%if 0%{?gh_date}
-Release: 0.%{rpmrel}.%{gh_date}git%{gh_short}%{?dist}
-%else
-%if 0%{?rcver:1}
-Release: 0.%{rpmrel}.%{rcver}%{?dist}
-%else
-Release: %{rpmrel}%{?dist}
-%endif
-%endif
+Release: %{?rcver:0.}%{rpmrel}%{?rcver:.%{rcver}}%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1835,7 +1827,11 @@ fi
 
 
 %changelog
-* Tue Apr 12 2016 Remi Collet <remi@fedoraproject.org> 7.0.6-0.1.0RC1
+* Wed Apr 27 2016 Remi Collet <remi@fedoraproject.org> 7.0.6-2
+- Update to 7.0.6
+  http://www.php.net/releases/7_0_6.php
+
+* Tue Apr 12 2016 Remi Collet <remi@fedoraproject.org> 7.0.6-0.2.RC1
 - Update to 7.0.6RC1
 
 * Fri Apr  8 2016 Remi Collet <remi@fedoraproject.org> 7.0.5-2
@@ -1845,7 +1841,7 @@ fi
 - Update to 7.0.5
   http://www.php.net/releases/7_0_5.php
 
-* Wed Mar 16 2016 Remi Collet <remi@fedoraproject.org> 7.0.5-0.1.0RC1
+* Wed Mar 16 2016 Remi Collet <remi@fedoraproject.org> 7.0.5-0.1.RC1
 - Update to 7.0.5RC1
 
 * Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> 7.0.4-2
@@ -1856,7 +1852,7 @@ fi
   http://www.php.net/releases/7_0_4.php
 - pcre: disables JIT compilation of patterns with system pcre < 8.38
 
-* Thu Feb 18 2016 Remi Collet <remi@fedoraproject.org> 7.0.4-0.1.0RC1
+* Thu Feb 18 2016 Remi Collet <remi@fedoraproject.org> 7.0.4-0.1.RC1
 - Update to 7.0.4RC1
 
 * Wed Feb  3 2016 Remi Collet <remi@fedoraproject.org> 7.0.3-1
@@ -1866,17 +1862,17 @@ fi
 * Fri Jan 29 2016 Remi Collet <remi@fedoraproject.org> 7.0.3-0.3.20160129gitdd3d10c
 - test build
 
-* Fri Jan 29 2016 Remi Collet <remi@fedoraproject.org> 7.0.3-0.2.0RC1
+* Fri Jan 29 2016 Remi Collet <remi@fedoraproject.org> 7.0.3-0.2.RC1
 - FPM: test build for https://bugs.php.net/62172
 
-* Wed Jan 20 2016 Remi Collet <remi@fedoraproject.org> 7.0.3-0.1.0RC1
+* Wed Jan 20 2016 Remi Collet <remi@fedoraproject.org> 7.0.3-0.1.RC1
 - Update to 7.0.3RC1
 
 * Wed Jan  6 2016 Remi Collet <remi@fedoraproject.org> 7.0.2-1
 - Update to 7.0.2
   http://www.php.net/releases/7_0_2.php
 
-* Sun Dec 27 2015 Remi Collet <remi@fedoraproject.org> 7.0.2-0.1.0RC1
+* Sun Dec 27 2015 Remi Collet <remi@fedoraproject.org> 7.0.2-0.1.RC1
 - Update to 7.0.2RC1
 - opcache: build with --disable-huge-code-pages on EL-6
 
@@ -1886,7 +1882,7 @@ fi
 - curl: add CURL_SSLVERSION_TLSv1_x constant (EL)
 - fpm: switch to UDS on Fedora >= 21
 
-* Wed Dec  9 2015 Remi Collet <remi@fedoraproject.org> 7.0.1-0.1.0RC1
+* Wed Dec  9 2015 Remi Collet <remi@fedoraproject.org> 7.0.1-0.1.RC1
 - Update to 7.0.1RC1
 - drop --disable-huge-code-pages build option on EL-6,
   but keep it disabled in default configuration

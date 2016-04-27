@@ -1,21 +1,17 @@
-===== 7.0.6RC1 (2016-04-14)
+===== 7.0.6 (2016-04-28)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl70*/build.log
 
-/var/lib/mock/scl70el6x/build.log:Tests failed    :    3
-/var/lib/mock/scl70el7x/build.log:Tests failed    :    3
-/var/lib/mock/scl70fc21x/build.log:Tests failed    :    1
-/var/lib/mock/scl70fc22x/build.log:Tests failed    :    2
-/var/lib/mock/scl70fc23x/build.log:Tests failed    :    1
-/var/lib/mock/scl70fc24x/build.log:Tests failed    :    1
+/var/lib/mock/scl70el6x/build.log:Tests failed    :     2
+/var/lib/mock/scl70el7x/build.log:Tests failed    :     2
+/var/lib/mock/scl70fc21x/build.log:Tests failed    :    0
+/var/lib/mock/scl70fc22x/build.log:Tests failed    :    0
+/var/lib/mock/scl70fc23x/build.log:Tests failed    :    0
+/var/lib/mock/scl70fc24x/build.log:Tests failed    :    0
 
 el6x, el7x, fc20x
     Bug #33414 [2] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-2.phpt]
     strtotime() function (64 bit) [ext/date/tests/strtotime3-64bit.phpt]
-fc22x:
-	*	Bug #64438 proc_open hangs with stdin/out with 4097+ bytes [ext/standard/tests/streams/proc_open_bug64438.phpt]
-all:
-	**	bug #71428.2: inheritance of ye olde dynamic interfaces [Zend/tests/bug71428.2.phpt]
 
 
 *	proc_open give erratic test results :(
