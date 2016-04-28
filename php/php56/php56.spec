@@ -15,7 +15,7 @@
 # Extension version
 %global fileinfover 1.0.5
 %global opcachever  7.0.6-dev
-%global oci8ver     2.0.10
+%global oci8ver     2.0.11
 
 # Use for first build of PHP (before pecl/zip and pecl/jsonc)
 %global php_bootstrap   0
@@ -145,7 +145,7 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.6.20
+Version: 5.6.21
 Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -183,10 +183,6 @@ Patch6: php-5.6.3-embed.patch
 Patch7: php-5.3.0-recode.patch
 Patch8: php-5.6.17-libdb.patch
 Patch9: php-5.5.30-curl.patch
-
-# Fixes for extension modules
-# https://bugs.php.net/63171 no odbc call during timeout
-Patch21: php-5.4.7-odbctimer.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
@@ -950,8 +946,6 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %if 0%{?rhel}
 %patch9 -p1 -b .curltls
 %endif
-
-%patch21 -p1 -b .odbctimer
 
 %patch40 -p1 -b .dlopen
 %if 0%{?fedora} >= 19 || 0%{?rhel} >= 5
@@ -1987,6 +1981,11 @@ fi
 
 
 %changelog
+* Thu Apr 28 2016 Remi Collet <remi@fedoraproject.org> 5.6.21-1
+- Update to 5.6.21
+  http://www.php.net/releases/5_6_21.php
+- bump oci8 version to 2.0.11
+
 * Thu Mar 31 2016 Remi Collet <remi@fedoraproject.org> 5.6.20-1
 - Update to 5.6.20
   http://www.php.net/releases/5_6_20.php

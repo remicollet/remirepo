@@ -1,9 +1,9 @@
-===== 5.6.21RC1 (2016-04-18)
+===== 5.6.21 (2016-04-24)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl56*/build.log
 
-/var/lib/mock/scl56el6x/build.log:Tests failed    :    5
-/var/lib/mock/scl56el7x/build.log:Tests failed    :    5
+/var/lib/mock/scl56el6x/build.log:Tests failed    :     5
+/var/lib/mock/scl56el7x/build.log:Tests failed    :     5
 /var/lib/mock/scl56fc21x/build.log:Tests failed    :    0
 /var/lib/mock/scl56fc22x/build.log:Tests failed    :    0
 /var/lib/mock/scl56fc23x/build.log:Tests failed    :    0

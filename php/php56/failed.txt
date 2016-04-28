@@ -1,12 +1,12 @@
-===== 5.6.20 (2016-03-31)
+===== 5.6.21 (2016-04-28)
 
 $ grep -r 'Tests failed' /var/lib/mock/56*/build.log
 
-/var/lib/mock/el5i/build.log:Tests failed    :    8
-/var/lib/mock/el5x/build.log:Tests failed    :    7
-/var/lib/mock/el6i/build.log:Tests failed    :    6
-/var/lib/mock/el6x/build.log:Tests failed    :    5
-/var/lib/mock/el7x/build.log:Tests failed    :    5
+/var/lib/mock/el5i/build.log:Tests failed    :     8
+/var/lib/mock/el5x/build.log:Tests failed    :     7
+/var/lib/mock/el6i/build.log:Tests failed    :     6
+/var/lib/mock/el6x/build.log:Tests failed    :     5
+/var/lib/mock/el7x/build.log:Tests failed    :     5
 /var/lib/mock/fc21i/build.log:Tests failed    :    2
 /var/lib/mock/fc21x/build.log:Tests failed    :    0
 /var/lib/mock/fc22i/build.log:Tests failed    :    2
