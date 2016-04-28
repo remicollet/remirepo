@@ -1726,6 +1726,7 @@ EOF
 
 * Tue Feb 16 2016 Remi Collet <remi@remirepo.net> 5.4.45-4
 - Fix #71354: phar, remove UMR when size is 0
+  CVE-2016-4342
 - Fix #71335: type confusion in WDDX packet deserialization
 - Fix #71391: NULL pointer dereference in phar_tar_setupmetadata()
 - Fix #71323: output of stream_get_meta_data can be falsified by its input
