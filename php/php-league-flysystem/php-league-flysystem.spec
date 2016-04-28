@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # Github
-%global gh_commit    35a83cf67d80d7040f306c77b0a84b9fbcc4fbfb
+%global gh_commit    bd73a91703969a2d20ab4bfbf971d6c2cbe36612
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     thephpleague
 %global gh_project   flysystem
@@ -19,7 +19,7 @@
 %global ns_project   Flysystem
 
 Name:           php-%{pk_vendor}-%{pk_name}
-Version:        1.0.21
+Version:        1.0.22
 Release:        1%{?dist}
 Summary:        Filesystem abstraction: Many filesystems, one API
 
@@ -138,6 +138,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr 28 2016 Remi Collet <remi@fedoraproject.org> - 1.0.22-1
+- update to 1.0.22
+
 * Fri Apr 22 2016 Remi Collet <remi@fedoraproject.org> - 1.0.21-1
 - update to 1.0.21
 
