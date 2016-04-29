@@ -10,6 +10,7 @@
     "php-tecnickcom-tc-lib-pdf-page": "tecnickcom\/tc-lib-pdf-page",
     "php-tecnickcom-tc-lib-unicode": "tecnickcom\/tc-lib-unicode",
     "php-tecnickcom-tc-lib-unicode-data": "tecnickcom\/tc-lib-unicode-data",
+    "php-justinrainbow-json-schema": "justinrainbow\/json-schema",
     "php-mongodb": "mongodb\/mongodb",
     "php-tedivm-jshrink": "tedivm\/jshrink",
     "php-phine-path": "phine\/path",

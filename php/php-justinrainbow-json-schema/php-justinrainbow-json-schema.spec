@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    f1f874d2c0eb546553290f56655c755f69cbaaa7
+%global gh_commit    9ef71fdf8aa59a93977446468fc718ea01115a83
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     justinrainbow
 %global gh_project   json-schema
@@ -16,7 +16,7 @@
 # Some sample files, only used for tests
 #        "json-schema/JSON-Schema-Test-Suite": "1.1.0",
 %global ts_commit    4eaaea8711d49656089643baeac4d32a01c1fce2
-%global ts_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global ts_short     %(c=%{ts_commit}; echo ${c:0:7})
 %global ts_owner     json-schema
 %global ts_project   JSON-Schema-Test-Suite
 %global ts_version   1.1.0
@@ -24,7 +24,7 @@
 %global eolv1   0
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.0.0
+Version:        2.0.1
 Release:        1%{?dist}
 Summary:        A library to validate a json schema
 
@@ -33,7 +33,7 @@ License:        MIT
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 # git snapshot to get upstream test suite
 Source0:        %{name}-%{version}-%{gh_short}.tgz
-Source1:        https://github.com/%{ts_owner}/%{ts_project}/archive/%{ts_commit}/%{ts_project}-%{ts_version}-%{gh_short}.tar.gz
+Source1:        https://github.com/%{ts_owner}/%{ts_project}/archive/%{ts_commit}/%{ts_project}-%{ts_version}-%{ts_short}.tar.gz
 Source2:        %{name}-autoload.php
 Source3:        %{name}-makesrc.sh
 
@@ -185,6 +185,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Apr 29 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- update to 2.0.1
+
 * Fri Apr 15 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - initial package, version 2.0.0
 
