@@ -95,7 +95,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -1676,7 +1676,13 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 $fedoraClassLoader->addPrefix('Symfony\\Component\\', dirname(dirname(__DIR__)));
 
 // Optional dependency
-@include_once '%{phpdir}/random_compat/autoload.php';
+foreach (array(
+	'%{phpdir}/random_compat/autoload.php',
+) as $dependencyAutoloader) {
+    if (file_exists($dependencyAutoloader)) {
+        require_once $dependencyAutoloader;
+    }
+}
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -1718,10 +1724,6 @@ foreach (array(
     if (file_exists($dependencyAutoloader)) {
         require_once $dependencyAutoloader;
     }
-}
-
-if (!interface_exists('SessionHandlerInterface', false) && file_exists(__DIR__ . '/Component/HttpFoundation/Resources/stubs/SessionHandlerInterface.php')) {
-    require_once __DIR__ . '/Component/HttpFoundation/Resources/stubs/SessionHandlerInterface.php';
 }
 
 $fedoraClassLoader->setUseIncludePath(true);
@@ -2530,8 +2532,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
-* Fri Apr 29 2016 Remi Collet <remi@fedoraproject.org> - 2.7.12-1
+* Fri Apr 29 2016 Remi Collet <remi@fedoraproject.org> - 2.7.12-2
 - Update to 2.7.12
+- cleanup autoloader
 
 * Sat Mar 26 2016 Remi Collet <remi@fedoraproject.org> - 2.7.11-2
 - Update to 2.7.11
