@@ -14,8 +14,8 @@
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.7.11
-%global github_commit    66c99826ce3d4392aa1fd08564946cb4277e3897
+%global github_version   2.7.12
+%global github_commit    9edf2430f1846602844d2b434f26389a018f494f
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -95,7 +95,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       1%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -1784,9 +1784,6 @@ sed -e 's#function testCreateFromChoicesSameChoices#function SKIP_testCreateFrom
     -e 's#function testCreateFromFlippedChoicesSameChoices#function SKIP_testCreateFromFlippedChoicesSameChoices#' \
     -i src/Symfony/Component/Form/Tests/ChoiceList/Factory/CachingFactoryDecoratorTest.php
 %endif
-# See https://github.com/symfony/symfony/issues/18319
-rm src/Symfony/Component/Validator/Tests/Constraints/UrlValidatorTest.php
-rm src/Symfony/Component/Validator/Tests/Constraints/EmailValidatorTest.php
 %endif
 
 
@@ -2533,6 +2530,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Fri Apr 29 2016 Remi Collet <remi@fedoraproject.org> - 2.7.12-1
+- Update to 2.7.12
+
 * Sat Mar 26 2016 Remi Collet <remi@fedoraproject.org> - 2.7.11-2
 - Update to 2.7.11
 - ignore dependency on symfony/polyfill-mbstring
