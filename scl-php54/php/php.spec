@@ -1697,6 +1697,7 @@ EOF
 - Fix #64938: libxml_disable_entity_loader setting is shared
   between threads  CVE-2015-8866
 - Fix #71912: libgd signedness vulnerability
+  CVE-2016-3074
 - Fix #72061: Out-of-bounds reads in zif_grapheme_stripos
   with negative offset
 - Fix #72093: bcpowmod accepts negative scale and corrupts
