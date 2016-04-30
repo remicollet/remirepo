@@ -21,6 +21,9 @@ $fedoraClassLoader->addPrefixes(array(
 require_once $vendorDir . '/Seld/JsonLint/autoload.php';
 require_once $vendorDir . '/Seld/PharUtils/autoload.php';
 require_once $vendorDir . '/Seld/CliPrompt/autoload.php';
+require_once $vendorDir . '/Composer/CaBundle/autoload.php';
 require_once $vendorDir . '/Composer/Spdx/autoload.php';
 require_once $vendorDir . '/Composer/Semver/autoload.php';
 require_once $vendorDir . '/JsonSchema/autoload.php';
+require_once $vendorDir . '/Psr/Log/autoload.php';
+

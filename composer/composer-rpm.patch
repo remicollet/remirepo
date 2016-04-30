@@ -1,6 +1,6 @@
 diff -up ./bin/composer.rpm ./bin/composer
---- ./bin/composer.rpm	2016-04-18 22:14:28.000000000 +0200
-+++ ./bin/composer	2016-04-19 07:15:05.420424086 +0200
+--- ./bin/composer.rpm	2016-04-29 18:32:14.000000000 +0200
++++ ./bin/composer	2016-04-30 10:07:31.835289957 +0200
 @@ -5,7 +5,7 @@ if (PHP_SAPI !== 'cli') {
      echo 'Warning: Composer should be invoked via the CLI version of PHP, not the '.PHP_SAPI.' SAPI'.PHP_EOL;
  }
@@ -11,10 +11,10 @@ diff -up ./bin/composer.rpm ./bin/composer
  use Composer\Console\Application;
  
 diff -up ./src/Composer/Autoload/AutoloadGenerator.php.rpm ./src/Composer/Autoload/AutoloadGenerator.php
---- ./src/Composer/Autoload/AutoloadGenerator.php.rpm	2016-04-18 22:14:28.000000000 +0200
-+++ ./src/Composer/Autoload/AutoloadGenerator.php	2016-04-19 07:15:05.421424090 +0200
-@@ -287,7 +287,7 @@ EOF;
-         file_put_contents($targetDir.'/autoload_real.php', $this->getAutoloadRealFile(true, (bool) $includePathFileContents, $targetDirLoader, (bool) $includeFilesFileContents, $vendorPathCode, $appBaseDirCode, $suffix, $useGlobalIncludePath, $prependAutoloader));
+--- ./src/Composer/Autoload/AutoloadGenerator.php.rpm	2016-04-30 10:07:31.836289961 +0200
++++ ./src/Composer/Autoload/AutoloadGenerator.php	2016-04-30 10:08:50.489640789 +0200
+@@ -288,7 +288,7 @@ EOF;
+         file_put_contents($targetDir.'/autoload_real.php', $this->getAutoloadRealFile(true, (bool) $includePathFileContents, $targetDirLoader, (bool) $includeFilesFileContents, $vendorPathCode, $appBaseDirCode, $suffix, $useGlobalIncludePath, $prependAutoloader, $staticPhpVersion));
  
          $this->safeCopy(__DIR__.'/ClassLoader.php', $targetDir.'/ClassLoader.php');
 -        $this->safeCopy(__DIR__.'/../../../LICENSE', $targetDir.'/LICENSE');
@@ -23,9 +23,9 @@ diff -up ./src/Composer/Autoload/AutoloadGenerator.php.rpm ./src/Composer/Autolo
          if ($this->runScripts) {
              $this->eventDispatcher->dispatchScript(ScriptEvents::POST_AUTOLOAD_DUMP, $this->devMode, array(), array(
 diff -up ./src/Composer/Compiler.php.rpm ./src/Composer/Compiler.php
---- ./src/Composer/Compiler.php.rpm	2016-04-18 22:14:28.000000000 +0200
-+++ ./src/Composer/Compiler.php	2016-04-19 07:15:05.421424090 +0200
-@@ -96,7 +96,7 @@ class Compiler
+--- ./src/Composer/Compiler.php.rpm	2016-04-29 18:32:14.000000000 +0200
++++ ./src/Composer/Compiler.php	2016-04-30 10:07:31.836289961 +0200
+@@ -97,7 +97,7 @@ class Compiler
          $finder = new Finder();
          $finder->files()
              ->name('*.json')
@@ -34,18 +34,9 @@ diff -up ./src/Composer/Compiler.php.rpm ./src/Composer/Compiler.php
              ->in(SpdxLicenses::getResourcesDir())
              ->sort($finderSort)
          ;
-@@ -138,7 +138,7 @@ class Compiler
-         }
-         $this->addFile($phar, new \SplFileInfo(__DIR__.'/../../vendor/composer/ClassLoader.php'));
- 
--        $this->addFile($phar, new \SplFileInfo(__DIR__ . '/../../res/cacert.pem'), false);
-+        $this->addFile($phar, new \SplFileInfo((getenv('BUILDROOT')?:'') . '/usr/share/composer/res/cacert.pem'), false);
- 
-         $this->addComposerBin($phar);
- 
 diff -up ./src/Composer/Json/JsonFile.php.rpm ./src/Composer/Json/JsonFile.php
---- ./src/Composer/Json/JsonFile.php.rpm	2016-04-18 22:14:28.000000000 +0200
-+++ ./src/Composer/Json/JsonFile.php	2016-04-19 07:15:05.421424090 +0200
+--- ./src/Composer/Json/JsonFile.php.rpm	2016-04-29 18:32:14.000000000 +0200
++++ ./src/Composer/Json/JsonFile.php	2016-04-30 10:07:31.836289961 +0200
 @@ -156,7 +156,7 @@ class JsonFile
              self::validateSyntax($content, $this->path);
          }
@@ -55,21 +46,9 @@ diff -up ./src/Composer/Json/JsonFile.php.rpm ./src/Composer/Json/JsonFile.php
          $schemaData = json_decode(file_get_contents($schemaFile));
  
          if ($schema === self::LAX_SCHEMA) {
-diff -up ./src/Composer/Util/RemoteFilesystem.php.rpm ./src/Composer/Util/RemoteFilesystem.php
---- ./src/Composer/Util/RemoteFilesystem.php.rpm	2016-04-18 22:14:28.000000000 +0200
-+++ ./src/Composer/Util/RemoteFilesystem.php	2016-04-19 07:15:05.421424090 +0200
-@@ -925,7 +925,7 @@ class RemoteFilesystem
-             }
-         }
- 
--        return $caPath = __DIR__.'/../../../res/cacert.pem'; // Bundled with Composer, last resort
-+        return $caPath = (getenv('BUILDROOT')?:'') . '/usr/share/composer/res/cacert.pem'; // Bundled with Composer, last resort
-     }
- 
-     /**
 diff -up ./tests/Composer/Test/Json/ComposerSchemaTest.php.rpm ./tests/Composer/Test/Json/ComposerSchemaTest.php
---- ./tests/Composer/Test/Json/ComposerSchemaTest.php.rpm	2016-04-19 07:15:19.122479957 +0200
-+++ ./tests/Composer/Test/Json/ComposerSchemaTest.php	2016-04-19 07:15:45.229586410 +0200
+--- ./tests/Composer/Test/Json/ComposerSchemaTest.php.rpm	2016-04-29 18:32:14.000000000 +0200
++++ ./tests/Composer/Test/Json/ComposerSchemaTest.php	2016-04-30 10:07:31.836289961 +0200
 @@ -87,7 +87,7 @@ class ComposerSchemaTest extends \PHPUni
  
      private function check($json)
