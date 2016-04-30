@@ -46,7 +46,7 @@ BuildRequires:  %{_sysconfdir}/pki/tls/certs/ca-bundle.crt
 # From composer.json, "require": {
 #        "php": "^5.3.2 || ^7.0"
 Requires:       php(language) >= 5.3.2
-# From phpcompatinfo report for version 1.0.0 (SpdxLicenses.php only)
+# From phpcompatinfo report for version 1.0.2
 Requires:       php-openssl
 Requires:       php-pcre
 # Autoloader
