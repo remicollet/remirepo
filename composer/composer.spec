@@ -58,9 +58,6 @@ BuildRequires:  php-seld-cli-prompt >= 1.0.0-3
 BuildRequires:  php-PsrLog          >= 1.0.0-8
 %endif
 
-# ca-certificates
-Requires:       %{_sysconfdir}/pki/tls/certs/ca-bundle.crt
-
 # From composer.json, "require": {
 #        "php": "^5.3.2 || ^7.0",
 #        "justinrainbow/json-schema": "^1.6",
@@ -248,6 +245,7 @@ rm -rf %{buildroot}
 - add dependency on composer/ca-bundle
 - add dependency on psr/log
 - bump composer-plugin-api to 1.1.0
+- drop dependency on ca-certificates
 
 * Sat Apr 30 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - update to 1.0.3
