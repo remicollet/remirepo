@@ -6,18 +6,17 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    07b940c68382cbfbf3a42e1de307ef6b53d5d515
+%global gh_commit    859a0170de120c66b042e6c0dbc1a9979c74669b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     owncloud
 %global gh_project   TarStreamer
 %global with_tests   0%{!?_without_tests:1}
 %global ns_vendor    ownCloud
 %global ns_project   TarStreamer
-%global prever       beta3
 
 Name:           php-owncloud-tarstreamer
-Version:        0.1
-Release:        0.1.%{prever}%{?dist}
+Version:        0.1.0
+Release:        1%{?dist}
 Summary:        Streaming dynamic tar files
 
 Group:          Development/Libraries
@@ -34,6 +33,7 @@ BuildRequires:  php-date
 BuildRequires:  php-spl
 BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php-pear(Archive_Tar)
+BuildRequires:  php-pecl(Xdebug)
 %endif
 
 # From composer.json
@@ -104,5 +104,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May  2 2016 Remi Collet <remi@fedoraproject.org> - 0.1.0-1
+- update to 0.1.0
+
 * Fri Jan  8 2016 Remi Collet <remi@fedoraproject.org> - 0.1-0.1.beta3
 - initial package
