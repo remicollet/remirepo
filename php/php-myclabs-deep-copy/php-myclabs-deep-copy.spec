@@ -1,4 +1,4 @@
-# remirepo spec/Fedora file for php-myclabs-deep-copy
+# remirepo/fedora spec file for php-myclabs-deep-copy
 #
 # Copyright (c) 2015-2016 Remi Collet
 # License: CC-BY-SA
