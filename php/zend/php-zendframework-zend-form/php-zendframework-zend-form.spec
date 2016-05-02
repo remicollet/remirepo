@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    59c483b06dd1f281a1f2f961e81107bd282a07f7
+%global gh_commit    0e8cce481470443b716a155e5f6bf40242d30635
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-form
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.8.1
+Version:        2.8.2
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -47,6 +47,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 #        "zendframework/zend-cache": "^2.6.1",
 #        "zendframework/zend-captcha": "^2.5.4",
 #        "zendframework/zend-code": "^2.6",
+#        "zendframework/zend-escaper": "^2.5",
 #        "zendframework/zend-eventmanager": "^2.6.2 || ^3.0",
 #        "zendframework/zend-filter": "^2.6",
 #        "zendframework/zend-i18n": "^2.6",
@@ -57,11 +58,12 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 #        "zendframework/zend-view": "^2.6.2",
 #        "zendframework/zendservice-recaptcha": "*",
 #        "fabpot/php-cs-fixer": "1.7.*",
-#        "phpunit/PHPUnit": "~4.0"
+#        "phpunit/PHPUnit": "~4.8"
 BuildRequires:  php-composer(doctrine/annotations)              >= 1.0
 BuildRequires:  php-composer(%{gh_owner}/zend-cache)            >= 2.6.1
 BuildRequires:  php-composer(%{gh_owner}/zend-captcha)          >= 2.5.4
 BuildRequires:  php-composer(%{gh_owner}/zend-code)             >= 2.6
+BuildRequires:  php-composer(%{gh_owner}/zend-escaper)          >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6.2
 BuildRequires:  php-composer(%{gh_owner}/zend-filter)           >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-i18n)             >= 2.6
@@ -70,12 +72,13 @@ BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.6.2
 BuildRequires:  php-composer(%{gh_owner}/zend-text)             >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-view)             >= 2.6.2
-BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
+BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.8
 # Missing
-BuildRequires:  php-composer(%{gh_owner}/zend-escaper)          >= 2.5
 BuildRequires:  php-composer(ircmaxell/random-lib)
 # Autoloader
-BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
+#BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
+# For dependencies autoloader
+BuildRequires:  php-zendframework-zend-loader                   >= 2.5.1-3
 %endif
 
 # From composer, "require": {
@@ -145,12 +148,17 @@ rm -rf %{buildroot}
 mkdir -p   %{buildroot}%{php_home}/Zend/
 cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 
+cp -p autoload/formElementManagerPolyfill.php \
+      %{buildroot}%{php_home}/Zend/%{library}-autoload.php
+
 
 %check
 %if %{with_tests}
 mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
+define('RPM_BUILDROOT', '%{buildroot}%{php_home}/Zend');
+
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
 Zend\Loader\AutoloaderFactory::factory(array(
     'Zend\Loader\StandardAutoloader' => array(
@@ -183,9 +191,14 @@ rm -rf %{buildroot}
 %doc CONTRIBUTING.md README.md
 %doc composer.json
 %{php_home}/Zend/%{library}
+%{php_home}/Zend/%{library}-autoload.php
 
 
 %changelog
+* Mon May  2 2016 Remi Collet <remi@fedoraproject.org> - 2.8.2-1
+- update to 2.8.2
+- raise dependency on zend-loader >= 2.5.1-3
+
 * Sun May  1 2016 Remi Collet <remi@fedoraproject.org> - 2.8.1-1
 - update to 2.8.1
 
