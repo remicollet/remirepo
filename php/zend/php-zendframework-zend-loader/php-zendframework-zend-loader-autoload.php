@@ -13,3 +13,15 @@ Zend\Loader\AutoloaderFactory::factory(array(
         'autoregister_zf' => true
      )
 ));
+
+// Dependencies during build
+if (defined('RPM_BUILDROOT')) {
+    foreach(glob(RPM_BUILDROOT . '/*-autoload.php') as $dep) {
+        require_once $dep;
+    }
+}
+// Dependencies outside Zend namespace
+foreach(glob(__DIR__ . '/*-autoload.php') as $dep) {
+    require_once $dep;
+}
+

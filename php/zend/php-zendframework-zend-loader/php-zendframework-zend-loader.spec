@@ -16,7 +16,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.5.1
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -96,5 +96,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon May  2 2016 Remi Collet <remi@fedoraproject.org> - 2.5.1-3
+- load dependencies out of Zend namespaces
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
 - initial package
