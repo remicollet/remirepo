@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    e3abefcd7f106677fd352cd7c187d6c969aa9ddc
+%global gh_commit    a8773992b362b58498eed24bf85005f363c34771
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     myclabs
 %global gh_project   DeepCopy
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-myclabs-deep-copy
-Version:        1.5.0
+Version:        1.5.1
 Release:        1%{?dist}
 Summary:        Create deep copies (clones) of your objects
 
@@ -86,6 +86,11 @@ EOF
 
 %{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
 %{_bindir}/phpunit --verbose
+
+if which php70; then
+  php70 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+  %{_bindir}/phpunit --verbose
+fi
 %else
 : Test suite disabled
 %endif
@@ -105,6 +110,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon May  2 2016 Remi Collet <remi@fedoraproject.org> - 1.5.1-1
+- update to 1.5.1
+- run test suite with both PHP 5 and 7 when available
+
 * Sun Nov  8 2015 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
 - update to 1.5.0
 
