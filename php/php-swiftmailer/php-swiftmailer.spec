@@ -6,7 +6,7 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    0697e6aa65c83edf97bb0f23d8763f94e3f11421
+%global gh_commit    d8db871a54619458a805229a057ea2af33c753e8
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     swiftmailer
 %global gh_project   swiftmailer
@@ -14,18 +14,14 @@
 %global php_home     %{_datadir}/php
 
 Name:           php-%{gh_project}
-Version:        5.4.1
-Release:        2%{?dist}
+Version:        5.4.2
+Release:        1%{?dist}
 Summary:        Free Feature-rich PHP Mailer
 
 Group:          Development/Libraries
 License:        MIT
 URL:            http://www.swiftmailer.org/
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
-
-# Upstream patches
-# Fix test bootstrap and disable gc to avoid segfault
-Patch0:         %{gh_project}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -76,8 +72,6 @@ Autoloader: %{php_home}/Swift/swift_required.php
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
-
-%patch0 -p1
 
 # Install using the same layout than the old PEAR package
 mv lib/swift_required_pear.php lib/swift_required.php
@@ -154,6 +148,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon May  2 2016 Remi Collet <remi@fedoraproject.org> - 5.4.2-1
+- update to 5.4.2
+
 * Fri Mar 25 2016 Remi Collet <remi@fedoraproject.org> - 5.4.1-2
 - rebuild for remi repository
 
