@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        6.9.3
-%global Patchlevel 8
+%global Patchlevel 9
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -131,9 +131,8 @@ one.
 ImageMagick-last includes the command line programs for creating animated or
 transparent .gifs, creating composite images, creating thumbnail images,
 and more.
-
 %if "%{name}" != "%{libname}"
-ImageMagick-last conflicts with ImageMagick official RPM and so can not
+%{name} conflicts with ImageMagick official RPM and so can not
 be installed together.
 %endif
 
@@ -166,8 +165,9 @@ Requires: openjpeg2-devel%{?_isa}
 Requires: jasper-devel%{?_isa}
 Requires: pkgconfig
 %if "%{name}" != "%{libname}"
-Provides: %{libname}-devel         = %{version}-%{release}
-Provides: %{libname}-devel%{?_isa} = %{version}-%{release}
+Conflicts: %{libname}-devel         < %{version}
+Provides:  %{libname}-devel         = %{version}-%{release}
+Provides:  %{libname}-devel%{?_isa} = %{version}-%{release}
 %endif
 
 %description devel
@@ -187,11 +187,11 @@ Group: Applications/Multimedia
 Obsoletes: ImageMagick2
 
 %description libs
-Provides the shared libraries and plugins of ImageMagick-last.
-
+Provides the shared libraries and plugins of %{name}.
+%if "%{name}" != "%{libname}"
 This package could be installed beside official RPM of ImageMagick
 for applications requiring this libraries.
-
+%endif
 
 
 %if %{with_djvu}
@@ -203,6 +203,10 @@ Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 %description djvu
 This packages contains a plugin for ImageMagick which makes it possible to
 save and load DjvU files from ImageMagick and libMagickCore using applications.
+%if "%{name}" != "%{libname}"
+This package could be installed beside official RPM of ImageMagick-djvu
+for applications requiring this libraries.
+%endif
 %endif
 
 
@@ -225,6 +229,11 @@ Summary: ImageMagick perl bindings
 Group: System Environment/Libraries
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+%if "%{name}" != "%{libname}"
+Conflicts: %{libname}-perl         < %{version}
+Provides:  %{libname}-perl         = %{version}-%{release}
+Provides:  %{libname}-perl%{?_isa} = %{version}-%{release}
+%endif
 
 %description perl
 Perl bindings to ImageMagick.
@@ -243,6 +252,10 @@ This package contains the Magick++ library, a C++ binding to the ImageMagick
 graphics manipulation library.
 
 Install ImageMagick-c++ if you want to use any applications that use Magick++.
+%if "%{name}" != "%{libname}"
+This package could be installed beside official RPM of ImageMagick-c++
+for applications requiring this libraries.
+%endif
 
 
 %package c++-devel
@@ -250,7 +263,11 @@ Summary: C++ bindings for the ImageMagick library
 Group: Development/Libraries
 Requires: %{name}-c++%{?_isa} = %{version}-%{release}
 Requires: %{name}-devel%{?_isa} = %{version}-%{release}
-Provides: ImageMagick-c++-devel = %{version}-%{release}
+%if "%{name}" != "%{libname}"
+Conflicts: %{libname}-c++-devel         < %{version}
+Provides:  %{libname}-c++-devel         = %{version}-%{release}
+Provides:  %{libname}-c++-devel%{?_isa} = %{version}-%{release}
+%endif
 
 %description c++-devel
 ImageMagick-devel contains the static libraries and header files you'll
@@ -492,6 +509,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon May  2 2016 Remi Collet <remi@remirepo.net> - 6.9.3.9-1
+- update to version 6.9.3 patchlevel 9
+
 * Tue Apr 12 2016 Remi Collet <remi@remirepo.net> - 6.9.3.8-1
 - update to version 6.9.3 patchlevel 8
 
