@@ -9,7 +9,7 @@
 #
 Name:           owncloud
 Version:        8.2.3
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
 
@@ -76,10 +76,56 @@ BuildArch:      noarch
 
 # expand pear macros on install
 BuildRequires:  php-pear
-# For sanity check
-BuildRequires:  php-cli
-BuildRequires:  php-composer(icewind/smb)     >= 1.0.4
-BuildRequires:  php-composer(icewind/streams) >= 0.2
+
+# For sanity %check
+BuildRequires:       php-cli
+BuildRequires:       php-composer(sabre/dav)  >= 2.1.9
+BuildRequires:       php-composer(sabre/dav)  < 2.2
+BuildRequires:       php-composer(doctrine/dbal) >= 2.5.1
+BuildRequires:       php-composer(doctrine/dbal) < 2.6
+BuildRequires:       php-composer(mcnetic/zipstreamer) >= 0.7
+BuildRequires:       php-composer(phpseclib/phpseclib) >= 2.0
+BuildRequires:       php-composer(phpseclib/phpseclib) < 3.0
+BuildRequires:       php-opencloud >= 1.9.2
+BuildRequires:       php-composer(james-heinrich/getid3) >= 1.9.12
+BuildRequires:       php-composer(jeremeamia/superclosure) >= 2.0
+BuildRequires:       php-composer(ircmaxell/random-lib) >= 1.1
+BuildRequires:       php-composer(ircmaxell/random-lib) < 2.0
+BuildRequires:       php-composer(bantu/ini-get-wrapper) >= 1.0.1
+BuildRequires:       php-composer(natxet/CssMin) >= 3.0.4
+BuildRequires:       php-composer(punic/punic) >= 1.1.0
+BuildRequires:       php-composer(pear/archive_tar) >= 1.4
+BuildRequires:       php-composer(pear/archive_tar) < 2.0
+BuildRequires:       php-composer(patchwork/utf8) >= 1.1
+BuildRequires:       php-composer(patchwork/utf8) < 2.0
+BuildRequires:       php-composer(symfony/console) >= 2.6.4
+BuildRequires:       php-composer(symfony/event-dispatcher) >= 2.6.4
+BuildRequires:       php-composer(symfony/routing) >= 2.6.4
+BuildRequires:       php-composer(symfony/process) >= 2.6.4
+BuildRequires:       php-composer(pimple/pimple) >= 3.0
+BuildRequires:       php-composer(pimple/pimple) < 4.0
+BuildRequires:       php-composer(ircmaxell/password-compat) >= 1.0.0
+BuildRequires:       php-composer(nikic/php-parser) >= 1.0
+BuildRequires:       php-composer(nikic/php-parser) < 2.0
+BuildRequires:       php-composer(icewind/streams) >= 0.2
+BuildRequires:       php-composer(swiftmailer/swiftmailer) >= 5.4.1
+BuildRequires:       php-composer(guzzlehttp/guzzle) >= 5.0
+BuildRequires:       php-composer(guzzlehttp/guzzle) < 6.0
+BuildRequires:       php-composer(league/flysystem) >= 1.0.4
+BuildRequires:       php-composer(interfasys/lognormalizer) >= 1.0
+BuildRequires:       php-composer(owncloud/tarstreamer) >= 0.1
+BuildRequires:       php-composer(patchwork/jsqueeze) >= 2.0
+BuildRequires:       php-composer(patchwork/jsqueeze) < 3.0
+BuildRequires:       php-composer(kriswallsmith/assetic) >= 1.3.2-3
+BuildRequires:       php-composer(kriswallsmith/assetic) < 2.0
+BuildRequires:       php-composer(icewind/smb)     >= 1.0.4
+BuildRequires:       php-pecl(smbclient) >= 0.8.0
+BuildRequires:       php-google-apiclient >= 1.0.3
+BuildRequires:       php-aws-sdk >= 2.7.0
+BuildRequires:       php-composer(symfony/yaml) >= 2.6.0
+BuildRequires:       php-composer(symfony/yaml) < 3.0.0
+BuildRequires:       php-pear(pear.dropbox-php.com/Dropbox)
+
 
 Requires:       %{name}-webserver = %{version}-%{release}
 Requires:       %{name}-database = %{version}-%{release}
@@ -475,7 +521,7 @@ if grep -r 3rdparty %{buildroot}%{_datadir}/%{name}/apps/files_external \
    false Patch needs to be adapted
 fi
 
-#php %{buildroot}%{_datadir}/%{name}/apps/files_external/3rdparty/autoload.php
+php %{buildroot}%{_datadir}/%{name}/apps/files_external/3rdparty/autoload.php
 
 # gallery checks
 nb=$(ls %{buildroot}%{_datadir}/%{name}/apps/gallery/vendor | wc -l)
@@ -483,7 +529,7 @@ if [ $nb -gt 1  ]; then
   false apps/gallery/vendor must only have autoload.php
 fi
 
-#php %{buildroot}%{_datadir}/%{name}/apps/gallery/vendor/autoload.php
+php %{buildroot}%{_datadir}/%{name}/apps/gallery/vendor/autoload.php
 
 # core checks
 nb=$(ls %{buildroot}%{_datadir}/%{name}/3rdparty | wc -l)
@@ -491,7 +537,7 @@ if [ $nb -gt 1  ]; then
   false core 3rdparty must only have autoload.php
 fi
 
-#php %{buildroot}%{_datadir}/%{name}/3rdparty/autoload.php
+php %{buildroot}%{_datadir}/%{name}/3rdparty/autoload.php
 
 
 %build
@@ -639,6 +685,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Apr 28 2016 James Hogarth <james.hogarth@gmail.com> - 8.2.3-6
+- Enable the sanity check of the autoloaders
+
 * Tue Apr 12 2016 James Hogarth <james.hogarth@gmail.com> - 8.2.3-5
 - Add autoloader based external libraries for core and gallery
 - Add checks to catch future added dependencies
