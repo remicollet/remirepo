@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    96f441f53c4de10f1154b386c925f51b08bf2fa6
+%global gh_commit    b945cbe4e8f96b639d82c4d1e2cae4ef3ab6fce5
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     solariumphp
 %global gh_project   solarium
@@ -14,7 +14,7 @@
 
 Name:           php-%{gh_project}
 Summary:        Solarium PHP Solr client library
-Version:        3.5.1
+Version:        3.6.0
 Release:        1%{?dist}
 
 URL:            http://www.solarium-project.org/
@@ -28,15 +28,22 @@ BuildArch:      noarch
 %if %{with_tests}
 # For tests
 BuildRequires:  php(language) >= 5.3.2
-BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
 BuildRequires:  php-composer(symfony/event-dispatcher) > 2.3
 BuildRequires:  php-composer(symfony/class-loader)
+# From composer.json, "require-dev": {
+#        "phpunit/phpunit": "~3.7",
+#        "squizlabs/php_codesniffer": "~1.4",
+#        "zendframework/zendframework1": "~1.12",
+#        "satooshi/php-coveralls": "~1.0"
+BuildRequires:  php-composer(phpunit/phpunit) >= 3.7
 %endif
 
-# From composer.json
+# From composer.json, "require": {
+#        "php": ">=5.3.2",
+#        "symfony/event-dispatcher": "~2.3|~3.0"
 Requires:       php(language) >= 5.3.2
 Requires:       php-composer(symfony/event-dispatcher) > 2.3
-Requires:       php-composer(symfony/event-dispatcher) < 3
+Requires:       php-composer(symfony/event-dispatcher) < 4
 # From phpcompatinfo report for version 3.4.1
 Requires:       php-curl
 Requires:       php-date
@@ -104,6 +111,10 @@ fi
 
 
 %changelog
+* Tue May  3 2016 Remi Collet <remi@fedoraproject.org> - 3.6.0-1
+- update to 3.6.0
+- allow symfony 3
+
 * Sat Dec 26 2015 Remi Collet <remi@fedoraproject.org> - 3.5.1-1
 - update to 3.5.1
 
