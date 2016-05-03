@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-patchwork-utf8
 #
-# Copyright (c) 2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2015-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,8 +12,8 @@
 
 %global github_owner     tchwork
 %global github_name      utf8
-%global github_version   1.2.5
-%global github_commit    25a55c6c668de61cc3b97aab4237ebf6dadabe17
+%global github_version   1.2.6
+%global github_commit    f986d18f4e37ab70b792e977c7d85970cf84f164
 
 %global composer_vendor  patchwork
 %global composer_project utf8
@@ -44,6 +44,11 @@ URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
 Source1:       %{name}-get-source.sh
 
+# fix for php 5.5.35/5.6.21/7.0.6
+# https://github.com/tchwork/utf8/pull/59
+# NOTE: Upstream patch modified for version 1.2
+Patch0:        %{name}-pr59-modified-for-1-2.patch
+
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Relative paths
@@ -57,7 +62,7 @@ BuildRequires: php-iconv
 BuildRequires: php-intl
 BuildRequires: php-mbstring
 BuildRequires: php-pcre
-## phpcompatinfo (computed from version 1.2.5)
+## phpcompatinfo (computed from version 1.2.6)
 BuildRequires: php-reflection
 BuildRequires: php-date
 BuildRequires: php-exif
@@ -76,7 +81,7 @@ Requires:      php-pcre
 Requires:      php-iconv
 Requires:      php-intl
 Requires:      php-mbstring
-# phpcompatinfo (computed from version 1.2.5)
+# phpcompatinfo (computed from version 1.2.6)
 #Requires:      php-exif
 Requires:      php-filter
 Requires:      php-json
@@ -94,6 +99,9 @@ Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
+
+: fix for php 5.5.35/5.6.21/7.0.6
+%patch0 -p 1
 
 : Create autoloader
 cat <<'AUTOLOAD' | tee src/Patchwork/autoload.php
@@ -157,6 +165,10 @@ ln -s \
 %check
 %if %{with_tests}
 %{_bindir}/phpunit --verbose --bootstrap %{buildroot}%{phpdir}/Patchwork/autoload.php
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose --bootstrap %{buildroot}%{phpdir}/Patchwork/autoload.php
+fi
 %else
 : Tests skipped
 %endif
@@ -180,6 +192,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue May 03 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.6-1
+- Updated to 1.2.6
+- Added patch "fix for php 5.5.35/5.6.21/7.0.6"
+
 * Thu Oct 15 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.5-1
 - Updated to 1.2.5 (RHBZ #1271631)
 - Exclude Patchwork/Utf8/Compiler.php
