@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # See https://github.com/llaville/php-compatinfo-db/releases
-%global gh_commit    87b1cf01ed68ddfe3b868e66dca6402d498e402c
+%global gh_commit    049c337c7a18c16b0e0e0b79a4f215efd908d5ae
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20151031
 %global gh_owner     llaville
@@ -23,7 +23,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{c_vendor}-%{c_project}
-Version:        1.8.0
+Version:        1.8.1
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Reference Database to be used with php-compatinfo library
@@ -149,9 +149,6 @@ if [ -n "$OPT" ]; then
 fi
 grep " LATEST" src/Bartlett/CompatInfoDb/ExtensionFactory.php
 
-: Fix Imagick methods - https://github.com/llaville/php-compatinfo-db/issues/4
-sed -e '/php_max/s/,//;/optional/d' -i data/references/Imagick.methods.json
-
 : Fix references database
 %{_bindir}/php -d date.timezone=Europe/Paris data/handleDB.php db:release:php
 
@@ -187,6 +184,9 @@ export BARTLETT_COMPATINFO_DB=%{buildroot}%{_datadir}/%{name}/compatinfo.sqlite
 
 
 %changelog
+* Tue May  3 2016 Remi Collet <remi@fedoraproject.org> - 1.8.1-1
+- update to 1.8.1
+
 * Tue May  3 2016 Remi Collet <remi@fedoraproject.org> - 1.8.0-1
 - update to 1.8.0
 - fix broken imagick references
