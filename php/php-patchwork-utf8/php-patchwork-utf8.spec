@@ -186,7 +186,6 @@ rm -rf %{buildroot}
 %doc composer.json
 %{phpdir}/Patchwork
 %exclude %{phpdir}/Patchwork/Utf8/Compiler.php
-%exclude %{phpdir}/Patchwork/Utf8/WindowsStreamWrapper.php
 %exclude %{phpdir}/Patchwork/Utf8/unicode-data.tbz2
 %{_datadir}/%{name}
 
