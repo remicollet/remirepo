@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #205 pq version 1.0.0 ] {
+Extension [ <persistent> extension #204 pq version 1.0.1 ] {
 
   - Dependencies {
     Dependency [ raphf (Required) ]

@@ -12,9 +12,8 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package       php-pecl-pq
 %endif
-
-%{?scl:          %scl_package        php-pecl-pq}
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  pq
@@ -36,11 +35,11 @@
 
 Summary:        PostgreSQL client library (libpq) binding
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.0.0
+Version:        1.0.1
 %if 0%{?rcver:1}
 Release:        0.1.%{rcver}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 License:        BSD
 Group:          Development/Languages
@@ -68,8 +67,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -289,6 +290,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May  4 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- update to 1.0.1 (php 5, stable)
+
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-3
 - adapt for F24
 
