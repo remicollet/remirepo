@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    0e8cce481470443b716a155e5f6bf40242d30635
+%global gh_commit    140f82ea93180a083fe46edba17d1860ff58308e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-form
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.8.2
+Version:        2.8.3
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -195,6 +195,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May  4 2016 Remi Collet <remi@fedoraproject.org> - 2.8.3-1
+- update to 2.8.3
+
 * Mon May  2 2016 Remi Collet <remi@fedoraproject.org> - 2.8.2-1
 - update to 2.8.2
 - raise dependency on zend-loader >= 2.5.1-3
