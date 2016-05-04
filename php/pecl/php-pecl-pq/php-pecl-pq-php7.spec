@@ -8,9 +8,8 @@
 #
 %if 0%{?scl:1}
 %global sub_prefix %{scl_prefix}
+%scl_package       php-pecl-pq
 %endif
-
-%{?scl:          %scl_package        php-pecl-pq}
 
 %global gh_commit  e381164032a750583657e449875f62d52b7b6609
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
@@ -37,12 +36,12 @@
 
 Summary:        PostgreSQL client library (libpq) binding
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        2.0.0
+Version:        2.0.1
 %if 0%{?gh_date:1}
 Release:        0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:        BSD
@@ -70,8 +69,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -292,6 +293,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May  4 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- update to 2.0.1 (php 7, stable)
+
 * Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
 - adapt for F24
 
