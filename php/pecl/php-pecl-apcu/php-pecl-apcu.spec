@@ -39,7 +39,7 @@ Version:        4.0.11
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 Source1:        %{pecl_name}.ini
@@ -68,11 +68,7 @@ Provides:       %{?scl_prefix}php-pecl(apcu)%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl-apcu         = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-apcu%{?_isa} = %{version}-%{release}
 %endif
-%if "%{php_version}" < "5.5"
-Conflicts:      %{?scl_prefix}php-pecl-apc < 4
-%else
 Obsoletes:      %{?scl_prefix}php-pecl-apc < 4
-%endif
 
 # Same provides than APC, this is a drop in replacement
 Provides:       %{?scl_prefix}php-apc = %{version}
@@ -133,11 +129,7 @@ Summary:       APCu developer files (header)
 Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 Requires:      %{?scl_prefix}php-devel%{?_isa}
-%if "%{php_version}" < "5.5"
-Conflicts:     %{?scl_prefix}php-pecl-apc-devel < 4
-%else
 Obsoletes:     %{?scl_prefix}php-pecl-apc-devel < 4
-%endif
 Provides:      %{?scl_prefix}php-pecl-apc-devel = %{version}-%{release}
 Provides:      %{?scl_prefix}php-pecl-apc-devel%{?_isa} = %{version}-%{release}
 
@@ -156,11 +148,7 @@ Requires:      %{name} = %{version}-%{release}
 Requires:      mod_php
 Requires:      php-gd
 Requires:      httpd
-%if "%{php_version}" < "5.5"
-Conflicts:     apc-panel < 4
-%else
 Obsoletes:     apc-panel < 4
-%endif
 Provides:      apc-panel = %{version}-%{release}
 
 %description -n apcu-panel
@@ -344,6 +332,9 @@ fi
 
 
 %changelog
+* Wed May  4 2016 Remi Collet <remi@fedoraproject.org> - 4.0.11-2
+- always obsoletes apc
+
 * Wed Apr 20 2016 Remi Collet <remi@fedoraproject.org> - 4.0.11-1
 - Update to 4.0.11 (stable)
 
