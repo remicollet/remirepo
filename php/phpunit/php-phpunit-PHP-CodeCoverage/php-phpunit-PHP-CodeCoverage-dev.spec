@@ -18,7 +18,7 @@
 %global pear_channel pear.phpunit.de
 %global major        3.3
 %global minor        1
-%global specrel      1
+%global specrel      2
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 %else
@@ -34,6 +34,9 @@ Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+
+# Fix for environment 1.3.6
+Patch0:         %{name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -95,6 +98,8 @@ for PHP code coverage information.
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+
+%patch0 -p1
 
 
 %build
@@ -166,6 +171,10 @@ fi
 
 
 %changelog
+* Wed May  4 2016 Remi Collet <remi@fedoraproject.org> - 3.3.1-2
+- add upstream patch for environment 1.3.6
+  https://github.com/sebastianbergmann/php-code-coverage/pull/435
+
 * Fri Apr  8 2016 Remi Collet <remi@fedoraproject.org> - 3.3.1-1
 - Update to 3.3.1
 
