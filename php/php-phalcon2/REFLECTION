@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
+Extension [ <persistent> extension #204 phalcon version 2.0.11 ] {
 
   - INI {
     Entry [ phalcon.db.escape_identifiers <ALL> ]
@@ -39,7 +39,7 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
     }
   }
 
-  - Classes [359] {
+  - Classes [360] {
     Interface [ <internal:phalcon> interface Phalcon\Di\InjectionAwareInterface ] {
 
       - Constants [0] {
@@ -1139,6 +1139,33 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
       }
     }
 
+    Interface [ <internal:phalcon> interface Phalcon\Logger\FormatterInterface ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:phalcon> abstract public method format ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $message ]
+            Parameter #1 [ <required> $type ]
+            Parameter #2 [ <required> $timestamp ]
+            Parameter #3 [ <optional> $context ]
+          }
+        }
+      }
+    }
+
     Interface [ <internal:phalcon> interface Phalcon\Db\AdapterInterface ] {
 
       - Constants [0] {
@@ -1685,33 +1712,6 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
           - Parameters [2] {
             Parameter #0 [ <required> $message ]
             Parameter #1 [ <optional> array or NULL $context ]
-          }
-        }
-      }
-    }
-
-    Interface [ <internal:phalcon> interface Phalcon\Logger\FormatterInterface ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [1] {
-        Method [ <internal:phalcon> abstract public method format ] {
-
-          - Parameters [4] {
-            Parameter #0 [ <required> $message ]
-            Parameter #1 [ <required> $type ]
-            Parameter #2 [ <required> $timestamp ]
-            Parameter #3 [ <optional> $context ]
           }
         }
       }
@@ -9055,7 +9055,7 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
       }
     }
 
-    Class [ <internal:phalcon> abstract class Phalcon\Logger\Formatter ] {
+    Class [ <internal:phalcon> abstract class Phalcon\Logger\Formatter implements Phalcon\Logger\FormatterInterface ] {
 
       - Constants [0] {
       }
@@ -9069,7 +9069,7 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
       - Properties [0] {
       }
 
-      - Methods [2] {
+      - Methods [3] {
         Method [ <internal:phalcon> public method getTypeString ] {
 
           - Parameters [1] {
@@ -9082,6 +9082,16 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
           - Parameters [2] {
             Parameter #0 [ <required> $message ]
             Parameter #1 [ <optional> $context ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Logger\FormatterInterface> abstract public method format ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $message ]
+            Parameter #1 [ <required> $type ]
+            Parameter #2 [ <required> $timestamp ]
+            Parameter #3 [ <optional> $context ]
           }
         }
       }
@@ -16243,6 +16253,14 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
           }
         }
 
+        Method [ <internal:phalcon, overwrites Phalcon\Db\Adapter, prototype Phalcon\Db\AdapterInterface> public method describeReferences ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $table ]
+            Parameter #1 [ <optional> $schema ]
+          }
+        }
+
         Method [ <internal:phalcon, inherits Phalcon\Db\Adapter\Pdo, prototype Phalcon\Db\AdapterInterface, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -16640,14 +16658,6 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
 
           - Parameters [1] {
             Parameter #0 [ <optional> $schemaName ]
-          }
-        }
-
-        Method [ <internal:phalcon, inherits Phalcon\Db\Adapter, prototype Phalcon\Db\AdapterInterface> public method describeReferences ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $table ]
-            Parameter #1 [ <optional> $schema ]
           }
         }
 
@@ -27901,7 +27911,7 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
         Method [ <internal:phalcon> public method labelsEnabled ] {
         }
 
-        Method [ <internal:phalcon, prototype Phalcon\Logger\FormatterInterface> public method format ] {
+        Method [ <internal:phalcon, overwrites Phalcon\Logger\FormatterInterface, prototype Phalcon\Logger\FormatterInterface> public method format ] {
 
           - Parameters [4] {
             Parameter #0 [ <required> $message ]
@@ -27936,7 +27946,7 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
       }
 
       - Methods [3] {
-        Method [ <internal:phalcon, prototype Phalcon\Logger\FormatterInterface> public method format ] {
+        Method [ <internal:phalcon, overwrites Phalcon\Logger\FormatterInterface, prototype Phalcon\Logger\FormatterInterface> public method format ] {
 
           - Parameters [4] {
             Parameter #0 [ <required> $message ]
@@ -28008,7 +28018,7 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
           }
         }
 
-        Method [ <internal:phalcon, prototype Phalcon\Logger\FormatterInterface> public method format ] {
+        Method [ <internal:phalcon, overwrites Phalcon\Logger\FormatterInterface, prototype Phalcon\Logger\FormatterInterface> public method format ] {
 
           - Parameters [4] {
             Parameter #0 [ <required> $message ]
@@ -28050,7 +28060,7 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
       }
 
       - Methods [3] {
-        Method [ <internal:phalcon, prototype Phalcon\Logger\FormatterInterface> public method format ] {
+        Method [ <internal:phalcon, overwrites Phalcon\Logger\FormatterInterface, prototype Phalcon\Logger\FormatterInterface> public method format ] {
 
           - Parameters [4] {
             Parameter #0 [ <required> $message ]
@@ -28131,16 +28141,20 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
       - Static methods [0] {
       }
 
-      - Properties [2] {
+      - Properties [3] {
         Property [ <default> protected $_loggers ]
         Property [ <default> protected $_formatter ]
+        Property [ <default> protected $_logLevel ]
       }
 
-      - Methods [13] {
+      - Methods [15] {
         Method [ <internal:phalcon> public method getLoggers ] {
         }
 
         Method [ <internal:phalcon> public method getFormatter ] {
+        }
+
+        Method [ <internal:phalcon> public method getLogLevel ] {
         }
 
         Method [ <internal:phalcon> public method push ] {
@@ -28154,6 +28168,13 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> Phalcon\Logger\FormatterInterface $formatter ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method setLogLevel ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $level ]
           }
         }
 
@@ -28931,7 +28952,7 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
         Property [ <default> protected $_behaviors ]
       }
 
-      - Methods [16] {
+      - Methods [17] {
         Method [ <internal:phalcon, prototype Phalcon\Di\InjectionAwareInterface> public method setDI ] {
 
           - Parameters [1] {
@@ -28989,6 +29010,13 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
           - Parameters [2] {
             Parameter #0 [ <required> Phalcon\Mvc\CollectionInterface $model ]
             Parameter #1 [ <required> $connectionService ]
+          }
+        }
+
+        Method [ <internal:phalcon> public method getConnectionService ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> Phalcon\Mvc\CollectionInterface $model ]
           }
         }
 
@@ -30017,7 +30045,7 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
         Property [ <default> protected $_snapshot ]
       }
 
-      - Methods [75] {
+      - Methods [77] {
         Method [ <internal:phalcon, ctor> final public method __construct ] {
 
           - Parameters [2] {
@@ -30443,6 +30471,21 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
           - Parameters [2] {
             Parameter #0 [ <required> $property ]
             Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:phalcon> final protected method _possibleSetter ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $property ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:phalcon> final protected method _isVisible ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $property ]
           }
         }
 
@@ -35789,7 +35832,7 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
       - Static methods [0] {
       }
 
-      - Properties [24] {
+      - Properties [23] {
         Property [ <default> protected $_dependencyInjector ]
         Property [ <default> protected $_eventsManager ]
         Property [ <default> protected $_uriSource ]
@@ -35810,7 +35853,6 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
         Property [ <default> protected $_removeExtraSlashes ]
         Property [ <default> protected $_notFoundPaths ]
         Property [ <default> protected $_handlers ]
-        Property [ <default> protected $_processed ]
         Property [ <default> protected $_controllerSuffix ]
         Property [ <default> protected $_actionSuffix ]
         Property [ <default> protected $_routePrefix ]
@@ -38126,7 +38168,7 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $data ]
-            Parameter #1 [ <optional> $options ]
+            Parameter #1 [ <optional> array or NULL $options ]
           }
         }
 
@@ -40442,7 +40484,7 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
           }
         }
 
-        Method [ <internal:phalcon> private method prepareOptions ] {
+        Method [ <internal:phalcon> protected method prepareOptions ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> array $options ]
@@ -41421,6 +41463,78 @@ Extension [ <persistent> extension #202 phalcon version 2.0.10 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $number ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Validation\Validator, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> array or NULL $options ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Validation\Validator, prototype Phalcon\Validation\ValidatorInterface> public method isSetOption ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Validation\Validator, prototype Phalcon\Validation\ValidatorInterface> public method hasOption ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Validation\Validator, prototype Phalcon\Validation\ValidatorInterface> public method getOption ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <optional> $defaultValue ]
+          }
+        }
+
+        Method [ <internal:phalcon, inherits Phalcon\Validation\Validator> public method setOption ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:phalcon> class Phalcon\Validation\Validator\Date extends Phalcon\Validation\Validator implements Phalcon\Validation\ValidatorInterface ] {
+
+      - Constants [1] {
+        Constant [ string DEFAULT_DATE_FORMAT ] { Y-m-d }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [1] {
+        Property [ <default> protected $_options ]
+      }
+
+      - Methods [7] {
+        Method [ <internal:phalcon, overwrites Phalcon\Validation\Validator, prototype Phalcon\Validation\Validator> public method validate ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Validation $validation ]
+            Parameter #1 [ <required> $field ]
+          }
+        }
+
+        Method [ <internal:phalcon> private method checkDate ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $value ]
+            Parameter #1 [ <required> $format ]
           }
         }
 

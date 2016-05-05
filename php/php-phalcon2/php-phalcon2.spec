@@ -12,13 +12,12 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package       php-phalcon2
+%else
+%global pkg_name   %{name}
 %endif
 
-%{?scl:          %scl_package             php-phalcon2}
-%{!?scl:         %global pkg_name         %{name}}
-%{!?__php:       %global __php            %{_bindir}/php}
-
-%global gh_commit    cf3c1fe62184d36d24c543c0b4f9993ea8f2445b
+%global gh_commit    1d8b41e0bb8d834a4da4aaa50e29fcd074090909
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phalcon
 %global gh_project   cphalcon
@@ -34,7 +33,7 @@
 %endif
 
 Name:           %{?sub_prefix}php-phalcon2
-Version:        2.0.10
+Version:        2.0.11
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Phalcon Framework
 
@@ -79,8 +78,10 @@ Requires:      %{?scl_prefix}php-pecl(igbinary)%{?_isa}
 
 Provides:      %{?scl_prefix}php-phalcon          = %{version}-%{release}
 Provides:      %{?scl_prefix}php-phalcon%{?_isa}  = %{version}-%{release}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:      %{?scl_prefix}php-phalcon2         = %{version}-%{release}
 Provides:      %{?scl_prefix}php-phalcon2%{?_isa} = %{version}-%{release}
+%endif
 # Only one version can be installed
 Conflicts:     %{?scl_prefix}php-phalcon < 2
 
@@ -243,6 +244,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu May  5 2016 Remi Collet <remi@fedoraproject.org> - 2.0.11-1
+- update to 2.0.11
+
 * Sun Feb  7 2016 Remi Collet <remi@fedoraproject.org> - 2.0.10-1
 - update to 2.0.10
 
