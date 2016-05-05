@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #121 libsodium version 1.0.5 ] {
+Extension [ <persistent> extension #121 libsodium version 1.0.6 ] {
 
   - Constants [58] {
     Constant [ integer Sodium\CRYPTO_AEAD_AES256GCM_KEYBYTES ] { 32 }
@@ -36,9 +36,9 @@ Extension [ <persistent> extension #121 libsodium version 1.0.5 ] {
     Constant [ integer Sodium\CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE ] { 4 }
     Constant [ integer Sodium\CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE ] { 33554432 }
     Constant [ integer Sodium\CRYPTO_PWHASH_OPSLIMIT_MODERATE ] { 6 }
-    Constant [ integer Sodium\CRYPTO_PWHASH_MEMLIMIT_MODERATE ] { 6 }
+    Constant [ integer Sodium\CRYPTO_PWHASH_MEMLIMIT_MODERATE ] { 134217728 }
     Constant [ integer Sodium\CRYPTO_PWHASH_OPSLIMIT_SENSITIVE ] { 8 }
-    Constant [ integer Sodium\CRYPTO_PWHASH_MEMLIMIT_SENSITIVE ] { 8 }
+    Constant [ integer Sodium\CRYPTO_PWHASH_MEMLIMIT_SENSITIVE ] { 536870912 }
     Constant [ integer Sodium\CRYPTO_PWHASH_SCRYPTSALSA208SHA256_SALTBYTES ] { 32 }
     Constant [ string Sodium\CRYPTO_PWHASH_SCRYPTSALSA208SHA256_STRPREFIX ] { $7$ }
     Constant [ integer Sodium\CRYPTO_PWHASH_SCRYPTSALSA208SHA256_OPSLIMIT_INTERACTIVE ] { 524288 }
