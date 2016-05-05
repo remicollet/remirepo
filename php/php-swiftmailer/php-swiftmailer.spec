@@ -98,7 +98,7 @@ mkdir vendor
 %{_bindir}/phpab --output vendor/autoload.php tests
 cat << 'EOF' | tee -a vendor/autoload.php
 require_once '%{buildroot}/%{php_home}/Swift/swift_required.php';
-require_once '/usr/share/php/Mockery/autoload.php';
+require_once '%{php_home}/Mockery/autoload.php';
 EOF
 
 TMPDIR=$(mktemp -d $PWD/rpmtests-XXXXXXXX)
