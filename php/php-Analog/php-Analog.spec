@@ -9,14 +9,14 @@
 #
 %global gh_owner   jbroadway
 %global gh_project analog
-%global gh_commit  1fcc97fd842f37013587d64aba5f3f1fa6b0d911
+%global gh_commit  69615c0e8b4033169b45d58f778fd3ba638d1d52
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date    20150213
 %global real_name  Analog
 
 Name:           php-Analog
 Summary:        PHP micro logging package
-Version:        1.0.6
+Version:        1.0.7
 %if 0%{?gh_date}
 Release:        5.%{gh_date}git%{gh_short}%{?dist}
 %else
@@ -26,8 +26,6 @@ License:        MIT
 Group:          Development/Libraries
 URL:            https://github.com/jbroadway/analog
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
-
-Patch0:         %{name}-php7.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -86,8 +84,6 @@ out of the box too.
 %prep
 %setup -qn %{gh_project}-%{gh_commit}
 
-%patch0 -p1
-
 
 %build
 # empty build section, nothing required
@@ -114,7 +110,11 @@ spl_autoload_register(function (\$class) {
 });
 EOF
 : Upstream test suite
-phpunit --bootstrap bs.php --include-path=%{buildroot}%{_datadir}/php
+%{_bindir}/phpunit --bootstrap bs.php --include-path=%{buildroot}%{_datadir}/php
+
+if which php70; then
+   php70 %{_bindir}/phpunit --bootstrap bs.php --include-path=%{buildroot}%{_datadir}/php
+fi
 
 
 %clean
@@ -133,6 +133,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu May 05 2016 Johan Cwiklinski <johan AT x-tnd DOT be> - 1.0.7-1
+- Update to 1.0.7 (PHP7 compatible)
+
 * Tue May 26 2015 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
 - update to 1.0.6
 - composer dependencies
