@@ -8,8 +8,8 @@
 # Please preserve changelog entries
 #
 Name:           owncloud
-Version:        8.2.3
-Release:        6%{?dist}
+Version:        8.2.4
+Release:        1%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
 
@@ -77,7 +77,7 @@ BuildArch:      noarch
 # expand pear macros on install
 BuildRequires:  php-pear
 
-# For sanity %check
+# For sanity check
 BuildRequires:       php-cli
 BuildRequires:       php-composer(sabre/dav)  >= 2.1.9
 BuildRequires:       php-composer(sabre/dav)  < 2.2
@@ -118,8 +118,10 @@ BuildRequires:       php-composer(patchwork/jsqueeze) >= 2.0
 BuildRequires:       php-composer(patchwork/jsqueeze) < 3.0
 BuildRequires:       php-composer(kriswallsmith/assetic) >= 1.3.2-3
 BuildRequires:       php-composer(kriswallsmith/assetic) < 2.0
-BuildRequires:       php-composer(icewind/smb)     >= 1.0.4
+BuildRequires:       php-composer(icewind/smb)     >= 1.0.8
+%if 0%{?rhel} != 5
 BuildRequires:       php-pecl(smbclient) >= 0.8.0
+%endif
 BuildRequires:       php-google-apiclient >= 1.0.3
 BuildRequires:       php-aws-sdk >= 2.7.0
 BuildRequires:       php-composer(symfony/yaml) >= 2.6.0
@@ -275,7 +277,9 @@ Requires:       php-composer(kriswallsmith/assetic) < 2.0
 Requires:       php-composer(icewind/smb)     >= 1.0.4
 # This makes smb external storage usable iin performance
 # and doesn't break things like encryption due to timeouts
+%if 0%{?rhel} != 5
 Requires:       php-pecl(smbclient) >= 0.8.0
+%endif
 
 
 # Requiring so that the shipped external smb storage works
@@ -685,6 +689,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu May  5 2016 Remi Collet <remi@fedoraproject.org> - 8.2.4-1
+- Update to 8.2.4
+- raise dependency on icewind/smb >= 1.0.8
+
 * Thu Apr 28 2016 James Hogarth <james.hogarth@gmail.com> - 8.2.3-6
 - Enable the sanity check of the autoloaders
 
