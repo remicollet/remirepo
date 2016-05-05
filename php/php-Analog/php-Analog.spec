@@ -20,7 +20,7 @@ Version:        1.0.7
 %if 0%{?gh_date}
 Release:        5.%{gh_date}git%{gh_short}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 License:        MIT
 Group:          Development/Libraries
@@ -29,6 +29,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  %{_bindir}/phpab
 # For tests
 BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php-composer(psr/log)
@@ -80,13 +81,24 @@ with examples for each in the examples folder. These include:
 So while it's a micro class, it's highly extensible and very capable
 out of the box too.
 
+Autoloader: %{_datadir}/php/%{real_name}/autoload.php
+
 
 %prep
 %setup -qn %{gh_project}-%{gh_commit}
 
 
 %build
-# empty build section, nothing required
+: Generate a simple classmap autoloader
+%{_bindir}/phpab \
+  --output lib/%{real_name}/autoload.php \
+  lib/%{real_name}
+
+cat << 'EOF' | tee -a lib/%{real_name}/autoload.php
+
+// Dependencies
+require_once '%{_datadir}/php/Psr/Log/autoload.php';
+EOF
 
 
 %install
@@ -101,19 +113,16 @@ cp -a lib/%{real_name} %{buildroot}%{_datadir}/php/
 : Relax 1 test
 sed -e 's/0600/%%d/' -i tests/AnalogTest.php
 
-: Generate simple PSR-0 autoloader
-cat <<EOF | tee bs.php
+: Use and test our autoloader
+cat <<EOF | tee tests/bootstrap.php
 <?php
-spl_autoload_register(function (\$class) {
-    \$src = str_replace(array('\\\\', '_'), '/', \$class).'.php';
-    @include_once \$src;
-});
+require '%{buildroot}%{_datadir}/php/%{real_name}/autoload.php';
 EOF
 : Upstream test suite
-%{_bindir}/phpunit --bootstrap bs.php --include-path=%{buildroot}%{_datadir}/php
+%{_bindir}/phpunit --include-path=%{buildroot}%{_datadir}/php
 
 if which php70; then
-   php70 %{_bindir}/phpunit --bootstrap bs.php --include-path=%{buildroot}%{_datadir}/php
+   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{_datadir}/php
 fi
 
 
@@ -133,6 +142,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu May  5 2016 Remi Collet <remi@fedoraproject.org> - 1.0.7-2
+- generate a simple autoloader (and use it for test suite)
+
 * Thu May 05 2016 Johan Cwiklinski <johan AT x-tnd DOT be> - 1.0.7-1
 - Update to 1.0.7 (PHP7 compatible)
 
