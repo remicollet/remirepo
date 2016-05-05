@@ -15,19 +15,17 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package       php-pecl-redis
+%else
+%global _root_bindir %{_bindir}
 %endif
 
-%{?scl:          %scl_package         php-pecl-redis}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl       %{_bindir}/pecl}
-%{!?__php:       %global __php        %{_bindir}/php}
-%{!?scl:         %global _root_bindir %{_bindir}}
 # See https://github.com/phpredis/phpredis/commits/php7
-%global gh_commit   2887ad1130aba5aee029a64140d111544e62d56d
+%global gh_commit   ad3c1169363f3268a2edf51041a79db60543d806
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    phpredis
 %global gh_project  phpredis
-%global gh_date     20160215
+%global gh_date     20160504
 %global pecl_name   redis
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global with_tests  0%{?_with_tests:1}
@@ -44,7 +42,7 @@ Summary:       Extension for communicating with the Redis key-value store
 Name:          %{?sub_prefix}php-pecl-redis
 Version:       2.2.8
 %if 0%{?gh_date}
-Release:       0.5.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.6.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
@@ -78,8 +76,10 @@ Provides:      %{?scl_prefix}php-redis = %{version}-%{release}
 Provides:      %{?scl_prefix}php-redis%{?_isa} = %{version}-%{release}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -123,7 +123,6 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %if 0%{?gh_date}
 %setup -qc
 mv %{gh_project}-%{gh_commit} NTS
-sed -e '/PHP_REDIS_VERSION/s/2.2.8-devphp7/%{version}-dev/' -i NTS/php_redis.h
 %{__php} -r '
   $pkg = simplexml_load_file("NTS/package.xml");
   $pkg->date = substr("%{gh_date}",0,4)."-".substr("%{gh_date}",4,2)."-".substr("%{gh_date}",6,2);
@@ -145,8 +144,8 @@ cd NTS
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_REDIS_VERSION/{s/.* "//;s/".*$//;p}' php_redis.h)
-if test "x${extver}" != "x%{version}%{?gh_date:-dev}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?gh_date:-dev}.
+if test "x${extver}" != "x%{version}%{?gh_date:-devphp7}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?gh_date:-devphp7}.
    exit 1
 fi
 cd ..
@@ -330,6 +329,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu May  5 2016 Remi Collet <remi@fedoraproject.org> - 2.2.8-0.6.20160504gitad3c116
+- refresh
+
 * Thu Mar  3 2016 Remi Collet <remi@fedoraproject.org> - 2.2.8-0.5.20160215git2887ad1
 - enable igbinary support
 
