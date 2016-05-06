@@ -1694,17 +1694,18 @@ EOF
 
 %changelog
 * Tue Apr 26 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-8
-- Fix #64938: libxml_disable_entity_loader setting is shared
-  between threads  CVE-2015-8866
+- Fix #64938: libxml_disable_entity_loader setting is shared between threads
+  CVE-2015-8866
 - Fix #71912: libgd signedness vulnerability
   CVE-2016-3074
-- Fix #72061: Out-of-bounds reads in zif_grapheme_stripos
-  with negative offset
-- Fix #72093: bcpowmod accepts negative scale and corrupts
-  _one_ definition
-- Fix #72094: Out of bounds heap read access in exif
-  header processing
+- Fix #72061: Out-of-bounds reads in zif_grapheme_stripos with negative offset
+  CVE-2016-4540 CVE-2016-4541
+- Fix #72093: bcpowmod accepts negative scale and corrupts _one_ definition
+  CVE-2016-4537 CVE-2016-4538
+- Fix #72094: Out of bounds heap read access in exif header processing
+  CVE-2016-4542 CVE-2016-4543 CVE-2016-4544
 - Fix #72099: xml_parse_into_struct segmentation fault
+  CVE-2016-4539
 
 * Tue Mar 29 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-7
 - Fix #71860: Require valid paths for phar filenames
