@@ -20,15 +20,15 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 # Pre-version are only available in github
-%global prever       rc3
+#global prever       rc3
 %global gh_commit    d5dab73127a3f02cf5c4964c66a6c7c7147b9dc0
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     antirez
 %global gh_project   redis
 
 Name:             redis
-Version:          3.2
-Release:          0.4.%{prever}%{?dist}
+Version:          3.2.0
+Release:          1%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -245,6 +245,9 @@ fi
 
 
 %changelog
+* Tue May 10 2016 Remi Collet <remi@fedoraproject.org> - 3.2.0-1
+- update to 3.2.0
+
 * Mon Feb  8 2016 Haïkel Guémar <hguemar@fedoraproject.org> - 3.2-0.4.rc3
 - Fix redis-shutdown to handle password-protected instances shutdown
 
