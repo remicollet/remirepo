@@ -11,7 +11,7 @@
 %global pear_name Crypt_TripleDES
 
 Name:           php-phpseclib-crypt-tripledes
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        Pure-PHP implementation of Triple DES
 
@@ -86,6 +86,9 @@ fi
 
 
 %changelog
+* Wed May 11 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- Update to 1.0.2 (no change)
+
 * Tue Jan 19 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1
 
