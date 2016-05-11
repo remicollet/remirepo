@@ -11,7 +11,7 @@
 %global pear_name Crypt_RSA
 
 Name:           php-phpseclib-crypt-rsa
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        Pure-PHP PKCS#1 (v2.1) compliant implementation of RSA
 
@@ -100,6 +100,9 @@ fi
 
 
 %changelog
+* Wed May 11 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- Update to 1.0.2
+
 * Tue Jan 19 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1
 
