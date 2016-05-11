@@ -18,18 +18,17 @@
 
 Summary:      PHP Bindings for rrdtool
 Name:         %{?scl_prefix}php-pecl-rrd
-Version:      2.0.0
-Release:      2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:      2.0.1
+Release:      1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      BSD
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/rrd
 
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
-BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel >= 7
 BuildRequires: rrdtool
-BuildRequires: rrdtool-devel >= 1.3.0
+BuildRequires: pkgconfig(librrd) >= 1.3.0
 BuildRequires: %{?scl_prefix}php-pear
 
 Requires:     %{?scl_prefix}php(zend-abi) = %{php_zend_api}
@@ -41,8 +40,10 @@ Provides:     %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:     %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:     %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -173,10 +174,6 @@ TEST_PHP_EXECUTABLE=%{_bindir}/php \
    run-tests.php --show-diff
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
@@ -198,7 +195,6 @@ fi
 
 
 %files
-%defattr(-, root, root, -)
 %doc %{pecl_docdir}/%{pecl_name}
 %{?_licensedir:%license NTS/LICENSE}
 %{pecl_xmldir}/%{name}.xml
@@ -213,6 +209,9 @@ fi
 
 
 %changelog
+* Wed May 11 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- update to 2.0.1 (no change)
+
 * Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
 - adapt for F24
 
