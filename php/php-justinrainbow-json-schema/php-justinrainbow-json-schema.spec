@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9ef71fdf8aa59a93977446468fc718ea01115a83
+%global gh_commit    c21534c635f03428e92254333fab4ae35b2cdfd9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     justinrainbow
 %global gh_project   json-schema
@@ -15,16 +15,16 @@
 
 # Some sample files, only used for tests
 #        "json-schema/JSON-Schema-Test-Suite": "1.1.0",
-%global ts_commit    4eaaea8711d49656089643baeac4d32a01c1fce2
+%global ts_commit    468fa788ca2053a69815c43abc500e044086120c
 %global ts_short     %(c=%{ts_commit}; echo ${c:0:7})
 %global ts_owner     json-schema
 %global ts_project   JSON-Schema-Test-Suite
-%global ts_version   1.1.0
+%global ts_version   1.1.2
 
 %global eolv1   0
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.0.1
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        A library to validate a json schema
 
@@ -185,6 +185,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May 11 2016 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- update to 2.0.3
+- use json-schema/JSON-Schema-Test-Suite 1.1.2
+
 * Fri Apr 29 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - update to 2.0.1
 
