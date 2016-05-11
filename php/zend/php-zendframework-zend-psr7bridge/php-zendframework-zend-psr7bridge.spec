@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    0a310c32f8f2cb4b6b037e0ed87f03f3e18e925a
+%global gh_commit    86c0b53b0c6381391c4add4a93a56e51d5c74605
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-psr7bridge
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        0.2.1
+Version:        0.2.2
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -127,5 +127,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May 11 2016 Remi Collet <remi@fedoraproject.org> - 0.2.2-1
+- update to 0.2.2
+
 * Wed Mar  2 2016 Remi Collet <remi@fedoraproject.org> - 0.2.1-1
 - initial package
