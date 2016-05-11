@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        7.0.1
-%global Patchlevel 1
+%global Patchlevel 3
 %global incsuffixe -7
 %global libsuffixe -7.Q16HDRI
 %global with_tests 0%{!?_without_tests:1}
@@ -19,8 +19,6 @@
 %else
 %global with_djvu 0
 %endif
-
-%global with_lcms2 1
 
 %if 0%{?fedora} >= 14 || 0%{?rhel} >= 6
 %global with_webp 1
@@ -85,11 +83,7 @@ BuildRequires:  libX11-devel, libXext-devel, libXt-devel
 BuildRequires:  libxml2-devel, librsvg2-devel
 BuildRequires:  fftw-devel
 BuildRequires:  OpenEXR-devel
-%if %{with_lcms2}
 BuildRequires:  lcms2-devel
-%else
-BuildRequires:  lcms-devel
-%endif
 %if %{with_webp}
 BuildRequires:  libwebp-devel
 %endif
@@ -148,11 +142,7 @@ Requires: freetype-devel%{?_isa}
 Requires: libtiff-devel%{?_isa}
 Requires: libjpeg-devel%{?_isa}
 Requires: OpenEXR-devel%{?_isa}
-%if %{with_lcms2}
 Requires: lcms2-devel%{?_isa}
-%else
-Requires: lcms-devel%{?_isa}
-%endif
 %if %{with_webp}
 Requires: libwebp-devel%{?_isa}
 %endif
@@ -308,11 +298,7 @@ cp -p Magick++/demo/*.cpp Magick++/demo/*.miff Magick++/examples
            --with-gslib=no \
 %endif
            --with-wmf \
-%if %{with_lcms2}
-           --with-lcms2 \
-%else
            --with-lcms \
-%endif
            --with-openexr \
            --with-rsvg \
            --with-xml \
@@ -330,13 +316,11 @@ cp -p Magick++/demo/*.cpp Magick++/demo/*.miff Magick++/examples
 %endif
            --with-perl-options="INSTALLDIRS=vendor %{?perl_prefix} CC='%__cc -L$PWD/magick/.libs' LDDLFLAGS='-shared -L$PWD/magick/.libs'" \
            --without-dps \
-           --without-included-ltdl --with-ltdl-include=%{_includedir} \
 %if "%{name}" != "%{libname}"
            --datadir=%{_datadir}/%{name} \
            --sysconfdir=%{_sysconfdir}/%{name} \
 %endif
-           --without-gcc-arch \
-           --with-ltdl-lib=%{_libdir}
+           --without-gcc-arch
 
 # Do *NOT* use %%{?_smp_mflags}, this causes PerlMagick to be silently misbuild
 make
@@ -504,6 +488,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed May 11 2016 Remi Collet <remi@remirepo.net> - 7.0.1.3-1
+- update to version 7.0.1 patchlevel 3
+
 * Wed May  4 2016 Remi Collet <remi@remirepo.net> - 7.0.1.1-1
 - update to version 7.0.1 patchlevel 1
 
