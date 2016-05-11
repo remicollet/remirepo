@@ -1,3 +1,5 @@
+# remirepo spec file for php-Analog, from
+#
 # Fedora spec file for php-Analog
 #
 # License: MIT
