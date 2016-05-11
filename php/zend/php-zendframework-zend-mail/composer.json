@@ -1,0 +1,50 @@
+{
+    "name": "zendframework/zend-mail",
+    "description": "provides generalized functionality to compose and send both text and MIME-compliant multipart e-mail messages",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "zf2",
+        "mail"
+    ],
+    "homepage": "https://github.com/zendframework/zend-mail",
+    "autoload": {
+        "psr-4": {
+            "Zend\\Mail\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^5.5 || ^7.0",
+        "zendframework/zend-loader": "^2.5",
+        "zendframework/zend-mime": "^2.5",
+        "zendframework/zend-stdlib": "^2.7 || ^3.0",
+        "zendframework/zend-validator": "^2.6"
+    },
+    "require-dev": {
+        "zendframework/zend-config": "^2.6",
+        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
+        "zendframework/zend-crypt": "^2.6",
+        "squizlabs/php_codesniffer": "^2.3.1",
+        "phpunit/phpunit": "^4.8"
+    },
+    "suggest": {
+        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3 when using SMTP to deliver messages",
+        "zendframework/zend-crypt": "Crammd5 support in SMTP Auth"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.7-dev",
+            "dev-develop": "2.8-dev"
+        },
+        "zf": {
+            "component": "Zend\\Mail",
+            "config-provider": "Zend\\Mail\\ConfigProvider"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ZendTest\\Mail\\": "test/"
+        }
+    }
+}

@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    fcec5a6f32a5646ce81783f319836996bdd03110
+%global gh_commit    2e817b58ebaa2b422a25d854106a91f74b6a7976
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-mail
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.0
+Version:        2.7.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -48,12 +48,12 @@ BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.6
 #        "zendframework/zend-config": "^2.6",
 #        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
 #        "zendframework/zend-crypt": "^2.6",
-#        "fabpot/php-cs-fixer": "1.7.*",
-#        "phpunit/PHPUnit": "~4.0"
+#        "squizlabs/php_codesniffer": "^2.3.1",
+#        "phpunit/phpunit": "^4.8"
 BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
 BuildRequires:  php-composer(%{gh_owner}/zend-crypt)            >= 2.6
-BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
+BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.8
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
@@ -156,6 +156,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May 11 2016 Remi Collet <remi@fedoraproject.org> - 2.7.1-1
+- update to 2.7.1
+
 * Tue Apr 12 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
 - update to 2.7.0
 - zend-crypt is now optional
