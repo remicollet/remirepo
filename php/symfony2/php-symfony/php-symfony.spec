@@ -14,8 +14,8 @@
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.7.12
-%global github_commit    9edf2430f1846602844d2b434f26389a018f494f
+%global github_version   2.7.13
+%global github_commit    7c23f76ba732de9b34075970b0d0a3ec9a5c38f0
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -95,7 +95,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       1%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -2532,6 +2532,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Wed May 11 2016 Remi Collet <remi@fedoraproject.org> - 2.7.13-1
+- Update to 2.7.13
+
 * Fri Apr 29 2016 Remi Collet <remi@fedoraproject.org> - 2.7.12-2
 - Update to 2.7.12
 - cleanup autoloader
