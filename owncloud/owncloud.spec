@@ -8,7 +8,7 @@
 # Please preserve changelog entries
 #
 Name:           owncloud
-Version:        8.2.4
+Version:        8.2.5
 Release:        1%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
@@ -48,7 +48,7 @@ Source8:        %{name}-fedora-autoloader.php
 # Adjust mediaelement not to use its SWF and Silverlight plugins. This
 # changes 'plugins:["flash,"silverlight","youtube","vimeo"]' to
 # 'plugins:["youtube","vimeo"]'
-Patch1:         %{name}-8.2.3-videoviewer_noplugins.patch
+Patch1:         %{name}-8.2.5-videoviewer_noplugins.patch
 
 # Stop OC from trying to do stuff to .htaccess files. Just calm down, OC.
 # Distributors are on the case.
@@ -689,6 +689,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu May 12 2016 Remi Collet <remi@fedoraproject.org> - 8.2.5-1
+- Update to 8.2.5
+
 * Thu May  5 2016 Remi Collet <remi@fedoraproject.org> - 8.2.4-1
 - Update to 8.2.4
 - raise dependency on icewind/smb >= 1.0.8
