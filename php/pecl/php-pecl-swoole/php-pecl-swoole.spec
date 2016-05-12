@@ -34,7 +34,7 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.8.4
+Version:        1.8.5
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
@@ -269,6 +269,9 @@ cd ../ZTS
 
 
 %changelog
+* Thu May 12 2016 Remi Collet <remi@fedoraproject.org> - 1.8.5-1
+- Update to 1.8.5
+
 * Wed Apr 13 2016 Remi Collet <remi@fedoraproject.org> - 1.8.4-1
 - Update to 1.8.4 (stable)
 
