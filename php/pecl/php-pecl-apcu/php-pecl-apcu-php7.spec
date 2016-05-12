@@ -11,10 +11,8 @@
 #
 %if 0%{?scl:1}
 %global sub_prefix %{scl_prefix}
+%scl_package        php-pecl-apcu
 %endif
-
-%{?scl:          %scl_package        php-pecl-apcu}
-%{!?scl:         %global pkg_name    %{name}}
 
 %global bootstrap  0
 %global gh_commit  e7a67846c2806cd70f4ea28c3aef4fe04430ad98
@@ -28,12 +26,12 @@
 
 Name:           %{?sub_prefix}php-pecl-apcu
 Summary:        APC User Cache
-Version:        5.1.3
+Version:        5.1.4
 %if 0%{?gh_date:1}
 Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 Source1:        %{pecl_name}-5.1.2.ini
@@ -44,7 +42,6 @@ License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/APCu
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 7
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  pcre-devel
@@ -62,9 +59,10 @@ Provides:       %{?scl_prefix}php-apcu               = %{version}
 Provides:       %{?scl_prefix}php-apcu%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(apcu)         = %{version}
 Provides:       %{?scl_prefix}php-pecl(apcu)%{?_isa} = %{version}
-# For "more" SCL
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-apcu          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-apcu%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -107,9 +105,10 @@ Requires:      %{?scl_prefix}php-devel%{?_isa}
 Obsoletes:     %{?scl_prefix}php-pecl-apc-devel          < 4
 Provides:      %{?scl_prefix}php-pecl-apc-devel          = %{version}-%{release}
 Provides:      %{?scl_prefix}php-pecl-apc-devel%{?_isa}  = %{version}-%{release}
-# For "more" SCL
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:      %{?scl_prefix}php-pecl-apcu-devel         = %{version}-%{release}
 Provides:      %{?scl_prefix}php-pecl-apcu-devel%{?_isa} = %{version}-%{release}
+%endif
 
 %description devel
 These are the files needed to compile programs using APCu.
@@ -186,8 +185,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-
 # Install the NTS stuff
 make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/%{ini_name}
@@ -254,10 +251,6 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
@@ -279,7 +272,6 @@ fi
 
 
 %files
-%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -297,7 +289,6 @@ fi
 
 
 %files devel
-%defattr(-,root,root,-)
 %doc %{pecl_testdir}/%{pecl_name}
 %{php_incldir}/ext/%{pecl_name}
 
@@ -308,7 +299,6 @@ fi
 
 %if 0%{!?scl:1}
 %files -n apcu-panel
-%defattr(-,root,root,-)
 # Need to restrict access, as it contains a clear password
 %attr(550,apache,root) %dir %{_sysconfdir}/apcu-panel
 %config(noreplace) %{_sysconfdir}/apcu-panel/conf.php
@@ -318,6 +308,9 @@ fi
 
 
 %changelog
+* Thu May 12 2016 Remi Collet <remi@fedoraproject.org> - 5.1.4-1
+- Update to 5.1.4 (php 7, stable)
+
 * Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 5.1.3-2
 - adapt for F24
 
