@@ -27,7 +27,7 @@
 %global pdover      20150127
 # Extension version
 %global opcachever  7.0.6-dev
-%global oci8ver     2.1.0
+%global oci8ver     2.1.1
 
 # Adds -z now to the linker flags
 %global _hardened_build 1
@@ -125,13 +125,13 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver        RC1
-%global rpmrel       3
+%global rcver        RC1
+%global rpmrel       1
 
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 7.0.6
+Version: 7.0.7
 Release: %{?rcver:0.}%{rpmrel}%{?rcver:.%{rcver}}%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -166,7 +166,7 @@ Patch5: php-7.0.0-includedir.patch
 Patch6: php-5.6.3-embed.patch
 Patch7: php-5.3.0-recode.patch
 Patch8: php-7.0.2-libdb.patch
-Patch9: php-5.5.30-curl.patch
+Patch9: php-7.0.7-curl.patch
 
 # Functional changes
 Patch40: php-7.0.0-dlopen.patch
@@ -1827,6 +1827,10 @@ fi
 
 
 %changelog
+* Thu May 12 2016 Remi Collet <remi@fedoraproject.org> 7.0.7-0.1.RC1
+- Update to 7.0.7RC1
+- oci8 version is now 2.1.1
+
 * Thu Apr 28 2016 Remi Collet <remi@fedoraproject.org> 7.0.6-3
 - Update to 7.0.6 - http://www.php.net/releases/7_0_6.php
 - rebuild for new sources
