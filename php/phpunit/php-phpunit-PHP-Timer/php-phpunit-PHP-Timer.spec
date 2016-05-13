@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    3e82f4e9fc92665fafd9157568e4dcb01d014e5b
+%global gh_commit    38e9124049cf1a164f1e4537caf19c99bf1eb260
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-timer
@@ -17,7 +17,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-phpunit-PHP-Timer
-Version:        1.0.7
+Version:        1.0.8
 Release:        1%{?dist}
 Summary:        PHP Utility class for timing
 
@@ -31,7 +31,9 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
-BuildRequires:  %{_bindir}/phpunit
+# From composer.json"require-dev": {
+#        "phpunit/phpunit": "~4|~5"
+BuildRequires:  php-composer(phpunit/phpunit) >= 4
 %endif
 
 # From composer.json
@@ -75,6 +77,11 @@ cp -pr PHP %{buildroot}%{php_home}
 : Run tests - set include_path to ensure PHPUnit autoloader use it
 %{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
 %{_bindir}/phpunit .
+
+if which php70; then
+  php70 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+  %{_bindir}/phpunit .
+fi
 %endif
 
 
@@ -99,6 +106,10 @@ fi
 
 
 %changelog
+* Fri May 13 2016 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
+- update to 1.0.8
+- run test with both PHP 5 and 7 when available
+
 * Sun Jul 26 2015 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
 - update to 1.0.7 (only CS)
 
