@@ -11,7 +11,7 @@ diff -up ./src/mongoc/mongoc-ssl.c.old ./src/mongoc/mongoc-ssl.c
 -    * @STRENGTH - Sort ciphers based on strength */
 -   SSL_CTX_set_cipher_list (ctx, "HIGH:!EXPORT:!aNULL@STRENGTH");
 +   /* See https://fedoraproject.org/wiki/Packaging:CryptoPolicies */
-+   SSL_CTX_set_cipher_list (ctx, "PROFILE=SYSTEM");
++   /* SSL_CTX_set_cipher_list (ctx, "PROFILE=SYSTEM"); */
  
     /* If renegotiation is needed, don't return from recv() or send() until it's successful.
      * Note: this is for blocking sockets only. */

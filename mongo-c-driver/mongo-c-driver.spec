@@ -32,6 +32,7 @@ Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{vers
 
 # Enforce system crypto policies
 # https://fedoraproject.org/wiki/Packaging:CryptoPolicies
+# https://jira.mongodb.org/browse/CDRIVER-1231
 Patch0:    %{name}-crypto.patch
 
 BuildRequires: pkgconfig(openssl)
