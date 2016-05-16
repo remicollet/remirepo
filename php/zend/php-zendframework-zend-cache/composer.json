@@ -22,7 +22,8 @@
         "zendframework/zend-serializer": "^2.6",
         "zendframework/zend-session": "^2.6.2",
         "fabpot/php-cs-fixer": "1.7.*",
-        "phpunit/phpunit": "^4.5"
+        "phpunit/phpunit": "^4.5",
+        "phpbench/phpbench": "^0.10.0"
     },
     "suggest": {
         "zendframework/zend-serializer": "Zend\\Serializer component",
@@ -52,7 +53,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "ZendTest\\Cache\\": "test/"
+            "ZendTest\\Cache\\": "test/",
+            "ZendBench\\Cache\\": "benchmark/"
         }
     }
 }

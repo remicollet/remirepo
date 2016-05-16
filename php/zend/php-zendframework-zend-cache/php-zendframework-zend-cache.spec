@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    33211da0598e8f20a8d425945e3d452a87c50364
+%global gh_commit    2c68def8f96ce842d2f2a9a69e2f3508c2f5312d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-cache
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.0
+Version:        2.7.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -46,7 +46,8 @@ BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6.2
 #        "zendframework/zend-serializer": "^2.6",
 #        "zendframework/zend-session": "^2.6.2",
 #        "fabpot/php-cs-fixer": "1.7.*",
-#        "phpunit/PHPUnit": "~4.5"
+#        "phpunit/phpunit": "^4.5",
+#        "phpbench/phpbench": "^0.10.0"
 BuildRequires:  php-composer(%{gh_owner}/zend-serializer)       >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.6.2
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.5
@@ -170,6 +171,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 13 2016 Remi Collet <remi@fedoraproject.org> - 2.7.1-1
+- update to 2.7.1
+
 * Wed Apr 13 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
 - update to 2.7.0
 
