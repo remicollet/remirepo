@@ -15,10 +15,11 @@
 %global with_tests   0%{!?_without_tests:1}
 
 %global eolv1   0
+%global script  0
 
 Name:           php-%{gh_owner}-%{pk_project}
 Version:        2.1.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A PHP parser written in PHP
 
 Group:          Development/Libraries
@@ -60,6 +61,8 @@ Requires:       php-xmlreader
 Requires:       php-xmlwriter
 %if %{eolv1}
 Obsoletes:      php-PHPParser < 2
+%endif
+%if %{script}
 Requires:       php-cli
 %endif
 
@@ -87,6 +90,10 @@ Autoloader: %{php_home}/PhpParser2/autoload.php
 %patch0 -p1 -b .rpm
 %patch1 -p1 -b .upstream
 
+%if ! %{script}
+chmod -x bin/*
+%endif
+
 
 %build
 # Empty build section, most likely nothing required.
@@ -100,7 +107,7 @@ mkdir -p                 %{buildroot}%{php_home}
 cp -pr lib/PhpParser     %{buildroot}%{php_home}/PhpParser2
 cp -p  lib/bootstrap.php %{buildroot}%{php_home}/PhpParser2/autoload.php
 
-%if %{eolv1}
+%if %{script}
 : Command
 install -Dpm 0755 bin/php-parse %{buildroot}%{_bindir}/php-parse
 %endif
@@ -137,7 +144,7 @@ rm -rf %{buildroot}
 %license LICENSE
 %doc composer.json
 %doc *.md
-%if %{eolv1}
+%if %{script}
 %{_bindir}/php-parse
 %else
 %doc bin/php-parse
@@ -146,6 +153,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon May 16 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-3
+- drop exec right in doc, fix rpmlint
+
 * Wed Apr 20 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-2
 - fix test suite, add upstream patch
 
