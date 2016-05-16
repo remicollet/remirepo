@@ -23,12 +23,16 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.3.5
-Release:   1%{?dist}
+Release:   2%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
+
+# Enforce system crypto policies
+# https://fedoraproject.org/wiki/Packaging:CryptoPolicies
+Patch0:    %{name}-crypto.patch
 
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libbson-1.0)
@@ -79,6 +83,8 @@ Documentation: http://api.mongodb.org/c/%{version}/
 
 %prep
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
+
+%patch0 -p1 -b .cryptopolicy
 
 rm -r src/libbson
 
@@ -171,6 +177,9 @@ exit $ret
 
 
 %changelog
+* Mon May 16 2016 Remi Collet <remi@fedoraproject.org> - 1.3.5-2
+- add patch to enforce system crypto policies
+
 * Thu Mar 31 2016 Remi Collet <remi@fedoraproject.org> - 1.3.5-1
 - update to 1.3.5
 - use --disable-automatic-init-and-cleanup build option
