@@ -20,12 +20,12 @@
 # After 20-sockets
 %global ini_name  40-%{pecl_name}.ini
 %endif
-%global prever    RC9
+#global prever    RC9
 
 Summary:        Provides interface to libev library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        0.7.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -47,8 +47,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -236,6 +238,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue May 17 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- update to 1.0.0 (stable)
+
 * Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.7.RC9
 - adapt for F24
 
