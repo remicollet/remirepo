@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    063694d3c781f284ab8f846b8af64c45d94aaf51
+%global gh_commit    f956581bc5fa4cf3f2933fe24e77deded8d1937b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-validator
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.2
+Version:        2.8.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -102,7 +102,7 @@ Suggests:       php-composer(%{gh_owner}/zend-session)
 Suggests:       php-composer(%{gh_owner}/zend-uri)
 %endif
 %endif
-# From phpcompatinfo report for version 2.5.3
+# From phpcompatinfo report for version 2.8.0
 Requires:       php-ctype
 Requires:       php-date
 Requires:       php-fileinfo
@@ -176,6 +176,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue May 17 2016 Remi Collet <remi@fedoraproject.org> - 2.8.0-1
+- Update to 2.8.0
+
 * Tue Apr 19 2016 Remi Collet <remi@fedoraproject.org> - 2.7.2-1
 - Update to 2.7.2
 
