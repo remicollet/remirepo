@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    2292b116f43c272ff4328083096114f84ea46a56
+%global gh_commit    4e8f0da10ac5802913afc151413bc8c53b6c2716
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   environment
@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-phpunit-environment
-Version:        1.3.6
+Version:        1.3.7
 Release:        1%{?dist}
 Summary:        Handle HHVM/PHP environments
 
@@ -41,6 +41,9 @@ BuildRequires:  php-composer(phpunit/phpunit) >= 4.4
 # from composer.json, "require": {
 #        "php": ">=5.3.3"
 Requires:       php(language) >= 5.3.3
+# From phpcompatinfo report for 1.3.7
+Requires:       php-pcre
+Requires:       php-posix
 
 Provides:       php-composer(sebastian/environment) = %{version}
 
@@ -99,6 +102,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue May 17 2016 Remi Collet <remi@fedoraproject.org> - 1.3.7-1
+- update to 1.3.7
+- add explicit dependencies on pcre and posix
+
 * Wed May  4 2016 Remi Collet <remi@fedoraproject.org> - 1.3.6-1
 - update to 1.3.6
 
