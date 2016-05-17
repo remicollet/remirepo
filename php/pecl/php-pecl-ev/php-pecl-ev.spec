@@ -7,15 +7,12 @@
 # Please, preserve the changelog entries
 #
 %{?scl:          %scl_package        php-pecl-ev}
-
 #
 # NOTE: bundled libev
 #
 
 %global pecl_name ev
-# failed test, so disabled for now
-%global with_zts  0%{?__ztsphp:1}
-
+%global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 # After sockets
 %global ini_name  z-%{pecl_name}.ini
@@ -23,15 +20,16 @@
 # After 20-sockets
 %global ini_name  40-%{pecl_name}.ini
 %endif
+%global prever    RC9
 
 Summary:        Provides interface to libev library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.2.15
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.0.0
+Release:        0.7.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.4
@@ -45,12 +43,12 @@ Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires:       %{?scl_prefix}php-sockets%{?_isa}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
-Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -83,12 +81,12 @@ Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 The ev extension provides interface to libev library - high performance
 full-featured event loop written in C.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection}.
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
 %setup -q -c
-mv %{pecl_name}-%{version} NTS
+mv %{pecl_name}-%{version}%{?prever} NTS
 
 # Don't register test files on install
 sed -e 's/role="test"/role="src"/' \
@@ -97,9 +95,9 @@ sed -e 's/role="test"/role="src"/' \
 
 cd NTS
 # Sanity check, really often broken
-extver=$(sed -n '/define PHP_EV_VERSION/{s/.* "//;s/".*$//;p}' php_ev.h)
-if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
+extver=$(sed -n '/define PHP_EV_VERSION/{s/.* "//;s/".*$//;p}' php%(%{__php} -r 'echo PHP_MAJOR_VERSION;')/php_ev.h)
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
 cd ..
@@ -189,12 +187,12 @@ DEPMOD=
 cd NTS
 %{_bindir}/php --no-php-ini \
     $DEPMOD \
-    --define extension=modules/%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 : Upstream test suite for NTS extension
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
-TEST_PHP_ARGS="-n $DEPMOD -d extension=$PWD/modules/%{pecl_name}.so" \
+TEST_PHP_ARGS="-n $DEPMOD -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php --show-diff
@@ -203,14 +201,15 @@ REPORT_EXIT_STATUS=1 \
 %if %{with_zts}
 : Minimal load test for ZTS extension
 cd ../ZTS
+
 %{__ztsphp} --no-php-ini \
     $DEPMOD \
-    --define extension=modules/%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 : Upstream test suite for ZTS extension
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-TEST_PHP_ARGS="-n $DEPMOD -d extension=$PWD/modules/%{pecl_name}.so" \
+TEST_PHP_ARGS="-n $DEPMOD -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php --show-diff
@@ -237,8 +236,27 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 0.2.15-2
+* Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.7.RC9
 - adapt for F24
+
+* Thu Feb 25 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.6.RC9
+- Update to 1.0.0RC9 (php 5 and 7, beta)
+
+* Mon Feb 22 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.5.RC8
+- Update to 1.0.0RC8
+
+* Thu Feb 11 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.4.RC4
+- Update to 1.0.0RC4
+
+* Wed Dec 16 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.RC3
+- Update to 1.0.0RC3
+
+* Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.RC2
+- Update to 1.0.0RC2
+
+* Fri Nov 20 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.RC1
+- Update to 1.0.0RC1
+- open https://bitbucket.org/osmanov/pecl-ev/issues/16 - ZTS segfault
 
 * Mon May 04 2015 Remi Collet <remi@fedoraproject.org> - 0.2.15-1
 - Update to 0.2.15 (stable, no change)
@@ -260,4 +278,3 @@ rm -rf %{buildroot}
 
 * Mon Sep  8 2014 Remi Collet <rcollet@redhat.com> - 0.2.11-1
 - initial package, version 0.2.11 (stable)
-
