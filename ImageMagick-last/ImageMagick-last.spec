@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        6.9.4
-%global Patchlevel 1
+%global Patchlevel 2
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -493,6 +493,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed May 18 2016 Remi Collet <remi@remirepo.net> - 6.9.4.2-1
+- update to version 6.9.4 patchlevel 2
+- open https://github.com/ImageMagick/ImageMagick/issues/202
+  6.9.4-2 failed test validate-formats-disk.tap
+
 * Wed May 11 2016 Remi Collet <remi@remirepo.net> - 6.9.4.1-1
 - update to version 6.9.4 patchlevel 1
 
