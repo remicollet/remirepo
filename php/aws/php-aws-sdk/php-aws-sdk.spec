@@ -14,8 +14,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   2.8.29
-%global github_commit    83b86d1bbbca452b00a1f0bbea6fcbb506c76650
+%global github_version   2.8.30
+%global github_commit    2d7183cd22381237bce25f11d741a77bdeb2d0b8
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -194,6 +194,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May 18 2016 Remi Collet <remi@fedoraproject.org> - 2.8.30-1
+- Update to 2.8.30
+
 * Tue Apr 12 2016 Remi Collet <remi@fedoraproject.org> - 2.8.29-1
 - Update to 2.8.29
 
