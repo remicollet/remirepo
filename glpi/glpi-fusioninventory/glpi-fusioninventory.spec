@@ -10,8 +10,8 @@
 %global glpi_version  0.90
 %global glpi_min      0.85
 %global glpi_max      0.91
-%global plug_version  1.2
-%global gh_tag        glpi090+1.2
+%global plug_version  1.3
+%global gh_tag        glpi090+1.3
 
 Name:           glpi-fusioninventory
 # New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
@@ -134,6 +134,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May 18 2016 Remi Collet <remi@fedoraproject.org> - 1:0.90.0.1.3-1
+- update to 0.90+1.3
+
 * Fri Mar 25 2016 Remi Collet <remi@fedoraproject.org> - 1:0.90.0.1.2-1
 - update to 0.90+1.2
 
