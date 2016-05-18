@@ -1,4 +1,8 @@
-Extension [ <persistent> extension #154 scrypt version 1.4 ] {
+Extension [ <persistent> extension #154 scrypt version 1.4.2 ] {
+
+  - Dependencies {
+    Dependency [ hash (Required) ]
+  }
 
   - Functions {
     Function [ <internal:scrypt> function scrypt ] {

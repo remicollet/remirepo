@@ -25,14 +25,12 @@
 
 Summary:        Scrypt hashing function
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.4
+Version:        1.4.2
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-Patch0:         %{pecl_name}-pr47.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -95,7 +93,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-%patch0 -p1 -b .pr47
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_SCRYPT_VERSION/{s/.* "//;s/".*$//;p}' php_scrypt.h)
@@ -231,6 +228,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May 18 2016 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
+- Update to 1.4.2
+- drop patches, all merged upstream
+
 * Wed May 18 2016 Remi Collet <remi@fedoraproject.org> - 1.4-1
 - Update to 1.4 (php 5 and 7, stable)
 - open https://github.com/DomBlack/php-scrypt/issues/46 failed test
