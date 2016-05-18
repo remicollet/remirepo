@@ -235,6 +235,8 @@ rm -rf %{buildroot}
 - Update to 1.4 (php 5 and 7, stable)
 - open https://github.com/DomBlack/php-scrypt/issues/46 failed test
 - add patch from https://github.com/DomBlack/php-scrypt/pull/47
+- open https://github.com/DomBlack/php-scrypt/pull/48
+  fix memory leak + cleanup (not applied)
 
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.3-2
 - adapt for F24
