@@ -12,12 +12,11 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package       php-pecl-scrypt
 %endif
 
-%{?scl:          %scl_package        php-pecl-scrypt}
-
 %global pecl_name scrypt
-%global with_zts  0%{?__ztsphp:1}
+%global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 %global ini_name  %{pecl_name}.ini
 %else
@@ -26,15 +25,15 @@
 
 Summary:        Scrypt hashing function
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.3
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.4
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel > 5.2
+BuildRequires:  %{?scl_prefix}php-devel > 5.3
 BuildRequires:  %{?scl_prefix}php-pear
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
@@ -46,8 +45,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -62,6 +63,10 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -223,6 +228,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May 18 2016 Remi Collet <remi@fedoraproject.org> - 1.4-1
+- Update to 1.4 (php 5 and 7, stable)
+
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.3-2
 - adapt for F24
 - drop runtime dependency on pear, new scriptlets

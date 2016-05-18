@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #145 scrypt version 1.3 ] {
+Extension [ <persistent> extension #154 scrypt version 1.4 ] {
 
   - Functions {
     Function [ <internal:scrypt> function scrypt ] {
