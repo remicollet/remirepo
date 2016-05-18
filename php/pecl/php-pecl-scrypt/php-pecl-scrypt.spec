@@ -32,6 +32,8 @@ Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
+Patch0:         %{pecl_name}-pr47.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
 BuildRequires:  %{?scl_prefix}php-pear
@@ -93,6 +95,7 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
+%patch0 -p1 -b .pr47
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_SCRYPT_VERSION/{s/.* "//;s/".*$//;p}' php_scrypt.h)
@@ -189,7 +192,7 @@ TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__php} -n run-tests.php
+%{__php} -n run-tests.php --show-diff
 
 
 %if %{with_zts}
@@ -204,7 +207,7 @@ TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__ztsphp} -n run-tests.php
+%{__ztsphp} -n run-tests.php --show-diff
 %endif
 
 
@@ -230,6 +233,8 @@ rm -rf %{buildroot}
 %changelog
 * Wed May 18 2016 Remi Collet <remi@fedoraproject.org> - 1.4-1
 - Update to 1.4 (php 5 and 7, stable)
+- open https://github.com/DomBlack/php-scrypt/issues/46 failed test
+- add patch from https://github.com/DomBlack/php-scrypt/pull/47
 
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.3-2
 - adapt for F24
