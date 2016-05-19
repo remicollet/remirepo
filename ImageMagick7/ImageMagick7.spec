@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        7.0.1
-%global Patchlevel 4
+%global Patchlevel 5
 %global incsuffixe -7
 %global libsuffixe -7.Q16HDRI
 %global with_tests 0%{!?_without_tests:1}
@@ -327,29 +327,29 @@ make
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
-make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
+make install DESTDIR=%{buildroot} INSTALL="install -p"
 # Delete *ONLY* _libdir/*.la files! .la files used internally to handle plugins - BUG#185237!!!
-rm $RPM_BUILD_ROOT%{_libdir}/*.la
+rm %{buildroot}%{_libdir}/*.la
 
 # fix weird perl Magick.so permissions
-chmod 755 $RPM_BUILD_ROOT%{perl_vendorarch}/auto/Image/Magick/Magick.so
+chmod 755 %{buildroot}%{perl_vendorarch}/auto/Image/Magick/Magick.so
 
 # perlmagick: fix perl path of demo files
 %{__perl} -MExtUtils::MakeMaker -e 'MY->fixin(@ARGV)' PerlMagick/demo/*.pl
 
 # perlmagick: cleanup various perl tempfiles from the build which get installed
-find $RPM_BUILD_ROOT -name "*.bs" |xargs rm -f
-find $RPM_BUILD_ROOT -name ".packlist" |xargs rm -f
-find $RPM_BUILD_ROOT -name "perllocal.pod" |xargs rm -f
+find %{buildroot} -name "*.bs" |xargs rm -f
+find %{buildroot} -name ".packlist" |xargs rm -f
+find %{buildroot} -name "perllocal.pod" |xargs rm -f
 
 # perlmagick: build files list
 echo "%defattr(-,root,root,-)" > perl-pkg-files
-find $RPM_BUILD_ROOT/%{_libdir}/perl* -type f -print \
-        | sed "s@^$RPM_BUILD_ROOT@@g" > perl-pkg-files 
-find $RPM_BUILD_ROOT%{perl_vendorarch} -type d -print \
-        | sed "s@^$RPM_BUILD_ROOT@%dir @g" \
+find %{buildroot}/%{_libdir}/perl* -type f -print \
+        | sed "s@^%{buildroot}@@g" > perl-pkg-files
+find %{buildroot}%{perl_vendorarch} -type d -print \
+        | sed "s@^%{buildroot}@%dir @g" \
         | grep -v '^%dir %{perl_vendorarch}$' \
         | grep -v '/auto$' >> perl-pkg-files 
 if [ -z perl-pkg-files ] ; then
@@ -395,7 +395,7 @@ make %{?_smp_mflags} check
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post -p /sbin/ldconfig
@@ -488,6 +488,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu May 19 2016 Remi Collet <remi@remirepo.net> - 7.0.1.5-1
+- update to version 7.0.1 patchlevel 5
+
 * Wed May 18 2016 Remi Collet <remi@remirepo.net> - 7.0.1.4-1
 - update to version 7.0.1 patchlevel 4
 
