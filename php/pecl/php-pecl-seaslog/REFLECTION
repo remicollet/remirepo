@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #212 SeasLog version 1.5.3 ] {
+Extension [ <persistent> extension #213 SeasLog version 1.5.6 ] {
 
   - INI {
     Entry [ seaslog.default_basepath <ALL> ]
@@ -37,7 +37,7 @@ Extension [ <persistent> extension #212 SeasLog version 1.5.3 ] {
   }
 
   - Constants [13] {
-    Constant [ string SEASLOG_VERSION ] { 1.5.3 }
+    Constant [ string SEASLOG_VERSION ] { 1.5.6 }
     Constant [ string SEASLOG_AUTHOR ] { Chitao.Gao  [ neeke@php.net ] }
     Constant [ string SEASLOG_ALL ] { all }
     Constant [ string SEASLOG_DEBUG ] { debug }
@@ -65,9 +65,7 @@ Extension [ <persistent> extension #212 SeasLog version 1.5.3 ] {
       - Constants [0] {
       }
 
-      - Static properties [2] {
-        Property [ public static $seaslog_buffer ]
-        Property [ public static $seaslog_buffer_size ]
+      - Static properties [0] {
       }
 
       - Static methods [19] {
