@@ -17,7 +17,7 @@
 %global pkg_name   %{name}
 %endif
 
-%global gh_commit    01eb195a34385ad4442e86e3a61e9c6c1d534306
+%global gh_commit    9c66927d02a04bfa87f0a6517a761744e376df42
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phalcon
 %global gh_project   cphalcon
@@ -33,7 +33,7 @@
 %endif
 
 Name:           %{?sub_prefix}php-phalcon2
-Version:        2.0.12
+Version:        2.0.13
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Phalcon Framework
 
@@ -244,6 +244,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 20 2016 Remi Collet <remi@fedoraproject.org> - 2.0.13-1
+- update to 2.0.13
+
 * Tue May 17 2016 Remi Collet <remi@fedoraproject.org> - 2.0.12-1
 - update to 2.0.12
 
