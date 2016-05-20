@@ -15,11 +15,15 @@
 %global with_tests   0%{!?_without_tests:1}
 
 %global eolv1   0
+%if 0
 %global script  0
+%else
+%global script  1
+%endif
 
 Name:           php-%{gh_owner}-%{pk_project}
 Version:        2.1.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A PHP parser written in PHP
 
 Group:          Development/Libraries
@@ -64,6 +68,8 @@ Obsoletes:      php-PHPParser < 2
 %endif
 %if %{script}
 Requires:       php-cli
+# previous version provides the php-parse command
+Conflicts:      php-PHPParser < 1.4.1-4
 %endif
 
 Provides:       php-composer(%{gh_owner}/%{pk_project}) = %{version}
@@ -72,7 +78,7 @@ Provides:       php-composer(%{gh_owner}/%{pk_project}) = %{version}
 %description
 This is a PHP 5.2 to PHP 7.0 parser written in PHP.
 Its purpose is to simplify static code analysis and manipulation.
-%if %{eolv1}
+%if %{script}
 This package provides the library version 2 and the php-parse command.
 %else
 This package provides the library version 2.
@@ -153,6 +159,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 20 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-3
+- add the php-parse command, no more in php-nikic-php-parser
+
 * Mon May 16 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-3
 - drop exec right in doc, fix rpmlint
 
