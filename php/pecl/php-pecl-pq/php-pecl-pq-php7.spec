@@ -36,7 +36,7 @@
 
 Summary:        PostgreSQL client library (libpq) binding
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        2.0.1
+Version:        2.1.1
 %if 0%{?gh_date:1}
 Release:        0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
@@ -205,6 +205,11 @@ fi
 
 
 %check
+if ! pkg-config libpq --atleast-version=9.3; then
+  : ignore some tests only because of "diag" content
+  rm ?TS/tests/{async003,async004,async005,async006,cancel001}.phpt
+fi
+
 OPT="-n"
 [ -f %{php_extdir}/json.so ]  && OPT="$OPT -d extension=json.so"
 [ -f %{php_extdir}/raphf.so ] && OPT="$OPT -d extension=raphf.so"
@@ -293,6 +298,15 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 20 2016 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
+- update to 2.1.1 (php 7, stable)
+- open https://github.com/m6w6/ext-pq/issues/19 failed tests
+  so temporarily ignore them with pgsql < 9.3
+
+* Fri May 20 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- update to 2.1.0 (php 7, stable)
+- open https://github.com/m6w6/ext-pq/issues/18 pgsql < 9.3
+
 * Wed May  4 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - update to 2.0.1 (php 7, stable)
 
