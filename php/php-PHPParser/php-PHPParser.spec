@@ -20,9 +20,15 @@
 
 %global php_min_ver     5.3
 
+%if 0
+%global script  1
+%else
+%global script  0
+%endif
+
 Name:          php-%{lib_name_old}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       4%{?dist}
 Summary:       A PHP parser written in PHP
 
 Group:         Development/Libraries
@@ -42,6 +48,7 @@ BuildArch:     noarch
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: %{_bindir}/phpunit
 # For tests: phpcompatinfo (computed from version 1.4.1)
+BuildRequires: php-ctype
 BuildRequires: php-filter
 BuildRequires: php-pcre
 BuildRequires: php-spl
@@ -53,23 +60,29 @@ BuildRequires: php-xmlwriter
 Requires:      php(language) >= %{php_min_ver}
 Requires:      php-tokenizer
 # phpcompatinfo (computed from version 1.4.1)
-Requires:      php-cli
 Requires:      php-filter
 Requires:      php-pcre
 Requires:      php-spl
 Requires:      php-xmlreader
 Requires:      php-xmlwriter
-
-Obsoletes:     %{name}-test
+%if %{script}
+Requires:      php-cli
+%endif
 
 Provides:      php-composer(nikic/php-parser) = %{version}
 
 
 %description
 A PHP parser written in PHP to simplify static analysis and code manipulation.
-
-To use this library, you just have to add, in your project:
-  require_once '%{_datadir}/php/%{lib_name}/autoload.php';
+%if %{script}
+This package provides the library version 1 and the php-parse command.
+The php-nikic-php-parser package provides the library version 2.
+%else
+This package provides the library version 1.
+The php-nikic-php-parser package provides the library version 2
+and the  php-parse command.
+%endif
+Autoloader: '%{_datadir}/php/%{lib_name}/autoload.php';
 
 
 %prep
@@ -92,7 +105,9 @@ mkdir -p -m 755 %{buildroot}%{_datadir}/php/%{lib_name_old}
 ln -s ../%{lib_name}/Autoloader.php \
     %{buildroot}%{_datadir}/php/%{lib_name_old}/Autoloader.php
 
+%if %{script}
 install -Dpm 755 bin/php-parse.php %{buildroot}%{_bindir}/php-parse
+%endif
 
 
 %check
@@ -106,12 +121,17 @@ install -Dpm 755 bin/php-parse.php %{buildroot}%{_bindir}/php-parse
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md doc grammar composer.json
+%if %{script}
 %{_bindir}/php-parse
+%endif
 %{_datadir}/php/%{lib_name_old}
 %{_datadir}/php/%{lib_name}
 
 
 %changelog
+* Fri May 20 2016 Remi Collet <remi@fedoraproject.org> - 1.4.1-4
+- drop the php-parse command, provided by php-nikic-php-parser
+
 * Sun Sep 20 2015 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
 - update to 1.4.1
 
