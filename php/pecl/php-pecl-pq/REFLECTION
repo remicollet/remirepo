@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #204 pq version 1.0.1 ] {
+Extension [ <persistent> extension #205 pq version 1.1.1 ] {
 
   - Dependencies {
     Dependency [ raphf (Required) ]
@@ -535,7 +535,7 @@ Extension [ <persistent> extension #204 pq version 1.0.1 ] {
       - Static methods [0] {
       }
 
-      - Properties [20] {
+      - Properties [21] {
         Property [ <default> public $status ]
         Property [ <default> public $transactionStatus ]
         Property [ <default> public $socket ]
@@ -543,6 +543,7 @@ Extension [ <persistent> extension #204 pq version 1.0.1 ] {
         Property [ <default> public $busy ]
         Property [ <default> public $encoding ]
         Property [ <default> public $unbuffered ]
+        Property [ <default> public $nonblocking ]
         Property [ <default> public $db ]
         Property [ <default> public $user ]
         Property [ <default> public $pass ]
@@ -558,7 +559,7 @@ Extension [ <persistent> extension #204 pq version 1.0.1 ] {
         Property [ <default> public $defaultAutoConvert ]
       }
 
-      - Methods [30] {
+      - Methods [31] {
         Method [ <internal:pq, ctor> public method __construct ] {
 
           - Parameters [2] {
@@ -580,6 +581,12 @@ Extension [ <persistent> extension #204 pq version 1.0.1 ] {
         }
 
         Method [ <internal:pq> public method poll ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:pq> public method flush ] {
 
           - Parameters [0] {
           }
@@ -1043,10 +1050,11 @@ Extension [ <persistent> extension #204 pq version 1.0.1 ] {
       - Static methods [0] {
       }
 
-      - Properties [8] {
+      - Properties [9] {
         Property [ <default> public $status ]
         Property [ <default> public $statusMessage ]
         Property [ <default> public $errorMessage ]
+        Property [ <default> public $diag ]
         Property [ <default> public $numRows ]
         Property [ <default> public $numCols ]
         Property [ <default> public $affectedRows ]
