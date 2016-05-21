@@ -15,5 +15,9 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 $fedoraClassLoader->addPrefix('SuperClosure\\', dirname(__DIR__));
 
 // Dependencies
-require_once $vendorDir . '/PhpParser/autoload.php';
+if (file_exists($vendorDir . '/PhpParser2/autoload.php')) {
+    require_once $vendorDir . '/PhpParser2/autoload.php';
+} else {
+    require_once $vendorDir . '/PhpParser/autoload.php';
+}
 require_once $vendorDir . '/Symfony/Polyfill/autoload.php';

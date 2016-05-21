@@ -19,7 +19,7 @@
 
 Name:           php-%{pk_vendor}-%{pk_name}
 Version:        2.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Serialize Closure objects, including their context and binding
 
 Group:          Development/Libraries
@@ -115,6 +115,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat May 21 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-2
+- use nikic/php-parser v2 when available
+
 * Sun Dec  6 2015 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
 - update to 2.2.0
 - run test suite with both php 5 and 7 when available
