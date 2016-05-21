@@ -7,11 +7,11 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    10a0cde18ab73d4b66283c8b1b736574c14ecd0f
+%global gh_commit    1d442459f3afd96375cf8b12f663c3e18253882d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 
 Name:           atoum
-Version:        2.6.1
+Version:        2.7.0
 Release:        1%{?dist}
 Summary:        PHP Unit Testing framework
 
@@ -135,13 +135,6 @@ cp -pr tests     %{buildroot}%{_datadir}/%{name}
 
 %check
 %if %{with_tests}
-%if 0%{?fedora} >= 22
-# Temporary ignore this test, BC break in libxml, see
-# https://bugzilla.redhat.com/1199396  incorrect identification of duplicate ID
-# https://github.com/atoum/atoum/issues/449 Failed test with libxml version 2.9.2
-rm tests/units/classes/reports/asynchronous/xunit.php
-%endif
-
 cd tests/units
 echo "date.timezone=UTC" >php.ini
 export PHPRC=$(pwd)/php.ini
@@ -174,6 +167,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat May 21 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
+- update to 2.7.0
+
 * Fri Apr  8 2016 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
 - update to 2.6.1
 
