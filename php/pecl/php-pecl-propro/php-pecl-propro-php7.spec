@@ -11,9 +11,8 @@
 #
 %if 0%{?scl:1}
 %global sub_prefix %{scl_prefix}
+%scl_package        php-pecl-propro
 %endif
-
-%{?scl:          %scl_package        php-pecl-raphf}
 
 %global gh_commit   55c3639a82f5e3dad0bb2e913e55ba929c624e34
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
@@ -29,25 +28,20 @@
 %global ini_name    40-%{pecl_name}.ini
 %endif
 
-# PHP 7 package from phpng branch
-# git clone git@git.php.net:/pecl/php/propro.git
-# cd propro; git checkout phpng; pecl package
-
 Summary:        Property proxy
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        2.0.0
+Version:        2.0.1
 %if 0%{?ghdate}
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 7
 BuildRequires:  %{?scl_prefix}php-pear
 
@@ -57,10 +51,12 @@ Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 
 Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
-Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
-Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -150,8 +146,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
@@ -227,12 +221,7 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -245,7 +234,6 @@ rm -rf %{buildroot}
 %endif
 
 %files devel
-%defattr(-,root,root,-)
 %doc %{pecl_testdir}/%{pecl_name}
 %{php_incldir}/ext/%{pecl_name}
 
@@ -255,6 +243,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May 25 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1 (stable)
+
 * Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
 - adapt for F24
 
