@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c21534c635f03428e92254333fab4ae35b2cdfd9
+%global gh_commit    5c133a3e336c2b35a4233f5da4cc15f083ea128d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     justinrainbow
 %global gh_project   json-schema
@@ -15,16 +15,16 @@
 
 # Some sample files, only used for tests
 #        "json-schema/JSON-Schema-Test-Suite": "1.1.0",
-%global ts_commit    468fa788ca2053a69815c43abc500e044086120c
+%global ts_commit    f3d5aeb5ffbe9d9a5a0ceb761dc47c7c4c2efa68
 %global ts_short     %(c=%{ts_commit}; echo ${c:0:7})
 %global ts_owner     json-schema
 %global ts_project   JSON-Schema-Test-Suite
-%global ts_version   1.1.2
+%global ts_version   1.2.0
 
 %global eolv1   0
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.0.3
+Version:        2.0.4
 Release:        1%{?dist}
 Summary:        A library to validate a json schema
 
@@ -145,7 +145,7 @@ install -Dpm 0755 bin/validate-json %{buildroot}%{_bindir}/validate-json
 cat << 'EOF' | tee vendor/autoload.php
 <?php
 require '%{buildroot}%{php_home}/JsonSchema2/autoload.php';
-$fedoraPsr4ClassLoader->addPrefix('JsonSchema\\Tests\\', 'tests/JsonSchema/Tests/');
+$fedoraPsr4ClassLoader->addPrefix('JsonSchema\\Tests\\', 'tests/');
 EOF
 
 : Test the command
@@ -185,6 +185,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May 25 2016 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- update to 2.0.4
+- use json-schema/JSON-Schema-Test-Suite 1.2.0
+
 * Wed May 11 2016 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - update to 2.0.3
 - use json-schema/JSON-Schema-Test-Suite 1.1.2
