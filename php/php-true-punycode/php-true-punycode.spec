@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    74fa01d4de396c40e239794123b3874cb594a30c
+%global gh_commit    6853ce218b6115ec749607e14ac51338920c9d81
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     true
 %global gh_project   php-punycode
@@ -15,14 +15,15 @@
 # Notice: single file / class, so no need to provide an autoloader for now
 
 Name:           php-true-punycode
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        A Bootstring encoding of Unicode for IDNA
 
 Group:          Development/Libraries
 License:        MIT
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+Source0:        %{name}-%{version}-%{gh_short}.tgz
+Source1:        makesrc.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -85,6 +86,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May 25 2016 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- update to version 2.0.3 (no change)
+- use git snapshot for sources with tests
+
 * Fri Jan  8 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - update to version 2.0.2
 - run test suite with both PHP 5 and 7 when available
