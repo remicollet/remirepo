@@ -19,12 +19,12 @@
 # After 40-igbinary and 40-json
 %global ini_name  50-%{pecl_name}.ini
 %endif
-%global        prever beta2
+%global        prever beta3
 
 Summary:       Couchbase Server PHP extension
 Name:          %{?scl_prefix}php-pecl-couchbase2
 Version:       2.2.0
-Release:       0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           pecl.php.net/package/couchbase
@@ -103,6 +103,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -q -c
+[ -f package2.xml ] && mv package2.xml package.xml
 
 mv %{pecl_name}-%{version}%{?prever} NTS
 
@@ -166,7 +167,7 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Install the package XML file
-install -D -m 644 package2.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # Test & Documentation
 cd NTS
@@ -227,6 +228,9 @@ fi
 
 
 %changelog
+* Thu May 26 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.2.beta3
+- Update to 2.2.0beta3 (php 5 and 7, beta)
+
 * Wed Mar 20 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.1.beta1
 - Update to 2.2.0beta2 (php 5 and 7, beta)
 

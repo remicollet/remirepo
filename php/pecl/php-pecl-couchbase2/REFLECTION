@@ -1,10 +1,10 @@
-Extension [ <persistent> extension #195 couchbase version 2.2.0beta2 ] {
+Extension [ <persistent> extension #196 couchbase version 2.2.0beta3 ] {
 
   - Dependencies {
     Dependency [ json (Required) ]
   }
 
-  - Constants [57] {
+  - Constants [114] {
     Constant [ integer COUCHBASE_PERSISTTO_MASTER ] { 1 }
     Constant [ integer COUCHBASE_PERSISTTO_ONE ] { 1 }
     Constant [ integer COUCHBASE_PERSISTTO_TWO ] { 2 }
@@ -12,6 +12,17 @@ Extension [ <persistent> extension #195 couchbase version 2.2.0beta2 ] {
     Constant [ integer COUCHBASE_REPLICATETO_ONE ] { 16 }
     Constant [ integer COUCHBASE_REPLICATETO_TWO ] { 32 }
     Constant [ integer COUCHBASE_REPLICATETO_THREE ] { 64 }
+    Constant [ integer COUCHBASE_SDCMD_GET ] { 1 }
+    Constant [ integer COUCHBASE_SDCMD_REPLACE ] { 3 }
+    Constant [ integer COUCHBASE_SDCMD_EXISTS ] { 2 }
+    Constant [ integer COUCHBASE_SDCMD_DICT_ADD ] { 4 }
+    Constant [ integer COUCHBASE_SDCMD_DICT_UPSERT ] { 5 }
+    Constant [ integer COUCHBASE_SDCMD_ARRAY_ADD_FIRST ] { 6 }
+    Constant [ integer COUCHBASE_SDCMD_ARRAY_ADD_LAST ] { 7 }
+    Constant [ integer COUCHBASE_SDCMD_ARRAY_INSERT ] { 9 }
+    Constant [ integer COUCHBASE_SDCMD_ARRAY_ADD_UNIQUE ] { 8 }
+    Constant [ integer COUCHBASE_SDCMD_COUNTER ] { 10 }
+    Constant [ integer COUCHBASE_SDCMD_REMOVE ] { 11 }
     Constant [ integer COUCHBASE_CNTL_OP_TIMEOUT ] { 0 }
     Constant [ integer COUCHBASE_CNTL_VIEW_TIMEOUT ] { 1 }
     Constant [ integer COUCHBASE_CNTL_DURABILITY_INTERVAL ] { 14 }
@@ -21,18 +32,22 @@ Extension [ <persistent> extension #195 couchbase version 2.2.0beta2 ] {
     Constant [ integer COUCHBASE_CNTL_CONFDELAY_THRESH ] { 25 }
     Constant [ integer COUCHBASE_CNTL_CONFIG_NODE_TIMEOUT ] { 27 }
     Constant [ integer COUCHBASE_CNTL_HTCONFIG_IDLE_TIMEOUT ] { 28 }
+    Constant [ integer COUCHBASE_VALUE_F_JSON ] { 1 }
+    Constant [ integer COUCHBASE_N1XSPEC_T_DEFAULT ] { 0 }
+    Constant [ integer COUCHBASE_N1XSPEC_T_GSI ] { 1 }
+    Constant [ integer COUCHBASE_N1XSPEC_T_VIEW ] { 2 }
     Constant [ integer COUCHBASE_SUCCESS ] { 0 }
     Constant [ integer COUCHBASE_AUTH_CONTINUE ] { 1 }
     Constant [ integer COUCHBASE_AUTH_ERROR ] { 2 }
     Constant [ integer COUCHBASE_DELTA_BADVAL ] { 3 }
     Constant [ integer COUCHBASE_E2BIG ] { 4 }
     Constant [ integer COUCHBASE_EBUSY ] { 5 }
+    Constant [ integer COUCHBASE_EINTERNAL ] { 6 }
+    Constant [ integer COUCHBASE_EINVAL ] { 7 }
     Constant [ integer COUCHBASE_ENOMEM ] { 8 }
     Constant [ integer COUCHBASE_ERANGE ] { 9 }
     Constant [ integer COUCHBASE_ERROR ] { 10 }
     Constant [ integer COUCHBASE_ETMPFAIL ] { 11 }
-    Constant [ integer COUCHBASE_EINVAL ] { 7 }
-    Constant [ integer COUCHBASE_CLIENT_ETMPFAIL ] { 27 }
     Constant [ integer COUCHBASE_KEY_EEXISTS ] { 12 }
     Constant [ integer COUCHBASE_KEY_ENOENT ] { 13 }
     Constant [ integer COUCHBASE_DLOPEN_FAILED ] { 14 }
@@ -45,9 +60,10 @@ Extension [ <persistent> extension #195 couchbase version 2.2.0beta2 ] {
     Constant [ integer COUCHBASE_UNKNOWN_HOST ] { 21 }
     Constant [ integer COUCHBASE_PROTOCOL_ERROR ] { 22 }
     Constant [ integer COUCHBASE_ETIMEDOUT ] { 23 }
+    Constant [ integer COUCHBASE_CONNECT_ERROR ] { 24 }
     Constant [ integer COUCHBASE_BUCKET_ENOENT ] { 25 }
     Constant [ integer COUCHBASE_CLIENT_ENOMEM ] { 26 }
-    Constant [ integer COUCHBASE_CONNECT_ERROR ] { 24 }
+    Constant [ integer COUCHBASE_CLIENT_ENOCONF ] { 27 }
     Constant [ integer COUCHBASE_EBADHANDLE ] { 28 }
     Constant [ integer COUCHBASE_SERVER_BUG ] { 29 }
     Constant [ integer COUCHBASE_PLUGIN_VERSION_MISMATCH ] { 30 }
@@ -55,10 +71,51 @@ Extension [ <persistent> extension #195 couchbase version 2.2.0beta2 ] {
     Constant [ integer COUCHBASE_INVALID_CHAR ] { 32 }
     Constant [ integer COUCHBASE_DURABILITY_ETOOMANY ] { 33 }
     Constant [ integer COUCHBASE_DUPLICATE_COMMANDS ] { 34 }
-    Constant [ integer COUCHBASE_EINTERNAL ] { 6 }
     Constant [ integer COUCHBASE_NO_MATCHING_SERVER ] { 35 }
     Constant [ integer COUCHBASE_BAD_ENVIRONMENT ] { 36 }
-    Constant [ integer COUCHBASE_VALUE_F_JSON ] { 1 }
+    Constant [ integer COUCHBASE_BUSY ] { 37 }
+    Constant [ integer COUCHBASE_INVALID_USERNAME ] { 38 }
+    Constant [ integer COUCHBASE_CONFIG_CACHE_INVALID ] { 39 }
+    Constant [ integer COUCHBASE_SASLMECH_UNAVAILABLE ] { 40 }
+    Constant [ integer COUCHBASE_TOO_MANY_REDIRECTS ] { 41 }
+    Constant [ integer COUCHBASE_MAP_CHANGED ] { 42 }
+    Constant [ integer COUCHBASE_INCOMPLETE_PACKET ] { 43 }
+    Constant [ integer COUCHBASE_ECONNREFUSED ] { 44 }
+    Constant [ integer COUCHBASE_ESOCKSHUTDOWN ] { 45 }
+    Constant [ integer COUCHBASE_ECONNRESET ] { 46 }
+    Constant [ integer COUCHBASE_ECANTGETPORT ] { 47 }
+    Constant [ integer COUCHBASE_EFDLIMITREACHED ] { 48 }
+    Constant [ integer COUCHBASE_ENETUNREACH ] { 49 }
+    Constant [ integer COUCHBASE_ECTL_UNKNOWN ] { 50 }
+    Constant [ integer COUCHBASE_ECTL_UNSUPPMODE ] { 51 }
+    Constant [ integer COUCHBASE_ECTL_BADARG ] { 52 }
+    Constant [ integer COUCHBASE_EMPTY_KEY ] { 53 }
+    Constant [ integer COUCHBASE_SSL_ERROR ] { 54 }
+    Constant [ integer COUCHBASE_SSL_CANTVERIFY ] { 55 }
+    Constant [ integer COUCHBASE_SCHEDFAIL_INTERNAL ] { 56 }
+    Constant [ integer COUCHBASE_CLIENT_FEATURE_UNAVAILABLE ] { 57 }
+    Constant [ integer COUCHBASE_OPTIONS_CONFLICT ] { 58 }
+    Constant [ integer COUCHBASE_HTTP_ERROR ] { 59 }
+    Constant [ integer COUCHBASE_DURABILITY_NO_MUTATION_TOKENS ] { 60 }
+    Constant [ integer COUCHBASE_UNKNOWN_MEMCACHED_ERROR ] { 61 }
+    Constant [ integer COUCHBASE_MUTATION_LOST ] { 62 }
+    Constant [ integer COUCHBASE_SUBDOC_PATH_ENOENT ] { 63 }
+    Constant [ integer COUCHBASE_SUBDOC_PATH_MISMATCH ] { 64 }
+    Constant [ integer COUCHBASE_SUBDOC_PATH_EINVAL ] { 65 }
+    Constant [ integer COUCHBASE_SUBDOC_PATH_E2BIG ] { 66 }
+    Constant [ integer COUCHBASE_SUBDOC_DOC_E2DEEP ] { 67 }
+    Constant [ integer COUCHBASE_SUBDOC_VALUE_CANTINSERT ] { 68 }
+    Constant [ integer COUCHBASE_SUBDOC_DOC_NOTJSON ] { 69 }
+    Constant [ integer COUCHBASE_SUBDOC_NUM_ERANGE ] { 70 }
+    Constant [ integer COUCHBASE_SUBDOC_BAD_DELTA ] { 71 }
+    Constant [ integer COUCHBASE_SUBDOC_PATH_EEXISTS ] { 72 }
+    Constant [ integer COUCHBASE_SUBDOC_MULTI_FAILURE ] { 73 }
+    Constant [ integer COUCHBASE_SUBDOC_VALUE_E2DEEP ] { 74 }
+    Constant [ integer COUCHBASE_EINVAL_MCD ] { 75 }
+    Constant [ integer COUCHBASE_EMPTY_PATH ] { 76 }
+    Constant [ integer COUCHBASE_UNKNOWN_SDCMD ] { 77 }
+    Constant [ integer COUCHBASE_ENO_COMMANDS ] { 78 }
+    Constant [ integer COUCHBASE_QUERY_ERROR ] { 79 }
     Constant [ integer COUCHBASE_TMPFAIL ] { 11 }
     Constant [ integer COUCHBASE_KEYALREADYEXISTS ] { 12 }
     Constant [ integer COUCHBASE_KEYNOTFOUND ] { 13 }
@@ -75,7 +132,7 @@ Extension [ <persistent> extension #195 couchbase version 2.2.0beta2 ] {
     }
   }
 
-  - Classes [4] {
+  - Classes [6] {
     Class [ <internal:couchbase> class CouchbaseException extends Exception ] {
 
       - Constants [0] {
@@ -155,6 +212,53 @@ Extension [ <persistent> extension #195 couchbase version 2.2.0beta2 ] {
       }
     }
 
+    Class [ <internal:couchbase> class CouchbaseDocumentFragment ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [3] {
+        Property [ <default> public $error ]
+        Property [ <default> public $cas ]
+        Property [ <default> public $value ]
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:couchbase> class CouchbaseN1qlIndex ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [8] {
+        Property [ <default> public $name ]
+        Property [ <default> public $isPrimary ]
+        Property [ <default> public $type ]
+        Property [ <default> public $state ]
+        Property [ <default> public $keyspace ]
+        Property [ <default> public $namespace ]
+        Property [ <default> public $fields ]
+        Property [ <default> public $condition ]
+      }
+
+      - Methods [0] {
+      }
+    }
+
     Class [ <internal:couchbase> class _CouchbaseCluster ] {
 
       - Constants [0] {
@@ -195,7 +299,7 @@ Extension [ <persistent> extension #195 couchbase version 2.2.0beta2 ] {
       - Properties [0] {
       }
 
-      - Methods [18] {
+      - Methods [22] {
         Method [ <internal:couchbase, ctor> public method __construct ] {
         }
 
@@ -238,7 +342,19 @@ Extension [ <persistent> extension #195 couchbase version 2.2.0beta2 ] {
         Method [ <internal:couchbase> public method http_request ] {
         }
 
+        Method [ <internal:couchbase> public method subdoc_request ] {
+        }
+
         Method [ <internal:couchbase> public method durability ] {
+        }
+
+        Method [ <internal:couchbase> public method n1ix_list ] {
+        }
+
+        Method [ <internal:couchbase> public method n1ix_create ] {
+        }
+
+        Method [ <internal:couchbase> public method n1ix_drop ] {
         }
 
         Method [ <internal:couchbase> public method setTranscoder ] {
