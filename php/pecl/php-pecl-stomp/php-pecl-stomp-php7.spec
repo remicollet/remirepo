@@ -11,25 +11,18 @@
 
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name   stomp
-%if "%{php_version}" < "5.6"
-# After sockets
-%global ini_name    %{pecl_name}.ini
-%else
-# After 20-sockets
 %global ini_name    40-%{pecl_name}.ini
-%endif
 
 Summary:        Stomp client extension
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.0.9
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        2.0.0
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-devel > 7
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  openssl-devel
 
@@ -41,8 +34,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -50,14 +45,12 @@ Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
-%if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
-%endif
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -141,8 +134,6 @@ peclbuild %{_bindir}/zts-php-config
 
 
 %install
-rm -rf %{buildroot}
-
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
@@ -199,12 +190,7 @@ fi
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -219,6 +205,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu May 26 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- update to 2.0.0 (php 7, beta)
+
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.0.9-2
 - adapt for F24
 
