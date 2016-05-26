@@ -1,4 +1,4 @@
-===== 5.6.21 (2016-04-28)
+===== 5.6.22 (2016-05-26)
 
 $ grep -r 'Tests failed' /var/lib/mock/56*/build.log
 
