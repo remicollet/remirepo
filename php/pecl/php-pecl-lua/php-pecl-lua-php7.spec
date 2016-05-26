@@ -18,7 +18,7 @@
 
 Summary:        Embedded lua interpreter
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        2.0.1
+Version:        2.0.2
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -221,6 +221,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Thu May 26 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- update to 2.0.2 for PHP 7
+
 * Tue Apr 12 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - update to 2.0.1 for PHP 7
 

@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #65 lua version 2.0.1 ] {
+Extension [ <persistent> extension #66 lua version 2.0.2 ] {
 
   - Constants [8] {
     Constant [ integer LUA_OK ] { 0 }
