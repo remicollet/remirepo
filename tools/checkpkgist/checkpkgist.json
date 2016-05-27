@@ -1,5 +1,4 @@
 {
-    "php-composer-ca-bundle": "composer\/ca-bundle",
     "php-ZendFramework": "zendframework\/zendframework1",
     "php-phpunit-PHPUnit-Story": "phpunit\/phpunit-story",
     "php-phpunit-phpdcd": "sebastian\/phpdcd",
