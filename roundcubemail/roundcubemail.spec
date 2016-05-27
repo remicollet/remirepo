@@ -14,13 +14,13 @@
 %else
 %global with_phpfpm 0
 %endif
-%global prever      rc
+#global prever      rc
 
 %global roundcubedir %{_datadir}/roundcubemail
 %global _logdir /var/log  
 Name: roundcubemail
-Version:  1.2
-Release:  0.2.%{prever}%{?dist}
+Version:  1.2.0
+Release:  1%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
 Group: Applications/System
@@ -94,7 +94,7 @@ Requires: php-xml
 #        "pear-pear.php.net/net_idna2": "~0.1.1",
 #        "pear-pear.php.net/mail_mime": "~1.10.0",
 #        "pear-pear.php.net/net_smtp": "~1.7.1",
-#        "pear-pear.php.net/crypt_gpg": "~1.4.0",
+#        "pear-pear.php.net/crypt_gpg": "~1.4.1",
 #        "roundcube/net_sieve": "~1.5.0"
 #   not available and doesn't make sense roundcube/plugin-installer
 Requires: php-pear(Net_Socket)      >= 1.0.12
@@ -102,7 +102,7 @@ Requires: php-pear(Auth_SASL)       >= 1.0.6
 Requires: php-pear(Net_IDNA2)       >= 0.1.1
 Requires: php-pear(Mail_Mime)       >= 1.10.0
 Requires: php-pear(Net_SMTP)        >= 1.7.1
-Requires: php-pear(Crypt_GPG)       >= 1.4.0
+Requires: php-pear(Crypt_GPG)       >= 1.4.1
 Requires: php-composer(roundcube/net_sieve) >= 1.5.0
 # From composer.json-dist, suggest
 #        "pear-pear.php.net/net_ldap2": "~2.2.0 required for connecting to LDAP address books",
@@ -277,6 +277,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri May 27 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- update to 1.2.0
+- raise dependency on Crypt_GPG ~1.4.1
+
 * Thu Apr 21 2016 Remi Collet <remi@fedoraproject.org> - 1.2-0.2.rc
 - update to 1.2-rc
 - sources from github
