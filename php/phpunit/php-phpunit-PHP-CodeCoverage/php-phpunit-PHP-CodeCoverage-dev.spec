@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    4862dac433cbdb4438b593fa7f79e07559ba157e
+%global gh_commit    44cd8e3930e431658d1a5de7d282d5cb37837fd5
 #global gh_date      20150924
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHP_CodeCoverage
 %global pear_channel pear.phpunit.de
 %global major        3.3
-%global minor        2
+%global minor        3
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
@@ -166,6 +166,9 @@ fi
 
 
 %changelog
+* Sat May 28 2016 Remi Collet <remi@fedoraproject.org> - 3.3.3-1
+- Update to 3.3.3
+
 * Wed May 25 2016 Remi Collet <remi@fedoraproject.org> - 3.3.2-1
 - Update to 3.3.2
 
