@@ -14,15 +14,14 @@
 
 Summary:        Routines for statistical computation
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        2.0.1
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        2.0.2
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-devel > 7
 BuildRequires:  %{?scl_prefix}php-pear
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
@@ -33,8 +32,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -115,8 +116,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
@@ -189,12 +188,7 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -208,6 +202,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat May 28 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- update to 2.0.1 (php 7, stable)
+
 * Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
 - adapt for F24
 
