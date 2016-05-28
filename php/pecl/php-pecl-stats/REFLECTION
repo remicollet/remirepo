@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #133 stats version 1.0.3 ] {
+Extension [ <persistent> extension #162 stats version 1.0.4 ] {
 
   - Functions {
     Function [ <internal:stats> function stats_cdf_t ] {
@@ -125,11 +125,11 @@ Extension [ <persistent> extension #133 stats version 1.0.3 ] {
     }
     Function [ <internal:stats> function stats_stat_factorial ] {
     }
+    Function [ <internal:stats> function stats_variance ] {
+    }
     Function [ <internal:stats> function stats_standard_deviation ] {
     }
     Function [ <internal:stats> function stats_absolute_deviation ] {
-    }
-    Function [ <internal:stats> function stats_variance ] {
     }
     Function [ <internal:stats> function stats_harmonic_mean ] {
     }

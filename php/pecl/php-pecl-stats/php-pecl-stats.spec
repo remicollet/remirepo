@@ -18,16 +18,14 @@
 
 Summary:        Routines for statistical computation
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.0.3
-Release:        6%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.0.4
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-# https://bugs.php.net/65884 Please Provides LICENSE file
-# Link from the headers
-Source1:        http://www.php.net/license/3_0.txt
+Patch0:         %{pecl_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -41,8 +39,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -83,14 +83,7 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-
-# empty this file which try to dl("stats.so")
-> tests/common.php
-
-cp %{SOURCE1} LICENSE
-
-# Fix version
-sed -e '/PHP_STATS_VERSION/s/1.0.3-dev/%{version}/' -i php_stats.h
+%patch0 -p1 -b .fix
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_STATS_VERSION/{s/.* "//;s/".*$//;p}' php_stats.h)
@@ -189,7 +182,7 @@ TEST_PHP_EXECUTABLE=%{_bindir}/php \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/php -n run-tests.php
+%{_bindir}/php -n run-tests.php --show-diff
 
 
 %if %{with_zts}
@@ -204,7 +197,7 @@ TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__ztsphp} -n run-tests.php
+%{__ztsphp} -n run-tests.php --show-diff
 %endif
 
 
@@ -228,6 +221,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat May 28 2016 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- update to 1.0.4 (php 5, stable)
+
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-6
 - adapt for F24
 

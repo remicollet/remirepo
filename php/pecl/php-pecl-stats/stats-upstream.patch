@@ -1,0 +1,29 @@
+From 9eadb06e96aabfaed7598bc3a7e730d74a9a9631 Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Sat, 28 May 2016 09:48:44 +0200
+Subject: [PATCH] fix zend_parse_parameters call and segfault in
+ stats_stat_binomial_coef
+
+---
+ php_stats.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/php_stats.c b/php_stats.c
+index 8b7c3ef..d7da5fd 100644
+--- a/php_stats.c
++++ b/php_stats.c
+@@ -3381,9 +3381,9 @@ PHP_FUNCTION(stats_stat_correlation)
+ 	Not documented */
+ PHP_FUNCTION(stats_stat_binomial_coef)
+ {
+-	int i;
++	long i;
+ 	long n;
+-	int x;
++	long x;
+ 	double bc = 1.0;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll", &x, &n) == FAILURE) {
+-- 
+2.1.4
+
