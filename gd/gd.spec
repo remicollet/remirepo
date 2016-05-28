@@ -1,13 +1,21 @@
+# remirepo spec file for gd-last
+# renamed for parallel installation, from:
+#
+# Fedora spec file for gd
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 #global prever    dev
 #global commit    725ba9de4005144d137d2a7a70f760068fc3d306
-#global short     %(c=%{commit}; echo ${c:0:7})
+#global short     %%(c=%%{commit}; echo ${c:0:7})
 
-# We observe a huge memory consumption on EL-6
-# when libvpx is enabled (~500MB)
-%if 0%{?fedora} < 17 && 0%{?rhel} < 6
-%global  with_vpx  0
+%if 0%{?fedora} < 20 && 0%{?rhel} < 6
+%global  with_webp  0
 %else
-%global  with_vpx  1
+%global  with_webp  1
 %endif
 
 Summary:       A graphics library for quick creation of PNG or JPEG images
@@ -16,24 +24,22 @@ Name:          gd
 %else
 Name:          gd-last
 %endif
-Version:       2.1.1
+Version:       2.2.1
 Release:       2%{?prever}%{?short}%{?dist}
 Group:         System Environment/Libraries
 License:       MIT
-URL:           http://libgd.bitbucket.org/
+URL:           http://libgd.github.io/
 %if 0%{?commit:1}
-# git clone git@bitbucket.org:libgd/gd-libgd.git; cd gd-libgd
-# git archive  --format=tgz --output=libgd-2.1.0-$(git rev-parse master).tgz --prefix=libgd-2.1.0/  master
+# git clone https://github.com/libgd/libgd.git; cd gd-libgd
+# git archive  --format=tgz --output=libgd-%{version}-%{commit}.tgz --prefix=libgd-%{version}/  master
 Source0:       libgd-%{version}-%{commit}.tgz
-# Stable archive (only used in EL-5 for autostuff)
-Source1:       https://bitbucket.org/libgd/gd-libgd/downloads/libgd-%{version}-rc2.tar.xz
 %else
-Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/libgd-%{version}%{?prever:-%{prever}}.tar.xz
+Source0:       https://github.com/libgd/libgd/releases/download/gd-%{version}/libgd-%{version}.tar.xz
 %endif
-# Missing in official archive, need for autoreconf
-Source2:       getver.pl
 
 Patch1:        gd-2.1.0-multilib.patch
+Patch2:        gd-2.2.1-initialize-full_filename.patch
+Patch3:        gd-2.2.1-fix-unused-variable-in-tests.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: freetype-devel
@@ -42,8 +48,8 @@ BuildRequires: gettext-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
 BuildRequires: libtiff-devel
-%if %{with_vpx}
-BuildRequires: libvpx-devel
+%if %{with_webp}
+BuildRequires: libwebp-devel
 %endif
 BuildRequires: libX11-devel
 BuildRequires: libXpm-devel
@@ -51,6 +57,10 @@ BuildRequires: zlib-devel
 BuildRequires: pkgconfig
 BuildRequires: libtool
 BuildRequires: perl
+
+%if "%{name}" != "gd-last"
+Obsoletes: gd-last <= %{version}
+%endif
 
 
 %description
@@ -69,6 +79,8 @@ Group:          Applications/Multimedia
 %if "%{name}" == "gd-last"
 Conflicts:      gd-progs < %{version}
 Provides:       gd-progs = %{version}-%{release}
+%else
+Obsoletes:      gd-last-progs <= %{version}
 %endif
 
 %description progs
@@ -85,8 +97,8 @@ Requires: fontconfig-devel%{?_isa}
 Requires: libjpeg-devel%{?_isa}
 Requires: libpng-devel%{?_isa}
 Requires: libtiff-devel%{?_isa}
-%if %{with_vpx}
-Requires: libvpx-devel%{?_isa}
+%if %{with_webp}
+Requires: libwebp-devel%{?_isa}
 %endif
 Requires: libX11-devel%{?_isa}
 Requires: libXpm-devel%{?_isa}
@@ -95,6 +107,8 @@ Requires: zlib-devel%{?_isa}
 %if "%{name}" == "gd-last"
 Conflicts: gd-devel < %{version}
 Provides:  gd-devel = %{version}-%{release}
+%else
+Obsoletes: gd-last-devel <= %{version}
 %endif
 
 
@@ -106,21 +120,13 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 %prep
 %setup -q -n libgd-%{version}%{?prever:-%{prever}}
 %patch1 -p1 -b .mlib
-
-# Workaround for https://bugzilla.redhat.com/978415
-touch src/vpx_config.h
-
-# Workaround for missing file
-cp %{SOURCE2} config/getver.pl
+%patch2 -p1 -b .full_filename
+%patch3 -p1 -b .unused-variable
 
 : $(perl config/getver.pl)
 
 # RHEL-5 auto* are too old
-%if 0%{?rhel} == 5
-%if 0%{?commit:1}
-xzcat %{SOURCE1} | \
-tar --extract --file - --keep-newer-files --strip-components 1
-%endif
+%if 0%{?rhel} == 5 || 0%{?rhel} == 6
 %else
 : regenerate autotool stuff
 if [ -f configure ]; then
@@ -141,10 +147,11 @@ CFLAGS="$RPM_OPT_FLAGS -DDEFAULT_FONTPATH='\"\
 /usr/share/X11/fonts/Type1:\
 /usr/share/fonts/liberation\"'"
 
-%configure \
-%if %{with_vpx}
-    --with-vpx=%{_prefix} \
+%if 0%{?rhel} == 5
+CFLAGS="$CFLAGS -fno-strict-aliasing"
 %endif
+
+%configure \
     --with-tiff=%{_prefix} \
     --disable-rpath
 make %{?_smp_mflags}
@@ -157,8 +164,11 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/libgd.a
 
 
 %check
-%if 0%{?fedora} <= 14 && 0%{?rhel} <= 5
-export XFAIL_TESTS="gdimagestringft/gdimagestringft_bbox"
+%if 0%{?rhel} > 0 && 0%{?rhel} <= 6
+export XFAIL_TESTS="freetype/bug00132"
+%endif
+%if 0%{?rhel} > 0 && 0%{?rhel} <= 5
+export XFAIL_TESTS="gdimagestringft/gdimagestringft_bbox $XFAIL_TESTS"
 %endif
 
 : Upstream test suite
@@ -194,6 +204,17 @@ grep %{version} $RPM_BUILD_ROOT%{_libdir}/pkgconfig/gdlib.pc
 
 
 %changelog
+* Sat May 28 2016 Remi Collet <remi@fedoraproject.org> - 2.2.1-2
+- Update to 2.2.1 (from Fedora)
+- remove unneeded sources
+- fix EL-5 and EL-6 build
+- obsolete gd-last when needed
+- use libwebp instead of libvpx for webp images
+
+* Fri May 27 2016 Marek Skalicky <mskalick@redhat.com> - 2.2.1-1
+- Upgrade to 2.2.1 release
+- Upstream moved to github.com
+
 * Mon Mar 23 2015 Remi Collet <remi@fedoraproject.org> - 2.1.1-2
 - fix version in gdlib.pc
 

@@ -1,0 +1,22 @@
+From 7d0d9d2a4f8e48f19e1603c649d4f15d0b9736de Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ond=C5=99ej=20Sur=C3=BD?= <ondrej@sury.org>
+Date: Fri, 20 May 2016 10:44:33 +0200
+Subject: [PATCH] Fix error: unused variable in tests/
+
+---
+ tests/gdimagesetpixel/gdeffectoverlay.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/tests/gdimagesetpixel/gdeffectoverlay.c b/tests/gdimagesetpixel/gdeffectoverlay.c
+index 5e42547..7f63e17 100644
+--- a/tests/gdimagesetpixel/gdeffectoverlay.c
++++ b/tests/gdimagesetpixel/gdeffectoverlay.c
+@@ -5,8 +5,6 @@ int main()
+ {
+ 	gdImagePtr im;
+ 	int x, y, c;
+-	FILE *out;
+-	char path[1024];
+ 	int r=0;
+ 
+ 
