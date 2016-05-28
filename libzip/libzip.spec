@@ -26,7 +26,7 @@ Name:    %{libname}-last
 %else
 Name:    %{libname}
 %endif
-Version: 1.1.2
+Version: 1.1.3
 Release: 1%{?dist}
 Group:   System Environment/Libraries
 Summary: C library for reading, creating, and modifying zip archives
@@ -164,7 +164,7 @@ make check
 
 %files devel
 %defattr(-,root,root,-)
-%doc API-CHANGES AUTHORS NEWS THANKS
+%doc API-CHANGES AUTHORS THANKS *.md
 %{_includedir}/zip.h
 %{_includedir}/zipconf*.h
 %dir %{_libdir}/libzip
@@ -177,6 +177,9 @@ make check
 
 
 %changelog
+* Sat May 28 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
+- update to 1.1.3
+
 * Sat Feb 20 2016 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - update to 1.1.2
 
