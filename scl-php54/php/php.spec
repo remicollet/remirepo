@@ -119,7 +119,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.4.45
-Release: 8%{?dist}
+Release: 9%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -206,6 +206,11 @@ Patch223: bug72061.patch
 Patch224: bug72093.patch
 Patch225: bug72094.patch
 Patch226: bug72099.patch
+Patch227: bug71331.patch
+Patch228: bug72114.patch
+Patch229: bugoverflow.patch
+Patch230: bug72135.patch
+Patch231: bug72241.patch
 
 # Fixes for tests (300+)
 # Backported from 5.5
@@ -870,6 +875,11 @@ support for using the enchant library to PHP.
 %patch224 -p1 -b .bug72093
 %patch225 -p1 -b .bug72094
 %patch226 -p1 -b .bug72099
+%patch227 -p1 -b .bug71331
+%patch228 -p1 -b .bug72114
+%patch229 -p1 -b .bugoverflow
+%patch230 -p1 -b .bug72135
+%patch231 -p1 -b .bug72241
 
 # Fixes for tests
 %patch300 -p1 -b .datetests1
@@ -1693,6 +1703,17 @@ EOF
 
 
 %changelog
+* Sun May 29 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-9
+- Fix #71331: Uninitialized pointer in phar_make_dirstream
+  CVE-2016-4343
+- Fix #72114: int/size_t confusion in fread
+  CVE-2016-5096
+- Add check for string overflow to all string add operations
+- Fix #72135: don't create strings with lengths outside int range
+  CVE-2016-5094
+- Fix #72241: get_icu_value_internal out-of-bounds read
+  CVE-2016-5093
+
 * Tue Apr 26 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-8
 - Fix #64938: libxml_disable_entity_loader setting is shared between threads
   CVE-2015-8866
