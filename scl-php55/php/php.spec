@@ -700,15 +700,16 @@ BuildRequires: libXpm-devel
 %if %{with_t1lib}
 BuildRequires: t1lib-devel
 %endif
-%if %{with_vpx}
-BuildRequires: libvpx-devel
-%endif
 %if %{with_libgd}
 BuildRequires: gd-devel >= 2.1.1
 %if 0%{?fedora} <= 19 && 0%{?rhel} <= 7
 Requires: gd-last%{?_isa} >= 2.1.1
 %else
 Requires: gd%{?_isa} >= 2.1.1
+%endif
+%else
+%if %{with_vpx}
+BuildRequires: libvpx-devel
 %endif
 %endif
 
@@ -1068,9 +1069,6 @@ ln -sf ../configure
     --with-freetype-dir=%{_root_prefix} \
     --with-png-dir=%{_root_prefix} \
     --with-xpm-dir=%{_root_prefix} \
-%if %{with_vpx}
-    --with-vpx-dir=%{_root_prefix} \
-%endif
     --enable-gd-native-ttf \
 %if %{with_t1lib}
     --with-t1lib=%{_root_prefix} \
@@ -1115,6 +1113,9 @@ build --libdir=%{_libdir}/php \
       --with-gd=shared,%{_root_prefix} \
 %else
       --with-gd=shared \
+%if %{with_vpx}
+      --with-vpx-dir=%{_root_prefix} \
+%endif
 %endif
       --with-gmp=shared \
       --enable-calendar=shared \

@@ -1153,9 +1153,6 @@ ln -sf ../configure
     --with-freetype-dir=%{_prefix} \
     --with-png-dir=%{_prefix} \
     --with-xpm-dir=%{_prefix} \
-%if %{with_vpx}
-    --with-vpx-dir=%{_prefix} \
-%endif
     --enable-gd-native-ttf \
     --with-t1lib=%{_prefix} \
     --without-gdbm \
@@ -1203,6 +1200,9 @@ build --libdir=%{_libdir}/php \
       --with-gd=shared,%{_prefix} \
 %else
       --with-gd=shared \
+%if %{with_vpx}
+      --with-vpx-dir=%{_prefix} \
+%endif
 %endif
       --with-gmp=shared \
       --enable-calendar=shared \
@@ -1345,6 +1345,9 @@ build --includedir=%{_includedir}/php-zts \
       --with-gd=shared,%{_prefix} \
 %else
       --with-gd=shared \
+%if %{with_vpx}
+      --with-vpx-dir=%{_prefix} \
+%endif
 %endif
       --with-gmp=shared \
       --enable-calendar=shared \
