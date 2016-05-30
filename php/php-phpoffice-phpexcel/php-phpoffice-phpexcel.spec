@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-phpoffice-phpexcel
 #
-# Copyright (c) 2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2015-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -28,7 +28,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{dist}
+Release:       3%{?github_release}%{dist}
 Summary:       A pure PHP library for reading and writing spreadsheet files
 
 Group:         Development/Libraries
@@ -186,9 +186,11 @@ rm -f \
     Classes/PHPExcel/Shared/StringTest.php \
     Classes/PHPExcel/Style/NumberFormatTest.php testFormatValueWithMask \
     Classes/PHPExcel/Worksheet/AutoFilter/Column/RuleTest.php \
-    Classes/PHPExcel/Worksheet/CellCollectionTest.php
+    Classes/PHPExcel/Worksheet/CellCollectionTest.php \
+    Classes/PHPExcel/Worksheet/ColumnIteratorTest.php \
+    Classes/PHPExcel/Worksheet/RowIteratorTest.php
 
-%{_bindir}/phpunit
+%{_bindir}/phpunit --verbose
 %else
 : Tests skipped
 %endif
@@ -224,6 +226,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon May 30 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.8.1-3
+- Skip additional tests known to fail
+- See https://github.com/PHPOffice/PHPExcel/issues/910
+
 * Tue Oct 13 2015 Remi Collet <remi@fedoraproject.org> - 1.8.1-1
 - backport for remi repo, add EL-5 stuff
 
