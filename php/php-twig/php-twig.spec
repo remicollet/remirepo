@@ -14,10 +14,16 @@
 
 %global github_owner     twigphp
 %global github_name      Twig
-%global github_version   1.24.0
-%global github_commit    3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8
+%global github_version   1.24.1
+%global github_commit    3566d311a92aae4deec6e48682dc5a4528c4a512
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
+%if "%{php_version}" < "7"
+%global with_ext 1
+%else
+%global with_ext 0
+BuildArch: noarch
+%endif
 
 # Lib
 %global composer_vendor  twig
@@ -171,6 +177,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+%if %{with_ext}
 : Ext -- NTS
 mv ext/%{ext_name} ext/NTS
 %if %{with_zts}
@@ -183,6 +190,7 @@ cat > %{ini_name} << 'INI'
 ; Enable %{ext_name} extension module
 extension=%{ext_name}.so
 INI
+%endif
 
 : Create lib autoloader
 cat <<'AUTOLOAD' | tee lib/Twig/autoload.php
@@ -197,8 +205,12 @@ require_once __DIR__ . '/Autoloader.php';
 Twig_Autoloader::register();
 AUTOLOAD
 
+: Disable deprecated warning
+sed -e '/trigger_error/d' -i lib/Twig/Autoloader.php
+
 
 %build
+%if %{with_ext}
 : Ext -- NTS
 pushd ext/NTS
 %{_bindir}/phpize
@@ -214,6 +226,7 @@ pushd ext/ZTS
 make %{?_smp_mflags}
 popd
 %endif
+%endif
 
 
 %install
@@ -223,6 +236,7 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}%{phpdir}
 cp -rp lib/* %{buildroot}%{phpdir}/
 
+%if %{with_ext}
 : Ext -- NTS
 make -C ext/NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 0644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
@@ -231,6 +245,7 @@ install -D -m 0644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 make -C ext/ZTS install INSTALL_ROOT=%{buildroot}
 install -D -m 0644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
+%endif
 
 
 %check
@@ -238,6 +253,7 @@ install -D -m 0644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %{_bindir}/php -r 'require_once "%{buildroot}%{phpdir}/Twig/autoload.php";
     exit(version_compare("%{version}", Twig_Environment::VERSION, "=") ? 0 : 1);'
 
+%if %{with_ext}
 : Extension version check
 EXT_VERSION=`grep PHP_TWIG_VERSION ext/NTS/php_twig.h | awk '{print $3}' | sed 's/"//g'` \
     %{_bindir}/php -r 'exit(version_compare("%{version}", getenv("EXT_VERSION"), "=") ? 0 : 1);'
@@ -253,6 +269,7 @@ EXT_VERSION=`grep PHP_TWIG_VERSION ext/NTS/php_twig.h | awk '{print $3}' | sed '
     --define extension=ext/ZTS/modules/%{ext_name}.so \
     --modules | grep %{ext_name}
 %endif
+%endif
 
 %if %{with_tests}
 : Skip tests known to fail
@@ -264,6 +281,7 @@ sed -e 's/function testGetAttributeWithTemplateAsObject/function skip_testGetAtt
 : Test suite without extension
 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php --verbose
 
+%if %{with_ext}
 : Test suite with extension
 %{_bindir}/php --define extension=ext/NTS/modules/%{ext_name}.so \
     %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php --verbose
@@ -271,6 +289,7 @@ sed -e 's/function testGetAttributeWithTemplateAsObject/function skip_testGetAtt
 if which php70; then
    php70 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php --verbose
 fi
+%endif
 %else
 : Tests skipped
 %endif
@@ -287,6 +306,7 @@ rm -rf %{buildroot}
 %doc CHANGELOG README.rst composer.json
 # Lib
 %{phpdir}/Twig
+%if %{with_ext}
 # Ext
 ## NTS
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -296,9 +316,15 @@ rm -rf %{buildroot}
 %config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{ext_name}.so
 %endif
+%endif
 
 
 %changelog
+* Mon May 30 2016 Remi Collet <remi@fedoraproject.org> - 1.24.1-1
+- Update to 1.24.1
+- disable deprecation warning
+- disable extension build with PHP 7
+
 * Tue Jan 26 2016 Remi Collet <remi@fedoraproject.org> - 1.24.0-1
 - Update to 1.24.0
 
