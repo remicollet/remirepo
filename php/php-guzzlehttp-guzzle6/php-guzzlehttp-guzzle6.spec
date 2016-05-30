@@ -44,7 +44,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}6
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}.1
+Release:       3%{?github_release}%{?dist}
 Summary:       PHP HTTP client library
 
 Group:         Development/Libraries
@@ -55,6 +55,11 @@ URL:           http://guzzlephp.org
 # Run php-guzzlehttp-guzzle6.sh to create full source.
 Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
 Source1:       %{name}-get-source.sh
+
+# Fixing failing test
+# https://github.com/guzzle/guzzle/issues/1470
+# https://github.com/guzzle/guzzle/commit/0d082d5714082d5c9e414e076507e883ccbf9f96
+Patch0:        %{name}-0d082d5714082d5c9e414e076507e883ccbf9f96.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -130,6 +135,9 @@ Autoloader: %{phpdir}/GuzzleHttp6/autoload.php
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
+
+: Fix failing test
+%patch0 -p1
 
 
 %build
@@ -210,6 +218,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun May 29 2016 Shawn Iwinski <shawn@iwin.ski> - 6.2.0-3
+- Fix failing test
+
 * Fri Apr 15 2016 Remi Collet <remi@remirepo.net> - 6.2.0-2.1
 - fix dep. on EL-5
 
