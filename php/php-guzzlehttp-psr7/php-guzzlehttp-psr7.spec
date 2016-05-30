@@ -12,8 +12,8 @@
 
 %global github_owner     guzzle
 %global github_name      psr7
-%global github_version   1.2.3
-%global github_commit    2e89629ff057ebb49492ba08e6995d3a6a80021b
+%global github_version   1.3.0
+%global github_commit    31382fef2889136415751badebbd1cb022a4ed72
 
 %global composer_vendor  guzzlehttp
 %global composer_project psr7
@@ -47,9 +47,10 @@ BuildArch:     noarch
 BuildRequires: php(language)                  >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(psr/http-message) >= %{psr_http_message_min_ver}
-## phpcompatinfo (computed from version 1.2.3)
+## phpcompatinfo (computed from version 1.3.0)
 BuildRequires: php-hash
 BuildRequires: php-pcre
+BuildRequires: php-reflection
 BuildRequires: php-spl
 BuildRequires: php-zlib
 ## Autoloader
@@ -60,7 +61,7 @@ BuildRequires: php-composer(symfony/class-loader)
 Requires:      php(language)                  >= %{php_min_ver}
 Requires:      php-composer(psr/http-message) >= %{psr_http_message_min_ver}
 Requires:      php-composer(psr/http-message) <  %{psr_http_message_max_ver}
-# phpcompatinfo (computed from version 1.2.3)
+# phpcompatinfo (computed from version 1.3.0)
 Requires:      php-hash
 Requires:      php-pcre
 Requires:      php-spl
@@ -148,6 +149,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun May 29 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.0-1
+- Updated to 1.3.0 (RHBZ #1326975)
+
 * Fri Mar 11 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.3-1
 - Updated to 1.2.3 (RHBZ #1301276)
 
