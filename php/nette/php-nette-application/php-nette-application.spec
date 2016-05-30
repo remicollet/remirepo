@@ -18,7 +18,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.3.12
-%global specrel 2
+%global specrel 3
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Application MVC Component
 
@@ -28,6 +28,8 @@ URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        %{name}-%{version}-%{gh_short}.tgz
 # pull a git snapshot to get test sutie
 Source1:        makesrc.sh
+
+Patch0:         %{name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -102,6 +104,8 @@ To use this library, you just have to add, in your project:
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+
+%patch0 -p1 -b .upstream
 
 
 %build
@@ -180,6 +184,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon May 30 2016 Remi Collet <remi@fedoraproject.org> - 2.3.12-3
+- add upstream patch for tests, fix FTBFS, thanks Koschei
+
 * Thu Apr 14 2016 Remi Collet <remi@fedoraproject.org> - 2.3.12-2
 - don't use include_once in autoloader
 
