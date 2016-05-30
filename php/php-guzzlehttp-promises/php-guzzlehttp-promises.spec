@@ -12,8 +12,8 @@
 
 %global github_owner     guzzle
 %global github_name      promises
-%global github_version   1.1.0
-%global github_commit    bb9024c526b22f3fe6ae55a561fd70653d470aa8
+%global github_version   1.2.0
+%global github_commit    c10d860e2a9595f8883527fa0021c7da9e65f579
 
 %global composer_vendor  guzzlehttp
 %global composer_project promises
@@ -43,7 +43,7 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 1.1.0)
+## phpcompatinfo (computed from version 1.2.0)
 BuildRequires: php-json
 BuildRequires: php-spl
 ## Autoloader
@@ -52,7 +52,7 @@ BuildRequires: php-composer(symfony/class-loader)
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.1.0)
+# phpcompatinfo (computed from version 1.2.0)
 Requires:      php-json
 Requires:      php-spl
 # Autoloader
@@ -142,6 +142,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun May 29 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.0-1
+- Updated to 1.2.0 (RHBZ #1337366)
+
 * Sun Mar 13 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.0-1
 - Updated to 1.1.0 (RHBZ #1315685)
 
