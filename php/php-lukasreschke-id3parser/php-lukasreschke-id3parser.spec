@@ -16,7 +16,7 @@
 Name:           php-%{pk_owner}-%{pk_project}
 Version:        0.0.1
 Release:        1%{?dist}
-Summary:        PHP stream wrapper for a virtual file system
+Summary:        ID3 parser library
 
 Group:          Development/Libraries
 # https://github.com/LukasReschke/ID3Parser/issues/1
