@@ -1,3 +1,4 @@
+# remirepo spec file for php-symfony-securiy-acl, from:
 #
 # Fedora spec file for php-symfony-securiy-acl
 #
@@ -58,6 +59,7 @@ URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
 BuildArch:     noarch
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # Tests
 %if %{with_tests}
 ## composer.json
@@ -88,10 +90,14 @@ Requires:      php-spl
 Requires:      php-composer(symfony/class-loader)
 
 # Weak dependencies
+%if 0%{?fedora} >= 21
 Suggests:      php-composer(doctrine/dbal)
+%endif
 Conflicts:     php-doctrine-dbal  <  %{doctrine_dbal_min_ver}
 Conflicts:     php-doctrine-dbal  >= %{doctrine_dbal_max_ver}
+%if 0%{?fedora} >= 21
 Suggests:      php-composer(symfony/finder)
+%endif
 Conflicts:     php-symfony-finder <  %{symfony_min_ver}
 Conflicts:     php-symfony-finder >= %{symfony_max_ver}
 
@@ -149,6 +155,8 @@ AUTOLOAD
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}/Symfony/Component/Security/Acl
 cp -rp * %{buildroot}%{phpdir}/Symfony/Component/Security/Acl/
 
@@ -165,12 +173,21 @@ require_once '%{phpdir}/Psr/Log/autoload.php';
 BOOTSTRAP
 
 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+
+if which php70; then
+   php70 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+fi
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -184,5 +201,8 @@ BOOTSTRAP
 
 
 %changelog
+* Tue May 31 2016 Remi Collet <remi@remirepo.net> - 2.8.0-1
+- add backport stuff for remi repository
+
 * Fri May 20 2016 Shawn Iwinski <shawn@iwin.ski> - 2.8.0-1
 - Initial package
