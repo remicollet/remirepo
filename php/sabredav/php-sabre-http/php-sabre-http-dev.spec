@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    6b06c03376219b3d608e1f878514ec105ed1b577
+%global gh_commit    2e93bc8321524c67be4ca5b8415daebd4c8bf85e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-http
@@ -15,14 +15,14 @@
 
 Name:           php-%{gh_project}
 Summary:        Library for dealing with http requests and responses
-Version:        3.0.5
+Version:        4.2.1
 Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 License:        BSD
 Group:          Development/Libraries
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
-Source1:        %{name}-autoload.php
+Source1:        %{name}-autoload-dev.php
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -31,7 +31,7 @@ BuildRequires:  php(language) > 5.4
 BuildRequires:  php-mbstring
 BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php-composer(sabre/event) >= 1.0.0
-BuildRequires:  php-composer(sabre/event) <  3
+BuildRequires:  php-composer(sabre/uri)   >= 1.0
 BuildRequires:  php-ctype
 BuildRequires:  php-curl
 BuildRequires:  php-date
@@ -47,11 +47,14 @@ BuildRequires:  php-composer(sabre/event) >= 2.0.2
 # From composer.json, "require" : {
 #        "php"          : ">=5.4",
 #        "ext-mbstring" : "*",
-#        "sabre/event"  : ">=1.0.0,<3.0.0"
+#        "sabre/event"  : ">=1.0.0,<4.0.0",
+#        "sabre/uri"    : "~1.0"
 Requires:       php(language) > 5.4
 Requires:       php-mbstring
 Requires:       php-composer(sabre/event) >= 1.0.0
-Requires:       php-composer(sabre/event) <  3
+Requires:       php-composer(sabre/event) <  4
+Requires:       php-composer(sabre/uri)   >= 1.0
+Requires:       php-composer(sabre/uri)   <  2
 # From composer.json, "suggest" : {
 #        "ext-curl" : " to make http requests with the Client class"
 Requires:       php-curl
@@ -118,9 +121,15 @@ cp -pr lib %{buildroot}%{_datadir}/php/Sabre/HTTP
 %if %{with_tests}
 : Run upstream test suite against installed library
 cd tests
-phpunit \
+%{_bindir}/phpunit \
   --bootstrap=%{buildroot}%{_datadir}/php/Sabre/HTTP/autoload.php \
   --verbose
+
+if which php70; then
+  php70 %{_bindir}/phpunit \
+    --bootstrap=%{buildroot}%{_datadir}/php/Sabre/HTTP/autoload.php \
+    --verbose
+fi
 %else
 : Skip upstream test suite
 %endif
@@ -140,6 +149,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Mar 11 2016 Remi Collet <remi@fedoraproject.org> - 4.2.1-1
+- update to 4.2.1
+- add dependency on sabre/uri
+- run test suite with both PHP 5 and 7 when available
+
 * Mon Jul 20 2015 Remi Collet <remi@fedoraproject.org> - 3.0.5-1
 - update to 3.0.5
 - add autoloader
