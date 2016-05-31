@@ -12,8 +12,8 @@
 
 %global github_owner     reactphp
 %global github_name      promise
-%global github_version   2.4.0
-%global github_commit    f942da7b505d1a294284ab343d05df42d02ad6d9
+%global github_version   2.4.1
+%global github_commit    8025426794f1944de806618671d4fa476dc7626f
 
 %global composer_vendor  react
 %global composer_project promise
@@ -40,10 +40,10 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
-BuildRequires: %{_bindir}/phpunit
+BuildRequires: php-composer(phpunit/phpunit)
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
-## phpcompatinfo (computed from version 2.4.0)
+## phpcompatinfo (computed from version 2.4.1)
 BuildRequires: php-json
 BuildRequires: php-reflection
 BuildRequires: php-spl
@@ -53,7 +53,7 @@ BuildRequires: php-composer(symfony/class-loader)
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 2.4.0)
+# phpcompatinfo (computed from version 2.4.1)
 Requires:      php-json
 Requires:      php-reflection
 Requires:      php-spl
@@ -151,6 +151,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon May 30 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.4.1-1
+- Updated to 2.4.1 (RHBZ #1332742)
+
 * Mon Apr 04 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.4.0-1
 - Updated to 2.4.0 (RHBZ #1319558)
 
