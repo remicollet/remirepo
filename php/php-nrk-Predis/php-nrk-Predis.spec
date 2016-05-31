@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear: %global __pear %{_bindir}/pear}
 %global pear_name    Predis
 %global pear_channel pear.nrk.io
 
@@ -17,7 +17,7 @@
 %endif
 
 Name:           php-nrk-Predis
-Version:        1.0.3
+Version:        1.0.4
 Release:        1%{?dist}
 Summary:        PHP client library for Redis
 
@@ -102,7 +102,11 @@ sed -e "s:/var:$PWD:" \
 : Run the installed test Suite against the installed library
 pushd %{buildroot}%{pear_testdir}/%{pear_name}
 ret=0
-phpunit --include-path=%{buildroot}%{pear_phpdir} || ret=1
+%{_bindir}/phpunit --include-path=%{buildroot}%{pear_phpdir} || ret=1
+
+if which php70; then
+   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{pear_phpdir} || ret=1
+fi
 popd
 
 : Cleanup
@@ -140,6 +144,9 @@ fi
 
 
 %changelog
+* Tue May 31 2016 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- Update to 1.0.4
+
 * Fri Jul 31 2015 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - Update to 1.0.3
 
