@@ -61,7 +61,7 @@ rm -rf       %{buildroot}
 install -Dpm 0644 lib_autolink.php %{buildroot}%{_datadir}/php/%{name}/lib_autolink.php
 
 # from composer.json, "autoload": {
-#		"files": ["lib_autolink.php"]
+#    "files": ["lib_autolink.php"]
 ln -s lib_autolink.php %{buildroot}%{_datadir}/php/%{name}/autoload.php
 
 
