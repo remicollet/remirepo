@@ -1,25 +1,36 @@
 diff --git a/lib/private/setup.php b/lib/private/setup.php
-index 8f1ae38..adc9f6a 100644
+index 6303d0d..7c30955 100644
 --- a/lib/private/setup.php
 +++ b/lib/private/setup.php
-@@ -369,12 +369,6 @@ class Setup {
+@@ -373,10 +373,6 @@ class Setup {
  			// out that this is indeed an ownCloud data directory
  			file_put_contents($config->getSystemValue('datadirectory', \OC::$SERVERROOT.'/data').'/.ocdata', '');
  
--			// Update htaccess files for apache hosts
--			if (isset($_SERVER['SERVER_SOFTWARE']) && strstr($_SERVER['SERVER_SOFTWARE'], 'Apache')) {
--				self::updateHtaccess();
--				self::protectDataDirectory();
--			}
+-			// Update .htaccess files
+-			Setup::updateHtaccess();
+-			Setup::protectDataDirectory();
 -
  			//try to write logtimezone
  			if (date_default_timezone_get()) {
  				$config->setSystemValue('logtimezone', date_default_timezone_get());
 diff --git a/lib/private/updater.php b/lib/private/updater.php
-index 9e5207c..6a169a6 100644
+index 0d567b8..6b0b1ad 100644
 --- a/lib/private/updater.php
 +++ b/lib/private/updater.php
-@@ -285,14 +285,6 @@ class Updater extends BasicEmitter {
+@@ -55,10 +55,10 @@ class Updater extends BasicEmitter {
+ 
+ 	/** @var ILogger $log */
+ 	private $log;
+-	
++
+ 	/** @var \OC\HTTPHelper $helper */
+ 	private $httpHelper;
+-	
++
+ 	/** @var IConfig */
+ 	private $config;
+ 
+@@ -294,14 +294,6 @@ class Updater extends BasicEmitter {
  			throw new \Exception('Updates between multiple major versions and downgrades are unsupported.');
  		}
  
@@ -34,18 +45,3 @@ index 9e5207c..6a169a6 100644
  		// create empty file in data dir, so we can later find
  		// out that this is indeed an ownCloud data directory
  		// (in case it didn't exist before)
-diff -up lib/private/setup.php.0 lib/private/setup.php
---- a/lib/private/setup.php.0	2016-03-23 08:12:31.399538916 +0100
-+++ b/lib/private/setup.php	2016-03-23 08:13:55.783981179 +0100
-@@ -415,6 +415,10 @@ class Setup {
- 	 * @throws \OC\HintException If .htaccess does not include the current version
- 	 */
- 	public static function updateHtaccess() {
-+
-+		// Should never be called, but for safety
-+		return;
-+
- 		$setupHelper = new \OC\Setup(\OC::$server->getConfig(), \OC::$server->getIniWrapper(),
- 			\OC::$server->getL10N('lib'), new \OC_Defaults(), \OC::$server->getLogger(),
- 			\OC::$server->getSecureRandom());
-

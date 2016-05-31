@@ -1,0 +1,50 @@
+diff --git a/settings/controller/checksetupcontroller.php b/settings/controller/checksetupcontroller.php
+index f849e3e..acfbc4e 100644
+--- a/settings/controller/checksetupcontroller.php
++++ b/settings/controller/checksetupcontroller.php
+@@ -83,8 +83,8 @@ class CheckSetupController extends Controller {
+ 
+ 		try {
+ 			$client = $this->clientService->newClient();
+-			$client->get('https://www.owncloud.org/');
+-			$client->get('http://www.owncloud.org/');
++			$client->get('https://owncloud.org/');
++			$client->get('http://owncloud.org/');
+ 			return true;
+ 		} catch (\Exception $e) {
+ 			return false;
+@@ -162,13 +162,13 @@ class CheckSetupController extends Controller {
+ 		if(strpos($versionString, 'NSS/') === 0) {
+ 			try {
+ 				$firstClient = $this->clientService->newClient();
+-				$firstClient->get('https://www.owncloud.org/');
++				$firstClient->get('https://api.owncloud.com/');
+ 
+ 				$secondClient = $this->clientService->newClient();
+-				$secondClient->get('https://owncloud.org/');
++				$secondClient->get('https://apps.owncloud.com/');
+ 			} catch (ClientException $e) {
+ 				if($e->getResponse()->getStatusCode() === 400) {
+-					return (string) $this->l10n->t('cURL is using an outdated %s version (%s). Please update your operating system or features such as %s will not work reliably.', ['NSS', $versionString, $features]);
++					return (string) $this->l10n->t('cURL is using %s version (%s). There may be an issue with features such as %s, this is expected to fixed in the RHEL7.3 milestone - bz#1241172', ['NSS', $versionString, $features]);
+ 				}
+ 			}
+ 		}
+diff --git a/lib/private/ocsclient.php b/lib/private/ocsclient.php
+index 359b5b4..28370f1 100644
+--- a/lib/private/ocsclient.php
++++ b/lib/private/ocsclient.php
+@@ -344,7 +344,12 @@ class OCSClient {
+ 		$tmp = $data->data->content;
+ 		$app = [];
+ 		if (isset($tmp->downloadlink)) {
+-			$app['downloadlink'] = (string)$tmp->downloadlink;
++            if (preg_match("/apps\.owncloud\.com/", (string)$tmp->downloadlink)) {
++                $downloadURL = preg_replace("/apps\.owncloud\.com/", "api.owncloud.com", (string)$tmp->downloadlink);
++            } else {
++                $downloadURL = (string)$tmp->downloadlink;
++            }
++			$app['downloadlink'] = $downloadURL;
+ 		} else {
+ 			$app['downloadlink'] = '';
+ 		}

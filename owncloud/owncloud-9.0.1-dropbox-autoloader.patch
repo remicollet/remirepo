@@ -1,5 +1,5 @@
 diff --git a/apps/files_external/ajax/oauth1.php b/apps/files_external/ajax/oauth1.php
-index 3d6736b..028d21a 100644
+index ea7db25..4279cec 100644
 --- a/apps/files_external/ajax/oauth1.php
 +++ b/apps/files_external/ajax/oauth1.php
 @@ -23,7 +23,6 @@
@@ -11,12 +11,12 @@ index 3d6736b..028d21a 100644
  OCP\JSON::checkAppEnabled('files_external');
  OCP\JSON::checkLoggedIn();
 diff --git a/apps/files_external/lib/dropbox.php b/apps/files_external/lib/dropbox.php
-index 6a822c3..b8e7f27 100644
+index 8381ccb..174baec 100644
 --- a/apps/files_external/lib/dropbox.php
 +++ b/apps/files_external/lib/dropbox.php
-@@ -31,8 +31,6 @@ namespace OC\Files\Storage;
- 
+@@ -33,8 +33,6 @@ use GuzzleHttp\Exception\RequestException;
  use Icewind\Streams\IteratorDirectory;
+ use Icewind\Streams\RetryWrapper;
  
 -require_once __DIR__ . '/../3rdparty/Dropbox/autoload.php';
 -

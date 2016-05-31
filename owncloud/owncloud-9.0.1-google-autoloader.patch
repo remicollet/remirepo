@@ -1,8 +1,8 @@
 diff --git a/apps/files_external/ajax/oauth2.php b/apps/files_external/ajax/oauth2.php
-index fbe60e1..bc7d285 100644
+index b110cba..1367c7b 100644
 --- a/apps/files_external/ajax/oauth2.php
 +++ b/apps/files_external/ajax/oauth2.php
-@@ -25,9 +25,6 @@
+@@ -26,9 +26,6 @@
   * along with this program.  If not, see <http://www.gnu.org/licenses/>
   *
   */
@@ -13,12 +13,12 @@ index fbe60e1..bc7d285 100644
  OCP\JSON::checkAppEnabled('files_external');
  OCP\JSON::checkLoggedIn();
 diff --git a/apps/files_external/lib/google.php b/apps/files_external/lib/google.php
-index eba2ee7..9ed0de1 100644
+index 62d264d..45b87c6 100644
 --- a/apps/files_external/lib/google.php
 +++ b/apps/files_external/lib/google.php
-@@ -35,10 +35,6 @@ namespace OC\Files\Storage;
- 
+@@ -37,10 +37,6 @@ use GuzzleHttp\Exception\RequestException;
  use Icewind\Streams\IteratorDirectory;
+ use Icewind\Streams\RetryWrapper;
  
 -set_include_path(get_include_path().PATH_SEPARATOR.
 -	\OC_App::getAppPath('files_external').'/3rdparty/google-api-php-client/src');
@@ -27,3 +27,11 @@ index eba2ee7..9ed0de1 100644
  
  class Google extends \OC\Files\Storage\Common {
  
+@@ -445,7 +441,6 @@ class Google extends \OC\Files\Storage\Common {
+ 							$response = $client->get($downloadUrl, [
+ 								'headers' => $httpRequest->getRequestHeaders(),
+ 								'stream' => true,
+-								'verify' => __DIR__ . '/../3rdparty/google-api-php-client/src/Google/IO/cacerts.pem',
+ 							]);
+ 						} catch (RequestException $e) {
+ 							if(!is_null($e->getResponse())) {
