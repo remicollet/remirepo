@@ -1,7 +1,7 @@
-diff -up tests/bootstrap.php.rpm tests/bootstrap.php
---- tests/bootstrap.php.rpm	2015-07-20 16:23:38.849592222 +0200
-+++ tests/bootstrap.php	2015-07-20 16:23:46.101628015 +0200
-@@ -1,21 +1,17 @@
+diff -up tests/bootstrap.php.orig tests/bootstrap.php
+--- tests/bootstrap.php.orig	2016-03-11 17:23:07.419944832 +0100
++++ tests/bootstrap.php	2016-03-11 17:25:57.205599320 +0100
+@@ -1,21 +1,20 @@
  <?php
  
 -set_include_path(__DIR__ . '/../lib/' . PATH_SEPARATOR . __DIR__ . PATH_SEPARATOR . get_include_path());
@@ -11,10 +11,13 @@ diff -up tests/bootstrap.php.rpm tests/bootstrap.php
  
  // SabreDAV tests auto loading
 -$autoLoader->add('Sabre\\', __DIR__);
--// VObject tests auto loadiong
--$autoLoader->addPsr4('Sabre\\VObject\\',__DIR__ . '/../vendor/sabre/vobject/tests/VObject');
 +$fedoraClassLoader->addPrefix('Sabre\\', __DIR__);
- 
++
+ // VObject tests auto loading
+-$autoLoader->addPsr4('Sabre\\VObject\\',__DIR__ . '/../vendor/sabre/vobject/tests/VObject');
+-$autoLoader->addPsr4('Sabre\\Xml\\',__DIR__ . '/../vendor/sabre/xml/tests/Sabre/Xml');
++//$autoLoader->addPsr4('Sabre\\VObject\\',__DIR__ . '/../vendor/sabre/vobject/tests/VObject');
++//$autoLoader->addPsr4('Sabre\\Xml\\',__DIR__ . '/../vendor/sabre/xml/tests/Sabre/Xml');
  
  date_default_timezone_set('UTC');
  
