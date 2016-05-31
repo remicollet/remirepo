@@ -17,7 +17,7 @@
 
 Name:           composer
 Version:        1.1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -35,6 +35,7 @@ BuildArch:      noarch
 BuildRequires:  php-cli
 %if %{with_tests}
 BuildRequires:  php-composer(justinrainbow/json-schema) >= 1.6
+BuildRequires:  php-composer(justinrainbow/json-schema) <  2
 BuildRequires:  php-composer(composer/spdx-licenses)    >= 1.0
 BuildRequires:  php-composer(composer/ca-bundle)        >= 1.0
 BuildRequires:  php-composer(composer/semver)           >= 1.0
@@ -240,6 +241,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue May 31 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-2
+- ensure justinrainbow/json-schema v1 is used for the build
+
 * Tue May 17 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - update to 1.1.1
 
