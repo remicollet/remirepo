@@ -1,0 +1,29 @@
+diff -up tests/bootstrap.php.rpm tests/bootstrap.php
+--- tests/bootstrap.php.rpm	2015-07-20 16:23:38.849592222 +0200
++++ tests/bootstrap.php	2015-07-20 16:23:46.101628015 +0200
+@@ -1,21 +1,17 @@
+ <?php
+ 
+-set_include_path(__DIR__ . '/../lib/' . PATH_SEPARATOR . __DIR__ . PATH_SEPARATOR . get_include_path());
+-
+-$autoLoader = include __DIR__ . '/../vendor/autoload.php';
++require '@BUILDROOT@/usr/share/php/Sabre/DAV/autoload.php';
+ 
+ // SabreDAV tests auto loading
+-$autoLoader->add('Sabre\\', __DIR__);
+-// VObject tests auto loadiong
+-$autoLoader->addPsr4('Sabre\\VObject\\',__DIR__ . '/../vendor/sabre/vobject/tests/VObject');
++$fedoraClassLoader->addPrefix('Sabre\\', __DIR__);
+ 
+ 
+ date_default_timezone_set('UTC');
+ 
+ $config = [
+     'SABRE_TEMPDIR'   => dirname(__FILE__) . '/temp/',
+-    'SABRE_HASSQLITE' => in_array('sqlite',PDO::getAvailableDrivers()),
+-    'SABRE_HASMYSQL'  => in_array('mysql',PDO::getAvailableDrivers()),
++    'SABRE_HASSQLITE' => 1,
++    'SABRE_HASMYSQL'  => 0,
+     'SABRE_MYSQLDSN'  => 'mysql:host=127.0.0.1;dbname=sabredav',
+     'SABRE_MYSQLUSER' => 'root',
+     'SABRE_MYSQLPASS' => '',
