@@ -433,8 +433,10 @@ work with an SQLite 3 database stored on the local system.
 %patch10 -p1
 %endif
 
-# patch backup files
-find . -name \*.orig -type f -exec rm {} \;
+# patch backup files and .git stuff
+find . -name \*.orig    -type f        -exec rm    {} \; -print
+find . -name .gitignore -type f        -exec rm    {} \; -print
+find . -name .github    -type d -prune -exec rm -r {} \; -print
 
 # prepare package doc
 cp %{SOURCE3} README.fedora
