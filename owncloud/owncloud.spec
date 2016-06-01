@@ -433,6 +433,9 @@ work with an SQLite 3 database stored on the local system.
 %patch10 -p1
 %endif
 
+# patch backup files
+find . -name \*.orig -type f -exec rm {} \;
+
 # prepare package doc
 cp %{SOURCE3} README.fedora
 cp %{SOURCE4} README.mysql
@@ -512,6 +515,7 @@ EOF
 
 # remove gallery external bundled libraries 
 rm -r apps/gallery/vendor/{symfony,composer*}
+rm    apps/gallery/composer.lock
 
 # create autoloader, from composer.json, "require": {
 #                "symfony/yaml": "_2.6"
@@ -565,7 +569,7 @@ fi
 php %{buildroot}%{_datadir}/%{name}/3rdparty/autoload.php
 
 # There should not be an composer.json files remaining
-nb=$(find -name "composer.json" | wc -l)
+nb=$(find -name 'composer.*'| wc -l)
 if [ $nb -gt 0 ]
   then
   false found unexpected composer.json files
