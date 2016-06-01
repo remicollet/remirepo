@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0cb5a8534bd446824ed6f63af3b4479c11361768
+%global gh_commit    e32577062a2544fedac8a95fbc393ab98a3291c7
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.8
+Version:        2.3.9
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Forms: greatly facilitates web forms
@@ -52,12 +52,12 @@ BuildRequires:  php-composer(tracy/tracy) >= 2.2
 
 # from composer.json, "require": {
 #        "php": ">=5.3.1"
-#        "nette/component-model": "~2.2",
+#        "nette/component-model": "~2.2.0",
 #        "nette/http": "~2.2",
 #        "nette/utils": "~2.2"
 Requires:       php(language) >= 5.3.1
-Requires:       php-composer(%{gh_owner}/component-model) >= 2.2
-Requires:       php-composer(%{gh_owner}/component-model) <  3
+Requires:       php-composer(%{gh_owner}/component-model) >= 2.2.0
+Requires:       php-composer(%{gh_owner}/component-model) <  2.3
 Requires:       php-composer(%{gh_owner}/http) >= 2.2
 Requires:       php-composer(%{gh_owner}/http) <  3
 Requires:       php-composer(%{gh_owner}/utils) >= 2.2
@@ -155,6 +155,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun  1 2016 Remi Collet <remi@fedoraproject.org> - 2.3.9-1
+- update to 2.3.9
+
 * Sat Feb 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.8-1
 - update to 2.3.8
 
