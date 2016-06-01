@@ -14,7 +14,12 @@
 %global ns_vendor    Nette
 %global ns_project   Database
 %global php_home     %{_datadir}/php
+%if 0%{?rhel} == 6
+# mockery is too old
+%global with_tests   0%{?_with_tests:1}
+%else
 %global with_tests   0%{!?_without_tests:1}
+%endif
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.3.9
