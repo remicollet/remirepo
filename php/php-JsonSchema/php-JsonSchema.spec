@@ -16,6 +16,8 @@
 %global github_commit  cc84765fb7317f6b07bd8ac78364747f95b86341
 %global github_short   %(c=%{github_commit}; echo ${c:0:7})
 
+%global with_script  0
+
 # Upstream recommends 5.3.29, ignored as test suite pass with 5.3.3 in RHEL-6
 %global php_min_ver    5.3.2
 
@@ -27,7 +29,7 @@
 
 Name:          php-%{lib_name}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       3%{?dist}
 Summary:       PHP implementation of JSON schema
 
 Group:         Development/Libraries
@@ -61,7 +63,9 @@ BuildRequires: php-composer(symfony/class-loader)
 
 Requires:      php(language) >= %{php_min_ver}
 # phpcompatinfo (computed from v1.6.0)
+%if %{with_script}
 Requires:      php-cli
+%endif
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-filter
@@ -78,7 +82,14 @@ Provides:      php-composer(justinrainbow/json-schema) = %{version}
 
 %description
 A PHP implementation for validating JSON structures against a given schema.
-
+%if %{with_script}
+This package provides the library version 1 and the validate-json command.
+The php-justinrainbow-json-schema package provides the library version 2.
+%else
+This package provides the library version 1.
+The php-justinrainbow-json-schema package provides the library version 2
+and the validate-json command.
+%endif
 See http://json-schema.org for more details.
 
 
@@ -97,8 +108,10 @@ cp -p %{SOURCE1} src/%{lib_name}/autoload.php
 mkdir -p %{buildroot}%{phpdir}
 cp -rp src/* %{buildroot}%{phpdir}/
 
+%if %{with_script}
 # Install bin
 install -Dpm 0755 bin/validate-json %{buildroot}%{_bindir}/validate-json
+%endif
 
 
 %check
@@ -129,10 +142,15 @@ fi
 %license LICENSE
 %doc README.md composer.json
 %{phpdir}/%{lib_name}
+%if %{with_script}
 %{_bindir}/validate-json
+%endif
 
 
 %changelog
+* Wed Jun  1 2016 Remi Collet <remi@fedoraproject.org> - 1.6.1-3
+- drop the validate-json command, moved in php-justinrainbow-json-schema
+
 * Tue Jan 26 2016 Remi Collet <remi@fedoraproject.org> - 1.6.1-1
 - update to 1.6.1
 

@@ -22,10 +22,15 @@
 %global ts_version   1.2.0
 
 %global eolv1   0
+%if 0
+%global with_script  0
+%else
+%global with_script  1
+%endif
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.0.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A library to validate a json schema
 
 Group:          Development/Libraries
@@ -78,7 +83,11 @@ Requires:       php-spl
 Requires:       php-composer(symfony/class-loader) >= 2.5
 %if %{eolv1}
 Obsoletes:      php-JsonSchema < 2
+%endif
+%if %{with_script}
 Requires:       php-cli
+# previous version provides the validate-json command
+Conflicts:      php-JsonSchema < 1.6.1-3
 %endif
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
@@ -86,8 +95,9 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 %description
 A PHP Implementation for validating JSON Structures against a given Schema.
-%if %{eolv1}
+%if %{with_script}
 This package provides the library version 2 and the validate-json command.
+The php-JsonSchema package provides the library version 1.
 %else
 This package provides the library version 2.
 The php-JsonSchema package provides the library version 1
@@ -117,7 +127,7 @@ find vendor/json-schema/JSON-Schema-Test-Suite/tests \
    -exec rm {} \; \
    -print
 
-%if ! %{eolv1}
+%if ! %{with_script}
 chmod -x bin/validate-json
 %endif
 
@@ -133,7 +143,7 @@ rm -rf %{buildroot}
 mkdir -p              %{buildroot}%{php_home}
 cp -pr src/JsonSchema %{buildroot}%{php_home}/JsonSchema2
 
-%if %{eolv1}
+%if %{with_script}
 : Command
 install -Dpm 0755 bin/validate-json %{buildroot}%{_bindir}/validate-json
 %endif
@@ -176,7 +186,7 @@ rm -rf %{buildroot}
 %license LICENSE
 %doc composer.json
 %doc *.md
-%if %{eolv1}
+%if %{with_script}
 %{_bindir}/validate-json
 %else
 %doc bin/validate-json
@@ -185,6 +195,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun  1 2016 Remi Collet <remi@fedoraproject.org> - 2.0.4-2
+- add the validate-json command, dropped from php-JsonSchema
+
 * Wed May 25 2016 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - update to 2.0.4
 - use json-schema/JSON-Schema-Test-Suite 1.2.0
