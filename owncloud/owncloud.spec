@@ -9,7 +9,7 @@
 #
 Name:           owncloud
 Version:        9.0.2
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
 
@@ -77,7 +77,7 @@ BuildArch:      noarch
 # expand pear macros on install
 BuildRequires:  php-pear
 
-# For sanity check
+# For sanity %%check
 BuildRequires:       php-cli
 BuildRequires:       php-composer(sabre/dav)  >= 3.0.8
 BuildRequires:       php-composer(sabre/dav)  < 4.0
@@ -95,7 +95,7 @@ BuildRequires:       php-composer(ircmaxell/random-lib) < 2.0
 BuildRequires:       php-composer(bantu/ini-get-wrapper) >= 1.0.1
 BuildRequires:       php-composer(natxet/CssMin) >= 3.0.4
 BuildRequires:       php-composer(punic/punic) >= 1.6.3
-BuildRequires:       php-composer(pear/archive_tar) >= 1.4.1
+BuildRequires:       php-composer(pear/archive_tar) >= 1.4.0
 BuildRequires:       php-composer(pear/archive_tar) < 2.0
 BuildRequires:       php-composer(patchwork/utf8) >= 1.2.6
 BuildRequires:       php-composer(patchwork/utf8) < 2.0
@@ -202,7 +202,7 @@ Requires:       php-composer(natxet/CssMin) >= 3.0.4
 Requires:       php-composer(punic/punic) >= 1.6.3
 
 # "pear/archive_tar": "1.4.1"
-Requires:       php-composer(pear/archive_tar) >= 1.4.1
+Requires:       php-composer(pear/archive_tar) >= 1.4.0
 Requires:       php-composer(pear/archive_tar) < 2.0
 
 # "patchwork/utf8": "1.2.6"
@@ -264,8 +264,7 @@ Requires:       php-composer(patchwork/jsqueeze) >= 2.0
 Requires:       php-composer(patchwork/jsqueeze) < 3.0
 
 # "kriswallsmith/assetic": "1.3.2"
-# Need release 3 for the autoloader fix to avoid it spamming the logs
-Requires:       php-composer(kriswallsmith/assetic) >= 1.3.2-3
+Requires:       php-composer(kriswallsmith/assetic) >= 1.3.2
 Requires:       php-composer(kriswallsmith/assetic) < 2.0
 
 # "sabre/dav" : "3.0.8"
@@ -439,6 +438,9 @@ cp %{SOURCE3} README.fedora
 cp %{SOURCE4} README.mysql
 cp %{SOURCE5} README.postgresql
 
+mv 3rdparty/composer.json 3rdparty_composer.json
+mv apps/files_external/3rdparty/composer.json files_external_composer.json
+mv apps/gallery/composer.json gallery_composer.json
 
 # Explicitly remove the bundled libraries we're aware of
 pushd 3rdparty
@@ -527,7 +529,10 @@ find . -size 0 -type f -exec rm {} \;
 # let's not ship upstream's 'updatenotification' app, which has zero chance of working and
 # a big chance of blowing things up
 rm -r apps/updatenotification
-
+# also remove the actual updater
+rm -r updater
+# removing the updater fixes as not required on our build
+rm -r resources/updater-fixes
 
 %check
 # files_external checks
@@ -558,6 +563,13 @@ if [ $nb -gt 1  ]; then
 fi
 
 php %{buildroot}%{_datadir}/%{name}/3rdparty/autoload.php
+
+# There should not be an composer.json files remaining
+nb=$(find -name "composer.json" | wc -l)
+if [ $nb -gt 0 ]
+  then
+  false found unexpected composer.json files
+fi
 
 %build
 # Nothing to build
@@ -684,6 +696,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING-AGPL README.fedora config/config.sample.php
+%doc *_composer.json
 
 %dir %attr(-,apache,apache) %{_sysconfdir}/%{name}
 # contains sensitive data (dbpassword, passwordsalt)
@@ -723,6 +736,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 01 2016 James Hogarth <james.hogarth@gmail.com> - 9.0.2-3
+- Place composer.json files in %%doc rather than remove them entirely
+
+* Wed Jun 01 2016 James Hogarth <james.hogarth@gmail.com> - 9.0.2-2
+- Remove updater app used by upstream
+- More vigorous checking for composer.json
+
 * Fri May 06 2016 James Hogarth <james.hogarth@gmail.com> - 9.0.2-1
 - Update to 9.0.2
 - Need a better way to deal with the integrity checking stuff from upstream
