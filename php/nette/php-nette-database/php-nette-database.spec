@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    1e12005c73411cade4691ca8e1c3b96c1d09a05e
+%global gh_commit    a4c7ea17470a7d888df5738f5e63b2605899f289
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.8
+Version:        2.3.9
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Database Component
@@ -158,6 +158,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun  1 2016 Remi Collet <remi@fedoraproject.org> - 2.3.9-1
+- update to 2.3.9
+
 * Thu Dec  3 2015 Remi Collet <remi@fedoraproject.org> - 2.3.8-1
 - update to 2.3.8
 - run test suite with both php 5 and 7 when available
