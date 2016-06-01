@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    7dbcb393c39d1f7ee8320896cfad2a4727789d1b
+%global gh_commit    d374f7c64ee2b6c491bd3d9f54a5ef45ec492089
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-mvc
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.7
+Version:        2.7.8
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -183,6 +183,8 @@ The MVC layer is built on top of the following components:
   Zend\Stdlib\DispatchableInterface. All “controllers” are simply dispatchable
   objects.
 
+Documentation: https://zendframework.github.io/zend-mvc/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
@@ -232,12 +234,15 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE.md
-%doc CONTRIBUTING.md README.md
+%doc CHANGELOG.md CONDUCT.md CONTRIBUTING.md README.md
 %doc composer.json
 %{php_home}/Zend/%{library}
 
 
 %changelog
+* Wed Jun  1 2016 Remi Collet <remi@fedoraproject.org> - 2.7.8-1
+- update to 2.7.8
+
 * Wed Apr 13 2016 Remi Collet <remi@fedoraproject.org> - 2.7.7-1
 - update to 2.7.7
 
