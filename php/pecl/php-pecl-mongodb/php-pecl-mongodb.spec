@@ -22,7 +22,7 @@
 
 Summary:        MongoDB driver for PHP
 Name:           php-pecl-%{pecl_name}
-Version:        1.1.6
+Version:        1.1.7
 Release:        1%{?dist}
 License:        BSD
 Group:          Development/Languages
@@ -194,7 +194,10 @@ cd ../ZTS
 
 
 %changelog
-* Thu Apr 07 2016 Remi Collet <remi@fedoraproject.org> - 1.1.6-1
+* Thu Jun  2 2016 Remi Collet <remi@fedoraproject.org> - 1.1.7-1
+- Update to 1.1.7
+
+* Thu Apr  7 2016 Remi Collet <remi@fedoraproject.org> - 1.1.6-1
 - Update to 1.1.6
 
 * Thu Mar 31 2016 Remi Collet <remi@fedoraproject.org> - 1.1.5-3
