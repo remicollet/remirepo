@@ -12,7 +12,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Imap-Client
-Version:        2.29.6
+Version:        2.29.7
 Release:        1%{?dist}
 Summary:        Horde IMAP abstraction interface
 
@@ -174,6 +174,9 @@ fi
 
 
 %changelog
+* Thu Jun 02 2016 Remi Collet <remi@fedoraproject.org> - 2.29.7-1
+- Update to 2.29.7
+
 * Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.29.6-1
 - Update to 2.29.6
 
