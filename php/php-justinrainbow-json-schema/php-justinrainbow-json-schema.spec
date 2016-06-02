@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5c133a3e336c2b35a4233f5da4cc15f083ea128d
+%global gh_commit    6b2a33e6a768f96bdc2ead5600af0822eed17d67
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     justinrainbow
 %global gh_project   json-schema
@@ -29,8 +29,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.0.4
-Release:        2%{?dist}
+Version:        2.0.5
+Release:        1%{?dist}
 Summary:        A library to validate a json schema
 
 Group:          Development/Libraries
@@ -195,6 +195,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun  2 2016 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- update to 2.0.5
+
 * Wed Jun  1 2016 Remi Collet <remi@fedoraproject.org> - 2.0.4-2
 - add the validate-json command, dropped from php-JsonSchema
 
