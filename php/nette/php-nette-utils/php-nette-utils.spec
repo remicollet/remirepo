@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    34ca4cd67bb768199aae2879eb8ad0ab016f2d8a
+%global gh_commit    f6586f827292bd35c8593df943437f2247ba5337
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -16,7 +16,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-nette-utils
-Version:        2.3.8
+Version:        2.3.9
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Utility Classes
@@ -29,6 +29,7 @@ Source0:        %{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
 
 # https://github.com/nette/utils/pull/91
+# And https://github.com/nette/utils/issues/112
 Patch0:         %{name}-pr91.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -162,6 +163,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun  2 2016 Remi Collet <remi@fedoraproject.org> - 2.3.9-1
+- update to 2.3.9
+
 * Sat Apr  2 2016 Remi Collet <remi@fedoraproject.org> - 2.3.8-1
 - update to 2.3.8
 - run test suite with both php 5 and 7 when available
