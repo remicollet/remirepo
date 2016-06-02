@@ -135,7 +135,7 @@ cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 rm MdnTest.php
 %endif
 
-%{_bindir}/phpunit .
+%{_bindir}/phpunit -d xdebug.max_nesting_level=1000 .
 
 if which php70; then
    php70 %{_bindir}/phpunit .
