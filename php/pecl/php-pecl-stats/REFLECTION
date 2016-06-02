@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #162 stats version 1.0.4 ] {
+Extension [ <persistent> extension #162 stats version 1.0.5 ] {
 
   - Functions {
     Function [ <internal:stats> function stats_cdf_t ] {
