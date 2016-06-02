@@ -139,7 +139,11 @@ done | tee ../%{pear_name}.lang
 export LANG=fr_FR.utf8
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
-%{_bindir}/phpunit --verbose .
+if %{_bindir}/phpunit --atleast-version 4.8; then
+   %{_bindir}/phpunit --verbose .
+else
+   : PHPUnit is too old for this package
+fi
 
 if which php70; then
    php70 %{_bindir}/phpunit --verbose .
