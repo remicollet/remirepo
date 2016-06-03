@@ -105,7 +105,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Fri Jun  2 2016 Remi Collet <remi@fedoraproject.org> - 0.4.1-1
+* Fri Jun  3 2016 Remi Collet <remi@fedoraproject.org> - 0.4.1-1
 - update to 0.4.1
 
 * Thu Mar 17 2016 Remi Collet <remi@fedoraproject.org> - 0.4.0-1
