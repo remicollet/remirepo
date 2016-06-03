@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    78cb486efff5c297d8b6a6f9091eb9211173785f
+%global gh_commit    2005bd90c2c8aae6d93ec82d9cda9d55dca96c3d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpcov
@@ -18,17 +18,14 @@
 
 
 Name:           php-phpunit-phpcov
-Version:        3.0.0
-Release:        3%{?dist}
+Version:        3.1.0
+Release:        1%{?dist}
 Summary:        TextUI front-end for PHP_CodeCoverage
 
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
-
-# Autoload template
-Source1:        autoload.php.in
 
 # Fix autoload for RPM
 Patch0:         %{gh_project}-rpm.patch
@@ -39,7 +36,7 @@ BuildRequires:  php(language) >= 5.6
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
 BuildRequires:  php-composer(phpunit/phpunit) >= 5.0
-BuildRequires:  php-composer(phpunit/php-code-coverage) >= 3.0
+BuildRequires:  php-composer(phpunit/php-code-coverage) >= 4.0
 BuildRequires:  php-composer(sebastian/diff) >= 1.1
 BuildRequires:  php-composer(sebastian/diff) <  2
 BuildRequires:  php-composer(sebastian/finder-facade) >= 1.1
@@ -51,18 +48,18 @@ BuildRequires:  php-pecl(Xdebug)
 %endif
 
 # from composer.json
-#        "php": ">=5.6",
-#        "phpunit/phpunit": "~5.0",
-#        "phpunit/php-code-coverage": "~3.0",
-#        "sebastian/diff": "~1.1",
-#        "sebastian/finder-facade": "~1.1",
-#        "sebastian/version": "~1.0",
-#        "symfony/console": "~2|~3"
+#        "php": "^5.6 || ^7.0",
+#        "phpunit/phpunit": "^5.0",
+#        "phpunit/php-code-coverage": "^4.0",
+#        "sebastian/diff": "^1.1",
+#        "sebastian/finder-facade": "^1.1",
+#        "sebastian/version": "^1.0|^2.0",
+#        "symfony/console": "^2|^3"
 Requires:       php(language) >= 5.6
 Requires:       php-composer(phpunit/phpunit) >= 5.0
 Requires:       php-composer(phpunit/phpunit) <  6
-Requires:       php-composer(phpunit/php-code-coverage) >= 3.0
-Requires:       php-composer(phpunit/php-code-coverage) <  4
+Requires:       php-composer(phpunit/php-code-coverage) >= 4.0
+Requires:       php-composer(phpunit/php-code-coverage) <  5
 Requires:       php-composer(sebastian/diff) >= 1.1
 Requires:       php-composer(sebastian/diff) <  2
 Requires:       php-composer(sebastian/finder-facade) >= 1.1
@@ -95,8 +92,17 @@ TextUI front-end for PHP_CodeCoverage.
 %build
 phpab \
   --output   src/autoload.php \
-  --template %{SOURCE1} \
   src
+
+cat << 'EOF' | tee -a src/autoload.php
+// Dependencies
+require_once 'PHPUnit/Autoload.php';
+require_once 'SebastianBergmann/CodeCoverage/autoload.php';
+require_once 'SebastianBergmann/Diff/autoload.php';
+require_once 'SebastianBergmann/FinderFacade/autoload.php';
+require_once 'SebastianBergmann/Version/autoload.php';
+require_once 'Symfony/Component/Console/autoloader.php';
+EOF
 
 
 %install
@@ -140,6 +146,11 @@ fi
 
 
 %changelog
+* Fri Jun  3 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-1
+- Update to 3.1.0
+- raise dependency on phpunit/php-code-coverage >= 4.0
+- drop the autoloader template, simply generate it
+
 * Mon Apr 18 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-3
 - allow sebastian/version 2.0
 

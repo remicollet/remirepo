@@ -1,0 +1,39 @@
+{
+    "name": "phpunit/phpcov",
+    "description": "CLI frontend for PHP_CodeCoverage",
+    "homepage": "https://github.com/sebastianbergmann/phpcov",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Sebastian Bergmann",
+            "email": "sebastian@phpunit.de",
+            "role": "lead"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/sebastianbergmann/phpcov/issues"
+    },
+    "require": {
+        "php": ">=5.3.3",
+        "phpunit/phpunit": ">=4.1",
+        "phpunit/php-code-coverage": "~2.0",
+        "sebastian/diff": "~1.1",
+        "sebastian/finder-facade": "~1.1",
+        "sebastian/version": "~1.0",
+        "symfony/console": "~2.2"
+    },
+    "autoload": {
+        "classmap": [
+            "src/"
+        ]
+    },
+    "bin": [
+        "phpcov"
+    ],
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
+    }
+}
+
