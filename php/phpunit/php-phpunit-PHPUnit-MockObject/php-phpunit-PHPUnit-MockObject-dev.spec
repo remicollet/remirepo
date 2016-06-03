@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    151c96874bff6fe61a25039df60e776613a61489
+%global gh_commit    314f8c44019b4dfece2571b98938574e6342be59
 #global gh_date      20150902
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -15,8 +15,8 @@
 %global php_home     %{_datadir}/php
 %global pear_name    PHPUnit_MockObject
 %global pear_channel pear.phpunit.de
-%global major        3.1
-%global minor        3
+%global major        3.2
+%global minor        0
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
@@ -45,16 +45,15 @@ BuildRequires:  php-theseer-autoload
 %if %{with_tests}
 BuildRequires:  php(language) >= 5.6
 # From composer.json, "require-dev": {
-#        "phpunit/phpunit": "~5"
-#  ignore min version (as tested with 4.8)
-BuildRequires:  php-composer(phpunit/phpunit) >= 4.4
+#        "phpunit/phpunit": "^5.4"
+BuildRequires:  php-composer(phpunit/phpunit) >= 5.4
 %endif
 
 # From composer.json, "require": {
-#        "php": ">=5.6",
-#        "phpunit/php-text-template": "~1.2",
+#        "php": "^5.6 || ^7.0",
+#        "phpunit/php-text-template": "^1.2",
 #        "doctrine/instantiator": "^1.0.2",
-#        "sebastian/exporter": "~1.2"
+#        "sebastian/exporter": "^1.2"
 Requires:       php(language) >= 5.6
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
@@ -65,7 +64,7 @@ Requires:       php-composer(sebastian/exporter) <  2
 # From composer.json, "suggest": {
 #        "ext-soap": "*"
 Requires:       php-soap
-# From phpcompatinfo report for version 3.1.0
+# From phpcompatinfo report for version 3.2.0
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
@@ -161,6 +160,10 @@ fi
 
 
 %changelog
+* Fri Jun  3 2016 Remi Collet <remi@fedoraproject.org> - 3.2.0-1
+- Update to 3.2.0
+- raise build dependency on phpunit >= 5.4
+
 * Thu Apr 21 2016 Remi Collet <remi@fedoraproject.org> - 3.1.3-1
 - Update to 3.1.3
 
