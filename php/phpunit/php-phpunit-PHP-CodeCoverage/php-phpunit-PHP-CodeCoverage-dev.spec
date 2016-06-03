@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    44cd8e3930e431658d1a5de7d282d5cb37837fd5
+%global gh_commit    900370c81280cc0d942ffbc5912d80464eaee7e9
 #global gh_date      20150924
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -16,8 +16,8 @@
 %global php_home     %{_datadir}/php
 %global pear_name    PHP_CodeCoverage
 %global pear_channel pear.phpunit.de
-%global major        3.3
-%global minor        3
+%global major        4.0
+%global minor        0
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
@@ -41,9 +41,9 @@ BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-theseer-autoload >= 1.19
 %if %{with_tests}
 # From composer.json, "require-dev": {
-#        "phpunit/phpunit": "~5",
+#        "phpunit/phpunit": "^5.4",
 #        "ext-xdebug": ">=2.1.4"
-BuildRequires:  php-composer(phpunit/phpunit) >= 5
+BuildRequires:  php-composer(phpunit/phpunit) >= 5.4
 BuildRequires:  php-composer(sebastian/code-unit-reverse-lookup) >= 1
 BuildRequires:  php-composer(sebastian/environment) >= 1.3.2
 BuildRequires:  php-pecl-xdebug  >= 2.4.0
@@ -76,7 +76,7 @@ Requires:       php-composer(sebastian/version) <  3
 #        "ext-xmlwriter": "*"
 Requires:       php-dom
 Requires:       php-xmlwriter
-# From phpcompatinfo report for version 3.0.0
+# From phpcompatinfo report for version 4.0.0
 Requires:       php-date
 Requires:       php-json
 Requires:       php-spl
@@ -99,10 +99,10 @@ for PHP code coverage information.
 
 %build
 phpab \
-  --output   src/CodeCoverage/Autoload.php \
+  --output   src/autoload.php \
   src
 
-cat << 'EOF' | tee -a src/CodeCoverage/Autoload.php
+cat << 'EOF' | tee -a src/autoload.php
 // Dependencies
 require_once 'File/Iterator/Autoload.php';
 require_once 'PHP/Token/Stream/Autoload.php';
@@ -115,22 +115,27 @@ EOF
 %install
 rm -rf     %{buildroot}
 # Restore PSR-0 tree
-mkdir -p   %{buildroot}%{php_home}
-cp -pr src %{buildroot}%{php_home}/PHP
+mkdir -p   %{buildroot}%{php_home}/SebastianBergmann
+cp -pr src %{buildroot}%{php_home}/SebastianBergmann/CodeCoverage
 
 
 %if %{with_tests}
 %check
-sed -e '/log/d' phpunit.xml.dist >phpunit.xml
-
 if ! php -v | grep Xdebug
 then EXT="-d zend_extension=xdebug.so"
 fi
 
+cat << 'EOF' | tee tests/bootstrap.php
+<?php
+require '%{buildroot}%{php_home}/SebastianBergmann/CodeCoverage/autoload.php';
+require __DIR__ . '/TestCase.php';
+define('TEST_FILES_PATH', __DIR__ . '/_files/');
+EOF
+
 %{_bindir}/php $EXT \
     -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
     %{_bindir}/phpunit \
-        --bootstrap %{buildroot}%{php_home}/PHP/CodeCoverage/Autoload.php \
+        --configuration build \
         --verbose
 
 # remirepo:7
@@ -138,7 +143,7 @@ if which php70 ; then
   php70 $EXT \
     -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
     %{_bindir}/phpunit \
-        --bootstrap %{buildroot}%{php_home}/PHP/CodeCoverage/Autoload.php \
+        --configuration build \
         --verbose
 fi
 %endif
@@ -161,11 +166,15 @@ fi
 %license LICENSE
 %doc CONTRIBUTING.md README.md composer.json
 %doc ChangeLog-%{major}.md
-%{php_home}/PHP/CodeCoverage
-%{php_home}/PHP/CodeCoverage.php
+%{php_home}/SebastianBergmann/CodeCoverage
 
 
 %changelog
+* Fri Jun  3 2016 Remi Collet <remi@fedoraproject.org> - 4.0.0-1
+- Update to 4.0.0
+- namespace changed from PHP to SebastianBergmann
+- raise build dependency on phpunit >= 5.4
+
 * Sat May 28 2016 Remi Collet <remi@fedoraproject.org> - 3.3.3-1
 - Update to 3.3.3
 
