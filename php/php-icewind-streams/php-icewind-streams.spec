@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # Github information
-%global gh_commit    9ca40274645a967ecc3408b0ca2e6255ead1d1d3
+%global gh_commit    d3620e8dc410c86c2ba55579803679c4e0b289ac
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     icewind1991
 %global gh_project   Streams
@@ -19,7 +19,7 @@
 %global ns_name      Streams
 
 Name:           php-%{pk_vendor}-%{pk_name}
-Version:        0.4.0
+Version:        0.4.1
 Release:        1%{?dist}
 Summary:        A set of generic stream wrappers
 
@@ -105,6 +105,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun  2 2016 Remi Collet <remi@fedoraproject.org> - 0.4.1-1
+- update to 0.4.1
+
 * Thu Mar 17 2016 Remi Collet <remi@fedoraproject.org> - 0.4.0-1
 - update to 0.4.0
 
