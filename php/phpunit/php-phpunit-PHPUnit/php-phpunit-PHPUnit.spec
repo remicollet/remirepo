@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a1066c562c52900a142a0e2bbf0582994671385e
+%global gh_commit    fc1d8cd5b5de11625979125c5639347896ac2c74
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
@@ -16,7 +16,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        4.8
-%global minor        24
+%global minor        26
 
 Name:           php-phpunit-PHPUnit
 Version:        %{major}.%{minor}
@@ -62,7 +62,7 @@ BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 #        "phpunit/php-file-iterator": "~1.4",
 #        "phpunit/php-text-template": "~1.2",
 #        "phpunit/php-code-coverage": "~2.1",
-#        "phpunit/php-timer": ">=1.0.6",
+#        "phpunit/php-timer": "^1.0.6",
 #        "phpunit/phpunit-mock-objects": "~2.2",
 #        "phpspec/prophecy": "^1.3.1",
 #        "symfony/yaml": "~2.1|~3.0",
@@ -206,6 +206,9 @@ fi
 
 
 %changelog
+* Fri Jun  3 2016 Remi Collet <remi@fedoraproject.org> - 4.8.26-1
+- Update to 4.8.26
+
 * Mon Mar 14 2016 Remi Collet <remi@fedoraproject.org> - 4.8.24-1
 - Update to 4.8.24
 
