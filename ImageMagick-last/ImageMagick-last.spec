@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        6.9.4
-%global Patchlevel 4
+%global Patchlevel 6
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -493,6 +493,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun  3 2016 Remi Collet <remi@remirepo.net> - 6.9.4.6-1
+- update to version 6.9.4 patchlevel 6
+
 * Fri May 27 2016 Remi Collet <remi@remirepo.net> - 6.9.4.4-1
 - update to version 6.9.4 patchlevel 4
 
