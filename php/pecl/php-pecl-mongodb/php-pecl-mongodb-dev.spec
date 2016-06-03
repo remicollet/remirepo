@@ -20,14 +20,26 @@
 # Still needed because of some private API
 %global buildver %(pkg-config --silence-errors --modversion libmongoc-priv 2>/dev/null || echo 65536)
 
+%ifarch x86_64
+%global with_tests   0%{!?_without_tests:1}
+%else
+# See https://jira.mongodb.org/browse/CDRIVER-1186
+# 32-bit MongoDB support was officially deprecated
+# in MongoDB 3.2, and support is being removed in 3.4.
+%global with_tests   0%{?_with_tests:1}
+%endif
+
 Summary:        MongoDB driver for PHP
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        1.1.7
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
+
+# Fix tests when using system libraries
+Patch0:         %{pecl_name}-tests.patch
 
 BuildRequires:  %{?scl_prefix}php-devel > 5.4
 BuildRequires:  %{?scl_prefix}php-pear
@@ -37,6 +49,9 @@ BuildRequires:  pkgconfig(libbson-1.0)    >= 1.3.0
 BuildRequires:  pkgconfig(libmongoc-1.0)  >= 1.3.0
 BuildRequires:  pkgconfig(libmongoc-priv) >= 1.3.0
 BuildRequires:  pkgconfig(libmongoc-priv) <  1.4
+%if %{with_tests}
+BuildRequires:  mongodb-server
+%endif
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
@@ -96,6 +111,7 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
+%patch0 -p0 -b .rpm
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define MONGODB_VERSION_S/{s/.* "//;s/".*$//;p}' php_phongo.h)
@@ -191,18 +207,85 @@ fi
 
 
 %check
-cd NTS
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
     --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 %if %{with_zts}
-cd ../ZTS
 : Minimal load test for ZTS extension
 %{__ztsphp} --no-php-ini \
     --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
+%endif
+
+%if %{with_tests}
+ret=0
+
+%global mongo_version  %(mongod --version | sed -n '/db version/{s/.*v//;p}' 2>/dev/null)
+
+: Run a mongodb server version %{mongo_version}
+mkdir dbtest
+mongod \
+  --journal \
+  --bind_ip     127.0.0.1 \
+  --unixSocketPrefix /tmp \
+  --logpath     $PWD/server.log \
+  --pidfilepath $PWD/server.pid \
+  --dbpath      $PWD/dbtest \
+  --fork   || : skip test as server cant start
+
+if [ -s server.pid ] ; then
+  : Drop known to fail tests
+%if 1
+    ### With mongodb 3.2
+    rm ?TS/tests/manager/manager-debug-001.phpt
+    rm ?TS/tests/manager/manager-debug-003.phpt
+    rm ?TS/tests/manager/manager-executequery-without-assignment.phpt
+    rm ?TS/tests/standalone/bug0487-002.phpt
+    rm ?TS/tests/standalone/bug0655.phpt
+%endif
+%if "%{mongo_version}" < "3.2"
+    ### With mongodb 3.0
+    rm ?TS/tests/manager/manager-executeBulkWrite-011.phpt
+    rm ?TS/tests/manager/manager-executeQuery-002.phpt
+    rm ?TS/tests/readPreference/bug0146-002.phpt
+%endif
+%if "%{mongo_version}" < "3.0"
+    ### Older mongodb
+    rm ?TS/tests/bulk/write-0003.phpt
+    rm ?TS/tests/manager/manager-executeBulkWrite_error-001.phpt
+    rm ?TS/tests/manager/manager-executeBulkWrite_error-002.phpt
+%endif
+
+  : Run the test suite
+  echo '{"STANDALONE": "mongodb://127.0.0.1:27017"}' | tee /tmp/PHONGO-SERVERS.json
+
+  pushd NTS
+    TEST_PHP_EXECUTABLE=%{__php} \
+    TEST_PHP_ARGS="-n -d extension=json.so -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so" \
+    NO_INTERACTION=1 \
+    REPORT_EXIT_STATUS=1 \
+    php -n run-tests.php --show-diff || ret=1
+  popd
+
+%if %{with_zts}
+  pushd ZTS
+    TEST_PHP_EXECUTABLE=%{__ztsphp} \
+    TEST_PHP_ARGS="-n -d extension=json.so -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so" \
+    NO_INTERACTION=1 \
+    REPORT_EXIT_STATUS=1 \
+    php -n run-tests.php --show-diff || ret=1
+  popd
+%endif
+
+  : Cleanup
+  kill $(cat server.pid)
+fi
+
+exit $ret
+%else
+: check disabled, missing '--with tests' option
 %endif
 
 
@@ -221,6 +304,10 @@ cd ../ZTS
 
 
 %changelog
+* Fri Jun  3 2016 Remi Collet <remi@fedoraproject.org> - 1.1.7-3
+- run the test suite during the build (x86_64 only)
+- ignore known to fail tests
+
 * Thu Jun  2 2016 Remi Collet <remi@fedoraproject.org> - 1.1.7-2
 - Update to 1.1.7
 
