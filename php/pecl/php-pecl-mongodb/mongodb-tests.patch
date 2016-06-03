@@ -1,0 +1,32 @@
+diff -up tests/functional/phpinfo-1.phpt.old tests/functional/phpinfo-1.phpt
+--- tests/functional/phpinfo-1.phpt.old	2016-06-03 14:31:22.438746223 +0200
++++ tests/functional/phpinfo-1.phpt	2016-06-03 14:31:33.197800761 +0200
+@@ -19,8 +19,10 @@ mongodb
+ mongodb support => enabled
+ mongodb version => 1.%d.%d%S
+ mongodb stability => %s
+-libmongoc version => 1.%s
+-libbson version => 1.%s
++libmongoc headers version => 1.%s
++libmongoc library version => 1.%s
++libbson headers version => 1.%s
++libbson library version => 1.%s
+ 
+ Directive => Local Value => Master Value
+ mongodb.debug => no value => no value
+diff -up tests/functional/phpinfo-2.phpt.old tests/functional/phpinfo-2.phpt
+--- tests/functional/phpinfo-2.phpt.old	2016-06-03 14:31:28.598777448 +0200
++++ tests/functional/phpinfo-2.phpt	2016-06-03 14:31:38.655828427 +0200
+@@ -22,8 +22,10 @@ mongodb
+ mongodb support => enabled
+ mongodb version => 1.%d.%d%S
+ mongodb stability => %s
+-libmongoc version => 1.%s
+-libbson version => 1.%s
++libmongoc headers version => 1.%s
++libmongoc library version => 1.%s
++libbson headers version => 1.%s
++libbson library version => 1.%s
+ 
+ Directive => Local Value => Master Value
+ mongodb.debug => stdout => stderr
