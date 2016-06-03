@@ -37,7 +37,7 @@ spl_autoload_register(
 
 /* Required */
 require_once 'File/Iterator/Autoload.php';
-require_once 'PHP/CodeCoverage/Autoload.php';
+require_once 'SebastianBergmann/CodeCoverage/autoload.php';
 require_once 'PHP/Timer/Autoload.php';
 require_once 'PHPUnit/Framework/MockObject/Autoload.php';
 require_once 'Text/Template/Autoload.php';
@@ -55,12 +55,12 @@ require_once 'SebastianBergmann/ResourceOperations/autoload.php';
 require_once 'DeepCopy/autoload.php';
 
 /* Optional */
-foreach(array(
+foreach([
             'PHPUnit/Extensions/Database/Autoload.php',
             'PHPUnit/Extensions/SeleniumCommon/Autoload.php',
             'PHPUnit/Extensions/SeleniumTestCase/Autoload.php',
             'PHPUnit/Extensions/Story/Autoload.php'
-        ) as $opt) {
+        ] as $opt) {
     if ($fic = stream_resolve_include_path($opt)) {
         require_once $fic;
     }

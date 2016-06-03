@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    00dd95ffb48805503817ced06399017df315fe5c
+%global gh_commit    32428748cee28724d24e7d3b5fb3151170a1aed2
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -16,8 +16,8 @@
 %global php_home     %{_datadir}/php
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
-%global major        5.3
-%global minor        4
+%global major        5.4
+%global minor        0
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -31,7 +31,7 @@ URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 # Autoload template, from version 3.7
-Source1:        %{gh_project}-5.3.0-Autoload.php.in
+Source1:        %{gh_project}-5.4.0-Autoload.php.in
 
 # Fix command for autoload
 Patch0:         %{gh_project}-rpm.patch
@@ -42,9 +42,9 @@ BuildRequires:  php(language) >= 5.6
 BuildRequires:  %{_bindir}/phpab
 BuildRequires:  php-composer(phpunit/php-file-iterator) >= 1.4
 BuildRequires:  php-composer(phpunit/php-text-template) >= 1.2
-BuildRequires:  php-composer(phpunit/php-code-coverage) >= 3.3.0
+BuildRequires:  php-composer(phpunit/php-code-coverage) >= 4.0
 BuildRequires:  php-composer(phpunit/php-timer) >= 1.0.6
-BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 3.0
+BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 3.2
 BuildRequires:  php-composer(phpspec/prophecy) >= 1.3.1
 BuildRequires:  php-composer(sebastian/comparator) >= 1.1
 BuildRequires:  php-composer(sebastian/diff) >= 1.2
@@ -64,9 +64,9 @@ BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 #        "php": "^5.6 || ^7.0",
 #        "phpunit/php-file-iterator": "~1.4",
 #        "phpunit/php-text-template": "~1.2",
-#        "phpunit/php-code-coverage": "^3.3.0",
+#        "phpunit/php-code-coverage": "^4.0",
 #        "phpunit/php-timer": "^1.0.6",
-#        "phpunit/phpunit-mock-objects": "^3.1",
+#        "phpunit/phpunit-mock-objects": "^3.2",
 #        "phpspec/prophecy": "^1.3.1",
 #        "symfony/yaml": "~2.1|~3.0",
 #        "sebastian/comparator": "~1.0",
@@ -90,11 +90,11 @@ Requires:       php-composer(phpunit/php-file-iterator) >= 1.4
 Requires:       php-composer(phpunit/php-file-iterator) <  2
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
-Requires:       php-composer(phpunit/php-code-coverage) >= 3.3.0
-Requires:       php-composer(phpunit/php-code-coverage) <  4
+Requires:       php-composer(phpunit/php-code-coverage) >= 4.0
+Requires:       php-composer(phpunit/php-code-coverage) <  5
 Requires:       php-composer(phpunit/php-timer) >= 1.0.6
 Requires:       php-composer(phpunit/php-timer) <  2
-Requires:       php-composer(phpunit/phpunit-mock-objects) >= 3.1
+Requires:       php-composer(phpunit/phpunit-mock-objects) >= 3.2
 Requires:       php-composer(phpunit/phpunit-mock-objects) <  4
 Requires:       php-composer(phpspec/prophecy) >= 1.3.1
 Requires:       php-composer(phpspec/prophecy) <  2
@@ -133,7 +133,7 @@ Requires:       php-composer(doctrine/instantiator) <  2
 Requires:       php-composer(symfony/class-loader) >= 2.0
 Requires:       php-composer(symfony/class-loader) <  3
 Requires:       php-composer(sebastian/recursion-context) >= 1.0
-# From phpcompatinfo report for version 5.2.9
+# From phpcompatinfo report for version 5.4.0
 Requires:       php-libxml
 Requires:       php-mbstring
 Requires:       php-openssl
@@ -178,6 +178,7 @@ mv src PHPUnit
 
 %{_bindir}/phpab \
   --output   tests/autoload.php \
+  --exclude  '*/BankAccountTest2.php' \
   tests
 
 
@@ -219,6 +220,11 @@ fi
 
 
 %changelog
+* Fri Jun  3 2016 Remi Collet <remi@fedoraproject.org> - 5.4.0-1
+- Update to 5.4.0
+- raise dependency on phpunit/php-code-coverage >= 4.0
+- raise dependency on phpunit/phpunit-mock-objects >= 3.2
+
 * Wed May 11 2016 Remi Collet <remi@fedoraproject.org> - 5.3.4-1
 - Update to 5.3.4
 
