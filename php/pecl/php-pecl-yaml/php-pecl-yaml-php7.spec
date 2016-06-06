@@ -10,24 +10,19 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
+%scl_package       php-pecl-yaml
 %endif
-%endif
-
-%{?scl:          %scl_package        php-pecl-yaml}
 
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  yaml
 %global ini_name   40-%{pecl_name}.ini
-%global prever     RC7
+%global prever     RC8
 
 Summary:       PHP Bindings for yaml
 Name:          %{?sub_prefix}php-pecl-yaml
 Version:       2.0.0
-Release:       0.8.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.9.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaml
@@ -46,8 +41,10 @@ Provides:      %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -168,9 +165,6 @@ done
 
 
 %check
-# See https://bugs.php.net/71696
-rm ?TS/tests/yaml_002.phpt
-
 cd NTS
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
@@ -236,6 +230,9 @@ fi
 
 
 %changelog
+* Mon Jun  6 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.9.RC8
+- update to 2.0.0RC8
+
 * Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.8.RC7
 - adapt for F24
 
