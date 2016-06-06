@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    314f8c44019b4dfece2571b98938574e6342be59
+%global gh_commit    0dc8fd8e87e0366c22b6c25d1f43c4e2e66847b3
 #global gh_date      20150902
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -16,7 +16,7 @@
 %global pear_name    PHPUnit_MockObject
 %global pear_channel pear.phpunit.de
 %global major        3.2
-%global minor        0
+%global minor        1
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
@@ -68,6 +68,10 @@ Requires:       php-soap
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
+# From composer.json, "conflict": {
+#        "phpunit/phpunit": "<5.4.0"
+Conflicts:      php-composer(phpunit/phpunit) < 5.4
+
 
 Provides:       php-composer(phpunit/phpunit-mock-objects) = %{version}
 
@@ -160,6 +164,10 @@ fi
 
 
 %changelog
+* Sat Jun  4 2016 Remi Collet <remi@fedoraproject.org> - 3.2.1-1
+- Update to 3.2.1 (no change)
+- ensure cannot be installed with old PHPUnit
+
 * Fri Jun  3 2016 Remi Collet <remi@fedoraproject.org> - 3.2.0-1
 - Update to 3.2.0
 - raise build dependency on phpunit >= 5.4
