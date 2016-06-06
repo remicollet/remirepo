@@ -15,9 +15,8 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package       php-pecl-yaml
 %endif
-
-%{?scl:          %scl_package        php-pecl-yaml}
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  yaml
@@ -26,16 +25,17 @@
 %else
 %global ini_name   40-%{pecl_name}.ini
 %endif
+%global prever     b1
 
 Summary:       PHP Bindings for yaml
 Name:          %{?sub_prefix}php-pecl-yaml
-Version:       1.2.0
-Release:       4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:       1.3.0
+Release:       0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaml
 
-Source:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel >= 5.2.0
@@ -50,8 +50,10 @@ Provides:      %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -91,7 +93,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -c -q
-mv %{pecl_name}-%{version} NTS
+mv %{pecl_name}-%{version}%{?prever} NTS
 
 # Remove test file to avoid regsitration
 sed -e 's/role="test"/role="src"/' \
@@ -105,8 +107,8 @@ sed -e 's:/lib:/$PHP_LIBDIR:' -i config.m4
 
 # Check upstream version (often broken)
 extver=$(sed -n '/#define PHP_YAML_VERSION/{s/.* "//;s/".*$//;p}' php_yaml.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream version is ${extver}, expecting %{version}.
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
 cd ..
@@ -255,6 +257,9 @@ fi
 
 
 %changelog
+* Mon Jun  6 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-0.1.b1
+- Update to 1.3.0b1 (beta)
+
 * Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-4
 - adapt for F24
 
