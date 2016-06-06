@@ -12,8 +12,8 @@
 
 %global github_owner     mnapoli
 %global github_name      phpunit-easymock
-%global github_version   0.2.1
-%global github_commit    77d949eb6ecd9739b4300a26c85022975f653760
+%global github_version   0.2.2
+%global github_commit    aa0fa90a768046113c60afdd7426dbc4ec76463f
 
 %global composer_vendor  mnapoli
 %global composer_project phpunit-easymock
@@ -51,7 +51,7 @@ BuildArch:     noarch
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(phpunit/phpunit-mock-objects) >= %{phpunit_mock_objects_min_ver}
-## phpcompatinfo (computed from version 0.2.1)
+## phpcompatinfo (computed from version 0.2.2)
 BuildRequires: php-reflection
 ## Autoloader
 BuildRequires: php-composer(symfony/class-loader)
@@ -61,7 +61,7 @@ BuildRequires: php-composer(symfony/class-loader)
 Requires:      php(language)                              >= %{php_min_ver}
 Requires:      php-composer(phpunit/phpunit-mock-objects) >= %{phpunit_mock_objects_min_ver}
 Requires:      php-composer(phpunit/phpunit-mock-objects) <  %{phpunit_mock_objects_max_ver}
-# phpcompatinfo (computed from version 0.2.1)
+# phpcompatinfo (computed from version 0.2.2)
 #     <none>
 # Autoloader
 Requires:      php-composer(symfony/class-loader)
@@ -154,6 +154,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jun 05 2016 Shawn Iwinski <shawn@iwin.ski> - 0.2.2-1
+- Updated to 0.2.2 (RHBZ #1342738)
+
 * Tue Jan  5 2016 Remi Collet <remi@remirepo.net> - 0.2.1-1
 - backport for #remirepo
 
