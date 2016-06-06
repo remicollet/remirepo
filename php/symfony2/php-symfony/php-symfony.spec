@@ -13,8 +13,8 @@
 
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.8.6
-%global github_commit    8408816780215fae055599d100b5385d9a247151
+%global github_version   2.8.7
+%global github_commit    663b2d6202c3149515b39cfe50a174a130acb8e2
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -2678,6 +2678,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Mon Jun  6 2016 Remi Collet <remi@fedoraproject.org> - 2.8.7-1
+- Update to 2.8.7
+
 * Sat May 28 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.8.6-2
 - Skip test known to fail on RHEL 7
 
