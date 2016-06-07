@@ -3,7 +3,7 @@
 
 %global github_owner            phpseclib
 %global github_name             phpseclib
-%global github_commit           ba6fb78f727cd09f2a649113b95468019e490585
+%global github_commit           3d265f7c079f5b37d33475f996d7a383c5fc8aeb
 %global github_short            %(c=%{github_commit}; echo ${c:0:7})
 %if 0%{?rhel} == 5
 %global with_tests              0%{?_with_tests:1}
@@ -12,7 +12,7 @@
 %endif
 
 Name:       php-%{composer_vendor}
-Version:    2.0.1
+Version:    2.0.2
 Release:    1%{?dist}
 Summary:    PHP Secure Communications Library
 
@@ -90,9 +90,13 @@ rm -rf %{buildroot}
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 
+
 %changelog
+* Tue Jun  7 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- update to 2.0.2
+
 * Tue Jan 19 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
-- update to 1.0.1
+- update to 2.0.1
 - sources from git snapshot for tests
 - run test suite with both PHP 5 and 7 when available
 

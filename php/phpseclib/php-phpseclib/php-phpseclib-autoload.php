@@ -14,6 +14,11 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
     $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
     $fedoraClassLoader->register();
 }
+
+// composer.json: "autoload": { "files": [ "phpseclib/bootstrap.php" ], "psr-4": { "phpseclib\\": "phpseclib/" }
+require_once __DIR__ . '/bootstrap.php';
+
 $fedoraClassLoader->addPrefixes(array(
     'phpseclib' => dirname(__DIR__),
 ));
+
