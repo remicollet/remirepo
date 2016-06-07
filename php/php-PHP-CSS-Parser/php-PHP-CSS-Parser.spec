@@ -6,14 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit  546b2b93733165cb27c7cef0ccc8e66384d1d833
+%global gh_commit  7642a0e1cabd81d95f91ebbea7d6de988c59edd3
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   sabberworm
 %global gh_project PHP-CSS-Parser
 
 Name:           php-%{gh_project}
 Summary:        A Parser for CSS Files
-Version:        7.0.2
+Version:        7.0.3
 Release:        1%{?dist}
 License:        MIT
 Group:          Development/Libraries
@@ -76,6 +76,9 @@ fi
 
 
 %changelog
+* Tue Jun  7 2016 Remi Collet <remi@fedoraproject.org> - 7.0.3-1
+- update to 7.0.3
+
 * Tue Apr  5 2016 Remi Collet <remi@fedoraproject.org> - 7.0.2-1
 - update to 7.0.2
 - run test suite with both PHP 5 and 7 when available
