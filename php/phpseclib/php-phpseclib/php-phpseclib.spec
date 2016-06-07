@@ -65,8 +65,8 @@ cp %{SOURCE1} %{composer_vendor}/autoload.php
 
 %install
 rm -rf %{buildroot}
-mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/php
-cp -pr %{composer_vendor} ${RPM_BUILD_ROOT}%{_datadir}/php
+mkdir -p %{buildroot}%{_datadir}/php
+cp -pr %{composer_vendor} %{buildroot}%{_datadir}/php
 
 %if %{with_tests}
 %check
