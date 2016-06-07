@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    3c91bdf81797d725b14cb62906f9a4ce44235972
+%global gh_commit    58a8137754bc24b25740d4281399a4a3596058e0
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpspec
 %global gh_project   prophecy
@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-phpspec-prophecy
-Version:        1.6.0
+Version:        1.6.1
 Release:        1%{?dist}
 Summary:        Highly opinionated mocking framework for PHP
 
@@ -34,20 +34,22 @@ Source1:        %{name}-autoload.php
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
-BuildRequires:  %{_bindir}/phpspec
+# from composer.json, "require-dev": {
+#        "phpspec/phpspec": "^2.0"
+BuildRequires:  php-composer(phpspec/phpspec) >= 2.0
 # For autoloader
 BuildRequires:  php-composer(symfony/class-loader)
 %endif
 
-# from composer.json, requires
+# from composer.json, "requires": {
 #        "php":                               "^5.3|^7.0",
-#        "phpdocumentor/reflection-docblock": "~2.0",
-#        "sebastian/comparator":              "~1.1",
+#        "phpdocumentor/reflection-docblock": "^2.0|^3.0.2",
+#        "sebastian/comparator":              "^1.1",
 #        "doctrine/instantiator":             "^1.0.2",
-#        "sebastian/recursion-context":       "~1.0"
-Requires:       php(language) >= 5.3.0
+#        "sebastian/recursion-context":       "^1.0"
+Requires:       php(language) >= 5.3
 Requires:       php-composer(phpdocumentor/reflection-docblock) >= 2.0
-Requires:       php-composer(phpdocumentor/reflection-docblock) <  3
+Requires:       php-composer(phpdocumentor/reflection-docblock) <  4
 Requires:       php-composer(sebastian/comparator)              >= 1.1
 Requires:       php-composer(sebastian/comparator)              <  2
 Requires:       php-composer(sebastian/recursion-context)       >= 1.0
@@ -97,9 +99,6 @@ cp -pr src/* %{buildroot}%{_datadir}/php
   run --format pretty --verbose --no-ansi
 
 if which php70; then
-  # See https://github.com/phpspec/prophecy/issues/258
-  rm spec/Prophecy/Doubler/Generator/ClassMirrorSpec.php
-
   php70 \
     -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
     %{_bindir}/phpspec \
@@ -124,6 +123,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun  7 2016 Remi Collet <remi@fedoraproject.org> - 1.6.1-1
+- update to 1.6.1
+
 * Mon Feb 15 2016 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
 - update to 1.6.0
 - add dependency on sebastian/recursion-context
