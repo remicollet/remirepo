@@ -52,27 +52,15 @@ for %{name}.
 
 find examples -name .gitignore -exec rm {} \; -print
 
-sed -e "s:@prefix@:%{_prefix}:" \
-    -e "s:@exec_prefix@:%{_exec_prefix}:" \
-    -e "s:@libdir@:%{_libdir}:" \
-    -e "s:@includedir@:%{_includedir}:" \
-    -e "s:@version@:%{version}:" \
-    packaging/cassandra.pc.in | tee packaging/cassandra.pc
-
 
 %build
-%cmake \
-  -DCMAKE_INSTALL_LIBDIR:PATH=%{_libdir} \
-  .
+%cmake
 
 make %{_smp_mflags}
 
 
 %install
 make install DESTDIR="%{buildroot}"
-
-install -Dpm 644 packaging/cassandra.pc \
-        %{buildroot}%{_libdir}/pkgconfig/cassandra.pc
 
 rm %{buildroot}%{_libdir}/%{libname}_static.a
 rm %{buildroot}%{_libdir}//pkgconfig/cassandra_static.pc
@@ -86,7 +74,6 @@ rm %{buildroot}%{_libdir}//pkgconfig/cassandra_static.pc
 %files
 %{!?_licensedir:%global license %%doc}
 %license LICENSE.txt
-%doc *md
 %{_libdir}/%{libname}.so.%{soname}*
 
 
