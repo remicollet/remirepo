@@ -1,4 +1,4 @@
-# remirepo spec file for cassandra-cpp-driver
+# remirepo/fedora spec file for cassandra-cpp-driver
 #
 # Copyright (c) 2015-2016 Remi Collet
 # License: CC-BY-SA
@@ -21,7 +21,7 @@ Release:       1%{?dist}
 License:       ASL 2.0
 Group:         System Environment/Libraries
 
-URL:           https://github.com/%{gh_owner}/%{gh_project}
+URL:           http://datastax.github.io/cpp-driver/
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 BuildRequires: cmake >= 2.6.4
