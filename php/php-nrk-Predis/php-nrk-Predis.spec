@@ -17,7 +17,7 @@
 %endif
 
 Name:           php-nrk-Predis
-Version:        1.0.4
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        PHP client library for Redis
 
@@ -28,7 +28,7 @@ Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3.2
+BuildRequires:  php(language) >= 5.3.9
 BuildRequires:  php-pear(PEAR)
 BuildRequires:  php-channel(%{pear_channel})
 %if %{with_tests}
@@ -38,10 +38,11 @@ BuildRequires:  redis > 2.8
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
-Requires:       php(language) >= 5.3.2
-Requires:       php-curl
-Requires:       php-pcre
+Requires:       php(language) >= 5.3.9
 Requires:       php-reflection
+Requires:       php-curl
+Requires:       php-filter
+Requires:       php-pcre
 Requires:       php-session
 Requires:       php-sockets
 Requires:       php-spl
@@ -144,6 +145,9 @@ fi
 
 
 %changelog
+* Tue Jun 07 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- Update to 1.1.0
+
 * Tue May 31 2016 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
 - Update to 1.0.4
 
