@@ -106,6 +106,15 @@ php7build:
 		time rpmbuild $(RPMDEFINES) --define "scl php70" --without zts -bb $(NAME).spec ; \
 	fi
 
+php71build:
+	@if test -f $(NAME)-php7.spec ; then \
+		time rpmbuild $(RPMDEFINES) --define "scl php71" --without zts -bb $(NAME)-php7.spec ; \
+	elif test -f $(NAME)-dev.spec ; then \
+		time rpmbuild $(RPMDEFINES) --define "scl php71" --without zts -bb $(NAME)-dev.spec ; \
+	else \
+		time rpmbuild $(RPMDEFINES) --define "scl php71" --without zts -bb $(NAME).spec ; \
+	fi
+
 php7test:
 	@if test -f $(NAME)-php7.spec ; then \
 		time rpmbuild $(RPMDEFINES) --define "scl php70" --without zts -bb --with tests $(NAME)-php7.spec ; \

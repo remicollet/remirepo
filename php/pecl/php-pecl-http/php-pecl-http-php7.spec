@@ -11,10 +11,11 @@
 #
 %if 0%{?scl:1}
 %global sub_prefix %{scl_prefix}
+%scl_package       php-pecl-http
+%else
+%global _root_prefix %{_prefix}
 %endif
 
-%{?scl:          %scl_package         php-pecl-http}
-%{!?scl:         %global _root_prefix %{_prefix}}
 
 %global gh_commit   a84b499418ee7b8992fd9e7e2abc661735a869bd
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
@@ -42,7 +43,7 @@ Version:        3.0.1
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 %endif
 Summary:        Extended HTTP support
@@ -53,6 +54,8 @@ URL:            http://pecl.php.net/package/pecl_http
 
 # From http://www.php.net/manual/en/http.configuration.php
 Source1:        %{proj_name}.ini
+
+Patch0:         %{proj_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel >= 7
@@ -104,8 +107,10 @@ Requires:       %{?scl_prefix}php-pecl(apfd)%{?_isa}
 
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})         = %{version}%{?prever}
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})%{?_isa} = %{version}%{?prever}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}%{?prever}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}%{?prever}
+%endif
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}%{?prever}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
 Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}%{?prever}
@@ -123,6 +128,10 @@ Obsoletes:     php56u-pecl-http <= %{version}
 Obsoletes:     php56w-pecl-http <= %{version}
 Obsoletes:     php70u-pecl-http <= %{version}
 Obsoletes:     php70w-pecl-http <= %{version}
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-http <= %{version}
+Obsoletes:     php71w-pecl-http <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -182,6 +191,8 @@ mv %{proj_name}-%{version}%{?prever} NTS
 %{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
+%patch0 -p1 -b .upstream
+
 extver=$(sed -n '/#define PHP_PECL_HTTP_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}%{?prever}%{?gh_date:dev}"; then
    : Error: Upstream HTTP version is now ${extver}, expecting %{version}%{?prever}%{?gh_date:dev}.
@@ -277,6 +288,10 @@ done
     --modules | grep %{pecl_name}
 
 %if %{with_tests}
+%if "%{php_version}" > "7.1"
+rm ?TS/tests/client022.phpt
+%endif
+
 : Upstream test suite NTS extension
 cd NTS
 TEST_PHP_EXECUTABLE=%{__php} \
@@ -351,6 +366,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun  8 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-2
+- add upstream patch, fix test suite with PHP 7.1
+
 * Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
 - Update to 3.0.1 (php 7, stable)
 
