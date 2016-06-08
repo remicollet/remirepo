@@ -1,0 +1,192 @@
+From 2e6d70787c93413daecbea529bf0f74fa901d1db Mon Sep 17 00:00:00 2001
+From: Xinchen Hui <laruence@gmail.com>
+Date: Tue, 29 Mar 2016 17:14:36 +0800
+Subject: [PATCH] Fixed bug #71914 (Reference is lost in "switch")
+
+---
+ NEWS                     |  1 +
+ Zend/tests/bug71914.phpt | 25 +++++++++++++++++++++++++
+ Zend/zend_vm_def.h       |  2 +-
+ Zend/zend_vm_execute.h   | 18 +++++++++---------
+ 4 files changed, 36 insertions(+), 10 deletions(-)
+ create mode 100644 Zend/tests/bug71914.phpt
+
+diff --git a/Zend/tests/bug71914.phpt b/Zend/tests/bug71914.phpt
+new file mode 100644
+index 0000000..8f825f8
+--- /dev/null
++++ b/Zend/tests/bug71914.phpt
+@@ -0,0 +1,25 @@
++--TEST--
++Bug #71914 (Reference is lost in "switch")
++--FILE--
++<?php
++
++function bug(&$value) {
++	switch ($value) {
++	case "xxxx":
++		$value = true;
++		break;
++	}
++}
++
++
++function test($arr, &$dummy) {
++	bug($arr["str"]);
++	var_dump($arr["str"]);
++}
++
++
++$array = array("str" => "xxxx");
++test($array, $array["str"]);
++?>
++--EXPECT--
++bool(true)
+diff --git a/Zend/zend_vm_def.h b/Zend/zend_vm_def.h
+index 2c721c3..8e658f5 100644
+--- a/Zend/zend_vm_def.h
++++ b/Zend/zend_vm_def.h
+@@ -4903,7 +4903,7 @@ ZEND_VM_HANDLER(48, ZEND_CASE, CONST|TMPVAR|CV, CONST|TMPVAR|CV)
+ 	SAVE_OPLINE();
+ 	if (OP1_TYPE == IS_CV && UNEXPECTED(Z_TYPE_P(op1) == IS_UNDEF)) {
+ 		op1 = GET_OP1_UNDEF_CV(op1, BP_VAR_R);
+-	} else if ((OP1_TYPE & (IS_VAR|IS_CV)) && UNEXPECTED(Z_ISREF_P(op1))) {
++	} else if ((OP1_TYPE & IS_VAR) && UNEXPECTED(Z_ISREF_P(op1))) {
+ 		/* Don't keep lock on reference, lock the value instead */
+ 		if (UNEXPECTED(Z_REFCOUNT_P(op1) == 1)) {
+ 			ZVAL_UNREF(op1);
+diff --git a/Zend/zend_vm_execute.h b/Zend/zend_vm_execute.h
+index c719aa2..bdc1bd7 100644
+--- a/Zend/zend_vm_execute.h
++++ b/Zend/zend_vm_execute.h
+@@ -5858,7 +5858,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_CASE_SPEC_CONST_CONST_HANDLER(
+ 	SAVE_OPLINE();
+ 	if (IS_CONST == IS_CV && UNEXPECTED(Z_TYPE_P(op1) == IS_UNDEF)) {
+ 		op1 = GET_OP1_UNDEF_CV(op1, BP_VAR_R);
+-	} else if ((IS_CONST & (IS_VAR|IS_CV)) && UNEXPECTED(Z_ISREF_P(op1))) {
++	} else if ((IS_CONST & IS_VAR) && UNEXPECTED(Z_ISREF_P(op1))) {
+ 		/* Don't keep lock on reference, lock the value instead */
+ 		if (UNEXPECTED(Z_REFCOUNT_P(op1) == 1)) {
+ 			ZVAL_UNREF(op1);
+@@ -9654,7 +9654,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_CASE_SPEC_CONST_CV_HANDLER(ZEN
+ 	SAVE_OPLINE();
+ 	if (IS_CONST == IS_CV && UNEXPECTED(Z_TYPE_P(op1) == IS_UNDEF)) {
+ 		op1 = GET_OP1_UNDEF_CV(op1, BP_VAR_R);
+-	} else if ((IS_CONST & (IS_VAR|IS_CV)) && UNEXPECTED(Z_ISREF_P(op1))) {
++	} else if ((IS_CONST & IS_VAR) && UNEXPECTED(Z_ISREF_P(op1))) {
+ 		/* Don't keep lock on reference, lock the value instead */
+ 		if (UNEXPECTED(Z_REFCOUNT_P(op1) == 1)) {
+ 			ZVAL_UNREF(op1);
+@@ -11428,7 +11428,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_CASE_SPEC_CONST_TMPVAR_HANDLER
+ 	SAVE_OPLINE();
+ 	if (IS_CONST == IS_CV && UNEXPECTED(Z_TYPE_P(op1) == IS_UNDEF)) {
+ 		op1 = GET_OP1_UNDEF_CV(op1, BP_VAR_R);
+-	} else if ((IS_CONST & (IS_VAR|IS_CV)) && UNEXPECTED(Z_ISREF_P(op1))) {
++	} else if ((IS_CONST & IS_VAR) && UNEXPECTED(Z_ISREF_P(op1))) {
+ 		/* Don't keep lock on reference, lock the value instead */
+ 		if (UNEXPECTED(Z_REFCOUNT_P(op1) == 1)) {
+ 			ZVAL_UNREF(op1);
+@@ -32184,7 +32184,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_CASE_SPEC_CV_CONST_HANDLER(ZEN
+ 	SAVE_OPLINE();
+ 	if (IS_CV == IS_CV && UNEXPECTED(Z_TYPE_P(op1) == IS_UNDEF)) {
+ 		op1 = GET_OP1_UNDEF_CV(op1, BP_VAR_R);
+-	} else if ((IS_CV & (IS_VAR|IS_CV)) && UNEXPECTED(Z_ISREF_P(op1))) {
++	} else if ((IS_CV & IS_VAR) && UNEXPECTED(Z_ISREF_P(op1))) {
+ 		/* Don't keep lock on reference, lock the value instead */
+ 		if (UNEXPECTED(Z_REFCOUNT_P(op1) == 1)) {
+ 			ZVAL_UNREF(op1);
+@@ -37280,7 +37280,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_CASE_SPEC_CV_CV_HANDLER(ZEND_O
+ 	SAVE_OPLINE();
+ 	if (IS_CV == IS_CV && UNEXPECTED(Z_TYPE_P(op1) == IS_UNDEF)) {
+ 		op1 = GET_OP1_UNDEF_CV(op1, BP_VAR_R);
+-	} else if ((IS_CV & (IS_VAR|IS_CV)) && UNEXPECTED(Z_ISREF_P(op1))) {
++	} else if ((IS_CV & IS_VAR) && UNEXPECTED(Z_ISREF_P(op1))) {
+ 		/* Don't keep lock on reference, lock the value instead */
+ 		if (UNEXPECTED(Z_REFCOUNT_P(op1) == 1)) {
+ 			ZVAL_UNREF(op1);
+@@ -39873,7 +39873,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_CASE_SPEC_CV_TMPVAR_HANDLER(ZE
+ 	SAVE_OPLINE();
+ 	if (IS_CV == IS_CV && UNEXPECTED(Z_TYPE_P(op1) == IS_UNDEF)) {
+ 		op1 = GET_OP1_UNDEF_CV(op1, BP_VAR_R);
+-	} else if ((IS_CV & (IS_VAR|IS_CV)) && UNEXPECTED(Z_ISREF_P(op1))) {
++	} else if ((IS_CV & IS_VAR) && UNEXPECTED(Z_ISREF_P(op1))) {
+ 		/* Don't keep lock on reference, lock the value instead */
+ 		if (UNEXPECTED(Z_REFCOUNT_P(op1) == 1)) {
+ 			ZVAL_UNREF(op1);
+@@ -42108,7 +42108,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_CASE_SPEC_TMPVAR_CONST_HANDLER
+ 	SAVE_OPLINE();
+ 	if ((IS_TMP_VAR|IS_VAR) == IS_CV && UNEXPECTED(Z_TYPE_P(op1) == IS_UNDEF)) {
+ 		op1 = GET_OP1_UNDEF_CV(op1, BP_VAR_R);
+-	} else if (((IS_TMP_VAR|IS_VAR) & (IS_VAR|IS_CV)) && UNEXPECTED(Z_ISREF_P(op1))) {
++	} else if (((IS_TMP_VAR|IS_VAR) & IS_VAR) && UNEXPECTED(Z_ISREF_P(op1))) {
+ 		/* Don't keep lock on reference, lock the value instead */
+ 		if (UNEXPECTED(Z_REFCOUNT_P(op1) == 1)) {
+ 			ZVAL_UNREF(op1);
+@@ -44256,7 +44256,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_CASE_SPEC_TMPVAR_CV_HANDLER(ZE
+ 	SAVE_OPLINE();
+ 	if ((IS_TMP_VAR|IS_VAR) == IS_CV && UNEXPECTED(Z_TYPE_P(op1) == IS_UNDEF)) {
+ 		op1 = GET_OP1_UNDEF_CV(op1, BP_VAR_R);
+-	} else if (((IS_TMP_VAR|IS_VAR) & (IS_VAR|IS_CV)) && UNEXPECTED(Z_ISREF_P(op1))) {
++	} else if (((IS_TMP_VAR|IS_VAR) & IS_VAR) && UNEXPECTED(Z_ISREF_P(op1))) {
+ 		/* Don't keep lock on reference, lock the value instead */
+ 		if (UNEXPECTED(Z_REFCOUNT_P(op1) == 1)) {
+ 			ZVAL_UNREF(op1);
+@@ -45403,7 +45403,7 @@ static ZEND_OPCODE_HANDLER_RET ZEND_FASTCALL ZEND_CASE_SPEC_TMPVAR_TMPVAR_HANDLE
+ 	SAVE_OPLINE();
+ 	if ((IS_TMP_VAR|IS_VAR) == IS_CV && UNEXPECTED(Z_TYPE_P(op1) == IS_UNDEF)) {
+ 		op1 = GET_OP1_UNDEF_CV(op1, BP_VAR_R);
+-	} else if (((IS_TMP_VAR|IS_VAR) & (IS_VAR|IS_CV)) && UNEXPECTED(Z_ISREF_P(op1))) {
++	} else if (((IS_TMP_VAR|IS_VAR) & IS_VAR) && UNEXPECTED(Z_ISREF_P(op1))) {
+ 		/* Don't keep lock on reference, lock the value instead */
+ 		if (UNEXPECTED(Z_REFCOUNT_P(op1) == 1)) {
+ 			ZVAL_UNREF(op1);
+-- 
+2.1.4
+
+From 256593abcf0452d2a95cc1869baeeaea0d72d2a7 Mon Sep 17 00:00:00 2001
+From: Xinchen Hui <laruence@gmail.com>
+Date: Tue, 29 Mar 2016 17:52:58 +0800
+Subject: [PATCH] Update tests
+
+---
+ Zend/tests/bug71914.phpt | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/Zend/tests/bug71914.phpt b/Zend/tests/bug71914.phpt
+index 8f825f8..a43eb56 100644
+--- a/Zend/tests/bug71914.phpt
++++ b/Zend/tests/bug71914.phpt
+@@ -11,15 +11,30 @@ function bug(&$value) {
+ 	}
+ }
+ 
++function returnArray() {
++	$array = array();
++	$array["str"]  = "xxxx";
++	return $array;
++}
++
++class Foo {
++	public $array = array("str" => "xxxx");
++}
+ 
+ function test($arr, &$dummy) {
+ 	bug($arr["str"]);
+ 	var_dump($arr["str"]);
+ }
+ 
++$foo = new Foo();
++$arr = returnArray();
+ 
+ $array = array("str" => "xxxx");
+ test($array, $array["str"]);
++test($arr, $arr["str"]);
++test($foo->array, $foo->array["str"]);
+ ?>
+ --EXPECT--
+ bool(true)
++bool(true)
++bool(true)
+-- 
+2.1.4
+
