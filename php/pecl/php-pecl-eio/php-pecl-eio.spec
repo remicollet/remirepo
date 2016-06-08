@@ -23,10 +23,10 @@ Provides: %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package       php-pecl-eio
 %endif
-%global prever    RC3
+#global prever     RC3
 
-%{?scl:          %scl_package        php-pecl-eio}
 
 #
 # NOTE: bundled libeio (which is retired from Fedora)
@@ -35,7 +35,7 @@ Provides: %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 Summary:        Provides interface to the libeio library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        2.0.0
-Release:        0.4.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -85,6 +85,10 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -266,6 +270,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun  8 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0 (stable)
+
 * Wed Mar 23 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.4.RC3
 - Update to 2.0.0RC3 (no change)
 
