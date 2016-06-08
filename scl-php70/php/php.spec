@@ -26,7 +26,6 @@
 %global zendver     20151012
 %global pdover      20150127
 # Extension version
-%global opcachever  7.0.6-dev
 %global oci8ver     2.1.1
 
 # Adds -z now to the linker flags
@@ -125,13 +124,13 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver        RC1
+%global rcver        RC1
 %global rpmrel       1
 
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 7.0.7
+Version: 7.0.8
 Release: %{?rcver:0.}%{rpmrel}%{?rcver:.%{rcver}}%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -406,10 +405,10 @@ Summary:   The Zend OPcache
 Group:     Development/Languages
 License:   PHP
 Requires:  %{?scl_prefix}php-common%{?_isa} = %{version}-%{release}
-Provides:  %{?scl_prefix}php-pecl-zendopcache = %{opcachever}
-Provides:  %{?scl_prefix}php-pecl-zendopcache%{?_isa} = %{opcachever}
-Provides:  %{?scl_prefix}php-pecl(opcache) = %{opcachever}
-Provides:  %{?scl_prefix}php-pecl(opcache)%{?_isa} = %{opcachever}
+Provides:  %{?scl_prefix}php-pecl-zendopcache = %{version}
+Provides:  %{?scl_prefix}php-pecl-zendopcache%{?_isa} = %{version}
+Provides:  %{?scl_prefix}php-pecl(opcache) = %{version}
+Provides:  %{?scl_prefix}php-pecl(opcache)%{?_isa} = %{version}
 
 %description opcache
 The Zend OPcache provides faster PHP execution through opcode caching and
@@ -979,13 +978,6 @@ ver=$(sed -n '/#define PHP_OCI8_VERSION /{s/.* "//;s/".*$//;p}' ext/oci8/php_oci
 if test "$ver" != "%{oci8ver}"; then
    : Error: Upstream OCI8 version is now ${ver}, expecting %{oci8ver}.
    : Update the oci8ver macro and rebuild.
-   exit 1
-fi
-
-ver=$(sed -n '/#define PHP_ZENDOPCACHE_VERSION /{s/.*\s"//;s/".*$//;p}' ext/opcache/ZendAccelerator.h)
-if test "$ver" != "%{opcachever}"; then
-   : Error: Upstream OPCACHE version is now ${ver}, expecting %{opcachever}.
-   : Update the opcachever macro and rebuild.
    exit 1
 fi
 
@@ -1827,6 +1819,10 @@ fi
 
 
 %changelog
+* Wed Jun  8 2016 Remi Collet <remi@fedoraproject.org> 7.0.8-0.1.RC1
+- Update to 7.0.8RC1
+- opcache version is now php version
+
 * Wed May 25 2016 Remi Collet <remi@fedoraproject.org> 7.0.7-1
 - Update to 7.0.7 - http://www.php.net/releases/7_0_7.php
 

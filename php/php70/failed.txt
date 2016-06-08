@@ -1,4 +1,4 @@
-===== 7.0.7 (2016-05-26)
+===== 7.0.8RC1 (2016-06-09)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
@@ -9,22 +9,16 @@ $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 /var/lib/mock/fc21x/build.log:Tests failed    :    0
 /var/lib/mock/fc22i/build.log:Tests failed    :    0
 /var/lib/mock/fc22x/build.log:Tests failed    :    0
-/var/lib/mock/fc23i/build.log:Tests failed    :    1
-/var/lib/mock/fc23x/build.log:Tests failed    :    1
+/var/lib/mock/fc23i/build.log:Tests failed    :    0
+/var/lib/mock/fc23x/build.log:Tests failed    :    0
 /var/lib/mock/fc24i/build.log:Tests failed    :    0
-/var/lib/mock/fc24x/build.log:Tests failed    :    1
+/var/lib/mock/fc24x/build.log:Tests failed    :    0
 
 
 el6i, el6x, el7x
 		Bug #33414 [2] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-2.phpt]
 el6x, el7x
 		strtotime() function (64 bit) [ext/date/tests/strtotime3-64bit.phpt]
-fc23i
-	*	Bug #61977 Test exit code for various errors [sapi/cli/tests/bug43177.phpt]
-fc23x
-	*	Bug #64438 proc_open hangs with stdin/out with 4097+ bytes [ext/standard/tests/streams/proc_open_bug64438.phpt]
-fc24x
-	*	Bug #70198 Checking liveness does not work as expected [ext/standard/tests/streams/bug70198.phpt]
 
 
 

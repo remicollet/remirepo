@@ -14,7 +14,6 @@
 %global pdover      20150127
 # Extension version
 %global fileinfover 1.0.5
-%global opcachever  7.0.6-dev
 %global oci8ver     2.1.1
 %global zipver      1.13.0
 %global jsonver     1.4.0
@@ -121,12 +120,12 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver         RC1
+%global rcver         RC1
 %global rpmrel        1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 7.0.7
+Version: 7.0.8
 Release: %{?rcver:0.}%{rpmrel}%{?rcver:.%{rcver}}%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -425,10 +424,10 @@ Group:     Development/Languages
 License:   PHP
 Requires:  php-common%{?_isa} = %{version}-%{release}
 Obsoletes: php-pecl-zendopcache
-Provides:  php-pecl-zendopcache = %{opcachever}
-Provides:  php-pecl-zendopcache%{?_isa} = %{opcachever}
-Provides:  php-pecl(opcache) = %{opcachever}
-Provides:  php-pecl(opcache)%{?_isa} = %{opcachever}
+Provides:  php-pecl-zendopcache = %{version}
+Provides:  php-pecl-zendopcache%{?_isa} = %{version}
+Provides:  php-pecl(opcache) = %{version}
+Provides:  php-pecl(opcache)%{?_isa} = %{version}
 Obsoletes: php55u-opcache, php55w-opcache, php56u-opcache, php56w-opcache, php70u-opcache, php70w-opcache
 
 %description opcache
@@ -1065,13 +1064,6 @@ ver=$(sed -n '/#define PHP_JSON_VERSION /{s/.* "//;s/".*$//;p}' ext/json/php_jso
 if test "$ver" != "%{jsonver}"; then
    : Error: Upstream JSON version is now ${ver}, expecting %{jsonver}.
    : Update the %{jsonver} macro and rebuild.
-   exit 1
-fi
-
-ver=$(sed -n '/#define PHP_ZENDOPCACHE_VERSION /{s/.*\s"//;s/".*$//;p}' ext/opcache/ZendAccelerator.h)
-if test "$ver" != "%{opcachever}"; then
-   : Error: Upstream OPCACHE version is now ${ver}, expecting %{opcachever}.
-   : Update the opcachever macro and rebuild.
    exit 1
 fi
 
@@ -1997,6 +1989,10 @@ fi
 
 
 %changelog
+* Wed Jun  8 2016 Remi Collet <remi@fedoraproject.org> 7.0.8-0.1.RC1
+- Update to 7.0.8RC1
+- opcache version is now php version
+
 * Wed May 25 2016 Remi Collet <remi@fedoraproject.org> 7.0.7-1
 - Update to 7.0.7 - http://www.php.net/releases/7_0_7.php
 
