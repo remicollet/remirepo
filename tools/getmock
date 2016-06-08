@@ -12,6 +12,9 @@ case $1 in
 	;;
 esac
 case $dep in 
+scl71el*)	dep=${dep#scl71el}
+	type=enterprise
+	;;
 scl70el*)	dep=${dep#scl70el}
 	type=enterprise
 	;;
@@ -28,6 +31,9 @@ el*)	dep=${dep#el}
 	type=enterprise
 	;;
 fc*)	dep=${dep#fc}
+	type=fedora
+	;;
+scl71fc*)	dep=${dep#scl71fc}
 	type=fedora
 	;;
 scl70fc*)	dep=${dep#scl70fc}
@@ -294,6 +300,16 @@ elif [ $1 = scl70 ]; then
 	for i in 6 7
 	do
 		getOneMock scl70el${i}x $opt
+	done
+
+elif [ $1 = scl71 ]; then
+	for i in 22 23 24
+	do
+		getOneMock scl71fc${i}x $opt
+	done
+	for i in 6 7
+	do
+		getOneMock scl71el${i}x $opt
 	done
 
 else
