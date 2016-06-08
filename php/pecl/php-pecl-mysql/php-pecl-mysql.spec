@@ -8,19 +8,18 @@
 #
 %if 0%{?scl:1}
 %global sub_prefix %{scl_prefix}
+%scl_package       php-pecl-mysql
 %endif
 
-%{?scl:          %scl_package        php-pecl-mysql}
-
 # https://github.com/php/pecl-database-mysql/commits/master
-%global gh_commit   294ce3b491ffb5ab2556b9f64ef6fb608d32e5c7
+%global gh_commit   45881bd8d817cef3254877f9ace22ff85b8637ca
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    php
 %global gh_project  pecl-database-mysql
-%global gh_date     20151007
+%global gh_date     20160428
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name   mysql
-%global with_tests  %{!?_without_tests:1}%{?_without_tests:0}
+%global with_tests  0%{!?_without_tests:1}
 # After 40-mysqlnd
 %global ini_name    50-%{pecl_name}.ini
 %global mysql_sock  %(mysql_config --socket 2>/dev/null || echo /var/lib/mysql/mysql.sock)
@@ -29,7 +28,7 @@ Summary:        MySQL database access functions
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
 %if 0%{?gh_date:1}
-Release:        0.10.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.11.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -55,8 +54,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = 1:%{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = 1:%{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -218,6 +219,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun  8 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.11.20160428git45881bd
+- refresh for PHP 7.1
+
 * Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.10.20150628git3c79a97
 - adapt for F24
 

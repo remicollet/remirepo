@@ -20,7 +20,7 @@
 Summary:       Package that installs PHP 7.0
 Name:          %scl_name
 Version:       1.0
-Release:       4%{?dist}
+Release:       5%{?dist}
 Group:         Development/Languages
 License:       GPLv2+
 
@@ -42,9 +42,6 @@ Requires:      %{?scl_name}-runtime%{?_isa}      = %{version}-%{release}
 %description
 This is the main package for %scl Software Collection,
 that install PHP 7.0 language.
-
-WARNING: this an experimental collection for
-the development version of PHP 7.0.
 
 
 %package runtime
@@ -208,7 +205,10 @@ restorecon -R %{_localstatedir} &>/dev/null || :
 
 
 %changelog
-* Thu Mar 10 2016 Remi Collet <remi@fedoraproject.org> 1.0.4
+* Wed Jun  8 2016 Remi Collet <remi@fedoraproject.org> 1.0-5
+- fix description (PHP 7.0 is stable)
+
+* Thu Mar 10 2016 Remi Collet <remi@fedoraproject.org> 1.0-4
 - add module file for EL
 
 * Mon Mar  7 2016 Remi Collet <remi@fedoraproject.org> 1.0-3
