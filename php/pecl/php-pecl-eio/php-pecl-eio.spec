@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global pecl_name eio
-%global with_zts  0%{?__ztsphp:1}
+%global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 # After sockets
 %global ini_name  z-%{pecl_name}.ini
@@ -24,6 +24,7 @@ Provides: %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 %global sub_prefix %{scl_prefix}
 %endif
 %endif
+%global prever    RC3
 
 %{?scl:          %scl_package        php-pecl-eio}
 
@@ -33,12 +34,12 @@ Provides: %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 
 Summary:        Provides interface to the libeio library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.2.6
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        2.0.0
+Release:        0.4.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -49,27 +50,41 @@ BuildRequires:  %{?scl_prefix}php-posix
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+%if "%{php_version}" < "5.4"
+# php 5.3.3 in EL-6 don't use arched virtual provides
+# so only requires real packages instead
+Requires:       %{?scl_prefix}php-common%{?_isa}
+%else
 Requires:       %{?scl_prefix}php-sockets%{?_isa}
+%endif
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:     php54-pecl-%{pecl_name}
-Obsoletes:     php54w-pecl-%{pecl_name}
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name}
-Obsoletes:     php55w-pecl-%{pecl_name}
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name}
-Obsoletes:     php56w-pecl-%{pecl_name}
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -95,7 +110,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -q -c
-mv %{pecl_name}-%{version} NTS
+mv %{pecl_name}-%{version}%{?prever} NTS
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' \
@@ -105,9 +120,9 @@ sed -e 's/role="test"/role="src"/' \
 cd NTS
 
 # Sanity check, really often broken
-extver=$(sed -n '/define PHP_EIO_VERSION/{s/.* "//;s/".*$//;p}' php_eio.h)
-if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
+extver=$(sed -n '/define PHP_EIO_VERSION/{s/.* "//;s/".*$//;p}' php%(%{__php} -r 'echo PHP_MAJOR_VERSION;')/php_eio.h)
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
 cd ..
@@ -189,14 +204,10 @@ fi
 
 
 %check
-# Need investigation (output order)
+# Need investigation (output order, erratic results)
 rm  ?TS/tests/eio_custom_basic.phpt
-%if 0%{?rhel} <= 7
+%if 0%{?rhel} == 5
 rm  ?TS/tests/eio_fallocate_basic.phpt
-%endif
-%if 0%{?rhel} <= 6
-rm  ?TS/tests/eio_write_variation.phpt
-rm  ?TS/tests/fork.phpt
 %endif
 
 DEPMOD=
@@ -207,15 +218,15 @@ DEPMOD=
 cd NTS
 %{_bindir}/php --no-php-ini \
     $DEPMOD \
-    --define extension=modules/%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 : Upstream test suite for NTS extension
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
-TEST_PHP_ARGS="-n $DEPMOD -d extension=$PWD/modules/%{pecl_name}.so" \
+TEST_PHP_ARGS="-n $DEPMOD -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/php -n run-tests.php
+%{_bindir}/php -n run-tests.php --show-diff
 
 
 %if %{with_zts}
@@ -223,15 +234,15 @@ REPORT_EXIT_STATUS=1 \
 cd ../ZTS
 %{__ztsphp} --no-php-ini \
     $DEPMOD \
-    --define extension=modules/%{pecl_name}.so \
+    --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 : Upstream test suite for ZTS extension
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-TEST_PHP_ARGS="-n $DEPMOD -d extension=$PWD/modules/%{pecl_name}.so" \
+TEST_PHP_ARGS="-n $DEPMOD -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__ztsphp} -n run-tests.php
+%{__ztsphp} -n run-tests.php --show-diff
 %endif
 
 
@@ -255,8 +266,19 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.2.6-2
-- adapt for F24
+* Wed Mar 23 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.4.RC3
+- Update to 2.0.0RC3 (no change)
+
+* Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.3.RC2
+- Update to 2.0.0RC2
+
+* Fri Nov 20 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.2.RC1
+- fix PHP 7 and ZTS build
+  open https://bitbucket.org/osmanov/pecl-eio/issues/3
+  open https://bitbucket.org/osmanov/pecl-eio/pull-requests/4
+
+* Thu Nov 19 2015 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.1.RC1
+- Update to 2.0.0RC1
 
 * Mon Sep 28 2015 Remi Collet <remi@fedoraproject.org> - 1.2.6-1
 - Update to 1.2.6
