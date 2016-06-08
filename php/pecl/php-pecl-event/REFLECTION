@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #212 event version 2.0.4 ] {
+Extension [ <persistent> extension #213 event version 2.1.0 ] {
 
   - Dependencies {
     Dependency [ sockets (Required) ]
@@ -1270,7 +1270,7 @@ Extension [ <persistent> extension #212 event version 2.0.4 ] {
 
     Class [ <internal:event> abstract final class EventUtil ] {
 
-      - Constants [25] {
+      - Constants [26] {
         Constant [ integer AF_INET ] { 2 }
         Constant [ integer AF_INET6 ] { 10 }
         Constant [ integer AF_UNIX ] { 1 }
@@ -1294,6 +1294,7 @@ Extension [ <persistent> extension #212 event version 2.0.4 ] {
         Constant [ integer SOL_TCP ] { 6 }
         Constant [ integer SOL_UDP ] { 17 }
         Constant [ integer IPPROTO_IP ] { 0 }
+        Constant [ integer SOCK_RAW ] { 3 }
         Constant [ integer IPPROTO_IPV6 ] { 41 }
         Constant [ integer LIBEVENT_VERSION_NUMBER ] { 33559808 }
       }
@@ -1360,7 +1361,7 @@ Extension [ <persistent> extension #212 event version 2.0.4 ] {
 
     Class [ <internal:event> final class EventSslContext ] {
 
-      - Constants [27] {
+      - Constants [29] {
         Constant [ integer SSLv2_CLIENT_METHOD ] { 1 }
         Constant [ integer SSLv3_CLIENT_METHOD ] { 2 }
         Constant [ integer SSLv23_CLIENT_METHOD ] { 3 }
@@ -1388,6 +1389,8 @@ Extension [ <persistent> extension #212 event version 2.0.4 ] {
         Constant [ integer OPT_NO_TLSv1_1 ] { 13 }
         Constant [ integer OPT_NO_TLSv1_2 ] { 14 }
         Constant [ integer OPT_CIPHER_SERVER_PREFERENCE ] { 15 }
+        Constant [ integer OPT_REQUIRE_CLIENT_CERT ] { 16 }
+        Constant [ integer OPT_VERIFY_CLIENT_ONCE ] { 17 }
       }
 
       - Static properties [0] {
