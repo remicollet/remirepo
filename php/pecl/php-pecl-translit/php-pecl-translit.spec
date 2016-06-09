@@ -12,9 +12,8 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package       php-pecl-translit
 %endif
-
-%{?scl:          %scl_package        php-pecl-translit}
 
 %global pecl_name   translit
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
@@ -35,7 +34,7 @@
 Summary:      Transliterates non-latin character sets to latin
 Name:         %{?sub_prefix}php-pecl-%{pecl_name}
 Version:      0.6.2
-Release:      2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      BSD
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -58,9 +57,10 @@ Provides:     %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
-# For more-php
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:     %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:     %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -79,6 +79,10 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -235,7 +239,7 @@ REPORT_EXIT_STATUS=1 \
 
 %files
 %defattr(-, root, root, -)
-#doc %{pecl_docdir}/%{pecl_name}
+%{!?_licensedir:%doc %{pecl_docdir}/%{pecl_name}}
 %{?_licensedir:%license NTS/LICENSE}
 %{pecl_xmldir}/%{name}.xml
 
@@ -249,6 +253,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Thu Jun  9 2016 Remi Collet <remi@fedoraproject.org> - 0.6.2-3
+- fix license installation on EL-6
+
 * Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 0.6.2-2
 - adapt for F24
 
