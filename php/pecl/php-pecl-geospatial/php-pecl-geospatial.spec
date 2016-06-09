@@ -12,9 +12,8 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package       php-pecl-geospatial
 %endif
-
-%{?scl:          %scl_package        php-pecl-geospatial}
 
 %global gh_commit   27547d489d5b4fc41cce0a0d3118979d6c10c0cf
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
@@ -37,7 +36,7 @@ Version:        0.1.0
 %if 0%{?gh_date:1}
 Release:        0.6.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 
 License:        PHP
@@ -59,8 +58,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -79,6 +80,10 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -237,7 +242,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-, root, root, 0755)
 %{?_licensedir:%license NTS/LICENSE}
-#doc %{pecl_docdir}/%{pecl_name}
+%{!?_licensedir:%doc %{pecl_docdir}/%{pecl_name}}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -250,6 +255,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun  6 2016 Remi Collet <remi@fedoraproject.org> - 0.1.0-3
+- fix license installation on EL-6
+
 * Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 0.1.0-2
 - adapt for F24
 
