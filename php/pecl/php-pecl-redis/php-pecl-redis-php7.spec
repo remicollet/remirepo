@@ -21,11 +21,11 @@
 %endif
 
 # See https://github.com/phpredis/phpredis/commits/php7
-%global gh_commit   ad3c1169363f3268a2edf51041a79db60543d806
+%global gh_commit   64479400a0b3c7b8b006e5de905836e4d764a763
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    phpredis
 %global gh_project  phpredis
-%global gh_date     20160504
+%global gh_date     20160603
 %global pecl_name   redis
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global with_tests  0%{?_with_tests:1}
@@ -40,9 +40,9 @@
 
 Summary:       Extension for communicating with the Redis key-value store
 Name:          %{?sub_prefix}php-pecl-redis
-Version:       2.2.8
+Version:       3.0.0
 %if 0%{?gh_date}
-Release:       0.6.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
@@ -99,6 +99,10 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -130,6 +134,7 @@ mv %{gh_project}-%{gh_commit} NTS
   $pkg->stability->release = "devel";
   $pkg->asXML("package.xml");
 '
+sed -e '/PHP_REDIS_VERSION/s/3.0.0-rc1/%{version}-dev/' -i NTS/php_redis.h
 %else
 %setup -q -c -a 1
 # rename source folder
@@ -144,7 +149,7 @@ cd NTS
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_REDIS_VERSION/{s/.* "//;s/".*$//;p}' php_redis.h)
-if test "x${extver}" != "x%{version}%{?gh_date:-devphp7}"; then
+if test "x${extver}" != "x%{version}%{?gh_date:-dev}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?gh_date:-devphp7}.
    exit 1
 fi
@@ -169,6 +174,17 @@ extension = %{pecl_name}.so
 
 ;session.save_handler = %{pecl_name}
 ;session.save_path = "tcp://host1:6379?weight=1, tcp://host2:6379?weight=2&timeout=2.5, tcp://host3:6379?weight=2"
+
+; Configuration
+;redis.arrays.names = ''
+;redis.arrays.hosts = ''
+;redis.arrays.previous = ''
+;redis.arrays.functions = ''
+;redis.arrays.index = ''
+;redis.arrays.autorehash = ''
+;redis.clusters.seeds = ''
+;redis.clusters.timeout = ''
+;redis.clusters.read_timeout = ''
 EOF
 
 
@@ -329,6 +345,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun  9 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.1.20160603git6447940
+- refresh and bump version
+
 * Thu May  5 2016 Remi Collet <remi@fedoraproject.org> - 2.2.8-0.6.20160504gitad3c116
 - refresh
 

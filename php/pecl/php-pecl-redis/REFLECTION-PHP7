@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #90 redis version 2.2.8-devphp7 ] {
+Extension [ <persistent> extension #91 redis version 3.0.0-dev ] {
 
   - INI {
     Entry [ redis.arrays.names <ALL> ]
