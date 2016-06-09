@@ -15,9 +15,9 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package       php-pecl-redis
 %endif
 
-%{?scl:          %scl_package        php-pecl-redis}
 
 %global pecl_name   redis
 %global with_zts    0%{?__ztsphp:1}
@@ -32,14 +32,12 @@
 
 Summary:       Extension for communicating with the Redis key-value store
 Name:          %{?sub_prefix}php-pecl-redis
-Version:       2.2.7
-Release:       3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:       2.2.8
+Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/redis
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-# https://github.com/nicolasff/phpredis/issues/332 - missing tests
-Source1:       https://github.com/phpredis/phpredis/archive/%{version}.tar.gz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
@@ -101,7 +99,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 
 %prep
-%setup -q -c -a 1
+%setup -q -c
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' \
@@ -110,8 +108,6 @@ sed -e 's/role="test"/role="src"/' \
 
 # rename source folder
 mv %{pecl_name}-%{version} NTS
-# tests folder from github archive
-mv phpredis-%{version}/tests NTS/tests
 
 cd NTS
 
@@ -142,6 +138,17 @@ extension = %{pecl_name}.so
 
 ;session.save_handler = %{pecl_name}
 ;session.save_path = "tcp://host1:6379?weight=1, tcp://host2:6379?weight=2&timeout=2.5, tcp://host3:6379?weight=2"
+
+; Configuration
+;redis.arrays.names = ''
+;redis.arrays.hosts = ''
+;redis.arrays.previous = ''
+;redis.arrays.functions = ''
+;redis.arrays.index = ''
+;redis.arrays.autorehash = ''
+;redis.clusters.seeds = ''
+;redis.clusters.timeout = ''
+;redis.clusters.read_timeout = ''
 EOF
 
 
@@ -207,11 +214,6 @@ done
 %if %{with_tests}
 cd NTS/tests
 
-# this test requires redis >= 2.6.9
-# https://github.com/nicolasff/phpredis/pull/333
-sed -e s/testClient/SKIP_testClient/ \
-    -i TestRedis.php
-
 # Launch redis server
 mkdir -p {run,log,lib}/redis
 sed -e "s:/^pidfile.*$:/pidfile $PWD/run/redis.pid:" \
@@ -230,7 +232,7 @@ port=6382
 %endif
 %endif
 sed -e "s/6379/$port/" -i redis.conf
-sed -e "s/6379/$port/" -i TestRedis.php
+sed -e "s/6379/$port/" -i *.php
 %{_bindir}/redis-server ./redis.conf
 
 # Run the test Suite
@@ -292,6 +294,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun  9 2016 Remi Collet <remi@fedoraproject.org> - 2.2.8-1
+- Update to 2.2.8 (stable)
+
 * Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 2.2.7-3
 - adapt for F24
 
