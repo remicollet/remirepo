@@ -22,7 +22,7 @@
 %global gh_project  imagick
 #global gh_date     20151204
 %global pecl_name   imagick
-#global prever      RC6
+%global prever      RC1
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 %global ini_name  %{pecl_name}.ini
@@ -35,12 +35,12 @@
 
 Summary:       Extension to create and modify images using ImageMagick
 Name:          %{?sub_prefix}php-pecl-imagick
-Version:       3.4.2
+Version:       3.4.3
 %if 0%{?gh_date}
 Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:       PHP
@@ -95,6 +95,10 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -249,6 +253,12 @@ rm ?TS/tests/025-get-color.phpt
 %endif
 %endif
 
+# See https://github.com/mkoppanen/imagick/issues/158
+if pkg-config ImageMagick --atleast-version 6.9.3
+then export REPORT_EXIT_STATUS=0
+else export REPORT_EXIT_STATUS=1
+fi
+
 : simple module load test for NTS extension
 cd NTS
 %{__php} --no-php-ini \
@@ -259,7 +269,6 @@ cd NTS
 : upstream test suite for NTS extension
 TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so" \
-REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
 %{__php} -n run-tests.php --show-diff
 
@@ -274,7 +283,6 @@ cd ../ZTS
 : upstream test suite for ZTS extension
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so" \
-REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
 %{__ztsphp} -n run-tests.php --show-diff
 %endif
@@ -309,6 +317,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 10 2016 Remi Collet <remi@fedoraproject.org> - 3.4.3-0.1.RC1
+- Update to 3.4.3RC1
+- ignore tests result with IM 6.9.4 because of
+  https://github.com/mkoppanen/imagick/issues/158
+
 * Mon Apr 25 2016 Remi Collet <remi@fedoraproject.org> - 3.4.2-1
 - Update to 3.4.2
 
