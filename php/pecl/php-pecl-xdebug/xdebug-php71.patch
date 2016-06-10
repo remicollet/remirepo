@@ -1,0 +1,14 @@
+diff -up ./php_xdebug.h.old ./php_xdebug.h
+--- ./php_xdebug.h.old	2016-06-10 12:09:53.021694392 +0200
++++ ./php_xdebug.h	2016-06-10 12:09:56.355710983 +0200
+@@ -29,6 +29,10 @@
+ 
+ #include "php.h"
+ 
++#ifndef LOG_NOTICE
++#define LOG_NOTICE 5
++#endif
++
+ #include "xdebug_compat.h"
+ #include "xdebug_handlers.h"
+ #include "xdebug_hash.h"

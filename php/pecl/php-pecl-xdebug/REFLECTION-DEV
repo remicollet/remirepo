@@ -1,0 +1,276 @@
+Extension [ <persistent> extension #51 xdebug version 2.5.0-dev ] {
+
+  - INI {
+    Entry [ xdebug.auto_trace <ALL> ]
+      Current = '0'
+    }
+    Entry [ xdebug.trace_enable_trigger <PERDIR,SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ xdebug.trace_enable_trigger_value <PERDIR,SYSTEM> ]
+      Current = ''
+    }
+    Entry [ xdebug.trace_output_dir <ALL> ]
+      Current = '/tmp'
+    }
+    Entry [ xdebug.trace_output_name <ALL> ]
+      Current = 'trace.%c'
+    }
+    Entry [ xdebug.trace_format <ALL> ]
+      Current = '0'
+    }
+    Entry [ xdebug.trace_options <ALL> ]
+      Current = '0'
+    }
+    Entry [ xdebug.coverage_enable <SYSTEM> ]
+      Current = '1'
+    }
+    Entry [ xdebug.collect_includes <ALL> ]
+      Current = '1'
+    }
+    Entry [ xdebug.collect_params <ALL> ]
+      Current = '0'
+    }
+    Entry [ xdebug.collect_return <ALL> ]
+      Current = '0'
+    }
+    Entry [ xdebug.collect_vars <ALL> ]
+      Current = '0'
+    }
+    Entry [ xdebug.collect_assignments <ALL> ]
+      Current = '0'
+    }
+    Entry [ xdebug.default_enable <ALL> ]
+      Current = '1'
+    }
+    Entry [ xdebug.extended_info <SYSTEM> ]
+      Current = '1'
+    }
+    Entry [ xdebug.file_link_format <ALL> ]
+      Current = ''
+    }
+    Entry [ xdebug.force_display_errors <SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ xdebug.force_error_reporting <SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ xdebug.halt_level <ALL> ]
+      Current = '0'
+    }
+    Entry [ xdebug.max_nesting_level <ALL> ]
+      Current = '256'
+    }
+    Entry [ xdebug.max_stack_frames <ALL> ]
+      Current = '-1'
+    }
+    Entry [ xdebug.overload_var_dump <ALL> ]
+      Current = '2'
+    }
+    Entry [ xdebug.show_error_trace <ALL> ]
+      Current = '0'
+    }
+    Entry [ xdebug.show_exception_trace <ALL> ]
+      Current = '0'
+    }
+    Entry [ xdebug.show_local_vars <ALL> ]
+      Current = '0'
+    }
+    Entry [ xdebug.show_mem_delta <ALL> ]
+      Current = '0'
+    }
+    Entry [ xdebug.dump.COOKIE <ALL> ]
+      Current = ''
+    }
+    Entry [ xdebug.dump.ENV <ALL> ]
+      Current = ''
+    }
+    Entry [ xdebug.dump.FILES <ALL> ]
+      Current = ''
+    }
+    Entry [ xdebug.dump.GET <ALL> ]
+      Current = ''
+    }
+    Entry [ xdebug.dump.POST <ALL> ]
+      Current = ''
+    }
+    Entry [ xdebug.dump.REQUEST <ALL> ]
+      Current = ''
+    }
+    Entry [ xdebug.dump.SERVER <ALL> ]
+      Current = ''
+    }
+    Entry [ xdebug.dump.SESSION <ALL> ]
+      Current = ''
+    }
+    Entry [ xdebug.dump_globals <ALL> ]
+      Current = '1'
+    }
+    Entry [ xdebug.dump_once <ALL> ]
+      Current = '1'
+    }
+    Entry [ xdebug.dump_undefined <ALL> ]
+      Current = '0'
+    }
+    Entry [ xdebug.profiler_enable <PERDIR,SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ xdebug.profiler_output_dir <PERDIR,SYSTEM> ]
+      Current = '/tmp'
+    }
+    Entry [ xdebug.profiler_output_name <PERDIR,SYSTEM> ]
+      Current = 'cachegrind.out.%p'
+    }
+    Entry [ xdebug.profiler_enable_trigger <PERDIR,SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ xdebug.profiler_enable_trigger_value <PERDIR,SYSTEM> ]
+      Current = ''
+    }
+    Entry [ xdebug.profiler_append <PERDIR,SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ xdebug.profiler_aggregate <PERDIR,SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ xdebug.remote_enable <PERDIR,SYSTEM> ]
+      Current = '0'
+    }
+    Entry [ xdebug.remote_handler <ALL> ]
+      Current = 'dbgp'
+    }
+    Entry [ xdebug.remote_host <ALL> ]
+      Current = 'localhost'
+    }
+    Entry [ xdebug.remote_mode <ALL> ]
+      Current = 'req'
+    }
+    Entry [ xdebug.remote_port <ALL> ]
+      Current = '9000'
+    }
+    Entry [ xdebug.remote_autostart <ALL> ]
+      Current = '0'
+    }
+    Entry [ xdebug.remote_connect_back <ALL> ]
+      Current = '0'
+    }
+    Entry [ xdebug.remote_log <ALL> ]
+      Current = ''
+    }
+    Entry [ xdebug.idekey <ALL> ]
+      Current = ''
+    }
+    Entry [ xdebug.remote_cookie_expire_time <ALL> ]
+      Current = '3600'
+    }
+    Entry [ xdebug.remote_addr_header <ALL> ]
+      Current = ''
+    }
+    Entry [ xdebug.var_display_max_children <ALL> ]
+      Current = '128'
+    }
+    Entry [ xdebug.var_display_max_data <ALL> ]
+      Current = '512'
+    }
+    Entry [ xdebug.var_display_max_depth <ALL> ]
+      Current = '3'
+    }
+    Entry [ xdebug.cli_color <ALL> ]
+      Current = '0'
+    }
+    Entry [ xdebug.scream <ALL> ]
+      Current = '0'
+    }
+  }
+
+  - Constants [8] {
+    Constant [ integer XDEBUG_TRACE_APPEND ] { 1 }
+    Constant [ integer XDEBUG_TRACE_COMPUTERIZED ] { 2 }
+    Constant [ integer XDEBUG_TRACE_HTML ] { 4 }
+    Constant [ integer XDEBUG_TRACE_NAKED_FILENAME ] { 8 }
+    Constant [ integer XDEBUG_CC_UNUSED ] { 1 }
+    Constant [ integer XDEBUG_CC_DEAD_CODE ] { 2 }
+    Constant [ integer XDEBUG_CC_BRANCH_CHECK ] { 4 }
+    Constant [ integer XDEBUG_STACK_NO_DESC ] { 1 }
+  }
+
+  - Functions {
+    Function [ <internal:xdebug> function xdebug_get_stack_depth ] {
+    }
+    Function [ <internal:xdebug> function xdebug_get_function_stack ] {
+    }
+    Function [ <internal:xdebug> function xdebug_get_formatted_function_stack ] {
+    }
+    Function [ <internal:xdebug> function xdebug_print_function_stack ] {
+    }
+    Function [ <internal:xdebug> function xdebug_get_declared_vars ] {
+    }
+    Function [ <internal:xdebug> function xdebug_call_class ] {
+    }
+    Function [ <internal:xdebug> function xdebug_call_function ] {
+    }
+    Function [ <internal:xdebug> function xdebug_call_file ] {
+    }
+    Function [ <internal:xdebug> function xdebug_call_line ] {
+    }
+    Function [ <internal:xdebug> function xdebug_var_dump ] {
+    }
+    Function [ <internal:xdebug> function xdebug_debug_zval ] {
+    }
+    Function [ <internal:xdebug> function xdebug_debug_zval_stdout ] {
+    }
+    Function [ <internal:xdebug> function xdebug_enable ] {
+    }
+    Function [ <internal:xdebug> function xdebug_disable ] {
+    }
+    Function [ <internal:xdebug> function xdebug_is_enabled ] {
+    }
+    Function [ <internal:xdebug> function xdebug_break ] {
+    }
+    Function [ <internal:xdebug> function xdebug_start_trace ] {
+    }
+    Function [ <internal:xdebug> function xdebug_stop_trace ] {
+    }
+    Function [ <internal:xdebug> function xdebug_get_tracefile_name ] {
+    }
+    Function [ <internal:xdebug> function xdebug_get_profiler_filename ] {
+    }
+    Function [ <internal:xdebug> function xdebug_dump_aggr_profiling_data ] {
+    }
+    Function [ <internal:xdebug> function xdebug_clear_aggr_profiling_data ] {
+    }
+    Function [ <internal:xdebug> function xdebug_memory_usage ] {
+    }
+    Function [ <internal:xdebug> function xdebug_peak_memory_usage ] {
+    }
+    Function [ <internal:xdebug> function xdebug_time_index ] {
+    }
+    Function [ <internal:xdebug> function xdebug_start_error_collection ] {
+    }
+    Function [ <internal:xdebug> function xdebug_stop_error_collection ] {
+    }
+    Function [ <internal:xdebug> function xdebug_get_collected_errors ] {
+    }
+    Function [ <internal:xdebug> function xdebug_start_function_monitor ] {
+    }
+    Function [ <internal:xdebug> function xdebug_stop_function_monitor ] {
+    }
+    Function [ <internal:xdebug> function xdebug_get_monitored_functions ] {
+    }
+    Function [ <internal:xdebug> function xdebug_start_code_coverage ] {
+    }
+    Function [ <internal:xdebug> function xdebug_stop_code_coverage ] {
+    }
+    Function [ <internal:xdebug> function xdebug_get_code_coverage ] {
+    }
+    Function [ <internal:xdebug> function xdebug_code_coverage_started ] {
+    }
+    Function [ <internal:xdebug> function xdebug_get_function_count ] {
+    }
+    Function [ <internal:xdebug> function xdebug_dump_superglobals ] {
+    }
+    Function [ <internal:xdebug> function xdebug_get_headers ] {
+    }
+  }
+}
+
