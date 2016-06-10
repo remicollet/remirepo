@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    140f82ea93180a083fe46edba17d1860ff58308e
+%global gh_commit    3abb688fda20989b2e2b444efc1dba173abb2e07
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-form
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.8.3
+Version:        2.9.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -95,23 +95,19 @@ Requires:       php-composer(%{gh_owner}/zend-hydrator)         <  3
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 # From composer, "suggest": {
-#        "zendframework/zend-captcha": "Zend\\Captcha component",
-#        "zendframework/zend-code": "Zend\\Code component",
-#        "zendframework/zend-eventmanager": "Zend\\EventManager component",
-#        "zendframework/zend-filter": "Zend\\Filter component",
-#        "zendframework/zend-i18n": "Zend\\I18n component",
-#        "zendframework/zend-servicemanager": "Zend\\ServiceManager component",
-#        "zendframework/zend-validator": "Zend\\Validator component",
-#        "zendframework/zend-view": "Zend\\View component",
-#        "zendframework/zendservice-recaptcha": "ZendService\\ReCaptcha component"
+#        "zendframework/zend-captcha": "^2.5.4, required for using CAPTCHA form elements",
+#        "zendframework/zend-code": "^2.6 || ^3.0, required to use zend-form annotations support",
+#        "zendframework/zend-eventmanager": "^2.6.2 || ^3.0, reuired for zend-form annotations support",
+#        "zendframework/zend-i18n": "^2.6, required when using zend-form view helpers",
+#        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3, required to use the form factories or provide services",
+#        "zendframework/zend-view": "^2.6.2, required for using the zend-form view helpers",
+#        "zendframework/zendservice-recaptcha": "in order to use the ReCaptcha form element"
 %if 0%{?fedora} >= 21
 Suggests:       php-composer(%{gh_owner}/zend-captcha)
 Suggests:       php-composer(%{gh_owner}/zend-code)
 Suggests:       php-composer(%{gh_owner}/zend-eventmanager)
-Suggests:       php-composer(%{gh_owner}/zend-filter)
 Suggests:       php-composer(%{gh_owner}/zend-i18n)
 Suggests:       php-composer(%{gh_owner}/zend-servicemanager)
-Suggests:       php-composer(%{gh_owner}/zend-validator)
 Suggests:       php-composer(%{gh_owner}/zend-view)
 #Suggests:       php-composer(%{gh_owner}/zendservice-recaptcha)
 %endif
@@ -195,6 +191,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 10 2016 Remi Collet <remi@fedoraproject.org> - 2.9.0-1
+- update to 2.9.0
+
 * Wed May  4 2016 Remi Collet <remi@fedoraproject.org> - 2.8.3-1
 - update to 2.8.3
 

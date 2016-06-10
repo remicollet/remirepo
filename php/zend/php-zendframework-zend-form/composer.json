@@ -40,22 +40,20 @@
         "phpunit/phpunit": "^4.8"
     },
     "suggest": {
-        "zendframework/zend-captcha": "Zend\\Captcha component",
-        "zendframework/zend-code": "Zend\\Code component",
-        "zendframework/zend-eventmanager": "Zend\\EventManager component",
-        "zendframework/zend-filter": "Zend\\Filter component",
-        "zendframework/zend-i18n": "Zend\\I18n component",
-        "zendframework/zend-servicemanager": "Zend\\ServiceManager component",
-        "zendframework/zend-validator": "Zend\\Validator component",
-        "zendframework/zend-view": "Zend\\View component",
-        "zendframework/zendservice-recaptcha": "ZendService\\ReCaptcha component"
+        "zendframework/zend-captcha": "^2.5.4, required for using CAPTCHA form elements",
+        "zendframework/zend-code": "^2.6 || ^3.0, required to use zend-form annotations support",
+        "zendframework/zend-eventmanager": "^2.6.2 || ^3.0, reuired for zend-form annotations support",
+        "zendframework/zend-i18n": "^2.6, required when using zend-form view helpers",
+        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3, required to use the form factories or provide services",
+        "zendframework/zend-view": "^2.6.2, required for using the zend-form view helpers",
+        "zendframework/zendservice-recaptcha": "in order to use the ReCaptcha form element"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "2.8-dev",
-            "dev-develop": "2.9-dev"
+            "dev-master": "2.9-dev",
+            "dev-develop": "2.10-dev"
         },
         "zf": {
             "component": "Zend\\Form",
@@ -66,6 +64,9 @@
         "psr-4": {
             "ZendTest\\Form\\": "test/"
         }
+    },
+    "config": {
+        "process-timeout": 0
     },
     "scripts": {
         "check": [
