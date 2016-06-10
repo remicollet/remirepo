@@ -380,7 +380,7 @@ Provides: %{?scl_prefix}php-tokenizer, %{?scl_prefix}php-tokenizer%{?_isa}
 Provides: %{?scl_prefix}php-zlib, %{?scl_prefix}php-zlib%{?_isa}
 %{?scl:Requires: %{scl}-runtime}
 # For user experience, those extensions were part of php-common
-Requires: %{?scl_prefix}php-json%{?_isa}
+Requires: %{?scl_prefix}php-json%{?_isa} = %{version}-%{release}
 #Requires: %%{?scl_prefix}php-zip%%{?_isa}
 
 %description common

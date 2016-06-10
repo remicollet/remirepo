@@ -382,7 +382,7 @@ Provides: php-standard = %{version}, php-standard%{?_isa} = %{version}
 Provides: php-tokenizer, php-tokenizer%{?_isa}
 Provides: php-zlib, php-zlib%{?_isa}
 # For user experience, those extensions were part of php-common
-Requires:  php-json%{?_isa}
+Requires: php-json%{?_isa} = %{version}-%{release}
 #Requires:  php-zip%%{?_isa}
 
 Obsoletes: php-pecl-phar < 1.2.4
