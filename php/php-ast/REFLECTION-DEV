@@ -1,27 +1,27 @@
-Extension [ <persistent> extension #56 ast version 0.1.1 ] {
+Extension [ <persistent> extension #46 ast version 0.1.2-dev ] {
 
-  - Constants [180] {
+  - Constants [182] {
     Constant [ integer ast\AST_FUNC_DECL ] { 66 }
     Constant [ integer ast\AST_CLOSURE ] { 67 }
     Constant [ integer ast\AST_METHOD ] { 68 }
     Constant [ integer ast\AST_CLASS ] { 69 }
     Constant [ integer ast\AST_ARG_LIST ] { 128 }
-    Constant [ integer ast\AST_LIST ] { 129 }
-    Constant [ integer ast\AST_ARRAY ] { 130 }
-    Constant [ integer ast\AST_ENCAPS_LIST ] { 131 }
-    Constant [ integer ast\AST_EXPR_LIST ] { 132 }
-    Constant [ integer ast\AST_STMT_LIST ] { 133 }
-    Constant [ integer ast\AST_IF ] { 134 }
-    Constant [ integer ast\AST_SWITCH_LIST ] { 135 }
-    Constant [ integer ast\AST_CATCH_LIST ] { 136 }
-    Constant [ integer ast\AST_PARAM_LIST ] { 137 }
-    Constant [ integer ast\AST_CLOSURE_USES ] { 138 }
-    Constant [ integer ast\AST_PROP_DECL ] { 139 }
-    Constant [ integer ast\AST_CONST_DECL ] { 140 }
-    Constant [ integer ast\AST_CLASS_CONST_DECL ] { 141 }
-    Constant [ integer ast\AST_NAME_LIST ] { 142 }
-    Constant [ integer ast\AST_TRAIT_ADAPTATIONS ] { 143 }
-    Constant [ integer ast\AST_USE ] { 144 }
+    Constant [ integer ast\AST_LIST ] { 255 }
+    Constant [ integer ast\AST_ARRAY ] { 129 }
+    Constant [ integer ast\AST_ENCAPS_LIST ] { 130 }
+    Constant [ integer ast\AST_EXPR_LIST ] { 131 }
+    Constant [ integer ast\AST_STMT_LIST ] { 132 }
+    Constant [ integer ast\AST_IF ] { 133 }
+    Constant [ integer ast\AST_SWITCH_LIST ] { 134 }
+    Constant [ integer ast\AST_CATCH_LIST ] { 135 }
+    Constant [ integer ast\AST_PARAM_LIST ] { 136 }
+    Constant [ integer ast\AST_CLOSURE_USES ] { 137 }
+    Constant [ integer ast\AST_PROP_DECL ] { 138 }
+    Constant [ integer ast\AST_CONST_DECL ] { 139 }
+    Constant [ integer ast\AST_CLASS_CONST_DECL ] { 140 }
+    Constant [ integer ast\AST_NAME_LIST ] { 141 }
+    Constant [ integer ast\AST_TRAIT_ADAPTATIONS ] { 142 }
+    Constant [ integer ast\AST_USE ] { 143 }
     Constant [ integer ast\AST_MAGIC_CONST ] { 0 }
     Constant [ integer ast\AST_TYPE ] { 1 }
     Constant [ integer ast\AST_VAR ] { 256 }
@@ -80,14 +80,14 @@ Extension [ <persistent> extension #56 ast version 0.1.1 ] {
     Constant [ integer ast\AST_SWITCH ] { 534 }
     Constant [ integer ast\AST_SWITCH_CASE ] { 535 }
     Constant [ integer ast\AST_DECLARE ] { 536 }
-    Constant [ integer ast\AST_CONST_ELEM ] { 537 }
-    Constant [ integer ast\AST_USE_TRAIT ] { 538 }
-    Constant [ integer ast\AST_TRAIT_PRECEDENCE ] { 539 }
-    Constant [ integer ast\AST_METHOD_REFERENCE ] { 540 }
-    Constant [ integer ast\AST_NAMESPACE ] { 541 }
-    Constant [ integer ast\AST_USE_ELEM ] { 542 }
-    Constant [ integer ast\AST_TRAIT_ALIAS ] { 543 }
-    Constant [ integer ast\AST_GROUP_USE ] { 544 }
+    Constant [ integer ast\AST_CONST_ELEM ] { 775 }
+    Constant [ integer ast\AST_USE_TRAIT ] { 537 }
+    Constant [ integer ast\AST_TRAIT_PRECEDENCE ] { 538 }
+    Constant [ integer ast\AST_METHOD_REFERENCE ] { 539 }
+    Constant [ integer ast\AST_NAMESPACE ] { 540 }
+    Constant [ integer ast\AST_USE_ELEM ] { 541 }
+    Constant [ integer ast\AST_TRAIT_ALIAS ] { 542 }
+    Constant [ integer ast\AST_GROUP_USE ] { 543 }
     Constant [ integer ast\AST_METHOD_CALL ] { 768 }
     Constant [ integer ast\AST_STATIC_CALL ] { 769 }
     Constant [ integer ast\AST_CONDITIONAL ] { 770 }
@@ -124,6 +124,7 @@ Extension [ <persistent> extension #56 ast version 0.1.1 ] {
     Constant [ integer ast\flags\TYPE_ARRAY ] { 7 }
     Constant [ integer ast\flags\TYPE_OBJECT ] { 8 }
     Constant [ integer ast\flags\TYPE_CALLABLE ] { 14 }
+    Constant [ integer ast\flags\TYPE_VOID ] { 18 }
     Constant [ integer ast\flags\UNARY_BOOL_NOT ] { 13 }
     Constant [ integer ast\flags\UNARY_BITWISE_NOT ] { 12 }
     Constant [ integer ast\flags\UNARY_SILENCE ] { 260 }
@@ -153,6 +154,7 @@ Extension [ <persistent> extension #56 ast version 0.1.1 ] {
     Constant [ integer ast\flags\BINARY_IS_GREATER ] { 256 }
     Constant [ integer ast\flags\BINARY_IS_GREATER_OR_EQUAL ] { 257 }
     Constant [ integer ast\flags\BINARY_SPACESHIP ] { 170 }
+    Constant [ integer ast\flags\BINARY_COALESCE ] { 260 }
     Constant [ integer ast\flags\ASSIGN_BITWISE_OR ] { 31 }
     Constant [ integer ast\flags\ASSIGN_BITWISE_AND ] { 32 }
     Constant [ integer ast\flags\ASSIGN_BITWISE_XOR ] { 33 }
