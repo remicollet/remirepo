@@ -1,0 +1,25 @@
+From 603689fe268d9178c4180b46f676b7d5abef696e Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sat, 11 Jun 2016 07:05:55 +0200
+Subject: [PATCH] fix for PHP 7.1
+
+---
+ yar_server.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/yar_server.c b/yar_server.c
+index d46bd72..fac921b 100644
+--- a/yar_server.c
++++ b/yar_server.c
+@@ -219,7 +219,11 @@ static char * php_yar_get_function_declaration(zend_function *fptr) /* {{{ */ {
+ 						zval zv, zv_copy;
+ 						int use_copy;
+ 						ZVAL_DUP(&zv, RT_CONSTANT(&fptr->op_array, precv->op2));
++#if PHP_VERSION_ID < 70100
+ 						zval_update_constant_ex(&zv, 1, fptr->common.scope);
++#else
++						zval_update_constant_ex(&zv, fptr->common.scope);
++#endif
+ 						if (Z_TYPE(zv) == IS_TRUE) {
+                             memcpy(offset, "true", 4);
+                             offset += 4;
