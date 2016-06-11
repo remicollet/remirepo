@@ -11,9 +11,8 @@
 #
 %if 0%{?scl:1}
 %global sub_prefix %{scl_prefix}
+%scl_package       php-pecl-msgpack
 %endif
-
-%{?scl:          %scl_package         php-pecl-msgpack}
 
 %global gh_commit   b29f3fd572b9d2ad8c053efa6279f93862f63657
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
@@ -37,14 +36,15 @@ Version:       2.0.1
 Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 License:       BSD
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/msgpack
 
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
+Patch0:        %{pecl_name}-pr87.patch
+
 BuildRequires: %{?scl_prefix}php-devel >= 7
 BuildRequires: %{?scl_prefix}php-pear
 %if %{with_msgpack}
@@ -76,6 +76,10 @@ Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -126,6 +130,7 @@ mv %{pecl_name}-%{version} NTS
 %{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml} \
 
 cd NTS
+%patch0 -p1 -b .pr87
 
 %if %{with_msgpack}
 # use system library
@@ -176,7 +181,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
 # Install the NTS stuff
 make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
@@ -257,12 +261,7 @@ fi
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -277,7 +276,6 @@ rm -rf %{buildroot}
 
 
 %files devel
-%defattr(-,root,root,-)
 %doc %{pecl_testdir}/%{pecl_name}
 %{php_incldir}/ext/%{pecl_name}
 
@@ -287,6 +285,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 11 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
+- add patch for PHP 7.1
+  open https://github.com/msgpack/msgpack-php/pull/87
+
 * Tue Mar  1 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - update to 2.0.1 (php 7, beta)
 - use sources from pecl

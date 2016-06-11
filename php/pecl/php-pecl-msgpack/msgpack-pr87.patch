@@ -1,0 +1,38 @@
+From 710f535c7b25ab7d49b649f9411427761525b8d7 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sat, 11 Jun 2016 06:39:22 +0200
+Subject: [PATCH] fix for PHP 7.1
+
+---
+ msgpack_convert.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/msgpack_convert.c b/msgpack_convert.c
+index 3b01150..9b6923a 100644
+--- a/msgpack_convert.c
++++ b/msgpack_convert.c
+@@ -289,9 +289,11 @@ int msgpack_convert_object(zval *return_value, zval *tpl, zval *value) /* {{{ */
+         zend_fcall_info_cache fcc;
+ 
+         fci.size = sizeof(fci);
++#if PHP_VERSION_ID < 70100
+         fci.function_table = EG(function_table);
+-        fci.function_name = function_name;
+         fci.symbol_table = NULL;
++#endif
++        fci.function_name = function_name;
+         fci.object = Z_OBJ_P(return_value);
+         fci.retval = &retval;
+         fci.param_count = 0;
+@@ -300,7 +302,11 @@ int msgpack_convert_object(zval *return_value, zval *tpl, zval *value) /* {{{ */
+ 
+         fcc.initialized = 1;
+         fcc.function_handler = ce->constructor;
++#if PHP_VERSION_ID < 70100
+         fcc.calling_scope = EG(scope);
++#else
++        fcc.calling_scope = zend_get_executed_scope();
++#endif
+         fcc.called_scope = Z_OBJCE_P(return_value);
+         fcc.object = Z_OBJ_P(return_value);
+ 
