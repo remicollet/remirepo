@@ -58,7 +58,7 @@ Name:           %{libname}
 Name:           %{libname}-last
 %endif
 Version:        %{VER}.%{Patchlevel}
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        An X application for displaying and manipulating images
 Group:          Applications/Multimedia
 License:        ImageMagick
@@ -66,6 +66,7 @@ Url:            http://www.imagemagick.org/
 Source0:        ftp://ftp.ImageMagick.org/pub/ImageMagick/ImageMagick-%{VER}-%{Patchlevel}.tar.xz
 
 Patch0:         ImageMagick-6.9.2-7-multiarch-implicit-pkgconfig-dir.patch
+Patch1:         %{libname}-pr219.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  bzip2-devel, freetype-devel, libjpeg-devel, libpng-devel
@@ -276,6 +277,7 @@ however.
 %setup -q -n %{libname}-%{VER}-%{Patchlevel}
 
 %patch0 -p1 -b .multiarch-implicit-pkgconfig-dir
+%patch1 -p1 -b .cache
 
 # for %%doc
 mkdir Magick++/examples
@@ -493,6 +495,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 11 2016 Remi Collet <remi@remirepo.net> - 6.9.4.8-2
+- add patch for cache time limit
+  open https://github.com/ImageMagick/ImageMagick/pull/219
+
 * Thu Jun  9 2016 Remi Collet <remi@remirepo.net> - 6.9.4.8-1
 - update to version 6.9.4 patchlevel 8
 
