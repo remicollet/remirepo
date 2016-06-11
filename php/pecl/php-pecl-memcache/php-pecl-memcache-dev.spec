@@ -6,14 +6,17 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package         php-pecl-memcache}
+%if 0%{?scl:1}
+%global sub_prefix %{scl_prefix}
+%scl_package       php-pecl-memcache
+%endif
 
 # https://github.com/websupport-sk/pecl-memcache/commits/NON_BLOCKING_IO_php7
-%global gh_commit   fdbd46bbc6f53ed6e024521895e142cbfc9b3340
+%global gh_commit   4991c2fff22d00dc81014cc92d2da7077ef4bc86
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    websupport-sk
 %global gh_project  pecl-memcache
-%global gh_date     20151130
+%global gh_date     20160311
 %global pecl_name   memcache
 # Not ready, some failed UDP tests. Neded investigation.
 %global with_tests  0%{?_with_tests:1}
@@ -28,7 +31,7 @@ Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?scl_prefix}php-pecl-memcache
 Version:      3.0.9
 %if 0%{?gh_date:1}
-Release:      0.3.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:      0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:      1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -58,8 +61,10 @@ Provides:     %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:     %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:     %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -78,6 +83,10 @@ Obsoletes:     php56w-pecl-%{pecl_name}
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name}
 Obsoletes:     php70w-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -297,6 +306,9 @@ fi
 
 
 %changelog
+* Sat Jun 11 2016 Remi Collet <rcollet@redhat.com> - 3.0.9-0.4.20160311git4991c2f
+- refresh
+
 * Sat Mar  5 2016 Remi Collet <rcollet@redhat.com> - 3.0.9-0.3.20151130gitfdbd46b
 - adapt for F24
 
