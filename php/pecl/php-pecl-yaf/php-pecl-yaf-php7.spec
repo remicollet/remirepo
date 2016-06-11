@@ -8,9 +8,8 @@
 #
 %if 0%{?scl:1}
 %global sub_prefix %{scl_prefix}
+%scl_package       php-pecl-yaf
 %endif
-
-%{?scl:          %scl_package        php-pecl-yaf}
 
 %global gh_commit   51e458e9746d7061efc565d49baaca26feacd7ff
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
@@ -28,13 +27,15 @@ Version:       3.0.2
 Release:       0.8.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaf
 Source1:       %{pecl_name}.ini
+
+Patch0:        %{pecl_name}-pr289.patch
 
 BuildRequires: %{?scl_prefix}php-devel >= 7
 BuildRequires: %{?scl_prefix}php-pear
@@ -48,8 +49,10 @@ Provides:      %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -63,6 +66,10 @@ Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -94,6 +101,8 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
+%patch0 -p1 -b .pr289
+
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_YAF_VERSION/{s/.*\t"//;s/".*$//;p}' php_yaf.h )
 if test "x${extver}" != "x%{version}%{?gh_date:-dev}"; then
@@ -210,6 +219,10 @@ fi
 
 
 %changelog
+* Sat Jun 11 2016 Remi Collet <remi@fedoraproject.org> - 3.0.2-3
+- add patch for PHP 7.1
+  open https://github.com/laruence/yaf/pull/289
+
 * Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 3.0.2-2
 - adapt for F24
 
