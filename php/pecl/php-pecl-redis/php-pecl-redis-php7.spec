@@ -10,11 +10,7 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
-%endif
 %scl_package       php-pecl-redis
 %else
 %global _root_bindir %{_bindir}
@@ -25,18 +21,13 @@
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    phpredis
 %global gh_project  phpredis
-%global gh_date     20160603
+#global gh_date     20160603
 %global pecl_name   redis
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global with_tests  0%{?_with_tests:1}
 %global with_igbin  1
-%if "%{php_version}" < "5.6"
-# after igbinary
-%global ini_name    %{pecl_name}.ini
-%else
 # after 40-igbinary
 %global ini_name    50-%{pecl_name}.ini
-%endif
 
 Summary:       Extension for communicating with the Redis key-value store
 Name:          %{?sub_prefix}php-pecl-redis
@@ -52,7 +43,6 @@ License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/redis
 
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
 BuildRequires: %{?scl_prefix}php-pear
 %if %{with_igbin}
@@ -66,8 +56,7 @@ BuildRequires: redis >= 3
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 %if %{with_igbin}
-# php-pecl-igbinary missing php-pecl(igbinary)%%{?_isa}
-Requires:      %{?sub_prefix}php-pecl-igbinary%{?_isa}
+Requires:      %{?sub_prefix}php-pecl(igbinary)%{?_isa}
 %endif
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
@@ -87,18 +76,12 @@ Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
-%if "%{php_version}" > "5.5"
 Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
-%endif
 %if "%{php_version}" > "7.1"
 Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
@@ -136,11 +119,9 @@ mv %{gh_project}-%{gh_commit} NTS
 '
 sed -e '/PHP_REDIS_VERSION/s/3.0.0-rc1/%{version}-dev/' -i NTS/php_redis.h
 %else
-%setup -q -c -a 1
+%setup -q -c
 # rename source folder
 mv %{pecl_name}-%{version} NTS
-# tests folder from github archive
-mv phpredis-%{version}/tests NTS/tests
 %endif
 
 %{?_licensedir:sed -e '/COPYING/s/role="doc"/role="src"/' -i package.xml}
@@ -215,8 +196,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-
 # Install the NTS stuff
 make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
@@ -257,11 +236,6 @@ done
 
 %if %{with_tests}
 cd NTS/tests
-
-# this test requires redis >= 2.6.9
-# https://github.com/nicolasff/phpredis/pull/333
-sed -e s/testClient/SKIP_testClient/ \
-    -i TestRedis.php
 
 # Launch redis server
 mkdir -p {run,log,lib}/redis
@@ -325,12 +299,7 @@ fi
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/COPYING}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -345,6 +314,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 11 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- Update to 3.0.0 (stable)
+
 * Thu Jun  9 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.1.20160603git6447940
 - refresh and bump version
 
