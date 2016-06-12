@@ -1,8 +1,7 @@
-# remirepo spec file for php-ZendFramework2, from:
 #
 # Fedora spec file for php-ZendFramework2
 #
-# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #                         Remi Collet <remi@fedoraproject.org>
 #
 # License: MIT
@@ -11,27 +10,30 @@
 # Please preserve changelog entries
 #
 
-%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
+%global github_owner     zendframework
+%global github_name      zendframework
+%global github_version   2.4.10
+%global github_commit    7e5bdc38820aef518c1c49d4b6e8fcb0083b165b
+
 %global composer_vendor  zendframework
-#global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
-%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+
+%global with_tests 0%{!?_without_tests:1}
+
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 Name:      php-ZendFramework2
-Version:   2.4.9
+Version:   %{github_version}
 Release:   1%{?dist}
 Summary:   Zend Framework 2
 
 Group:     Development/Libraries
 License:   BSD
 URL:       http://framework.zend.com
-Source0:   https://packages.zendframework.com/releases/ZendFramework-%{version}/ZendFramework-%{version}.tgz
-# git clone https://github.com/zendframework/zf2.git ; cf zf2
-# OR cd /work/GIT/zf2; git pull; git pull --tags
-# git checkout release-2.3.9
-# tar czf ../ZendFramework-tests-2.3.9.tgz tests
-Source1:   ZendFramework-tests-%{version}.tgz
-# Autoloader
-Source2:   ZendFramework-autoload.php
+
+# GitHub export does not include tests.
+# Run php-ZendFramework2-get-source.sh to create full source.
+Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
+Source1:       %{name}-get-source.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -76,6 +78,7 @@ BuildRequires: php-zip
 BuildRequires: php-zlib
 BuildRequires: php-composer(ircmaxell/random-lib)
 BuildRequires: php-composer(mikey179/vfsStream) >= 1.2
+BuildRequires: php-composer(%{composer_vendor}/zendxml)
 %endif
 
 Requires: php-composer(%{composer_vendor}/zend-authentication)   = %{version}
@@ -128,7 +131,7 @@ Requires: php-composer(%{composer_vendor}/zend-validator)        = %{version}
 Requires: php-composer(%{composer_vendor}/zend-version)          = %{version}
 Requires: php-composer(%{composer_vendor}/zend-view)             = %{version}
 Requires: php-composer(%{composer_vendor}/zend-xmlrpc)           = %{version}
-Requires: php-composer(%{composer_vendor}/zendxml)               = %{version}
+Requires: php-composer(%{composer_vendor}/zendxml)
 
 Provides: php-composer(%{composer_vendor}/zendframework) = %{version}
 
@@ -889,13 +892,13 @@ Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.3/en/modules/zend.json.introduction.html
 
 Requires: %{name}-common  = %{version}-%{release}
-Requires: php-composer(%{composer_vendor}/zendxml)               = %{version}
+Requires: php-composer(%{composer_vendor}/zendxml)
 # composer.json
 Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
 # composer.json (optional)
 Requires: php-composer(%{composer_vendor}/zend-http)             = %{version}
 Requires: php-composer(%{composer_vendor}/zend-server)           = %{version}
-Requires: php-composer(%{composer_vendor}/zendxml)               = %{version}
+Requires: php-composer(%{composer_vendor}/zendxml)
 # phpcompatinfo (computed from version 2.3.1)
 Requires: php-json
 Requires: php-mbstring
@@ -1389,7 +1392,6 @@ Requires: php-dom
 Requires: php-libxml
 Requires: php-pcre
 Requires: php-pecl(igbinary)
-Requires: php-pecl(msgpack)
 Requires: php-simplexml
 Requires: php-spl
 
@@ -1399,6 +1401,8 @@ Provides: php-composer(%{composer_vendor}/zend-serializer) = %{version}
 The Zend\Serializer component provides an adapter based interface to simply
 generate storable representation of PHP types by different facilities, and
 recover.
+
+Optional: msgpack (php-pecl-msgpack)
 
 # ------------------------------------------------------------------------------
 
@@ -1785,13 +1789,13 @@ Group:    Development/Libraries
 URL:      http://framework.zend.com/manual/2.3/en/modules/zend.xmlrpc.intro.html
 
 Requires: %{name}-common  = %{version}-%{release}
-Requires: php-composer(%{composer_vendor}/zendxml)               = %{version}
+Requires: php-composer(%{composer_vendor}/zendxml)
 # composer.json
 Requires: php-composer(%{composer_vendor}/zend-http)             = %{version}
 Requires: php-composer(%{composer_vendor}/zend-math)             = %{version}
 Requires: php-composer(%{composer_vendor}/zend-server)           = %{version}
 Requires: php-composer(%{composer_vendor}/zend-stdlib)           = %{version}
-Requires: php-composer(%{composer_vendor}/zendxml)               = %{version}
+Requires: php-composer(%{composer_vendor}/zendxml)
 # composer.json (optional)
 Requires: php-composer(%{composer_vendor}/zend-cache)            = %{version}
 # phpcompatinfo (computed from version 2.3.1)
@@ -1818,49 +1822,38 @@ and building new XML-RPC servers.
 
 [1] http://www.xmlrpc.com/
 
-# ------------------------------------------------------------------------------
-
-%package  ZendXml
-
-Summary:  Zend Framework 2: XML usage, best practices, and security in PHP
-Group:    Development/Libraries
-URL:      https://github.com/zendframework/ZendXml
-
-Requires: %{name}-common = %{version}-%{release}
-# phpcompatinfo (computed from version 2.3.1)
-Requires: php-dom
-Requires: php-libxml
-Requires: php-simplexml
-Requires: php-spl
-
-Provides: php-composer(%{composer_vendor}/zendxml) = %{version}
-
-%description ZendXml
-This is a security component to prevent XML eXternal Entity (XXE) and
-XML Entity Expansion (XEE) attacks on XML documents.
-
-The XXE attack is prevented disabling the load of external entities in
-the libxml library used by PHP, using the function libxml_disable_entity_loader.
-
-The XEE attack is prevented looking inside the XML document for ENTITY usage.
-If the XML document uses ENTITY the library throw an Exception.
 
 # ##############################################################################
 
 
 %prep
-%setup -q -n ZendFramework-%{version} -a 1
+%setup -qn %{github_name}-%{github_commit}
 
 
 %build
-# Empty build section, nothing required
+: Create autoloader
+cat <<'AUTOLOAD' | tee library/Zend/autoload.php
+<?php
+/*
+Simple autoloader for Zend Framework
+Inspired from https://github.com/zendframework/ZendSkeletonApplication
+
+Set autoregister_zf     for Zend Framework
+Set fallback_autoloader for dependencies which are PSR-0 compliant
+*/
+require_once __DIR__ . '/Loader/AutoloaderFactory.php';
+Zend\Loader\AutoloaderFactory::factory(array(
+    'Zend\Loader\StandardAutoloader' => array(
+        'fallback_autoloader' => true,
+        'autoregister_zf' => true
+    )
+));
+AUTOLOAD
 
 
 %install
 mkdir -p %{buildroot}%{_datadir}/php
-cp -rp library/* %{buildroot}%{_datadir}/php
-
-install -pm 644 %{SOURCE2} %{buildroot}%{_datadir}/php/Zend/autoload.php
+cp -rp library/* %{buildroot}%{_datadir}/php/
 
 # Symlink package docs to common sub-package docs
 mkdir -p %{buildroot}%{_docdir}
@@ -1883,7 +1876,9 @@ Zend\Loader\AutoloaderFactory::factory(array(
     'Zend\\Loader\\StandardAutoloader' => array(
         'namespaces' => array(
            'ZendTest' => __DIR__ . '/ZendTest',
-))));
+        )
+    )
+));
 AUTOLOADER
 
 : ignore these for now
@@ -2521,16 +2516,14 @@ exit $RET
 %exclude %{_datadir}/php/Zend/XmlRpc/*.md
 %exclude %{_datadir}/php/Zend/XmlRpc/composer.json
 
-# ------------------------------------------------------------------------------
-
-%files ZendXml
-%defattr(-,root,root,-)
-
-%{_datadir}/php/ZendXml
-
 # ##############################################################################
 
 %changelog
+* Sun Jun 12 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.4.10-1
+- Update to 2.4.10 (RHBZ #1343995 / RHBZ #1343990)
+- Switch to GitHub source (and separate ZendXml pkg)
+- Move autoloader into spec
+
 * Wed Nov 25 2015 Remi Collet <remi@fedoraproject.org> - 2.4.9-1
 - Update to 2.4.9
 
