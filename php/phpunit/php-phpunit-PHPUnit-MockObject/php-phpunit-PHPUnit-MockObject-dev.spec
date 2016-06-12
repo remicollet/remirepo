@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    0dc8fd8e87e0366c22b6c25d1f43c4e2e66847b3
+%global gh_commit    b13d0d9426ced06958bd32104653526a6c998a52
 #global gh_date      20150902
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -16,7 +16,7 @@
 %global pear_name    PHPUnit_MockObject
 %global pear_channel pear.phpunit.de
 %global major        3.2
-%global minor        1
+%global minor        3
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
@@ -164,6 +164,9 @@ fi
 
 
 %changelog
+* Sun Jun 12 2016 Remi Collet <remi@fedoraproject.org> - 3.2.3-1
+- Update to 3.2.3
+
 * Sat Jun  4 2016 Remi Collet <remi@fedoraproject.org> - 3.2.1-1
 - Update to 3.2.1 (no change)
 - ensure cannot be installed with old PHPUnit
