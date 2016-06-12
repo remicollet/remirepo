@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #68 ssh2 version 0.13-dev ] {
+Extension [ <persistent> extension #76 ssh2 version 1.0 ] {
 
   - Constants [21] {
     Constant [ integer SSH2_FINGERPRINT_MD5 ] { 0 }
@@ -30,6 +30,12 @@ Extension [ <persistent> extension #68 ssh2 version 0.13-dev ] {
       - Parameters [2] {
         Parameter #0 [ <required> $host ]
         Parameter #1 [ <required> $port ]
+      }
+    }
+    Function [ <internal:ssh2> function ssh2_disconnect ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $resource ]
       }
     }
     Function [ <internal:ssh2> function ssh2_methods_negotiated ] {

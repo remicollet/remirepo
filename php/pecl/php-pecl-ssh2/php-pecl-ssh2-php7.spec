@@ -11,17 +11,13 @@
 #
 %if 0%{?scl:1}
 %global sub_prefix %{scl_prefix}
+%scl_package       php-pecl-ssh2
 %endif
-
-%{?scl:          %scl_package        php-pecl-ssh2}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__pecl:      %global __pecl      %{_bindir}/pecl}
-%{!?__php:       %global __php       %{_bindir}/php}
 
 # See https://github.com/php/pecl-networking-ssh2/commits/master
 %global gh_commit  50d97a52c39166d59e59222a20e841f3f3ce594d
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date    20160113
+#global gh_date    20160113
 %global gh_owner   php
 %global gh_project pecl-networking-ssh2
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
@@ -29,12 +25,12 @@
 %global ini_name   40-%{pecl_name}.ini
 
 Name:           %{?sub_prefix}php-pecl-ssh2
-Version:        0.13
+Version:        1.0
 %if 0%{?gh_date}
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
 %else
-Release:        6%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/ssh2-%{version}.tgz
 %endif
 Summary:        Bindings for the libssh2 library
@@ -45,7 +41,6 @@ License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/ssh2
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  libssh2-devel >= 1.2
 BuildRequires:  %{?scl_prefix}php-devel > 7
 BuildRequires:  %{?scl_prefix}php-pear
@@ -59,6 +54,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -72,6 +71,10 @@ Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -107,7 +110,9 @@ mv %{pecl_name}-%{version} NTS
 %endif
 
 # Don't install/register tests
-sed -e 's/role="test"/role="src"/' -i package.xml
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 extver=$(sed -n '/#define PHP_SSH2_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_ssh2.h)
 if test "x${extver}" != "x%{version}%{?gh_date:-dev}"; then
@@ -142,8 +147,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # Install XML package description
@@ -180,6 +183,7 @@ done
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
@@ -199,16 +203,12 @@ fi
 if [ $1 -eq 0 -a -x %{__pecl} ] ; then
     %{pecl_uninstall} %{pecl_name} >/dev/null || :
 fi
-
-
-%clean
-rm -rf %{buildroot}
+%endif
 
 
 %files
-%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
-%doc %{pecl_docdir}/%{pecl_name}
+%{!?_licensedir:%doc %{pecl_docdir}/%{pecl_name}}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -221,6 +221,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jun 12 2016 Remi Collet <remi@fedoraproject.org> - 1.0-1
+- update to 1.0
+
 * Wed Jan 13 2016 Remi Collet <remi@fedoraproject.org> - 0.13-0.1.20160113git50d97a5
 - update to 0.13-dev, git snapshot, for PHP 7
 
