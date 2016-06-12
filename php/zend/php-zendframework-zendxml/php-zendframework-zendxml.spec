@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        1.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -34,7 +34,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.3.23
+BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  php-simplexml
 BuildRequires:  php-dom
 BuildRequires:  php-libxml
@@ -45,7 +45,7 @@ BuildRequires:  php-spl
 #        "squizlabs/php_codesniffer": "~1.5"
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 3.7
 # Autoloader
-BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-loader)
 %endif
 
 # From composer, "require": {
@@ -90,11 +90,14 @@ cat << 'EOF' | tee vendor/autoload.php
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
 Zend\Loader\AutoloaderFactory::factory(array(
     'Zend\Loader\StandardAutoloader' => array(
+        'fallback_autoloader' => true,
+        'autoregister_zf' => true,
         'namespaces' => array(
-           'ZendTest\\Xml' => dirname(__DIR__).'/tests/ZendXmlTest',
-           '%{library}'      => '%{buildroot}%{php_home}/%{library}'
-))));
-require_once '%{php_home}/Zend/autoload.php';
+            'ZendTest\\Xml' => dirname(__DIR__).'/tests/ZendXmlTest',
+            '%{library}'    => '%{buildroot}%{php_home}/%{library}'
+        )
+    )
+));
 EOF
 cd tests
 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
@@ -121,6 +124,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 11 2016 Shawn Iwinski <shawn@iwin.ski> - 1.0.2-2
+- Allow F22 / EPEL7 / EPEL6 (ZF 2.4)
+
 * Fri Feb  5 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - update to 1.0.2
 
