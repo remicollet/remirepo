@@ -42,5 +42,16 @@
         "psr-4": {
             "ZendTest\\InputFilter\\": "test/"
         }
+    },
+    "scripts": {
+        "check": [
+            "@cs-check",
+            "@test"
+        ],
+        "upload-coverage": "coveralls -v",
+        "cs-check": "php-cs-fixer --version && php-cs-fixer fix -v --diff --dry-run",
+        "cs-fix": "php-cs-fixer fix -v",
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-clover clover.xml"
     }
 }
