@@ -15,9 +15,8 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package       php-pecl-ssh2
 %endif
-
-%{?scl:          %scl_package        php-pecl-ssh2}
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name ssh2
@@ -28,8 +27,8 @@
 %endif
 
 Name:           %{?sub_prefix}php-pecl-ssh2
-Version:        0.12
-Release:        7%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        0.13
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Bindings for the libssh2 library
 
 %global buildver %(pkg-config --silence-errors --modversion libssh2  2>/dev/null || echo 65536)
@@ -54,8 +53,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -93,9 +94,10 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %prep
 %setup -c -q
 
-# http://git.php.net/?p=pecl/networking/ssh2.git;a=commit;h=febf5a78b761ad3c8da06dfb6e94ac54708d2fa1
-%{?_licensedir:sed  -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
-%{!?_licensedir:sed -e '/LICENSE/s/role="src"/role="doc"/' -i package.xml}
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 mv %{pecl_name}-%{version} NTS
 
@@ -214,6 +216,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jun 12 2016 Remi Collet <remi@fedoraproject.org> - 0.13-1
+- update to 0.13
+
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 0.12-7
 - adapt for F24
 

@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #132 ssh2 version 0.12 ] {
+Extension [ <persistent> extension #161 ssh2 version 0.13 ] {
 
   - Constants [21] {
     Constant [ integer SSH2_FINGERPRINT_MD5 ] { 0 }
@@ -26,34 +26,120 @@ Extension [ <persistent> extension #132 ssh2 version 0.12 ] {
 
   - Functions {
     Function [ <internal:ssh2> function ssh2_connect ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $host ]
+        Parameter #1 [ <required> $port ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_methods_negotiated ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $resource ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_fingerprint ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $resource ]
+        Parameter #1 [ <required> $flags ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_auth_none ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $session ]
+        Parameter #1 [ <required> $username ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_auth_password ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $session ]
+        Parameter #1 [ <required> $username ]
+        Parameter #2 [ <required> $password ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_auth_pubkey_file ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $session ]
+        Parameter #1 [ <required> $username ]
+        Parameter #2 [ <required> $pubkeyfile ]
+        Parameter #3 [ <required> $privkeyfile ]
+        Parameter #4 [ <optional> $passphrase ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_auth_hostbased_file ] {
+
+      - Parameters [7] {
+        Parameter #0 [ <required> $session ]
+        Parameter #1 [ <required> $username ]
+        Parameter #2 [ <required> $hostname ]
+        Parameter #3 [ <required> $pubkeyfile ]
+        Parameter #4 [ <required> $privkeyfile ]
+        Parameter #5 [ <optional> $passphrase ]
+        Parameter #6 [ <optional> $local_username ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_forward_listen ] {
     }
     Function [ <internal:ssh2> function ssh2_forward_accept ] {
     }
     Function [ <internal:ssh2> function ssh2_shell ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $session ]
+        Parameter #1 [ <optional> $termtype ]
+        Parameter #2 [ <optional> $env ]
+        Parameter #3 [ <optional> $width ]
+        Parameter #4 [ <optional> $height ]
+        Parameter #5 [ <optional> $width_height_type ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_exec ] {
+
+      - Parameters [7] {
+        Parameter #0 [ <required> $session ]
+        Parameter #1 [ <required> $command ]
+        Parameter #2 [ <optional> $pty ]
+        Parameter #3 [ <optional> $env ]
+        Parameter #4 [ <optional> $width ]
+        Parameter #5 [ <optional> $height ]
+        Parameter #6 [ <optional> $width_height_type ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_tunnel ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $session ]
+        Parameter #1 [ <required> $host ]
+        Parameter #2 [ <required> $port ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_scp_recv ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $session ]
+        Parameter #1 [ <required> $remote_file ]
+        Parameter #2 [ <required> $local_file ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_scp_send ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $session ]
+        Parameter #1 [ <required> $remote_file ]
+        Parameter #2 [ <required> $local_file ]
+        Parameter #3 [ <optional> $create_mode ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_fetch_stream ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $channel ]
+        Parameter #1 [ <required> $stream_id ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_poll ] {
 
@@ -62,36 +148,122 @@ Extension [ <persistent> extension #132 ssh2 version 0.12 ] {
       }
     }
     Function [ <internal:ssh2> function ssh2_sftp ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $session ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_sftp_rename ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $sftp ]
+        Parameter #1 [ <required> $from ]
+        Parameter #2 [ <required> $to ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_sftp_unlink ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $sftp ]
+        Parameter #1 [ <required> $filename ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_sftp_mkdir ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $sftp ]
+        Parameter #1 [ <required> $dirname ]
+        Parameter #2 [ <optional> $mode ]
+        Parameter #3 [ <optional> $recursive ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_sftp_rmdir ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $sftp ]
+        Parameter #1 [ <required> $dirname ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_sftp_chmod ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $sftp ]
+        Parameter #1 [ <required> $filename ]
+        Parameter #2 [ <required> $mode ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_sftp_stat ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $sftp ]
+        Parameter #1 [ <required> $path ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_sftp_lstat ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $sftp ]
+        Parameter #1 [ <required> $path ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_sftp_symlink ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $sftp ]
+        Parameter #1 [ <required> $target ]
+        Parameter #2 [ <required> $link ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_sftp_readlink ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $sftp ]
+        Parameter #1 [ <required> $link ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_sftp_realpath ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $sftp ]
+        Parameter #1 [ <required> $filename ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_publickey_init ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $session ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_publickey_add ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $pkey ]
+        Parameter #1 [ <required> $algoname ]
+        Parameter #2 [ <required> $blob ]
+        Parameter #3 [ <optional> $overwrite ]
+        Parameter #4 [ <optional> $attributes ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_publickey_remove ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $pkey ]
+        Parameter #1 [ <required> $algoname ]
+        Parameter #2 [ <required> $blob ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_publickey_list ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $pkey ]
+      }
     }
     Function [ <internal:ssh2> function ssh2_auth_agent ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $session ]
+        Parameter #1 [ <required> $username ]
+      }
     }
   }
 }
