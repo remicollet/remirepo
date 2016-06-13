@@ -31,7 +31,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}
 Summary:       Helpers to build PHPUnit mocks
 
 Group:         Development/Libraries
@@ -42,6 +42,9 @@ URL:           https://github.com/%{github_owner}/%{github_name}
 # Run php-mnapoli-phpunit-easymock-get-source.sh to create full source.
 Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
 Source1:       %{name}-get-source.sh
+
+# https://github.com/mnapoli/phpunit-easymock/pull/5
+Patch0:        %{name}-pr5.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -77,6 +80,8 @@ Autoloader: %{phpdir}/EasyMock/autoload.php
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
+
+%patch0 -p1 -b .pr5
 
 : Create autoloader
 cat <<'AUTOLOAD' | tee src/autoload.php
@@ -154,6 +159,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 13 2016 Remi Collet <remi@fedoraproject.org> - 0.2.2-2
+- add patch to fix test suite with latest PHPUnit
+  open https://github.com/mnapoli/phpunit-easymock/pull/5
+
 * Sun Jun 05 2016 Shawn Iwinski <shawn@iwin.ski> - 0.2.2-1
 - Updated to 0.2.2 (RHBZ #1342738)
 
