@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        6.9.4
-%global Patchlevel 8
+%global Patchlevel 9
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -58,7 +58,7 @@ Name:           %{libname}
 Name:           %{libname}-last
 %endif
 Version:        %{VER}.%{Patchlevel}
-Release:        3%{?dist}
+Release:        1%{?dist}
 Summary:        An X application for displaying and manipulating images
 Group:          Applications/Multimedia
 License:        ImageMagick
@@ -495,6 +495,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 13 2016 Remi Collet <remi@remirepo.net> - 6.9.4.9-1
+- update to version 6.9.4 patchlevel 9
+
 * Sat Jun 11 2016 Remi Collet <remi@remirepo.net> - 6.9.4.8-2
 - add patch for cache time limit
   open https://github.com/ImageMagick/ImageMagick/pull/219

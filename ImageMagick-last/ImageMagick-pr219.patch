@@ -1,0 +1,31 @@
+From db260ad55e138e8679590e7f4332931b94e59b28 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sat, 11 Jun 2016 10:52:58 +0200
+Subject: [PATCH] fix cache time limit, fix #217
+
+---
+ magick/cache.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/magick/cache.c b/magick/cache.c
+index 91723ff..e3a1871 100644
+--- a/magick/cache.c
++++ b/magick/cache.c
+@@ -1858,7 +1858,7 @@ static Cache GetImagePixelCache(Image *image,const MagickBooleanType clone,
+     status;
+ 
+   static MagickSizeType
+-    cache_timelimit = 0,
++    cache_timelimit = MagickResourceInfinity,
+     cpu_throttle = MagickResourceInfinity,
+     cycles = 0;
+ 
+@@ -1875,7 +1875,7 @@ static Cache GetImagePixelCache(Image *image,const MagickBooleanType clone,
+       cache_epoch=time((time_t *) NULL);
+       cache_timelimit=GetMagickResourceLimit(TimeResource);
+     }
+-  if ((cache_timelimit != MagickResourceInfinity) &&
++  else if ((cache_timelimit != MagickResourceInfinity) &&
+       ((MagickSizeType) (time((time_t *) NULL)-cache_epoch) >= cache_timelimit))
+      {
+ #if defined(ECANCELED)
