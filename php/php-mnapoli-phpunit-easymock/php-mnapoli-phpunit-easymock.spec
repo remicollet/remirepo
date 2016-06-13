@@ -12,8 +12,8 @@
 
 %global github_owner     mnapoli
 %global github_name      phpunit-easymock
-%global github_version   0.2.2
-%global github_commit    aa0fa90a768046113c60afdd7426dbc4ec76463f
+%global github_version   0.2.3
+%global github_commit    023279dbe33f6e6eaace7c76d1fef9adf3f7cf4c
 
 %global composer_vendor  mnapoli
 %global composer_project phpunit-easymock
@@ -31,7 +31,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       Helpers to build PHPUnit mocks
 
 Group:         Development/Libraries
@@ -43,9 +43,6 @@ URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
 Source1:       %{name}-get-source.sh
 
-# https://github.com/mnapoli/phpunit-easymock/pull/5
-Patch0:        %{name}-pr5.patch
-
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
@@ -54,7 +51,7 @@ BuildArch:     noarch
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(phpunit/phpunit-mock-objects) >= %{phpunit_mock_objects_min_ver}
-## phpcompatinfo (computed from version 0.2.2)
+## phpcompatinfo (computed from version 0.2.3)
 BuildRequires: php-reflection
 ## Autoloader
 BuildRequires: php-composer(symfony/class-loader)
@@ -64,7 +61,7 @@ BuildRequires: php-composer(symfony/class-loader)
 Requires:      php(language)                              >= %{php_min_ver}
 Requires:      php-composer(phpunit/phpunit-mock-objects) >= %{phpunit_mock_objects_min_ver}
 Requires:      php-composer(phpunit/phpunit-mock-objects) <  %{phpunit_mock_objects_max_ver}
-# phpcompatinfo (computed from version 0.2.2)
+# phpcompatinfo (computed from version 0.2.3)
 #     <none>
 # Autoloader
 Requires:      php-composer(symfony/class-loader)
@@ -80,8 +77,6 @@ Autoloader: %{phpdir}/EasyMock/autoload.php
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
-
-%patch0 -p1 -b .pr5
 
 : Create autoloader
 cat <<'AUTOLOAD' | tee src/autoload.php
@@ -159,6 +154,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 13 2016 Remi Collet <remi@fedoraproject.org> - 0.2.3-1
+- Updated to 0.2.3
+
 * Mon Jun 13 2016 Remi Collet <remi@fedoraproject.org> - 0.2.2-2
 - add patch to fix test suite with latest PHPUnit
   open https://github.com/mnapoli/phpunit-easymock/pull/5
