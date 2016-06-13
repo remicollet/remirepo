@@ -2520,7 +2520,8 @@ exit $RET
 
 %changelog
 * Sun Jun 12 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.4.10-1
-- Update to 2.4.10 (RHBZ #1343995 / RHBZ #1343990)
+- Update to 2.4.10 (RHBZ #1343995 / RHBZ #1343990 / ZF2015-09 / ZF2015-10 /
+  CVE-2015-7503)
 - Switch to GitHub source (and separate ZendXml pkg)
 - Move autoloader into spec
 
