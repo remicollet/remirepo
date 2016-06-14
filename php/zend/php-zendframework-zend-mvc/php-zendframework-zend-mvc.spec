@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    d374f7c64ee2b6c491bd3d9f54a5ef45ec492089
+%global gh_commit    9b705d5d5c7ed3808f8d52b440f612d9dc28c395
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-mvc
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.8
+Version:        2.7.10
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -65,7 +65,7 @@ BuildRequires:  php-composer(container-interop/container-interop) >= 1.1
 #        "zendframework/zend-validator": "^2.6",
 #        "zendframework/zend-version": "^2.5",
 #        "zendframework/zend-view": "^2.6.3",
-#        "fabpot/php-cs-fixer": "1.7.*",
+#        "friendsofphp/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "^4.5",
 #        "sebastian/version": "^1.0.4"
 BuildRequires:  php-composer(%{gh_owner}/zend-authentication)   >= 2.5.3
@@ -130,6 +130,7 @@ Requires:       php-composer(container-interop/container-interop) <  2
 #        "zendframework/zend-log": "Zend\\Log component",
 #        "zendframework/zend-modulemanager": "Zend\\ModuleManager component",
 #        "zendframework/zend-serializer": "Zend\\Serializer component",
+#        "zendframework/zend-servicemanager-di": "^1.0.1, if using zend-servicemanager v3 and requiring the zend-di integration",
 #        "zendframework/zend-session": "Zend\\Session component for FlashMessenger, PRG, and FPRG plugins",
 #        "zendframework/zend-text": "Zend\\Text component",
 #        "zendframework/zend-uri": "Zend\\Uri component",
@@ -240,6 +241,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 14 2016 Remi Collet <remi@fedoraproject.org> - 2.7.10-1
+- update to 2.7.10
+
 * Wed Jun  1 2016 Remi Collet <remi@fedoraproject.org> - 2.7.8-1
 - update to 2.7.8
 

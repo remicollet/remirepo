@@ -19,6 +19,8 @@
 %global with_tests   0%{!?_without_tests:1}
 %endif
 
+# TODO: when updating to 3.x, need zend-servicemanager-di for zend-mvc
+
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.7.6
 Release:        1%{?dist}
