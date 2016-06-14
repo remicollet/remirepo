@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    ef5915f15b78738a833aebbd720a2c1323cbfe4d
+%global gh_commit    d07655331e9044df1b80b63e66fb574b1924f902
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.5.0
+Version:        1.6.0
 Release:        1%{?dist}
 Summary:        PHP library to read byte-level data from files
 
@@ -108,6 +108,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 14 2016 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
+- update to 1.6.0 (no change)
+
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
 - update to 1.5.0
 
