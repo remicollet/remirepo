@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # Github information
-%global gh_commit    822f924967c68228555cea84ea44765f8e85c601
+%global gh_commit    2a101e73bc6a354eab8c1dd6f7d113af63e255e8
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     icewind1991
 %global gh_project   SMB
@@ -28,7 +28,7 @@
 %global with_tests   0%{?_with_tests:1}
 
 Name:           php-%{pk_vendor}-%{pk_name}
-Version:        1.1.0
+Version:        1.1.1
 Release:        1%{?dist}
 Summary:        php wrapper for smbclient and libsmbclient-php
 
@@ -144,6 +144,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 14 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- update to 1.1.1
+
 * Fri Jun  3 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - update to 1.1.0
 
