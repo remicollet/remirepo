@@ -22,7 +22,8 @@
         "zendframework/zend-http": "^2.5.4",
         "zendframework/zend-i18n": "^2.6",
         "zendframework/zend-log": "^2.7.1",
-        "zendframework/zend-mvc": "^2.7",
+        "zendframework/zend-mvc": "^2.7.9 || ^3.0",
+        "zendframework/zend-router": "^3.0",
         "zendframework/zend-permissions-acl": "^2.6",
         "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
         "zendframework/zend-uri": "^2.5",
@@ -31,18 +32,18 @@
         "phpunit/phpunit": "^4.5"
     },
     "suggest": {
-        "zendframework/zend-config": "Zend\\Config component",
-        "zendframework/zend-mvc": "Zend\\Mvc component, to provide dynamic routing capabilities for navigation pages",
-        "zendframework/zend-permissions-acl": "Zend\\Permissions\\Acl component, to allow restricting access to navigation pages",
-        "zendframework/zend-servicemanager": "Zend\\ServiceManager component, to use the navigation factories",
-        "zendframework/zend-view": "Zend\\View component, to use the navigation view helpers"
+        "zendframework/zend-config": "^2.6, to provide page configuration (optional, as arrays and Traversables are also allowed)",
+        "zendframework/zend-permissions-acl": "^2.6, to provide ACL-based access restrictions to pages",
+        "zendframework/zend-router": "^3.0, to use router-based URI generation with Mvc pages",
+        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3, to use the navigation factories",
+        "zendframework/zend-view": "^2.6.5, to use the navigation view helpers"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "2.7-dev",
-            "dev-develop": "2.8-dev"
+            "dev-master": "2.8-dev",
+            "dev-develop": "2.9-dev"
         },
         "zf": {
             "component": "Zend\\Navigation",

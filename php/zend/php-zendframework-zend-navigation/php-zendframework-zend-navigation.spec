@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    670812295242c29a890fbb4c2a68c2fed43f4dfa
+%global gh_commit    353f5c31aeaaecc2c12e7f949c3feb3dc255019b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-navigation
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.1
+Version:        2.8.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -44,7 +44,8 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 #        "zendframework/zend-http": "^2.5.4",
 #        "zendframework/zend-i18n": "^2.6",
 #        "zendframework/zend-log": "^2.7.1",
-#        "zendframework/zend-mvc": "^2.7",
+#        "zendframework/zend-mvc": "^2.7.9 || ^3.0",
+#        "zendframework/zend-router": "^3.0",
 #        "zendframework/zend-permissions-acl": "^2.6",
 #        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
 #        "zendframework/zend-uri": "^2.5",
@@ -57,6 +58,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-http)             >= 2.5.4
 BuildRequires:  php-composer(%{gh_owner}/zend-i18n)             >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-log)              >= 2.7.1
 BuildRequires:  php-composer(%{gh_owner}/zend-mvc)              >= 2.7
+BuildRequires:  php-composer(%{gh_owner}/zend-router)           >= 3.0
 BuildRequires:  php-composer(%{gh_owner}/zend-permissions-acl)  >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
 BuildRequires:  php-composer(%{gh_owner}/zend-uri)              >= 2.5
@@ -74,16 +76,16 @@ Requires:       php(language) >= 5.5
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 # From composer, "suggest": {
-#        "zendframework/zend-config": "Zend\\Config component",
-#        "zendframework/zend-mvc": "Zend\\Mvc component, to provide dynamic routing capabilities for navigation pages",
-#        "zendframework/zend-permissions-acl": "Zend\\Permissions\\Acl component, to allow restricting access to navigation pages",
-#        "zendframework/zend-servicemanager": "Zend\\ServiceManager component, to use the navigation factories",
-#        "zendframework/zend-view": "Zend\\View component, to use the navigation view helpers"
+#        "zendframework/zend-config": "^2.6, to provide page configuration (optional, as arrays and Traversables are also allowed)",
+#        "zendframework/zend-permissions-acl": "^2.6, to provide ACL-based access restrictions to pages",
+#        "zendframework/zend-router": "^3.0, to use router-based URI generation with Mvc pages",
+#        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3, to use the navigation factories",
+#        "zendframework/zend-view": "^2.6.5, to use the navigation view helpers"
 %if 0%{?fedora} >= 21
 Suggests:       php-composer(%{gh_owner}/zend-config)
-Suggests:       php-composer(%{gh_owner}/zend-mvc)
 Suggests:       php-composer(%{gh_owner}/zend-permissions-acl)
 Suggests:       php-composer(%{gh_owner}/zend-servicemanager)
+Suggests:       php-composer(%{gh_owner}/zend-router)
 Suggests:       php-composer(%{gh_owner}/zend-view)
 %endif
 %endif
@@ -101,6 +103,8 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 Zend\Navigation is a component for managing trees of pointers to web pages.
 Simply put: It can be used for creating menus, breadcrumbs, links,
 and sitemaps, or serve as a model for other navigation related purposes.
+
+Documentation: https://zendframework.github.io/%{gh_project}/
 
 
 %prep
@@ -151,12 +155,15 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE.md
-%doc CONTRIBUTING.md README.md
+%doc CHANGELOG.md CONDUCT.md CONTRIBUTING.md README.md
 %doc composer.json
 %{php_home}/Zend/%{library}
 
 
 %changelog
+* Tue Jun 14 2016 Remi Collet <remi@fedoraproject.org> - 2.8.1-1
+- update to 2.8.1
+
 * Fri Apr  8 2016 Remi Collet <remi@fedoraproject.org> - 2.7.1-1
 - update to 2.7.1
 
