@@ -15,13 +15,16 @@
 
 Name:           php-%{gh_project}
 Version:        5.4.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Free Feature-rich PHP Mailer
 
 Group:          Development/Libraries
 License:        MIT
 URL:            http://www.swiftmailer.org/
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+
+# https://github.com/swiftmailer/swiftmailer/pull/769
+Patch0:         %{name}-mockery.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -31,7 +34,6 @@ BuildRequires:  php-composer(theseer/autoload)
 # From composer.json, "require-dev": {
 #        "mockery/mockery": "~0.9.1,<0.9.4"
 BuildRequires:  php-composer(mockery/mockery) >= 0.9.1
-BuildRequires:  php-composer(mockery/mockery) <  0.9.4
 %endif
 
 # From composer.json, "require": {
@@ -72,6 +74,8 @@ Autoloader: %{php_home}/Swift/swift_required.php
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+
+%patch0 -p1
 
 # Install using the same layout than the old PEAR package
 mv lib/swift_required_pear.php lib/swift_required.php
@@ -148,6 +152,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 14 2016 Remi Collet <remi@fedoraproject.org> - 5.4.2-2
+- add patch to allow mockery 0.9.x
+  open https://github.com/swiftmailer/swiftmailer/pull/769
+
 * Mon May  2 2016 Remi Collet <remi@fedoraproject.org> - 5.4.2-1
 - update to 5.4.2
 
