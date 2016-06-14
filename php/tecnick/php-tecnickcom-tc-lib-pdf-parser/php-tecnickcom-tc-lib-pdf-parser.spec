@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5c0a8fdccc17abb3c25ab3dadf752fab01b9ff4b
+%global gh_commit    4d1ecdecd96dc6e770351cfca1aeaed72893bbfc
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.2.3
+Version:        2.3.0
 Release:        1%{?dist}
 Summary:        PHP library to parse PDF documents
 
@@ -36,9 +36,9 @@ BuildRequires:  php-pcre
 
 # From composer.json, "require": {
 #        "php": ">=5.4"
-#        "tecnick.com/tc-lib-pdf-filter": "^1.2.0"
+#        "tecnick.com/tc-lib-pdf-filter": "^1.3.0"
 Requires:       php(language) >= 5.4
-Requires:       php-composer(%{c_vendor}/tc-lib-pdf-filter) >= 1.2.0
+Requires:       php-composer(%{c_vendor}/tc-lib-pdf-filter) >= 1.3.0
 Requires:       php-composer(%{c_vendor}/tc-lib-pdf-filter) <  2
 # From phpcompatinfo report for version 2.1.0
 Requires:       php-pcre
@@ -114,6 +114,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 14 2016 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
+- update to 2.3.0 (no change)
+
 * Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
 - update to 2.2.3 (no change)
 
