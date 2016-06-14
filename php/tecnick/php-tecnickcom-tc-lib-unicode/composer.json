@@ -1,0 +1,40 @@
+{
+    "name": "tecnickcom/tc-lib-unicode",
+    "description": "PHP library containing Unicode methods",
+    "type": "library",
+    "homepage": "http://www.tecnick.com",
+    "license": "LGPL-3.0",
+    "keywords": ["tc-lib-unicode", "PDF", "font", "UTF-8"],
+    "authors": [
+        {
+            "name": "Nicola Asuni",
+            "email": "info@tecnick.com",
+            "role": "lead"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "tecnickcom/tc-lib-unicode-data": "^1.6.0"
+    },
+    "require-dev": {
+        "apigen/apigen" : "^4.1.2",
+        "bartlett/php-compatinfo" : "^5.0.0",
+        "pdepend/pdepend" : "^2.2.2",
+        "phploc/phploc" : "^2.1.5|^3.0.0",
+        "phpmd/phpmd" : "^2.3.2",
+        "phpunit/phpunit": "4.8.19|^5.0.0",
+        "sebastian/phpcpd" : "^2.0.2",
+        "squizlabs/php_codesniffer": "^2.5.0|^3.0.0"
+    },
+    "autoload": {
+        "psr-4":{
+            "Com\\Tecnick\\Unicode\\": "src"
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:tecnickcom/tc-lib-unicode-data.git"
+        }
+    ]
+}

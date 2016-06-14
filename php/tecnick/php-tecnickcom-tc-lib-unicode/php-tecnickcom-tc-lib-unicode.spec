@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a1341f719c678703207da0073719e28a9bbdacb5
+%global gh_commit    363376cb4a340dc6d6060aff312ca45d7d0ee77a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.2.2
+Version:        1.3.0
 Release:        1%{?dist}
 Summary:        PHP library containing Unicode methods
 
@@ -37,9 +37,9 @@ BuildRequires:  php-pcre
 
 # From composer.json, "require": {
 #        "php": ">=5.4"
-#        "tecnickcom/tc-lib-unicode-data": "^1.5.0"
+#        "tecnickcom/tc-lib-unicode-data": "^1.6.0"
 Requires:       php(language) >= 5.4
-Requires:       php-composer(%{c_vendor}/tc-lib-unicode-data) >= 1.5.0
+Requires:       php-composer(%{c_vendor}/tc-lib-unicode-data) >= 1.6.0
 Requires:       php-composer(%{c_vendor}/tc-lib-unicode-data) <  2
 # From phpcompatinfo report for version 1.2.1
 Requires:       php-mbstring
@@ -110,6 +110,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 14 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- update to 1.3.0 (no change)
+
 * Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
 - update to 1.2.2 (no change)
 
