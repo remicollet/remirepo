@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a9ad0b4a14555b29e8194be9d07c7a168acb3ba7
+%global gh_commit    0aa2a8fe28e65fa354dcfeae5c85bc1bd6ae8ac9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.2.1
+Version:        1.3.0
 Release:        1%{?dist}
 Summary:        PHP library to decode PDF compression and encryption filters
 
@@ -107,6 +107,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 14 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- update to 1.3.0 (no change)
+
 * Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - update to 1.2.1 (no change)
 
