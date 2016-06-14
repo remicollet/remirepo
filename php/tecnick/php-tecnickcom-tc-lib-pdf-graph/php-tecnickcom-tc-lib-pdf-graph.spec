@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    32d1e33a68daa3f578f0f8be50f5ad25bae9a8d4
+%global gh_commit    47d3302930e11722d31002a25091f50922ab6136
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.0.2
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        PHP library containing PDF graphic and geometric methods
 
@@ -35,9 +35,9 @@ BuildRequires:  php-composer(%{c_vendor}/tc-lib-color) >= 1.8.0
 
 # From composer.json, "require": {
 #        "php": ">=5.4"
-#        "tecnickcom/tc-lib-color": "^1.9.0"
+#        "tecnickcom/tc-lib-color": "^1.11.0"
 Requires:       php(language) >= 5.4
-Requires:       php-composer(%{c_vendor}/tc-lib-color) >= 1.8.0
+Requires:       php-composer(%{c_vendor}/tc-lib-color) >= 1.11.0
 Requires:       php-composer(%{c_vendor}/tc-lib-color) <  2
 # From phpcompatinfo report for version 2.0.1
 # nothing
@@ -107,6 +107,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 14 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- update to 1.1.0 (no change)
+
 * Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - update to 1.0.2 (no change)
 
