@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0772baff33d55a4ce4fb42e0815a414e60648cb3
+%global gh_commit    ef09ded22d3c8a6117f2aec02a5ceaf41d26bb1f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.3.2
+Version:        1.4.0
 Release:        1%{?dist}
 Summary:        PHP library to encrypt data for PDF
 
@@ -86,7 +86,7 @@ cp -p  resources/autoload.php \
 mkdir vendor
 cat <<EOF | tee vendor/autoload.php
 <?php
-date_default_timezone_set("Europe/London");
+date_default_timezone_set("UTC");
 require '%{buildroot}%{php_project}/autoload.php';
 EOF
 
@@ -117,6 +117,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 14 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
+- update to 1.4.0 (no change)
+
 * Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
 - update to 1.3.2 (no change)
 
