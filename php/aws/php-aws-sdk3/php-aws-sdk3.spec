@@ -12,8 +12,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   3.18.17
-%global github_commit    6c7849556f556da8615d22e675710c7a086ed5d0
+%global github_version   3.18.18
+%global github_commit    68b9d0b7e007782bc0f2633cdf5a4a6bf08aaafc
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -255,8 +255,8 @@ export AWS_SECRET_ACCESS_KEY=bar
 
 %{_bindir}/phpunit -d memory_limit=1G --verbose --bootstrap bootstrap.php
 
-if which php70; then
-   php70 %{_bindir}/phpunit -d memory_limit=1G --verbose --bootstrap bootstrap.php
+if which php71; then
+   php71 %{_bindir}/phpunit -d memory_limit=1G --verbose --bootstrap bootstrap.php
 fi
 %else
 : Tests skipped
@@ -279,6 +279,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 15 2016 Remi Collet <remi@remirepo.net> - 3.18.18-1
+- update to 3.18.18
+
 * Fri Jun 10 2016 Remi Collet <remi@remirepo.net> - 3.18.17-1
 - update to 3.18.17
 
