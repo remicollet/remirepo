@@ -1,0 +1,39 @@
+{
+    "name": "alcaeus/mongo-php-adapter",
+    "type": "library",
+    "description": "Adapter to provide ext-mongo interface on top of mongo-php-libary",
+    "keywords": ["mongodb", "database"],
+    "license": "MIT",
+    "authors": [
+        { "name": "alcaeus", "email": "alcaeus@alcaeus.org" },
+        { "name": "Olivier Lechevalier", "email": "olivier.lechevalier@gmail.com" }
+    ],
+    "require": {
+        "php": "^5.5 || ^7.0",
+        "ext-hash": "*",
+        "mongodb/mongodb": "^1.0.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8 || ^5.0"
+    },
+    "provide": {
+        "ext-mongo": "1.6.13"
+    },
+    "autoload": {
+        "psr-0": {
+            "Mongo": "lib/Mongo"
+        },
+        "psr-4": {
+            "Alcaeus\\MongoDbAdapter\\": "lib/Alcaeus/MongoDbAdapter"
+        },
+        "files": [ "lib/Mongo/functions.php" ]
+    },
+    "autoload-dev": {
+        "psr-4": { "Alcaeus\\MongoDbAdapter\\Tests\\": "tests/Alcaeus/MongoDbAdapter" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
