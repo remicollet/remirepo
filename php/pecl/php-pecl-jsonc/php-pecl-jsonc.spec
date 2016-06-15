@@ -31,8 +31,8 @@
 
 Summary:       Support for JSON serialization
 Name:          %{?scl_prefix}php-pecl-%{proj_name}
-Version:       1.3.9
-Release:       3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:       1.3.10
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 # PHP extension is PHP
 # jsonc-c is MIT
 # json-c/linkhask.c is Public Domain
@@ -63,8 +63,6 @@ Provides:      %{?scl_prefix}php-pecl(%{proj_name})%{?_isa} = %{version}
 Obsoletes:     %{?scl_prefix}php-pecl-json                  < 1.3.1-2
 Provides:      %{?scl_prefix}php-pecl-json                  = %{version}-%{release}
 Provides:      %{?scl_prefix}php-pecl-json%{?_isa}          = %{version}-%{release}
-Provides:      %{?scl_prefix}php-pecl-jsonc                 = %{version}-%{release}
-Provides:      %{?scl_prefix}php-pecl-jsonc%{?_isa}         = %{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -296,6 +294,9 @@ rm -rf %{buildroot}
 # Note to remi : remember to always build in remi-php55(56) first
 #
 %changelog
+* Wed Jun 15 2016 Remi Collet <remi@fedoraproject.org> - 1.3.10-1
+- release 1.3.10 (stable)
+
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.3.9-3
 - adapt for F24
 
