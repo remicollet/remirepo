@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    02d5b64aa0837a038a5a4faeeefa5ef44bdcb928
+%global gh_commit    744a50838ef373be00fb658ce9544905cf587c17
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.4
-%global minor        4
+%global minor        5
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -71,7 +71,7 @@ BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 #        "symfony/yaml": "~2.1|~3.0",
 #        "sebastian/comparator": "~1.0",
 #        "sebastian/diff": "~1.2",
-#        "sebastian/environment": "~1.3",
+#        "sebastian/environment": "^1.3 || ^2.0",
 #        "sebastian/exporter": "~1.1",
 #        "sebastian/recursion-context": "~1.0",
 #        "sebastian/global-state": "~1.0",
@@ -103,7 +103,7 @@ Requires:       php-composer(sebastian/comparator) <  2
 Requires:       php-composer(sebastian/diff) >= 1.2
 Requires:       php-composer(sebastian/diff) <  2
 Requires:       php-composer(sebastian/environment) >= 1.3
-Requires:       php-composer(sebastian/environment) <  2
+Requires:       php-composer(sebastian/environment) <  3
 Requires:       php-composer(sebastian/exporter) >= 1.2
 Requires:       php-composer(sebastian/exporter) <  2
 Requires:       php-composer(sebastian/global-state) >= 1.0
@@ -193,8 +193,8 @@ install -D -p -m 755 phpunit %{buildroot}%{_bindir}/phpunit
 %check
 ./phpunit --testsuite=small --no-coverage --verbose
 
-if which php70; then
-   php70 ./phpunit --testsuite=small --no-coverage --verbose
+if which php71; then
+   php71 ./phpunit --testsuite=small --no-coverage --verbose
 fi
 
 
@@ -220,6 +220,9 @@ fi
 
 
 %changelog
+* Wed Jun 15 2016 Remi Collet <remi@fedoraproject.org> - 5.4.5-1
+- Update to 5.4.5
+
 * Thu Jun  9 2016 Remi Collet <remi@fedoraproject.org> - 5.4.4-1
 - Update to 5.4.4
 
