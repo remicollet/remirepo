@@ -10,7 +10,7 @@
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     alcaeus
 %global gh_project   mongo-php-adapter
-%if 0%{?fedora} >= 21 || 0%{?rhel} >= 6
+%if 0%{?fedora} >= 22 || 0%{?rhel} >= 7
 %global with_tests   0%{!?_without_tests:1}
 %else
 %global with_tests   0%{?_with_tests:1}
@@ -42,7 +42,7 @@ BuildRequires:  php-spl
 # from composer.json, require-dev": {
 #        "phpunit/phpunit": "^4.8 || ^5.0"
 BuildRequires:  php-composer(phpunit/phpunit)
-BuildRequires:  mongodb-server >= 2.4
+BuildRequires:  mongodb-server >= 2.6
 %endif
 
 # From composer.json, "require": {
@@ -103,22 +103,12 @@ cp -pr lib/%{ns_vendor} %{buildroot}%{_datadir}/php/%{ns_vendor}
 
 %check
 %if %{with_tests}
+RET=0
+
 # ignore know to fail tests (different error code)
 sed -e 's/testDeleteIndexUsingIndexName/SKIP_testDeleteIndexUsingIndexName/' \
     -e 's/testDeleteIndexesForNonExistingCollection/SKIP_testDeleteIndexesForNonExistingCollection/' \
     -i tests/%{ns_vendor}/MongoDbAdapter/Mongo/MongoCollectionTest.php
-
-: Run a server
-mkdir dbtest
-
-: Choose a port to allow parallel build
-
-mongod \
-  --journal \
-  --logpath     $PWD/server.log \
-  --pidfilepath $PWD/server.pid \
-  --dbpath      $PWD/dbtest \
-  --fork
 
 cat << 'EOF' | tee bs.php
 <?php
@@ -126,15 +116,26 @@ require '%{buildroot}%{_datadir}/php/%{ns_vendor}/MongoDbAdapter/autoload.php';
 require 'tests/%{ns_vendor}/MongoDbAdapter/TestCase.php';
 EOF
 
-: Run the test suite
-%{_bindir}/phpunit --bootstrap bs.php || RET=1
+: Run a server
+mkdir dbtest
+mongod \
+  --journal \
+  --logpath     $PWD/server.log \
+  --pidfilepath $PWD/server.pid \
+  --dbpath      $PWD/dbtest \
+  --fork   || : skip test as server cant start
 
-if which php71; then
-  php71 %{_bindir}/phpunit --bootstrap bs.php || RET=1
+if [ -s server.pid ] ; then
+  : Run the test suite
+  %{_bindir}/phpunit --bootstrap bs.php || RET=1
+
+  if which php71; then
+    php71 %{_bindir}/phpunit --bootstrap bs.php || RET=1
+  fi
+
+  : Cleanup
+  kill $(cat server.pid)
 fi
-
-: Cleanup
-[ -s server.pid ] && kill $(cat server.pid)
 
 exit $RET
 %else
