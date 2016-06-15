@@ -1,6 +1,6 @@
-# remirepo/fedora spec file for php-mongodb
+# remirepo/fedora spec file for php-alcaeus-mongo-php-adapter
 #
-# Copyright (c) 2015-2016 Remi Collet
+# Copyright (c) 2016 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #
