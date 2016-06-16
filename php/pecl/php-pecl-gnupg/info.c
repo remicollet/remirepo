@@ -69,10 +69,17 @@ int main (int argc, char *argv[]) {
 	gpgme_encrypt_result_t encresult;
 	gpgme_decrypt_result_t decresult;
 
+	printf("Starting\n");
 	// TMP directory
 	dir = tmpnam(NULL);
 	sprintf(buf, "GNUPGHOME=%s", dir);
 	printf("Using %s directory (%d,%d)\n", dir, mkdir(dir, 0755), putenv(buf));
+
+	printf("Checking version\n");
+	if (gpgme_engine_check_version(GPGME_PROTOCOL_OpenPGP) != GPG_ERR_NO_ERROR) {
+		printf("gpgme_engine_check_version fails\n");
+		exit(1);
+	}
 
 	ver = gpgme_check_version(NULL);
 	printf("gpgme version: %s\n", ver);
@@ -98,7 +105,9 @@ int main (int argc, char *argv[]) {
 
 	info = gpgme_ctx_get_engine_info(ctx);
 	while(info) {
-		printf("protocol:%d, file_name:%s\n", info->protocol, info->file_name);
+		printf("protocol:%d, file_name:%s version:%s, req_version:%s, home_dir:%s\n",
+			info->protocol, info->file_name,
+			info->version, info->req_version, info->home_dir);
 		info = info->next;
 	}
 	if (gpgme_data_new_from_mem(&in, testkey, strlen(testkey), 0) != GPG_ERR_NO_ERROR) {
