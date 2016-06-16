@@ -9,7 +9,7 @@
 #
 Name:           owncloud
 Version:        9.0.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
 
@@ -64,11 +64,14 @@ Patch7:         %{name}-9.0.2-no_need_for_broken_updater_repair.patch
 # Disable the integrity checking whilst a better way to deal with it is found
 Patch8:         %{name}-9.0.2-default_integrity_check_disabled.patch
 
+# Backport patch from future 9.0.3 to handle broken shared link issue bz#1346233
+Patch9:         %{name}-9.0.2-core-23066-infinite-loop-share-link.patch
+
 # Need to work around an NSS issue in el7.2, due to be fix el7.3 bz#1241172
-Patch9:         %{name}-8.1.6-work-arround-nss-issue.patch
+Patch10:         %{name}-8.1.6-work-arround-nss-issue.patch
 
 # RH provide support for php54 so don't tell users it's EOL
-Patch10:         %{name}-8.2.3-dont_warn_php54_eol.patch
+Patch11:         %{name}-8.2.3-dont_warn_php54_eol.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -428,9 +431,10 @@ work with an SQLite 3 database stored on the local system.
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
-%if 0%{?rhel}
 %patch9 -p1
+%if 0%{?rhel}
 %patch10 -p1
+%patch11 -p1
 %endif
 
 # patch backup files and .git stuff
@@ -742,6 +746,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 14 2016 James Hogarth <james.hogarth@gmail.com> - 9.0.2-4
+- Fix an infinite loop on a shared link with password and postgres bz#1346233
+
 * Wed Jun 01 2016 James Hogarth <james.hogarth@gmail.com> - 9.0.2-3
 - Place composer.json files in %%doc rather than remove them entirely
 

@@ -1,0 +1,79 @@
+diff --git a/apps/dav/lib/connector/publicauth.php b/apps/dav/lib/connector/publicauth.php
+index f069a21..36da649 100644
+--- a/apps/dav/lib/connector/publicauth.php
++++ b/apps/dav/lib/connector/publicauth.php
+@@ -89,7 +89,7 @@ class PublicAuth extends \Sabre\DAV\Auth\Backend\AbstractBasic {
+ 					}
+ 					return true;
+ 				} else if (\OC::$server->getSession()->exists('public_link_authenticated')
+-					&& \OC::$server->getSession()->get('public_link_authenticated') === $linkItem['id']) {
++					&& \OC::$server->getSession()->get('public_link_authenticated') === (string)$linkItem['id']) {
+ 					return true;
+ 				} else {
+ 					return false;
+diff --git a/apps/files_sharing/lib/helper.php b/apps/files_sharing/lib/helper.php
+index e857974..3dfbf8f 100644
+--- a/apps/files_sharing/lib/helper.php
++++ b/apps/files_sharing/lib/helper.php
+@@ -131,7 +131,7 @@ class Helper {
+ 				$newHash = '';
+ 				if(\OC::$server->getHasher()->verify($password, $linkItem['share_with'], $newHash)) {
+ 					// Save item id in session for future requests
+-					\OC::$server->getSession()->set('public_link_authenticated', $linkItem['id']);
++					\OC::$server->getSession()->set('public_link_authenticated', (string)$linkItem['id']);
+ 
+ 					/**
+ 					 * FIXME: Migrate old hashes to new hash format
+@@ -161,7 +161,7 @@ class Helper {
+ 		else {
+ 			// not authenticated ?
+ 			if ( ! \OC::$server->getSession()->exists('public_link_authenticated')
+-				|| \OC::$server->getSession()->get('public_link_authenticated') !== $linkItem['id']) {
++				|| \OC::$server->getSession()->get('public_link_authenticated') !== (string)$linkItem['id']) {
+ 				return false;
+ 			}
+ 		}
+diff --git a/apps/gallery/middleware/envcheckmiddleware.php b/apps/gallery/middleware/envcheckmiddleware.php
+index 8364e52..086da2f 100644
+--- a/apps/gallery/middleware/envcheckmiddleware.php
++++ b/apps/gallery/middleware/envcheckmiddleware.php
+@@ -274,7 +274,7 @@ class EnvCheckMiddleware extends CheckMiddleware {
+ 		$newHash = '';
+ 		if ($this->hasher->verify($password, $linkItem['share_with'], $newHash)) {
+ 			// Save item id in session for future requests
+-			$this->session->set('public_link_authenticated', $linkItem['id']);
++			$this->session->set('public_link_authenticated', (string)$linkItem['id']);
+ 			// @codeCoverageIgnoreStart
+ 			if (!empty($newHash)) {
+ 				// For future use
+@@ -296,7 +296,7 @@ class EnvCheckMiddleware extends CheckMiddleware {
+ 	private function checkSession($linkItem) {
+ 		// Not authenticated ?
+ 		if (!$this->session->exists('public_link_authenticated')
+-			|| $this->session->get('public_link_authenticated') !== $linkItem['id']
++			|| $this->session->get('public_link_authenticated') !== (string)$linkItem['id']
+ 		) {
+ 			throw new CheckException("Missing password", Http::STATUS_UNAUTHORIZED);
+ 		}
+diff --git a/lib/private/share/share.php b/lib/private/share/share.php
+index 3dcfa14..fcd013c 100644
+--- a/lib/private/share/share.php
++++ b/lib/private/share/share.php
+@@ -2477,7 +2477,7 @@ class Share extends Constants {
+ 		}
+ 
+ 		if ( \OC::$server->getSession()->exists('public_link_authenticated')
+-			&& \OC::$server->getSession()->get('public_link_authenticated') === $linkItem['id'] ) {
++			&& \OC::$server->getSession()->get('public_link_authenticated') === (string)$linkItem['id'] ) {
+ 			return true;
+ 		}
+ 
+@@ -2767,7 +2767,7 @@ class Share extends Constants {
+ 
+ 	/**
+ 	 * @param IConfig $config
+-	 * @return bool 
++	 * @return bool
+ 	 */
+ 	public static function enforcePassword(IConfig $config) {
+ 		$enforcePassword = $config->getAppValue('core', 'shareapi_enforce_links_password', 'no');
