@@ -34,7 +34,7 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.8.5
+Version:        1.8.6
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
@@ -86,6 +86,10 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -112,7 +116,9 @@ high performance for PHP.
 - async read/write file system
 - async dns lookup
 - support IPv4/IPv6/UnixSocket/TCP/UDP
-- support SSL/TLS encrypted transmission</description>
+- support SSL/TLS encrypted transmission
+
+Documentation: https://rawgit.com/tchiotludo/swoole-ide-helper/english/docs/
 
 Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
@@ -158,17 +164,11 @@ EOF
 
 
 %build
-# --enable-async-mysql requires mysqlnd, so php >= 5.4
-
 peclbuild() {
 %configure \
     --with-swoole \
     --enable-openssl \
     --enable-sockets \
-%if "%{php_version}" > "5.4"
-    --enable-async-mysql \
-%endif
-    --enable-async-httpclient \
 %if %{with_nghttpd2}
     --enable-http2 \
 %endif
@@ -269,6 +269,11 @@ cd ../ZTS
 
 
 %changelog
+* Thu Jun 16 2016 Remi Collet <remi@fedoraproject.org> - 1.8.6-1
+- Update to 1.8.6
+- drop --enable-async-mysql and --enable-async-httpclient
+  removed upstream
+
 * Thu May 12 2016 Remi Collet <remi@fedoraproject.org> - 1.8.5-1
 - Update to 1.8.5
 
