@@ -6,25 +6,39 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package        php-pecl-gnupg}
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%scl_package       php-pecl-gnupg
+%endif
+%if 0%{?rhel} >= 6
+# ignore test result on EL-6 and 7 which only have gnupg2
+%global with_tests 0%{?_with_tests:0}
+%else
+%global with_tests 0%{!?_without_tests:1}
+%endif
 
 %global pecl_name  gnupg
-%global with_zts   0%{?__ztsphp:1}
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 %global ini_name   %{pecl_name}.ini
 %else
 %global ini_name   40-%{pecl_name}.ini
 %endif
+%global prever     RC1
 
 Summary:      Wrapper around the gpgme library
-Name:         %{?scl_prefix}php-pecl-gnupg
-Version:      1.3.6
-Release:      2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Name:         %{?sub_prefix}php-pecl-gnupg
+Version:      1.4.0
+Release:      0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 License:      BSD
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/gnupg
-Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel
@@ -42,8 +56,10 @@ Provides:     %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:     %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:     %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -58,6 +74,14 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -90,13 +114,13 @@ cat >%{ini_name} << 'EOF'
 extension=%{pecl_name}.so
 EOF
 
-mv %{pecl_name}-%{version} NTS
+mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
 
 # Check extension version
 extver=$(sed -n '/#define PHP_GNUPG_VERSION/{s/.* "//;s/".*$//;p}' php_gnupg.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}.
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
 cd ..
@@ -184,43 +208,40 @@ rm -f ?TS/tests/gnupg_{oo,res}_listsignatures.phpt
 %endif
 unset GPG_AGENT_INFO
 
-# ignore test result on EL-6 which only have gnupg2
-%if 0%{?rhel} >= 6
-status=0
-%else
-status=1
-%endif
-
 cd NTS
 : Check if build NTS extension can be loaded
 %{__php} -n -q \
     -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+%if %{with_tests}
 : Run upstream test suite for NTS extension
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
-REPORT_EXIT_STATUS=$status \
+REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
-%{__php} run-tests.php \
+%{__php} -n run-tests.php \
     -n -q \
-    -d extension_dir=modules \
-    -d extension=%{pecl_name}.so
+    -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
+    --show-diff
+%endif
 
 %if %{with_zts}
 cd ../ZTS
 : Check if build ZTS extension can be loaded
-%{__php} -n -q \
-    -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
+%{__ztsphp} -n -q \
+    -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
+%if %{with_tests}
 : Run upstream test suite for ZTS extension
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-REPORT_EXIT_STATUS=$status \
+REPORT_EXIT_STATUS=1 \
 NO_INTERACTION=1 \
-%{__ztsphp} run-tests.php \
+%{__ztsphp} -n run-tests.php \
     -n -q \
-    -d extension_dir=modules \
-    -d extension=%{pecl_name}.so
+    -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
+    --show-diff
+%endif
 %endif
 
 
@@ -240,6 +261,9 @@ NO_INTERACTION=1 \
 
 
 %changelog
+* Thu Jun 16 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-0.1.RC1
+- update to 1.4.0RC1 (beta)
+
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.3.6-2
 - adapt for F24
 
