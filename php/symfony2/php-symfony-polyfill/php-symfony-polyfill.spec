@@ -12,14 +12,17 @@
 
 %global github_owner     symfony
 %global github_name      polyfill
-%global github_version   1.1.1
-%global github_commit    3dc21aeff3e1f8cb708421ed02cf1a8901d7b535
+%global github_version   1.2.0
+%global github_commit    ee2c9c2576fdd4a42b024260a1906a9888770c34
 
 %global composer_vendor  symfony
 %global composer_project polyfill
 
 # "php": ">=5.3.3"
 %global php_min_ver 5.3.3
+# "paragonie/random_compat": "~1.0|~2.0"
+%global paragonie_random_compat_min_ver 1.0
+%global paragonie_random_compat_max_ver 3.0
 
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
@@ -46,8 +49,8 @@ BuildRequires: php-composer(phpunit/phpunit)
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(ircmaxell/password-compat)
-BuildRequires: php-composer(paragonie/random_compat)
-## phpcompatinfo (computed from version 1.1.1)
+BuildRequires: php-composer(paragonie/random_compat) >= %{paragonie_random_compat_min_ver}
+## phpcompatinfo (computed from version 1.2.0)
 BuildRequires: php-hash
 BuildRequires: php-json
 BuildRequires: php-ldap
@@ -60,8 +63,9 @@ BuildRequires: php-spl
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
 Requires:      php-composer(ircmaxell/password-compat)
-Requires:      php-composer(paragonie/random_compat)
-# phpcompatinfo (computed from version 1.1.1)
+Requires:      php-composer(paragonie/random_compat) >= %{paragonie_random_compat_min_ver}
+Requires:      php-composer(paragonie/random_compat) <  %{paragonie_random_compat_max_ver}
+# phpcompatinfo (computed from version 1.2.0)
 Requires:      php-hash
 Requires:      php-json
 Requires:      php-mbstring
@@ -168,6 +172,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 16 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.0-1
+- Updated to 1.2.0 (RHBZ #1301791)
+
 * Tue Apr 12 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.1-1
 - Updated to 1.1.1 (RHBZ #1301791)
 
