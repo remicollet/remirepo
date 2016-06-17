@@ -1,7 +1,17 @@
+# remirepo spec file for gnupg1
+# renamed for parallel installation, from:
+#
+# Fedora spec file for gnupg
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 Summary: A GNU utility for secure communication and data storage
-Name: gnupg
+Name: gnupg1
 Version: 1.4.20
-Release: 2%{?dist}
+Release: 1%{?dist}
 License: GPLv3+ with exceptions
 Group: Applications/System
 Source0: ftp://ftp.gnupg.org/gcrypt/gnupg/gnupg-%{version}.tar.bz2
@@ -10,8 +20,12 @@ Source2: gnupg-shm-coprocessing.expect
 Patch0: gnupg-1.4.1-gcc.patch
 
 URL: http://www.gnupg.org/
+%if 0%{?rhel} < 7
+BuildRequires: autoconf268
+%else
 # Requires autoconf >= 2.60 because earlier autoconf didn't define $localedir.
 BuildRequires: autoconf >= 2.60
+%endif
 BuildRequires: git
 BuildRequires: automake, bzip2-devel, expect, ncurses-devel
 BuildRequires: openldap-devel, readline-devel, zlib-devel, gettext-devel
@@ -21,6 +35,7 @@ BuildRequires: libusb-devel
 %endif
 # pgp-tools, perl-GnuPG-Interface include 'Requires: gpg' -- Rex
 Provides: gpg = %{version}-%{release}
+Provides: gnupg = %{version}-%{release}
 Requires(post): /sbin/install-info
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -33,7 +48,7 @@ algorithm, it is not compatible with any version of PGP2 (PGP2.x uses
 only IDEA for symmetric-key encryption, which is patented worldwide).
 
 %prep
-%setup -q
+%setup -q -n gnupg-%{version}
 
 git init
 git config user.email "gnupg-owner@fedoraproject.org"
@@ -41,13 +56,30 @@ git config user.name "Fedora Ninjas"
 git add .
 git commit -a -q -m "%{version} baseline."
 git am %{patches}
+
 # Convert these files to UTF-8, per rpmlint.
 iconv -f iso-8859-15 -t utf-8 THANKS > THANKS.utf8
 mv THANKS.utf8 THANKS
 git commit -a -m "run iconv"
+
+# Hack
+sed -e 's/serial-tests //' \
+%if 0%{?rhel} < 7
+    -e '/AM_GNU_GETTEXT_VERSION/s/0.19.3/0.17/' \
+%else
+    -e '/AM_GNU_GETTEXT_VERSION/s/0.19.3/0.18.2/' \
+%endif
+    -i configure.ac
+
+git commit -a -m "configure hack"
 git tag -a %{name}-%{version} -m "baseline"
 
+%if 0%{?rhel} < 7
+autoreconf268 -vif
+%else
 autoreconf -vif
+%endif
+
 
 %build
 configure_flags=
@@ -64,11 +96,14 @@ LDFLAGS="$RPM_OPT_FLAGS -pie -Wl,-z,relro,-z,now" ; export LDFLAGS
 make %{?_smp_mflags}
 env LANG=C expect -f %{SOURCE2}
 
+
 %check
 make check
 
+
 %clean
 rm -rf %{buildroot}
+
 
 %install
 rm -rf %{buildroot}
@@ -77,17 +112,24 @@ install -m644 doc/gnupg1.info %{buildroot}/%{_infodir}
 sed 's^\.\./g[0-9\.]*/^^g' tools/lspgpot > lspgpot
 install -m755 lspgpot %{buildroot}%{_bindir}/lspgpot
 rm -f %{buildroot}/%{_infodir}/dir
-%find_lang %name
+%find_lang gnupg
+
+: Rename or drop binaries to avoid conflict with link from gnupg2
+rm %{buildroot}%{_bindir}/gpgsplit
+
+rm %{buildroot}%{_bindir}/gpg-zip
+rm %{buildroot}%{_mandir}/man1/gpg-zip.1
+
+mv %{buildroot}%{_bindir}/gpg         %{buildroot}%{_bindir}/gpg1
+mv %{buildroot}%{_mandir}/man1/gpg.1  %{buildroot}%{_mandir}/man1/gpg1.1
+
+mv %{buildroot}%{_bindir}/gpgv %{buildroot}%{_bindir}/gpgv1
+mv %{buildroot}%{_mandir}/man1/gpgv.1 %{buildroot}%{_mandir}/man1/gpgv1.1
+
 
 %post
 if test -s %{_infodir}/gnupg1.info.gz ; then
     /sbin/install-info %{_infodir}/gnupg1.info.gz %{_infodir}/dir 2> /dev/null
-fi
-if ! test -s %{_infodir}/gpg.info.gz ; then
-    /sbin/install-info --delete %{_infodir}/gpg.info.gz %{_infodir}/dir 2> /dev/null
-fi
-if ! test -s %{_infodir}/gpgv.info.gz ; then
-    /sbin/install-info --delete %{_infodir}/gpgv.info.gz %{_infodir}/dir 2> /dev/null
 fi
 exit 0
 
@@ -99,25 +141,29 @@ if [ $1 = 0 ]; then
 fi
 exit 0
 
-%files -f %{name}.lang
+%files -f gnupg.lang
 %defattr(-,root,root)
 %doc AUTHORS BUGS COPYING NEWS PROJECTS README THANKS TODO
 %doc doc/DETAILS doc/HACKING doc/OpenPGP doc/samplekeys.asc
-%{_bindir}/*
-%dir %{_datadir}/%{name}
+%{_bindir}/gpg1
+%{_bindir}/gpgv1
+%{_bindir}/lspgpot
+%dir %{_datadir}/gnupg
 %dir %{_libexecdir}/gnupg
-%{_datadir}/%{name}/FAQ
-%{_datadir}/%{name}/options.skel
+%{_datadir}/gnupg/FAQ
+%{_datadir}/gnupg/options.skel
 %{_libexecdir}/gnupg/gpgkeys_curl
 %{_libexecdir}/gnupg/gpgkeys_finger
 %{_libexecdir}/gnupg/gpgkeys_hkp
 %{_libexecdir}/gnupg/gpgkeys_ldap
 %{_infodir}/gnupg1.info.gz
-%{_mandir}/man1/gpg-zip.1.gz
-%{_mandir}/man1/gpg.1.gz
-%{_mandir}/man1/gpgv.1.gz
+%{_mandir}/man1/gpg1.1.gz
+%{_mandir}/man1/gpgv1.1.gz
 
 %changelog
+* Thu Jun 16 2016 Remi Collet <remi@remirepo.net> - 1.4.20-1
+- adapt for EL to install beside gnupg2
+
 * Wed Feb 03 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1.4.20-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
