@@ -1,0 +1,46 @@
+From e89e07669e5bb46023f08d5c0b69065a931f9d27 Mon Sep 17 00:00:00 2001
+From: "Brian C. Lane" <bcl@redhat.com>
+Date: Mon, 30 Jan 2012 09:47:40 -0800
+Subject: [PATCH] Call gcc directly to build assembly files, so that CFLAGS
+ which are needed during preprocessing (-DPIC) get properly
+ passed to the preprocessor.
+
+---
+ configure.ac    |    1 +
+ mpi/Makefile.am |    5 +++++
+ 2 files changed, 6 insertions(+), 0 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 5dc0a52..55d9bc2 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1398,6 +1398,7 @@ fi
+ 
+ AM_CONDITIONAL(CROSS_COMPILING, test x$cross_compiling = xyes)
+ 
++AM_CONDITIONAL(USING_GCC, test x$GCC = xyes)
+ 
+ # add some extra libs here so that previous tests don't fail for
+ # mysterious reasons - the final link step should bail out.
+diff --git a/mpi/Makefile.am b/mpi/Makefile.am
+index 7610e27..27d36b8 100644
+--- a/mpi/Makefile.am
++++ b/mpi/Makefile.am
+@@ -69,9 +69,14 @@ libmpi_a_LIBADD = $(common_asm_objects) @MPI_EXTRA_ASM_OBJS@
+ 
+ # cancel the default rules used by libtool which do not really
+ # work and add one to cpp .S files
++if USING_GCC
++.S.o:
++	 $(COMPILE) $(AM_CCASFLAGS) -c $<
++else
+ .S.o:
+ 	 $(CPP) $(INCLUDES) $(DEFS) $< | grep -v '^#' > _$*.s
+ 	 $(COMPILE) $(AM_CCASFLAGS) -c _$*.s
+ 	 mv -f _$*.o $*.o
++endif
+ 
+ .S.lo:
+-- 
+1.7.6.5
+

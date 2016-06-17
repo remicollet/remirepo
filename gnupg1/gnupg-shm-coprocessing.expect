@@ -1,0 +1,5 @@
+spawn -noecho ./g10/gpg --homedir . --run-as-shm-coprocess 0
+while {1} { expect {
+	"shared memory coprocessing is not available" {exit 1}
+	"Go ahead and type your message" {exit 0}
+} }
