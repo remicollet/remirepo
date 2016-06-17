@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    7ae5513327cb536431847bcc0c10edba2701064e
+%global gh_commit    42c4c2eec485ee3e159ec9884f95b431287edde4
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   exporter
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-phpunit-exporter
-Version:        1.2.1
+Version:        1.2.2
 Release:        1%{?dist}
 Summary:        Export PHP variables for visualization
 
@@ -36,8 +36,10 @@ BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
 # from composer.json, "require-dev": {
-#        "phpunit/phpunit": "~4.4"
+#        "phpunit/phpunit": "~4.4",
+#        "ext-mbstring": "*"
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.4
+BuildRequires:  php-mbstring
 BuildRequires:  php-composer(sebastian/recursion-context) >= 1.0
 %endif
 
@@ -47,8 +49,8 @@ BuildRequires:  php-composer(sebastian/recursion-context) >= 1.0
 Requires:       php(language) >= 5.3.3
 Requires:       php-composer(sebastian/recursion-context) >= 1.0
 Requires:       php-composer(sebastian/recursion-context) <  2
-# from phpcompatinfo report for version 1.0.0
-Requires:       php-hash
+# from phpcompatinfo report for version 1.2.2
+Requires:       php-mbstring
 Requires:       php-pcre
 Requires:       php-spl
 
@@ -92,6 +94,11 @@ cp -pr src %{buildroot}%{php_home}/SebastianBergmann/Exporter
 %check
 %{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
 %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/SebastianBergmann/Exporter/autoload.php
+
+if which php71; then
+  %{_bindir}/php71 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+  %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/SebastianBergmann/Exporter/autoload.php
+fi
 %endif
 
 
@@ -116,6 +123,10 @@ fi
 
 
 %changelog
+* Fri Jun 17 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
+- update to 1.2.2
+- run test suite with both PHP 5 and 7 when available
+
 * Sun Jul 26 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - update to 1.2.1 (only CS)
 
