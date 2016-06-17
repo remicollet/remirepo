@@ -33,11 +33,13 @@
 Summary:       Extension for communicating with the Redis key-value store
 Name:          %{?sub_prefix}php-pecl-redis
 Version:       2.2.8
-Release:       1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:       2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/redis
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+Patch0:        %{pecl_name}-pr840.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
@@ -110,6 +112,7 @@ sed -e 's/role="test"/role="src"/' \
 mv %{pecl_name}-%{version} NTS
 
 cd NTS
+%patch0 -p1 -b .pr840
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_REDIS_VERSION/{s/.* "//;s/".*$//;p}' php_redis.h)
@@ -294,6 +297,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 17 2016 Remi Collet <remi@fedoraproject.org> - 2.2.8-2
+- test build for https://github.com/phpredis/phpredis/issues/742
+
 * Thu Jun  9 2016 Remi Collet <remi@fedoraproject.org> - 2.2.8-1
 - Update to 2.2.8 (stable)
 
