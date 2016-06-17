@@ -17,7 +17,7 @@
 %endif
 
 Name:           php-nrk-Predis
-Version:        1.1.0
+Version:        1.1.1
 Release:        1%{?dist}
 Summary:        PHP client library for Redis
 
@@ -105,8 +105,8 @@ pushd %{buildroot}%{pear_testdir}/%{pear_name}
 ret=0
 %{_bindir}/phpunit --include-path=%{buildroot}%{pear_phpdir} || ret=1
 
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{pear_phpdir} || ret=1
+if which php71; then
+   php71 %{_bindir}/phpunit --include-path=%{buildroot}%{pear_phpdir} || ret=1
 fi
 popd
 
@@ -145,6 +145,9 @@ fi
 
 
 %changelog
+* Fri Jun 17 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- Update to 1.1.1
+
 * Tue Jun 07 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - Update to 1.1.0
 
