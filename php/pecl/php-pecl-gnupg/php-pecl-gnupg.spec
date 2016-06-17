@@ -14,12 +14,7 @@
 %endif
 %scl_package       php-pecl-gnupg
 %endif
-%if 0%{?rhel} >= 6
-# ignore test result on EL-6 and 7 which only have gnupg2
-%global with_tests 0%{?_with_tests:0}
-%else
 %global with_tests 0%{!?_without_tests:1}
-%endif
 
 %global pecl_name  gnupg
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
@@ -33,23 +28,25 @@
 Summary:      Wrapper around the gpgme library
 Name:         %{?sub_prefix}php-pecl-gnupg
 Version:      1.4.0
-Release:      0.1.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 License:      BSD
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/gnupg
 Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
+Patch0:       %{pecl_name}-pr1.patch
+
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel
 BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: gpgme-devel
-BuildRequires: gnupg
+BuildRequires: gnupg < 2
 
 Requires:     %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:     %{?scl_prefix}php(api) = %{php_core_api}
 # We force use of /usr/bin/gpg as gpg2 is unusable in non-interactive mode
-Requires:     gnupg
+Requires:     gnupg < 2
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:     %{?scl_prefix}php-%{pecl_name}               = %{version}
@@ -116,6 +113,7 @@ EOF
 
 mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
+%patch0 -p1 -b .pr1
 
 # Check extension version
 extver=$(sed -n '/#define PHP_GNUPG_VERSION/{s/.* "//;s/".*$//;p}' php_gnupg.h)
@@ -133,22 +131,26 @@ cp -r NTS ZTS
 
 %build
 export PHP_RPATH=no
-export CFLAGS="$RPM_OPT_FLAGS -D_FILE_OFFSET_BITS=64 -DGNUPG_PATH='\"/usr/bin/gpg\"'"
+export CFLAGS="$RPM_OPT_FLAGS -D_FILE_OFFSET_BITS=64"
+export GPG1=$(which gpg1 2>/dev/null || which gpg)
+$GPG1 --version
+
+peclbuild() {
+%{_bindir}/${1}ize
+%configure \
+    --with-gpg=$GPG1 \
+    --with-libdir=%{_lib} \
+    --with-php-config=%{_bindir}/${1}-config
+
+make %{?_smp_mflags}
+}
 
 cd NTS
-%{_bindir}/phpize
-%configure \
-    --with-libdir=%{_lib} \
-    --with-php-config=%{_bindir}/php-config
-make %{?_smp_mflags}
+peclbuild php
 
 %if %{with_zts}
 cd ../ZTS
-%{_bindir}/zts-phpize
-%configure \
-    --with-libdir=%{_lib} \
-    --with-php-config=%{_bindir}/zts-php-config
-make %{?_smp_mflags}
+peclbuild zts-php
 %endif
 
 
@@ -261,6 +263,9 @@ NO_INTERACTION=1 \
 
 
 %changelog
+* Fri Jun 17 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-0.2.RC1
+- always use gnupg < 2
+
 * Thu Jun 16 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-0.1.RC1
 - update to 1.4.0RC1 (beta)
 
