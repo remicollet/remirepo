@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    cbb4920d166af495f83eb213f16512a421d44f63
+%global gh_commit    2ed42cc6c61317c847c2bfb96ae7a865dc88c331
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.2.1
+Version:        2.2.2
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Tokenizer
@@ -36,8 +36,10 @@ BuildRequires:  php-composer(theseer/autoload)
 BuildRequires:  php(language) >= 5.3.1
 BuildRequires:  php-pcre
 # From composer.json, "require-dev": {
-#        "nette/tester": "~1.0"
+#       "nette/tester": "~2.0",
+#		"tracy/tracy": "^2.3"
 BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.4
+BuildRequires:  php-composer(tracy/tracy)        >= 2.3
 %endif
 
 # from composer.json, "require": {
@@ -89,6 +91,12 @@ EOF
 
 : Run test suite in sources tree
 nette-tester --colors 0 -p php -c ./php.ini tests -s
+
+# remirepo:4
+if which php70; then
+  cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
+  php70 %{_bindir}/nette-tester --colors 0 -p php70 -c ./php.ini tests -s
+fi
 %else
 : Test suite disabled
 %endif
@@ -109,5 +117,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 20 2016 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
+- update to 2.2.2
+
 * Sun Nov  1 2015 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - initial package
