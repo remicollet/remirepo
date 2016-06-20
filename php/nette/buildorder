@@ -10,7 +10,7 @@ For framework version				   2.3		2.4
 1277377** php-nette-utils              2.3.10	2.4.0 	(; tester)
 1277376** php-nette-neon               2.3.5   	!!		(; tester)
 1277384** php-nette-finder             2.3.2   	2.4.0	(utils ; tester)
-1277388** php-nette-php-generator      2.3.5   	2.4.0	(utils ; tester)
+1277388** php-nette-php-generator      2.3.6   	2.4.0	(utils ; tester)
 1277395** php-nette-component-model    2.2.4  	2.3.0 	(utils ; tester)
 1277397** php-nette-di                 2.3.10  	!!		(neon, php-generator, utils ; tester)
 1277400** php-tracy                    2.3.10  	2.4.0	(; di, tester)

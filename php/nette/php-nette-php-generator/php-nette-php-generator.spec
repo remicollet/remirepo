@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    224730a45e0cd6e76e692997a3d981a592f80b5d
+%global gh_commit    bbc8189aa54af093c908d98212e1c309b9170345
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.5
+Version:        2.3.6
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette PHP Generator
@@ -122,6 +122,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.6-1
+- update to 2.3.6
+
 * Thu Dec  3 2015 Remi Collet <remi@fedoraproject.org> - 2.3.5-1
 - update to 2.3.5
 - run test suite with both php 5 and 7 when available
