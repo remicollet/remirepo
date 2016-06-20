@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #70 OAuth version 2.0.1 ] {
+Extension [ <persistent> extension #71 OAuth version 2.0.2 ] {
 
   - Constants [32] {
     Constant [ string OAUTH_SIG_METHOD_HMACSHA1 ] { HMAC-SHA1 }

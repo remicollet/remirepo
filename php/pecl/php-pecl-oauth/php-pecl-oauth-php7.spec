@@ -8,15 +8,17 @@
 #
 # Please, preserve the changelog entries
 #
-
-%{?scl:          %scl_package         php-pecl-oauth}
+%if 0%{?scl:1}
+%global sub_prefix %{scl_prefix}
+%scl_package       php-pecl-oauth
+%endif
 
 %global pecl_name   oauth
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global ini_name    40-%{pecl_name}.ini
 
-Name:           %{?scl_prefix}php-pecl-oauth
-Version:        2.0.1
+Name:           %{?sub_prefix}php-pecl-oauth
+Version:        2.0.2
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        PHP OAuth consumer extension
 Group:          Development/Languages
@@ -37,8 +39,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -52,6 +56,10 @@ Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -183,6 +191,9 @@ fi
 
 
 %changelog
+* Mon Jun 20 2016 Remi Collet <rcollet@redhat.com> - 2.0.2-1
+- update to 2.0.2
+
 * Fri Mar 11 2016 Remi Collet <rcollet@redhat.com> - 2.0.1-1
 - update to 2.0.1
 
