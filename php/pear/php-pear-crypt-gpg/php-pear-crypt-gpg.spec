@@ -9,15 +9,10 @@
 
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name Crypt_GPG
-%if 0%{?rhel}
-# All features require GnuPG v1 (under investigation)
-%global with_tests 0%{?_with_tests:1}
-%else
 %global with_tests 0%{!?_without_tests:1}
-%endif
 
 Name:           php-pear-crypt-gpg
-Version:        1.4.1
+Version:        1.4.2
 Release:        1%{?dist}
 Summary:        GNU Privacy Guard (GnuPG)
 
@@ -33,8 +28,7 @@ BuildRequires:  php-pear(PEAR)
 %if %{with_tests}
 # for tests
 BuildRequires:  php-composer(phpunit/phpunit)
-BuildRequires:  %{_bindir}/gpg
-BuildRequires:  %{_bindir}/gpg-agent
+BuildRequires:  gnupg < 2
 BuildRequires:  %{_bindir}/ps
 %endif
 
@@ -42,7 +36,7 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(PEAR)
 
-Requires:       %{_bindir}/gpg
+Requires:       gnupg < 2
 # From package.pear
 Requires:       php(language) >= 5.2.1
 Requires:       php-pear(Console_CommandLine) >= 1.1.10
@@ -72,6 +66,13 @@ is intended only to facilitate public-key cryptography.
 %setup -q -c
 
 %{?_licensedir:sed -e '/LICENSE/d' -i package.xml}
+
+if [ -x %{_bindir}/gpg1 ]; then
+  sed -e "s:'%{_bindir}/gpg':'%{_bindir}/gpg1':" \
+      -i Crypt_GPG-1.4.2/Crypt/GPG/Engine.php
+  sed -e 's/md5sum="[^"]*"//' \
+      -i package.xml
+fi
 
 cd %{pear_name}-%{version}
 mv  ../package.xml %{name}.xml
@@ -136,6 +137,10 @@ fi
 
 
 %changelog
+* Mon Jun 20 2016 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
+- Update to 1.4.2
+- always use gnupg v1
+
 * Sun Apr 17 2016 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
 - Update to 1.4.1
 
