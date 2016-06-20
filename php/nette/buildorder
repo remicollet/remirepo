@@ -1,5 +1,5 @@
 Review   Name                         Version 			(BuildRequires ; Requires)
-For framework version				   2.3		2.4                                     
+For framework version				   2.3.10	2.4.0                                     
 --------  ---------------------        ------ 	------	--------------------------------
 1277487** php-kukulich-fshl            2.1.0
 1277375** php-nette-tester             1.7.1	-   	()
@@ -26,7 +26,7 @@ For framework version				   2.3		2.4
 1277470** php-nette-application        2.3.13  	2.4.0	(component-model, http, reflection, security, utils ; tester, di, forms, robot-loader, latte)
 1277476** php-nette-bootstrap          2.3.5   	2.4.0	(di, utils ; application, caching, database, forms, http, mail, robot-loader, safe-stream, security, tester, latte, tracy)
 1277478** php-nette-deprecated         2.3.2   	-		(; application, bootstrap, caching, forms, mail, robot-loader, safe-stream, utils, latte, tracy, tester)
-1277484** php-nette                    2.3.9   	2.4.0	(everything)
+1277484** php-nette                    2.3.10  	2.4.0	(everything)
 1277493** php-kdyby-events             2.4.0   			(di, utils ; nette, tester)
 1277504** apigen                       4.1.2   			(application, bootstrap, di, neon, mail, robot-loader, safe-stream, late, tracy, kukulich/fshl, kdyby/events,
 
