@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    e32964df66f2c5a3a50b229204f583d20c1f6829
+%global gh_commit    1fc6e52b790864d2973d479a4460a89cec1f51f8
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.4
+Version:        2.3.5
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Bootstrap
@@ -70,12 +70,12 @@ BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.3
 
 # from composer.json, "require": {
 #        "php": ">=5.3.1"
-#        "nette/di": "~2.3",
+#        "nette/di": "~2.3.0",
 #        "nette/utils": "~2.2"
 Requires:       php(language) >= 5.3.1
 Requires:       php-tokenizer
 Requires:       php-composer(%{gh_owner}/di) >= 2.3
-Requires:       php-composer(%{gh_owner}/di) <  3
+Requires:       php-composer(%{gh_owner}/di) <  2.4
 Requires:       php-composer(%{gh_owner}/utils) >= 2.2
 Requires:       php-composer(%{gh_owner}/utils) <  3
 # from phpcompatinfo report for version 2.3.3
@@ -146,6 +146,12 @@ EOF
 
 : Run test suite in sources tree
 nette-tester --colors 0 -p php -c ./php.ini tests -s
+
+# remirepo:4
+if which php70; then
+  cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
+  php70 %{_bindir}/nette-tester --colors 0 -p php70 -c ./php.ini tests -s
+fi
 %else
 : Test suite disabled
 %endif
@@ -166,6 +172,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.5-1
+- update to 2.3.5
+
 * Mon Nov 30 2015 Remi Collet <remi@fedoraproject.org> - 2.3.4-1
 - update to 2.3.4
 
