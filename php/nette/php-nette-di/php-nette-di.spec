@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    2e361f237de2c2e0b54ad83716b605180c27f09f
+%global gh_commit    3f8347bbcac706e1ced651c7beb9affd66298473
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.10
+Version:        2.3.11
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Dependency Injection Component
@@ -39,7 +39,7 @@ BuildRequires:  php-reflection
 BuildRequires:  php-spl
 BuildRequires:  php-tokenizer
 BuildRequires:  php-composer(%{gh_owner}/neon) >= 2.3.3
-BuildRequires:  php-composer(%{gh_owner}/php-generator) >= 2.3.3
+BuildRequires:  php-composer(%{gh_owner}/php-generator) >= 2.3.6
 BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.3.5
 # From composer.json, "require-dev": {
 #        "nette/tester": "~1.6"
@@ -49,12 +49,12 @@ BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.6
 # from composer.json, "require": {
 #        "php": ">=5.3.1"
 #        "nette/neon": "^2.3.3",
-#        "nette/php-generator": "^2.3.3",
+#        "nette/php-generator": "^2.3.6",
 #        "nette/utils": "^2.3.5"
 Requires:       php(language) >= 5.3.1
 Requires:       php-composer(%{gh_owner}/neon) >= 2.3.3
 Requires:       php-composer(%{gh_owner}/neon) <  3
-Requires:       php-composer(%{gh_owner}/php-generator) >= 2.3.3
+Requires:       php-composer(%{gh_owner}/php-generator) >= 2.3.6
 Requires:       php-composer(%{gh_owner}/php-generator) <  3
 Requires:       php-composer(%{gh_owner}/utils) >= 2.3.5
 Requires:       php-composer(%{gh_owner}/utils) <  3
@@ -146,6 +146,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.11-1
+- update to 2.3.11
+
 * Sat Apr  2 2016 Remi Collet <remi@fedoraproject.org> - 2.3.10-1
 - update to 2.3.10
 
