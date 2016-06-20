@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    f6586f827292bd35c8593df943437f2247ba5337
+%global gh_commit    66ceba196e4535ca3bf8f835db50d7e02339fdb0
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -16,7 +16,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-nette-utils
-Version:        2.3.9
+Version:        2.3.10
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Utility Classes
@@ -27,10 +27,6 @@ URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        %{name}-%{version}-%{gh_short}.tgz
 # pull a git snapshot to get test sutie
 Source1:        makesrc.sh
-
-# https://github.com/nette/utils/pull/91
-# And https://github.com/nette/utils/issues/112
-Patch0:         %{name}-pr91.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -97,8 +93,6 @@ To use this library, you just have to add, in your project:
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-%patch0 -p1
-
 
 %build
 : Generate a classmap autoloader
@@ -134,12 +128,10 @@ require_once '%{buildroot}%{php_home}/%{ns_vendor}/Utils/autoload.php';
 EOF
 
 : Run test suite in sources tree
-SKIP_ONLINE_TESTS=1 \
 nette-tester --colors 0 -p php -c ./php.ini tests -s
 
 if which php70; then
   cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
-  SKIP_ONLINE_TESTS=1 \
   php70 %{_bindir}/nette-tester --colors 0 -p php70 -c ./php.ini tests -s
 fi
 %else
@@ -163,6 +155,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.10-1
+- update to 2.3.10
+
 * Thu Jun  2 2016 Remi Collet <remi@fedoraproject.org> - 2.3.9-1
 - update to 2.3.9
 
