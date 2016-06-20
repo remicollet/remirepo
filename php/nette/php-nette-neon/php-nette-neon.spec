@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0042f72a2c51b24f5de3ca5f365494cd9b0d45f0
+%global gh_commit    75699de201932e6de6b249824dc8c53d0f442cd5
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.4
+Version:        2.3.5
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette NEON: parser and generator for Nette Object Notation
@@ -120,6 +120,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.5-1
+- update to 2.3.5
+
 * Wed Jan 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.4-1
 - update to 2.3.4
 - run test suite with both php 5 and 7 when available
