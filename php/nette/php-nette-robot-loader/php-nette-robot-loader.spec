@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    69331d359bbc9e5f911c12b82187cac914d983fb
+%global gh_commit    0dbed866df47fd0425ce9a3cc9085779d8ada143
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,8 +17,8 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.1
-%global specrel 2
+Version:        2.3.2
+%global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette RobotLoader: comfortable autoloading
 
@@ -29,6 +29,9 @@ Source0:        %{name}-%{version}-%{gh_short}.tgz
 # pull a git snapshot to get test sutie
 Source1:        makesrc.sh
 
+# Ensure TEMP_DIR exists
+Patch0:         %{name}-rpm.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-composer(theseer/autoload)
@@ -38,6 +41,7 @@ BuildRequires:  php-composer(%{gh_owner}/caching) >= 2.2
 BuildRequires:  php-composer(%{gh_owner}/finder) >= 2.3
 BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.2
 BuildRequires:  php-pcre
+BuildRequires:  php-phar
 BuildRequires:  php-spl
 # From composer.json, "require-dev": {
 #        "nette/tester": "~1.4"
@@ -79,6 +83,8 @@ To use this library, you just have to add, in your project:
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+%patch0 -p0 -b .rpm
+
 
 %build
 : Generate a classmap autoloader
@@ -114,6 +120,11 @@ EOF
 
 : Run test suite in sources tree
 nette-tester --colors 0 -p php -c ./php.ini tests -s
+
+if which php70; then
+  cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
+  php70 %{_bindir}/nette-tester --colors 0 -p php70 -c ./php.ini tests -s
+fi
 %else
 : Test suite disabled
 %endif
@@ -133,6 +144,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
+- update to 2.3.2
+
 * Tue Nov  3 2015 Remi Collet <remi@fedoraproject.org> - 2.3.1-2
 - fix package summary
 
