@@ -26,9 +26,12 @@
 
 %global mysql_sock %(mysql_config --socket 2>/dev/null || echo /var/lib/mysql/mysql.sock)
 
+# Instant Client naming convention changed after 10 to include the major version number
 %ifarch ppc ppc64
+%global oraclepackage oracle-instantclient-devel
 %global oraclever 10.2.0.2
 %else
+%global oraclepackage oracle-instantclient12.1-devel
 %global oraclever 12.1
 %endif
 
@@ -613,7 +616,7 @@ Summary:        A module for PHP applications that use OCI8 databases
 Group:          Development/Languages
 # All files licensed under PHP version 3.01
 License:        PHP
-BuildRequires:  oracle-instantclient-devel >= %{oraclever}
+BuildRequires:  %{oraclepackage} >= %{oraclever}
 Requires:       php-pdo%{?_isa} = %{version}-%{release}
 Provides:       php_database
 Provides:       php-pdo_oci, php-pdo_oci%{?_isa}
@@ -629,7 +632,7 @@ The php-oci8 packages provides the OCI8 extension version %{oci8ver}
 and the PDO driver to access Oracle Database.
 
 The extension is linked with Oracle client libraries %{oraclever}
-(Oracle Instant Client).  For details, see Oracle's note
+(Oracle Instant Client).  For details, see Oracle\'s note
 "Oracle Client / Server Interoperability Support" (ID 207303.1).
 
 You must install libclntsh.so.%{oraclever} to use this package, provided
@@ -1246,9 +1249,9 @@ build --libdir=%{_libdir}/php \
       --with-mysql-sock=%{mysql_sock} \
 %if %{with_oci8}
 %ifarch x86_64
-      --with-oci8=shared,instantclient,%{_libdir}/oracle/%{oraclever}/client64/lib,%{oraclever} \
+      --with-oci8=shared,instantclient,/usr/lib/oracle/%{oraclever}/client64/lib \
 %else
-      --with-oci8=shared,instantclient,%{_libdir}/oracle/%{oraclever}/client/lib,%{oraclever} \
+      --with-oci8=shared,instantclient,/usr/lib/oracle/%{oraclever}/client/lib \
 %endif
       --with-pdo-oci=shared,instantclient,/usr,%{oraclever} \
 %endif
@@ -1393,9 +1396,9 @@ build --includedir=%{_includedir}/php-zts \
       --enable-mysqlnd-threading \
 %if %{with_oci8}
 %ifarch x86_64
-      --with-oci8=shared,instantclient,%{_libdir}/oracle/%{oraclever}/client64/lib,%{oraclever} \
+      --with-oci8=shared,instantclient,/usr/lib/oracle/%{oraclever}/client64/lib \
 %else
-      --with-oci8=shared,instantclient,%{_libdir}/oracle/%{oraclever}/client/lib,%{oraclever} \
+      --with-oci8=shared,instantclient,/usr/lib/oracle/%{oraclever}/client/lib \
 %endif
       --with-pdo-oci=shared,instantclient,/usr,%{oraclever} \
 %endif
@@ -1989,9 +1992,8 @@ fi
 
 
 %changelog
-* Wed Jun  8 2016 Remi Collet <remi@fedoraproject.org> 7.0.8-0.1.RC1
-- Update to 7.0.8RC1
-- opcache version is now php version
+* Mon Jun 20 2016 Laurence Rochfort <laurence.rochfort@oracle.com>
+- Fix Oracle Instant Client package names and library paths.
 
 * Wed May 25 2016 Remi Collet <remi@fedoraproject.org> 7.0.7-1
 - Update to 7.0.7 - http://www.php.net/releases/7_0_7.php
