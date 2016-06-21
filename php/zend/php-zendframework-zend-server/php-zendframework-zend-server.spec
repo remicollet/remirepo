@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    d70b5e345a531a6b5138418cd6e9a13036d8f3da
+%global gh_commit    7cb617ca3e9b24579f544a244ee79ae61f480914
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-server
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.1
+Version:        2.7.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -34,30 +34,30 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.5
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
 BuildRequires:  php-reflection
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-code)             >= 2.5
 # From composer, "require-dev": {
-#        "fabpot/php-cs-fixer": "1.7.*",
-#        "phpunit/PHPUnit": "~4.0"
-BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
+#        "phpunit/phpUnit": "^4.8",
+#        "squizlabs/php_codesniffer": "^2.3.1"
+BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.8
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": "^5.5 || ^7.0",
+#        "php": "^5.6 || ^7.0",
 #        "zendframework/zend-stdlib": "^2.5 || ^3.0",
-#        "zendframework/zend-code": "~2.5"
-Requires:       php(language) >= 5.5
+#        "zendframework/zend-code": "^2.5 || ^3.0"
+Requires:       php(language) >= 5.6
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 Requires:       php-composer(%{gh_owner}/zend-code)             >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-code)             <  3
+Requires:       php-composer(%{gh_owner}/zend-code)             <  4
 %endif
 # From phpcompatinfo report for version 2.6.0
 Requires:       php-pcre
@@ -105,12 +105,13 @@ Zend\Loader\AutoloaderFactory::factory(array(
            'Zend\\%{library}'     => '%{buildroot}%{php_home}/Zend/%{library}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
+require_once 'test/TestAsset/reflectionTestFunction.php';
 EOF
 
 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
 
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+if which php71; then
+   php71 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
 fi
 %else
 : Test suite disabled
@@ -131,6 +132,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 21 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
+- update to 2.7.0
+- raise dependency on PHP 5.6
+
 * Fri Feb  5 2016 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
 - update to 2.6.1
 
