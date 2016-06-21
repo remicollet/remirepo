@@ -119,7 +119,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.4.45
-Release: 9%{?dist}
+Release: 10%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -211,6 +211,10 @@ Patch228: bug72114.patch
 Patch229: bugoverflow.patch
 Patch230: bug72135.patch
 Patch231: bug72241.patch
+Patch232: bug66387.patch
+Patch233: bug72340.patch
+Patch234: bug72275.patch
+Patch235: bug72400.patch
 
 # Fixes for tests (300+)
 # Backported from 5.5
@@ -880,6 +884,10 @@ support for using the enchant library to PHP.
 %patch229 -p1 -b .bugoverflow
 %patch230 -p1 -b .bug72135
 %patch231 -p1 -b .bug72241
+%patch232 -p1 -b .bug66387
+%patch233 -p1 -b .bug72340
+%patch234 -p1 -b .bug72275
+%patch235 -p1 -b .bug72400
 
 # Fixes for tests
 %patch300 -p1 -b .datetests1
@@ -1703,6 +1711,12 @@ EOF
 
 
 %changelog
+* Tue Jun 21 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-10
+- Fix #66387: Stack overflow with imagefilltoborder
+- Fix #72340: Double Free Courruption in wddx_deserialize
+- Fix #72275: don't allow smart_str to overflow int
+- Fix #72400 and #72403: prevent signed int overflows for string lengths
+
 * Sun May 29 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-9
 - Fix #71331: Uninitialized pointer in phar_make_dirstream
   CVE-2016-4343
