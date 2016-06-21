@@ -1,3 +1,5 @@
+# remirepo spec file for php-slim3, from
+#
 # Fedora spec file for php-slim3
 #
 # License: MIT
@@ -5,12 +7,12 @@
 #
 # Please preserve changelog entries
 
-%global gh_commit   794073a27b2dd9ef492124263038291b7f8daeb3
+%global gh_commit   a132385f736063d00632b52b3f8a389fe66fe4fa
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    slimphp
 %global gh_project  Slim
 %global pk_project  slim
-%global gh_version  3.4.1
+%global gh_version  3.4.2
 %global php_home    %{_datadir}/php
 %global slim_home   %{php_home}/Slim3
 
@@ -131,11 +133,20 @@ sed -e \
         -e "s|\$autoloader->addPsr4.*$|require 'autoload.php';|" \
         -i tests/bootstrap.php
 
+ret=0
+
 # OK (Tests: 512, Assertions: 820, Skipped: 13)
 %{_bindir}/phpunit \
     -d memory_limit=-1 \
-    tests
+    tests || ret=1
 
+if which php71; then
+  php71 %{_bindir}/phpunit \
+    -d memory_limit=-1 \
+    tests || ret=1
+fi
+
+exit $ret
 
 %clean
 rm -rf %{buildroot}
@@ -151,6 +162,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 21 2016 Remi Collet <remi@fedoraproject.org> - 3.4.2-1
+- update to 3.4.2
+
 * Tue May 17 2016 Johan Cwiklinski <johan AT x-tnd DOT be> - 3.4.1-1
 - Update to Slim 3
 - Use a git snapshot as upstream drop tests from distribution (thanks to Remi)
