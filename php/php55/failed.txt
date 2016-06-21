@@ -1,10 +1,10 @@
-==== PHP 5.5.36 (2016-05-26)
+==== PHP 5.5.37 (2016-06-23)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
-/var/lib/mock/el5i/build.log:Tests failed    :    6
+/var/lib/mock/el5i/build.log:Tests failed    :    5
 /var/lib/mock/el5x/build.log:Tests failed    :    3
-/var/lib/mock/el6i/build.log:Tests failed    :    4
+/var/lib/mock/el6i/build.log:Tests failed    :    3
 /var/lib/mock/el6x/build.log:Tests failed    :    0
 /var/lib/mock/el7x/build.log:Tests failed    :    0
 
@@ -17,7 +17,4 @@ el6i
 el5i, el6i
 	Bug #53437 DateInterval unserialize bad data, 32 bit [ext/date/tests/bug53437_var3.phpt]
 	Bug #64146 (serialize incorrectly saving objects when they are cloned) [ext/standard/tests/serialize/bug64146.phpt]
-	* Bug #72114 (Integer underflow / arbitrary null write in fread/gzread) [ext/standard/tests/file/bug72114.phpt]
 
-
-* fixed upstream in next
