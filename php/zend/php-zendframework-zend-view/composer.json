@@ -62,13 +62,16 @@
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "2.7-dev",
-            "dev-develop": "2.8-dev"
+            "dev-master": "2.8-dev",
+            "dev-develop": "2.9-dev"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "ZendTest\\View\\": "test/"
         }
-    }
+    },
+    "bin": [
+        "bin/templatemap_generator.php"
+    ]
 }

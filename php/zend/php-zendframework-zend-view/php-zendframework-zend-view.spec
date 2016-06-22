@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    001336925fec6bb36e8e6d2b2af60da30a9d087e
+%global gh_commit    1516805ed7f04afedbd4600d496437c49847a6cd
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-view
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.0
+Version:        2.8.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -137,6 +137,7 @@ Suggests:       php-composer(%{gh_owner}/zend-uri)
 %endif
 %endif
 # From phpcompatinfo report for version 2.6.0
+Requires:       php-cli
 Requires:       php-date
 Requires:       php-dom
 Requires:       php-filter
@@ -146,12 +147,16 @@ Requires:       php-spl
 Obsoletes:      php-ZendFramework2-%{library} < 2.5
 Provides:       php-ZendFramework2-%{library} = %{version}
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
+# for zf_templatemap_generator command
+Conflicts:      php-zendframework < 2.5.3-3
 
 
 %description
 Zend\View provides the “View” layer of Zend Framework 2’s MVC system.
 It is a multi-tiered system allowing a variety of mechanisms for extension,
 substitution, and more.
+
+Documentation: https://zendframework.github.io/zend-view/
 
 
 %prep
@@ -167,6 +172,12 @@ rm -rf %{buildroot}
 
 mkdir -p   %{buildroot}%{php_home}/Zend/
 cp -pr src %{buildroot}%{php_home}/Zend/%{library}
+
+# From composer.json,     "bin": [
+#        "bin/templatemap_generator.php"
+for i in bin/templatemap_generator.php
+do   install -Dpm 755 $i %{buildroot}%{_bindir}/zf_$(basename $i .php)
+done
 
 
 %check
@@ -208,9 +219,14 @@ rm -rf %{buildroot}
 %doc CONTRIBUTING.md README.md
 %doc composer.json
 %{php_home}/Zend/%{library}
+%{_bindir}/zf_templatemap_generator
 
 
 %changelog
+* Wed Jun 22 2016 Remi Collet <remi@fedoraproject.org> - 2.8.0-1
+- version 2.8.0
+- add zf_templatemap_generator (dropped from zf2)
+
 * Thu May 12 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
 - version 2.7.0
 
