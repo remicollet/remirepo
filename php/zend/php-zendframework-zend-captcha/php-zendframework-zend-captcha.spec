@@ -98,6 +98,8 @@ information is a human and not an automated process. Typically, a captcha
 is used with form submissions where authenticated users are not necessary,
 but you want to prevent spam submissions.
 
+Documentation: https://zendframework.github.io/zend-captcha/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
