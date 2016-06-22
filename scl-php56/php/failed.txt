@@ -1,4 +1,4 @@
-===== 5.6.23RC1 (2016-06-09)
+===== 5.6.23 (2016-06-23)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl56*/build.log
 
