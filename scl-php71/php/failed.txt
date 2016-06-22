@@ -1,4 +1,4 @@
-===== 7.1.0alpha1 (2016-06-09)
+===== 7.1.0alpha2 (2016-06-23)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl71*/build.log
 
