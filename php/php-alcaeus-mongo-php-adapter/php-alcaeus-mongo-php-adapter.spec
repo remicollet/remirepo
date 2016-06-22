@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    f3b879fadc0f5271f054b87b525b3945c9abd608
+%global gh_commit    92feaf5b6e368fbfefa7f53f41dd66f3f7963bd3
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     alcaeus
 %global gh_project   mongo-php-adapter
@@ -19,7 +19,7 @@
 
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.0.3
+Version:        1.0.4
 Release:        1%{?dist}
 Summary:        Mongo PHP Adapter
 
@@ -157,6 +157,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 22 2016 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- update to 1.0.4
+
 * Wed Jun 15 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - initial package
 
