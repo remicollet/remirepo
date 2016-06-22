@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    95385c2342fc335d5164eb95ac3ca230aa51223b
+%global gh_commit    ff74ea020f5f90866eb28365327e9bc765a61a6e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-serializer
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.2
+Version:        2.8.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -34,7 +34,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.5
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-dom
 BuildRequires:  php-libxml
 BuildRequires:  php-pcre
@@ -45,7 +45,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-json)             >= 2.5
 # From composer, "require-dev": {
 #        "zendframework/zend-math": "^2.6",
 #        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
-#        "fabpot/php-cs-fixer": "1.7.*",
+#        "squizlabs/php_codesniffer": "^2.3.1",
 #        "phpunit/PHPUnit": "^4.5"
 BuildRequires:  php-composer(%{gh_owner}/zend-math)             >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
@@ -55,17 +55,18 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": "^5.5 || ^7.0",
+#        "php": "^5.6 || ^7.0",
 #        "zendframework/zend-stdlib": "^2.7 || ^3.0",
-#        "zendframework/zend-json": "^2.5"
-Requires:       php(language) >= 5.5
+#        "zendframework/zend-json": "^2.5 || ^3.0"
+Requires:       php(language) >= 5.6
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 Requires:       php-composer(%{gh_owner}/zend-json)             >= 2.5
-Requires:       php-composer(%{gh_owner}/zend-json)             <  3
+Requires:       php-composer(%{gh_owner}/zend-json)             <  4
 # From composer, "suggest": {
-#        "zendframework/zend-servicemanager": "To support plugin manager support"
+#        "zendframework/zend-math": "(^2.6 || ^3.0) To support Python Pickle serialization",
+#        "zendframework/zend-servicemanager": "(^2.7.5 || ^3.0.3) To support plugin manager support"
 %if 0%{?fedora} >= 21
 Suggests:       php-composer(%{gh_owner}/zend-math)
 Suggests:       php-composer(%{gh_owner}/zend-servicemanager)
@@ -145,6 +146,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 21 2016 Remi Collet <remi@fedoraproject.org> - 2.8.0-1
+- update to 2.8.0
+- raise dependency on PHP 5.6
+
 * Wed May 11 2016 Remi Collet <remi@fedoraproject.org> - 2.7.2-1
 - update to 2.7.2
 - dependency to zend-math is now optional
