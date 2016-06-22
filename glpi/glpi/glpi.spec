@@ -28,7 +28,7 @@
 
 Name:           glpi
 Version:        0.90.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
@@ -47,6 +47,8 @@ Source4:        glpi-nginx.conf
 Patch0:         glpi-0.90-cron.patch
 # Fix autoloader
 Patch1:         glpi-0.90-autoload.patch
+# Upstream patch
+Patch2:         glpi-0.90-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -84,7 +86,6 @@ Requires:       php-simplepie
 Requires:       php-composer(zendframework/zend-cache)
 Requires:       php-composer(zendframework/zend-i18n)
 Requires:       php-composer(zendframework/zend-loader)
-Requires:       php-composer(zendframework/zend-version)
 Requires:       php-composer(ircmaxell/password-compat)
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 Requires:       php-composer(zetacomponents/graph)
@@ -130,6 +131,7 @@ techniciens grâce à une maintenance plus cohérente.
 
 %patch0 -p0
 %patch1 -p0
+%patch2 -p1
 
 find . -name \*.orig -exec rm {} \; -print
 
@@ -327,6 +329,9 @@ fi
 
 
 %changelog
+* Wed Jun 22 2016 Remi Collet <remi@fedoraproject.org> - 0.90.3-2
+- add upstream patch, drop dependency on zend-version
+
 * Tue Apr 12 2016 Remi Collet <remi@fedoraproject.org> - 0.90.3-1
 - update to 0.90.3
   https://github.com/glpi-project/glpi/issues?q=milestone:0.90.3
