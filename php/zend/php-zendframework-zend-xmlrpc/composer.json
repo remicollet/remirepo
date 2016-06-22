@@ -21,10 +21,10 @@
         ]
     },
     "require": {
-        "php": "^5.5 || ^7.0",
+        "php": "^5.6 || ^7.0",
         "zendframework/zend-http": "^2.5.4",
-        "zendframework/zend-math": "^2.7",
-        "zendframework/zend-server": "^2.6.1",
+        "zendframework/zend-math": "^2.7 || ^3.0",
+        "zendframework/zend-server": "^2.7",
         "zendframework/zend-stdlib": "^2.7 || ^3.0",
         "zendframework/zendxml": "^1.0.2"
     },
@@ -39,8 +39,8 @@
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "2.5-dev",
-            "dev-develop": "2.6-dev"
+            "dev-master": "2.6-dev",
+            "dev-develop": "2.7-dev"
         }
     },
     "scripts": {

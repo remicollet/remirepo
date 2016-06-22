@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    8d7016dfd5d10b8ca7d493917fd060114fe69591
+%global gh_commit    04f5c91e4d15ab8ca379877ec962589c5e9b66d7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-xmlrpc
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.2
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -34,7 +34,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.5
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-simplexml
 BuildRequires:  php-date
 BuildRequires:  php-dom
@@ -45,7 +45,7 @@ BuildRequires:  php-spl
 BuildRequires:  php-xmlwriter
 BuildRequires:  php-composer(%{gh_owner}/zend-http)             >= 2.5.4
 BuildRequires:  php-composer(%{gh_owner}/zend-math)             >= 2.7
-BuildRequires:  php-composer(%{gh_owner}/zend-server)           >= 2.6.1
+BuildRequires:  php-composer(%{gh_owner}/zend-server)           >= 2.7
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 BuildRequires:  php-composer(%{gh_owner}/zendxml)               >= 1.0.2
 # From composer, "require-dev": {
@@ -57,19 +57,19 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": "^5.5 || ^7.0",
+#        "php": "^5.6 || ^7.0",
 #        "zendframework/zend-http": "^2.5.4",
-#        "zendframework/zend-math": "^2.7",
-#        "zendframework/zend-server": "^2.6.1",
+#        "zendframework/zend-math": "^2.7 || ^3.0",
+#        "zendframework/zend-server": "^2.7",
 #        "zendframework/zend-stdlib": "^2.7 || ^3.0",
 #        "zendframework/zendxml": "^1.0.2"
-Requires:       php(language) >= 5.5
+Requires:       php(language) >= 5.6
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-http)             >= 2.5.4
 Requires:       php-composer(%{gh_owner}/zend-http)             <  3
 Requires:       php-composer(%{gh_owner}/zend-math)             >= 2.7
-Requires:       php-composer(%{gh_owner}/zend-math)             <  3
-Requires:       php-composer(%{gh_owner}/zend-server)           >= 2.6.1
+Requires:       php-composer(%{gh_owner}/zend-math)             <  4
+Requires:       php-composer(%{gh_owner}/zend-server)           >= 2.7
 Requires:       php-composer(%{gh_owner}/zend-server)           <  3
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
@@ -104,6 +104,8 @@ transmitted, processed and returned.”
 
 Zend\XmlRpc provides support for both consuming remote XML-RPC services and
 building new XML-RPC servers.
+
+Documentation: https://zendframework.github.io/zend-xmlrpc/
 
 
 %prep
@@ -161,6 +163,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 21 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- update to 2.6.0
+- raise dependency on PHP 5.6
+- raise dependency on zend-server 2.7
+
 * Fri Apr 22 2016 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - update to 2.5.2
 - raise dependency on PHP >= 5.5
