@@ -124,7 +124,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver        RC1
+#global rcver        RC1
 %global rpmrel       1
 
 
@@ -1819,6 +1819,9 @@ fi
 
 
 %changelog
+* Wed Jun 22 2016 Remi Collet <remi@fedoraproject.org> 7.0.8-1
+- Update to 7.0.8 - http://www.php.net/releases/7_0_8.php
+
 * Wed Jun  8 2016 Remi Collet <remi@fedoraproject.org> 7.0.8-0.1.RC1
 - Update to 7.0.8RC1
 - opcache version is now php version

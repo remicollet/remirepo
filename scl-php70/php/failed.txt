@@ -1,4 +1,4 @@
-===== 7.0.8RC1 (2016-06-09)
+===== 7.0.8 (2016-06-23)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl70*/build.log
 
@@ -6,12 +6,14 @@ $ grep -r 'Tests failed' /var/lib/mock/scl70*/build.log
 /var/lib/mock/scl70el7x/build.log:Tests failed    :     2
 /var/lib/mock/scl70fc21x/build.log:Tests failed    :    0
 /var/lib/mock/scl70fc22x/build.log:Tests failed    :    0
-/var/lib/mock/scl70fc23x/build.log:Tests failed    :    0
+/var/lib/mock/scl70fc23x/build.log:Tests failed    :    1
 /var/lib/mock/scl70fc24x/build.log:Tests failed    :    0
 
 el6x, el7x
     Bug #33414 [2] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-2.phpt]
     strtotime() function (64 bit) [ext/date/tests/strtotime3-64bit.phpt]
+fc23x
+	Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
 
 
 *	proc_open give erratic test results :(
