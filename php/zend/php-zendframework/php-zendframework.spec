@@ -17,7 +17,7 @@
 
 Name:           php-%{gh_owner}
 Version:        2.5.3
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Zend Framework
 
 Group:          Development/Libraries
@@ -216,7 +216,7 @@ and services using PHP.
 
 This package is a metapackage aggregating most of the components.
 
-Documentation: http://framework.zend.com/manual
+Documentation: https://zendframework.github.io/
 
 
 %prep
@@ -237,7 +237,7 @@ rm -rf %{buildroot}
 #        "bin/pluginmap_generator.php",
 #        "bin/templatemap_generator.php"
 
-for i in bin/classmap_generator.php bin/pluginmap_generator.php bin/templatemap_generator.php
+for i in bin/classmap_generator.php bin/pluginmap_generator.php
 do   install -Dpm 755 $i %{buildroot}%{_bindir}/zf_$(basename $i .php)
 done
 
@@ -252,10 +252,14 @@ rm -rf %{buildroot}
 %license LICENSE.md
 %doc CHANGELOG.md CONTRIBUTING.md README.md
 %doc composer.json
-%{_bindir}/zf_*
+%{_bindir}/zf_classmap_generator
+%{_bindir}/zf_pluginmap_generator
 
 
 %changelog
+* Wed Jun 22 2016 Remi Collet <remi@fedoraproject.org> - 2.5.3-3
+- drop zf_templatemap_generator command (moved in zend-view)
+
 * Thu Jan 28 2016 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
 - update to 2.5.3
 - raise max components version from 2.6 to 3
