@@ -23,7 +23,7 @@
 %{!?runselftest: %global runselftest 1}
 
 Name:           memcached
-Version:        1.4.25
+Version:        1.4.26
 Release:        1%{?dist}
 Epoch:          0
 Summary:        High Performance, Distributed Memory Object Cache
@@ -106,10 +106,10 @@ make %{?_smp_mflags}
 rm -f t/whitespace.t
 
 # Parts of the test suite only succeed as non-root.
-if [ `id -u` -ne 0 ]; then
+if [ $(id -u -n) != remi ]; then
   # remove failing test that doesn't work in
   # build systems
-  rm -f t/daemonize.t
+  rm t/daemonize.t t/watcher.t t/expirations.t
 fi
 make test
 %endif
@@ -236,11 +236,14 @@ fi
 
 
 %files devel
-%defattr(-,root,root,0755)
+%defattr(-,root,root,-)
 %{_includedir}/memcached/*
 
 
 %changelog
+* Wed Jun 22 2016 Remi Collet <rpms@famillecollet.com> - 0:1.4.26-1
+- Update to 1.4.26 (backported from Fedora)
+
 * Sun Jan  3 2016 Remi Collet <rpms@famillecollet.com> - 0:1.4.25-1
 - Update to 1.4.25
 
