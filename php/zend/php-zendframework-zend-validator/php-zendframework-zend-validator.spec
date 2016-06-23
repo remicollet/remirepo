@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    f956581bc5fa4cf3f2933fe24e77deded8d1937b
+%global gh_commit    8ec9f57a717dd37340308aa632f148a2c2be1cfc
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-validator
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.8.0
+Version:        2.8.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -121,6 +121,8 @@ The Zend\Validator component provides a set of commonly needed validators.
 It also provides a simple validator chaining mechanism by which multiple
 validators may be applied to a single datum in a user-defined order.
 
+Documentation: https://zendframework.github.io/zend-validator/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
@@ -176,6 +178,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 23 2016 Remi Collet <remi@fedoraproject.org> - 2.8.1-1
+- Update to 2.8.1
+
 * Tue May 17 2016 Remi Collet <remi@fedoraproject.org> - 2.8.0-1
 - Update to 2.8.0
 
