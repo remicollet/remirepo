@@ -1,0 +1,30 @@
+Backported from 5.5.37 for 5.4 by Remi Collet
+
+
+From c395c6e5d7e8df37a21265ff76e48fe75ceb5ae6 Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Mon, 20 Jun 2016 23:58:26 -0700
+Subject: [PATCH] iFixed bug #72446 - Integer Overflow in
+ gdImagePaletteToTrueColor() resulting in heap overflow
+
+---
+ NEWS              |  2 ++
+ ext/gd/libgd/gd.c | 22 +++++++++++++---------
+ 2 files changed, 15 insertions(+), 9 deletions(-)
+
+diff --git a/ext/gd/libgd/gd.c b/ext/gd/libgd/gd.c
+index 2c63aac..4dad95a 100644
+--- a/ext/gd/libgd/gd.c
++++ b/ext/gd/libgd/gd.c
+@@ -133,6 +133,10 @@ gdImagePtr gdImageCreate (int sx, int sy)
+ 		return NULL;
+ 	}
+ 
++	if (overflow2(sizeof(unsigned char *), sx)) {
++		return NULL;
++	}
++
+ 	im = (gdImage *) gdCalloc(1, sizeof(gdImage));
+ 
+ 	/* Row-major ever since gd 1.3 */
+

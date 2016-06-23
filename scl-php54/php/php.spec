@@ -214,7 +214,15 @@ Patch231: bug72241.patch
 Patch232: bug66387.patch
 Patch233: bug72340.patch
 Patch234: bug72275.patch
+# For #72400, #72403, #72268
 Patch235: bug72400.patch
+Patch236: bug72339.patch
+Patch237: bug72298.patch
+Patch238: bug72402.patch
+Patch239: bug72433.patch
+Patch240: bug72434.patch
+Patch241: bug72455.patch
+Patch242: bug72446.patch
 
 # Fixes for tests (300+)
 # Backported from 5.5
@@ -888,6 +896,13 @@ support for using the enchant library to PHP.
 %patch233 -p1 -b .bug72340
 %patch234 -p1 -b .bug72275
 %patch235 -p1 -b .bug72400
+%patch236 -p1 -b .bug72339
+%patch237 -p1 -b .bug72298
+%patch238 -p1 -b .bug72402
+%patch239 -p1 -b .bug72433
+%patch240 -p1 -b .bug72434
+%patch241 -p1 -b .bug72455
+%patch242 -p1 -b .bug72446
 
 # Fixes for tests
 %patch300 -p1 -b .datetests1
@@ -1714,8 +1729,24 @@ EOF
 * Tue Jun 21 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-10
 - Fix #66387: Stack overflow with imagefilltoborder
 - Fix #72340: Double Free Courruption in wddx_deserialize
+  CVE-2016-5772
 - Fix #72275: don't allow smart_str to overflow int
-- Fix #72400 and #72403: prevent signed int overflows for string lengths
+- Fix #72400: prevent signed int overflows for string lengths
+- Fix #72403: prevent signed int overflows for string lengths
+- Fix #72268: Integer Overflow in nl2br(). (Stas)
+- Fix #72339: Integer Overflow in _gd2GetHeader() resulting in heap overflow
+  CVE-2016-5766
+- Fix #72298: pass2_no_dither out-of-bounds access
+- Fix #72402: _php_mb_regex_ereg_replace_exec - double free
+  CVE-2016-5768
+- Fix #72433: SPL use After Free Vulnerability in PHP's GC
+  CVE-2016-5771
+- Fix #72434: ZipArchive class use After Free Vulnerability in PHP's GC
+  CVE-2016-5773
+- Fix #72455: Heap Overflow due to integer overflows
+  CVE-2016-5769
+- Fix #72446: Integer Overflow in gdImagePaletteToTrueColor()
+  CVE-2016-5767
 
 * Sun May 29 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-9
 - Fix #71331: Uninitialized pointer in phar_make_dirstream
