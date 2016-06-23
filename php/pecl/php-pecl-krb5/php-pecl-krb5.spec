@@ -15,11 +15,11 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package       php-pecl-krb5
+%else
+%global _root_includedir %{_includedir}
+%global _root_bindir     %{_bindir}
 %endif
-
-%{?scl:          %scl_package         php-pecl-krb5}
-%{!?scl:         %global _root_includedir %{_includedir}}
-%{!?scl:         %global _root_bindir %{_bindir}}
 
 %global pecl_name krb5
 %global with_zts  0%{?__ztsphp:1}
@@ -32,7 +32,7 @@
 Summary:        Kerberos authentification extension
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        7%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        9%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -55,8 +55,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -254,6 +256,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 23 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-9
+- rebuild for krb5 1.14 (F23+)
+
 * Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-7
 - adapt for F24
 - fix license management
