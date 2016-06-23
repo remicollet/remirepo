@@ -14,7 +14,7 @@
         }
     },
     "require": {
-        "php": "^5.5 || ^7.0",
+        "php": "^5.6 || ^7.0",
         "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
         "zendframework/zend-stdlib": "^2.7 || ^3.0",
         "psr/log": "^1.0"
@@ -30,8 +30,11 @@
         "phpunit/PHPUnit": "~4.0",
         "mikey179/vfsStream": "^1.6"
     },
+    "provide": {
+        "psr/log-implementation": "1.0.0"
+    },
     "suggest": {
-        "ext-mongo": "mongodb extension to use MongoDB writer",
+        "ext-mongodb": "mongodb extension to use MongoDB writer",
         "zendframework/zend-console": "Zend\\Console component to use the RequestID log processor",
         "zendframework/zend-db": "Zend\\Db component to use the database log writer",
         "zendframework/zend-escaper": "Zend\\Escaper component, for use in the XML log formatter",
@@ -42,8 +45,8 @@
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "2.8-dev",
-            "dev-develop": "2.9-dev"
+            "dev-master": "2.9-dev",
+            "dev-develop": "2.10-dev"
         },
         "zf": {
             "component": "Zend\\Log",

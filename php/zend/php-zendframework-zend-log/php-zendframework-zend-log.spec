@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    78712a83261739f0c7bc5718c8cb9514b58e6a0d
+%global gh_commit    0325ad00505b8f39d79f26e666dc851bfd25fdaa
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-log
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.8.3
+Version:        2.9.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -34,7 +34,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.5
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-ctype
 BuildRequires:  php-date
 BuildRequires:  php-dom
@@ -69,11 +69,11 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": "^5.5 || ^7.0",
+#        "php": "^5.6 || ^7.0",
 #        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
 #        "zendframework/zend-stdlib": "^2.7 || ^3.0",
 #        "psr/log": "^1.0"
-Requires:       php(language) >= 5.5
+Requires:       php(language) >= 5.6
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
 Requires:       php-composer(%{gh_owner}/zend-servicemanager)   <  4
@@ -82,14 +82,14 @@ Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 Requires:       php-composer(psr/log)                           >= 1.0
 Requires:       php-composer(psr/log)                           <  2
 # From composer, "suggest": {
-#        "ext-mongo": "mongodb extetension to use MongoDB writer",
+#        "ext-mongodb": "mongodb extension to use MongoDB writer",
 #        "zendframework/zend-console": "Zend\\Console component to use the RequestID log processor",
 #        "zendframework/zend-db": "Zend\\Db component to use the database log writer",
 #        "zendframework/zend-escaper": "Zend\\Escaper component, for use in the XML log formatter",
 #        "zendframework/zend-mail": "Zend\\Mail component to use the email log writer",
 #        "zendframework/zend-validator": "Zend\\Validator component to block invalid log messages"
 %if 0%{?fedora} >= 21
-Suggests:       php-pecl(mongo)
+Suggests:       php-pecl(mongodb)
 Suggests:       php-composer(%{gh_owner}/zend-console)
 Suggests:       php-composer(%{gh_owner}/zend-db)
 Suggests:       php-composer(%{gh_owner}/zend-escaper)
@@ -109,12 +109,15 @@ Requires:       php-spl
 Obsoletes:      php-ZendFramework2-%{library} < 2.5
 Provides:       php-ZendFramework2-%{library} = %{version}
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
+Provides:       php-composer(psr/log-implementation) = 1.0.0
 
 
 %description
 Zend\Log is a component for general purpose logging. It supports multiple
 log backends, formatting messages sent to the log, and filtering messages
 from being logged.
+
+Documentation: https://zendframework.github.io/zend-log/
 
 
 %prep
@@ -173,6 +176,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 23 2016 Remi Collet <remi@fedoraproject.org> - 2.9.0-1
+- update to 2.9.0
+- provide php-composer(psr/log-implementation)
+- raise dependency on PHP 5.6
+- suggest mongodb instead of mongo extension
+
 * Fri May 27 2016 Remi Collet <remi@fedoraproject.org> - 2.8.3-1
 - update to 2.8.3
 
