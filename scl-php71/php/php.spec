@@ -125,7 +125,7 @@
 %endif
 
 %global rcver        alpha2
-%global rpmrel       2
+%global rpmrel       3
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1819,6 +1819,9 @@ fi
 
 
 %changelog
+* Wed Jun 22 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-0.3.alpha2
+- Update to 7.1.0alpha2 (rebuild)
+
 * Wed Jun 22 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-0.2.alpha2
 - Update to 7.1.0alpha2
 
