@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        6.9.4
-%global Patchlevel 9
+%global Patchlevel 10
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -66,7 +66,6 @@ Url:            http://www.imagemagick.org/
 Source0:        ftp://ftp.ImageMagick.org/pub/ImageMagick/ImageMagick-%{VER}-%{Patchlevel}.tar.xz
 
 Patch0:         ImageMagick-6.9.2-7-multiarch-implicit-pkgconfig-dir.patch
-Patch1:         %{libname}-pr219.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  bzip2-devel, freetype-devel, libjpeg-devel, libpng-devel
@@ -277,7 +276,6 @@ however.
 %setup -q -n %{libname}-%{VER}-%{Patchlevel}
 
 %patch0 -p1 -b .multiarch-implicit-pkgconfig-dir
-%patch1 -p1 -b .cache
 
 # for %%doc
 mkdir Magick++/examples
@@ -495,6 +493,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 24 2016 Remi Collet <remi@remirepo.net> - 6.9.4.10-1
+- update to version 6.9.4 patchlevel 10
+
 * Mon Jun 13 2016 Remi Collet <remi@remirepo.net> - 6.9.4.9-1
 - update to version 6.9.4 patchlevel 9
 
