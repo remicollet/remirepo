@@ -28,7 +28,7 @@
 
 Name:             redis
 Version:          3.2.1
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -206,6 +206,7 @@ if [ $1 = 0 ]; then
 fi
 %endif
 
+%postun
 %if 0%{?systemd_postun_with_restart:1}
 %systemd_postun_with_restart redis.service
 %systemd_postun_with_restart redis-sentinel.service
@@ -245,6 +246,9 @@ fi
 
 
 %changelog
+* Fri Jun 24 2016 Remi Collet <remi@fedoraproject.org> - 3.2.1-2
+- fix %%postun scriptlet, thanks Matthias
+
 * Mon Jun 20 2016 Remi Collet <remi@fedoraproject.org> - 3.2.1-1
 - Redis 3.2.1 - Release date: Fri Jun 17 15:01:56 CEST 2016
 - Upgrade urgency HIGH: Critical fix to Redis Sentinel,
