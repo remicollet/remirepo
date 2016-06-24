@@ -7,7 +7,8 @@
 # Please, preserve the changelog entries
 #
 %global gh_owner    couchbase
-%global gh_commit   03cd355b5007c3f8ffd0e131575b62f36e7127e7
+# see https://github.com/couchbase/libcouchbase/tags
+%global gh_commit   eb09707433013b742c0aa221e564ad73ba8a3708
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 
 # Tests require some need which are downloaded during make
@@ -20,7 +21,7 @@
 %endif
 
 Name:          libcouchbase
-Version:       2.6.0
+Version:       2.6.1
 Release:       1%{?dist}
 Summary:       Couchbase client library
 Group:         System Environment/Libraries
@@ -29,7 +30,6 @@ URL:           http://www.couchbase.com/communities/c/getting-started
 Source0:       http://packages.couchbase.com/clients/c/%{name}-%{version}.tar.gz
 #Source0:      https://github.com/%{gh_owner}/%{name}/archive/%{gh_commit}/%{name}-%{version}-%{gh_short}.tar.gz
 
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libtool
 BuildRequires: openssl-devel
 BuildRequires: cyrus-sasl-devel
@@ -96,8 +96,15 @@ make install DESTDIR=%{buildroot}
 rm -f %{buildroot}%{_libdir}/*.la
 
 
+%check
+%if %{with_tests}
+make check
+%else
+: check disabled, missing '--with tests' option
+%endif
+
+
 %files
-%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %{_libdir}/%{name}.so.2*
@@ -106,7 +113,6 @@ rm -f %{buildroot}%{_libdir}/*.la
 %{_libdir}/%{name}_libev.so
 
 %files devel
-%defattr(-,root,root,-)
 %doc RELEASE_NOTES.markdown
 %{_includedir}/%{name}
 #{_mandir}/man3/libcouch*
@@ -116,20 +122,15 @@ rm -f %{buildroot}%{_libdir}/*.la
 %{_libdir}/pkgconfig/%{name}.pc
 
 %files tools
-%defattr(-,root,root,-)
 %{_bindir}/cbc*
 %{_mandir}/man1/cbc*
 %{_mandir}/man4/cbc*
 
-%check
-%if %{with_tests}
-make check
-%else
-: check disabled, missing '--with tests' option
-%endif
-
 
 %changelog
+* Fri Jun 24 2016 Remi Collet <remi@feoraproject.org> - 2.6.1-1
+- update to 2.6.1
+
 * Thu May 26 2016 Remi Collet <remi@feoraproject.org> - 2.6.0-1
 - update to 2.6.0
 
