@@ -24,8 +24,8 @@ Name:          gd
 %else
 Name:          gd-last
 %endif
-Version:       2.2.1
-Release:       2%{?prever}%{?short}%{?dist}
+Version:       2.2.2
+Release:       1%{?prever}%{?short}%{?dist}
 Group:         System Environment/Libraries
 License:       MIT
 URL:           http://libgd.github.io/
@@ -39,7 +39,6 @@ Source0:       https://github.com/libgd/libgd/releases/download/gd-%{version}/li
 
 Patch1:        gd-2.1.0-multilib.patch
 Patch2:        gd-2.2.1-initialize-full_filename.patch
-Patch3:        gd-2.2.1-fix-unused-variable-in-tests.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: freetype-devel
@@ -121,7 +120,6 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 %setup -q -n libgd-%{version}%{?prever:-%{prever}}
 %patch1 -p1 -b .mlib
 %patch2 -p1 -b .full_filename
-%patch3 -p1 -b .unused-variable
 
 : $(perl config/getver.pl)
 
@@ -169,6 +167,10 @@ export XFAIL_TESTS="freetype/bug00132"
 %endif
 %if 0%{?rhel} > 0 && 0%{?rhel} <= 5
 export XFAIL_TESTS="gdimagestringft/gdimagestringft_bbox $XFAIL_TESTS"
+%else
+%ifnarch x86_64
+export XFAIL_TESTS="gdimagerotate/bug00067 $XFAIL_TESTS"
+%endif
 %endif
 
 : Upstream test suite
@@ -204,6 +206,9 @@ grep %{version} $RPM_BUILD_ROOT%{_libdir}/pkgconfig/gdlib.pc
 
 
 %changelog
+* Fri Jun 24 2016 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
+- Update to 2.2.2
+
 * Sat May 28 2016 Remi Collet <remi@fedoraproject.org> - 2.2.1-2
 - Update to 2.2.1 (from Fedora)
 - remove unneeded sources
