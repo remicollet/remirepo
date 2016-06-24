@@ -168,7 +168,8 @@ export XFAIL_TESTS="freetype/bug00132"
 %if 0%{?rhel} > 0 && 0%{?rhel} <= 5
 export XFAIL_TESTS="gdimagestringft/gdimagestringft_bbox $XFAIL_TESTS"
 %else
-%ifnarch x86_64
+%ifarch %{ix86}
+# see https://github.com/libgd/libgd/issues/242
 export XFAIL_TESTS="gdimagerotate/bug00067 $XFAIL_TESTS"
 %endif
 %endif
