@@ -23,7 +23,7 @@
 %{!?runselftest: %global runselftest 1}
 
 Name:           memcached
-Version:        1.4.26
+Version:        1.4.27
 Release:        1%{?dist}
 Epoch:          0
 Summary:        High Performance, Distributed Memory Object Cache
@@ -43,6 +43,9 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  libevent-devel > 2
 %else
 BuildRequires:  libevent-devel
+%endif
+%if 0%{?fedora} > 22
+BuildRequires:  perl-generators
 %endif
 BuildRequires:  perl(Test::More), perl(Test::Harness)
 %if %{with_sasl}
@@ -102,15 +105,6 @@ make %{?_smp_mflags}
 
 %check
 %if %runselftest
-# whitespace tests fail locally on fedpkg systems now that they use git
-rm -f t/whitespace.t
-
-# Parts of the test suite only succeed as non-root.
-if [ $(id -u -n) != remi ]; then
-  # remove failing test that doesn't work in
-  # build systems
-  rm t/daemonize.t t/watcher.t t/expirations.t
-fi
 make test
 %endif
 
@@ -241,6 +235,10 @@ fi
 
 
 %changelog
+* Sat Jun 25 2016 Remi Collet <rpms@famillecollet.com> - 0:1.4.27-1
+- Update to 1.4.27
+- run all tests during the build
+
 * Wed Jun 22 2016 Remi Collet <rpms@famillecollet.com> - 0:1.4.26-1
 - Update to 1.4.26 (backported from Fedora)
 
