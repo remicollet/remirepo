@@ -7,9 +7,10 @@
 #
 # Please preserve changelog entries
 #
-%global		github_user	PHPMailer
-%global		github_app	PHPMailer
-%global		github_tag	1d85f9ef3ecfc42bbc4f3c70d5e37ca9a65f629a
+%global github_user  PHPMailer
+%global github_app   PHPMailer
+%global github_tag   1d85f9ef3ecfc42bbc4f3c70d5e37ca9a65f629a
+%global github_short %(c=%{github_tag}; echo ${c:0:7})
 
 %global		arch_name	%{github_app}-%{github_tag}
 
@@ -21,7 +22,7 @@ License:	LGPLv2+
 Group:		System Environment/Libraries
 URL:		http://phpmailer.worxware.com/
 
-Source0:	https://github.com/%{github_user}/%{github_app}/archive/%{github_tag}/%{github_app}-%{version}.tar.gz
+Source0:	https://github.com/%{github_user}/%{github_app}/archive/%{github_tag}/%{github_app}-%{version}-%{github_short}.tar.gz
 
 # Fix language default path
 # Don't rely on autoloader (for app which overides __construct)
