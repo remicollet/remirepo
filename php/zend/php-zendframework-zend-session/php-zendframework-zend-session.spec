@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    79002c7b3e83477217121936c2577526f15555b1
+%global gh_commit    f44101f8e8bc95090ef1b59ffb0f1c03d70d7bed
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-session
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.1
+Version:        2.7.2
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -107,6 +107,8 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 Zend\Session is a component to manage PHP session using an object
 oriented interface.
 
+Documentation: https://zendframework.github.io/zend-session/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
@@ -169,6 +171,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 25 2016 Remi Collet <remi@fedoraproject.org> - 2.7.2-1
+- update to 2.7.2
+
 * Wed May 11 2016 Remi Collet <remi@fedoraproject.org> - 2.7.1-1
 - update to 2.7.1
 
