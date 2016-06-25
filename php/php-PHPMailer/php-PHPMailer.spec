@@ -16,7 +16,7 @@
 Name:		php-PHPMailer
 Summary:	PHP email transport class with a lot of features
 Version:	5.2.16
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
 URL:		http://phpmailer.worxware.com/
@@ -30,13 +30,19 @@ Patch0:		%{github_app}-path.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Buildarch:	noarch
 
-# From phpcompatinfo report for 5.2.10
+#for tests
+BuildRequires: php-cli
+
+# From phpcompatinfo report for 5.2.16
 Requires:	php-date
 Requires:	php-filter
 Requires:	php-hash
+Requires:	php-imap
+Requires:	php-intl
 Requires:	php-mbstring
 Requires:	php-openssl
 Requires:	php-pcre
+Requires:	php-spl
 
 Provides:	php-composer(phpmailer/phpmailer) = %{version}
 
@@ -116,6 +122,15 @@ install -p -m 644 language/*.php					\
 ) > files.list
 
 
+%check
+: Test autoloader and version
+php -r '
+require "%{buildroot}%{_datadir}/php/PHPMailer/PHPMailerAutoload.php";
+$mailer = new PHPMailer();
+version_compare($mailer->Version, "%{version}", "=") or exit(1);
+'
+
+
 #-------------------------------------------------------------------------------
 %clean
 #-------------------------------------------------------------------------------
@@ -138,6 +153,9 @@ rm -rf "${RPM_BUILD_ROOT}"
 
 
 %changelog
+* Sat Jun 25 2016 Johan Cwiklinski <johan AT x-tnd DOT be> - 5.2.16-2
+- add a check on version
+
 * Mon Jun  6 2016 Remi Collet <remi@fedoraproject.org> - 5.2.16-1
 - update to 5.2.16
 
