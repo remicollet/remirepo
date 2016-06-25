@@ -92,6 +92,8 @@ The Zend\Barcode component is divided into two subcomponents: barcode objects
 and renderers. Objects allow you to create barcodes independently of the
 renderer. Renderer allow you to draw barcodes based on the support required.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

@@ -77,6 +77,8 @@ Zend\Mime is a support class for handling multipart MIME messages.
 It is used by Zend\Mail and Zend\Mime\Message and may be used by
 applications requiring MIME support.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

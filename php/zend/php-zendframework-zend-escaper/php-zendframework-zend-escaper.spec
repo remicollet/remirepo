@@ -73,6 +73,8 @@ component was written. It offers developers a way to escape output and defend
 from XSS and related vulnerabilities by introducing contextual escaping based
 on peer-reviewed rules.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

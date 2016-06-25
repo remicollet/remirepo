@@ -89,6 +89,8 @@ and vice versa, including facilities for filtering which data
 is mapped as well as providing mechanisms for mapping nested
 structures.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

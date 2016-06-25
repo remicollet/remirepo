@@ -107,7 +107,7 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 Zend\Session is a component to manage PHP session using an object
 oriented interface.
 
-Documentation: https://zendframework.github.io/zend-session/
+Documentation: https://zendframework.github.io/%{gh_project}/
 
 
 %prep

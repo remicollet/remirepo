@@ -60,6 +60,8 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 %description
 Provides role-based access control (RBAC) permissions management.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

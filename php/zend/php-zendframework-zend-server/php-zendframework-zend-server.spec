@@ -76,6 +76,8 @@ Zend\Server\Server provides an interface that mimics PHP 5’s SoapServer class;
 all server classes should implement this interface in order to provide a
 standard server API.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

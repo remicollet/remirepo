@@ -97,6 +97,8 @@ The available features are:
 The main scope of this component is to offer an easy and secure way
 to protect and authenticate sensitive data in PHP.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

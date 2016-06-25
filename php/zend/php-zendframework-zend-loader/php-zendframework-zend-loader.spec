@@ -51,6 +51,8 @@ Zend\Loader provides different strategies for autoloading PHP classes.
 You can include %{php_home}/Zend/autoload.php from
 your application to use the Zend Framework.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

@@ -113,6 +113,8 @@ The translator itself is initialized without any parameters, as any
 configuration to it is optional. A translator without any translations
 will actually do nothing but just return the given message IDs.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

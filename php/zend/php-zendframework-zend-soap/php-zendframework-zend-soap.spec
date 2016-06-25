@@ -92,6 +92,8 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 Zend\Soap is a component to manage the SOAP protocol in order
 to design client or server PHP application.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

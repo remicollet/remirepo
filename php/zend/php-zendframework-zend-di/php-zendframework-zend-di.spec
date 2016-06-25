@@ -84,6 +84,8 @@ IoC containers are widely used to create object instances that have all
 dependencies resolved and injected. Dependency Injection containers are
 one form of IoC – but not the only form.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

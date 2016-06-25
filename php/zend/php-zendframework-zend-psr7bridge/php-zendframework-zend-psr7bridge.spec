@@ -72,6 +72,8 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 %description
 Code for converting PSR-7 messages to zend-http messages, and vice versa.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

@@ -104,6 +104,8 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 The Zend\Authentication component provides an API for authentication and
 includes concrete authentication adapters for common use case scenarios.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

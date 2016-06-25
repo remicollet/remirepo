@@ -75,6 +75,8 @@ prints or returns information about an expression. This simple technique
 of debugging is common because it is easy to use in an ad hoc fashion and
 requires no initialization, special tools, or debugging environment.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

@@ -85,6 +85,8 @@ takes an absolute value and optionally a status message, and then calls
 the adapter with some precalculated values like percentage and estimated
 time left.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

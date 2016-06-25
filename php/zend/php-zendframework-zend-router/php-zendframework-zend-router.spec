@@ -98,6 +98,8 @@ and provides capabilities around:
 Additionally, it supports combinations of different route types in tree
 structures, allowing for fast, b-tree lookups.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

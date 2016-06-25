@@ -88,6 +88,8 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 Zend\Json provides convenience methods for serializing native PHP to JSON
 and decoding JSON to native PHP.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

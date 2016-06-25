@@ -94,6 +94,8 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 Zend\Paginator is a flexible component for paginating
 collections of data and presenting that data to users.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

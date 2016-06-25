@@ -81,6 +81,8 @@ Zend\Tag\Item and Zend\Tag\ItemList. Additionally, it comes with the
 interface Zend\Tag\TaggableInterface, which allows you to use any of
 your models as a taggable item in conjunction with Zend\Tag.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

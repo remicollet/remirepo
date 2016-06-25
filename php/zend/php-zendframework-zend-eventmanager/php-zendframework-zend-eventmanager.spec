@@ -73,6 +73,8 @@ The basic architecture allows you to attach and detach listeners to named
 events, both on a per-instance basis as well as via shared collections;
 trigger events; and interrupt execution of listeners.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

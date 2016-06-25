@@ -94,6 +94,8 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 %description
 Zend\File is a component used to manage file transfer and class autoloading.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

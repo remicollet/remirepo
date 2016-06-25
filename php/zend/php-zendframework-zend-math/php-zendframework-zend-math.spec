@@ -84,6 +84,8 @@ So far the supported functionalities are:
 * Zend\Math\Rand, a random number generator;
 * Zend\Math\BigInteger, a library to manage big integers.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

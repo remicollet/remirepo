@@ -105,7 +105,7 @@ transmitted, processed and returned.”
 Zend\XmlRpc provides support for both consuming remote XML-RPC services and
 building new XML-RPC servers.
 
-Documentation: https://zendframework.github.io/zend-xmlrpc/
+Documentation: https://zendframework.github.io/%{gh_project}/
 
 
 %prep

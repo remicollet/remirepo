@@ -116,6 +116,8 @@ The Zend\Cache component is able to cache different patterns
 (class, object, output, etc) using different storage adapters
 (DB, File, Memcache, etc).
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

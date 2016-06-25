@@ -87,6 +87,8 @@ oriented API to build the queries. Zend\Db consumes different storage adapters
 to access different database vendors such as MySQL, PostgreSQL, Oracle,
 IBM DB2, Microsoft Sql Server, PDO, etc.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

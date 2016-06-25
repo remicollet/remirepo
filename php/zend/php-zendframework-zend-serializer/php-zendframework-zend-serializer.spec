@@ -91,7 +91,7 @@ The Zend\Serializer component provides an adapter based interface
 to simply generate storable representation of PHP types by different
 facilities, and recover.
 
-Documentation: https://zendframework.github.io/zend-serializer/
+Documentation: https://zendframework.github.io/%{gh_project}/
 
 
 %prep

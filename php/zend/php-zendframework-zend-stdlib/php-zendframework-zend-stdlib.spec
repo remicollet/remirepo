@@ -109,6 +109,8 @@ class for different scopes like:
 * string wrappers;
 * etc.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

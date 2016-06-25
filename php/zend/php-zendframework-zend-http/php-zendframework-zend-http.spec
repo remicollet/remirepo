@@ -95,6 +95,8 @@ Since much of what PHP does is web-based, specifically HTTP,
 it makes sense to have a performant, extensible, concise and
 consistent API to do all things HTTP.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

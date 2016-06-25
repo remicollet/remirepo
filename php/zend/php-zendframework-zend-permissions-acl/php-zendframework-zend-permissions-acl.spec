@@ -70,6 +70,8 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 Provides a lightweight and flexible access control list (ACL)
 implementation for privileges management.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

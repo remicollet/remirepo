@@ -129,6 +129,8 @@ and the View Layer. It composes a thin layer of objects representing form
 elements, an InputFilter, and a small number of methods for binding data to
 and from the form and attached objects.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

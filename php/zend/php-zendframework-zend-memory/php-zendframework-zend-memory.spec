@@ -78,6 +78,8 @@ memory usage to exceed the limit you specify, some managed objects are copied
 to cache storage outside of memory. In this way, the total memory used by
 managed objects does not exceed the limit you need to enforce.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

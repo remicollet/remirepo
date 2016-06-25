@@ -101,6 +101,8 @@ via the Mail\Transport\Sendmail, Mail\Transport\Smtp or the
 Mail\Transport\File transport. Of course, you can also implement your own
 transport by implementing the Mail\Transport\TransportInterface.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

@@ -92,6 +92,8 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 Zend\Ldap\Ldap is a class for performing LDAP operations including but
 not limited to binding, searching and modifying entries in an LDAP directory.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

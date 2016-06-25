@@ -95,6 +95,8 @@ The Zend\Filter component provides a set of commonly needed data filters.
 It also provides a simple filter chaining mechanism by which multiple
 filters may be applied to a single datum in a user-defined order.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

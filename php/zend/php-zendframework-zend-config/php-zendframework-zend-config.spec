@@ -95,6 +95,8 @@ for accessing this configuration data within application code. The
 configuration data may come from a variety of media supporting hierarchical
 data storage.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

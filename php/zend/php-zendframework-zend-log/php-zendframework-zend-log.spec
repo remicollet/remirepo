@@ -117,7 +117,7 @@ Zend\Log is a component for general purpose logging. It supports multiple
 log backends, formatting messages sent to the log, and filtering messages
 from being logged.
 
-Documentation: https://zendframework.github.io/zend-log/
+Documentation: https://zendframework.github.io/%{gh_project}/
 
 
 %prep

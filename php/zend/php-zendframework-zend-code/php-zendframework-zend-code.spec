@@ -88,6 +88,8 @@ PHP code, you can easily extend the base class in order to provide code
 generation for other tasks: JavaScript, configuration files, apache vhosts,
 etc.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

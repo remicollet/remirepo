@@ -115,6 +115,8 @@ and entry attributes. Zend\Feed also has extensive support for modifying feed
 and entry structure with the same natural syntax, and turning the result back
 into XML.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

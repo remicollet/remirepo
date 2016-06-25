@@ -86,6 +86,8 @@ A PHP package containing implementations of the accepted PSR-7 HTTP message
 interfaces [1], as well as a "server" implementation similar to node's
 http.Server [2].
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 Autoloader: %{phpdir}/Zend/Diactoros/autoload.php
 
 [1] http://www.php-fig.org/psr/psr-7/

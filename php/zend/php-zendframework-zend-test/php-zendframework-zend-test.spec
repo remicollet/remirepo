@@ -118,6 +118,8 @@ testing of your Zend Framework MVC applications.
 
 PHPUnit is the only library supported currently.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

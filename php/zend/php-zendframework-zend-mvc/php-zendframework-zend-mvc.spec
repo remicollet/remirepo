@@ -184,7 +184,7 @@ The MVC layer is built on top of the following components:
   Zend\Stdlib\DispatchableInterface. All “controllers” are simply dispatchable
   objects.
 
-Documentation: https://zendframework.github.io/zend-mvc/
+Documentation: https://zendframework.github.io/%{gh_project}/
 
 
 %prep

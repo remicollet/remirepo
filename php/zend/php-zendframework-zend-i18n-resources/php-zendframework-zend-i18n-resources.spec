@@ -55,6 +55,8 @@ This "component" provides translation resources, specifically
 for zendframework/zend-validate and zendframework/zend-captcha,
 for use with zendframework/zend-i18n's Translator subcomponent.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

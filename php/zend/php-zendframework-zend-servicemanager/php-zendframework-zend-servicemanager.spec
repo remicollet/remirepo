@@ -84,6 +84,8 @@ The Service Locator design pattern is implemented by the Zend\ServiceManager
 component. The Service Locator is a service/object locator, tasked with
 retrieving other objects.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

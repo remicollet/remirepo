@@ -156,7 +156,7 @@ Zend\View provides the “View” layer of Zend Framework 2’s MVC system.
 It is a multi-tiered system allowing a variety of mechanisms for extension,
 substitution, and more.
 
-Documentation: https://zendframework.github.io/zend-view/
+Documentation: https://zendframework.github.io/%{gh_project}/
 
 
 %prep

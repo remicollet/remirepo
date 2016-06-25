@@ -103,6 +103,8 @@ The possibilities are endless.
 
 Zend\ModuleManager is the component that enables the design of a module architecture for PHP applcations.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

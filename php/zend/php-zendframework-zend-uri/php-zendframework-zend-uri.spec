@@ -73,6 +73,8 @@ Zend\Uri is a component that aids in manipulating and validating Uniform
 Resource Identifiers (URIs). Zend\Uri exists primarily to service other
 components, such as Zend\Http, but is also useful as a standalone utility.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

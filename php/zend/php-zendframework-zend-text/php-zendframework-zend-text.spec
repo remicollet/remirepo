@@ -86,6 +86,8 @@ It contains the subcomponents:
   information in a CLI application. Zend\Text\Table supports multi-line columns,
   colspan and align as well.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

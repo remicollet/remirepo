@@ -81,6 +81,8 @@ The Zend\InputFilter component can be used to filter and validate generic sets
 of input data. For instance, you could use it to filter $_GET or $_POST values,
 CLI arguments, etc.
 
+Documentation: https://zendframework.github.io/%{gh_project}/
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
