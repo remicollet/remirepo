@@ -13,21 +13,22 @@
 %endif
 
 %global pecl_name  gmagick
-%global prever     RC2
+%global prever     RC1
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global ini_name   40-%{pecl_name}.ini
 
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        2.0.2
-Release:        0.4.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        2.0.3
+Release:        0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
-# https://github.com/vitoc/gmagick/pull/41 - for PHP 7.1
-Patch0:         %{pecl_name}-pr41.patch
+# restore dropped constant by mistake
+# see https://github.com/vitoc/gmagick/pull/41#issuecomment-228584703
+Patch0:         %{pecl_name}-const.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-pear
@@ -92,7 +93,7 @@ sed -e 's/role="test"/role="src"/' \
 
 mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
-%patch0 -p1 -b .pr41
+%patch0 -p1 -b .const
 
 extver=$(sed -n '/#define PHP_GMAGICK_VERSION/{s/.* "//;s/".*$//;p}' php_gmagick.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -217,6 +218,9 @@ export TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so"
 
 
 %changelog
+* Sun Jun 26 2016 Remi Collet <remi@fedoraproject.org> - 2.0.3-0.1.RC1
+- Update to 2.0.3RC1 (php 7, beta)
+
 * Fri Jun 24 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-0.4.RC2
 - add patch for PHP 7.1, https://github.com/vitoc/gmagick/pull/41
 
