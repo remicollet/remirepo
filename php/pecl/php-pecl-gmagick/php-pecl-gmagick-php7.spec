@@ -28,7 +28,7 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 # restore dropped constant by mistake
 # see https://github.com/vitoc/gmagick/pull/41#issuecomment-228584703
-Patch0:         %{pecl_name}-const.patch
+Patch0:         %{pecl_name}-pr42.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-pear
