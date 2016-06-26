@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #93 fann version 1.1.0 ] {
+Extension [ <persistent> extension #93 fann version 1.1.1 ] {
 
   - Constants [51] {
     Constant [ string FANN_VERSION ] { 2.2 }

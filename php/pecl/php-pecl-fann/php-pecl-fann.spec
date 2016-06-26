@@ -15,9 +15,8 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package       php-pecl-fann
 %endif
-
-%{?scl:          %scl_package        php-pecl-fann}
 
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  fann
@@ -31,7 +30,7 @@
 
 Summary:        Wrapper for FANN Library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.1.0
+Version:        1.1.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -72,6 +71,10 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -227,6 +230,9 @@ fi
 
 
 %changelog
+* Sun Jun 26 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- update to 1.1.1
+
 * Thu Mar 31 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - update to 1.1.0  (stable, no change since RC2)
 
