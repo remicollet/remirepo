@@ -1,13 +1,13 @@
-# remirepo spec file for php-Analog, from
+# remirepo spec file for php-nikic-fast-route, from
 #
-# Fedora spec file for php-Analog
+# Fedora spec file for php-nikic-fast-route
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
 #
 # Please preserve changelog entries
 
-%global gh_commit    79843dce62ac52e9b628e73d5f1264cad10c65a6
+%global gh_commit    8ea928195fa9b907f0d6e48312d323c1a13cc2af
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nikic
 %global gh_project   FastRoute
@@ -16,8 +16,8 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{pk_project}
-Version:        1.0.0
-Release:        2%{?dist}
+Version:        1.0.1
+Release:        1%{?dist}
 Summary:        Fast implementation of a regular expression based router
 
 Group:          Development/Libraries
@@ -83,8 +83,8 @@ sed -e "s|BUILDROOT_PATH|%{buildroot}/%{php_home}/%{gh_project}|" -i test/bootst
 : Upstream test suite
 %{_bindir}/phpunit --verbose
 
-if which php70; then
-    php70 %{_bindir}/phpunit --verbose
+if which php71; then
+    php71 %{_bindir}/phpunit --verbose
 fi
 %else
 : Test suite disabled
@@ -105,6 +105,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jun 25 2016 Johan Cwiklinski <johan AT x-tnd DOT be> - 1.0.1-1
+- Last upstream release
+
 * Fri May 06 2016 Johan Cwiklinski <johan AT x-tnd DOT be> - 1.0.0-2
 - Fix package name
 
