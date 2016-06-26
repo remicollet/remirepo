@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b2cf67b1a575d7e648c742be2454339232ef32b2
+%global gh_commit    30ab6f1c1753267d181839142fafe022313c3c9a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
 %global gh_owner     composer
@@ -16,7 +16,7 @@
 #global prever       RC
 
 Name:           composer
-Version:        1.1.2
+Version:        1.1.3
 Release:        1%{?dist}
 Summary:        Dependency Manager for PHP
 
@@ -217,8 +217,8 @@ rm -rf res
 export BUILDROOT=%{buildroot}
 %{_bindir}/phpunit --include-path %{buildroot}%{_datadir}/php --verbose
 
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path %{buildroot}%{_datadir}/php --verbose
+if which php71; then
+   php71 %{_bindir}/phpunit --include-path %{buildroot}%{_datadir}/php --verbose
 fi
 %else
 : Test suite disabled
@@ -241,6 +241,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jun 26 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
+- update to 1.1.3
+
 * Wed Jun  1 2016 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - update to 1.1.2
 
