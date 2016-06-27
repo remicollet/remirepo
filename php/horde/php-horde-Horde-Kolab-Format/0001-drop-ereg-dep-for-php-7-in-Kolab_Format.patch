@@ -1,0 +1,25 @@
+From a7a553fc381400d34e92408f921c58950ba43410 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Mon, 27 Jun 2016 07:14:04 +0200
+Subject: [PATCH] drop ereg dep for php 7 in Kolab_Format
+
+---
+ framework/Kolab_Format/lib/Horde/Kolab/Format/Xml/Annotation.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/framework/Kolab_Format/lib/Horde/Kolab/Format/Xml/Annotation.php b/framework/Kolab_Format/lib/Horde/Kolab/Format/Xml/Annotation.php
+index e33e186..cb9a012 100644
+--- a/framework/Kolab_Format/lib/Horde/Kolab/Format/Xml/Annotation.php
++++ b/framework/Kolab_Format/lib/Horde/Kolab/Format/Xml/Annotation.php
+@@ -59,7 +59,7 @@ class Horde_Kolab_Format_Xml_Annotation extends Horde_Kolab_Format_Xml
+ 
+         $result = array();
+         foreach ($object['annotation'] as $annotation) {
+-            list($key, $value)           = split('#', $annotation, 2);
++            list($key, $value)           = explode('#', $annotation, 2);
+             $result[base64_decode($key)] = base64_decode($value);
+         }
+ 
+-- 
+2.5.5
+

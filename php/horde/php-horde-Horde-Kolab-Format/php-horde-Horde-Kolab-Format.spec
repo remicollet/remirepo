@@ -12,13 +12,15 @@
 
 Name:           php-horde-Horde-Kolab-Format
 Version:        2.0.8
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A package for reading/writing Kolab data formats
 
 Group:          Development/Libraries
 License:        LGPLv2
 URL:            http://%{pear_channel}/
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+
+Patch0:         0001-drop-ereg-dep-for-php-7-in-Kolab_Format.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -33,10 +35,8 @@ Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
 Requires:       php-date
 Requires:       php-dom
-Requires:       php-ereg
 Requires:       php-mbstring
 Requires:       php-pcre
-Requires:       php-spl
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
@@ -59,6 +59,10 @@ This package allows to convert Kolab data objects from XML to data arrays.
 %setup -q -c
 cd %{pear_name}-%{version}
 mv ../package.xml %{name}.xml
+
+%patch0 -p3 -b .ereg
+sed -e '/Annotation.php/s/md5sum="[^"]*"//' \
+    -i %{name}.xml
 
 
 %build
@@ -119,6 +123,9 @@ fi
 
 
 %changelog
+* Mon Jun 27 2016 Remi Collet <remi@fedoraproject.org> - 2.0.8-2
+- add patch to drop dependency on ereg
+
 * Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.0.8-1
 - Update to 2.0.8
 - PHP 7 compatible version
