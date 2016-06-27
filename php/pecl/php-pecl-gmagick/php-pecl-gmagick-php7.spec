@@ -19,16 +19,12 @@
 
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        2.0.3
+Version:        2.0.4
 Release:        0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
-
-# restore dropped constant by mistake
-# see https://github.com/vitoc/gmagick/pull/41#issuecomment-228584703
-Patch0:         %{pecl_name}-pr42.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-pear
@@ -93,7 +89,6 @@ sed -e 's/role="test"/role="src"/' \
 
 mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
-%patch0 -p1 -b .const
 
 extver=$(sed -n '/#define PHP_GMAGICK_VERSION/{s/.* "//;s/".*$//;p}' php_gmagick.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
@@ -218,6 +213,9 @@ export TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so"
 
 
 %changelog
+* Mon Jun 27 2016 Remi Collet <remi@fedoraproject.org> - 2.0.4-0.1.RC1
+- Update to 2.0.4RC1 (php 7, beta)
+
 * Sun Jun 26 2016 Remi Collet <remi@fedoraproject.org> - 2.0.3-0.1.RC1
 - Update to 2.0.3RC1 (php 7, beta)
 
