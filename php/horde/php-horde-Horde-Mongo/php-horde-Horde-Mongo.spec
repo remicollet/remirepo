@@ -12,13 +12,16 @@
 
 Name:           php-horde-Horde-Mongo
 Version:        1.0.3
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Horde Mongo Configuration
 
 Group:          Development/Libraries
 License:        LGPLv2
 URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+
+# https://github.com/horde/horde/pull/194
+Patch0:         %{name}-pr194.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -30,7 +33,11 @@ Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
 Requires:       php-spl
+%if 0%{?rhel} == 5
 Requires:       php-pecl(mongo) >= 1.3.0
+%else
+Requires:       php-composer(alcaeus/mongo-php-adapter)
+%endif
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 
@@ -47,6 +54,9 @@ consistently across various Horde packages.
 
 cd %{pear_name}-%{version}
 mv ../package.xml %{name}.xml
+%patch0 -p3 -b .pr194
+sed -e '/Client.php/s/md5sum="[^"]*"//' \
+    -i %{name}.xml
 
 
 %build
@@ -91,6 +101,10 @@ fi
 
 
 %changelog
+* Mon Jun 27 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-3
+- drop dependency on mongo extension for PHP 7
+- add dependency on alcaeus/mongo-php-adapter
+
 * Fri Jan 09 2015 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - Update to 1.0.3
 - add provides php-composer(horde/horde-mongo)
