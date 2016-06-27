@@ -1,0 +1,25 @@
+From 70efe638bfe64a09f97758223862efd81d30f301 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Mon, 27 Jun 2016 07:45:45 +0200
+Subject: [PATCH 3/3] drop ereg dep for php 7 in Db
+
+---
+ framework/Db/lib/Horde/Db/SearchParser.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/framework/Db/lib/Horde/Db/SearchParser.php b/framework/Db/lib/Horde/Db/SearchParser.php
+index fcb5181..d08d1e6 100644
+--- a/framework/Db/lib/Horde/Db/SearchParser.php
++++ b/framework/Db/lib/Horde/Db/SearchParser.php
+@@ -156,7 +156,7 @@ class Horde_Db_SearchParser
+         }
+ 
+         $val = Horde_String::lower(substr(array_shift($tokens), 1));
+-        $val = addslashes(ereg_replace("([\\%])", "\\\\1", $val));
++        $val = addslashes(str_replace("%", "\\%", $val));
+ 
+         return "(LOWER($column) LIKE '%$val%')";
+     }
+-- 
+2.5.5
+

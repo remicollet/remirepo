@@ -13,13 +13,16 @@
 
 Name:           php-horde-Horde-Db
 Version:        2.3.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Database Libraries
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+
+# https://github.com/horde/horde/pull/195
+Patch0:         0003-drop-ereg-dep-for-php-7-in-Db.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -33,10 +36,10 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Cache) >= 2.0.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
-Requires:       php-ereg
+Requires:       php-pdo
+Requires:       php-hash
 Requires:       php-pcre
 Requires:       php-spl
-Requires:       php-pdo
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.0.0
@@ -66,6 +69,9 @@ Horde database/SQL abstraction layer
 
 cd %{pear_name}-%{version}
 mv ../package.xml %{name}.xml
+%patch0 -p3 -b .ereg
+sed -e '/SearchParser.php/s/md5sum="[^"]*"//' \
+    -i %{name}.xml
 
 
 %build
@@ -116,6 +122,9 @@ fi
 
 
 %changelog
+* Mon Jun 27 2016 Remi Collet <remi@fedoraproject.org> - 2.3.1-2
+- add patch to drop dependency on ereg
+
 * Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.3.1-1
 - Update to 2.3.1
 - PHP 7 compatible version

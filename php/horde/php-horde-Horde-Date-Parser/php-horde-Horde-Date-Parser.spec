@@ -20,6 +20,7 @@ License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
 
+# https://github.com/horde/horde/pull/195
 Patch0:         0002-drop-ereg-dep-for-php-7-in-Date_Parser.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
