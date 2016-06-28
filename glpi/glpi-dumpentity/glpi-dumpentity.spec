@@ -6,21 +6,21 @@ Version:        1.3.1
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        1.1%{?dist}
 %endif
 Summary:        GLPI Plugin for entity export
 Summary(fr):    Extension GLPI d'export d'entité
 
 Group:          Applications/Internet
 License:        GPLv2+
-URL:            https://forge.indepnet.net/projects/dumpentity
+URL:            https://forge.glpi-project.org/projects/dumpentity
 
 %if 0%{?svnrelease}
-# svn export -r 101 https://forge.indepnet.net/svn/dumpentity/trunk dumpentity
+# svn export -r 101 https://forge.glpi-project.org/svn/dumpentity/trunk dumpentity
 # tar czf glpi-dumpentity-1.2.0-101.tar.gz dumpentity
 Source0:        glpi-dumpentity-%{version}-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/1216/glpi-dumpentity-1.3.1.tar.gz
+Source0:        https://forge.glpi-project.org/attachments/download/1216/glpi-dumpentity-1.3.1.tar.gz
 %endif
 
 
@@ -78,6 +78,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 28 2016 Johan Cwiklinski <jcwiklinski AT teclib DOT com> - 1.3.1-1.1
+- Change URL and Source
+
 * Thu Jul 12 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.3.1-1
 - version 1.3.1 for GLPI 0.83.3
   https://forge.indepnet.net/projects/dumpentity/versions/780

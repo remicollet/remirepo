@@ -11,12 +11,12 @@
 
 Name:           glpi-ocsinventoryng
 Version:        1.1.2
-Release:        1%{?dist}
+Release:        1.1%{?dist}
 Summary:        Plugin to synchronize GLPI with OCS Inventory NG
 
 Group:          Applications/Internet
 License:        GPLv2+
-URL:            https://forge.indepnet.net/projects/ocsinventoryng
+URL:            https://forge.glpi-project.org/projects/ocsinventoryng
 
 Source0:        https://forge.glpi-project.org/attachments/download/2094/glpi-ocsinventoryng-1.1.2.tar.gz
 Source1:        %{name}-httpd.conf
@@ -162,6 +162,9 @@ grep %{lockname} %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}/setup.php |
 
 
 %changelog
+* Tue Jun 28 2016 Johan Cwiklinski <jcwiklinski AT teclib DOT com> - 1.1.2-1.1
+- Change URL
+
 * Wed Sep 16 2015 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - Update to 1.1.2 for GLPI 0.85+
   https://forge.glpi-project.org/versions/1131

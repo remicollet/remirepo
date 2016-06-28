@@ -14,7 +14,7 @@ Version:        2.4.1
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        1.1%{?dist}
 %endif
 Summary:        Plugin for importing data into GLPI
 Summary(fr):    Extension pour importer des données dans GLPI
@@ -22,9 +22,9 @@ Summary(fr):    Extension pour importer des données dans GLPI
 Group:          Applications/Internet
 License:        GPLv2+
 
-URL:            https://forge.indepnet.net/projects/datainjection
+URL:            https://forge.glpi-project.org/projects/datainjection
 %if 0%{?svnrelease}
-# svn export -r 703 https://forge.indepnet.net/svn/datainjection/trunk datainjection
+# svn export -r 703 https://forge.glpi-project.org/svn/datainjection/trunk datainjection
 # tar czf glpi-datainjection-2.2.0-703.tar.gz datainjection
 Source0:        glpi-datainjection-2.2.0-%{svnrelease}.tar.gz
 %else
@@ -121,6 +121,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 28 2016 Johan Cwiklinski <jcwiklinski AT teclib DOT com> - 2.4.1-1.1
+- Change URL
+
 * Wed Feb 24 2016 Remi Collet <Fedora@FamilleCollet.com> - 2.4.1-1
 - version 2.4.1 for GLPI 0.85/0.90
 
