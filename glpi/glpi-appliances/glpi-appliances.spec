@@ -9,8 +9,8 @@
 %global pluginname   appliances
 
 Name:           glpi-appliances
-Version:        1.9.1
-Release:        1.1%{?dist}
+Version:        2.1
+Release:        1%{?dist}
 Summary:        GLPI Plugin to manage appliances
 Summary(fr):    Extension GLPI de gestion des applicatifs
 
@@ -18,14 +18,14 @@ Group:          Applications/Internet
 License:        GPLv2+
 URL:            https://forge.glpi-project.org/projects/appliances
 
-Source0:        https://forge.glpi-project.org/attachments/download/1773/glpi-appliances-1.9.1.tar.gz
+Source0:        https://forge.glpi-project.org/attachments/download/2147/glpi-appliances-2.1.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
 
-Requires:       glpi >= 0.84
-Requires:       glpi <  0.85
+Requires:       glpi >= 0.90
+Requires:       glpi <  0.91
 
 
 %description
@@ -52,13 +52,13 @@ rm -rf %{pluginname}/tools
 
 cat >httpd <<EOF
 <Directory /usr/share/glpi/plugins/%{pluginname}/sql>
-	<IfModule mod_authz_core.c>
-		Require all denied
-	</IfModule>
-	<IfModule !mod_authz_core.c>
-		Order Allow,Deny
-		Deny from all
-	</IfModule>
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Allow,Deny
+        Deny from all
+    </IfModule>
 </Directory>
 EOF
 
@@ -108,6 +108,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 28 2016 Johan Cwiklinski <jcwiklinski AT teclib DOT com> - 2.1-1
+- Last upstream release
+- Clean rpmlint mixed tabs and spaces warning
+
 * Tue Jun 28 2016 Johan Cwiklinski <jcwiklinski AT teclib DOT com> - 1.9.1-1.1
 - Change URL and Source
 
