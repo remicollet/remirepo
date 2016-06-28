@@ -28,7 +28,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       4%{?github_release}%{?dist}
 Summary:       Composable algorithmic transformations
 
 Group:         Development/Libraries
@@ -48,7 +48,6 @@ BuildArch:     noarch
 BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language) >= %{php_min_ver}
 ## phpcompatinfo (computed from version 0.3.0)
-BuildRequires: php-ereg
 BuildRequires: php-json
 BuildRequires: php-spl
 %endif
@@ -56,7 +55,6 @@ BuildRequires: php-spl
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
 # phpcompatinfo (computed from version 0.3.0)
-Requires:      php-ereg
 Requires:      php-json
 Requires:      php-spl
 
@@ -108,6 +106,11 @@ sed -e 's/function testToTraversableReturnsStreamsIter/function SKIP_testToTrave
 
 %{_bindir}/phpunit \
     --bootstrap %{buildroot}%{phpdir}/%{composer_project}/autoload.php
+
+if which php56; then
+  php56 %{_bindir}/phpunit \
+    --bootstrap %{buildroot}%{phpdir}/%{composer_project}/autoload.php
+fi
 %else
 : Tests skipped
 %endif
@@ -128,6 +131,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon May 18 2015 Remi Collet <remi@fedoraproject.org> - 0.3.0-4
+- drop dependency on php-ereg (false positive)
+
 * Mon May 18 2015 Remi Collet <RPMS@FamilleCollet.com> - 0.3.0-1
 - add needed backport stuff for remi repository
 
