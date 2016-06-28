@@ -25,7 +25,7 @@ Name:          gd
 Name:          gd-last
 %endif
 Version:       2.2.2
-Release:       1%{?prever}%{?short}%{?dist}
+Release:       1%{?prever}%{?short}%{?dist}.1
 Group:         System Environment/Libraries
 License:       MIT
 URL:           http://libgd.github.io/
@@ -148,6 +148,10 @@ CFLAGS="$RPM_OPT_FLAGS -DDEFAULT_FONTPATH='\"\
 %if 0%{?rhel} == 5
 CFLAGS="$CFLAGS -fno-strict-aliasing"
 %endif
+%ifarch %{ix86}
+# see https://github.com/libgd/libgd/issues/242
+CFLAGS="$CFLAGS -msse -mfpmath=sse"
+%endif
 
 %configure \
     --with-tiff=%{_prefix} \
@@ -167,11 +171,6 @@ export XFAIL_TESTS="freetype/bug00132"
 %endif
 %if 0%{?rhel} > 0 && 0%{?rhel} <= 5
 export XFAIL_TESTS="gdimagestringft/gdimagestringft_bbox $XFAIL_TESTS"
-%else
-%ifarch %{ix86}
-# see https://github.com/libgd/libgd/issues/242
-export XFAIL_TESTS="gdimagerotate/bug00067 $XFAIL_TESTS"
-%endif
 %endif
 
 : Upstream test suite
@@ -207,6 +206,9 @@ grep %{version} $RPM_BUILD_ROOT%{_libdir}/pkgconfig/gdlib.pc
 
 
 %changelog
+* Tue Jun 28 2016 Remi Collet <remi@fedoraproject.org> - 2.2.2-1.1
+- use -msse -mfpmath=sse build options (x86-32)
+
 * Fri Jun 24 2016 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
 - Update to 2.2.2
 
