@@ -131,7 +131,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Mon May 18 2015 Remi Collet <remi@fedoraproject.org> - 0.3.0-4
+* Tue Jun 28 2016 Remi Collet <remi@fedoraproject.org> - 0.3.0-4
 - drop dependency on php-ereg (false positive)
 
 * Mon May 18 2015 Remi Collet <RPMS@FamilleCollet.com> - 0.3.0-1
