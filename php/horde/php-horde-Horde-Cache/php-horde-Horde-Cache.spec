@@ -13,7 +13,7 @@
 
 Name:           php-horde-Horde-Cache
 Version:        2.5.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Caching API
 
 Group:          Development/Libraries
@@ -28,7 +28,7 @@ BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
 # To run unit tests
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
-BuildRequires:  php-pecl(APC)
+#BuildRequires:  php-pecl(APC)
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -46,8 +46,13 @@ Requires:       php-pear(%{pear_channel}/Horde_Util) <  3.0.0
 # From package.xml, optional
 Requires:       php-pear(%{pear_channel}/Horde_HashTable) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_HashTable) <  2.0.0
+%if 0%{?fedora} > 21
+Suggests:       php-pear(%{pear_channel}/Horde_Mongo) >= 1.0.0
+Suggests:       php-pear(%{pear_channel}/Horde_Mongo) <  2.0.0
+%else
 Requires:       php-pear(%{pear_channel}/Horde_Mongo) >= 1.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mongo) <  2.0.0
+%endif
 # From phpcompatinfo report for version 2.5.0
 Requires:       php-date
 Requires:       php-spl
@@ -120,6 +125,9 @@ fi
 
 
 %changelog
+* Tue Jun 28 2016 Remi Collet <remi@fedoraproject.org> - 2.5.3-2
+- Horde_Mongo is optional
+
 * Fri Feb 19 2016 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
 - Update to 2.5.3
 - PHP 7 compatible version
