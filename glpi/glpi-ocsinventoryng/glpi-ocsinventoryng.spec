@@ -10,23 +10,23 @@
 %global lockname     ocsinventoryng.lock
 
 Name:           glpi-ocsinventoryng
-Version:        1.1.2
-Release:        1.1%{?dist}
+Version:        1.2.1
+Release:        1%{?dist}
 Summary:        Plugin to synchronize GLPI with OCS Inventory NG
 
 Group:          Applications/Internet
 License:        GPLv2+
 URL:            https://forge.glpi-project.org/projects/ocsinventoryng
 
-Source0:        https://forge.glpi-project.org/attachments/download/2094/glpi-ocsinventoryng-1.1.2.tar.gz
+Source0:        https://forge.glpi-project.org/attachments/download/2114/glpi-ocsinventoryng-1.2.1.tar.gz
 Source1:        %{name}-httpd.conf
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
 
-Requires:       glpi >= 0.85
-Requires:       glpi <  0.86
+Requires:       glpi >= 0.90
+Requires:       glpi <  0.91
 Requires:       crontabs
 Requires:       php-cli
 # phpcompatinfo for version 1.0.2
@@ -81,6 +81,10 @@ EOF
 # fix perms
 find %{pluginname} -type f -exec chmod -x {} \;
 chmod +x %{pluginname}/scripts/*.sh
+
+#Drop empty files
+rm -f %{pluginname}/locales/bg_BG.po
+rm -f %{pluginname}/locales/uk_UA.po
 
 
 %build
@@ -162,6 +166,9 @@ grep %{lockname} %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}/setup.php |
 
 
 %changelog
+* Tue Jun 28 2016 Johan Cwiklinski <jcwiklinski AT teclib DOT com> - 1.2.1-1
+- Last upstream release
+
 * Tue Jun 28 2016 Johan Cwiklinski <jcwiklinski AT teclib DOT com> - 1.1.2-1.1
 - Change URL
 
