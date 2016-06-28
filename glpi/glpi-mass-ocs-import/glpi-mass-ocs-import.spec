@@ -7,21 +7,21 @@ Version:        1.5.2
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        1.1%{?dist}
 %endif
 Summary:        GLPI Plugin for OCS Massive import
 Summary(fr):    Extension GLPI d'import en masse OCS
 
 Group:          Applications/Internet
 License:        GPLv2+
-URL:            https://forge.indepnet.net/projects/massocsimport
+URL:            https://forge.glpi-project.org/projects/massocsimport
 
 %if 0%{?svnrelease}
-# svn export -r 108 https://forge.indepnet.net/svn/massocsimport/trunk massocsimport
+# svn export -r 108 https://forge.glpi-project.org/svn/massocsimport/trunk massocsimport
 # tar czf glpi-massocsimport-1.5.0-108.tar.gz massocsimport
 Source0:        glpi-massocsimport-1.5.0-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/975/glpi-massocsimport-1.5.2.tar.gz
+Source0:        https://forge.glpi-project.org/attachments/download/975/glpi-massocsimport-1.5.2.tar.gz
 %endif
 
 
@@ -143,6 +143,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 28 2016 Johan Cwiklinski <jcwiklinski AT teclib DOT com> - 1.5.2-1.1
+- Change URL
+
 * Tue Sep 27 2011 Remi Collet <Fedora@FamilleCollet.com> - 1.5.2-1
 - version 1.5.1 released
   https://forge.indepnet.net/projects/massocsimport/versions/618

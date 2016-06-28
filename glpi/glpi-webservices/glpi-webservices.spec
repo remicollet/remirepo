@@ -14,17 +14,17 @@ Version:        1.6.0
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        1.1%{?dist}
 %endif
 Summary:        GLPI Plugin which provides web services
 Summary(fr):    Extension GLPI fournissant des services web
 
 Group:          Applications/Internet
 License:        GPLv2+
-URL:            https://forge.indepnet.net/projects/webservices
+URL:            https://forge.glpi-project.org/projects/webservices
 
 %if 0%{?svnrelease}
-# svn export -r 322 https://forge.indepnet.net/svn/webservices/trunk webservices
+# svn export -r 322 https://forge.glpi-project.org/svn/webservices/trunk webservices
 # tar czf glpi-webservices-1.3.0-322.tar.gz webservices
 Source0:        glpi-%{pluginname}-%{version}-%{svnrelease}.tar.gz
 %else
@@ -107,6 +107,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jun 28 2016 Johan Cwiklinski <jcwiklinski AT teclib DOT com> - 1.6.0-1.1
+- Change URL
+
 * Sat Oct  3 2015 Remi Collet <Fedora@FamilleCollet.com> - 1.6.0-1
 - version 1.6.0 for GLPI 0.85.3 and 0.90
   https://forge.glpi-project.org/versions/1176

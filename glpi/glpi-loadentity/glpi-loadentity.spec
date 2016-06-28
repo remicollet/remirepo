@@ -6,21 +6,21 @@ Version:        1.3.1
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        1.1%{?dist}
 %endif
 Summary:        GLPI Plugin for entity import
 Summary(fr):    Extension GLPI d'import d'une entité
 
 Group:          Applications/Internet
 License:        GPLv2+
-URL:            https://forge.indepnet.net/projects/loadentity
+URL:            https://forge.glpi-project.org/projects/loadentity
 
 %if 0%{?svnrelease}
-# svn export -r 57 https://forge.indepnet.net/svn/loadentity/trunk loadentity
+# svn export -r 57 https://forge.glpi-project.org/svn/loadentity/trunk loadentity
 # tar czf glpi-loadentity-1.2.0-57.tar.gz loadentity
 Source0:        glpi-loadentity-%{version}-%{svnrelease}.tar.gz
 %else
-Source0:        https://forge.indepnet.net/attachments/download/1215/glpi-loadentity-1.3.1.tar.gz
+Source0:        https://forge.glpi-project.org/attachments/download/1215/glpi-loadentity-1.3.1.tar.gz
 %endif
 
 
@@ -100,6 +100,9 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/%{pluginname}
 
 %changelog
+* Tue Jun 28 2016 Johan Cwiklinski <jcwiklinski AT teclib DOT com> - 1.3.1-1.1
+- Change URL and Source
+
 * Thu Jul 12 2012 Remi Collet <Fedora@FamilleCollet.com> - 1.3.1-1
 - version 1.3.1 for GLPI 0.83.3
   https://forge.indepnet.net/projects/loadentity/versions/788
