@@ -62,7 +62,7 @@ BuildArch: noarch
 
 Name:          %{?sub_prefix}php-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:       The flexible, fast, and secure template engine for PHP
 
 Group:         Development/Libraries
@@ -102,10 +102,12 @@ Requires:      %{?scl_prefix}php-mbstring
 Requires:      %{?scl_prefix}php-pcre
 Requires:      %{?scl_prefix}php-reflection
 Requires:      %{?scl_prefix}php-spl
+%if %{with_ext}
 # Ext
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api)      = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
+%endif
 
 # Lib
 ## Composer
@@ -115,17 +117,21 @@ Obsoletes:     %{?scl_prefix}php-twig-Twig < %{version}-%{release}
 Provides:      %{?scl_prefix}php-twig-Twig = %{version}-%{release}
 ## PEAR
 Provides:      %{?scl_prefix}php-pear(pear.twig-project.org/Twig) = %{version}
+%if %{with_ext}
 # Ext
 ## Rename
 Obsoletes:     %{?scl_prefix}php-twig-ctwig         < %{version}-%{release}
 Provides:      %{?scl_prefix}php-twig-ctwig         = %{version}-%{release}
 Provides:      %{?scl_prefix}php-twig-ctwig%{?_isa} = %{version}-%{release}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 ## Compat SCL (rh-php56)
 Provides:      %{?scl_prefix}php-twig         = %{version}-%{release}
 Provides:      %{?scl_prefix}php-twig%{?_isa} = %{version}-%{release}
+%endif
 ## PECL
 Provides:      %{?scl_prefix}php-pecl(pear.twig-project.org/CTwig)         = %{version}
 Provides:      %{?scl_prefix}php-pecl(pear.twig-project.org/CTwig)%{?_isa} = %{version}
+%endif
 
 # This pkg was the only one in this channel so the channel is no longer needed
 Obsoletes:     %{?scl_prefix}php-channel-twig
@@ -320,6 +326,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jun 27 2016 Remi Collet <remi@fedoraproject.org> - 1.24.1-2
+- fix dependency with PHP-7
+
 * Mon May 30 2016 Remi Collet <remi@fedoraproject.org> - 1.24.1-1
 - Update to 1.24.1
 - disable deprecation warning
