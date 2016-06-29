@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #196 couchbase version 2.2.0beta3 ] {
+Extension [ <persistent> extension #132 couchbase version 2.2.0beta4 ] {
 
   - Dependencies {
     Dependency [ json (Required) ]
@@ -132,8 +132,8 @@ Extension [ <persistent> extension #196 couchbase version 2.2.0beta3 ] {
     }
   }
 
-  - Classes [6] {
-    Class [ <internal:couchbase> class CouchbaseException extends Exception ] {
+  - Classes [7] {
+    Class [ <internal:couchbase> class CouchbaseException extends Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -152,7 +152,7 @@ Extension [ <persistent> extension #196 couchbase version 2.2.0beta3 ] {
       }
 
       - Methods [10] {
-        Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $message ]
@@ -164,28 +164,28 @@ Extension [ <persistent> extension #196 couchbase version 2.2.0beta3 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
@@ -201,11 +201,12 @@ Extension [ <persistent> extension #196 couchbase version 2.2.0beta3 ] {
       - Static methods [0] {
       }
 
-      - Properties [4] {
+      - Properties [5] {
         Property [ <default> public $error ]
         Property [ <default> public $value ]
         Property [ <default> public $flags ]
         Property [ <default> public $cas ]
+        Property [ <default> public $token ]
       }
 
       - Methods [0] {
@@ -223,10 +224,11 @@ Extension [ <persistent> extension #196 couchbase version 2.2.0beta3 ] {
       - Static methods [0] {
       }
 
-      - Properties [3] {
+      - Properties [4] {
         Property [ <default> public $error ]
         Property [ <default> public $cas ]
         Property [ <default> public $value ]
+        Property [ <default> public $token ]
       }
 
       - Methods [0] {
@@ -299,7 +301,7 @@ Extension [ <persistent> extension #196 couchbase version 2.2.0beta3 ] {
       - Properties [0] {
       }
 
-      - Methods [22] {
+      - Methods [23] {
         Method [ <internal:couchbase, ctor> public method __construct ] {
         }
 
@@ -342,6 +344,9 @@ Extension [ <persistent> extension #196 couchbase version 2.2.0beta3 ] {
         Method [ <internal:couchbase> public method http_request ] {
         }
 
+        Method [ <internal:couchbase> public method fts_request ] {
+        }
+
         Method [ <internal:couchbase> public method subdoc_request ] {
         }
 
@@ -365,6 +370,28 @@ Extension [ <persistent> extension #196 couchbase version 2.2.0beta3 ] {
 
         Method [ <internal:couchbase> public method getOption ] {
         }
+      }
+    }
+
+    Class [ <internal:couchbase> class CouchbaseMutationToken ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> public $bucket ]
+        Property [ <default> public $vbucketID ]
+        Property [ <default> public $vbucketUUID ]
+        Property [ <default> public $sequenceNumber ]
+      }
+
+      - Methods [0] {
       }
     }
   }

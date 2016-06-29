@@ -6,8 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-
-%{?scl:          %scl_package         php-pecl-couchbase2}
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%scl_package         php-pecl-couchbase2
+%endif
 
 %global pecl_name couchbase
 %global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
@@ -19,12 +25,12 @@
 # After 40-igbinary and 40-json
 %global ini_name  50-%{pecl_name}.ini
 %endif
-%global        prever beta3
+%global        prever beta4
 
 Summary:       Couchbase Server PHP extension
-Name:          %{?scl_prefix}php-pecl-couchbase2
+Name:          %{?sub_prefix}php-pecl-couchbase2
 Version:       2.2.0
-Release:       0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           pecl.php.net/package/couchbase
@@ -78,6 +84,10 @@ Obsoletes:     php56w-pecl-%{pecl_name}2 <= %{version}
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -228,6 +238,9 @@ fi
 
 
 %changelog
+* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.3.beta4
+- Update to 2.2.0beta4 (php 5 and 7, beta)
+
 * Thu May 26 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.2.beta3
 - Update to 2.2.0beta3 (php 5 and 7, beta)
 

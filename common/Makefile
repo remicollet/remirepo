@@ -97,6 +97,13 @@ devsrc:
 php7src:
 	spectool -g -S $(NAME)-php7.spec
 
+php5build:
+	@if test -f $(NAME)-dev.spec ; then \
+		time rpmbuild $(RPMDEFINES) --define "scl php56" --without zts -bb $(NAME)-dev.spec ; \
+	else \
+		time rpmbuild $(RPMDEFINES) --define "scl php56" --without zts -bb $(NAME).spec ; \
+	fi
+
 php7build:
 	@if test -f $(NAME)-php7.spec ; then \
 		time rpmbuild $(RPMDEFINES) --define "scl php70" --without zts -bb $(NAME)-php7.spec ; \
