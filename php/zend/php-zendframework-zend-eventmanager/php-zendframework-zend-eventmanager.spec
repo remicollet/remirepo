@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    3d41b6129fb4916d483671cea9f77e4f90ae85d3
+%global gh_commit    5c80bdee0e952be112dcec0968bad770082c3a6e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-eventmanager
@@ -20,9 +20,9 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.3
+Version:        3.0.1
 Release:        1%{?dist}
-Summary:        Zend Framework %{library} component
+Summary:        Trigger and listen to events within a PHP application
 
 Group:          Development/Libraries
 License:        BSD
@@ -38,21 +38,29 @@ BuildRequires:  php(language) >= 5.5
 BuildRequires:  php-spl
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)      >= 2.5
 # From composer, "require-dev": {
-#        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0",
-#        "athletic/athletic": "dev-master"
+#        "athletic/athletic": "^0.1",
+#        "squizlabs/php_codesniffer": "^2.0",
+#        "zendframework/zend-stdlib": "^2.7.3 || ^3.0",
+#        "container-interop/container-interop": "^1.1.0"
 BuildRequires:  php-composer(phpunit/phpunit)              >= 4.0
+BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)      >= 2.7.3
+BuildRequires:  php-composer(container-interop/container-interop) >= 1.1.0
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)      >= 2.5
 %endif
 
 # From composer, "require": {
 #        "php": "^5.5 || ^7.0",
-#        "zendframework/zend-stdlib": "^2.7"
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
-Requires:       php-composer(%{gh_owner}/zend-stdlib)      >= 2.7
-Requires:       php-composer(%{gh_owner}/zend-stdlib)      <  3
+# From composer, "suggest": {
+#        "container-interop/container-interop": "^1.1.0, to use the lazy listeners feature",
+#        "zendframework/zend-stdlib": "^2.7.3 || ^3.0, to use the FilterChain feature"
+%if 0%{?fedora} >= 21
+Suggests:       php-composer(container-interop/container-interop)
+Suggests:       php-composer(%{gh_owner}/zend-stdlib)
+%endif
 %endif
 # From phpcompatinfo report for version 2.5.2
 Requires:       php-spl
@@ -106,11 +114,22 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
-
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
 fi
+if which php71; then
+   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -130,6 +149,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
+- update to 3.0.1 for ZendFramework 3
+- dependency on zend-stdlib is optional
+
 * Fri Feb 19 2016 Remi Collet <remi@fedoraproject.org> - 2.6.3-1
 - update to 2.6.3
 - raise dependency on zend-stdlib >= 2.7
