@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        3.0.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -29,6 +29,9 @@ License:        BSD
 URL:            https://framework.zend.com/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
+
+# see https://github.com/zendframework/zend-code/pull/80
+Patch0:         %{name}-pr80.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -94,6 +97,8 @@ Documentation: https://zendframework.github.io/%{gh_project}/
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+%patch0 -p1
+
 
 %build
 # Empty build section, nothing required
@@ -156,6 +161,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-2
+- add patch for ocramius/proxy-manager
+  https://github.com/zendframework/zend-code/pull/80
+
 * Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
 - update to 3.0.0 for ZendFramework 3
 
