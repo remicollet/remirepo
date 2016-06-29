@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    f4358090d5d23973121f1ed0b376184b66d9edec
+%global gh_commit    fda3b4e6c3bb15c35adc6db38b2eacabaa243e65
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-math
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.0
+Version:        3.0.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -40,35 +40,40 @@ BuildRequires:  php-gmp
 BuildRequires:  php-openssl
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
+BuildRequires:  php-composer(paragonie/random_compat)
 # test suite hangs without (need investigation)
 BuildRequires:  php-mcrypt
 # From composer, "require-dev": {
 #        "fabpot/php-cs-fixer": "1.7.*",
-#        "ircmaxell/random-lib": "~1.1",
 #        "phpunit/PHPUnit": "~4.0",
 #        "zendframework/zend-servicemanager": "~2.5"
 BuildRequires:  php-composer(ircmaxell/random-lib)              >= 1.1
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
-BuildRequires:  php-composer(%{gh_owner}/zend-loader) >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
+# For dependencies autoloader
+BuildRequires:  php-zendframework-zend-loader                   >= 2.5.1-3
 %endif
 
 # From composer, "require": {
-#        "php": "^5.5 || ^7.0"
+#        "php": "^5.5 || ^7.0",
+#        "ext-mbstring": "*",
+#        "paragonie/random_compat": "^2.0.2"
 Requires:       php(language) >= 5.5
+Requires:       php-mbstring
+# ignore min version
+Requires:       php-composer(paragonie/random_compat)
 # From phpcompatinfo report for version 2.5.2
 Requires:       php-openssl
 Requires:       php-pcre
 Requires:       php-spl
+Requires:       php-zendframework-zend-loader                   >= 2.5.1-3
 %if ! %{bootstrap}
 # From composer, "suggest": {
 #        "ext-bcmath": "If using the bcmath functionality",
 #        "ext-gmp": "If using the gmp functionality",
-#        "ircmaxell/random-lib": "Fallback random byte generator for Zend\\Math\\Rand if Mcrypt extensions is unavailable"
 Requires:       php-bcmath
 Requires:       php-gmp
-# Mandatory as we don't want mcrypt
-Requires:       php-composer(ircmaxell/random-lib)
 # Autoloader
 Requires:       php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
@@ -90,6 +95,12 @@ Documentation: https://zendframework.github.io/%{gh_project}/
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+: Create dependency autoloader
+cat << 'EOF' | tee autoload.php
+<?php
+require_once '%{php_home}/random_compat/autoload.php';
+EOF
+
 
 %build
 # Empty build section, nothing required
@@ -101,12 +112,16 @@ rm -rf %{buildroot}
 mkdir -p   %{buildroot}%{php_home}/Zend/
 cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 
+install -m644 autoload.php %{buildroot}%{php_home}/Zend/%{library}-autoload.php
+
 
 %check
 %if %{with_tests}
 mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
+define('RPM_BUILDROOT', '%{buildroot}%{php_home}/Zend');
+
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
 Zend\Loader\AutoloaderFactory::factory(array(
     'Zend\Loader\StandardAutoloader' => array(
@@ -117,12 +132,22 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
-
-# remirepo:3
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
 fi
+if which php71; then
+   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -139,9 +164,16 @@ rm -rf %{buildroot}
 %doc CONTRIBUTING.md README.md
 %doc composer.json
 %{php_home}/Zend/%{library}
+%{php_home}/Zend/%{library}-autoload.php
 
 
 %changelog
+* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- update to 3.0.0 for ZendFramework 3
+- add dependencies autoloader
+- add dependency on paragonie/random_compat
+- drop dependency on ircmaxell/random-lib
+
 * Fri Apr  8 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
 - update to 2.7.0
 - add mandatory dependency on ircmaxell/random-lib
