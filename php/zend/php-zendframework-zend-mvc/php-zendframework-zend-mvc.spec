@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    9b705d5d5c7ed3808f8d52b440f612d9dc28c395
+%global gh_commit    dc9926ae85798c6765ae4124a19ec24a2e50f6cb
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-mvc
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.10
+Version:        3.0.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -34,128 +34,84 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.5
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-reflection
 BuildRequires:  php-intl
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
-BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6.2
-BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
-BuildRequires:  php-composer(%{gh_owner}/zend-hydrator)         >= 1.1
-BuildRequires:  php-composer(%{gh_owner}/zend-form)             >= 2.7
-BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7.5
-BuildRequires:  php-composer(%{gh_owner}/zend-psr7bridge)       >= 0.2
+BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 3.0
+BuildRequires:  php-composer(%{gh_owner}/zend-http)             >= 2.5.4
+BuildRequires:  php-composer(%{gh_owner}/zend-modulemanager)    >= 2.7.1
+BuildRequires:  php-composer(%{gh_owner}/zend-router)           >= 3.0.1
+BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 3.0.3
+BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 3.0
+BuildRequires:  php-composer(%{gh_owner}/zend-view)             >= 2.6.7
 BuildRequires:  php-composer(container-interop/container-interop) >= 1.1
 # From composer, "require-dev": {
-#        "zendframework/zend-authentication": "^2.5.3",
-#        "zendframework/zend-cache": "^2.6.1",
-#        "zendframework/zend-console": "^2.6",
-#        "zendframework/zend-di": "^2.6",
-#        "zendframework/zend-filter": "^2.6.1",
-#        "zendframework/zend-http": "^2.5.4",
-#        "zendframework/zend-i18n": "^2.6",
-#        "zendframework/zend-inputfilter": "^2.6",
-#        "zendframework/zend-json": "^2.6.1",
-#        "zendframework/zend-log": "^2.7.1",
-#        "zendframework/zend-modulemanager": "^2.7.1",
-#        "zendframework/zend-session": "^2.6.2",
-#        "zendframework/zend-serializer": "^2.6.1",
-#        "zendframework/zend-text": "^2.6",
-#        "zendframework/zend-uri": "^2.5",
-#        "zendframework/zend-validator": "^2.6",
-#        "zendframework/zend-version": "^2.5",
-#        "zendframework/zend-view": "^2.6.3",
-#        "friendsofphp/php-cs-fixer": "1.7.*",
-#        "phpunit/PHPUnit": "^4.5",
-#        "sebastian/version": "^1.0.4"
-BuildRequires:  php-composer(%{gh_owner}/zend-authentication)   >= 2.5.3
-BuildRequires:  php-composer(%{gh_owner}/zend-cache)            >= 2.6.1
-BuildRequires:  php-composer(%{gh_owner}/zend-console)          >= 2.6
-BuildRequires:  php-composer(%{gh_owner}/zend-di)               >= 2.6
-BuildRequires:  php-composer(%{gh_owner}/zend-filter)           >= 2.6.1
-BuildRequires:  php-composer(%{gh_owner}/zend-http)             >= 2.5.4
-BuildRequires:  php-composer(%{gh_owner}/zend-i18n)             >= 2.6
-BuildRequires:  php-composer(%{gh_owner}/zend-inputfilter)      >= 2.6
+#        "zendframework/zend-json": "^2.6.1 || ^3.0",
+#        "zendframework/zend-psr7bridge": "^0.2",
+#        "fabpot/php-cs-fixer": "1.7.*",
+#        "phpunit/phpunit": "^4.5"
 BuildRequires:  php-composer(%{gh_owner}/zend-json)             >= 2.6.1
-BuildRequires:  php-composer(%{gh_owner}/zend-log)              >= 2.7.1
-BuildRequires:  php-composer(%{gh_owner}/zend-modulemanager)    >= 2.7.1
-BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.6.2
-BuildRequires:  php-composer(%{gh_owner}/zend-serializer)       >= 2.6.1
-BuildRequires:  php-composer(%{gh_owner}/zend-text)             >= 2.6
-BuildRequires:  php-composer(%{gh_owner}/zend-uri)              >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-validator)        >= 2.6
-BuildRequires:  php-composer(%{gh_owner}/zend-version)          >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-view)             >= 2.6.3
+BuildRequires:  php-composer(%{gh_owner}/zend-psr7bridge)       >= 0.2
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.5
-BuildRequires:  php-composer(sebastian/version)                 >= 1.0.4
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
+# For dependencies autoloader
+BuildRequires:  php-zendframework-zend-loader                   >= 2.5.1-3
 %endif
 
 # From composer, "require": {
-#        "php": "^5.5 || ^7.0",
-#        "zendframework/zend-eventmanager": "^2.6.2 || ^3.0",
-#        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
-#        "zendframework/zend-hydrator": "^1.1 || ^2.1",
-#        "zendframework/zend-form": "^2.7",
-#        "zendframework/zend-stdlib": "^2.7.5 || ^3.0",
-#        "zendframework/zend-psr7bridge": "^0.2",
-#        "container-interop/container-interop": "^1.1"
-Requires:       php(language) >= 5.5
+#        "php": "^5.6 || ^7.0",
+#        "zendframework/zend-eventmanager": "^3.0",
+#        "zendframework/zend-http": "^2.5.4",
+#        "zendframework/zend-modulemanager": "^2.7.1",
+#        "zendframework/zend-router": "^3.0.1",
+#        "zendframework/zend-servicemanager": "^3.0.3",
+#        "zendframework/zend-stdlib": "^3.0",
+#        "zendframework/zend-view": "^2.6.7",
+Requires:       php(language) >= 5.6
 %if ! %{bootstrap}
-Requires:       php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6.2
+Requires:       php-composer(%{gh_owner}/zend-eventmanager)     >= 3.0
 Requires:       php-composer(%{gh_owner}/zend-eventmanager)     <  4
-Requires:       php-composer(%{gh_owner}/zend-servicemanager)   >= 2.7.5
+Requires:       php-composer(%{gh_owner}/zend-http)             >= 2.5.4
+Requires:       php-composer(%{gh_owner}/zend-http)             <  3
+Requires:       php-composer(%{gh_owner}/zend-modulemanager)    >= 2.7.1
+Requires:       php-composer(%{gh_owner}/zend-modulemanager)    <  3
+Requires:       php-composer(%{gh_owner}/zend-router)           >= 3.0.1
+Requires:       php-composer(%{gh_owner}/zend-router)           <  4
+Requires:       php-composer(%{gh_owner}/zend-servicemanager)   >= 3.0.3
 Requires:       php-composer(%{gh_owner}/zend-servicemanager)   <  4
-Requires:       php-composer(%{gh_owner}/zend-hydrator)         >= 1.1
-Requires:       php-composer(%{gh_owner}/zend-hydrator)         <  3
-Requires:       php-composer(%{gh_owner}/zend-form)             >= 2.7
-Requires:       php-composer(%{gh_owner}/zend-form)             <  3
-Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7.5
+Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 3.0
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
-Requires:       php-composer(%{gh_owner}/zend-psr7bridge)       >= 0.2
-Requires:       php-composer(%{gh_owner}/zend-psr7bridge)       <  1
+Requires:       php-composer(%{gh_owner}/zend-view)             >= 2.6.7
+Requires:       php-composer(%{gh_owner}/zend-http)             <  3
 Requires:       php-composer(container-interop/container-interop) >= 1.1
 Requires:       php-composer(container-interop/container-interop) <  2
 # From composer, "suggest": {
-#        "zendframework/zend-authentication": "Zend\\Authentication component for Identity plugin",
-#        "zendframework/zend-config": "Zend\\Config component",
-#        "zendframework/zend-console": "Zend\\Console component",
-#        "zendframework/zend-di": "Zend\\Di component",
-#        "zendframework/zend-filter": "Zend\\Filter component",
-#        "zendframework/zend-http": "Zend\\Http component",
-#        "zendframework/zend-i18n": "Zend\\I18n component for translatable segments",
-#        "zendframework/zend-inputfilter": "Zend\\Inputfilter component",
-#        "zendframework/zend-json": "Zend\\Json component",
-#        "zendframework/zend-log": "Zend\\Log component",
-#        "zendframework/zend-modulemanager": "Zend\\ModuleManager component",
-#        "zendframework/zend-serializer": "Zend\\Serializer component",
-#        "zendframework/zend-servicemanager-di": "^1.0.1, if using zend-servicemanager v3 and requiring the zend-di integration",
-#        "zendframework/zend-session": "Zend\\Session component for FlashMessenger, PRG, and FPRG plugins",
-#        "zendframework/zend-text": "Zend\\Text component",
-#        "zendframework/zend-uri": "Zend\\Uri component",
-#        "zendframework/zend-validator": "Zend\\Validator component",
-#        "zendframework/zend-version": "Zend\\Version component",
-#        "zendframework/zend-view": "Zend\\View component"
+#        "zendframework/zend-json": "(^2.6.1 || ^3.0) To auto-deserialize JSON body content in AbstractRestfulController extensions, when json_decode is unavailable",
+#        "zendframework/zend-mvc-console": "zend-mvc-console provides the ability to expose zend-mvc as a console application",
+#        "zendframework/zend-mvc-i18n": "zend-mvc-i18n provides integration with zend-i18n, including a translation bridge and translatable route segments",
+#        "zendframework/zend-mvc-plugin-fileprg": "To provide Post/Redirect/Get functionality around forms that container file uploads",
+#        "zendframework/zend-mvc-plugin-flashmessenger": "To provide flash messaging capabilities between requests",
+#        "zendframework/zend-mvc-plugin-identity": "To access the authenticated identity (per zend-authentication) in controllers",
+#        "zendframework/zend-mvc-plugin-prg": "To provide Post/Redirect/Get functionality within controllers",
+#        "zendframework/zend-psr7bridge": "(^0.2) To consume PSR-7 middleware within the MVC workflow",
+#        "zendframework/zend-servicemanager-di": "zend-servicemanager-di provides utilities for integrating zend-di and zend-servicemanager in your zend-mvc application"
 %if 0%{?fedora} >= 21
-Suggests:       php-composer(%{gh_owner}/zend-authentication)
-Suggests:       php-composer(%{gh_owner}/zend-config)
-Suggests:       php-composer(%{gh_owner}/zend-console)
-Suggests:       php-composer(%{gh_owner}/zend-di)
-Suggests:       php-composer(%{gh_owner}/zend-filter)
-Suggests:       php-composer(%{gh_owner}/zend-i18n)
-Suggests:       php-composer(%{gh_owner}/zend-inputfilter)
 Suggests:       php-composer(%{gh_owner}/zend-json)
-Suggests:       php-composer(%{gh_owner}/zend-log)
-Suggests:       php-composer(%{gh_owner}/zend-modulemanager)
-Suggests:       php-composer(%{gh_owner}/zend-serializer)
-Suggests:       php-composer(%{gh_owner}/zend-session)
-Suggests:       php-composer(%{gh_owner}/zend-text)
-Suggests:       php-composer(%{gh_owner}/zend-uri)
-Suggests:       php-composer(%{gh_owner}/zend-validator)
-Suggests:       php-composer(%{gh_owner}/zend-version)
-Suggests:       php-composer(%{gh_owner}/zend-view)
+Suggests:       php-composer(%{gh_owner}/zend-mvc-console)
+Suggests:       php-composer(%{gh_owner}/zend-mvc-i18n)
+Suggests:       php-composer(%{gh_owner}/zend-mvc-plugin-fileprg)
+Suggests:       php-composer(%{gh_owner}/zend-mvc-plugin-flashmessenger)
+Suggests:       php-composer(%{gh_owner}/zend-mvc-plugin-identity)
+Suggests:       php-composer(%{gh_owner}/zend-mvc-plugin-prg)
+Suggests:       php-composer(%{gh_owner}/zend-psr7bridge)
+Suggests:       php-composer(%{gh_owner}/zend-servicemanager-di)
 %endif
+# Autoloader
+Requires:       php-composer(%{gh_owner}/zend-loader)           >= 2.5
+Requires:       php-zendframework-zend-loader                   >= 2.5.1-3
 %endif
 # From phpcompatinfo report for version 2.7.0
 Requires:       php-reflection
@@ -190,6 +146,13 @@ Documentation: https://zendframework.github.io/%{gh_project}/
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+: Create dependency autoloader
+cat << 'EOF' | tee autoload.php
+<?php
+require_once '%{php_home}/Interop/Container/autoload.php';
+EOF
+
+
 
 %build
 # Empty build section, nothing required
@@ -201,12 +164,16 @@ rm -rf %{buildroot}
 mkdir -p   %{buildroot}%{php_home}/Zend/
 cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 
+install -m644 autoload.php %{buildroot}%{php_home}/Zend/%{library}-autoload.php
+
 
 %check
 %if %{with_tests}
 mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
+define('RPM_BUILDROOT', '%{buildroot}%{php_home}/Zend');
+
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
 Zend\Loader\AutoloaderFactory::factory(array(
     'Zend\Loader\StandardAutoloader' => array(
@@ -217,11 +184,22 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
-
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
 fi
+if which php71; then
+   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -238,9 +216,20 @@ rm -rf %{buildroot}
 %doc CHANGELOG.md CONDUCT.md CONTRIBUTING.md README.md
 %doc composer.json
 %{php_home}/Zend/%{library}
+%{php_home}/Zend/%{library}-autoload.php
 
 
 %changelog
+* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
+- update to 3.0.1 for ZendFramework 3
+- raise dependency on PHP 5.6
+- raise dependency on zend-eventmanager 3.0
+- raise dependency on zend-stdlib 3.0
+- raise dependency on zend-servicemanager 3.0.3
+- add dependencies on zend-http, zend-modulemanager, zend-router, zend-view
+- drop dependencies on zend-hydrator, zend-form, zend-psr7bridge
+- add dependencies autoloader
+
 * Tue Jun 14 2016 Remi Collet <remi@fedoraproject.org> - 2.7.10-1
 - update to 2.7.10
 
