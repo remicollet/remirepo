@@ -26,7 +26,7 @@ Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
 License:        BSD
-URL:            http://framework.zend.com/
+URL:            https://framework.zend.com/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
 
@@ -156,11 +156,22 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
-
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
 fi
+if which php71; then
+   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif

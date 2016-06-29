@@ -18,7 +18,7 @@ Summary:        Zend Framework Mvc-%{library} component
 
 Group:          Development/Libraries
 License:        BSD
-URL:            http://framework.zend.com/
+URL:            https://framework.zend.com/
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{name}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root

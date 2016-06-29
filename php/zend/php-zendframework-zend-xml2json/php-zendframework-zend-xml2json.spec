@@ -26,7 +26,7 @@ Summary:        Provides functionality for converting XML to JSON
 
 Group:          Development/Libraries
 License:        BSD
-URL:            https://zendframework.github.io/%{gh_project}
+URL:            https://framework.zend.com/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
 
@@ -120,7 +120,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE.md
-%doc CONTRIBUTING.md README.md
+%doc CHANGELOG.md CONDUCT.md CONTRIBUTING.md README.md
 %doc composer.json
 %{php_home}/Zend/%{library}
 

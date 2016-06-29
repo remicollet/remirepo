@@ -26,7 +26,7 @@ Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
 License:        BSD
-URL:            http://framework.zend.com/
+URL:            https://framework.zend.com/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
 
