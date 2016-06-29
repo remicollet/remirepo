@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    0e44eb46788f65e09e077eb7f44d2659143bcc1f
+%global gh_commit    8bafa58574204bdff03c275d1d618aaa601588ae
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-stdlib
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.7
+Version:        3.0.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -44,21 +44,9 @@ BuildRequires:  php-pcre
 BuildRequires:  php-reflection
 BuildRequires:  php-spl
 # From composer, "require-dev": {
-#        "zendframework/zend-config": "~2.5",
-#        "zendframework/zend-eventmanager": "~2.5",
-#        "zendframework/zend-inputfilter": "~2.5",
-#        "zendframework/zend-serializer": "~2.5",
-#        "zendframework/zend-servicemanager": "~2.5",
-#        "zendframework/zend-filter": "~2.5",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0",
 #        "athletic/athletic": "~0.1"
-BuildRequires:  php-composer(%{gh_owner}/zend-config)           >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-inputfilter)      >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-serializer)       >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-filter)           >= 2.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
@@ -66,23 +54,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 
 # From composer, "require": {
 #        "php": "^5.5 || ^7.0",
-#        "zendframework/zend-hydrator": "~1.1"
 Requires:       php(language) >= 5.5
-Requires:       php-composer(%{gh_owner}/zend-hydrator)         >= 1.1
-Requires:       php-composer(%{gh_owner}/zend-hydrator)         <  2
-%if ! %{bootstrap}
-# From composer, "suggest": {
-#        "zendframework/zend-eventmanager": "To support aggregate hydrator usage",
-#        "zendframework/zend-serializer": "Zend\\Serializer component",
-#        "zendframework/zend-servicemanager": "To support hydrator plugin manager usage",
-#        "zendframework/zend-filter": "To support naming strategy hydrator usage"
-%if 0%{?fedora} >= 21
-Suggests:       php-composer(%{gh_owner}/zend-eventmanager)
-Suggests:       php-composer(%{gh_owner}/zend-serializer)
-Suggests:       php-composer(%{gh_owner}/zend-servicemanager)
-Suggests:       php-composer(%{gh_owner}/zend-filter)
-%endif
-%endif
 # From phpcompatinfo report for version 2.7.4
 Requires:       php-date
 Requires:       php-iconv
@@ -142,11 +114,22 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
-
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
 fi
+if which php71; then
+   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -166,6 +149,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
+- update to 3.0.1 for ZendFramework 3
+- drop dependency on zend-hydrator
+
 * Wed Apr 13 2016 Remi Collet <remi@fedoraproject.org> - 2.7.7-1
 - update to 2.7.7
 
