@@ -1,4 +1,4 @@
-# remirepo/Fedora spec file for php-zendframework-zend-mvc-plugin-flashmessenger
+# remirepo/Fedora spec file for php-zendframework-zend-mvc-plugin-prg
 #
 # Copyright (c) 2016 Remi Collet
 # License: CC-BY-SA
@@ -7,12 +7,12 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    712bffa12c955a06d1e4303ab90026486b5b8586
+%global gh_commit    8c7ccb9f0004e92ff258b483447d914f42cb7448
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
-%global gh_project   zend-mvc-plugin-flashmessenger
+%global gh_project   zend-mvc-plugin-prg
 %global php_home     %{_datadir}/php
-%global library      FlashMessenger
+%global library      Prg
 %if %{bootstrap}
 %global with_tests   0%{?_with_tests:1}
 %else
@@ -38,7 +38,6 @@ BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-composer(%{gh_owner}/zend-mvc)                >= 3.0
 BuildRequires:  php-composer(%{gh_owner}/zend-session)            >= 2.6.2
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)             >= 2.7.5
-BuildRequires:  php-spl
 # From composer, "require-dev": {
 #        "phpunit/PHPUnit": "^4.5",
 #        "squizlabs/php_codesniffer": "^2.3.1"
@@ -62,7 +61,7 @@ Requires:       php-composer(%{gh_owner}/zend-session)            <  3
 Requires:       php-composer(%{gh_owner}/zend-stdlib)             >= 2.7
 Requires:       php-composer(%{gh_owner}/zend-stdlib)             <  4
 # From phpcompatinfo report for version 1.0.0
-Requires:       php-spl
+# Nothing
 %if ! %{bootstrap}
 # Autoloader
 Requires:       php-composer(%{gh_owner}/zend-loader)           >= 2.5
@@ -72,16 +71,11 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 
 %description
-Flash messages derive from Rails, and are used to expose messages from one
-action to the next, after which they are cleared; a typical use case is with
-Post/Redirect/Get, where they are created in the POST handler, and then
-displayed by the GET handler to indicate success or failure to the end-user.
+Provides a Post-Redirect-Get controller plugin for zend-mvc versions 3.0
+and up.
 
-This component provides a flash messenger controller plugin for zend-mvc
-versions 3.0 and up.
-
-* Issues at https://github.com/zendframework/zend-mvc-plugin-flashmessenger/issues
-* Documentation is at https://zendframework.github.io/zend-mvc-plugin-flashmessenger/
+* Issues at https://github.com/zendframework/zend-mvc-plugin-prg/issues
+* Documentation is at https://zendframework.github.io/zend-mvc-plugin-prg/
 
 
 %prep

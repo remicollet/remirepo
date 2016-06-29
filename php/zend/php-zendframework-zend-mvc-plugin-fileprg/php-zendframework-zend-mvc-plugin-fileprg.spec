@@ -93,7 +93,7 @@ and up, specifically for submissions that include file uploads.
 
 If you want a generic PRG plugin without file upload support, see zend-mvc-plugin-prg.
 
-* File issues at https://github.com/zendframework/zend-mvc-plugin-fileprg/issues
+* Issues at https://github.com/zendframework/zend-mvc-plugin-fileprg/issues
 * Documentation is at https://zendframework.github.io/zend-mvc-plugin-fileprg/
 
 

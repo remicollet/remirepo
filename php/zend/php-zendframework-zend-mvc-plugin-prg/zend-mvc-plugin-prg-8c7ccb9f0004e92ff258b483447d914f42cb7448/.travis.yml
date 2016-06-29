@@ -1,0 +1,86 @@
+sudo: false
+
+language: php
+
+branches:
+  except:
+    - /^release-.*$/
+    - /^ghgfk-.*$/
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+    - $HOME/.local
+    - zf-mkdoc-theme
+
+env:
+  global:
+    - COMPOSER_ARGS="--no-interaction --ignore-platform-reqs"
+    - SITE_URL=https://zendframework.github.io/zend-mvc-plugin-prg
+    - GH_USER_NAME="Matthew Weier O'Phinney"
+    - GH_USER_EMAIL=matthew@weierophinney.net
+    - GH_REF=github.com/zendframework/zend-mvc-plugin-prg.git
+    - secure: "fA5rOTwEEphRdaCZ3eJBDNz5NpaO3oe8+wPjM0wdERyxQxj/eKMUQlje+TSOnlgYb/PlR5szAMJWAPrRBOuHaV2VGRAn38Ho/bTaU0tHCH4stbvg4sV4MjBYUuyclWYh7wXDs7NiwJGc0rwX5cLpSmcUD+A+cqabXFxQuzKNZrVpqHpdvMwk2uk/5DxCP+2kD4klkEEAY/wyaCY+3LBYzLU/0f9RhSAPWWAnf3XoSBCyqb2LlqzrltucDRx3h1Sy5R4CwTd90D6DIRPGIfx1sSfX9oktuv3ztUBPd3wxjfioG1mMcbFb/YC/YLqp2l0DThSEvyS26gXxhbW5M1ng9ZYH++w/Ij13tcKgKJ+aoKocpfsl1PyqpdDio8FROID8T87e6NfsgB7fevu7MepFHJwWohyu1RSqFx4lXcwviLqIxlTH8r3/yOwSUs1QRIRK05DwqF0AFL4JDkCaAlnImmaP5XPN0wf9S3Y2Od3Y2JSaW2s34T4QeoEKR5zvmRStzxVeLTlcEjRzxHr4YMYNDHWVDSelH+2RshowIwFXoKcQAX18PFJma2LTP07KmuWr9U9MRU6sXti8yVyjH+QQWzUtSndst2xXZ5lwnGNFag5pOMZnRAAAbgXSaoLnYIMiT18AmWRNTD9TE84i0NY0JwoO4xQokxy+mMGwvhEcMSk="
+
+matrix:
+  fast_finish: true
+  include:
+    - php: 5.6
+      env:
+        - DEPS=lowest
+    - php: 5.6
+      env:
+        - DEPS=locked
+        - TEST_COVERAGE=true
+        - DEPLOY_DOCS="$(if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then echo -n 'true' ; else echo -n 'false' ; fi)"
+        - PATH="$HOME/.local/bin:$PATH"
+    - php: 5.6
+      env:
+        - DEPS=latest
+    - php: 7
+      env:
+        - DEPS=lowest
+    - php: 7
+      env:
+        - DEPS=locked
+        - CHECK_CS=true
+    - php: 7
+      env:
+        - DEPS=latest
+    - php: hhvm
+      env:
+        - DEPS=lowest
+    - php: hhvm
+      env:
+        - DEPS=locked
+    - php: hhvm
+      env:
+        - DEPS=latest
+  allow_failures:
+    - php: hhvm
+
+notifications:
+  irc: "irc.freenode.org#zftalk.dev"
+  email: false
+
+before_install:
+  - travis_retry composer self-update
+  - if [[ $TRAVIS_PHP_VERSION != "hhvm" && $TEST_COVERAGE != 'true' ]]; then phpenv config-rm xdebug.ini ; fi
+
+install:
+  - if [[ $DEPS == 'latest' ]]; then travis_retry composer update $COMPOSER_ARGS ; fi
+  - if [[ $DEPS == 'lowest' ]]; then travis_retry composer update --prefer-lowest --prefer-stable $COMPOSER_ARGS ; fi
+  - if [[ $TEST_COVERAGE == 'true' ]]; then travis_retry composer require --no-update --dev $COMPOSER_ARGS satooshi/php-coveralls ; fi
+  - travis_retry composer install $COMPOSER_ARGS
+  - composer show --installed
+
+script:
+  - if [[ $TEST_COVERAGE == 'true' ]]; then composer test-coverage ; else composer test ; fi
+  - if [[ $CHECK_CS == 'true' ]]; then composer cs-check ; fi
+  - if [[ $DEPLOY_DOCS == "true" && "$TRAVIS_TEST_RESULT" == "0" ]]; then travis_retry curl -sSL https://raw.githubusercontent.com/zendframework/zf-mkdoc-theme/master/theme-installer.sh | bash ; fi
+
+after_script:
+  - if [[ $TEST_COVERAGE == 'true' ]]; then travis_retry composer upload-coverage ; fi
+
+after_success:
+  - if [[ $DEPLOY_DOCS == "true" ]]; then ./zf-mkdoc-theme/deploy.sh ; fi
