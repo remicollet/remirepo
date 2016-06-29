@@ -1,0 +1,54 @@
+{
+    "name":              "ocramius/proxy-manager",
+    "description":       "A library providing utilities to generate, instantiate and generally operate with Object Proxies",
+    "type":              "library",
+    "license":           "MIT",
+    "homepage":          "https://github.com/Ocramius/ProxyManager",
+    "keywords":          [
+        "proxy",
+        "proxy pattern",
+        "service proxies",
+        "lazy loading",
+        "aop"
+    ],
+    "authors": [
+        {
+            "name":     "Marco Pivetta",
+            "email":    "ocramius@gmail.com",
+            "homepage": "http://ocramius.github.io/"
+        }
+    ],
+    "require": {
+        "php":                       "7.0.0 - 7.0.5 || ^7.0.7",
+        "zendframework/zend-code":   "~3.0",
+        "ocramius/package-versions": "^1.0"
+    },
+    "require-dev": {
+        "ext-phar":                    "*",
+        "phpunit/phpunit":             "^5.1.3",
+        "squizlabs/php_codesniffer":   "^2.5.1",
+        "couscous/couscous":           "^1.4.0"
+    },
+    "suggest": {
+        "ocramius/generated-hydrator": "To have very fast object to array to object conversion for ghost objects",
+        "zendframework/zend-xmlrpc":   "To have the XmlRpc adapter (Remote Object feature)",
+        "zendframework/zend-json":     "To have the JsonRpc adapter (Remote Object feature)",
+        "zendframework/zend-soap":     "To have the Soap adapter (Remote Object feature)"
+    },
+    "autoload": {
+        "psr-0": {
+            "ProxyManager\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "ProxyManagerTest\\": "tests",
+            "ProxyManagerTestAsset\\": "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.0.x-dev"
+        }
+    }
+}
