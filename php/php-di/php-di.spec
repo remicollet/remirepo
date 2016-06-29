@@ -12,14 +12,14 @@
 
 %global github_owner     PHP-DI
 %global github_name      PHP-DI
-%global github_version   5.2.2
-%global github_commit    f574bcc841201ab04587b1c6da1234d4044f67d8
+%global github_version   5.3.0
+%global github_commit    854a6d8f54e2146f0a34f0a28f0adea688b634a3
 
 %global composer_vendor  php-di
 %global composer_project php-di
 
-# "php": ">=5.4.0"
-%global php_min_ver 5.4.0
+# "php": ">=5.5.0"
+%global php_min_ver 5.5.0
 # "container-interop/container-interop": "~1.0"
 %global container_interop_min_ver 1.0
 %global container_interop_max_ver 2.0
@@ -38,9 +38,9 @@
 # "php-di/phpdoc-reader": "^2.0.1"
 %global di_phpdoc_reader_min_ver 2.0.1
 %global di_phpdoc_reader_max_ver 3.0
-# "ocramius/proxy-manager": "~1.0"
+# "ocramius/proxy-manager": "~1.0|~2.0"
 %global proxy_manager_min_ver 1.0
-%global proxy_manager_max_ver 2.0
+%global proxy_manager_max_ver 3.0
 
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
@@ -115,6 +115,7 @@ Suggests:      php-composer(ocramius/proxy-manager)              <  %{proxy_mana
 Provides:      php-%{composer_vendor}-%{composer_project}           = %{version}-%{release}
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
+Provides:      php-composer(container-interop/container-interop-implementation) = 1.0
 
 %description
 %{summary}.
@@ -218,6 +219,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 5.3.0-1
+- update to 5.3.0
+- raise dependency on php >=5.5.0
+- allow ocramius/proxy-manager 2.0
+
 * Fri Mar 11 2016 Shawn Iwinski <shawn@iwin.ski> - 5.2.2-1
 - Updated to 5.2.2 (RHBZ #1298928)
 
