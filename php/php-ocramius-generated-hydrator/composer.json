@@ -1,0 +1,50 @@
+{
+    "name":              "ocramius/generated-hydrator",
+    "description":       "An Object Hydrator that allows very fast array to object to array conversion",
+    "type":              "library",
+    "license":           "MIT",
+    "homepage":          "https://github.com/Ocramius/GeneratedHydrator",
+    "minimum-stability": "dev",
+    "keywords":          [
+        "hydrator",
+        "performance",
+        "array conversion",
+        "object conversion",
+        "serializer"
+    ],
+    "authors": [
+        {
+            "name":     "Marco Pivetta",
+            "email":    "ocramius@gmail.com",
+            "homepage": "http://ocramius.github.com/"
+        }
+    ],
+    "require": {
+        "php":                           "~7.0",
+        "nikic/php-parser":              "~2.0",
+        "ocramius/code-generator-utils": "0.4.*",
+        "zendframework/zend-hydrator":   "^2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit":           "~5.0",
+        "squizlabs/php_codesniffer": "~2.0",
+        "athletic/athletic":         "~0.1.6"
+    },
+    "autoload": {
+        "psr-0": {
+            "GeneratedHydrator\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "GeneratedHydratorPerformance\\": "tests",
+            "GeneratedHydratorTest\\":        "tests",
+            "GeneratedHydratorTestAsset\\":   "tests"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1.x-dev"
+        }
+    }
+}
