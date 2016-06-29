@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    1b2f5600bf6262904167116fa67b58ab1457036d
+%global gh_commit    ed348e3e87c945759d11edae5316125c3582bc72
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-crypt
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.0
+Version:        3.0.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -34,8 +34,8 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.5
-BuildRequires:  php-mcrypt
+BuildRequires:  php(language) >= 5.6
+BuildRequires:  php-mbstring
 BuildRequires:  php-hash
 BuildRequires:  php-openssl
 BuildRequires:  php-pcre
@@ -44,30 +44,36 @@ BuildRequires:  php-composer(%{gh_owner}/zend-math)             >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 BuildRequires:  php-composer(container-interop/container-interop) >= 1.0
 # From composer, "require-dev": {
-#        "fabpot/php-cs-fixer": "1.7.*",
-#        "phpunit/PHPUnit": "~4.0",
-BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
+#        "squizlabs/php_codesniffer": "^2.3.1",
+#        "phpunit/PHPUnit": "~4.8"
+BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.8
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
+# For dependencies autoloader
+BuildRequires:  php-zendframework-zend-loader                   >= 2.5.1-3
 %endif
 
 # From composer, "require": {
-#        "php": "^5.5 || ^7.0",
-#        "zendframework/zend-math": "^2.6",
+#        "php": "^5.6 || ^7.0",
+#        "ext-mbstring": "*",
+#        "zendframework/zend-math": "^3.0",
 #        "zendframework/zend-stdlib": "^2.7 || ^3.0",
 #        "container-interop/container-interop": "~1.0"
-Requires:       php(language) >= 5.5
+Requires:       php(language) >= 5.6
+Requires:       php-mbstring
 %if ! %{bootstrap}
-Requires:       php-composer(%{gh_owner}/zend-math)             >= 2.6
-Requires:       php-composer(%{gh_owner}/zend-math)             <  3
+Requires:       php-composer(%{gh_owner}/zend-math)             >= 3.0
+Requires:       php-composer(%{gh_owner}/zend-math)             <  4
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 Requires:       php-composer(container-interop/container-interop) >= 1.0
 Requires:       php-composer(container-interop/container-interop) <  2
 # From composer, "suggest": {
-#        "ext-mcrypt": "Required for most features of Zend\\Crypt"
-# https://github.com/zendframework/zend-crypt/issues/3
-Requires:       php-mcrypt
+#        "ext-openssl": "Required for most features of Zend\\Crypt"
+Requires:       php-openssl
+# Autoloader
+Requires:       php-composer(%{gh_owner}/zend-loader)           >= 2.5
+Requires:       php-zendframework-zend-loader                   >= 2.5.1-3
 %endif
 # From phpcompatinfo report for version 2.5.2
 Requires:       php-hash
@@ -103,6 +109,12 @@ Documentation: https://zendframework.github.io/%{gh_project}/
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+: Create dependency autoloader
+cat << 'EOF' | tee autoload.php
+<?php
+require_once '%{php_home}/Interop/Container/autoload.php';
+EOF
+
 
 %build
 # Empty build section, nothing required
@@ -114,12 +126,16 @@ rm -rf %{buildroot}
 mkdir -p   %{buildroot}%{php_home}/Zend/
 cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 
+install -m644 autoload.php %{buildroot}%{php_home}/Zend/%{library}-autoload.php
+
 
 %check
 %if %{with_tests}
 mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
+define('RPM_BUILDROOT', '%{buildroot}%{php_home}/Zend');
+
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
 Zend\Loader\AutoloaderFactory::factory(array(
     'Zend\Loader\StandardAutoloader' => array(
@@ -130,16 +146,20 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
+# remirepo:11
 run=0
 ret=0
 if which php56; then
-   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose || ret=1
+   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
 fi
 if which php71; then
-   php71 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose || ret=1
+   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
 fi
 if [ $run -eq 0 ]; then
-   %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose || ret=1
+%{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose
+# remirepo:2
 fi
 exit $ret
 %else
@@ -158,9 +178,16 @@ rm -rf %{buildroot}
 %doc CONTRIBUTING.md README.md
 %doc composer.json
 %{php_home}/Zend/%{library}
+%{php_home}/Zend/%{library}-autoload.php
 
 
 %changelog
+* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- update to 3.0.0 for ZendFramework 3
+- add dependencies autoloader
+- raise dependency on PHP 5.6
+- raise dependency on zend-math 3.0
+
 * Thu Feb  4 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
 - update to 2.6.0
 - raise dependency on zend-math ~2.6
