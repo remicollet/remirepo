@@ -29,6 +29,9 @@
     "suggest": {
         "zendframework/zend-i18n": "^2.6, if defining translatable HTTP path segments"
     },
+    "conflict": {
+        "zendframework/zend-mvc": "<3.0.0"
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "3.0-dev",
