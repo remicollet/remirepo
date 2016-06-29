@@ -100,8 +100,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-
 # Install the NTS stuff
 make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
