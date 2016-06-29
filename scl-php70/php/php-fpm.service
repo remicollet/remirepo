@@ -1,7 +1,6 @@
-# It's not recommended to modify this file in-place, because it will be
-# overwritten during package upgrades.  If you want to customize, the
-# best way is to drop a file with the suffix .conf in
-# /etc/systemd/system/php-fpm.service.d
+# It's not recommended to modify this file in-place, because it
+# will be overwritten during upgrades.  If you want to customize,
+# the best way is to use the "systemctl edit" command.
 
 [Unit]
 Description=The PHP FastCGI Process Manager
