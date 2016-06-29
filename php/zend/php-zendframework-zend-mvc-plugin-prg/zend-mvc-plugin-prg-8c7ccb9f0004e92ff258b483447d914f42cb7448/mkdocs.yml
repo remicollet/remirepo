@@ -1,8 +1,0 @@
-docs_dir: doc/book
-site_dir: doc/html
-pages:
-    - index.md
-site_name: zend-mvc-plugin-prg
-site_description: 'zend-mvc-plugin-prg: Post-Redirect-Get controller plugin for zend-mvc'
-repo_url: 'https://github.com/zendframework/zend-mvc-plugin-prg'
-copyright: 'Copyright (c) 2016 <a href="http://www.zend.com/">Zend Technologies USA Inc.</a>'
