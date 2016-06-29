@@ -8,8 +8,8 @@
 # Please preserve changelog entries
 #
 Name:           owncloud
-Version:        9.0.2
-Release:        4%{?dist}
+Version:        9.0.3
+Release:        1%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
 
@@ -47,7 +47,7 @@ Source8:        %{name}-fedora-autoloader.php
 Patch2:         %{name}-9.0.1-dont_update_htacess.patch
 
 # Remove explicit load of dropbox
-Patch3:         %{name}-9.0.1-dropbox-autoloader.patch
+Patch3:         %{name}-9.0.3-dropbox-autoloader.patch
 
 # Remove explicit load of google
 Patch4:         %{name}-9.0.1-google-autoloader.patch
@@ -58,14 +58,8 @@ Patch5:         %{name}-8.2.3-amazon-autoloader.patch
 # Display the appropriate upgrade command for fedora/epel users bz#1321417
 Patch6:         %{name}-8.2.3-correct-cli-upgrade-command.patch
 
-# The broken updater repair step gets upset we unbundle
-Patch7:         %{name}-9.0.2-no_need_for_broken_updater_repair.patch
-
 # Disable the integrity checking whilst a better way to deal with it is found
 Patch8:         %{name}-9.0.2-default_integrity_check_disabled.patch
-
-# Backport patch from future 9.0.3 to handle broken shared link issue bz#1346233
-Patch9:         %{name}-9.0.2-core-23066-infinite-loop-share-link.patch
 
 # Need to work around an NSS issue in el7.2, due to be fix el7.3 bz#1241172
 Patch10:         %{name}-8.1.6-work-arround-nss-issue.patch
@@ -429,9 +423,7 @@ work with an SQLite 3 database stored on the local system.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
 %patch8 -p1
-%patch9 -p1
 %if 0%{?rhel}
 %patch10 -p1
 %patch11 -p1
@@ -746,6 +738,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 9.0.3-1
+- Update to 9.0.3
+
 * Tue Jun 14 2016 James Hogarth <james.hogarth@gmail.com> - 9.0.2-4
 - Fix an infinite loop on a shared link with password and postgres bz#1346233
 
