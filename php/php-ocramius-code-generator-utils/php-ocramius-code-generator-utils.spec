@@ -42,13 +42,13 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:     noarch
+BuildRequires: %{_bindir}/phpab
 %if %{with_tests}
 # composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(nikic/php-parser) >= %{php_parser_min_ver}
 BuildRequires: php-composer(nikic/php-parser) <  %{php_parser_max_ver}
 BuildRequires: php-composer(phpunit/phpunit)  >= 5.0
-BuildRequires: %{_bindir}/phpab
 # phpcompatinfo (computed from version 0.4.0)
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -83,6 +83,7 @@ cat << 'EOF' | tee -a src/CodeGenerationUtils/autoload.php
 require_once '%{phpdir}/PhpParser2/autoload.php';
 EOF
 
+
 %install
 rm -rf %{buildroot}
 mkdir -pm 0755 %{buildroot}%{phpdir}
@@ -97,7 +98,7 @@ cat << 'EOF' | tee -a vendor/autoload.php
 require_once '%{buildroot}%{phpdir}/CodeGenerationUtils/autoload.php';
 EOF
 
-%{_bindir}/phpunit
+%{_bindir}/phpunit --verbose
 %else
 : Tests skipped
 %endif
