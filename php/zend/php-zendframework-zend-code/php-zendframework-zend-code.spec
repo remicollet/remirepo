@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    95033f061b083e16cdee60530ec260d7d628b887
+%global gh_commit    cdd9d0ff36c09772ca787c9c54318115f65d4fab
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-code
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.3
+Version:        3.0.3
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -41,14 +41,14 @@ BuildRequires:  php-spl
 BuildRequires:  php-tokenizer
 BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6
 # From composer, "require-dev": {
+#        "ext-phar": "*",
 #        "doctrine/annotations": "~1.0",
 #        "zendframework/zend-stdlib": "^2.7 || ^3.0",
 #        "zendframework/zend-version": "~2.5",
-#        "fabpot/php-cs-fixer": "1.7.*",
+#        "squizlabs/php_codesniffer": "^2.5",
 #        "phpunit/PHPUnit": "^4.8.21"
 BuildRequires:  php-composer(doctrine/annotations)              >= 1.0
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
-BuildRequires:  php-composer(%{gh_owner}/zend-version)          >= 2.5
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.8.21
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
@@ -121,11 +121,22 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
-
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
 fi
+if which php71; then
+   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -145,6 +156,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- update to 3.0.0 for ZendFramework 3
+
 * Thu Apr 21 2016 Remi Collet <remi@fedoraproject.org> - 2.6.3-1
 - update to 2.6.3
 
