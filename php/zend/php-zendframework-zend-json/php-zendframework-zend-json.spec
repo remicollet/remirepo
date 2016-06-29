@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    4c8705dbe4ad7d7e51b2876c5b9eea0ef916ba28
+%global gh_commit    f42a1588e75c2a3e338cd94c37906231e616daab
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-json
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.6.1
+Version:        3.0.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -41,16 +41,10 @@ BuildRequires:  php-pcre
 BuildRequires:  php-reflection
 BuildRequires:  php-spl
 # From composer, "require-dev": {
-#        "zendframework/zend-http": "^2.5.4",
-#        "zendframework/zend-server": "^2.6.1",
-#        "zendframework/zend-stdlib": "^2.5 || ^3.0",
-#        "zendframework/zendxml": "^1.0.2",
-#        "fabpot/php-cs-fixer": "1.7.*",
+#        "zendframework/zend-stdlib": "^2.7 || ^3.0",
+#        "squizlabs/php_codesniffer": "^2.3",
 #        "phpunit/PHPUnit": "~4.0"
-BuildRequires:  php-composer(%{gh_owner}/zend-http)             >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-server)           >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zendxml)               >= 1.0
+BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
@@ -61,15 +55,11 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 Requires:       php(language) >= 5.5
 %if ! %{bootstrap}
 # From composer, "suggest": {
-#        "zendframework/zend-http": "Zend\\Http component",
-#        "zendframework/zend-server": "Zend\\Server component",
-#        "zendframework/zend-stdlib": "To use the cache for Zend\\Server",
-#        "zendframework/zendxml": "To support Zend\\Json\\Json::fromXml() usage"
+#        "zendframework/zend-json-server": "For implementing JSON-RPC servers",
+#        "zendframework/zend-xml2json": "For converting XML documents to JSON"
 %if 0%{?fedora} >= 21
-Suggests:       php-composer(%{gh_owner}/zend-http)
-Suggests:       php-composer(%{gh_owner}/zend-server)
-Suggests:       php-composer(%{gh_owner}/zend-stdlib)
-Suggests:       php-composer(%{gh_owner}/zendxml)
+Suggests:       php-composer(%{gh_owner}/zend-json-server)
+Suggests:       php-composer(%{gh_owner}/zend-xml2json)
 %endif
 %endif
 # From phpcompatinfo report for version 2.6.0
@@ -121,11 +111,22 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
-
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
 fi
+if which php71; then
+   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -145,6 +146,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- update to 3.0.0 for ZendFramework 3
+- add optional dependencies on zend-json-server and zend-xml2json
+
 * Fri Feb  5 2016 Remi Collet <remi@fedoraproject.org> - 2.6.1-1
 - version 2.6.1
 
