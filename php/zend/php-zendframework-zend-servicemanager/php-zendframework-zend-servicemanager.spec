@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    a6db4d13b9141fccce5dcb553df0295d6ad7d477
+%global gh_commit    90b88339a4b937c6bb0055ee04b2567e7e628f25
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-servicemanager
@@ -19,10 +19,8 @@
 %global with_tests   0%{!?_without_tests:1}
 %endif
 
-# TODO: when updating to 3.x, need zend-servicemanager-di for zend-mvc
-
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.6
+Version:        3.1.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -40,18 +38,16 @@ BuildRequires:  php(language) >= 5.5
 BuildRequires:  php-composer(container-interop/container-interop) >= 1.0
 BuildRequires:  php-spl
 # From composer, "require-dev": {
-#        "zendframework/zend-di": "~2.5",
-#        "zendframework/zend-mvc": "~2.5",
-#        "fabpot/php-cs-fixer": "1.7.*",
-#        "phpunit/PHPUnit": "~4.0",
-#        "athletic/athletic": "dev-master"
-BuildRequires:  php-composer(%{gh_owner}/zend-di)               >= 2.5
-BuildRequires:  php-composer(%{gh_owner}/zend-mvc)              >= 2.5
-BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
-# Because of bootstrap
-BuildRequires:  php-composer(%{gh_owner}/zend-code)             >= 2.5
+#        "phpunit/phpunit": "^4.6 || ^5.2.10",
+#        "ocramius/proxy-manager": "^1.0 || ^2.0",
+#        "squizlabs/php_codesniffer": "^2.5.1",
+#        "phpbench/phpbench": "^0.10.0"
+BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.6
+BuildRequires:  php-composer(ocramius/proxy-manager)            >= 1.0
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
+# For dependencies autoloader
+BuildRequires:  php-zendframework-zend-loader                   >= 2.5.1-3
 %endif
 
 # From composer, "require": {
@@ -64,19 +60,21 @@ Requires:       php-composer(container-interop/container-interop) <  2
 Requires:       php-spl
 %if ! %{bootstrap}
 # From composer, "suggest": {
-#        "ocramius/proxy-manager": "ProxyManager 0.5.* to handle lazy initialization of services",
-#        "zendframework/zend-di": "Zend\\Di component"
+#        "ocramius/proxy-manager": "ProxyManager 1.* to handle lazy initialization of services",
+#        "zendframework/zend-stdlib": "zend-stdlib ^2.5 if you wish to use the MergeReplaceKey or MergeRemoveKey features in Config instances"
 %if 0%{?fedora} >= 21
 Suggests:       php-composer(ocramius/proxy-manager)
-Suggests:       php-composer(%{gh_owner}/zend-di)
+Suggests:       php-composer(%{gh_owner}/zend-stdlib)
 %endif
 # Autoloader
 Requires:       php-composer(%{gh_owner}/zend-loader)           >= 2.5
+Requires:       php-zendframework-zend-loader                   >= 2.5.1-3
 %endif
 
 Obsoletes:      php-ZendFramework2-%{library} < 2.5
 Provides:       php-ZendFramework2-%{library} = %{version}
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
+Provides:       php-composer(container-interop/container-interop-implementation) = 1.1
 
 
 %description
@@ -90,8 +88,14 @@ Documentation: https://zendframework.github.io/%{gh_project}/
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-# NOTICE container-interop/container-interop is PSR-0
-# so will be managed by the fallback_autoloader option
+: Create dependency autoloader
+cat << 'EOF' | tee autoload.php
+<?php
+require_once '%{php_home}/Interop/Container/autoload.php';
+if (file_exists('%{php_home}/ProxyManager/autoload.php')) {
+	require_once '%{php_home}/ProxyManager/autoload.php';
+}
+EOF
 
 
 %build
@@ -104,12 +108,16 @@ rm -rf %{buildroot}
 mkdir -p   %{buildroot}%{php_home}/Zend/
 cp -pr src %{buildroot}%{php_home}/Zend/%{library}
 
+install -m644 autoload.php %{buildroot}%{php_home}/Zend/%{library}-autoload.php
+
 
 %check
 %if %{with_tests}
 mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
+define('RPM_BUILDROOT', '%{buildroot}%{php_home}/Zend');
+
 require_once '%{php_home}/Zend/Loader/AutoloaderFactory.php';
 Zend\Loader\AutoloaderFactory::factory(array(
     'Zend\Loader\StandardAutoloader' => array(
@@ -120,11 +128,22 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
-
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
 fi
+if which php71; then
+   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -141,9 +160,14 @@ rm -rf %{buildroot}
 %doc CONTRIBUTING.md README.md
 %doc composer.json
 %{php_home}/Zend/%{library}
+%{php_home}/Zend/%{library}-autoload.php
 
 
 %changelog
+* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- update to 3.0.0 for ZendFramework 3
+- add dependencies autoloader
+
 * Thu Apr 28 2016 Remi Collet <remi@fedoraproject.org> - 2.7.6-1
 - update to 2.7.6
 
