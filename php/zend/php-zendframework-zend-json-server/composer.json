@@ -1,0 +1,52 @@
+{
+    "name": "zendframework/zend-json-server",
+    "description": "Zend Json-Server is a JSON-RPC server implementation.",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "zf2",
+        "json",
+        "server",
+        "json-server"
+    ],
+    "homepage": "https://github.com/zendframework/zend-json-server",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.0-dev",
+            "dev-develop": "3.1-dev"
+        }
+    },
+    "require": {
+        "php": "^5.5 || ^7.0",
+        "zendframework/zend-json": "^2.6.1 || ^3.0",
+        "zendframework/zend-http": "^2.5.4",
+        "zendframework/zend-server": "^2.6.1"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^2.3",
+        "phpunit/PHPUnit": "~4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zend\\Json\\Server\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ZendTest\\Json\\Server\\": "test/"
+        },
+        "files": [
+            "test/TestAsset/FooFunc.php"
+        ]
+    },
+    "scripts": {
+        "check": [
+            "@cs-check",
+            "@test"
+        ],
+        "upload-coverage": "coveralls",
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf fix -v",
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-clover clover.xml"
+    }
+}
