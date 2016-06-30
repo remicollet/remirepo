@@ -121,7 +121,7 @@
 %endif
 
 #global rcver         RC1
-%global rpmrel        1
+%global rpmrel        1.1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -1561,6 +1561,8 @@ install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/wsdlcache
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/opcache
 %if 0%{?fedora} >= 24
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/peclxml
+install -m 755 -d $RPM_BUILD_ROOT%{_docdir}/pecl
+install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/tests/pecl
 %endif
 
 %if %{with_lsws}
@@ -1851,6 +1853,9 @@ fi
 %dir %{_localstatedir}/lib/php
 %if 0%{?fedora} >= 24
 %dir %{_localstatedir}/lib/php/peclxml
+%dir %{_docdir}/pecl
+%dir %{_datadir}/tests
+%dir %{_datadir}/tests/pecl
 %endif
 %dir %{_datadir}/php
 
@@ -1989,6 +1994,9 @@ fi
 
 
 %changelog
+* Thu Jun 30 2016 Remi Collet <remi@fedoraproject.org> 7.0.8-1.1
+- own tests/doc directories for pecl packages (f24)
+
 * Wed Jun 22 2016 Remi Collet <remi@fedoraproject.org> 7.0.8-1
 - Update to 7.0.8 - http://www.php.net/releases/7_0_8.php
 

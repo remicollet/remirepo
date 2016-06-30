@@ -119,7 +119,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.4.45
-Release: 10%{?dist}
+Release: 10.1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1305,6 +1305,8 @@ install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/wsdlcache
 %if 0%{?fedora} >= 24
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/peclxml
+install -m 755 -d $RPM_BUILD_ROOT%{_docdir}/pecl
+install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/tests/pecl
 %endif
 
 %if %{with_lsws}
@@ -1602,6 +1604,9 @@ EOF
 %dir %{_datadir}/php
 %if 0%{?fedora} >= 24
 %dir %{_localstatedir}/lib/php/peclxml
+%dir %{_docdir}/pecl
+%dir %{_datadir}/tests
+%dir %{_datadir}/tests/pecl
 %endif
 
 %files cli
@@ -1726,6 +1731,9 @@ EOF
 
 
 %changelog
+* Thu Jun 30 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-10.1
+- own tests/doc directories for pecl packages (f24)
+
 * Tue Jun 21 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-10
 - Fix #66387: Stack overflow with imagefilltoborder
 - Fix #72340: Double Free Courruption in wddx_deserialize

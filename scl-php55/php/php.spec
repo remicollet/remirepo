@@ -140,7 +140,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.5.37
-Release: 1%{?dist}
+Release: 1.1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1334,6 +1334,8 @@ install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/wsdlcache
 %if 0%{?fedora} >= 24
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/peclxml
+install -m 755 -d $RPM_BUILD_ROOT%{_docdir}/pecl
+install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/tests/pecl
 %endif
 
 %if %{with_lsws}
@@ -1641,6 +1643,9 @@ fi
 %dir %{_datadir}/php
 %if 0%{?fedora} >= 24
 %dir %{_localstatedir}/lib/php/peclxml
+%dir %{_docdir}/pecl
+%dir %{_datadir}/tests
+%dir %{_datadir}/tests/pecl
 %endif
 
 %files cli
@@ -1771,6 +1776,9 @@ fi
 
 
 %changelog
+* Thu Jun 30 2016 Remi Collet <remi@fedoraproject.org> 5.5.37-1.1
+- own tests/doc directories for pecl packages (f24)
+
 * Tue Jun 21 2016 Remi Collet <remi@fedoraproject.org> 5.5.37-1
 - Update to 5.5.37
   http://www.php.net/releases/5_5_37.php
