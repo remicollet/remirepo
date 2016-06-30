@@ -14,7 +14,7 @@
 
 Name:           php-horde-horde
 Version:        5.2.10
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Application Framework
 
 Group:          Development/Libraries
@@ -121,7 +121,6 @@ Requires:       php-pear(File_Fstab)
 Requires:       php-pear(Console_Getopt)
 Requires:       php-pear(Console_Table)
 Requires:       php-pear(Net_DNS2)
-Requires:       php-pear(Services_Weather)
 Requires:       php-pear(%{pear_channel}/Horde_Feed) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Feed) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_OpenXchange) >= 1.0.0
@@ -311,6 +310,10 @@ fi
 
 
 %changelog
+* Thu Jun 30 2016 Remi Collet <remi@fedoraproject.org> - 5.2.10-2
+- drop dependency on php-pear-Services-Weather which is
+  optional, and dead project
+
 * Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 5.2.10-1
 - Update to 5.2.10
 
