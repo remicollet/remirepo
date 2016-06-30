@@ -8,8 +8,8 @@
 #
 # Please preserve changelog entries
 #
-%global VER        6.9.4
-%global Patchlevel 10
+%global VER        6.9.5
+%global Patchlevel 0
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -395,13 +395,27 @@ make %{?_smp_mflags} check
 rm -rf %{buildroot}
 
 
-%post -p /sbin/ldconfig
+%pre libs
+LIB=%{_libdir}/%{libname}-%{VER}
+%if "%{name}" != "%{libname}"
+ETC=%{_sysconfdir}/%{name}
+%else
+ETC=%{_sysconfdir}/%{name}%{?incsuffixe}
+%endif
+if [ -d $ETC -a ! -d $LIB ]; then cat << EOF
 
-%post c++ -p /sbin/ldconfig
+WARNING : %{name} modules directory have changed.
+You need to restart some services to take care of
+the new location (e.g. httpd, php-fpm).
 
-%postun -p /sbin/ldconfig
+EOF
+fi
 
-%postun c++ -p /sbin/ldconfig
+%post libs -p /sbin/ldconfig
+%post c++  -p /sbin/ldconfig
+
+%postun libs -p /sbin/ldconfig
+%postun c++  -p /sbin/ldconfig
 
 
 %files
@@ -493,6 +507,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 30 2016 Remi Collet <remi@remirepo.net> - 6.9.5.0-1
+- update to version 6.9.5
+- display update message when modules directory change
+- fix scriplets
+
 * Fri Jun 24 2016 Remi Collet <remi@remirepo.net> - 6.9.4.10-1
 - update to version 6.9.4 patchlevel 10
 
