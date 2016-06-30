@@ -15,9 +15,9 @@
 Name:           remi-release
 Version:        %{fedora}
 %if %{fedora} >= 24
-Release:        1%{?dist}
+Release:        2%{?dist}
 %else
-Release:        3%{?dist}
+Release:        4%{?dist}
 %endif
 Summary:        Configuration for remi repository
 Summary(fr):	Configuration pour le dépôt remi
@@ -31,6 +31,9 @@ Source2:        remi-test-fc.repo
 Source3:        remi-php56-fc.repo
 Source4:        remi-php70-fc.repo
 Source5:        remi-php70-test-fc.repo
+Source6:        remi-php71-fc.repo
+Source7:        remi-php71-test-fc.repo
+Source8:        remi-debug-fc.repo
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}
 BuildArchitectures: noarch
@@ -53,6 +56,10 @@ the --enablerepo=remi option for %{pkgman}.
 For PHP 7.0 you must enable the remi-php70 repository:
     %{pkgman} config-manager --enable remi-php70
 %endif
+%if %{fedora} >= 22
+For PHP 7.1 you must enable the remi-php71 repository:
+    %{pkgman} config-manager --enable remi-php71
+%endif
 FAQ:   http://blog.remirepo.net/pages/English-FAQ
 Forum: http://forum.remirepo.net/
 
@@ -65,6 +72,10 @@ l'option --enablerepo=remi de %{pkgman}.
 %if %{fedora} >= 21 && %{fedora} <= 24
 Pour PHP 7.0 vous devez activer le dépôt remi-php70
     %{pkgman} config-manager --enable remi-php70
+%endif
+%if %{fedora} >= 22
+Pour PHP 7.1 vous devez activer le dépôt remi-php71
+    %{pkgman} config-manager --enable remi-php71
 %endif
 FAQ:   http://blog.remirepo.net/pages/FAQ-en-Francais
 Forum: http://forum.remirepo.net/
@@ -94,6 +105,13 @@ install -Dp -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php56.
 install -Dp -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php70.repo
 install -Dp -m 644 %{SOURCE5} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php70-test.repo
 %endif
+%if %{fedora} >= 22
+install -Dp -m 644 %{SOURCE6} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php71.repo
+install -Dp -m 644 %{SOURCE7} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-php71-test.repo
+%endif
+%if %{fedora} >= 23
+install -Dp -m 644 %{SOURCE8} %{buildroot}%{_sysconfdir}/yum.repos.d/remi-debuginfo.repo
+%endif
 
 
 %clean
@@ -107,6 +125,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 30 2016 Remi Collet <remi@remirepo.net> - 22-4, 23-4 and 24-2
+- add remi-php71 repository configuration
+- add debuginfo repository configuration
+
 * Fri Mar  4 2016 Remi Collet <remi@remirepo.net> - 24-1.fc24
 - Fedora release 24
 

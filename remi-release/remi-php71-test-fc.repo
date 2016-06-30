@@ -1,0 +1,10 @@
+[remi-php71-test]
+name=Remi's RPM repository - Testing - PHP 7.1 - Fedora $releasever - $basearch
+#baseurl=http://rpms.remirepo.net/fedora/$releasever/test71/$basearch/
+mirrorlist=http://rpms.remirepo.net/fedora/$releasever/test71/mirror
+# WARNING: If you enable this repository, you must also enable "remi" and "remi-php71"
+enabled=0
+gpgcheck=1
+failovermethod=roundrobin
+fastestmirror=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-remi
