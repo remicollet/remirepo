@@ -8,12 +8,12 @@
 #
 Name:           remi-release
 %if %{rhel} == 7
-Version:        7.1
-Release:        3%{?dist}
+Version:        7.2
+Release:        1%{?dist}
 %endif
 %if %{rhel} == 6
-Version:        6.6
-Release:        2%{?dist}
+Version:        6.8
+Release:        1%{?dist}
 %endif
 %if %{rhel} == 5
 Version:        5.10
@@ -29,13 +29,17 @@ Source0:        RPM-GPG-KEY-remi
 Source1:        remi-el.repo
 Source2:        remi-safe.repo
 Source3:        remi-php70.repo
+Source4:        remi-php71.repo
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}
 BuildArchitectures: noarch
 
 Requires:       yum
-Requires:       redhat-release >= %{rhel}
-Requires:       epel-release >= %{rhel}
+# Sadly system-release and redhat-release are not versionned
+Requires:       redhat-release
+Requires:       epel-release   = %{rhel}
+# Ensure not installable on Fedora
+Conflicts:      fedora-release
 
 
 %description
@@ -54,6 +58,9 @@ For PHP 5.6 you must enable the remi-php56 repository:
 
 For PHP 7.0 you must enable the remi-php70 repository:
     yum-config-manager --enable remi-php70
+
+For PHP 7.1 you must enable the remi-php71 repository:
+    yum-config-manager --enable remi-php71
 
 %if %{rhel} >= 6
 Software Collections are in the "remi-safe" repository.
@@ -78,6 +85,9 @@ Pour PHP 5.6 vous devez activer le dépôt remi-php56
 Pour PHP 7.0 vous devez activer le dépôt remi-php70
     yum-config-manager --enable remi-php70
 
+Pour PHP 7.1 vous devez activer le dépôt remi-php71
+    yum-config-manager --enable remi-php71
+
 %if %{rhel} >= 6
 Les "Software Collections" sont dans le dépôt "remi-safe".
 %endif
@@ -92,6 +102,7 @@ sed -e "s/VERSION/%{rhel}/" %{SOURCE1} | tee remi.repo
 %if %{rhel} >= 6
 sed -e "s/VERSION/%{rhel}/" %{SOURCE2} | tee remi-safe.repo
 sed -e "s/VERSION/%{rhel}/" %{SOURCE3} | tee remi-php70.repo
+sed -e "s/VERSION/%{rhel}/" %{SOURCE4} | tee remi-php71.repo
 %endif
 
 
@@ -123,6 +134,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jun 30 2016 Remi Collet <remmi@remirepo.net> - 6.8-1 and 7.2-1
+- add remi-php71 repository
+
 * Wed Dec  9 2015 Remi Collet <remmi@remirepo.net> - 6.6-2 and 7.1-3
 - add remi-php70-test repository
 - fix information, remi is not more required by remi-phpxx
