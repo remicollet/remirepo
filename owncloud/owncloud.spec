@@ -567,7 +567,7 @@ fi
 php %{buildroot}%{_datadir}/%{name}/3rdparty/autoload.php
 
 # There should not be an composer.json files remaining
-nb=$(find -name 'composer.*'| wc -l)
+nb=$(find -name 'composer.*' | wc -l)
 if [ $nb -gt 0 ]
   then
   false found unexpected composer.json files

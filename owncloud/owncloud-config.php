@@ -6,6 +6,8 @@ $CONFIG = array (
     "check_for_working_htaccess" => false,
     "asset-pipeline.enabled" => false,
     "assetdirectory" => '/var/lib/owncloud',
+    "preview_libreoffice_path" => '/usr/bin/libreoffice',
+
 
     "apps_paths" => array(
         0 =>

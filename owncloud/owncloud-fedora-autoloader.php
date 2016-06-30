@@ -68,5 +68,6 @@ require_once $vendor . '/ownCloud/TarStreamer/autoload.php';
 require_once $vendor . '/Patchwork/JSqueeze.php';
 // "kriswallsmith/assetic"
 require_once $vendor . '/Assetic/autoload.php';
-
+// "symfony/polyfill-php{55,56,70}"
+require_once $vendor . '/Symfony/Polyfill/autoload.php';
 
