@@ -1,6 +1,3 @@
-# Fedora spec file for php-pecl-apcu-bc
-# without SCL compatibility, from
-#
 # remirepo spec file for php-pecl-apcu-bc
 #
 # Copyright (c) 2015-2016 Remi Collet
@@ -9,6 +6,18 @@
 #
 # Please, preserve the changelog entries
 #
+%if 0%{?scl:1}
+%global sub_prefix %{scl_prefix}
+%endif
+
+%{?scl:          %scl_package        php-pecl-apcu-bc}
+%{!?scl:         %global pkg_name    %{name}}
+
+%global gh_commit  52b97a7ef7565509ff1db58ad95fb13c87ab2544
+%global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner   krakjoe
+%global gh_project apcu-bc
+#global gh_date    20151204
 %global proj_name  apcu_bc
 %global pecl_name  apcu-bc
 %global ext_name   apc
@@ -17,46 +26,82 @@
 # After 40-apcu.ini
 %global ini_name   50-%{ext_name}.ini
 
-Name:           php-pecl-%{pecl_name}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Summary:        APCu Backwards Compatibility Module
 Version:        1.0.3
-Release:        3%{?dist}
+%if 0%{?gh_date:1}
+Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{proj_name}-%{version}-%{gh_short}.tar.gz
+%else
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
+%endif
 
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/APCu
 
-BuildRequires:  php-devel > 7
-BuildRequires:  php-pear
-BuildRequires:  php-pecl-apcu-devel >= 5.1.2
+BuildRequires:  %{?scl_prefix}php-devel > 7
+BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  %{?scl_prefix}php-pecl-apcu-devel >= 5.1.2
 
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
-Requires:       php-pecl-apcu%{?_isa} >= 5.1.2
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
+Requires:       %{?scl_prefix}php-pecl-apcu%{?_isa} >= 5.1.2
 
-Obsoletes:      php-pecl-apc              < 4
-Provides:       php-apc                   = %{apcver}
-Provides:       php-apc%{?_isa}           = %{apcver}
-Provides:       php-pecl-apc              = %{apcver}-%{release}
-Provides:       php-pecl-apc%{?_isa}      = %{apcver}-%{release}
-Provides:       php-pecl(APC)             = %{apcver}
-Provides:       php-pecl(APC)%{?_isa}     = %{apcver}
-Provides:       php-pecl(%{proj_name})         = %{version}
-Provides:       php-pecl(%{proj_name})%{?_isa} = %{version}
+Obsoletes:      %{?scl_prefix}php-pecl-apc              < 4
+Provides:       %{?scl_prefix}php-apc                   = %{apcver}
+Provides:       %{?scl_prefix}php-apc%{?_isa}           = %{apcver}
+Provides:       %{?scl_prefix}php-pecl-apc              = %{apcver}-%{release}
+Provides:       %{?scl_prefix}php-pecl-apc%{?_isa}      = %{apcver}-%{release}
+Provides:       %{?scl_prefix}php-pecl(APC)             = %{apcver}
+Provides:       %{?scl_prefix}php-pecl(APC)%{?_isa}     = %{apcver}
+Provides:       %{?scl_prefix}php-pecl(%{proj_name})         = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{proj_name})%{?_isa} = %{version}
+# For "more" SCL
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+# Other third party repo stuff
+Obsoletes:      php53-pecl-%{ext_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{ext_name}  <= %{version}
+Obsoletes:      php54-pecl-%{ext_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{ext_name}  <= %{version}
+Obsoletes:     php55u-pecl-%{ext_name}  <= %{version}
+Obsoletes:     php55w-pecl-%{ext_name}  <= %{version}
+Obsoletes:     php56u-pecl-%{ext_name}  <= %{version}
+Obsoletes:     php56w-pecl-%{ext_name}  <= %{version}
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+
+%if 0%{?fedora} < 20 && 0%{?rhel} < 7
+# Filter shared private
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
+%{?filter_setup}
+%endif
 
 
 %description
 This module provides a backwards compatible API for APC.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
+
 
 %prep
 %setup -qc
+%if 0%{?gh_date:1}
+mv %{gh_project}-%{gh_commit} NTS
+mv NTS/package.xml .
+%else
 mv %{proj_name}-%{version} NTS
+%endif
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' \
-    -e '/LICENSE/s/role="doc"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
     -i package.xml
 
 cd NTS
@@ -122,13 +167,13 @@ done
 %check
 cd NTS
 # Check than both extensions are reported (BC mode)
-%{__php} -n \
+%{_bindir}/php -n \
    -d extension=apcu.so \
    -d extension=%{buildroot}%{php_extdir}/apc.so \
    -m | grep 'apc$'
 
 # Upstream test suite for NTS extension
-TEST_PHP_EXECUTABLE=%{__php} \
+TEST_PHP_EXECUTABLE=%{_bindir}/php \
 TEST_PHP_ARGS="-n -d extension=apcu.so -d extension=%{buildroot}%{php_extdir}/apc.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
@@ -150,8 +195,28 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
+%if 0%{?fedora} < 24
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
+
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
+fi
+
+%postun
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
+    %{pecl_uninstall} %{pecl_name} >/dev/null || :
+fi
+%endif
+
+
 %files
-%license NTS/LICENSE
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{proj_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -165,9 +230,6 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
-* Sun Jun 26 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-3
-- drop SCL stuff for Fedora review
-
 * Mon Mar  7 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-2
 - fix apcver macro definition
 
