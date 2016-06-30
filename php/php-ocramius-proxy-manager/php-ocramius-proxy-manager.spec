@@ -12,7 +12,7 @@
 
 %global github_owner      Ocramius
 %global github_name       ProxyManager
-%global github_version    2.0.0
+%global github_version    2.0.2
 %global github_commit     001e730968f17cb36816ad68914994341d16e029
 %global github_short      %(c=%{github_commit}; echo ${c:0:7})
 
@@ -144,8 +144,8 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
-- update to 2.0.0
+* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- update to 2.0.2
 - raise dependency on php 7.0.7
 - raise dependency on zendframework/zend-code 3.0
 
