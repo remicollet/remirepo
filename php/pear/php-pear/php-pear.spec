@@ -37,7 +37,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.10.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 Epoch: 1
 # PEAR, PEAR_Manpages, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -89,16 +89,16 @@ Provides:  %{?scl_prefix}php-composer(pear/xml_util) = %{xmlutil}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # From other third party
-Obsoletes: php53-pear  <= %{version}
-Obsoletes: php53u-pear <= %{version}
-Obsoletes: php54-pear  <= %{version}
-Obsoletes: php54w-pear <= %{version}
-Obsoletes: php55u-pear <= %{version}
-Obsoletes: php55w-pear <= %{version}
-Obsoletes: php56u-pear <= %{version}
-Obsoletes: php56w-pear <= %{version}
-Obsoletes: php70u-pear <= %{version}
-Obsoletes: php70w-pear <= %{version}
+Obsoletes: php53-pear  <= %{epoch}:%{version}
+Obsoletes: php53u-pear <= %{epoch}:%{version}
+Obsoletes: php54-pear  <= %{epoch}:%{version}
+Obsoletes: php54w-pear <= %{epoch}:%{version}
+Obsoletes: php55u-pear <= %{epoch}:%{version}
+Obsoletes: php55w-pear <= %{epoch}:%{version}
+Obsoletes: php56u-pear <= %{epoch}:%{version}
+Obsoletes: php56w-pear <= %{epoch}:%{version}
+Obsoletes: php70u-pear <= %{epoch}:%{version}
+Obsoletes: php70w-pear <= %{epoch}:%{version}
 %endif
 
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}}
@@ -189,8 +189,10 @@ install -d $RPM_BUILD_ROOT%{peardir} \
            $RPM_BUILD_ROOT%{_localstatedir}/cache/php-pear \
            $RPM_BUILD_ROOT%{_localstatedir}/www/html \
            $RPM_BUILD_ROOT%{_localstatedir}/lib/pear/pkgxml \
+%if 0%{?fedora} < 24
            $RPM_BUILD_ROOT%{_docdir}/pecl \
            $RPM_BUILD_ROOT%{_datadir}/tests/pecl \
+%endif
            $RPM_BUILD_ROOT%{_sysconfdir}/pear
 
 export INSTALL_ROOT=$RPM_BUILD_ROOT
@@ -400,9 +402,11 @@ fi
 %doc README*
 %dir %{_docdir}/pear
 %doc %{_docdir}/pear/*
+%if 0%{?fedora} < 24
 %dir %{_docdir}/pecl
 %dir %{_datadir}/tests
 %dir %{_datadir}/tests/pecl
+%endif
 %{_datadir}/tests/pear
 %{_datadir}/pear-data
 %if 0%{?scl:1}
@@ -416,6 +420,10 @@ fi
 
 
 %changelog
+* Thu Jun 30 2016 Remi Collet <remi@fedoraproject.org> 1:1.10.1-5
+- don't own test/doc directories for pecl packages (f24)
+- fix obsoletes
+
 * Thu Feb 25 2016 Remi Collet <remi@fedoraproject.org> 1:1.10.1-4
 - update Archive_Tar to 1.4.2
 
