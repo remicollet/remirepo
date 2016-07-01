@@ -30,9 +30,6 @@ URL:            https://framework.zend.com/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
 
-# see https://github.com/zendframework/zend-code/pull/80
-Patch0:         %{name}-pr80.patch
-
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
@@ -96,8 +93,6 @@ Documentation: https://zendframework.github.io/%{gh_project}/
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
-
-%patch0 -p1
 
 
 %build
