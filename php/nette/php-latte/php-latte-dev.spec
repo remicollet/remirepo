@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    26af8b6b68ea68bb466ce692c12b8898524456bd
+%global gh_commit    2c45c382f50cc981019628c9b074ad257207fb09
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -16,7 +16,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_project}
-Version:        2.3.12
+Version:        2.4.0
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Latte: the amazing template engine for PHP
@@ -32,7 +32,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-composer(theseer/autoload)
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.3.1
+BuildRequires:  php(language) >= 5.4.4
 BuildRequires:  php-tokenizer
 BuildRequires:  php-date
 BuildRequires:  php-fileinfo
@@ -43,14 +43,16 @@ BuildRequires:  php-pcre
 BuildRequires:  php-reflection
 BuildRequires:  php-spl
 # From composer.json, "require-dev": {
-#        "nette/tester": "~1.3"
-BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.3
+#		"nette/tester": "~2.0",
+#		"tracy/tracy": "^2.3"
+BuildRequires:  php-composer(%{gh_owner}/tester) >= 2.0
+BuildRequires:  php-composer(tracy/tracy) >= 2.3
 %endif
 
 # from composer.json, "require": {
-#        "php": ">=5.3.1"
+#        "php": ">=5.4.4"
 #        "ext-tokenizer": "*"
-Requires:       php(language) >= 5.3.1
+Requires:       php(language) >= 5.4.4
 Requires:       php-tokenizer
 # from phpcompatinfo report for version 2.3.6
 Requires:       php-date
@@ -145,6 +147,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
+- update to 2.4.0
+- raise dependency on php >= 5.4.4
+
 * Mon May 30 2016 Remi Collet <remi@fedoraproject.org> - 2.3.12-1
 - update to 2.3.12
 
