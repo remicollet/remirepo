@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    a4b227d8a477f4e7e9073f8e0a7ae7dbd3104a73
+%global gh_commit    2dcd14b61a72d8b8e27d579c6344e12c26141d4e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-escaper
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.1
+Version:        2.5.2
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -34,7 +34,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.3.23
+BuildRequires:  php(language) >= 5.5
 BuildRequires:  php-ctype
 BuildRequires:  php-iconv
 BuildRequires:  php-mbstring
@@ -49,8 +49,8 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.3.23"
-Requires:       php(language) >= 5.3.23
+#        "php": ">=5.5"
+Requires:       php(language) >= 5.5
 # From phpcompatinfo report for version 2.5.1
 Requires:       php-ctype
 Requires:       php-iconv
@@ -106,11 +106,22 @@ Zend\\Loader\\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
-
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
 fi
+if which php71; then
+   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -130,5 +141,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
+- update to 2.5.2
+- raise dependency on PHP 5.5
+
 * Tue Aug  4 2015 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
 - initial package
