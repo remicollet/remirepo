@@ -157,7 +157,7 @@ rm -rf %{buildroot}
 
 %changelog
 * Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 3.0.4-1
-- update to 3.0.4 for ZendFramework 3
+- update to 3.0.4
 
 * Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.3-2
 - add patch for ocramius/proxy-manager
