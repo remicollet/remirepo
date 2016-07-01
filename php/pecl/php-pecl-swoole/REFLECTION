@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #166 swoole version 1.8.6 ] {
+Extension [ <persistent> extension #113 swoole version 1.8.7 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -63,7 +63,7 @@ Extension [ <persistent> extension #166 swoole version 1.8.6 ] {
     Constant [ integer SWOOLE_DTLSv1_CLIENT_METHOD ] { 17 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.8.6 }
+    Constant [ string SWOOLE_VERSION ] { 1.8.7 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 1 }
     Constant [ integer SWOOLE_FILELOCK ] { 2 }
@@ -139,6 +139,12 @@ Extension [ <persistent> extension #166 swoole version 1.8.6 ] {
       - Parameters [2] {
         Parameter #0 [ <required> $ms ]
         Parameter #1 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:swoole> function swoole_timer_exists ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $timer_id ]
       }
     }
     Function [ <internal:swoole> function swoole_timer_clear ] {
@@ -504,7 +510,7 @@ Extension [ <persistent> extension #166 swoole version 1.8.6 ] {
       - Static properties [0] {
       }
 
-      - Static methods [3] {
+      - Static methods [4] {
         Method [ <internal:swoole> static public method tick ] {
 
           - Parameters [3] {
@@ -519,6 +525,13 @@ Extension [ <persistent> extension #166 swoole version 1.8.6 ] {
           - Parameters [2] {
             Parameter #0 [ <required> $ms ]
             Parameter #1 [ <required> $callback ]
+          }
+        }
+
+        Method [ <internal:swoole> static public method exists ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $timer_id ]
           }
         }
 
@@ -1749,7 +1762,7 @@ Extension [ <persistent> extension #166 swoole version 1.8.6 ] {
       }
     }
 
-    Class [ <internal:swoole> class swoole_mysql_exception extends Exception ] {
+    Class [ <internal:swoole> class swoole_mysql_exception extends Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -1768,7 +1781,7 @@ Extension [ <persistent> extension #166 swoole version 1.8.6 ] {
       }
 
       - Methods [10] {
-        Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $message ]
@@ -1780,28 +1793,28 @@ Extension [ <persistent> extension #166 swoole version 1.8.6 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
