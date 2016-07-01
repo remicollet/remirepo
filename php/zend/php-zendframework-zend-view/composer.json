@@ -31,7 +31,7 @@
         "zendframework/zend-json": "^2.6.1",
         "zendframework/zend-log": "^2.7",
         "zendframework/zend-modulemanager": "^2.7.1",
-        "zendframework/zend-mvc": "^2.7",
+        "zendframework/zend-mvc": "^2.7 || ^3.0",
         "zendframework/zend-navigation": "^2.5",
         "zendframework/zend-paginator": "^2.5",
         "zendframework/zend-permissions-acl": "^2.6",

@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    1516805ed7f04afedbd4600d496437c49847a6cd
+%global gh_commit    71b4ebd0c4c9a2d0e0438f9d3a435e08dd769ff8
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-view
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.8.0
+Version:        2.8.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -56,7 +56,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 #        "zendframework/zend-json": "^2.6.1",
 #        "zendframework/zend-log": "^2.7",
 #        "zendframework/zend-modulemanager": "^2.7.1",
-#        "zendframework/zend-mvc": "^2.7",
+#        "zendframework/zend-mvc": "^2.7 || ^3.0",
 #        "zendframework/zend-navigation": "^2.5",
 #        "zendframework/zend-paginator": "^2.5",
 #        "zendframework/zend-permissions-acl": "^2.6",
@@ -198,11 +198,22 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-%{_bindir}/phpunit -d memory_limit=256M --include-path=%{buildroot}%{php_home}
-
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
 fi
+if which php71; then
+   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -223,6 +234,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 2.8.1-1
+- version 2.8.1
+
 * Wed Jun 22 2016 Remi Collet <remi@fedoraproject.org> - 2.8.0-1
 - version 2.8.0
 - add zf_templatemap_generator (dropped from zf2)
