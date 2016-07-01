@@ -12,8 +12,8 @@
 
 %global github_owner      Ocramius
 %global github_name       ProxyManager
-%global github_version    2.0.2
-%global github_commit     001e730968f17cb36816ad68914994341d16e029
+%global github_version    2.0.3
+%global github_commit     51c7fdd99dba53808aaab21b34f7a55b302c160c
 %global github_short      %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor   ocramius
@@ -21,8 +21,8 @@
 
 # "php": "7.0.0 - 7.0.5 || ^7.0.7"
 %global php_min_ver 7.0.7
-# "zendframework/zend-code": "~3.0"
-%global zf_min_ver  3.0
+# "zendframework/zend-code": "~3.0.0 - 3.0.2 || ^3.0.4"
+%global zf_min_ver  3.0.4
 %global zf_max_ver  4
 
 # Build using "--without tests" to disable tests
@@ -41,6 +41,7 @@ URL:           http://ocramius.github.io/ProxyManager/
 Source0:       %{name}-%{github_version}-%{github_short}.tgz
 # git snapshot to retrieve test suite
 Source1:       makesrc.sh
+
 # Hardcode library version
 # drop dependency on ocramius/package-versions
 Patch0:        %{name}-rpm.patch
@@ -60,7 +61,7 @@ BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
 # Autoloader
-BuildRequires: php-composer(phpunit/phpunit)         >= 5.1.3
+BuildRequires: php-composer(phpunit/phpunit)         >= 5.3.4
 %endif
 
 # composer.json
@@ -144,6 +145,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- update to 2.0.3
+- raise dependency on zendframework/zend-code 3.0.4
+
 * Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - update to 2.0.2
 - raise dependency on php 7.0.7
