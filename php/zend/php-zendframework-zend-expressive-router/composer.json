@@ -1,0 +1,53 @@
+{
+    "name": "zendframework/zend-expressive-router",
+    "description": "Router subcomponent for Expressive",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "expressive",
+        "http",
+        "middleware",
+        "psr",
+        "psr-7"
+    ],
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.2-dev",
+            "dev-develop": "1.3-dev"
+        }
+    },
+    "require": {
+        "php": "^5.5 || ^7.0",
+        "psr/http-message": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.7",
+        "squizlabs/php_codesniffer": "^2.3"
+    },
+    "autoload": {
+      "psr-4": {
+        "Zend\\Expressive\\Router\\": "src/"
+      }
+    },
+    "autoload-dev": {
+      "psr-4": {
+        "ZendTest\\Expressive\\Router\\": "test/"
+      }
+    },
+    "suggest": {
+        "zendframework/zend-expressive-aurarouter": "^0.1 to use the Aura.Router routing adapter",
+        "zendframework/zend-expressive-fastroute": "^0.1 to use the FastRoute routing adapter",
+        "zendframework/zend-expressive-zendrouter": "^0.1 to use the zend-mvc routing adapter"
+    },
+    "scripts": {
+        "check": [
+            "@cs",
+            "@test"
+        ],
+        "coveralls": "coveralls",
+        "cs": "phpcs",
+        "cs-fix": "phpcbf",
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-clover clover.xml"
+    }
+}
