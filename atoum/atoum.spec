@@ -7,11 +7,11 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    1d442459f3afd96375cf8b12f663c3e18253882d
+%global gh_commit    a3bceadf39cccd4cc321407eeb61187bdee438cd
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 
 Name:           atoum
-Version:        2.7.0
+Version:        2.8.0
 Release:        1%{?dist}
 Summary:        PHP Unit Testing framework
 
@@ -139,14 +139,22 @@ cd tests/units
 echo "date.timezone=UTC" >php.ini
 export PHPRC=$(pwd)/php.ini
 
-if which php70; then
-    php70 runner.php --directories .
-fi
+# remirepo:11
+run=0
+ret=0
 if which php56; then
-    php56 runner.php --directories .
-else
-    php runner.php --directories .
+   php56 runner.php --directories . || ret=1
+   run=1
 fi
+if which php70; then
+   php70 runner.php --directories . || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+php runner.php --directories .
+# remirepo:2
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -167,6 +175,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 2.8.0-1
+- update to 2.8.0
+
 * Sat May 21 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
 - update to 2.7.0
 
