@@ -63,8 +63,13 @@ with the following features:
 
 Autoloader: %{php_home}/%{ns_owner}/%{ns_project}/autoload.php
 
+
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+
+# Uggly hack, need by this package and others
+# Only usable in phpunit environment
+mv tests/_Config src/_Config
 
 
 %build
