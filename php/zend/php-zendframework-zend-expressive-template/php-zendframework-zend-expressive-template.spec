@@ -1,4 +1,4 @@
-# remirepo/Fedora spec file for php-zendframework-zend-expressive-router
+# remirepo/Fedora spec file for php-zendframework-zend-expressive-template
 #
 # Copyright (c) 2016 Remi Collet
 # License: CC-BY-SA
@@ -7,13 +7,13 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    ec11c758e067c3eef579cb51dcabfcbf5de2ec03
+%global gh_commit    2aac4050ebcf9a2c883dc23cf74671da02a66a7b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
-%global gh_project   zend-expressive-router
+%global gh_project   zend-expressive-template
 %global php_home     %{_datadir}/php
 %global library      Expressive
-%global sublib       Router
+%global sublib       Template
 %if %{bootstrap}
 %global with_tests   0%{?_with_tests:1}
 %else
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.2.0
+Version:        1.0.3
 Release:        1%{?dist}
 Summary:        %{sublib} subcomponent for %{library}
 
@@ -36,61 +36,52 @@ BuildArch:      noarch
 # Tests
 %if %{with_tests}
 BuildRequires:  php(language) >= 5.5
-BuildRequires:  php-composer(psr/http-message)                    >= 1.0
-BuildRequires:  php-pcre
 BuildRequires:  php-spl
 # From composer, "require-dev": {
 #        "phpunit/phpunit": "^4.7",
 #        "squizlabs/php_codesniffer": "^2.3"
-BuildRequires:  php-composer(phpunit/phpunit)                     >= 4.7
+BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.7
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
-# For dependencies autoloader
-BuildRequires:  php-zendframework-zend-loader                   >= 2.5.1-3
 %endif
 
 # From composer, "require": {
-#        "php": "^5.5 || ^7.0",
-#        "psr/http-message": "^1.0"
+#        "php": ">=5.5"
 Requires:       php(language) >= 5.5
-Requires:       php-composer(psr/http-message)                    >= 1.0
-Requires:       php-composer(psr/http-message)                    <  2
-# From phpcompatinfo report for version 1.2.0
-Requires:       php-pcre
+# From phpcompatinfo report for version 1.0.3
 Requires:       php-spl
 %if ! %{bootstrap}
 # From composer, "suggest": {
-#        "zendframework/zend-expressive-aurarouter": "^0.1 to use the Aura.Router routing adapter",
-#        "zendframework/zend-expressive-fastroute": "^0.1 to use the FastRoute routing adapter",
-#        "zendframework/zend-expressive-zendrouter": "^0.1 to use the zend-mvc routing adapter"
+#        "zendframework/zend-expressive-platesrenderer": "^0.1 to use the Plates template renderer",
+#        "zendframework/zend-expressive-twigrenderer": "^0.1 to use the Twig template renderer",
+#        "zendframework/zend-expressive-zendviewrenderer": "^0.1 to use the zend-view PhpRenderer template renderer"
 %if 0%{?fedora} >= 21
-Suggests:       php-composer(%{gh_owner}/zend-expressive-aurarouter)
-Suggests:       php-composer(%{gh_owner}/zend-expressive-fastroute)
-Suggests:       php-composer(%{gh_owner}/zend-expressive-zendrouter)
+Suggests:       php-composer(%{gh_owner}/zend-expressive-platesrenderer)
+Suggests:       php-composer(%{gh_owner}/zend-expressive-twigrenderer)
+Suggests:       php-composer(%{gh_owner}/zend-expressive-zendviewrenderer)
 %endif
 # Autoloader
 Requires:       php-composer(%{gh_owner}/zend-loader)           >= 2.5
-Requires:       php-zendframework-zend-loader                   >= 2.5.1-3
 %endif
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 
 %description
-Router subcomponent for Expressive.
+Template subcomponent for Expressive
 
-This package provides the following classes and interfaces:
+This package provides the following classes, interfaces, and traits:
 
-* RouterInterface, a generic interface to implement for providing routing
-  capabilities around PSR-7 ServerRequest messages.
-* Route, a value object describing routed middleware.
-* RouteResult, a value object describing the results of routing.
+* TemplateRendererInterface, a generic interface for providing template rendering capabilities.
+* TemplatePath, a value object describing a (optionally) namespaced path in which templates reside; the TemplateRendererInterface returns these.
+* ArrayParametersTrait provides helper methods you can mix in to implementations for normalizing template parameters to an array.
+* DefaultParamsTrait provides helper methods you can mix in to implementations for aggregating default parameters as well as merging global, template-specific, and provided parameters when rendering.
 
 We currently support and provide the following routing integrations:
 
-* Aura.Router: php-zendframework-zend-expressive-aurarouter
-* FastRoute: php-zendframework-zend-expressive-fastroute
-* ZF2 MVC Router: php-zendframework-zend-expressive-zendviewrouter
+* Plates: php-zendframework-zend-expressive-platesrenderer
+* Twig: php-zendframework-zend-expressive-twigrenderer
+* ZF2 PhpRenderer: php-zendframework-zend-expressive-zendviewrenderer
 
 Documentation: http://zend-expressive.readthedocs.io/
 
@@ -99,12 +90,6 @@ Documentation: http://zend-expressive.readthedocs.io/
 %setup -q -n %{gh_project}-%{gh_commit}
 
 mv LICENSE.md LICENSE
-
-: Create dependency autoloader
-cat << 'EOF' | tee autoload.php
-<?php
-require_once '%{php_home}/Psr/Http/Message/autoload.php';
-EOF
 
 
 %build
@@ -116,8 +101,6 @@ rm -rf %{buildroot}
 
 mkdir -p   %{buildroot}%{php_home}/Zend/%{library}
 cp -pr src %{buildroot}%{php_home}/Zend/%{library}/%{sublib}
-
-install -m644 autoload.php %{buildroot}%{php_home}/Zend/%{library}-%{sublib}-autoload.php
 
 
 %check
@@ -170,7 +153,6 @@ rm -rf %{buildroot}
 %doc composer.json
 %dir %{php_home}/Zend/%{library}/
      %{php_home}/Zend/%{library}/%{sublib}/
-     %{php_home}/Zend/%{library}-%{sublib}-autoload.php
 
 
 %changelog
