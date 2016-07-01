@@ -1,4 +1,4 @@
-# remirepo/Fedora spec file for php-zendframework-zend-expressive-aurarouter
+# remirepo/Fedora spec file for php-zendframework-zend-expressive-fastroute
 #
 # Copyright (c) 2016 Remi Collet
 # License: CC-BY-SA
@@ -7,10 +7,10 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    cfca5afe885dc7db3358ab0eb8fae38a20d619c2
+%global gh_commit    2d08527ee8b4ac8709a9dae626f868eaaa1d84e6
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
-%global gh_project   zend-expressive-aurarouter
+%global gh_project   zend-expressive-fastroute
 %global php_home     %{_datadir}/php
 %global library      Expressive
 %global sublib       Router
@@ -21,9 +21,9 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.0.0
+Version:        1.2.0
 Release:        1%{?dist}
-Summary:        Aura.Router integration for %{library}
+Summary:        FastRoute integration for %{library}
 
 Group:          Development/Libraries
 License:        BSD
@@ -36,9 +36,10 @@ BuildArch:      noarch
 # Tests
 %if %{with_tests}
 BuildRequires:  php(language) >= 5.5
-BuildRequires:  php-composer(aura/router)                            >= 2.3
+BuildRequires:  php-composer(nikic/fast-route)                       >= 1.0.0
 BuildRequires:  php-composer(psr/http-message)                       >= 1.0
 BuildRequires:  php-composer(%{gh_owner}/zend-expressive-router)     >= 1.0
+BuildRequires:  php-pcre
 # From composer, "require-dev": {
 #        "phpunit/phpunit": "^4.7",
 #        "squizlabs/php_codesniffer": "^2.3"
@@ -49,18 +50,18 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)                >= 2.5
 
 # From composer, "require": {
 #        "php": "^5.5 || ^7.0",
-#        "aura/router": "^2.3",
+#        "nikic/fast-route": "^1.0.0",
 #        "psr/http-message": "^1.0",
 #        "zendframework/zend-expressive-router": "^1.0"
 Requires:       php(language) >= 5.5
-Requires:       php-composer(aura/router)                            >= 2.3
-Requires:       php-composer(aura/router)                            <  3
+Requires:       php-composer(nikic/fast-route)                       >= 1.0.0
+Requires:       php-composer(nikic/fast-route)                       <  2
 Requires:       php-composer(psr/http-message)                       >= 1.0
 Requires:       php-composer(psr/http-message)                       <  2
 Requires:       php-composer(%{gh_owner}/zend-expressive-router)     >= 1.0
 Requires:       php-composer(%{gh_owner}/zend-expressive-router)     <  2
-# From phpcompatinfo report for version 1.0.0
-# Nothing
+# From phpcompatinfo report for version 1.2.0
+Requires:       php-pcre
 %if ! %{bootstrap}
 # Autoloader
 Requires:       php-composer(%{gh_owner}/zend-loader)                >= 2.5
@@ -71,7 +72,7 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 
 %description
-Provides Aura.Router integration for zend-expressive.
+Provides FastRoute integration for Expressive.
 
 Documentation: http://zend-expressive.readthedocs.io/
 
@@ -85,7 +86,7 @@ mv LICENSE.md LICENSE
 cat << 'EOF' | tee autoload.php
 <?php
 require_once '%{php_home}/Psr/Http/Message/autoload.php';
-require_once '%{php_home}/Aura/Router/autoload.php';
+require_once '%{php_home}/FastRoute/bootstrap.php';
 EOF
 
 
@@ -99,7 +100,7 @@ rm -rf %{buildroot}
 mkdir -p   %{buildroot}%{php_home}/Zend/%{library}
 cp -pr src %{buildroot}%{php_home}/Zend/%{library}/%{sublib}
 
-install -m644 autoload.php %{buildroot}%{php_home}/Zend/%{library}-%{sublib}-aura-autoload.php
+install -m644 autoload.php %{buildroot}%{php_home}/Zend/%{library}-%{sublib}-fast-autoload.php
 
 
 %check
@@ -123,15 +124,15 @@ EOF
 run=0
 ret=0
 if which php56; then
-   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php56 %{_bindir}/phpunit --verbose || ret=1
    run=1
 fi
 if which php71; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php70 %{_bindir}/phpunit --verbose || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose
+%{_bindir}/phpunit --verbose
 # remirepo:2
 fi
 exit $ret
@@ -150,11 +151,11 @@ rm -rf %{buildroot}
 %license LICENSE
 %doc *.md
 %doc composer.json
-%{php_home}/Zend/%{library}/%{sublib}/Aura*
-%{php_home}/Zend/%{library}-%{sublib}-aura-autoload.php
+%{php_home}/Zend/%{library}/%{sublib}/Fast*
+%{php_home}/Zend/%{library}-%{sublib}-fast-autoload.php
 
 
 %changelog
-* Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+* Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - initial package
 
