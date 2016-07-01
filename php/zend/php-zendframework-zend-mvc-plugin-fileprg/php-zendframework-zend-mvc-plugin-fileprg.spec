@@ -100,6 +100,8 @@ If you want a generic PRG plugin without file upload support, see zend-mvc-plugi
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+mv LICENSE.md LICENSE
+
 
 %build
 # Empty build section, nothing required
@@ -155,8 +157,8 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license LICENSE.md
-%doc CHANGELOG.md CONDUCT.md CONTRIBUTING.md README.md
+%license LICENSE
+%doc *.md
 %doc composer.json
 %{php_home}/Zend/Mvc/Plugin/%{library}
 

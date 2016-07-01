@@ -97,6 +97,8 @@ Autoloader: %{phpdir}/Zend/Diactoros/autoload.php
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+mv LICENSE.md LICENSE
+
 : Create autoloader
 cat <<'AUTOLOAD' | tee src/autoload.php
 <?php
@@ -168,10 +170,8 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license LICENSE.md
-%doc CHANGELOG.md
-%doc CONTRIBUTING.md
-%doc README.md
+%license LICENSE
+%doc *.md
 %doc composer.json
 %dir %{phpdir}/Zend
      %{phpdir}/Zend/Diactoros

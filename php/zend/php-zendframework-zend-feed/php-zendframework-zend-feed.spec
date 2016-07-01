@@ -121,6 +121,8 @@ Documentation: https://zendframework.github.io/%{gh_project}/
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+mv LICENSE.md LICENSE
+
 # NOTICE: psr/http-message is PSR-0 compliant
 # autoload will be managed by fallback_autoloader
 
@@ -172,8 +174,8 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license LICENSE.md
-%doc CONTRIBUTING.md README.md
+%license LICENSE
+%doc *.md
 %doc composer.json
 %{php_home}/Zend/%{library}
 

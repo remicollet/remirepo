@@ -249,6 +249,8 @@ Documentation: https://zendframework.github.io/
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+mv LICENSE.md LICENSE
+
 
 %build
 # Empty build section, nothing required
@@ -260,8 +262,8 @@ Documentation: https://zendframework.github.io/
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license LICENSE.md
-%doc CHANGELOG.md CONDUCT.md CONTRIBUTING.md README.md
+%license LICENSE
+%doc *.md
 %doc composer.json
 
 

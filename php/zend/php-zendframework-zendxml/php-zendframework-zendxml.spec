@@ -70,6 +70,8 @@ An utility component for XML usage and best practices in PHP.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+mv LICENSE.md LICENSE
+
 
 %build
 # Empty build section, nothing required
@@ -117,8 +119,8 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license LICENSE.md
-%doc README.md
+%license LICENSE
+%doc *.md
 %doc composer.json
 %{php_home}/%{library}
 

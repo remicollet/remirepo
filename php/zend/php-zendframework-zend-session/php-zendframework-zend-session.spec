@@ -117,6 +117,8 @@ Documentation: https://zendframework.github.io/%{gh_project}/
 %build
 # Empty build section, nothing required
 
+mv LICENSE.md LICENSE
+
 
 %install
 rm -rf %{buildroot}
@@ -164,8 +166,8 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license LICENSE.md
-%doc CONTRIBUTING.md README.md
+%license LICENSE
+%doc *.md
 %doc composer.json
 %{php_home}/Zend/%{library}
 

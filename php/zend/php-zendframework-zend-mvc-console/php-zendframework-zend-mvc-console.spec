@@ -127,6 +127,8 @@ three components.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+mv LICENSE.md LICENSE
+
 : Create dependency autoloader
 cat << 'EOF' | tee autoload.php
 <?php
@@ -192,8 +194,8 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license LICENSE.md
-%doc CHANGELOG.md CONDUCT.md CONTRIBUTING.md README.md
+%license LICENSE
+%doc *.md
 %doc composer.json
 %{php_home}/Zend/Mvc/%{library}
 %{php_home}/Zend/Mvc-%{library}-autoload.php

@@ -73,6 +73,8 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+mv LICENSE.txt LICENSE
+
 
 %build
 # Empty build section, nothing required
@@ -114,8 +116,8 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license LICENSE.txt
-%doc README.md
+%license LICENSE
+%doc *.md
 %doc composer.json
 %{php_home}/%{library}
 
