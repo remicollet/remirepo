@@ -1,4 +1,4 @@
-# remirepo/Fedora spec file for php-zendframework-zend-expressive-aurarouter
+# remirepo/Fedora spec file for php-zendframework-zend-expressive-zendrouter
 #
 # Copyright (c) 2016 Remi Collet
 # License: CC-BY-SA
@@ -7,10 +7,10 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    cfca5afe885dc7db3358ab0eb8fae38a20d619c2
+%global gh_commit    0fd6c5f6b22b614960a94beceaa58742444f84b4
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
-%global gh_project   zend-expressive-aurarouter
+%global gh_project   zend-expressive-zendrouter
 %global php_home     %{_datadir}/php
 %global library      Expressive
 %global sublib       Router
@@ -21,9 +21,9 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.0.0
+Version:        1.1.0
 Release:        1%{?dist}
-Summary:        Aura.Router integration for %{library}
+Summary:        zend-mvc router support for %{library}
 
 Group:          Development/Libraries
 License:        BSD
@@ -31,63 +31,64 @@ URL:            https://framework.zend.com/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
 
+# to allow ZF3 and raise dependencies
+Patch0:         %{name}-pr7.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.5
-BuildRequires:  php-composer(aura/router)                            >= 2.3
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-composer(psr/http-message)                       >= 1.0
-BuildRequires:  php-composer(%{gh_owner}/zend-expressive-router)     >= 1.0
+BuildRequires:  php-composer(%{gh_owner}/zend-expressive-router)     >= 1.2
+BuildRequires:  php-composer(%{gh_owner}/zend-router)                >= 3.0
+BuildRequires:  php-composer(%{gh_owner}/zend-psr7bridge)            >= 0.2.2
+BuildRequires:  php-pcre
 # From composer, "require-dev": {
 #        "phpunit/phpunit": "^4.7",
 #        "squizlabs/php_codesniffer": "^2.3"
 BuildRequires:  php-composer(phpunit/phpunit)                        >= 4.7
-# Autoloader
-BuildRequires:  php-composer(%{gh_owner}/zend-loader)                >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": "^5.5 || ^7.0",
-#        "aura/router": "^2.3",
+#        "php": "^5.6 || ^7.0",
 #        "psr/http-message": "^1.0",
-#        "zendframework/zend-expressive-router": "^1.0"
-Requires:       php(language) >= 5.5
-Requires:       php-composer(aura/router)                            >= 2.3
-Requires:       php-composer(aura/router)                            <  3
+#        "zendframework/zend-expressive-router": "^1.2",
+#        "zendframework/zend-router": "^3.0",
+#        "zendframework/zend-psr7bridge": "^0.2.2"
+Requires:       php(language) >= 5.6
 Requires:       php-composer(psr/http-message)                       >= 1.0
 Requires:       php-composer(psr/http-message)                       <  2
-Requires:       php-composer(%{gh_owner}/zend-expressive-router)     >= 1.0
+Requires:       php-composer(%{gh_owner}/zend-expressive-router)     >= 1.2
 Requires:       php-composer(%{gh_owner}/zend-expressive-router)     <  2
-# From phpcompatinfo report for version 1.0.0
-# Nothing
+Requires:       php-composer(%{gh_owner}/zend-router)                >= 3.0
+Requires:       php-composer(%{gh_owner}/zend-router)                <  4
+Requires:       php-composer(%{gh_owner}/zend-psr7bridge)            >= 0.2.2
+# From phpcompatinfo report for version 1.2.0
+Requires:       php-pcre
 %if ! %{bootstrap}
 # Autoloader
 Requires:       php-composer(%{gh_owner}/zend-loader)                >= 2.5
-Requires:       php-zendframework-zend-loader                        >= 2.5.1-3
 %endif
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 
 %description
-Provides Aura.Router integration for zend-expressive.
+Provides ZF2's MVC router integration for zend-expressive.
 
-Documentation: http://zend-expressive.readthedocs.io/
+Documentation: 
+https://zendframework.github.io/zend-expressive/features/router/zf2/
 
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+%patch0 -p1
+
 mv LICENSE.md LICENSE
 
 # psr/http-message load by zend-expressive-router
-
-: Create dependency autoloader
-cat << 'EOF' | tee autoload.php
-<?php
-require_once '%{php_home}/Aura/Router/autoload.php';
-EOF
 
 
 %build
@@ -99,8 +100,6 @@ rm -rf %{buildroot}
 
 mkdir -p   %{buildroot}%{php_home}/Zend/%{library}
 cp -pr src %{buildroot}%{php_home}/Zend/%{library}/%{sublib}
-
-install -m644 autoload.php %{buildroot}%{php_home}/Zend/%{library}-%{sublib}-aura-autoload.php
 
 
 %check
@@ -124,15 +123,15 @@ EOF
 run=0
 ret=0
 if which php56; then
-   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php56 %{_bindir}/phpunit --verbose || ret=1
    run=1
 fi
 if which php71; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php70 %{_bindir}/phpunit --verbose || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose
+%{_bindir}/phpunit --verbose
 # remirepo:2
 fi
 exit $ret
@@ -151,11 +150,10 @@ rm -rf %{buildroot}
 %license LICENSE
 %doc *.md
 %doc composer.json
-%{php_home}/Zend/%{library}/%{sublib}/Aura*
-%{php_home}/Zend/%{library}-%{sublib}-aura-autoload.php
+%{php_home}/Zend/%{library}/%{sublib}/Zend*
 
 
 %changelog
-* Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+* Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - initial package
 

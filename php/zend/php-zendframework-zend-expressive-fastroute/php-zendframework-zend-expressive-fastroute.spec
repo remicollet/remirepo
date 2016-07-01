@@ -46,6 +46,8 @@ BuildRequires:  php-pcre
 BuildRequires:  php-composer(phpunit/phpunit)                        >= 4.7
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)                >= 2.5
+# For dependencies autoloader
+BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-3
 %endif
 
 # From composer, "require": {
@@ -74,7 +76,8 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 %description
 Provides FastRoute integration for Expressive.
 
-Documentation: http://zend-expressive.readthedocs.io/
+Documentation:
+https://zendframework.github.io/zend-expressive/features/router/fast-route/
 
 
 %prep
@@ -82,10 +85,11 @@ Documentation: http://zend-expressive.readthedocs.io/
 
 mv LICENSE.md LICENSE
 
+# psr/http-message load by zend-expressive-router
+
 : Create dependency autoloader
 cat << 'EOF' | tee autoload.php
 <?php
-require_once '%{php_home}/Psr/Http/Message/autoload.php';
 require_once '%{php_home}/FastRoute/bootstrap.php';
 EOF
 

@@ -100,6 +100,8 @@ Documentation: http://zend-expressive.readthedocs.io/
 
 mv LICENSE.md LICENSE
 
+# psr/http-message also used by aurarouter, fastroute and zendrouter
+
 : Create dependency autoloader
 cat << 'EOF' | tee autoload.php
 <?php
