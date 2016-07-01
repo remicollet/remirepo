@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    cdd9d0ff36c09772ca787c9c54318115f65d4fab
+%global gh_commit    c5272131d3acb0f470a2462ed088fca3b6ba61c2
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-code
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        3.0.3
-Release:        2%{?dist}
+Version:        3.0.4
+Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -155,17 +155,20 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE.md
-%doc CONTRIBUTING.md README.md
+%doc CHANGELOG.md CONDUCT.md CONTRIBUTING.md README.md
 %doc composer.json
 %{php_home}/Zend/%{library}
 
 
 %changelog
-* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-2
+* Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 3.0.4-1
+- update to 3.0.4 for ZendFramework 3
+
+* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.3-2
 - add patch for ocramius/proxy-manager
   https://github.com/zendframework/zend-code/pull/80
 
-* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.3-1
 - update to 3.0.0 for ZendFramework 3
 
 * Thu Apr 21 2016 Remi Collet <remi@fedoraproject.org> - 2.6.3-1
