@@ -7,7 +7,7 @@ Build order
 	* Horde_Stringprep          1.0.2        
 	* Horde_Thrift              2.0.2        
 	* Horde_Translation         2.2.1       I: Horde_Test 
-	* Horde_Util                2.5.7       I: Horde_Test, Horde_Imap_Client 
+	* Horde_Util                2.5.8       I: Horde_Test, Horde_Imap_Client 
 	* horde_lz4                 1.0.10       
 	* Horde_Exception           2.0.8       I: Horde_Test R: Horde_Translation
 	* Horde_Imsp                2.0.9        R: Horde_Translation, Horde_Util

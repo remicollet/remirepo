@@ -18,8 +18,8 @@
 %endif
 
 Name:           php-horde-Horde-Util
-Version:        2.5.7
-Release:        2%{?dist}
+Version:        2.5.8
+Release:        1%{?dist}
 Summary:        Horde Utility Libraries
 
 Group:          Development/Libraries
@@ -100,14 +100,25 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %if %{with_tests}
 export LANG=fr_FR.utf8
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+# remirepo:14
 %if 0%{?rhel} == 5
 phpunit . || : Test suite result ignored
 %else
-%{_bindir}/phpunit --verbose .
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose .
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit . || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose .
+# remirepo:3
+fi
+exit $ret
 %endif
 %else
 : Test disabled, bootstrap build
@@ -140,6 +151,9 @@ fi
 
 
 %changelog
+* Sat Jul 02 2016 Remi Collet <remi@fedoraproject.org> - 2.5.8-1
+- Update to 2.5.8
+
 * Mon Feb 29 2016 Remi Collet <remi@fedoraproject.org> - 2.5.7-2
 - add BR on glibc-langpack-fr, glibc-langpack-tr (F25+)
 
