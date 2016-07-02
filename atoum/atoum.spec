@@ -7,11 +7,11 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    a3bceadf39cccd4cc321407eeb61187bdee438cd
+%global gh_commit    1813c5f50d4727cc4be8ec9abe25befae78ce4c5
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 
 Name:           atoum
-Version:        2.8.0
+Version:        2.8.1
 Release:        1%{?dist}
 Summary:        PHP Unit Testing framework
 
@@ -175,6 +175,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 2.8.1-1
+- update to 2.8.1
+
 * Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 2.8.0-1
 - update to 2.8.0
 
