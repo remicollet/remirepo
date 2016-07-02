@@ -50,5 +50,6 @@
 	"php-zendframework-zend-expressive-router": "zendframework/zend-expressive-router",
 	"php-zendframework-zend-expressive-template": "zendframework/zend-expressive-template",
 	"php-zendframework-zend-expressive-zendrouter": "zendframework/zend-expressive-zendrouter",
+	"php-zendframework-zend-expressive-helpers": "zendframework/zend-expressive-helpers",
     "php-theseer-fxsl": "theseer\/fxsl"
 }
