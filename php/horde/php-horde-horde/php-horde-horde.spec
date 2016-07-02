@@ -13,8 +13,8 @@
 %global with_sysjs   0
 
 Name:           php-horde-horde
-Version:        5.2.10
-Release:        2%{?dist}
+Version:        5.2.11
+Release:        1%{?dist}
 Summary:        Horde Application Framework
 
 Group:          Development/Libraries
@@ -310,6 +310,9 @@ fi
 
 
 %changelog
+* Sat Jul 02 2016 Remi Collet <remi@fedoraproject.org> - 5.2.11-1
+- Update to 5.2.11
+
 * Thu Jun 30 2016 Remi Collet <remi@fedoraproject.org> - 5.2.10-2
 - drop dependency on php-pear-Services-Weather which is
   optional, and dead project
