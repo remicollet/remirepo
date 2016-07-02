@@ -29,19 +29,17 @@
 
 Summary:        Light, concurrent RPC framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        2.0.0
+Version:        2.0.1
 %if 0%{?gh_date:1}
 Release:        0.10.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
-
-# https://github.com/laruence/yar/pull/83
-Patch0:         %{pecl_name}-php71.patch
 
 BuildRequires:  curl-devel
 BuildRequires:  %{?scl_prefix}php-devel > 7
@@ -105,8 +103,12 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -qc
+%if 0%{?gh_date:1}
 mv %{gh_project}-%{gh_commit} NTS
 mv NTS/package2.xml .
+%else
+mv %{pecl_name}-%{version} NTS
+%endif
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' \
@@ -114,7 +116,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package2.xml
 
 cd NTS
-%patch0 -p1 -b .php71
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_YAR_VERSION/{s/.* "//;s/".*$//;p}' php_yar.h)
@@ -269,6 +270,11 @@ export YAR_API_PORT=8964
 
 
 %changelog
+* Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- update to 2.0.1 (php 7)
+- sources from pecl
+- drop patch merged upstream
+
 * Sat Jun 11 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-3
 - add patch for PHP 7.1
   open https://github.com/laruence/yar/pull/83

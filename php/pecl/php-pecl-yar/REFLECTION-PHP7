@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #106 yar version 2.0.0 ] {
+Extension [ <persistent> extension #141 yar version 2.0.1 ] {
 
   - Dependencies {
     Dependency [ json (Required) ]
@@ -33,7 +33,7 @@ Extension [ <persistent> extension #106 yar version 2.0.0 ] {
   }
 
   - Constants [18] {
-    Constant [ string YAR_VERSION ] { 2.0.0 }
+    Constant [ string YAR_VERSION ] { 2.0.1 }
     Constant [ integer YAR_OPT_PACKAGER ] { 1 }
     Constant [ integer YAR_OPT_PERSISTENT ] { 2 }
     Constant [ integer YAR_OPT_TIMEOUT ] { 4 }
@@ -49,7 +49,7 @@ Extension [ <persistent> extension #106 yar version 2.0.0 ] {
     Constant [ integer YAR_ERR_TRANSPORT ] { 16 }
     Constant [ integer YAR_ERR_REQUEST ] { 4 }
     Constant [ integer YAR_ERR_PROTOCOL ] { 2 }
-    Constant [ integer YAR_ERR_PACKAGER ] { 64 }
+    Constant [ integer YAR_ERR_PACKAGER ] { 1 }
     Constant [ integer YAR_ERR_EXCEPTION ] { 64 }
   }
 
