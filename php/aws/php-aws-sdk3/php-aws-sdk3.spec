@@ -12,8 +12,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   3.18.23
-%global github_commit    a2791b6f14b7aa6eeb4fb9f3f779cc291ab455db
+%global github_version   3.18.24
+%global github_commit    c74f6f316282b0ac6a3cd8a681171343c0e07ec3
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -36,8 +36,8 @@
 # "guzzlehttp/promises": "~1.0"
 %global guzzle_promises_min_ver 1.0
 %global guzzle_promises_max_ver 2.0
-# "guzzlehttp/psr7": "~1.0"
-%global guzzle_psr7_min_ver 1.0
+# "guzzlehttp/psr7": "~1.3.1"
+%global guzzle_psr7_min_ver 1.3.1
 %global guzzle_psr7_max_ver 2.0
 # "mtdowling/jmespath.php": "~2.2"
 %global jmespath_min_ver 2.2
@@ -286,6 +286,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jul  2 2016 Remi Collet <remi@remirepo.net> - 3.18.24-1
+- update to 3.18.24
+
 * Fri Jul  1 2016 Remi Collet <remi@remirepo.net> - 3.18.23-1
 - update to 3.18.23
 
