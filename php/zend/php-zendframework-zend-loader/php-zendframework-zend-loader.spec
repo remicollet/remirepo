@@ -16,7 +16,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.5.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -100,6 +100,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 2.5.1-4
+- load container-interop and psr/http-message when present
+
 * Mon May  2 2016 Remi Collet <remi@fedoraproject.org> - 2.5.1-3
 - load dependencies out of Zend namespaces
 

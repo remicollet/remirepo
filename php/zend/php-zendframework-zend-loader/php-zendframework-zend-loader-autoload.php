@@ -24,4 +24,13 @@ if (defined('RPM_BUILDROOT')) {
 foreach(glob(__DIR__ . '/*-autoload.php') as $dep) {
     require_once $dep;
 }
+// Common optional dependencies
+foreach ([
+    '/usr/share/php/Psr/Http/Message/autoload.php',
+    '/usr/share/php/Interop/Container/autoload.php',
+] as $dep) {
+    if (file_exists($dep)) {
+        require_once($dep);
+    }
+}
 
