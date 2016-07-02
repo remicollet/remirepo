@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-kronolith
-Version:        4.2.16
+Version:        4.2.17
 Release:        1%{?dist}
 Summary:        A web based calendar
 
@@ -212,11 +212,22 @@ cd %{pear_name}-%{version}/test/Kronolith
 rm Integration/ToIcalendarTest.php
 rm Integration/FromIcalendarTest.php
 
-%{_bindir}/phpunit .
-
-if which php70; then
-   php70 %{_bindir}/phpunit .
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit . || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose .
+# remirepo:2
+fi
+exit $ret
 
 
 %post
@@ -262,6 +273,9 @@ fi
 
 
 %changelog
+* Sat Jul 02 2016 Remi Collet <remi@fedoraproject.org> - 4.2.17-1
+- Update to 4.2.17
+
 * Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 4.2.16-1
 - Update to 4.2.16
 
