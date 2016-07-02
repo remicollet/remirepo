@@ -12,7 +12,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-horde-ingo
-Version:        3.2.10
+Version:        3.2.11
 Release:        1%{?dist}
 Summary:        An email filter rules manager
 
@@ -155,14 +155,26 @@ done | tee ../%{pear_name}.lang
 %check
 %if %{with_tests}
 cd %{pear_name}-%{version}/test/Ingo
-if phpunit --atleast-version 4
-then %{_bindir}/phpunit .
 
-if which php70; then
-   php70 %{_bindir}/phpunit .
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit . || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+if   %{_bindir}/phpunit --atleast-version 4
+then %{_bindir}/phpunit --verbose .
 else : PHPUnit is too old
 fi
+# remirepo:2
+fi
+exit $ret
 %else
 : tests disabled
 %endif
@@ -209,6 +221,9 @@ fi
 
 
 %changelog
+* Sat Jul 02 2016 Remi Collet <remi@fedoraproject.org> - 3.2.11-1
+- Update to 3.2.11
+
 * Tue Apr 05 2016 Remi Collet <remi@fedoraproject.org> - 3.2.10-1
 - Update to 3.2.10
 
