@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        1.2.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Middleware for PHP
 
 Group:          Development/Libraries
@@ -49,7 +49,7 @@ BuildRequires:  php-composer(phpunit/phpunit)                     >= 4.7
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)             >= 2.5
 # For dependencies autoloader
-BuildRequires:  php-zendframework-zend-loader                     >= 2.5.1-3
+BuildRequires:  php-zendframework-zend-loader                     >= 2.5.1-4
 %endif
 
 # From composer, "require": {
@@ -72,7 +72,7 @@ Requires:       php-reflection
 Requires:       php-spl
 # Autoloader
 Requires:       php-composer(%{gh_owner}/zend-loader)             >= 2.5
-Requires:       php-zendframework-zend-loader                     >= 2.5.1-3
+Requires:       php-zendframework-zend-loader                     >= 2.5.1-4
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
@@ -95,12 +95,6 @@ It allows you to create and dispatch middleware pipelines.
 
 mv LICENSE.md LICENSE
 
-: Create dependency autoloader
-cat << 'EOF' | tee autoload.php
-<?php
-require_once '%{php_home}/Psr/Http/Message/autoload.php';
-EOF
-
 
 %build
 # Empty build section, nothing required
@@ -111,8 +105,6 @@ rm -rf %{buildroot}
 
 mkdir -p   %{buildroot}%{php_home}/Zend/
 cp -pr src %{buildroot}%{php_home}/Zend/%{library}
-
-install -m644 autoload.php %{buildroot}%{php_home}/Zend/%{library}-autoload.php
 
 
 %check
@@ -136,15 +128,15 @@ EOF
 run=0
 ret=0
 if which php56; then
-   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php56 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if which php71; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php70 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose
+%{_bindir}/phpunit --verbose
 # remirepo:2
 fi
 exit $ret
@@ -164,9 +156,11 @@ rm -rf %{buildroot}
 %doc *.md
 %doc composer.json
 %{php_home}/Zend/%{library}
-%{php_home}/Zend/%{library}-autoload.php
 
 
 %changelog
+* Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-2
+- drop autoloader, rely on zend-loader >= 2.5.1-4
+
 * Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - initial package
