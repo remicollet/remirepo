@@ -12,8 +12,8 @@
 
 %global github_owner     guzzle
 %global github_name      psr7
-%global github_version   1.3.0
-%global github_commit    31382fef2889136415751badebbd1cb022a4ed72
+%global github_version   1.3.1
+%global github_commit    5c6447c9df362e8f8093bda8f5d8873fe5c7f65b
 
 %global composer_vendor  guzzlehttp
 %global composer_project psr7
@@ -124,10 +124,17 @@ cp -rp src/* %{buildroot}%{phpdir}/GuzzleHttp/Psr7/
 sed "s#require.*autoload.*#require '%{buildroot}%{phpdir}/GuzzleHttp/Psr7/autoload.php';#" \
     -i tests/bootstrap.php
 
-%{_bindir}/phpunit --verbose
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose
+run=0
+if which php56; then
+   php56 %{_bindir}/phpunit --verbose
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --verbose
+   run=1
+fi
+if [ $run -eq 0 ]; then
+   %{_bindir}/phpunit --verbose
 fi
 %else
 : Tests skipped
@@ -149,6 +156,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jul  2 2016 Remi Collet <remi@remirepo.net> - 1.3.1-1
+- Updated to 1.3.1
+
 * Sun May 29 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.0-1
 - Updated to 1.3.0 (RHBZ #1326975)
 
