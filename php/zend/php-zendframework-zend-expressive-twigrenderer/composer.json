@@ -1,0 +1,55 @@
+{
+    "name": "zendframework/zend-expressive-twigrenderer",
+    "description": "Twig integration for Expressive",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "expressive",
+        "http",
+        "middleware",
+        "psr",
+        "psr-7",
+        "twig"
+    ],
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.1-dev",
+            "dev-develop": "1.2-dev"
+        }
+    },
+    "require": {
+        "php": "^5.5 || ^7.0",
+        "container-interop/container-interop": "^1.1",
+        "twig/twig": "^1.19",
+        "zendframework/zend-expressive-helpers": "^1.1 || ^2.0",
+        "zendframework/zend-expressive-template": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.7",
+        "squizlabs/php_codesniffer": "^2.3"
+    },
+    "autoload": {
+      "psr-4": {
+        "Zend\\Expressive\\Twig\\": "src/"
+      }
+    },
+    "autoload-dev": {
+      "psr-4": {
+        "ZendTest\\Expressive\\Twig\\": "test/"
+      }
+    },
+    "suggest": {
+        "mouf/pimple-interop": "^1.0 to use Pimple for dependency injection",
+        "aura/di": "3.0.*@beta to make use of Aura.Di dependency injection container",
+        "zendframework/zend-servicemanager": "^2.5 to use zend-servicemanager for dependency injection"
+    },
+    "scripts": {
+        "check": [
+            "@cs",
+            "@test"
+        ],
+        "cs": "phpcs",
+        "cs-fix": "phpcbf",
+        "test": "phpunit"
+    }
+}

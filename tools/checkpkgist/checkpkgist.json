@@ -51,5 +51,8 @@
 	"php-zendframework-zend-expressive-template": "zendframework/zend-expressive-template",
 	"php-zendframework-zend-expressive-zendrouter": "zendframework/zend-expressive-zendrouter",
 	"php-zendframework-zend-expressive-helpers": "zendframework/zend-expressive-helpers",
+	"php-zendframework-zend-expressive-platesrenderer": "zendframework/zend-expressive-platesrenderer",
+	"php-zendframework-zend-expressive-twigrenderer": "zendframework/zend-expressive-twigrenderer",
+	"php-zendframework-zend-expressive-zendviewrenderer": "zendframework/zend-expressive-zendviewrenderer",
     "php-theseer-fxsl": "theseer\/fxsl"
 }
