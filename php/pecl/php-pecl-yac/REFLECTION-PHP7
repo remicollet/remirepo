@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #96 yac version 2.0.0 ] {
+Extension [ <persistent> extension #124 yac version 2.0.1 ] {
 
   - INI {
     Entry [ yac.enable <SYSTEM> ]
@@ -22,7 +22,7 @@ Extension [ <persistent> extension #96 yac version 2.0.0 ] {
   }
 
   - Constants [5] {
-    Constant [ string YAC_VERSION ] { 2.0.0 }
+    Constant [ string YAC_VERSION ] { 2.0.1 }
     Constant [ integer YAC_MAX_KEY_LEN ] { 48 }
     Constant [ integer YAC_MAX_VALUE_RAW_LEN ] { 67108863 }
     Constant [ integer YAC_MAX_RAW_COMPRESSED_LEN ] { 1048576 }
