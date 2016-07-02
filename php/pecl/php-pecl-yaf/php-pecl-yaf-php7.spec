@@ -22,20 +22,18 @@
 
 Summary:       Yet Another Framework
 Name:          %{?sub_prefix}php-pecl-yaf
-Version:       3.0.2
+Version:       3.0.3
 %if 0%{?gh_date:1}
 Release:       0.8.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaf
 Source1:       %{pecl_name}.ini
-
-Patch0:        %{pecl_name}-pr289.patch
 
 BuildRequires: %{?scl_prefix}php-devel >= 7
 BuildRequires: %{?scl_prefix}php-pear
@@ -101,7 +99,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-%patch0 -p1 -b .pr289
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_YAF_VERSION/{s/.*\t"//;s/".*$//;p}' php_yaf.h )
@@ -219,6 +216,10 @@ fi
 
 
 %changelog
+* Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 3.0.3-1
+- update to 3.0.3
+- drop patch merged upstream
+
 * Sat Jun 11 2016 Remi Collet <remi@fedoraproject.org> - 3.0.2-3
 - add patch for PHP 7.1
   open https://github.com/laruence/yaf/pull/289
