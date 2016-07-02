@@ -22,7 +22,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        1.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Aura.Router integration for %{library}
 
 Group:          Development/Libraries
@@ -45,6 +45,8 @@ BuildRequires:  php-composer(%{gh_owner}/zend-expressive-router)     >= 1.0
 BuildRequires:  php-composer(phpunit/phpunit)                        >= 4.7
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)                >= 2.5
+# For dependencies autoloader
+BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-4
 %endif
 
 # From composer, "require": {
@@ -64,7 +66,7 @@ Requires:       php-composer(%{gh_owner}/zend-expressive-router)     <  2
 %if ! %{bootstrap}
 # Autoloader
 Requires:       php-composer(%{gh_owner}/zend-loader)                >= 2.5
-Requires:       php-zendframework-zend-loader                        >= 2.5.1-3
+Requires:       php-zendframework-zend-loader                        >= 2.5.1-4
 %endif
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
@@ -80,8 +82,6 @@ Documentation: http://zend-expressive.readthedocs.io/
 %setup -q -n %{gh_project}-%{gh_commit}
 
 mv LICENSE.md LICENSE
-
-# psr/http-message load by zend-expressive-router
 
 : Create dependency autoloader
 cat << 'EOF' | tee autoload.php
@@ -124,15 +124,15 @@ EOF
 run=0
 ret=0
 if which php56; then
-   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php56 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if which php71; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php71 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose
+%{_bindir}/phpunit --verbose
 # remirepo:2
 fi
 exit $ret
@@ -156,6 +156,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- clean autoloader, rely on zend-loader >= 2.5.1-4
+
 * Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package
 
