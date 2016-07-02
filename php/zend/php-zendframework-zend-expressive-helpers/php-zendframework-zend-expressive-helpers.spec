@@ -22,7 +22,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        1.4.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Helper/Utility classes for Expressive
 
 Group:          Development/Libraries
@@ -99,14 +99,6 @@ Helper classes for Expressive.
 
 mv LICENSE.md LICENSE
 
-# psr/http-message also used by aurarouter, fastroute and zendrouter
-
-: Create dependency autoloader
-cat << 'EOF' | tee autoload.php
-<?php
-require_once '%{php_home}/Psr/Http/Message/autoload.php';
-EOF
-
 
 %build
 # Empty build section, nothing required
@@ -117,8 +109,6 @@ rm -rf %{buildroot}
 
 mkdir -p   %{buildroot}%{php_home}/Zend/%{library}
 cp -pr src %{buildroot}%{php_home}/Zend/%{library}/%{sublib}
-
-install -m644 autoload.php %{buildroot}%{php_home}/Zend/%{library}-%{sublib}-autoload.php
 
 
 %check
@@ -142,15 +132,15 @@ EOF
 run=0
 ret=0
 if which php56; then
-   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php56 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if which php71; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php71 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose
+%{_bindir}/phpunit --verbose
 # remirepo:2
 fi
 exit $ret
@@ -170,10 +160,12 @@ rm -rf %{buildroot}
 %doc *.md
 %doc composer.json
 %{php_home}/Zend/%{library}/%{sublib}/
-%{php_home}/Zend/%{library}-%{sublib}-autoload.php
 
 
 %changelog
+* Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-2
+- drop autoloader, rely on zend-loader >= 2.5.1-4
+
 * Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - initial package
 
