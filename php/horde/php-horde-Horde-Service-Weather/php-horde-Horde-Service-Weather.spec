@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Service-Weather
-Version:        2.3.3
+Version:        2.3.4
 Release:        1%{?dist}
 Summary:        Horde Weather Provider
 
@@ -114,11 +114,23 @@ done | tee ../%{pear_name}.lang
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-%{_bindir}/phpunit --verbose .
 
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose .
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit . || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose .
+# remirepo:2
+fi
+exit $ret
 
 
 %clean
@@ -150,6 +162,9 @@ fi
 
 
 %changelog
+* Sat Jul 02 2016 Remi Collet <remi@fedoraproject.org> - 2.3.4-1
+- Update to 2.3.4
+
 * Wed Mar 16 2016 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
 - Update to 2.3.3
 
