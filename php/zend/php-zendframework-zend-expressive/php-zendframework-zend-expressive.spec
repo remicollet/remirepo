@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        1.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        PSR-7 Middleware Microframework based on Stratigility
 
 Group:          Development/Libraries
@@ -59,7 +59,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-expressive-fastroute)  >= 1.0
 BuildRequires:  php-composer(%{gh_owner}/zend-expressive-zendrouter) >= 1.0
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)        >= 2.6
 # For dependencies autoloader
-BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-3
+BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-4
 %endif
 
 # From composer, "require": {
@@ -114,7 +114,7 @@ Suggests:       php-composer(%{gh_owner}/zend-servicemanager)
 %endif
 # Autoloader
 Requires:       php-composer(%{gh_owner}/zend-loader)           >= 2.5
-Requires:       php-zendframework-zend-loader                   >= 2.5.1-3
+Requires:       php-zendframework-zend-loader                   >= 2.5.1-4
 %endif
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
@@ -142,13 +142,9 @@ Documentation: http://zend-expressive.readthedocs.io/
 
 mv LICENSE.md LICENSE
 
-# psr/http-message also used by aurarouter, fastroute and zendrouter
-
 : Create dependency autoloader
 cat << 'EOF' | tee autoload.php
 <?php
-require_once '%{php_home}/Interop/Container/autoload.php';
-require_once '%{php_home}/Psr/Http/Message/autoload.php';
 if (file_exists('%{php_home}/Aura/Di/autoload.php')) {
    require_once '%{php_home}/Aura/Di/autoload.php';
 }
@@ -197,7 +193,7 @@ if which php56; then
    run=1
 fi
 if which php71; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php71 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -225,6 +221,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- clean autoloader, rely on zend-loader >= 2.5.1-4
+
 * Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package
 
