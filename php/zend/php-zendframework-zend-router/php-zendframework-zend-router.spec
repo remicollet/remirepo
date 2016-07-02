@@ -73,6 +73,9 @@ Requires:       php-composer(%{gh_owner}/zend-stdlib)             <  4
 %if 0%{?fedora} >= 21
 Suggests:       php-composer(%{gh_owner}/zend-i18n)
 %endif
+# From composer, "conflict": {
+#        "zendframework/zend-mvc": "<3.0.0"
+Conflicts:      php-composer(%{gh_owner}/zend-mvc)                <  3
 %endif
 # From phpcompatinfo report for version 2.5.1
 Requires:       php-pcre
