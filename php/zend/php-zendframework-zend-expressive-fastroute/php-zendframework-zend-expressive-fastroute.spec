@@ -22,7 +22,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        1.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        FastRoute integration for %{library}
 
 Group:          Development/Libraries
@@ -47,7 +47,7 @@ BuildRequires:  php-composer(phpunit/phpunit)                        >= 4.7
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)                >= 2.5
 # For dependencies autoloader
-BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-3
+BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-4
 %endif
 
 # From composer, "require": {
@@ -67,7 +67,7 @@ Requires:       php-pcre
 %if ! %{bootstrap}
 # Autoloader
 Requires:       php-composer(%{gh_owner}/zend-loader)                >= 2.5
-Requires:       php-zendframework-zend-loader                        >= 2.5.1-3
+Requires:       php-zendframework-zend-loader                        >= 2.5.1-4
 %endif
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
@@ -84,8 +84,6 @@ https://zendframework.github.io/zend-expressive/features/router/fast-route/
 %setup -q -n %{gh_project}-%{gh_commit}
 
 mv LICENSE.md LICENSE
-
-# psr/http-message load by zend-expressive-router
 
 : Create dependency autoloader
 cat << 'EOF' | tee autoload.php
@@ -132,7 +130,7 @@ if which php56; then
    run=1
 fi
 if which php71; then
-   php70 %{_bindir}/phpunit --verbose || ret=1
+   php71 %{_bindir}/phpunit --verbose || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -160,6 +158,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-2
+- clean autoloader, rely on zend-loader >= 2.5.1-4
+
 * Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - initial package
 
