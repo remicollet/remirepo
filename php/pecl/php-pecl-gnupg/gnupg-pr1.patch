@@ -1,0 +1,91 @@
+From 32203934c7c4a624b54e2d5822a523fec14b1e7a Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 16 Jun 2016 11:09:56 +0200
+Subject: [PATCH] Fix callbacks prototype, to match exactly what expected.
+
+This is broken on ZTS, as the additional parameter (TRSMLS)
+will never be sent by libgpgme.
+
+The cast was badly hdding the warning about this.
+---
+ gnupg.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
+
+diff --git a/gnupg.c b/gnupg.c
+index af20050..3ff4f09 100644
+--- a/gnupg.c
++++ b/gnupg.c
+@@ -395,14 +395,16 @@ PHP_MINFO_FUNCTION(gnupg)
+ 
+ /* {{{ passphrase_cb */
+ gpgme_error_t passphrase_cb(
+-		PHPC_THIS_DECLARE(gnupg),
++		void *hook,
+ 		const char *uid_hint, const char *passphrase_info,
+-		int last_was_bad, int fd TSRMLS_DC)
++		int last_was_bad, int fd)
+ {
+ 	char uid[17];
+ 	int idx;
+ 	char *passphrase = NULL;
+ 	zval *return_value = NULL;
++	PHPC_THIS_DECLARE(gnupg) = hook;
++	TSRMLS_FETCH();
+ 
+ 	if (last_was_bad) {
+ 		GNUPG_ERR("Incorrent passphrase");
+@@ -431,14 +433,16 @@ gpgme_error_t passphrase_cb(
+ 
+ /* {{{ passphrase_decrypt_cb */
+ gpgme_error_t passphrase_decrypt_cb (
+-		PHPC_THIS_DECLARE(gnupg),
++		void *hook,
+ 		const char *uid_hint, const char *passphrase_info,
+-		int last_was_bad, int fd TSRMLS_DC)
++		int last_was_bad, int fd)
+ {
+ 	char uid[17];
+ 	int idx;
+ 	char *passphrase = NULL;
+ 	zval *return_value = NULL;
++	PHPC_THIS_DECLARE(gnupg) = hook;
++	TSRMLS_FETCH();
+ 
+ 	if (last_was_bad) {
+ 		GNUPG_ERR("Incorrent passphrase");
+@@ -927,7 +931,7 @@ PHP_FUNCTION(gnupg_sign)
+ 		GNUPG_RES_FETCH();
+ 	}
+ 
+-	gpgme_set_passphrase_cb(PHPC_THIS->ctx, (void *)passphrase_cb, PHPC_THIS);
++	gpgme_set_passphrase_cb(PHPC_THIS->ctx, passphrase_cb, PHPC_THIS);
+ 	if ((PHPC_THIS->err = gpgme_data_new_from_mem(&in, value, value_len, 0)) != GPG_ERR_NO_ERROR) {
+ 		GNUPG_ERR("could not create in-data buffer");
+ 		return;
+@@ -1063,7 +1067,7 @@ PHP_FUNCTION(gnupg_encryptsign)
+ 		GNUPG_ERR("no key for encryption set");
+ 		return;
+ 	}
+-	gpgme_set_passphrase_cb(PHPC_THIS->ctx, (void *)passphrase_cb, PHPC_THIS);
++	gpgme_set_passphrase_cb(PHPC_THIS->ctx, passphrase_cb, PHPC_THIS);
+ 	if ((PHPC_THIS->err = gpgme_data_new_from_mem (&in, value, value_len, 0)) != GPG_ERR_NO_ERROR) {
+ 		GNUPG_ERR("could not create in-data buffer");
+ 		return;
+@@ -1227,7 +1231,7 @@ PHP_FUNCTION(gnupg_decrypt)
+ 		GNUPG_RES_FETCH();
+ 	}
+ 
+-	gpgme_set_passphrase_cb(PHPC_THIS->ctx, (void *)passphrase_decrypt_cb, PHPC_THIS);
++	gpgme_set_passphrase_cb(PHPC_THIS->ctx, passphrase_decrypt_cb, PHPC_THIS);
+ 
+ 	if ((PHPC_THIS->err = gpgme_data_new_from_mem(&in, enctxt, enctxt_len, 0)) != GPG_ERR_NO_ERROR) {
+ 		GNUPG_ERR("could not create in-data buffer");
+@@ -1291,7 +1295,7 @@ PHP_FUNCTION(gnupg_decryptverify)
+ 	}
+ 	PHPC_PZVAL_DEREF(plaintext);
+ 
+-	gpgme_set_passphrase_cb(PHPC_THIS->ctx, (void *)passphrase_decrypt_cb, PHPC_THIS);
++	gpgme_set_passphrase_cb(PHPC_THIS->ctx, passphrase_decrypt_cb, PHPC_THIS);
+ 
+ 	if ((PHPC_THIS->err = gpgme_data_new_from_mem(&in, enctxt, enctxt_len, 0)) != GPG_ERR_NO_ERROR) {
+ 		GNUPG_ERR("could not create in-data buffer");
