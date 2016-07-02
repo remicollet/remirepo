@@ -22,7 +22,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        1.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        %{sublib} subcomponent for %{library}
 
 Group:          Development/Libraries
@@ -44,9 +44,9 @@ BuildRequires:  php-spl
 #        "squizlabs/php_codesniffer": "^2.3"
 BuildRequires:  php-composer(phpunit/phpunit)                     >= 4.7
 # Autoloader
-BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/zend-loader)             >= 2.5
 # For dependencies autoloader
-BuildRequires:  php-zendframework-zend-loader                   >= 2.5.1-3
+BuildRequires:  php-zendframework-zend-loader                     >= 2.5.1-4
 %endif
 
 # From composer, "require": {
@@ -70,7 +70,7 @@ Suggests:       php-composer(%{gh_owner}/zend-expressive-zendrouter)
 %endif
 # Autoloader
 Requires:       php-composer(%{gh_owner}/zend-loader)           >= 2.5
-Requires:       php-zendframework-zend-loader                   >= 2.5.1-3
+Requires:       php-zendframework-zend-loader                   >= 2.5.1-4
 %endif
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
@@ -100,14 +100,6 @@ Documentation: http://zend-expressive.readthedocs.io/
 
 mv LICENSE.md LICENSE
 
-# psr/http-message also used by aurarouter, fastroute and zendrouter
-
-: Create dependency autoloader
-cat << 'EOF' | tee autoload.php
-<?php
-require_once '%{php_home}/Psr/Http/Message/autoload.php';
-EOF
-
 
 %build
 # Empty build section, nothing required
@@ -118,8 +110,6 @@ rm -rf %{buildroot}
 
 mkdir -p   %{buildroot}%{php_home}/Zend/%{library}
 cp -pr src %{buildroot}%{php_home}/Zend/%{library}/%{sublib}
-
-install -m644 autoload.php %{buildroot}%{php_home}/Zend/%{library}-%{sublib}-autoload.php
 
 
 %check
@@ -143,15 +133,15 @@ EOF
 run=0
 ret=0
 if which php56; then
-   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php56 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if which php71; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php70 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose
+%{_bindir}/phpunit --verbose
 # remirepo:2
 fi
 exit $ret
@@ -172,10 +162,12 @@ rm -rf %{buildroot}
 %doc composer.json
 %dir %{php_home}/Zend/%{library}/
      %{php_home}/Zend/%{library}/%{sublib}/
-     %{php_home}/Zend/%{library}-%{sublib}-autoload.php
 
 
 %changelog
+* Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-2
+- drop autoloader, rely on zend-loader >= 2.5.1-4
+
 * Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - initial package
 
