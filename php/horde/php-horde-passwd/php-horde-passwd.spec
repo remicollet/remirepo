@@ -13,7 +13,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-passwd
-Version:        5.0.4
+Version:        5.0.5
 Release:        1%{?dist}
 Summary:        Horde password changing application
 
@@ -139,12 +139,24 @@ rm -rf %{buildroot}
 
 %check
 %if %{with_tests}
-src=$(pwd)/%{pear_name}-%{version}
 cd %{pear_name}-%{version}/test/Passwd
-phpunit\
-    --include-path=$src/lib \
-    -d date.timezone=UTC \
-    .
+
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose .
+# remirepo:2
+fi
+exit $ret
 %else
 : Test disabled
 %endif
@@ -183,6 +195,9 @@ fi
 
 
 %changelog
+* Sat Jul 02 2016 Remi Collet <remi@fedoraproject.org> - 5.0.5-1
+- Update to 5.0.5
+
 * Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 5.0.4-1
 - Update to 5.0.4
 
