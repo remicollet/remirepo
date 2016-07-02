@@ -32,7 +32,7 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-pear(PEAR) >= 1.7.0
 BuildRequires:  php-channel(%{pear_channel})
-%if 0%{?fedora} > 24
+%if 0%{?fedora} >= 24
 # Used as default LANG for the test suite
 BuildRequires:  glibc-langpack-fr
 # Used by some tests
