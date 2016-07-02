@@ -22,7 +22,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        1.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        zend-mvc router support for %{library}
 
 Group:          Development/Libraries
@@ -48,14 +48,18 @@ BuildRequires:  php-pcre
 #        "phpunit/phpunit": "^4.7",
 #        "squizlabs/php_codesniffer": "^2.3"
 BuildRequires:  php-composer(phpunit/phpunit)                        >= 4.7
+# Autoloader
+BuildRequires:  php-composer(%{gh_owner}/zend-loader)                >= 2.5
+# For dependencies autoloader
+BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-4
 %endif
 
 # From composer, "require": {
 #        "php": "^5.6 || ^7.0",
 #        "psr/http-message": "^1.0",
-#        "zendframework/zend-expressive-router": "^1.2",
-#        "zendframework/zend-router": "^3.0",
-#        "zendframework/zend-psr7bridge": "^0.2.2"
+#        "zendframework/zend-expressive-router": "^1.0",
+#        "zendframework/zend-router": "^2.5",
+#        "zendframework/zend-psr7bridge": "^0.2.0"
 Requires:       php(language) >= 5.6
 Requires:       php-composer(psr/http-message)                       >= 1.0
 Requires:       php-composer(psr/http-message)                       <  2
@@ -69,6 +73,7 @@ Requires:       php-pcre
 %if ! %{bootstrap}
 # Autoloader
 Requires:       php-composer(%{gh_owner}/zend-loader)                >= 2.5
+Requires:       php-zendframework-zend-loader                        >= 2.5.1-4
 %endif
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
@@ -87,8 +92,6 @@ https://zendframework.github.io/zend-expressive/features/router/zf2/
 %patch0 -p1
 
 mv LICENSE.md LICENSE
-
-# psr/http-message load by zend-expressive-router
 
 
 %build
@@ -127,7 +130,7 @@ if which php56; then
    run=1
 fi
 if which php71; then
-   php70 %{_bindir}/phpunit --verbose || ret=1
+   php71 %{_bindir}/phpunit --verbose || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -154,6 +157,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-2
+- cleanup and build for ZF2
+
 * Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - initial package
 
