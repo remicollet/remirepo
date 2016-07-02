@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-nag
-Version:        4.2.9
+Version:        4.2.10
 Release:        1%{?dist}
 Summary:        A web based task list manager
 
@@ -169,11 +169,23 @@ done | tee ../%{pear_name}.lang
 
 %check
 cd %{pear_name}-%{version}/test/Nag
-%{_bindir}/phpunit .
 
-if which php70; then
-   php70 %{_bindir}/phpunit .
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit . || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose .
+# remirepo:2
+fi
+exit $ret
 
 
 %post
@@ -218,6 +230,9 @@ fi
 
 
 %changelog
+* Sat Jul 02 2016 Remi Collet <remi@fedoraproject.org> - 4.2.10-1
+- Update to 4.2.10
+
 * Tue Apr 05 2016 Remi Collet <remi@fedoraproject.org> - 4.2.9-1
 - Update to 4.2.9
 
