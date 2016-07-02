@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    c98e7e2e16a79cf703b7cb1564bd8a33a5cfee7f
+%global gh_commit    7d7cf9573638448acdde5b2ee4a30ebd33401fb7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-helpers
@@ -21,8 +21,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.4.0
-Release:        2%{?dist}
+Version:        2.0.0
+Release:        1%{?dist}
 Summary:        Helper/Utility classes for Expressive
 
 Group:          Development/Libraries
@@ -163,6 +163,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- update to 2.0.0
+
 * Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-2
 - drop autoloader, rely on zend-loader >= 2.5.1-4
 
