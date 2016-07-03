@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Css-Parser
-Version:        1.0.10
+Version:        1.0.11
 Release:        1%{?dist}
 Summary:        Horde CSS Parser
 
@@ -40,7 +40,7 @@ Requires:       php-mbstring
 Requires:       php-pear(PEAR) >= 1.7.0
 Requires:       php-channel(%{pear_channel})
 # Unbundled library
-Requires:       php-composer(sabberworm/php-css-parser) >= 7.0.2
+Requires:       php-composer(sabberworm/php-css-parser) >= 7.0.3
 # From phpcompatinfo report for 1.0.2
 Requires:       php-iconv
 Requires:       php-pcre
@@ -87,11 +87,23 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-%{_bindir}/phpunit .
 
-if which php70; then
-   php70 %{_bindir}/phpunit . || :
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit . || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose .
+# remirepo:2
+fi
+exit $ret
 
 
 %clean
@@ -119,6 +131,10 @@ fi
 
 
 %changelog
+* Sun Jul 03 2016 Remi Collet <remi@fedoraproject.org> - 1.0.11-1
+- Update to 1.0.11 (no change)
+- raise dependency on php-PHP-CSS-Parser >= 7.0.3
+
 * Fri Apr 15 2016 Remi Collet <remi@fedoraproject.org> - 1.0.10-1
 - Update to 1.0.10
 
