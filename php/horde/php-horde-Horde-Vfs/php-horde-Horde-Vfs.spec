@@ -14,7 +14,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Vfs
-Version:        2.3.2
+Version:        2.3.3
 Release:        1%{?dist}
 Summary:        Virtual File System API
 
@@ -60,7 +60,7 @@ Requires:       php-pear(%{pear_channel}/Horde_Kolab_Session) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Perms) <  3.0.0
 # Optional and skiped to avoid circular dependency: Horde_Core
-# Optional and implicitly required: Horde_Db, Horde_Mime
+# Optional and implicitly required: Horde_Db, Horde_Mime, Horde_Mime
 
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 Provides:       php-composer(horde/horde-vfs) = %{version}
@@ -132,11 +132,22 @@ cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 sed -e 's/testDeleteUnusalFileNames/SKIP_testDeleteUnusalFileNames/' \
     -i FileTest.php
 
-%{_bindir}/phpunit .
-
-if which php70; then
-   php70 %{_bindir}/phpunit .
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit . || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose .
+# remirepo:2
+fi
+exit $ret
 %else
 : Test disabled
 %endif
@@ -167,6 +178,9 @@ fi
 
 
 %changelog
+* Sun Jul 03 2016 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
+- Update to 2.3.3
+
 * Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
 - Update to 2.3.2
 
