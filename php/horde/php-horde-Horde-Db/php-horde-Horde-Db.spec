@@ -12,17 +12,14 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Db
-Version:        2.3.1
-Release:        2%{?dist}
+Version:        2.3.2
+Release:        1%{?dist}
 Summary:        Horde Database Libraries
 
 Group:          Development/Libraries
 License:        BSD
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-
-# https://github.com/horde/horde/pull/195
-Patch0:         0003-drop-ereg-dep-for-php-7-in-Db.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -69,9 +66,6 @@ Horde database/SQL abstraction layer
 
 cd %{pear_name}-%{version}
 mv ../package.xml %{name}.xml
-%patch0 -p3 -b .ereg
-sed -e '/SearchParser.php/s/md5sum="[^"]*"//' \
-    -i %{name}.xml
 
 
 %build
@@ -93,11 +87,23 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-%{_bindir}/phpunit .
 
-if which php70; then
-   php70 %{_bindir}/phpunit .
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit . || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose .
+# remirepo:2
+fi
+exit $ret
 
 
 %post
@@ -122,6 +128,10 @@ fi
 
 
 %changelog
+* Sun Jul 03 2016 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
+- Update to 2.3.2
+- drop patch merged upstream
+
 * Mon Jun 27 2016 Remi Collet <remi@fedoraproject.org> - 2.3.1-2
 - add patch to drop dependency on ereg
 
