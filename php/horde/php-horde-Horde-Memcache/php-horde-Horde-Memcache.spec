@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Memcache
-Version:        2.0.7
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Horde Memcache API
 
@@ -42,6 +42,9 @@ Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
 
 %description
 Provides an API to access a memcache installation.
+
+You need to also install php-pecl-memcache or php-pecl-memcached.
+
 
 %prep
 %setup -q -c
@@ -87,6 +90,9 @@ fi
 
 
 %changelog
+* Sun Jul 03 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+
 * Wed Dec 03 2014 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
 - Update to 2.0.7
 
