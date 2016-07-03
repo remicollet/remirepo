@@ -7,9 +7,9 @@
 # Please, preserve the changelog entries
 #
 
-%global gh_commit    804b0d5d81f5fc80cbd96db71ba045e90aba46c5
+%global gh_commit    fe3f274cb0a862e7e511a7f2033301a06cbfb4f1
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20150519
+%global gh_date      20150618
 %global gh_owner     znerol
 %global gh_project   Stringprep
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
@@ -18,16 +18,13 @@
 
 Name:           php-znerol-php-stringprep
 Version:        0
-Release:        0.2.%{gh_date}git%{gh_short}%{?dist}
+Release:        0.4.%{gh_date}git%{gh_short}%{?dist}
 Summary:        Implementation of RFC 3454 Preparation of Internationalized Strings
 
 Group:          Development/Libraries
 License:        LGPLv3
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
-
-# https://github.com/znerol/Stringprep/pull/6
-Patch0:         %{gh_project}-pr6.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -59,8 +56,6 @@ See: http://tools.ietf.org/html/rfc3454
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-%patch0 -p1
-
 
 %build
 # Generate a simple autoloader
@@ -79,8 +74,22 @@ cp -pr Profile RFC3454 *php \
 
 %check
 %if %{with_tests}
-%{_bindir}/phpunit \
-    --bootstrap %{buildroot}%{basedir}/autoload.php
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap %{buildroot}%{basedir}/autoload.php || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap %{buildroot}%{basedir}/autoload.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --bootstrap %{buildroot}%{basedir}/autoload.php --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -99,6 +108,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jul  3 2016 Remi Collet <remi@fedoraproject.org> - 0-0.4.20150618gitfe3f274
+- new snapshot
+- drop patch merges upstream
+
 * Thu Jun 18 2015 Remi Collet <remi@fedoraproject.org> - 0-0.2.20150519git804b0d5
 - add patch for autoload issue
   https://github.com/znerol/Stringprep/pull/6
