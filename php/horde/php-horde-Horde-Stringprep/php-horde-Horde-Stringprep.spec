@@ -14,8 +14,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Stringprep
-Version:        1.0.2
-Release:        2%{?dist}
+Version:        1.0.3
+Release:        1%{?dist}
 Summary:        Preparation of Internationalized Strings ("stringprep")
 
 Group:          Development/Libraries
@@ -54,7 +54,7 @@ cd %{pear_name}-%{version}
 
 %patch0 -p1 -b .syslib
 
-sed -e '/bundle/d' \
+sed -e '/bundle\//d' \
     -e '/Stringprep.php/s/md5sum=.*name=/name=/' \
     ../package.xml >%{name}.xml
 touch -r ../package.xml %{name}.xml
@@ -109,6 +109,9 @@ fi
 
 
 %changelog
+* Sun Jul 03 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3 (no change)
+
 * Sun Jun 21 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-2
 - fix license handling per review #1222799
 
