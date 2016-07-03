@@ -23,7 +23,7 @@
 %{!?runselftest: %global runselftest 1}
 
 Name:           memcached
-Version:        1.4.27
+Version:        1.4.28
 Release:        1%{?dist}
 Epoch:          0
 Summary:        High Performance, Distributed Memory Object Cache
@@ -235,6 +235,9 @@ fi
 
 
 %changelog
+* Sun Jul  3 2016 Remi Collet <rpms@famillecollet.com> - 0:1.4.28-1
+- Update to 1.4.28
+
 * Sat Jun 25 2016 Remi Collet <rpms@famillecollet.com> - 0:1.4.27-1
 - Update to 1.4.27
 - run all tests during the build
