@@ -12,8 +12,8 @@
 
 %global github_owner     Seldaek
 %global github_name      monolog
-%global github_version   1.19.0
-%global github_commit    5f56ed5212dc509c8dc8caeba2715732abb32dbf
+%global github_version   1.20.0
+%global github_commit    55841909e2bcde01b5318c35f2b74f8ecc86e037
 
 %global composer_vendor  monolog
 %global composer_project monolog
@@ -24,9 +24,6 @@
 #     NOTE: Min version not 1.0 because autoloader required
 %global psrlog_min_ver  1.0.0-8
 %global psrlog_max_ver  2.0
-# "raven/raven": "^0.13"
-%global raven_min_ver   0.13
-%global raven_max_ver   1.0
 # "aws/aws-sdk-php": "^2.4.9"
 #     NOTE: Min version not 2.4.9 because autoloader required
 %global aws_min_ver     2.8.13
@@ -62,7 +59,6 @@ BuildRequires: php-PsrLog                            >= %{psrlog_min_ver}
 BuildRequires: php-composer(psr/log)                 <  %{psrlog_max_ver}
 ## optional
 BuildRequires: php-composer(swiftmailer/swiftmailer) >= %{swift_min_ver}
-BuildRequires: php-composer(raven/raven)             >= %{raven_min_ver}
 BuildRequires: php-composer(aws/aws-sdk-php)         >= %{aws_min_ver}
 ## phpcompatinfo (computed from version 1.18.2)
 BuildRequires: php-curl
@@ -116,20 +112,17 @@ Provides:      %{name}-dynamo = %{version}-%{release}
 Obsoletes:     %{name}-mongo  < %{version}-%{release}
 Provides:      %{name}-mongo  = %{version}-%{release}
 Obsoletes:     %{name}-raven  < %{version}-%{release}
-Provides:      %{name}-raven  = %{version}-%{release}
 
 # Weak dependencies
 %if 0%{?fedora} >= 21
 Suggests:      php-composer(aws/aws-sdk-php)
-Suggests:      php-composer(raven/raven)
+Suggests:      php-composer(sentry/sentry)
 Suggests:      php-composer(swiftmailer/swiftmailer)
 Suggests:      php-pecl(amqp)
 Suggests:      php-pecl(mongo)
 %endif
 Conflicts:     php-aws-sdk     <  %{aws_min_ver}
 Conflicts:     php-aws-sdk     >= %{aws_max_ver}
-Conflicts:     php-Raven       <  %{raven_min_ver}
-Conflicts:     php-Raven       >= %{raven_max_ver}
 Conflicts:     php-swiftmailer <  %{swift_min_ver}
 Conflicts:     php-swiftmailer >= %{swift_max_ver}
 
@@ -173,7 +166,6 @@ $fedoraClassLoader->addPrefix('Monolog\\', dirname(__DIR__));
 foreach(array(
     '%{phpdir}/Psr/Log/autoload.php'     => true,
     '%{phpdir}/Aws/autoload.php'         => false,
-    '%{phpdir}/Raven/autoload.php'       => false,
     '%{phpdir}/Swift/swift_required.php' => false,
 ) as $dependencyAutoloader => $required) {
     if ($required || file_exists($dependencyAutoloader)) {
@@ -253,6 +245,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jul  3 2016 Remi Collet <remi@remirepo.net> - 1.20.0-1
+- update to 1.20.0
+- drop dependency on raven (upstream switch to sentry)
+
 * Thu Apr 14 2016 Remi Collet <remi@remirepo.net> - 1.19.0-1
 - update to 1.19.0
 - updated autoloader dependency loading
