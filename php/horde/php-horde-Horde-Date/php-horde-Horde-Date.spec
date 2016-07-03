@@ -18,7 +18,7 @@
 %endif
 
 Name:           php-horde-Horde-Date
-Version:        2.3.0
+Version:        2.3.1
 Release:        1%{?dist}
 Summary:        Horde Date package
 
@@ -110,11 +110,22 @@ done | tee ../%{pear_name}.lang
 %check
 %if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-%{_bindir}/phpunit .
-
-if which php70; then
-   php70 %{_bindir}/phpunit .
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit . || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose .
+# remirepo:2
+fi
+exit $ret
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -142,6 +153,9 @@ fi
 
 
 %changelog
+* Sun Jul 03 2016 Remi Collet <remi@fedoraproject.org> - 2.3.1-1
+- Update to 2.3.1
+
 * Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
 - Update to 2.3.0
 
