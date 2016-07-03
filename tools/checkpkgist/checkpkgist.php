@@ -222,4 +222,4 @@ if (count($tmp)) {
 foreach ($pkgs as $rpm => $name) {
 	run($name, $rpm);
 }
-echo str_repeat(' ', 50)."\n";
+echo str_repeat(' ', 80)."\n";
