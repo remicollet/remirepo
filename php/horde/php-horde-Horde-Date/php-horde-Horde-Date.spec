@@ -110,6 +110,7 @@ done | tee ../%{pear_name}.lang
 %check
 %if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+
 # remirepo:11
 run=0
 ret=0
