@@ -47,7 +47,7 @@ BuildArch:     noarch
 BuildRequires: php(language)                  >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(psr/http-message) >= %{psr_http_message_min_ver}
-## phpcompatinfo (computed from version 1.3.0)
+## phpcompatinfo (computed from version 1.3.1)
 BuildRequires: php-hash
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -61,7 +61,7 @@ BuildRequires: php-composer(symfony/class-loader)
 Requires:      php(language)                  >= %{php_min_ver}
 Requires:      php-composer(psr/http-message) >= %{psr_http_message_min_ver}
 Requires:      php-composer(psr/http-message) <  %{psr_http_message_max_ver}
-# phpcompatinfo (computed from version 1.3.0)
+# phpcompatinfo (computed from version 1.3.1)
 Requires:      php-hash
 Requires:      php-pcre
 Requires:      php-spl
@@ -156,6 +156,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jul 03 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.1-1
+- Updated to 1.3.1 (RHBZ #1352354)
+
 * Sat Jul  2 2016 Remi Collet <remi@remirepo.net> - 1.3.1-1
 - Updated to 1.3.1
 
