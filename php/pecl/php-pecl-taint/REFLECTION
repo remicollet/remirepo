@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #55 taint version 2.0.1 ] {
+Extension [ <persistent> extension #114 taint version 2.0.2 ] {
 
   - Dependencies {
     Dependency [ xdebug (Conflicts) ]
