@@ -37,6 +37,7 @@
 %global guzzle_promises_min_ver 1.0
 %global guzzle_promises_max_ver 2.0
 # "guzzlehttp/psr7": "~1.3.1"
+#     NOTE: Keeping previous max of 2.0 instead of changing to 1.4
 %global guzzle_psr7_min_ver 1.3.1
 %global guzzle_psr7_max_ver 2.0
 # "mtdowling/jmespath.php": "~2.2"
@@ -88,20 +89,20 @@ BuildRequires: php-composer(doctrine/cache)                    >= %{doctrine_cac
 BuildRequires: php-composer(nette/neon)                        >= %{nette_neon_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(psr/cache)                         >= %{psr_cache_min_ver}
-## phpcompatinfo (computed from version 3.18.0)
-BuildRequires: php-curl
-BuildRequires: php-date
 BuildRequires: php-dom
-BuildRequires: php-filter
-BuildRequires: php-hash
 BuildRequires: php-json
-BuildRequires: php-libxml
 BuildRequires: php-openssl
 BuildRequires: php-pcre
-BuildRequires: php-reflection
-BuildRequires: php-session
 BuildRequires: php-simplexml
 BuildRequires: php-spl
+## phpcompatinfo (computed from version 3.18.24)
+BuildRequires: php-curl
+BuildRequires: php-date
+BuildRequires: php-filter
+BuildRequires: php-hash
+BuildRequires: php-libxml
+BuildRequires: php-reflection
+BuildRequires: php-session
 BuildRequires: php-xml
 BuildRequires: php-xmlwriter
 %endif
@@ -116,7 +117,7 @@ Requires:      php-composer(guzzlehttp/psr7)        <  %{guzzle_psr7_max_ver}
 Requires:      php-composer(guzzlehttp/psr7)        >= %{guzzle_psr7_min_ver}
 Requires:      php-composer(mtdowling/jmespath.php) <  %{jmespath_max_ver}
 Requires:      php-composer(mtdowling/jmespath.php) >= %{jmespath_min_ver}
-# phpcompatinfo (computed from version 3.18.0)
+# phpcompatinfo (computed from version 3.18.24)
 Requires:      php-date
 Requires:      php-filter
 Requires:      php-hash
@@ -158,9 +159,6 @@ Autoloader: %{phpdir}/Aws3/autoload.php
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
-
-: Remove executable bits
-chmod a-x composer.json
 
 
 %build
@@ -255,15 +253,16 @@ export AWS_SECRET_ACCESS_KEY=bar
 
 run=0
 if which php56; then
-   php56 %{_bindir}/phpunit -d memory_limit=1G --verbose --bootstrap bootstrap.php
+   php56 %{_bindir}/phpunit -d memory_limit=1G --testsuite=unit --bootstrap bootstrap.php
    run=1
 fi
 if which php71; then
-   php71 %{_bindir}/phpunit -d memory_limit=1G --verbose --bootstrap bootstrap.php
+   php71 %{_bindir}/phpunit -d memory_limit=1G --testsuite=unit --bootstrap bootstrap.php
    run=1
 fi
 if [ $run -eq 0 ]; then
-   %{_bindir}/phpunit -d memory_limit=1G --verbose --bootstrap bootstrap.php
+%{_bindir}/phpunit -d memory_limit=1G --verbose  --testsuite=unit \
+    --bootstrap bootstrap.php
 fi
 %else
 : Tests skipped
@@ -286,6 +285,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 04 2016 Shawn Iwinski <shawn@iwin.ski> - 3.18.24-1
+- Updated to 3.18.24 (RHBZ #1342771)
+
 * Sat Jul  2 2016 Remi Collet <remi@remirepo.net> - 3.18.24-1
 - update to 3.18.24
 
