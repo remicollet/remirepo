@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    92feaf5b6e368fbfefa7f53f41dd66f3f7963bd3
+%global gh_commit    db7ef240fc9de81cd093d4d7e401a30b79023196
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     alcaeus
 %global gh_project   mongo-php-adapter
@@ -19,7 +19,7 @@
 
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.0.4
+Version:        1.0.5
 Release:        1%{?dist}
 Summary:        Mongo PHP Adapter
 
@@ -125,19 +125,31 @@ mongod \
   --dbpath      $PWD/dbtest \
   --fork   || : skip test as server cant start
 
-if [ -s server.pid ] ; then
-  : Run the test suite
-  %{_bindir}/phpunit --bootstrap bs.php || RET=1
-
-  if which php71; then
-    php71 %{_bindir}/phpunit --bootstrap bs.php || RET=1
-  fi
-
-  : Cleanup
-  kill $(cat server.pid)
+if [ ! -s server.pid ] ; then
+  exit 0
 fi
 
-exit $RET
+: Run the test suite
+ret=0
+# remirepo:10
+run=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap bs.php || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap bs.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --bootstrap bs.php || ret=1
+# remirepo:1
+fi
+
+: Cleanup
+kill $(cat server.pid)
+
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -157,6 +169,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul  4 2016 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
+- update to 1.0.5
+
 * Wed Jun 22 2016 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
 - update to 1.0.4
 
