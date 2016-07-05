@@ -12,12 +12,12 @@
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
-%global api_version  1.2.0
+%global api_version  1.1.0
 %global prever       RC
 
 Name:           composer
-Version:        1.1.3
-Release:        1%{?dist}
+Version:        1.2.0
+Release:        0.1.RC%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -34,8 +34,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-cli
 %if %{with_tests}
-BuildRequires:  php-composer(justinrainbow/json-schema) >= 1.6
-BuildRequires:  php-composer(justinrainbow/json-schema) <  2
+BuildRequires:  php-composer(justinrainbow/json-schema) >= 2.0
 BuildRequires:  php-composer(composer/spdx-licenses)    >= 1.0
 BuildRequires:  php-composer(composer/ca-bundle)        >= 1.0
 BuildRequires:  php-composer(composer/semver)           >= 1.0
@@ -75,8 +74,8 @@ BuildRequires:  php-PsrLog          >= 1.0.0-8
 #        "psr/log": "^1.0"
 Requires:       php(language)                           >= 5.3.2
 Requires:       php-cli
-Requires:       php-composer(justinrainbow/json-schema) >= 1.6
-Requires:       php-composer(justinrainbow/json-schema) <  2
+Requires:       php-composer(justinrainbow/json-schema) >= 2.0
+Requires:       php-composer(justinrainbow/json-schema) <  3
 Requires:       php-composer(composer/spdx-licenses)    >= 1.0
 Requires:       php-composer(composer/spdx-licenses)    <  2
 Requires:       php-composer(composer/ca-bundle)        >= 1.0
@@ -215,11 +214,22 @@ rm -rf res
 
 : Run test suite
 export BUILDROOT=%{buildroot}
-%{_bindir}/phpunit --include-path %{buildroot}%{_datadir}/php --verbose
-
-if which php71; then
-   php71 %{_bindir}/phpunit --include-path %{buildroot}%{_datadir}/php --verbose
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --include-path %{buildroot}%{_datadir}/php || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit --include-path %{buildroot}%{_datadir}/php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --include-path %{buildroot}%{_datadir}/php --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -243,6 +253,7 @@ rm -rf %{buildroot}
 %changelog
 * Tue Jul  5 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-0.1.RC
 - update to 1.2.0-RC
+- switch to justinrainbow/json-schema v2
 
 * Sun Jun 26 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
 - update to 1.1.3
