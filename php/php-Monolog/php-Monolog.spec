@@ -24,6 +24,9 @@
 #     NOTE: Min version not 1.0 because autoloader required
 %global psrlog_min_ver  1.0.0-8
 %global psrlog_max_ver  2.0
+# "raven/raven": "^0.13"
+%global raven_min_ver   0.13
+%global raven_max_ver   1.0
 # "aws/aws-sdk-php": "^2.4.9"
 #     NOTE: Min version not 2.4.9 because autoloader required
 %global aws_min_ver     2.8.13
@@ -39,7 +42,7 @@
 
 Name:      php-Monolog
 Version:   %{github_version}
-Release:   1%{?dist}
+Release:   1.1%{?dist}
 Summary:   Sends your logs to files, sockets, inboxes, databases and various web services
 
 Group:     Development/Libraries
@@ -59,8 +62,9 @@ BuildRequires: php-PsrLog                            >= %{psrlog_min_ver}
 BuildRequires: php-composer(psr/log)                 <  %{psrlog_max_ver}
 ## optional
 BuildRequires: php-composer(swiftmailer/swiftmailer) >= %{swift_min_ver}
+BuildRequires: php-composer(raven/raven)             >= %{raven_min_ver}
 BuildRequires: php-composer(aws/aws-sdk-php)         >= %{aws_min_ver}
-## phpcompatinfo (computed from version 1.18.2)
+## phpcompatinfo (computed from version 1.20.0)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -82,7 +86,7 @@ Requires:      php(language)         >= %{php_min_ver}
 #Requires:      php-composer(psr/log) >= %%{psrlog_min_ver}
 Requires:      php-PsrLog            >= %{psrlog_min_ver}
 Requires:      php-composer(psr/log) <  %{psrlog_max_ver}
-# phpcompatinfo (computed from version 1.18.2)
+# phpcompatinfo (computed from version 1.20.0)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-filter
@@ -99,7 +103,7 @@ Requires:      php-composer(symfony/class-loader)
 
 # Standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming
 Provides:      php-%{composer_vendor}-%{composer_project} = %{version}-%{release}
-Provides:      php-%{composer_vendor} = %{version}-%{release}
+Provides:      php-%{composer_project} = %{version}-%{release}
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 Provides:      php-composer(psr/log-implementation) = 1.0.0
@@ -112,10 +116,12 @@ Provides:      %{name}-dynamo = %{version}-%{release}
 Obsoletes:     %{name}-mongo  < %{version}-%{release}
 Provides:      %{name}-mongo  = %{version}-%{release}
 Obsoletes:     %{name}-raven  < %{version}-%{release}
+Provides:      %{name}-raven  = %{version}-%{release}
 
 # Weak dependencies
 %if 0%{?fedora} >= 21
 Suggests:      php-composer(aws/aws-sdk-php)
+Suggests:      php-composer(raven/raven)
 Suggests:      php-composer(sentry/sentry)
 Suggests:      php-composer(swiftmailer/swiftmailer)
 Suggests:      php-pecl(amqp)
@@ -123,6 +129,8 @@ Suggests:      php-pecl(mongo)
 %endif
 Conflicts:     php-aws-sdk     <  %{aws_min_ver}
 Conflicts:     php-aws-sdk     >= %{aws_max_ver}
+Conflicts:     php-Raven       <  %{raven_min_ver}
+Conflicts:     php-Raven       >= %{raven_max_ver}
 Conflicts:     php-swiftmailer <  %{swift_min_ver}
 Conflicts:     php-swiftmailer >= %{swift_max_ver}
 
@@ -166,6 +174,7 @@ $fedoraClassLoader->addPrefix('Monolog\\', dirname(__DIR__));
 foreach(array(
     '%{phpdir}/Psr/Log/autoload.php'     => true,
     '%{phpdir}/Aws/autoload.php'         => false,
+    '%{phpdir}/Raven/autoload.php'       => false,
     '%{phpdir}/Swift/swift_required.php' => false,
 ) as $dependencyAutoloader => $required) {
     if ($required || file_exists($dependencyAutoloader)) {
@@ -245,6 +254,14 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul  5 2016 Remi Collet <remi@remirepo.net> - 1.20.0-1.1
+- sync with Fedora, re-add dependency on raven
+  (sentry is only a rename)
+
+* Mon Jul 04 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.20.0-1
+- Updated to 1.20.0 (RHBZ #1352494)
+- Updated autoloader to not use "@include_once"
+
 * Sun Jul  3 2016 Remi Collet <remi@remirepo.net> - 1.20.0-1
 - update to 1.20.0
 - drop dependency on raven (upstream switch to sentry)
