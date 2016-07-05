@@ -29,7 +29,7 @@
 
 Summary:        A effective,fast,stable log extension for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.5.6
+Version:        1.6.0
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        ASL 2.0
 Group:          Development/Languages
@@ -124,15 +124,18 @@ extension=%{pecl_name}.so
 ; Configuration
 ;seaslog.default_basepath = '/var/log/www'
 ;seaslog.default_logger = 'default'
+;seaslog.default_datetime_format = 'Y:m:d H:i:s	'
 ;seaslog.logger = 'default'
-;seaslog.default_datetime_format = '%Y:%m:%d %H:%M:%S'
 ;seaslog.disting_type = 0
 ;seaslog.disting_by_hour = 0
 ;seaslog.use_buffer = 0
-;seaslog.buffer_size = 0
-;seaslog.level = 0
 ;seaslog.trace_error = 1
 ;seaslog.trace_exception = 0
+;seaslog.buffer_size = 0
+;seaslog.level = 0
+;seaslog.appender = 1
+;seaslog.remote_host = '127.0.0.1'
+;seaslog.remote_port = 514
 EOF
 
 
@@ -235,6 +238,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 05 2016 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
+- Update to 1.6.0
+- update providing configuration for new options
+
 * Thu May 19 2016 Remi Collet <remi@fedoraproject.org> - 1.5.6-1
 - Update to 1.5.6
 

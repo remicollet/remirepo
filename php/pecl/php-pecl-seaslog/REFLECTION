@@ -1,4 +1,7 @@
-Extension [ <persistent> extension #213 SeasLog version 1.5.6 ] {
+Extension [ <persistent> extension #143 SeasLog version 1.6.0 ] {
+
+  - Dependencies {
+  }
 
   - INI {
     Entry [ seaslog.default_basepath <ALL> ]
@@ -8,7 +11,7 @@ Extension [ <persistent> extension #213 SeasLog version 1.5.6 ] {
       Current = 'default'
     }
     Entry [ seaslog.default_datetime_format <ALL> ]
-      Current = '%Y:%m:%d %H:%M:%S'
+      Current = 'Y:m:d H:i:s'
     }
     Entry [ seaslog.logger <ALL> ]
       Current = 'default'
@@ -22,22 +25,31 @@ Extension [ <persistent> extension #213 SeasLog version 1.5.6 ] {
     Entry [ seaslog.use_buffer <ALL> ]
       Current = '0'
     }
-    Entry [ seaslog.buffer_size <ALL> ]
-      Current = '0'
-    }
-    Entry [ seaslog.level <ALL> ]
-      Current = '0'
-    }
     Entry [ seaslog.trace_error <ALL> ]
       Current = '1'
     }
     Entry [ seaslog.trace_exception <ALL> ]
       Current = '0'
     }
+    Entry [ seaslog.buffer_size <ALL> ]
+      Current = '0'
+    }
+    Entry [ seaslog.level <ALL> ]
+      Current = '0'
+    }
+    Entry [ seaslog.appender <ALL> ]
+      Current = '1'
+    }
+    Entry [ seaslog.remote_host <ALL> ]
+      Current = '127.0.0.1'
+    }
+    Entry [ seaslog.remote_port <ALL> ]
+      Current = '514'
+    }
   }
 
-  - Constants [13] {
-    Constant [ string SEASLOG_VERSION ] { 1.5.6 }
+  - Constants [16] {
+    Constant [ string SEASLOG_VERSION ] { 1.6.0 }
     Constant [ string SEASLOG_AUTHOR ] { Chitao.Gao  [ neeke@php.net ] }
     Constant [ string SEASLOG_ALL ] { all }
     Constant [ string SEASLOG_DEBUG ] { debug }
@@ -50,6 +62,9 @@ Extension [ <persistent> extension #213 SeasLog version 1.5.6 ] {
     Constant [ string SEASLOG_EMERGENCY ] { emergency }
     Constant [ integer SEASLOG_DETAIL_ORDER_ASC ] { 1 }
     Constant [ integer SEASLOG_DETAIL_ORDER_DESC ] { 2 }
+    Constant [ integer SEASLOG_APPENDER_FILE ] { 1 }
+    Constant [ integer SEASLOG_APPENDER_TCP ] { 2 }
+    Constant [ integer SEASLOG_APPENDER_UDP ] { 3 }
   }
 
   - Functions {
