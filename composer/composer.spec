@@ -6,14 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    30ab6f1c1753267d181839142fafe022313c3c9a
+%global gh_commit    e3c36a766b0791abcbc8876b4a5cb4bde10a5f1b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
-%global api_version  1.1.0
-#global prever       RC
+%global api_version  1.2.0
+%global prever       RC
 
 Name:           composer
 Version:        1.1.3
@@ -50,7 +50,7 @@ BuildRequires:  php-composer(symfony/process)           >= 2.1
 BuildRequires:  php-zip
 # From composer.json, "require-dev": {
 #        "phpunit/phpunit": "^4.5 || ^5.0.5",
-#        "phpunit/phpunit-mock-objects": "2.3.0 || ^3.0"
+#        "phpunit/phpunit-mock-objects": "^2.3 || ^3.0"
 BuildRequires:  php-composer(phpunit/phpunit)           >= 4.5
 # For autoloader
 BuildRequires:  php-composer(symfony/class-loader)
@@ -61,7 +61,7 @@ BuildRequires:  php-PsrLog          >= 1.0.0-8
 
 # From composer.json, "require": {
 #        "php": "^5.3.2 || ^7.0",
-#        "justinrainbow/json-schema": "^1.6",
+#        "justinrainbow/json-schema": "^1.6 || ^2.0",
 #        "composer/ca-bundle": "^1.0",
 #        "composer/semver": "^1.0",
 #        "composer/spdx-licenses": "^1.0",
@@ -241,6 +241,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul  5 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-0.1.RC
+- update to 1.2.0-RC
+
 * Sun Jun 26 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
 - update to 1.1.3
 
