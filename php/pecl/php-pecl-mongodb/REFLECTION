@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #202 mongodb version 1.1.7 ] {
+Extension [ <persistent> extension #137 mongodb version 1.1.8 ] {
 
   - INI {
     Entry [ mongodb.debug <ALL> ]
@@ -7,7 +7,7 @@ Extension [ <persistent> extension #202 mongodb version 1.1.7 ] {
   }
 
   - Constants [3] {
-    Constant [ string MONGODB_VERSION ] { 1.1.7 }
+    Constant [ string MONGODB_VERSION ] { 1.1.8 }
     Constant [ string MONGODB_STABILITY ] { stable }
     Constant [ string BSON_NAMESPACE ] { MongoDB\BSON }
   }
@@ -755,7 +755,7 @@ Extension [ <persistent> extension #202 mongodb version 1.1.7 ] {
       }
     }
 
-    Class [ <internal:mongodb> class MongoDB\Driver\Exception\LogicException extends LogicException implements MongoDB\Driver\Exception\Exception ] {
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\LogicException extends LogicException implements Throwable, MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -786,33 +786,33 @@ Extension [ <persistent> extension #202 mongodb version 1.1.7 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:mongodb> class MongoDB\Driver\Exception\RuntimeException extends RuntimeException implements MongoDB\Driver\Exception\Exception ] {
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\RuntimeException extends RuntimeException implements Throwable, MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -843,33 +843,33 @@ Extension [ <persistent> extension #202 mongodb version 1.1.7 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:mongodb> class MongoDB\Driver\Exception\UnexpectedValueException extends UnexpectedValueException implements MongoDB\Driver\Exception\Exception ] {
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\UnexpectedValueException extends UnexpectedValueException implements Throwable, MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -900,33 +900,33 @@ Extension [ <persistent> extension #202 mongodb version 1.1.7 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:mongodb> class MongoDB\Driver\Exception\InvalidArgumentException extends InvalidArgumentException implements MongoDB\Driver\Exception\Exception ] {
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\InvalidArgumentException extends InvalidArgumentException implements Throwable, MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -957,33 +957,33 @@ Extension [ <persistent> extension #202 mongodb version 1.1.7 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:mongodb> class MongoDB\Driver\Exception\ConnectionException extends MongoDB\Driver\Exception\RuntimeException implements MongoDB\Driver\Exception\Exception ] {
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\ConnectionException extends MongoDB\Driver\Exception\RuntimeException implements MongoDB\Driver\Exception\Exception, Throwable ] {
 
       - Constants [0] {
       }
@@ -1014,33 +1014,33 @@ Extension [ <persistent> extension #202 mongodb version 1.1.7 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:mongodb> class MongoDB\Driver\Exception\AuthenticationException extends MongoDB\Driver\Exception\ConnectionException implements MongoDB\Driver\Exception\Exception ] {
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\AuthenticationException extends MongoDB\Driver\Exception\ConnectionException implements Throwable, MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -1071,33 +1071,33 @@ Extension [ <persistent> extension #202 mongodb version 1.1.7 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:mongodb> final class MongoDB\Driver\Exception\SSLConnectionException extends MongoDB\Driver\Exception\ConnectionException implements MongoDB\Driver\Exception\Exception ] {
+    Class [ <internal:mongodb> final class MongoDB\Driver\Exception\SSLConnectionException extends MongoDB\Driver\Exception\ConnectionException implements Throwable, MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -1128,33 +1128,33 @@ Extension [ <persistent> extension #202 mongodb version 1.1.7 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:mongodb> abstract class MongoDB\Driver\Exception\WriteException extends MongoDB\Driver\Exception\RuntimeException implements MongoDB\Driver\Exception\Exception ] {
+    Class [ <internal:mongodb> abstract class MongoDB\Driver\Exception\WriteException extends MongoDB\Driver\Exception\RuntimeException implements MongoDB\Driver\Exception\Exception, Throwable ] {
 
       - Constants [0] {
       }
@@ -1192,33 +1192,33 @@ Extension [ <persistent> extension #202 mongodb version 1.1.7 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:mongodb> class MongoDB\Driver\Exception\BulkWriteException extends MongoDB\Driver\Exception\WriteException implements MongoDB\Driver\Exception\Exception ] {
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\BulkWriteException extends MongoDB\Driver\Exception\WriteException implements Throwable, MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -1256,33 +1256,33 @@ Extension [ <persistent> extension #202 mongodb version 1.1.7 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:mongodb> final class MongoDB\Driver\Exception\ExecutionTimeoutException extends MongoDB\Driver\Exception\RuntimeException implements MongoDB\Driver\Exception\Exception ] {
+    Class [ <internal:mongodb> final class MongoDB\Driver\Exception\ExecutionTimeoutException extends MongoDB\Driver\Exception\RuntimeException implements MongoDB\Driver\Exception\Exception, Throwable ] {
 
       - Constants [0] {
       }
@@ -1313,33 +1313,33 @@ Extension [ <persistent> extension #202 mongodb version 1.1.7 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:mongodb> final class MongoDB\Driver\Exception\ConnectionTimeoutException extends MongoDB\Driver\Exception\ConnectionException implements MongoDB\Driver\Exception\Exception ] {
+    Class [ <internal:mongodb> final class MongoDB\Driver\Exception\ConnectionTimeoutException extends MongoDB\Driver\Exception\ConnectionException implements Throwable, MongoDB\Driver\Exception\Exception ] {
 
       - Constants [0] {
       }
@@ -1370,28 +1370,28 @@ Extension [ <persistent> extension #202 mongodb version 1.1.7 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }

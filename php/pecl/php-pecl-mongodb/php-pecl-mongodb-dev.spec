@@ -6,7 +6,16 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package        php-pecl-mongodb}
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%scl_package       php-pecl-mongodb
+%else
+%global _root_prefix %{_prefix}
+%endif
 
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  mongodb
@@ -21,7 +30,7 @@
 %global buildver %(pkg-config --silence-errors --modversion libmongoc-priv 2>/dev/null || echo 65536)
 
 %ifarch x86_64
-%global with_tests   0%{!?_without_tests:1}
+%global with_tests   0%{?_with_tests:1}
 %else
 # See https://jira.mongodb.org/browse/CDRIVER-1186
 # 32-bit MongoDB support was officially deprecated
@@ -30,9 +39,9 @@
 %endif
 
 Summary:        MongoDB driver for PHP
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.1.7
-Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
+Version:        1.1.8
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -83,6 +92,10 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -304,6 +317,9 @@ exit $ret
 
 
 %changelog
+* Wed Jul 06 2016 Remi Collet <remi@fedoraproject.org> - 1.1.8-1
+- Update to 1.1.8
+
 * Fri Jun  3 2016 Remi Collet <remi@fedoraproject.org> - 1.1.7-3
 - run the test suite during the build (x86_64 only)
 - ignore known to fail tests
