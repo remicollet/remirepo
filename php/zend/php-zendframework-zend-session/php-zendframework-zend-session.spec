@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    f44101f8e8bc95090ef1b59ffb0f1c03d70d7bed
+%global gh_commit    346e9709657b81a5d53d70ce754730a26d1f02f2
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-session
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.2
+Version:        2.7.3
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -144,16 +144,27 @@ Zend\Loader\AutoloaderFactory::factory(array(
 ))));
 require_once '%{php_home}/Zend/autoload.php';
 EOF
+# remirepo:16
 %if 0%{?rhel} == 5
 # sqlite is too old
 rm test/SaveHandler/DbTableGatewayTest.php
 %endif
 
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
-
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -173,6 +184,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jul  6 2016 Remi Collet <remi@fedoraproject.org> - 2.7.3-1
+- update to 2.7.3
+
 * Sat Jun 25 2016 Remi Collet <remi@fedoraproject.org> - 2.7.2-1
 - update to 2.7.2
 
