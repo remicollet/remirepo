@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
-%global gh_commit    1b65ee36ac475e2ce3a20fae612659ea933338c6
+%global gh_commit    300a1689891aa97a6733ef496081ec394f53486b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20151005
 %global gh_owner     llaville
@@ -16,8 +16,8 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        5.0.0
-%global specrel 2
+Version:        5.0.1
+%global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -90,7 +90,6 @@ Requires:       php-composer(symfony/console)      <  3
 #        "bartlett/umlwriter": "Allow writing UML class diagrams (Graphviz or PlantUML)"
 # Required by autoloader
 Requires:       php-composer(symfony/class-loader)
-Requires:       php-bartlett-PHP-Reflect >= 3.1.1-3
 
 Provides:       phpcompatinfo = %{version}
 Provides:       php-composer(bartlett/php-compatinfo) = %{version}
@@ -140,15 +139,22 @@ install -D -p -m 755 %{SOURCE1}                  %{buildroot}%{_datadir}/%{name}
 mkdir vendor
 ln -s %{buildroot}%{_datadir}/php/Bartlett/CompatInfo/autoload.php vendor/
 
-%{_bindir}/phpunit \
-    --include-path %{buildroot}%{_datadir}/php \
-    -d memory_limit=1G
-
-if which php70; then
-  php70 %{_bindir}/phpunit \
-    --include-path %{buildroot}%{_datadir}/php \
-    -d memory_limit=1G
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --include-path %{buildroot}%{_datadir}/php --verbose
+# remirepo:2
+fi
+exit $ret
 %endif
 
 
@@ -171,6 +177,9 @@ fi
 
 
 %changelog
+* Wed Jul  6 2016 Remi Collet <remi@fedoraproject.org> - 5.0.1-1
+- update to 5.0.1
+
 * Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 5.0.0-2
 - display DB version instead of build date
 
