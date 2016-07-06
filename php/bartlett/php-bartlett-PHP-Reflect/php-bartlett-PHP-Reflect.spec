@@ -53,6 +53,7 @@ BuildRequires:  php-composer(symfony/dependency-injection)      >= 2.5
 BuildRequires:  php-composer(phpdocumentor/reflection-docblock) >= 2.0
 BuildRequires:  php-composer(seld/jsonlint)                     >= 1.1
 BuildRequires:  php-composer(justinrainbow/json-schema)         >= 1.3
+BuildRequires:  php-composer(justinrainbow/json-schema)         <  2
 BuildRequires:  php-composer(monolog/monolog)                   >= 1.10
 # For our patch / autoloader
 BuildRequires:  php-doctrine-collections                        >= 1.3.0-2
