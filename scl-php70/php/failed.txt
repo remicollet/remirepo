@@ -1,19 +1,23 @@
-===== 7.0.8 (2016-06-23)
+===== 7.0.9RC1 (2016-07-08)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl70*/build.log
 
-/var/lib/mock/scl70el6x/build.log:Tests failed    :     2
-/var/lib/mock/scl70el7x/build.log:Tests failed    :     2
+/var/lib/mock/scl70el6x/build.log:Tests failed    :     3
+/var/lib/mock/scl70el7x/build.log:Tests failed    :     4
 /var/lib/mock/scl70fc21x/build.log:Tests failed    :    0
 /var/lib/mock/scl70fc22x/build.log:Tests failed    :    0
-/var/lib/mock/scl70fc23x/build.log:Tests failed    :    1
-/var/lib/mock/scl70fc24x/build.log:Tests failed    :    0
+/var/lib/mock/scl70fc23x/build.log:Tests failed    :    0
+/var/lib/mock/scl70fc24x/build.log:Tests failed    :    1
 
 el6x, el7x
     Bug #33414 [2] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-2.phpt]
     strtotime() function (64 bit) [ext/date/tests/strtotime3-64bit.phpt]
-fc23x
+el6x
+	Test session_set_save_handler() function : test lazy_write [ext/session/tests/session_set_save_handler_variation6.phpt]
+el7x, fc24x
 	Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
+el7x
+	Bug #64438 proc_open hangs with stdin/out with 4097+ bytes [ext/standard/tests/streams/proc_open_bug64438.phpt]
 
 
 *	proc_open give erratic test results :(
