@@ -16,31 +16,29 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 }
 $fedoraClassLoader->addPrefixes(array(
     'Symfony\\Component'                  => $vendorDir,
-    'JsonSchema'                          => $vendorDir,
-    'Seld\\JsonLint'                      => $vendorDir,
     'Bartlett'                            => dirname(dirname(__DIR__)),
 ));
 
-// Mandatory dependencies
-require_once $vendorDir . '/PhpParser/Autoloader.php';
-PhpParser\Autoloader::register();
-require_once $vendorDir . '/SebastianBergmann/Version/autoload.php';
-require_once $vendorDir . '/Doctrine/Common/Collections/autoload.php';
-require_once $vendorDir . '/Doctrine/Common/Cache/autoload.php';
-require_once $vendorDir . '/phpDocumentor/Reflection/DocBlock/autoload.php';
-
 // Needed when installed for 'Bartlett\CompatInfo\Analyser\CompatibilityAnalyser'
-if (is_dir($vendorDir . '/Bartlett/CompatInfo')) {
+if (is_dir("$vendorDir/Bartlett/CompatInfo")) {
    $fedoraClassLoader->addPrefix('Bartlett\\CompatInfo', $vendorDir);
 }
 
-// Optional dependencies
-if (file_exists($vendorDir . '/Bartlett/UmlWriter/autoload.php')) {
-   require_once $vendorDir . '/Bartlett/UmlWriter/autoload.php';
+// Dependencies (autoloader => required)
+foreach(array(
+    "$vendorDir/PhpParser/autoload.php"                         => true,
+    "$vendorDir/Seld/JsonLint/autoload.php"                     => true,
+    "$vendorDir/JsonSchema/autoload.php"                        => true,
+    "$vendorDir/SebastianBergmann/Version/autoload.php"         => true,
+    "$vendorDir/Doctrine/Common/Collections/autoload.php"       => true,
+    "$vendorDir/Doctrine/Common/Cache/autoload.php"             => true,
+    "$vendorDir/phpDocumentor/Reflection/DocBlock/autoload.php" => true,
+    "$vendorDir/Bartlett/UmlWriter/autoload.php"                => false,
+    "$vendorDir/Psr/Log/autoload.php"                           => false,
+    "$vendorDir/Monolog/autoload.php"                           => false,
+) as $dependencyAutoloader => $required) {
+    if ($required || file_exists($dependencyAutoloader)) {
+        require_once $dependencyAutoloader;
+    }
 }
-if (is_dir($vendorDir . '/Psr/Log')) {
-   $fedoraClassLoader->addPrefix('Psr\\Log', $vendorDir);
-}
-if (is_dir($vendorDir . '/Monolog')) {
-   $fedoraClassLoader->addPrefix('Monolog', $vendorDir);
-}
+

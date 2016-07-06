@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    e8da05ee5d7469f8a48d6d28ed0bcd8eaf8ef79e
+%global gh_commit    73eac11e5bd3b161745ad5d6bef6af73458010f6
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150331
 %global gh_owner     llaville
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-bartlett-PHP-Reflect
-Version:        4.0.0
-%global specrel 3
+Version:        4.0.1
+%global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -68,7 +68,7 @@ BuildRequires:  php-composer(symfony/class-loader)              >= 2.5
 #        "ext-json": "*",
 #        "ext-date": "*",
 #        "ext-reflection": "*",
-#        "sebastian/version": "~1.0",
+#        "sebastian/version": "~1.0|~2.0",
 #        "nikic/php-parser": "~1.4",
 #        "doctrine/collections": "~1.2",
 #        "symfony/event-dispatcher": "~2.5",
@@ -127,12 +127,17 @@ Requires:       php-composer(psr/log)                  >= 1.0
 %if ! %{bootstrap}
 Requires:       php-composer(bartlett/umlwriter)       >= 1.0
 Requires:       php-composer(bartlett/umlwriter)       <  2
+%if 0%{?fedora} >= 21
+Suggests:       php-composer(psr/log)
+Suggests:       php-composer(monolog/monolog)
+%endif
 %endif
 # For our patch / autoloader
 Requires:       php-composer(symfony/class-loader)     >= 2.5
 Requires:       php-composer(symfony/class-loader)     <  3
 Requires:       php-doctrine-collections               >= 1.3.0-2
 Requires:       php-doctrine-cache                     >= 1.4.1
+Requires:       php-PsrLog                             >= 1.0.0-8
 
 Obsoletes:      php-channel-bartlett <= 1.3
 
@@ -171,17 +176,26 @@ install -D -p -m 644 bin/phpreflect.1         %{buildroot}%{_mandir}/man1/phpref
 
 %check
 %if %{with_tests}
-# Version 4.0.0: OK, but incomplete, skipped, or risky tests!
-# Tests: 122, Assertions: 123, Incomplete: 3.
+# Version 4.0.1: OK, but incomplete, skipped, or risky tests!
+# Tests: 122, Assertions: 122, Incomplete: 3.
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{_datadir}/php || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --include-path=%{buildroot}%{_datadir}/php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/phpunit \
     --include-path=%{buildroot}%{_datadir}/php \
     --verbose
-
-if which php70; then
-  php70 %{_bindir}/phpunit \
-    --include-path=%{buildroot}%{_datadir}/php \
-    --verbose
+# remirepo:2
 fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -205,6 +219,10 @@ fi
 
 
 %changelog
+* Wed Jul  6 2016 Remi Collet <remi@fedoraproject.org> - 4.0.1-1
+- update to 4.0.1
+- rewrite autoloader
+
 * Mon Apr 18 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-3
 - allow sebastian/version 2.0
 - run test suite with both PHP 5 and 7 when available

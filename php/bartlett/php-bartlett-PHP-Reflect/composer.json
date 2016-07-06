@@ -24,7 +24,7 @@
         "ext-json": "*",
         "ext-date": "*",
         "ext-reflection": "*",
-        "sebastian/version": "~1.0",
+        "sebastian/version": "~1.0|~2.0",
         "nikic/php-parser": "~1.4",
         "doctrine/collections": "~1.2",
         "symfony/event-dispatcher": "~2.5",
