@@ -1,0 +1,30 @@
+diff -up ./autoloader.php.rpm ./autoloader.php
+--- ./autoloader.php.rpm	2016-07-07 08:03:48.148863182 +0200
++++ ./autoloader.php	2016-07-07 08:04:13.777994006 +0200
+@@ -63,7 +63,7 @@ class SimplePie_Autoloader
+ 	 */
+ 	public function __construct()
+ 	{
+-		$this->path = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'library';
++		$this->path = dirname(__FILE__);
+ 	}
+ 
+ 	/**
+@@ -82,4 +82,4 @@ class SimplePie_Autoloader
+ 		$filename = $this->path . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
+ 		include $filename;
+ 	}
+-}
+\ Pas de fin de ligne à la fin du fichier
++}
+diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
+--- ./tests/bootstrap.php.rpm	2016-07-07 08:03:52.644886131 +0200
++++ ./tests/bootstrap.php	2016-07-07 08:04:51.301185544 +0200
+@@ -1,6 +1,6 @@
+ <?php
+ 
+-require_once dirname(dirname(__FILE__)) . '/autoloader.php';
++require_once '@PATH@/autoloader.php';
+ 
+ /**
+  * Acts as a fake feed request

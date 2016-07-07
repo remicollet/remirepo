@@ -44,6 +44,7 @@
     "php-hoa-xyl": "hoa\/xyl",
     "php-hoa-zformat": "hoa\/zformat",
     "php-pimple-lib": "pimple\/pimple",
+    "php-simplepie": "simplepie\/simplepie",
 	"php-zendframework-zend-expressive": "zendframework/zend-expressive",
 	"php-zendframework-zend-expressive-aurarouter": "zendframework/zend-expressive-aurarouter",
 	"php-zendframework-zend-expressive-fastroute": "zendframework/zend-expressive-fastroute",

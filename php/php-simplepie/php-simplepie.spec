@@ -1,29 +1,54 @@
-Name:		php-simplepie
-Version:	1.3.1
-Release:	2%{?dist}
-Summary:	Simple RSS Library in PHP
+# remirepo spec file for php-simplepie, from:
 
-Group:		Development/Libraries
-License:	BSD
-URL:		http://simplepie.org/
-Source0:	http://simplepie.org/downloads/simplepie_%{version}.zip
+# Fedora spec file for php-simplepie
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+%global gh_commit    9b775e88ba1128fa14c69ff94ab954d86067de2a
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     simplepie
+%global gh_project   simplepie
+%global with_tests   0%{!?_without_tests:1}
 
-BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
-BuildArch:	noarch
-BuildRequires:	php-phpunit-PHPUnit
+Name:       php-simplepie
+Version:    1.4.2
+Release:    1%{?dist}
+Summary:    A simple Atom/RSS parsing library for PHP
 
-Requires:	php-IDNA_Convert
-Requires:	php-curl
-Requires:	php-date
-Requires:	php-dom
-Requires:	php-iconv
-Requires:	php-libxml
-Requires:	php-mbstring
-Requires:	php-pcre
-Requires:	php-pdo
-Requires:	php-reflection
-Requires:	php-xml
-# Optional: memcache, xmlreader, zlib
+Group:   	Development/Libraries
+License:    BSD
+URL:   	    http://simplepie.org/
+# Git snapshot to retrieve test suite excluded in .gitattributes
+Source0:    %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
+Source1:    makesrc.sh
+
+# Adapt autoloader for installation tree
+Patch0:     %{name}-rpm.patch
+# https://github.com/simplepie/simplepie/pull/458
+Patch1:     %{name}-php71.patch
+
+BuildRoot:  %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+BuildArch:  noarch
+BuildRequires: php-phpunit-PHPUnit
+
+Requires:   php-IDNA_Convert
+Requires:   php-curl
+Requires:   php-date
+Requires:   php-dom
+Requires:   php-iconv
+Requires:   php-libxml
+Requires:   php-mbstring
+Requires:   php-pcre
+Requires:   php-pdo
+Requires:   php-reflection
+Requires:   php-xml
+# Optional: memcache, memcached, redis, xmlreader, zlib
+
+Provides:   php-composer(%{gh_owner}/%{gh_project}) = %{version}
+
 
 %description
 SimplePie is a very fast and easy-to-use class, written in PHP, that puts the 
@@ -31,10 +56,17 @@ SimplePie is a very fast and easy-to-use class, written in PHP, that puts the
 beginners and veterans alike, SimplePie is focused on speed, ease of use, 
 compatibility and standards compliance.
 
+Autoloader: %{_datadir}/php/%{name}/autoloader.php
+
+
 %prep
-%setup -qn simplepie-simplepie-e9472a1
-chmod -x demo/cli_test.php
-chmod -x demo/for_the_demo/mediaplayer_readme.htm
+%setup -q -n %{gh_project}-%{gh_commit}
+
+%patch0 -p1 -b .rpm
+%patch1 -p1
+
+find . -type f -exec chmod -x {} \;
+rm demo/cache/.gitignore
 
 
 %build
@@ -46,12 +78,33 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}/%{_datadir}/php/
 cp -ar library %{buildroot}/%{_datadir}/php/%{name}
 
-sed -e '/__FILE__/s/\..*$/;/' autoloader.php \
-    > %{buildroot}/%{_datadir}/php/%{name}/autoloader.php
+install -pm 644 autoloader.php \
+    %{buildroot}/%{_datadir}/php/%{name}/autoloader.php
 
 
 %check
-phpunit .
+sed -e 's:@PATH@:%{buildroot}/%{_datadir}/php/%{name}:' \
+    -i tests/bootstrap.php
+
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+
+# Known failed test with PHP 7+
+rm tests/IRITest.php
+rm tests/oldtests/first_item_title/SPtests/bugs/179.0.10.php
+
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+fi
+exit $ret
 
 
 %clean
@@ -65,6 +118,12 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Thu Jul  7 2016 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
+- update to 1.4.2
+- sources from git snapshot
+- add patch for php 7.1 https://github.com/simplepie/simplepie/pull/458
+- provide php-composer(simplepie/simplepie)
+
 * Sun Dec 16 2012 Remi Collet <remi@fedoraproject.org> - 1.3.1-2
 - really install library
 - provides autoloader.php
