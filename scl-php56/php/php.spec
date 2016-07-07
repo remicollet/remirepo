@@ -137,12 +137,12 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver  RC1
-%global rpmrel 1.1
+%global rcver  RC1
+%global rpmrel 1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 5.6.23
+Version: 5.6.24
 %if 0%{?rcver:1}
 Release: 0.%{rpmrel}.%{rcver}%{?dist}
 %else
@@ -1813,6 +1813,9 @@ fi
 
 
 %changelog
+* Thu Jul  7 2016 Remi Collet <remi@fedoraproject.org> 5.6.24-0.1.RC1
+- update to 5.6.24RC1
+
 * Thu Jun 30 2016 Remi Collet <remi@fedoraproject.org> 5.6.23-1.1
 - own tests/doc directories for pecl packages (f24)
 
