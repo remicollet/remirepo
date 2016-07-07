@@ -6,11 +6,17 @@
 #
 # Please, preserve the changelog entries
 #
-
-%{?scl:          %scl_package         php-pecl-couchbase2}
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%scl_package         php-pecl-couchbase2
+%endif
 
 %global pecl_name couchbase
-%global with_zts  0%{?__ztsphp:1}
+%global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
 
 %if "%{php_version}" < "5.6"
 # After igbinary (and XDebug for 5.4)
@@ -19,21 +25,20 @@
 # After 40-igbinary and 40-json
 %global ini_name  50-%{pecl_name}.ini
 %endif
+#global        prever beta4
 
 Summary:       Couchbase Server PHP extension
-Name:          %{?scl_prefix}php-pecl-couchbase2
-Version:       2.1.0
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Name:          %{?sub_prefix}php-pecl-couchbase2
+Version:       2.2.0
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           pecl.php.net/package/couchbase
-Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?svnrev:-dev}.tgz
-
-# Build with system fastlz
-Patch0:        %{pecl_name}-fastlz.patch
+Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRequires: %{?scl_prefix}php-devel >= 5.3.0
 BuildRequires: %{?scl_prefix}php-pear
+BuildRequires: %{?scl_prefix}php-json
 BuildRequires: libcouchbase-devel
 BuildRequires: fastlz-devel
 BuildRequires: zlib-devel
@@ -43,7 +48,6 @@ BuildRequires: %{?scl_prefix}php-pecl-xdebug
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 # used in embded php code
-# TODO fastlz http://www.couchbase.com/issues/browse/PCBC-293
 Requires:      %{?scl_prefix}php-igbinary%{?_isa}
 Requires:      %{?scl_prefix}php-json%{?_isa}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
@@ -56,8 +60,12 @@ Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name}2         = %{version}-%{release}
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name}2%{?_isa} = %{version}-%{release}
 %endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     %{?scl_prefix}php-pecl-couchbase < 2
+%else
 # Only 1 version can be installed
 Conflicts:     %{?scl_prefix}php-pecl-couchbase < 2
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -76,6 +84,10 @@ Obsoletes:     php56w-pecl-%{pecl_name}2 <= %{version}
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -101,8 +113,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -q -c
+[ -f package2.xml ] && mv package2.xml package.xml
 
-mv %{pecl_name}-%{version} NTS
+mv %{pecl_name}-%{version}%{?prever} NTS
 
 %{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
@@ -110,12 +123,11 @@ cd NTS
 # Drop bundled library
 sed -e '/fastlz/d' -i ../package.xml
 rm -r fastlz
-%patch0 -p1 -b .sysfast
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_COUCHBASE_VERSION/{s/.* "//;s/".*$//;p}' php_couchbase.h)
-if test "x${extver}" != "x%{version}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}..
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}
    exit 1
 fi
 cd ..
@@ -165,7 +177,7 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 # Install the package XML file
-install -D -m 644 package2.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 # Test & Documentation
 cd NTS
@@ -177,12 +189,14 @@ done
 %check
 : minimal NTS load test
 %{__php} -n \
+   -d extension=json.so \
    -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
    -m | grep %{pecl_name}
 
 %if %{with_zts}
 : minimal ZTS load test
 %{__ztsphp} -n \
+   -d extension=json.so \
    -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
    -m | grep %{pecl_name}
 %endif
@@ -224,6 +238,18 @@ fi
 
 
 %changelog
+* Thu Jul  7 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0 (php 5 and 7, stable)
+
+* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.3.beta4
+- Update to 2.2.0beta4 (php 5 and 7, beta)
+
+* Thu May 26 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.2.beta3
+- Update to 2.2.0beta3 (php 5 and 7, beta)
+
+* Wed Mar 20 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-0.1.beta1
+- Update to 2.2.0beta2 (php 5 and 7, beta)
+
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-2
 - adapt for F24
 
