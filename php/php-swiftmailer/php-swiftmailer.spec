@@ -6,7 +6,7 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    d8db871a54619458a805229a057ea2af33c753e8
+%global gh_commit    4cc92842069c2bbc1f28daaaf1d2576ec4dfe153
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     swiftmailer
 %global gh_project   swiftmailer
@@ -14,8 +14,8 @@
 %global php_home     %{_datadir}/php
 
 Name:           php-%{gh_project}
-Version:        5.4.2
-Release:        2%{?dist}
+Version:        5.4.3
+Release:        1%{?dist}
 Summary:        Free Feature-rich PHP Mailer
 
 Group:          Development/Libraries
@@ -23,16 +23,13 @@ License:        MIT
 URL:            http://www.swiftmailer.org/
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
-# https://github.com/swiftmailer/swiftmailer/pull/769
-Patch0:         %{name}-mockery.patch
-
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php-composer(theseer/autoload)
 # From composer.json, "require-dev": {
-#        "mockery/mockery": "~0.9.1,<0.9.4"
+#        "mockery/mockery": "~0.9.1"
 BuildRequires:  php-composer(mockery/mockery) >= 0.9.1
 %endif
 
@@ -75,8 +72,6 @@ Autoloader: %{php_home}/Swift/swift_required.php
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-%patch0 -p1
-
 # Install using the same layout than the old PEAR package
 mv lib/swift_required_pear.php lib/swift_required.php
 rm lib/swiftmailer_generate_mimes_config.php
@@ -111,24 +106,21 @@ cat << EOF | tee tests/acceptance.conf.php
 define('SWIFT_TMP_DIR', '$TMPDIR');
 EOF
 
-ret=0
-run=0
-
-# with mockobject 3.1.0
-# PHPUnit_Framework_MockObject_RuntimeException: Trying to configure method "sendPerformed"
-# which cannot be configured because it does not exist, has not been specified, is final, or is static
-
 : Run upstream test suite
+ret=0
+# remirepo:10
+run=0
 if which php56; then
    php56 %{_bindir}/phpunit --exclude smoke --verbose || ret=1
    run=1
 fi
-if which php70; then
-   php70 %{_bindir}/phpunit --exclude smoke --verbose || : ignore PHP 7 test results
+if which php71; then
+   php71 %{_bindir}/phpunit --exclude smoke --verbose || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
-   %{_bindir}/phpunit --exclude smoke --verbose || ret=1
+%{_bindir}/phpunit --exclude smoke --verbose || ret=1
+# remirepo:1
 fi
 
 # Cleanup
@@ -152,6 +144,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul  8 2016 Remi Collet <remi@fedoraproject.org> - 5.4.3-1
+- update to 5.4.2
+- drop patch merged upstream
+
 * Tue Jun 14 2016 Remi Collet <remi@fedoraproject.org> - 5.4.2-2
 - add patch to allow mockery 0.9.x
   open https://github.com/swiftmailer/swiftmailer/pull/769
