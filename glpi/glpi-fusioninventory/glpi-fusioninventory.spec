@@ -76,6 +76,17 @@ mv %{pluginname}/PICTURES .
 rm %{pluginname}/install/mysql/.htaccess \
    %{pluginname}/scripts/.htaccess
 
+#Fix rpmlint warnings
+chmod +x %{pluginname}/scripts/createSNMPWalks.php
+find %{pluginname}/lib \(\
+    -name .travis.yml \
+    -o -name .npmignore \
+    -o -name .gitignore \
+    -o -name .gitmodules \
+    -o -name .jshintrc \
+    \) -exec rm -f {} \;
+iconv -f ISO-8859-1 -t UTF-8 docs/CHANGES >a && mv a docs/CHANGES
+
 
 %build
 # Regenerate the locales
