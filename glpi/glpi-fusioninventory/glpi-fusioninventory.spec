@@ -17,7 +17,7 @@ Name:           glpi-fusioninventory
 # New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
 Epoch:          1
 Version:        %{glpi_version}.0.%{plug_version}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        FusionInventory Server embedded as a GLPI plugin
 Summary(fr):    Serveur FusionInventory en extension pour GLPI
 
@@ -89,6 +89,8 @@ done
 rm -rf %{buildroot} 
 
 # Plugin
+mkdir -p %{buildroot}%{_localstatedir}/lib/glpi/files/_plugins/%{pluginname}
+
 mkdir -p %{buildroot}/%{_datadir}/glpi/plugins
 cp -ar %{pluginname} %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}
 
@@ -131,9 +133,14 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/%{pluginname}/pics
 %{_datadir}/glpi/plugins/%{pluginname}/report
 %{_datadir}/glpi/plugins/%{pluginname}/scripts
+# Data
+%attr(750,apache,root) %{_localstatedir}/lib/glpi/files/_plugins/%{pluginname}
 
 
 %changelog
+* Fri Jul 08 2016 Johan Cwiklinski <jcwiklinski AT teclib DOT com> - 1:0.90.0.1.3-2
+- Add plugin data dir
+
 * Wed May 18 2016 Remi Collet <remi@fedoraproject.org> - 1:0.90.0.1.3-1
 - update to 0.90+1.3
 
