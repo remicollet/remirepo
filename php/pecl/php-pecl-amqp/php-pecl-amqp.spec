@@ -29,7 +29,7 @@
 
 Summary:       Communicate with any AMQP compliant server
 Name:          %{?sub_prefix}php-pecl-amqp
-Version:       1.7.0
+Version:       1.7.1
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
@@ -79,6 +79,10 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -293,6 +297,9 @@ fi
 
 
 %changelog
+* Sun Jul 10 2016 Remi Collet <remi@fedoraproject.org> - 1.7.1-1
+- Update to 1.7.1 (php 5 and 7, stable)
+
 * Tue Apr 26 2016 Remi Collet <remi@fedoraproject.org> - 1.7.0-1
 - update to 1.7.0 (php 5 and 7, stable)
 
