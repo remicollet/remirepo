@@ -12,24 +12,23 @@
 
 %global github_owner    FriendsOfPHP
 %global github_name     Goutte
-%global github_version  2.0.4
-%global github_commit   0ad3ee6dc2d0aaa832a80041a1e09bf394e99802
+%global github_version  3.1.2
+%global github_commit   3cbc6ed222422a28400e470050f14928a153207e
 
 %global composer_vendor  fabpot
 %global composer_project goutte
 
-# "php": ">=5.4.0"
-%global php_min_ver 5.4.0
-# "guzzlehttp/guzzle": ">=4,<6"
-#     NOTE: Min version not 4 because autoloader required
-%global guzzle_min_ver 5.3.0
-%global guzzle_max_ver 6.0
-# "symfony/browser-kit": "~2.1"
-# "symfony/css-selector": "~2.1"
-# "symfony/dom-crawler": "~2.1"
+# "php": ">=5.5.0"
+%global php_min_ver 5.5.0
+# "guzzlehttp/guzzle": "^6.0"
+%global guzzle_min_ver 6.0
+%global guzzle_max_ver 7.0
+# "symfony/browser-kit": "~2.1|~3.0"
+# "symfony/css-selector": "~2.1|~3.0"
+# "symfony/dom-crawler": "~2.1|~3.0"
 #     NOTE: Min version not 2.1 because autoloader required
 %global symfony_min_ver 2.7.1
-%global symfony_max_ver 3.0
+%global symfony_max_ver 4.0
 
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
@@ -53,12 +52,12 @@ BuildArch:     noarch
 BuildRequires: php-composer(phpunit/phpunit)
 ## composer.json
 BuildRequires: php(language)                      >= %{php_min_ver}
-BuildRequires: php-composer(guzzlehttp/guzzle)    >= %{guzzle_min_ver}
 BuildRequires: php-composer(guzzlehttp/guzzle)    <  %{guzzle_max_ver}
+BuildRequires: php-composer(guzzlehttp/guzzle)    >= %{guzzle_min_ver}
 BuildRequires: php-composer(symfony/browser-kit)  >= %{symfony_min_ver}
 BuildRequires: php-composer(symfony/css-selector) >= %{symfony_min_ver}
 BuildRequires: php-composer(symfony/dom-crawler)  >= %{symfony_min_ver}
-## phpcompatinfo (computed from version 2.0.4)
+## phpcompatinfo (computed from version 3.1.2)
 # <none>
 ## Autoloader
 BuildRequires: php-composer(symfony/class-loader)
@@ -66,15 +65,15 @@ BuildRequires: php-composer(symfony/class-loader)
 
 # composer.json
 Requires:      php(language)                      >= %{php_min_ver}
-Requires:      php-composer(guzzlehttp/guzzle)    >= %{guzzle_min_ver}
 Requires:      php-composer(guzzlehttp/guzzle)    <  %{guzzle_max_ver}
-Requires:      php-composer(symfony/browser-kit)  >= %{symfony_min_ver}
+Requires:      php-composer(guzzlehttp/guzzle)    >= %{guzzle_min_ver}
 Requires:      php-composer(symfony/browser-kit)  <  %{symfony_max_ver}
-Requires:      php-composer(symfony/css-selector) >= %{symfony_min_ver}
+Requires:      php-composer(symfony/browser-kit)  >= %{symfony_min_ver}
 Requires:      php-composer(symfony/css-selector) <  %{symfony_max_ver}
-Requires:      php-composer(symfony/dom-crawler)  >= %{symfony_min_ver}
+Requires:      php-composer(symfony/css-selector) >= %{symfony_min_ver}
 Requires:      php-composer(symfony/dom-crawler)  <  %{symfony_max_ver}
-# phpcompatinfo (computed from version 2.0.4)
+Requires:      php-composer(symfony/dom-crawler)  >= %{symfony_min_ver}
+# phpcompatinfo (computed from version 3.1.2)
 # <none>
 
 # Standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming
@@ -115,7 +114,7 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('Goutte\\', dirname(__DIR__));
 
-require_once '%{phpdir}/GuzzleHttp/autoload.php';
+require_once '%{phpdir}/GuzzleHttp6/autoload.php';
 require_once '%{phpdir}/Symfony/Component/BrowserKit/autoload.php';
 require_once '%{phpdir}/Symfony/Component/CssSelector/autoload.php';
 require_once '%{phpdir}/Symfony/Component/DomCrawler/autoload.php';
@@ -137,13 +136,24 @@ cp -p Goutte/{autoload,Client}.php %{buildroot}/%{phpdir}/Goutte/
 
 %check
 %if %{with_tests}
+
+ret=0
+run=0
+if which php56; then
+  php56 %{_bindir}/phpunit --verbose \
+    --bootstrap %{buildroot}/%{phpdir}/Goutte/autoload.php || ret=1
+  run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --verbose \
+    --bootstrap %{buildroot}/%{phpdir}/Goutte/autoload.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/phpunit --verbose \
     --bootstrap %{buildroot}/%{phpdir}/Goutte/autoload.php
-
-if which php70; then
-  php70 %{_bindir}/phpunit --verbose \
-    --bootstrap %{buildroot}/%{phpdir}/Goutte/autoload.php
 fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -163,6 +173,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jul 09 2016 Shawn Iwinski <shawn@iwin.ski> - 3.1.2-1
+- Update to 3.1.2 (RHBZ #1100719, 1289798)
+
 * Sun Jun 12 2016 Shawn Iwinski <shawn@iwin.ski> - 2.0.4-1
 - Update to 2.0.4
 
