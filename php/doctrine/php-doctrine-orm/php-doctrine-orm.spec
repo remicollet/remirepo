@@ -1,7 +1,8 @@
+# remirepo spec file for php-doctrine-orm, from
 #
-# RPM spec file for php-doctrine-orm
+# Fedora spec file for php-doctrine-orm
 #
-# Copyright (c) 2013-2014 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #                         Remi Collet <remi@fedoraproject.org>
 #
 # License: MIT
@@ -12,68 +13,74 @@
 
 %global github_owner     doctrine
 %global github_name      doctrine2
-%global github_version   2.4.7
-%global github_commit    2bc4ff3cab2ae297bcd05f2e619d42e6a7ca9e68
+%global github_version   2.4.8
+%global github_commit    5aedac1e5c5caaeac14798822c70325dc242d467
 
 %global composer_vendor  doctrine
 %global composer_project orm
 
 # "php": ">=5.3.2"
-%global php_min_ver         5.3.2
+%global php_min_ver 5.3.2
 # "doctrine/collections": "~1.1"
-%global collections_min_ver 1.1
+#     NOTE: Min version not 1.1 because autoloader required
+%global collections_min_ver 1.3.0
 %global collections_max_ver 2.0
 # "doctrine/dbal": "~2.4"
-%global dbal_min_ver        2.4
-%global dbal_max_ver        3.0
+#     NOTE: Min version not 2.4 because autoloader required
+%global dbal_min_ver 2.5.4
+%global dbal_max_ver 3.0
 # "symfony/console": "~2.0"
 # "symfony/yaml": "~2.1"
-%global symfony_min_ver     2.1
-%global symfony_max_ver     3.0
+#     NOTE: Min version not 2.1 because autoloader required
+%global symfony_min_ver 2.7.1
+%global symfony_max_ver 3.0
 
-%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 # Build using "--without tests" to disable tests
 %global with_tests %{?_without_tests:0}%{!?_without_tests:1}
 
-Name:      php-%{composer_vendor}-%{composer_project}
-Version:   %{github_version}
-Release:   4%{?dist}
-Summary:   Doctrine Object-Relational-Mapper (ORM)
+Name:          php-%{composer_vendor}-%{composer_project}
+Version:       %{github_version}
+Release:       1%{?dist}
+Summary:       Doctrine Object-Relational-Mapper (ORM)
 
-Group:     Development/Libraries
-License:   MIT
-URL:       http://www.doctrine-project.org/projects/orm.html
+Group:         Development/Libraries
+License:       MIT
+URL:           http://www.doctrine-project.org/projects/orm.html
 
 # Run "php-doctrine-orm-get-source.sh" to create source
-Source0:   %{name}-%{version}-%{github_commit}.tar.gz
-Source1:   %{name}-get-source.sh
+Source0:       %{name}-%{version}-%{github_commit}.tar.gz
+Source1:       %{name}-get-source.sh
 
 # Update bin script:
 # 1) Add she-bang
 # 2) Auto-load using Doctrine\Common\ClassLoader
-Patch0:    %{name}-bin.patch
+Patch0:        %{name}-bin.patch
+
+# Fix test suite using PHPUnit 5.4
+Patch1:        %{name}-phpunit54.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 %if %{with_tests}
-BuildRequires: php-phpunit-PHPUnit
+BuildRequires: php-composer(phpunit/phpunit)
 # composer.json
 BuildRequires: php(language)                      >= %{php_min_ver}
-BuildRequires: php-composer(doctrine/collections) >= %{collections_min_ver}
 BuildRequires: php-composer(doctrine/collections) <  %{collections_max_ver}
-BuildRequires: php-composer(doctrine/dbal)        >= %{dbal_min_ver}
+BuildRequires: php-composer(doctrine/collections) >= %{collections_min_ver}
 BuildRequires: php-composer(doctrine/dbal)        <  %{dbal_max_ver}
-BuildRequires: php-symfony-console                >= %{symfony_min_ver}
-BuildRequires: php-symfony-console                <  %{symfony_max_ver}
-BuildRequires: php-symfony-yaml                   >= %{symfony_min_ver}
-BuildRequires: php-symfony-yaml                   <  %{symfony_max_ver}
-# phpcompatinfo (computed from version 2.4.7)
+BuildRequires: php-composer(doctrine/dbal)        >= %{dbal_min_ver}
+BuildRequires: php-composer(symfony/console)      <  %{symfony_max_ver}
+BuildRequires: php-composer(symfony/console)      >= %{symfony_min_ver}
+BuildRequires: php-composer(symfony/yaml)         <  %{symfony_max_ver}
+BuildRequires: php-composer(symfony/yaml)         >= %{symfony_min_ver}
+BuildRequires: php-pdo
+# phpcompatinfo (computed from version 2.4.8)
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-dom
 BuildRequires: php-pcre
-BuildRequires: php-pdo
 BuildRequires: php-reflection
 BuildRequires: php-simplexml
 BuildRequires: php-spl
@@ -82,31 +89,40 @@ BuildRequires: php-tokenizer
 
 # composer.json
 Requires:      php(language)                      >= %{php_min_ver}
-Requires:      php-composer(doctrine/collections) >= %{collections_min_ver}
 Requires:      php-composer(doctrine/collections) <  %{collections_max_ver}
-Requires:      php-composer(doctrine/dbal)        >= %{dbal_min_ver}
+Requires:      php-composer(doctrine/collections) >= %{collections_min_ver}
 Requires:      php-composer(doctrine/dbal)        <  %{dbal_max_ver}
-Requires:      php-symfony-console                >= %{symfony_min_ver}
-Requires:      php-symfony-console                <  %{symfony_max_ver}
-Requires:      php-symfony-yaml                   >= %{symfony_min_ver}
-Requires:      php-symfony-yaml                   <  %{symfony_max_ver}
-# phpcompatinfo (computed from version 2.4.7)
+Requires:      php-composer(doctrine/dbal)        >= %{dbal_min_ver}
+Requires:      php-composer(symfony/console)      <  %{symfony_max_ver}
+Requires:      php-composer(symfony/console)      >= %{symfony_min_ver}
+Requires:      php-composer(symfony/yaml)         <  %{symfony_max_ver}
+Requires:      php-composer(symfony/yaml)         >= %{symfony_min_ver}
+Requires:      php-pdo
+# phpcompatinfo (computed from version 2.4.8)
 Requires:      php-ctype
 Requires:      php-dom
 Requires:      php-pcre
-Requires:      php-pdo
 Requires:      php-reflection
 Requires:      php-simplexml
 Requires:      php-spl
 Requires:      php-tokenizer
 
+# Weak dependencies
+%if 0%{?fedora} >= 21
+## Optional caches (see Doctrine\ORM\Tools\Setup::createConfiguration())
+Suggests:      php-pecl(apcu)
+Suggests:      php-pecl(memcache)
+Suggests:      php-pecl(redis)
+Suggests:      php-xcache
+%endif
+
 # Composer
-Provides:  php-composer(%{composer_vendor}/%{composer_project}) = %{version}
+Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 # PEAR
-Provides:  php-pear(pear.doctrine-project.org/DoctrineORM) = %{version}
+Provides:      php-pear(pear.doctrine-project.org/DoctrineORM) = %{version}
 # Rename
-Obsoletes: php-doctrine-DoctrineORM < %{version}
-Provides:  php-doctrine-DoctrineORM = %{version}
+Obsoletes:     php-doctrine-DoctrineORM < %{version}
+Provides:      php-doctrine-DoctrineORM = %{version}
 
 %description
 Object relational mapper (ORM) for PHP that sits on top of a powerful database
@@ -116,58 +132,98 @@ Query Language (DQL), inspired by Hibernate's HQL. This provides developers
 with a powerful alternative to SQL that maintains flexibility without requiring
 unnecessary code duplication.
 
-Optional caches (see Doctrine\ORM\Tools\Setup::createConfiguration()):
-* APC (php-pecl-apc)
-* Memcache (php-pecl-memcache)
-* Redis (php-pecl-redis)
-* XCache (php-xcache)
+Autoloader: %{phpdir}/Doctrine/ORM/autoload.php
 
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-# Patch bin script
+: Patch bin script
 %patch0 -p1
 
-# Remove empty file
+if %{_bindir}/phpunit --atleast-version 5.4; then
+: Fix test suite using PHPUnit 5.4
+%patch1 -p0
+fi
+
+: Remove empty file
 rm -f lib/Doctrine/ORM/README.markdown
 
-# Remove unnecessary executable bits
+: Remove unnecessary executable bits
 chmod a-x lib/Doctrine/ORM/Tools/Pagination/Paginator.php
 
 
 %build
-# Empty build section, nothing required
+: Create autoloader
+cat <<'AUTOLOAD' | tee lib/Doctrine/ORM/autoload.php
+<?php
+/**
+ * Autoloader for %{name} and its' dependencies
+ * (created by %{name}-%{version}-%{release}).
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('Doctrine\\ORM\\', dirname(dirname(__DIR__)));
+
+// Dependencies (autoloader => required)
+foreach(array(
+    '%{phpdir}/Doctrine/Common/Collections/autoload.php' => true,
+    '%{phpdir}/Doctrine/DBAL/autoload.php'               => true,
+    '%{phpdir}/Symfony/Component/Console/autoload.php'   => true,
+    '%{phpdir}/Symfony/Component/Yaml/autoload.php'      => true,
+) as $dependencyAutoloader => $required) {
+    if ($required || file_exists($dependencyAutoloader)) {
+        require_once $dependencyAutoloader;
+    }
+}
+
+return $fedoraClassLoader;
+AUTOLOAD
 
 
 %install
 rm -rf %{buildroot}
 
-# Lib
-mkdir -p %{buildroot}/%{_datadir}/php
-cp -rp lib/Doctrine %{buildroot}/%{_datadir}/php/
+: Lib
+mkdir -p %{buildroot}%{phpdir}
+cp -rp lib/Doctrine %{buildroot}%{phpdir}/
 
-# Bin
+: Bin
 mkdir -p %{buildroot}/%{_bindir}
 install -pm 0755 bin/doctrine.php %{buildroot}/%{_bindir}/doctrine
 
 
 %check
 %if %{with_tests}
-# Rewrite "tests/Doctrine/Tests/TestInit.php"
+: Remove load of TestInit
 mv tests/Doctrine/Tests/TestInit.php tests/Doctrine/Tests/TestInit.php.dist
-cat > tests/Doctrine/Tests/TestInit.php <<'TEST_INIT'
-<?php
+grep -r --files-with-matches 'TestInit' tests \
+    | xargs sed '/TestInit/d' -i
 
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', $class).'.php';
-    @include_once $src;
-});
-TEST_INIT
+: Load annotation register file from buildroot
+sed 's#__DIR__\s*\.\s*"/\(\.\./\)*lib#"%{buildroot}%{phpdir}#' \
+    -i tests/Doctrine/Tests/OrmTestCase.php
+
+: Create tests bootstrap
+cat > bootstrap.php <<'BOOTSTRAP'
+<?php
+$fedoraClassLoader =
+    require_once '%{buildroot}%{phpdir}/Doctrine/ORM/autoload.php';
+
+$fedoraClassLoader->addPrefix('Doctrine\\Tests\\', __DIR__.'/tests');
+BOOTSTRAP
 
 # Skip test known to fail
-sed 's/function testSupportsMoreThanTwoParametersInConcatFunction/function SKIP_testSupportsMoreThanTwoParametersInConcatFunction/' \
-    -i tests/Doctrine/Tests/ORM/Query/SelectSqlGenerationTest.php
 sed -e 's/function testQueryCache_DependsOnHints/function SKIP_testQueryCache_DependsOnHints/' \
     -e 's/function testQueryCache_NoHitSaveParserResult/function SKIP_testQueryCache_NoHitSaveParserResult/' \
     -i tests/Doctrine/Tests/ORM/Functional/QueryCacheTest.php
@@ -175,6 +231,11 @@ sed 's/function testNativeQueryResultCaching/function SKIP_testNativeQueryResult
     -i tests/Doctrine/Tests/ORM/Functional/ResultCacheTest.php
 sed 's/function testQueryCache_DependsOnFilters/function SKIP_testQueryCache_DependsOnFilters/' \
     -i tests/Doctrine/Tests/ORM/Functional/SQLFilterTest.php
+%if 1
+# PHP 7
+sed 's/function testReusedSplObjectHashDoesNotConfuseUnitOfWork/function SKIP_testReusedSplObjectHashDoesNotConfuseUnitOfWork/' \
+    -i tests/Doctrine/Tests/ORM/Functional/IdentityMapTest.php
+%endif
 
 # Weird el6 error
 # TODO: Investigate and submit upstream patch
@@ -187,11 +248,20 @@ sed 's#$this->_em->clear();#if (isset($this->_em)) { $this->_em->clear(); }#' \
 rm tests/Doctrine/Tests/ORM/Functional/QueryDqlFunctionTest.php
 %endif
 
-%{__phpunit} --include-path ./lib:./tests -d memory_limit="512M"
-
-if which php70; then
-   php70 %{__phpunit} --include-path ./lib:./tests -d memory_limit="512M" || :
+ret=0
+run=0
+if which php56; then
+  php56 %{_bindir}/phpunit -d memory_limit="512M" --bootstrap bootstrap.php || ret=1
+  run=1
 fi
+if which php71; then
+  php71 %{_bindir}/phpunit -d memory_limit="512M" --bootstrap bootstrap.php || ret=1
+  run=1
+fi
+if [ $run -eq 0 ]; then
+  %{_bindir}/phpunit -d memory_limit="512M" --bootstrap bootstrap.php
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -211,6 +281,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jul 09 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.4.8-1
+- Updated to 2.4.8 (RHBZ #1347926 / CVE-2015-5723)
+- Added autoloader
+
+* Mon Jun 13 2016 Remi Collet <remi@fedoraproject.org> - 2.4.7-5
+- add workaround for test suite with PHPUnit 5.4
+
 * Sun Feb 28 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.4.7-4
 - Skip additional tests known to fail (RHBZ #1307857)
 
