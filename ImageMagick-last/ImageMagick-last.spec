@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        6.9.5
-%global Patchlevel 0
+%global Patchlevel 1
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -507,6 +507,9 @@ fi
 
 
 %changelog
+* Sun Jul 10 2016 Remi Collet <remi@remirepo.net> - 6.9.5.1-1
+- update to version 6.9.5 patchlevel 1
+
 * Thu Jun 30 2016 Remi Collet <remi@remirepo.net> - 6.9.5.0-1
 - update to version 6.9.5
 - display update message when modules directory change
