@@ -44,6 +44,9 @@ and user for ownCloud manually, before you can finish the setup process. The
 README.postgresql and README.mysql files provide more details and help with
 this.
 
+In addition if using a remote database then then selinux must be configured to
+allow the webserver to connect to it - see the selinux section further down.
+
 Configuration
 -------------
 You can find the main configuration file at '/etc/owncloud/config.php'. Until
@@ -85,6 +88,11 @@ Selinux Booleans
 If you want to use external files (eg remote smb/cifs server) the httpd_can_network_connect
 selinux boolean should be toggled on. If you want to use libreoffice document conversion
 then the httpd_execmem should be toggled on and the unoconv package should be installed.
+
+If not using an external file source but still using an external database then the boolean
+httpd_can_network_connect_db should be toggled on for access to regular DB ports. The general
+network connect can alternatiely be used for non-standard ports or for a broader permission 
+in case of future external files requirements.
 
 Memory caching
 --------------

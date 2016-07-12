@@ -9,7 +9,7 @@
 #
 Name:           owncloud
 Version:        9.0.3
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
 
@@ -371,7 +371,8 @@ Group:      Applications/Internet
 Provides:   %{name}-database = %{version}-%{release}
 Requires:   %{name} = %{version}-%{release}
 
-Requires:   php-mysql
+# From getSupportedDatabases, mysql => pdo, mysql
+Requires:   php-pdo_mysql
 
 %description mysql
 This package ensures the necessary dependencies are in place for ownCloud to
@@ -390,6 +391,7 @@ Group:      Applications/Internet
 Provides:   %{name}-database = %{version}-%{release}
 Requires:   %{name} = %{version}-%{release}
 
+# From getSupportedDatabases, pgsql => function, pg_connect
 Requires:   php-pgsql
 
 %description postgresql
@@ -409,6 +411,7 @@ Group:      Applications/Internet
 
 Provides:   %{name}-database = %{version}-%{release}
 Requires:   %{name} = %{version}-%{release}
+# From getSupportedDatabases, pgsql => class, SQLite3
 Requires:   php-sqlite3 php-pcre
 
 %description sqlite
@@ -738,6 +741,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 12 2016 James Hogarth <james.hogarth@gmail.com> - 9.0.3-3
+- Added selinux remote DB details to readme bz#1349700
+
+* Mon Jul  4 2016 Remi Collet <remi@fedoraproject.org> - 9.0.3-2
+- mysql support uses pdo_mysql (not mysql extension)
+
 * Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 9.0.3-1
 - Update to 9.0.3
 
