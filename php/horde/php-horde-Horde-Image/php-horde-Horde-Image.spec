@@ -13,7 +13,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Image
-Version:        2.3.5
+Version:        2.3.6
 Release:        1%{?dist}
 Summary:        Horde Image API
 
@@ -121,11 +121,23 @@ done | tee ../%{pear_name}.lang
 %check
 %if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-%{_bindir}/phpunit .
 
-if which php70; then
-   php70 %{_bindir}/phpunit .
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit . || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose .
+# remirepo:2
+fi
+exit $ret
 %else
 : Test disabled, bootstrap build
 %endif
@@ -154,6 +166,9 @@ fi
 
 
 %changelog
+* Wed Jul 13 2016 Remi Collet <remi@fedoraproject.org> - 2.3.6-1
+- Update to 2.3.6
+
 * Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.3.5-1
 - Update to 2.3.5
 
