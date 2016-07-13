@@ -11,7 +11,7 @@ Build order
 	* horde_lz4                 1.0.10       
 	* Horde_Exception           2.0.8       I: Horde_Test R: Horde_Translation
 	* Horde_Imsp                2.0.9        R: Horde_Translation, Horde_Util
-	* Horde_Memcache            2.1.0        R: Horde_Exception
+	* Horde_Memcache            2.1.1        R: Horde_Exception
 	* Horde_Nls                 2.2.0        R: Horde_Util, Horde_Translation
 	* Horde_Scribe              2.0.2        R: Horde_Thrift
 	* Horde_Socket_Client       2.1.1        R: Horde_Exception
