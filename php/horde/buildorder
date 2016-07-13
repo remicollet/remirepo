@@ -1,6 +1,6 @@
 Build order
 	* Horde_Constraint          2.0.3       I: Horde_Test 
-	* Horde_Mongo               1.0.3        
+	* Horde_Mongo               1.1.0        
 	* Horde_Queue               1.1.3        
 	* Horde_Role                1.0.1        
 	* Horde_Stream_Wrapper      2.1.3       I: Horde_Test 
