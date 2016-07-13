@@ -11,17 +11,14 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Date-Parser
-Version:        2.0.5
-Release:        2%{?dist}
+Version:        2.0.6
+Release:        1%{?dist}
 Summary:        Horde Date Parser
 
 Group:          Development/Libraries
 License:        LGPLv2
 URL:            http://pear.horde.org
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
-
-# https://github.com/horde/horde/pull/195
-Patch0:         0002-drop-ereg-dep-for-php-7-in-Date_Parser.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -60,9 +57,6 @@ languages and locales
 
 cd %{pear_name}-%{version}
 mv ../package.xml %{name}.xml
-%patch0 -p3 -b .ereg
-sed -e '/Pt.php/s/md5sum="[^"]*"//' \
-    -i %{name}.xml
 
 
 %build
@@ -112,6 +106,9 @@ fi
 
 
 %changelog
+* Wed Jul 13 2016 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
+- Update to 2.0.6
+
 * Mon Jun 27 2016 Remi Collet <remi@fedoraproject.org> - 2.0.5-2
 - add patch to drop dependency on ereg
 
