@@ -10,7 +10,7 @@ diff -up Horde_Test-2.4.1/lib/Horde/Test/Autoload.php.rpm Horde_Test-2.4.1/lib/H
 -        } else {
 -            require __DIR__ . '/../../../bundle/vendor/autoload.php';
 -        }
-+        require_once 'PHPUnit/Autoload.php';
++        require_once '/usr/share/php/PHPUnit/Autoload.php';
  
          spl_autoload_register(
              function($class) {
