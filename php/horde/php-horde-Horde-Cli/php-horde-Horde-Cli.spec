@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Cli
-Version:        2.0.6
+Version:        2.0.7
 Release:        1%{?dist}
 Summary:        Horde Command Line Interface API
 
@@ -111,6 +111,9 @@ fi
 
 
 %changelog
+* Wed Jul 13 2016 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
+- Update to 2.0.7
+
 * Thu Jan 08 2015 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
 - Update to 2.0.6
 - add provides php-composer(horde/horde-cli)
