@@ -31,17 +31,13 @@
 
 Summary:        Kerberos authentification extension
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.0.0
-Release:        9%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.1.0
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-# http://svn.php.net/viewvc?view=revision&revision=333127
-Patch0:         krb5-build.patch
-
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  krb5-devel >= 1.8
 BuildRequires:  pkgconfig(com_err)
 BuildRequires:  %{?scl_prefix}php-devel > 5.2
@@ -77,6 +73,10 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -115,13 +115,9 @@ mv %{pecl_name}-%{version} NTS
 %{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
-%patch0 -p0 -b .build
-
-# http://svn.php.net/viewvc?view=revision&revision=333126
-chmod -x php_krb5_gssapi.h
 
 # Sanity check, really often broken
-extver=$(sed -n '/#define PHP_KRB5_EXT_VERSION/{s/.* "//;s/".*$//;p}' php_krb5.h)
+extver=$(sed -n '/#define PHP_KRB5_VERSION/{s/.* "//;s/".*$//;p}' php_krb5.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}.
    exit 1
@@ -164,8 +160,6 @@ peclbuild %{_bindir}/zts-php-config
 
 
 %install
-rm -rf %{buildroot}
-
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
@@ -225,12 +219,7 @@ cd ../ZTS
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -245,7 +234,6 @@ rm -rf %{buildroot}
 
 
 %files devel
-%defattr(-,root,root,-)
 %doc %{pecl_testdir}/%{pecl_name}
 
 %{php_incldir}/ext/%{pecl_name}
@@ -256,6 +244,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jul 17 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- Update to 1.1.0 (PHP 5 and 7, stable)
+
 * Thu Jun 23 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-9
 - rebuild for krb5 1.14 (F23+)
 
