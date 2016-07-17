@@ -1,3 +1,4 @@
+# remirepo spec file for php-robrichards-xmlseclibs1, from:
 #
 # Fedora spec file for php-robrichards-xmlseclibs1
 #
@@ -36,6 +37,7 @@ License:       BSD
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -95,6 +97,8 @@ Autoloader: %{phpdir}/robrichards-xmlseclibs/autoload.php
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}/robrichards-xmlseclibs
 cp -rp src/* %{buildroot}%{phpdir}/robrichards-xmlseclibs/
 
@@ -109,13 +113,29 @@ sed 's#require.*xmlseclibs.*#require_once "%{buildroot}%{phpdir}/robrichards-xml
 rm -f tests/extract-win-cert.phpt
 
 : Run tests
-%{_bindir}/phpunit tests
+run=0
+if which php56; then
+   php56 %{_bindir}/phpunit tests
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit tests
+   run=1
+fi
+if [ $run -eq 0 ]; then
+   %{_bindir}/phpunit tests
+fi
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc CHANGELOG.txt
@@ -125,6 +145,9 @@ rm -f tests/extract-win-cert.phpt
 
 
 %changelog
+* Sun Jul 17 2016 Remi Collet <remi@remirepo.net> - 1.4.1-2.20160518git2e20c8d
+- backport for remi repository
+
 * Thu Jul 14 2016 Shawn Iwinski <shawn@iwin.ski> - 1.4.1-2.20160518git2e20c8d
 - Updated to latest 1.4 snapshot
 - Moved php-openssl from weak dependency to hard dependency
