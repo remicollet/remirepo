@@ -23,7 +23,7 @@
 %{!?runselftest: %global runselftest 1}
 
 Name:           memcached
-Version:        1.4.28
+Version:        1.4.29
 Release:        1%{?dist}
 Epoch:          0
 Summary:        High Performance, Distributed Memory Object Cache
@@ -32,11 +32,14 @@ Group:          System Environment/Daemons
 License:        BSD
 URL:            http://www.memcached.org/
 Source0:        http://www.memcached.org/files/%{name}-%{version}.tar.gz
+Source1:        memcached.sysconfig
 
-# custom unit file
-Source1:        memcached.service
 # custom init script
 Source2:        memcached.sysv
+# custom unit file
+Source3:        memcached.service
+
+Patch1:         memcached-unit.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if "%{?vendor}" == "Remi Collet"
@@ -88,6 +91,7 @@ access to the memcached binary include files.
 
 %prep
 %setup -q
+%patch1 -p1 -b .unit
 
 
 %build
@@ -105,6 +109,10 @@ make %{?_smp_mflags}
 
 %check
 %if %runselftest
+%if 0%{?rhel} == 5
+rm t/chunked-items.t
+%endif
+
 make test
 %endif
 
@@ -122,7 +130,12 @@ install -Dp -m0644 scripts/memcached-tool.1 \
 
 %if %{with_systemd}
 # Unit file
-install -Dp -m0644 %{SOURCE1} %{buildroot}%{_unitdir}/memcached.service
+%if 0%{?fedora} < 25
+install -Dp -m0644 %{SOURCE3} %{buildroot}%{_unitdir}/memcached.service
+%else
+install -Dp -m0644 scripts/memcached.service \
+        %{buildroot}%{_unitdir}/memcached.service
+%endif
 %else
 # Init script
 install -Dp -m0755 %{SOURCE2} %{buildroot}%{_initrddir}/memcached
@@ -133,6 +146,7 @@ mkdir -p %{buildroot}/%{_localstatedir}/run/memcached
 
 
 # Default configs
+%if 0%{?fedora} < 25
 mkdir -p %{buildroot}/%{_sysconfdir}/sysconfig
 cat <<EOF >%{buildroot}/%{_sysconfdir}/sysconfig/%{name}
 PORT="11211"
@@ -144,6 +158,9 @@ EOF
 
 # Constant timestamp on the config file.
 touch -r %{SOURCE1} %{buildroot}/%{_sysconfdir}/sysconfig/%{name}
+%else
+install -Dp -m0644 %{SOURCE1} %{buildroot}/%{_sysconfdir}/sysconfig/%{name}
+%endif
 
 
 %clean
@@ -235,6 +252,18 @@ fi
 
 
 %changelog
+* Mon Jul 18 2016 Remi Collet <remi@remirepo.net> - 0:1.4.29-1
+- Update to 1.4.29
+
+* Thu Jul 14 2016 Miroslav Lichvar <mlichvar@redhat.com> - 0:1.4.29-1
+- update to 1.4.29
+
+* Tue Jul 12 2016 Miroslav Lichvar <mlichvar@redhat.com> - 0:1.4.28-1
+- update to 1.4.28
+- listen only on loopback interface by default (#1182542)
+- use upstream unit file (#1350939)
+- remove obsolete macros and scriptlet
+
 * Sun Jul  3 2016 Remi Collet <rpms@famillecollet.com> - 0:1.4.28-1
 - Update to 1.4.28
 
