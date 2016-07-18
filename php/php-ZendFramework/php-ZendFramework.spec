@@ -15,12 +15,12 @@
 
 Summary:         Leading open-source PHP framework
 Name:            php-ZendFramework
-Version:         1.12.18
+Version:         1.12.19
 Release:         1%{?posttag}%{?dist}
 
 License:         BSD
 Group:           Development/Libraries
-Source0:         http://framework.zend.com/releases/%{php_name}-%{version}%{?posttag}/%{php_name}-%{version}%{?posttag}.tar.gz
+Source0:         https://packages.zendframework.com/releases/%{php_name}-%{version}%{?posttag}/%{php_name}-%{version}%{?posttag}.tar.gz
 Source1:         README.fedora
 BuildRoot:       %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 URL:             http://framework.zend.com/
@@ -289,7 +289,7 @@ Summary:  Zend Framework database adapter for MS SQL PDO
 Group:    Development/Libraries
 Requires: %{name} = %{version}-%{release}
 Requires: %{name}-Db-Adapter-Pdo = %{version}-%{release}
-Requires: php-mssql
+Requires: php-pdo_dblib
 
 %description Db-Adapter-Pdo-Mssql
 This package contains the files for Zend Framework necessary to connect to MS 
@@ -301,7 +301,7 @@ Summary:  Zend Framework database adapter for MySQL PDO
 Group:    Development/Libraries
 Requires: %{name} = %{version}-%{release}
 Requires: %{name}-Db-Adapter-Pdo = %{version}-%{release}
-Requires: php-mysql
+Requires: php-pdo_mysql
 
 %description Db-Adapter-Pdo-Mysql
 This package contains the files for Zend Framework necessary to connect to MySQL
@@ -855,6 +855,15 @@ ln -s %{_datadir}/php/Zend/zf.sh \
 
 
 %changelog
+* Mon Jul 18 2016 Remi Collet <remi@remirepo.net> - 1.12.19-1
+- update to 1.12.19
+
+* Sun Jul  3 2016 Remi Collet <RPMS@FamilleCollet.com> - 1.12.18-3
+- php-ZendFramework-Db-Adapter-Pdo-Mssql requires pdo_dblib (not mssql)
+
+* Fri Jul  1 2016 Remi Collet <RPMS@FamilleCollet.com> - 1.12.18-2
+- php-ZendFramework-Db-Adapter-Pdo-Mysql requires pdo_mysql (not mysql)
+
 * Thu Apr 14 2016 Remi Collet <remi@remirepo.net> - 1.12.18-1
 - update to 1.12.18
 - extras and Db-Adapter-Firebird sub packages are back
