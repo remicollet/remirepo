@@ -6,14 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    385ecb015e97c13818074f1517928b24d4a26067
+%global gh_commit    531d00ee76e9ae98279ed4dbb2419e5e0f7fb82d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpspec
 %global gh_project   phpspec
 #global prever       beta3
 
 Name:           php-phpspec
-Version:        2.5.0
+Version:        2.5.1
 Release:        1%{?dist}
 Summary:        Specification-oriented BDD framework for PHP
 
@@ -40,9 +40,10 @@ BuildRequires:  php-composer(symfony/yaml)             >= 2.1
 BuildRequires:  php-composer(doctrine/instantiator)    >= 1.0.1
 # From composer.json, require-dev
 #         "behat/behat":           "^3.0.11",
-#         "bossa/phpspec2-expect": "~1.0",
 #         "symfony/filesystem":    "~2.1|~3.0",
 #         "phpunit/phpunit":       "~4.4"
+#         "phpunit/phpunit":       "~4.4",
+#         "ciaranmcnulty/versionbasedtestskipper": "^0.2.1"
 BuildRequires:  php-composer(symfony/filesystem)       >= 2.1
 BuildRequires:  php-composer(phpunit/phpunit)          >= 4.4
 # For our autoloader
@@ -134,6 +135,33 @@ export LANG=en_GB.utf8
 # Ignore this test which use bossa/phpspec2-expect
 rm spec/PhpSpec/Message/CurrentExampleTrackerSpec.php
 
+# remirepo:26
+run=0
+if which php56; then
+  php56 \
+    -d include_path=.:%{buildroot}%{_datadir}/php \
+    bin/phpspec \
+      run --format pretty --verbose --no-ansi
+
+  php56 %{_bindir}/phpunit \
+    --verbose \
+    --bootstrap %{buildroot}%{_datadir}/php/PhpSpec/autoload.php
+
+  run=1
+fi
+if which php70; then
+  php71 \
+    -d include_path=.:%{buildroot}%{_datadir}/php \
+    bin/phpspec \
+      run --format pretty --verbose --no-ansi
+
+  php71 %{_bindir}/phpunit \
+    --verbose \
+    --bootstrap %{buildroot}%{_datadir}/php/PhpSpec/autoload.php
+
+  run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/php \
   -d include_path=.:%{buildroot}%{_datadir}/php \
   bin/phpspec \
@@ -142,16 +170,7 @@ rm spec/PhpSpec/Message/CurrentExampleTrackerSpec.php
 %{_bindir}/phpunit \
   --verbose \
   --bootstrap %{buildroot}%{_datadir}/php/PhpSpec/autoload.php
-
-if which php70; then
-  php70 \
-    -d include_path=.:%{buildroot}%{_datadir}/php \
-    bin/phpspec \
-      run --format pretty --verbose --no-ansi
-
-  php70 %{_bindir}/phpunit \
-    --verbose \
-    --bootstrap %{buildroot}%{_datadir}/php/PhpSpec/autoload.php
+# remirepo:2
 fi
 
 %clean
@@ -169,6 +188,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 18 2016 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
+- update to 2.5.1
+
 * Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
 - update to 2.5.0
 
