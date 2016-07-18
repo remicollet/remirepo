@@ -12,9 +12,8 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package        php-pecl-hdr-histogram
 %endif
-
-%{?scl:          %scl_package        php-pecl-hdr-histogram}
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  hdr_histogram
@@ -27,15 +26,14 @@
 
 Summary:       PHP extension wrapper for the C hdrhistogram API
 Name:          %{?sub_prefix}php-pecl-hdr-histogram
-Version:       0.1.0
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:       0.2.0
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/%{pecl_name}
 
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel >= 5.4
 BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: hdrhistogram-devel
@@ -48,8 +46,10 @@ Provides:      %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -66,6 +66,10 @@ Obsoletes:     php56w-pecl-hdr-histogram <= %{version}
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-hdr-histogram <= %{version}
 Obsoletes:     php70w-pecl-hdr-histogram <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-hdr-histogram <= %{version}
+Obsoletes:     php71w-pecl-hdr-histogram <= %{version}
 %endif
 %endif
 
@@ -156,9 +160,6 @@ done
 
 
 %check
-sed -e 's/82016/820%d/' \
-    -e 's/EXPECT/EXPECTF/' \
-    -i ?TS/tests/hdrhistogram_001.phpt
 cd NTS
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
@@ -189,10 +190,6 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
@@ -214,7 +211,6 @@ fi
 
 
 %files
-%defattr(-, root, root, -)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -229,6 +225,9 @@ fi
 
 
 %changelog
+* Mon Jul 18 2016 Remi Collet <remi@fedoraproject.org> - 0.2.0-1
+- Update to 0.2.0
+
 * Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 0.1.0-2
 - adapt for F24
 

@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #101 hdrhistogram version 0.1.0 ] {
+Extension [ <persistent> extension #86 hdrhistogram version 0.2.0 ] {
 
   - Functions {
     Function [ <internal:hdrhistogram> function hdr_init ] {
@@ -18,6 +18,8 @@ Extension [ <persistent> extension #101 hdrhistogram version 0.1.0 ] {
     Function [ <internal:hdrhistogram> function hdr_min ] {
     }
     Function [ <internal:hdrhistogram> function hdr_max ] {
+    }
+    Function [ <internal:hdrhistogram> function hdr_total_count ] {
     }
     Function [ <internal:hdrhistogram> function hdr_reset ] {
     }
@@ -40,6 +42,10 @@ Extension [ <persistent> extension #101 hdrhistogram version 0.1.0 ] {
     Function [ <internal:hdrhistogram> function hdr_export ] {
     }
     Function [ <internal:hdrhistogram> function hdr_import ] {
+    }
+    Function [ <internal:hdrhistogram> function hdr_base64_encode ] {
+    }
+    Function [ <internal:hdrhistogram> function hdr_base64_decode ] {
     }
   }
 }
