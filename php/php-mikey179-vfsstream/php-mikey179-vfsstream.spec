@@ -6,14 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c19925cd0390d3c436a0203ae859afa460d0474b
+%global gh_commit    0247f57b2245e8ad2e689d7cee754b45fbabd592
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     mikey179
 %global gh_project   vfsStream
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-mikey179-vfsstream
-Version:        1.6.3
+Version:        1.6.4
 Release:        1%{?dist}
 Summary:        PHP stream wrapper for a virtual file system
 
@@ -79,17 +79,29 @@ cp -pr src/main/php/org %{buildroot}%{_datadir}/php/org
 # erratic result in mock
 rm src/test/php/org/bovigo/vfs/vfsStreamWrapperLargeFileTestCase.php
 
+# remirepo:15
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit \
+    --bootstrap %{buildroot}%{_datadir}/php/org/bovigo/vfs/autoload.php \
+    --verbose || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit \
+     --bootstrap %{buildroot}%{_datadir}/php/org/bovigo/vfs/autoload.php \
+     --verbose || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 : Run test suite with installed library
 %{_bindir}/phpunit \
   --bootstrap %{buildroot}%{_datadir}/php/org/bovigo/vfs/autoload.php \
   --verbose
-
-# remirepo:5
-if which php70; then
-  php70 %{_bindir}/phpunit \
-    --bootstrap %{buildroot}%{_datadir}/php/org/bovigo/vfs/autoload.php \
-    --verbose || :
+# remirepo:2
 fi
+exit $ret
 %endif
 
 
@@ -109,6 +121,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 18 2016 Remi Collet <remi@fedoraproject.org> - 1.6.4-1
+- update to 1.6.4
+
 * Wed Apr 13 2016 Remi Collet <remi@fedoraproject.org> - 1.6.3-1
 - update to 1.6.3
 
