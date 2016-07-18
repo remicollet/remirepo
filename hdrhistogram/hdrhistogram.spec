@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 
-%global gh_commit   581014321c66a5607fa0911e60815490c2f64650
+%global gh_commit   04db500b5f012db322b4c7ff2217c680b986fafe
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    HdrHistogram
 %global gh_project  HdrHistogram_c
@@ -16,7 +16,7 @@
 
 Name:          hdrhistogram
 Summary:       A High Dynamic Range (HDR) Histogram
-Version:       0.9.3
+Version:       0.9.4
 Release:       1%{?dist}
 License:       CC0 or BSD
 Group:         System Environment/Libraries
@@ -26,9 +26,6 @@ Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}
 
 # build with fPIC
 Patch0:        %{name}-fpic.patch
-# See https://github.com/HdrHistogram/HdrHistogram_c/issues/31
-# fix soname version
-Patch1:        %{name}-sover.patch
 
 BuildRequires: cmake > 2.8
 BuildRequires: zlib-devel
@@ -73,7 +70,6 @@ mkdir docs
 cp -pr examples docs/examples
 
 %patch0 -p1 -b .fpic
-%patch1 -p1 -b .pr28
 
 grep CMAKE_C_FLAGS CMakeLists.txt
 
@@ -128,5 +124,11 @@ make test
 
 
 %changelog
+* Mon Jul 18 2016 Remi Collet <remi@fedoraproject.org> - 0.9.4-1
+- update to 0.9.4
+
+* Wed Apr  6 2016 Remi Collet <remi@fedoraproject.org> - 0.9.3-1
+- update to 0.9.3
+
 * Fri Jan  1 2016 Remi Collet <remi@fedoraproject.org> - 0.9.1-1
 - initial package
