@@ -15,15 +15,14 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package        php-pecl-igbinary
 %endif
-
-%{?scl:          %scl_package        php-pecl-igbinary}
 
 %global extname    igbinary
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
-%global gh_commit  2b7c703f0b2ad30b15cd0d85bc6b9e40e7603b13
+%global gh_commit  a87a99395e1569ff6df9727c8789c91a8825f00d
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date    20151217
+%global gh_date    20160715
 %global prever    -dev
 %if "%{php_version}" < "5.6"
 %global ini_name  %{extname}.ini
@@ -35,7 +34,7 @@ Summary:        Replacement for the standard PHP serializer
 Name:           %{?sub_prefix}php-pecl-igbinary
 Version:        1.2.2
 %if 0%{?gh_date}
-Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        https://github.com/%{extname}/%{extname}7/archive/%{gh_commit}/%{extname}-%{version}-%{gh_short}.tar.gz
 %else
 Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
@@ -56,13 +55,15 @@ Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Obsoletes:      %{?scl_prefix}php-%{extname} <= 1.1.1
-Provides:       %{?scl_prefix}php-%{extname} = %{version}
-Provides:       %{?scl_prefix}php-%{extname}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{extname}) = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{extname})%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
+Obsoletes:      %{?scl_prefix}php-%{extname}                <= 1.1.1
+Provides:       %{?scl_prefix}php-%{extname}                = %{version}
+Provides:       %{?scl_prefix}php-%{extname}%{?_isa}        = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{extname})          = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{extname})%{?_isa}  = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}         = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -81,6 +82,10 @@ Obsoletes:     php56w-pecl-%{extname}
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{extname}
 Obsoletes:     php70w-pecl-%{extname}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{extname}
+Obsoletes:     php71w-pecl-%{extname}
 %endif
 %endif
 
@@ -106,8 +111,8 @@ Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 Requires:      %{?scl_prefix}php-devel%{?_isa}
 
-Obsoletes:     %{?scl_prefix}php-%{extname}-devel <= 1.1.1
-Provides:      %{?scl_prefix}php-%{extname}-devel = %{version}-%{release}
+Obsoletes:     %{?scl_prefix}php-%{extname}-devel         <= 1.1.1
+Provides:      %{?scl_prefix}php-%{extname}-devel         = %{version}-%{release}
 Provides:      %{?scl_prefix}php-%{extname}-devel%{?_isa} = %{version}-%{release}
 
 %description devel
@@ -224,7 +229,7 @@ TEST_PHP_EXECUTABLE=%{_bindir}/php \
 TEST_PHP_ARGS="-n $MOD -d extension=$PWD/modules/%{extname}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/php -n run-tests.php --show-diff || : ignore results
+%{_bindir}/php -n run-tests.php --show-diff
 
 %if %{with_zts}
 : simple ZTS module load test, without APC, as optional
@@ -238,7 +243,7 @@ TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n $MOD -d extension=$PWD/modules/%{extname}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__ztsphp} -n run-tests.php --show-diff || : ignore results
+%{__ztsphp} -n run-tests.php --show-diff
 %endif
 
 
@@ -292,6 +297,9 @@ fi
 
 
 %changelog
+* Mon Jul 18 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-0.2.20160715gita87a993
+- refresh, newer snapshot
+
 * Wed Mar  2 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-0.1.20151217git2b7c703
 - update to 1.2.2dev for PHP 7
 - ignore test results, 4 failed tests: igbinary_009.phpt, igbinary_014.phpt
