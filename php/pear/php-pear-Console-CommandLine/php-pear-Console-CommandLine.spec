@@ -1,4 +1,4 @@
-# remirepo/fedora spec file for ImageMagick
+# remirepo/fedora spec file for php-pear-Console-CommandLine
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -10,7 +10,7 @@
 %global pear_name Console_CommandLine
 
 Name:           php-pear-Console-CommandLine
-Version:        1.2.1
+Version:        1.2.2
 Release:        1%{?dist}
 Summary:        A full featured command line options and arguments parser
 
@@ -18,9 +18,6 @@ Group:          Development/Libraries
 License:        MIT
 URL:            http://pear.php.net/package/%{pear_name}
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
-
-# https://github.com/pear/Console_CommandLine/pull/8
-Patch1:         %{pear_name}-pr8.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -53,13 +50,8 @@ Main features:
 
 %prep
 %setup -qc
-# because of our patches
-sed -e 's/md5sum=.*name/name/' -i package.xml
-
 cd %{pear_name}-%{version}
 mv ../package.xml %{name}.xml
-
-%patch1 -p1 -b .pr8
 
 
 %build
@@ -68,8 +60,9 @@ cd %{pear_name}-%{version}
 
 
 %install
+rm -rf %{buildroot}
+
 cd %{pear_name}-%{version}
-rm -rf %{buildroot} docdir
 %{__pear} install --nodeps --packagingroot %{buildroot} %{name}.xml
 
 # Clean up unnecessary files
@@ -111,6 +104,9 @@ fi
 
 
 %changelog
+* Mon Jul 18 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
+- Update to 1.2.2
+
 * Fri Dec 11 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - Update to 1.2.1
 - provide php-composer(pear/console_commandline)
