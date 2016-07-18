@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    90b88339a4b937c6bb0055ee04b2567e7e628f25
+%global gh_commit    f701b0d322741b0c8d8ca1288f249a49438029cd
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-servicemanager
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        3.1.0
+Version:        3.1.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -134,11 +134,11 @@ EOF
 run=0
 ret=0
 if which php56; then
-   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || : ignore
    run=1
 fi
 if which php71; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php71 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -166,8 +166,11 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
-- update to 3.0.0 for ZendFramework 3
+* Sun Jul 17 2016 Remi Collet <remi@fedoraproject.org> - 3.1.1-1
+- update to 3.1.1
+
+* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-1
+- update to 3.1.0 for ZendFramework 3
 - add dependencies autoloader
 
 * Thu Apr 28 2016 Remi Collet <remi@fedoraproject.org> - 2.7.6-1
