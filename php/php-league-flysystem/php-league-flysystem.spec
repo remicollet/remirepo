@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # Github
-%global gh_commit    9aca859a303fdca30370f42b8c611d9cf0dedf4b
+%global gh_commit    a76afa4035931be0c78ca8efc6abf3902362f437
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     thephpleague
 %global gh_project   flysystem
@@ -19,7 +19,7 @@
 %global ns_project   Flysystem
 
 Name:           php-%{pk_vendor}-%{pk_name}
-Version:        1.0.24
+Version:        1.0.25
 Release:        1%{?dist}
 Summary:        Filesystem abstraction: Many filesystems, one API
 
@@ -114,15 +114,35 @@ EOF
 sed -e 's/file="[^"]*"//' -i phpunit.xml
 echo 'bootstrap: vendor/autoload.php' >>phpspec.yml
 
-: Run upstream test suite
-%{_bindir}/phpspec run
-%{_bindir}/phpunit --verbose
-
-if which php70; then
-  : Run upstream test suite with PHP 7
-  php70 %{_bindir}/phpspec run
-  php70 %{_bindir}/phpunit --verbose
+PHPSPECVER=$(%{_bindir}/phpspec --version | sed 's/.* //;s/\..*//')
+if [ "$PHPSPECVER" -ge 3 ]
+then PHPSPEC=/dev/null
+else PHPSPEC=%{_bindir}/phpspec
 fi
+
+# remirepo:15
+run=0
+ret=0
+if which php56; then
+   : Run upstream test suite with PHP 5
+   php56 $PHPSPEC run || ret=1
+   php56 %{_bindir}/phpunit --verbose || ret=1
+   run=1
+fi
+if which php71; then
+   : Run upstream test suite with PHP 7
+   php71 $PHPSPEC run || ret=1
+   php71 %{_bindir}/phpunit --verbose || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+: Run upstream test suite
+%{_bindir}/php $PHPSPEC run
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
+
 
 %clean
 rm -rf %{buildroot}
@@ -138,6 +158,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jul 18 2016 Remi Collet <remi@fedoraproject.org> - 1.0.25-1
+- update to 1.0.25
+- disable spec test suite with phpspec 3
+
 * Sat Jun  4 2016 Remi Collet <remi@fedoraproject.org> - 1.0.24-1
 - update to 1.0.24
 
