@@ -6,18 +6,18 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    e3c36a766b0791abcbc8876b4a5cb4bde10a5f1b
+%global gh_commit    b49a006748a460f8dae6500ec80ed021501ce969
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 %global api_version  1.1.0
-%global prever       RC
+#global prever       RC
 
 Name:           composer
 Version:        1.2.0
-Release:        0.1.RC%{?dist}
+Release:        1%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -251,6 +251,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 19 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- update to 1.2.0
+
 * Tue Jul  5 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-0.1.RC
 - update to 1.2.0-RC
 - switch to justinrainbow/json-schema v2
