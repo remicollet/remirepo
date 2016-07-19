@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a2995e5fe351055f2c7630166af12ce8fd03edfc
+%global gh_commit    5df9ed0ed0c9506ea6404a23450854e5df15cc12
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     composer
 %global gh_project   ca-bundle
@@ -14,7 +14,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-composer-ca-bundle
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}
 Summary:        Lets you find a path to the system CA
 
@@ -44,11 +44,14 @@ BuildRequires:  %{_sysconfdir}/pki/tls/certs/ca-bundle.crt
 %endif
 
 # From composer.json, "require": {
+#        "ext-openssl": "*",
+#        "ext-pcre": "*",
 #        "php": "^5.3.2 || ^7.0"
 Requires:       php(language) >= 5.3.2
-# From phpcompatinfo report for version 1.0.2
 Requires:       php-openssl
 Requires:       php-pcre
+# From phpcompatinfo report for version 1.0.3
+#nothing
 # Autoloader
 Requires:       php-composer(symfony/class-loader)
 # ca-certificates
@@ -117,6 +120,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 19 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- update to 1.0.3
+
 * Sat Apr 30 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - initial package, version 1.0.2
 
