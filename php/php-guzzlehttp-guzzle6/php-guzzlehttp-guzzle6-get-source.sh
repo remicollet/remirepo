@@ -44,7 +44,7 @@ print "GIT_DIR = $GIT_DIR"
 
 TEMP_DIR=$(mktemp --dir)
 TAR_FILE=$PWD/${NAME}-${VERSION}-${GIT_COMMIT}.tar.gz
-CMP_FILE=$PWD/composer-${VERSION}.json
+CMP_FILE=$PWD/composer.json
 
 pushd $TEMP_DIR
     print "Cloning git repo..."
