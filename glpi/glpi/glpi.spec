@@ -27,8 +27,8 @@
 %endif
 
 Name:           glpi
-Version:        0.90.3
-Release:        2%{?dist}
+Version:        0.90.4
+Release:        1%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
@@ -128,6 +128,8 @@ techniciens grâce à une maintenance plus cohérente.
 
 %prep
 %setup -q -n glpi
+
+grep %{version} config/define.php
 
 %patch0 -p0
 %patch1 -p0
@@ -329,6 +331,10 @@ fi
 
 
 %changelog
+* Tue Jul 19 2016 Remi Collet <remi@fedoraproject.org> - 0.90.4-1
+- update to 0.90.4
+  https://github.com/glpi-project/glpi/issues?q=milestone:0.90.4
+
 * Wed Jun 22 2016 Remi Collet <remi@fedoraproject.org> - 0.90.3-2
 - add upstream patch, drop dependency on zend-version
 
