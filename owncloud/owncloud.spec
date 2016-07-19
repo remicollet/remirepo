@@ -8,8 +8,8 @@
 # Please preserve changelog entries
 #
 Name:           owncloud
-Version:        9.0.3
-Release:        3%{?dist}
+Version:        9.0.4
+Release:        1%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
 
@@ -61,11 +61,17 @@ Patch6:         %{name}-8.2.3-correct-cli-upgrade-command.patch
 # Disable the integrity checking whilst a better way to deal with it is found
 Patch8:         %{name}-9.0.2-default_integrity_check_disabled.patch
 
+# There's additional htaccess calls to clean up
+Patch9:         %{name}-9.0.4-further_htaccess_cleanup.patch
+
+# Since we unbundle we don't want 3rdparty libraries to be repaired
+Patch10:        %{name}-9.0.4-no_3rdparty_repairs.patch
+
 # Need to work around an NSS issue in el7.2, due to be fix el7.3 bz#1241172
-Patch10:         %{name}-8.1.6-work-arround-nss-issue.patch
+Patch11:         %{name}-8.1.6-work-arround-nss-issue.patch
 
 # RH provide support for php54 so don't tell users it's EOL
-Patch11:         %{name}-8.2.3-dont_warn_php54_eol.patch
+Patch12:         %{name}-8.2.3-dont_warn_php54_eol.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -427,9 +433,11 @@ work with an SQLite 3 database stored on the local system.
 %patch5 -p1
 %patch6 -p1
 %patch8 -p1
-%if 0%{?rhel}
+%patch9 -p1
 %patch10 -p1
+%if 0%{?rhel}
 %patch11 -p1
+%patch12 -p1
 %endif
 
 # patch backup files and .git stuff
@@ -741,6 +749,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 19 2016 James Hogarth <james.hogarth@gmail.com> - 9.0.4-1
+- New release 9.0.4
+
 * Tue Jul 12 2016 James Hogarth <james.hogarth@gmail.com> - 9.0.3-3
 - Added selinux remote DB details to readme bz#1349700
 
