@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-guzzlehttp-guzzle
 #
-# Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2014-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,8 +12,8 @@
 
 %global github_owner     guzzle
 %global github_name      guzzle
-%global github_version   5.3.0
-%global github_commit    f3c8c22471cb55475105c14769644a49c3262b93
+%global github_version   5.3.1
+%global github_commit    70f1fa53b71c4647bf2762c09068a95f77e12fb8
 
 %global composer_vendor  guzzlehttp
 %global composer_project guzzle
@@ -41,13 +41,17 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       4%{?github_release}%{?dist}.1
+Release:       1%{?github_release}%{?dist}
 Summary:       PHP HTTP client and webservice framework
 
 Group:         Development/Libraries
 License:       MIT
 URL:           http://guzzlephp.org
-Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+
+# GitHub export does not include tests.
+# Run php-guzzlehttp-guzzle.sh to create full source.
+Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
+Source1:       %{name}-get-source.sh
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -60,7 +64,7 @@ BuildRequires: php-guzzlehttp-ringphp-tests
 BuildRequires: php(language)                    >= %{php_min_ver}
 #BuildRequires: php-composer(guzzlehttp/ringphp) >= %%{ring_min_ver}
 BuildRequires: php-guzzlehttp-ringphp           >= %{ring_min_ver}
-## phpcompatinfo (computed from version 5.3.0)
+## phpcompatinfo (computed from version 5.3.1)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -81,7 +85,7 @@ Requires:      php(language)                    >= %{php_min_ver}
 #Requires:      php-composer(guzzlehttp/ringphp) >= %%{ring_min_ver}
 Requires:      php-guzzlehttp-ringphp           >= %{ring_min_ver}
 Requires:      php-composer(guzzlehttp/ringphp) <  %{ring_max_ver}
-# phpcompatinfo (computed from version 5.3.0)
+# phpcompatinfo (computed from version 5.3.1)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-filter
@@ -114,13 +118,14 @@ the pain out of consuming web services.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+
+%build
 : Create autoloader
 cat <<'AUTOLOAD' | tee src/autoload.php
 <?php
 /**
  * Autoloader for %{name} and its' dependencies
- *
- * Created by %{name}-%{version}-%{release}
+ * (created by %{name}-%{version}-%{release}).
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
@@ -136,14 +141,11 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('GuzzleHttp\\', dirname(__DIR__));
 
+// Required dependency
 require_once '%{phpdir}/GuzzleHttp/Ring/autoload.php';
 
 return $fedoraClassLoader;
 AUTOLOAD
-
-
-%build
-# Empty build section, nothing required
 
 
 %install
@@ -158,8 +160,7 @@ cp -pr src/* %{buildroot}%{phpdir}/GuzzleHttp/
 cat <<'AUTOLOAD' | tee tests/autoload.php
 <?php
 
-require_once '%{buildroot}%{phpdir}/GuzzleHttp/autoload.php';
-
+$fedoraClassLoader = require '%{buildroot}%{phpdir}/GuzzleHttp/autoload.php';
 $fedoraClassLoader->addPrefix('GuzzleHttp\\Tests', __DIR__);
 AUTOLOAD
 
@@ -172,7 +173,38 @@ sed -e "s#.*require.*autoload.*#require __DIR__ . '/autoload.php';#" \
 mkdir tests/GuzzleHttp
 ln -s .. tests/GuzzleHttp/Tests
 
-%{_bindir}/phpunit --verbose
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit
+   run=1
+fi
+
+%if 1
+: Skip allowed failures
+: https://github.com/guzzle/guzzle/blob/5.3.1/.travis.yml
+: https://travis-ci.org/guzzle/guzzle/builds/145548161
+sed -e 's/function testLoadsFromFileFile/function SKIP_testLoadsFromFileFile/' \
+    -e 's/function testPersistsToFileFile/function SKIP_testPersistsToFileFile/' \
+    -i tests/Cookie/FileCookieJarTest.php
+sed -e 's/function testLoadsFromSession/function SKIP_testLoadsFromSession/' \
+    -e 's/function testPersistsToSession/function SKIP_testPersistsToSession/' \
+    -i tests/Cookie/SessionCookieJarTest.php
+sed -e 's/function testParsesJsonResponses/function SKIP_testParsesJsonResponses/' \
+    -e 's/function testThrowsExceptionWhenFailsToParseJsonResponse/function SKIP_testThrowsExceptionWhenFailsToParseJsonResponse/' \
+    -i tests/Message/ResponseTest.php
+sed 's/function testEnsuresResponseIsPresentAfterSending/function SKIP_testEnsuresResponseIsPresentAfterSending/' \
+    -i tests/ClientTest.php
+%endif
+
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose || ret=1
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -192,6 +224,14 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 19 2016 Remi Collet <remi@remirepo.net> - 5.3.1-1
+- update to 5.3.1 (bacported from Fedora)
+- run test suite with both PHP 5 and 7 when available
+
+* Mon Jul 18 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 5.3.1-1
+- Update to 5.3.1 (RHBZ #1350616 / RHBZ #1357580 / CVE-2016-5385)
+- Add "get source" script
+
 * Fri Apr 15 2016 Remi Collet <remi@remirepo.net> - 5.3.0-4.1
 - fix dep. on EL-5
 
