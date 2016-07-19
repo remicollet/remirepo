@@ -41,8 +41,8 @@
 Summary:        MongoDB driver for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.1.8
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
-License:        BSD
+Release:        4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+License:        ASL 2.0
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
@@ -317,7 +317,10 @@ exit $ret
 
 
 %changelog
-* Wed Jul 06 2016 Remi Collet <remi@fedoraproject.org> - 1.1.8-1
+* Tue Jul 19 2016 Remi Collet <remi@fedoraproject.org> - 1.1.8-4
+- License is ASL 2.0, from review #1269056
+
+* Wed Jul 06 2016 Remi Collet <remi@fedoraproject.org> - 1.1.8-2
 - Update to 1.1.8
 
 * Fri Jun  3 2016 Remi Collet <remi@fedoraproject.org> - 1.1.7-3
