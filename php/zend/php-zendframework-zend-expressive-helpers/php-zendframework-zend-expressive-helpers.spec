@@ -40,7 +40,7 @@ BuildRequires:  php-composer(psr/http-message)                    >= 1.0
 BuildRequires:  php-json
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
-BuildRequires:  php-composer(container-interop/container-interop) >= 1.0
+BuildRequires:  php-composer(container-interop/container-interop) >= 1.1
 BuildRequires:  php-composer(psr/http-message)                    >= 1.0
 BuildRequires:  php-composer(%{gh_owner}/zend-expressive-router)  >= 1.1
 # From composer, "require-dev": {
@@ -61,7 +61,7 @@ BuildRequires:  php-zendframework-zend-loader                     >= 2.5.1-4
 #        "psr/http-message": "^1.0",
 #        "zendframework/zend-expressive-router": "^1.1"
 Requires:       php(language) >= 5.5
-Requires:       php-composer(container-interop/container-interop) >= 1.0
+Requires:       php-composer(container-interop/container-interop) >= 1.1
 Requires:       php-composer(container-interop/container-interop) <  2
 Requires:       php-composer(psr/http-message)                    >= 1.0
 Requires:       php-composer(psr/http-message)                    <  2
@@ -78,7 +78,7 @@ Requires:       php-spl
 #        "zendframework/zend-servicemanager": "^2.5 to use zend-servicemanager for dependency injection"
 %if 0%{?fedora} >= 21
 Suggests:       php-composer(mouf/pimple-interop)
-Suggests:       php-composer(%{gh_owner}/aura/di)
+Suggests:       php-composer(aura/di)
 Suggests:       php-composer(%{gh_owner}/zend-servicemanager)
 %endif
 # Autoloader
