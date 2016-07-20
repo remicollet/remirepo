@@ -1,16 +1,16 @@
-===== 7.0.9RC1 (2016-07-08)
+===== 7.0.9 (2016-07-21)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
 /var/lib/mock/el6i/build.log:Tests failed    :     1
 /var/lib/mock/el6x/build.log:Tests failed    :     2
 /var/lib/mock/el7x/build.log:Tests failed    :     2
-/var/lib/mock/fc21i/build.log:Tests failed    :    1
+/var/lib/mock/fc21i/build.log:Tests failed    :    0
 /var/lib/mock/fc21x/build.log:Tests failed    :    0
 /var/lib/mock/fc22i/build.log:Tests failed    :    0
-/var/lib/mock/fc22x/build.log:Tests failed    :    2
+/var/lib/mock/fc22x/build.log:Tests failed    :    0
 /var/lib/mock/fc23i/build.log:Tests failed    :    0
-/var/lib/mock/fc23x/build.log:Tests failed    :    0
+/var/lib/mock/fc23x/build.log:Tests failed    :    1
 /var/lib/mock/fc24i/build.log:Tests failed    :    0
 /var/lib/mock/fc24x/build.log:Tests failed    :    0
 
@@ -19,11 +19,8 @@ el6i, el6x, el7x
 		Bug #33414 [2] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-2.phpt]
 el6x, el7x
 		strtotime() function (64 bit) [ext/date/tests/strtotime3-64bit.phpt]
-fc21i, fc22x
-		Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
-fc22x
-		php://input is empty when enable_post_data_reading=Off [tests/basic/bug67198.phpt]
-
+fc23x
+		Concatenating many small strings should not slowdown allocations [Zend/tests/concat_003.phpt]
 
 
 *  proc_open give erratic test results :(
