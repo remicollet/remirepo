@@ -38,7 +38,7 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.5
 BuildRequires:  php-composer(container-interop/container-interop)    >= 1.1
 BuildRequires:  php-composer(twig/twig)                              >= 1.19
-BuildRequires:  php-composer(%{gh_owner}/zend-expressive-helpers)    >= 1.0
+BuildRequires:  php-composer(%{gh_owner}/zend-expressive-helpers)    >= 1.1
 BuildRequires:  php-composer(%{gh_owner}/zend-expressive-template)   >= 1.0
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
@@ -63,7 +63,7 @@ Requires:       php-composer(container-interop/container-interop)    >= 1.1
 Requires:       php-composer(container-interop/container-interop)    <  2
 Requires:       php-composer(twig/twig)                              >= 1.19
 Requires:       php-composer(twig/twig)                              <  2
-Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    >= 1.0
+Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    >= 1.1
 Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    <  3
 Requires:       php-composer(%{gh_owner}/zend-expressive-template)   >= 1.0
 Requires:       php-composer(%{gh_owner}/zend-expressive-template)   <  2
