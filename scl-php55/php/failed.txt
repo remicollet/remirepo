@@ -1,4 +1,4 @@
-==== PHP 5.5.37 (2016-06-23)
+==== PHP 5.5.38 (2016-07-21)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl55*/build.log
 
@@ -6,10 +6,12 @@ $ grep -r 'Tests failed' /var/lib/mock/scl55*/build.log
 /var/lib/mock/scl55el7x/build.log: Tests failed    :    0
 /var/lib/mock/scl55fc21x/build.log:Tests failed    :    0
 /var/lib/mock/scl55fc22x/build.log:Tests failed    :    0
-/var/lib/mock/scl55fc23x/build.log:Tests failed    :    1
-/var/lib/mock/scl55fc24x/build.log:Tests failed    :    1
+/var/lib/mock/scl55fc23x/build.log:Tests failed    :    2
+/var/lib/mock/scl55fc24x/build.log:Tests failed    :    2
 
 fc23, fc24:
 	Bug #64802: openssl_x509_parse fails to parse subject properly in some cases [ext/openssl/tests/bug64802.phpt]
+	Bug #33414 [1] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-1.phpt]
+
 
 * proc_open have erratic results :(
