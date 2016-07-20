@@ -35,7 +35,7 @@ BuildArch:      noarch
 # Tests
 %if %{with_tests}
 BuildRequires:  php(language) >= 5.5
-BuildRequires:  php-composer(container-interop/container-interop)    >= 1.0
+BuildRequires:  php-composer(container-interop/container-interop)    >= 1.1
 BuildRequires:  php-composer(psr/http-message)                       >= 1.0
 BuildRequires:  php-composer(%{gh_owner}/zend-diactoros)             >= 1.1
 BuildRequires:  php-composer(%{gh_owner}/zend-expressive-router)     >= 1.1
@@ -71,7 +71,7 @@ BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-4
 #        "zendframework/zend-expressive-template": "^1.0.1",
 #        "zendframework/zend-stratigility": "^1.1"
 Requires:       php(language) >= 5.5
-Requires:       php-composer(container-interop/container-interop)    >= 1.0
+Requires:       php-composer(container-interop/container-interop)    >= 1.1
 Requires:       php-composer(container-interop/container-interop)    <  2
 Requires:       php-composer(psr/http-message)                       >= 1.0
 Requires:       php-composer(psr/http-message)                       <  2
