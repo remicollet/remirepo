@@ -1,6 +1,6 @@
+# remirepo spec file for php-consolidation-annotated-command, from:
 #
 # Fedora spec file for php-consolidation-annotated-command
-
 #
 # Copyright (c) 2016 Shawn Iwinski <shawn@iwin.ski>
 #
@@ -53,6 +53,7 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -140,6 +141,8 @@ AUTOLOAD
 
 
 %install
+rm -rf   %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}/Consolidation/AnnotatedCommand
 cp -rp src/* %{buildroot}%{phpdir}/Consolidation/AnnotatedCommand/
 
@@ -160,13 +163,31 @@ $fedoraClassLoader->addPrefix('Consolidation\\TestUtils\\', __DIR__.'/tests-psr0
 require_once '%{phpdir}/Consolidation/OutputFormatters/autoload.php';
 BOOTSTRAP
 
-%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+   %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -176,5 +197,8 @@ BOOTSTRAP
 
 
 %changelog
+* Thu Jul 21 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- backport for remi repository
+
 * Tue Jul 19 2016 Shawn Iwinski <shawn@iwin.ski> - 1.0.1-1
 - Initial package
