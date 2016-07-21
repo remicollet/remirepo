@@ -114,7 +114,7 @@ AUTOLOAD
 
 
 %install
-rm -rf         %{buildroot}
+rm -rf   %{buildroot}
 
 mkdir -p %{buildroot}%{phpdir}/Consolidation/OutputFormatters
 cp -rp src/* %{buildroot}%{phpdir}/Consolidation/OutputFormatters/

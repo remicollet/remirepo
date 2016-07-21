@@ -96,7 +96,7 @@ AUTOLOAD
 
 
 %install
-rm -rf         %{buildroot}
+rm -rf   %{buildroot}
 
 mkdir -p %{buildroot}%{phpdir}/XdgBaseDir
 cp -rp src/* %{buildroot}%{phpdir}/XdgBaseDir/
