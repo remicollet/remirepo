@@ -30,7 +30,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.0.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A library to validate a json schema
 
 Group:          Development/Libraries
@@ -44,6 +44,8 @@ Source3:        %{name}-makesrc.sh
 
 # Autoloader
 Patch0:         %{name}-rpm.patch
+# https://github.com/justinrainbow/json-schema/pull/292
+Patch1:        %{name}-pr292.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -112,6 +114,7 @@ Autoloader: %{php_home}/JsonSchema2/autoload.php
 %setup -q -n %{gh_project}-%{gh_commit} -a 1
 
 %patch0 -p0 -b .rpm
+%patch1 -p1
 
 cp %{SOURCE2} src/JsonSchema/autoload.php
 
@@ -166,11 +169,22 @@ php bin/validate-json-test \
     /usr/share/composer/res/composer-schema.json
 
 : Upstream test suite
-%{_bindir}/phpunit --verbose
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -195,6 +209,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul 21 2016 Remi Collet <remi@fedoraproject.org> - 2.0.5-2
+- fix failed test, FTBFS detected by Koschei
+  open https://github.com/justinrainbow/json-schema/pull/292
+
 * Thu Jun  2 2016 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - update to 2.0.5
 
