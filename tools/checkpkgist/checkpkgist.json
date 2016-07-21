@@ -45,15 +45,5 @@
     "php-hoa-zformat": "hoa\/zformat",
     "php-pimple-lib": "pimple\/pimple",
     "php-simplepie": "simplepie\/simplepie",
-	"php-zendframework-zend-expressive": "zendframework/zend-expressive",
-	"php-zendframework-zend-expressive-aurarouter": "zendframework/zend-expressive-aurarouter",
-	"php-zendframework-zend-expressive-fastroute": "zendframework/zend-expressive-fastroute",
-	"php-zendframework-zend-expressive-router": "zendframework/zend-expressive-router",
-	"php-zendframework-zend-expressive-template": "zendframework/zend-expressive-template",
-	"php-zendframework-zend-expressive-zendrouter": "zendframework/zend-expressive-zendrouter",
-	"php-zendframework-zend-expressive-helpers": "zendframework/zend-expressive-helpers",
-	"php-zendframework-zend-expressive-platesrenderer": "zendframework/zend-expressive-platesrenderer",
-	"php-zendframework-zend-expressive-twigrenderer": "zendframework/zend-expressive-twigrenderer",
-	"php-zendframework-zend-expressive-zendviewrenderer": "zendframework/zend-expressive-zendviewrenderer",
     "php-theseer-fxsl": "theseer\/fxsl"
 }
