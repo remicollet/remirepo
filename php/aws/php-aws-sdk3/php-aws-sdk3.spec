@@ -12,8 +12,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   3.18.28
-%global github_commit    c75d3ba185d5db6998124fa1a99a63e5d529b247
+%global github_version   3.18.31
+%global github_commit    dad0b7db5fa8f3c7a3805efb2a1e86a50f11fe8b
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -30,8 +30,8 @@
 #     NOTE: Min version not 1.4 because autoloader required
 %global doctrine_cache_min_ver 1.4.1
 %global doctrine_cache_max_ver 2.0
-# "guzzlehttp/guzzle": "~5.3|~6.0.1|~6.1"
-%global guzzle_min_ver 5.3
+# "guzzlehttp/guzzle": "^5.3.1|^6.2.1"
+%global guzzle_min_ver 5.3.1
 %global guzzle_max_ver 7.0
 # "guzzlehttp/promises": "~1.0"
 %global guzzle_promises_min_ver 1.0
@@ -285,6 +285,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul 21 2016 Remi Collet <remi@remirepo.net> - 3.18.31-1
+- update to 3.18.31
+
 * Sun Jul 17 2016 Remi Collet <remi@remirepo.net> - 3.18.28-1
 - update to 3.18.28
 
