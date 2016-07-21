@@ -29,7 +29,7 @@
 
 Name:          php-%{lib_name}
 Version:       %{github_version}
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       PHP implementation of JSON schema
 
 Group:         Development/Libraries
@@ -41,6 +41,9 @@ Source0:       %{name}-%{github_version}-%{github_short}.tgz
 Source1:       %{name}-autoload.php
 # Script to pull the git snapshot
 Source2:       %{name}-makesrc.sh
+
+# https://github.com/justinrainbow/json-schema/pull/292
+Patch0:        %{name}-pr292.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -95,6 +98,7 @@ See http://json-schema.org for more details.
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
+%patch0 -p1
 
 cp -p %{SOURCE1} src/%{lib_name}/autoload.php
 
@@ -126,11 +130,22 @@ require '%{buildroot}%{phpdir}/%{lib_name}/autoload.php';
 $fedoraClassLoader->addPrefix('%{lib_name}\\Tests\\', realpath(__DIR__.'/../tests'));
 EOF
 
-%{_bindir}/phpunit --verbose
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -148,6 +163,10 @@ fi
 
 
 %changelog
+* Thu Jul 21 2016 Remi Collet <remi@fedoraproject.org> - 1.6.1-4
+- fix failed test, FTBFS detected by Koschei
+  open https://github.com/justinrainbow/json-schema/pull/292
+
 * Wed Jun  1 2016 Remi Collet <remi@fedoraproject.org> - 1.6.1-3
 - drop the validate-json command, moved in php-justinrainbow-json-schema
 
