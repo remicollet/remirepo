@@ -1,0 +1,32 @@
+From 82a388a4b657989985f58855b5f1737ac2fbe5b1 Mon Sep 17 00:00:00 2001
+From: Shawn Iwinski <shawn@iwin.ski>
+Date: Fri, 15 Jul 2016 05:46:05 -0400
+Subject: [PATCH] Update tests to use createMock() instead of getMock() for
+ PHPUnit 5.4+
+
+---
+ tests/JakubOnderka/PhpConsoleHighligter/HigligterTest.php | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/tests/JakubOnderka/PhpConsoleHighligter/HigligterTest.php b/tests/JakubOnderka/PhpConsoleHighligter/HigligterTest.php
+index 269d03d..8e8b4bf 100644
+--- a/tests/JakubOnderka/PhpConsoleHighligter/HigligterTest.php
++++ b/tests/JakubOnderka/PhpConsoleHighligter/HigligterTest.php
+@@ -8,7 +8,9 @@ class HighlighterTest extends \PHPUnit_Framework_TestCase
+ 
+     protected function getConsoleColorMock()
+     {
+-        $mock = $this->getMock('\JakubOnderka\PhpConsoleColor\ConsoleColor');
++        $mock = method_exists($this, 'createMock')
++            ? $this->createMock('\JakubOnderka\PhpConsoleColor\ConsoleColor')
++            : $this->getMock('\JakubOnderka\PhpConsoleColor\ConsoleColor');
+ 
+         $mock->expects($this->any())
+             ->method('apply')
+@@ -260,4 +262,4 @@ public function testEmpty()
+             ''
+         );
+     }
+-}
+\ No newline at end of file
++}
