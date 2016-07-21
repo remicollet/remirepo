@@ -1,3 +1,4 @@
+# remirepo spec file for psysh, from:
 #
 # Fedora spec file for psysh
 #
@@ -55,6 +56,7 @@ Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{githu
 # Update bin script to use generated autoloader
 Patch0:        %{name}-bin-autoload.patch
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -171,6 +173,8 @@ AUTOLOAD
 
 
 %install
+rm -rf   %{buildroot}
+
 : Library
 mkdir -p %{buildroot}%{phpdir}
 cp -rp src/* %{buildroot}%{phpdir}/
@@ -200,13 +204,31 @@ sed 's/function testFormat/function SKIP_testFormat/' \
 sed 's/function testWriteReturnValue/function SKIP_testWriteReturnValue/' \
     -i test/Psy/Test/ShellTest.php
 
-%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+   %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -216,6 +238,9 @@ sed 's/function testWriteReturnValue/function SKIP_testWriteReturnValue/' \
 
 
 %changelog
+* Thu Jul 21 2016 Remi Collet <remi@fedoraproject.org> - 0.7.2-2
+- backport for remi repository
+
 * Wed Jul 20 2016 Shawn Iwinski <shawn@iwin.ski> - 0.7.2-2
 - Add explicit php-cli dependency (bin script uses "#!/usr/bin/env php")
 
