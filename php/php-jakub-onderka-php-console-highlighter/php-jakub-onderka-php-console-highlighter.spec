@@ -1,3 +1,4 @@
+# remirepo spec file for php-jakub-onderka-php-console-highlighter, from:
 #
 # Fedora spec file for php-jakub-onderka-php-console-highlighter
 #
@@ -43,6 +44,7 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 # https://patch-diff.githubusercontent.com/raw/JakubOnderka/PHP-Console-Highlighter/pull/11.patch
 Patch0:        %{name}-pr11-phpunit-createMock.patch
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -111,20 +113,40 @@ AUTOLOAD
 
 
 %install
+rm -rf   %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}
 cp -rp src/* %{buildroot}%{phpdir}/
 
 
 %check
 %if %{with_tests}
-%{_bindir}/phpunit --verbose \
-    --bootstrap %{buildroot}%{phpdir}/JakubOnderka/PhpConsoleHighlighter/autoload.php
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/JakubOnderka/PhpConsoleHighlighter/autoload.php || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/JakubOnderka/PhpConsoleHighlighter/autoload.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+   %{_bindir}/phpunit --verbose \
+      --bootstrap %{buildroot}%{phpdir}/JakubOnderka/PhpConsoleHighlighter/autoload.php
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -133,5 +155,8 @@ cp -rp src/* %{buildroot}%{phpdir}/
 
 
 %changelog
+* Thu Jul 21 2016 Remi Collet <remi@fedoraproject.org> - 0.3.2-1
+- backport for remi repository
+
 * Fri Jul 15 2016 Shawn Iwinski <shawn@iwin.ski> - 0.3.2-1
 - Initial package
