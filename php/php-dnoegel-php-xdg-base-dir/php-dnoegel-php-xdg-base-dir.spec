@@ -1,3 +1,4 @@
+# remirepo spec file for php-dnoegel-php-xdg-base-dir, from
 #
 # Fedora spec file for php-dnoegel-php-xdg-base-dir
 #
@@ -35,6 +36,7 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -94,6 +96,8 @@ AUTOLOAD
 
 
 %install
+rm -rf         %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}/XdgBaseDir
 cp -rp src/* %{buildroot}%{phpdir}/XdgBaseDir/
 
@@ -107,14 +111,32 @@ sed 's#rmdir\($runtimeDir\);#rmdir($runtimeDir); echo PHP_EOL,">>>>> runtimeDir=
 sed 's/function testGetRuntimeShouldDeleteDirsWithWrongPermission/function SKIP_testGetRuntimeShouldDeleteDirsWithWrongPermission/' \
     -i tests/XdgTest.php
 
-%{_bindir}/phpunit --verbose \
-    --bootstrap %{buildroot}%{phpdir}/XdgBaseDir/autoload.php
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/XdgBaseDir/autoload.php || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/XdgBaseDir/autoload.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+   %{_bindir}/phpunit --verbose \
+       --bootstrap %{buildroot}%{phpdir}/XdgBaseDir/autoload.php
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -123,5 +145,8 @@ sed 's/function testGetRuntimeShouldDeleteDirsWithWrongPermission/function SKIP_
 
 
 %changelog
+* Thu Jul 21 2016 Remi Collet <remi@fedoraproject.org> - 0.1-1
+- backport for remi repository
+
 * Fri Jul 15 2016 Shawn Iwinski <shawn@iwin.ski> - 0.1-1
 - Initial package
