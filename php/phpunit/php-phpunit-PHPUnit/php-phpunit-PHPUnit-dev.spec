@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    2f1fc94b77ea6418bd6a06c64a1dac0645fbce59
+%global gh_commit    6c8a756c17a1a92a066c99860eb57922e8b723da
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.4
-%global minor        6
+%global minor        7
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -191,11 +191,22 @@ install -D -p -m 755 phpunit %{buildroot}%{_bindir}/phpunit
 
 
 %check
-./phpunit --testsuite=small --no-coverage --verbose
-
-if which php71; then
-   php71 ./phpunit --testsuite=small --no-coverage --verbose
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 ./phpunit --testsuite=small --no-coverage
+   run=1
 fi
+if which php71; then
+   php71 ./phpunit --testsuite=small --no-coverage
+   run=1
+fi
+if [ $run -eq 0 ]; then
+./phpunit --testsuite=small --no-coverage --verbose
+# remirepo:2
+fi
+exit $ret
 
 
 %clean
@@ -220,6 +231,9 @@ fi
 
 
 %changelog
+* Thu Jul 21 2016 Remi Collet <remi@fedoraproject.org> - 5.4.7-1
+- Update to 5.4.7
+
 * Thu Jun 16 2016 Remi Collet <remi@fedoraproject.org> - 5.4.6-1
 - Update to 5.4.6 (no change)
 
