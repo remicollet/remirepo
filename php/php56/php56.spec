@@ -145,8 +145,8 @@
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.6.23
-Release: 1.1%{?dist}
+Version: 5.6.24
+Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -1989,6 +1989,9 @@ fi
 
 
 %changelog
+* Thu Jul 21 2016 Remi Collet <remi@fedoraproject.org> 5.6.24-1
+- Update to 5.6.24 - http://www.php.net/releases/5_6_24.php
+
 * Thu Jun 30 2016 Remi Collet <remi@fedoraproject.org> 5.6.23-1.1
 - own tests/doc directories for pecl packages (f24)
 

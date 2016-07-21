@@ -1,8 +1,8 @@
-===== 5.6.24RC1 (2016-07-08)
+===== 5.6.24 (2016-07-21)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl56*/build.log
 
-/var/lib/mock/scl56el6x/build.log:Tests failed    :     6
+/var/lib/mock/scl56el6x/build.log:Tests failed    :     5
 /var/lib/mock/scl56el7x/build.log:Tests failed    :     5
 /var/lib/mock/scl56fc21x/build.log:Tests failed    :    0
 /var/lib/mock/scl56fc22x/build.log:Tests failed    :    0
@@ -15,8 +15,6 @@ el6x, el7x:
 	Test date_sunset() function : usage variation - Passing high positive and negative float values to time argument. [ext/date/tests/date_sunset_variation9.phpt]
 	Test getdate() function : usage variation - Passing high positive and negative float values to timestamp. [ext/date/tests/getdate_variation7.phpt]
 	strtotime() function (64 bit) [ext/date/tests/strtotime3-64bit.phpt]
-el6x
-	Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
 
 
 * outdated tzdata cause date failure
