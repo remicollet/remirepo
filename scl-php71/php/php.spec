@@ -124,8 +124,8 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver        alpha3
-%global rpmrel       5
+%global rcver        beta1
+%global rpmrel       6
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -873,9 +873,6 @@ support for JavaScript Object Notation (JSON) to PHP.
 %else
 %setup -q -n php-%{version}%{?rcver}
 %endif
-
-# Temporary
-sed -e 's/-alpha3/alpha3/' -i ./configure ./configure.in ./main/php_version.h
 
 %patch5 -p1 -b .includedir
 %patch6 -p1 -b .embed
@@ -1827,6 +1824,9 @@ fi
 
 
 %changelog
+* Thu Jul 21 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-0.6.beta1
+- Update to 7.1.0beta1
+
 * Wed Jul  6 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-0.5.alpha3
 - Update to 7.1.0alpha3
 

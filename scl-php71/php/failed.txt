@@ -1,20 +1,18 @@
-===== 7.1.0alpha3 (2016-07-08)
+===== 7.1.0beta1 (2016-07-21)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl71*/build.log
 
-/var/lib/mock/scl70el6x/build.log:Tests failed    :     2
-/var/lib/mock/scl70el7x/build.log:Tests failed    :     2
+/var/lib/mock/scl70el6x/build.log:Tests failed    :     3
+/var/lib/mock/scl70el7x/build.log:Tests failed    :     3
 /var/lib/mock/scl70fc22x/build.log:Tests failed    :    1
-/var/lib/mock/scl70fc23x/build.log:Tests failed    :    0
+/var/lib/mock/scl70fc23x/build.log:Tests failed    :    1
 /var/lib/mock/scl70fc24x/build.log:Tests failed    :    1
 
 el6x, el7x
     Bug #33414 [2] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-2.phpt]
     strtotime() function (64 bit) [ext/date/tests/strtotime3-64bit.phpt]
-fc22x
-	Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
-fc24x
-	Test session_set_save_handler() function : basic functionality [ext/session/tests/session_set_save_handler_basic.phpt]
+el6x, el7x, fc22x, fc23x, fc24x
+	gzfile() with various invalid params [ext/zlib/tests/004-mb.phpt]
 
 
 *	proc_open give erratic test results :(
