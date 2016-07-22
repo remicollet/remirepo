@@ -1,0 +1,54 @@
+From 7b1572b1772dc92b2e73b7cf6d51dca88a60f411 Mon Sep 17 00:00:00 2001
+From: Pierre Joye <pierre.php@gmail.com>
+Date: Tue, 19 Jul 2016 07:11:44 +0700
+Subject: [PATCH] fix #72519, possible OOB using imagegif
+
+fix #72519, possible OOB using imagegif
+---
+ ext/gd/libgd/gd_gif_out.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/ext/gd/libgd/gd_gif_out.c b/ext/gd/libgd/gd_gif_out.c
+index 1404538..0178dd9 100644
+--- a/ext/gd/libgd/gd_gif_out.c
++++ b/ext/gd/libgd/gd_gif_out.c
+@@ -601,14 +601,26 @@ compress(int init_bits, gdIOCtxPtr outfile, gdImagePtr im, GifCtx *ctx)
+  * code in turn.  When the buffer fills up empty it and start over.
+  */
+ 
+-static unsigned long masks[] = { 0x0000, 0x0001, 0x0003, 0x0007, 0x000F,
++static const unsigned long masks[] = { 0x0000, 0x0001, 0x0003, 0x0007, 0x000F,
+                                   0x001F, 0x003F, 0x007F, 0x00FF,
+                                   0x01FF, 0x03FF, 0x07FF, 0x0FFF,
+                                   0x1FFF, 0x3FFF, 0x7FFF, 0xFFFF };
+ 
++
++/* Arbitrary value to mark output is done.  When we see EOFCode, then we don't
++ * expect to see any more data.  If we do (e.g. corrupt image inputs), cur_bits
++ * might be negative, so flag it to return early.
++ */
++#define CUR_BITS_FINISHED -1000
++
++
+ static void
+ output(code_int code, GifCtx *ctx)
+ {
++	if (ctx->cur_bits == CUR_BITS_FINISHED) {
++		return;
++	}
++
+     ctx->cur_accum &= masks[ ctx->cur_bits ];
+ 
+     if( ctx->cur_bits > 0 )
+@@ -655,8 +667,10 @@ output(code_int code, GifCtx *ctx)
+                 ctx->cur_bits -= 8;
+         }
+ 
+-        flush_char(ctx);
++		/* Flag that it's done to prevent re-entry. */
++		ctx->cur_bits = CUR_BITS_FINISHED;
+ 
++        flush_char(ctx);
+     }
+ }
+ 

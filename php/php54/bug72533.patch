@@ -1,0 +1,80 @@
+Adapted for 5.4, by Remi Collet, from:
+
+
+From aa82e99ed8003c01f1ef4f0940e56b85c5b032d4 Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Tue, 12 Jul 2016 22:37:36 -0700
+Subject: [PATCH] Fix bug #72533 (locale_accept_from_http out-of-bounds access)
+
+---
+ ext/intl/locale/locale_methods.c | 18 ++++++++++++++++++
+ ext/intl/tests/bug72533.phpt     | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
+ create mode 100644 ext/intl/tests/bug72533.phpt
+
+diff --git a/ext/intl/locale/locale_methods.c b/ext/intl/locale/locale_methods.c
+index 31f60b3..443856f 100644
+--- a/ext/intl/locale/locale_methods.c
++++ b/ext/intl/locale/locale_methods.c
+@@ -1596,6 +1596,24 @@ PHP_FUNCTION(locale_accept_from_http)
+ 		"locale_accept_from_http: unable to parse input parameters", 0 TSRMLS_CC );
+ 		RETURN_FALSE;
+ 	}
++	if(http_accept_len > ULOC_FULLNAME_CAPACITY) {
++		/* check each fragment, if any bigger than capacity, can't do it due to bug #72533 */
++		char *start = http_accept;
++		char *end;
++		size_t len;
++		do {
++			end = strchr(start, ',');
++			len = end ? end-start : http_accept_len-(start-http_accept);
++			if(len > ULOC_FULLNAME_CAPACITY) {
++				intl_error_set( NULL, U_ILLEGAL_ARGUMENT_ERROR,
++						"locale_accept_from_http: locale string too long", 0 TSRMLS_CC );
++				RETURN_FALSE;
++			}
++			if(end) {
++				start = end+1;
++			}
++		} while(end != NULL);
++	}
+ 	
+ 	available = ures_openAvailableLocales(NULL, &status);
+ 	INTL_CHECK_STATUS(status, "locale_accept_from_http: failed to retrieve locale list");
+diff --git a/ext/intl/tests/bug72533.phpt b/ext/intl/tests/bug72533.phpt
+new file mode 100644
+index 0000000..c7fcba3
+--- /dev/null
++++ b/ext/intl/tests/bug72533.phpt
+@@ -0,0 +1,30 @@
++--TEST--
++Bug #72533 (locale_accept_from_http out-of-bounds access)
++--SKIPIF--
++<?php if( !extension_loaded( 'intl' ) ) print 'skip'; ?>
++--FILE--
++<?php
++
++function ut_main()
++{
++    $ret = var_export(ut_loc_accept_http(str_repeat('x', 256)), true);
++    $ret .= "\n";
++	if(intl_is_failure(intl_get_error_code())) {
++		$ret .= var_export(intl_get_error_message(), true);
++	}
++    $ret .= "\n";
++    $ret .= var_export(ut_loc_accept_http(str_repeat('en,', 256)), true);
++    $ret .= "\n";
++	if(intl_is_failure(intl_get_error_code())) {
++		$ret .= var_export(intl_get_error_message(), true);
++	}
++    return $ret;
++}
++
++include_once( 'ut_common.inc' );
++ut_run();
++?>
++--EXPECTF--
++false
++'locale_accept_from_http: locale string too long: U_ILLEGAL_ARGUMENT_ERROR'
++'en'
+\ No newline at end of file

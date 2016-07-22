@@ -1,13 +1,16 @@
-===== 5.5.45-10 (2016-06-23)
+===== 5.5.45-11 (2016-07-22)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
-/var/lib/mock/el5i/build.log:Tests failed    :    7
+/var/lib/mock/el5i/build.log:Tests failed    :    9
 /var/lib/mock/el5x/build.log:Tests failed    :    3
 /var/lib/mock/el6i/build.log:Tests failed    :    5
 /var/lib/mock/el6x/build.log:Tests failed    :    1
 /var/lib/mock/el7x/build.log:Tests failed    :    0
 
+el5i
+	IPv4 Loopback test [ext/sockets/tests/ipv4loop.phpt]
+	ext/sockets - socket_getpeername_ipv4loop - basic test [ext/sockets/tests/socket_getpeername_ipv4loop.phpt]
 el5i, el5x
 	Bug #33414 [1] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-1.phpt]
 	Bug #66501: EC private key support in openssl_sign [ext/openssl/tests/bug66501.phpt]

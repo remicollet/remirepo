@@ -98,7 +98,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.4.45
-Release: 10%{?dist}
+Release: 11%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -200,6 +200,19 @@ Patch239: bug72433.patch
 Patch240: bug72434.patch
 Patch241: bug72455.patch
 Patch242: bug72446.patch
+Patch243: bug70480.patch
+Patch244: bug69975.patch
+Patch245: bug72479.patch
+Patch246: bug72573.patch
+Patch247: bug72513.patch
+Patch248: bug72520.patch
+Patch249: bug72533.patch
+Patch250: bug72562.patch
+Patch251: bug72603.patch
+Patch252: bug72606.patch
+Patch253: bug72613.patch
+Patch254: bug72618.patch
+Patch255: bug72519.patch
 
 # Fixes for tests
 # no_NO issue
@@ -950,6 +963,19 @@ rm -f ext/json/utf8_to_utf16.*
 %patch240 -p1 -b .bug72434
 %patch241 -p1 -b .bug72455
 %patch242 -p1 -b .bug72446
+%patch243 -p1 -b .bug70480
+%patch244 -p1 -b .bug69975
+%patch245 -p1 -b .bug72479
+%patch246 -p1 -b .bug72573
+%patch247 -p1 -b .bug72513
+%patch248 -p1 -b .bug72520
+%patch249 -p1 -b .bug72533
+%patch250 -p1 -b .bug72562
+%patch251 -p1 -b .bug72603
+%patch252 -p1 -b .bug72606
+%patch253 -p1 -b .bug72613
+%patch254 -p1 -b .bug72618
+%patch255 -p1 -b .bug72519
 
 # Fixes for tests
 %patch301 -p1 -b .datetests2
@@ -1839,6 +1865,23 @@ fi
 
 
 %changelog
+* Fri Jul 22 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-11
+- Fix #70480: php_url_parse_ex() buffer overflow read
+- Fix #69975: PHP segfaults when accessing nvarchar(max) defined columns
+- Fix #72479: Use After Free Vulnerability in SNMP with GC and unserialize()
+- Fix #72573: HTTP_PROXY is improperly trusted by some PHP libraries
+  CVE-2016-5385
+- Fix #72513: buffer overflow vulnerability in virtual_file_ex
+- Fix #72520: buffer overflow vulnerability in php_stream_zip_opener
+- Fix #72533: locale_accept_from_http out-of-bounds access
+- Fix #72562: Use After Free in unserialize() with Unexpected Session
+  Deserialization
+- Fix #72603: Out of bound read in exif_process_IFD_in_MAKERNOTE
+- Fix #72606: heap-buffer-overflow (write) simplestring_addn simplestring.c
+- Partial fix #72613: do not treat negative returns from bz2 as size_t
+- Fix #72618: NULL Pointer Dereference in exif_process_user_comment
+- Fix #72519: possible OOB using imagegif
+
 * Tue Jun 21 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-10
 - Fix #66387: Stack overflow with imagefilltoborder
 - Fix #72340: Double Free Courruption in wddx_deserialize
