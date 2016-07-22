@@ -24,8 +24,8 @@ Name:          gd
 %else
 Name:          gd-last
 %endif
-Version:       2.2.2
-Release:       1%{?prever}%{?short}%{?dist}.1
+Version:       2.2.3
+Release:       1%{?prever}%{?short}%{?dist}
 Group:         System Environment/Libraries
 License:       MIT
 URL:           http://libgd.github.io/
@@ -38,7 +38,6 @@ Source0:       https://github.com/libgd/libgd/releases/download/gd-%{version}/li
 %endif
 
 Patch1:        gd-2.1.0-multilib.patch
-Patch2:        gd-2.2.1-initialize-full_filename.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: freetype-devel
@@ -56,6 +55,7 @@ BuildRequires: zlib-devel
 BuildRequires: pkgconfig
 BuildRequires: libtool
 BuildRequires: perl
+BuildRequires: perl-generators
 
 %if "%{name}" != "gd-last"
 Obsoletes: gd-last <= %{version}
@@ -119,12 +119,12 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 %prep
 %setup -q -n libgd-%{version}%{?prever:-%{prever}}
 %patch1 -p1 -b .mlib
-%patch2 -p1 -b .full_filename
 
 : $(perl config/getver.pl)
 
 # RHEL-5 auto* are too old
 %if 0%{?rhel} == 5 || 0%{?rhel} == 6
+sed -e 's/-Werror//' -i configure
 %else
 : regenerate autotool stuff
 if [ -f configure ]; then
@@ -206,6 +206,9 @@ grep %{version} $RPM_BUILD_ROOT%{_libdir}/pkgconfig/gdlib.pc
 
 
 %changelog
+* Fri Jul 22 2016 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
+- Update to 2.2.3
+
 * Tue Jun 28 2016 Remi Collet <remi@fedoraproject.org> - 2.2.2-1.1
 - use -msse -mfpmath=sse build options (x86-32)
 
