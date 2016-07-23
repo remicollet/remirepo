@@ -21,7 +21,11 @@
 %global gh_project apcu
 #global gh_date    20151205
 %global pecl_name  apcu
+%if "%{php_version}" > "7.1"
+%global with_zts   0
+%else
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
+%endif
 %global ini_name   40-%{pecl_name}.ini
 
 Name:           %{?sub_prefix}php-pecl-apcu
@@ -31,7 +35,7 @@ Version:        5.1.5
 Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 Source1:        %{pecl_name}-5.1.2.ini
@@ -76,6 +80,10 @@ Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -308,6 +316,9 @@ fi
 
 
 %changelog
+* Sat Jul 23 2016 Remi Collet <remi@fedoraproject.org> - 5.1.5-2
+- disable ZTS build with PHP 7.1
+
 * Tue Jun  7 2016 Remi Collet <remi@fedoraproject.org> - 5.1.5-1
 - Update to 5.1.5 (php 7, stable)
 
