@@ -1,0 +1,59 @@
+From 4a857c3bfd2354196b7035e1ab6356b724813df7 Mon Sep 17 00:00:00 2001
+From: Johan Cwiklinski <jcwiklinski@teclib.com>
+Date: Tue, 19 Jul 2016 16:17:38 +0200
+Subject: [PATCH] Only check for param name, we do not have any CommonDBTM
+ subclass here
+
+---
+ ajax/dropdownRubDocument.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ajax/dropdownRubDocument.php b/ajax/dropdownRubDocument.php
+index f057b6c..15f321d 100644
+--- a/ajax/dropdownRubDocument.php
++++ b/ajax/dropdownRubDocument.php
+@@ -67,7 +67,7 @@
+       }
+    }
+ 
+-   if (!is_subclass_of($_POST['myname'], 'CommonDBTM')) {
++   if (preg_match('/[^a-z_\-0-9]/i', $_POST['myname'])) {
+       throw new \RuntimeException('Invalid name provided!');
+    }
+ 
+From fae0968a43947354598e073ab311970b5eb546e5 Mon Sep 17 00:00:00 2001
+From: Johan Cwiklinski <jcwiklinski@teclib.com>
+Date: Tue, 19 Jul 2016 16:36:09 +0200
+Subject: [PATCH] Fix overrided variable
+
+---
+ ajax/dropdownRubDocument.php | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/ajax/dropdownRubDocument.php b/ajax/dropdownRubDocument.php
+index 15f321d..9a1cab3 100644
+--- a/ajax/dropdownRubDocument.php
++++ b/ajax/dropdownRubDocument.php
+@@ -50,16 +50,16 @@
+ 
+    // Clean used array
+    if (isset($_POST['used']) && is_array($_POST['used']) && (count($_POST['used']) > 0)) {
+-      $used = '';
+-      foreach ($_POST['used'] as $used) {
+-         if ($used !== '') {
+-            $used .= ', ';
++      $used_qry = '';
++      foreach ($_POST['used'] as $current_used) {
++         if ($used_qry !== '') {
++            $used_qry .= ', ';
+          }
+-         $used .= (int)$used;
++         $used_qry .= (int)$current_used;
+       }
+       $query = "SELECT `id`
+                 FROM `glpi_documents`
+-                WHERE `id` IN (".$used.")
++                WHERE `id` IN (".$used_qry.")
+                       AND `documentcategories_id` = '".(int)$_POST["rubdoc"]."'";
+ 
+       foreach ($DB->request($query) AS $data) {

@@ -28,7 +28,7 @@
 
 Name:           glpi
 Version:        0.90.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
@@ -47,8 +47,9 @@ Source4:        glpi-nginx.conf
 Patch0:         glpi-0.90-cron.patch
 # Fix autoloader
 Patch1:         glpi-0.90-autoload.patch
-# Upstream patch
+# Upstream patches
 Patch2:         glpi-0.90-upstream.patch
+Patch3:         glpi-0.90-upstream2.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -134,6 +135,7 @@ grep %{version} config/define.php
 %patch0 -p0
 %patch1 -p0
 %patch2 -p1
+%patch3 -p1
 
 find . -name \*.orig -exec rm {} \; -print
 
@@ -331,6 +333,9 @@ fi
 
 
 %changelog
+* Sat Jul 23 2016 Remi Collet <remi@fedoraproject.org> - 0.90.4-2
+- fix regression in document form, adding upstream patch
+
 * Tue Jul 19 2016 Remi Collet <remi@fedoraproject.org> - 0.90.4-1
 - update to 0.90.4
   https://github.com/glpi-project/glpi/issues?q=milestone:0.90.4
