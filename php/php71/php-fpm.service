@@ -1,0 +1,19 @@
+# It's not recommended to modify this file in-place, because it
+# will be overwritten during upgrades.  If you want to customize,
+# the best way is to use the "systemctl edit" command.
+
+[Unit]
+Description=The PHP FastCGI Process Manager
+After=syslog.target network.target
+
+[Service]
+Type=notify
+PIDFile=/run/php-fpm/php-fpm.pid
+EnvironmentFile=/etc/sysconfig/php-fpm
+ExecStart=/usr/sbin/php-fpm --nodaemonize
+ExecReload=/bin/kill -USR2 $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+
