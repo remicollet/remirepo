@@ -16,7 +16,7 @@ if [ "$nom" = "SRPMS" ]
 then
   dis=fedora
   ver=17
-  old=4
+  old=5
 else
   dis=${nom%%/*}
   ver=${nom#$dis/}
