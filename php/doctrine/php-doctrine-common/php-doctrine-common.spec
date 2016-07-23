@@ -12,8 +12,8 @@
 
 %global github_owner     doctrine
 %global github_name      common
-%global github_version   2.5.0
-%global github_commit    cd8daf2501e10c63dced7b8b9b905844316ae9d3
+%global github_version   2.5.3
+%global github_commit    10f1f19651343f87573129ca970aef1a47a6f29e
 
 %global composer_vendor  doctrine
 %global composer_project common
@@ -58,6 +58,8 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Library version value check
+BuildRequires: php-cli
 # Tests
 %if %{with_tests}
 ## composer.json
@@ -70,7 +72,7 @@ BuildRequires: php-composer(doctrine/collections) >= %{doctrine_collections_min_
 BuildRequires: php-doctrine-inflector             >= %{doctrine_inflector_min_ver}
 #BuildRequires: php-composer(doctrine/lexer)       >= %%{doctrine_lexer_min_ver}
 BuildRequires: php-doctrine-lexer                 >= %{doctrine_lexer_min_ver}
-## phpcompatinfo (computed from version 2.5.0)
+## phpcompatinfo (computed from version 2.5.3)
 BuildRequires: php-date
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -80,6 +82,7 @@ BuildRequires: php-tokenizer
 BuildRequires: php-composer(symfony/class-loader)
 %endif
 
+# composer.json
 Requires:      php(language)                      >= %{php_min_ver}
 Requires:      php-composer(doctrine/annotations) >= %{doctrine_annotations_min_ver}
 Requires:      php-composer(doctrine/annotations) <  %{doctrine_annotations_max_ver}
@@ -113,24 +116,23 @@ Provides:      php-doctrine-DoctrineCommon = %{version}
 The Doctrine Common project is a library that provides extensions to core PHP
 functionality.
 
+Autoloader: %{phpdir}/Doctrine/Common/autoload.php
+
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+
+%build
 : Create autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee lib/Doctrine/Common/autoload.php
 <?php
 /**
- * Autoloader created by %{name}-%{version}-%{release}
+ * Autoloader for %{name} and its' dependencies
+ * (created by %{name}-%{version}-%{release}).
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
-
-require_once '%{phpdir}/Doctrine/Common/Annotations/autoload.php';
-require_once '%{phpdir}/Doctrine/Common/Cache/autoload.php';
-require_once '%{phpdir}/Doctrine/Common/Collections/autoload.php';
-require_once '%{phpdir}/Doctrine/Common/Inflector/autoload.php';
-require_once '%{phpdir}/Doctrine/Common/Lexer/autoload.php';
 
 if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
     if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
@@ -143,22 +145,31 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('Doctrine\\Common\\', dirname(dirname(__DIR__)));
 
+require_once '%{phpdir}/Doctrine/Common/Annotations/autoload.php';
+require_once '%{phpdir}/Doctrine/Common/Cache/autoload.php';
+require_once '%{phpdir}/Doctrine/Common/Collections/autoload.php';
+require_once '%{phpdir}/Doctrine/Common/Inflector/autoload.php';
+require_once '%{phpdir}/Doctrine/Common/Lexer/autoload.php';
+
 return $fedoraClassLoader;
 AUTOLOAD
-) | tee lib/Doctrine/Common/autoload.php
-
-
-%build
-# Empty build section, nothing required
 
 
 %install
-rm -rf %{buildroot}
+rm -rf   %{buildroot}
 mkdir -p %{buildroot}%{phpdir}
 cp -rp lib/* %{buildroot}%{phpdir}/
 
 
 %check
+: Library version value check
+%{_bindir}/php -r '
+    require_once "%{buildroot}%{phpdir}/Doctrine/Common/Version.php";
+    $version = \Doctrine\Common\Version::VERSION;
+    echo "Version $version (expected %{version})\n";
+    exit(version_compare("%{version}", "$version", "=") ? 0 : 1);
+'
+
 %if %{with_tests}
 : Modify tests init
 sed "s#require.*autoload.*#require_once '%{buildroot}%{phpdir}/Doctrine/Common/autoload.php';#" \
@@ -173,7 +184,20 @@ sed -e 's/function testGetManagerForAliasedClass/function SKIP_testGetManagerFor
     -i tests/Doctrine/Tests/Common/Persistence/ManagerRegistryTest.php
 %endif
 
-%{_bindir}/phpunit -v
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -198,6 +222,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 22 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.5.3-1
+- Updated to 2.5.3 (RHBZ #1347924 / CVE-2015-5723)
+- Added library version value check
+
 * Sat Jun 27 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.5.0-1
 - Updated to 2.5.0 (RHBZ #1209683)
 - Added autoloader
