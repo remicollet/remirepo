@@ -1,0 +1,149 @@
+From e4dd42a5ed8d410fd718f53d9f3f72bd91b4b0b1 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sat, 23 Jul 2016 13:45:43 +0200
+Subject: [PATCH 1/3] Fix build with PHP 7.1
+
+- zend_print_zval_r_ex have been removed from 7.1
+- zend_print_zval_r_to_str have been added in 7.1
+- make apm_write static (not used anywhere else)
+- move extract_data declaration
+---
+ apm.c     | 16 +++++++++++++++-
+ php_apm.h | 10 +---------
+ 2 files changed, 16 insertions(+), 10 deletions(-)
+
+diff --git a/apm.c b/apm.c
+index 624369c..e45200f 100644
+--- a/apm.c
++++ b/apm.c
+@@ -94,7 +94,8 @@ static int apm_end_silence_opcode_handler(ZEND_USER_OPCODE_HANDLER_ARGS)
+ 	return ZEND_USER_OPCODE_DISPATCH;
+ }
+ 
+-int apm_write(const char *str,
++#if PHP_VERSION_ID <  70100
++static int apm_write(const char *str,
+ #if PHP_VERSION_ID >= 70000
+ size_t
+ #else
+@@ -107,6 +108,7 @@ length)
+ 	smart_str_0(APM_G(buffer));
+ 	return length;
+ }
++#endif
+ 
+ void (*old_error_cb)(int type, const char *error_filename, const uint error_lineno, const char *format, va_list args);
+ 
+@@ -596,8 +598,14 @@ void extract_data(TSRMLS_D)
+ 		zend_is_auto_global_compat("_COOKIE");
+ 		if (FETCH_HTTP_GLOBALS(COOKIE)) {
+ 			if (Z_ARRVAL_P(tmp)->nNumOfElements > 0) {
++#if PHP_VERSION_ID >= 70100
++				zend_string *tmpstr;
++				tmpstr = zend_print_zval_r_to_str(tmp, 0);
++				smart_str_append(&APM_RD(cookies), tmpstr);
++#else
+ 				APM_G(buffer) = &APM_RD(cookies);
+ 				zend_print_zval_r_ex(apm_write, tmp, 0 TSRMLS_CC);
++#endif
+ 				APM_RD(cookies_found) = 1;
+ 			}
+ 		}
+@@ -606,8 +614,14 @@ void extract_data(TSRMLS_D)
+ 		zend_is_auto_global_compat("_POST");
+ 		if (FETCH_HTTP_GLOBALS(POST)) {
+ 			if (Z_ARRVAL_P(tmp)->nNumOfElements > 0) {
++#if PHP_VERSION_ID >= 70100
++				zend_string *tmpstr;
++				tmpstr = zend_print_zval_r_to_str(tmp, 0);
++				smart_str_append(&APM_RD(post_vars), tmpstr);
++#else
+ 				APM_G(buffer) = &APM_RD(post_vars);
+ 				zend_print_zval_r_ex(apm_write, tmp, 0 TSRMLS_CC);
++#endif
+ 				APM_RD(post_vars_found) = 1;
+ 			}
+ 		}
+diff --git a/php_apm.h b/php_apm.h
+index 4a5ee24..3fe29e3 100644
+--- a/php_apm.h
++++ b/php_apm.h
+@@ -368,14 +368,6 @@ ZEND_END_MODULE_GLOBALS(apm)
+ # define add_assoc_long_compat(array, key, value) add_assoc_long_ex((array), (key), (sizeof(key)), (value));
+ #endif
+ 
+-int apm_write(const char *str,
+-#if PHP_VERSION_ID >= 70000
+-size_t
+-#else
+-uint
+-#endif
+-length);
+-
++void extract_data(TSRMLS_D);
+ #endif
+ 
+-void extract_data(TSRMLS_D);
+
+From 6109488d4b35ccb0c9b56b79986e8b5375c8f1a6 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sat, 23 Jul 2016 13:55:05 +0200
+Subject: [PATCH 2/3] Declare module dependencies (only json for socket driver)
+
+---
+ apm.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/apm.c b/apm.c
+index e45200f..1b21dd0 100644
+--- a/apm.c
++++ b/apm.c
+@@ -124,8 +124,17 @@ struct timeval begin_tp;
+ struct rusage begin_usg;
+ #endif
+ 
++static const zend_module_dep apm_deps[] = {
++#ifdef APM_DRIVER_SOCKET
++	ZEND_MOD_REQUIRED("json")
++#endif
++	ZEND_MOD_END
++};
++
+ zend_module_entry apm_module_entry = {
+-	STANDARD_MODULE_HEADER,
++	STANDARD_MODULE_HEADER_EX,
++	NULL,
++	apm_deps,
+ 	"apm",
+ 	NULL,
+ 	PHP_MINIT(apm),
+
+From 95e6fd6fb69abce62b0e1c6a1d2a9f80f463a687 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sat, 23 Jul 2016 14:05:15 +0200
+Subject: [PATCH 3/3] memleak
+
+---
+ apm.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/apm.c b/apm.c
+index 1b21dd0..99157b1 100644
+--- a/apm.c
++++ b/apm.c
+@@ -611,6 +611,7 @@ void extract_data(TSRMLS_D)
+ 				zend_string *tmpstr;
+ 				tmpstr = zend_print_zval_r_to_str(tmp, 0);
+ 				smart_str_append(&APM_RD(cookies), tmpstr);
++				zend_string_release(tmpstr);
+ #else
+ 				APM_G(buffer) = &APM_RD(cookies);
+ 				zend_print_zval_r_ex(apm_write, tmp, 0 TSRMLS_CC);
+@@ -627,6 +628,7 @@ void extract_data(TSRMLS_D)
+ 				zend_string *tmpstr;
+ 				tmpstr = zend_print_zval_r_to_str(tmp, 0);
+ 				smart_str_append(&APM_RD(post_vars), tmpstr);
++				zend_string_release(tmpstr);
+ #else
+ 				APM_G(buffer) = &APM_RD(post_vars);
+ 				zend_print_zval_r_ex(apm_write, tmp, 0 TSRMLS_CC);

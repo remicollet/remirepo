@@ -46,12 +46,14 @@ Version:        2.1.1
 Release:        6.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 %endif
 
 # Disable the extension and drivers by default
 Patch0:         %{proj_name}-config.patch
+# See https://github.com/patrickallaert/php-apm/pull/44
+Patch1:         %{proj_name}-pr44.patch
 
 License:        PHP
 Group:          Development/Languages
@@ -99,6 +101,10 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -142,6 +148,7 @@ mv %{proj_name}-%{version} NTS
 cd NTS
 %patch0 -p0 -b .rpm
 sed -e 's:/var/php/apm/db:%{_localstatedir}/lib/php/apm/db:' -i apm.ini
+%patch1 -p1 -b .pr44
 
 : Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APM_VERSION/{s/.* "//;s/".*$//;p}' php_apm.h)
@@ -275,6 +282,10 @@ fi
 
 
 %changelog
+* Sat Jul 23 2016 Remi Collet <remi@fedoraproject.org> - 2.1.1-2
+- fix build with PHP 7.1
+  open https://github.com/patrickallaert/php-apm/pull/44
+
 * Tue Mar 29 2016 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - Update to 2.1.1 (no change, only patch merged upstream)
 
