@@ -12,8 +12,8 @@
 
 %global github_owner     composer
 %global github_name      installers
-%global github_version   1.0.25
-%global github_commit    36e5b5843203d7f1cf6ffb0305a97e014387bd8e
+%global github_version   1.1.0
+%global github_commit    a3595c5272a6f247228abb20076ed27321e4aae9
 
 %global composer_vendor  composer
 %global composer_project installers
@@ -36,8 +36,8 @@ Summary:       A multi-framework Composer library installer
 
 Group:         Development/Libraries
 License:       MIT
-URL:           https://github.com/%{github_owner}/%{github_name}
-Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+URL:           http://composer.github.io/installers/
+Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
 BuildArch:     noarch
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -47,7 +47,7 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-composer(composer-plugin-api) >= %{composer_plugin_min_ver}
 BuildRequires: php-composer(composer/composer)   >= %{composer_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 1.0.23)
+## phpcompatinfo (computed from version 1.1.0)
 BuildRequires: php(language) >= 5.3.0
 BuildRequires: php-pcre
 BuildRequires: php-spl
@@ -58,7 +58,7 @@ BuildRequires: php-composer(symfony/class-loader)
 # composer.json
 Requires:      php-composer(composer-plugin-api) >= %{composer_plugin_min_ver}
 Requires:      php-composer(composer-plugin-api) <  %{composer_plugin_max_ver}
-# phpcompatinfo (computed from version 1.0.23)
+# phpcompatinfo (computed from version 1.1.0)
 Requires:      php(language) >= 5.3.0
 Requires:      php-pcre
 Requires:      php-spl
@@ -85,6 +85,8 @@ installer to handle it.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+
+%build
 : Create autoloader
 cat <<'AUTOLOAD' | tee src/Composer/Installers/autoload.php
 <?php
@@ -112,10 +114,6 @@ return $fedoraClassLoader;
 AUTOLOAD
 
 
-%build
-# Empty build section, nothing to build
-
-
 %install
 rm -rf   %{buildroot}
 
@@ -133,11 +131,20 @@ $fedoraClassLoader->addPrefix('Composer\\Installers\\Test\\', __DIR__ . '/tests'
 BOOTSTRAP
 
 : Run tests
-%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -157,6 +164,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jul 23 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.0-1
+- Updated to 1.1.0 (RHBZ #1352896)
+- Updated URL
+
 * Thu Apr 14 2016 Remi Collet <remi@remirepo.net> - 1.0.25-1
 - update to 1.0.25
 
