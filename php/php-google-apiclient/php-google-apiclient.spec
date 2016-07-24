@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-google-apiclient
 #
-# Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2014-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #                         Adam Williamson <awilliam@redhat.com>
 #
 # License: MIT
@@ -13,8 +13,8 @@
 
 %global github_owner     google
 %global github_name      google-api-php-client
-%global github_version   1.1.5
-%global github_commit    2bc00ec4e8fa1a5eec793d800fac339f30b730db
+%global github_version   1.1.8
+%global github_commit    85309a3520bb5f53368d43e35fd24f43c9556323
 
 %global composer_vendor  google
 %global composer_project apiclient
@@ -29,7 +29,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}.1
+Release:       1%{?dist}
 Summary:       Client library for Google APIs
 
 Group:         Development/Libraries
@@ -44,7 +44,7 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 1.1.5)
+## phpcompatinfo (computed from version 1.1.8)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -60,7 +60,7 @@ BuildRequires: php-spl
 Requires:      /etc/pki/tls/certs/ca-bundle.crt
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.1.5)
+# phpcompatinfo (computed from version 1.1.8)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-json
@@ -68,6 +68,13 @@ Requires:      php-openssl
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
+
+# Weak dependencies
+%if 0%{?fedora} >= 21
+Suggests:      php-pecl(apcu)
+Suggests:      php-pecl(memcache)
+Suggests:      php-pecl(memcached)
+%endif
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -77,12 +84,9 @@ Google APIs Client Library for PHP provides access to many Google APIs.
 It is designed for PHP client-application developers and offers simple,
 flexible, powerful API access.
 
-Optional:
-* php-pecl-apcu
-* php-pecl-memcache
-* php-pecl-memcached
-
 Examples are available in the %{name}-examples package.
+
+Autoloader: %{phpdir}/Google/autoload.php
 
 
 %package examples
@@ -120,16 +124,29 @@ cp -rp src/* %{buildroot}%{phpdir}/
 
 
 %check
+: Ensure unbundled CA cert is referenced
+grep '%{_sysconfdir}/pki/tls/certs/ca-bundle.crt' --quiet \
+    %{buildroot}%{phpdir}/Google/IO/{Curl,Stream}.php
+
 %if %{with_tests}
 : Skip tests requiring network access
 rm -f tests/general/ApiBatchRequestTest.php
 
 : Run tests
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/phpunit --verbose
-
-: Ensure unbundled CA cert is referenced
-grep '%{_sysconfdir}/pki/tls/certs/ca-bundle.crt' --quiet \
-    %{buildroot}%{phpdir}/Google/IO/{Curl,Stream}.php
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -154,6 +171,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jul 24 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.8-1
+- Updated to 1.1.8 (RHBZ #1275453)
+- Added weak dependencies
+- Always ensure unbundled CA cert is referenced
+
 * Fri Apr 15 2016 Remi Collet <remi@remirepo.net> - 1.1.5-1.1
 - fix dep. on EL-5
 

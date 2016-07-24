@@ -1,0 +1,23 @@
+{
+    "name": "google/apiclient",
+    "type": "library",
+    "description": "Client library for Google APIs",
+    "keywords": ["google"],
+    "homepage": "http://developers.google.com/api-client-library/php",
+    "license": "Apache-2.0",
+    "require": {
+        "php": ">=5.2.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*",
+        "squizlabs/php_codesniffer": "~2.3"
+    },
+    "autoload": {
+        "files": ["src/Google/autoload.php"]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-v1-master": "1.1.x-dev"
+        }
+    }
+}
