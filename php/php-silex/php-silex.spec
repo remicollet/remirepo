@@ -51,7 +51,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       3%{dist}
+Release:       4%{dist}
 Summary:       PHP micro-framework based on the Symfony components
 
 Group:         Development/Libraries
@@ -205,32 +205,38 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('Silex\\', dirname(__DIR__));
 
-// Required dependencies
-require_once '%{phpdir}/Pimple1/autoload.php';
-require_once '%{phpdir}/Symfony/Component/EventDispatcher/autoload.php';
-require_once '%{phpdir}/Symfony/Component/HttpFoundation/autoload.php';
-require_once '%{phpdir}/Symfony/Component/HttpKernel/autoload.php';
-require_once '%{phpdir}/Symfony/Component/Routing/autoload.php';
-
-// Optional dependencies
-@include_once '%{phpdir}/Doctrine/DBAL/autoload.php';
-@include_once '%{phpdir}/Monolog/autoload.php';
-@include_once '%{phpdir}/Psr/Log/autoload.php';
-@include_once '%{phpdir}/Swift/swift_required.php';
-@include_once '%{phpdir}/Symfony/Bridge/Doctrine/autoload.php';
-@include_once '%{phpdir}/Symfony/Bridge/Monolog/autoload.php';
-@include_once '%{phpdir}/Symfony/Bridge/Twig/autoload.php';
-@include_once '%{phpdir}/Symfony/Component/BrowserKit/autoload.php';
-@include_once '%{phpdir}/Symfony/Component/Debug/autoload.php';
-@include_once '%{phpdir}/Symfony/Component/Finder/autoload.php';
-@include_once '%{phpdir}/Symfony/Component/Form/autoload.php';
-@include_once '%{phpdir}/Symfony/Component/Locale/autoload.php';
-@include_once '%{phpdir}/Symfony/Component/Process/autoload.php';
-@include_once '%{phpdir}/Symfony/Component/Security/autoload.php';
-@include_once '%{phpdir}/Symfony/Component/Serializer/autoload.php';
-@include_once '%{phpdir}/Symfony/Component/Translation/autoload.php';
-@include_once '%{phpdir}/Symfony/Component/Validator/autoload.php';
-@include_once '%{phpdir}/Twig/autoload.php';
+// Dependencies (autoloader => required)
+foreach(array(
+    // Required dependencies
+    '%{phpdir}/Pimple1/autoload.php' => true,
+    '%{phpdir}/Symfony/Component/EventDispatcher/autoload.php' => true,
+    '%{phpdir}/Symfony/Component/HttpFoundation/autoload.php' => true,
+    '%{phpdir}/Symfony/Component/HttpKernel/autoload.php' => true,
+    '%{phpdir}/Symfony/Component/Routing/autoload.php' => true,
+    // Optional dependencies
+    '%{phpdir}/Doctrine/DBAL/autoload.php' => false,
+    '%{phpdir}/Monolog/autoload.php' => false,
+    '%{phpdir}/Psr/Log/autoload.php' => false,
+    '%{phpdir}/Swift/swift_required.php' => false,
+    '%{phpdir}/Symfony/Bridge/Doctrine/autoload.php' => false,
+    '%{phpdir}/Symfony/Bridge/Monolog/autoload.php' => false,
+    '%{phpdir}/Symfony/Bridge/Twig/autoload.php' => false,
+    '%{phpdir}/Symfony/Component/BrowserKit/autoload.php' => false,
+    '%{phpdir}/Symfony/Component/Debug/autoload.php' => false,
+    '%{phpdir}/Symfony/Component/Finder/autoload.php' => false,
+    '%{phpdir}/Symfony/Component/Form/autoload.php' => false,
+    '%{phpdir}/Symfony/Component/Locale/autoload.php' => false,
+    '%{phpdir}/Symfony/Component/Process/autoload.php' => false,
+    '%{phpdir}/Symfony/Component/Security/autoload.php' => false,
+    '%{phpdir}/Symfony/Component/Serializer/autoload.php' => false,
+    '%{phpdir}/Symfony/Component/Translation/autoload.php' => false,
+    '%{phpdir}/Symfony/Component/Validator/autoload.php' => false,
+    '%{phpdir}/Twig/autoload.php' => false,
+) as $dependencyAutoloader => $required) {
+    if ($required || file_exists($dependencyAutoloader)) {
+        require_once $dependencyAutoloader;
+    }
+}
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -278,11 +284,20 @@ rm -f \
     tests/Silex/Tests/Application/SwiftmailerTraitTest.php
 
 : Run tests
-%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -303,6 +318,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jul 23 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.5-4
+- Updated autoloader to not use "@include_once"
+
 * Fri Apr 01 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.5-3
 - Use actual package names (instead of virtual provides) for conflicts
 
