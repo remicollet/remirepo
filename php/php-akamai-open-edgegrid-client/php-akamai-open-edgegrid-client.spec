@@ -12,8 +12,8 @@
 
 %global github_owner     akamai-open
 %global github_name      AkamaiOPEN-edgegrid-php
-%global github_version   0.4.4
-%global github_commit    4eb9f733cfcd0e1574896b456f62296355bb816f
+%global github_version   0.4.5
+%global github_commit    1e079aa0977c7d907427876fdcc38b0042bd2493
 
 %global composer_vendor  akamai-open
 %global composer_project edgegrid-client
@@ -48,16 +48,19 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Library version value and autoloader check
+BuildRequires: php-cli
+## composer.json
+BuildRequires: php-composer(guzzlehttp/guzzle) >= %{guzzle_min_ver}
+#BuildRequires: php-composer(psr/log)           >= %%{psr_log_min_ver}
+BuildRequires: php-PsrLog                      >= %{psr_log_min_ver}
 # Tests
 %if %{with_tests}
 ## composer.json
 BuildRequires: php(language)                   >= %{php_min_ver}
-BuildRequires: php-composer(guzzlehttp/guzzle) >= %{guzzle_min_ver}
 BuildRequires: php-composer(monolog/monolog)   >= %{monolog_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-#BuildRequires: php-composer(psr/log)           >= %%{psr_log_min_ver}
-BuildRequires: php-PsrLog                      >= %{psr_log_min_ver}
-## phpcompatinfo (computed from version 0.4.4)
+## phpcompatinfo (computed from version 0.4.5)
 BuildRequires: php-date
 BuildRequires: php-hash
 BuildRequires: php-json
@@ -76,7 +79,7 @@ Requires:      php-composer(monolog/monolog)   <  %{monolog_max_ver}
 #Requires:      php-composer(psr/log)           >= %%{psr_log_min_ver}
 Requires:      php-PsrLog                      >= %{psr_log_min_ver}
 Requires:      php-composer(psr/log)           <  %{psr_log_max_ver}
-# phpcompatinfo (computed from version 0.4.4)
+# phpcompatinfo (computed from version 0.4.5)
 Requires:      php-date
 Requires:      php-hash
 Requires:      php-json
@@ -146,6 +149,14 @@ cp -rp src/* %{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/
 
 
 %check
+: Library version value and autoloader check
+%{_bindir}/php -r '
+    require_once "%{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/autoload.php";
+    $version = \Akamai\Open\EdgeGrid\Client::VERSION;
+    echo "Version $version (expected %{version})\n";
+    exit(version_compare("%{version}", "$version", "=") ? 0 : 1);
+'
+
 %if %{with_tests}
 : Make PSR-0 tests
 mkdir -p tests-psr0/Akamai/Open/EdgeGrid
@@ -156,14 +167,26 @@ cat <<'BOOTSTRAP' | tee bootstrap.php
 <?php
 require_once '%{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/autoload.php';
 
-$fedoraClassLoader->addPrefix('Akamai\\Open\\EdgeGrid\\Tests\\', __DIR__.'/tests-psr0');
+$fedoraClassLoader->addPrefix(
+    'Akamai\\Open\\EdgeGrid\\Tests\\',
+    __DIR__.'/tests-psr0'
+);
 BOOTSTRAP
 
-%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -185,6 +208,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jul 23 2016 Shawn Iwinski <shawn@iwin.ski> - 0.4.5-1
+- Updated to 0.4.5 (RHBZ #1333785)
+- Added library version value and autoloader check
+
 * Fri Apr 15 2016 Remi Collet <remi@remirepo.net> - 0.4.4-1
 - backport for remi repository
 
