@@ -12,14 +12,12 @@
 
 %global github_owner     PHP-DI
 %global github_name      Invoker
-%global github_version   1.3.0
-%global github_commit    c5c50237115803d7410d13d9d6afb5afe6526fac
+%global github_version   1.3.3
+%global github_commit    1f4ca63b9abc66109e53b255e465d0ddb5c2e3f7
 
 %global composer_vendor  php-di
 %global composer_project invoker
 
-# "php": ">=5.3.0"
-%global php_min_ver 5.3.0
 # "container-interop/container-interop": "~1.1"
 %global container_interop_min_ver 1.1
 %global container_interop_max_ver 2.0
@@ -48,20 +46,20 @@ BuildArch:     noarch
 # Tests
 %if %{with_tests}
 ## composer.json
-BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(container-interop/container-interop) >= %{container_interop_min_ver}
-## phpcompatinfo (computed from version 1.3.0)
+BuildRequires: php-composer(phpunit/phpunit)
+## phpcompatinfo (computed from version 1.3.3)
+BuildRequires: php(language) >= 5.3.0
 BuildRequires: php-reflection
 ## Autoloader
 BuildRequires: php-composer(symfony/class-loader)
 %endif
 
 # composer.json
-Requires:      php(language)                                     >= %{php_min_ver}
 Requires:      php-composer(container-interop/container-interop) >= %{container_interop_min_ver}
 Requires:      php-composer(container-interop/container-interop) <  %{container_interop_max_ver}
-# phpcompatinfo (computed from version 1.3.0)
+# phpcompatinfo (computed from version 1.3.3)
+Requires:      php(language) >= 5.3.0
 Requires:      php-reflection
 # Autoloader
 Requires:      php-composer(symfony/class-loader)
@@ -80,6 +78,8 @@ Autoloader: %{phpdir}/Invoker/autoload.php
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+
+%build
 : Create autoloader
 cat <<'AUTOLOAD' | tee src/autoload.php
 <?php
@@ -108,12 +108,9 @@ return $fedoraClassLoader;
 AUTOLOAD
 
 
-%build
-# Empty build section, nothing to build
-
-
 %install
 rm -rf   %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}/Invoker
 cp -rp src/* %{buildroot}%{phpdir}/Invoker/
 
@@ -132,11 +129,20 @@ $fedoraClassLoader->addPrefix('Invoker\\Test\\', __DIR__.'/tests-psr0');
 BOOTSTRAP
 
 : Run tests
-%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -156,6 +162,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jul 23 2016 Shawn Iwinski <shawn@iwin.ski> - 1.3.3-1
+- Updated to 1.3.3 (RHBZ #1341396)
+
 * Sun Mar 27 2016 Shawn Iwinski <shawn@iwin.ski> - 1.3.0-1
 - Updated to 1.3.0 (RHBZ #1319537)
 
