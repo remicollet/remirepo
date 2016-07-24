@@ -46,7 +46,7 @@
 
 Name:      php-aws-sdk
 Version:   %{github_version}
-Release:   1%{?dist}
+Release:   1.1%{?dist}
 Summary:   Amazon Web Services framework for PHP
 
 Group:     Development/Libraries
@@ -67,7 +67,7 @@ Requires:  php-composer(guzzle/guzzle) >= %{guzzle_min_ver}
 Requires:  php-composer(guzzle/guzzle) <  %{guzzle_max_ver}
 # composer.json: optional
 Requires:  php-openssl
-# phpcompatinfo (computed from version 2.8.27)
+# phpcompatinfo (computed from version 2.8.30)
 Requires:  php-curl
 Requires:  php-date
 Requires:  php-hash
@@ -87,12 +87,12 @@ Suggests:  php-composer(monolog/monolog)
 Suggests:  php-composer(symfony/yaml)
 Suggests:  php-pecl(apcu)
 %endif
-Conflicts: php-composer(doctrine/cache)  <  %{doctrine_cache_min_ver}
-Conflicts: php-composer(doctrine/cache)  >= %{doctrine_cache_max_ver}
-Conflicts: php-composer(monolog/monolog) <  %{monolog_min_ver}
-Conflicts: php-composer(monolog/monolog) >= %{monolog_max_ver}
-Conflicts: php-composer(symfony/yaml)    <  %{symfony_min_ver}
-Conflicts: php-composer(symfony/yaml)    >= %{symfony_max_ver}
+Conflicts: php-doctrine-cache <  %{doctrine_cache_min_ver}
+Conflicts: php-doctrine-cache >= %{doctrine_cache_max_ver}
+Conflicts: php-Monolog        <  %{monolog_min_ver}
+Conflicts: php-Monolog        >= %{monolog_max_ver}
+Conflicts: php-symfony-yaml   <  %{symfony_min_ver}
+Conflicts: php-symfony-yaml   >= %{symfony_max_ver}
 
 # Composer
 Provides:  php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -134,13 +134,19 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('Aws\\', dirname(__DIR__));
 
-// Required dependency
-require_once '%{phpdir}/Guzzle/autoload.php';
-
-// Optional dependencies
-@include_once '%{phpdir}/Doctrine/Common/Cache/autoload.php';
-@include_once '%{phpdir}/Monolog/autoload.php';
-@include_once '%{phpdir}/Symfony/Component/Yaml/autoload.php';
+// Dependencies (autoloader => required)
+foreach(array(
+    // Required dependencies
+    '%{phpdir}/Guzzle/autoload.php'                 => true,
+    // Optional dependencies
+    '%{phpdir}/Doctrine/Common/Cache/autoload.php'  => false,
+    '%{phpdir}/Monolog/autoload.php'                => false,
+    '%{phpdir}/Symfony/Component/Yaml/autoload.php' => false,
+) as $dependencyAutoloader => $required) {
+    if ($required || file_exists($dependencyAutoloader)) {
+        require_once $dependencyAutoloader;
+    }
+}
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -194,6 +200,15 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jul 24 2016 Remi Collet <remi@fedoraproject.org> - 2.8.30-1.1
+- sync with Fedora
+
+* Sat Jul 23 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.8.30-1
+- Updated to 2.8.30 (RHBZ #1359344)
+- Updated weak dependency conflicts to use actual pkg names instead of
+  php-composer(*) virtual provides
+- Updated autoloader to not use "@include_once"
+
 * Wed May 18 2016 Remi Collet <remi@fedoraproject.org> - 2.8.30-1
 - Update to 2.8.30
 
