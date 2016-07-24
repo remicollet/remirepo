@@ -52,7 +52,7 @@ pushd $TEMP_DIR
     pushd $GIT_DIR
         print "Checking out commit..."
         $GIT checkout $GIT_COMMIT
-        cp composer.json ${SRC_DIR}/composer-${VERSION}.json
+        cp composer.json ${SRC_DIR}/composer.json
     popd
 
     TAR_DIR=${GIT_NAME}-${GIT_COMMIT}

@@ -12,8 +12,8 @@
 
 %global github_owner     tchwork
 %global github_name      utf8
-%global github_version   1.2.6
-%global github_commit    f986d18f4e37ab70b792e977c7d85970cf84f164
+%global github_version   1.3.1
+%global github_commit    30ec6451aec7d2536f0af8fe535f70c764f2c47a
 
 %global composer_vendor  patchwork
 %global composer_project utf8
@@ -44,11 +44,6 @@ URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
 Source1:       %{name}-get-source.sh
 
-# fix for php 5.5.35/5.6.21/7.0.6
-# https://github.com/tchwork/utf8/pull/59
-# NOTE: Upstream patch modified for version 1.2
-Patch0:        %{name}-pr59-modified-for-1-2.patch
-
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Relative paths
@@ -62,12 +57,12 @@ BuildRequires: php-iconv
 BuildRequires: php-intl
 BuildRequires: php-mbstring
 BuildRequires: php-pcre
-## phpcompatinfo (computed from version 1.2.6)
-BuildRequires: php-reflection
+## phpcompatinfo (computed from version 1.3.1)
 BuildRequires: php-date
 BuildRequires: php-exif
 BuildRequires: php-filter
 BuildRequires: php-json
+BuildRequires: php-reflection
 BuildRequires: php-spl
 BuildRequires: php-xml
 ## Autoloader
@@ -81,7 +76,7 @@ Requires:      php-pcre
 Requires:      php-iconv
 Requires:      php-intl
 Requires:      php-mbstring
-# phpcompatinfo (computed from version 1.2.6)
+# phpcompatinfo (computed from version 1.3.1)
 #Requires:      php-exif
 Requires:      php-filter
 Requires:      php-json
@@ -100,16 +95,12 @@ Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-: fix for php 5.5.35/5.6.21/7.0.6
-%patch0 -p 1
-
 : Create autoloader
 cat <<'AUTOLOAD' | tee src/Patchwork/autoload.php
 <?php
 /**
  * Autoloader for %{name} and its' dependencies
- *
- * Created by %{name}-%{version}-%{release}
+ * (created by %{name}-%{version}-%{release}).
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
@@ -164,11 +155,24 @@ ln -s \
 
 %check
 %if %{with_tests}
-%{_bindir}/phpunit --verbose --bootstrap %{buildroot}%{phpdir}/Patchwork/autoload.php
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose --bootstrap %{buildroot}%{phpdir}/Patchwork/autoload.php
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Patchwork/autoload.php || ret=1
+   run=1
 fi
+if which php70; then
+   php70 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Patchwork/autoload.php || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Patchwork/autoload.php || : ignore
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose --bootstrap %{buildroot}%{phpdir}/Patchwork/autoload.php
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -191,6 +195,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jul 23 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.1-1
+- Updated to 1.3.1 (RHBZ #1332183)
+
 * Tue May 03 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.6-1
 - Updated to 1.2.6
 - Added patch "fix for php 5.5.35/5.6.21/7.0.6"
