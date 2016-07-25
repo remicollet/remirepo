@@ -23,19 +23,17 @@
 %else
 %global ini_name   40-%{pecl_name}.ini
 %endif
-%global prever     RC1
+%global prever     RC2
 
 Summary:      Wrapper around the gpgme library
 Name:         %{?sub_prefix}php-pecl-gnupg
 Version:      1.4.0
-Release:      0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      0.3.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 License:      BSD
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/gnupg
 Source0:      http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
-
-Patch0:       %{pecl_name}-pr1.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel
@@ -113,7 +111,6 @@ EOF
 
 mv %{pecl_name}-%{version}%{?prever} NTS
 cd NTS
-%patch0 -p1 -b .pr1
 
 # Check extension version
 extver=$(sed -n '/#define PHP_GNUPG_VERSION/{s/.* "//;s/".*$//;p}' php_gnupg.h)
@@ -263,6 +260,9 @@ NO_INTERACTION=1 \
 
 
 %changelog
+* Mon Jul 25 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-0.3.RC2
+- update to 1.4.0RC2 (beta)
+
 * Fri Jun 17 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-0.2.RC1
 - always use gnupg < 2
 
