@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #89 eio version 2.0.0 ] {
+Extension [ <persistent> extension #78 eio version 2.0.1 ] {
 
   - Dependencies {
     Dependency [ sockets (Optional) ]
@@ -215,7 +215,10 @@ Extension [ <persistent> extension #89 eio version 2.0.0 ] {
     }
     Function [ <internal:eio> function eio_sync ] {
 
-      - Parameters [0] {
+      - Parameters [3] {
+        Parameter #0 [ <optional> $pri ]
+        Parameter #1 [ <optional> $callback ]
+        Parameter #2 [ <optional> $data ]
       }
     }
     Function [ <internal:eio> function eio_fsync ] {
