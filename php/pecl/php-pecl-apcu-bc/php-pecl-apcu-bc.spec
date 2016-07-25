@@ -22,11 +22,7 @@
 %global pecl_name  apcu-bc
 %global ext_name   apc
 %global apcver     %(%{_bindir}/php -r 'echo (phpversion("apcu")?:0);' 2>/dev/null || echo 65536)
-%if "%{php_version}" > "7.1"
-%global with_zts   0
-%else
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
-%endif
 # After 40-apcu.ini
 %global ini_name   50-%{ext_name}.ini
 
@@ -37,7 +33,7 @@ Version:        1.0.3
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{proj_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 %endif
 
@@ -238,6 +234,9 @@ fi
 
 
 %changelog
+* Mon Jul 25 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-4
+- re-enable ZTS build with PHP 7.1
+
 * Sat Jul 23 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-3
 - disable ZTS build with PHP 7.1
 
