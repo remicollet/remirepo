@@ -1,0 +1,37 @@
+From 563c4573d439d5371f7f331b5117b7e6b648ed17 Mon Sep 17 00:00:00 2001
+From: Tyson Andre <tysonandre775@hotmail.com>
+Date: Sun, 24 Jul 2016 19:05:10 -0700
+Subject: [PATCH] Fixes #188: Fix Segfault in ZTS build when locking
+
+In ZTS builds with static TSRMLS,
+blocking interruptions requires TSRMLS to be initialized.
+
+(WLOCK will block signal interruptions, then acquire a lock)
+
+The code initialized it in RINIT (per-request), but did not initialize
+it in MINIT(module init).
+But module init needed to lock in order to not be interrupted while
+allocating an arena in shared memory.
+
+Fixed this by calling ZEND_TSRMLS_CACHE_UPDATE();
+
+Other extensions do this in MINIT in both php-7.0 and php-7.1
+E.g.  https://github.com/php/php-src/blob/PHP-7.0.9/ext/mbstring/mbstring.c#L1550
+---
+ php_apc.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/php_apc.c b/php_apc.c
+index 83fd758..d79338e 100644
+--- a/php_apc.c
++++ b/php_apc.c
+@@ -210,6 +210,9 @@ static PHP_MINFO_FUNCTION(apcu)
+ /* {{{ PHP_MINIT_FUNCTION(apcu) */
+ static PHP_MINIT_FUNCTION(apcu)
+ {
++#if defined(ZTS) && defined(COMPILE_DL_APCU)
++    ZEND_TSRMLS_CACHE_UPDATE();
++#endif
+     ZEND_INIT_MODULE_GLOBALS(apcu, php_apc_init_globals, NULL);
+ 
+     REGISTER_INI_ENTRIES();

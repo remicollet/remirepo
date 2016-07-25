@@ -21,11 +21,7 @@
 %global gh_project apcu
 #global gh_date    20151205
 %global pecl_name  apcu
-%if "%{php_version}" > "7.1"
-%global with_zts   0
-%else
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
-%endif
 %global ini_name   40-%{pecl_name}.ini
 
 Name:           %{?sub_prefix}php-pecl-apcu
@@ -35,12 +31,14 @@ Version:        5.1.5
 Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 Source1:        %{pecl_name}-5.1.2.ini
 Source2:        %{pecl_name}-panel.conf
 Source3:        %{pecl_name}.conf.php
+
+Patch0:         %{pecl_name}-upstream.patch
 
 License:        PHP
 Group:          Development/Languages
@@ -155,6 +153,7 @@ mv %{pecl_name}-%{version} NTS
 %{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
+%patch0 -p1 -b .upstream
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APCU_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
@@ -316,6 +315,9 @@ fi
 
 
 %changelog
+* Mon Jul 25 2016 Remi Collet <remi@fedoraproject.org> - 5.1.5-3
+- add patch for PHP 7.1 and ZTS
+
 * Sat Jul 23 2016 Remi Collet <remi@fedoraproject.org> - 5.1.5-2
 - disable ZTS build with PHP 7.1
 
