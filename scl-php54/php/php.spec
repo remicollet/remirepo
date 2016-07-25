@@ -1761,19 +1761,27 @@ EOF
 %changelog
 * Fri Jul 22 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-11
 - Fix #70480: php_url_parse_ex() buffer overflow read
+  CVE-2016-6288
 - Fix #69975: PHP segfaults when accessing nvarchar(max) defined columns
 - Fix #72479: Use After Free Vulnerability in SNMP with GC and unserialize()
+  CVE-2016-6295
 - Fix #72573: HTTP_PROXY is improperly trusted by some PHP libraries
   CVE-2016-5385
 - Fix #72513: buffer overflow vulnerability in virtual_file_ex
+  CVE-2016-6289
 - Fix #72520: buffer overflow vulnerability in php_stream_zip_opener
+  CVE-2016-6297
 - Fix #72533: locale_accept_from_http out-of-bounds access
+  CVE-2016-6294
 - Fix #72562: Use After Free in unserialize() with Unexpected Session
-  Deserialization
+  Deserialization CVE-2016-6290
 - Fix #72603: Out of bound read in exif_process_IFD_in_MAKERNOTE
+  CVE-2016-6291
 - Fix #72606: heap-buffer-overflow (write) simplestring_addn simplestring.c
+  CVE-2016-6296
 - Partial fix #72613: do not treat negative returns from bz2 as size_t
 - Fix #72618: NULL Pointer Dereference in exif_process_user_comment
+  CVE-2016-6292
 - Fix #72519: possible OOB using imagegif
 
 * Thu Jun 30 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-10.1
