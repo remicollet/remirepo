@@ -13,8 +13,8 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        1.0.1
-Release:        1%{?dist}
-Summary:        Zend Framework Mvc-%{library} component
+Release:        2%{?dist}
+Summary:        Zend Framework Mvc-Plugins component
 
 Group:          Development/Libraries
 License:        BSD
@@ -44,18 +44,14 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 
 %description
-zend-mvc-form is a metapackage that provides a single package for installing
-all packages necessary to fully use zend-form under zend-mvc, including:
+zend-mvc-plugins is a metapackage that provides a single package for
+installing all official zend-mvc plugins shipped as separate packages
+under the zendframework organization. Currently, these include:
 
-* zendframework/zend-code
-* zendframework/zend-form
-* zendframework/zend-i18n
-
-i18n integration: this package only requires zend-i18n, and not zend-mvc-i18n.
-This is to allow providing the bare minimum required to use zend-form, as its
-base view helper extends from the base zend-i18n view helper. If you want to
-provide translations for your form elements, please install zend-mvc-i18n as
-well.
+* zendframework/zend-mvc-plugin-fileprg
+* zendframework/zend-mvc-plugin-flashmessenger
+* zendframework/zend-mvc-plugin-identity
+* zendframework/zend-mvc-plugin-prg
 
 
 %prep
@@ -85,6 +81,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 26 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
+- fix summary and description
+
 * Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - initial package
 

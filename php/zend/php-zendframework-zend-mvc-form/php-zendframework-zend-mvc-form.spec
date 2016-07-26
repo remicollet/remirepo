@@ -13,8 +13,8 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        1.0.0
-Release:        1%{?dist}
-Summary:        Zend Framework Mvc-%{library} component
+Release:        2%{?dist}
+Summary:        Zend Framework Mvc-Form component
 
 Group:          Development/Libraries
 License:        BSD
@@ -82,6 +82,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jul 26 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- fix summary
+
 * Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package
 
