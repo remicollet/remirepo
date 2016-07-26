@@ -6,16 +6,16 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5c489d91f561cb0a63e0b63b29d6da71f626a137
+%global gh_commit    1ec169a2a76110bbd0734da23a43c4d23c1eecfb
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_owner     udan11
+%global gh_owner     phpmyadmin
 #global gh_date      20150820
 %global gh_project   sql-parser
 %global with_tests   0%{!?_without_tests:1}
 %global psr0         SqlParser
 
-Name:           php-%{gh_owner}-%{gh_project}
-Version:        3.4.0
+Name:           php-udan11-%{gh_project}
+Version:        3.4.4
 Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A validating SQL lexer and parser with a focus on MySQL dialect
 
@@ -24,9 +24,8 @@ License:        GPLv2+
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{?gh_short}.tar.gz
 
-# patch from phpMyAdmin 4.5.5.1
-# https://github.com/phpmyadmin/phpmyadmin/commit/3a6a9a807d99371ee126635e1a505fc1fe0df32c
-Patch0:         %{name}-pma.patch
+# Use our autoloader
+Patch0:         %{name}-autoload.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -53,8 +52,11 @@ Requires:       php-spl
 # Rename
 Obsoletes:      php-dmitry-php-sql-parser < 0-0.2
 Provides:       php-dmitry-php-sql-parser = %{version}-%{release}
+# New packagist name
+Provides:       php-phpmyadmin-sql-parser = %{version}-%{release}
 
 # Composer
+Provides:       php-composer(udan11/%{gh_project})      = %{version}
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
 
@@ -64,13 +66,12 @@ A validating SQL lexer and parser with a focus on MySQL dialect.
 This library was originally developed for phpMyAdmin during
 the Google Summer of Code 2015.
 
-To use this library, you just have to add, in your project:
-  require_once '%{_datadir}/php/%{psr0}/autoload.php';
+Autoloader: %{_datadir}/php/%{psr0}/autoload.php
 
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
-%patch0 -p3
+%patch0 -p0 -b .rpm
 
 
 %build
@@ -80,8 +81,14 @@ To use this library, you just have to add, in your project:
 
 %install
 rm -rf     %{buildroot}
+
+: Library
 mkdir -p   %{buildroot}%{_datadir}/php
 cp -pr src %{buildroot}%{_datadir}/php/%{psr0}
+
+: Commands
+install -Dpm 0755 bin/highlight-query %{buildroot}%{_bindir}/%{gh_project}-highlight-query
+install -Dpm 0755 bin/lint-query      %{buildroot}%{_bindir}/%{gh_project}-lint-query
 
 
 %check
@@ -92,13 +99,24 @@ cat << 'EOF' | tee vendor/autoload.php
 require '%{buildroot}%{_datadir}/php/%{psr0}/autoload.php';
 EOF
 
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --no-coverage || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --no-coverage || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 if %{_bindir}/phpunit --atleast-version 4.8; then
    %{_bindir}/phpunit --no-coverage --verbose
 fi
-
-if which php70; then
-  php70 %{_bindir}/phpunit --no-coverage --verbose
+# remirepo:2
 fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -115,9 +133,16 @@ rm -rf %{buildroot}
 %doc composer.json
 %doc README.md
 %{_datadir}/php/%{psr0}
+%{_bindir}/%{gh_project}-highlight-query
+%{_bindir}/%{gh_project}-lint-query
 
 
 %changelog
+* Tue Jul 26 2016 Remi Collet <remi@fedoraproject.org> - 3.4.4-1
+- update to 3.4.4
+- switch from udan11/sql-parser to phpmyadmin/sql-parser
+- add sql-parser-highlight-query and sql-parser-lint-query commands
+
 * Tue Mar  1 2016 Remi Collet <remi@fedoraproject.org> - 3.4.0-1
 - update to 3.4.0 (for phpMyAdmin 4.5.5.1)
 - add patch from phpMyAdmin

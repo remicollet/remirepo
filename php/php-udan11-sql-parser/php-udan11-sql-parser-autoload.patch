@@ -1,0 +1,68 @@
+diff -up bin/highlight-query.rpm bin/highlight-query
+--- bin/highlight-query.rpm	2016-07-26 08:44:20.461742790 +0200
++++ bin/highlight-query	2016-07-26 08:44:57.594944077 +0200
+@@ -1,29 +1,7 @@
+ #!/usr/bin/env php
+ <?php
+ 
+-$files = array(
+-    __DIR__ . "/../vendor/autoload.php",
+-    __DIR__ . "/../../vendor/autoload.php",
+-    __DIR__ . "/../../../autoload.php",
+-    "vendor/autoload.php"
+-);
+-
+-$found = false;
+-foreach ($files as $file) {
+-    if (file_exists($file)) {
+-        require_once $file;
+-        $found = true;
+-        break;
+-    }
+-}
+-
+-if (!$found) {
+-    die(
+-        "You need to set up the project dependencies using the following commands:" . PHP_EOL .
+-        "curl -s http://getcomposer.org/installer | php" . PHP_EOL .
+-        "php composer.phar install" . PHP_EOL
+-    );
+-}
++require '/usr/share/php/SqlParser/autoload.php';
+ 
+ $cli = new SqlParser\Utils\CLI();
+ exit($cli->runHighlight());
+diff -up bin/lint-query.rpm bin/lint-query
+--- bin/lint-query.rpm	2016-07-26 08:44:29.869793788 +0200
++++ bin/lint-query	2016-07-26 08:45:05.123984889 +0200
+@@ -1,29 +1,7 @@
+ #!/usr/bin/env php
+ <?php
+ 
+-$files = array(
+-    __DIR__ . "/../vendor/autoload.php",
+-    __DIR__ . "/../../vendor/autoload.php",
+-    __DIR__ . "/../../../autoload.php",
+-    "vendor/autoload.php"
+-);
+-
+-$found = false;
+-foreach ($files as $file) {
+-    if (file_exists($file)) {
+-        require_once $file;
+-        $found = true;
+-        break;
+-    }
+-}
+-
+-if (!$found) {
+-    die(
+-        "You need to set up the project dependencies using the following commands:" . PHP_EOL .
+-        "curl -s http://getcomposer.org/installer | php" . PHP_EOL .
+-        "php composer.phar install" . PHP_EOL
+-    );
+-}
++require '/usr/share/php/SqlParser/autoload.php';
+ 
+ $cli = new SqlParser\Utils\CLI();
+ exit($cli->runLint());
