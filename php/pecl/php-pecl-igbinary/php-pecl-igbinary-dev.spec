@@ -20,9 +20,9 @@
 
 %global extname    igbinary
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
-%global gh_commit  a87a99395e1569ff6df9727c8789c91a8825f00d
+%global gh_commit  332a3d7ca899531f063dab38608e69e0e18f62a2
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date    20160715
+%global gh_date    20160724
 %global prever    -dev
 %if "%{php_version}" < "5.6"
 %global ini_name  %{extname}.ini
@@ -34,7 +34,7 @@ Summary:        Replacement for the standard PHP serializer
 Name:           %{?sub_prefix}php-pecl-igbinary
 Version:        1.2.2
 %if 0%{?gh_date}
-Release:        0.3.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.4.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        https://github.com/%{extname}/%{extname}7/archive/%{gh_commit}/%{extname}-%{version}-%{gh_short}.tar.gz
 %else
 Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
@@ -211,9 +211,11 @@ done
 
 %check
 MOD=""
-%if "%{php_version}" > "7.1"
+%if "%{php_version}" > "7.0"
+# See https://github.com/igbinary/igbinary7/issues/24
 rm */tests/igbinary_040.phpt
-%else
+%endif
+
 # APC required for test 045
 if [ -f %{php_extdir}/apcu.so ]; then
   MOD="-d extension=apcu.so"
@@ -221,7 +223,6 @@ fi
 if [ -f %{php_extdir}/apc.so ]; then
   MOD="$MOD -d extension=apc.so"
 fi
-%endif
 
 : simple NTS module load test, without APC, as optional
 %{_bindir}/php --no-php-ini \
@@ -302,6 +303,9 @@ fi
 
 
 %changelog
+* Mon Jul 25 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-0.4.20160724git332a3d7
+- refresh
+
 * Sat Jul 23 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-0.3.20160715gita87a993
 - ignore 1 test with 7.1
 
