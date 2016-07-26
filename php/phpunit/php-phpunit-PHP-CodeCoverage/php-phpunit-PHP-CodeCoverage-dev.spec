@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    900370c81280cc0d942ffbc5912d80464eaee7e9
+%global gh_commit    5f3f7e736d6319d5f1fc402aff8b026da26709a3
 #global gh_date      20150924
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHP_CodeCoverage
 %global pear_channel pear.phpunit.de
 %global major        4.0
-%global minor        0
+%global minor        1
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
@@ -55,7 +55,7 @@ BuildRequires:  php-pecl-xdebug  >= 2.4.0
 #        "phpunit/php-token-stream": "^1.4.2",
 #        "phpunit/php-text-template": "~1.2",
 #        "sebastian/code-unit-reverse-lookup": "~1.0",
-#        "sebastian/environment": "^1.3.2",
+#        "sebastian/environment": "^1.3.2 || ^2.0",
 #        "sebastian/version": "~1.0|~2.0"
 Requires:       php(language) >= 5.6
 Requires:       php-composer(phpunit/php-file-iterator) >= 1.3
@@ -67,7 +67,7 @@ Requires:       php-composer(phpunit/php-text-template) <  2
 Requires:       php-composer(sebastian/code-unit-reverse-lookup) >= 1
 Requires:       php-composer(sebastian/code-unit-reverse-lookup) <  2
 Requires:       php-composer(sebastian/environment) >= 1.3.2
-Requires:       php-composer(sebastian/environment) <  2
+Requires:       php-composer(sebastian/environment) <  3
 Requires:       php-composer(sebastian/version) >= 1.0
 Requires:       php-composer(sebastian/version) <  3
 # From composer.json, suggest
@@ -132,19 +132,35 @@ require __DIR__ . '/TestCase.php';
 define('TEST_FILES_PATH', __DIR__ . '/_files/');
 EOF
 
+# remirepo:17
+run=0
+ret=0
+if which php56; then
+  php56 $EXT \
+    -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+    %{_bindir}/phpunit \
+        --configuration build
+  run=1
+fi
+if which php70; then
+  php70 -d precision=14 $EXT \
+    -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+    %{_bindir}/phpunit \
+        --configuration build
+  run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/php $EXT \
     -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
     %{_bindir}/phpunit \
         --configuration build \
         --verbose
+# remirepo:2
+fi
+exit $ret
 
 # remirepo:7
 if which php70 ; then
-  php70 $EXT \
-    -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
-    %{_bindir}/phpunit \
-        --configuration build \
-        --verbose
 fi
 %endif
 
@@ -170,6 +186,9 @@ fi
 
 
 %changelog
+* Tue Jul 26 2016 Remi Collet <remi@fedoraproject.org> - 4.0.1-1
+- Update to 4.0.1
+
 * Fri Jun  3 2016 Remi Collet <remi@fedoraproject.org> - 4.0.0-1
 - Update to 4.0.0
 - namespace changed from PHP to SebastianBergmann
