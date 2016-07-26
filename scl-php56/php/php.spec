@@ -200,7 +200,8 @@ Patch91: php-5.6.3-oci8conf.patch
 
 # Fixes for tests (300+)
 # Factory is droped from system tzdata
-Patch300: php-5.6.3-datetests.patch
+# Relax some tests with erratic results with system tzdata
+Patch300: php-5.6.24-datetests.patch
 # Revert changes for pcre < 8.34
 Patch301: php-5.6.0-oldpcre.patch
 
