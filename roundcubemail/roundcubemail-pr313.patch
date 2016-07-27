@@ -11,12 +11,12 @@ diff --git a/program/lib/Roundcube/rcube.php b/program/lib/Roundcube/rcube.php
 index 7388472..c2fc70f 100644
 --- a/program/lib/Roundcube/rcube.php
 +++ b/program/lib/Roundcube/rcube.php
-@@ -1184,7 +1184,7 @@ public static function write_log($name, $line)
+@@ -1195,7 +1195,7 @@ class rcube
+             $log_dir = RCUBE_INSTALL_PATH . 'logs';
          }
  
-         // try to open specific log file for writing
--        $logfile = $log_dir.'/'.$name;
-+        $logfile = $log_dir.'/'.$name.'.log';
+-        return file_put_contents("$log_dir/$name", $line, FILE_APPEND) !== false;
++        return file_put_contents("$log_dir/$name.log", $line, FILE_APPEND) !== false;
+     }
  
-         if ($fp = @fopen($logfile, 'a')) {
-             fwrite($fp, $line);
+     /**

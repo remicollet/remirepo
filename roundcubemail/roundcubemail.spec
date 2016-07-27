@@ -19,7 +19,7 @@
 %global roundcubedir %{_datadir}/roundcubemail
 %global _logdir /var/log  
 Name: roundcubemail
-Version:  1.2.0
+Version:  1.2.1
 Release:  1%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
@@ -45,7 +45,7 @@ Source2: roundcubemail.logrotate
 Source4: roundcubemail-README.rpm
 # Elegantly handle removal of moxieplayer Flash binary in tinymce
 # media plugin (see "Drop precompiled flash" in %%prep)
-Patch0: roundcubemail-1.2-no_swf.patch
+Patch0: roundcubemail-1.2.1-no_swf.patch
 
 # Non-upstreamable: Adjusts config path to Fedora policy
 Patch1: roundcubemail-1.1.0-confpath.patch
@@ -88,6 +88,7 @@ Requires: php-spl
 Requires: php-xml
 # From composer.json-dist, require
 #        "php": ">=5.3.7",
+#        "pear/pear-core-minimal": "~1.10.1",
 #        "roundcube/plugin-installer": "~0.1.6",
 #        "pear-pear.php.net/net_socket": "~1.0.12",
 #        "pear-pear.php.net/auth_sasl": "~1.0.6",
@@ -97,12 +98,13 @@ Requires: php-xml
 #        "pear-pear.php.net/crypt_gpg": "~1.4.1",
 #        "roundcube/net_sieve": "~1.5.0"
 #   not available and doesn't make sense roundcube/plugin-installer
+Requires: php-pear(PEAR)            >= 1.10.1
 Requires: php-pear(Net_Socket)      >= 1.0.12
 Requires: php-pear(Auth_SASL)       >= 1.0.6
 Requires: php-pear(Net_IDNA2)       >= 0.1.1
 Requires: php-pear(Mail_Mime)       >= 1.10.0
 Requires: php-pear(Net_SMTP)        >= 1.7.1
-Requires: php-pear(Crypt_GPG)       >= 1.4.1
+Requires: php-pear(Crypt_GPG)       >= 1.4.2
 Requires: php-composer(roundcube/net_sieve) >= 1.5.0
 # From composer.json-dist, suggest
 #        "pear-pear.php.net/net_ldap2": "~2.2.0 required for connecting to LDAP address books",
@@ -277,6 +279,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jul 27 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- update to 1.2.1
+
 * Fri May 27 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - update to 1.2.0
 - raise dependency on Crypt_GPG ~1.4.1
