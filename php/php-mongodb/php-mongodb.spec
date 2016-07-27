@@ -123,10 +123,20 @@ $Loader->register();
 EOF
 
 : Run the test suite
+RET=0
+# remirepo:10
+run=0
+if which php56; then
+  php56 %{_bindir}/phpunit --verbose || RET=1
+  run=1
+fi
+if which php71; then
+  php71 %{_bindir}/phpunit --verbose || RET=1
+  run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/phpunit --verbose || RET=1
-
-if which php70; then
-  php70 %{_bindir}/phpunit --verbose || RET=1
+# remirepo:1
 fi
 
 : Cleanup
