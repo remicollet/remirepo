@@ -158,10 +158,6 @@ if [ $run -eq 0 ]; then
 # remirepo:2
 fi
 exit $ret
-
-# remirepo:7
-if which php70 ; then
-fi
 %endif
 
 
