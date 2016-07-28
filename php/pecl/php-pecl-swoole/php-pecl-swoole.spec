@@ -26,8 +26,7 @@
 %endif
 
 %if 0%{?fedora} >= 22 || 0%{?rhel} >= 6
-# See https://github.com/swoole/swoole-src/issues/787
-%global with_nghttpd2 0
+%global with_nghttpd2 1
 %else
 %global with_nghttpd2 0
 %endif
@@ -36,11 +35,13 @@
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.8.8
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+Patch0:         %{pecl_name}-upstream.patch
 
 BuildRequires:  %{?scl_prefix}php-devel >= 5.3.10
 BuildRequires:  %{?scl_prefix}php-pear
@@ -136,6 +137,7 @@ sed -e 's/role="test"/role="src"/' \
 
 
 cd NTS
+%patch0 -p1 -b .upstream
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_SWOOLE_VERSION/{s/.* "//;s/".*$//;p}' php_swoole.h)
@@ -270,6 +272,9 @@ cd ../ZTS
 
 
 %changelog
+* Thu Jul 28 2016 Remi Collet <remi@fedoraproject.org> - 1.8.8-2
+- add upstream patch and add back --enable-http2 build option
+
 * Thu Jul 28 2016 Remi Collet <remi@fedoraproject.org> - 1.8.8-1
 - Update to 1.8.8
 - drop --enable-http2 build option (broken)
