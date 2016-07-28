@@ -8,7 +8,7 @@
 #
 %global gh_owner    couchbase
 # see https://github.com/couchbase/libcouchbase/tags
-%global gh_commit   eb09707433013b742c0aa221e564ad73ba8a3708
+%global gh_commit   788e1eeda075eddd8204ecc3fc5028add74e8074
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 
 # Tests require some need which are downloaded during make
@@ -21,7 +21,7 @@
 %endif
 
 Name:          libcouchbase
-Version:       2.6.1
+Version:       2.6.2
 Release:       1%{?dist}
 Summary:       Couchbase client library
 Group:         System Environment/Libraries
@@ -128,6 +128,9 @@ make check
 
 
 %changelog
+* Thu Jul 28 2016 Remi Collet <remi@feoraproject.org> - 2.6.2-1
+- update to 2.6.2
+
 * Fri Jun 24 2016 Remi Collet <remi@feoraproject.org> - 2.6.1-1
 - update to 2.6.1
 
