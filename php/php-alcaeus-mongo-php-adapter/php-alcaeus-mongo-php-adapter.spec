@@ -10,17 +10,15 @@
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     alcaeus
 %global gh_project   mongo-php-adapter
-%if 0%{?fedora} >= 22 || 0%{?rhel} >= 7
-%global with_tests   0%{!?_without_tests:1}
-%else
+# Upstream only support 64bits, see https://jira.mongodb.org/browse/CDRIVER-1186
+# Server only available on LE arch (ExcludeArch: ppc ppc64 %{sparc} s390 s390x)
 %global with_tests   0%{?_with_tests:1}
-%endif
 %global ns_vendor    Alcaeus
 
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        1.0.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Mongo PHP Adapter
 
 Group:          Development/Libraries
@@ -169,6 +167,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul 28 2016 Remi Collet <remi@fedoraproject.org> - 1.0.5-2
+- only run upstream test suite when build --with tests
+
 * Mon Jul  4 2016 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
 - update to 1.0.5
 
