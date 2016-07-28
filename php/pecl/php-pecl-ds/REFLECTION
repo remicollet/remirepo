@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #78 ds version 1.0.0 ] {
+Extension [ <persistent> extension #144 ds version 1.0.1 ] {
 
   - Classes [11] {
     Interface [ <internal:ds> interface Ds\Hashable ] {
@@ -1052,7 +1052,7 @@ Extension [ <persistent> extension #78 ds version 1.0.0 ] {
       - Properties [0] {
       }
 
-      - Methods [36] {
+      - Methods [37] {
         Method [ <internal:ds, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -1064,6 +1064,13 @@ Extension [ <persistent> extension #78 ds version 1.0.0 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> integer $capacity ]
+          }
+        }
+
+        Method [ <internal:ds> public method apply ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> callable $callback ]
           }
         }
 

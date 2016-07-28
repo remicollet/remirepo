@@ -20,8 +20,8 @@
 # After json
 %global ini_name     40-%{pecl_name}.ini
 
-# For test suite
-%global gh_commit    538b39609f8d8a5d1cb074dde9b14c80ad72bf8e
+# For test suite, see https://github.com/php-ds/tests/commits/master
+%global gh_commit    6bed9cfe04d35f9fe857a430dcecdac2a651ccdc
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     php-ds
 %global gh_project   tests
@@ -29,7 +29,7 @@
 
 Summary:        Data Structures for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
@@ -38,9 +38,6 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 # Only use for tests during the build, no value to be packaged separately
 # in composer.json:  "require-dev": {  "php-ds/tests": "dev-master" }
 Source1:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{gh_short}.tar.gz
-# https://github.com/php-ds/extension/pull/26
-Source2:        https://raw.githubusercontent.com/php-ds/extension/master/src/php/handlers/php_common_handlers.c
-Source3:        https://raw.githubusercontent.com/php-ds/extension/master/src/php/handlers/php_common_handlers.h
 
 BuildRequires:  %{?scl_prefix}php-devel >= 7
 BuildRequires:  %{?scl_prefix}php-pear
@@ -94,7 +91,6 @@ mv %{gh_project}-%{gh_commit} tests
 %{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
-cp %{SOURCE2} %{SOURCE3} src/php/handlers/
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_DS_VERSION/{s/.* "//;s/".*$//;p}' php_ds.h)
@@ -200,9 +196,6 @@ cd ../ZTS
 cd ..
 
 %if %{with_tests}
-# see https://github.com/php-ds/tests/issues/3
-rm tests/tests/Map/sorted.php
-
 : Generate autoloader for tests
 %{_bindir}/phpab \
    --output tests/autoload.php \
@@ -232,6 +225,9 @@ rm tests/tests/Map/sorted.php
 
 
 %changelog
+* Thu Jul 28 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1
+
 * Thu Jul 28 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package, version 1.0.0 (devel)
   open tests/tests/Map/sort.php
