@@ -184,7 +184,7 @@ if [ $1 = devs -o $1 = dev ]; then
 fi
 
 if [ $1 = all ]; then
-	for i in 20 21 22 23 24
+	for i in 21 22 23 24
 	do
 		getOneMock fc${i}i $opt
 	done
@@ -202,11 +202,6 @@ elif [ $1 = all55 ]; then
 		getOneMock el${n}x php55
 
 elif [ $1 = all56 ]; then
-	for n in 20
-	do
-		getOneMock fc${n}i php56
-		getOneMock fc${n}x php56
-	done
 	for n in 5 6
 	do
 		getOneMock el${n}i php56
@@ -253,8 +248,6 @@ elif [ $1 = all54 ]; then
 		getOneMock el${n}x remi
 
 elif [ $1 = for56 ]; then
-	i=20
-		getOneMock fc${i}x test
 	for i in 21 22 23 24
 	do
 		getOneMock fc${i}x remi
@@ -265,7 +258,7 @@ elif [ $1 = for56 ]; then
 	done
 
 elif [ $1 = for55 ]; then
-	for i in 20 21 22 23 24
+	for i in 21 22 23 24
 	do
 		getOneMock fc${i}x remi
 	done
@@ -275,7 +268,7 @@ elif [ $1 = for55 ]; then
 	done
 
 elif [ $1 = allx ]; then
-	for i in 20 21 22 23 24
+	for i in 21 22 23 24
 	do
 		getOneMock fc${i}x $opt
 	done
@@ -285,7 +278,7 @@ elif [ $1 = allx ]; then
 	done
 
 elif [ $1 = scl54 ]; then
-	for i in 20 21 22 23 24
+	for i in 21 22 23 24
 	do
 		getOneMock scl54fc${i}x $opt
 	done
@@ -305,7 +298,7 @@ elif [ $1 = scl55 ]; then
 	done
 
 elif [ $1 = scl56 ]; then
-	for i in 20 21 22 23 24
+	for i in 21 22 23 24
 	do
 		getOneMock scl56fc${i}x $opt
 	done
@@ -315,7 +308,7 @@ elif [ $1 = scl56 ]; then
 	done
 
 elif [ $1 = scl70 ]; then
-	for i in 20 21 22 23 24
+	for i in 21 22 23 24
 	do
 		getOneMock scl70fc${i}x $opt
 	done
