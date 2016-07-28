@@ -15,7 +15,7 @@
 %global with_tests   0%{?_with_tests:1}
 
 Name:           php-horde-Horde-Mime-Viewer
-Version:        2.1.3
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        Horde MIME Viewer Library
 
@@ -134,11 +134,22 @@ rm -rf %{buildroot}
 %if %{with_tests}
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
-%{_bindir}/phpunit .
-
-if which php70; then
-   php70 %{_bindir}/phpunit .
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit . || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose .
+# remirepo:2
+fi
+exit $ret
 %else
 : Test disabled, missing '--with tests' option.
 %endif
@@ -170,6 +181,9 @@ fi
 
 
 %changelog
+* Thu Jul 28 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+
 * Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
 - Update to 2.1.3
 
