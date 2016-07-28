@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-Horde-Core
-Version:        2.24.0
+Version:        2.25.0
 Release:        1%{?dist}
 Summary:        Horde Core Framework libraries
 
@@ -107,7 +107,7 @@ Requires:       php-pear(%{pear_channel}/Horde_LoginTasks) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_LoginTasks) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) >= 2.5.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime) <  3.0.0
-Requires:       php-pear(%{pear_channel}/Horde_Mime_Viewer) >= 2.0.0
+Requires:       php-pear(%{pear_channel}/Horde_Mime_Viewer) >= 2.2.0
 Requires:       php-pear(%{pear_channel}/Horde_Mime_Viewer) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Notification) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Notification) <  3.0.0
@@ -298,6 +298,10 @@ fi
 
 
 %changelog
+* Thu Jul 28 2016 Remi Collet <remi@fedoraproject.org> - 2.25.0-1
+- Update to 2.25.0
+- raise dependency on Horde_Mime_Viewer 2.2.0
+
 * Sat Jul 02 2016 Remi Collet <remi@fedoraproject.org> - 2.24.0-1
 - Update to 2.24.0
 
