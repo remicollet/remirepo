@@ -35,7 +35,7 @@
 
 Summary:      DataStax PHP Driver for Apache Cassandra
 Name:         %{?sub_prefix}php-pecl-%{pecl_name}
-Version:      1.2.0
+Version:      1.2.1
 Release:      1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      ASL 2.0
 Group:        Development/Languages
@@ -47,7 +47,6 @@ Source0:      https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/
 %else
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
-Source1:      https://raw.githubusercontent.com/datastax/php-driver/84035aa9d81c7c3b53f2f3461949e2bbdd300f46/ext/src/Cassandra/FutureRows.h
 
 BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel >= 5.5
@@ -117,8 +116,6 @@ mv NTS/package.xml .
 %else
 mv %{pecl_name}-%{version}%{?prever} NTS
 %endif
-
-cp %{SOURCE1} NTS/src/Cassandra
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' \
@@ -262,6 +259,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Thu Jul 28 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- Update to 1.2.1 (no change)
+
 * Wed Jul 27 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - Update to 1.2.0
 
