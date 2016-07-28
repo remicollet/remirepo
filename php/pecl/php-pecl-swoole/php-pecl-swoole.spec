@@ -26,7 +26,8 @@
 %endif
 
 %if 0%{?fedora} >= 22 || 0%{?rhel} >= 6
-%global with_nghttpd2 1
+# See https://github.com/swoole/swoole-src/issues/787
+%global with_nghttpd2 0
 %else
 %global with_nghttpd2 0
 %endif
@@ -34,7 +35,7 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.8.7
+Version:        1.8.8
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
@@ -269,6 +270,11 @@ cd ../ZTS
 
 
 %changelog
+* Thu Jul 28 2016 Remi Collet <remi@fedoraproject.org> - 1.8.8-1
+- Update to 1.8.8
+- drop --enable-http2 build option (broken)
+  open https://github.com/swoole/swoole-src/issues/787
+
 * Fri Jul 01 2016 Remi Collet <remi@fedoraproject.org> - 1.8.7-1
 - Update to 1.8.7
 
