@@ -13,6 +13,10 @@
 # Upstream only support 64bits, see https://jira.mongodb.org/browse/CDRIVER-1186
 # Server only available on LE arch (ExcludeArch: ppc ppc64 %{sparc} s390 s390x)
 %global with_tests   0%{?_with_tests:1}
+# remirepo:3
+%if 0%{?fedora} >= 22 || 0%{?rhel} >= 7
+%global with_tests   0%{!?_without_tests:1}
+%endif
 %global ns_vendor    Alcaeus
 
 

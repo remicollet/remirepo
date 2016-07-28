@@ -11,10 +11,12 @@
 %global gh_owner     mongodb
 #global gh_date      20151102
 %global gh_project   mongo-php-library
+# Upstream only support 64bits, see https://jira.mongodb.org/browse/CDRIVER-1186
+# Server only available on LE arch (ExcludeArch: ppc ppc64 %{sparc} s390 s390x)
+%global with_tests   0%{!?_without_tests:1}
+# remirepo:3
 %if 0%{?fedora} >= 21 || 0%{?rhel} >= 6
 %global with_tests   0%{!?_without_tests:1}
-%else
-%global with_tests   0%{?_with_tests:1}
 %endif
 %global psr0         MongoDB
 #global prever       beta2
@@ -24,7 +26,7 @@ Version:        1.0.2
 %if 0%{?gh_date}
 Release:        0.2.%{gh_date}git%{gh_short}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 Summary:        MongoDB driver library
 
@@ -165,6 +167,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jul 28 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-2
+- only run upstream test suite when build --with tests
+
 * Thu Mar 31 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - update to 1.0.2
 
