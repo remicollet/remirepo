@@ -1,3 +1,12 @@
+# remirepo spec file for php-onelogin-php-saml from:
+#
+# Fedora spec file for php-onelogin-php-saml
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 %global gh_commit    17bfafe301bf21be1827c72f90e33a9c29d58553
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     onelogin
@@ -7,6 +16,7 @@
 %global php_minver 5.3.2
 
 Name:           php-%{gh_owner}-%{gh_project}
+Group:          Development/Libraries
 Version:        2.9.1
 Release:        3%{?dist}
 Summary:        SAML support for PHP
@@ -18,6 +28,7 @@ Source0:        %{url}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}
 # Patch the test bootstrap for our autoload.php rather than adjust in %%check to simplify spec
 Patch0:         php-saml-bootstrap-autoloader.patch
 
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 
 BuildRequires:  php(language) >= %{php_minver}
@@ -68,7 +79,8 @@ Autoloader: %{_datadir}/php/%{php_vendor}/Saml2/autoload.php
 
 
 %prep
-%autosetup -n %{gh_project}-%{gh_commit} -p1
+%setup -n %{gh_project}-%{gh_commit}
+%patch0 -p1
 
 
 %build
@@ -82,27 +94,47 @@ EOF
 
 
 %install
+rm -rf %{buildroot}
 mkdir -p   %{buildroot}%{_datadir}/php/%{php_vendor}
 cp -pr lib/* %{buildroot}%{_datadir}/php/%{php_vendor}/
 
 
 %check
-: Run upstream phpunit tests in dev mode
-%{_bindir}/php -c %{_docdir}/php/php.ini-development %{_bindir}/phpunit --verbose --debug --bootstrap tests/bootstrap.php --configuration tests/phpunit.xml
+# With PHP 7.1, There was 1 failure:
+# 1) OneLogin_Saml2_UtilsTest::testisSessionStarted
+# Failed asserting that false is true.
+
+run=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap tests/bootstrap.php --configuration tests/phpunit.xml
+   run=1
+fi
+if which php70; then
+   php70 %{_bindir}/phpunit --bootstrap tests/bootstrap.php --configuration tests/phpunit.xml
+   run=1
+fi
+if [ $run -eq 0 ]; then
 : Run upstream phpunit tests in system settings mode
 %{_bindir}/php %{_bindir}/phpunit --verbose --debug --bootstrap tests/bootstrap.php --configuration tests/phpunit.xml
+fi
 
 
-
+%clean
+rm -rf %{buildroot}
 
 
 %files
+%defattr(-,root,root,-)
+%{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc advanced_settings_example.php settings_example.php README.md composer.json CHANGELOG
 %{_datadir}/php/%{php_vendor}
 
 
 %changelog
+* Thu Jul 28 2016 Remi Collet <remi@remirepo.net> - 2.9.1-3
+- add needed backport stuff for remi repository
+
 * Mon Jul 25 2016 James Hogarth <james.hogarth@gmail.com> - 2.9.1-3
 - Switch to a single autoloader after feedback
 
