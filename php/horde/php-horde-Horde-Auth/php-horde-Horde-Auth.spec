@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Auth
-Version:        2.1.12
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        Horde Authentication API
 
@@ -120,15 +120,26 @@ done | tee ../%{pear_name}.lang
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:)
 
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit . || : ignore
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 # hex2bin is 5.4 only
 if php -r 'exit(function_exists("hex2bin") ? 0 : 1);'
 then %{_bindir}/phpunit .
 else : test ignored
 fi
-
-if which php70
-then php70 %{_bindir}/phpunit .
+# remirepo:2
 fi
+exit $ret
 
 
 %post
@@ -155,6 +166,9 @@ fi
 
 
 %changelog
+* Thu Jul 28 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- Update to 2.2.0
+
 * Tue Apr 05 2016 Remi Collet <remi@fedoraproject.org> - 2.1.12-1
 - Update to 2.1.12
 
