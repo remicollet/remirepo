@@ -31,7 +31,7 @@
 
 Summary:        Provides interface to libev library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -192,11 +192,6 @@ fi
 
 
 %check
-%if "%{php_version}" < "5.5"
-# https://bitbucket.org/osmanov/pecl-ev/issues/28/101-failed-test-with-php-54
-rm ?TS/tests/16_generator_cb.phpt
-%endif
-
 DEPMOD=
 [ -f %{php_extdir}/sockets.so ] && DEPMOD="$DEPMOD -d extension=sockets.so"
 [ -f %{php_extdir}/posix.so ]   && DEPMOD="$DEPMOD -d extension=posix.so"
@@ -254,6 +249,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 29 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- Update to 1.0.2 (stable)
+
 * Fri Jul 29 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1 (stable)
 - ignore 1 failed test with PHP 5.4, see

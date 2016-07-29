@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #80 ev version 1.0.1 ] {
+Extension [ <persistent> extension #80 ev version 1.0.2 ] {
 
   - Dependencies {
     Dependency [ sockets (Optional) ]
