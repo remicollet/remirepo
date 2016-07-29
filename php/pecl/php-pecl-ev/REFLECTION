@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #80 ev version 1.0.2 ] {
+Extension [ <persistent> extension #80 ev version 1.0.3 ] {
 
   - Dependencies {
     Dependency [ sockets (Optional) ]
@@ -184,14 +184,14 @@ Extension [ <persistent> extension #80 ev version 1.0.2 ] {
       }
 
       - Properties [8] {
-        Property [ <default> public $"data" ]
-        Property [ <default> public $"backend" ]
-        Property [ <default> public $"is_default_loop" ]
-        Property [ <default> public $"iteration" ]
-        Property [ <default> public $"pending" ]
-        Property [ <default> public $"io_interval" ]
-        Property [ <default> public $"timeout_interval" ]
-        Property [ <default> public $"depth" ]
+        Property [ <default> public $data ]
+        Property [ <default> public $backend ]
+        Property [ <default> public $is_default_loop ]
+        Property [ <default> public $iteration ]
+        Property [ <default> public $pending ]
+        Property [ <default> public $io_interval ]
+        Property [ <default> public $timeout_interval ]
+        Property [ <default> public $depth ]
       }
 
       - Methods [22] {
@@ -392,10 +392,10 @@ Extension [ <persistent> extension #80 ev version 1.0.2 ] {
       }
 
       - Properties [4] {
-        Property [ <default> public $"is_active" ]
-        Property [ <default> public $"data" ]
-        Property [ <default> public $"is_pending" ]
-        Property [ <default> public $"priority" ]
+        Property [ <default> public $is_active ]
+        Property [ <default> public $data ]
+        Property [ <default> public $is_pending ]
+        Property [ <default> public $priority ]
       }
 
       - Methods [9] {
@@ -478,12 +478,12 @@ Extension [ <persistent> extension #80 ev version 1.0.2 ] {
       }
 
       - Properties [6] {
-        Property [ <default> public $"is_active" ]
-        Property [ <default> public $"data" ]
-        Property [ <default> public $"is_pending" ]
-        Property [ <default> public $"priority" ]
-        Property [ <default> public $"fd" ]
-        Property [ <default> public $"events" ]
+        Property [ <default> public $is_active ]
+        Property [ <default> public $data ]
+        Property [ <default> public $is_pending ]
+        Property [ <default> public $priority ]
+        Property [ <default> public $fd ]
+        Property [ <default> public $events ]
       }
 
       - Methods [10] {
@@ -582,12 +582,12 @@ Extension [ <persistent> extension #80 ev version 1.0.2 ] {
       }
 
       - Properties [6] {
-        Property [ <default> public $"is_active" ]
-        Property [ <default> public $"data" ]
-        Property [ <default> public $"is_pending" ]
-        Property [ <default> public $"priority" ]
-        Property [ <default> public $"repeat" ]
-        Property [ <default> public $"remaining" ]
+        Property [ <default> public $is_active ]
+        Property [ <default> public $data ]
+        Property [ <default> public $is_pending ]
+        Property [ <default> public $priority ]
+        Property [ <default> public $repeat ]
+        Property [ <default> public $remaining ]
       }
 
       - Methods [11] {
@@ -693,12 +693,12 @@ Extension [ <persistent> extension #80 ev version 1.0.2 ] {
       }
 
       - Properties [6] {
-        Property [ <default> public $"is_active" ]
-        Property [ <default> public $"data" ]
-        Property [ <default> public $"is_pending" ]
-        Property [ <default> public $"priority" ]
-        Property [ <default> public $"offset" ]
-        Property [ <default> public $"interval" ]
+        Property [ <default> public $is_active ]
+        Property [ <default> public $data ]
+        Property [ <default> public $is_pending ]
+        Property [ <default> public $priority ]
+        Property [ <default> public $offset ]
+        Property [ <default> public $interval ]
       }
 
       - Methods [12] {
@@ -809,11 +809,11 @@ Extension [ <persistent> extension #80 ev version 1.0.2 ] {
       }
 
       - Properties [5] {
-        Property [ <default> public $"is_active" ]
-        Property [ <default> public $"data" ]
-        Property [ <default> public $"is_pending" ]
-        Property [ <default> public $"priority" ]
-        Property [ <default> public $"signum" ]
+        Property [ <default> public $is_active ]
+        Property [ <default> public $data ]
+        Property [ <default> public $is_pending ]
+        Property [ <default> public $priority ]
+        Property [ <default> public $signum ]
       }
 
       - Methods [10] {
@@ -910,13 +910,13 @@ Extension [ <persistent> extension #80 ev version 1.0.2 ] {
       }
 
       - Properties [7] {
-        Property [ <default> public $"is_active" ]
-        Property [ <default> public $"data" ]
-        Property [ <default> public $"is_pending" ]
-        Property [ <default> public $"priority" ]
-        Property [ <default> public $"pid" ]
-        Property [ <default> public $"rpid" ]
-        Property [ <default> public $"rstatus" ]
+        Property [ <default> public $is_active ]
+        Property [ <default> public $data ]
+        Property [ <default> public $is_pending ]
+        Property [ <default> public $priority ]
+        Property [ <default> public $pid ]
+        Property [ <default> public $rpid ]
+        Property [ <default> public $rstatus ]
       }
 
       - Methods [10] {
@@ -1015,12 +1015,12 @@ Extension [ <persistent> extension #80 ev version 1.0.2 ] {
       }
 
       - Properties [6] {
-        Property [ <default> public $"is_active" ]
-        Property [ <default> public $"data" ]
-        Property [ <default> public $"is_pending" ]
-        Property [ <default> public $"priority" ]
-        Property [ <default> public $"path" ]
-        Property [ <default> public $"interval" ]
+        Property [ <default> public $is_active ]
+        Property [ <default> public $data ]
+        Property [ <default> public $is_pending ]
+        Property [ <default> public $priority ]
+        Property [ <default> public $path ]
+        Property [ <default> public $interval ]
       }
 
       - Methods [13] {
@@ -1135,10 +1135,10 @@ Extension [ <persistent> extension #80 ev version 1.0.2 ] {
       }
 
       - Properties [4] {
-        Property [ <default> public $"is_active" ]
-        Property [ <default> public $"data" ]
-        Property [ <default> public $"is_pending" ]
-        Property [ <default> public $"priority" ]
+        Property [ <default> public $is_active ]
+        Property [ <default> public $data ]
+        Property [ <default> public $is_pending ]
+        Property [ <default> public $priority ]
       }
 
       - Methods [9] {
@@ -1225,10 +1225,10 @@ Extension [ <persistent> extension #80 ev version 1.0.2 ] {
       }
 
       - Properties [4] {
-        Property [ <default> public $"is_active" ]
-        Property [ <default> public $"data" ]
-        Property [ <default> public $"is_pending" ]
-        Property [ <default> public $"priority" ]
+        Property [ <default> public $is_active ]
+        Property [ <default> public $data ]
+        Property [ <default> public $is_pending ]
+        Property [ <default> public $priority ]
       }
 
       - Methods [9] {
@@ -1315,10 +1315,10 @@ Extension [ <persistent> extension #80 ev version 1.0.2 ] {
       }
 
       - Properties [4] {
-        Property [ <default> public $"is_active" ]
-        Property [ <default> public $"data" ]
-        Property [ <default> public $"is_pending" ]
-        Property [ <default> public $"priority" ]
+        Property [ <default> public $is_active ]
+        Property [ <default> public $data ]
+        Property [ <default> public $is_pending ]
+        Property [ <default> public $priority ]
       }
 
       - Methods [9] {
@@ -1406,11 +1406,11 @@ Extension [ <persistent> extension #80 ev version 1.0.2 ] {
       }
 
       - Properties [5] {
-        Property [ <default> public $"is_active" ]
-        Property [ <default> public $"data" ]
-        Property [ <default> public $"is_pending" ]
-        Property [ <default> public $"priority" ]
-        Property [ <default> public $"embed" ]
+        Property [ <default> public $is_active ]
+        Property [ <default> public $data ]
+        Property [ <default> public $is_pending ]
+        Property [ <default> public $priority ]
+        Property [ <default> public $embed ]
       }
 
       - Methods [11] {
@@ -1511,10 +1511,10 @@ Extension [ <persistent> extension #80 ev version 1.0.2 ] {
       }
 
       - Properties [4] {
-        Property [ <default> public $"is_active" ]
-        Property [ <default> public $"data" ]
-        Property [ <default> public $"is_pending" ]
-        Property [ <default> public $"priority" ]
+        Property [ <default> public $is_active ]
+        Property [ <default> public $data ]
+        Property [ <default> public $is_pending ]
+        Property [ <default> public $priority ]
       }
 
       - Methods [9] {
