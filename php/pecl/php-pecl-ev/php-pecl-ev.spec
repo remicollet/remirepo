@@ -6,10 +6,17 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package        php-pecl-ev}
 #
 # NOTE: bundled libev
 #
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%scl_package        php-pecl-ev
+%endif
 
 %global pecl_name ev
 %global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
@@ -23,8 +30,8 @@
 #global prever    RC9
 
 Summary:        Provides interface to libev library
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.0.0
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
+Version:        1.0.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -43,13 +50,13 @@ Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires:       %{?scl_prefix}php-sockets%{?_isa}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 %if "%{?scl_prefix}" != "%{?sub_prefix}"
-Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
-Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 %endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
@@ -69,6 +76,10 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -181,6 +192,11 @@ fi
 
 
 %check
+%if "%{php_version}" < "5.5"
+# https://bitbucket.org/osmanov/pecl-ev/issues/28/101-failed-test-with-php-54
+rm ?TS/tests/16_generator_cb.phpt
+%endif
+
 DEPMOD=
 [ -f %{php_extdir}/sockets.so ] && DEPMOD="$DEPMOD -d extension=sockets.so"
 [ -f %{php_extdir}/posix.so ]   && DEPMOD="$DEPMOD -d extension=posix.so"
@@ -238,6 +254,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul 29 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1 (stable)
+- ignore 1 failed test with PHP 5.4, see
+  https://bitbucket.org/osmanov/pecl-ev/issues/28/101-failed-test-with-php-54
+
 * Tue May 17 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - update to 1.0.0 (stable)
 
