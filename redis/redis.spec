@@ -27,8 +27,8 @@
 %global gh_project   redis
 
 Name:             redis
-Version:          3.2.1
-Release:          2%{?dist}
+Version:          3.2.2
+Release:          1%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -115,6 +115,18 @@ Documentation: http://redis.io/documentation
 %patch0 -p1 -b .rpmconf
 %patch1 -p1 -b .pic
 %patch2 -p1 -b .jem
+
+# No hidden build.
+sed -i -e 's|\t@|\t|g' deps/lua/src/Makefile
+sed -i -e 's|$(QUIET_CC)||g' src/Makefile
+sed -i -e 's|$(QUIET_LINK)||g' src/Makefile
+sed -i -e 's|$(QUIET_INSTALL)||g' src/Makefile
+# Ensure deps are built with proper flags
+sed -i -e 's|$(CFLAGS)|%{optflags}|g' deps/Makefile
+sed -i -e 's|OPTIMIZATION?=-O3|OPTIMIZATION=%{optflags}|g' deps/hiredis/Makefile
+sed -i -e 's|$(LDFLAGS)|%{?__global_ldflags}|g' deps/hiredis/Makefile
+sed -i -e 's|$(CFLAGS)|%{optflags}|g' deps/linenoise/Makefile
+sed -i -e 's|$(LDFLAGS)|%{?__global_ldflags}|g' deps/linenoise/Makefile
 
 
 %build
@@ -246,6 +258,12 @@ fi
 
 
 %changelog
+* Fri Jul 29 2016 Remi Collet <remi@fedoraproject.org> - 3.2.2-1
+- Redis 3.2.2 - Release date: Thu Jul 28 14:14:54 CEST 2016
+- Upgrade urgency MODERATE:
+  A Redis server and a Sentinel crash are now fixed.
+  GEORADIUS errors in reported entries are fixed.
+
 * Fri Jun 24 2016 Remi Collet <remi@fedoraproject.org> - 3.2.1-2
 - fix %%postun scriptlet, thanks Matthias
 
