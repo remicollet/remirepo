@@ -243,6 +243,8 @@ rm -rf %{buildroot}
 * Sat Jul 30 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
 - update to 3.0.0
 - rename to php-phalcon2
+- PHP 7 build is broken for now
+  open https://github.com/phalcon/cphalcon/issues/12054
 
 * Fri May 20 2016 Remi Collet <remi@fedoraproject.org> - 2.0.13-1
 - update to 2.0.13
