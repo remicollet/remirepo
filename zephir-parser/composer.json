@@ -1,0 +1,47 @@
+{
+    "name": "phalcon/zephir",
+    "description": "Zephir is a compiled high level language aimed to the creation of C-extensions for PHP",
+    "keywords": ["extension"],
+    "homepage": "http://zephir-lang.com/",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Zephir Team",
+            "homepage": "http://zephir-lang.com/"
+        },
+        {
+            "name": "Contributors",
+            "homepage": "https://github.com/phalcon/zephir/graphs/contributors"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/phalcon/zephir/issues?state=open",
+        "source": "https://github.com/phalcon/zephir",
+        "forum": "https://forum.zephir-lang.com/",
+        "docs": "http://docs.zephir-lang.com/"
+    },
+    "require": {
+        "php": ">=5.4",
+        "ext-json": "*",
+        "ext-hash": "*",
+        "ext-ctype": "*"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "~2.6",
+        "phpunit/phpunit": "3.7.*",
+        "ext-gmp": "*",
+        "ext-pdo": "*",
+        "ext-pdo_sqlite": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zephir\\": "Library"
+        }
+    },
+    "bin": ["bin/zephir"],
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}
