@@ -13,8 +13,8 @@
 
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.8.8
-%global github_commit    038d13264f732f9bba850c423e374dc72874d1a6
+%global github_version   2.8.9
+%global github_commit    df02dd5d3f7decb3a05c6d0f31054b4263625dcb
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -113,9 +113,6 @@ Group:         Development/Libraries
 License:       MIT
 URL:           http://symfony.com
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_short}.tar.gz
-
-# https://github.com/symfony/symfony/pull/19255
-Patch0:        %{name}-pr19255.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -1756,8 +1753,6 @@ The YAML Component loads and dumps YAML files.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-%patch0 -p1
-
 : Remove unnecessary files
 find src -name '.git*' -delete
 
@@ -2683,6 +2678,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Sat Jul 30 2016 Remi Collet <remi@fedoraproject.org> - 2.8.9-1
+- Update to 2.8.9
+
 * Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 2.8.8-1
 - Update to 2.8.8
 - add patch for test suite with phpunit-bridge 2.8
