@@ -71,6 +71,10 @@ function run($name, $rpm) {
 	if (in_array($name, ['znerol/php-stringprep', 'psr/http-message-implementation'])) {
 		return;
 	}
+	if (!strpos($name, '/')) {
+		// e.g. ext-foo
+		return;
+	}
 	list($owner, $library) = explode('/', $name, 2);
 	if (in_array($owner, ['horde', 'kolab'])) {
 		return;
