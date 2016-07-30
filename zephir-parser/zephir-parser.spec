@@ -25,7 +25,7 @@
 
 Name:           %{?scl_prefix}%{gh_project}-parser
 Version:        0.9.3
-Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
+Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Zephir parser extension
 
 Group:          Development/Libraries
@@ -66,27 +66,6 @@ Group:         Development/Languages
 BuildArch:     noarch
 %endif
 
-%description  -n %{?scl_prefix}%{gh_project}
-Zephir - Ze(nd Engine) Ph(p) I(nt)r(mediate) - is a high level language
-that eases the creation and maintainability of extensions for PHP. 
-Zephir extensions are exported to C code that can be compiled and
-optimized by major C compilers such as gcc/clang/vc++. Functionality
-is exposed to the PHP language.
-
-Main features:
-* Both dynamic/static typing
-* Reduced execution overhead compared with full interpretation
-* Restricted procedural programming, promoting OOP
-* Memory safety
-* Ahead-of-time (AOT) compiler to provide predictable performance
-
-Compiler design goals:
-* Multi-pass compilation
-* Type speculation/inference
-* Allow runtime profile-guided optimizations, pseudo-constant propagation
-  and indirect/virtual function inlining
-
-
 Requires:       %{?scl_prefix}php-cli
 Requires:       %{name} = %{version}-%{release}
 # From composer.json, "require"
@@ -108,6 +87,26 @@ Requires:       %{?scl_prefix}php-spl
 Requires:       %{?scl_prefix}php-xml
 
 Provides:       %{?scl_prefix}php-composer(%{gh_owner}/%{gh_project}) = %{version}
+
+%description  -n %{?scl_prefix}%{gh_project}
+Zephir - Ze(nd Engine) Ph(p) I(nt)r(mediate) - is a high level language
+that eases the creation and maintainability of extensions for PHP.
+Zephir extensions are exported to C code that can be compiled and
+optimized by major C compilers such as gcc/clang/vc++. Functionality
+is exposed to the PHP language.
+
+Main features:
+* Both dynamic/static typing
+* Reduced execution overhead compared with full interpretation
+* Restricted procedural programming, promoting OOP
+* Memory safety
+* Ahead-of-time (AOT) compiler to provide predictable performance
+
+Compiler design goals:
+* Multi-pass compilation
+* Type speculation/inference
+* Allow runtime profile-guided optimizations, pseudo-constant propagation
+  and indirect/virtual function inlining
 
 
 %prep

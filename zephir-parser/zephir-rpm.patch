@@ -26,9 +26,9 @@ diff -up bin/zephir.rpm bin/zephir
  
  if [[ $1 && $2 && $3 && "$1"=="-c" ]]; then
 -    php -d safe_mode=Off -d enable_dl=On -c $2 $ZEPHIRDIR/compiler.php ${*:3}
-+    @BINDIR@/php -d extension=zephir_parser.so -c $2 $ZEPHIRDIR/compiler.php ${*:3}
++    @BINDIR@/php -d memory_limit=1G -d extension=zephir_parser.so -c $2 $ZEPHIRDIR/compiler.php ${*:3}
  else
 -    php -d safe_mode=Off -d enable_dl=On $ZEPHIRDIR/compiler.php $*
-+    @BINDIR@/php -d extension=zephir_parser.so $ZEPHIRDIR/compiler.php $*
++    @BINDIR@/php -d memory_limit=1G -d extension=zephir_parser.so $ZEPHIRDIR/compiler.php $*
  fi
  
