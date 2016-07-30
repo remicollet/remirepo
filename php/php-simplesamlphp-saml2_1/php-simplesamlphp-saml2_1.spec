@@ -1,3 +1,4 @@
+# remirepo spec file for php-simplesamlphp-saml2_1, from:
 #
 # Fedora spec file for php-simplesamlphp-saml2_1
 #
@@ -45,6 +46,7 @@ License:       LGPLv2
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -57,9 +59,7 @@ BuildRequires: php-composer(robrichards/xmlseclibs) <  %{robrichards_xmlseclibs_
 BuildRequires: php-composer(robrichards/xmlseclibs) >= %{robrichards_xmlseclibs_min_ver}
 BuildRequires: php-dom
 BuildRequires: php-openssl
-%if 0%{!?el6:1}
 BuildRequires: php-composer(mockery/mockery)        >= %{mockery_min_ver}
-%endif
 ## phpcompatinfo (computed from version 1.9)
 BuildRequires: php-date
 BuildRequires: php-libxml
@@ -122,6 +122,7 @@ AUTOLOAD
 
 
 %install
+rm -rf   %{buildroot}
 mkdir -p %{buildroot}%{phpdir}/SAML2_1
 cp -rp src/SAML2/* %{buildroot}%{phpdir}/SAML2_1/
 
@@ -133,24 +134,35 @@ mkdir vendor
 %{_bindir}/phpab --nolower --output vendor/autoload.php tests
 cat <<'AUTOLOAD' | tee -a vendor/autoload.php
 require_once '%{buildroot}%{phpdir}/SAML2_1/autoload.php';
-%if 0%{!?el6:1}
 require_once '%{phpdir}/Mockery/autoload.php';
-%endif
 AUTOLOAD
 
-%if 0%{?el6}
-: Remove tests requiring Mockery
-grep -r --files-with-matches Mockery tests | xargs rm -f
-%endif
-
 : Run tests
+ret=0
+run=0
+if which php56; then
+   php56 %{_bindir}/phpunit --configuration=tools/phpunit || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --configuration=tools/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/phpunit --configuration=tools/phpunit --verbose
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -159,5 +171,8 @@ grep -r --files-with-matches Mockery tests | xargs rm -f
 
 
 %changelog
+* Sat Jul 30 2016 Remi Collet <remi@remirepo.net> - 1.9.1
+- backport for remirepo
+
 * Sun Jul 10 2016 Shawn Iwinski <shawn@iwin.ski> - 1.9-1
 - Initial package
