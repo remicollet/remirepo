@@ -34,7 +34,7 @@
 
 Name:           %{?sub_prefix}php-phalcon3
 Version:        3.0.0
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Phalcon Framework
 
 Group:          Development/Libraries
@@ -53,6 +53,12 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 5.5
 BuildRequires: %{?scl_prefix}php-json
 BuildRequires: %{?scl_prefix}php-pdo
+# For sources generation
+BuildRequires: %{?scl_prefix}zephir
+BuildRequires: %{?scl_prefix}php-gd
+BuildRequires: %{?scl_prefix}php-libsodium
+BuildRequires: %{?scl_prefix}php-mbstring
+BuildRequires: %{?scl_prefix}php-msgpack
 
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
@@ -139,11 +145,14 @@ peclconf() {
 }
 
 : Generate the SAFE sources - optimization seems no more needed
-%{__php} build/gen-build.php
 
 %if "%{php_version}" > "7.0"
+%{_bindir}/zephir generate --backend=ZendEngine3
+%{__php} build/gen-build.php
 mv build/php7/safe build/NTS
 %else
+%{_bindir}/zephir generate --backend=ZendEngine2
+%{__php} build/gen-build.php
 mv build/php5/safe build/NTS
 %endif
 
@@ -172,7 +181,7 @@ rm -rf %{buildroot}
 
 make -C build/NTS install INSTALL_ROOT=%{buildroot}
 
-# install config file (z-http.ini to be loaded after json)
+# install config file
 install -Dpm644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
 %if %{with_zts}
@@ -184,7 +193,7 @@ install -Dpm644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %check
 # Shared needed extensions
 modules=""
-for mod in json hash pdo igbinary; do
+for mod in json pdo; do
   if [ -f %{php_extdir}/${mod}.so ]; then
     modules="$modules -d extension=${mod}.so"
   fi
@@ -240,6 +249,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jul 30 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-2
+- generate sources using zephir
+
 * Sat Jul 30 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
 - update to 3.0.0
 - rename to php-phalcon2
