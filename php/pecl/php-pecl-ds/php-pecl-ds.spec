@@ -21,7 +21,7 @@
 %global ini_name     40-%{pecl_name}.ini
 
 # For test suite, see https://github.com/php-ds/tests/commits/master
-%global gh_commit    6bed9cfe04d35f9fe857a430dcecdac2a651ccdc
+%global gh_commit    bff759ed81f7cb2042700700eb9c1d68e74fb3dd
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     php-ds
 %global gh_project   tests
@@ -29,7 +29,7 @@
 
 Summary:        Data Structures for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
@@ -225,6 +225,9 @@ cd ..
 
 
 %changelog
+* Sat Jul 30 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- Update to 1.0.2 (stable)
+
 * Thu Jul 28 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1
 

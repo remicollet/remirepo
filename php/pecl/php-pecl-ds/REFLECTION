@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #144 ds version 1.0.1 ] {
+Extension [ <persistent> extension #144 ds version 1.0.2 ] {
 
   - Classes [11] {
     Interface [ <internal:ds> interface Ds\Hashable ] {
@@ -1052,7 +1052,7 @@ Extension [ <persistent> extension #144 ds version 1.0.1 ] {
       - Properties [0] {
       }
 
-      - Methods [37] {
+      - Methods [38] {
         Method [ <internal:ds, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -1193,6 +1193,13 @@ Extension [ <persistent> extension #144 ds version 1.0.1 ] {
           - Parameters [2] {
             Parameter #0 [ <required> $key ]
             Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:ds> public method putAll ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $values ]
           }
         }
 
