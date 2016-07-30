@@ -66,12 +66,16 @@ Provides:      %{?scl_prefix}php-phalcon%{?_isa}  = %{version}-%{release}
 Provides:      %{?scl_prefix}php-phalcon3         = %{version}-%{release}
 Provides:      %{?scl_prefix}php-phalcon3%{?_isa} = %{version}-%{release}
 %endif
+%if "%{php_version}" > "7"
+Obsoletes:     %{?scl_prefix}php-phalcon  < 3
+Obsoletes:     %{?scl_prefix}php-phalcon2 < 3
+%else
 # Only one version can be installed
 Conflicts:     %{?scl_prefix}php-phalcon  < 3
 Conflicts:     %{?scl_prefix}php-phalcon2 < 3
+%endif
 
 # Don't provides php-composer(phalcon/cphalcon), not registered on packagist
-
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter shared private
@@ -238,6 +242,7 @@ rm -rf %{buildroot}
 %changelog
 * Sat Jul 30 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
 - update to 3.0.0
+- rename to php-phalcon2
 
 * Fri May 20 2016 Remi Collet <remi@fedoraproject.org> - 2.0.13-1
 - update to 2.0.13
