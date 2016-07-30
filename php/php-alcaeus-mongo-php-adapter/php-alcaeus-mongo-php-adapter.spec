@@ -33,8 +33,8 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-composer(theseer/autoload)
-%if %{with_tests}
 BuildRequires:  php(language) >= 5.5
+%if %{with_tests}
 BuildRequires:  php-hash
 BuildRequires:  php-composer(mongodb/mongodb) >= 1.0.1
 BuildRequires:  php-date
