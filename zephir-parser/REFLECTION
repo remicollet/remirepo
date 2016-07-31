@@ -1,0 +1,8 @@
+Extension [ <persistent> extension #144 zephir_parser version 0.1.0 ] {
+
+  - Functions {
+    Function [ <internal:zephir_parser> function zephir_parse_file ] {
+    }
+  }
+}
+

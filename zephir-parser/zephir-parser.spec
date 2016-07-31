@@ -55,6 +55,10 @@ BuildRequires:  %{?scl_prefix}php-pdo_sqlite
 BuildRequires:  %{?scl_prefix}php-composer(phpunit/phpunit)    >= 3.7
 %endif
 
+Requires:     %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:     %{?scl_prefix}php(api) = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
+
 %description
 Parser extension used by %{gh_project}
 
@@ -158,7 +162,9 @@ sh ./bin/%{gh_project}.test version | grep %{version}
 
 %if %{with_tests}
 : Run test suite
-%{_bindir}/phpunit unit-tests/Zephir --verbose
+if %{_bindir}/phpunit --atleast-version 5; then
+   %{_bindir}/phpunit unit-tests/Zephir --verbose
+fi
 
 %else
 : Test suite disabled
