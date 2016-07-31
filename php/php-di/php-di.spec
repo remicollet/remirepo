@@ -101,15 +101,19 @@ Requires:      php-spl
 Requires:      php-composer(symfony/class-loader)
 # Weak dependencies
 %if 0%{?fedora} >= 21
-Suggests:      php-composer(doctrine/annotations)                >= %{doctrine_annotations_min_ver}
-Suggests:      php-composer(doctrine/annotations)                <  %{doctrine_annotations_max_ver}
-Suggests:      php-composer(doctrine/cache)                      >= %{doctrine_cache_min_ver}
-Suggests:      php-composer(doctrine/cache)                      <  %{doctrine_cache_max_ver}
-Suggests:      php-composer(mnapoli/phpunit-easymock)            >= %{phpunit_easymock_min_ver}
-Suggests:      php-composer(mnapoli/phpunit-easymock)            <  %{phpunit_easymock_max_ver}
-Suggests:      php-composer(ocramius/proxy-manager)              >= %{proxy_manager_min_ver}
-Suggests:      php-composer(ocramius/proxy-manager)              <  %{proxy_manager_max_ver}
+Suggests:      php-composer(doctrine/annotations)
+Suggests:      php-composer(doctrine/cache)
+Suggests:      php-composer(mnapoli/phpunit-easymock)
+Suggests:      php-composer(ocramius/proxy-manager)
 %endif
+Conflicts:     php-composer(doctrine/annotations)                <  %{doctrine_annotations_min_ver}
+Conflicts:     php-composer(doctrine/annotations)                >= %{doctrine_annotations_max_ver}
+Conflicts:     php-composer(doctrine/cache)                      <  %{doctrine_cache_min_ver}
+Conflicts:     php-composer(doctrine/cache)                      >= %{doctrine_cache_max_ver}
+Conflicts:     php-composer(mnapoli/phpunit-easymock)            <  %{phpunit_easymock_min_ver}
+Conflicts:     php-composer(mnapoli/phpunit-easymock)            >= %{phpunit_easymock_max_ver}
+Conflicts:     php-composer(ocramius/proxy-manager)              <  %{proxy_manager_min_ver}
+Conflicts:     php-composer(ocramius/proxy-manager)              >= %{proxy_manager_max_ver}
 
 # php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}
 Provides:      php-%{composer_vendor}-%{composer_project}           = %{version}-%{release}
@@ -152,15 +156,22 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 $fedoraClassLoader->addPrefix('DI\\', dirname(__DIR__));
 require_once __DIR__.'/functions.php';
 
-// Required dependencies
-require_once '%{phpdir}/Interop/Container/autoload.php';
-require_once '%{phpdir}/Invoker/autoload.php';
-require_once '%{phpdir}/PhpDocReader/autoload.php';
+// Dependencies (autoloader => required)
+foreach(array(
+    // Required dependencies
+    '%{phpdir}/Interop/Container/autoload.php'           => true,
+    '%{phpdir}/Invoker/autoload.php'                     => true,
+    '%{phpdir}/PhpDocReader/autoload.php'                => true,
+    // Optional dependencies
+    '%{phpdir}/Doctrine/Common/Annotations/autoload.php' => false,
+    '%{phpdir}/Doctrine/Common/Cache/autoload.php'       => false,
+    '%{phpdir}/ProxyManager/autoload.php'                => false,
+) as $dependencyAutoloader => $required) {
+    if ($required || file_exists($dependencyAutoloader)) {
+        require_once $dependencyAutoloader;
+    }
+}
 
-// Optional dependencies
-@include_once '%{phpdir}/Doctrine/Common/Annotations/autoload.php';
-@include_once '%{phpdir}/Doctrine/Common/Cache/autoload.php';
-@include_once '%{phpdir}/ProxyManager/autoload.php';
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -193,12 +204,34 @@ $fedoraClassLoader->addPrefix('DI\\Test\\UnitTest\\', __DIR__.'/tests-psr0');
 require_once '%{phpdir}/EasyMock/autoload.php';
 BOOTSTRAP
 
-: Run tests
-%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+: Skip tests known to fail with "php-composer(php-di/invoker)" >= 1.3.2
+: See https://github.com/PHP-DI/Invoker/issues/13
+sed 's/function test_not_callable/function SKIP_test_not_callable/' \
+    -i tests/IntegrationTest/CallFunctionTest.php
+sed 's/function test_not_callable_factory_definition/function SKIP_test_not_callable_factory_definition/' \
+    -i tests/IntegrationTest/Definitions/FactoryDefinitionTest.php
+sed 's/function test_factory_not_callable/function SKIP_test_factory_not_callable/' \
+    -i tests/IntegrationTest/ErrorMessages/ErrorMessagesTest.php
+sed -e '/@test/d' \
+    -e 's/public function should_/public function test_should_/g' \
+    -e 's/function test_should_throw_if_the_factory_is_not_callable/function SKIP_test_should_throw_if_the_factory_is_not_callable/' \
+    -i tests/UnitTest/Definition/Resolver/FactoryResolverTest.php
 
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php  || :
+: Run tests
+ret=0
+run=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap bootstrap.php || : ignore
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
