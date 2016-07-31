@@ -1,8 +1,8 @@
 # remirepo spec file for php-doctrine-datafixtures, from Fedora:
 #
-# RPM spec file for php-doctrine-datafixtures
+# Fedora spec file for php-doctrine-datafixtures
 #
-# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -25,7 +25,8 @@
 %global doctrine_common_min_ver 2.5
 %global doctrine_common_max_ver 3.0
 # "doctrine/orm": "~2.2"
-%global doctrine_orm_min_ver 2.2
+#     NOTE: Min version not 2.2 because autoloader required
+%global doctrine_orm_min_ver 2.4.8
 %global doctrine_orm_max_ver 3.0
 
 # Build using "--without tests" to disable tests
@@ -35,7 +36,7 @@
 
 Name:          php-%{composer_vendor}-datafixtures
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       3%{?dist}
 Summary:       Data Fixtures for all Doctrine Object Managers
 
 Group:         Development/Libraries
@@ -48,12 +49,10 @@ BuildArch:     noarch
 # Tests
 %if %{with_tests}
 ## composer.json
-BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language)                 >= %{php_min_ver}
 BuildRequires: php-composer(doctrine/common) >= %{doctrine_common_min_ver}
-BuildRequires: php-composer(doctrine/common) <  %{doctrine_common_max_ver}
 BuildRequires: php-composer(doctrine/orm)    >= %{doctrine_orm_min_ver}
-BuildRequires: php-composer(doctrine/orm)    <  %{doctrine_orm_max_ver}
+BuildRequires: php-composer(phpunit/phpunit)
 ## phpcompatinfo (computed from version 1.0.2)
 BuildRequires: php-json
 BuildRequires: php-reflection
@@ -90,15 +89,14 @@ of data fixtures for the Doctrine ORM or ODM.
 %setup -qn %{github_name}-%{github_commit}
 
 : Create autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee lib/Doctrine/Common/DataFixtures/autoload.php
 <?php
 /**
- * Autoloader created by %{name}-%{version}-%{release}
+ * Autoloader for %{name} and its' dependencies
+ * (created by %{name}-%{version}-%{release}).
  *
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
-
-require_once '%{phpdir}/Doctrine/Common/autoload.php';
 
 if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
     if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
@@ -111,17 +109,20 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('Doctrine\\Common\\DataFixtures\\', dirname(dirname(dirname(__DIR__))));
 
-// Doctrine ORM does not provide its' own autoloader yet. Use it when it is
-// available otherwise fall back to using include path.
-if (file_exists('%{phpdir}/Doctrine/ORM/autoload.php')) {
-    require_once '%{phpdir}/Doctrine/ORM/autoload.php';
-} else {
-    $fedoraClassLoader->setUseIncludePath(true);
+// Dependencies (autoloader => required)
+foreach(array(
+    // Required dependency
+    '%{phpdir}/Doctrine/Common/autoload.php' => true,
+    // Optional dependency
+    '%{phpdir}/Doctrine/ORM/autoload.php'    => false,
+) as $dependencyAutoloader => $required) {
+    if ($required || file_exists($dependencyAutoloader)) {
+        require_once $dependencyAutoloader;
+    }
 }
 
 return $fedoraClassLoader;
 AUTOLOAD
-) | tee lib/Doctrine/Common/DataFixtures/autoload.php
 
 
 %build
@@ -152,7 +153,7 @@ sed -e 's#function testReferenceIdentityPopulation#function SKIP_testReferenceId
 %endif
 
 : Create tests bootstrap
-(cat <<'BOOTSTRAP'
+cat <<'BOOTSTRAP' | tee bootstrap.php
 <?php
 
 $fedoraClassLoader =
@@ -160,9 +161,21 @@ $fedoraClassLoader =
 
 $fedoraClassLoader->addPrefix('Doctrine\\Tests\\', __DIR__ . '/tests');
 BOOTSTRAP
-) | tee bootstrap.php
 
-%{_bindir}/phpunit -v --bootstrap ./bootstrap.php
+ret=0
+run=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap ./bootstrap.php || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap ./bootstrap.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose --bootstrap ./bootstrap.php
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -183,6 +196,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jul 31 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.2-1
+- Updated/fixed php-composer(doctrine/*) dependencies min version for autoloaders
+- Modified autoloader
+
 * Fri Jul 03 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.2-1
 - Updated to 1.0.2 (RHBZ #1206860)
 - Added standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming provides
