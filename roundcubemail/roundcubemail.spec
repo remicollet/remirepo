@@ -20,7 +20,7 @@
 %global _logdir /var/log  
 Name: roundcubemail
 Version:  1.2.1
-Release:  1%{?dist}
+Release:  3%{?dist}
 Summary: Round Cube Webmail is a browser-based multilingual IMAP client
 
 Group: Applications/System
@@ -48,7 +48,7 @@ Source4: roundcubemail-README.rpm
 Patch0: roundcubemail-1.2.1-no_swf.patch
 
 # Non-upstreamable: Adjusts config path to Fedora policy
-Patch1: roundcubemail-1.1.0-confpath.patch
+Patch1: roundcubemail-1.2.1-confpath.patch
 
 # add .log prefix to all log file names
 # see https://github.com/roundcube/roundcubemail/pull/313
@@ -219,7 +219,9 @@ sed -e '/su /d' -i %{buildroot}%{_sysconfdir}/logrotate.d/roundcubemail
 # Log files
 mkdir -p %{buildroot}/var/log/roundcubemail
 # Temp files
-mkdir -p %{buildroot}/var/lib/roundcubemail
+mkdir -p %{buildroot}/var/lib/roundcubemail/temp
+# GPG keys
+mkdir -p %{buildroot}/var/lib/roundcubemail/enigma
 
 cp -pr %SOURCE4 README.rpm
 
@@ -231,6 +233,15 @@ touch %{buildroot}%{_sysconfdir}/roundcubemail/config.inc.php
 
 # keep any other config files too
 mv %{buildroot}%{roundcubedir}/config/* %{buildroot}%{_sysconfdir}/roundcubemail/
+
+# Also move plugins configuration file samples
+pushd %{buildroot}%{roundcubedir}/plugins
+for plug in $(ls); do
+  if [ -f $plug/config.inc.php.dist ]; then
+    mv $plug/config.inc.php.dist %{buildroot}%{_sysconfdir}/roundcubemail/$plug.inc.php.dist
+  fi
+done
+popd
 
 # clean up the buildroot
 rm -r %{buildroot}%{roundcubedir}/{config,logs,temp}
@@ -269,16 +280,25 @@ rm -rf %{buildroot}
 %attr(0640,root,apache) %{_sysconfdir}/%{name}/mimetypes.php
 %attr(0640,root,apache) %{_sysconfdir}/%{name}/defaults.inc.php
 %attr(0640,root,apache) %{_sysconfdir}/%{name}/config.inc.php.sample
+%attr(0640,root,apache) %{_sysconfdir}/%{name}/*.inc.php.dist
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/%{name}.conf
 %if %{with_phpfpm}
 %config(noreplace) %{_sysconfdir}/nginx/default.d/%{name}.conf
 %endif
 %attr(0770,root,apache) %dir /var/log/roundcubemail
 %attr(0770,root,apache) %dir /var/lib/roundcubemail
+%attr(0770,root,apache) %dir /var/lib/roundcubemail/temp
+%attr(0770,root,apache) %dir /var/lib/roundcubemail/enigma
 %config(noreplace) %{_sysconfdir}/logrotate.d/roundcubemail
 
 
 %changelog
+* Sun Jul 31 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-3
+- use /var/lib/roundcubemail/temp for temporary files
+- add /var/lib/roundcubemail/enigma for GPG keys storage
+- move plugins configuration samples in /etc/roundcubemail
+- fix permission adjustments required for encryption support #1347332
+
 * Wed Jul 27 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - update to 1.2.1
 

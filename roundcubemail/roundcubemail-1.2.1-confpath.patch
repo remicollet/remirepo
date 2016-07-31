@@ -1,7 +1,7 @@
-diff -up roundcubemail-1.1.0/config/defaults.inc.php.orig roundcubemail-1.1.0/config/defaults.inc.php
---- roundcubemail-1.1.0/config/defaults.inc.php.orig	2015-02-16 17:39:52.274132735 +0100
-+++ roundcubemail-1.1.0/config/defaults.inc.php	2015-02-16 17:46:10.336534781 +0100
-@@ -321,11 +321,11 @@ $config['user_aliases'] = false;
+diff -up config/defaults.inc.php.rpm config/defaults.inc.php
+--- roundcubemail-1.2.1/config/defaults.inc.php.rpm	2016-07-24 22:30:15.000000000 +0200
++++ roundcubemail-1.2.1/config/defaults.inc.php	2016-07-31 18:32:28.747930911 +0200
+@@ -346,11 +346,11 @@ $config['user_aliases'] = false;
  // use this folder to store log files
  // must be writeable for the user who runs PHP process (Apache user if mod_php is being used)
  // This is used by the 'file' log driver.
@@ -11,11 +11,11 @@ diff -up roundcubemail-1.1.0/config/defaults.inc.php.orig roundcubemail-1.1.0/co
  // use this folder to store temp files
  // must be writeable for the user who runs PHP process (Apache user if mod_php is being used)
 -$config['temp_dir'] = RCUBE_INSTALL_PATH . 'temp/';
-+$config['temp_dir'] = '/var/lib/roundcubemail/';
++$config['temp_dir'] = '/var/lib/roundcubemail/temp/';
  
  // expire files in temp_dir after 48 hours
  // possible units: s, m, h, d, w
-@@ -511,7 +511,7 @@ $config['mime_magic'] = null;
+@@ -579,7 +579,7 @@ $config['mime_magic'] = null;
  // This is used to derive mime-types from the filename extension or vice versa.
  // Such a file is usually part of the apache webserver. If you don't find a file named mime.types on your system,
  // download it from http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
@@ -24,6 +24,28 @@ diff -up roundcubemail-1.1.0/config/defaults.inc.php.orig roundcubemail-1.1.0/co
  
  // path to imagemagick identify binary (if not set we'll use Imagick or GD extensions)
  $config['im_identify_path'] = null;
+@@ -1211,3 +1211,7 @@ $config['message_show_email'] = false;
+ // 0 - Reply-All always
+ // 1 - Reply-List if mailing list is detected
+ $config['reply_all_mode'] = 0;
++
++// Keys directory for all users. Default 'enigma/home'.
++// Must be writeable by PHP process
++$config['enigma_pgp_homedir'] = '/var/lib/roundcubemail/enigma';
+diff -up plugins/enigma/config.inc.php.dist.rpm plugins/enigma/config.inc.php.dist
+--- roundcubemail-1.2.1/plugins/enigma/config.inc.php.dist.rpm	2016-07-31 18:30:24.901231602 +0200
++++ roundcubemail-1.2.1/plugins/enigma/config.inc.php.dist	2016-07-31 18:32:00.291770232 +0200
+@@ -12,10 +12,6 @@ $config['enigma_smime_driver'] = 'phpssl
+ // Enables logging of enigma operations (including Crypt_GPG debug info)
+ $config['enigma_debug'] = false;
+ 
+-// Keys directory for all users. Default 'enigma/home'.
+-// Must be writeable by PHP process
+-$config['enigma_pgp_homedir'] = null;
+-
+ // Location of gpg binary. By default it will be auto-detected.
+ // This is also a way to force gpg2 use if there are both 1.x and 2.x on the system.
+ $config['enigma_pgp_binary'] = '';
 diff -up roundcubemail-1.1.0/installer/index.php.orig roundcubemail-1.1.0/installer/index.php
 --- roundcubemail-1.1.0/installer/index.php.orig	2015-02-16 17:39:52.274132735 +0100
 +++ roundcubemail-1.1.0/installer/index.php	2015-02-16 17:41:44.115547278 +0100

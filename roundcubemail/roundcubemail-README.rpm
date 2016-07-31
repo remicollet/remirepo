@@ -3,9 +3,10 @@ Additional installation and update information:
 Upstream documentation: http://trac.roundcube.net/wiki
 
 Notice
-- temporary files are stored in /var/lib/roundcubemail
+- temporary files are stored in /var/lib/roundcubemail/temp
 - logs files are stored in /var/log/roundcubemail
 - configuration files are stored in /etc/roundcubemail
+- PGP keys used by enigma plugin are stored in /var/lib/roundcubemail/enigma
 
 As those directories are not served by the web server,
 there is no need to protect them.
