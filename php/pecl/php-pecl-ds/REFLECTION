@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #144 ds version 1.0.2 ] {
+Extension [ <persistent> extension #145 ds version 1.0.3 ] {
 
   - Classes [11] {
     Interface [ <internal:ds> interface Ds\Hashable ] {
@@ -332,7 +332,7 @@ Extension [ <persistent> extension #144 ds version 1.0.2 ] {
       - Properties [0] {
       }
 
-      - Methods [35] {
+      - Methods [34] {
         Method [ <internal:ds, prototype Ds\Sequence, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -572,13 +572,6 @@ Extension [ <persistent> extension #144 ds version 1.0.2 ] {
           - Parameters [0] {
           }
           - Return [ array ]
-        }
-
-        Method [ <internal:ds> public method push_one ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $value ]
-          }
         }
       }
     }
@@ -1350,7 +1343,7 @@ Extension [ <persistent> extension #144 ds version 1.0.2 ] {
       - Properties [0] {
       }
 
-      - Methods [28] {
+      - Methods [29] {
         Method [ <internal:ds, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -1435,6 +1428,14 @@ Extension [ <persistent> extension #144 ds version 1.0.2 ] {
 
           - Parameters [0] {
           }
+        }
+
+        Method [ <internal:ds> public method merge ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $values ]
+          }
+          - Return [ Ds\Set or NULL ]
         }
 
         Method [ <internal:ds> public method reduce ] {
