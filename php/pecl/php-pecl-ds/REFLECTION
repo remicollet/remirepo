@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #145 ds version 1.0.3 ] {
+Extension [ <persistent> extension #145 ds version 1.0.4 ] {
 
   - Classes [11] {
     Interface [ <internal:ds> interface Ds\Hashable ] {
