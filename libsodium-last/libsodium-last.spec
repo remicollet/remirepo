@@ -22,7 +22,7 @@ Name:           %{libname}
 # Build for parallel install
 Name:           %{libname}-last
 %endif
-Version:        1.0.10
+Version:        1.0.11
 Release:        1%{?dist}
 Summary:        The Sodium crypto library
 Group:          System Environment/Libraries
@@ -127,6 +127,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug  1 2016 Remi Collet <remi@fedoraproject.org> - 1.0.11-1
+- update to 1.0.11
+
 * Tue Apr  5 2016 Remi Collet <remi@fedoraproject.org> - 1.0.10-1
 - update to 1.0.10
 
