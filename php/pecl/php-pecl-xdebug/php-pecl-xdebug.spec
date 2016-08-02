@@ -16,7 +16,7 @@
 
 %global pecl_name   xdebug
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
-%global gh_commit   821c1fd2e09e65a9d33414ce7ce234e2ea6fdf83
+%global gh_commit   02a6ecd690bc1d214c0c8e2ab38dbf82e7f717de
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date     20151118
 %global with_tests  0%{?_with_tests:1}
@@ -31,7 +31,7 @@
 
 Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
-Version:        2.4.0
+Version:        2.4.1
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{gh_commit}/%{pecl_name}-%{version}%{?prever}-%{gh_short}.tar.gz
 
@@ -291,6 +291,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug  2 2016 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
+- update to 2.4.1
+
 * Fri Mar  4 2016 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
 - update to 2.4.0
 
