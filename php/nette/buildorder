@@ -10,8 +10,8 @@ For framework version				   2.3.10	2.4.0
 1277497** php-apigen-theme-bootstrap   1.1.3   	-		(; latte)
 1277499** php-apigen-theme-default     1.0.2    -		(; latte)
 1277384** php-nette-finder             2.3.2   	2.4.0	(tester, [tracy] ; utils)
+1277388** php-nette-php-generator      2.3.6   	2.4.1	(tester, [tracy] ; utils)
 
-1277388** php-nette-php-generator      2.3.6   	2.4.1	(utils ; tester)
 1277395** php-nette-component-model    2.2.4  	2.3.0 	(utils ; tester)
 1277397** php-nette-di                 2.3.12  	2.4.2	(neon, php-generator, utils ; tester)
 1277400** php-tracy                    2.3.10  	2.4.1	(; di, tester)
