@@ -42,11 +42,12 @@ BuildRequires:  php-mbstring
 BuildRequires:  php-pcre
 BuildRequires:  php-reflection
 BuildRequires:  php-spl
+BuildRequires:  php-tokenizer
 # From composer.json, "require-dev": {
 #		"nette/tester": "~2.0",
 #		"tracy/tracy": "^2.3"
-BuildRequires:  php-composer(%{gh_owner}/tester) >= 2.0
-BuildRequires:  php-composer(tracy/tracy) >= 2.3
+# ignore tester min version (pass with 1.7), ignore tracy (pass without)
+BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.7
 %endif
 
 # from composer.json, "require": {
@@ -54,7 +55,7 @@ BuildRequires:  php-composer(tracy/tracy) >= 2.3
 #        "ext-tokenizer": "*"
 Requires:       php(language) >= 5.4.4
 Requires:       php-tokenizer
-# from phpcompatinfo report for version 2.3.6
+# from phpcompatinfo report for version 2.4.0
 Requires:       php-date
 Requires:       php-fileinfo
 Requires:       php-iconv
@@ -63,6 +64,7 @@ Requires:       php-mbstring
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
+Requires:       php-tokenizer
 
 # provides latte/latte
 Provides:       php-composer(%{gh_project}/%{gh_project}) = %{version}
@@ -103,15 +105,9 @@ cp -pr src/* %{buildroot}%{php_home}/
 
 %check
 %if %{with_tests}
-: Ignore failed test under investigation
-rm 'tests/Latte/Helpers.optimizePhp().phpt'
-
 : Generate configuration
 cat /etc/php.ini /etc/php.d/*ini >php.ini
 export LANG=fr_FR.utf8
-
-: For PHP 5.3.3 on RHEL-6
-sed -e 's/50303/99999/' -i tests/Latte/Object.phpt
 
 : Generate autoloader
 mkdir vendor
@@ -122,12 +118,25 @@ require_once '%{buildroot}%{php_home}/%{ns_vendor}/autoload.php';
 EOF
 
 : Run test suite in sources tree
-%{_bindir}/nette-tester --colors 0 -p php -c ./php.ini tests -s
-
-if which php70; then
-  cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
-  php70 %{_bindir}/nette-tester --colors 0 -p php70 -c ./php.ini tests -s
+# remirepo:14
+ret=0
+run=0
+if which php56; then
+   cat /opt/remi/php56/root/etc/php.ini /opt/remi/php56/root/etc/php.d/*ini >php.ini
+   php56 %{_bindir}/nette-tester --colors 0 -p php56 -c ./php.ini tests -s || ret=1
+   run=1
 fi
+if which php71; then
+   rm tests/Latte/Filters.general.phpt
+   cat /etc/opt/remi/php71/php.ini /etc/opt/remi/php71/php.d/*ini >php.ini
+   php71 %{_bindir}/nette-tester --colors 0 -p php71 -c ./php.ini tests -s || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/nette-tester --colors 0 -p php -c ./php.ini tests -s
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
