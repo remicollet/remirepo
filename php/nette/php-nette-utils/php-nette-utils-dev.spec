@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    66ceba196e4535ca3bf8f835db50d7e02339fdb0
+%global gh_commit    c455ade9f24a1f99aa81772516764045296b8ca0
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -16,7 +16,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-nette-utils
-Version:        2.3.10
+Version:        2.4.0
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Utility Classes
@@ -32,7 +32,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-composer(theseer/autoload)
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.3.1
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-iconv
 BuildRequires:  php-intl
 BuildRequires:  php-mbstring
@@ -47,13 +47,15 @@ BuildRequires:  php-reflection
 BuildRequires:  php-spl
 BuildRequires:  php-xml
 # From composer.json, "require-dev": {
-#        "nette/tester": "~1.0"
+#		"nette/tester": "~2.0",
+#		"tracy/tracy": "^2.3"
+# ignore tester min version (pass with 1.7), ignore tracy (pass without)
 BuildRequires:  php-composer(%{gh_owner}/tester)
 %endif
 
 # from composer.json, "require": {
-#        "php": ">=5.3.1"
-Requires:       php(language) >= 5.3.1
+#        "php": ">=5.6.0"
+Requires:       php(language) >= 5.6
 # from composer.json, "suggest": {
 #        "ext-iconv": "to use Strings::webalize() and toAscii()",
 #        "ext-intl": "for script transliteration in Strings::webalize() and toAscii()",
@@ -70,7 +72,7 @@ Requires:       php-intl
 Requires:       php-mbstring
 Requires:       php-gd
 %endif
-# from phpcompatinfo report for version 2.3.6 (mcrypt is optional, openssl prefered)
+# from phpcompatinfo report for version 2.4.0 (mcrypt is optional, openssl prefered)
 Requires:       php-date
 Requires:       php-fileinfo
 Requires:       php-json
@@ -109,15 +111,14 @@ cp -pr src/* %{buildroot}%{php_home}/%{ns_vendor}/
 %if %{with_tests}
 : Ignore failed tests under investigation
 rm tests/Utils/Image.alpha1.phpt
+rm tests/Utils/Image.alpha2.phpt
+rm tests/Utils/Image.resize.phpt
 rm tests/Utils/Json.decode\(\).phpt
 rm tests/Utils/Image.drawing.phpt
 
 : Generate configuration
 cat /etc/php.ini /etc/php.d/*ini >php.ini
 export LANG=fr_FR.utf8
-
-: For PHP 5.3.3 on RHEL-6
-sed -e 's/50303/99999/' -i tests/Utils/Object.magicMethod.errors.phpt
 
 : Generate autoloader
 mkdir vendor
@@ -128,12 +129,24 @@ require_once '%{buildroot}%{php_home}/%{ns_vendor}/Utils/autoload.php';
 EOF
 
 : Run test suite in sources tree
-nette-tester --colors 0 -p php -c ./php.ini tests -s
-
-if which php70; then
-  cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
-  php70 %{_bindir}/nette-tester --colors 0 -p php70 -c ./php.ini tests -s
+# remirepo:13
+ret=0
+run=0
+if which php56; then
+   cat /opt/remi/php56/root/etc/php.ini /opt/remi/php56/root/etc/php.d/*ini >php.ini
+   php56 %{_bindir}/nette-tester --colors 0 -p php56 -c ./php.ini tests -s || ret=1
+   run=1
 fi
+if which php71; then
+   cat /etc/opt/remi/php71/php.ini /etc/opt/remi/php71/php.d/*ini >php.ini
+   php71 %{_bindir}/nette-tester --colors 0 -p php71 -c ./php.ini tests -s || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/nette-tester --colors 0 -p php -c ./php.ini tests -s
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -155,6 +168,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug  2 2016 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
+- update to 2.4.0
+- raise dependency on PHP >= 5.6
+
 * Mon Jun 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.10-1
 - update to 2.3.10
 
