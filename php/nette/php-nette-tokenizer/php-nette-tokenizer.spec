@@ -38,8 +38,8 @@ BuildRequires:  php-pcre
 # From composer.json, "require-dev": {
 #       "nette/tester": "~1.7",
 #		"tracy/tracy": "^2.3"
+# ignore tracy (pass without)
 BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.7
-BuildRequires:  php-composer(tracy/tracy)        >= 2.3
 %endif
 
 # from composer.json, "require": {
