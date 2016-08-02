@@ -16,9 +16,9 @@
 
 %global pecl_name   xdebug
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
-%global gh_commit   bcb45acb6c828ccf9e217a1f58db92658c6650cb
+%global gh_commit   9fe2994df1439546373440b72fb7623f357c680c
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date     20160705
+%global gh_date     20160731
 %global with_tests  0%{?_with_tests:1}
 #global prever      RC4
 
@@ -33,7 +33,7 @@ Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.5.0
 %if 0%{?gh_date:1}
-Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.3.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -44,9 +44,6 @@ License:        BSD
 Group:          Development/Languages
 URL:            http://xdebug.org/
 Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{gh_commit}/%{pecl_name}-%{version}%{?prever}-%{gh_short}.tar.gz
-
-# Temp for 7.1.0alpha1, fixed upstream
-Patch0:         %{pecl_name}-php71.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-pear  > 1.9.1
@@ -139,7 +136,6 @@ mv NTS/package.xml .
 %{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
-%patch0 -p0 -b .php71
 
 # Check extension version
 ver=$(sed -n '/XDEBUG_VERSION/{s/.* "//;s/".*$//;p}' php_xdebug.h)
@@ -314,6 +310,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug  2 2016 Remi Collet <remi@fedoraproject.org> - 2.5.0-0.3.20160731git9fe2994
+- new snapshot of 2.5.0-dev
+
 * Fri Jul 29 2016 Remi Collet <remi@fedoraproject.org> - 2.5.0-0.2.20160705git62b3733
 - new snapshot of 2.5.0-dev
 

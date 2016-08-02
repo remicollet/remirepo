@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #146 xdebug version 2.4.0 ] {
+Extension [ <persistent> extension #15 xdebug version 2.5.0-dev ] {
 
   - INI {
     Entry [ xdebug.auto_trace <ALL> ]
@@ -65,7 +65,7 @@ Extension [ <persistent> extension #146 xdebug version 2.4.0 ] {
       Current = '-1'
     }
     Entry [ xdebug.overload_var_dump <ALL> ]
-      Current = '1'
+      Current = '2'
     }
     Entry [ xdebug.show_error_trace <ALL> ]
       Current = '0'
