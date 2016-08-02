@@ -5,11 +5,11 @@ For framework version				   2.3.10	2.4.0
 1277375** php-nette-tester             1.7.1	!!!  	()
 1277379** php-nette-tokenizer          2.2.3  	-		(tester, tracy ;)
 1277377** php-nette-utils              2.3.10	2.4.0 	(tester, [tracy] ;)
+1277376** php-nette-neon               2.3.5   	2.4.0	(tester, [tracy] ;)
 
 1277407** php-latte                    2.3.11  	2.4.1	(tracy, tester; )
 1277497** php-apigen-theme-bootstrap   1.1.3   	-		(; latte)
 1277499** php-apigen-theme-default     1.0.2    -		(; latte)
-1277376** php-nette-neon               2.3.5   	2.4.0	(; tester)
 1277384** php-nette-finder             2.3.2   	2.4.0	(utils ; tester)
 1277388** php-nette-php-generator      2.3.6   	2.4.1	(utils ; tester)
 1277395** php-nette-component-model    2.2.4  	2.3.0 	(utils ; tester)
