@@ -90,13 +90,24 @@ require_once '%{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php';
 EOF
 
 : Run test suite in sources tree
-nette-tester --colors 0 -p php -c ./php.ini tests -s
-
-# remirepo:4
-if which php70; then
-  cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
-  php70 %{_bindir}/nette-tester --colors 0 -p php70 -c ./php.ini tests -s
+# remirepo:13
+ret=0
+run=0
+if which php56; then
+   cat /opt/remi/php56/root/etc/php.ini /opt/remi/php56/root/etc/php.d/*ini >php.ini
+   php56 %{_bindir}/nette-tester --colors 0 -p php -c ./php.ini tests -s || ret=1
+   run=1
 fi
+if which php71; then
+   cat /etc/opt/remi/php71/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
+   php71 %{_bindir}/nette-tester --colors 0 -p php -c ./php.ini tests -s || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/nette-tester --colors 0 -p php -c ./php.ini tests -s
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
