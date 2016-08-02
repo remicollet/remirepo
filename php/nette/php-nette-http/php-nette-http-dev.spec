@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b2f28f2437d53af8788ea80605a16501c86848e9
+%global gh_commit    659e277017006edf12d4fc86bf54a060e56c71ac
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.7
+Version:        2.4.0
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette HTTP Component
@@ -33,28 +33,29 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-composer(theseer/autoload)
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.3.1
-BuildRequires:  php-composer(%{gh_owner}/finder) >= 2.2
-BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.2
+BuildRequires:  php(language) >= 5.6
+BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.4
 BuildRequires:  php-fileinfo
 BuildRequires:  php-date
 BuildRequires:  php-filter
+BuildRequires:  php-json
 BuildRequires:  php-pcre
 BuildRequires:  php-session
-BuildRequires:  php-reflection
 BuildRequires:  php-spl
 # From composer.json, "require-dev": {
-#        "nette/di": "~2.3",
-#        "nette/tester": "~1.4"
+#               "nette/di": "^2.3",
+#               "nette/tester": "~2.0",
+#               "tracy/tracy": "^2.3"
 BuildRequires:  php-composer(%{gh_owner}/di) >= 2.3
-BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.4
+BuildRequires:  php-composer(%{gh_owner}/tester) >= 2.0
+BuildRequires:  php-composer(tracy/tracy) >= 2.3
 %endif
 
 # from composer.json, "require": {
-#        "php": ">=5.3.1"
-#        "nette/utils": "~2.2, >=2.2.2"
-Requires:       php(language) >= 5.3.1
-Requires:       php-composer(%{gh_owner}/utils) >= 2.2.2
+#               "php": ">=5.6.0",
+#               "nette/utils": "^2.4"
+Requires:       php(language) >= 5.6
+Requires:       php-composer(%{gh_owner}/utils) >= 2.4
 Requires:       php-composer(%{gh_owner}/utils) <  3
 # from composer.json, "suggest": {
 #        "ext-fileinfo": "to detect type of uploaded files"
@@ -62,9 +63,9 @@ Requires:       php-fileinfo
 # from phpcompatinfo report for version 2.3.3
 Requires:       php-date
 Requires:       php-filter
+Requires:       php-json
 Requires:       php-pcre
 Requires:       php-session
-Requires:       php-reflection
 Requires:       php-spl
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
@@ -146,6 +147,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug  2 2016 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
+- update to 2.4.0
+- raise dependency on PHP >= 5.6
+- raise dependency on nette/utils >= 2.4
+
 * Mon Jun 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.7-1
 - update to 2.3.7
 

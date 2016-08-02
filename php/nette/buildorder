@@ -15,9 +15,9 @@ For framework version				   2.3.10	2.4.0
 1277397** php-nette-di                 2.3.12  	2.4.2	(tester, [tracy] ; utils ; neon, php-generator, utils)
 1277400** php-tracy                    2.3.10  	2.4.1	(di, tester ;)
 1277441** php-nette-safe-stream        2.3.2   	-		(tracy; tester)
-1277409** php-nette-caching            2.3.5   	2.5.1	(finder, utils ; di, tester)
+1277409** php-nette-caching            2.3.5   	2.5.1	(di, tester, latte, tracy ; finder, utils)
+1277415** php-nette-http               2.3.7   	2.4.0	(di, tester, tracy ; utils)
 
-1277415** php-nette-http               2.3.7   	2.4.0	(finder, utils ; di, tester)
 1277413** php-nette-reflection         2.3.2   	2.4.0	(caching, utils ; di, tester)
 1277418** php-nette-security           2.3.2   	2.4.0	(utils ; di, http, tester)
 1277437** php-nette-robot-loader       2.3.2   	2.4.0	(caching, finder, utils ; tester)
