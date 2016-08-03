@@ -1,18 +1,15 @@
-===== 7.1.0beta1 (2016-07-21)
+===== 7.1.0beta2 (2016-08-04)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl71*/build.log
 
-/var/lib/mock/scl70el6x/build.log:Tests failed    :     3
-/var/lib/mock/scl70el7x/build.log:Tests failed    :     3
+/var/lib/mock/scl70el6x/build.log:Tests failed    :     1
+/var/lib/mock/scl70el7x/build.log:Tests failed    :     1
 /var/lib/mock/scl70fc22x/build.log:Tests failed    :    1
 /var/lib/mock/scl70fc23x/build.log:Tests failed    :    1
 /var/lib/mock/scl70fc24x/build.log:Tests failed    :    1
 
-el6x, el7x
-    Bug #33414 [2] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-2.phpt]
-    strtotime() function (64 bit) [ext/date/tests/strtotime3-64bit.phpt]
 el6x, el7x, fc22x, fc23x, fc24x
-	gzfile() with various invalid params [ext/zlib/tests/004-mb.phpt]
+	**	Test base64_decode() function : basic functionality - padding and whitespace [ext/standard/tests/url/base64_decode_basic_003.phpt]
 
 
 *	proc_open give erratic test results :(

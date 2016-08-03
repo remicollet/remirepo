@@ -120,8 +120,8 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver         beta1
-%global rpmrel        1
+%global rcver         beta2
+%global rpmrel        2
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -182,7 +182,7 @@ Patch91: php-5.6.3-oci8conf.patch
 
 # Fixes for tests (300+)
 # Factory is droped from system tzdata
-Patch300: php-5.6.3-datetests.patch
+Patch300: php-7.0.10-datetests.patch
 # Revert changes for pcre < 8.34
 Patch301: php-7.0.0-oldpcre.patch
 
@@ -1994,6 +1994,9 @@ fi
 
 
 %changelog
+* Wed Aug  3 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-0.2.beta2
+- Update to 7.1.0beta2
+
 * Sat Jul 23 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-0.1.beta1
 - Update to 7.1.0beta1
 
