@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # Github
-%global gh_commit    a76afa4035931be0c78ca8efc6abf3902362f437
+%global gh_commit    fb3b30dca320b36931ea878fea17ebe136fba1b0
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     thephpleague
 %global gh_project   flysystem
@@ -19,7 +19,7 @@
 %global ns_project   Flysystem
 
 Name:           php-%{pk_vendor}-%{pk_name}
-Version:        1.0.25
+Version:        1.0.26
 Release:        1%{?dist}
 Summary:        Filesystem abstraction: Many filesystems, one API
 
@@ -158,6 +158,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Aug  3 2016 Remi Collet <remi@fedoraproject.org> - 1.0.26-1
+- update to 1.0.26
+
 * Mon Jul 18 2016 Remi Collet <remi@fedoraproject.org> - 1.0.25-1
 - update to 1.0.25
 - disable spec test suite with phpspec 3
