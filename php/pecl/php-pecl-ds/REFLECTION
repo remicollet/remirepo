@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #145 ds version 1.0.4 ] {
+Extension [ <persistent> extension #145 ds version 1.1.0 ] {
 
   - Classes [11] {
     Interface [ <internal:ds> interface Ds\Hashable ] {
@@ -1666,13 +1666,20 @@ Extension [ <persistent> extension #145 ds version 1.0.4 ] {
       - Properties [0] {
       }
 
-      - Methods [3] {
+      - Methods [4] {
         Method [ <internal:ds, ctor> public method __construct ] {
 
           - Parameters [2] {
             Parameter #0 [ <optional> $key ]
             Parameter #1 [ <optional> $value ]
           }
+        }
+
+        Method [ <internal:ds> public method copy ] {
+
+          - Parameters [0] {
+          }
+          - Return [ Ds\Pair or NULL ]
         }
 
         Method [ <internal:ds, prototype JsonSerializable> public method jsonSerialize ] {
