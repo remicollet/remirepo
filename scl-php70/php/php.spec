@@ -124,13 +124,13 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver        RC1
+%global rcver        RC1
 %global rpmrel       1
 
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 7.0.9
+Version: 7.0.10
 Release: %{?rcver:0.}%{rpmrel}%{?rcver:.%{rcver}}%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -183,13 +183,12 @@ Patch47: php-5.6.3-phpinfo.patch
 Patch91: php-5.6.3-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch100: bug72564.patch
 
 # Security fixes (200+)
 
 # Fixes for tests (300+)
 # Factory is droped from system tzdata
-Patch300: php-5.6.3-datetests.patch
+Patch300: php-7.0.10-datetests.patch
 # Revert changes for pcre < 8.34
 Patch301: php-7.0.0-oldpcre.patch
 
@@ -895,7 +894,6 @@ support for JavaScript Object Notation (JSON) to PHP.
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch100 -p1 -b .bug72564
 
 # security patches
 
@@ -1826,6 +1824,10 @@ fi
 
 
 %changelog
+* Wed Aug  3 2016 Remi Collet <remi@fedoraproject.org> 7.0.10-0.1.RC1
+- Update to 7.0.10RC1
+- relax 2 date tests (failing on EL with system tzdata)
+
 * Wed Jul 20 2016 Remi Collet <remi@fedoraproject.org> 7.0.9-1
 - Update to 7.0.9 - http://www.php.net/releases/7_0_9.php
 - wddx: add upstream patch for https://bugs.php.net/72564
