@@ -11,14 +11,14 @@ $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 /var/lib/mock/fc24x/build.log:Tests failed    :    1
 
 el6x,
-	Bug #70198 Checking liveness does not work as expected [ext/standard/tests/streams/bug70198.phpt]
+	*	Bug #70198 Checking liveness does not work as expected [ext/standard/tests/streams/bug70198.phpt]
 el6i
-	Test mt_rand() function : usage variations - different data types as $max argument [ext/standard/tests/math/mt_rand_variation2.phpt]
+	***	Test mt_rand() function : usage variations - different data types as $max argument [ext/standard/tests/math/mt_rand_variation2.phpt]
 el6x, el6x, el7x, fc23i, fc23x, fc24i, fc24x
-	**	Test base64_decode() function : basic functionality - padding and whitespace [ext/standard/tests/url/base64_decode_basic_003.phpt]
+	***	Test base64_decode() function : basic functionality - padding and whitespace [ext/standard/tests/url/base64_decode_basic_003.phpt]
 el6i, fc23i, fc24i
-	Test rand() function : usage variations - different data types as $min argument [ext/standard/tests/math/rand_variation1.phpt]
-	Test rand() function : usage variations - different data types as $max argument [ext/standard/tests/math/rand_variation2.phpt]
+	***	Test rand() function : usage variations - different data types as $min argument [ext/standard/tests/math/rand_variation1.phpt]
+	***	Test rand() function : usage variations - different data types as $max argument [ext/standard/tests/math/rand_variation2.phpt]
 
 *   proc_open give erratic test results :(
 **  date tests vary with tzdata available in system
