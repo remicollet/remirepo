@@ -31,7 +31,7 @@
 Summary:        ZeroMQ messaging
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.1.3
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -63,8 +63,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -83,6 +85,10 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -258,6 +264,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Aug  3 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-3
+- rebuild against zeromq 4.1 available in EPEL-7
+
 * Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-2
 - adapt for F24
 
