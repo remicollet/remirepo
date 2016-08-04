@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    79d539fee7e927e5774492b0774044a0456cd50b
+%global gh_commit    25381e4ec7902734e49924c1ffd07017830c5f31
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -16,7 +16,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_project}
-Version:        2.3.10
+Version:        2.4.0
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Framework
@@ -76,27 +76,27 @@ BuildRequires:  php-composer(tracy/tracy)
 #               "nette/utils": "~2.3.8",
 #               "latte/latte": "~2.3.11",
 #               "tracy/tracy": "~2.3.10"
-Requires:       php-composer(%{gh_owner}/application)     >= 2.3.12
-Requires:       php-composer(%{gh_owner}/bootstrap)       >= 2.3.4
-Requires:       php-composer(%{gh_owner}/caching)         >= 2.3.5
-Requires:       php-composer(%{gh_owner}/component-model) >= 2.2.4
-Requires:       php-composer(%{gh_owner}/database)        >= 2.3.8
-Requires:       php-composer(%{gh_owner}/deprecated)      >= 2.3.2
-Requires:       php-composer(%{gh_owner}/di)              >= 2.3.10
-Requires:       php-composer(%{gh_owner}/finder)          >= 2.3.2
-Requires:       php-composer(%{gh_owner}/forms)           >= 2.3.8
-Requires:       php-composer(%{gh_owner}/http)            >= 2.3.6
-Requires:       php-composer(%{gh_owner}/mail)            >= 2.3.5
-Requires:       php-composer(%{gh_owner}/neon)            >= 2.3.4
-Requires:       php-composer(%{gh_owner}/php-generator)   >= 2.3.5
-Requires:       php-composer(%{gh_owner}/reflection)      >= 2.3.2
-Requires:       php-composer(%{gh_owner}/robot-loader)    >= 2.3.1
-Requires:       php-composer(%{gh_owner}/safe-stream)     >= 2.3.2
-Requires:       php-composer(%{gh_owner}/security)        >= 2.3.1
-Requires:       php-composer(%{gh_owner}/tokenizer)       >= 2.2.1
-Requires:       php-composer(%{gh_owner}/utils)           >= 2.3.8
-Requires:       php-composer(latte/latte)                 >= 2.3.11
-Requires:       php-composer(tracy/tracy)                 >= 2.3.10
+Requires:       php-composer(%{gh_owner}/application)     >= 2.4
+Requires:       php-composer(%{gh_owner}/bootstrap)       >= 2.4
+Requires:       php-composer(%{gh_owner}/caching)         >= 2.5
+Requires:       php-composer(%{gh_owner}/component-model) >= 2.3
+Requires:       php-composer(%{gh_owner}/database)        >= 2.4
+Requires:       php-composer(%{gh_owner}/deprecated)      >= 2.3
+Requires:       php-composer(%{gh_owner}/di)              >= 2.4
+Requires:       php-composer(%{gh_owner}/finder)          >= 2.4
+Requires:       php-composer(%{gh_owner}/forms)           >= 2.4
+Requires:       php-composer(%{gh_owner}/http)            >= 2.4
+Requires:       php-composer(%{gh_owner}/mail)            >= 2.4
+Requires:       php-composer(%{gh_owner}/neon)            >= 2.4
+Requires:       php-composer(%{gh_owner}/php-generator)   >= 2.4
+Requires:       php-composer(%{gh_owner}/reflection)      >= 2.4
+Requires:       php-composer(%{gh_owner}/robot-loader)    >= 2.4
+Requires:       php-composer(%{gh_owner}/safe-stream)     >= 2.3
+Requires:       php-composer(%{gh_owner}/security)        >= 2.4
+Requires:       php-composer(%{gh_owner}/tokenizer)       >= 2.2
+Requires:       php-composer(%{gh_owner}/utils)           >= 2.4
+Requires:       php-composer(latte/latte)                 >= 2.4
+Requires:       php-composer(tracy/tracy)                 >= 2.4
 # from phpcompatinfo report for version 2.3.7: nothing
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
@@ -161,7 +161,7 @@ cp -pr %{ns_vendor} %{buildroot}%{php_home}/%{ns_vendor}
 php -r '
 require "%{buildroot}%{php_home}/%{ns_vendor}/autoload.php";
 printf("%s version %s, %s\n", Nette\Framework::NAME, Nette\Framework::VERSION, Nette\Framework::REVISION);
-exit(version_compare(Nette\Framework::VERSION, "%{version}") ? 1 : 0);
+exit(version_compare(Nette\Framework::VERSION, "2.4") ? 1 : 0);
 '
 %else
 : Test suite disabled
@@ -182,6 +182,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug  4 2016 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
+- update to 2.4.0
+- raise minimal version of updated components
+
 * Thu Apr 14 2016 Remi Collet <remi@fedoraproject.org> - 2.3.10-1
 - update to 2.3.10
 - raise minimal version of updated components
