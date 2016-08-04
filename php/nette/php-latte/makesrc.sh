@@ -1,17 +1,10 @@
 #!/bin/bash
 
 NAME=$(basename $PWD)
-if [ "$1" = "dev" ]; then
-SPEC=$NAME-dev.spec
-COMP=composer-dev.json
-else
-SPEC=$NAME.spec
-COMP=composer.json
-fi
-OWNER=$(sed   -n '/^%global gh_owner/{s/.* //;p}'   $SPEC)
-PROJECT=$(sed -n '/^%global gh_project/{s/.* //;p}' $SPEC)
-VERSION=$(sed -n '/^Version:/{s/.* //;p}'           $SPEC)
-COMMIT=$(sed  -n '/^%global gh_commit/{s/.* //;p}'  $SPEC)
+OWNER=$(sed   -n '/^%global gh_owner/{s/.* //;p}'   $NAME$1.spec)
+PROJECT=$(sed -n '/^%global gh_project/{s/.* //;p}' $NAME$1.spec)
+VERSION=$(sed -n '/^Version:/{s/.* //;p}'           $NAME$1.spec)
+COMMIT=$(sed  -n '/^%global gh_commit/{s/.* //;p}'  $NAME$1.spec)
 SHORT=${COMMIT:0:7}
 
 echo -e "\nCreate git snapshot\nName=$NAME, Owner=$OWNER, Project=$PROJECT, Version=$VERSION\n"
@@ -23,7 +16,7 @@ git clone https://github.com/$OWNER/$PROJECT.git $PROJECT-$COMMIT
 echo "Getting commit..."
 pushd $PROJECT-$COMMIT
 git checkout $COMMIT
-cp composer.json ../$COMP
+cp composer.json ../composer$1.json
 popd
 
 echo "Archiving..."

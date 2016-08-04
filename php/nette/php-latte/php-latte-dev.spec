@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    2c45c382f50cc981019628c9b074ad257207fb09
+%global gh_commit    08efb9414d847643848932ef8163d5b66d6d0380
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -16,7 +16,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_project}
-Version:        2.4.0
+Version:        2.4.1
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Latte: the amazing template engine for PHP
@@ -43,6 +43,7 @@ BuildRequires:  php-pcre
 BuildRequires:  php-reflection
 BuildRequires:  php-spl
 BuildRequires:  php-tokenizer
+BuildRequires:  php-xml
 # From composer.json, "require-dev": {
 #		"nette/tester": "~2.0",
 #		"tracy/tracy": "^2.3"
@@ -52,15 +53,24 @@ BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.7
 
 # from composer.json, "require": {
 #        "php": ">=5.4.4"
+#        "ext-json": "*",
 #        "ext-tokenizer": "*"
 Requires:       php(language) >= 5.4.4
-Requires:       php-tokenizer
-# from phpcompatinfo report for version 2.4.0
-Requires:       php-date
-Requires:       php-fileinfo
-Requires:       php-iconv
 Requires:       php-json
+Requires:       php-tokenizer
+# from composer.json, "suggest": {
+#               "ext-mbstring": "to use filters like lower, upper, capitalize, ...",
+#               "ext-fileinfo": "to use filter |datastream",
+#               "ext-xml": "to use filters like length, substring, ..."
+Requires:       php-fileinfo
 Requires:       php-mbstring
+Requires:       php-xml
+# from composer.json, "conflict": {
+#               "nette/application": "<2.4"
+Conflicts:      php-composer(%{gh_owner}/application) < 2.4.1
+# from phpcompatinfo report for version 2.4.1
+Requires:       php-date
+Requires:       php-iconv
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
@@ -156,6 +166,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug  4 2016 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
+- update to 2.4.1
+
 * Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
 - update to 2.4.0
 - raise dependency on php >= 5.4.4
