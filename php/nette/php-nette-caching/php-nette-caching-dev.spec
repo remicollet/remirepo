@@ -104,6 +104,10 @@ cp -pr src/* %{buildroot}%{php_home}/%{ns_vendor}/
 %if %{with_tests}
 : Ignore tests which require memcache
 rm tests/Storages/*Memcache*
+# remirepo:3
+%if 0%{?rhel} == 5
+rm tests/Storages/SQLiteStorage.sliding.phpt
+%endif
 
 : Generate configuration
 cat /etc/php.ini /etc/php.d/*ini >php.ini
