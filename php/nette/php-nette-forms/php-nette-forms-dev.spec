@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    22ab1e9794fabe225b980ee4c31f57ee5b7f74e2
+%global gh_commit    57295d16f8e90173465735eb6be49a1e3ce614bd
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.10
+Version:        2.4.1
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Forms: greatly facilitates web forms
@@ -33,36 +33,36 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-composer(theseer/autoload)
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.3.1
-BuildRequires:  php-composer(%{gh_owner}/component-model) >= 2.2
+BuildRequires:  php(language) >= 5.6
+BuildRequires:  php-composer(%{gh_owner}/component-model) >= 2.3
 BuildRequires:  php-composer(%{gh_owner}/http) >= 2.2
-BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.3.10
+BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.4
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
 # From composer.json, "require-dev": {
-#        "nette/di": "~2.3",
-#        "nette/tester": "~1.3"
-#        "latte/latte": "~2.3.2"
-#        "tracy/tracy": "~2.2"
-BuildRequires:  php-composer(%{gh_owner}/di) >= 2.3
-BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.3
-BuildRequires:  php-composer(latte/latte) >= 2.3.2
-BuildRequires:  php-composer(tracy/tracy) >= 2.2
+#        "nette/di": "~2.4",
+#        "nette/tester": "~2.0"
+#        "latte/latte": "~2.4"
+#        "tracy/tracy": "~2.4"
+BuildRequires:  php-composer(%{gh_owner}/di) >= 2.4
+BuildRequires:  php-composer(%{gh_owner}/tester) >= 2.0
+BuildRequires:  php-composer(latte/latte) >= 2.4
+BuildRequires:  php-composer(tracy/tracy) >= 2.4
 %endif
 
 # from composer.json, "require": {
-#        "php": ">=5.3.1"
-#        "nette/component-model": "~2.2.0",
+#        "php": ">=5.6.0"
+#        "nette/component-model": "~2.3",
 #        "nette/http": "~2.2",
-#        "nette/utils": "~2.3.10"
-Requires:       php(language) >= 5.3.1
-Requires:       php-composer(%{gh_owner}/component-model) >= 2.2.0
-Requires:       php-composer(%{gh_owner}/component-model) <  2.3
+#        "nette/utils": "~2.4"
+Requires:       php(language) >= 5.6
+Requires:       php-composer(%{gh_owner}/component-model) >= 2.3
+Requires:       php-composer(%{gh_owner}/component-model) <  3
 Requires:       php-composer(%{gh_owner}/http) >= 2.2
 Requires:       php-composer(%{gh_owner}/http) <  3
-Requires:       php-composer(%{gh_owner}/utils) >= 2.3.10
+Requires:       php-composer(%{gh_owner}/utils) >= 2.4
 Requires:       php-composer(%{gh_owner}/utils) <  3
-# from phpcompatinfo report for version 2.3.6
+# from phpcompatinfo report for version 2.4.1
 Requires:       php-pcre
 Requires:       php-spl
 
@@ -168,6 +168,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug  4 2016 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
+- update to 2.4.1
+- raise dependency on PHP >= 5.6
+- raise dependency on nette/utils >= 2.4
+- raise dependency on nette/component-model >= 2.3
+
 * Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 2.3.10-1
 - update to 2.3.10
 - raise dependency on nette/utils ~2.3.10
