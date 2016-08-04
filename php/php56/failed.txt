@@ -1,17 +1,17 @@
-===== 5.6.24 (2016-07-21)
+===== 5.6.25RC1 (2016-08-04)
 
-$ grep -r 'Tests failed' /var/lib/mock/56*/build.log
+$ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
-/var/lib/mock/el5i/build.log:Tests failed    :     8
-/var/lib/mock/el5x/build.log:Tests failed    :     7
-/var/lib/mock/el6i/build.log:Tests failed    :     6
-/var/lib/mock/el6x/build.log:Tests failed    :     5
-/var/lib/mock/el7x/build.log:Tests failed    :     5
+/var/lib/mock/el5i/build.log:Tests failed    :     7
+/var/lib/mock/el5x/build.log:Tests failed    :     2
+/var/lib/mock/el6i/build.log:Tests failed    :     5
+/var/lib/mock/el6x/build.log:Tests failed    :     0
+/var/lib/mock/el7x/build.log:Tests failed    :     0
 /var/lib/mock/fc21i/build.log:Tests failed    :    2
 /var/lib/mock/fc21x/build.log:Tests failed    :    0
 /var/lib/mock/fc22i/build.log:Tests failed    :    2
 /var/lib/mock/fc22x/build.log:Tests failed    :    0
-/var/lib/mock/fc23i/build.log:Tests failed    :    2
+/var/lib/mock/fc23i/build.log:Tests failed    :    3
 /var/lib/mock/fc23x/build.log:Tests failed    :    0
 /var/lib/mock/fc24i/build.log:Tests failed    :    2
 /var/lib/mock/fc24x/build.log:Tests failed    :    0
@@ -20,13 +20,12 @@ $ grep -r 'Tests failed' /var/lib/mock/56*/build.log
 el5i, el5x
     openssl_x509_parse() basic test for OpenSSL 0.9 [ext/openssl/tests/openssl_x509_parse_basic_v9.phpt]
     sni_server [ext/openssl/tests/sni_server.phpt]
+fc23i
+	openssl_pkey_new() basic usage tests [ext/openssl/tests/openssl_pkey_new_basic.phpt]
 el5i, el6i, fc21i, fc22i, fc23i, fc24i
-    Bug #64146 (serialize incorrectly saving objects when they are cloned) [ext/standard/tests/serialize/bug64146.phpt]
     Bug #53437 DateInterval unserialize bad data, 32 bit [ext/date/tests/bug53437_var3.phpt]
-el5x, el6x, el7x
-    strtotime() function (64 bit) [ext/date/tests/strtotime3-64bit.phpt]
-el5i, el5x, el6i, el6x, el7x
-    Bug #33414 [2] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-2.phpt]
+    Bug #64146 (serialize incorrectly saving objects when they are cloned) [ext/standard/tests/serialize/bug64146.phpt]
+el5i, el6i
     Test date_sunrise() function : usage variation -  Passing high positive and negative float values to time argument. [ext/date/tests/date_sunrise_variation9.phpt]
     Test date_sunset() function : usage variation - Passing high positive and negative float values to time argument. [ext/date/tests/date_sunset_variation9.phpt]
     Test getdate() function : usage variation - Passing high positive and negative float values to timestamp. [ext/date/tests/getdate_variation7.phpt]
