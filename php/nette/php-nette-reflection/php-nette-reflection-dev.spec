@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    6c39adc4661f5f7b64be7ee161b8f67d8174da4d
+%global gh_commit    1922f2502e5d2bf6be51859721855e8e72ebde96
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.2
+Version:        2.4.0
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette PHP Reflection Component
@@ -33,29 +33,31 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-composer(theseer/autoload)
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.3.1
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-tokenizer
 BuildRequires:  php-pcre
 BuildRequires:  php-reflection
 BuildRequires:  php-composer(%{gh_owner}/caching) >= 2.2
-BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.2
+BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.4
 # From composer.json, "require-dev": {
-#        "nette/di": "~2.3",
-#        "nette/tester": "~1.4"
+#               "nette/di": "~2.3",
+#               "nette/tester": "~2.0",
+#               "tracy/tracy": "^2.3"
 BuildRequires:  php-composer(%{gh_owner}/di) >= 2.3
-BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.4
+BuildRequires:  php-composer(%{gh_owner}/tester) >= 2.0
+BuildRequires:  php-composer(tracy/tracy) >= 2.3
 %endif
 
 # from composer.json, "require": {
-#        "php": ">=5.3.1"
+#        "php": ">=5.6.0"
 #        "ext-tokenizer": "*",
 #        "nette/caching": "~2.2",
-#        "nette/utils": "~2.2"
-Requires:       php(language) >= 5.3.1
+#        "nette/utils": "~2.4"
+Requires:       php(language) >= 5.6
 Requires:       php-tokenizer
 Requires:       php-composer(%{gh_owner}/caching) >= 2.2
 Requires:       php-composer(%{gh_owner}/caching) <  3
-Requires:       php-composer(%{gh_owner}/utils) >= 2.2
+Requires:       php-composer(%{gh_owner}/utils) >= 2.4
 Requires:       php-composer(%{gh_owner}/utils) <  3
 # from phpcompatinfo report for version 2.3.1
 Requires:       php-reflection
@@ -113,12 +115,24 @@ require_once '%{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php';
 EOF
 
 : Run test suite in sources tree
-%{_bindir}/nette-tester --colors 0 -p php -c ./php.ini tests -s
-
-if which php70; then
-  cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
-  php70 %{_bindir}/nette-tester --colors 0 -p php70 -c ./php.ini tests -s
+# remirepo:13
+ret=0
+run=0
+if which php56; then
+   cat /opt/remi/php56/root/etc/php.ini /opt/remi/php56/root/etc/php.d/*ini >php.ini
+   php56 %{_bindir}/nette-tester --colors 0 -p php56 -c ./php.ini tests -s || ret=1
+   run=1
 fi
+if which php71; then
+   cat /etc/opt/remi/php71/php.ini /etc/opt/remi/php71/php.d/*ini >php.ini
+   php71 %{_bindir}/nette-tester --colors 0 -p php71 -c ./php.ini tests -s || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/nette-tester --colors 0 -p php -c ./php.ini tests -s
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -139,6 +153,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug  4 2016 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
+- update to 2.4.0
+- raise dependency on PHP >= 5.6
+- raise dependency on nette/utils >= 2.4
+
 * Sat Apr  2 2016 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
 - update to 2.3.2
 - run test suite with both php 5 and 7 when available
