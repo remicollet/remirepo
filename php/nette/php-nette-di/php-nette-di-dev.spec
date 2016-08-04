@@ -39,7 +39,7 @@ BuildRequires:  php-pcre
 BuildRequires:  php-reflection
 BuildRequires:  php-spl
 BuildRequires:  php-composer(%{gh_owner}/neon) >= 2.3.3
-BuildRequires:  php-composer(%{gh_owner}/php-generator) >= 2.3.6
+BuildRequires:  php-composer(%{gh_owner}/php-generator) >= 2.4
 BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.3.5
 # From composer.json, "require-dev": {
 #               "nette/tester": "~2.0",
