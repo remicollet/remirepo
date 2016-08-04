@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    1fc6e52b790864d2973d479a4460a89cec1f51f8
+%global gh_commit    322f41597c935110e3611ca7cdf9b2f855841cda
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.5
+Version:        2.4.1
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Bootstrap
@@ -37,49 +37,49 @@ BuildRequires:  php(language) >= 5.3.1
 BuildRequires:  php-tokenizer
 BuildRequires:  php-pcre
 BuildRequires:  php-reflection
-BuildRequires:  php-composer(%{gh_owner}/di) >= 2.3
-BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.2
+BuildRequires:  php-composer(%{gh_owner}/di) >= 2.4.0
+BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.4
 # From composer.json, "require-dev": {
 #        "nette/application": "~2.3",
 #        "nette/caching": "~2.3",
 #        "nette/database": "~2.3",
 #        "nette/forms": "~2.3",
-#        "nette/http": "~2.3",
+#        "nette/http": "~2.4.0",
 #        "nette/mail": "~2.3",
 #        "nette/robot-loader": "~2.2",
 #        "nette/safe-stream": "~2.2",
 #        "nette/security": "~2.3",
-#        "nette/tester": "~1.3",
+#        "nette/tester": "~2.0",
 #        "latte/latte": "~2.2",
-#        "tracy/tracy": "~2.3"
+#        "tracy/tracy": "~2.4.1"
 # ignore not yet available components
 BuildRequires:  php-composer(%{gh_owner}/application) >= 2.3
 BuildRequires:  php-composer(%{gh_owner}/caching) >= 2.3
 BuildRequires:  php-composer(%{gh_owner}/database) >= 2.3
 BuildRequires:  php-composer(%{gh_owner}/forms) >= 2.3
-BuildRequires:  php-composer(%{gh_owner}/http) >= 2.3
+BuildRequires:  php-composer(%{gh_owner}/http) >= 2.4.0
 BuildRequires:  php-composer(%{gh_owner}/mail) >= 2.3
 BuildRequires:  php-composer(%{gh_owner}/robot-loader) >= 2.2
 BuildRequires:  php-composer(%{gh_owner}/safe-stream) >= 2.2
 BuildRequires:  php-composer(%{gh_owner}/security) >= 2.3
-BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.3
+BuildRequires:  php-composer(%{gh_owner}/tester) >= 2.0
 BuildRequires:  php-composer(latte/latte) >= 2.2
-BuildRequires:  php-composer(tracy/tracy) >= 2.3
-BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.3
+BuildRequires:  php-composer(tracy/tracy) >= 2.4.1
 %endif
 
 # from composer.json, "require": {
-#        "php": ">=5.3.1"
-#        "nette/di": "~2.3.0",
-#        "nette/utils": "~2.2"
+#        "php": ">=5.6.0"
+#        "nette/di": "~2.4.0",
+#        "nette/utils": "~2.4"
 Requires:       php(language) >= 5.3.1
 Requires:       php-tokenizer
-Requires:       php-composer(%{gh_owner}/di) >= 2.3
-Requires:       php-composer(%{gh_owner}/di) <  2.4
-Requires:       php-composer(%{gh_owner}/utils) >= 2.2
+Requires:       php-composer(%{gh_owner}/di) >= 2.4.0
+Requires:       php-composer(%{gh_owner}/di) <  2.5
+Requires:       php-composer(%{gh_owner}/utils) >= 2.4
 Requires:       php-composer(%{gh_owner}/utils) <  3
-# from phpcompatinfo report for version 2.3.3
+# from phpcompatinfo report for version 2.4.1
 Requires:       php-reflection
+Requires:       php-date
 Requires:       php-pcre
 %if 0%{?fedora} > 21
 Suggests:       php-pecl(memcache)
@@ -145,13 +145,26 @@ require_once '%{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php';
 EOF
 
 : Run test suite in sources tree
-nette-tester --colors 0 -p php -c ./php.ini tests -s
-
-# remirepo:4
-if which php70; then
-  cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
-  php70 %{_bindir}/nette-tester --colors 0 -p php70 -c ./php.ini tests -s
+# remirepo:15
+run=0
+ret=0
+if which php56; then
+   cat /opt/remi/php56/root/etc/php.ini /opt/remi/php56/root/etc/php.d/*ini >php.ini
+   echo 'session.save_path = "/tmp"' >>php.ini
+   php56 %{_bindir}/nette-tester --colors 0 -p php56 -c ./php.ini tests -s
+   run=1
 fi
+if which php70; then
+   cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
+   echo 'session.save_path = "/tmp"' >>php.ini
+   php70 %{_bindir}/nette-tester --colors 0 -p php70 -c ./php.ini tests -s
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/nette-tester --colors 0 -p php -c ./php.ini tests -s
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -172,6 +185,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug  4 2016 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
+- update to 2.4.1
+- raise dependency on PHP >= 5.6
+- raise dependency on nette/utils >= 2.4
+- raise dependency on nette/di >= 2.4
+
 * Mon Jun 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.5-1
 - update to 2.3.5
 
