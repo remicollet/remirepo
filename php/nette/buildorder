@@ -18,9 +18,9 @@ For framework version				   2.3.10	2.4.0
 1277409** php-nette-caching            2.3.5   	2.5.1	(di, tester, latte, tracy ; finder, utils)
 1277415** php-nette-http               2.3.7   	2.4.0	(di, tester, tracy ; utils)
 1277413** php-nette-reflection         2.3.2   	2.4.0	(di, tester, tracy ; caching, utils)
-1277418** php-nette-security           2.3.2   	2.4.0	(di, http, tester, tracy, utils)
+1277418** php-nette-security           2.3.2   	2.4.0	(di, http, tester, tracy ; utils)
+1277437** php-nette-robot-loader       2.3.2   	2.4.0	(tester, tracy ; caching, finder, utils)
 
-1277437** php-nette-robot-loader       2.3.2   	2.4.0	(caching, finder, utils ; tester)
 1277474** php-nette-database           2.3.8   	2.4.0	(caching, utils ; tester, di)
 1277465** php-nette-forms              2.3.8   	2.4.1	(component-model, http, utils ; di, tester, latte, tracy)
 1277434** php-nette-mail               2.3.4   	2.4.1	(utils ; di, tester)
