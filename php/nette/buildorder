@@ -23,8 +23,8 @@ For framework version				   2.3.10	2.4.0
 1277474** php-nette-database           2.3.8   	2.4.0	(tester, di, tracy ; caching, utils)
 1277465** php-nette-forms              2.3.8   	2.4.1	(di, tester, latte, tracy ; component-model, http, utils)
 1277434** php-nette-mail               2.3.4   	2.4.1	(di, tester, tracy ; utils)
+1277470** php-nette-application        2.3.13  	2.4.1	(tester, di, forms, robot-loader, security, latte, tracy ; component-model, http, reflection, utils)
 
-1277470** php-nette-application        2.3.13  	2.4.1	(component-model, http, reflection, security, utils ; tester, di, forms, robot-loader, latte)
 1277476** php-nette-bootstrap          2.3.5   	2.4.1	(di, utils ; application, caching, database, forms, http, mail, robot-loader, safe-stream, security, tester, latte, tracy)
 1277478** php-nette-deprecated         2.3.2   	2.4.0	(; application, bootstrap, caching, forms, mail, robot-loader, safe-stream, utils, latte, tracy, tester)
 1277484** php-nette                    2.3.10  	2.4.0	(everything)
