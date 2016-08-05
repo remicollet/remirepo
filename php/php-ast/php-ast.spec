@@ -7,14 +7,12 @@
 # Please, preserve the changelog entries
 #
 %{?scl:          %scl_package         php-ast}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__php:       %global __php        %{_bindir}/php}
 
-%global gh_commit   3b9abc7b6012d760de99e10edc99c9742dafd11a
+%global gh_commit   b8f5805b17c43c664dda62d1f401a7d3379be9f3
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    nikic
 %global gh_project  php-ast
-#global gh_date     20151021
+%global gh_date     20160608
 %global pecl_name   ast
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 # After 20-tokenizer.ini
@@ -22,9 +20,9 @@
 
 Summary:       Abstract Syntax Tree
 Name:          %{?scl_prefix}php-ast
-Version:       0.1.1
+Version:       0.1.2
 %if 0%{?gh_date:1}
-Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -45,6 +43,10 @@ Requires:      %{?scl_prefix}php-tokenizer%{?_isa}
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 Obsoletes:     php70u-%{pecl_name} <= %{version}
 Obsoletes:     php70w-%{pecl_name} <= %{version}
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-%{pecl_name} <= %{version}
+Obsoletes:     php71w-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -70,9 +72,6 @@ cd NTS
 
 # When this file is removed, fix description
 [ -f EXPERIMENTAL ] || exit 1
-
-# Fix
-sed -e '/PHP_AST_VERSION/s/0.1.0/0.1.0-dev/' -i php_ast.h
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_AST_VERSION/{s/.* "//;s/".*$//;p}' php_ast.h)
@@ -166,7 +165,7 @@ rm -rf %{buildroot}
 %license NTS/LICENSE
 %doc NTS/EXPERIMENTAL
 %doc NTS/README.md
-%doc NTS/generate_ast_data.php
+%doc NTS/scripts
 %doc NTS/util.php
 
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -179,6 +178,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jun 10 2016 Remi Collet <remi@fedoraproject.org> - 0.1.2-0.1.20160608gitb8f5805
+- update to 0.1.2-dev for PHP 7.1
+
 * Thu Jan  7 2016 Remi Collet <remi@fedoraproject.org> - 0.1.1-1
 - update to 0.1.1
 
