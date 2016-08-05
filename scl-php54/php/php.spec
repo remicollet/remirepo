@@ -119,7 +119,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.4.45
-Release: 11%{?dist}
+Release: 11%{?dist}.1
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -236,6 +236,7 @@ Patch252: bug72606.patch
 Patch253: bug72613.patch
 Patch254: bug72618.patch
 Patch255: bug72519.patch
+Patch256: bug72735.patch
 
 # Fixes for tests (300+)
 # Backported from 5.5
@@ -929,8 +930,9 @@ support for using the enchant library to PHP.
 %patch253 -p1 -b .bug72613
 %patch254 -p1 -b .bug72618
 %patch255 -p1 -b .bug72519
+%patch256 -p1 -b .bug72735
 : ------------------------
-# exit 1
+#exit 1
 
 # Fixes for tests
 %patch300 -p1 -b .datetests1
@@ -1759,6 +1761,9 @@ EOF
 
 
 %changelog
+* Fri Aug  5 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-11.1
+- fix #72735 regression in exif maker note parser
+
 * Fri Jul 22 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-11
 - Fix #70480: php_url_parse_ex() buffer overflow read
   CVE-2016-6288

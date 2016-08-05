@@ -140,7 +140,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.5.38
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -192,6 +192,7 @@ Patch47: php-5.4.9-phpinfo.patch
 Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
+Patch100: bug72735.patch
 
 # Security fixes (200+)
 
@@ -882,6 +883,7 @@ support for using the enchant library to PHP.
 # upstream patches
 
 # security patches
+%patch100 -p1 -b .bug72735
 
 # Fixes for tests
 %patch300 -p1 -b .datetests
@@ -1776,6 +1778,9 @@ fi
 
 
 %changelog
+* Fri Aug  5 2016 Remi Collet <remi@fedoraproject.org> 5.5.38-1.1
+- fix #72735 regression in exif maker note parser
+
 * Wed Jul 20 2016 Remi Collet <remi@fedoraproject.org> 5.5.38-1
 - Update to 5.5.38 - http://www.php.net/releases/5_5_38.php
 
