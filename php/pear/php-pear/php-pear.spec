@@ -37,7 +37,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.10.1
-Release: 5%{?dist}
+Release: 6%{?dist}
 Epoch: 1
 # PEAR, PEAR_Manpages, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -47,7 +47,7 @@ URL: http://pear.php.net/package/PEAR
 Source0: http://download.pear.php.net/package/PEAR-%{version}%{?pearprever}.tgz
 # wget https://raw.githubusercontent.com/pear/pear-core/stable/install-pear.php
 Source1: install-pear.php
-Source3: strip.php
+Source3: cleanup.php
 Source10: pear.sh
 Source11: pecl.sh
 Source12: peardev.sh
@@ -66,7 +66,7 @@ BuildRequires: %{?scl_prefix}php-cli
 BuildRequires: %{?scl_prefix}php-xml
 BuildRequires: gnupg
 # For pecl_xmldir macro
-BuildRequires: php-devel
+BuildRequires: %{?scl_prefix}php-devel
 %if %{with_tests}
 BuildRequires:  %{_bindir}/phpunit
 %endif
@@ -225,9 +225,9 @@ for exe in pear pecl peardev; do
 done
 
 # Sanitize the pear.conf
-%{_bindir}/php %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf ext_dir >new-pear.conf
-%{_bindir}/php %{SOURCE3} new-pear.conf http_proxy > $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf
+%{_bindir}/php %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/pear.conf %{_datadir}
 
+# Display configuration for debug
 %{_bindir}/php -r "print_r(unserialize(substr(file_get_contents('$RPM_BUILD_ROOT%{_sysconfdir}/pear.conf'),17)));"
 
 
@@ -320,11 +320,7 @@ done
 %endif
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-rm new-pear.conf
-
-
+%if 0%{?fedora} < 25
 %pre
 # Manage relocation of metadata, before update to pear
 if [ -d %{peardir}/.registry -a ! -d %{metadir}/.registry ]; then
@@ -371,11 +367,17 @@ if [ "$current" != "%{_datadir}/tests/pecl" ]; then
     test_dir %{_datadir}/tests/pecl \
     system >/dev/null || :
 fi
+%endif
+
 
 %postun
 if [ $1 -eq 0 -a -d %{metadir}/.registry ] ; then
   rm -rf %{metadir}/.registry
 fi
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 
 %files
@@ -420,6 +422,10 @@ fi
 
 
 %changelog
+* Fri Aug  5 2016 Remi Collet <remi@fedoraproject.org> 1:1.10.1-6
+- improve default config, to avoid change in scriptlet
+- remove unneeded scriplets for Fedora 25
+
 * Thu Jun 30 2016 Remi Collet <remi@fedoraproject.org> 1:1.10.1-5
 - don't own test/doc directories for pecl packages (f24)
 - fix obsoletes
