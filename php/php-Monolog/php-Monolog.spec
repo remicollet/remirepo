@@ -12,8 +12,8 @@
 
 %global github_owner     Seldaek
 %global github_name      monolog
-%global github_version   1.20.0
-%global github_commit    55841909e2bcde01b5318c35f2b74f8ecc86e037
+%global github_version   1.21.0
+%global github_commit    f42fbdfd53e306bda545845e4dbfd3e72edb4952
 
 %global composer_vendor  monolog
 %global composer_project monolog
@@ -42,7 +42,7 @@
 
 Name:      php-Monolog
 Version:   %{github_version}
-Release:   1.1%{?dist}
+Release:   1%{?dist}
 Summary:   Sends your logs to files, sockets, inboxes, databases and various web services
 
 Group:     Development/Libraries
@@ -221,12 +221,12 @@ sed 's/function testThrowsOnInvalidEncoding/function SKIP_testThrowsOnInvalidEnc
 
 ret=0
 run=0
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php || ret=1
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
    run=1
 fi
 if which php56; then
-   php56 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php || ret=1
+   php56 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -254,6 +254,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Aug  5 2016 Remi Collet <remi@remirepo.net> - 1.21.0-1
+- update to 1.21.0
+
 * Tue Jul  5 2016 Remi Collet <remi@remirepo.net> - 1.20.0-1.1
 - sync with Fedora, re-add dependency on raven
   (sentry is only a rename)
