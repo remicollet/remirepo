@@ -1,10 +1,6 @@
-Extension [ <persistent> extension #56 ast version 0.1.1 ] {
+Extension [ <persistent> extension #75 ast version 0.1.2 ] {
 
-  - Constants [180] {
-    Constant [ integer ast\AST_FUNC_DECL ] { 66 }
-    Constant [ integer ast\AST_CLOSURE ] { 67 }
-    Constant [ integer ast\AST_METHOD ] { 68 }
-    Constant [ integer ast\AST_CLASS ] { 69 }
+  - Constants [187] {
     Constant [ integer ast\AST_ARG_LIST ] { 128 }
     Constant [ integer ast\AST_LIST ] { 129 }
     Constant [ integer ast\AST_ARRAY ] { 130 }
@@ -22,6 +18,13 @@ Extension [ <persistent> extension #56 ast version 0.1.1 ] {
     Constant [ integer ast\AST_NAME_LIST ] { 142 }
     Constant [ integer ast\AST_TRAIT_ADAPTATIONS ] { 143 }
     Constant [ integer ast\AST_USE ] { 144 }
+    Constant [ integer ast\AST_NAME ] { 2048 }
+    Constant [ integer ast\AST_CLOSURE_VAR ] { 2049 }
+    Constant [ integer ast\AST_NULLABLE_TYPE ] { 2050 }
+    Constant [ integer ast\AST_FUNC_DECL ] { 66 }
+    Constant [ integer ast\AST_CLOSURE ] { 67 }
+    Constant [ integer ast\AST_METHOD ] { 68 }
+    Constant [ integer ast\AST_CLASS ] { 69 }
     Constant [ integer ast\AST_MAGIC_CONST ] { 0 }
     Constant [ integer ast\AST_TYPE ] { 1 }
     Constant [ integer ast\AST_VAR ] { 256 }
@@ -80,6 +83,7 @@ Extension [ <persistent> extension #56 ast version 0.1.1 ] {
     Constant [ integer ast\AST_SWITCH ] { 534 }
     Constant [ integer ast\AST_SWITCH_CASE ] { 535 }
     Constant [ integer ast\AST_DECLARE ] { 536 }
+    Constant [ integer ast\AST_PROP_ELEM ] { 774 }
     Constant [ integer ast\AST_CONST_ELEM ] { 537 }
     Constant [ integer ast\AST_USE_TRAIT ] { 538 }
     Constant [ integer ast\AST_TRAIT_PRECEDENCE ] { 539 }
@@ -94,11 +98,8 @@ Extension [ <persistent> extension #56 ast version 0.1.1 ] {
     Constant [ integer ast\AST_TRY ] { 771 }
     Constant [ integer ast\AST_CATCH ] { 772 }
     Constant [ integer ast\AST_PARAM ] { 773 }
-    Constant [ integer ast\AST_PROP_ELEM ] { 774 }
     Constant [ integer ast\AST_FOR ] { 1024 }
     Constant [ integer ast\AST_FOREACH ] { 1025 }
-    Constant [ integer ast\AST_NAME ] { 2048 }
-    Constant [ integer ast\AST_CLOSURE_VAR ] { 2049 }
     Constant [ integer ast\flags\NAME_FQ ] { 0 }
     Constant [ integer ast\flags\NAME_NOT_FQ ] { 1 }
     Constant [ integer ast\flags\NAME_RELATIVE ] { 2 }
@@ -124,6 +125,8 @@ Extension [ <persistent> extension #56 ast version 0.1.1 ] {
     Constant [ integer ast\flags\TYPE_ARRAY ] { 7 }
     Constant [ integer ast\flags\TYPE_OBJECT ] { 8 }
     Constant [ integer ast\flags\TYPE_CALLABLE ] { 14 }
+    Constant [ integer ast\flags\TYPE_VOID ] { 18 }
+    Constant [ integer ast\flags\TYPE_ITERABLE ] { 19 }
     Constant [ integer ast\flags\UNARY_BOOL_NOT ] { 13 }
     Constant [ integer ast\flags\UNARY_BITWISE_NOT ] { 12 }
     Constant [ integer ast\flags\UNARY_SILENCE ] { 260 }
@@ -153,6 +156,7 @@ Extension [ <persistent> extension #56 ast version 0.1.1 ] {
     Constant [ integer ast\flags\BINARY_IS_GREATER ] { 256 }
     Constant [ integer ast\flags\BINARY_IS_GREATER_OR_EQUAL ] { 257 }
     Constant [ integer ast\flags\BINARY_SPACESHIP ] { 170 }
+    Constant [ integer ast\flags\BINARY_COALESCE ] { 260 }
     Constant [ integer ast\flags\ASSIGN_BITWISE_OR ] { 31 }
     Constant [ integer ast\flags\ASSIGN_BITWISE_AND ] { 32 }
     Constant [ integer ast\flags\ASSIGN_BITWISE_XOR ] { 33 }
@@ -181,6 +185,9 @@ Extension [ <persistent> extension #56 ast version 0.1.1 ] {
     Constant [ integer ast\flags\MAGIC_METHOD ] { 375 }
     Constant [ integer ast\flags\MAGIC_CLASS ] { 373 }
     Constant [ integer ast\flags\MAGIC_TRAIT ] { 374 }
+    Constant [ integer ast\flags\ARRAY_SYNTAX_LIST ] { 1 }
+    Constant [ integer ast\flags\ARRAY_SYNTAX_LONG ] { 2 }
+    Constant [ integer ast\flags\ARRAY_SYNTAX_SHORT ] { 3 }
   }
 
   - Functions {
