@@ -18,7 +18,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.4.0
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        APIs and features removed from Nette Framework
 
@@ -101,8 +101,6 @@ cp -pr src/* %{buildroot}%{php_home}/%{ns_vendor}/
 
 %check
 %if %{with_tests}
-: Generate configuration
-cat /etc/php.ini /etc/php.d/*ini >php.ini
 export LANG=fr_FR.utf8
 
 : Generate autoloader
@@ -117,6 +115,7 @@ require_once '%{php_home}/%{ns_vendor}/Forms/autoload.php';
 require_once '%{php_home}/%{ns_vendor}/Mail/autoload.php';
 require_once '%{php_home}/%{ns_vendor}/RobotLoader/autoload.php';
 require_once '%{php_home}/%{ns_vendor}/SafeStream/autoload.php';
+require_once '%{php_home}/%{ns_vendor}/Security/autoload.php';
 require_once '%{php_home}/%{ns_vendor}/Utils/autoload.php';
 require_once '%{php_home}/Latte/autoload.php';
 require_once '%{php_home}/Tracy/autoload.php';
@@ -127,23 +126,19 @@ EOF
 php -r 'require "vendor/autoload.php";'
 
 : Run test suite in sources tree
-# remirepo:15
+# remirepo:11
 run=0
 ret=0
 if which php56; then
-   cat /opt/remi/php56/root/etc/php.ini /opt/remi/php56/root/etc/php.d/*ini >php.ini
-   echo 'session.save_path = "/tmp"' >>php.ini
-   php56 %{_bindir}/nette-tester --colors 0 -p php56 -c ./php.ini tests -s
+   php56 %{_bindir}/nette-tester --colors 0 -p php56 -C tests -s
    run=1
 fi
 if which php70; then
-   cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
-   echo 'session.save_path = "/tmp"' >>php.ini
-   php70 %{_bindir}/nette-tester --colors 0 -p php70 -c ./php.ini tests -s
+   php70 %{_bindir}/nette-tester --colors 0 -p php70 -C tests -s
    run=1
 fi
 if [ $run -eq 0 ]; then
-%{_bindir}/nette-tester --colors 0 -p php -c ./php.ini tests -s
+%{_bindir}/nette-tester --colors 0 -p php -C tests -s
 # remirepo:2
 fi
 exit $ret
@@ -166,6 +161,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Aug  5 2016 Remi Collet <remi@fedoraproject.org> - 2.4.0-2
+- fix test suite autoloader
+
 * Thu Aug  4 2016 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
 - update to 2.4.0
 - add dependency on nette/security >= 2.2

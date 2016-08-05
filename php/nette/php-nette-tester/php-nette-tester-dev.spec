@@ -97,6 +97,7 @@ install -Dpm 755 nette-tester %{buildroot}%{_bindir}/nette-tester
 %check
 %if %{with_tests}
 : Generate configuration
+# NOTICE: -C seems to doesn't work for tester itself
 cat /etc/php.ini /etc/php.d/*ini >php.ini
 export LANG=fr_FR.utf8
 

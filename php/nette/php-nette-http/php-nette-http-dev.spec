@@ -22,6 +22,8 @@ Version:        2.4.0
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette HTTP Component
 
+Patch0:         %{name}-upstream.patch
+
 Group:          Development/Libraries
 License:        BSD or GPLv2 or GPLv3
 URL:            https://github.com/%{gh_owner}/%{gh_project}
@@ -83,6 +85,8 @@ To use this library, you just have to add, in your project:
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+%patch0 -p1
+
 
 %build
 : Generate a classmap autoloader
@@ -107,8 +111,6 @@ cp -pr src/* %{buildroot}%{php_home}/%{ns_vendor}/
 rm tests/Http/Session.start.error.phpt
 %endif
 
-: Generate configuration
-cat /etc/php.ini /etc/php.d/*ini >php.ini
 export LANG=fr_FR.utf8
 
 : Generate autoloader
@@ -121,12 +123,22 @@ require_once '%{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php';
 EOF
 
 : Run test suite in sources tree
-%{_bindir}/nette-tester --colors 0 -p php -c ./php.ini tests -s
-
-if which php70; then
-  cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
-  php70 %{_bindir}/nette-tester --colors 0 -p php70 -c ./php.ini tests -s
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/nette-tester --colors 0 -p php56 -C tests -s
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/nette-tester --colors 0 -p php71 -C tests -s
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/nette-tester --colors 0 -p php -C tests -s
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif

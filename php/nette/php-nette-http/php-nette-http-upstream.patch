@@ -1,0 +1,20 @@
+From 3fb64f5ae5d1e161cb8ab12de1fb9958cea8a50b Mon Sep 17 00:00:00 2001
+From: David Grudl <david@grudl.com>
+Date: Thu, 14 Jul 2016 16:56:39 +0200
+Subject: [PATCH] travis: added PHP 7.1
+
+---
+ .travis.yml                         | 4 ++++
+ tests/Http/Session.start.error.phpt | 2 +-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/tests/Http/Session.start.error.phpt b/tests/Http/Session.start.error.phpt
+index 9bf7e87..ebd213f 100644
+--- a/tests/Http/Session.start.error.phpt
++++ b/tests/Http/Session.start.error.phpt
+@@ -20,4 +20,4 @@ $session = new Session(new Nette\Http\Request(new Nette\Http\UrlScript), new Net
+ 
+ Assert::exception(function () use ($session) {
+ 	$session->start();
+-}, Nette\InvalidStateException::class, '%a?%open(%A%) failed: %a%');
++}, Nette\InvalidStateException::class);

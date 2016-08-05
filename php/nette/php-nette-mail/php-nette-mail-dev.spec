@@ -94,8 +94,6 @@ cp -pr src/* %{buildroot}%{php_home}/%{ns_vendor}/
 
 %check
 %if %{with_tests}
-: Generate configuration
-cat /etc/php.ini /etc/php.d/*ini >php.ini
 export LANG=fr_FR.utf8
 
 : Generate autoloader
@@ -108,23 +106,19 @@ require_once '%{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php';
 EOF
 
 : Run test suite in sources tree
-# remirepo:15
+# remirepo:11
 run=0
 ret=0
 if which php56; then
-   cat /opt/remi/php56/root/etc/php.ini /opt/remi/php56/root/etc/php.d/*ini >php.ini
-   echo 'session.save_path = "/tmp"' >>php.ini
-   php56 %{_bindir}/nette-tester --colors 0 -p php56 -c ./php.ini tests -s
+   php56 %{_bindir}/nette-tester --colors 0 -p php56 -C tests -s
    run=1
 fi
-if which php70; then
-   cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
-   echo 'session.save_path = "/tmp"' >>php.ini
-   php70 %{_bindir}/nette-tester --colors 0 -p php70 -c ./php.ini tests -s
+if which php71; then
+   php71 %{_bindir}/nette-tester --colors 0 -p php71 -C tests -s
    run=1
 fi
 if [ $run -eq 0 ]; then
-%{_bindir}/nette-tester --colors 0 -p php -c ./php.ini tests -s
+%{_bindir}/nette-tester --colors 0 -p php -C tests -s
 # remirepo:2
 fi
 exit $ret
