@@ -12,8 +12,8 @@
 
 %global github_owner     php-fig
 %global github_name      cache
-%global github_version   1.0.0
-%global github_commit    9e66031f41fbbdda45ee11e93c45d480ccba3eb3
+%global github_version   1.0.1
+%global github_commit    d11b50ad223250cf17b86e38383413f5a6764bf8
 
 %global composer_vendor  psr
 %global composer_project cache
@@ -35,6 +35,9 @@ Source0:   %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_co
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
+# For tests
+BuildRequires: php-cli
+BuildRequires: php-composer(symfony/class-loader)
 
 # composer.json
 Requires:  php(language) >= %{php_min_ver}
@@ -45,6 +48,7 @@ Requires:  php-composer(symfony/class-loader)
 
 # Composer
 Provides:  php-composer(%{composer_vendor}/%{composer_project}) = %{version}
+
 
 %description
 This package holds all interfaces defined by PSR-6 [1].
@@ -97,7 +101,11 @@ cp -rp src/* %{buildroot}%{phpdir}/Psr/Cache/
 
 
 %check
-: No tests provided upstream
+: Test autoloader
+php -r '
+require "%{buildroot}%{phpdir}/Psr/Cache/autoload.php";
+exit (interface_exists("Psr\\Cache\\CacheItemInterface") ? 0 : 1);
+'
 
 
 %clean
@@ -115,7 +123,11 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Mon Jan 04 2016 Remi Collet <remi@remirepo.net> - 1.0.0-1
+* Sun Aug  7 2016 Remi Collet <remi@remirepo.net> - 1.0.1-1
+- update to 1.0.1 (only comments)
+- add check for autoloader
+
+* Mon Jan  4 2016 Remi Collet <remi@remirepo.net> - 1.0.0-1
 - backport for #remirepo
 
 * Sun Jan 03 2016 Shawn Iwinski <shawn@iwin.ski> - 1.0.0-1
