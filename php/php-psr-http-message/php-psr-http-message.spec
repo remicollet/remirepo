@@ -2,7 +2,7 @@
 #
 # RPM spec file for php-psr-http-message
 #
-# Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2014-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,8 +12,8 @@
 
 %global github_owner     php-fig
 %global github_name      http-message
-%global github_version   1.0
-%global github_commit    85d63699f0dbedb190bbd4b0d2b9dc707ea4c298
+%global github_version   1.0.1
+%global github_commit    f6561bf28d520154e4b0ec72be95418abe6d9363
 
 %global composer_vendor  psr
 %global composer_project http-message
@@ -34,6 +34,8 @@ BuildArch:     noarch
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 # Autoload generation
 BuildRequires: %{_bindir}/phpab
+# For tests
+BuildRequires: php-cli
 
 # phpcompatinfo (computed from version 1.0)
 Requires:      php(language) >= 5.3.0
@@ -46,6 +48,8 @@ This package holds all interfaces/classes/traits related to PSR-7 [1].
 
 Note that this is not a HTTP message implementation of its own. It is merely an
 interface that describes a HTTP message. See the specification for more details.
+
+Autoloader: %{phpdir}/Psr/Http/Message/autoload.php
 
 [1] http://www.php-fig.org/psr/psr-7/
 
@@ -66,7 +70,11 @@ cp -rp src/* %{buildroot}%{phpdir}/Psr/Http/Message/
 
 
 %check
-# No tests provided by upstream
+: Test autoloader
+php -r '
+require "%{buildroot}%{phpdir}/Psr/Http/Message/autoload.php";
+exit (interface_exists("Psr\\Http\\Message\\UriInterface") ? 0 : 1);
+'
 
 
 %clean
@@ -77,7 +85,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc README.md
+%doc *.md
 %doc composer.json
 %dir %{phpdir}/Psr
 %dir %{phpdir}/Psr/Http
@@ -85,6 +93,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Aug  7 2016 Remi Collet <remi@remirepo.net> - 1.0.1-1
+- update to 1.0.1 (only comments)
+- add check for autoloader
+
 * Sat May 30 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0-1
 - Updated to 1.0 (BZ #1218459)
 - Added autoloader
