@@ -8,10 +8,13 @@
 #
 # Please preserve changelog entries
 #
-%{?scl:%scl_package php-pear}
-%{!?scl:%global pkg_name %{name}}
-%{!?scl:%global _root_sysconfdir %{_sysconfdir}}
-%{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
+%if 0%{?scl:1}
+%scl_package             php-pear
+%else
+%global pkg_name         %{name}
+%global _root_sysconfdir %{_sysconfdir}
+%global _root_bindir     %{_bindir}
+%endif
 
 %global peardir %{_datadir}/pear
 %global metadir %{_localstatedir}/lib/pear
@@ -99,6 +102,8 @@ Obsoletes: php56u-pear <= %{epoch}:%{version}
 Obsoletes: php56w-pear <= %{epoch}:%{version}
 Obsoletes: php70u-pear <= %{epoch}:%{version}
 Obsoletes: php70w-pear <= %{epoch}:%{version}
+Obsoletes: php71u-pear <= %{epoch}:%{version}
+Obsoletes: php71w-pear <= %{epoch}:%{version}
 %endif
 
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}}
