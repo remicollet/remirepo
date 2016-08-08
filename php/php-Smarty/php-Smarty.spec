@@ -8,14 +8,14 @@
 # Please preserve changelog entries
 #
 
-%global gh_commit    35480f10e7ce9b0fdaf23d3799d7b79463919b1e
+%global gh_commit    ed2b7f1146cfda13df1eea8a5f707a1b771b6e7e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     smarty-php
 %global gh_project   smarty
 
 Name:           php-Smarty
 Summary:        Template/Presentation Framework for PHP
-Version:        3.1.29
+Version:        3.1.30
 Release:        1%{?dist}
 
 URL:            http://www.smarty.net
@@ -30,7 +30,7 @@ BuildRequires:  php-cli
 
 # From composer.json
 Requires:       php(language) >= 5.2.0
-# From phpcompatinfo report for 3.1.28
+# From phpcompatinfo report for 3.1.30
 Requires:       php-ctype
 Requires:       php-date
 Requires:       php-mbstring
@@ -99,6 +99,9 @@ version_compare(Smarty::SMARTY_VERSION, "%{version}", "=") or exit(1);
 
 
 %changelog
+* Mon Aug  8 2016 Remi Collet <remi@remirepo.net> - 3.1.30-1
+- update to 3.1.30
+
 * Sat Dec 26 2015 Remi Collet <remi@fedoraproject.org> - 3.1.29-1
 - update to 3.1.29
 

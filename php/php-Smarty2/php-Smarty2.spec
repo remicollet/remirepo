@@ -93,11 +93,12 @@ rm -rf $RPM_BUILD_ROOT
 %license COPYING.lib
 %doc BUGS ChangeLog demo FAQ NEWS QUICK_START README
 %doc RELEASE_NOTES TODO
+%doc composer.json
 %{_datadir}/php/Smarty2
 
 
 %changelog
-* Sun Dec 22 2013 Remi Collet <remi@remirepo.net> - 2.6.30-1
+* Mon Aug  8 2016 Remi Collet <remi@remirepo.net> - 2.6.30-1
 - update to 2.6.30
 - sources from github
 - add autoloader
