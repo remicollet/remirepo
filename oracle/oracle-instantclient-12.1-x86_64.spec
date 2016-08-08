@@ -190,6 +190,7 @@ install -p wrc 		%{buildroot}%{oradir}/bin
 ln -sf %{oradir}/bin/wrc %{buildroot}%{_bindir}/wrc
 
 # Precomp
+# NOTICE: don't install rtsora - broken dep on  libcobcrtn64.so
 install -p -m 755 sdk/{proc,procob}	%{buildroot}%{oradir}/bin
 install -p -m 755 cobsqlintf.o		%{buildroot}%{oradir}/lib
 install -p -m 644 precomp/admin/*	%{buildroot}%{oradir}/precomp/admin
