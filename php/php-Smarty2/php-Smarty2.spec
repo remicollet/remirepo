@@ -1,17 +1,41 @@
+# remirepo spec file for php-Smarty2 from:
+#
+# Fedora spec file for php-Smarty2
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
+%global gh_commit    c5c9d6514ceaf15fe35345886668726829560f93
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     smarty-php
+%global gh_project   smarty
+
 Name:           php-Smarty2
 Summary:        Template/Presentation Framework for PHP
-Version:        2.6.28
+Version:        2.6.30
 Release:        1%{?dist}
 
-Source0:        http://www.smarty.net/files/Smarty-%{version}.tar.gz
 URL:            http://www.smarty.net
 License:        LGPLv2+
 Group:          Development/Libraries
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  %{_bindir}/phpab
+# For tests
+BuildRequires:  php-cli
 
-Requires:       php-date, php-mbstring, php-pcre, php-spl
+# From composer.json
+Requires:       php(language) >= 5.2
+# From phpcompatinfo report for 2.6.30
+Requires:       php-date
+Requires:       php-pcre
+
+Provides:       php-composer(smarty/smarty) = %{version}
 
 
 %description
@@ -24,11 +48,17 @@ Although it can be used for such a simple purpose, its focus is on quick and
 painless development and deployment of your application, while maintaining
 high-performance, scalability, security and future growth.
 
+Autoloader: %{_datadir}/php/Smarty2/autoload.php
+
 
 %prep
-%setup -qn Smarty-%{version}
+%setup -qn %{gh_project}-%{gh_commit}
 iconv -f iso8859-1 -t utf-8 NEWS > NEWS.conv && mv -f NEWS.conv NEWS
 iconv -f iso8859-1 -t utf-8 ChangeLog > ChangeLog.conv && mv -f ChangeLog.conv ChangeLog
+
+%{_bindir}/phpab \
+   --output libs/autoload.php \
+   libs/Smarty.class.php  libs/Smarty_Compiler.class.php libs/Config_File.class.php
 
 
 %build
@@ -43,18 +73,37 @@ install -d $RPM_BUILD_ROOT%{_datadir}/php/Smarty2
 cp -a libs/* $RPM_BUILD_ROOT%{_datadir}/php/Smarty2/
 
 
+%check
+: Test autoloader and version
+php -r '
+require "%{buildroot}%{_datadir}/php/Smarty2/autoload.php";
+$s = new Smarty();
+printf("Smarty version \"%s\"\n", $s->_version);
+version_compare($s->_version, "%{version}", "=") or exit(1);
+'
+
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 
 %files
 %defattr(-,root,root,-)
-%doc BUGS ChangeLog COPYING.lib demo FAQ NEWS QUICK_START README
+%{!?_licensedir:%global license %%doc}
+%license COPYING.lib
+%doc BUGS ChangeLog demo FAQ NEWS QUICK_START README
 %doc RELEASE_NOTES TODO
 %{_datadir}/php/Smarty2
 
 
 %changelog
+* Sun Dec 22 2013 Remi Collet <remi@remirepo.net> - 2.6.30-1
+- update to 2.6.30
+- sources from github
+- add autoloader
+- add minimal check for autoloader and version
+- fix license installation
+
 * Sun Dec 22 2013 Remi Collet <RPMS@FamilleCollet.com> - 2.6.28-1
 - update to 2.6.28
 
