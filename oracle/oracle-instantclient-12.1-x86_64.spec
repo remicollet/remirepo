@@ -190,13 +190,12 @@ install -p wrc 		%{buildroot}%{oradir}/bin
 ln -sf %{oradir}/bin/wrc %{buildroot}%{_bindir}/wrc
 
 # Precomp
-install -p -m 755 sdk/{proc,procob,rtsora}	%{buildroot}%{oradir}/bin
+install -p -m 755 sdk/{proc,procob}	%{buildroot}%{oradir}/bin
 install -p -m 755 cobsqlintf.o		%{buildroot}%{oradir}/lib
 install -p -m 644 precomp/admin/*	%{buildroot}%{oradir}/precomp/admin
 
 ln -s %{oradir}/bin/proc %{buildroot}%{_bindir}/proc
 ln -s %{oradir}/bin/procob %{buildroot}%{_bindir}/procob
-ln -s %{oradir}/bin/rtsora %{buildroot}%{_bindir}/rtsora
 
 # Precomp-Devel
 install -p -m 644 sdk/include/*.h     %{buildroot}%{incdir}
@@ -291,13 +290,14 @@ rm -rf %{buildroot}
 %{oradir}/lib/cobsqlintf.o
 %{oradir}/bin/proc
 %{oradir}/bin/procob
-%{oradir}/bin/rtsora
 %{_bindir}/proc
 %{_bindir}/procob
-%{_bindir}/rtsora
 
 
 %changelog
+* Mon Aug  8 2016 Pierre Duperray <pierreduperray@free.fr> - 12.1.0.2.0-1
+- unfortunately due to not yet packaged tuxedo dependancy, remove rtsora from precomp package
+
 * Fri Jul 26 2013 Remi Collet <RPMS@famillecollet.com> 12.1.0.1.0-1
 - update to 12.1.0.1.0
 
