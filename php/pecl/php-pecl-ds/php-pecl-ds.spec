@@ -29,9 +29,9 @@
 
 Summary:        Data Structures for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.1.2
+Version:        1.1.3
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
-License:        BSD
+License:        MIT
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
@@ -211,8 +211,8 @@ cd ..
 
 
 %files
-%{?_licensedir:%license NTS/LICENSE.md}
-%doc %{pecl_docdir}/%{pecl_name}
+%{?_licensedir:%license NTS/LICENSE}
+%{!?_licensedir:%doc %{pecl_docdir}/%{pecl_name}}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -225,6 +225,10 @@ cd ..
 
 
 %changelog
+* Mon Aug 08 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
+- Update to 1.1.3
+- Fix License tag
+
 * Fri Aug 05 2016 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - Update to 1.1.2 (stable)
 
