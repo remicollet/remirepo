@@ -21,7 +21,6 @@
 # in MongoDB 3.2, and support is being removed in 3.4.
 %global with_tests   0%{?_with_tests:1}
 %endif
-%global with_tests   0
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
@@ -89,6 +88,12 @@ rm -r src/libbson
 sed -e 's/libbson-1.0 >= \$MONGOC_RELEASED_VERSION/libbson-1.0 >= %{bsonver}/' \
     -i configure
 
+# Temporary for https://jira.mongodb.org/browse/CDRIVER-1457
+sed -e '/mongoc_client_pool_set_appname/d' \
+    -e '/mongoc_client_set_appname/d' \
+    -e '/mongoc_metadata_append/d' \
+    -i src/libmongoc.symbols
+
 
 %build
 export LIBS=-lpthread
@@ -99,7 +104,6 @@ export LIBS=-lpthread
   --enable-shm-counters \
   --disable-automatic-init-and-cleanup \
   --enable-system-crypto-profile \
-  --enable-experimental-features \
 %if %{with_tests}
   --enable-tests \
 %else
@@ -172,7 +176,7 @@ exit $ret
 * Mon Aug  8 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-0.1.beta1
 - update to 1.4.0-beta1
 - build with --enable-system-crypto-profile option
-- build with --enable-experimental-features option
+- open https://jira.mongodb.org/browse/CDRIVER-1457 (symbols)
 
 * Mon May 16 2016 Remi Collet <remi@fedoraproject.org> - 1.3.5-2
 - add patch to enforce system crypto policies
