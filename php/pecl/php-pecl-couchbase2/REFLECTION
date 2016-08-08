@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #133 couchbase version 2.2.0 ] {
+Extension [ <persistent> extension #135 couchbase version 2.2.1 ] {
 
   - Dependencies {
     Dependency [ json (Required) ]
