@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    7b920b4ec34b5ee58f76eb4e8c408b083121953c
+%global gh_commit    98b1cac0bc7a91497c5898184281abcd0e24c8d6
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-http
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.4
+Version:        2.5.5
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -130,11 +130,22 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
-
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+# remirepo:11
+ret=0
+run=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -154,6 +165,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug  8 2016 Remi Collet <remi@fedoraproject.org> - 2.5.5-1
+- version 2.5.5
+
 * Fri Feb  5 2016 Remi Collet <remi@fedoraproject.org> - 2.5.4-1
 - version 2.5.4
 
