@@ -10,6 +10,8 @@
 %global gh_project   mongo-c-driver
 %global libname      libmongoc
 %global libver       1.0
+%global prever       beta1
+%global bsonver      1.4
 
 %ifarch x86_64
 %global with_tests   0%{!?_without_tests:1}
@@ -19,24 +21,20 @@
 # in MongoDB 3.2, and support is being removed in 3.4.
 %global with_tests   0%{?_with_tests:1}
 %endif
+%global with_tests   0
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.3.5
-Release:   2%{?dist}
+Version:   1.4.0
+Release:   0.1.%{prever}%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
 
-# Enforce system crypto policies
-# https://fedoraproject.org/wiki/Packaging:CryptoPolicies
-# https://jira.mongodb.org/browse/CDRIVER-1231
-Patch0:    %{name}-crypto.patch
-
 BuildRequires: pkgconfig(openssl)
-BuildRequires: pkgconfig(libbson-1.0)
+BuildRequires: pkgconfig(libbson-1.0) > %{bsonver}
 %if 0%{?fedora} > 21 || 0%{?rhel} > 6
 BuildRequires: pkgconfig(libsasl2)
 %else
@@ -85,12 +83,10 @@ Documentation: http://api.mongodb.org/c/%{version}/
 %prep
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
 
-%patch0 -p1 -b .cryptopolicy
-
 rm -r src/libbson
 
 # Ignore check for libbson version = libmongoc version
-sed -e 's/libbson-1.0 >= $MONGOC_RELEASED_VERSION/libbson-1.0 >= 1.3/' \
+sed -e 's/libbson-1.0 >= \$MONGOC_RELEASED_VERSION/libbson-1.0 >= %{bsonver}/' \
     -i configure
 
 
@@ -102,6 +98,8 @@ export LIBS=-lpthread
   --enable-debug-symbols\
   --enable-shm-counters \
   --disable-automatic-init-and-cleanup \
+  --enable-system-crypto-profile \
+  --enable-experimental-features \
 %if %{with_tests}
   --enable-tests \
 %else
@@ -121,11 +119,6 @@ make install DESTDIR=%{buildroot}
 
 rm    %{buildroot}%{_libdir}/*la
 rm -r %{buildroot}%{_datadir}/doc/
-# drop "generic" man pages, avoid conflicts
-# https://jira.mongodb.org/browse/CDRIVER-1039
-rm    %{buildroot}/%{_mandir}/man3/[a-l]*
-rm    %{buildroot}/%{_mandir}/man3/ma*
-rm    %{buildroot}/%{_mandir}/man3/[t-u]*
 
 
 %check
@@ -166,18 +159,21 @@ exit $ret
 %{!?_licensedir:%global license %%doc}
 %license COPYING
 %{_libdir}/%{libname}-%{libver}.so.*
-%{_libdir}/%{libname}-priv.so.*
 
 %files devel
 %doc NEWS README*
 %{_includedir}/%{libname}-%{libver}
 %{_libdir}/%{libname}-%{libver}.so
-%{_libdir}/%{libname}-priv.so
 %{_libdir}/pkgconfig/%{libname}-*.pc
 %{_mandir}/man3/mongoc*
 
 
 %changelog
+* Mon Aug  8 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-0.1.beta1
+- update to 1.4.0-beta1
+- build with --enable-system-crypto-profile option
+- build with --enable-experimental-features option
+
 * Mon May 16 2016 Remi Collet <remi@fedoraproject.org> - 1.3.5-2
 - add patch to enforce system crypto policies
 
