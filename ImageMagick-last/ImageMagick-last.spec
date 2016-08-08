@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        6.9.5
-%global Patchlevel 4
+%global Patchlevel 5
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -66,6 +66,7 @@ Url:            http://www.imagemagick.org/
 Source0:        ftp://ftp.ImageMagick.org/pub/ImageMagick/ImageMagick-%{VER}-%{Patchlevel}.tar.xz
 
 Patch0:         ImageMagick-6.9.2-7-multiarch-implicit-pkgconfig-dir.patch
+Patch1:         ImageMagick-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  bzip2-devel, freetype-devel, libjpeg-devel, libpng-devel
@@ -276,6 +277,7 @@ however.
 %setup -q -n %{libname}-%{VER}-%{Patchlevel}
 
 %patch0 -p1 -b .multiarch-implicit-pkgconfig-dir
+%patch1 -p1
 
 # for %%doc
 mkdir Magick++/examples
@@ -507,6 +509,11 @@ fi
 
 
 %changelog
+* Mon Aug  8 2016 Remi Collet <remi@remirepo.net> - 6.9.5.5-1
+- update to version 6.9.5 patchlevel 5
+- add upstream patch for
+  https://github.com/ImageMagick/ImageMagick/issues/245
+
 * Sat Jul 30 2016 Remi Collet <remi@remirepo.net> - 6.9.5.4-1
 - update to version 6.9.5 patchlevel 4
 
