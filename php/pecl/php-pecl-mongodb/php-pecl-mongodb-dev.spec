@@ -25,9 +25,7 @@
 # After 40-smbclient.ini, see https://jira.mongodb.org/browse/PHPC-658
 %global ini_name   50-%{pecl_name}.ini
 %endif
-#global prever     RC0
-# Still needed because of some private API
-%global buildver %(pkg-config --silence-errors --modversion libmongoc-priv 2>/dev/null || echo 65536)
+%global prever     alpha1
 
 %ifarch x86_64
 %global with_tests   0%{?_with_tests:1}
@@ -40,8 +38,8 @@
 
 Summary:        MongoDB driver for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.1.8
-Release:        4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.2.0
+Release:        0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        ASL 2.0
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -54,17 +52,14 @@ BuildRequires:  %{?scl_prefix}php-devel > 5.4
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  cyrus-sasl-devel
 BuildRequires:  openssl-devel
-BuildRequires:  pkgconfig(libbson-1.0)    >= 1.3.0
-BuildRequires:  pkgconfig(libmongoc-1.0)  >= 1.3.0
-BuildRequires:  pkgconfig(libmongoc-priv) >= 1.3.0
-BuildRequires:  pkgconfig(libmongoc-priv) <  1.4
+BuildRequires:  pkgconfig(libbson-1.0)    >= 1.4
+BuildRequires:  pkgconfig(libmongoc-1.0)  >= 1.4
 %if %{with_tests}
 BuildRequires:  mongodb-server
 %endif
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
-Requires:       mongo-c-driver%{?_isa} >= %{buildver}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 # Don't provide php-mongodb which is the pure PHP library
@@ -317,6 +312,10 @@ exit $ret
 
 
 %changelog
+* Mon Aug  8 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-0.1.alpha1
+- update to 1.2.0alpha1
+- open https://jira.mongodb.org/browse/PHPC-762 missing symbols
+
 * Tue Jul 19 2016 Remi Collet <remi@fedoraproject.org> - 1.1.8-4
 - License is ASL 2.0, from review #1269056
 
