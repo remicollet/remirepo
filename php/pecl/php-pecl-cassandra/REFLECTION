@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #76 cassandra version 1.2.1 ] {
+Extension [ <persistent> extension #77 cassandra version 1.2.2 ] {
 
   - Dependencies {
     Dependency [ spl (Required) ]
@@ -3139,7 +3139,7 @@ Extension [ <persistent> extension #76 cassandra version 1.2.1 ] {
         Constant [ string TYPE_VARINT ] { varint }
         Constant [ string TYPE_TIMEUUID ] { timeuuid }
         Constant [ string TYPE_INET ] { inet }
-        Constant [ string VERSION ] { 1.2.1 }
+        Constant [ string VERSION ] { 1.2.2 }
         Constant [ string CPP_DRIVER_VERSION ] { 2.4.2 }
       }
 

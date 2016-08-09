@@ -35,7 +35,7 @@
 
 Summary:      DataStax PHP Driver for Apache Cassandra
 Name:         %{?sub_prefix}php-pecl-%{pecl_name}
-Version:      1.2.1
+Version:      1.2.2
 Release:      1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      ASL 2.0
 Group:        Development/Languages
@@ -48,7 +48,6 @@ Source0:      https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/
 Source:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 
-BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: %{?scl_prefix}php-devel >= 5.5
 BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: cassandra-cpp-driver-devel
@@ -164,8 +163,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
@@ -183,10 +180,6 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
-
-
-%clean
-rm -rf %{buildroot}
 
 
 %if 0%{?fedora} < 24
@@ -244,7 +237,6 @@ REPORT_EXIT_STATUS=1 \
 
 
 %files
-%defattr(-, root, root, -)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -259,6 +251,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Tue Aug 09 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
+- Update to 1.2.2 (stable)
+
 * Thu Jul 28 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - Update to 1.2.1 (no change)
 
