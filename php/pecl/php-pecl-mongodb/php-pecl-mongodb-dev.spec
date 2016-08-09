@@ -231,6 +231,7 @@ fi
 ret=0
 
 %global mongo_version  %(mongod --version | sed -n '/db version/{s/.*v//;p}' 2>/dev/null)
+#global mongo_version 4
 
 : Run a mongodb server version %{mongo_version}
 mkdir dbtest
@@ -245,7 +246,7 @@ mongod \
 
 if [ -s server.pid ] ; then
   : Drop known to fail tests
-%if 1
+%if "%{mongo_version}" < "3.4"
     ### With mongodb 3.2
     rm ?TS/tests/manager/manager-debug-001.phpt
     rm ?TS/tests/manager/manager-debug-003.phpt
