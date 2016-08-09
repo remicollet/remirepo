@@ -13,8 +13,8 @@
 %global github_owner     consolidation-org
 %global github_name      annotated-command
 
-%global github_version   1.0.1
-%global github_commit    ed279df30b9386fd8e523003dc679421a87c52e0
+%global github_version   1.2.1
+%global github_commit    296b4f507b1e184a28c9969bc7ae779f689db5ee
 
 %global composer_vendor  consolidation
 %global composer_project annotated-command
@@ -29,9 +29,9 @@
 #     NOTE: Min version not 1.0 because autoloader required
 %global psr_log_min_ver 1.0.0-8
 %global psr_log_max_ver 2.0
-# "phpdocumentor/reflection-docblock": "~2"
+# "phpdocumentor/reflection-docblock": "^2.0|^3.0.2"
 %global phpdocumentor_reflection_docblock_min_ver 2
-%global phpdocumentor_reflection_docblock_max_ver 3
+%global phpdocumentor_reflection_docblock_max_ver 4
 # "symfony/console": "~2.5|~3.0"
 # "symfony/finder": "~2.5|~3.0"
 #     NOTE: Min version not 2.5 because autoloader required
@@ -71,7 +71,7 @@ BuildRequires: php-composer(symfony/console)                   <  %{symfony_max_
 BuildRequires: php-composer(symfony/console)                   >= %{symfony_min_ver}
 BuildRequires: php-composer(symfony/finder)                    <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/finder)                    >= %{symfony_min_ver}
-## phpcompatinfo (computed from version 1.0.1)
+## phpcompatinfo (computed from version 1.2.1)
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 ## Autoloader
@@ -89,7 +89,7 @@ Requires:      php-composer(symfony/console)                   <  %{symfony_max_
 Requires:      php-composer(symfony/console)                   >= %{symfony_min_ver}
 Requires:      php-composer(symfony/finder)                    <  %{symfony_max_ver}
 Requires:      php-composer(symfony/finder)                    >= %{symfony_min_ver}
-# phpcompatinfo (computed from version 1.0.1)
+# phpcompatinfo (computed from version 1.2.1)
 Requires:      php-pcre
 Requires:      php-reflection
 # Autoloader
@@ -197,6 +197,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug 08 2016 Shawn Iwinski <shawn@iwin.ski> - 1.2.1-1
+- Updated to 1.2.1 (RHBZ #1359450)
+
 * Thu Jul 21 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - backport for remi repository
 
