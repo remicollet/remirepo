@@ -64,7 +64,7 @@ BuildRequires: php-composer(psr/log)                 <  %{psrlog_max_ver}
 BuildRequires: php-composer(swiftmailer/swiftmailer) >= %{swift_min_ver}
 BuildRequires: php-composer(raven/raven)             >= %{raven_min_ver}
 BuildRequires: php-composer(aws/aws-sdk-php)         >= %{aws_min_ver}
-## phpcompatinfo (computed from version 1.20.0)
+## phpcompatinfo (computed from version 1.21.0)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -86,7 +86,7 @@ Requires:      php(language)         >= %{php_min_ver}
 #Requires:      php-composer(psr/log) >= %%{psrlog_min_ver}
 Requires:      php-PsrLog            >= %{psrlog_min_ver}
 Requires:      php-composer(psr/log) <  %{psrlog_max_ver}
-# phpcompatinfo (computed from version 1.20.0)
+# phpcompatinfo (computed from version 1.21.0)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-filter
@@ -122,7 +122,6 @@ Provides:      %{name}-raven  = %{version}-%{release}
 %if 0%{?fedora} >= 21
 Suggests:      php-composer(aws/aws-sdk-php)
 Suggests:      php-composer(raven/raven)
-Suggests:      php-composer(sentry/sentry)
 Suggests:      php-composer(swiftmailer/swiftmailer)
 Suggests:      php-pecl(amqp)
 Suggests:      php-pecl(mongo)
@@ -254,6 +253,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug 08 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.21.0-1
+- Updated to 1.21.0 (RHBZ #1362318)
+
 * Fri Aug  5 2016 Remi Collet <remi@remirepo.net> - 1.21.0-1
 - update to 1.21.0
 
