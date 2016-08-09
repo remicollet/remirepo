@@ -238,6 +238,7 @@ rm -rf %{buildroot}
 %{oradir}/lib/libclntsh.so
 %{oradir}/lib/libocci.so
 %{oradir}/lib/ottclasses.zip
+%dir %{incdir}
 %{incdir}/ldap.h
 %{incdir}/nzerror.h
 %{incdir}/nzt.h
@@ -318,14 +319,14 @@ rm -rf %{buildroot}
 %{oradir}/bin/procob
 %{_bindir}/proc
 %{_bindir}/procob
-%{incdir}/sqlkpr.h  
+%{incdir}/oraca.h  
+%{incdir}/sql2oci.h  
+%{incdir}/sqlapr.h
 %{incdir}/sqlca.h  
 %{incdir}/sqlcpr.h  
-%{incdir}/sql2oci.h  
 %{incdir}/sqlda.h  
+%{incdir}/sqlkpr.h  
 %{incdir}/sqlucs2.h  
-%{incdir}/oraca.h  
-%{incdir}/sqlapr.h
 
 
 %changelog
