@@ -1,0 +1,1924 @@
+Extension [ <persistent> extension #139 mongodb version 1.2.0alpha1 ] {
+
+  - INI {
+    Entry [ mongodb.debug <ALL> ]
+      Current = ''
+    }
+  }
+
+  - Constants [3] {
+    Constant [ string MONGODB_VERSION ] { 1.2.0alpha1 }
+    Constant [ string MONGODB_STABILITY ] { alpha }
+    Constant [ string BSON_NAMESPACE ] { MongoDB\BSON }
+  }
+
+  - Functions {
+    Function [ <internal:mongodb> function MongoDB\BSON\fromPHP ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $value ]
+      }
+    }
+    Function [ <internal:mongodb> function MongoDB\BSON\toPHP ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $bson ]
+      }
+    }
+    Function [ <internal:mongodb> function MongoDB\BSON\toJSON ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $bson ]
+      }
+    }
+    Function [ <internal:mongodb> function MongoDB\BSON\fromJSON ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $json ]
+      }
+    }
+  }
+
+  - Classes [37] {
+    Class [ <internal:mongodb> final class MongoDB\Driver\Command ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $document ]
+          }
+        }
+
+        Method [ <internal:mongodb> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> <iterateable> final class MongoDB\Driver\Cursor implements Traversable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [7] {
+        Method [ <internal:mongodb, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method setTypeMap ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $typemap ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method toArray ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getId ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getServer ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method isDead ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\Driver\CursorId ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [3] {
+        Method [ <internal:mongodb, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\Driver\Manager ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [10] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $uri ]
+            Parameter #1 [ <optional> array $options ]
+            Parameter #2 [ <optional> array $driverOptions ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method executeCommand ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $db ]
+            Parameter #1 [ <required> MongoDB\Driver\Command $command ]
+            Parameter #2 [ <optional> MongoDB\Driver\ReadPreference or NULL $readPreference ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method executeQuery ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $namespace ]
+            Parameter #1 [ <required> MongoDB\Driver\Query $zquery ]
+            Parameter #2 [ <optional> MongoDB\Driver\ReadPreference or NULL $readPreference ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method executeBulkWrite ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $namespace ]
+            Parameter #1 [ <required> MongoDB\Driver\BulkWrite $zbulk ]
+            Parameter #2 [ <optional> MongoDB\Driver\WriteConcern or NULL $writeConcern ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getReadConcern ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getReadPreference ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getServers ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getWriteConcern ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method selectServer ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> MongoDB\Driver\ReadPreference or NULL $readPreference ]
+          }
+        }
+
+        Method [ <internal:mongodb> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\Driver\Query ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $filter ]
+            Parameter #1 [ <optional> array $options ]
+          }
+        }
+
+        Method [ <internal:mongodb> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\Driver\ReadConcern ] {
+
+      - Constants [2] {
+        Constant [ string LOCAL ] { local }
+        Constant [ string MAJORITY ] { majority }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [3] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $level ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getLevel ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\Driver\ReadPreference ] {
+
+      - Constants [5] {
+        Constant [ integer RP_PRIMARY ] { 1 }
+        Constant [ integer RP_PRIMARY_PREFERRED ] { 5 }
+        Constant [ integer RP_SECONDARY ] { 2 }
+        Constant [ integer RP_SECONDARY_PREFERRED ] { 6 }
+        Constant [ integer RP_NEAREST ] { 10 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $mode ]
+            Parameter #1 [ <optional> array or NULL $tagSets ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getMode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getTagSets ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\Driver\Server ] {
+
+      - Constants [9] {
+        Constant [ integer TYPE_UNKNOWN ] { 0 }
+        Constant [ integer TYPE_STANDALONE ] { 1 }
+        Constant [ integer TYPE_MONGOS ] { 2 }
+        Constant [ integer TYPE_POSSIBLE_PRIMARY ] { 3 }
+        Constant [ integer TYPE_RS_PRIMARY ] { 4 }
+        Constant [ integer TYPE_RS_SECONDARY ] { 5 }
+        Constant [ integer TYPE_RS_ARBITER ] { 6 }
+        Constant [ integer TYPE_RS_OTHER ] { 7 }
+        Constant [ integer TYPE_RS_GHOST ] { 8 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [16] {
+        Method [ <internal:mongodb, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method executeCommand ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $db ]
+            Parameter #1 [ <required> MongoDB\Driver\Command $command ]
+            Parameter #2 [ <optional> MongoDB\Driver\ReadPreference or NULL $readPreference ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method executeQuery ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $namespace ]
+            Parameter #1 [ <required> MongoDB\Driver\Query $zquery ]
+            Parameter #2 [ <optional> MongoDB\Driver\ReadPreference or NULL $readPreference ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method executeBulkWrite ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $namespace ]
+            Parameter #1 [ <required> MongoDB\Driver\BulkWrite $zbulk ]
+            Parameter #2 [ <optional> MongoDB\Driver\WriteConcern or NULL $writeConcern ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getHost ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getTags ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getInfo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getLatency ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getPort ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method isPrimary ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method isSecondary ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method isArbiter ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method isHidden ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method isPassive ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\Driver\BulkWrite implements Countable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> array or NULL $options ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method insert ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $document ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method update ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $query ]
+            Parameter #1 [ <required> $newObj ]
+            Parameter #2 [ <optional> array or NULL $updateOptions ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method delete ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $query ]
+            Parameter #1 [ <optional> array or NULL $deleteOptions ]
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Countable> final public method count ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\Driver\WriteConcern ] {
+
+      - Constants [1] {
+        Constant [ string MAJORITY ] { majority }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $w ]
+            Parameter #1 [ <optional> $wtimeout ]
+            Parameter #2 [ <optional> $journal ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getW ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getWtimeout ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getJournal ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\Driver\WriteConcernError ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:mongodb, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getCode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getInfo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getMessage ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\Driver\WriteError ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:mongodb, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getCode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getIndex ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getMessage ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getInfo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\Driver\WriteResult ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [12] {
+        Method [ <internal:mongodb, ctor> final private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getInsertedCount ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getMatchedCount ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getModifiedCount ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getDeletedCount ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getUpsertedCount ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getServer ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getUpsertedIds ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getWriteConcernError ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getWriteErrors ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method isAcknowledged ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Interface [ <internal:mongodb> interface MongoDB\Driver\Exception\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\LogicException extends LogicException implements Throwable, MongoDB\Driver\Exception\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\RuntimeException extends RuntimeException implements Throwable, MongoDB\Driver\Exception\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\UnexpectedValueException extends UnexpectedValueException implements Throwable, MongoDB\Driver\Exception\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\InvalidArgumentException extends InvalidArgumentException implements Throwable, MongoDB\Driver\Exception\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\ConnectionException extends MongoDB\Driver\Exception\RuntimeException implements MongoDB\Driver\Exception\Exception, Throwable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\AuthenticationException extends MongoDB\Driver\Exception\ConnectionException implements Throwable, MongoDB\Driver\Exception\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\Driver\Exception\SSLConnectionException extends MongoDB\Driver\Exception\ConnectionException implements Throwable, MongoDB\Driver\Exception\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> abstract class MongoDB\Driver\Exception\WriteException extends MongoDB\Driver\Exception\RuntimeException implements MongoDB\Driver\Exception\Exception, Throwable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [5] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+        Property [ <default> protected $writeResult ]
+      }
+
+      - Methods [11] {
+        Method [ <internal:mongodb> final public method getWriteResult ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> class MongoDB\Driver\Exception\BulkWriteException extends MongoDB\Driver\Exception\WriteException implements Throwable, MongoDB\Driver\Exception\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [5] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+        Property [ <default> protected $writeResult ]
+      }
+
+      - Methods [11] {
+        Method [ <internal:mongodb, inherits MongoDB\Driver\Exception\WriteException> final public method getWriteResult ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\Driver\Exception\ExecutionTimeoutException extends MongoDB\Driver\Exception\RuntimeException implements MongoDB\Driver\Exception\Exception, Throwable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\Driver\Exception\ConnectionTimeoutException extends MongoDB\Driver\Exception\ConnectionException implements Throwable, MongoDB\Driver\Exception\Exception ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        }
+      }
+    }
+
+    Interface [ <internal:mongodb> interface MongoDB\BSON\Type ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Interface [ <internal:mongodb> interface MongoDB\BSON\Serializable extends MongoDB\BSON\Type ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:mongodb> abstract public method bsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Interface [ <internal:mongodb> interface MongoDB\BSON\Unserializable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:mongodb> abstract public method bsonUnserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $data ]
+          }
+        }
+      }
+    }
+
+    Interface [ <internal:mongodb> interface MongoDB\BSON\Persistable extends MongoDB\BSON\Unserializable, MongoDB\BSON\Serializable, MongoDB\BSON\Type ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:mongodb, inherits MongoDB\BSON\Unserializable> abstract public method bsonUnserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $data ]
+          }
+        }
+
+        Method [ <internal:mongodb, inherits MongoDB\BSON\Serializable> abstract public method bsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\Binary implements MongoDB\BSON\Type ] {
+
+      - Constants [7] {
+        Constant [ integer TYPE_GENERIC ] { 0 }
+        Constant [ integer TYPE_FUNCTION ] { 1 }
+        Constant [ integer TYPE_OLD_BINARY ] { 2 }
+        Constant [ integer TYPE_OLD_UUID ] { 3 }
+        Constant [ integer TYPE_UUID ] { 4 }
+        Constant [ integer TYPE_MD5 ] { 5 }
+        Constant [ integer TYPE_USER_DEFINED ] { 128 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:mongodb> static public method __set_state ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $properties ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $data ]
+            Parameter #1 [ <required> $type ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getData ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getType ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\Javascript implements MongoDB\BSON\Type ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:mongodb> static public method __set_state ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $properties ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $javascript ]
+            Parameter #1 [ <optional> $scope ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getCode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getScope ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\MaxKey implements MongoDB\BSON\Type ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:mongodb> static public method __set_state ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $properties ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:mongodb> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\MinKey implements MongoDB\BSON\Type ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:mongodb> static public method __set_state ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $properties ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:mongodb> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\ObjectID implements MongoDB\BSON\Type ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:mongodb> static public method __set_state ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $properties ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [3] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $id ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\Regex implements MongoDB\BSON\Type ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:mongodb> static public method __set_state ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $properties ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $pattern ]
+            Parameter #1 [ <required> $flags ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getPattern ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getFlags ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\Timestamp implements MongoDB\BSON\Type ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:mongodb> static public method __set_state ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $properties ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [3] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $increment ]
+            Parameter #1 [ <required> $timestamp ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\UTCDateTime implements MongoDB\BSON\Type ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:mongodb> static public method __set_state ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $properties ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $milliseconds ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> public method __wakeup ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method toDateTime ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+  }
+}
+
