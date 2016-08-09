@@ -21,6 +21,7 @@
 # in MongoDB 3.2, and support is being removed in 3.4.
 %global with_tests   0%{?_with_tests:1}
 %endif
+%global with_tests   0
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
@@ -31,6 +32,9 @@ Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
+
+# https://github.com/mongodb/mongo-c-driver/pull/385
+Patch0:    %{name}-api.patch
 
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libbson-1.0) > %{bsonver}
@@ -81,6 +85,7 @@ Documentation: http://api.mongodb.org/c/%{version}/
 
 %prep
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
+%patch0 -p1 -b .api
 
 rm -r src/libbson
 
@@ -148,7 +153,7 @@ make check || ret=1
 
 exit $ret
 %else
-: check disabled, missing '--with tests' option
+make -C tests abicheck
 %endif
 
 
