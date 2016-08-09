@@ -12,25 +12,25 @@
 
 %global github_owner     minkphp
 %global github_name      MinkBrowserKitDriver
-%global github_version   1.3.0
-%global github_commit    da47df1593dac132f04d24e7277ef40d33d9f201
+%global github_version   1.3.2
+%global github_commit    10e67fb4a295efcd62ea0bf16025a85ea19534fb
 
 %global composer_vendor  behat
 %global composer_project mink-browserkit-driver
 
 # "php": ">=5.3.6"
 %global php_min_ver 5.3.6
-# "behat/mink": "~1.7@dev"
-%global mink_min_ver 1.7
+# "behat/mink": "^1.7.1@dev"
+%global mink_min_ver 1.7.1
 %global mink_max_ver 2.0
 # "silex/silex": "~1.2"
 %global silex_min_ver 1.2
 %global silex_max_ver 2.0
-# "symfony/browser-kit": "~2.3"
-# "symfony/dom-crawler": "~2.3"
+# "symfony/browser-kit": "~2.3|~3.0"
+# "symfony/dom-crawler": "~2.3|~3.0"
 #     NOTE: Min version not 2.3 because autoloader required
 %global symfony_min_ver 2.7.1
-%global symfony_max_ver 3.0
+%global symfony_max_ver 4.0
 
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
@@ -60,7 +60,7 @@ BuildRequires: php-composer(behat/mink)          >= %{mink_min_ver}
 BuildRequires: php-composer(silex/silex)         >= %{silex_min_ver}
 BuildRequires: php-composer(symfony/browser-kit) >= %{symfony_min_ver}
 BuildRequires: php-composer(symfony/dom-crawler) >= %{symfony_min_ver}
-## phpcompatinfo (computed from version 1.3.0)
+## phpcompatinfo (computed from version 1.3.2)
 BuildRequires: php-json
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -76,7 +76,7 @@ Requires:      php-composer(symfony/browser-kit) >= %{symfony_min_ver}
 Requires:      php-composer(symfony/browser-kit) <  %{symfony_max_ver}
 Requires:      php-composer(symfony/dom-crawler) >= %{symfony_min_ver}
 Requires:      php-composer(symfony/dom-crawler) <  %{symfony_max_ver}
-# phpcompatinfo (computed from version 1.3.0)
+# phpcompatinfo (computed from version 1.3.2)
 Requires:      php-pcre
 Requires:      php-reflection
 
@@ -96,6 +96,8 @@ Autoloader: %{phpdir}/Behat/Mink/Driver/autoload-browserkit.php
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+
+%build
 : Create library autoloader
 cat <<'AUTOLOAD' | tee src/autoload-browserkit.php
 <?php
@@ -128,10 +130,6 @@ return $fedoraClassLoader;
 AUTOLOAD
 
 
-%build
-# Empty build section, nothing to build
-
-
 %install
 rm -rf %{buildroot}
 
@@ -161,11 +159,20 @@ require_once __DIR__ . '/vendor/behat/mink/driver-testsuite/bootstrap.php';
 BOOTSTRAP
 
 : Run tests
-%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
-
-if which php70; then
-  php70 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -186,6 +193,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 09 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.2-1
+- Updated to 1.3.2 (RHBZ #1300118)
+
 * Thu Dec  3 2015 Remi Collet <remi@remirepo.net> - 1.3.0-1
 - backport for remi repository
 - run test suite with both php 5 and 7 when available
