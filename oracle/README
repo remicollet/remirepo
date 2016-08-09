@@ -8,3 +8,18 @@ RPM can't be published but are used to build php-oci8, tora, ...
 Download .zip files from:
 http://www.oracle.com/technology/software/tech/oci/instantclient/index.html
 
+
+One spec file per version / architecture, as upstream sometime release them
+at different time, and content may also differ.
+
+
+Differences with upstream packages:
+
+- installation under /usr/lib64 instead of /usr/lib (x86_64)
+- linker configuration to find the libraries
+- some documentation (demo) in /usr/share/doc
+- no version in package name, as parallel installation
+  is not supported, so does not make sense
+- auto provides/requires enabled
+- rtsora not packaged (missing dependency on libcobcrtn64.so)
+
