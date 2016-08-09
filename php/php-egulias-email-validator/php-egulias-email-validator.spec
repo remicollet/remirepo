@@ -12,15 +12,15 @@
 
 %global github_owner     egulias
 %global github_name      EmailValidator
-%global github_version   1.2.11
-%global github_commit    04c6cdf9871140b80947c87db7770c0dd9c75c7c
+%global github_version   1.2.13
+%global github_commit    b8bb147f46cc9790326ce2440a13be06cc5a63bb
 
 %global composer_vendor  egulias
 %global composer_project email-validator
 
 # "php": ">= 5.3.3"
 %global php_min_ver 5.3.3
-# "doctrine/lexer": "~1.0,>=1.0.1"
+# "doctrine/lexer": "^1.0.1"
 #     NOTE: Min version not 1.0.1 because autoloader required
 %global doctrine_lexer_min_ver 1.0.1-4
 %global doctrine_lexer_max_ver 2.0
@@ -50,7 +50,7 @@ BuildRequires: php(language)                >= %{php_min_ver}
 #BuildRequires: php-composer(doctrine/lexer) >= %%{doctrine_lexer_min_ver}
 BuildRequires: php-doctrine-lexer           >= %{doctrine_lexer_min_ver}
 BuildRequires: php-composer(doctrine/lexer) <  %{doctrine_lexer_max_ver}
-## phpcompatinfo (computed from version 1.2.11)
+## phpcompatinfo (computed from version 1.2.13)
 BuildRequires: php-filter
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -64,7 +64,7 @@ Requires:      php(language)                >= %{php_min_ver}
 #Requires:      php-composer(doctrine/lexer) >= %%{doctrine_lexer_min_ver}
 Requires:      php-doctrine-lexer           >= %{doctrine_lexer_min_ver}
 Requires:      php-composer(doctrine/lexer) <  %{doctrine_lexer_max_ver}
-# phpcompatinfo (computed from version 1.2.11)
+# phpcompatinfo (computed from version 1.2.13)
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
@@ -131,13 +131,21 @@ sed -e 's/function testValidEmailsWithWarningsCheck/function SKIP_testValidEmail
     -i tests/egulias/Tests/EmailValidator/EmailValidatorTest.php
 
 : Run tests
-%{_bindir}/phpunit --verbose \
-    --bootstrap %{buildroot}%{phpdir}/Egulias/EmailValidator/autoload.php
-
-if which php70; then
-  php70 %{_bindir}/phpunit --verbose \
+ret=0
+run=0
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Egulias/EmailValidator/autoload.php || ret=1
+   run=1
+fi
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Egulias/EmailValidator/autoload.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+  %{_bindir}/phpunit --verbose \
     --bootstrap %{buildroot}%{phpdir}/Egulias/EmailValidator/autoload.php
 fi
+exit $ret;
 %else
 : Tests skipped
 %endif
@@ -158,6 +166,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Aug 08 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.13-1
+- Updated to 1.2.13 (RHBZ #1336594)
+
 * Mon Jan 04 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.11-1
 - Updated to 1.2.10 (RHBZ #1280283)
 
