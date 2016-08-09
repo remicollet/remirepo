@@ -14,7 +14,7 @@
 Summary: 	Instant Client for Oracle Database 11g
 Name: 		oracle-instantclient-i386
 Version: 	12.1.0.2.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	Oracle
 Group:		Applications/File
 Url:		http://www.oracle.com/technology/software/tech/oci/instantclient/index.html
@@ -132,8 +132,8 @@ rm -rf %{buildroot}
 cd %{topdir}
 
 mkdir -p %{buildroot}%{_bindir}
-mkdir -p %{buildroot}%{oradir}/{bin,lib,precomp/admin}
-mkdir -p %{buildroot}%{oradir}/lib
+mkdir -p %{buildroot}%{oradir}/{bin,lib}
+mkdir -p %{buildroot}%{oradir}/lib/precomp/admin
 mkdir -p %{buildroot}%{incdir}
 mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d
 
@@ -191,7 +191,7 @@ ln -sf %{oradir}/bin/wrc %{buildroot}%{_bindir}/wrc
 # NOTICE: don't install rtsora - broken dep on  libcobcrtn64.so
 install -p -m 755 sdk/{proc,procob}	%{buildroot}%{oradir}/bin
 install -p -m 755 cobsqlintf.o		%{buildroot}%{oradir}/lib
-install -p -m 644 precomp/admin/*	%{buildroot}%{oradir}/precomp/admin
+install -p -m 644 precomp/admin/*	%{buildroot}%{oradir}/lib/precomp/admin
 
 ln -s %{oradir}/bin/proc %{buildroot}%{_bindir}/proc
 ln -s %{oradir}/bin/procob %{buildroot}%{_bindir}/procob
@@ -238,7 +238,35 @@ rm -rf %{buildroot}
 %{oradir}/lib/libclntsh.so
 %{oradir}/lib/libocci.so
 %{oradir}/lib/ottclasses.zip
-%{incdir}
+%{incdir}/ldap.h
+%{incdir}/nzerror.h
+%{incdir}/nzt.h
+%{incdir}/occi.h
+%{incdir}/occiAQ.h
+%{incdir}/occiCommon.h
+%{incdir}/occiControl.h
+%{incdir}/occiData.h
+%{incdir}/occiObjects.h
+%{incdir}/oci.h
+%{incdir}/oci1.h
+%{incdir}/oci8dp.h
+%{incdir}/ociap.h
+%{incdir}/ociapr.h
+%{incdir}/ocidef.h
+%{incdir}/ocidem.h
+%{incdir}/ocidfn.h
+%{incdir}/ociextp.h
+%{incdir}/ocikpr.h
+%{incdir}/ocixmldb.h
+%{incdir}/ocixstream.h
+%{incdir}/odci.h
+%{incdir}/oratypes.h
+%{incdir}/ori.h
+%{incdir}/orid.h
+%{incdir}/orl.h
+%{incdir}/oro.h
+%{incdir}/ort.h
+%{incdir}/xa.h
 %{_bindir}/ott
 %{oradir}/bin/ott
 
@@ -280,19 +308,30 @@ rm -rf %{buildroot}
 %files -n oracle-instantclient-precomp
 %defattr(-,root,root)
 %doc %{topdir}/sdk/demo %{topdir}/PRECOMP_README
-%dir %{oradir}/precomp
-%dir %{oradir}/precomp/admin
-%config  %{oradir}/precomp/admin/pcbcfg.cfg
-%config  %{oradir}/precomp/admin/pcscfg.cfg
+%dir %{oradir}/lib
+%dir %{oradir}/lib/precomp
+%dir %{oradir}/lib/precomp/admin
+%config  %{oradir}/lib/precomp/admin/pcbcfg.cfg
+%config  %{oradir}/lib/precomp/admin/pcscfg.cfg
 %{oradir}/lib/cobsqlintf.o
 %{oradir}/bin/proc
 %{oradir}/bin/procob
 %{_bindir}/proc
 %{_bindir}/procob
-%{_bindir}/rtsora
+%{incdir}/sqlkpr.h  
+%{incdir}/sqlca.h  
+%{incdir}/sqlcpr.h  
+%{incdir}/sql2oci.h  
+%{incdir}/sqlda.h  
+%{incdir}/sqlucs2.h  
+%{incdir}/oraca.h  
+%{incdir}/sqlapr.h
 
 
 %changelog
+* Tue Aug  9 2016 Pierre Duperray <pierreduperray@free.fr> - 12.1.0.2.0-2
+- separated devel and precomp headers and moved precomp pcbcfg.cfg file to the right folder
+
 * Mon Aug  8 2016 Pierre Duperray <pierreduperray@free.fr> - 12.1.0.2.0-1
 - unfortunately due to not yet packaged tuxedo dependancy, remove rtsora from precomp package
 
