@@ -42,7 +42,7 @@ Buildroot: 	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 %global incdir	%{_includedir}/oracle/%{mainver}/client
 
 %description
-Base files for Instant Client.  Support for OCI, OCCI, 
+Base files for Instant Client.  Support for OCI, OCCI,
 and JDBC-OCI applications.
 
 %package -n oracle-instantclient-basic
@@ -77,9 +77,9 @@ Group:		Applications/File
 Requires: 	oracle-instantclient-basic%{?_isa} = %version
 
 %description -n oracle-instantclient-odbc
-Oracle  ODBC Instant Client for Linux complies with 
-ODBC 3.52 specifications. It is based on features of 
-Oracle %{version} ODBC driver for Windows, without 
+Oracle  ODBC Instant Client for Linux complies with
+ODBC 3.52 specifications. It is based on features of
+Oracle %{version} ODBC driver for Windows, without
 the need for a traditional ORACLE_HOME installation.
 
 %package -n oracle-instantclient-sqlplus
@@ -88,7 +88,7 @@ Group:		Applications/File
 Requires: 	oracle-instantclient-basic%{?_isa} = %version
 
 %description -n oracle-instantclient-sqlplus
-Additional libraries and executable for running 
+Additional libraries and executable for running
 SQL*Plus with Instant Client.
 
 %package -n oracle-instantclient-tools
@@ -204,7 +204,7 @@ install -p -m 644 sdk/include/*.h     %{buildroot}%{incdir}
 rm -rf %{buildroot}
 
 %post -n oracle-instantclient-basic
-/sbin/ldconfig 
+/sbin/ldconfig
 
 %postun -n oracle-instantclient-basic
 /sbin/ldconfig
@@ -233,7 +233,7 @@ rm -rf %{buildroot}
 
 %files -n oracle-instantclient-devel
 %defattr(-,root,root)
-%doc %{topdir}/sdk/demo %{topdir}/sdk/SDK_README %{topdir}/sdk/ott 
+%doc %{topdir}/sdk/demo %{topdir}/sdk/SDK_README %{topdir}/sdk/ott
 %{oradir}/lib/libclntshcore.so
 %{oradir}/lib/libclntsh.so
 %{oradir}/lib/libocci.so
@@ -272,7 +272,7 @@ rm -rf %{buildroot}
 %{oradir}/bin/ott
 
 %post -n oracle-instantclient-sqlplus
-/sbin/ldconfig 
+/sbin/ldconfig
 
 %postun -n oracle-instantclient-sqlplus
 /sbin/ldconfig
@@ -319,14 +319,14 @@ rm -rf %{buildroot}
 %{oradir}/bin/procob
 %{_bindir}/proc
 %{_bindir}/procob
-%{incdir}/oraca.h  
-%{incdir}/sql2oci.h  
+%{incdir}/oraca.h
+%{incdir}/sql2oci.h
 %{incdir}/sqlapr.h
-%{incdir}/sqlca.h  
-%{incdir}/sqlcpr.h  
-%{incdir}/sqlda.h  
-%{incdir}/sqlkpr.h  
-%{incdir}/sqlucs2.h  
+%{incdir}/sqlca.h
+%{incdir}/sqlcpr.h
+%{incdir}/sqlda.h
+%{incdir}/sqlkpr.h
+%{incdir}/sqlucs2.h
 
 
 %changelog
@@ -378,7 +378,7 @@ rm -rf %{buildroot}
 - FC6.x86_64 build (conditional targetname & datever)
 
 * Thu Oct 26 2006 Remi Collet <RPMS@famillecollet.com> 10.2.0.2-2.fc6.remi
-- FC6.i386 build 
+- FC6.i386 build
 
 * Fri Jun 23 2006 Remi Collet <RPMS@famillecollet.com> 10.2.0.2-2.fc5.remi
 - Switch back to defaut oracle strategie.
