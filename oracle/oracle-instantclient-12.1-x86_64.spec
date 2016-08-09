@@ -5,6 +5,7 @@
 # oracle-instantclient-jdbc
 # oracle-instantclient-odbc
 # oracle-instantclient-tools
+# oracle-instantclient-precomp
 
 %define __arch_install_post /bin/true
 
@@ -313,7 +314,6 @@ rm -rf %{buildroot}
 %files -n oracle-instantclient-precomp
 %defattr(-,root,root)
 %doc %{topdir}/sdk/demo %{topdir}/PRECOMP_README
-%dir %{oradir}/lib
 %dir %{oradir}/lib/precomp
 %dir %{oradir}/lib/precomp/admin
 %config  %{oradir}/lib/precomp/admin/pcbcfg.cfg
