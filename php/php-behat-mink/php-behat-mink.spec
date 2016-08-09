@@ -12,18 +12,18 @@
 
 %global github_owner     minkphp
 %global github_name      Mink
-%global github_version   1.7.0
-%global github_commit    6c129030ec2cc029905cf969a56ca8f087b2dfdf
+%global github_version   1.7.1
+%global github_commit    e6930b9c74693dff7f4e58577e1b1743399f3ff9
 
 %global composer_vendor  behat
 %global composer_project mink
 
 # "php": ">=5.3.1"
 %global php_min_ver 5.3.1
-# "symfony/css-selector": "~2.1"
+# "symfony/css-selector": "~2.1|~3.0"
 #     NOTE: Min version not 2.1 because autoloader required
 %global symfony_min_ver %{?el6:2.3.31}%{!?el6:2.7.1}
-%global symfony_max_ver 3.0
+%global symfony_max_ver 4.0
 
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
@@ -39,7 +39,11 @@ Summary:       Browser controller/emulator abstraction for PHP
 Group:         Development/Libraries
 License:       MIT
 URL:           http://mink.behat.org/
-Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+
+# GitHub export does not include tests.
+# Run php-behat-mink-get-source.sh to create full source.
+Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
+Source1:       %{name}-get-source.sh
 
 # Modify driver testsuite bootstrap
 Patch0:        %{name}-driver-testsuite-bootstrap.patch
@@ -52,7 +56,7 @@ BuildArch:     noarch
 BuildRequires: php(language)                      >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(symfony/css-selector) >= %{symfony_min_ver}
-## phpcompatinfo (computed from version 1.7.0)
+## phpcompatinfo (computed from version 1.7.1)
 BuildRequires: php-dom
 BuildRequires: php-gd
 BuildRequires: php-json
@@ -69,7 +73,7 @@ BuildRequires: php-composer(symfony/class-loader)
 Requires:      php(language)                      >= %{php_min_ver}
 Requires:      php-composer(symfony/css-selector) >= %{symfony_min_ver}
 Requires:      php-composer(symfony/css-selector) <  %{symfony_max_ver}
-# phpcompatinfo (computed from version 1.7.0)
+# phpcompatinfo (computed from version 1.7.1)
 Requires:      php-mbstring
 Requires:      php-pcre
 Requires:      php-spl
@@ -130,32 +134,6 @@ Bootstrap: %{testsdir}/%{name}-driver-testsuite/boostrap.php
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-: Create library autoloader
-cat <<'AUTOLOAD' | tee src/autoload.php
-<?php
-/**
- * Autoloader for %{name} and its' dependencies
- * (created by %{name}-%{version}-%{release}).
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
- */
-
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
-
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('Behat\\Mink\\', dirname(dirname(__DIR__)));
-
-require_once '%{phpdir}/Symfony/Component/CssSelector/autoload.php';
-
-return $fedoraClassLoader;
-AUTOLOAD
-
 : Make PSR-0 driver testsuite tests
 # Separate "tests-psr0" and "tests" directories so driver testsuite users (other
 #     packages) do not need to update their code
@@ -183,7 +161,31 @@ AUTOLOAD
 
 
 %build
-# Empty build section, nothing to build
+: Create library autoloader
+cat <<'AUTOLOAD' | tee src/autoload.php
+<?php
+/**
+ * Autoloader for %{name} and its' dependencies
+ * (created by %{name}-%{version}-%{release}).
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('Behat\\Mink\\', dirname(dirname(__DIR__)));
+
+require_once '%{phpdir}/Symfony/Component/CssSelector/autoload.php';
+
+return $fedoraClassLoader;
+AUTOLOAD
 
 
 %install
@@ -218,11 +220,20 @@ sed -e 's/function testEscapedSelectors/function SKIP_testEscapedSelectors/' \
 %endif
 
 : Run tests
-%{_bindir}/phpunit --verbose --bootstrap tests-psr0/autoload.php
-
-if which php70; then
-  php70 %{_bindir}/phpunit --verbose --bootstrap tests-psr0/autoload.php
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap tests-psr0/autoload.php || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap tests-psr0/autoload.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose --bootstrap tests-psr0/autoload.php
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -247,6 +258,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Aug 09 2016 Shawn Iwinski <shawn@iwin.ski> - 1.7.1-1
+- Updated to 1.7.1 (RHBZ #1314987)
+
 * Tue Dec  1 2015 Remi Collet <remi@fedoraproject.org> - 1.7.0-1
 - backport for remi repository
 
