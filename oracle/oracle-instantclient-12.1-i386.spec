@@ -15,7 +15,7 @@
 Summary: 	Instant Client for Oracle Database 11g
 Name: 		oracle-instantclient-i386
 Version: 	12.1.0.2.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	Oracle
 Group:		Applications/File
 Url:		http://www.oracle.com/technology/software/tech/oci/instantclient/index.html
@@ -120,13 +120,14 @@ iii) sample configuration files, demo programs and demo
 %prep
 rm -rf %{topdir}
 
-unzip %{SOURCE0}
-unzip %{SOURCE1}
-unzip %{SOURCE2}
-unzip %{SOURCE3}
-unzip %{SOURCE4}
-unzip %{SOURCE5}
-unzip %{SOURCE6}
+unzip %{SOURCE0} | tee BASIC
+unzip %{SOURCE1} | tee JDBC
+unzip %{SOURCE2} | tee ODBC
+unzip %{SOURCE3} | tee DEVEL
+unzip %{SOURCE4} | tee SQLPLUS
+unzip %{SOURCE5} | tee TOOLS
+unzip %{SOURCE6} | tee PRECOMP
+
 
 %install
 rm -rf %{buildroot}
@@ -200,18 +201,26 @@ ln -s %{oradir}/bin/procob %{buildroot}%{_bindir}/procob
 # Precomp-Devel
 install -p -m 644 sdk/include/*.h     %{buildroot}%{incdir}
 
+# Create files lists
+echo '%%defattr(-,root,root,-)' | tee devel.files > %{topdir}precomp.files
+for header in sdk/include/*.h
+do if grep -q $header ../DEVEL
+   then echo %{incdir}/$(basename $header) >>devel.files
+   else echo %{incdir}/$(basename $header) >>precomp.files
+fi
+done
+
 
 %clean
 rm -rf %{buildroot}
 
-%post -n oracle-instantclient-basic
-/sbin/ldconfig
-
-%postun -n oracle-instantclient-basic
-/sbin/ldconfig
+%post   -n oracle-instantclient-basic   -p /sbin/ldconfig
+%postun -n oracle-instantclient-basic   -p /sbin/ldconfig
+%post   -n oracle-instantclient-sqlplus -p /sbin/ldconfig
+%postun -n oracle-instantclient-sqlplus -p /sbin/ldconfig
 
 %files -n oracle-instantclient-basic
-%defattr(-,root,root)
+%defattr(-,root,root,-)
 %doc %{topdir}/BASIC_README
 %dir %{oradir}
 %dir %{oradir}/lib
@@ -232,54 +241,19 @@ rm -rf %{buildroot}
 %{oradir}/bin/adrci
 %{oradir}/bin/uidrvci
 
-%files -n oracle-instantclient-devel
-%defattr(-,root,root)
+%files -n oracle-instantclient-devel -f %{topdir}/devel.files
+%defattr(-,root,root,-)
 %doc %{topdir}/sdk/demo %{topdir}/sdk/SDK_README %{topdir}/sdk/ott
 %{oradir}/lib/libclntshcore.so
 %{oradir}/lib/libclntsh.so
 %{oradir}/lib/libocci.so
 %{oradir}/lib/ottclasses.zip
 %dir %{incdir}
-%{incdir}/ldap.h
-%{incdir}/nzerror.h
-%{incdir}/nzt.h
-%{incdir}/occi.h
-%{incdir}/occiAQ.h
-%{incdir}/occiCommon.h
-%{incdir}/occiControl.h
-%{incdir}/occiData.h
-%{incdir}/occiObjects.h
-%{incdir}/oci.h
-%{incdir}/oci1.h
-%{incdir}/oci8dp.h
-%{incdir}/ociap.h
-%{incdir}/ociapr.h
-%{incdir}/ocidef.h
-%{incdir}/ocidem.h
-%{incdir}/ocidfn.h
-%{incdir}/ociextp.h
-%{incdir}/ocikpr.h
-%{incdir}/ocixmldb.h
-%{incdir}/ocixstream.h
-%{incdir}/odci.h
-%{incdir}/oratypes.h
-%{incdir}/ori.h
-%{incdir}/orid.h
-%{incdir}/orl.h
-%{incdir}/oro.h
-%{incdir}/ort.h
-%{incdir}/xa.h
 %{_bindir}/ott
 %{oradir}/bin/ott
 
-%post -n oracle-instantclient-sqlplus
-/sbin/ldconfig
-
-%postun -n oracle-instantclient-sqlplus
-/sbin/ldconfig
-
 %files -n oracle-instantclient-sqlplus
-%defattr(-,root,root)
+%defattr(-,root,root,-)
 %doc %{topdir}/SQLPLUS_README
 %{_bindir}/sqlplus
 %{oradir}/bin/sqlplus
@@ -288,27 +262,27 @@ rm -rf %{buildroot}
 %{oradir}/lib/libsqlplusic.so
 
 %files -n oracle-instantclient-jdbc
-%defattr(-,root,root)
+%defattr(-,root,root,-)
 %doc %{topdir}/JDBC_README
 %{oradir}/lib/libheteroxa%{major}.so
 %{oradir}/lib/orai18n-mapping.jar
 %{oradir}/lib/orai18n.jar
 
 %files -n oracle-instantclient-odbc
-%defattr(-,root,root)
+%defattr(-,root,root,-)
 %doc %{topdir}/ODBC_IC_Readme_Unix.html
 %doc %{topdir}/odbc_update_ini.sh
 %doc %{topdir}/help
 %{oradir}/lib/libsqora.so.%{mainver}
 
 %files -n oracle-instantclient-tools
-%defattr(-,root,root)
+%defattr(-,root,root,-)
 %doc %{topdir}/TOOLS_README
 %{_bindir}/wrc
 %{oradir}/bin/wrc
 
-%files -n oracle-instantclient-precomp
-%defattr(-,root,root)
+%files -n oracle-instantclient-precomp -f %{topdir}/precomp.files
+%defattr(-,root,root,-)
 %doc %{topdir}/sdk/demo %{topdir}/PRECOMP_README
 %dir %{oradir}/lib/precomp
 %dir %{oradir}/lib/precomp/admin
@@ -319,17 +293,13 @@ rm -rf %{buildroot}
 %{oradir}/bin/procob
 %{_bindir}/proc
 %{_bindir}/procob
-%{incdir}/oraca.h
-%{incdir}/sql2oci.h
-%{incdir}/sqlapr.h
-%{incdir}/sqlca.h
-%{incdir}/sqlcpr.h
-%{incdir}/sqlda.h
-%{incdir}/sqlkpr.h
-%{incdir}/sqlucs2.h
 
 
 %changelog
+* Tue Aug  9 2016 Remi Collet <remi@remirepo.net> 12.1.0.1.0-3
+- simplify headers packaging
+- simplify ldconfig call in scriptlets
+
 * Tue Aug  9 2016 Pierre Duperray <pierreduperray@free.fr> - 12.1.0.2.0-2
 - separated devel and precomp headers and moved precomp pcbcfg.cfg file to the right folder
 
