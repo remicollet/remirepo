@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    c9fa8fdab194093fff58e4f1180c7e15d80a2cb5
+%global gh_commit    5926a1a2e7e035546b690cb7d4c11a3c47db2c98
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-db
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.8.1
+Version:        2.8.2
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -122,11 +122,22 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
-
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || : ignore
+# remirepo:11
+ret=0
+run=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -146,6 +157,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Aug 10 2016 Remi Collet <remi@fedoraproject.org> - 2.8.2-1
+- update to 2.8.2
+
 * Thu Apr 14 2016 Remi Collet <remi@fedoraproject.org> - 2.8.1-1
 - update to 2.8.1
 
