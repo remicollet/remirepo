@@ -1,0 +1,35 @@
+From 8587a88808ee913974f0c9bbf7353db767259f28 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Wed, 6 Jul 2016 16:37:55 +0200
+Subject: [PATCH] fix for monolog 1.20
+
+---
+ tests/Environment/YourLogger.php | 2 +-
+ tests/EnvironmentTest.php        | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/tests/Environment/YourLogger.php b/tests/Environment/YourLogger.php
+index 2e5242d..2a06aed 100644
+--- a/tests/Environment/YourLogger.php
++++ b/tests/Environment/YourLogger.php
+@@ -17,7 +17,7 @@ public function __construct($name = 'DEV')
+         $filename = sprintf('phpreflect-%s.log', date('Ymd'));
+ 
+         $stream = new RotatingFileHandler("$tempDir/$filename", 30);
+-        $stream->setFilenameFormat('{filename}-{date}', 'Ymd');
++        $stream->setFilenameFormat('{filename}-{date}', 'Y-m-d');
+ 
+         $handlers = array($stream);
+ 
+diff --git a/tests/EnvironmentTest.php b/tests/EnvironmentTest.php
+index be8f0a4..86b1809 100644
+--- a/tests/EnvironmentTest.php
++++ b/tests/EnvironmentTest.php
+@@ -188,7 +188,6 @@ public function testDefaultLoggerAccessor()
+     /**
+      * @covers Bartlett\Reflect\Environment::getLogger
+      * @runInSeparateProcess
+-     * @expectedException PHPUnit_Framework_Error_Deprecated
+      *
+      * @return void
+      */
