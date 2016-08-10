@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    6853ce218b6115ec749607e14ac51338920c9d81
+%global gh_commit    74033cbe9fdd3eba597f8af501947a125b3b8087
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     true
 %global gh_project   php-punycode
@@ -15,7 +15,7 @@
 # Notice: single file / class, so no need to provide an autoloader for now
 
 Name:           php-true-punycode
-Version:        2.0.3
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        A Bootstring encoding of Unicode for IDNA
 
@@ -27,14 +27,15 @@ Source1:        makesrc.sh
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3.0
+BuildRequires:  php(language) >= 5.3
 BuildRequires:  php-mbstring
 BuildRequires:  %{_bindir}/phpunit
+BuildRequires:  %{_bindir}/phpab
 
 # From composer.json
 #      "php": ">=5.3.0"
 #      "ext-mbstring": "*"
-Requires:       php(language) >= 5.3.3
+Requires:       php(language) >= 5.3
 Requires:       php-mbstring
 
 Provides:       php-composer(true/punycode) = %{version}
@@ -44,13 +45,16 @@ Provides:       php-composer(true/punycode) = %{version}
 A Bootstring encoding of Unicode for Internationalized Domain Names
 in Applications (IDNA).
 
+Autoloader: %{_datadir}/php/TrueBV/autoload.php
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
 
 %build
-# Nothing
+: Generate a classmap autoloader
+%{_bindir}/phpab --output src/autoload.php src
 
 
 %install
@@ -61,12 +65,26 @@ cp -pr src %{buildroot}%{_datadir}/php/TrueBV
 
 %check
 %if %{with_tests}
-: Run test suite
-%{_bindir}/phpunit --bootstrap src/Punycode.php
+mkdir vendor
+ln -s %{buildroot}%{_datadir}/php/TrueBV/autoload.php vendor/autoload.php
 
-if which php70; then
-   php70 %{_bindir}/phpunit --bootstrap src/Punycode.php
+: Run test suite
+# remirepo:11
+ret=0
+run=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -86,6 +104,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Aug 10 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- update to 2.1.0
+- add autoloader
+
 * Wed May 25 2016 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - update to version 2.0.3 (no change)
 - use git snapshot for sources with tests
