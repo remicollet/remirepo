@@ -8,10 +8,10 @@
 # Please, preserve the changelog entries
 #
 
-%global prever beta1
+#global prever beta1
 Name:       libbson
 Version:    1.4.0
-Release:    0.1.%{prever}%{?dist}
+Release:    1%{?dist}
 Summary:    Building, parsing, and iterating BSON documents
 Group:      System Environment/Libraries
 ## Installed:
@@ -97,13 +97,6 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=%{buildroot}
 find %{buildroot} -name '*.la' -exec rm -f '{}' +
-# Move ambiguously named manual pages into package-specific directory
-# <https://jira.mongodb.org/browse/CDRIVER-1039>
-#install -d -m 0755 %{buildroot}%{_docdir}/%{name}-devel
-#for P in clock creating endianness errors index installing json memory \
-#        oid parsing performance threading utf8 version; do
-#    mv %{buildroot}%{_mandir}/man3/"$P".3 %{buildroot}%{_docdir}/%{name}-devel
-#done
 # Install examples here because it's forbidden to use relative %%doc with
 # installing into %%_pkgdocdir
 install -d -m 0755 %{buildroot}%{_docdir}/%{name}-devel/examples
@@ -138,6 +131,9 @@ make %{?_smp_mflags} check
 
 
 %changelog
+* Thu Aug 11 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
+- update to 1.4.0
+
 * Mon Aug  8 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-0.1.beta1
 - update to 1.4.0-beta1
 
