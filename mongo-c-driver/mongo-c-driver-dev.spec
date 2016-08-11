@@ -21,7 +21,7 @@
 # in MongoDB 3.2, and support is being removed in 3.4.
 %global with_tests   0%{?_with_tests:1}
 %endif
-%global with_tests   0
+#global with_tests   0
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
