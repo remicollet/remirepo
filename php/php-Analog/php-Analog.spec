@@ -9,18 +9,18 @@
 #
 %global gh_owner   jbroadway
 %global gh_project analog
-%global gh_commit  69615c0e8b4033169b45d58f778fd3ba638d1d52
+%global gh_commit  9e02358735912ed203c073d192b5e07cb6b663dd
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date    20150213
 %global real_name  Analog
 
 Name:           php-Analog
 Summary:        PHP micro logging package
-Version:        1.0.7
+Version:        1.0.8
 %if 0%{?gh_date}
 Release:        5.%{gh_date}git%{gh_short}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        1%{?dist}
 %endif
 License:        MIT
 Group:          Development/Libraries
@@ -110,20 +110,28 @@ cp -a lib/%{real_name} %{buildroot}%{_datadir}/php/
 
 
 %check
-: Relax 1 test
-sed -e 's/0600/%%d/' -i tests/AnalogTest.php
-
 : Use and test our autoloader
 cat <<EOF | tee tests/bootstrap.php
 <?php
 require '%{buildroot}%{_datadir}/php/%{real_name}/autoload.php';
 EOF
-: Upstream test suite
-%{_bindir}/phpunit --include-path=%{buildroot}%{_datadir}/php
 
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{_datadir}/php
+: Run upstream test suite
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+fi
+exit $ret
+
 
 
 %clean
@@ -142,6 +150,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Aug 11 2016 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
+- update to 1.0.8
+
 * Thu May  5 2016 Remi Collet <remi@fedoraproject.org> - 1.0.7-2
 - generate a simple autoloader (and use it for test suite)
 
