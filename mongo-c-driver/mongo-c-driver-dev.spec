@@ -10,7 +10,7 @@
 %global gh_project   mongo-c-driver
 %global libname      libmongoc
 %global libver       1.0
-%global prever       beta1
+#global prever       beta1
 %global bsonver      1.4
 
 %ifarch x86_64
@@ -26,15 +26,12 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.4.0
-Release:   0.1.%{prever}%{?dist}
+Release:   1%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
-
-# https://github.com/mongodb/mongo-c-driver/pull/385
-Patch0:    %{name}-api.patch
 
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libbson-1.0) > %{bsonver}
@@ -85,19 +82,12 @@ Documentation: http://api.mongodb.org/c/%{version}/
 
 %prep
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
-%patch0 -p1 -b .api
 
 rm -r src/libbson
 
 # Ignore check for libbson version = libmongoc version
 sed -e 's/libbson-1.0 >= \$MONGOC_RELEASED_VERSION/libbson-1.0 >= %{bsonver}/' \
     -i configure
-
-# Temporary for https://jira.mongodb.org/browse/CDRIVER-1457
-sed -e '/mongoc_client_pool_set_appname/d' \
-    -e '/mongoc_client_set_appname/d' \
-    -e '/mongoc_metadata_append/d' \
-    -i src/libmongoc.symbols
 
 
 %build
@@ -178,10 +168,16 @@ make -C tests abicheck
 
 
 %changelog
+* Thu Aug 11 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
+- update to 1.4.0
+- drop API patch merged upstream
+
 * Mon Aug  8 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-0.1.beta1
 - update to 1.4.0-beta1
 - build with --enable-system-crypto-profile option
 - open https://jira.mongodb.org/browse/CDRIVER-1457 (symbols)
+- open https://github.com/mongodb/mongo-c-driver/pull/385
+- drop crypto patch merged upstream
 
 * Mon May 16 2016 Remi Collet <remi@fedoraproject.org> - 1.3.5-2
 - add patch to enforce system crypto policies
