@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #189 yaz version 1.2.0 ] {
+Extension [ <persistent> extension #130 yaz version 1.2.1 ] {
 
   - INI {
     Entry [ yaz.max_links <ALL> ]

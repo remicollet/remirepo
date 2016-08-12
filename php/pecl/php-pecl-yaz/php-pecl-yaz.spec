@@ -6,7 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package        php-pecl-yaz}
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%scl_package        php-pecl-yaz
+%endif
 
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  yaz
@@ -19,8 +26,8 @@
 %global with_tests %{?_with_tests:1}%{!?_with_tests:0}
 
 Summary:        Z39.50/SRU client
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        1.2.0
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
+Version:        1.2.1
 Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
@@ -66,6 +73,10 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -231,6 +242,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Fri Aug 12 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- Update to 1.2.1
+
 * Tue Mar 22 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - Update to 1.2.0
 
