@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    0fd6c5f6b22b614960a94beceaa58742444f84b4
+%global gh_commit    bbd3cc499f3dcaeb0ce483e7975c238719b0104f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-zendrouter
@@ -21,8 +21,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.1.0
-Release:        2%{?dist}
+Version:        1.2.0
+Release:        1%{?dist}
 Summary:        zend-mvc router support for %{library}
 
 Group:          Development/Libraries
@@ -30,9 +30,6 @@ License:        BSD
 URL:            https://framework.zend.com/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
-
-# to allow ZF3 and raise dependencies
-Patch0:         %{name}-pr7.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -45,9 +42,9 @@ BuildRequires:  php-composer(%{gh_owner}/zend-router)                >= 3.0
 BuildRequires:  php-composer(%{gh_owner}/zend-psr7bridge)            >= 0.2.2
 BuildRequires:  php-pcre
 # From composer, "require-dev": {
-#        "phpunit/phpunit": "^4.7",
-#        "squizlabs/php_codesniffer": "^2.3"
-BuildRequires:  php-composer(phpunit/phpunit)                        >= 4.7
+#        "phpunit/phpunit": "^4.8",
+#        "squizlabs/php_codesniffer": "^2.6.2"
+BuildRequires:  php-composer(phpunit/phpunit)                        >= 4.8
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)                >= 2.5
 # For dependencies autoloader
@@ -57,9 +54,9 @@ BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-4
 # From composer, "require": {
 #        "php": "^5.6 || ^7.0",
 #        "psr/http-message": "^1.0",
-#        "zendframework/zend-expressive-router": "^1.0",
-#        "zendframework/zend-router": "^2.5",
-#        "zendframework/zend-psr7bridge": "^0.2.0"
+#        "zendframework/zend-expressive-router": "^1.2",
+#        "zendframework/zend-router": "^3.0",
+#        "zendframework/zend-psr7bridge": "^0.2.2"
 Requires:       php(language) >= 5.6
 Requires:       php-composer(psr/http-message)                       >= 1.0
 Requires:       php-composer(psr/http-message)                       <  2
@@ -88,8 +85,6 @@ https://zendframework.github.io/zend-expressive/features/router/zf2/
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
-
-%patch0 -p1
 
 mv LICENSE.md LICENSE
 
@@ -157,6 +152,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Aug 12 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- update to 1.2.0
+
 * Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-2
 - cleanup and build for ZF2
 
