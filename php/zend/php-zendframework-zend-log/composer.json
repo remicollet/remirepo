@@ -20,13 +20,12 @@
         "psr/log": "^1.0"
     },
     "require-dev": {
-        "zendframework/zend-console": "^2.6",
         "zendframework/zend-db": "^2.6",
         "zendframework/zend-escaper": "^2.5",
         "zendframework/zend-filter": "^2.5",
         "zendframework/zend-mail": "^2.6.1",
         "zendframework/zend-validator": "^2.6",
-        "fabpot/php-cs-fixer": "1.7.*",
+        "friendsofphp/php-cs-fixer": "~1.7.0",
         "phpunit/PHPUnit": "~4.0",
         "mikey179/vfsStream": "^1.6"
     },
@@ -34,6 +33,7 @@
         "psr/log-implementation": "1.0.0"
     },
     "suggest": {
+        "ext-mongo": "mongo extension to use Mongo writer",
         "ext-mongodb": "mongodb extension to use MongoDB writer",
         "zendframework/zend-console": "Zend\\Console component to use the RequestID log processor",
         "zendframework/zend-db": "Zend\\Db component to use the database log writer",

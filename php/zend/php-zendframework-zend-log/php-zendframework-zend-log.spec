@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    0325ad00505b8f39d79f26e666dc851bfd25fdaa
+%global gh_commit    115d75db1f8fb29efbf1b9a49cb91c662b7195dc
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-log
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.9.0
+Version:        2.9.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -45,13 +45,12 @@ BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)   >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 BuildRequires:  php-composer(psr/log)                           >= 1.0
 # From composer, "require-dev": {
-#        "zendframework/zend-console": "^2.6",
 #        "zendframework/zend-db": "^2.6",
 #        "zendframework/zend-escaper": "^2.5",
 #        "zendframework/zend-filter": "^2.5",
 #        "zendframework/zend-mail": "^2.6.1",
 #        "zendframework/zend-validator": "^2.6",
-#        "fabpot/php-cs-fixer": "1.7.*",
+#        "friendsofphp/php-cs-fixer": "~1.7.0",
 #        "phpunit/PHPUnit": "~4.0",
 #        "mikey179/vfsStream": "^1.6"
 BuildRequires:  php-composer(%{gh_owner}/zend-console)          >= 2.5
@@ -82,6 +81,7 @@ Requires:       php-composer(%{gh_owner}/zend-stdlib)           <  4
 Requires:       php-composer(psr/log)                           >= 1.0
 Requires:       php-composer(psr/log)                           <  2
 # From composer, "suggest": {
+#        "ext-mongo": "mongo extension to use Mongo writer",
 #        "ext-mongodb": "mongodb extension to use MongoDB writer",
 #        "zendframework/zend-console": "Zend\\Console component to use the RequestID log processor",
 #        "zendframework/zend-db": "Zend\\Db component to use the database log writer",
@@ -89,6 +89,7 @@ Requires:       php-composer(psr/log)                           <  2
 #        "zendframework/zend-mail": "Zend\\Mail component to use the email log writer",
 #        "zendframework/zend-validator": "Zend\\Validator component to block invalid log messages"
 %if 0%{?fedora} >= 21
+Suggests:       php-pecl(mongo)
 Suggests:       php-pecl(mongodb)
 Suggests:       php-composer(%{gh_owner}/zend-console)
 Suggests:       php-composer(%{gh_owner}/zend-db)
@@ -154,11 +155,22 @@ require_once '%{php_home}/Zend/autoload.php';
 require __DIR__ . '/../test/Writer/TestAsset/chmod.php';
 EOF
 
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
-
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+# remirepo:11
+ret=0
+run=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -178,6 +190,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Aug 12 2016 Remi Collet <remi@fedoraproject.org> - 2.9.1-1
+- update to 2.9.1
+
 * Thu Jun 23 2016 Remi Collet <remi@fedoraproject.org> - 2.9.0-1
 - update to 2.9.0
 - provide php-composer(psr/log-implementation)
