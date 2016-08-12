@@ -12,8 +12,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   3.18.38
-%global github_commit    979470feb19af8b5cd2f7a455407618416cdfadc
+%global github_version   3.18.39
+%global github_commit    85f1fddaeb40b95106b2a2764268e9c89fc258ce
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -285,6 +285,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Aug 12 2016 Remi Collet <remi@remirepo.net> - 3.18.39-1
+- update to 3.18.39
+
 * Wed Aug 10 2016 Remi Collet <remi@remirepo.net> - 3.18.38-1
 - update to 3.18.38
 
