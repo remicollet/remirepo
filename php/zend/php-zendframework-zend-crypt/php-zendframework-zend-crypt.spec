@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    ed348e3e87c945759d11edae5316125c3582bc72
+%global gh_commit    caadff93c6a5a3d17aab72f026a4a883e33a3e94
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-crypt
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        3.0.0
+Version:        3.1.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -75,11 +75,13 @@ Requires:       php-openssl
 Requires:       php-composer(%{gh_owner}/zend-loader)           >= 2.5
 Requires:       php-zendframework-zend-loader                   >= 2.5.1-3
 %endif
-# From phpcompatinfo report for version 2.5.2
+# From phpcompatinfo report for version 3.1.0
 Requires:       php-hash
-Requires:       php-openssl
 Requires:       php-pcre
 Requires:       php-spl
+%if 0%{?fedora} >= 21
+Suggests:       php-pecl(scrypt)
+%endif
 
 Obsoletes:      php-ZendFramework2-%{library} < 2.5
 Provides:       php-ZendFramework2-%{library} = %{version}
@@ -152,15 +154,15 @@ EOF
 run=0
 ret=0
 if which php56; then
-   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php56 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if which php71; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php70 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose
+%{_bindir}/phpunit --verbose
 # remirepo:2
 fi
 exit $ret
@@ -184,6 +186,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Aug 12 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-1
+- update to 3.1.0
+
 * Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
 - update to 3.0.0 for ZendFramework 3
 - add dependencies autoloader
