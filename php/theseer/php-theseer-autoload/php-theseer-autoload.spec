@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    19513be5913ed780836e3df5e68bfb5655630612
+%global gh_commit    b0b4c214ec5a76ddda0a5964ced3e8f18be2ff8f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     theseer
 %global gh_project   Autoload
@@ -15,7 +15,7 @@
 %global pear_channel pear.netpirates.net
 
 Name:           php-theseer-autoload
-Version:        1.21.0
+Version:        1.22.0
 Release:        1%{?dist}
 Summary:        A tool and library to generate autoload code
 
@@ -105,12 +105,25 @@ cat <<EOF | tee tests/init.php
 require '%{buildroot}%{_datadir}/php/TheSeer/Autoload/autoload.php';
 EOF
 
-: Run upstream test suite
-phpunit --verbose
-
-if which php70; then
-  php70 %{_bindir}/phpunit --verbose
+# remirepo:13
+run=0
+ret=0
+if which php56; then
+   : Run upstream test suite with PHP 5
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   : Run upstream test suite with PHP 7
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+: Run upstream test suite
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 
 
 %clean
@@ -134,6 +147,9 @@ fi
 
 
 %changelog
+* Sat Aug 13 2016 Remi Collet <remi@fedoraproject.org> - 1.22.0-1
+- update to 1.22.0
+
 * Wed Nov 11 2015 Remi Collet <remi@fedoraproject.org> - 1.21.0-1
 - update to 1.21.0
 
