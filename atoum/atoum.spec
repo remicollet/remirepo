@@ -7,11 +7,11 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    1813c5f50d4727cc4be8ec9abe25befae78ce4c5
+%global gh_commit    4d0136b21185eea5fc2ee638f77b291e6c537100
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 
 Name:           atoum
-Version:        2.8.1
+Version:        2.8.2
 Release:        1%{?dist}
 Summary:        PHP Unit Testing framework
 
@@ -139,13 +139,14 @@ cd tests/units
 echo "date.timezone=UTC" >php.ini
 export PHPRC=$(pwd)/php.ini
 
-# remirepo:11
+# remirepo:12
 run=0
 ret=0
 if which php56; then
    php56 runner.php --directories . || ret=1
    run=1
 fi
+# Not ready for 7.1 (Fatal error: Cannot use 'void' as class name...)
 if which php70; then
    php70 runner.php --directories . || ret=1
    run=1
@@ -175,6 +176,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Aug 13 2016 Remi Collet <remi@fedoraproject.org> - 2.8.2-1
+- update to 2.8.2
+
 * Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 2.8.1-1
 - update to 2.8.1
 
