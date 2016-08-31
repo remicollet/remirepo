@@ -8,19 +8,21 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c062dddcb68e44b563f66ee319ddae2b5a322a90
+%global gh_commit    3e6e88e56c912133de6e99b87728cca7ed70c5f5
+#global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit
 %global php_home     %{_datadir}/php
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
-%global major        4.8
-%global minor        27
+%global major        5.5
+%global minor        4
+%global specrel      1
 
 Name:           php-phpunit-PHPUnit
 Version:        %{major}.%{minor}
-Release:        1%{?dist}
+Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        The PHP Unit Testing framework
 
 Group:          Development/Libraries
@@ -29,67 +31,71 @@ URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 # Autoload template, from version 3.7
-Source1:        Autoload.php.in
+Source1:        %{gh_project}-5.4.0-Autoload.php.in
 
 # Fix command for autoload
 Patch0:         %{gh_project}-rpm.patch
-# add --atleast-version option, backported from 5.0
-Patch1:         %{gh_project}-atleast.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  %{_bindir}/phpab
-BuildRequires:  php-composer(phpunit/php-file-iterator) >= 1.3.2
+BuildRequires:  php-composer(phpunit/php-file-iterator) >= 1.4
 BuildRequires:  php-composer(phpunit/php-text-template) >= 1.2
-BuildRequires:  php-composer(phpunit/php-code-coverage) >= 2.1
+BuildRequires:  php-composer(phpunit/php-code-coverage) >= 4.0
 BuildRequires:  php-composer(phpunit/php-timer) >= 1.0.6
-BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 2.3
+BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 3.2
 BuildRequires:  php-composer(phpspec/prophecy) >= 1.3.1
 BuildRequires:  php-composer(sebastian/comparator) >= 1.1
-BuildRequires:  php-composer(sebastian/diff) >= 1.1
+BuildRequires:  php-composer(sebastian/diff) >= 1.2
 BuildRequires:  php-composer(sebastian/environment) >= 1.3
 BuildRequires:  php-composer(sebastian/exporter) >= 1.2
 BuildRequires:  php-composer(sebastian/recursion-context) >= 1.0
 BuildRequires:  php-composer(sebastian/global-state) >= 1.0
+BuildRequires:  php-composer(sebastian/object-enumerator) >= 1.0
+BuildRequires:  php-composer(sebastian/resource-operations) >= 1.0
 BuildRequires:  php-composer(sebastian/version) >= 1.0
-BuildRequires:  php-composer(symfony/yaml) >= 2.0
+BuildRequires:  php-composer(myclabs/deep-copy) >= 1.3
+BuildRequires:  php-composer(symfony/yaml) >= 2.1
 BuildRequires:  php-composer(symfony/class-loader) >= 2.0
 BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 
 # From composer.json
-#        "php": ">=5.3.3",
+#        "php": "^5.6 || ^7.0",
 #        "phpunit/php-file-iterator": "~1.4",
 #        "phpunit/php-text-template": "~1.2",
-#        "phpunit/php-code-coverage": "~2.1",
+#        "phpunit/php-code-coverage": "^4.0.1",
 #        "phpunit/php-timer": "^1.0.6",
-#        "phpunit/phpunit-mock-objects": "~2.2",
+#        "phpunit/phpunit-mock-objects": "^3.2",
 #        "phpspec/prophecy": "^1.3.1",
 #        "symfony/yaml": "~2.1|~3.0",
 #        "sebastian/comparator": "~1.0",
 #        "sebastian/diff": "~1.2",
-#        "sebastian/environment": "~1.3",
+#        "sebastian/environment": "^1.3 || ^2.0",
 #        "sebastian/exporter": "~1.1",
 #        "sebastian/recursion-context": "~1.0",
 #        "sebastian/global-state": "~1.0",
-#        "sebastian/version": "~1.0",
+#        "sebastian/object-enumerator": "~1.0",
+#        "sebastian/resource-operations": "~1.0",
+#        "sebastian/version": "~1.0|~2.0",
+#        "myclabs/deep-copy": "~1.3",
 #        "ext-dom": "*",
 #        "ext-json": "*",
 #        "ext-pcre": "*",
 #        "ext-reflection": "*",
 #        "ext-spl": "*"
-Requires:       php(language) >= 5.3.3
+Requires:       php(language) >= 5.6
 Requires:       php-cli
 Requires:       php-composer(phpunit/php-file-iterator) >= 1.4
 Requires:       php-composer(phpunit/php-file-iterator) <  2
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
-Requires:       php-composer(phpunit/php-code-coverage) >= 2.1
-Requires:       php-composer(phpunit/php-code-coverage) <  3
+Requires:       php-composer(phpunit/php-code-coverage) >= 4.0.1
+Requires:       php-composer(phpunit/php-code-coverage) <  5
 Requires:       php-composer(phpunit/php-timer) >= 1.0.6
 Requires:       php-composer(phpunit/php-timer) <  2
-Requires:       php-composer(phpunit/phpunit-mock-objects) >= 2.3
-Requires:       php-composer(phpunit/phpunit-mock-objects) <  3
+Requires:       php-composer(phpunit/phpunit-mock-objects) >= 3.2
+Requires:       php-composer(phpunit/phpunit-mock-objects) <  4
 Requires:       php-composer(phpspec/prophecy) >= 1.3.1
 Requires:       php-composer(phpspec/prophecy) <  2
 Requires:       php-composer(sebastian/comparator) >= 1.1
@@ -97,13 +103,19 @@ Requires:       php-composer(sebastian/comparator) <  2
 Requires:       php-composer(sebastian/diff) >= 1.2
 Requires:       php-composer(sebastian/diff) <  2
 Requires:       php-composer(sebastian/environment) >= 1.3
-Requires:       php-composer(sebastian/environment) <  2
+Requires:       php-composer(sebastian/environment) <  3
 Requires:       php-composer(sebastian/exporter) >= 1.2
 Requires:       php-composer(sebastian/exporter) <  2
 Requires:       php-composer(sebastian/global-state) >= 1.0
 Requires:       php-composer(sebastian/global-state) <  2
+Requires:       php-composer(sebastian/object-enumerator) >= 1.0
+Requires:       php-composer(sebastian/object-enumerator) <  2
+Requires:       php-composer(sebastian/resource-operations) >= 1.0
+Requires:       php-composer(sebastian/resource-operations) <  2
 Requires:       php-composer(sebastian/version) >= 1.0
-Requires:       php-composer(sebastian/version) <  2
+Requires:       php-composer(sebastian/version) <  3
+Requires:       php-composer(myclabs/deep-copy) >= 1.3
+Requires:       php-composer(myclabs/deep-copy) <  2
 Requires:       php-composer(symfony/yaml) >= 2.1
 Requires:       php-composer(symfony/yaml) <  4
 Requires:       php-dom
@@ -121,8 +133,7 @@ Requires:       php-composer(doctrine/instantiator) <  2
 Requires:       php-composer(symfony/class-loader) >= 2.0
 Requires:       php-composer(symfony/class-loader) <  3
 Requires:       php-composer(sebastian/recursion-context) >= 1.0
-# From phpcompatinfo report for version 4.0.18
-Requires:       php-date
+# From phpcompatinfo report for version 5.4.0
 Requires:       php-libxml
 Requires:       php-mbstring
 Requires:       php-openssl
@@ -154,8 +165,6 @@ for the creation, execution and analysis of Unit Tests.
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p0 -b .rpm
-%patch1 -p1 -b .atleast
-rm src/TextUI/Command.php.atleast
 
 # Restore PSR-0 tree
 mv src PHPUnit
@@ -169,6 +178,7 @@ mv src PHPUnit
 
 %{_bindir}/phpab \
   --output   tests/autoload.php \
+  --exclude  '*/BankAccountTest2.php' \
   tests
 
 
@@ -181,7 +191,22 @@ install -D -p -m 755 phpunit %{buildroot}%{_bindir}/phpunit
 
 
 %check
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 ./phpunit --testsuite=small --no-coverage
+   run=1
+fi
+if which php71; then
+   php71 ./phpunit --testsuite=small --no-coverage
+   run=1
+fi
+if [ $run -eq 0 ]; then
 ./phpunit --testsuite=small --no-coverage --verbose
+# remirepo:2
+fi
+exit $ret
 
 
 %clean
@@ -206,53 +231,145 @@ fi
 
 
 %changelog
-* Tue Jul 26 2016 Remi Collet <remi@fedoraproject.org> - 4.8.27-1
-- Update to 4.8.27
+* Wed Aug 31 2016 Remi Collet <remi@fedoraproject.org> - 5.5.4-1
+- Update to 5.5.4
 
-* Fri Jun  3 2016 Remi Collet <remi@fedoraproject.org> - 4.8.26-1
-- Update to 4.8.26
+* Fri Aug  5 2016 Remi Collet <remi@fedoraproject.org> - 5.5.0-1
+- Update to 5.5.0
 
-* Mon Mar 14 2016 Remi Collet <remi@fedoraproject.org> - 4.8.24-1
-- Update to 4.8.24
+* Tue Jul 26 2016 Remi Collet <remi@fedoraproject.org> - 5.4.8-1
+- Update to 5.4.8 (no change)
+- raise dependency on phpunit/php-code-coverage >= 4.0.1
 
-* Thu Feb 11 2016 Remi Collet <remi@fedoraproject.org> - 4.8.23-1
-- Update to 4.8.23
+* Thu Jul 21 2016 Remi Collet <remi@fedoraproject.org> - 5.4.7-1
+- Update to 5.4.7
 
-* Tue Feb  2 2016 Remi Collet <remi@fedoraproject.org> - 4.8.22-1
-- Update to 4.8.22
+* Thu Jun 16 2016 Remi Collet <remi@fedoraproject.org> - 5.4.6-1
+- Update to 5.4.6 (no change)
 
-* Sat Dec 12 2015 Remi Collet <remi@fedoraproject.org> - 4.8.21-1
-- Update to 4.8.21
+* Wed Jun 15 2016 Remi Collet <remi@fedoraproject.org> - 5.4.5-1
+- Update to 5.4.5
 
-* Thu Dec 10 2015 Remi Collet <remi@fedoraproject.org> - 4.8.20-1
-- Update to 4.8.20
+* Thu Jun  9 2016 Remi Collet <remi@fedoraproject.org> - 5.4.4-1
+- Update to 5.4.4
 
-* Mon Nov 30 2015 Remi Collet <remi@fedoraproject.org> - 4.8.19-1
-- Update to 4.8.19
+* Fri Jun  3 2016 Remi Collet <remi@fedoraproject.org> - 5.4.2-1
+- Update to 5.4.2
 
-* Wed Nov 11 2015 Remi Collet <remi@fedoraproject.org> - 4.8.17-1
-- Update to 4.8.17
+* Fri Jun  3 2016 Remi Collet <remi@fedoraproject.org> - 5.4.0-1
+- Update to 5.4.0
+- raise dependency on phpunit/php-code-coverage >= 4.0
+- raise dependency on phpunit/phpunit-mock-objects >= 3.2
 
-* Fri Oct 23 2015 Remi Collet <remi@fedoraproject.org> - 4.8.16-1
-- Update to 4.8.16 (no change)
+* Wed May 11 2016 Remi Collet <remi@fedoraproject.org> - 5.3.4-1
+- Update to 5.3.4
 
-* Thu Oct 22 2015 Remi Collet <remi@fedoraproject.org> - 4.8.15-1
-- Update to 4.8.15
+* Wed Apr 13 2016 Remi Collet <remi@fedoraproject.org> - 5.3.2-1
+- Update to 5.3.2
 
-* Sat Oct 17 2015 Remi Collet <remi@fedoraproject.org> - 4.8.14-1
-- Update to 4.8.14
+* Thu Apr  7 2016 Remi Collet <remi@fedoraproject.org> - 5.3.1-1
+- Update to 5.3.1
 
-* Wed Oct 14 2015 Remi Collet <remi@fedoraproject.org> - 4.8.13-1
-- Update to 4.8.13
+* Fri Apr  1 2016 Remi Collet <remi@fedoraproject.org> - 5.3.0-1
+- Update to 5.3.0
+- add dependency on sebastian/object-enumerator
+- raise dependency on phpunit/phpunit-mock-objects >= 3.1
 
-* Mon Oct 12 2015 Remi Collet <remi@fedoraproject.org> - 4.8.12-1
-- Update to 4.8.12
+* Tue Mar 15 2016 Remi Collet <remi@fedoraproject.org> - 5.2.12-1
+- Update to 5.2.12
 
-* Wed Oct  7 2015 Remi Collet <remi@fedoraproject.org> - 4.8.11-1
-- Update to 4.8.11
+* Mon Mar 14 2016 Remi Collet <remi@fedoraproject.org> - 5.2.11-1
+- Update to 5.2.11
 
-* Fri Oct  2 2015 Remi Collet <remi@fedoraproject.org> - 4.8.10-1
-- Update to 4.8.10
+* Thu Mar  3 2016 Remi Collet <remi@fedoraproject.org> - 5.2.10-1
+- Update to 5.2.10
+- raise dependency on phpunit/php-code-coverage >= 3.3.0
+
+* Fri Feb 19 2016 Remi Collet <remi@fedoraproject.org> - 5.2.9-1
+- Update to 5.2.9
+
+* Thu Feb 18 2016 Remi Collet <remi@fedoraproject.org> - 5.2.8-1
+- Update to 5.2.8
+- raise dependency on phpunit/php-code-coverage >= 3.2.1
+
+* Tue Feb 16 2016 Remi Collet <remi@fedoraproject.org> - 5.2.6-1
+- Update to 5.2.6
+
+* Sat Feb 13 2016 Remi Collet <remi@fedoraproject.org> - 5.2.5-1
+- Update to 5.2.5
+- raise dependency on phpunit/php-code-coverage >= 3.2
+
+* Thu Feb 11 2016 Remi Collet <remi@fedoraproject.org> - 5.2.4-1
+- Update to 5.2.4
+- lower dependency on phpunit/php-code-coverage >= 3.0
+
+* Sun Feb  7 2016 Remi Collet <remi@fedoraproject.org> - 5.2.2-1
+- Update to 5.2.2
+
+* Fri Feb  5 2016 Remi Collet <remi@fedoraproject.org> - 5.2.1-1
+- Update to 5.2.1
+
+* Fri Feb  5 2016 Remi Collet <remi@fedoraproject.org> - 5.2.0-1
+- Update to 5.2.0
+- raise dependency on phpunit/php-code-coverage >= 3.1
+
+* Tue Feb  2 2016 Remi Collet <remi@fedoraproject.org> - 5.1.7-1
+- Update to 5.1.7
+
+* Fri Jan 29 2016 Remi Collet <remi@fedoraproject.org> - 5.1.6-1
+- Update to 5.1.6
+
+* Fri Jan 29 2016 Remi Collet <remi@fedoraproject.org> - 5.1.5-1
+- Update to 5.1.5
+
+* Mon Jan 11 2016 Remi Collet <remi@fedoraproject.org> - 5.1.4-1
+- Update to 5.1.4
+
+* Thu Dec 10 2015 Remi Collet <remi@fedoraproject.org> - 5.1.3-1
+- Update to 5.1.3
+- obsolete php-phpunit-PHPUnit-Selenium
+
+* Mon Dec  7 2015 Remi Collet <remi@fedoraproject.org> - 5.1.2-1
+- Update to 5.1.2
+
+* Thu Dec  3 2015 Remi Collet <remi@fedoraproject.org> - 5.1.0-1
+- Update to 5.1.0
+
+* Mon Nov 30 2015 Remi Collet <remi@fedoraproject.org> - 5.0.10-1
+- Update to 5.0.10
+- run test suite with both PHP 5 and 7 when available
+
+* Wed Nov 11 2015 Remi Collet <remi@fedoraproject.org> - 5.0.9-1
+- Update to 5.0.9
+
+* Fri Oct 23 2015 Remi Collet <remi@fedoraproject.org> - 5.0.8-1
+- Update to 5.0.8 (no change)
+
+* Thu Oct 22 2015 Remi Collet <remi@fedoraproject.org> - 5.0.7-1
+- Update to 5.0.7
+
+* Wed Oct 14 2015 Remi Collet <remi@fedoraproject.org> - 5.0.6-1
+- Update to 5.0.6
+
+* Mon Oct 12 2015 Remi Collet <remi@fedoraproject.org> - 5.0.5-1
+- Update to 5.0.5
+
+* Wed Oct  7 2015 Remi Collet <remi@fedoraproject.org> - 5.0.4-1
+- Update to 5.0.4
+
+* Fri Oct  2 2015 Remi Collet <remi@fedoraproject.org> - 5.0.3-1
+- Update to 5.0.3 (no change)
+
+* Fri Oct  2 2015 Remi Collet <remi@fedoraproject.org> - 5.0.2-1
+- Update to 5.0.2
+
+* Tue Sep 29 2015 Remi Collet <remi@fedoraproject.org> - 5.0.0-0.1.20150927gite3b3f36
+- update to 5.0.0-dev
+- raise dependency on PHP >= 5.6
+- raise dependency on phpunit/php-code-coverage ~3.0
+- raise dependency on phpunit/phpunit-mock-objects ~3.0
+- add dependency on sebastian/resource-operations ~1.0
+- add dependency on myclabs/deep-copy ~1.3
 
 * Sun Sep 27 2015 Remi Collet <remi@fedoraproject.org> - 4.8.9-2
 - add --atleast-version command option, backported from 5.0
