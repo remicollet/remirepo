@@ -1,16 +1,13 @@
-===== 5.6.25RC1 (2016-08-04)
+===== 5.6.25 (2016-08-19)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl56*/build.log
 
 /var/lib/mock/scl56el6x/build.log:Tests failed    :     0
 /var/lib/mock/scl56el7x/build.log:Tests failed    :     0
 /var/lib/mock/scl56fc21x/build.log:Tests failed    :    0
-/var/lib/mock/scl56fc22x/build.log:Tests failed    :    1
+/var/lib/mock/scl56fc22x/build.log:Tests failed    :    0
 /var/lib/mock/scl56fc23x/build.log:Tests failed    :    0
 /var/lib/mock/scl56fc24x/build.log:Tests failed    :    0
-
-fc22x
-		openssl_pkey_new() basic usage tests [ext/openssl/tests/openssl_pkey_new_basic.phpt]
 
 
 * proc_open have erratic results... :(
