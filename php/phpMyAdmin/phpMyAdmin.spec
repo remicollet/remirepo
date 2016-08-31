@@ -41,6 +41,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: unzip
 
+Requires(post): coreutils sed
 Requires:  webserver
 %if %{with_nginx}
 Requires:  nginx-filesystem
@@ -198,9 +199,10 @@ if  [ -d %{_datadir}/%{name}/doc/html ]; then
 fi
 
 %post
-# generate a secret key for this install
-sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RANDOM/" \
-    %{_sysconfdir}/%{name}/config.inc.php
+# generate a 32 chars secret key for this install
+SECRET=$(printf "%04x%04x%04x%04x%04x%04x%04x%04x" $RANDOM $RANDOM $RANDOM $RANDOM $RANDOM $RANDOM $RANDOM $RANDOM)
+sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
+    -i %{_sysconfdir}/%{name}/config.inc.php
 
 
 %files
