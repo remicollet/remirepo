@@ -7,13 +7,17 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    ac8e7a3db35738d56ee9a76e78a4e03d97628983
+%global gh_commit    b13d0d9426ced06958bd32104653526a6c998a52
+#global gh_date      20150902
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   phpunit-mock-objects
 %global php_home     %{_datadir}/php
 %global pear_name    PHPUnit_MockObject
 %global pear_channel pear.phpunit.de
+%global major        3.2
+%global minor        3
+%global specrel      1
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 %else
@@ -21,8 +25,8 @@
 %endif
 
 Name:           php-phpunit-PHPUnit-MockObject
-Version:        2.3.8
-Release:        1%{?dist}
+Version:        %{major}.%{minor}
+Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Mock Object library for PHPUnit
 
 Group:          Development/Libraries
@@ -31,7 +35,7 @@ URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 # Temporary workaround, under investigation
-Patch0:         %{gh_project}-rpm.patch
+Patch0:         %{gh_project}-3.0.0-rpm.patch
 
 # Upstream patches
 
@@ -39,17 +43,18 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-theseer-autoload
 %if %{with_tests}
+BuildRequires:  php(language) >= 5.6
 # From composer.json, "require-dev": {
-#        "phpunit/phpunit": "~4.4"
-BuildRequires:  php-composer(phpunit/phpunit) >= 4.4
+#        "phpunit/phpunit": "^5.4"
+BuildRequires:  php-composer(phpunit/phpunit) >= 5.4
 %endif
 
 # From composer.json, "require": {
-#        "php": ">=5.3.3",
-#        "phpunit/php-text-template": "~1.2",
+#        "php": "^5.6 || ^7.0",
+#        "phpunit/php-text-template": "^1.2",
 #        "doctrine/instantiator": "^1.0.2",
-#        "sebastian/exporter": "~1.2"
-Requires:       php(language) >= 5.3.3
+#        "sebastian/exporter": "^1.2"
+Requires:       php(language) >= 5.6
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
 Requires:       php-composer(doctrine/instantiator) >= 1.0.2
@@ -59,10 +64,14 @@ Requires:       php-composer(sebastian/exporter) <  2
 # From composer.json, "suggest": {
 #        "ext-soap": "*"
 Requires:       php-soap
-# From phpcompatinfo report for version 2.3.5
+# From phpcompatinfo report for version 3.2.0
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
+# From composer.json, "conflict": {
+#        "phpunit/phpunit": "<5.4.0"
+Conflicts:      php-composer(phpunit/phpunit) < 5.4
+
 
 Provides:       php-composer(phpunit/phpunit-mock-objects) = %{version}
 
@@ -74,7 +83,7 @@ Mock Object library for PHPUnit
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-%patch0 -p1
+%patch0 -p0
 
 find . -name \*.orig -exec rm {} \; -print
 
@@ -115,8 +124,21 @@ require __DIR__ . '/_fixture/autoload.php';
 EOF
 
 : Run tests - set include_path to ensure PHPUnit autoloader use it
-%{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
-%{_bindir}/phpunit
+run=0
+if which php56; then
+  run=1
+  php56 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+  %{_bindir}/phpunit --no-coverage
+fi
+if which php70; then
+  run=1
+  php70 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+  %{_bindir}/phpunit --no-coverage
+fi
+if [ $run -eq 0 ]; then
+  %{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+  %{_bindir}/phpunit --no-coverage
+fi
 %endif
 
 
@@ -142,8 +164,50 @@ fi
 
 
 %changelog
-* Fri Oct  2 2015 Remi Collet <remi@fedoraproject.org> - 2.3.8-1
-- update to 2.3.8
+* Sun Jun 12 2016 Remi Collet <remi@fedoraproject.org> - 3.2.3-1
+- Update to 3.2.3
+
+* Sat Jun  4 2016 Remi Collet <remi@fedoraproject.org> - 3.2.1-1
+- Update to 3.2.1 (no change)
+- ensure cannot be installed with old PHPUnit
+
+* Fri Jun  3 2016 Remi Collet <remi@fedoraproject.org> - 3.2.0-1
+- Update to 3.2.0
+- raise build dependency on phpunit >= 5.4
+
+* Thu Apr 21 2016 Remi Collet <remi@fedoraproject.org> - 3.1.3-1
+- Update to 3.1.3
+
+* Thu Mar 24 2016 Remi Collet <remi@fedoraproject.org> - 3.1.2-1
+- Update to 3.1.2
+
+* Wed Mar 23 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-1
+- Update to 3.1.0
+
+* Tue Dec  8 2015 Remi Collet <remi@fedoraproject.org> - 3.0.6-1
+- Update to 3.0.6
+
+* Tue Dec  8 2015 Remi Collet <remi@fedoraproject.org> - 3.0.5-1
+- Update to 3.0.5
+
+* Wed Nov 18 2015 Remi Collet <remi@fedoraproject.org> - 3.0.4-1
+- Update to 3.0.4
+
+* Sun Oct 18 2015 Remi Collet <remi@fedoraproject.org> - 3.0.3-1
+- Update to 3.0.3
+
+* Fri Oct 16 2015 Remi Collet <remi@fedoraproject.org> - 3.0.2-1
+- Update to 3.0.2
+
+* Wed Oct 14 2015 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
+- Update to 3.0.1
+
+* Fri Oct  2 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- Update to 3.0.0
+
+* Mon Sep 14 2015 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.1.20150902git4f526b7
+- update to 3.0.0-dev
+- raise dependency on PHP >= 5.6
 
 * Fri Aug 21 2015 Remi Collet <remi@fedoraproject.org> - 2.3.7-1
 - update to 2.3.7
