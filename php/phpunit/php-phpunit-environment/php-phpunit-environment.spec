@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    4e8f0da10ac5802913afc151413bc8c53b6c2716
+%global gh_commit    be2c607e43ce4c89ecd60e75c6a85c126e754aea
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   environment
@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-phpunit-environment
-Version:        1.3.7
+Version:        1.3.8
 Release:        1%{?dist}
 Summary:        Handle HHVM/PHP environments
 
@@ -34,12 +34,12 @@ BuildRequires:  php(language) >= 5.3.3
 BuildRequires:  %{_bindir}/phpab
 %if %{with_tests}
 # from composer.json, "require-dev": {
-#        "phpunit/phpunit": "~4.4"
-BuildRequires:  php-composer(phpunit/phpunit) >= 4.4
+#        "phpunit/phpunit": "^4.8 || ^5."
+BuildRequires:  php-composer(phpunit/phpunit) >= 4.8
 %endif
 
 # from composer.json, "require": {
-#        "php": ">=5.3.3"
+#        "php": "^5.3.3 || ^7.0"
 Requires:       php(language) >= 5.3.3
 # From phpcompatinfo report for 1.3.7
 Requires:       php-pcre
@@ -78,13 +78,25 @@ cp -pr                           SebastianBergmann/Environment \
 %if %{with_tests}
 %check
 : Run tests - set include_path to ensure PHPUnit autoloader use it
+# remirepo:13
+run=0
+ret=0
+if which php56; then
+   php56 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+   %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/SebastianBergmann/Environment/autoload.php
+   run=1
+fi
+if which php71; then
+   php71 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+   %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/SebastianBergmann/Environment/autoload.php
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
 %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/SebastianBergmann/Environment/autoload.php
-
-if which php70; then
-  php70 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
-  %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/SebastianBergmann/Environment/autoload.php
+# remirepo:2
 fi
+exit $ret
 %endif
 
 
@@ -102,6 +114,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Aug 31 2016 Remi Collet <remi@fedoraproject.org> - 1.3.8-1
+- update to 1.3.8
+
 * Tue May 17 2016 Remi Collet <remi@fedoraproject.org> - 1.3.7-1
 - update to 1.3.7
 - add explicit dependencies on pcre and posix
