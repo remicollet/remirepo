@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    b13d0d9426ced06958bd32104653526a6c998a52
+%global gh_commit    46b249b43fd2ed8e127aa0fdb3cbcf56e9bc0e49
 #global gh_date      20150902
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -16,7 +16,7 @@
 %global pear_name    PHPUnit_MockObject
 %global pear_channel pear.phpunit.de
 %global major        3.2
-%global minor        3
+%global minor        6
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
@@ -124,21 +124,25 @@ require __DIR__ . '/_fixture/autoload.php';
 EOF
 
 : Run tests - set include_path to ensure PHPUnit autoloader use it
+# remirepo:13
+ret=0
 run=0
 if which php56; then
   run=1
   php56 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
-  %{_bindir}/phpunit --no-coverage
+  %{_bindir}/phpunit --no-coverage || ret=1
 fi
-if which php70; then
+if which php71; then
   run=1
-  php70 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
-  %{_bindir}/phpunit --no-coverage
+  php71 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+  %{_bindir}/phpunit --no-coverage || ret=1
 fi
 if [ $run -eq 0 ]; then
-  %{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
-  %{_bindir}/phpunit --no-coverage
+%{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+%{_bindir}/phpunit --no-coverage
+# remirepo:2
 fi
+exit $ret
 %endif
 
 
@@ -164,6 +168,9 @@ fi
 
 
 %changelog
+* Wed Aug 31 2016 Remi Collet <remi@fedoraproject.org> - 3.2.6-1
+- Update to 3.2.6
+
 * Sun Jun 12 2016 Remi Collet <remi@fedoraproject.org> - 3.2.3-1
 - Update to 3.2.3
 
