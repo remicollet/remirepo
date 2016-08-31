@@ -22,8 +22,8 @@
 %endif
 
 Name: phpMyAdmin
-Version: 4.6.3
-Release: 2%{?dist}
+Version: 4.6.4
+Release: 1%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -224,6 +224,9 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
+* Wed Aug 31 2016 Remi Collet <remi@remirepo.net> 4.6.4-1
+- update to 4.6.4 (2016-08-17, security and bug fixes)
+
 * Tue Jul 26 2016 Remi Collet <remi@remirepo.net> 4.6.4-1
 - bump dependency on sql-parser 3.4.4
 
