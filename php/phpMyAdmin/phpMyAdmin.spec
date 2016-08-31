@@ -9,7 +9,7 @@
 #
 # Please, preserve the changelog entries
 #
-#global prever rc1
+#global prever rc2
 %{!?_pkgdocdir: %global _pkgdocdir %{_datadir}/doc/%{name}-%{version}}
 %if 0%{?fedora} >= 21
 # nginx 1.6 with nginx-filesystem
@@ -22,16 +22,18 @@
 %endif
 
 Name: phpMyAdmin
-Version: 4.4.15.7
-Release: 1%{?dist}
+Version: 4.6.3
+Release: 2%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
-# MIT (js/jquery/, js/canvg/, js/codemirror/), GPLv2+ (the rest)
-License:	GPLv2+ and MIT
+# MIT (js/jquery/, js/codemirror/),
+# BSD (libraries/plugins/auth/recaptcha/),
+# GPLv2+ (the rest)
+License: GPLv2+ and MIT and BSD
 URL: https://www.phpmyadmin.net/
-Source0: https://files.phpmyadmin.net/%{name}/%{version}/%{name}-%{version}-all-languages.tar.xz
-Source1: https://files.phpmyadmin.net/%{name}/%{version}/%{name}-%{version}-all-languages.tar.xz.asc
+Source0: https://files.phpmyadmin.net/%{name}/%{version}%{?prever:-%prever}/%{name}-%{version}%{?prever:-%prever}-all-languages.tar.xz
+Source1: https://files.phpmyadmin.net/%{name}/%{version}%{?prever:-%prever}/%{name}-%{version}%{?prever:-%prever}-all-languages.tar.xz.asc
 Source2: phpMyAdmin.htaccess
 Source3: phpMyAdmin.nginx
 
@@ -48,7 +50,7 @@ Requires:  httpd-filesystem
 Requires:  php(httpd)
 Suggests:  httpd
 %endif
-Requires:  php(language) >= 5.3.7
+Requires:  php(language) >= 5.5
 Requires:  php-bcmath
 Requires:  php-bz2
 Requires:  php-ctype
@@ -74,6 +76,7 @@ Requires:  php-php-gettext
 Requires:  php-tcpdf
 Requires:  php-tcpdf-dejavu-sans-fonts
 Requires:  php-composer(phpseclib/phpseclib) >= 2.0.0
+Requires:  php-composer(phpmyadmin/sql-parser) >= 3.4.4
 # optional and ignored php-gmp (as bcmath is enough)
 
 Provides:  phpmyadmin = %{version}-%{release}
@@ -107,11 +110,12 @@ sed -e "/'extension'/s@'mysql'@'mysqli'@"  \
 # Setup vendor config file
 sed -e "/'CHANGELOG_FILE'/s@./ChangeLog@%{_pkgdocdir}/ChangeLog@" \
     -e "/'LICENSE_FILE'/s@./LICENSE@%{_pkgdocdir}/LICENSE@" \
-    -e "/'CONFIG_DIR'/s@'./'@'%{_sysconfdir}/%{name}/'@" \
+    -e "/'CONFIG_DIR'/s@''@'%{_sysconfdir}/%{name}/'@" \
     -e "/'SETUP_CONFIG_FILE'/s@./config/config.inc.php@%{_localstatedir}/lib/%{name}/config/config.inc.php@" \
     -e "/'GETTEXT_INC'/s@./libraries/php-gettext/gettext.inc@%{_datadir}/php/gettext/gettext.inc@" \
     -e "/'TCPDF_INC'/s@./libraries/tcpdf/tcpdf.php@%{_datadir}/php/tcpdf/tcpdf.php@" \
     -e "/'PHPSECLIB_INC_DIR'/s@./libraries/phpseclib@%{_datadir}/php/phpseclib@" \
+    -e "/'SQL_PARSER_AUTOLOAD'/s@./libraries/sql-parser@%{_datadir}/php/SqlParser@" \
 %if 0%{?_licensedir:1}
     -e '/LICENSE_FILE/s:%_defaultdocdir:%_defaultlicensedir:' \
 %endif
@@ -127,6 +131,7 @@ rm doc/html/.buildinfo
 rm -r libraries/php-gettext
 rm -r libraries/tcpdf
 rm -r libraries/phpseclib
+rm -r libraries/sql-parser
 
 # Remove sources of JavaScript librairies
 rm -r js/jquery/src
@@ -171,9 +176,9 @@ mkdir -p %{buildroot}/%{_localstatedir}/lib/%{name}/{upload,save,config}
 rm -rf %{buildroot}%{_datadir}/%{name}/libraries/php-gettext
 rm -rf %{buildroot}%{_datadir}/%{name}/libraries/tcpdf
 
-mv js/jquery/MIT-LICENSE.txt   LICENSE-jquery
-mv js/canvg/MIT-LICENSE.txt    LICENSE-canvg
-mv js/codemirror/LICENSE       LICENSE-codemirror
+mv -f $RPM_BUILD_ROOT%{_datadir}/%{name}/js/jquery/MIT-LICENSE.txt LICENSE-jquery
+mv -f $RPM_BUILD_ROOT%{_datadir}/%{name}/js/codemirror/LICENSE LICENSE-codemirror
+mv -f $RPM_BUILD_ROOT%{_datadir}/%{name}/libraries/plugins/auth/recaptcha/LICENSE LICENSE-recaptcha
 
 
 %clean
@@ -219,29 +224,65 @@ sed -i -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$RANDOM$RANDOM$RANDOM$RAN
 
 
 %changelog
-* Thu Jun 23 2016 Remi Collet <remi@remirepo.net> 4.4.15.7-1
-- update to 4.4.15.7 (2016-06-23, security)
+* Tue Jul 26 2016 Remi Collet <remi@remirepo.net> 4.6.4-1
+- bump dependency on sql-parser 3.4.4
 
-* Fri May 27 2016 Remi Collet <remi@remirepo.net> 4.4.15.6-1
-- update to 4.4.15.6 (2016-05-25, security)
+* Thu Jun 23 2016 Remi Collet <remi@remirepo.net> 4.6.3-1
+- update to 4.6.3 (2016-06-23, security and maintenance release)
 
-* Tue Mar  1 2016 Remi Collet <remi@remirepo.net> 4.4.15.5-1
-- update to 4.4.15.5 (2016-02-29, security)
+* Thu May 26 2016 Remi Collet <remi@remirepo.net> 4.6.2-1
+- update to 4.6.2 (2016-05-25, maintenance release)
 
-* Fri Jan 29 2016 Remi Collet <remi@remirepo.net> 4.4.15.4-1
-- update to 4.4.15.4 (2016-01-29, bugfix)
+* Tue May  3 2016 Remi Collet <remi@remirepo.net> 4.6.1-1
+- update to 4.6.1 (2016-05-03, maintenance release)
 
-* Thu Jan 28 2016 Remi Collet <remi@remirepo.net> 4.4.15.3-1
-- update to 4.4.15.3 (2016-01-28, security)
+* Tue Mar 22 2016 Remi Collet <remi@remirepo.net> 4.6.0-1
+- update to 4.6.0 (2016-03-22, features release)
 
-* Sat Dec 26 2015 Remi Collet <remi@remirepo.net> 4.4.15.2-1
-- update to 4.4.15.2 (2015-12-25, security)
+* Thu Mar  3 2016 Remi Collet <remi@remirepo.net> 4.6.0-0.1.rc2
+- update to 4.6.0-rc2
 
-* Fri Sep 25 2015 Remi Collet <remi@remirepo.net> 4.4.15.1-1
-- update to 4.4.15.1 (2015-10-23, bugfix)
+* Tue Mar  1 2016 Remi Collet <remi@remirepo.net> 4.5.5.1-1
+- update to 4.5.5.1 (2016-02-29, security and bugfix)
+- raise dependency on udan11/sql-parser >= 3.4.0
+
+* Tue Feb 23 2016 Remi Collet <remi@remirepo.net> 4.5.5-1
+- update to 4.5.5 (2016-02-22, bugfix)
+- raise dependency on udan11/sql-parser >= 3.3.1
+
+* Fri Jan 29 2016 Remi Collet <remi@remirepo.net> 4.5.4.1-1
+- update to 4.5.4.1 (2016-01-29, bugfix)
+
+* Thu Jan 28 2016 Remi Collet <remi@remirepo.net> 4.5.4-1
+- update to 4.5.4 (2016-01-28, security and bugfix)
+
+* Sat Dec 26 2015 Remi Collet <remi@remirepo.net> 4.5.3.1-1
+- update to 4.5.3.1 (2015-12-25, security)
+- raise dependency on udan11/sql-parser >= 3.0.8
+
+* Wed Nov 25 2015 Remi Collet <remi@remirepo.net> 4.5.2-1
+- update to 4.5.2 (2015-11-23, bugfix)
+- raise dependency on udan11/sql-parser >= 3.0.5
+
+* Fri Sep 25 2015 Remi Collet <remi@remirepo.net> 4.5.1-1
+- update to 4.5.1 (2015-10-23, bugfix)
+- raise dependency on udan11/sql-parser >= 3.0.3
+
+* Fri Sep 25 2015 Remi Collet <remi@remirepo.net> 4.5.0.2-1
+- update to 4.5.0.2 (2015-09-25, regression fix)
+
+* Thu Sep 24 2015 Remi Collet <remi@remirepo.net> 4.5.0.1-1
+- update to 4.5.0.1 (2015-09-24, regression fix)
+
+* Wed Sep 23 2015 Remi Collet <remi@remirepo.net> 4.5.0-1
+- update to 4.5.0 (2015-09-23, features release)
+- raise php minimal version to 5.5
 
 * Sun Sep 20 2015 Remi Collet <remi@remirepo.net> 4.4.15-1
 - update to 4.4.15 (2015-09-20, last bugfix release)
+
+* Mon Sep 14 2015 Remi Collet <remi@remirepo.net> 4.5.0-0.1.rc1
+- update to 4.5.0-rc1
 
 * Wed Sep  9 2015 Remi Collet <remi@remirepo.net> 4.4.14.1-1
 - update to 4.4.14.1 (2015-09-08, security)
