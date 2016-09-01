@@ -6,7 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package        php-pecl-termbox}
+%if 0%{?scl:1}
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%scl_package       php-pecl-termbox
+%endif
 
 %global with_zts   0%{?__ztsphp:1}
 %global pecl_name  termbox
@@ -18,18 +25,14 @@
 %endif
 
 Summary:        A termbox wrapper for PHP
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.1.2
-Release:        8%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
+Version:        0.1.3
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        ASL 2.0
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-# Upstream patch
-Patch0:         %{pecl_name}-php7.patch
-
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  termbox-devel
 BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
@@ -44,8 +47,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -64,6 +69,10 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -93,9 +102,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-
-%patch0 -p1 -b .php7
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_TERMBOX_VERSION/{s/.* "//;s/".*$//;p}' php_termbox.h)
 if test "x${extver}" != "x%{version}"; then
@@ -133,8 +139,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
@@ -209,12 +213,7 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %doc %{pecl_docdir}/%{pecl_name}
 %{?_licensedir:%license NTS/LICENSE}
 
@@ -229,6 +228,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 01 2016 Remi Collet <remi@fedoraproject.org> - 0.1.3-1
+- Update to 0.1.3
+
 * Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 0.1.2-8
 - adapt for F24
 
