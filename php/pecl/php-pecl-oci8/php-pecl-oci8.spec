@@ -9,9 +9,9 @@
 %{?scl:          %scl_package         php-pecl-oci8}
 %{!?scl:         %global _root_libdir %{_libdir}}
 
-%global with_zts  0%{?__ztsphp:1}
+%global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name oci8
-%global with_tests %{!?_with_tests:0}%{?_with_tests:1}
+%global with_tests 0%{?_with_tests:1}
 %if "%{php_version}" < "5.6"
 %global ini_name  %{pecl_name}.ini
 %else
@@ -27,7 +27,7 @@
 
 Summary:        Extension for Oracle Database
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        2.0.11
+Version:        2.0.12
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 License:        PHP
@@ -308,6 +308,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 01 2016 Remi Collet <remi@fedoraproject.org> - 2.0.12-1
+- Update to 2.0.12
+
 * Mon Apr 18 2016 Remi Collet <remi@fedoraproject.org> - 2.0.11-1
 - Update to 2.0.11
 
