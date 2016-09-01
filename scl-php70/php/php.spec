@@ -26,7 +26,7 @@
 %global zendver     20151012
 %global pdover      20150127
 # Extension version
-%global oci8ver     2.1.1
+%global oci8ver     2.1.2
 
 # Adds -z now to the linker flags
 %global _hardened_build 1
@@ -124,13 +124,13 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver        RC1
+%global rcver        RC1
 %global rpmrel       1
 
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 7.0.10
+Version: 7.0.11
 Release: %{?rcver:0.}%{rpmrel}%{?rcver:.%{rcver}}%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1824,6 +1824,9 @@ fi
 
 
 %changelog
+* Thu Sep  1 2016 Remi Collet <remi@fedoraproject.org> 7.0.11-0.1.RC1
+- Update to 7.0.11RC1
+
 * Wed Aug 31 2016 Remi Collet <remi@fedoraproject.org> 7.0.10-1
 - Update to 7.0.10 - http://www.php.net/releases/7_0_10.php
 
