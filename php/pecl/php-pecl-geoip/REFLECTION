@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #86 geoip version 1.1.0 ] {
+Extension [ <persistent> extension #84 geoip version 1.1.1 ] {
 
   - INI {
     Entry [ geoip.custom_directory <ALL> ]
@@ -33,6 +33,12 @@ Extension [ <persistent> extension #86 geoip version 1.1.0 ] {
     Function [ <internal:geoip> function geoip_country_code3_by_name ] {
     }
     Function [ <internal:geoip> function geoip_country_name_by_name ] {
+    }
+    Function [ <internal:geoip> function geoip_country_code_by_name_v6 ] {
+    }
+    Function [ <internal:geoip> function geoip_country_code3_by_name_v6 ] {
+    }
+    Function [ <internal:geoip> function geoip_country_name_by_name_v6 ] {
     }
     Function [ <internal:geoip> function geoip_continent_code_by_name ] {
     }
