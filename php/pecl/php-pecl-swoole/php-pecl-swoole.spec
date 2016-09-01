@@ -34,14 +34,12 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.8.8
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.8.10
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-Patch0:         %{pecl_name}-upstream.patch
 
 BuildRequires:  %{?scl_prefix}php-devel >= 5.3.10
 BuildRequires:  %{?scl_prefix}php-pear
@@ -137,8 +135,6 @@ sed -e 's/role="test"/role="src"/' \
 
 
 cd NTS
-%patch0 -p1 -b .upstream
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_SWOOLE_VERSION/{s/.* "//;s/".*$//;p}' php_swoole.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
@@ -272,6 +268,12 @@ cd ../ZTS
 
 
 %changelog
+* Thu Sep 01 2016 Remi Collet <remi@fedoraproject.org> - 1.8.10-1
+- Update to 1.8.10
+
+* Thu Sep 01 2016 Remi Collet <remi@fedoraproject.org> - 1.8.9-1
+- Update to 1.8.9
+
 * Thu Jul 28 2016 Remi Collet <remi@fedoraproject.org> - 1.8.8-2
 - add upstream patch and add back --enable-http2 build option
 

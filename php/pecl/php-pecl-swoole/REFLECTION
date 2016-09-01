@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #115 swoole version 1.8.8 ] {
+Extension [ <persistent> extension #115 swoole version 1.8.10 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -63,7 +63,7 @@ Extension [ <persistent> extension #115 swoole version 1.8.8 ] {
     Constant [ integer SWOOLE_DTLSv1_CLIENT_METHOD ] { 17 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.8.8 }
+    Constant [ string SWOOLE_VERSION ] { 1.8.10 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 1 }
     Constant [ integer SWOOLE_FILELOCK ] { 2 }
@@ -254,13 +254,13 @@ Extension [ <persistent> extension #115 swoole version 1.8.8 ] {
       - Properties [0] {
       }
 
-      - Methods [36] {
+      - Methods [38] {
         Method [ <internal:swoole, ctor> public method __construct ] {
 
           - Parameters [4] {
-            Parameter #0 [ <required> $serv_host ]
-            Parameter #1 [ <required> $serv_port ]
-            Parameter #2 [ <optional> $serv_mode ]
+            Parameter #0 [ <required> $host ]
+            Parameter #1 [ <required> $port ]
+            Parameter #2 [ <optional> $mode ]
             Parameter #3 [ <optional> $sock_type ]
           }
         }
@@ -307,7 +307,7 @@ Extension [ <persistent> extension #115 swoole version 1.8.8 ] {
         Method [ <internal:swoole> public method send ] {
 
           - Parameters [3] {
-            Parameter #0 [ <required> $conn_fd ]
+            Parameter #0 [ <required> $fd ]
             Parameter #1 [ <required> $send_data ]
             Parameter #2 [ <optional> $from_id ]
           }
@@ -333,14 +333,14 @@ Extension [ <persistent> extension #115 swoole version 1.8.8 ] {
         Method [ <internal:swoole> public method exist ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> $conn_fd ]
+            Parameter #0 [ <required> $fd ]
           }
         }
 
         Method [ <internal:swoole> public method protect ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> $conn_fd ]
+            Parameter #0 [ <required> $fd ]
             Parameter #1 [ <optional> $is_protected ]
           }
         }
@@ -361,6 +361,20 @@ Extension [ <persistent> extension #115 swoole version 1.8.8 ] {
         }
 
         Method [ <internal:swoole> public method confirm ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fd ]
+          }
+        }
+
+        Method [ <internal:swoole> public method pause ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fd ]
+          }
+        }
+
+        Method [ <internal:swoole> public method resume ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $fd ]
@@ -816,7 +830,7 @@ Extension [ <persistent> extension #115 swoole version 1.8.8 ] {
         Property [ <default> public $sock ]
       }
 
-      - Methods [15] {
+      - Methods [16] {
         Method [ <internal:swoole, ctor> public method __construct ] {
         }
 
@@ -836,6 +850,9 @@ Extension [ <persistent> extension #115 swoole version 1.8.8 ] {
         }
 
         Method [ <internal:swoole> public method setData ] {
+        }
+
+        Method [ <internal:swoole> public method addFile ] {
         }
 
         Method [ <internal:swoole> public method execute ] {
@@ -954,7 +971,7 @@ Extension [ <persistent> extension #115 swoole version 1.8.8 ] {
       - Properties [0] {
       }
 
-      - Methods [18] {
+      - Methods [16] {
         Method [ <internal:swoole, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -1033,18 +1050,6 @@ Extension [ <persistent> extension #115 swoole version 1.8.8 ] {
             Parameter #0 [ <required> $key ]
             Parameter #1 [ <required> $column ]
             Parameter #2 [ <optional> $decrby ]
-          }
-        }
-
-        Method [ <internal:swoole> public method lock ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:swoole> public method unlock ] {
-
-          - Parameters [0] {
           }
         }
 
@@ -1168,7 +1173,7 @@ Extension [ <persistent> extension #115 swoole version 1.8.8 ] {
         Property [ <default> private $global ]
       }
 
-      - Methods [36] {
+      - Methods [38] {
         Method [ <internal:swoole, overwrites swoole_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
@@ -1183,9 +1188,9 @@ Extension [ <persistent> extension #115 swoole version 1.8.8 ] {
         Method [ <internal:swoole, inherits swoole_server, ctor> public method __construct ] {
 
           - Parameters [4] {
-            Parameter #0 [ <required> $serv_host ]
-            Parameter #1 [ <required> $serv_port ]
-            Parameter #2 [ <optional> $serv_mode ]
+            Parameter #0 [ <required> $host ]
+            Parameter #1 [ <required> $port ]
+            Parameter #2 [ <optional> $mode ]
             Parameter #3 [ <optional> $sock_type ]
           }
         }
@@ -1218,7 +1223,7 @@ Extension [ <persistent> extension #115 swoole version 1.8.8 ] {
         Method [ <internal:swoole, inherits swoole_server> public method send ] {
 
           - Parameters [3] {
-            Parameter #0 [ <required> $conn_fd ]
+            Parameter #0 [ <required> $fd ]
             Parameter #1 [ <required> $send_data ]
             Parameter #2 [ <optional> $from_id ]
           }
@@ -1244,14 +1249,14 @@ Extension [ <persistent> extension #115 swoole version 1.8.8 ] {
         Method [ <internal:swoole, inherits swoole_server> public method exist ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> $conn_fd ]
+            Parameter #0 [ <required> $fd ]
           }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method protect ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> $conn_fd ]
+            Parameter #0 [ <required> $fd ]
             Parameter #1 [ <optional> $is_protected ]
           }
         }
@@ -1272,6 +1277,20 @@ Extension [ <persistent> extension #115 swoole version 1.8.8 ] {
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method confirm ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fd ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method pause ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fd ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method resume ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $fd ]
@@ -1567,7 +1586,7 @@ Extension [ <persistent> extension #115 swoole version 1.8.8 ] {
       - Properties [0] {
       }
 
-      - Methods [37] {
+      - Methods [39] {
         Method [ <internal:swoole, overwrites swoole_http_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
@@ -1599,9 +1618,9 @@ Extension [ <persistent> extension #115 swoole version 1.8.8 ] {
         Method [ <internal:swoole, inherits swoole_server, ctor> public method __construct ] {
 
           - Parameters [4] {
-            Parameter #0 [ <required> $serv_host ]
-            Parameter #1 [ <required> $serv_port ]
-            Parameter #2 [ <optional> $serv_mode ]
+            Parameter #0 [ <required> $host ]
+            Parameter #1 [ <required> $port ]
+            Parameter #2 [ <optional> $mode ]
             Parameter #3 [ <optional> $sock_type ]
           }
         }
@@ -1634,7 +1653,7 @@ Extension [ <persistent> extension #115 swoole version 1.8.8 ] {
         Method [ <internal:swoole, inherits swoole_server> public method send ] {
 
           - Parameters [3] {
-            Parameter #0 [ <required> $conn_fd ]
+            Parameter #0 [ <required> $fd ]
             Parameter #1 [ <required> $send_data ]
             Parameter #2 [ <optional> $from_id ]
           }
@@ -1660,7 +1679,7 @@ Extension [ <persistent> extension #115 swoole version 1.8.8 ] {
         Method [ <internal:swoole, inherits swoole_server> public method protect ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> $conn_fd ]
+            Parameter #0 [ <required> $fd ]
             Parameter #1 [ <optional> $is_protected ]
           }
         }
@@ -1681,6 +1700,20 @@ Extension [ <persistent> extension #115 swoole version 1.8.8 ] {
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method confirm ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fd ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method pause ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fd ]
+          }
+        }
+
+        Method [ <internal:swoole, inherits swoole_server> public method resume ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $fd ]
