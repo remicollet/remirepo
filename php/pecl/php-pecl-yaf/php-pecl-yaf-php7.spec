@@ -22,7 +22,7 @@
 
 Summary:       Yet Another Framework
 Name:          %{?sub_prefix}php-pecl-yaf
-Version:       3.0.3
+Version:       3.0.4
 %if 0%{?gh_date:1}
 Release:       0.8.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
@@ -216,6 +216,9 @@ fi
 
 
 %changelog
+* Thu Sep  1 2016 Remi Collet <remi@fedoraproject.org> - 3.0.4-1
+- update to 3.0.4
+
 * Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 3.0.3-1
 - update to 3.0.3
 - drop patch merged upstream
