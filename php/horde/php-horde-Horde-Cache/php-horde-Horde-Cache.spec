@@ -12,8 +12,8 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Cache
-Version:        2.5.3
-Release:        2%{?dist}
+Version:        2.5.4
+Release:        1%{?dist}
 Summary:        Horde Caching API
 
 Group:          Development/Libraries
@@ -96,11 +96,22 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 %check
 cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
 
-php -d apc.enable_cli=1 %{_bindir}/phpunit .
-
-if which php70; then
-   php70 -d apc.enable_cli=1 %{_bindir}/phpunit .
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 -d apc.enable_cli=1 %{_bindir}/phpunit . || ret=1
+   run=1
 fi
+if which php71; then
+   php71 -d apc.enable_cli=1 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+php -d apc.enable_cli=1 %{_bindir}/phpunit --verbose .
+# remirepo:2
+fi
+exit $ret
 
 
 %post
@@ -125,6 +136,9 @@ fi
 
 
 %changelog
+* Thu Sep 01 2016 Remi Collet <remi@fedoraproject.org> - 2.5.4-1
+- Update to 2.5.4 (no change)
+
 * Tue Jun 28 2016 Remi Collet <remi@fedoraproject.org> - 2.5.3-2
 - Horde_Mongo is optional
 
