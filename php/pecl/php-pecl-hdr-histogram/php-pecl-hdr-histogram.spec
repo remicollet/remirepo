@@ -15,7 +15,7 @@
 %scl_package        php-pecl-hdr-histogram
 %endif
 
-%global with_zts   0%{?__ztsphp:1}
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  hdr_histogram
 %global ext_name   hdrhistogram
 %if "%{php_version}" < "5.6"
@@ -26,7 +26,7 @@
 
 Summary:       PHP extension wrapper for the C hdrhistogram API
 Name:          %{?sub_prefix}php-pecl-hdr-histogram
-Version:       0.2.0
+Version:       0.3.0
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
@@ -103,6 +103,8 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
+sed -e '/HDR_VERSION/s/0.2.0/0.3.0/' -i php_hdrhistogram.h
+
 # Check upstream version (often broken)
 extver=$(sed -n '/#define HDR_VERSION/{s/.* "//;s/".*$//;p}' php_hdrhistogram.h)
 if test "x${extver}" != "x%{version}"; then
@@ -225,6 +227,9 @@ fi
 
 
 %changelog
+* Thu Sep 01 2016 Remi Collet <remi@fedoraproject.org> - 0.3.0-1
+- Update to 0.3.0
+
 * Mon Jul 18 2016 Remi Collet <remi@fedoraproject.org> - 0.2.0-1
 - Update to 0.2.0
 

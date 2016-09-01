@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #86 hdrhistogram version 0.2.0 ] {
+Extension [ <persistent> extension #87 hdrhistogram version 0.3.0 ] {
 
   - Functions {
     Function [ <internal:hdrhistogram> function hdr_init ] {
