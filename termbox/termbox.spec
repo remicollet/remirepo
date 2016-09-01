@@ -6,23 +6,22 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    7cdd648ab890764fda6a3ce5da08f60e4392aa8e
+%global gh_commit    aba34487481da9c7102573f8f5db1be469386a72
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20140912
+#global gh_date      20140912
 %global gh_owner     nsf
 %global gh_project   termbox
 
 Name:          termbox
 Version:       1.1.0
-Release:       0.1.%{gh_date}git%{gh_short}%{?dist}
+Release:       1%{?dist}
 Summary:       Minimalist library for text-based user interfaces
 Group:         System Environment/Libraries
 
 License:       MIT
 URL:           https://github.com/%{gh_owner}/%{gh_project}
-Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?gh_date:-%{gh_short}}.tar.gz
+Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: waf
 
 
@@ -70,18 +69,20 @@ export CFLAGS="%{optflags}"
 
 
 %files
-%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license COPYING
 %{_libdir}/lib%{name}.so.*
 
 %files devel
-%defattr(-,root,root,-)
-%doc README
+%doc README.rst
+%doc src/demo/
 %{_includedir}/%{name}.h
 %{_libdir}/lib%{name}.so
 
 
 %changelog
+* Thu Sep  1 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- update to 1.1.0
+
 * Fri Sep 12 2014 Remi Collet <remi@fedoraproject.org> - 1.1.0-0.1.20140912git7cdd648
 - initial package
