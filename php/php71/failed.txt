@@ -1,24 +1,19 @@
-===== 7.1.0beta2 (2016-08-04)
+===== 7.1.0RC1 (2016-09-01)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
-/var/lib/mock/el6i/build.log:Tests failed    :     4
-/var/lib/mock/el6x/build.log:Tests failed    :     2
+/var/lib/mock/el6i/build.log:Tests failed    :     0
+/var/lib/mock/el6x/build.log:Tests failed    :     0
 /var/lib/mock/el7x/build.log:Tests failed    :     1
-/var/lib/mock/fc23i/build.log:Tests failed    :    3
-/var/lib/mock/fc23x/build.log:Tests failed    :    1
-/var/lib/mock/fc24i/build.log:Tests failed    :    3
-/var/lib/mock/fc24x/build.log:Tests failed    :    1
+/var/lib/mock/fc23i/build.log:Tests failed    :    1
+/var/lib/mock/fc23x/build.log:Tests failed    :    0
+/var/lib/mock/fc24i/build.log:Tests failed    :    0
+/var/lib/mock/fc24x/build.log:Tests failed    :    0
 
-el6x,
+el7x
+	*	php://input is empty when enable_post_data_reading=Off [tests/basic/bug67198.phpt]
+fc23i
 	*	Bug #70198 Checking liveness does not work as expected [ext/standard/tests/streams/bug70198.phpt]
-el6i
-	***	Test mt_rand() function : usage variations - different data types as $max argument [ext/standard/tests/math/mt_rand_variation2.phpt]
-el6x, el6x, el7x, fc23i, fc23x, fc24i, fc24x
-	***	Test base64_decode() function : basic functionality - padding and whitespace [ext/standard/tests/url/base64_decode_basic_003.phpt]
-el6i, fc23i, fc24i
-	***	Test rand() function : usage variations - different data types as $min argument [ext/standard/tests/math/rand_variation1.phpt]
-	***	Test rand() function : usage variations - different data types as $max argument [ext/standard/tests/math/rand_variation2.phpt]
 
 *   proc_open give erratic test results :(
 **  date tests vary with tzdata available in system

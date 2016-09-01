@@ -26,7 +26,7 @@
 %global zendver     20160303
 %global pdover      20150127
 # Extension version
-%global oci8ver     2.1.1
+%global oci8ver     2.1.2
 
 # Adds -z now to the linker flags
 %global _hardened_build 1
@@ -124,8 +124,8 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver        beta2
-%global rpmrel       7
+%global rcver        RC1
+%global rpmrel       8
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1824,6 +1824,10 @@ fi
 
 
 %changelog
+* Thu Sep  1 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-0.8.RC1
+- Update to 7.1.0RC1
+- oci8 version is now 2.1.2
+
 * Wed Aug  3 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-0.7.beta2
 - Update to 7.1.0beta2
 

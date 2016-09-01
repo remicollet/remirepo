@@ -1,0 +1,386 @@
+From a70ca97c189e5ccf931a4fa6dd4186a0d6cd3e14 Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Wed, 3 Aug 2016 14:24:35 +0200
+Subject: [PATCH] fix paths in tests
+
+---
+ ext/standard/tests/math/rand_variation1.phpt |  4 +--
+ ext/standard/tests/math/rand_variation2.phpt | 48 ++++++++++++++--------------
+ 2 files changed, 26 insertions(+), 26 deletions(-)
+
+diff --git a/ext/standard/tests/math/rand_variation1.phpt b/ext/standard/tests/math/rand_variation1.phpt
+index 7b38751..7019a99 100644
+--- a/ext/standard/tests/math/rand_variation1.phpt
++++ b/ext/standard/tests/math/rand_variation1.phpt
+@@ -98,7 +98,7 @@ int(%i)
+ 
+ -- Iteration 3 --
+ 
+-Warning: rand(): max(100) is smaller than min(12345) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation1.php on line 79
++Warning: rand(): max(100) is smaller than min(12345) in %s on line %d
+ bool(false)
+ 
+ -- Iteration 4 --
+@@ -106,7 +106,7 @@ int(%i)
+ 
+ -- Iteration 5 --
+ 
+-Warning: rand(): max(100) is smaller than min(2147483647) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation1.php on line 79
++Warning: rand(): max(100) is smaller than min(2147483647) in %s on line %d
+ bool(false)
+ 
+ -- Iteration 6 --
+diff --git a/ext/standard/tests/math/rand_variation2.phpt b/ext/standard/tests/math/rand_variation2.phpt
+index 379f883..04ee205 100644
+--- a/ext/standard/tests/math/rand_variation2.phpt
++++ b/ext/standard/tests/math/rand_variation2.phpt
+@@ -92,12 +92,12 @@ fclose($fp);
+ 
+ -- Iteration 1 --
+ 
+-Warning: rand(): max(0) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand(): max(0) is smaller than min(100) in %s on line %d
+ bool(false)
+ 
+ -- Iteration 2 --
+ 
+-Warning: rand(): max(1) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand(): max(1) is smaller than min(100) in %s on line %d
+ bool(false)
+ 
+ -- Iteration 3 --
+@@ -105,7 +105,7 @@ int(%i)
+ 
+ -- Iteration 4 --
+ 
+-Warning: rand(): max(-2345) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand(): max(-2345) is smaller than min(100) in %s on line %d
+ bool(false)
+ 
+ -- Iteration 5 --
+@@ -113,106 +113,106 @@ int(%i)
+ 
+ -- Iteration 6 --
+ 
+-Warning: rand(): max(10) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand(): max(10) is smaller than min(100) in %s on line %d
+ bool(false)
+ 
+ -- Iteration 7 --
+ 
+-Warning: rand(): max(-10) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand(): max(-10) is smaller than min(100) in %s on line %d
+ bool(false)
+ 
+ -- Iteration 8 --
+ 
+-Warning: rand() expects parameter 2 to be integer, float given in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand() expects parameter 2 to be integer, float given in %s on line %d
+ NULL
+ 
+ -- Iteration 9 --
+ 
+-Warning: rand(): max(0) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand(): max(0) is smaller than min(100) in %s on line %d
+ bool(false)
+ 
+ -- Iteration 10 --
+ 
+-Warning: rand(): max(0) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand(): max(0) is smaller than min(100) in %s on line %d
+ bool(false)
+ 
+ -- Iteration 11 --
+ 
+-Warning: rand(): max(0) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand(): max(0) is smaller than min(100) in %s on line %d
+ bool(false)
+ 
+ -- Iteration 12 --
+ 
+-Warning: rand(): max(0) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand(): max(0) is smaller than min(100) in %s on line %d
+ bool(false)
+ 
+ -- Iteration 13 --
+ 
+-Warning: rand(): max(1) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand(): max(1) is smaller than min(100) in %s on line %d
+ bool(false)
+ 
+ -- Iteration 14 --
+ 
+-Warning: rand(): max(0) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand(): max(0) is smaller than min(100) in %s on line %d
+ bool(false)
+ 
+ -- Iteration 15 --
+ 
+-Warning: rand(): max(1) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand(): max(1) is smaller than min(100) in %s on line %d
+ bool(false)
+ 
+ -- Iteration 16 --
+ 
+-Warning: rand(): max(0) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand(): max(0) is smaller than min(100) in %s on line %d
+ bool(false)
+ 
+ -- Iteration 17 --
+ 
+-Warning: rand() expects parameter 2 to be integer, string given in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand() expects parameter 2 to be integer, string given in %s on line %d
+ NULL
+ 
+ -- Iteration 18 --
+ 
+-Warning: rand() expects parameter 2 to be integer, string given in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand() expects parameter 2 to be integer, string given in %s on line %d
+ NULL
+ 
+ -- Iteration 19 --
+ 
+-Warning: rand() expects parameter 2 to be integer, array given in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand() expects parameter 2 to be integer, array given in %s on line %d
+ NULL
+ 
+ -- Iteration 20 --
+ 
+-Warning: rand() expects parameter 2 to be integer, string given in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand() expects parameter 2 to be integer, string given in %s on line %d
+ NULL
+ 
+ -- Iteration 21 --
+ 
+-Warning: rand() expects parameter 2 to be integer, string given in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand() expects parameter 2 to be integer, string given in %s on line %d
+ NULL
+ 
+ -- Iteration 22 --
+ 
+-Warning: rand() expects parameter 2 to be integer, string given in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand() expects parameter 2 to be integer, string given in %s on line %d
+ NULL
+ 
+ -- Iteration 23 --
+ 
+-Warning: rand() expects parameter 2 to be integer, object given in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand() expects parameter 2 to be integer, object given in %s on line %d
+ NULL
+ 
+ -- Iteration 24 --
+ 
+-Warning: rand(): max(0) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand(): max(0) is smaller than min(100) in %s on line %d
+ bool(false)
+ 
+ -- Iteration 25 --
+ 
+-Warning: rand(): max(0) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand(): max(0) is smaller than min(100) in %s on line %d
+ bool(false)
+ 
+ -- Iteration 26 --
+ 
+-Warning: rand() expects parameter 2 to be integer, resource given in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++Warning: rand() expects parameter 2 to be integer, resource given in %s on line %d
+ NULL
+ ===Done===
+-- 
+2.1.4
+
+From cff668f7a7a5891d29b69eda2a4a1ad58e3d1afc Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Wed, 3 Aug 2016 12:56:07 +0200
+Subject: [PATCH] Fix 32bits tests
+
+Notice: this warning is only raise since rand is an alias to mt_rand
+---
+ ext/standard/tests/math/rand_variation1.phpt |  8 ++-
+ ext/standard/tests/math/rand_variation2.phpt | 78 +++++++++++++++++++---------
+ 2 files changed, 60 insertions(+), 26 deletions(-)
+
+diff --git a/ext/standard/tests/math/rand_variation1.phpt b/ext/standard/tests/math/rand_variation1.phpt
+index f14ada8..7b38751 100644
+--- a/ext/standard/tests/math/rand_variation1.phpt
++++ b/ext/standard/tests/math/rand_variation1.phpt
+@@ -97,13 +97,17 @@ int(%i)
+ int(%i)
+ 
+ -- Iteration 3 --
+-int(%i)
++
++Warning: rand(): max(100) is smaller than min(12345) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation1.php on line 79
++bool(false)
+ 
+ -- Iteration 4 --
+ int(%i)
+ 
+ -- Iteration 5 --
+-int(%i)
++
++Warning: rand(): max(100) is smaller than min(2147483647) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation1.php on line 79
++bool(false)
+ 
+ -- Iteration 6 --
+ int(%i)
+diff --git a/ext/standard/tests/math/rand_variation2.phpt b/ext/standard/tests/math/rand_variation2.phpt
+index 824b47b..379f883 100644
+--- a/ext/standard/tests/math/rand_variation2.phpt
++++ b/ext/standard/tests/math/rand_variation2.phpt
+@@ -91,98 +91,128 @@ fclose($fp);
+ *** Testing rand) : usage variations ***
+ 
+ -- Iteration 1 --
+-int(%i)
++
++Warning: rand(): max(0) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++bool(false)
+ 
+ -- Iteration 2 --
+-int(%i)
++
++Warning: rand(): max(1) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++bool(false)
+ 
+ -- Iteration 3 --
+ int(%i)
+ 
+ -- Iteration 4 --
+-int(%i)
++
++Warning: rand(): max(-2345) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++bool(false)
+ 
+ -- Iteration 5 --
+ int(%i)
+ 
+ -- Iteration 6 --
+-int(%i)
++
++Warning: rand(): max(10) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++bool(false)
+ 
+ -- Iteration 7 --
+-int(%i)
++
++Warning: rand(): max(-10) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++bool(false)
+ 
+ -- Iteration 8 --
+ 
+-Warning: rand() expects parameter 2 to be integer, float given in %s on line %d
++Warning: rand() expects parameter 2 to be integer, float given in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
+ NULL
+ 
+ -- Iteration 9 --
+-int(%i)
++
++Warning: rand(): max(0) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++bool(false)
+ 
+ -- Iteration 10 --
+-int(%i)
++
++Warning: rand(): max(0) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++bool(false)
+ 
+ -- Iteration 11 --
+-int(%i)
++
++Warning: rand(): max(0) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++bool(false)
+ 
+ -- Iteration 12 --
+-int(%i)
++
++Warning: rand(): max(0) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++bool(false)
+ 
+ -- Iteration 13 --
+-int(%i)
++
++Warning: rand(): max(1) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++bool(false)
+ 
+ -- Iteration 14 --
+-int(%i)
++
++Warning: rand(): max(0) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++bool(false)
+ 
+ -- Iteration 15 --
+-int(%i)
++
++Warning: rand(): max(1) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++bool(false)
+ 
+ -- Iteration 16 --
+-int(%i)
++
++Warning: rand(): max(0) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++bool(false)
+ 
+ -- Iteration 17 --
+ 
+-Warning: rand() expects parameter 2 to be integer, string given in %s on line %d
++Warning: rand() expects parameter 2 to be integer, string given in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
+ NULL
+ 
+ -- Iteration 18 --
+ 
+-Warning: rand() expects parameter 2 to be integer, string given in %s on line %d
++Warning: rand() expects parameter 2 to be integer, string given in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
+ NULL
+ 
+ -- Iteration 19 --
+ 
+-Warning: rand() expects parameter 2 to be integer, array given in %s on line %d
++Warning: rand() expects parameter 2 to be integer, array given in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
+ NULL
+ 
+ -- Iteration 20 --
+ 
+-Warning: rand() expects parameter 2 to be integer, string given in %s on line %d
++Warning: rand() expects parameter 2 to be integer, string given in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
+ NULL
+ 
+ -- Iteration 21 --
+ 
+-Warning: rand() expects parameter 2 to be integer, string given in %s on line %d
++Warning: rand() expects parameter 2 to be integer, string given in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
+ NULL
+ 
+ -- Iteration 22 --
+ 
+-Warning: rand() expects parameter 2 to be integer, string given in %s on line %d
++Warning: rand() expects parameter 2 to be integer, string given in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
+ NULL
+ 
+ -- Iteration 23 --
+ 
+-Warning: rand() expects parameter 2 to be integer, object given in %s on line %d
++Warning: rand() expects parameter 2 to be integer, object given in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
+ NULL
+ 
+ -- Iteration 24 --
+-int(%i)
++
++Warning: rand(): max(0) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++bool(false)
+ 
+ -- Iteration 25 --
+-int(%i)
++
++Warning: rand(): max(0) is smaller than min(100) in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
++bool(false)
+ 
+ -- Iteration 26 --
+ 
+-Warning: rand() expects parameter 2 to be integer, resource given in %s on line %d
++Warning: rand() expects parameter 2 to be integer, resource given in /builddir/build/BUILD/php-7.1.0beta2/ext/standard/tests/math/rand_variation2.php on line 79
+ NULL
+ ===Done===
+-- 
+2.1.4
+

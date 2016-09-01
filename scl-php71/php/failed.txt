@@ -1,15 +1,16 @@
-===== 7.1.0beta2 (2016-08-04)
+===== 7.1.0RC1 (2016-09-01)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl71*/build.log
 
-/var/lib/mock/scl70el6x/build.log:Tests failed    :     1
-/var/lib/mock/scl70el7x/build.log:Tests failed    :     1
-/var/lib/mock/scl70fc22x/build.log:Tests failed    :    1
-/var/lib/mock/scl70fc23x/build.log:Tests failed    :    1
-/var/lib/mock/scl70fc24x/build.log:Tests failed    :    1
+/var/lib/mock/scl70el6x/build.log:Tests failed    :     0
+/var/lib/mock/scl70el7x/build.log:Tests failed    :     0
+/var/lib/mock/scl70fc22x/build.log:Tests failed    :    2
+/var/lib/mock/scl70fc23x/build.log:Tests failed    :    0
+/var/lib/mock/scl70fc24x/build.log:Tests failed    :    0
 
-el6x, el7x, fc22x, fc23x, fc24x
-	**	Test base64_decode() function : basic functionality - padding and whitespace [ext/standard/tests/url/base64_decode_basic_003.phpt]
+fc22x
+		Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
+		Bug #64438 proc_open hangs with stdin/out with 4097+ bytes [ext/standard/tests/streams/proc_open_bug64438.phpt]
 
 
 *	proc_open give erratic test results :(

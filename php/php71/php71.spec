@@ -14,9 +14,9 @@
 %global pdover      20150127
 # Extension version
 %global fileinfover 1.0.5
-%global oci8ver     2.1.1
+%global oci8ver     2.1.2
 %global zipver      1.13.0
-%global jsonver     1.4.0
+%global jsonver     1.5.0
 
 # Adds -z now to the linker flags
 %global _hardened_build 1
@@ -120,8 +120,8 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver         beta2
-%global rpmrel        2
+%global rcver         RC1
+%global rpmrel        3
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -177,6 +177,7 @@ Patch47: php-5.6.3-phpinfo.patch
 Patch91: php-5.6.3-oci8conf.patch
 
 # Upstream fixes (100+)
+Patch100: php-upstream.patch
 
 # Security fixes (200+)
 
@@ -958,6 +959,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
+%patch100 -p1 -R -b .upstream
 
 # security patches
 
@@ -1994,6 +1996,11 @@ fi
 
 
 %changelog
+* Thu Sep  1 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-0.3.RC1
+- Update to 7.1.0RC1
+- oci8 version is now 2.1.2
+- json version is now 1.5.0
+
 * Wed Aug  3 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-0.2.beta2
 - Update to 7.1.0beta2
 
