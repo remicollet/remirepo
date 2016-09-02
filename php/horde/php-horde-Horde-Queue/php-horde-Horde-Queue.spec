@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Queue
-Version:        1.1.3
+Version:        1.1.4
 Release:        1%{?dist}
 Summary:        Horde Queue
 
@@ -90,6 +90,9 @@ fi
 
 
 %changelog
+* Fri Sep 02 2016 Remi Collet <remi@fedoraproject.org> - 1.1.4-1
+- Update to 1.1.4
+
 * Wed Oct 21 2015 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
 - Update to 1.1.3
 
