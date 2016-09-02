@@ -15,7 +15,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-Horde-Lock
-Version:        2.1.3
+Version:        2.1.4
 Release:        1%{?dist}
 Summary:        Horde Resource Locking System
 
@@ -127,6 +127,9 @@ fi
 
 
 %changelog
+* Fri Sep 02 2016 Remi Collet <remi@fedoraproject.org> - 2.1.4-1
+- Update to 2.1.4
+
 * Sun Jul 03 2016 Remi Collet <remi@fedoraproject.org> - 2.1.3-1
 - Update to 2.1.3
 
