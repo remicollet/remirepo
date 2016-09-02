@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    7d7cf9573638448acdde5b2ee4a30ebd33401fb7
+%global gh_commit    acf878ec292fc8fbd7d1cbf11e054d98fe980ae8
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-helpers
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.0.0
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        Helper/Utility classes for Expressive
 
@@ -128,15 +128,17 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
+sed -e 's/Syntax error//' -i test/BodyParams/JsonStrategyTest.php
+
 # remirepo:11
 run=0
 ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit || ret=1
-   run=1
-fi
 if which php71; then
    php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -163,6 +165,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep  2 2016 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- update to 2.0.3
+
 * Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - update to 2.0.0
 
