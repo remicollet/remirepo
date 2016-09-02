@@ -3,7 +3,7 @@
 
 %global github_owner            phpseclib
 %global github_name             phpseclib
-%global github_commit           3d265f7c079f5b37d33475f996d7a383c5fc8aeb
+%global github_commit           41f85e9c2582b3f6d1b7d20395fb40c687ad5370
 %global github_short            %(c=%{github_commit}; echo ${c:0:7})
 %if 0%{?rhel} == 5
 %global with_tests              0%{?_with_tests:1}
@@ -12,7 +12,7 @@
 %endif
 
 Name:       php-%{composer_vendor}
-Version:    2.0.2
+Version:    2.0.3
 Release:    1%{?dist}
 Summary:    PHP Secure Communications Library
 
@@ -79,8 +79,8 @@ if which php56; then
    php56 %{_bindir}/phpunit || ret=1
    run=1
 fi
-if which php70; then
-   php70 %{_bindir}/phpunit || ret=1
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -101,6 +101,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep  2 2016 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- update to 2.0.3
+
 * Tue Jun  7 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - update to 2.0.2
 
