@@ -11,7 +11,7 @@
 %global pear_name Crypt_Random
 
 Name:           php-phpseclib-crypt-random
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}
 Summary:        Random Number Generator
 
@@ -85,6 +85,9 @@ fi
 
 
 %changelog
+* Fri Sep 02 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3 (no change)
+
 * Wed May 11 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Update to 1.0.2
 

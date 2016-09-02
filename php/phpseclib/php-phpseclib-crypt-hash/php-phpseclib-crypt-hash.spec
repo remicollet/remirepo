@@ -11,7 +11,7 @@
 %global pear_name Crypt_Hash
 
 Name:           php-phpseclib-crypt-hash
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}
 Summary:        Pure-PHP implementations of keyed HMACs and hashing functions
 
@@ -86,6 +86,9 @@ fi
 
 
 %changelog
+* Fri Sep 02 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3
+
 * Wed May 11 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Update to 1.0.2 (no change)
 

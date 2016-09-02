@@ -11,7 +11,7 @@
 %global pear_name Net_SFTP
 
 Name:           php-phpseclib-net-sftp
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}
 Summary:        Pure-PHP implementation of SFTP
 
@@ -88,6 +88,9 @@ fi
 
 
 %changelog
+* Fri Sep 02 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3
+
 * Wed May 11 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Update to 1.0.2
 
