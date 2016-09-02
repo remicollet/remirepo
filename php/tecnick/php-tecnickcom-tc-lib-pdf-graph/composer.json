@@ -14,7 +14,8 @@
     ],
     "require": {
         "php": ">=5.4",
-        "tecnickcom/tc-lib-color": "^1.11.0"
+        "tecnickcom/tc-lib-color": "^1.12.1",
+        "tecnickcom/tc-lib-pdf-encrypt": "^1.4.3"
     },
     "require-dev": {
         "apigen/apigen" : "^4.1.2",
@@ -35,6 +36,10 @@
         {
             "type": "vcs",
             "url": "git@github.com:tecnickcom/tc-lib-color.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:tecnickcom/tc-lib-pdf-encrypt.git"
         }
     ]
 }

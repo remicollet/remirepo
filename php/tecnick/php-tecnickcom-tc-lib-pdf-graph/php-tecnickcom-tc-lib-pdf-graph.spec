@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    47d3302930e11722d31002a25091f50922ab6136
+%global gh_commit    00b479529d98adacbbb9cc3a7ef7d6d73eb9cd60
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.1.0
+Version:        1.4.1
 Release:        1%{?dist}
 Summary:        PHP library containing PDF graphic and geometric methods
 
@@ -30,17 +30,21 @@ BuildArch:      noarch
 # For tests
 BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php(language) >= 5.4
-BuildRequires:  php-composer(%{c_vendor}/tc-lib-color) >= 1.8.0
+BuildRequires:  php-composer(%{c_vendor}/tc-lib-color) >= 1.12.1
+BuildRequires:  php-composer(%{c_vendor}/tc-lib-pdf-encrypt) >= 1.4.3
 %endif
 
 # From composer.json, "require": {
 #        "php": ">=5.4"
-#        "tecnickcom/tc-lib-color": "^1.11.0"
+#        "tecnickcom/tc-lib-color": "^1.12.1",
+#        "tecnickcom/tc-lib-pdf-encrypt": "^1.4.3"
 Requires:       php(language) >= 5.4
-Requires:       php-composer(%{c_vendor}/tc-lib-color) >= 1.11.0
+Requires:       php-composer(%{c_vendor}/tc-lib-color) >= 1.12.1
 Requires:       php-composer(%{c_vendor}/tc-lib-color) <  2
-# From phpcompatinfo report for version 2.0.1
-# nothing
+Requires:       php-composer(%{c_vendor}/tc-lib-pdf-encrypt) >= 1.4.3
+Requires:       php-composer(%{c_vendor}/tc-lib-pdf-encrypt) <  2
+# From phpcompatinfo report for version 1.4.1
+Requires:       php-zlib
 
 # Composer
 Provides:       php-composer(%{c_vendor}/%{gh_project}) = %{version}
@@ -82,11 +86,22 @@ require '%{buildroot}%{php_project}/autoload.php';
 require '%{php_project}/../../Color/autoload.php';
 EOF
 
-%{_bindir}/phpunit --verbose
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -107,6 +122,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep  2 2016 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
+- update to 1.4.1
+- raise dependency on tecnickcom/tc-lib-color >= 1.12.1
+- add dependency on tecnickcom/tc-lib-pdf-encrypt
+
 * Tue Jun 14 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - update to 1.1.0 (no change)
 
