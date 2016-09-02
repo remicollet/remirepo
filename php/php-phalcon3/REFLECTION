@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #140 phalcon version 3.0.0 ] {
+Extension [ <persistent> extension #142 phalcon version 3.0.1 ] {
 
   - INI {
     Entry [ phalcon.db.escape_identifiers <ALL> ]
@@ -2892,6 +2892,32 @@ Extension [ <persistent> extension #140 phalcon version 3.0.0 ] {
             Parameter #0 [ <required> $translation ]
             Parameter #1 [ <optional> $placeholders ]
           }
+        }
+      }
+    }
+
+    Interface [ <internal:phalcon> interface Phalcon\Acl\ResourceInterface ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [3] {
+        Method [ <internal:phalcon> abstract public method getName ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method getDescription ] {
+        }
+
+        Method [ <internal:phalcon> abstract public method __toString ] {
         }
       }
     }
@@ -6626,32 +6652,6 @@ Extension [ <persistent> extension #140 phalcon version 3.0.0 ] {
 
       - Methods [1] {
         Method [ <internal:phalcon> abstract public method getResourceName ] {
-        }
-      }
-    }
-
-    Interface [ <internal:phalcon> interface Phalcon\Acl\ResourceInterface ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [3] {
-        Method [ <internal:phalcon> abstract public method getName ] {
-        }
-
-        Method [ <internal:phalcon> abstract public method getDescription ] {
-        }
-
-        Method [ <internal:phalcon> abstract public method __toString ] {
         }
       }
     }
@@ -12340,7 +12340,7 @@ Extension [ <persistent> extension #140 phalcon version 3.0.0 ] {
       }
     }
 
-    Class [ <internal:phalcon> class Phalcon\Acl\Resource ] {
+    Class [ <internal:phalcon> class Phalcon\Acl\Resource implements Phalcon\Acl\ResourceInterface ] {
 
       - Constants [0] {
       }
@@ -12357,13 +12357,13 @@ Extension [ <persistent> extension #140 phalcon version 3.0.0 ] {
       }
 
       - Methods [4] {
-        Method [ <internal:phalcon> public method getName ] {
+        Method [ <internal:phalcon, prototype Phalcon\Acl\ResourceInterface> public method getName ] {
         }
 
-        Method [ <internal:phalcon> public method __toString ] {
+        Method [ <internal:phalcon, prototype Phalcon\Acl\ResourceInterface> public method __toString ] {
         }
 
-        Method [ <internal:phalcon> public method getDescription ] {
+        Method [ <internal:phalcon, prototype Phalcon\Acl\ResourceInterface> public method getDescription ] {
         }
 
         Method [ <internal:phalcon, ctor> public method __construct ] {
@@ -16495,8 +16495,9 @@ Extension [ <persistent> extension #140 phalcon version 3.0.0 ] {
       - Methods [12] {
         Method [ <internal:phalcon, overwrites Phalcon\Config, ctor> public method __construct ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $filePath ]
+            Parameter #1 [ <optional> $mode ]
           }
         }
 
@@ -30087,7 +30088,7 @@ Extension [ <persistent> extension #140 phalcon version 3.0.0 ] {
         Property [ <default> protected $_snapshot ]
       }
 
-      - Methods [78] {
+      - Methods [77] {
         Method [ <internal:phalcon, ctor> final public method __construct ] {
 
           - Parameters [3] {
@@ -30522,13 +30523,6 @@ Extension [ <persistent> extension #140 phalcon version 3.0.0 ] {
           - Parameters [2] {
             Parameter #0 [ <required> $property ]
             Parameter #1 [ <required> $value ]
-          }
-        }
-
-        Method [ <internal:phalcon> final protected method _isVisible ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $property ]
           }
         }
 
@@ -30975,13 +30969,14 @@ Extension [ <persistent> extension #140 phalcon version 3.0.0 ] {
       - Static methods [0] {
       }
 
-      - Properties [24] {
+      - Properties [25] {
         Property [ <default> protected $_dependencyInjector ]
         Property [ <default> protected $_eventsManager ]
         Property [ <default> protected $_customEventsManager ]
         Property [ <default> protected $_readConnectionServices ]
         Property [ <default> protected $_writeConnectionServices ]
         Property [ <default> protected $_aliases ]
+        Property [ <default> protected $_modelVisibility ]
         Property [ <default> protected $_hasMany ]
         Property [ <default> protected $_hasManySingle ]
         Property [ <default> protected $_hasOne ]
@@ -31002,7 +30997,7 @@ Extension [ <persistent> extension #140 phalcon version 3.0.0 ] {
         Property [ <default> protected $_namespaceAliases ]
       }
 
-      - Methods [62] {
+      - Methods [63] {
         Method [ <internal:phalcon, prototype Phalcon\Di\InjectionAwareInterface> public method setDI ] {
 
           - Parameters [1] {
@@ -31068,6 +31063,14 @@ Extension [ <persistent> extension #140 phalcon version 3.0.0 ] {
           - Parameters [2] {
             Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
             Parameter #1 [ <required> $source ]
+          }
+        }
+
+        Method [ <internal:phalcon> final public method isVisibleModelProperty ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> Phalcon\Mvc\ModelInterface $model ]
+            Parameter #1 [ <required> $property ]
           }
         }
 
@@ -40674,7 +40677,7 @@ Extension [ <persistent> extension #140 phalcon version 3.0.0 ] {
           }
         }
 
-        Method [ <internal:phalcon> private method getOptionsDefault ] {
+        Method [ <internal:phalcon> protected method getOptionsDefault ] {
         }
 
         Method [ <internal:phalcon, inherits Phalcon\Translate\Adapter> public method setInterpolator ] {

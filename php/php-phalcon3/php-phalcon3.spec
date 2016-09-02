@@ -17,7 +17,7 @@
 %global pkg_name   %{name}
 %endif
 
-%global gh_commit    5372ac7972218b10fd9f08027a7718ea10f191b5
+%global gh_commit    23b4100faa3ef91863d7f05de3f1c7a450cd52bc
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phalcon
 %global gh_project   cphalcon
@@ -33,8 +33,8 @@
 %endif
 
 Name:           %{?sub_prefix}php-phalcon3
-Version:        3.0.0
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        3.0.1
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Phalcon Framework
 
 Group:          Development/Libraries
@@ -249,12 +249,15 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep  2 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
+- update to 3.0.1
+
 * Sat Jul 30 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-2
 - generate sources using zephir
 
 * Sat Jul 30 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
 - update to 3.0.0
-- rename to php-phalcon2
+- rename to php-phalcon3
 - PHP 7 build is broken for now
   open https://github.com/phalcon/cphalcon/issues/12054
 
