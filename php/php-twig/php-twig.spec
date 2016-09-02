@@ -14,8 +14,8 @@
 
 %global github_owner     twigphp
 %global github_name      Twig
-%global github_version   1.24.1
-%global github_commit    3566d311a92aae4deec6e48682dc5a4528c4a512
+%global github_version   1.24.2
+%global github_commit    33093f6e310e6976baeac7b14f3a6ec02f2d79b7
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %if "%{php_version}" < "7"
@@ -50,8 +50,14 @@ BuildArch: noarch
 %global sub_prefix %{scl_prefix}
 %endif
 %else
+%if 0%{?fedora}
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
+%else
+# Build using "--with tests" to enable tests
+# PHPUnit in remi requires PHP 5.6
+%global with_tests 0%{?_with_tests:1}
+%endif
 %endif
 
 %{?scl:          %scl_package        php-twig}
@@ -62,7 +68,7 @@ BuildArch: noarch
 
 Name:          %{?sub_prefix}php-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:       The flexible, fast, and secure template engine for PHP
 
 Group:         Development/Libraries
@@ -154,6 +160,10 @@ Obsoletes:     php56w-%{ext_name} <= %{version}
 Obsoletes:     php70u-%{ext_name} <= %{version}
 Obsoletes:     php70w-%{ext_name} <= %{version}
 %endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-%{ext_name} <= %{version}
+Obsoletes:     php71w-%{ext_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -182,6 +192,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
+
+echo PHP version %{php_version}
+echo Build extension %{with_ext}
 
 %if %{with_ext}
 : Ext -- NTS
@@ -285,17 +298,30 @@ sed -e 's/function testGetAttributeWithTemplateAsObject/function skip_testGetAtt
 %endif
 
 : Test suite without extension
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php --verbose
+# remirepo:1
+fi
 
 %if %{with_ext}
 : Test suite with extension
 %{_bindir}/php --define extension=ext/NTS/modules/%{ext_name}.so \
     %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php --verbose
-
-if which php70; then
-   php70 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php --verbose
-fi
 %endif
+
+# remirepo:1
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -326,6 +352,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep  2 2016 Remi Collet <remi@fedoraproject.org> - 1.24.2-1
+- Update to 1.24.2
+
 * Mon Jun 27 2016 Remi Collet <remi@fedoraproject.org> - 1.24.1-2
 - fix dependency with PHP-7
 
