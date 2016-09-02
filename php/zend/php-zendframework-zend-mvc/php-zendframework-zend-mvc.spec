@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    3c6c9e570e01a8b8fcb0605d2f8eb25812c0c273
+%global gh_commit    69ac3e4dcf0639101ac71478dcb39941ba4e7e7e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-mvc
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        3.0.2
+Version:        3.0.3
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -222,6 +222,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep  2 2016 Remi Collet <remi@fedoraproject.org> - 3.0.3-1
+- update to 3.0.3
+
 * Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 3.0.2-1
 - update to 3.0.2
 
