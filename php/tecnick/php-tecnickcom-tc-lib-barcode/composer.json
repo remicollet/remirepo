@@ -14,7 +14,7 @@
     ],
     "require": {
         "php": ">=5.4",
-        "tecnickcom/tc-lib-color": "^1.11.0"
+        "tecnickcom/tc-lib-color": "^1.12.1"
     },
     "require-dev": {
         "apigen/apigen" : "^4.1.2",
@@ -29,6 +29,11 @@
     "autoload": {
         "psr-4":{
             "Com\\Tecnick\\Barcode\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4":{
+            "Test\\": "test"
         }
     },
     "repositories": [
