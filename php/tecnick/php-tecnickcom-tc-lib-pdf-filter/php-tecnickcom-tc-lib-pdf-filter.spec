@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0aa2a8fe28e65fa354dcfeae5c85bc1bd6ae8ac9
+%global gh_commit    b26d5e06b8bd7bef836b0c18530b971839eee664
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.3.0
+Version:        1.3.3
 Release:        1%{?dist}
 Summary:        PHP library to decode PDF compression and encryption filters
 
@@ -80,11 +80,22 @@ cat <<EOF | tee vendor/autoload.php
 require '%{buildroot}%{php_project}/autoload.php';
 EOF
 
-%{_bindir}/phpunit --verbose
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -107,6 +118,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep  2 2016 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
+- update to 1.3.3 (no change)
+
 * Tue Jun 14 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - update to 1.3.0 (no change)
 
