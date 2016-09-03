@@ -13,8 +13,8 @@
 
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.8.9
-%global github_commit    df02dd5d3f7decb3a05c6d0f31054b4263625dcb
+%global github_version   2.8.10
+%global github_commit    84e8eb7690eea267526c3d40050b4c54f1878b7a
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -178,7 +178,7 @@ BuildRequires: php-xml
 # Bridges
 Requires:      php-composer(%{composer_vendor}/doctrine-bridge)      = %{version}
 Requires:      php-composer(%{composer_vendor}/monolog-bridge)       = %{version}
-Requires:      php-composer(%{composer_vendor}/proxy-manager-bridge) = %{version}
+#Requires:      php-composer(%%{composer_vendor}/proxy-manager-bridge) = %%{version}
 Requires:      php-composer(%{composer_vendor}/swiftmailer-bridge)   = %{version}
 Requires:      php-composer(%{composer_vendor}/twig-bridge)          = %{version}
 # Bundles
@@ -2678,6 +2678,11 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Sat Sep  3 2016 Remi Collet <remi@fedoraproject.org> - 2.8.10-1
+- Update to 2.8.10
+- remove proxy-manager-bridge from default installation
+  to avoid dependency on PHP 7
+
 * Sat Jul 30 2016 Remi Collet <remi@fedoraproject.org> - 2.8.9-1
 - Update to 2.8.9
 
