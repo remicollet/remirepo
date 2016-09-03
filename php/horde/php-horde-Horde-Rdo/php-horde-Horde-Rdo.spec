@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Rdo
-Version:        2.0.5
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Rampage Data Objects
 
@@ -77,15 +77,27 @@ install -pm 644 %{name}.xml %{buildroot}%{pear_xmldir}
 
 
 %check
+cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
+
+# remirepo:14
 %if 0%{?rhel} == 5
 : test skipped, issue with sqlite, need investigation
 %else
-cd %{pear_name}-%{version}/test/$(echo %{pear_name} | sed -e s:_:/:g)
-%{_bindir}/phpunit .
-
-if which php70; then
-   php70 %{_bindir}/phpunit .
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit . || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose .
+# remirepo:3
+fi
+exit $ret
 %endif
 
 
@@ -110,6 +122,9 @@ fi
 
 
 %changelog
+* Fri Sep 02 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- Update to 2.1.0
+
 * Tue Feb 02 2016 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
 - Update to 2.0.5
 - PHP 7 compatible version
