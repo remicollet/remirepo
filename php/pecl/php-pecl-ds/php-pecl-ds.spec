@@ -29,7 +29,7 @@
 
 Summary:        Data Structures for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.1.5
+Version:        1.1.6
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        MIT
 Group:          Development/Languages
@@ -225,6 +225,9 @@ cd ..
 
 
 %changelog
+* Sun Sep 04 2016 Remi Collet <remi@fedoraproject.org> - 1.1.6-1
+- Update to 1.1.6
+
 * Thu Sep 01 2016 Remi Collet <remi@fedoraproject.org> - 1.1.5-1
 - Update to 1.1.5
 
