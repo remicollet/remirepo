@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 
-%global gh_commit   04db500b5f012db322b4c7ff2217c680b986fafe
+%global gh_commit   4c4112a19e5359bb6c74ea5c393e0a59dd012532
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    HdrHistogram
 %global gh_project  HdrHistogram_c
@@ -16,7 +16,7 @@
 
 Name:          hdrhistogram
 Summary:       A High Dynamic Range (HDR) Histogram
-Version:       0.9.4
+Version:       0.9.5
 Release:       1%{?dist}
 License:       CC0 or BSD
 Group:         System Environment/Libraries
@@ -124,6 +124,9 @@ make test
 
 
 %changelog
+* Sun Sep  4 2016 Remi Collet <remi@fedoraproject.org> - 0.9.5-1
+- update to 0.9.5
+
 * Mon Jul 18 2016 Remi Collet <remi@fedoraproject.org> - 0.9.4-1
 - update to 0.9.4
 
