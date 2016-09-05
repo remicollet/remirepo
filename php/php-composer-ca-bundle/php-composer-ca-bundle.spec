@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5df9ed0ed0c9506ea6404a23450854e5df15cc12
+%global gh_commit    ec21a59414b99501e723b63fd664aa8ead9c5680
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     composer
 %global gh_project   ca-bundle
@@ -14,7 +14,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-composer-ca-bundle
-Version:        1.0.3
+Version:        1.0.4
 Release:        1%{?dist}
 Summary:        Lets you find a path to the system CA
 
@@ -99,6 +99,7 @@ if (!CA::validateCaFile($file)) {
     echo "Cannot validate $file\n";
     exit(1);
 }
+echo "OK\n";
 '
 %else
 : Test suite disabled
@@ -120,6 +121,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Sep  5 2016 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- update to 1.0.4 (no change)
+
 * Tue Jul 19 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - update to 1.0.3
 
