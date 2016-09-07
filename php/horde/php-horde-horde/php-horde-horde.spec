@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-horde
-Version:        5.2.11
+Version:        5.2.12
 Release:        1%{?dist}
 Summary:        Horde Application Framework
 
@@ -248,17 +248,6 @@ do
 done | tee ../%{pear_name}.lang
 
 
-%pretrans
-if [ -d %{pear_hordedir}/static -a ! -L %{pear_hordedir}/static ]
-then
-  save=%{pear_hordedir}/static.rpmsave
-  while [ -e $save ]
-  do  save=${save}_
-  done
-  mv %{pear_hordedir}/static $save
-fi
-
-
 %clean
 rm -rf %{buildroot}
 
@@ -310,6 +299,10 @@ fi
 
 
 %changelog
+* Wed Sep 07 2016 Remi Collet <remi@fedoraproject.org> - 5.2.12-1
+- Update to 5.2.12
+- drop old %%pretrans scriptlet not needed anymore
+
 * Sat Jul 02 2016 Remi Collet <remi@fedoraproject.org> - 5.2.11-1
 - Update to 5.2.11
 
