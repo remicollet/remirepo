@@ -15,7 +15,7 @@
 %scl_package        php-snappy
 %endif
 
-%global gh_commit   9b0357f39335ecd36858b05ace09a47f46b493c5
+%global gh_commit   4906868a139f7dc0b14e3d334773354da2bebd5a
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    kjdev
 %global gh_project  php-ext-snappy
@@ -26,7 +26,7 @@
 
 Summary:       Snappy Extension for PHP
 Name:          %{?sub_prefix}php-snappy
-Version:       0.1.3
+Version:       0.1.4
 %if 0%{?gh_date:1}
 Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
@@ -36,8 +36,6 @@ License:       PHP
 Group:         Development/Languages
 URL:           https://github.com/%{gh_owner}/%{gh_project}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
-
-Patch0:        %{gh_project}-pr4.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
@@ -90,7 +88,6 @@ mv %{gh_project}-%{gh_commit} NTS
 
 cd NTS
 # Use the system library
-%patch0 -p1 -b .pr4
 rm -r snappy
 
 # Sanity check, really often broken
@@ -203,6 +200,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep  7 2016 Remi Collet <remi@fedoraproject.org> - 0.1.4-1
+- update to 0.1.4 (no change)
+- drop patch merged upstream
+
 * Tue Sep  6 2016 Remi Collet <remi@fedoraproject.org> - 0.1.3-1
 - new package, version 0.1.3
 - add patch to build with system libsnappy
