@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Text-Filter
-Version:        2.3.4
+Version:        2.3.5
 Release:        1%{?dist}
 Summary:        Horde Text Filter API
 
@@ -120,11 +120,22 @@ sed -e 's/testOfficeNamespace/SKIP_testOfficeNamespace/' \
     -i MsofficeTest.php
 %endif
 
-%{_bindir}/phpunit .
-
-if which php70; then
-   php70 %{_bindir}/phpunit .
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit . || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit . || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose .
+# remirepo:2
+fi
+exit $ret
 
 
 %clean
@@ -154,6 +165,9 @@ fi
 
 
 %changelog
+* Wed Sep 07 2016 Remi Collet <remi@fedoraproject.org> - 2.3.5-1
+- Update to 2.3.5
+
 * Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.3.4-1
 - Update to 2.3.4
 
