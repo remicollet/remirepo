@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a8773992b362b58498eed24bf85005f363c34771
+%global gh_commit    da8529775f14f4fdae33f916eb0cf65f6afbddbc
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     myclabs
 %global gh_project   DeepCopy
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-myclabs-deep-copy
-Version:        1.5.1
+Version:        1.5.2
 Release:        1%{?dist}
 Summary:        Create deep copies (clones) of your objects
 
@@ -84,13 +84,25 @@ $fedoraClassLoader->addPrefix('DeepCopyTest\\', __DIR__ . '/../tests');
 $fedoraClassLoader->addPrefix('Doctrine\\', '%{php_home}');
 EOF
 
+# remirepo:13
+run=0
+ret=0
+if which php56; then
+   php56 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+   %{_bindir}/phpunit --verbose
+   run=1
+fi
+if which php71; then
+   php71 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+   %{_bindir}/phpunit --verbose
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
 %{_bindir}/phpunit --verbose
-
-if which php70; then
-  php70 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
-  %{_bindir}/phpunit --verbose
+# remirepo:2
 fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -110,6 +122,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep  7 2016 Remi Collet <remi@fedoraproject.org> - 1.5.2-1
+- update to 1.5.2
+
 * Mon May  2 2016 Remi Collet <remi@fedoraproject.org> - 1.5.1-1
 - update to 1.5.1
 - run test suite with both PHP 5 and 7 when available
