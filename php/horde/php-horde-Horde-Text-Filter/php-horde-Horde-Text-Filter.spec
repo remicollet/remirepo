@@ -132,6 +132,14 @@ if which php71; then
    run=1
 fi
 if [ $run -eq 0 ]; then
+%if 0%{?rhel} == 6
+# Only fails with PHP < 5.3.6, see http://3v4l.org/Vkcdu
+sed -e 's/testLinkurls/SKIP_testLinkurls/' \
+    -i LinkurlsTest.php
+sed -e 's/testMsoNormalCss/SKIP_testMsoNormalCss/' \
+    -i MsofficeTest.php
+%endif
+
 %{_bindir}/phpunit --verbose .
 # remirepo:2
 fi
