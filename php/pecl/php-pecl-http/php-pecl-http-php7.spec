@@ -170,8 +170,10 @@ Obsoletes:     %{?scl_prefix}php-pecl-http1-devel < 2
 # Can't install both versions of the same extension
 Conflicts:     %{?scl_prefix}php-pecl-http1-devel
 %endif
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name}-devel          = %{version}%{?prever}
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name}-devel%{?_isa}  = %{version}%{?prever}
+%endif
 
 %description devel
 These are the files needed to compile programs using HTTP extension.

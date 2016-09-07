@@ -15,15 +15,16 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package       php-pecl-http
+%else
+%global _root_prefix %{_prefix}
 %endif
 
-%{?scl:          %scl_package         php-pecl-http}
-%{!?scl:         %global _root_prefix %{_prefix}}
-
+%global prever    beta2
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
 %global pecl_name http
-%global with_zts  0%{?__ztsphp:1}
+%global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 # after hash iconv propro raphf
 %global ini_name  z-%{pecl_name}.ini
@@ -40,8 +41,8 @@
 
 #global prever RC1
 Name:           %{?sub_prefix}php-pecl-http
-Version:        2.5.6
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        2.6.0
+Release:        0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -110,8 +111,10 @@ Provides:       %{?scl_prefix}php-pecl(%{proj_name})         = %{version}%{?prev
 Provides:       %{?scl_prefix}php-pecl(%{proj_name})%{?_isa} = %{version}%{?prever}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}%{?prever}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}%{?prever}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}%{?prever}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}%{?prever}
+%endif
 Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}%{?prever}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}%{?prever}
 
@@ -128,10 +131,6 @@ Obsoletes:     php55w-pecl-http <= %{version}
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-http <= %{version}
 Obsoletes:     php56w-pecl-http <= %{version}
-%endif
-%if "%{php_version}" > "7.0"
-Obsoletes:     php70u-pecl-http <= %{version}
-Obsoletes:     php70w-pecl-http <= %{version}
 %endif
 %endif
 
@@ -177,8 +176,10 @@ Obsoletes:     %{?scl_prefix}php-pecl-http1-devel < 2
 # Can't install both versions of the same extension
 Conflicts:     %{?scl_prefix}php-pecl-http1-devel
 %endif
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name}-devel          = %{version}%{?prever}
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name}-devel%{?_isa}  = %{version}%{?prever}
+%endif
 
 %description devel
 These are the files needed to compile programs using HTTP extension.
@@ -362,6 +363,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep  7 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-0.1.beta2
+- Update to 2.6.0beta2 (php 5, beta)
+
 * Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 2.5.6-1
 - Update to 2.5.6 (php 5, stable)
 
