@@ -1,0 +1,22 @@
+Extension [ <persistent> extension #99 lz4 version 0.2.5 ] {
+
+  - Functions {
+    Function [ <internal:lz4> function lz4_compress ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <optional> $high ]
+        Parameter #2 [ <optional> $extra ]
+      }
+    }
+    Function [ <internal:lz4> function lz4_uncompress ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $data ]
+        Parameter #1 [ <optional> $max ]
+        Parameter #2 [ <optional> $offset ]
+      }
+    }
+  }
+}
+

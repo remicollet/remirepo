@@ -1,0 +1,42 @@
+From 620320c8a6e7ffa959a232626e46877dab7b85c9 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Wed, 7 Sep 2016 15:12:21 +0200
+Subject: [PATCH] fix some types
+
+---
+ lz4.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/lz4.c b/lz4.c
+index 5dac48f..3ddbfc2 100644
+--- a/lz4.c
++++ b/lz4.c
+@@ -100,12 +100,12 @@ static ZEND_FUNCTION(lz4_compress)
+     int output_len, data_len;
+     zend_bool high = 0;
+     char *extra = NULL;
+-    int extra_len = -1;
+ #if ZEND_MODULE_API_NO >= 20141001
+-    size_t offset = 0;
++    size_t extra_len = -1;
+ #else
+-    int offset = 0;
++    int extra_len = -1;
+ #endif
++    int offset = 0;
+ 
+     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,
+                               "z|bs", &data, &high,
+@@ -164,8 +164,11 @@ static ZEND_FUNCTION(lz4_uncompress)
+     zval *data;
+     int output_len, data_size;
+     char *output;
++#if ZEND_MODULE_API_NO >= 20141001
++    zend_long max_size = -1, offset = 0;
++#else
+     long max_size = -1, offset = 0;
+-    void *len;
++#endif
+ 
+     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,
+                               "z|ll", &data, &max_size, &offset) == FAILURE) {
