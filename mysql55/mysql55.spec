@@ -6,7 +6,7 @@
 %global with_dtrace  0
 
 Name: mysql
-Version: 5.5.51
+Version: 5.5.52
 Release: 1%{?dist}
 
 Summary: MySQL client programs and shared libraries
@@ -834,6 +834,10 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Wed Sep  7 2016 Remi Collet <RPMS@FamilleCollet.com> - 5.5.52-1
+- update to MySQL 5.5.52 Community Server GA
+  http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-52.html
+
 * Fri Jul 29 2016 Remi Collet <RPMS@FamilleCollet.com> - 5.5.51-1
 - update to MySQL 5.5.51 Community Server GA
   http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-51.html
