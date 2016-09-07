@@ -24,7 +24,7 @@
         "zendframework/zend-stdlib": "^2.7 || ^3.0",
         "zendframework/zend-uri": "^2.5",
         "zendframework/zend-view": "^2.6.3",
-        "sebastian/version": "^1.0.4"
+        "sebastian/version": "^1.0.4 || ^2.0"
     },
     "require-dev": {
         "fabpot/php-cs-fixer": "1.7.*",

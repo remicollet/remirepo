@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    e344ab9ec4307f3e18664a81dc233554bbac58da
+%global gh_commit    f1ee9ae3f69446f19f4015826b7a70d5ff2f5644
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-test
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        3.0.1
+Version:        3.0.2
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -82,7 +82,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 #        "zendframework/zend-stdlib": "^2.7 || ^3.0",
 #        "zendframework/zend-uri": "^2.5",
 #        "zendframework/zend-view": "^2.6.3",
-#        "sebastian/version": "^1.0.4"
+#        "sebastian/version": "^1.0.4 || ^2.0"
 Requires:       php(language) >= 5.6
 Requires:       php-composer(phpunit/phpunit)                   >= 4.0
 Requires:       php-composer(phpunit/phpunit)                   <  6
@@ -166,7 +166,7 @@ if which php56; then
    run=1
 fi
 if which php71; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php71 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -193,6 +193,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep  7 2016 Remi Collet <remi@fedoraproject.org> - 3.0.2-1
+- update to 3.0.2
+
 * Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
 - update to 3.0.1 for ZendFramework 3
 - raise dependency on PHP 5.6
