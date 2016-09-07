@@ -12,7 +12,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-horde-ingo
-Version:        3.2.11
+Version:        3.2.12
 Release:        1%{?dist}
 Summary:        An email filter rules manager
 
@@ -221,6 +221,9 @@ fi
 
 
 %changelog
+* Wed Sep 07 2016 Remi Collet <remi@fedoraproject.org> - 3.2.12-1
+- Update to 3.2.12
+
 * Sat Jul 02 2016 Remi Collet <remi@fedoraproject.org> - 3.2.11-1
 - Update to 3.2.11
 
