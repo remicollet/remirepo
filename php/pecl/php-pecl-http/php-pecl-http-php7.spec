@@ -22,7 +22,7 @@
 %global gh_owner    m6w6
 %global gh_project  ext-http
 #global gh_date     20150928
-#global prever      RC1
+%global prever      beta2
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
 %global pecl_name http
@@ -38,12 +38,12 @@
 
 #global prever RC1
 Name:           %{?sub_prefix}php-pecl-http
-Version:        3.0.1
+Version:        3.1.0
 %if 0%{?gh_date:1}
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 %endif
 Summary:        Extended HTTP support
@@ -54,8 +54,6 @@ URL:            http://pecl.php.net/package/pecl_http
 
 # From http://www.php.net/manual/en/http.configuration.php
 Source1:        %{proj_name}.ini
-
-Patch0:         %{proj_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel >= 7
@@ -191,7 +189,6 @@ mv %{proj_name}-%{version}%{?prever} NTS
 %{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
-%patch0 -p1 -b .upstream
 
 extver=$(sed -n '/#define PHP_PECL_HTTP_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}%{?prever}%{?gh_date:dev}"; then
@@ -366,6 +363,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep  7 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-0.1.beta2
+- Update to 3.1.0beta2 (php 7, beta)
+
 * Wed Jun  8 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-2
 - add upstream patch, fix test suite with PHP 7.1
 

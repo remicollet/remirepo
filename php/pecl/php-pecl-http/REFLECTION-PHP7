@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #84 http version 3.0.1 ] {
+Extension [ <persistent> extension #138 http version 3.1.0beta2 ] {
 
   - Dependencies {
     Dependency [ raphf (Required) ]
@@ -14,7 +14,29 @@ Extension [ <persistent> extension #84 http version 3.0.1 ] {
     }
   }
 
-  - Constants [31] {
+  - Constants [53] {
+    Constant [ integer http\Client\Curl\FEATURES ] { 1017757 }
+    Constant [ integer http\Client\Curl\Features\IPV6 ] { 1 }
+    Constant [ integer http\Client\Curl\Features\KERBEROS4 ] { 2 }
+    Constant [ integer http\Client\Curl\Features\KERBEROS5 ] { 262144 }
+    Constant [ integer http\Client\Curl\Features\SSL ] { 4 }
+    Constant [ integer http\Client\Curl\Features\LIBZ ] { 8 }
+    Constant [ integer http\Client\Curl\Features\NTLM ] { 16 }
+    Constant [ integer http\Client\Curl\Features\GSSNEGOTIATE ] { 32 }
+    Constant [ integer http\Client\Curl\Features\ASYNCHDNS ] { 128 }
+    Constant [ integer http\Client\Curl\Features\SPNEGO ] { 256 }
+    Constant [ integer http\Client\Curl\Features\LARGEFILE ] { 512 }
+    Constant [ integer http\Client\Curl\Features\IDN ] { 1024 }
+    Constant [ integer http\Client\Curl\Features\SSPI ] { 2048 }
+    Constant [ integer http\Client\Curl\Features\GSSAPI ] { 131072 }
+    Constant [ integer http\Client\Curl\Features\TLSAUTH_SRP ] { 16384 }
+    Constant [ integer http\Client\Curl\Features\NTLM_WB ] { 32768 }
+    Constant [ integer http\Client\Curl\Features\HTTP2 ] { 65536 }
+    Constant [ integer http\Client\Curl\Features\UNIX_SOCKETS ] { 524288 }
+    Constant [ string http\Client\Curl\VERSIONS ] { libcurl/7.43.0 NSS/3.25 zlib/1.2.8 libidn/1.33 libssh2/1.6.0 nghttp2/1.7.1 }
+    Constant [ string http\Client\Curl\Versions\CURL ] { 7.43.0 }
+    Constant [ string http\Client\Curl\Versions\SSL ] { NSS/3.25 }
+    Constant [ string http\Client\Curl\Versions\LIBZ ] { 1.2.8 }
     Constant [ integer http\Client\Curl\HTTP_VERSION_1_0 ] { 1 }
     Constant [ integer http\Client\Curl\HTTP_VERSION_1_1 ] { 2 }
     Constant [ integer http\Client\Curl\HTTP_VERSION_2_0 ] { 3 }
@@ -48,7 +70,7 @@ Extension [ <persistent> extension #84 http version 3.0.1 ] {
     Constant [ integer http\Client\Curl\POSTREDIR_ALL ] { 7 }
   }
 
-  - Classes [30] {
+  - Classes [31] {
     Interface [ <internal:http> interface http\Exception ] {
 
       - Constants [0] {
@@ -1826,7 +1848,13 @@ Extension [ <persistent> extension #84 http version 3.0.1 ] {
 
     Class [ <internal:http> class http\Client implements SplSubject, Countable ] {
 
-      - Constants [0] {
+      - Constants [6] {
+        Constant [ integer DEBUG_INFO ] { 0 }
+        Constant [ integer DEBUG_IN ] { 1 }
+        Constant [ integer DEBUG_OUT ] { 2 }
+        Constant [ integer DEBUG_HEADER ] { 16 }
+        Constant [ integer DEBUG_BODY ] { 32 }
+        Constant [ integer DEBUG_SSL ] { 64 }
       }
 
       - Static properties [0] {
@@ -1847,7 +1875,7 @@ Extension [ <persistent> extension #84 http version 3.0.1 ] {
         Property [ <default> public $recordHistory ]
       }
 
-      - Methods [30] {
+      - Methods [31] {
         Method [ <internal:http, ctor> public method __construct ] {
 
           - Parameters [2] {
@@ -2047,6 +2075,13 @@ Extension [ <persistent> extension #84 http version 3.0.1 ] {
         Method [ <internal:http> public method getAvailableConfiguration ] {
 
           - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:http> public method setDebug ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $callback ]
           }
         }
       }
@@ -2755,9 +2790,72 @@ Extension [ <persistent> extension #84 http version 3.0.1 ] {
       }
     }
 
+    Interface [ <internal:http> interface http\Client\Curl\User ] {
+
+      - Constants [5] {
+        Constant [ integer POLL_NONE ] { 0 }
+        Constant [ integer POLL_IN ] { 1 }
+        Constant [ integer POLL_OUT ] { 2 }
+        Constant [ integer POLL_INOUT ] { 3 }
+        Constant [ integer POLL_REMOVE ] { 4 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:http> abstract public method init ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $run ]
+          }
+        }
+
+        Method [ <internal:http> abstract public method timer ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> integer $timeout_ms ]
+          }
+        }
+
+        Method [ <internal:http> abstract public method socket ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $socket ]
+            Parameter #1 [ <required> integer $action ]
+          }
+        }
+
+        Method [ <internal:http> abstract public method once ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:http> abstract public method wait ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> integer $timeout_ms ]
+          }
+        }
+
+        Method [ <internal:http> abstract public method send ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
     Class [ <internal:http> class http\Url ] {
 
-      - Constants [17] {
+      - Constants [20] {
         Constant [ integer REPLACE ] { 0 }
         Constant [ integer JOIN_PATH ] { 1 }
         Constant [ integer JOIN_QUERY ] { 2 }
@@ -2775,6 +2873,9 @@ Extension [ <persistent> extension #84 http version 3.0.1 ] {
         Constant [ integer PARSE_MBUTF8 ] { 131072 }
         Constant [ integer PARSE_TOIDN ] { 1048576 }
         Constant [ integer PARSE_TOPCT ] { 2097152 }
+        Constant [ integer IGNORE_ERRORS ] { 268435456 }
+        Constant [ integer SILENT_ERRORS ] { 536870912 }
+        Constant [ integer STDFLAGS ] { 3350531 }
       }
 
       - Static properties [0] {
