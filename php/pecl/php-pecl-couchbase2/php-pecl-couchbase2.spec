@@ -29,7 +29,7 @@
 
 Summary:       Couchbase Server PHP extension
 Name:          %{?sub_prefix}php-pecl-couchbase2
-Version:       2.2.1
+Version:       2.2.2
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
@@ -135,6 +135,9 @@ cd ..
 cat << 'EOF' | tee %{ini_name}
 ; Enable %{pecl_name} extension module
 extension=%{pecl_name}.so
+
+; Configuration
+;couchbase.log_level = 'WARN'
 EOF
 
 %if 0%{?__ztsphp:1}
@@ -238,6 +241,9 @@ fi
 
 
 %changelog
+* Wed Sep 07 2016 Remi Collet <remi@fedoraproject.org> - 2.2.2-1
+- Update to 2.2.2
+
 * Mon Aug 08 2016 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - Update to 2.2.1
 

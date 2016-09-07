@@ -1,7 +1,13 @@
-Extension [ <persistent> extension #135 couchbase version 2.2.1 ] {
+Extension [ <persistent> extension #137 couchbase version 2.2.2 ] {
 
   - Dependencies {
     Dependency [ json (Required) ]
+  }
+
+  - INI {
+    Entry [ couchbase.log_level <ALL> ]
+      Current = 'WARN'
+    }
   }
 
   - Constants [114] {
