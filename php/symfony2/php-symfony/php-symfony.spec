@@ -13,8 +13,8 @@
 
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.8.10
-%global github_commit    84e8eb7690eea267526c3d40050b4c54f1878b7a
+%global github_version   2.8.11
+%global github_commit    f588c92c3e263b2eaa2f96a7b1359199eb209b3d
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -2678,6 +2678,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Wed Sep  7 2016 Remi Collet <remi@fedoraproject.org> - 2.8.11-1
+- Update to 2.8.11
+
 * Sat Sep  3 2016 Remi Collet <remi@fedoraproject.org> - 2.8.10-1
 - Update to 2.8.10
 - remove proxy-manager-bridge from default installation
