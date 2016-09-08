@@ -6,15 +6,15 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    13efa4368bb2ac88bb3b1459b487d907de4dbf7c
+%global gh_commit    e9e0204f40e49fa4419946c677eccd3fa25b8cf4
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     ircmaxell
 %global gh_project   RandomLib
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-ircmaxell-random-lib
-Version:        1.1.0
-Release:        3%{?dist}
+Version:        1.2.0
+Release:        1%{?dist}
 Summary:        A Library For Generating Secure Random Numbers
 
 Group:          Development/Libraries
@@ -28,26 +28,28 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 BuildRequires:  %{_bindir}/phpab
-BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php(language) >= 5.3.2
 BuildRequires:  php-hash
 BuildRequires:  php-openssl
 BuildRequires:  php-posix
 BuildRequires:  php-spl
 BuildRequires:  php-composer(ircmaxell/security-lib) >= 1.0
-#      "mikey179/vfsStream": "1.1.*", ignore max version on purpose
-BuildRequires:  php-composer(mikey179/vfsStream) >= 1.1
+#        "mikey179/vfsStream": "^1.6",
+#        "friendsofphp/php-cs-fixer": "^1.11",
+#        "phpunit/phpunit": "^4.8|^5.0"
+BuildRequires:  php-composer(mikey179/vfsStream) >= 1.6
+BuildRequires:  php-composer(phpunit/phpunit) >= 4.8
 # For autoloader
 BuildRequires:  php-mikey179-vfsstream >= 1.6.0
 BuildRequires:  php-ircmaxell-security-lib >= 1.1.0-3
 %endif
 
 # From composer.json
-#      "php": ">=5.3.2"
-#      "ircmaxell/security-lib": "1.0.*@dev",
+#        "ircmaxell/security-lib": "^1.1",
+#        "php": ">=5.3.2"
 Requires:       php(language) >= 5.3.2
-Requires:       php-composer(ircmaxell/security-lib) >= 1.0
-# From phpcompatinfo report for version 1.1.0
+Requires:       php-composer(ircmaxell/security-lib) >= 1.1
+# From phpcompatinfo report for version 1.2.0
 Requires:       php-hash
 Requires:       php-openssl
 Requires:       php-posix
@@ -102,11 +104,22 @@ require_once '%{buildroot}%{_datadir}/php/RandomLib/autoload.php';
 EOF
 
 : Run test suite
-%{_bindir}/phpunit --verbose
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --verbose
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit --verbose
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -126,6 +139,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep  8 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- update to 1.2.0
+
 * Thu Jan 14 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-3
 - add autoloader
 
