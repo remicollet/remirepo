@@ -12,9 +12,8 @@
 
 %global github_owner     robrichards
 %global github_name      xmlseclibs
-%global github_version   1.4.1
-%global github_commit    2e20c8d1d01c806a02e7ac2bc3b2bee00bdb514a
-%global github_release   .20160518git%(c=%{github_commit}; echo ${c:0:7})
+%global github_version   1.4.2
+%global github_commit    79fb5e03c4ee4dc3ec77e4b2628231374364a017
 
 %global composer_vendor  robrichards
 %global composer_project xmlseclibs
@@ -29,7 +28,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}1
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       A PHP library for XML Security (version 1)
 
 Group:         Development/Libraries
@@ -118,8 +117,9 @@ if which php56; then
    php56 %{_bindir}/phpunit tests
    run=1
 fi
-if which php71; then
-   php71 %{_bindir}/phpunit tests
+if which php70; then
+   # use 7.0 as 7.1 have mcrypt deprecated
+   php70 %{_bindir}/phpunit tests
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -145,6 +145,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep  8 2016 Remi Collet <remi@remirepo.net> - 1.4.2-1
+- update to 1.4.2 (no change)
+
 * Sun Jul 17 2016 Remi Collet <remi@remirepo.net> - 1.4.1-2.20160518git2e20c8d
 - backport for remi repository
 
