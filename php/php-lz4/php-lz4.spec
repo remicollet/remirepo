@@ -15,7 +15,7 @@
 %scl_package        php-lz4
 %endif
 
-%global gh_commit   35f942c0e26f12999332d5043777ed5f0264a775
+%global gh_commit   d06c93e7c834d95d843edaa2c69fd6a6373841a5
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    kjdev
 %global gh_project  php-ext-lz4
@@ -26,7 +26,7 @@
 
 Summary:       LZ4 Extension for PHP
 Name:          %{?sub_prefix}php-lz4
-Version:       0.2.5
+Version:       0.2.7
 %if 0%{?gh_date:1}
 Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
@@ -37,8 +37,8 @@ Group:         Development/Languages
 URL:           https://github.com/%{gh_owner}/%{gh_project}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
-# https://github.com/kjdev/php-ext-lz4/pull/12
-Patch0:        %{gh_project}-pr12.patch
+# https://github.com/kjdev/php-ext-lz4/pull/13
+Patch0:        %{gh_project}-pr13.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
@@ -90,13 +90,11 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{gh_project}-%{gh_commit} NTS
 
 cd NTS
-# See https://github.com/kjdev/php-ext-lz4/pull/11
-sed -e 's/HAVE_LIBSNAPPY/HAVE_LIBLZ4/' -i lz4.c
-
 # Use the system library
 rm -r lz4
 
-%patch0 -p1 -b .pr12
+%patch0 -p1 -b .pr13
+chmod 644 tests/010.phpt tests/*txt tests/*pr13
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define LZ4_EXT_VERSION/{s/.* "//;s/".*$//;p}' php_lz4.h)
@@ -155,13 +153,6 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 
 %check
-%ifnarch x86_64
-: ignore test with different output on 32bits - md5 diff only
-rm ?TS/tests/001.phpt
-rm ?TS/tests/003.phpt
-rm ?TS/tests/008.phpt
-%endif
-
 cd NTS
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
@@ -212,7 +203,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep  8 2016 Remi Collet <remi@fedoraproject.org> - 0.2.7-1
+- update to 0.2.7 (no change)
+- open https://github.com/kjdev/php-ext-lz4/pull/13
+
 * Wed Sep  7 2016 Remi Collet <remi@fedoraproject.org> - 0.2.5-1
 - new package, version 0.2.5
+- open https://github.com/kjdev/php-ext-lz4/pull/11
 - open https://github.com/kjdev/php-ext-lz4/pull/12
 
