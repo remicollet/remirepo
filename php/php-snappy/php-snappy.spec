@@ -15,7 +15,7 @@
 %scl_package        php-snappy
 %endif
 
-%global gh_commit   4906868a139f7dc0b14e3d334773354da2bebd5a
+%global gh_commit   f7a9c4dfe0796184ecbdcde809a8a234f508d8ea
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    kjdev
 %global gh_project  php-ext-snappy
@@ -26,7 +26,7 @@
 
 Summary:       Snappy Extension for PHP
 Name:          %{?sub_prefix}php-snappy
-Version:       0.1.4
+Version:       0.1.5
 %if 0%{?gh_date:1}
 Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
@@ -147,9 +147,6 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 
 %check
-: Ignore failed test as everything seems ok
-rm ?TS/tests/003.phpt
-
 cd NTS
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
@@ -200,6 +197,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep  8 2016 Remi Collet <remi@fedoraproject.org> - 0.1.5-1
+- update to 0.1.5 (no change)
+
 * Wed Sep  7 2016 Remi Collet <remi@fedoraproject.org> - 0.1.4-1
 - update to 0.1.4 (no change)
 - drop patch merged upstream
