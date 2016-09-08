@@ -12,8 +12,8 @@
 
 %global github_owner     zendframework
 %global github_name      zend-diactoros
-%global github_version   1.3.5
-%global github_commit    b1d59735b672865dbeb930805029c24f226e3e77
+%global github_version   1.3.6
+%global github_commit    a60da179c37f2c4e44ef734d0b92824a58943f7f
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  zendframework
@@ -153,11 +153,22 @@ require_once __DIR__ . '/test/TestAsset/Functions.php';
 require_once __DIR__ . '/test/TestAsset/SapiResponse.php';
 BOOTSTRAP
 
-%{_bindir}/phpunit --verbose --bootstrap ./bootstrap.php
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose --bootstrap ./bootstrap.php
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap ./bootstrap.php
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap ./bootstrap.php
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose --bootstrap ./bootstrap.php
+# remirepo:2
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -178,6 +189,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep  8 2016 Remi Collet <remi@remirepo.net> - 1.3.6-1
+- update to 1.3.6
+
 * Wed Apr  6 2016 Remi Collet <remi@remirepo.net> - 1.3.5-1
 - update to 1.3.5
 
