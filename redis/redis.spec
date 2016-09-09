@@ -28,7 +28,7 @@
 
 Name:             redis
 Version:          3.2.3
-Release:          2%{?dist}
+Release:          3%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -55,6 +55,8 @@ Patch2:           0003-redis-2.8.11-use-system-jemalloc.patch
 
 # https://github.com/antirez/redis/pull/3491 - man pages
 Patch3:           %{name}-pr3491.patch
+# https://github.com/antirez/redis/pull/3494 - symlink
+Patch4:           %{name}-pr3494.patch
 
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if !0%{?el5}
@@ -119,6 +121,7 @@ Documentation: http://redis.io/documentation
 %patch2 -p1 -b .jem
 
 %patch3 -p1
+%patch4 -p1 -b .old
 
 # No hidden build.
 sed -i -e 's|\t@|\t|g' deps/lua/src/Makefile
@@ -178,12 +181,6 @@ install -p -D -m 644 %{SOURCE9} %{buildroot}%{_sysconfdir}/security/limits.d/95-
 
 # Fix non-standard-executable-perm error
 chmod 755 %{buildroot}%{_bindir}/%{name}-*
-
-# create redis-sentinel command as described on
-# http://redis.io/topics/sentinel
-ln -sf %{name}-server %{buildroot}%{_bindir}/%{name}-sentinel
-# Same binary
-ln -sf %{name}-server %{buildroot}%{_bindir}/%{name}-check-rdb
 
 # Install redis-shutdown
 install -pDm755 %{SOURCE7} %{buildroot}%{_bindir}/%{name}-shutdown
@@ -271,6 +268,9 @@ fi
 
 
 %changelog
+* Fri Sep  9 2016 Remi Collet <remi@fedoraproject.org> - 3.2.3-3
+- add patch from https://github.com/antirez/redis/pull/3494
+
 * Fri Sep  9 2016 Remi Collet <remi@fedoraproject.org> - 3.2.3-2
 - add man pages from https://github.com/antirez/redis/pull/3491
 - data and configuration should not be publicly readable
