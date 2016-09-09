@@ -43,5 +43,6 @@
     "php-hoa-zformat": "hoa\/zformat",
     "php-pimple-lib": "pimple\/pimple",
     "php-simplepie": "simplepie\/simplepie",
-    "php-theseer-fxsl": "theseer\/fxsl"
+    "php-theseer-fxsl": "theseer\/fxsl",
+    "php-cs-fixer": "friendsofphp\/php-cs-fixer"
 }
