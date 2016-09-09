@@ -1,0 +1,649 @@
+From 8295483fcee6c1232ac801ff91f66e21f9d23d80 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 8 Sep 2016 14:51:15 +0200
+Subject: [PATCH] 1st man pageis for - redis-cli - redis-benchmark -
+ redis-check-aof - redis-check-rdb - redis-server - redis.conf
+
+as redis-sentinel is a symlink to redis-server, same page can be used (also symlinked)
+redis.conf can also be used for sentinel.conf
+---
+ man/man1/redis-benchmark.1 | 132 ++++++++++++++++++++++++++++++++++
+ man/man1/redis-check-aof.1 |  60 ++++++++++++++++
+ man/man1/redis-check-rdb.1 |  53 ++++++++++++++
+ man/man1/redis-cli.1       | 171 +++++++++++++++++++++++++++++++++++++++++++++
+ man/man1/redis-server.1    | 117 +++++++++++++++++++++++++++++++
+ man/man5/redis.conf.5      |  57 +++++++++++++++
+ 6 files changed, 590 insertions(+)
+ create mode 100644 man/man1/redis-benchmark.1
+ create mode 100644 man/man1/redis-check-aof.1
+ create mode 100644 man/man1/redis-check-rdb.1
+ create mode 100644 man/man1/redis-cli.1
+ create mode 100644 man/man1/redis-server.1
+ create mode 100644 man/man5/redis.conf.5
+
+diff --git a/man/man1/redis-benchmark.1 b/man/man1/redis-benchmark.1
+new file mode 100644
+index 0000000..a3e4c62
+--- /dev/null
++++ b/man/man1/redis-benchmark.1
+@@ -0,0 +1,132 @@
++.TH REDIS-BENCHMARK 1 "2016" "Redis" "User commands"
++.SH NAME
++redis\-benchmark \- Redis benchmark
++
++.SH SYNOPSIS
++.B redis\-benchmark
++[ options ]
++.LP
++
++.SH DESCRIPTION
++\fBRedis\fP is an open source (BSD licensed), in-memory data structure store,
++used as database, cache and message broker, found at
++.B http://redis.io/
++
++The \fBredis\-benchmark\fP command is a command to benchmark redis-server.
++
++.SH OPTIONS
++.TP 15
++.B \-h \fIhostname\fP
++Server hostname (default: 127.0.0.1).
++.TP
++.B \-p \fIport\fP
++Server port (default: 6379).
++.TP
++.B \-s \fIsocket\fP
++Server socket (overrides hostname and port).
++.TP
++.B \-a \fIpassword\fP
++Password to use when connecting to the server.
++.TP
++.B \-c \fIclients\fP
++Number of parallel connections (default 50)
++.TP
++.B \-dnnum \fIdb\fP
++SELECT the specified db number (default 0)
++.TP
++.B \-k \fIboolean\fP
++1=keep alive 0=reconnect (default 1)
++.TP
++.B \-r \fIkeyspacelen\fP
++Use random keys for SET/GET/INCR, random values for SADD
++Using this option the benchmark will expand the string __rand_int__
++inside an argument with a 12 digits number in the specified range
++from 0 to keyspacelen-1. The substitution changes every time a command
++is executed. Default tests use this to hit random keys in the
++specified range.
++.TP
++.B \-P \fInumreq\fP
++Pipeline <numreq> requests. Default 1 (no pipeline).
++.TP
++.B \-e
++If server replies with errors, show them on stdout.
++(no more than 1 error per second is displayed)
++.TP
++.B \-q
++Quiet. Just show query/sec values
++.TP
++.B \-\-csv
++Output in CSV format
++.TP
++.B \-l
++Loop. Run the tests forever
++.TP
++.B \-t \fItests\fP
++Only run the comma separated list of tests. The test
++names are the same as the ones produced as output.
++.TP
++.B \-I
++Idle mode. Just open N idle connections and wait.
++
++.SH EXAMPLES
++.TP 5
++Run the benchmark with the default configuration against 127.0.0.1:6379:
++$ redis\-benchmark
++.TP
++Use 20 parallel clients, for a total of 100k requests, against 192.168.1.1:
++$ redis-benchmark \-h 192.168.1.1 \-p 6379 \-n 100000 \-c 20
++.TP
++Fill 127.0.0.1:6379 with about 1 million keys only using the SET test:
++$ redis\-benchmark \-t set \-n 1000000 \-r 100000000
++.TP
++Benchmark 127.0.0.1:6379 for a few commands producing CSV output:
++$ redis\-benchmark \-t ping,set,get \-n 100000 \-\-csv
++.TP
++Benchmark a specific command line:
++$ redis\-benchmark \-r 10000 \-n 10000 eval 'return redis.call("ping")' 0
++.TP
++Fill a list with 10000 random elements:
++$ redis\-benchmark \-r 10000 \-n 10000 lpush mylist __rand_int__
++.TP
++On user specified command lines __rand_int__ is replaced with a random integer
++with a range of values selected by the -r option.
++
++
++.SH BUGS
++See:
++.PD 0
++.B http://redis.io/support
++and
++.B https://github.com/antirez/redis/issues
++
++.SH COPYRIGHT
++Copyright \(co 2006\-2016
++Salvatore Sanfilippo
++.P
++Redistribution and use in source and binary forms, with or without
++modification, are permitted provided that the following conditions are met:
++.TP 2
++*
++Redistributions of source code must retain the above copyright notice,
++this list of conditions and the following disclaimer.
++.TP
++*
++Redistributions in binary form must reproduce the above copyright
++notice, this list of conditions and the following disclaimer in the
++documentation and/or other materials provided with the distribution.
++.TP
++*
++Neither the name of Redis nor the names of its contributors may be used
++to endorse or promote products derived from this software without specific
++prior written permission.
++.P
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
++ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
++ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
++ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+diff --git a/man/man1/redis-check-aof.1 b/man/man1/redis-check-aof.1
+new file mode 100644
+index 0000000..1569fd9
+--- /dev/null
++++ b/man/man1/redis-check-aof.1
+@@ -0,0 +1,60 @@
++.TH REDIS-CHECK-AOF 1 "2016" "Redis" "User commands"
++.SH NAME
++redis\-check\-aof \- Redis AOF file checker and repairer
++
++.SH SYNOPSIS
++.B redis\-check\-aof
++[\-\-fix]
++.IR file.aof
++
++.SH DESCRIPTION
++\fBRedis\fP is an open source (BSD licensed), in-memory data structure store,
++used as database, cache and message broker, found at
++.B http://redis.io/
++
++The \fBredis\-check\-aof\fP command to check or repair redis-server AOF files.
++
++.SH OPTIONS
++.TP 15
++.B \-\-fix
++Fix the file
++
++
++.SH BUGS
++See:
++.PD 0
++.B http://redis.io/support
++and
++.B https://github.com/antirez/redis/issues
++
++.SH COPYRIGHT
++Copyright \(co 2006\-2016
++Salvatore Sanfilippo
++.P
++Redistribution and use in source and binary forms, with or without
++modification, are permitted provided that the following conditions are met:
++.TP 2
++*
++Redistributions of source code must retain the above copyright notice,
++this list of conditions and the following disclaimer.
++.TP
++*
++Redistributions in binary form must reproduce the above copyright
++notice, this list of conditions and the following disclaimer in the
++documentation and/or other materials provided with the distribution.
++.TP
++*
++Neither the name of Redis nor the names of its contributors may be used
++to endorse or promote products derived from this software without specific
++prior written permission.
++.P
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
++ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
++ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
++ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+diff --git a/man/man1/redis-check-rdb.1 b/man/man1/redis-check-rdb.1
+new file mode 100644
+index 0000000..0e798ab
+--- /dev/null
++++ b/man/man1/redis-check-rdb.1
+@@ -0,0 +1,53 @@
++.TH REDIS-CHECK-RDB 1 "2016" "Redis" "User commands"
++.SH NAME
++redis\-check\-aof \- Redis RDB file checker
++
++.SH SYNOPSIS
++.B redis\-check\-aof
++.IR file.rdb
++
++.SH DESCRIPTION
++\fBRedis\fP is an open source (BSD licensed), in-memory data structure store,
++used as database, cache and message broker, found at
++.B http://redis.io/
++
++The \fBredis\-check\-rdb\fP command to check redis-server RDB files.
++
++.SH BUGS
++See:
++.PD 0
++.B http://redis.io/support
++and
++.B https://github.com/antirez/redis/issues
++
++.SH COPYRIGHT
++Copyright \(co 2006\-2016
++Salvatore Sanfilippo
++.P
++Redistribution and use in source and binary forms, with or without
++modification, are permitted provided that the following conditions are met:
++.TP 2
++*
++Redistributions of source code must retain the above copyright notice,
++this list of conditions and the following disclaimer.
++.TP
++*
++Redistributions in binary form must reproduce the above copyright
++notice, this list of conditions and the following disclaimer in the
++documentation and/or other materials provided with the distribution.
++.TP
++*
++Neither the name of Redis nor the names of its contributors may be used
++to endorse or promote products derived from this software without specific
++prior written permission.
++.P
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
++ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
++ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
++ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+diff --git a/man/man1/redis-cli.1 b/man/man1/redis-cli.1
+new file mode 100644
+index 0000000..14f84df
+--- /dev/null
++++ b/man/man1/redis-cli.1
+@@ -0,0 +1,171 @@
++.TH REDIS-CLI 1 "2016" "Redis" "User commands"
++.SH NAME
++redis\-cli \- Redis client
++
++.SH SYNOPSIS
++.B redis\-cli
++[ options ] [cmd [arg [arg ...]]]
++.LP
++
++.SH DESCRIPTION
++\fBRedis\fP is an open source (BSD licensed), in-memory data structure store,
++used as database, cache and message broker, found at
++.B http://redis.io/
++
++The \fBredis-cli\fP command is a command line client to redis-server.
++
++.SH OPTIONS
++.TP 15
++.B \-h \fIhostname\fP
++Server hostname (default: 127.0.0.1).
++.TP
++.B \-p \fIport\fP
++Server port (default: 6379).
++.TP
++.B \-s \fIsocket\fP
++Server socket (overrides hostname and port).
++.TP
++.B \-a \fIpassword\fP
++Password to use when connecting to the server.
++.TP
++.B \-r \fIrepeat\fP
++Execute specified command N times.
++.TP
++.B \-i \fIinterval\fP
++When -r is used, waits \fIinterval\fP seconds per command.
++It is possible to specify sub-second times like -i 0.1.
++.TP
++.B \-n \fIdb\fP
++Database number.
++.TP
++.B \-x
++Read last argument from STDIN.
++.TP
++.B \-d \fIdelimiter\fP
++Multi-bulk delimiter in for raw formatting (default: \n).
++.TP
++.B \-c
++Enable cluster mode (follow -ASK and -MOVED redirections).
++.TP
++.B \-\-raw
++Use raw formatting for replies (default when STDOUT is not a tty).
++.TP
++.B \-\-no\-raw
++Force formatted output even when STDOUT is not a tty.
++.TP
++.B \-\-csv
++Output in CSV format.
++.TP
++.B \-\-stat
++Print rolling stats about server: mem, clients, ...
++.TP
++.B \-\-latency
++Enter a special mode continuously sampling latency.
++.TP
++.B \-\-latency\-history
++Like \-\-latency but tracking latency changes over time.
++Default time interval is 15 sec. Change it using -i.
++.TP
++.B \-\-latency\-dist
++Shows latency as a spectrum, requires xterm 256 colors.
++Default time interval is 1 sec. Change it using -i.
++.TP
++.B \-\-lru\-test
++Simulate a cache workload with an 80-20 distribution.
++.TP
++.B \-\-slave
++Simulate a slave showing commands received from the master.
++.TP
++.B \-\-rdb \fIfilename\fP
++Transfer an RDB dump from remote server to local file.
++.TP
++.B \-\-pipe
++Transfer raw Redis protocol from stdin to server.
++.TP
++.B \-\-pipe-timeout \fIn\fP
++In --pipe mode, abort with error if after sending all data.
++no reply is received within \fIn\fP seconds.
++Default timeout: 30. Use 0 to wait forever.
++.TP
++.B \-\-bigkeys
++Sample Redis keys looking for big keys.
++.TP
++.B \-\-scan
++List all keys using the SCAN command.
++.TP
++.B \-\-pattern \fIpat\fP
++Useful with --scan to specify a SCAN pattern.
++.TP
++.B \-\-intrinsic-latency \fIsec\fP
++Run a test to measure intrinsic system latency.
++The test will run for the specified amount of seconds.
++.TP
++.B \-\-eval \fIfile\fP
++Send an EVAL command using the Lua script at \fIfile\fP.
++.TP
++.B \-\-ldb
++Used with --eval enable the Redis Lua debugger.
++.TP
++.B \-\-ldb-sync-mode
++Like --ldb but uses the synchronous Lua debugger, in
++this mode the server is blocked and script changes are
++are not rolled back from the server memory.
++.TP
++.B \-\-help
++Output this help and exit.
++.TP
++.B \-\-version
++Output version and exit.
++
++.SH EXAMPLES
++.TP
++cat /etc/passwd | redis-cli -x set mypasswd
++.TP
++redis-cli get mypasswd
++.TP
++redis-cli \-r 100 lpush mylist x
++.TP
++redis-cli \-r 100 \-i 1 info | grep used_memory_human:
++.TP
++redis-cli \-\-eval myscript.lua key1 key2 , arg1 arg2 arg3
++.TP
++redis-cli \-\-scan \-\-pattern '*:12345*'
++
++.SH BUGS
++See:
++.PD 0
++.B http://redis.io/support
++and
++.B https://github.com/antirez/redis/issues
++
++.SH COPYRIGHT
++Copyright \(co 2006\-2016
++Salvatore Sanfilippo
++.P
++Redistribution and use in source and binary forms, with or without
++modification, are permitted provided that the following conditions are met:
++.TP 2
++*
++Redistributions of source code must retain the above copyright notice,
++this list of conditions and the following disclaimer.
++.TP
++*
++Redistributions in binary form must reproduce the above copyright
++notice, this list of conditions and the following disclaimer in the
++documentation and/or other materials provided with the distribution.
++.TP
++*
++Neither the name of Redis nor the names of its contributors may be used
++to endorse or promote products derived from this software without specific
++prior written permission.
++.P
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
++ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
++ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
++ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+diff --git a/man/man1/redis-server.1 b/man/man1/redis-server.1
+new file mode 100644
+index 0000000..d6edd25
+--- /dev/null
++++ b/man/man1/redis-server.1
+@@ -0,0 +1,117 @@
++.TH REDIS-SERVER 1 "2016" "Redis" "User commands"
++.SH NAME
++redis\-server, redis\-sentinel \- Redis server
++
++.SH SYNOPSIS
++.B redis\-server
++[
++.IR configuration_file
++] [ options ] [ \-\-sentinel ]
++.LP
++.B redis\-sentinel
++[
++.IR configuration_file
++] [ options ]
++
++
++.SH DESCRIPTION
++\fBRedis\fP is an open source (BSD licensed), in-memory data structure store,
++used as database, cache and message broker, found at
++.B http://redis.io/
++.LP
++The \fBredis\-server\fP command is a command line to launch a Redis server.
++.LP
++The \fBredis\-sentinel\fP command is a symbolic link to the \fBredis\-server\fP
++command which imply the \fB\-\-sentionel\fP option.
++
++.SH OPTIONS
++.TP 15
++.B \-
++Read configuration from stdin.
++.TP
++.TP 15
++.B \-\-sentinel
++Run in sentinel mode
++.TP
++.B \-\-test-memory \fImegabytes\fP
++Run a memory check and exit.
++.TP
++.PD 0
++.B \-\-help
++.TP
++.PD 1
++.B \-h
++Output this help and exit.
++.TP
++.PD 0
++.B \-\-version
++.TP
++.PD 1
++.B \-v
++Output version and exit.
++.P
++All parameters described in \fBredis.conf\fR file can be passed as
++command line option, e.g.
++.B \-\-port
++.IR port
++.
++
++.SH EXAMPLES
++.TP 5
++Run the server with default conf
++redis-server
++.TP
++Run the server with a configuration file
++redis-server /etc/redis/6379.conf
++.TP
++Run the server changing some default options
++redis-server --port 7777 --slaveof 127.0.0.1 8888
++.TP
++Run the server with a configuration file and changing some options
++redis-server /etc/myredis.conf --loglevel verbose
++.TP
++Run in sentinel mode
++redis-server /etc/sentinel.conf --sentinel
++
++.SH "SEE ALSO"
++.PP
++\fBredis.conf\fR(5)
++
++.SH BUGS
++See:
++.PD 0
++.B http://redis.io/support
++and
++.B https://github.com/antirez/redis/issues
++
++.SH COPYRIGHT
++Copyright \(co 2006\-2016
++Salvatore Sanfilippo
++.P
++Redistribution and use in source and binary forms, with or without
++modification, are permitted provided that the following conditions are met:
++.TP 2
++*
++Redistributions of source code must retain the above copyright notice,
++this list of conditions and the following disclaimer.
++.TP
++*
++Redistributions in binary form must reproduce the above copyright
++notice, this list of conditions and the following disclaimer in the
++documentation and/or other materials provided with the distribution.
++.TP
++*
++Neither the name of Redis nor the names of its contributors may be used
++to endorse or promote products derived from this software without specific
++prior written permission.
++.P
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
++ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
++ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
++ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+diff --git a/man/man5/redis.conf.5 b/man/man5/redis.conf.5
+new file mode 100644
+index 0000000..1e0c9c9
+--- /dev/null
++++ b/man/man5/redis.conf.5
+@@ -0,0 +1,57 @@
++.TH REDIS.CONF 5 "2016" "Redis" "Configuration files"
++.SH NAME
++redis.conf, sentinel.conf - redis server configuration files.
++
++.SH PARAMETERS
++.TP
++All empty lines or lines beginning with '#' are ignored.
++.TP
++See inline comments for parameters description.
++
++.SH DESCRIPTION
++.TP
++\fBredis-server\fP read the configuration file passed as first argument.
++
++.SH "SEE ALSO"
++.PP
++\fBredis\-server\fR(1)
++
++
++.SH BUGS
++See:
++.PD 0
++.B http://redis.io/support
++and
++.B https://github.com/antirez/redis/issues
++
++.SH COPYRIGHT
++Copyright \(co 2006\-2016
++Salvatore Sanfilippo
++.P
++Redistribution and use in source and binary forms, with or without
++modification, are permitted provided that the following conditions are met:
++.TP 2
++*
++Redistributions of source code must retain the above copyright notice,
++this list of conditions and the following disclaimer.
++.TP
++*
++Redistributions in binary form must reproduce the above copyright
++notice, this list of conditions and the following disclaimer in the
++documentation and/or other materials provided with the distribution.
++.TP
++*
++Neither the name of Redis nor the names of its contributors may be used
++to endorse or promote products derived from this software without specific
++prior written permission.
++.P
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
++ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
++ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
++ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
