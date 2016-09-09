@@ -182,6 +182,8 @@ chmod 755 %{buildroot}%{_bindir}/%{name}-*
 # create redis-sentinel command as described on
 # http://redis.io/topics/sentinel
 ln -sf %{name}-server %{buildroot}%{_bindir}/%{name}-sentinel
+# Same binary
+ln -sf %{name}-server %{buildroot}%{_bindir}/%{name}-check-rdb
 
 # Install redis-shutdown
 install -pDm755 %{SOURCE7} %{buildroot}%{_bindir}/%{name}-shutdown
@@ -273,6 +275,7 @@ fi
 - add man pages from https://github.com/antirez/redis/pull/3491
 - data and configuration should not be publicly readable
 - remove /var/run/redis with systemd
+- provide redis-check-rdb as a symlink to redis-server
 
 * Tue Aug  2 2016 Remi Collet <remi@fedoraproject.org> - 3.2.3-1
 - Redis 3.2.3 - Release date: Tue Aug 02 10:55:24 CEST 2016
