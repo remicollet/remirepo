@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #64 rdkafka version 1.0.0 ] {
+Extension [ <persistent> extension #109 rdkafka version 2.0.0 ] {
 
   - Constants [88] {
     Constant [ integer RD_KAFKA_CONSUMER ] { 1 }
@@ -429,7 +429,7 @@ Extension [ <persistent> extension #64 rdkafka version 1.0.0 ] {
       }
     }
 
-    Class [ <internal:rdkafka> class RdKafka\Exception extends Exception ] {
+    Class [ <internal:rdkafka> class RdKafka\Exception extends Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -460,28 +460,28 @@ Extension [ <persistent> extension #64 rdkafka version 1.0.0 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
