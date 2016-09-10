@@ -1,0 +1,26 @@
+Backported from 5.6.25 by Remi.
+
+From 7d5ca3b28d3c8f8cae6cd874740f18fd3eb5100e Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Sun, 7 Aug 2016 16:17:54 -0700
+Subject: [PATCH] Fix bug #72771: ftps:// opendir wrapper is vulnerable to
+ protocol downgrade attack
+
+---
+ ext/standard/ftp_fopen_wrapper.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/ext/standard/ftp_fopen_wrapper.c b/ext/standard/ftp_fopen_wrapper.c
+index bfb1631..5bffa47 100644
+--- a/ext/standard/ftp_fopen_wrapper.c
++++ b/ext/standard/ftp_fopen_wrapper.c
+@@ -187,7 +187,8 @@ static php_stream *php_ftp_fopen_connect(php_stream_wrapper *wrapper, const char
+ 			/* get the response */
+ 			result = GET_FTP_RESULT(stream);
+ 			if (result != 334) {
+-				use_ssl = 0;
++				php_stream_wrapper_log_error(wrapper, options TSRMLS_CC, "Server doesn't support FTPS.");
++				goto connect_errexit;
+ 			} else {
+ 				/* we must reuse the old SSL session id */
+ 				/* if we talk to an old ftpd-ssl */

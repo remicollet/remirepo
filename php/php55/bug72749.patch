@@ -1,0 +1,90 @@
+Backported from 5.6.25 by Remi.
+
+From db38282f421a5d552840aeac807efc2f584162d2 Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Thu, 4 Aug 2016 00:17:42 -0700
+Subject: [PATCH] Fix bug #72749: wddx_deserialize allows illegal memory access
+
+---
+ ext/wddx/tests/bug72749.phpt | 34 ++++++++++++++++++++++++++++++++++
+ ext/wddx/wddx.c              | 20 ++++++++++++++------
+ 2 files changed, 48 insertions(+), 6 deletions(-)
+ create mode 100644 ext/wddx/tests/bug72749.phpt
+
+diff --git a/ext/wddx/tests/bug72749.phpt b/ext/wddx/tests/bug72749.phpt
+new file mode 100644
+index 0000000..ee17d0f
+--- /dev/null
++++ b/ext/wddx/tests/bug72749.phpt
+@@ -0,0 +1,34 @@
++--TEST--
++Bug #72749: wddx_deserialize allows illegal memory access
++--SKIPIF--
++<?php
++if (!extension_loaded('wddx')) {
++    die('skip. wddx not available');
++}
++?>
++--FILE--
++<?php
++$xml = <<<XML
++<?xml version='1.0'?>
++<!DOCTYPE wddxPacket SYSTEM 'wddx_0100.dtd'>
++<wddxPacket version='1.0'>
++<header/>
++        <data>
++                <struct>
++                     <var name='aDateTime3'>
++                         <dateTime>2\r2004-09-10T05:52:49+00</dateTime>
++                     </var>
++                 </struct>
++        </data>
++</wddxPacket>
++XML;
++
++$array = wddx_deserialize($xml);
++var_dump($array);
++?>
++--EXPECT--
++array(1) {
++  ["aDateTime3"]=>
++  string(24) "2
++2004-09-10T05:52:49+00"
++}
+diff --git a/ext/wddx/wddx.c b/ext/wddx/wddx.c
+index cde3e07..faadbfe1 100644
+--- a/ext/wddx/wddx.c
++++ b/ext/wddx/wddx.c
+@@ -1116,18 +1116,26 @@ static void php_wddx_process_data(void *user_data, const XML_Char *s, int len)
+ 			case ST_DATETIME: {
+ 				char *tmp;
+ 
+-				tmp = emalloc(len + 1);
+-				memcpy(tmp, s, len);
++				if (Z_TYPE_P(ent->data) == IS_STRING) {
++					tmp = safe_emalloc(Z_STRLEN_P(ent->data), 1, (size_t)len + 1);
++					memcpy(tmp, Z_STRVAL_P(ent->data), Z_STRLEN_P(ent->data));
++					memcpy(tmp + Z_STRLEN_P(ent->data), s, len);
++					len += Z_STRLEN_P(ent->data);
++					efree(Z_STRVAL_P(ent->data));
++					Z_TYPE_P(ent->data) = IS_LONG;
++				} else {
++					tmp = emalloc(len + 1);
++					memcpy(tmp, s, len);
++				}
+ 				tmp[len] = '\0';
+ 
+ 				Z_LVAL_P(ent->data) = php_parse_date(tmp, NULL);
+ 				/* date out of range < 1969 or > 2038 */
+ 				if (Z_LVAL_P(ent->data) == -1) {
+-					Z_TYPE_P(ent->data) = IS_STRING;
+-					Z_STRLEN_P(ent->data) = len;
+-					Z_STRVAL_P(ent->data) = estrndup(s, len);
++					ZVAL_STRINGL(ent->data, tmp, len, 0);
++				} else {
++					efree(tmp);
+ 				}
+-				efree(tmp);
+ 			}
+ 				break;
+ 

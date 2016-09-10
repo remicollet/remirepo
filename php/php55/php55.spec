@@ -141,7 +141,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.38
-Release: 1%{?dist}.1
+Release: 2%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -203,6 +203,25 @@ Patch91: php-5.3.7-oci8conf.patch
 
 # Upstream fixes (100+)
 Patch100: bug72735.patch
+Patch101: bug72716.patch
+Patch102: bug72663.patch
+Patch103: bug72681.patch
+Patch104: bug72708.patch
+Patch105: bug72749.patch
+Patch106: bug70436.patch
+Patch107: bug72771.patch
+Patch108: bug72750.patch
+Patch109: bug72627.patch
+Patch110: bug72697.patch
+Patch111: bug72730.patch
+Patch112: bug72790.patch
+Patch113: bug72807.patch
+Patch114: bug72836.patch
+Patch115: bug72837.patch
+Patch116: bug72838.patch
+Patch117: bug72848.patch
+Patch118: bug72849.patch
+Patch119: bug72850.patch
 
 # Security fixes (200+)
 
@@ -969,6 +988,25 @@ rm -rf ext/json
 
 # security patches
 %patch100 -p1 -b .bug72735
+%patch101 -p1 -b .bug72716
+%patch102 -p1 -b .bug72663
+%patch103 -p1 -b .bug72681
+%patch104 -p1 -b .bug72708
+%patch105 -p1 -b .bug72749
+%patch106 -p1 -b .bug70436
+%patch107 -p1 -b .bug72771
+%patch108 -p1 -b .bug72750
+%patch109 -p1 -b .bug72627
+%patch110 -p1 -b .bug72697
+%patch111 -p1 -b .bug72730
+%patch112 -p1 -b .bug72790
+%patch113 -p1 -b .bug72807
+%patch114 -p1 -b .bug72836
+%patch115 -p1 -b .bug72837
+%patch116 -p1 -b .bug72838
+%patch117 -p1 -b .bug72848
+%patch118 -p1 -b .bug72849
+%patch119 -p1 -b .bug72850
 
 # Fixes for tests
 %patch300 -p1 -b .datetests
@@ -1830,6 +1868,16 @@ fi
 %post embedded -p /sbin/ldconfig
 %postun embedded -p /sbin/ldconfig
 
+%posttrans common
+cat << EOF
+
+WARNING : PHP 5.5 have reached its "End of Life" in July 2016.
+Even, if this package includes some security fix, backported from 5.6,
+The upgrade to a maintained version is very strongly recommended.
+
+EOF
+
+
 %files
 %defattr(-,root,root)
 %{_httpd_moddir}/libphp5.so
@@ -1981,6 +2029,40 @@ fi
 
 
 %changelog
+* Mon Sep  5 2016 Remi Collet <remi@remirepo.net> 5.5.38-2
+- fix #72716: initialize buffer before read (ftp)
+- fix #72663: destroy broken object when unserializing
+  CVE-2016-7124
+- fix #72681: consume data even if we're not storing them
+  CVE-2016-7125
+- fix #72708: php_snmp_parse_oid integer overflow in memory allocation
+- fix #72749: wddx_deserialize allows illegal memory access
+  CVE-2016-7129
+- fix #70436: Use After Free Vulnerability in unserialize()
+  CVE-2016-7129
+- fix #72771: ftps:// opendir wrapper is vulnerable to protocol
+  downgrade attack
+- fix #72750: wddx_deserialize null dereference
+  CVE-2016-7130
+- fix #72627: Memory Leakage In exif_process_IFD_in_TIFF
+  CVE-2016-7128
+- fix #72697: select_colors write out-of-bounds
+  CVE-2016-7126
+- fix #72730: imagegammacorrect allows arbitrary write access
+  CVE-2016-7127
+- fix #72790: wddx_deserialize null dereference with invalid xml
+  CVE-2016-7131
+- fix #72799: wddx_deserialize null dereference in php_wddx_pop_element
+  CVE-2016-7132
+- fix #72807: do not produce strings with negative length
+- fix #72836: integer overflow in base64_decode caused heap corruption
+- fix #72837: integer overflow in bzdecompress caused heap corruption
+- fix #72838: Integer overflow lead to heap corruption in sql_regcase
+- fix #72848: integer overflow in quoted_printable_encode caused
+  heap corruption
+- fix #72849: integer overflow in urlencode
+- fix #72850: integer overflow in uuencode
+
 * Fri Aug  5 2016 Remi Collet <remi@fedoraproject.org> 5.5.38-1.1
 - fix #72735 regression in exif maker note parser
 

@@ -1,0 +1,25 @@
+Backported from 5.6.25 by Remi.
+
+From b9ab6e14ffd602d2020da53be44bf2e77aae7b55 Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Wed, 3 Aug 2016 22:37:57 -0700
+Subject: [PATCH] Fix bug #72708 - php_snmp_parse_oid integer overflow in
+ memory allocation
+
+---
+ ext/snmp/snmp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ext/snmp/snmp.c b/ext/snmp/snmp.c
+index b88cdcd..d2c1b94 100644
+--- a/ext/snmp/snmp.c
++++ b/ext/snmp/snmp.c
+@@ -1034,7 +1034,7 @@ static int php_snmp_parse_oid(zval *object, int st, struct objid_query *objid_qu
+ 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "Got empty OID array");
+ 			return FALSE;
+ 		}
+-		objid_query->vars = (snmpobjarg *)emalloc(sizeof(snmpobjarg) * zend_hash_num_elements(Z_ARRVAL_PP(oid)));
++		objid_query->vars = (snmpobjarg *)safe_emalloc(sizeof(snmpobjarg), zend_hash_num_elements(Z_ARRVAL_PP(oid)), 0);
+ 		if (objid_query->vars == NULL) {
+ 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "emalloc() failed while parsing oid array: %s", strerror(errno));
+ 			efree(objid_query->vars);

@@ -1,0 +1,134 @@
+Backported from 5.6.25 by Remi.
+
+From 1f6078e4a5c67733bfdbd20bb2706501ac56a344 Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Wed, 10 Aug 2016 23:43:56 -0700
+Subject: [PATCH] Fix for bug #72790 and bug #72799
+
+---
+ ext/wddx/tests/bug72790.phpt | 35 +++++++++++++++++++++++++++++++++++
+ ext/wddx/tests/bug72799.phpt | 28 ++++++++++++++++++++++++++++
+ ext/wddx/wddx.c              | 14 +++++++++-----
+ 3 files changed, 72 insertions(+), 5 deletions(-)
+ create mode 100644 ext/wddx/tests/bug72790.phpt
+ create mode 100644 ext/wddx/tests/bug72799.phpt
+
+diff --git a/ext/wddx/tests/bug72790.phpt b/ext/wddx/tests/bug72790.phpt
+new file mode 100644
+index 0000000..a60524b
+--- /dev/null
++++ b/ext/wddx/tests/bug72790.phpt
+@@ -0,0 +1,35 @@
++--TEST--
++Bug 72790: wddx_deserialize null dereference with invalid xml
++--SKIPIF--
++<?php
++if (!extension_loaded('wddx')) {
++    die('skip. wddx not available');
++}
++?>
++--FILE--
++<?php
++
++$xml = <<< XML
++<?xml version='1.0' ?>
++<!DOCTYPE wddxPacket SYSTEM 'wddx_0100.dtd'>
++<wddxPacket version='1.0'>
++        |array>
++                <var name="XXXX">
++                        <boolean value="this">
++                        </boolean>
++                </var>
++                <var name="YYYY">
++                        <var name="UUUU">
++                                <var name="EZEZ">
++                                </var>
++                        </var>
++                </var>
++        </array>
++</wddxPacket>
++XML;
++
++$array = wddx_deserialize($xml);
++var_dump($array);
++?>
++--EXPECT--
++NULL
+\ No newline at end of file
+diff --git a/ext/wddx/tests/bug72799.phpt b/ext/wddx/tests/bug72799.phpt
+new file mode 100644
+index 0000000..5861d55
+--- /dev/null
++++ b/ext/wddx/tests/bug72799.phpt
+@@ -0,0 +1,28 @@
++--TEST--
++Bug #72799: wddx_deserialize null dereference in php_wddx_pop_element
++--SKIPIF--
++<?php
++if (!extension_loaded('wddx')) {
++    die('skip. wddx not available');
++}
++?>
++--FILE--
++<?php
++
++$xml = <<<XML
++<?xml version='1.0'?>
++<!DOCTYPE wddxPacket SYSTEM 'wddx_0100.dtd'>
++<wddxPacket version="1.0">
++    <var name="XXXX">
++        <boolean value="1">
++            <dateTime>1998-06-12T04:32:12+00</dateTime>
++        </boolean>
++    </var>
++</wddxPacket>
++XML;
++
++$array = wddx_deserialize($xml);
++var_dump($array);
++?>
++--EXPECT--
++NULL
+\ No newline at end of file
+diff --git a/ext/wddx/wddx.c b/ext/wddx/wddx.c
+index 1b2d103..d7bd295 100644
+--- a/ext/wddx/wddx.c
++++ b/ext/wddx/wddx.c
+@@ -939,10 +939,10 @@ static void php_wddx_pop_element(void *user_data, const XML_Char *name)
+ 		if (!ent1->data) {
+ 			if (stack->top > 1) {
+ 				stack->top--;
++				efree(ent1);
+ 			} else {
+ 				stack->done = 1;
+ 			}
+-			efree(ent1);
+ 			return;
+ 		}
+ 
+@@ -981,7 +981,7 @@ static void php_wddx_pop_element(void *user_data, const XML_Char *name)
+ 			wddx_stack_top(stack, (void**)&ent2);
+ 
+ 			/* if non-existent field */
+-			if (ent2->type == ST_FIELD && ent2->data == NULL) {
++			if (ent2->data == NULL) {
+ 				zval_ptr_dtor(&ent1->data);
+ 				efree(ent1);
+ 				return;
+@@ -1172,9 +1172,13 @@ int php_wddx_deserialize_ex(char *value, int vallen, zval *return_value)
+ 
+ 	if (stack.top == 1) {
+ 		wddx_stack_top(&stack, (void**)&ent);
+-		*return_value = *(ent->data);
+-		zval_copy_ctor(return_value);
+-		retval = SUCCESS;
++		if(ent->data == NULL) {
++			retval = FAILURE;
++		} else {
++			*return_value = *(ent->data);
++			zval_copy_ctor(return_value);
++			retval = SUCCESS;
++		}
+ 	} else {
+ 		retval = FAILURE;
+ 	}

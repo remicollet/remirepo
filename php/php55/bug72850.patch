@@ -1,0 +1,54 @@
+Backported from 5.6.25 by Remi.
+
+From c35e4cb20cdeb02d9d362c57edce11c2948effcd Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Tue, 16 Aug 2016 16:03:44 -0700
+Subject: [PATCH] Fix bug #72850 - integer overflow in uuencode
+
+---
+ ext/standard/uuencode.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/ext/standard/uuencode.c b/ext/standard/uuencode.c
+index cd35c28..a31f14d 100644
+--- a/ext/standard/uuencode.c
++++ b/ext/standard/uuencode.c
+@@ -153,7 +153,7 @@ PHPAPI int php_uudecode(char *src, int src_len, char **dest) /* {{{ */
+ 		while (s < ee) {
+ 			if(s+4 > e) {
+ 				goto err;
+-			} 
++			}
+ 			*p++ = PHP_UU_DEC(*s) << 2 | PHP_UU_DEC(*(s + 1)) >> 4;
+ 			*p++ = PHP_UU_DEC(*(s + 1)) << 4 | PHP_UU_DEC(*(s + 2)) >> 2;
+ 			*p++ = PHP_UU_DEC(*(s + 2)) << 6 | PHP_UU_DEC(*(s + 3));
+@@ -168,7 +168,7 @@
+ 		s++;
+ 	}
+ 
+-	if ((len = total_len > (p - *dest))) {
++	if ((len = total_len) > (p - *dest)) {
+ 		*p++ = PHP_UU_DEC(*s) << 2 | PHP_UU_DEC(*(s + 1)) >> 4;
+ 		if (len > 1) {
+ 			*p++ = PHP_UU_DEC(*(s + 1)) << 4 | PHP_UU_DEC(*(s + 2)) >> 2;
+@@ -188,7 +188,7 @@ PHPAPI int php_uudecode(char *src, int src_len, char **dest) /* {{{ */
+ }
+ /* }}} */
+ 
+-/* {{{ proto string convert_uuencode(string data) 
++/* {{{ proto string convert_uuencode(string data)
+    uuencode a string */
+ PHP_FUNCTION(convert_uuencode)
+ {
+@@ -200,6 +200,11 @@ PHP_FUNCTION(convert_uuencode)
+ 	}
+ 
+ 	dst_len = php_uuencode(src, src_len, &dst);
++	if (dst_len < 0) {
++		php_error_docref(NULL TSRMLS_CC, E_WARNING, "String too long, max length is %d", INT_MAX);
++		efree(dst);
++		RETURN_FALSE;
++	}
+ 
+ 	RETURN_STRINGL(dst, dst_len, 0);
+ }
