@@ -184,7 +184,7 @@ if [ $1 = devs -o $1 = dev ]; then
 fi
 
 if [ $1 = all ]; then
-	for i in 21 22 23 24
+	for i in 21 22 23 24 25
 	do
 		getOneMock fc${i}i $opt
 	done
@@ -227,7 +227,7 @@ elif [ $1 = all70 ]; then
 elif [ $1 = all71 ]; then
 	[ $opt = remi ] && opt=php71
 	[ $opt = test ] && opt=test71
-	for n in 23 24
+	for n in 23 24 25
 	do
 		getOneMock fc${n}i $opt
 		getOneMock fc${n}x $opt
@@ -268,7 +268,7 @@ elif [ $1 = for55 ]; then
 	done
 
 elif [ $1 = allx ]; then
-	for i in 21 22 23 24
+	for i in 21 22 23 24 25
 	do
 		getOneMock fc${i}x $opt
 	done

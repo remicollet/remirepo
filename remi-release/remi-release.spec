@@ -14,10 +14,14 @@
 
 Name:           remi-release
 Version:        %{fedora}
+%if %{fedora} >= 25
+Release:        1%{?dist}
+%else
 %if %{fedora} >= 24
 Release:        2%{?dist}
 %else
 Release:        4%{?dist}
+%endif
 %endif
 Summary:        Configuration for remi repository
 Summary(fr):	Configuration pour le dépôt remi
@@ -125,6 +129,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 11 2016 Remi Collet <remi@remirepo.net> - 25-1
+- Fedora release 25
+
 * Thu Jun 30 2016 Remi Collet <remi@remirepo.net> - 22-4, 23-4 and 24-2
 - add remi-php71 repository configuration
 - add debuginfo repository configuration

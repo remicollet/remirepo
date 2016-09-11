@@ -13,6 +13,8 @@ $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 /var/lib/mock/fc23x/build.log:Tests failed    :    0
 /var/lib/mock/fc24i/build.log:Tests failed    :    2
 /var/lib/mock/fc24x/build.log:Tests failed    :    0
+/var/lib/mock/fc25i/build.log:Tests failed    :    0
+/var/lib/mock/fc25x/build.log:Tests failed    :    0
 
 
 fc24i

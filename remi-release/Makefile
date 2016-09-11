@@ -11,6 +11,9 @@ el6:
 el7:
 	rpmbuild $(RPMDEFINES) $(SRCDEFINES) -bs $(NAME)-el.spec --define 'dist .el7.remi' --define 'rhel 7'
 
+f25:
+	rpmbuild $(RPMDEFINES) $(SRCDEFINES) -bs $(NAME).spec --define 'dist .f25.remi' --define 'fedora 25'
+
 f24:
 	rpmbuild $(RPMDEFINES) $(SRCDEFINES) -bs $(NAME).spec --define 'dist .f24.remi' --define 'fedora 24'
 
@@ -20,9 +23,4 @@ f23:
 f22:
 	rpmbuild $(RPMDEFINES) $(SRCDEFINES) -bs $(NAME).spec --define 'dist .f22.remi' --define 'fedora 22'
 
-f21:
-	rpmbuild $(RPMDEFINES) $(SRCDEFINES) -bs $(NAME).spec --define 'dist .f21.remi' --define 'fedora 21'
-
-f20:
-	rpmbuild $(RPMDEFINES) $(SRCDEFINES) -bs $(NAME).spec --define 'dist .f20.remi' --define 'fedora 20'
 
