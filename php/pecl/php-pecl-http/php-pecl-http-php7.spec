@@ -43,7 +43,7 @@ Version:        3.1.0
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 %endif
 Summary:        Extended HTTP support
@@ -287,9 +287,12 @@ done
     --modules | grep %{pecl_name}
 
 %if %{with_tests}
-%if "%{php_version}" > "7.1"
-rm ?TS/tests/client022.phpt
+%if "%{php_version}" > "7"
+  rm ?TS/tests/client022.phpt
 %endif
+if pkg-config --atleast-version=7.49 libcurl; then
+  rm ?TS/tests/client019.phpt
+fi
 
 : Upstream test suite NTS extension
 cd NTS
@@ -365,6 +368,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 11 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-0.2.beta2
+- ignore test with libcurl > 7.49
+
 * Wed Sep  7 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-0.1.beta2
 - Update to 3.1.0beta2 (php 7, beta)
 
