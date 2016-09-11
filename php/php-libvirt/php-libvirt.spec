@@ -33,7 +33,7 @@
 
 Name:          %{?sub_prefix}php-libvirt
 Version:       0.5.2
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:       PHP language binding for Libvirt
 
 Group:         Development/Libraries
@@ -108,9 +108,13 @@ make %{?_smp_mflags}
 make install DESTDIR=%{buildroot}
 install -pm 644 COPYING %{buildroot}%{_pkgdocdir}
 
-if [ "%{extname}.ini" != "%{ini_name}" ]; then
-  mv %{buildroot}%{php_inidir}/%{extname}.ini \
-     %{buildroot}%{php_inidir}/%{ini_name}
+if [ -f %{buildroot}%{php_inidir}/%{extname}.ini ]; then
+  if [ "%{extname}.ini" != "%{ini_name}" ]; then
+    mv %{buildroot}%{php_inidir}/%{extname}.ini \
+       %{buildroot}%{php_inidir}/%{ini_name}
+  fi
+else
+  install -Dpm 644 src/libvirt-php.ini %{buildroot}%{php_inidir}/%{ini_name}
 fi
 
 : Fix installation
@@ -140,6 +144,9 @@ php --no-php-ini \
 
 
 %changelog
+* Sun Sep 11 2016 Remi Collet <remi@fedoraproject.org> - 0.5.2-2
+- fix F25 build (ini file installation)
+
 * Thu Apr 21 2016 Remi Collet <remi@fedoraproject.org> - 0.5.2-1
 - update to 0.5.2
 - raise dependency on libvirt 1.2.9
