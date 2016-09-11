@@ -8,6 +8,7 @@ $ grep -r 'Tests failed' /var/lib/mock/scl56*/build.log
 /var/lib/mock/scl56fc22x/build.log:Tests failed    :    0
 /var/lib/mock/scl56fc23x/build.log:Tests failed    :    0
 /var/lib/mock/scl56fc24x/build.log:Tests failed    :    0
+/var/lib/mock/scl56fc25x/build.log:Tests failed    :    0
 
 
 * proc_open have erratic results... :(
