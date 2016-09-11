@@ -14,7 +14,7 @@
 
 Name:          termbox
 Version:       1.1.0
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Minimalist library for text-based user interfaces
 Group:         System Environment/Libraries
 
@@ -62,6 +62,11 @@ export CFLAGS="%{optflags}"
     --targets=termbox_shared \
     --destdir=%{buildroot}
 
+# F25 workaround
+if [ ! -f %{buildroot}%{_includedir}/%{name}.h ]; then
+  install -Dpm 644 src/termbox.h %{buildroot}%{_includedir}/%{name}.h
+fi
+
 
 %post -p /sbin/ldconfig
 
@@ -81,6 +86,9 @@ export CFLAGS="%{optflags}"
 
 
 %changelog
+* Sun Sep 11 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-2
+- fix F25 build
+
 * Thu Sep  1 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - update to 1.1.0
 
