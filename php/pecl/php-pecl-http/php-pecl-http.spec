@@ -42,7 +42,7 @@
 #global prever RC1
 Name:           %{?sub_prefix}php-pecl-http
 Version:        2.6.0
-Release:        0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -273,6 +273,9 @@ else
 : only local tests when mock is used
 export SKIP_ONLINE_TESTS=1
 fi
+if pkg-config --atleast-version=7.49 libcurl; then
+  rm ?TS/tests/client019.phpt
+fi
 
 # Shared needed extensions
 modules=""
@@ -363,6 +366,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 11 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-0.2.beta2
+- F25 build
+
 * Wed Sep  7 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-0.1.beta2
 - Update to 2.6.0beta2 (php 5, beta)
 

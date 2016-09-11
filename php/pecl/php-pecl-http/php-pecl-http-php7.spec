@@ -287,9 +287,7 @@ done
     --modules | grep %{pecl_name}
 
 %if %{with_tests}
-%if "%{php_version}" > "7"
-  rm ?TS/tests/client022.phpt
-%endif
+rm ?TS/tests/client022.phpt
 if pkg-config --atleast-version=7.49 libcurl; then
   rm ?TS/tests/client019.phpt
 fi
