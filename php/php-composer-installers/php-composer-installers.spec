@@ -12,8 +12,8 @@
 
 %global github_owner     composer
 %global github_name      installers
-%global github_version   1.1.0
-%global github_commit    a3595c5272a6f247228abb20076ed27321e4aae9
+%global github_version   1.2.0
+%global github_commit    d78064c68299743e0161004f2de3a0204e33b804
 
 %global composer_vendor  composer
 %global composer_project installers
@@ -47,7 +47,7 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-composer(composer-plugin-api) >= %{composer_plugin_min_ver}
 BuildRequires: php-composer(composer/composer)   >= %{composer_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 1.1.0)
+## phpcompatinfo (computed from version 1.2.0)
 BuildRequires: php(language) >= 5.3.0
 BuildRequires: php-pcre
 BuildRequires: php-spl
@@ -58,7 +58,7 @@ BuildRequires: php-composer(symfony/class-loader)
 # composer.json
 Requires:      php-composer(composer-plugin-api) >= %{composer_plugin_min_ver}
 Requires:      php-composer(composer-plugin-api) <  %{composer_plugin_max_ver}
-# phpcompatinfo (computed from version 1.1.0)
+# phpcompatinfo (computed from version 1.2.0)
 Requires:      php(language) >= 5.3.0
 Requires:      php-pcre
 Requires:      php-spl
@@ -164,6 +164,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 11 2016 Shawn Iwinski <shawn@iwin.ski> - 1.2.0-1
+- Updated to 1.2.0 (RHBZ #1372115)
+
 * Sat Jul 23 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.0-1
 - Updated to 1.1.0 (RHBZ #1352896)
 - Updated URL
