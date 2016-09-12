@@ -8,6 +8,7 @@ $ grep -r 'Tests failed' /var/lib/mock/scl54*/build.log
 /var/lib/mock/scl54fc22x/build.log:Tests failed    :    1
 /var/lib/mock/scl54fc23x/build.log:Tests failed    :    3
 /var/lib/mock/scl54fc24x/build.log:Tests failed    :    4
+/var/lib/mock/scl54fc25x/build.log:Tests failed    :    3
 
 f23, f24
 	Bug #33414 [1] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-1.phpt]
