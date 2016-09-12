@@ -160,11 +160,10 @@ make test-sentinel
 make install PREFIX=%{buildroot}%{_prefix}
 # Install misc other
 install -p -D -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
-install -p -D -m 644 %{name}.conf  %{buildroot}%{_sysconfdir}/%{name}.conf
-install -p -D -m 644 sentinel.conf %{buildroot}%{_sysconfdir}/%{name}-sentinel.conf
-install -d -m 755 %{buildroot}%{_localstatedir}/lib/%{name}
-install -d -m 755 %{buildroot}%{_localstatedir}/log/%{name}
-install -d -m 755 %{buildroot}%{_localstatedir}/run/%{name}
+install -p -D -m 640 %{name}.conf  %{buildroot}%{_sysconfdir}/%{name}.conf
+install -p -D -m 640 sentinel.conf %{buildroot}%{_sysconfdir}/%{name}-sentinel.conf
+install -d -m 750 %{buildroot}%{_localstatedir}/lib/%{name}
+install -d -m 750 %{buildroot}%{_localstatedir}/log/%{name}
 
 %if %{with_systemd}
 # Install systemd unit
@@ -174,6 +173,7 @@ install -p -D -m 644 %{SOURCE6} %{buildroot}%{_unitdir}/%{name}-sentinel.service
 install -p -D -m 644 %{SOURCE8} %{buildroot}%{_sysconfdir}/systemd/system/%{name}.service.d/limit.conf
 install -p -D -m 644 %{SOURCE8} %{buildroot}%{_sysconfdir}/systemd/system/%{name}-sentinel.service.d/limit.conf
 %else
+install -d -m 750 %{buildroot}%{_localstatedir}/run/%{name}
 install -p -D -m 755 %{SOURCE2} %{buildroot}%{_initrddir}/%{name}
 install -p -D -m 755 %{SOURCE5} %{buildroot}%{_initrddir}/%{name}-sentinel
 install -p -D -m 644 %{SOURCE9} %{buildroot}%{_sysconfdir}/security/limits.d/95-%{name}.conf
@@ -245,10 +245,10 @@ fi
 %license COPYING
 %doc 00-RELEASENOTES BUGS CONTRIBUTING MANIFESTO README.md
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
-%attr(0600, redis, root) %config(noreplace) %{_sysconfdir}/%{name}.conf
-%attr(0600, redis, root) %config(noreplace) %{_sysconfdir}/%{name}-sentinel.conf
-%dir %attr(0700, redis, redis) %{_localstatedir}/lib/%{name}
-%dir %attr(0700, redis, redis) %{_localstatedir}/log/%{name}
+%attr(0640, redis, root) %config(noreplace) %{_sysconfdir}/%{name}.conf
+%attr(0640, redis, root) %config(noreplace) %{_sysconfdir}/%{name}-sentinel.conf
+%dir %attr(0750, redis, redis) %{_localstatedir}/lib/%{name}
+%dir %attr(0750, redis, redis) %{_localstatedir}/log/%{name}
 %{_bindir}/%{name}-*
 %{_mandir}/man1/redis*
 %{_mandir}/man5/redis*
@@ -263,7 +263,7 @@ fi
 %{_initrddir}/%{name}
 %{_initrddir}/%{name}-sentinel
 %config(noreplace) %{_sysconfdir}/security/limits.d/95-%{name}.conf
-%dir %attr(0700, redis, redis) %{_localstatedir}/run/%{name}
+%dir %attr(0750, redis, redis) %{_localstatedir}/run/%{name}
 %endif
 
 
