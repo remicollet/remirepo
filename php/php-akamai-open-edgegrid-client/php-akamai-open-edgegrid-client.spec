@@ -12,8 +12,8 @@
 
 %global github_owner     akamai-open
 %global github_name      AkamaiOPEN-edgegrid-php
-%global github_version   0.4.5
-%global github_commit    1e079aa0977c7d907427876fdcc38b0042bd2493
+%global github_version   0.4.6
+%global github_commit    00bd7dbe59d52c19c9a465373cb58d2a65e46ec6
 
 %global composer_vendor  akamai-open
 %global composer_project edgegrid-client
@@ -60,7 +60,7 @@ BuildRequires: php-PsrLog                      >= %{psr_log_min_ver}
 BuildRequires: php(language)                   >= %{php_min_ver}
 BuildRequires: php-composer(monolog/monolog)   >= %{monolog_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 0.4.5)
+## phpcompatinfo (computed from version 0.4.6)
 BuildRequires: php-date
 BuildRequires: php-hash
 BuildRequires: php-json
@@ -79,7 +79,7 @@ Requires:      php-composer(monolog/monolog)   <  %{monolog_max_ver}
 #Requires:      php-composer(psr/log)           >= %%{psr_log_min_ver}
 Requires:      php-PsrLog                      >= %{psr_log_min_ver}
 Requires:      php-composer(psr/log)           <  %{psr_log_max_ver}
-# phpcompatinfo (computed from version 0.4.5)
+# phpcompatinfo (computed from version 0.4.6)
 Requires:      php-date
 Requires:      php-hash
 Requires:      php-json
@@ -208,6 +208,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 11 2016 Shawn Iwinski <shawn@iwin.ski> - 0.4.6-1
+- Updated to 0.4.6 (RHBZ #1371149)
+
 * Sat Jul 23 2016 Shawn Iwinski <shawn@iwin.ski> - 0.4.5-1
 - Updated to 0.4.5 (RHBZ #1333785)
 - Added library version value and autoloader check
