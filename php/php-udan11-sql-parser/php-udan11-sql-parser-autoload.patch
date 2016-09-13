@@ -1,6 +1,6 @@
 diff -up bin/highlight-query.rpm bin/highlight-query
---- bin/highlight-query.rpm	2016-07-26 08:44:20.461742790 +0200
-+++ bin/highlight-query	2016-07-26 08:44:57.594944077 +0200
+--- bin/highlight-query.rpm	2016-09-13 13:04:29.517214693 +0200
++++ bin/highlight-query	2016-09-13 13:05:35.400519256 +0200
 @@ -1,29 +1,7 @@
  #!/usr/bin/env php
  <?php
@@ -24,7 +24,7 @@ diff -up bin/highlight-query.rpm bin/highlight-query
 -if (!$found) {
 -    die(
 -        "You need to set up the project dependencies using the following commands:" . PHP_EOL .
--        "curl -s http://getcomposer.org/installer | php" . PHP_EOL .
+-        "curl -sS https://getcomposer.org/installer | php" . PHP_EOL .
 -        "php composer.phar install" . PHP_EOL
 -    );
 -}
@@ -33,8 +33,8 @@ diff -up bin/highlight-query.rpm bin/highlight-query
  $cli = new SqlParser\Utils\CLI();
  exit($cli->runHighlight());
 diff -up bin/lint-query.rpm bin/lint-query
---- bin/lint-query.rpm	2016-07-26 08:44:29.869793788 +0200
-+++ bin/lint-query	2016-07-26 08:45:05.123984889 +0200
+--- bin/lint-query.rpm	2016-09-13 13:04:29.517214693 +0200
++++ bin/lint-query	2016-09-13 13:05:58.585626435 +0200
 @@ -1,29 +1,7 @@
  #!/usr/bin/env php
  <?php
@@ -58,7 +58,7 @@ diff -up bin/lint-query.rpm bin/lint-query
 -if (!$found) {
 -    die(
 -        "You need to set up the project dependencies using the following commands:" . PHP_EOL .
--        "curl -s http://getcomposer.org/installer | php" . PHP_EOL .
+-        "curl -sS https://getcomposer.org/installer | php" . PHP_EOL .
 -        "php composer.phar install" . PHP_EOL
 -    );
 -}

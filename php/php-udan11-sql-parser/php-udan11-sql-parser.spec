@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    1ec169a2a76110bbd0734da23a43c4d23c1eecfb
+%global gh_commit    98c2a72dd19542d80dcee63eb50c199e5f9a2935
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpmyadmin
 #global gh_date      20150820
@@ -15,7 +15,7 @@
 %global psr0         SqlParser
 
 Name:           php-udan11-%{gh_project}
-Version:        3.4.4
+Version:        3.4.5
 Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A validating SQL lexer and parser with a focus on MySQL dialect
 
@@ -40,11 +40,12 @@ BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php-composer(theseer/autoload)
 
 # From composer.json, "require": {
-#        "php": ">=5.4.0"
+#        "php": ">=5.4.0",
+#        "ext-mbstring": "*"
 Requires:       php(language) >= 5.4
-# From phpcompatinfo report for 20150629
-Requires:       php-ctype
 Requires:       php-mbstring
+# From phpcompatinfo report for 3.4.5
+Requires:       php-ctype
 Requires:       php-pcre
 # For generated autoloader
 Requires:       php-spl
@@ -138,6 +139,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 13 2016 Remi Collet <remi@fedoraproject.org> - 3.4.5-1
+- update to 3.4.5
+
 * Tue Jul 26 2016 Remi Collet <remi@fedoraproject.org> - 3.4.4-1
 - update to 3.4.4
 - switch from udan11/sql-parser to phpmyadmin/sql-parser
