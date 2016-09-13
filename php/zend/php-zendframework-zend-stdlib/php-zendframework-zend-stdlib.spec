@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    8bafa58574204bdff03c275d1d618aaa601588ae
+%global gh_commit    debedcfc373a293f9250cc9aa03cf121428c8e78
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-stdlib
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        3.0.1
+Version:        3.1.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -34,7 +34,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.5
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-composer(%{gh_owner}/zend-hydrator)         >= 1.1
 BuildRequires:  php-date
 BuildRequires:  php-iconv
@@ -44,17 +44,18 @@ BuildRequires:  php-pcre
 BuildRequires:  php-reflection
 BuildRequires:  php-spl
 # From composer, "require-dev": {
+#        "athletic/athletic": "~0.1",
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "phpunit/PHPUnit": "~4.0",
-#        "athletic/athletic": "~0.1"
+#        "squizlabs/php_codesniffer": "^2.6.2"
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.0
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": "^5.5 || ^7.0",
-Requires:       php(language) >= 5.5
+#        "php": "^5.6 || ^7.0",
+Requires:       php(language) >= 5.6
 # From phpcompatinfo report for version 2.7.4
 Requires:       php-date
 Requires:       php-iconv
@@ -151,6 +152,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 13 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-1
+- update to 3.1.0
+- raise dependency on PHP >= 5.6
+
 * Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
 - update to 3.0.1 for ZendFramework 3
 - drop dependency on zend-hydrator
