@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    98c2a72dd19542d80dcee63eb50c199e5f9a2935
+%global gh_commit    a0d8069906d464de75bea761acb9fdde0aa2ee72
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpmyadmin
 #global gh_date      20150820
@@ -15,7 +15,7 @@
 %global psr0         SqlParser
 
 Name:           php-udan11-%{gh_project}
-Version:        3.4.5
+Version:        3.4.6
 Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A validating SQL lexer and parser with a focus on MySQL dialect
 
@@ -30,7 +30,7 @@ Patch0:         %{name}-autoload.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.4.0
+BuildRequires:  php(language) >= 5.3.0
 # For tests, from composer.json "require-dev": {
 #        "phpunit/php-code-coverage": "~2.0 || ~3.0",
 #        "phpunit/phpunit": "~4.8 || ~5.1"
@@ -40,9 +40,9 @@ BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php-composer(theseer/autoload)
 
 # From composer.json, "require": {
-#        "php": ">=5.4.0",
+#        "php": ">=5.3.0",
 #        "ext-mbstring": "*"
-Requires:       php(language) >= 5.4
+Requires:       php(language) >= 5.3
 Requires:       php-mbstring
 # From phpcompatinfo report for 3.4.5
 Requires:       php-ctype
@@ -139,6 +139,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 13 2016 Remi Collet <remi@fedoraproject.org> - 3.4.6-1
+- update to 3.4.6
+- lower dependency on php >= 5.3
+
 * Tue Sep 13 2016 Remi Collet <remi@fedoraproject.org> - 3.4.5-1
 - update to 3.4.5
 
