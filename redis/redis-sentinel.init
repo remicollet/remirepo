@@ -10,7 +10,7 @@
 
 name="redis-sentinel"
 exec="/usr/bin/$name"
-shut="/usr/bin/redis-shutdown"
+shut="/usr/libexec/redis-shutdown"
 pidfile="/var/run/redis/sentinel.pid"
 SENTINEL_CONFIG="/etc/redis-sentinel.conf"
 

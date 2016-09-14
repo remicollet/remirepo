@@ -28,7 +28,7 @@
 
 Name:             redis
 Version:          3.2.3
-Release:          3%{?dist}
+Release:          4%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -183,7 +183,7 @@ install -p -D -m 644 %{SOURCE9} %{buildroot}%{_sysconfdir}/security/limits.d/95-
 chmod 755 %{buildroot}%{_bindir}/%{name}-*
 
 # Install redis-shutdown
-install -pDm755 %{SOURCE7} %{buildroot}%{_bindir}/%{name}-shutdown
+install -pDm755 %{SOURCE7} %{buildroot}%{_libexecdir}/%{name}-shutdown
 
 # Install man pages
 man=$(dirname %{buildroot}%{_mandir})
@@ -250,6 +250,7 @@ fi
 %dir %attr(0750, redis, redis) %{_localstatedir}/lib/%{name}
 %dir %attr(0750, redis, redis) %{_localstatedir}/log/%{name}
 %{_bindir}/%{name}-*
+%{_libexecdir}/%{name}-*
 %{_mandir}/man1/redis*
 %{_mandir}/man5/redis*
 %if %{with_systemd}
@@ -268,6 +269,9 @@ fi
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 3.2.3-4
+- move redis-shutdown to libexec
+
 * Fri Sep  9 2016 Remi Collet <remi@fedoraproject.org> - 3.2.3-3
 - add patch from https://github.com/antirez/redis/pull/3494
 
