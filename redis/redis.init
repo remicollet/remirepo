@@ -4,6 +4,14 @@
 #
 # chkconfig:   - 20 80
 # description: Starts and stops the redis daemon.
+#
+### BEGIN INIT INFO
+# Provides: redis-server
+# Required-Start: $local_fs $remote_fs $network
+# Required-Stop: $local_fs $remote_fs $network
+# Short-Description: start and stop Redis server
+# Description: A persistent key-value database
+### END INIT INFO
 
 # Source function library.
 . /etc/rc.d/init.d/functions

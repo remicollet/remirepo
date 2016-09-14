@@ -271,6 +271,7 @@ fi
 %changelog
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 3.2.3-4
 - move redis-shutdown to libexec
+- add missing LSB headers to init scripts
 
 * Fri Sep  9 2016 Remi Collet <remi@fedoraproject.org> - 3.2.3-3
 - add patch from https://github.com/antirez/redis/pull/3494
