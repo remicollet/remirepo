@@ -67,9 +67,12 @@ Requires:       php(httpd)
 Requires:       httpd, mod_php
 %endif
 Requires:       php(language) >= 5.4
+Requires:       php-ctype
+Requires:       php-curl
 Requires:       php-date
-Requires:       php-gd
+Requires:       php-exif
 Requires:       php-fileinfo
+Requires:       php-gd
 Requires:       php-imap
 Requires:       php-json
 Requires:       php-ldap
@@ -77,7 +80,10 @@ Requires:       php-mbstring
 Requires:       php-mysqli
 Requires:       php-pcre
 Requires:       php-session
-Requires:       php-xml
+Requires:       php-simplexml
+Requires:       php-wddx
+Requires:       php-xmlrpc
+Requires:       php-zlib
 Requires:       php-PHPMailer
 Requires:       php-tcpdf
 Requires:       php-pear-CAS >= 1.2.0
