@@ -32,7 +32,7 @@
 Summary:        Provides interface to libev library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.3
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -249,6 +249,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-2
+- rebuild for PHP 7.1 new API version
+
 * Fri Jul 29 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - Update to 1.0.3
 

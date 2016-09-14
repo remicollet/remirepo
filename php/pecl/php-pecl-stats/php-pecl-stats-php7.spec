@@ -15,7 +15,7 @@
 Summary:        Routines for statistical computation
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        2.0.3
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -49,6 +49,10 @@ Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -202,6 +206,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 2.0.3-2
+- rebuild for PHP 7.1 new API version
+
 * Thu Jun  2 2016 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - update to 2.0.3 (php 7, stable)
 

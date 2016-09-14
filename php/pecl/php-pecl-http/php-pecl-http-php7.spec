@@ -40,10 +40,10 @@
 Name:           %{?sub_prefix}php-pecl-http
 Version:        3.1.0
 %if 0%{?gh_date:1}
-Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 %endif
 Summary:        Extended HTTP support
@@ -366,6 +366,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-0.3.beta2
+- rebuild for PHP 7.1 new API version
+
 * Sun Sep 11 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-0.2.beta2
 - ignore test with libcurl > 7.49
 

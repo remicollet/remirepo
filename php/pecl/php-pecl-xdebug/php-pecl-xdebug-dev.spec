@@ -33,9 +33,9 @@ Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.5.0
 %if 0%{?gh_date:1}
-Release:        0.3.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 
 # The Xdebug License, version 1.01
@@ -310,6 +310,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 2.5.0-0.4.20160731git9fe2994
+- rebuild for PHP 7.1 new API version
+
 * Tue Aug  2 2016 Remi Collet <remi@fedoraproject.org> - 2.5.0-0.3.20160731git9fe2994
 - new snapshot of 2.5.0-dev
 

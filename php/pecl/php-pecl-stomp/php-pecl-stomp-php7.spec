@@ -16,7 +16,7 @@
 Summary:        Stomp client extension
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        2.0.0
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -212,6 +212,9 @@ fi
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-3
+- rebuild for PHP 7.1 new API version
+
 * Fri Jun 10 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
 - add upstream patch for PHP 7.1
 

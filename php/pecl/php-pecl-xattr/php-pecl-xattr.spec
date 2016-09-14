@@ -27,7 +27,7 @@
 Summary:        Extended attributes
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.3.0
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -65,6 +65,10 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -227,6 +231,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-2
+- rebuild for PHP 7.1 new API version
+
 * Mon Mar  7 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - update to 1.3.0 (stable) - no change since RC1
 

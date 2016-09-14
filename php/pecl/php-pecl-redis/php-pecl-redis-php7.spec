@@ -33,10 +33,10 @@ Summary:       Extension for communicating with the Redis key-value store
 Name:          %{?sub_prefix}php-pecl-redis
 Version:       3.0.0
 %if 0%{?gh_date}
-Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 License:       PHP
@@ -314,6 +314,9 @@ fi
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-2
+- rebuild for PHP 7.1 new API version
+
 * Sat Jun 11 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
 - Update to 3.0.0 (stable)
 

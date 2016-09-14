@@ -33,10 +33,10 @@ Summary:       API for communicating with MessagePack serialization
 Name:          %{?sub_prefix}php-pecl-msgpack
 Version:       2.0.1
 %if 0%{?gh_date:1}
-Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 License:       BSD
@@ -44,6 +44,8 @@ Group:         Development/Languages
 URL:           http://pecl.php.net/package/msgpack
 
 Patch0:        %{pecl_name}-pr87.patch
+# Temp for https://github.com/msgpack/msgpack-php/issues/100
+Patch1:        %{pecl_name}-php71.patch
 
 BuildRequires: %{?scl_prefix}php-devel >= 7
 BuildRequires: %{?scl_prefix}php-pear
@@ -132,6 +134,7 @@ mv %{pecl_name}-%{version} NTS
 
 cd NTS
 %patch0 -p1 -b .pr87
+%patch1 -p1 -b .php71
 
 %if %{with_msgpack}
 # use system library
@@ -284,6 +287,9 @@ fi
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-4
+- rebuild for PHP 7.1 new API version
+
 * Sat Jul 23 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-3
 - ignore more tests with 7.1
 

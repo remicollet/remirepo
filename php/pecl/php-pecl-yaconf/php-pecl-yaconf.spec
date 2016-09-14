@@ -21,10 +21,10 @@ Summary:       Yet Another Configurations Container
 Name:          %{?scl_prefix}php-pecl-yaconf
 Version:       1.0.2
 %if 0%{?gh_date:1}
-Release:       0.7.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.8.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 License:       PHP
@@ -39,8 +39,12 @@ Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
-Obsoletes:     php70u-%{gh_project} <= %{version}
-Obsoletes:     php70w-%{gh_project} <= %{version}
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 # Package have be renamed
@@ -230,6 +234,9 @@ fi
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-2
+- rebuild for PHP 7.1 new API version
+
 * Thu May 26 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Update to 1.0.2 (php 7, stable)
 

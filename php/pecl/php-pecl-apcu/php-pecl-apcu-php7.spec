@@ -28,10 +28,10 @@ Name:           %{?sub_prefix}php-pecl-apcu
 Summary:        APC User Cache
 Version:        5.1.5
 %if 0%{?gh_date:1}
-Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.3.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 Source1:        %{pecl_name}-5.1.2.ini
@@ -315,6 +315,9 @@ fi
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 5.1.5-4
+- rebuild for PHP 7.1 new API version
+
 * Mon Jul 25 2016 Remi Collet <remi@fedoraproject.org> - 5.1.5-3
 - add patch for PHP 7.1 and ZTS
 

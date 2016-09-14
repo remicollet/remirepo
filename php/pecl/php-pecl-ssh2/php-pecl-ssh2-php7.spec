@@ -27,10 +27,10 @@
 Name:           %{?sub_prefix}php-pecl-ssh2
 Version:        1.0
 %if 0%{?gh_date}
-Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
 %else
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/ssh2-%{version}.tgz
 %endif
 Summary:        Bindings for the libssh2 library
@@ -221,6 +221,9 @@ fi
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.0-2
+- rebuild for PHP 7.1 new API version
+
 * Sun Jun 12 2016 Remi Collet <remi@fedoraproject.org> - 1.0-1
 - update to 1.0
 

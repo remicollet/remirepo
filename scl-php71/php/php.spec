@@ -22,7 +22,7 @@
 %endif
 
 # API/ABI check
-%global apiver      20151012
+%global apiver      20160303
 %global zendver     20160303
 %global pdover      20150127
 # Extension version
@@ -124,7 +124,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver        RC1
+%global rcver        RC2
 %global rpmrel       8
 
 
@@ -1824,6 +1824,10 @@ fi
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-0.9.RC2
+- Update to 7.1.0RC2
+- API version is now 20160303
+
 * Thu Sep  1 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-0.8.RC1
 - Update to 7.1.0RC1
 - oci8 version is now 2.1.2

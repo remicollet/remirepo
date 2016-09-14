@@ -38,10 +38,10 @@ Summary:        PostgreSQL client library (libpq) binding
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        2.1.1
 %if 0%{?gh_date:1}
-Release:        0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.5.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:        BSD
@@ -84,6 +84,10 @@ Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -209,6 +213,9 @@ if ! pkg-config libpq --atleast-version=9.3; then
   : ignore some tests only because of "diag" content
   rm ?TS/tests/{async003,async004,async005,async006,cancel001}.phpt
 fi
+%if "%{php_version}" > "7.1"
+  rm ?TS/tests/conv001.phpt
+%endif
 
 OPT="-n"
 [ -f %{php_extdir}/json.so ]  && OPT="$OPT -d extension=json.so"
@@ -298,6 +305,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 2.1.1-2
+- rebuild for PHP 7.1 new API version
+
 * Fri May 20 2016 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - update to 2.1.1 (php 7, stable)
 - open https://github.com/m6w6/ext-pq/issues/19 failed tests

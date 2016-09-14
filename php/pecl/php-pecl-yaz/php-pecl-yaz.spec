@@ -28,7 +28,7 @@
 Summary:        Z39.50/SRU client
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.2.1
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -242,6 +242,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-3
+- rebuild for PHP 7.1 new API version
+
 * Fri Aug 12 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - Update to 1.2.1
 

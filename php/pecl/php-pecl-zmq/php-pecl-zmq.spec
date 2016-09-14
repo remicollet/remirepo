@@ -31,7 +31,7 @@
 Summary:        ZeroMQ messaging
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.1.3
-Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -213,6 +213,10 @@ fi
 
 
 %check
+%if "%{php_version}" > "7.1"
+rm ?TS/tests/019-callbackinvalidsignature.phpt
+%endif
+
 cd NTS
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
@@ -264,6 +268,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-4
+- rebuild for PHP 7.1 new API version
+
 * Wed Aug  3 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-3
 - rebuild against zeromq 4.1 available in EPEL-7
 

@@ -37,7 +37,7 @@
 Summary:        Horde LZ4 Compression Extension
 Name:           %{?sub_prefix}php-horde-horde-lz4
 Version:        1.0.10
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        MIT
 Group:          Development/Languages
 URL:            http://www.horde.org
@@ -240,6 +240,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.0.10-2
+- rebuild for PHP 7.1 new API version
+
 * Wed Mar 09 2016 Remi Collet <remi@fedoraproject.org> - 1.0.10-1
 - Update to 1.0.10 (no change)
 

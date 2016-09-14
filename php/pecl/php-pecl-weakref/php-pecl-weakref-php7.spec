@@ -24,10 +24,10 @@ Summary:        Implementation of weak references
 Name:           %{?scl_prefix}php-pecl-weakref
 Version:        0.3.2
 %if 0%{?gh_date}
-Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 License:        PHP
@@ -64,6 +64,10 @@ Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -236,6 +240,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 0.3.2-3
+- rebuild for PHP 7.1 new API version
+
 * Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 0.3.2-2
 - adapt for F24
 - drop runtime dependency on pear, new scriptlets

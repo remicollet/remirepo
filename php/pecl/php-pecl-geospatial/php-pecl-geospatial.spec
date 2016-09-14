@@ -34,9 +34,9 @@ Summary:        PHP Extension to handle common geospatial functions
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        0.1.0
 %if 0%{?gh_date:1}
-Release:        0.6.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.7.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 
 License:        PHP
@@ -255,7 +255,10 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu Jun  6 2016 Remi Collet <remi@fedoraproject.org> - 0.1.0-3
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 0.1.0-4
+- rebuild for PHP 7.1 new API version
+
+* Mon Jun  6 2016 Remi Collet <remi@fedoraproject.org> - 0.1.0-3
 - fix license installation on EL-6
 
 * Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 0.1.0-2

@@ -25,7 +25,7 @@
 
 Name:           %{?scl_prefix}%{gh_project}-parser
 Version:        0.9.3
-Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Zephir parser extension
 
 Group:          Development/Libraries
@@ -190,6 +190,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 0.9.3-2.20160728gite716dbe
+- rebuild for PHP 7.1 new API version
+
 * Sat Jul 30 2016 Remi Collet <remi@fedoraproject.org> - 0.9.0-1.20160728gite716dbe
 - Initial package
 

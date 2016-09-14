@@ -39,7 +39,7 @@ Summary:        Object oriented API to Apache Solr
 Summary(fr):    API orientée objet pour Apache Solr
 Name:           %{?sub_prefix}php-pecl-solr2
 Version:        2.4.0
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/solr
@@ -99,6 +99,12 @@ Obsoletes:     php70u-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php70u-pecl-%{pecl_name}2 <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name}2 <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php71u-pecl-%{pecl_name}2 <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name}2 <= %{version}
 %endif
 %endif
 
@@ -301,6 +307,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 2.4.0-2
+- rebuild for PHP 7.1 new API version
+
 * Wed Mar 30 2016 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
 - update to 2.4.0 (stable)
 

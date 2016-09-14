@@ -32,7 +32,7 @@
 Summary:        Kerberos authentification extension
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.1.0
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -244,6 +244,9 @@ cd ../ZTS
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-2
+- rebuild for PHP 7.1 new API version
+
 * Sun Jul 17 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - Update to 1.1.0 (PHP 5 and 7, stable)
 

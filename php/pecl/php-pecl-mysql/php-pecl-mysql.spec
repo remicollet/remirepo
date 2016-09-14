@@ -28,9 +28,9 @@ Summary:        MySQL database access functions
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
 %if 0%{?gh_date:1}
-Release:        0.11.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.12.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 
 License:        PHP
@@ -219,6 +219,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.12.20160428git45881bd
+- rebuild for PHP 7.1 new API version
+
 * Wed Jun  8 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.11.20160428git45881bd
 - refresh for PHP 7.1
 

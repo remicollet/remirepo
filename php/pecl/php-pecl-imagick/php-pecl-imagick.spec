@@ -37,10 +37,10 @@ Summary:       Extension to create and modify images using ImageMagick
 Name:          %{?sub_prefix}php-pecl-imagick
 Version:       3.4.3
 %if 0%{?gh_date}
-Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:       PHP
@@ -317,6 +317,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 3.4.3-0.2.RC1
+- rebuild for PHP 7.1 new API version
+
 * Fri Jun 10 2016 Remi Collet <remi@fedoraproject.org> - 3.4.3-0.1.RC1
 - Update to 3.4.3RC1
 - ignore tests result with IM 6.9.4 because of

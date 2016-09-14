@@ -28,7 +28,7 @@
 Summary:      Wrapper around the gpgme library
 Name:         %{?sub_prefix}php-pecl-gnupg
 Version:      1.4.0
-Release:      1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 
 License:      BSD
 Group:        Development/Languages
@@ -198,7 +198,7 @@ fi
 
 
 %check
-%if 0%{?fedora} >= 24
+%if 0%{?fedora} >= 23
 sed -e '/GnuPG v1/d' \
 %else
 sed -e 's:GnuPG v1.%d.%d (GNU/Linux):GnuPG v%s:' \
@@ -264,6 +264,9 @@ NO_INTERACTION=1 \
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-2
+- rebuild for PHP 7.1 new API version
+
 * Thu Sep  1 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - update to 1.4.0 (stable)
 

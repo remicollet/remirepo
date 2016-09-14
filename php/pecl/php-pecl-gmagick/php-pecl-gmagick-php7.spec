@@ -20,7 +20,7 @@
 Summary:        Provides a wrapper to the GraphicsMagick library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        2.0.4
-Release:        0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Libraries
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -213,6 +213,9 @@ export TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so"
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 2.0.4-0.2.RC1
+- rebuild for PHP 7.1 new API version
+
 * Mon Jun 27 2016 Remi Collet <remi@fedoraproject.org> - 2.0.4-0.1.RC1
 - Update to 2.0.4RC1 (php 7, beta)
 

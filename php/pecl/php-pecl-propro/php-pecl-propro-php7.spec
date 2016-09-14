@@ -32,10 +32,10 @@ Summary:        Property proxy
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        2.0.1
 %if 0%{?ghdate}
-Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:        BSD
@@ -243,6 +243,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
+- rebuild for PHP 7.1 new API version
+
 * Wed May 25 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Update to 2.0.1 (stable)
 

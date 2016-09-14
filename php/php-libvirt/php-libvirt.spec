@@ -33,7 +33,7 @@
 
 Name:          %{?sub_prefix}php-libvirt
 Version:       0.5.2
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:       PHP language binding for Libvirt
 
 Group:         Development/Libraries
@@ -144,6 +144,9 @@ php --no-php-ini \
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 0.5.2-3
+- rebuild for PHP 7.1 new API version
+
 * Sun Sep 11 2016 Remi Collet <remi@fedoraproject.org> - 0.5.2-2
 - fix F25 build (ini file installation)
 

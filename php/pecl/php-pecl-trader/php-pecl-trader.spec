@@ -30,7 +30,7 @@
 Summary:        Technical Analysis for traders
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        0.4.0
-Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 # PHP ext is BSD-2, ta-lib is BSD-3
 License:        BSD
 Group:          Development/Languages
@@ -70,6 +70,10 @@ Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -236,6 +240,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 0.4.0-4
+- rebuild for PHP 7.1 new API version
+
 * Sun Mar  6 2016 Remi Collet <remi@fedoraproject.org> - 0.4.0-3
 - adapt for F24
 

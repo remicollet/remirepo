@@ -24,10 +24,10 @@ Summary:       Yet Another Framework
 Name:          %{?sub_prefix}php-pecl-yaf
 Version:       3.0.4
 %if 0%{?gh_date:1}
-Release:       0.8.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.9.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:       PHP
@@ -149,6 +149,8 @@ done
 
 
 %check
+sed -e 's/Catchable/%s/' -i ?TS/tests/022.phpt
+
 cd NTS
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
@@ -216,6 +218,9 @@ fi
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 3.0.4-2
+- rebuild for PHP 7.1 new API version
+
 * Thu Sep  1 2016 Remi Collet <remi@fedoraproject.org> - 3.0.4-1
 - update to 3.0.4
 

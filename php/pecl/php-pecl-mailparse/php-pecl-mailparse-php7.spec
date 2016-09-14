@@ -24,7 +24,7 @@
 Summary:   PHP PECL package for parsing and working with email messages
 Name:      %{?sub_prefix}php-pecl-mailparse
 Version:   3.0.1
-Release:   2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:   3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:   PHP
 Group:     Development/Languages
 URL:       http://pecl.php.net/package/mailparse
@@ -52,16 +52,20 @@ Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{rele
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}
-Obsoletes:     php53u-pecl-%{pecl_name}
-Obsoletes:     php54-pecl-%{pecl_name}
-Obsoletes:     php54w-pecl-%{pecl_name}
-Obsoletes:     php55u-pecl-%{pecl_name}
-Obsoletes:     php55w-pecl-%{pecl_name}
-Obsoletes:     php56u-pecl-%{pecl_name}
-Obsoletes:     php56w-pecl-%{pecl_name}
-Obsoletes:     php70u-pecl-%{pecl_name}
-Obsoletes:     php70w-pecl-%{pecl_name}
+Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
+Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -218,6 +222,9 @@ fi
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-3
+- rebuild for PHP 7.1 new API version
+
 * Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-2
 - adapt for F24
 

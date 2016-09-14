@@ -24,7 +24,7 @@
 Summary:        User Operations for Zend
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        5.0.1
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -253,6 +253,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 5.0.1-3
+- rebuild for PHP 7.1 new API version
+
 * Thu Jun  9 2016 Remi Collet <remi@fedoraproject.org> - 5.0.1-2
 - add upstream patch for PHP 7.1
 

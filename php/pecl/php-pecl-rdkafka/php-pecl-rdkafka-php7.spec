@@ -19,7 +19,7 @@
 Summary:        Kafka client based on librdkafka
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        2.0.0
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -52,10 +52,8 @@ Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
-%if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
-%endif
 %if "%{php_version}" > "7.1"
 Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
@@ -201,6 +199,9 @@ cd ../ZTS
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
+- rebuild for PHP 7.1 new API version
+
 * Fri Sep 09 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Update to 2.0.0 (php 7)
 - open https://github.com/arnaud-lb/php-rdkafka/issues/71

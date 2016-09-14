@@ -22,7 +22,7 @@
 Summary:        PHP client library to communicate with the MogileFS storage
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        0.9.3.1
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 # https://github.com/lstrojny/pecl-mogilefs/issues/15
 License:        BSD
 Group:          Development/Languages
@@ -58,6 +58,10 @@ Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -222,6 +226,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 0.9.3.1-3
+- rebuild for PHP 7.1 new API version
+
 * Sat Mar  5 2016 Remi Collet <remi@fedoraproject.org> - 0.9.3.1-2
 - adapt for F24
 

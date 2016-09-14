@@ -35,7 +35,7 @@ Provides: %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
 Summary:        Provides interface to the libeio library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        2.0.1
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -270,6 +270,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
+- rebuild for PHP 7.1 new API version
+
 * Mon Jul 25 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - Update to 2.0.1
 

@@ -34,10 +34,10 @@ Summary:        Replacement for the standard PHP serializer
 Name:           %{?sub_prefix}php-pecl-igbinary
 Version:        1.2.2
 %if 0%{?gh_date}
-Release:        0.4.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.5.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        https://github.com/%{extname}/%{extname}7/archive/%{gh_commit}/%{extname}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        http://pecl.php.net/get/%{extname}-%{version}.tgz
 %endif
 License:        BSD
@@ -303,6 +303,9 @@ fi
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-0.5.20160724git332a3d7
+- rebuild for PHP 7.1 new API version
+
 * Mon Jul 25 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-0.4.20160724git332a3d7
 - refresh
 

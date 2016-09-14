@@ -36,7 +36,7 @@
 
 Name:           %{?sub_prefix}php-smbclient
 Version:        0.8.0
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        PHP wrapper for libsmbclient
 
 Group:          Development/Languages
@@ -242,6 +242,9 @@ fi
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 0.8.0-2
+- rebuild for PHP 7.1 new API version
+
 * Wed Mar  2 2016 Remi Collet <remi@fedoraproject.org> - 0.8.0-1
 - update to 0.8.0 (stable, no change)
 

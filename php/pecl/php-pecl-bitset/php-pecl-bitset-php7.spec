@@ -16,7 +16,7 @@
 Summary:        BITSET library
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        3.0.0
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -200,6 +200,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-2
+- rebuild for PHP 7.1 new API version
+
 * Tue Mar  1 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
 - Update to 3.0.0 (php 7, beta)
 

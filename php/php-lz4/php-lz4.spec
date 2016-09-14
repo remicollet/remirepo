@@ -28,9 +28,9 @@ Summary:       LZ4 Extension for PHP
 Name:          %{?sub_prefix}php-lz4
 Version:       0.2.7
 %if 0%{?gh_date:1}
-Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 License:       MIT
 Group:         Development/Languages
@@ -203,6 +203,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 0.2.7-2
+- rebuild for PHP 7.1 new API version
+
 * Thu Sep  8 2016 Remi Collet <remi@fedoraproject.org> - 0.2.7-1
 - update to 0.2.7 (no change)
 - open https://github.com/kjdev/php-ext-lz4/pull/13

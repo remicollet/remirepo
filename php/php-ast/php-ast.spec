@@ -22,9 +22,9 @@ Summary:       Abstract Syntax Tree
 Name:          %{?scl_prefix}php-ast
 Version:       0.1.2
 %if 0%{?gh_date:1}
-Release:       0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 License:       PHP
 Group:         Development/Languages
@@ -173,6 +173,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 0.1.2-2
+- rebuild for PHP 7.1 new API version
+
 * Fri Aug  5 2016 Remi Collet <remi@fedoraproject.org> - 0.1.2-1
 - update to 0.1.2
 

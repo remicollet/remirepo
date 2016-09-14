@@ -19,7 +19,7 @@
 
 Name:           %{?sub_prefix}php-pecl-oauth
 Version:        2.0.2
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        PHP OAuth consumer extension
 Group:          Development/Languages
 License:        BSD
@@ -191,6 +191,9 @@ fi
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-2
+- rebuild for PHP 7.1 new API version
+
 * Mon Jun 20 2016 Remi Collet <rcollet@redhat.com> - 2.0.2-1
 - update to 2.0.2
 

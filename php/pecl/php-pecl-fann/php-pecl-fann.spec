@@ -31,7 +31,7 @@
 Summary:        Wrapper for FANN Library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.1.1
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -230,6 +230,9 @@ fi
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-2
+- rebuild for PHP 7.1 new API version
+
 * Sun Jun 26 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - update to 1.1.1
 

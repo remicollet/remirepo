@@ -28,7 +28,7 @@
 
 Name:           %{?sub_prefix}php-pecl-lzf
 Version:        1.6.5
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Extension to handle LZF de/compression
 Group:          Development/Languages
 License:        PHP
@@ -70,6 +70,10 @@ Obsoletes:     php56w-pecl-%{ext_name} <= %{version}
 %if "%{php_version}" > "7.0"
 Obsoletes:     php70u-pecl-%{ext_name} <= %{version}
 Obsoletes:     php70w-pecl-%{ext_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{ext_name} <= %{version}
+Obsoletes:     php71w-pecl-%{ext_name} <= %{version}
 %endif
 %endif
 
@@ -234,6 +238,9 @@ fi
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.6.5-2
+- rebuild for PHP 7.1 new API version
+
 * Sun Apr  3 2016 Remi Collet <remi@fedoraproject.org> - 1.6.5-1
 - update to 1.6.5 (stable)
 
