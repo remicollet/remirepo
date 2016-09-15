@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 # API/ABI check
-%global apiver      20151012
+%global apiver      20160303
 %global zendver     20160303
 %global pdover      20150127
 # Extension version
@@ -120,8 +120,8 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver         RC1
-%global rpmrel        3
+%global rcver         RC2
+%global rpmrel        4
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -177,7 +177,6 @@ Patch47: php-5.6.3-phpinfo.patch
 Patch91: php-5.6.3-oci8conf.patch
 
 # Upstream fixes (100+)
-Patch100: php-upstream.patch
 
 # Security fixes (200+)
 
@@ -959,7 +958,6 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
-%patch100 -p1 -R -b .upstream
 
 # security patches
 
@@ -1996,6 +1994,10 @@ fi
 
 
 %changelog
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-0.4.RC2
+- Update to 7.1.0RC2
+- API version is now 20160303
+
 * Thu Sep  1 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-0.3.RC1
 - Update to 7.1.0RC1
 - oci8 version is now 2.1.2

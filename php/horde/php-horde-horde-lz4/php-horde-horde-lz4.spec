@@ -81,6 +81,10 @@ Obsoletes:     php56w-horde-horde-lz4 <= %{version}
 Obsoletes:     php70u-horde-horde-lz4 <= %{version}
 Obsoletes:     php70w-horde-horde-lz4 <= %{version}
 %endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-horde-horde-lz4 <= %{version}
+Obsoletes:     php71w-horde-horde-lz4 <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7

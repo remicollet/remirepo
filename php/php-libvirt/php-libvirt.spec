@@ -57,6 +57,30 @@ Provides:      %{?scl_prefix}php-libvirt         = %{version}-%{release}
 Provides:      %{?scl_prefix}php-libvirt%{?_isa} = %{version}-%{release}
 %endif
 
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+# Other third party repo stuff
+Obsoletes:     php53-libvirt  <= %{version}
+Obsoletes:     php53u-libvirt <= %{version}
+Obsoletes:     php54-libvirt  <= %{version}
+Obsoletes:     php54w-libvirt <= %{version}
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-libvirt <= %{version}
+Obsoletes:     php55w-libvirt <= %{version}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-libvirt <= %{version}
+Obsoletes:     php56w-libvirt <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-libvirt <= %{version}
+Obsoletes:     php70w-libvirt <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-libvirt <= %{version}
+Obsoletes:     php71w-libvirt <= %{version}
+%endif
+%endif
+
 # Filter shared private - always as libvirt-php.so is a very bad name
 %{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
 %{?filter_setup}
