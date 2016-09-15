@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    3abb688fda20989b2e2b444efc1dba173abb2e07
+%global gh_commit    a0f0ce0f4c11e1c78939b4e8a212f6ba44559253
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-form
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.9.0
+Version:        2.9.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -39,6 +39,8 @@ BuildRequires:  php-date
 BuildRequires:  php-intl
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
+# Temporary, see https://github.com/zendframework/zend-math/issues/23
+BuildRequires:  php-mcrypt
 BuildRequires:  php-composer(%{gh_owner}/zend-inputfilter)      >= 2.5
 BuildRequires:  php-composer(%{gh_owner}/zend-hydrator)         >= 1.0
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
@@ -46,7 +48,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.7
 #        "doctrine/annotations": "~1.0",
 #        "zendframework/zend-cache": "^2.6.1",
 #        "zendframework/zend-captcha": "^2.5.4",
-#        "zendframework/zend-code": "^2.6",
+#        "zendframework/zend-code": "^2.6 || ^3.0",
 #        "zendframework/zend-escaper": "^2.5",
 #        "zendframework/zend-eventmanager": "^2.6.2 || ^3.0",
 #        "zendframework/zend-filter": "^2.6",
@@ -169,12 +171,22 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-%{_bindir}/phpunit -d memory_limit=1G --include-path=%{buildroot}%{php_home}
-
-# remirepo:3
-if which php70; then
-   php70 %{_bindir}/phpunit -d memory_limit=1G --include-path=%{buildroot}%{php_home}
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit -d memory_limit=1G --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit -d memory_limit=1G --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit -d memory_limit=1G --include-path=%{buildroot}%{php_home} --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -195,6 +207,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 15 2016 Remi Collet <remi@fedoraproject.org> - 2.9.1-1
+- update to 2.9.1
+
 * Fri Jun 10 2016 Remi Collet <remi@fedoraproject.org> - 2.9.0-1
 - update to 2.9.0
 
