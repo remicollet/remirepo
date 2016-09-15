@@ -13,8 +13,8 @@
 
 %global github_owner   Seldaek
 %global github_name    jsonlint
-%global github_version 1.4.0
-%global github_commit  66834d3e3566bb5798db7294619388786ae99394
+%global github_version 1.4.1
+%global github_commit  e827b5254d3e58c736ea2c5616710983d80b0b70
 
 # "php": "^5.3 || ^7.0"
 %global php_min_ver    5.3
@@ -93,15 +93,25 @@ install -pm 0755 bin/jsonlint %{buildroot}%{_bindir}/
 
 %check
 %if %{with_tests}
+
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap %{buildroot}%{_datadir}/php/Seld/JsonLint/autoload.php || ret=1
+   run=1
+fi
+if which php70; then # With 7.1 '' => '_empty_' property names
+   php70 %{_bindir}/phpunit --bootstrap %{buildroot}%{_datadir}/php/Seld/JsonLint/autoload.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/phpunit \
   --bootstrap %{buildroot}%{_datadir}/php/Seld/JsonLint/autoload.php \
   --verbose
-
-if which php70; then
-  php70 %{_bindir}/phpunit \
-    --bootstrap %{buildroot}%{_datadir}/php/Seld/JsonLint/autoload.php \
-    --verbose
+# remirepo:2
 fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -118,6 +128,9 @@ fi
 
 
 %changelog
+* Thu Sep 15 2016 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
+- Updated to 1.4.1
+
 * Thu Nov 26 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - Updated to 1.4.0
 - run test suite with both PHP 5 and 7 when available
