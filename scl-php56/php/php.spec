@@ -137,7 +137,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver  RC1
+#global rcver  RC1
 %global rpmrel 1
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1814,6 +1814,9 @@ fi
 
 
 %changelog
+* Thu Sep 15 2016 Remi Collet <remi@fedoraproject.org> 5.6.26-1
+- Update to 5.6.26 - http://www.php.net/releases/5_6_26.php
+
 * Fri Sep  2 2016 Remi Collet <remi@fedoraproject.org> 5.6.26-0.1.RC1
 - update to 5.6.26RC1
 - oci8 version is now 2.0.12
