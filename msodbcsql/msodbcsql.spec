@@ -26,6 +26,8 @@ Source0:       https://download.microsoft.com/download/B/C/D/BCDD264C-7517-4B7D-
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:     x86_64
+# Upstream use this exact version, be relax for Fedora (2.3.4)
+BuildRequires: unixODBC >= 2.3.1
 
 Requires(preun): %{_bindir}/odbcinst
 Requires(post):  %{_bindir}/odbcinst
