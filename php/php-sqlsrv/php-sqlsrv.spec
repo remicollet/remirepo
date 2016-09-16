@@ -31,13 +31,13 @@ Source1:       https://github.com/Microsoft/msphpsql/blob/master/LICENSE
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 7
 BuildRequires: %{?scl_prefix}php-pdo
-BuildRequires: msodbcsql
-BuildRequires: unixODBC
+BuildRequires: msodbcsql >= 13
 
 Requires:      msodbcsql%{?_isa} >= 13
 # ABI check
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
-Requires:      %{?scl_prefix}php(api) = %{php_core_api}
+Requires:      %{?scl_prefix}php(api)      = %{php_core_api}
+Requires:      %{?scl_prefix}php(pdo-abi)  = %{php_pdo_api}
 Requires:      %{?scl_prefix}php-pdo%{?_isa}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 

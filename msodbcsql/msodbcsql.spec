@@ -31,7 +31,6 @@ BuildRequires: unixODBC >= 2.3.1
 
 Requires(preun): %{_bindir}/odbcinst
 Requires(post):  %{_bindir}/odbcinst
-Requires:        unixODBC%{?_isa}
 
 
 %description
