@@ -1,0 +1,23 @@
+From 66f003c661c430031f7a55bd470fe0da1536a5b1 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Fri, 16 Sep 2016 15:53:20 +0200
+Subject: [PATCH] Fix PHP 7.1 build
+
+---
+ source/sqlsrv/stmt.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/source/sqlsrv/stmt.cpp b/source/sqlsrv/stmt.cpp
+index 90bb025..b3f1dac 100644
+--- a/source/sqlsrv/stmt.cpp
++++ b/source/sqlsrv/stmt.cpp
+@@ -881,7 +881,9 @@ PHP_FUNCTION( sqlsrv_fetch_object )
+ 
+             memset( &fci, 0, sizeof( fci ));
+             fci.size = sizeof( fci );
++#if PHP_VERSION_ID < 70100
+             fci.function_table = &( class_entry )->function_table;
++#endif
+             ZVAL_UNDEF( &( fci.function_name ) );
+             fci.retval = &ctor_retval_z;
+             fci.param_count = num_params;

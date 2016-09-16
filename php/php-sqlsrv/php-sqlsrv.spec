@@ -8,30 +8,38 @@
 #
 %{?scl:          %scl_package             php-sqlsrv}
 
-%global __arch_install_post  /bin/true
-%global debug_package        %{nil}
-%global __debug_install_post /bin/true
+%global gh_commit   4ccffbbe077e87288bf00cc6327142579da46775
+%global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner    Microsoft
+%global gh_project  msphpsql
 
 %global extname       sqlsrv
-%global with_zts      0%{?__ztsphp:1}
+%global with_zts      0%{!?_without_zts:%{?__ztsphp:1}}
 # After 20-pdo.ini
 %global ininame       40-%{extname}.ini
 
 Name:          %{?scl_prefix}php-sqlsrv
 Summary:       Microsoft Drivers for PHP for SQL Server
 Version:       4.0.4
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
 
 URL:           https://github.com/Microsoft/msphpsql
-Source0:       https://github.com/Microsoft/msphpsql/releases/download/%{version}-Linux/CentOS7.zip#/CentOS7-%{version}.zip
-Source1:       https://github.com/Microsoft/msphpsql/blob/master/LICENSE
+Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+
+# https://github.com/Microsoft/msphpsql/pull/153 - build
+Patch0:        %{extname}-pr153.patch
+# https://github.com/Microsoft/msphpsql/pull/154 - odbcver
+Patch1:        %{extname}-pr154.patch
+# https://github.com/Microsoft/msphpsql/pull/155 - PHP 7.1
+Patch2:        %{extname}-pr155.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 7
 BuildRequires: %{?scl_prefix}php-pdo
 BuildRequires: msodbcsql >= 13
+BuildRequires: unixODBC-devel >= 2.3.1
 
 Requires:      msodbcsql%{?_isa} >= 13
 # ABI check
@@ -71,8 +79,14 @@ Package built for PHP %(%{__php} -n -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VER
 
 
 %prep
-%setup -q -n CentOS7
-cp %{SOURCE1} LICENSE
+%setup -qc
+cd %{gh_project}-%{gh_commit}
+%patch0 -p1 -b .pr153
+%patch1 -p1 -b .pr154
+%patch2 -p1 -b .pr155
+cd ..
+
+mv %{gh_project}-%{gh_commit}/source NTS
 
 cat << 'EOF' | tee %{ininame}
 ; Enable '%{summary}' extension module
@@ -90,24 +104,60 @@ extension = pdo_%{extname}.so
 ;pdo_sqlsrv.client_buffer_max_kb_size = 10240
 EOF
 
+%if %{with_zts}
+# duplicate for ZTS build
+cp -pr NTS ZTS
+%endif
+
 
 %build
-: tarball provides binaries
+: =================== sqlsrv NTS ===================
+cd NTS/%{extname}
+%{_bindir}/phpize
+%configure \
+    --with-php-config=%{_bindir}/php-config \
+    --enable-sqlsrv
+make %{?_smp_mflags}
+
+: =================== pdo_sqlsrv NTS ===================
+cd ../../NTS/pdo_%{extname}
+%{_bindir}/phpize
+%configure \
+    --with-php-config=%{_bindir}/php-config \
+    --with-pdo_sqlsrv
+make %{?_smp_mflags}
+
+%if %{with_zts}
+: =================== sqlsrv ZTS ===================
+cd ../../ZTS/%{extname}
+%{_bindir}/zts-phpize
+%configure \
+    --with-php-config=%{_bindir}/zts-php-config \
+    --enable-sqlsrv
+make %{?_smp_mflags}
+
+: =================== pdo_sqlsrv ZTS ===================
+cd ../../ZTS/pdo_%{extname}
+%{_bindir}/zts-phpize
+%configure \
+    --with-php-config=%{_bindir}/zts-php-config \
+    --with-pdo_sqlsrv
+make %{?_smp_mflags}
+%endif
 
 
 %install
 rm -rf %{buildroot}
 ver=$(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')
 
-
-install -D -pm 755 php_pdo_sqlsrv_7_nts.so %{buildroot}%{php_extdir}/pdo_%{extname}.so
-install -D -pm 755 php_sqlsrv_7_nts.so     %{buildroot}%{php_extdir}/%{extname}.so
-install -D  -m 644 %{ininame}              %{buildroot}%{php_inidir}/%{ininame}
+make -C NTS/%{extname}     install INSTALL_ROOT=%{buildroot}
+make -C NTS/pdo_%{extname} install INSTALL_ROOT=%{buildroot}
+install -D  -m 644 %{ininame} %{buildroot}%{php_inidir}/%{ininame}
 
 %if %{with_zts}
-install -D -pm 755 php_pdo_sqlsrv_7_ts.so  %{buildroot}%{php_ztsextdir}/pdo_%{extname}.so
-install -D -pm 755 php_sqlsrv_7_ts.so      %{buildroot}%{php_ztsextdir}/%{extname}.so
-install -D  -m 644 %{ininame}              %{buildroot}%{php_ztsinidir}/%{ininame}
+make -C ZTS/%{extname}     install INSTALL_ROOT=%{buildroot}
+make -C ZTS/pdo_%{extname} install INSTALL_ROOT=%{buildroot}
+install -D  -m 644 %{ininame} %{buildroot}%{php_ztsinidir}/%{ininame}
 %endif
 
 
@@ -139,7 +189,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license LICENSE
+%license %{gh_project}-%{gh_commit}/LICENSE
 
 %config(noreplace) %{php_inidir}/%{ininame}
 %{php_extdir}/%{extname}.so
@@ -153,6 +203,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 16 2016 Remi Collet <remi@remirepo.net> - 4.0.4-2
+- build from sources
+- open https://github.com/Microsoft/msphpsql/pull/153 - build
+- open https://github.com/Microsoft/msphpsql/pull/154 - odbcver
+- open https://github.com/Microsoft/msphpsql/pull/155 - PHP 7.1
+
 * Fri Sep 16 2016 Remi Collet <remi@remirepo.net> - 4.0.4-1
 - initial package
 
