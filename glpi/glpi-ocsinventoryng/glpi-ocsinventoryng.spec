@@ -10,15 +10,15 @@
 %global lockname     ocsinventoryng.lock
 
 Name:           glpi-ocsinventoryng
-Version:        1.2.1
+Version:        1.2.2
 Release:        1%{?dist}
 Summary:        Plugin to synchronize GLPI with OCS Inventory NG
 
 Group:          Applications/Internet
 License:        GPLv2+
-URL:            https://forge.glpi-project.org/projects/ocsinventoryng
+URL:            https://github.com/pluginsGLPI/ocsinventoryng
 
-Source0:        https://forge.glpi-project.org/attachments/download/2114/glpi-ocsinventoryng-1.2.1.tar.gz
+Source0:        https://github.com/pluginsGLPI/ocsinventoryng/releases/download/%{version}/glpi-ocsinventoryng-%{version}.tar.gz
 Source1:        %{name}-httpd.conf
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -26,7 +26,7 @@ BuildArch:      noarch
 BuildRequires:  gettext
 
 Requires:       glpi >= 0.90
-Requires:       glpi <  0.91
+Requires:       glpi <  9.2
 Requires:       crontabs
 Requires:       php-cli
 # phpcompatinfo for version 1.0.2
@@ -62,7 +62,9 @@ done
 ln -s %{_datadir}/glpi/plugins/%{pluginname}/LICENSE LICENSE
 
 # For developer only
-rm -rf %{pluginname}/tools
+rm     %{pluginname}/README.md
+rm     %{pluginname}/TOKNOW.txt
+rm     %{pluginname}/ocsinventoryng.png
 
 # For Windows only
 rm %{pluginname}/scripts/run.**
@@ -150,6 +152,7 @@ grep %{lockname} %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}/setup.php |
 %dir %{_datadir}/glpi/plugins/%{pluginname}
 %dir %{_datadir}/glpi/plugins/%{pluginname}/locales
 %{_datadir}/glpi/plugins/%{pluginname}/*.php
+%{_datadir}/glpi/plugins/%{pluginname}/ajax
 %{_datadir}/glpi/plugins/%{pluginname}/front
 %{_datadir}/glpi/plugins/%{pluginname}/inc
 %{_datadir}/glpi/plugins/%{pluginname}/install
@@ -162,6 +165,10 @@ grep %{lockname} %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}/setup.php |
 
 
 %changelog
+* Fri Sep 16 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
+- Update to 1.2.2 for GLPI 0.90 and 9.1
+- sources from github
+
 * Fri Nov 27 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - Update to 1.2.1 for GLPI 0.90
   https://forge.glpi-project.org/versions/1181
