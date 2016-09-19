@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    47b254ea51f1d6d5dc04b9b299e88346bf2369e3
+%global gh_commit    4dd659edadffdc2143e4753df655d866dbfeedf0
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nikic
 %global gh_project   PHP-Parser
@@ -22,8 +22,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{pk_project}
-Version:        2.1.0
-Release:        4%{?dist}
+Version:        2.1.1
+Release:        1%{?dist}
 Summary:        A PHP parser written in PHP
 
 Group:          Development/Libraries
@@ -33,8 +33,6 @@ Source:         https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 # Autoloader
 Patch0:         %{name}-rpm.patch
-
-Patch1:         %{name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -94,7 +92,6 @@ Autoloader: %{php_home}/PhpParser2/autoload.php
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
-%patch1 -p1 -b .upstream
 
 %if ! %{script}
 chmod -x bin/*
@@ -130,11 +127,22 @@ php bin/php-parse-test --help
 sed -e 's:@BUILDROOT@:%{buildroot}:' -i test/bootstrap.php
 
 : Upstream test suite
-%{_bindir}/phpunit --verbose
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -159,6 +167,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Sep 19 2016 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
+- update to 2.1.1
+
 * Fri May 20 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-3
 - add the php-parse command, no more in php-nikic-php-parser
 
