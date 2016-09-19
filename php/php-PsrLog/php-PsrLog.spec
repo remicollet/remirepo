@@ -12,8 +12,8 @@
 
 %global github_owner     php-fig
 %global github_name      log
-%global github_version   1.0.0
-%global github_commit    fe0936ee26643249e916849d48e3a51d5f5e278b
+%global github_version   1.0.1
+%global github_commit    5277094ed527a1c4477177d102fe4c53551953e0
 
 %global composer_vendor  psr
 %global composer_project log
@@ -22,7 +22,7 @@
 
 Name:      php-PsrLog
 Version:   %{github_version}
-Release:   9%{?dist}
+Release:   1%{?dist}
 Summary:   Common interface for logging libraries
 
 Group:     Development/Libraries
@@ -100,6 +100,9 @@ cp -rp Psr %{buildroot}%{_datadir}/php/
 
 
 %changelog
+* Mon Sep 19 2016 Remi Collet <remi@fedoraproject.org> 1.0.1-1
+- update to 1.0.1
+
 * Wed Jan 20 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.0-9
 - Added php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT} ("php-psr-log") virtual provide
 - %%license usage
