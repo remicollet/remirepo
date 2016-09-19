@@ -6,14 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    531d00ee76e9ae98279ed4dbb2419e5e0f7fb82d
+%global gh_commit    5602f67d429d0280c63a66f1c104186032259bbd
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpspec
 %global gh_project   phpspec
 #global prever       beta3
 
 Name:           php-phpspec
-Version:        2.5.1
+Version:        3.1.0
 Release:        1%{?dist}
 Summary:        Specification-oriented BDD framework for PHP
 
@@ -25,7 +25,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 Source1:        %{gh_project}-autoload.php
 
 # Use our autoloader
-Patch0:         %{gh_project}-rpm.patch
+Patch0:         %{gh_project}-3-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -39,45 +39,44 @@ BuildRequires:  php-composer(symfony/process)          >= 2.6
 BuildRequires:  php-composer(symfony/yaml)             >= 2.1
 BuildRequires:  php-composer(doctrine/instantiator)    >= 1.0.1
 # From composer.json, require-dev
-#         "behat/behat":           "^3.0.11",
-#         "symfony/filesystem":    "~2.1|~3.0",
-#         "phpunit/phpunit":       "~4.4"
-#         "phpunit/phpunit":       "~4.4",
+#        "behat/behat":           "^3.1",
+#        "symfony/filesystem":    "^3.0",
+#        "phpunit/phpunit":       "^5.4",
 #         "ciaranmcnulty/versionbasedtestskipper": "^0.2.1"
 BuildRequires:  php-composer(symfony/filesystem)       >= 2.1
-BuildRequires:  php-composer(phpunit/phpunit)          >= 4.4
+BuildRequires:  php-composer(phpunit/phpunit)          >= 5.4
 # For our autoloader
 BuildRequires:  php-composer(symfony/class-loader)
 
 # From composer.json, require
-#         "php":                      ">=5.3.3",
-#         "phpspec/prophecy":         "~1.4",
-#         "phpspec/php-diff":         "~1.0.0",
-#         "sebastian/exporter":       "~1.0",
-#         "symfony/console":          "~2.3|~3.0",
-#         "symfony/event-dispatcher": "~2.1|~3.0",
-#         "symfony/process":          "^2.6|~3.0",
-#         "symfony/finder":           "~2.1|~3.0",
-#         "symfony/yaml":             "~2.1|~3.0",
-#         "doctrine/instantiator":    "^1.0.1"
-#         "ext-tokenizer":            "*"
+#        "php":                      "^5.6 || ^7.0",
+#        "phpspec/prophecy":         "^1.5",
+#        "phpspec/php-diff":         "^1.0.0",
+#        "sebastian/exporter":       "^1.0",
+#        "symfony/console":          "^2.7 || ^3.0",
+#        "symfony/event-dispatcher": "^2.7 || ^3.0",
+#        "symfony/process":          "^2.7 || ^3.0",
+#        "symfony/finder":           "^2.7 || ^3.0",
+#        "symfony/yaml":             "^2.7 || ^3.0",
+#        "doctrine/instantiator":    "^1.0.1"
+#        "ext-tokenizer":            "*"
 
-Requires:       php(language) >= 5.3.3
-Requires:       php-composer(phpspec/prophecy)         >= 1.4
+Requires:       php(language) >= 5.6
+Requires:       php-composer(phpspec/prophecy)         >= 1.5
 Requires:       php-composer(phpspec/prophecy)         <  2
 Requires:       php-composer(phpspec/php-diff)         >= 1.0.0
 Requires:       php-composer(phpspec/php-diff)         <  2
 Requires:       php-composer(sebastian/exporter)       >= 1.0
 Requires:       php-composer(sebastian/exporter)       <  2
-Requires:       php-composer(symfony/console)          >= 2.3.0
+Requires:       php-composer(symfony/console)          >= 2.7
 Requires:       php-composer(symfony/console)          <  4
-Requires:       php-composer(symfony/event-dispatcher) >= 2.1
+Requires:       php-composer(symfony/event-dispatcher) >= 2.7
 Requires:       php-composer(symfony/event-dispatcher) <  4
-Requires:       php-composer(symfony/finder)           >= 2.1
+Requires:       php-composer(symfony/finder)           >= 2.7
 Requires:       php-composer(symfony/finder)           <  4
-Requires:       php-composer(symfony/process)          >= 2.6
+Requires:       php-composer(symfony/process)          >= 2.7
 Requires:       php-composer(symfony/process)          <  4
-Requires:       php-composer(symfony/yaml)             >= 2.1
+Requires:       php-composer(symfony/yaml)             >= 2.7
 Requires:       php-composer(symfony/yaml)             <  4
 Requires:       php-composer(doctrine/instantiator)    >= 1.0.1
 Requires:       php-composer(doctrine/instantiator)    <  2
@@ -149,7 +148,7 @@ if which php56; then
 
   run=1
 fi
-if which php70; then
+if which php71; then
   php71 \
     -d include_path=.:%{buildroot}%{_datadir}/php \
     bin/phpspec \
@@ -188,6 +187,15 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Sep 19 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-1
+- update to 3.1.0
+
+* Mon Jul 18 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- update to 3.0.0
+- raise dependency on php ^5.6 || ^7.0
+- raise dependency on phpspec/prophecy ^1.5
+- raise dependency on symfony/console ^2.7 || ^3.0
+
 * Mon Jul 18 2016 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
 - update to 2.5.1
 
