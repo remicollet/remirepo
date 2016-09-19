@@ -1,0 +1,32 @@
+Backported from 5.6.26 by Remi.
+Binary diff dropped.
+
+
+From 71a6cff185e26d2806b551d4022e766421d3b275 Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Sun, 11 Sep 2016 21:37:44 -0700
+Subject: [PATCH] Fix bug #73035 (Out of bound when verify signature of tar
+ phar in phar_parse_tarfile)
+
+---
+ ext/phar/tar.c               |   2 +-
+ ext/phar/tests/bug73035.phpt |  18 ++++++++++++++++++
+ ext/phar/tests/bug73035.tar  | Bin 0 -> 10240 bytes
+ 3 files changed, 19 insertions(+), 1 deletion(-)
+ create mode 100644 ext/phar/tests/bug73035.phpt
+ create mode 100644 ext/phar/tests/bug73035.tar
+
+diff --git a/ext/phar/tar.c b/ext/phar/tar.c
+index 62edcb5..898ff85 100644
+--- a/ext/phar/tar.c
++++ b/ext/phar/tar.c
+@@ -277,7 +277,7 @@ int phar_parse_tarfile(php_stream* fp, char *fname, int fname_len, char *alias,
+ 			}
+ 			curloc = php_stream_tell(fp);
+ 			read = php_stream_read(fp, buf, size);
+-			if (read != size) {
++			if (read != size || read <= 8) {
+ 				if (error) {
+ 					spprintf(error, 4096, "phar error: tar-based phar \"%s\" signature cannot be read", fname);
+ 				}
+

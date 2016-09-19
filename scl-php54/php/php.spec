@@ -119,7 +119,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.4.45
-Release: 11%{?dist}.1
+Release: 12%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -237,6 +237,10 @@ Patch253: bug72613.patch
 Patch254: bug72618.patch
 Patch255: bug72519.patch
 Patch256: bug72735.patch
+Patch257: bug72627.patch
+Patch258: bug72926.patch
+Patch259: bug73035.patch
+Patch260: bug72928.patch
 
 # Fixes for tests (300+)
 # Backported from 5.5
@@ -931,6 +935,10 @@ support for using the enchant library to PHP.
 %patch254 -p1 -b .bug72618
 %patch255 -p1 -b .bug72519
 %patch256 -p1 -b .bug72735
+%patch257 -p1 -b .bug72627
+%patch258 -p1 -b .bug72926
+%patch259 -p1 -b .bug73035
+%patch260 -p1 -b .bug72928
 : ------------------------
 #exit 1
 
@@ -1593,11 +1601,14 @@ fi
 
 %posttrans common
 cat << EOF
+=====================================================================
 
-WARNING : PHP 5.4 have reached its "End of Life".
-Even, if this package includes some security fix, backported from 5.5,
-The upgrade to a maintained version is very strongly recommended.
+ WARNING : PHP 5.4 have reached its "End of Life" in September 2015.
+ Even, if this package includes some of the important security fix,
+ backported from 5.5 or 5.6,
+ The UPGRADE to a maintained version is very strongly RECOMMENDED.
 
+=====================================================================
 EOF
 
 
@@ -1761,7 +1772,14 @@ EOF
 
 
 %changelog
-* Fri Aug  5 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-11.1
+* Mon Sep 19 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-12
+- fix #72627: Memory Leakage In exif_process_IFD_in_TIFF
+  CVE-2016-7128
+- fix #72926: Uninitialized Thumbail Data Leads To Memory Leakage
+  in exif_process_IFD_in_TIFF
+- fix #73035: Out of bound when verify signature of tar phar
+- fix #72928: Out of bound when verify signature of zip phar
+  CVE-2016-7414
 - fix #72735 regression in exif maker note parser
 
 * Fri Jul 22 2016 Remi Collet <remi@fedoraproject.org> 5.4.45-11
