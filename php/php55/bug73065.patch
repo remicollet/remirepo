@@ -1,0 +1,196 @@
+Backported from 5.6.26 by Remi.
+
+
+From 7d011b6f59a3f5a59a9835f9ad40d9b40c266bec Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Mon, 12 Sep 2016 00:35:01 -0700
+Subject: [PATCH] Fix bug #73065: Out-Of-Bounds Read in php_wddx_push_element
+ of wddx.c
+
+---
+ ext/wddx/tests/bug73065.phpt | 98 ++++++++++++++++++++++++++++++++++++++++++++
+ ext/wddx/wddx.c              | 19 +++++----
+ 2 files changed, 108 insertions(+), 9 deletions(-)
+ create mode 100644 ext/wddx/tests/bug73065.phpt
+
+diff --git a/ext/wddx/tests/bug73065.phpt b/ext/wddx/tests/bug73065.phpt
+new file mode 100644
+index 0000000..aa301aa
+--- /dev/null
++++ b/ext/wddx/tests/bug73065.phpt
+@@ -0,0 +1,98 @@
++--TEST--
++Bug #73065: Out-Of-Bounds Read in php_wddx_push_element of wddx.c
++--SKIPIF--
++<?php
++if (!extension_loaded('wddx')) {
++    die('skip. wddx not available');
++}
++?>
++--FILE--
++<?php
++
++$xml1 = <<<XML
++<?xml version='1.0' ?>
++    <!DOCTYPE et SYSTEM 'w'>
++    <wddxPacket ven='1.0'>
++        <array>
++            <var Name="name">
++                <boolean value="keliu"></boolean>
++            </var>
++            <var name="1111">
++                <var name="2222">
++                    <var name="3333"></var>
++                </var>
++            </var>
++        </array>
++    </wddxPacket>
++XML;
++    
++$xml2 = <<<XML
++<?xml version='1.0' ?>
++    <!DOCTYPE et SYSTEM 'w'>
++    <wddxPacket ven='1.0'>
++        <array>
++            <char Name="code">
++                <boolean value="keliu"></boolean>
++            </char>
++        </array>
++    </wddxPacket>
++XML;
++
++$xml3 = <<<XML
++<?xml version='1.0' ?>
++    <!DOCTYPE et SYSTEM 'w'>
++    <wddxPacket ven='1.0'>
++        <array>
++            <boolean Name="value">
++                <boolean value="keliu"></boolean>
++            </boolean>
++        </array>
++    </wddxPacket>
++XML;
++
++$xml4 = <<<XML
++<?xml version='1.0' ?>
++    <!DOCTYPE et SYSTEM 'w'>
++    <wddxPacket ven='1.0'>
++        <array>
++            <recordset Name="fieldNames">
++                <boolean value="keliu"></boolean>
++            </recordset>
++        </array>
++    </wddxPacket>
++XML;
++
++$xml5 = <<<XML
++<?xml version='1.0' ?>
++    <!DOCTYPE et SYSTEM 'w'>
++    <wddxPacket ven='1.0'>
++        <array>
++            <field Name="name">
++                <boolean value="keliu"></boolean>
++            </field>
++        </array>
++    </wddxPacket>
++XML;
++
++for($i=1;$i<=5;$i++) {
++	$xmlvar = "xml$i";
++    $array = wddx_deserialize($$xmlvar);
++    var_dump($array);
++}
++?>
++DONE
++--EXPECTF--
++array(0) {
++}
++array(0) {
++}
++array(0) {
++}
++array(1) {
++  [0]=>
++  array(0) {
++  }
++}
++array(0) {
++}
++DONE
+\ No newline at end of file
+diff --git a/ext/wddx/wddx.c b/ext/wddx/wddx.c
+index b02d2f0..0e77826 100644
+--- a/ext/wddx/wddx.c
++++ b/ext/wddx/wddx.c
+@@ -774,10 +774,10 @@ static void php_wddx_push_element(void *user_data, const XML_Char *name, const X
+ 		int i;
+ 
+ 		if (atts) for (i = 0; atts[i]; i++) {
+-			if (!strcmp(atts[i], EL_CHAR_CODE) && atts[++i] && atts[i][0]) {
++			if (!strcmp(atts[i], EL_CHAR_CODE) && atts[i+1] && atts[i+1][0]) {
+ 				char tmp_buf[2];
+ 
+-				snprintf(tmp_buf, sizeof(tmp_buf), "%c", (char)strtol(atts[i], NULL, 16));
++				snprintf(tmp_buf, sizeof(tmp_buf), "%c", (char)strtol(atts[i+1], NULL, 16));
+ 				php_wddx_process_data(user_data, tmp_buf, strlen(tmp_buf));
+ 				break;
+ 			}
+@@ -795,7 +795,7 @@ static void php_wddx_push_element(void *user_data, const XML_Char *name, const X
+ 		int i;
+ 
+ 		if (atts) for (i = 0; atts[i]; i++) {
+-			if (!strcmp(atts[i], EL_VALUE) && atts[++i] && atts[i][0]) {
++			if (!strcmp(atts[i], EL_VALUE) && atts[i+1] && atts[i+1][0]) {
+ 				ent.type = ST_BOOLEAN;
+ 				SET_STACK_VARNAME;
+ 
+@@ -803,7 +803,7 @@ static void php_wddx_push_element(void *user_data, const XML_Char *name, const X
+ 				INIT_PZVAL(ent.data);
+ 				Z_TYPE_P(ent.data) = IS_BOOL;
+ 				wddx_stack_push((wddx_stack *)stack, &ent, sizeof(st_entry));
+-				php_wddx_process_data(user_data, atts[i], strlen(atts[i]));
++				php_wddx_process_data(user_data, atts[i+1], strlen(atts[i+1]));
+ 				break;
+ 			}
+ 		}
+@@ -836,8 +836,8 @@ static void php_wddx_push_element(void *
+ 		int i;
+ 
+ 		if (atts) for (i = 0; atts[i]; i++) {
+-			if (!strcmp(atts[i], EL_NAME) && atts[++i] && atts[i][0]) {
+-				stack->varname = estrdup(atts[i]);
++			if (!strcmp(atts[i], EL_NAME) && atts[i+1] && atts[i+1][0]) {
++				stack->varname = estrdup(atts[i+1]);
+ 				break;
+ 			}
+ 		}
+@@ -850,11 +850,12 @@ static void php_wddx_push_element(void *user_data, const XML_Char *name, const X
+ 		array_init(ent.data);
+ 
+ 		if (atts) for (i = 0; atts[i]; i++) {
+-			if (!strcmp(atts[i], "fieldNames") && atts[++i] && atts[i][0]) {
++			if (!strcmp(atts[i], "fieldNames") && atts[i+1] && atts[i+1][0]) {
+ 				zval *tmp;
+ 				char *key;
+ 				char *p1, *p2, *endp;
+ 
++				i++;
+ 				endp = (char *)atts[i] + strlen(atts[i]);
+ 				p1 = (char *)atts[i];
+ 				while ((p2 = php_memnstr(p1, ",", sizeof(",")-1, endp)) != NULL) {
+@@ -886,13 +887,13 @@ static void php_wddx_push_element(void *user_data, const XML_Char *name, const X
+ 		ent.data = NULL;
+ 
+ 		if (atts) for (i = 0; atts[i]; i++) {
+-			if (!strcmp(atts[i], EL_NAME) && atts[++i] && atts[i][0]) {
++			if (!strcmp(atts[i], EL_NAME) && atts[i+1] && atts[i+1][0]) {
+ 				st_entry *recordset;
+ 				zval **field;
+ 
+ 				if (wddx_stack_top(stack, (void**)&recordset) == SUCCESS &&
+ 					recordset->type == ST_RECORDSET &&
+-					zend_hash_find(Z_ARRVAL_P(recordset->data), (char*)atts[i], strlen(atts[i])+1, (void**)&field) == SUCCESS) {
++					zend_hash_find(Z_ARRVAL_P(recordset->data), (char*)atts[i+1], strlen(atts[i+1])+1, (void**)&field) == SUCCESS) {
+ 					ent.data = *field;
+ 				}
+ 

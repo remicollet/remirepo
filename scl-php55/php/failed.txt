@@ -1,10 +1,9 @@
-==== PHP 5.5.38-2 (2016-09-10)
+==== PHP 5.5.38-3 (2016-09-19)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl55*/build.log
 
 /var/lib/mock/scl55el6x/build.log: Tests failed    :    0
 /var/lib/mock/scl55el7x/build.log: Tests failed    :    0
-/var/lib/mock/scl55fc21x/build.log:Tests failed    :    0
 /var/lib/mock/scl55fc22x/build.log:Tests failed    :    0
 /var/lib/mock/scl55fc23x/build.log:Tests failed    :    2
 /var/lib/mock/scl55fc24x/build.log:Tests failed    :    2

@@ -140,7 +140,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.5.38
-Release: 2%{?dist}
+Release: 3%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -212,6 +212,15 @@ Patch116: bug72838.patch
 Patch117: bug72848.patch
 Patch118: bug72849.patch
 Patch119: bug72850.patch
+Patch120: bug72910.patch
+Patch121: bug72926.patch
+Patch122: bug72928.patch
+Patch123: bug73007.patch
+Patch124: bug72860.patch
+Patch125: bug73029.patch
+Patch126: bug73052.patch
+Patch127: bug73035.patch
+Patch128: bug73065.patch
 
 # Security fixes (200+)
 
@@ -922,6 +931,15 @@ support for using the enchant library to PHP.
 %patch117 -p1 -b .bug72848
 %patch118 -p1 -b .bug72849
 %patch119 -p1 -b .bug72850
+%patch120 -p1 -b .bug72910
+%patch121 -p1 -b .bug72926
+%patch122 -p1 -b .bug72928
+%patch123 -p1 -b .bug73007
+%patch124 -p1 -b .bug72860
+%patch125 -p1 -b .bug73029
+%patch126 -p1 -b .bug73052
+%patch127 -p1 -b .bug73035
+%patch128 -p1 -b .bug73065
 
 # Fixes for tests
 %patch300 -p1 -b .datetests
@@ -1826,6 +1844,24 @@ EOF
 
 
 %changelog
+* Mon Sep 19 2016 Remi Collet <remi@remirepo.net> 5.5.38-3
+- fix #72910: Out of bounds heap read in mbc_to_code()
+- fix #72926: Uninitialized Thumbail Data Leads To Memory Leakage
+  in exif_process_IFD_in_TIFF
+- fix #72928: Out of bound when verify signature of zip phar
+  CVE-2016-7414
+- fix #73007: add locale length check
+  CVE-2016-7416
+- fix #72860: wddx_deserialize use-after-free
+  CVE-2016-7413
+- fix #73029: Missing type check when unserializing SplArray
+  CVE-2016-7417
+- fix #73052: Memory Corruption in During Deserialized-object Destruction
+  CVE-2016-7411
+- fix #73035: Out of bound when verify signature of tar phar
+- fix #73065: Out-Of-Bounds Read in php_wddx_push_element of wddx.c
+  CVE-2016-7418
+
 * Mon Sep  5 2016 Remi Collet <remi@remirepo.net> 5.5.38-2
 - fix #72716: initialize buffer before read (ftp)
 - fix #72663: destroy broken object when unserializing
