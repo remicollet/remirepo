@@ -21,7 +21,7 @@
 Name:          %{?scl_prefix}php-sqlsrv
 Summary:       Microsoft Drivers for PHP for SQL Server
 Version:       4.0.4
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
 
@@ -34,6 +34,8 @@ Patch0:        %{extname}-pr153.patch
 Patch1:        %{extname}-pr154.patch
 # https://github.com/Microsoft/msphpsql/pull/155 - PHP 7.1
 Patch2:        %{extname}-pr155.patch
+# https://github.com/Microsoft/msphpsql/pull/157 - buffer overflow
+Patch3:        %{extname}-pr157.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 7
@@ -84,9 +86,27 @@ cd %{gh_project}-%{gh_commit}
 %patch0 -p1 -b .pr153
 %patch1 -p1 -b .pr154
 %patch2 -p1 -b .pr155
+%patch3 -p1 -b .pr157
 cd ..
 
 mv %{gh_project}-%{gh_commit}/source NTS
+
+cd NTS
+sed -e '/VER_FILEVERSION_STR/s/4.0.0.0/%{version}/' \
+    -i sqlsrv/version.h pdo_sqlsrv/version.h
+
+# Sanity check, really often broken
+extver=$(sed -n '/#define VER_FILEVERSION_STR/{s/.* "//;s/".*$//;p}' sqlsrv/version.h)
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
+   exit 1
+fi
+extver=$(sed -n '/#define VER_FILEVERSION_STR/{s/.* "//;s/".*$//;p}' pdo_sqlsrv/version.h)
+if test "x${extver}" != "x%{version}%{?prever}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
+   exit 1
+fi
+cd ..
 
 cat << 'EOF' | tee %{ininame}
 ; Enable '%{summary}' extension module
@@ -203,6 +223,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Sep 19 2016 Remi Collet <remi@remirepo.net> - 4.0.4-4
+- fix reported version
+- open https://github.com/Microsoft/msphpsql/pull/157 - buffer overflow
+
 * Fri Sep 16 2016 Remi Collet <remi@remirepo.net> - 4.0.4-2
 - build from sources
 - open https://github.com/Microsoft/msphpsql/pull/153 - build
