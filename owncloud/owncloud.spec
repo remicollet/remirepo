@@ -8,7 +8,7 @@
 # Please preserve changelog entries
 #
 Name:           owncloud
-Version:        9.0.4
+Version:        9.0.5
 Release:        1%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
@@ -113,7 +113,7 @@ BuildRequires:       php-composer(nikic/php-parser) >= 1.4.1
 BuildRequires:       php-composer(nikic/php-parser) < 2.0
 BuildRequires:       php-composer(icewind/streams) >= 0.4.0
 BuildRequires:       php-composer(swiftmailer/swiftmailer) >= 5.4.1
-BuildRequires:       php-composer(guzzlehttp/guzzle) >= 5.3.0
+BuildRequires:       php-composer(guzzlehttp/guzzle) >= 5.3.1
 BuildRequires:       php-composer(guzzlehttp/guzzle) < 6.0
 BuildRequires:       php-composer(league/flysystem) >= 1.0.16
 BuildRequires:       php-composer(interfasys/lognormalizer) >= 1.0
@@ -239,10 +239,10 @@ Requires:       php-composer(icewind/streams) >= 0.4.0
 # Version 5.4.1 for autoloader in /usr/share/php
 Requires:       php-composer(swiftmailer/swiftmailer) >= 5.4.1
 
-# "guzzlehttp/guzzle": "5.3.0"
+# "guzzlehttp/guzzle": "5.3.1"
 # pulls in guzzlehttp/ringphp as strict requires
 # ringphp pulls in guzzlehttp/streams and react/promise as strict requires
-Requires:       php-composer(guzzlehttp/guzzle) >= 5.3.0
+Requires:       php-composer(guzzlehttp/guzzle) >= 5.3.1
 Requires:       php-composer(guzzlehttp/guzzle) < 6.0
 
 # "league/flysystem": "1.0.16"
@@ -749,6 +749,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 20 2016 Remi Collet <remi@fedoraproject.org> - 9.0.5-1
+- Update to 9.0.5
+
 * Tue Jul 19 2016 James Hogarth <james.hogarth@gmail.com> - 9.0.4-1
 - New release 9.0.4
 
