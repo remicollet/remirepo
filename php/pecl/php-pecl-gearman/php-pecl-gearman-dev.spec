@@ -42,7 +42,7 @@ Summary:        PHP wrapper to libgearman
 
 Group:          Development/Tools
 License:        PHP
-URL:            http://gearman.org
+URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}%{?prever}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
