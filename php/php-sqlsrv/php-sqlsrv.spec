@@ -21,7 +21,7 @@
 Name:          %{?scl_prefix}php-sqlsrv
 Summary:       Microsoft Drivers for PHP for SQL Server
 Version:       4.0.4
-Release:       4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       5%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
 
@@ -40,10 +40,10 @@ Patch3:        %{extname}-pr157.patch
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 7
 BuildRequires: %{?scl_prefix}php-pdo
-BuildRequires: msodbcsql >= 13
+BuildRequires: msodbcsql-devel >= 13
 BuildRequires: unixODBC-devel >= 2.3.1
 
-Requires:      msodbcsql%{?_isa} >= 13
+Requires:      msodbcsql-libs%{?_isa} >= 13
 # ABI check
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api)      = %{php_core_api}
@@ -223,6 +223,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 20 2016 Remi Collet <remi@remirepo.net> - 4.0.4-5
+- use the splitted msodbcsql packages
+
 * Mon Sep 19 2016 Remi Collet <remi@remirepo.net> - 4.0.4-4
 - fix reported version
 - open https://github.com/Microsoft/msphpsql/pull/157 - buffer overflow

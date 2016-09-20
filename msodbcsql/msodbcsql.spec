@@ -13,36 +13,61 @@
 %global vendor  microsoft
 %global libname libmsodbcsql-13.0.so.0.0
 %global dm_name ODBC Driver 13 for SQL Server
+%global descr   Microsoft ODBC Driver for SQL Server
 
 Name:          msodbcsql
-Summary:       Microsoft ODBC Driver for SQL Server
+Summary:       Tools of %{descr}
 Version:       13.0.0.0
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}
 License:       Distribuable
-Group:         Development/Languages
+Group:         Applications/Databases
 
 URL:           https://msdn.microsoft.com/library/hh568454(v=sql.110).aspx
 Source0:       https://download.microsoft.com/download/B/C/D/BCDD264C-7517-4B7D-8159-C99FC5535680/msodbcsql-13.0.0.0.tar.gz
 
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:     x86_64
 # Upstream use this exact version, be relax for Fedora (2.3.4)
 BuildRequires: unixODBC >= 2.3.1
 
 Requires(preun): %{_bindir}/odbcinst
 Requires(post):  %{_bindir}/odbcinst
+Requires:        %{name}-libs%{?_isa} = %{version}-%{release}
 
 
 %description
-%{summary}.
+%{descr}.
+
+This package provides the command line tools:
+- sqlcmd
+- bcp
+
+
+%package libs
+
+Summary: Libraries of %{descr}
+Group: Applications/Databases
+
+%description libs
+%{descr}.
+
+This package provides the libraries and localization files.
+
+
+%package devel
+
+Summary:  Development files of %{descr}
+Group:    Applications/Databases
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description devel
+%{descr}.
+
+This package provides the header files and documentation.
 
 
 %prep
 %setup -q
-mkdir _docs
-tar --extract \
-    --file docs/en_US.tar.gz \
-    --directory _docs
+
 cat <<EOF | tee %{name}.ini
 [%{dm_name}]
 Description = %{summary}
@@ -56,8 +81,6 @@ EOF
 
 
 %install
-rm -rf %{buildroot}
-
 : Lib
 mkdir -p %{buildroot}%{_libdir}
 for fic in %{_lib}/%{libname}
@@ -91,34 +114,49 @@ done
 : Template
 install -m 644 %{name}.ini %{buildroot}/opt/%{vendor}/%{name}/%{version}/%{name}.ini
 
+: Docs
+mkdir -p %{buildroot}/opt/%{vendor}/%{name}/%{version}/docs/en_US
+tar --extract \
+    --file docs/en_US.tar.gz \
+    --directory %{buildroot}/opt/%{vendor}/%{name}/%{version}/docs/en_US
 
-%preun
+
+%preun libs
 if [ -f /etc/odbcinst.ini ]; then
   %{_bindir}/odbcinst -u -d -n "%{dm_name}" >/dev/null || :
 fi
 
-%post
+%post libs
 if [ -f /etc/odbcinst.ini ]; then
   %{_bindir}/odbcinst -i -d -f /opt/%{vendor}/%{name}/%{version}/%{name}.ini  >/dev/null || :
 fi
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
-%{!?_licensedir:%global license %%doc}
-%license LICENSE
-%doc _docs/*
-%dir /opt/%{vendor}
-     /opt/%{vendor}/%{name}
 %{_bindir}/bcp
 %{_bindir}/sqlcmd
+/opt/%{vendor}/%{name}/bin
+
+%files libs
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%dir /opt/%{vendor}
+%dir /opt/%{vendor}/%{name}
+%dir /opt/%{vendor}/%{name}/%{version}
+     /opt/%{vendor}/%{name}/%{version}/*ini
+     /opt/%{vendor}/%{name}/%{version}/en_US
+     /opt/%{vendor}/%{name}/%{_lib}
+
+
+%files devel
+/opt/%{vendor}/%{name}/%{version}/include
+/opt/%{vendor}/%{name}/%{version}/docs
 
 
 %changelog
+* Tue Sep 20 2016 Remi Collet <remi@remirepo.net> - 13.0.0.0-2
+- create libs and devel sub packages
+
 * Fri Sep 16 2016 Remi Collet <remi@remirepo.net> - 13.0.0.0-1
 - initial package
 
