@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        6.9.5
-%global Patchlevel 9
+%global Patchlevel 10
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -434,10 +434,13 @@ fi
 %if "%{name}" != "%{libname}"
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/%{libname}%{?incsuffixe}
-%{_sysconfdir}/%{name}
+%dir               %{_sysconfdir}/%{name}
+%dir               %{_sysconfdir}/%{name}/%{libname}%{?incsuffixe}
+%config(noreplace) %{_sysconfdir}/%{name}/%{libname}%{?incsuffixe}/*.xml
 %else
 %{_datadir}/%{name}%{?incsuffixe}
-%{_sysconfdir}/%{name}%{?incsuffixe}
+%dir               %{_sysconfdir}/%{libname}%{?incsuffixe}
+%config(noreplace) %{_sysconfdir}/%{libname}%{?incsuffixe}/*.xml
 %endif
 %if %{with_djvu}
 %exclude %{_libdir}/%{libname}-%{VER}/modules-Q16/coders/djvu.*
@@ -507,6 +510,10 @@ fi
 
 
 %changelog
+* Wed Sep 21 2016 Remi Collet <remi@remirepo.net> - 6.9.5.10-1
+- update to version 6.9.5 patchlevel 10
+- flag configuration files as %%config
+
 * Tue Sep  6 2016 Remi Collet <remi@remirepo.net> - 6.9.5.9-1
 - update to version 6.9.5 patchlevel 9
 
