@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        7.0.3
-%global Patchlevel 0
+%global Patchlevel 1
 %global incsuffixe -7
 %global libsuffixe -7.Q16HDRI
 %global with_tests 0%{!?_without_tests:1}
@@ -53,6 +53,9 @@
 %endif
 
 %global libname ImageMagick
+# No need to relocate for now, as ImageMagick-7 is not ImageMagick-6
+%global move    0
+
 %if 0%{?fedora} > 99
 Name:           %{libname}
 %else
@@ -316,7 +319,7 @@ cp -p Magick++/demo/*.cpp Magick++/demo/*.miff Magick++/examples
 %endif
            --with-perl-options="INSTALLDIRS=vendor %{?perl_prefix} CC='%__cc -L$PWD/magick/.libs' LDDLFLAGS='-shared -L$PWD/magick/.libs'" \
            --without-dps \
-%if "%{name}" != "%{libname}"
+%if %{move}
            --datadir=%{_datadir}/%{name} \
            --sysconfdir=%{_sysconfdir}/%{name} \
 %endif
@@ -420,13 +423,16 @@ rm -rf %{buildroot}
 %{_libdir}/libMagickCore%{?libsuffixe}.so.0*
 %{_libdir}/libMagickWand%{?libsuffixe}.so.0*
 %{_libdir}/%{libname}-%{VER}
-%if "%{name}" != "%{libname}"
+%if %{move}
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/%{libname}%{?incsuffixe}
-%{_sysconfdir}/%{name}
+%dir               %{_sysconfdir}/%{name}
+%dir               %{_sysconfdir}/%{name}/%{libname}%{?incsuffixe}
+%config(noreplace) %{_sysconfdir}/%{name}/%{libname}%{?incsuffixe}/*.xml
 %else
-%{_datadir}/%{name}%{?incsuffixe}
-%{_sysconfdir}/%{name}%{?incsuffixe}
+%{_datadir}/%{libname}%{?incsuffixe}
+%dir               %{_sysconfdir}/%{libname}%{?incsuffixe}
+%config(noreplace) %{_sysconfdir}/%{libname}%{?incsuffixe}/*.xml
 %endif
 %if %{with_djvu}
 %exclude %{_libdir}/%{libname}-%{VER}/modules-Q16HDRI/coders/djvu.*
@@ -458,10 +464,10 @@ rm -rf %{buildroot}
 
 %files doc
 %defattr(-,root,root,-)
-%if "%{name}" != "%{libname}"
+%if %{move}
 %doc %{_datadir}/%{name}/doc/%{libname}%{?incsuffixe}
 %else
-%doc %{_datadir}/doc/%{name}%{?incsuffixe}
+%doc %{_datadir}/doc/%{libname}%{?incsuffixe}
 %endif
 
 %files c++
@@ -488,6 +494,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 21 2016 Remi Collet <remi@remirepo.net> - 7.0.3.1-1
+- update to version 7.0.3 patchlevel 1
+- flag configuration files as %%config
+- don't relocate config and date directory
+
 * Tue Sep  6 2016 Remi Collet <remi@remirepo.net> - 7.0.3.0-1
 - update to version 7.0.3
 
