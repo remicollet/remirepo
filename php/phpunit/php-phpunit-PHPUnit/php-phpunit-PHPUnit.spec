@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    3e6e88e56c912133de6e99b87728cca7ed70c5f5
+%global gh_commit    a57126dc681b08289fef6ac96a48e30656f84350
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.5
-%global minor        4
+%global minor        5
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -60,7 +60,7 @@ BuildRequires:  php-composer(symfony/yaml) >= 2.1
 BuildRequires:  php-composer(symfony/class-loader) >= 2.0
 BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 
-# From composer.json
+# From composer.json, "require": {
 #        "php": "^5.6 || ^7.0",
 #        "phpunit/php-file-iterator": "~1.4",
 #        "phpunit/php-text-template": "~1.2",
@@ -81,9 +81,9 @@ BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
 #        "myclabs/deep-copy": "~1.3",
 #        "ext-dom": "*",
 #        "ext-json": "*",
-#        "ext-pcre": "*",
-#        "ext-reflection": "*",
-#        "ext-spl": "*"
+#        "ext-mbstring": "*",
+#        "ext-xml": "*",
+#        "ext-libxml": "*"
 Requires:       php(language) >= 5.6
 Requires:       php-cli
 Requires:       php-composer(phpunit/php-file-iterator) >= 1.4
@@ -120,27 +120,29 @@ Requires:       php-composer(symfony/yaml) >= 2.1
 Requires:       php-composer(symfony/yaml) <  4
 Requires:       php-dom
 Requires:       php-json
-Requires:       php-pcre
-Requires:       php-reflection
-Requires:       php-spl
-# Optional
-#        "phpunit/php-invoker": "~1.1"
+Requires:       php-mbstring
+Requires:       php-xml
+Requires:       php-libxml
+# From composer.json, "suggest": {
+#        "phpunit/php-invoker": "~1.1",
+#        "ext-tidy": "*",
+#        "ext-xdebug": "*"
 Requires:       php-composer(phpunit/php-invoker) >= 1.1
 Requires:       php-composer(phpunit/php-invoker) <  2
+Requires:       php-tidy
 # For our autoload patch
 Requires:       php-composer(doctrine/instantiator) >= 1.0.4
 Requires:       php-composer(doctrine/instantiator) <  2
 Requires:       php-composer(symfony/class-loader) >= 2.0
 Requires:       php-composer(symfony/class-loader) <  3
 Requires:       php-composer(sebastian/recursion-context) >= 1.0
-# From phpcompatinfo report for version 5.4.0
-Requires:       php-libxml
-Requires:       php-mbstring
+# From phpcompatinfo report for version 5.5.5
+Requires:       php-reflection
 Requires:       php-openssl
 Requires:       php-pcntl
+Requires:       php-pcre
 Requires:       php-phar
-Requires:       php-tidy
-Requires:       php-xml
+Requires:       php-spl
 
 
 Provides:       php-composer(phpunit/phpunit) = %{version}
@@ -231,6 +233,9 @@ fi
 
 
 %changelog
+* Wed Sep 21 2016 Remi Collet <remi@fedoraproject.org> - 5.5.5-1
+- Update to 5.5.5
+
 * Wed Aug 31 2016 Remi Collet <remi@fedoraproject.org> - 5.5.4-1
 - Update to 5.5.4
 
