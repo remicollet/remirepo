@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b29b872a92e9b29708b426a47aae5365184a606a
+%global gh_commit    be919ad4c3f833770241d1c448ef7f42a67e9e02
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpmyadmin
 #global gh_date      20150820
@@ -15,7 +15,7 @@
 %global psr0         SqlParser
 
 Name:           php-udan11-%{gh_project}
-Version:        3.4.7
+Version:        3.4.8
 Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A validating SQL lexer and parser with a focus on MySQL dialect
 
@@ -139,6 +139,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 22 2016 Remi Collet <remi@fedoraproject.org> - 3.4.8-1
+- update to 3.4.8 (no change)
+
 * Tue Sep 20 2016 Remi Collet <remi@fedoraproject.org> - 3.4.7-1
 - update to 3.4.7
 
