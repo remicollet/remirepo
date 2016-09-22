@@ -19,8 +19,8 @@
 
 Summary:        Package for generating PDF files
 Name:           %{?scl_prefix}php-pecl-pdflib
-Version:        3.0.4
-Release:        4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        4.0.0
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # https://bugs.php.net/60396 ask license file
 License:        PHP
 Group:          Development/Languages
@@ -41,8 +41,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared
@@ -63,6 +65,14 @@ Obsoletes:     php55w-pecl-%{pecl_name}
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name}
 Obsoletes:     php56w-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name}
+Obsoletes:     php70w-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name}
+Obsoletes:     php71w-pecl-%{pecl_name}
 %endif
 %endif
 
@@ -188,6 +198,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 22 2016 Remi Collet <remi@fedoraproject.org> - 4.0.0-1
+- update to 4.0.0 (beta) for PHP 7
+
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 3.0.4-4
 - adapt for F24
 
