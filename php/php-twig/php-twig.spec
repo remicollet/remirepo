@@ -11,11 +11,31 @@
 #
 # Please preserve changelog entries
 #
+%if 0%{?scl:1}
+# PHPUnit not available in SCL
+%global with_tests 0
+%if "%{scl}" == "rh-php56"
+%global sub_prefix more-php56-
+%else
+%global sub_prefix %{scl_prefix}
+%endif
+%scl_package        php-twig
+%else
+%global pkg_name    %{name}
+%if 0%{?fedora}
+# Build using "--without tests" to disable tests
+%global with_tests 0%{!?_without_tests:1}
+%else
+# Build using "--with tests" to enable tests
+# PHPUnit in remi requires PHP 5.6
+%global with_tests 0%{?_with_tests:1}
+%endif
+%endif
 
 %global github_owner     twigphp
 %global github_name      Twig
-%global github_version   1.24.2
-%global github_commit    33093f6e310e6976baeac7b14f3a6ec02f2d79b7
+%global github_version   1.25.0
+%global github_commit    f16a634ab08d87e520da5671ec52153d627f10f6
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %if "%{php_version}" < "7"
@@ -41,30 +61,7 @@ BuildArch: noarch
 # "php": ">=5.2.7"
 %global php_min_ver 5.2.7
 
-%if 0%{?scl:1}
-# PHPUnit not available in SCL
-%global with_tests 0
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
-%global sub_prefix %{scl_prefix}
-%endif
-%else
-%if 0%{?fedora}
-# Build using "--without tests" to disable tests
-%global with_tests 0%{!?_without_tests:1}
-%else
-# Build using "--with tests" to enable tests
-# PHPUnit in remi requires PHP 5.6
-%global with_tests 0%{?_with_tests:1}
-%endif
-%endif
-
-%{?scl:          %scl_package        php-twig}
-%{!?scl:         %global pkg_name    %{name}}
-%{!?phpdir:      %global phpdir      %{_datadir}/php}
-%{!?php_inidir:  %global php_inidir  %{_sysconfdir}/php.d}
-%{!?__php:       %global __php       %{_bindir}/php}
+%global phpdir      %{_datadir}/php
 
 Name:          %{?sub_prefix}php-%{composer_project}
 Version:       %{github_version}
@@ -193,8 +190,8 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-echo PHP version %{php_version}
-echo Build extension %{with_ext}
+: PHP version %{php_version}
+: Build extension %{with_ext}
 
 %if %{with_ext}
 : Ext -- NTS
@@ -352,6 +349,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 22 2016 Remi Collet <remi@fedoraproject.org> - 1.25.0-1
+- Update to 1.25.0
+
 * Fri Sep  2 2016 Remi Collet <remi@fedoraproject.org> - 1.24.2-1
 - Update to 1.24.2
 
