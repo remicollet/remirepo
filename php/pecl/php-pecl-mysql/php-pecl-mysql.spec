@@ -217,7 +217,6 @@ while [ $n -gt 0 ]; do
   sleep 1
 done
 
-if [ -f $MYSQL_PID_FILE ]; then
 : Run upstream test suite
 sed -e "s/localhost/$MYSQL_TEST_HOST/;s/3306/$MYSQL_TEST_PORT/" -i tests/connect.inc
 
@@ -226,15 +225,17 @@ rm tests/bug55473.phpt
 rm tests/mysql_pconn_max_links.phpt
 rm tests/mysql_query_load_data_openbasedir.phpt
 
-
+if [ $n -gt 0 ]; then
 TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n -d extension=mysqlnd.so -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__php} -n run-tests.php --show-diff || RET=1
+fi
 
 : Cleanup
-kill $(cat $MYSQL_PID_FILE)
+if [ -s $MYSQL_PID_FILE ]; then
+  kill $(cat $MYSQL_PID_FILE)
 fi
 
 exit $RET
