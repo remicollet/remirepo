@@ -19,7 +19,7 @@
 %global gh_date     20160428
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name   mysql
-%global with_tests  0%{!?_without_tests:1}
+%global with_tests  0%{?_with_tests:1}
 # After 40-mysqlnd
 %global ini_name    50-%{pecl_name}.ini
 %global mysql_sock  %(mysql_config --socket 2>/dev/null || echo /var/lib/mysql/mysql.sock)
@@ -28,7 +28,7 @@ Summary:        MySQL database access functions
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
 %if 0%{?gh_date:1}
-Release:        0.12.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.13.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -43,6 +43,9 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 7
 BuildRequires:  %{?scl_prefix}php-mysqlnd
 BuildRequires:  %{?scl_prefix}php-pear
+%if %{with_tests}
+BuildRequires:  mariadb-server
+%endif
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
@@ -182,6 +185,61 @@ cd ../ZTS
 
 %endif
 
+%if %{with_tests}
+cd ../NTS
+RET=0
+
+: Running a server
+MYSQL_TEST_HOST=127.0.0.1
+MYSQL_TEST_PORT=3308
+MYSQL_TEST_SOCKET=$PWD/mysql.sock
+MYSQL_PID_FILE=$PWD/mysql.pid
+
+rm -rf data
+mkdir  data
+%{_bindir}/mysql_install_db \
+   --datadir=$PWD/data
+
+%{_libexecdir}/mysqld \
+   --socket=$MYSQL_TEST_SOCKET \
+   --log-error=$PWD/mysql.log \
+   --pid-file=$MYSQL_PID_FILE \
+   --port=$MYSQL_TEST_PORT \
+   --datadir=$PWD/data &
+
+n=15
+while [ $n -gt 0 ]; do
+  RESPONSE=$(%{_bindir}/mysqladmin --no-defaults --socket="$MYSQL_TEST_SOCKET" --user=root ping 2>&1 || :)
+  if [ "$RESPONSE" == "mysqld is alive" ]; then
+    break
+  fi
+  n=$(expr $n - 1)
+  sleep 1
+done
+
+if [ -f $MYSQL_PID_FILE ]; then
+: Run upstream test suite
+sed -e "s/localhost/$MYSQL_TEST_HOST/;s/3306/$MYSQL_TEST_PORT/" -i tests/connect.inc
+
+: Known to fail
+rm tests/bug55473.phpt
+rm tests/mysql_pconn_max_links.phpt
+rm tests/mysql_query_load_data_openbasedir.phpt
+
+
+TEST_PHP_EXECUTABLE=%{__php} \
+TEST_PHP_ARGS="-n -d extension=mysqlnd.so -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so" \
+NO_INTERACTION=1 \
+REPORT_EXIT_STATUS=1 \
+%{__php} -n run-tests.php --show-diff || RET=1
+
+: Cleanup
+kill $(cat $MYSQL_PID_FILE)
+fi
+
+exit $RET
+%endif
+
 
 %if 0%{?fedora} < 24
 # when pear installed alone, after us
@@ -223,6 +281,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 22 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.13.20160428git45881bd
+- run upstream test suite when build using --with tests option
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.12.20160428git45881bd
 - rebuild for PHP 7.1 new API version
 

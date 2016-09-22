@@ -43,6 +43,9 @@ build:
 buildtest:
 	time rpmbuild $(RPMDEFINES) -bb --with tests $(NAME).spec
 
+bitest:
+	rpmbuild $(RPMDEFINES) --with tests -bi --short-circuit $(NAME).spec
+
 buildmini:
 	time rpmbuild $(RPMDEFINES) --define "runselftest 0" --without tests -bb $(NAME).spec
 
