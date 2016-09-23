@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    89c8a68920cffcd7ffda7c6e6987958d56e36a84
+%global gh_commit    62f4de76d4eaa9ea13c66dacc1f22977dace6638
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     LukasReschke
 %global gh_project   ID3Parser
@@ -14,7 +14,7 @@
 %global pk_project   id3parser
 
 Name:           php-%{pk_owner}-%{pk_project}
-Version:        0.0.2
+Version:        0.0.3
 Release:        1%{?dist}
 Summary:        ID3 parser library
 
@@ -90,6 +90,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 23 2016 Remi Collet <remi@fedoraproject.org> - 0.0.3-1
+- update to 0.0.3
+
 * Wed Sep  7 2016 Remi Collet <remi@fedoraproject.org> - 0.0.2-1
 - update to 0.0.2 (no change)
 - add upstream LICENSE file
