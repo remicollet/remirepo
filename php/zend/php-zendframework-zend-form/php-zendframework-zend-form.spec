@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    a0f0ce0f4c11e1c78939b4e8a212f6ba44559253
+%global gh_commit    2d076100e4c6a779b7676d098192e3d1cf74f34e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-form
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.9.1
+Version:        2.9.2
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -175,15 +175,15 @@ EOF
 run=0
 ret=0
 if which php56; then
-   php56 %{_bindir}/phpunit -d memory_limit=1G --include-path=%{buildroot}%{php_home} || ret=1
+   php56 %{_bindir}/phpunit -d memory_limit=1G || ret=1
    run=1
 fi
 if which php71; then
-   php71 %{_bindir}/phpunit -d memory_limit=1G --include-path=%{buildroot}%{php_home} || ret=1
+   php71 %{_bindir}/phpunit -d memory_limit=1G || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
-%{_bindir}/phpunit -d memory_limit=1G --include-path=%{buildroot}%{php_home} --verbose
+%{_bindir}/phpunit -d memory_limit=1G --verbose
 # remirepo:2
 fi
 exit $ret
@@ -207,6 +207,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 23 2016 Remi Collet <remi@fedoraproject.org> - 2.9.2-1
+- update to 2.9.2
+
 * Thu Sep 15 2016 Remi Collet <remi@fedoraproject.org> - 2.9.1-1
 - update to 2.9.1
 
