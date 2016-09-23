@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    73eac11e5bd3b161745ad5d6bef6af73458010f6
+%global gh_commit    7aaf1f43760aff4b97c679c46dd8b6700c948ff5
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150331
 %global gh_owner     llaville
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-bartlett-PHP-Reflect
-Version:        4.0.1
-%global specrel 2
+Version:        4.0.2
+%global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -35,8 +35,6 @@ Source1:        %{name}-autoload.php
 
 # Enable cache plugin
 Patch0:         %{name}-4.0.0-rpm.patch
-# See https://github.com/llaville/php-reflect/pull/22
-Patch1:         %{name}-pr22.patch
 
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.4.0
@@ -158,7 +156,6 @@ Documentation: http://php5.laurent-laville.org/reflect/manual/current/en/
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
-%patch1 -p1 -b .pr22
 cp %{SOURCE1} src/Bartlett/Reflect/autoload.php
 
 sed -e 's/@package_version@/%{version}%{?prever}/' \
@@ -180,8 +177,8 @@ install -D -p -m 644 bin/phpreflect.1         %{buildroot}%{_mandir}/man1/phpref
 
 %check
 %if %{with_tests}
-# Version 4.0.1: OK, but incomplete, skipped, or risky tests!
-# Tests: 122, Assertions: 122, Incomplete: 3.
+# Version 4.0.2: OK, but incomplete, skipped, or risky tests!
+# Tests: 122, Assertions: 123, Incomplete: 3.
 # remirepo:11
 run=0
 ret=0
@@ -223,6 +220,9 @@ fi
 
 
 %changelog
+* Fri Sep 23 2016 Remi Collet <remi@fedoraproject.org> - 4.0.2-1
+- update to 4.0.2
+
 * Wed Aug 10 2016 Remi Collet <remi@fedoraproject.org> - 4.0.1-2
 - fix test suite to work with all Monolog versions
   from https://github.com/llaville/php-reflect/pull/22
