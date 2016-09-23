@@ -12,8 +12,8 @@
 
 %global github_owner     twigphp
 %global github_name      Twig-extensions
-%global github_version   1.3.0
-%global github_commit    449e3c8a9ffad7c2479c7864557275a32b037499
+%global github_version   1.4.0
+%global github_commit    531eaf4b9ab778b1d7cdd10d40fc6aa74729dfee
 
 %global composer_vendor  twig
 %global composer_project extensions
@@ -107,8 +107,23 @@ cp -rp lib/* %{buildroot}%{phpdir}/
 
 %check
 %if %{with_tests}
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/Extensions/autoload.php || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/Extensions/autoload.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/phpunit --verbose \
     --bootstrap %{buildroot}%{phpdir}/Twig/Extensions/autoload.php
+# remirepo:2
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -129,6 +144,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 23 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
+- update to 1.4.0
+
 * Mon Oct 12 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.0-1
 - Updated to 1.3.0 (RHBZ #1256169)
 - "php-phpunit-PHPUnit" build dependency changed to "php-composer(phpunit/phpunit)"
