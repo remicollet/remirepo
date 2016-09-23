@@ -10,11 +10,11 @@
 #global svnrelease   703
 
 Name:           glpi-data-injection
-Version:        2.4.1
+Version:        2.4.2
 %if 0%{?svnrelease}
 Release:        0.1.svn%{svnrelease}%{?dist}
 %else
-Release:        1.1%{?dist}
+Release:        1%{?dist}
 %endif
 Summary:        Plugin for importing data into GLPI
 Summary(fr):    Extension pour importer des données dans GLPI
@@ -36,7 +36,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
 Requires:       glpi >= 0.84
-Requires:       glpi <  0.91
+Requires:       glpi <  9.2
 #Requires:       glpi-pdf
 
 # This plugin have been renamed
@@ -121,6 +121,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 23 2016 Johan Cwiklinski <jcwiklinski AT teclib DOT com> - 2.4.2-1
+- Last upstream release, 9.1 compatible
+
 * Tue Jun 28 2016 Johan Cwiklinski <jcwiklinski AT teclib DOT com> - 2.4.1-1.1
 - Change URL
 
