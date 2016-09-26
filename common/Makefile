@@ -148,7 +148,7 @@ composer:
 	tar xf $(shell spectool -l $(NAME).spec | head -n 1 | sed -e 's:.* ::' | sed -e 's:.*/::') --strip-components=1 '*/composer.json'
 
 devcomposer:
-	mv composer.json old.json && \
+	if [ -f composeer.json ]; then mv composer.json old.json; fi && \
 	tar xf $(shell spectool -l $(NAME)-dev.spec | head -n 1 | sed -e 's:.*/::') --strip-components=1 '*/composer.json' && \
 	mv composer.json composer-dev.json && \
-	mv old.json composer.json
+	if [ -f old.json ]; then mv old.json composer.json; fi
