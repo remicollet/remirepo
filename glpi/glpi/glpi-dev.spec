@@ -291,9 +291,11 @@ done >%{name}.lang
 
 %check
 %if %{with_tests}
+RET=0
 
 : Running a PHP server
-php -S localhost:8088&
+sed -e 's/localhost/127.0.0.1/' -i tests/bootstrap.php
+%{_bindir}/php -S 127.0.0.1:8088 &>/dev/null &
 PHPPID=$!
 
 : Running a MariaDB server
