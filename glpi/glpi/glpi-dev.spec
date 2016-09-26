@@ -430,8 +430,8 @@ fi
 
 
 %changelog
-* Mon Sep 26 2016 Remi Collet <remi@fedoraproject.org> - 0.91-1
-- update to 0.91
+* Mon Sep 26 2016 Remi Collet <remi@fedoraproject.org> - 9.1-1
+- update to 9.1
   https://github.com/glpi-project/glpi/milestone/2?closed=1
 - add patch to ensure correct autolading
   open https://github.com/glpi-project/glpi/pull/1056
