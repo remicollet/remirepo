@@ -18,19 +18,19 @@
 %scl_package       php-pecl-yaml
 %endif
 
-%global with_zts   0%{?__ztsphp:1}
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  yaml
 %if "%{php_version}" < "5.6"
 %global ini_name   %{pecl_name}.ini
 %else
 %global ini_name   40-%{pecl_name}.ini
 %endif
-%global prever     b1
+#global prever     b1
 
 Summary:       PHP Bindings for yaml
 Name:          %{?sub_prefix}php-pecl-yaml
 Version:       1.3.0
-Release:       0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaml
@@ -68,10 +68,6 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "7.0"
-Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -257,6 +253,9 @@ fi
 
 
 %changelog
+* Mon Sep 26 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- Update to 1.3.0 (php 5)
+
 * Mon Jun  6 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-0.1.b1
 - Update to 1.3.0b1 (beta)
 
