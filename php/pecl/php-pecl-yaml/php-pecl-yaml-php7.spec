@@ -17,12 +17,12 @@
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  yaml
 %global ini_name   40-%{pecl_name}.ini
-%global prever     RC8
+#global prever     RC8
 
 Summary:       PHP Bindings for yaml
 Name:          %{?sub_prefix}php-pecl-yaml
 Version:       2.0.0
-Release:       0.10.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaml
@@ -234,6 +234,9 @@ fi
 
 
 %changelog
+* Mon Sep 26 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- update to 2.0.0 (php 7)
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.10.RC8
 - rebuild for PHP 7.1 new API version
 

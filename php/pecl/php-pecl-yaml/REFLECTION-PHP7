@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #83 yaml version 2.0.0RC8 ] {
+Extension [ <persistent> extension #137 yaml version 2.0.0 ] {
 
   - Dependencies {
     Dependency [ date (Optional) ]
