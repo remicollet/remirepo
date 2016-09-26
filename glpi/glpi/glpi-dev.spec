@@ -7,9 +7,9 @@
 # Please, preserve the changelog entries
 #
 
-%global gh_commit  f4143e32c122073948ee8b372261e787601b309d
+%global gh_commit  06a1bceddbd0b635e7c35c87406b529be1f38a46
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date    20160923
+#global gh_date    20160923
 %global gh_owner   glpi-project
 %global gh_project glpi
 
@@ -37,7 +37,7 @@
 
 Name:           %{gh_project}
 Version:        9.1
-Release:        0.1.%{gh_date}git%{gh_short}%{?dist}
+Release:        1%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
@@ -95,6 +95,7 @@ Requires:       php(httpd)
 %else
 Requires:       httpd, mod_php
 %endif
+# use 5.5+ to avoid dependency on ircmaxell/password-compat and ramsey/array_column
 Requires:       php(language) >= 5.5
 Requires:       php-ctype
 Requires:       php-curl
@@ -189,9 +190,9 @@ sed -e '/GLPI_FONT_FREESANS/s/gnu-free/freefont/' \
 cp  %{SOURCE2}  config/config_path.php
 %endif
 
-cp %{SOURCE5} ./%{name}-autoload.php
-sed -i "s,##DATADIR##,%{_datadir}," %{name}-autoload.php
-sed -e "s|vendor/autoload\.php|%{name}-autoload.php|" -i inc/autoload.function.php
+mkdir vendor
+sed -e "s,##DATADIR##,%{_datadir}," \
+    %{SOURCE5} > vendor/autoload.php
 
 mv lib/tiny_mce/license.txt LICENSE.tiny_mce
 rm scripts/glpi_cron_*.sh
@@ -321,8 +322,8 @@ cp %{SOURCE12} config/config_path.php
 cp %{SOURCE13} config/config_db.php
 
 : Run upstream test suite
-php tools/cliinstall.php --host=127.0.0.1 --db=glpitest --user=root --tests --force --lang=en_US
-%{_bindir}/phpunit --verbose
+php tools/cliinstall.php --host=127.0.0.1:3308 --db=glpitest --user=root --tests --force --lang=en_US || ret=1
+%{_bindir}/phpunit --verbose || ret=1
 
 : Cleanup
 if [ -s $MYSQL_PID_FILE ]; then
@@ -415,7 +416,11 @@ fi
 
 
 %changelog
-* Thu Sep 23 2016 Johan Cwiklinski <jcwiklinski@teclib.com> - 9.1-0.1.20160922gitf4143e3
+* Mon Sep 26 2016 Remi Collet <remi@fedoraproject.org> - 0.91-1
+- update to 0.91
+  https://github.com/glpi-project/glpi/milestone/2?closed=1
+
+* Fri Sep 23 2016 Johan Cwiklinski <jcwiklinski@teclib.com> - 9.1-0.1.20160922gitf4143e3
 - First pre-build for 9.1 series
 - Drop upstream patches
 - Add unit tests
