@@ -7,15 +7,10 @@
 # Please, preserve the changelog entries
 #
 %global pluginname   datainjection
-#global svnrelease   703
 
 Name:           glpi-data-injection
 Version:        2.4.2
-%if 0%{?svnrelease}
-Release:        0.1.svn%{svnrelease}%{?dist}
-%else
 Release:        1%{?dist}
-%endif
 Summary:        Plugin for importing data into GLPI
 Summary(fr):    Extension pour importer des données dans GLPI
 
@@ -23,21 +18,13 @@ Group:          Applications/Internet
 License:        GPLv2+
 
 URL:            https://forge.glpi-project.org/projects/datainjection
-%if 0%{?svnrelease}
-# svn export -r 703 https://forge.glpi-project.org/svn/datainjection/trunk datainjection
-# tar czf glpi-datainjection-2.2.0-703.tar.gz datainjection
-Source0:        glpi-datainjection-2.2.0-%{svnrelease}.tar.gz
-%else
-# This change for each new version
-Source0:        https://forge.glpi-project.org/attachments/download/2081/glpi-datainjection-2.4.1.tar.gz
-%endif
+Source0:        https://github.com/pluginsGLPI/%{pluginname}/releases/download/%{version}/glpi-%{pluginname}-%{version}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
 Requires:       glpi >= 0.84
 Requires:       glpi <  9.2
-#Requires:       glpi-pdf
 
 # This plugin have been renamed
 Provides:       glpi-%{pluginname} = %{version}-%{release}
@@ -65,6 +52,9 @@ Elle pourra servir, par exemple, à :
 %prep
 %setup -q -c
 
+# Move doc files
+mv %{pluginname}/README.md README.md
+mv %{pluginname}/%{pluginname}.xml %{pluginname}.xml
 mv %{pluginname}/docs docs
 
 # dos2unix to avoid rpmlint warnings
@@ -104,7 +94,7 @@ rm -rf %{buildroot}
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc docs/*
+%doc docs/* README.md %{pluginname}.xml
 %dir %{_datadir}/glpi/plugins/%{pluginname}
 %{_datadir}/glpi/plugins/%{pluginname}/*.php
 %dir %{_datadir}/glpi/plugins/%{pluginname}/locales
@@ -114,6 +104,7 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/%{pluginname}/inc
 %{_datadir}/glpi/plugins/%{pluginname}/javascript
 %{_datadir}/glpi/plugins/%{pluginname}/pics
+%{_datadir}/glpi/plugins/%{pluginname}/%{pluginname}.png
 # Need here, required from the Interface
 %{_datadir}/glpi/plugins/%{pluginname}/LICENSE
 # Data
