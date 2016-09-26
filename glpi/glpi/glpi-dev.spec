@@ -65,19 +65,20 @@ BuildRequires:  php-cli
 BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  mariadb-server
 #PHP libs
-BuildRequires:  php-PHPMailer
-BuildRequires:  php-tcpdf
 BuildRequires:  php-htmLawed
-BuildRequires:  php-simplepie
-BuildRequires:  php-composer(zendframework/zend-cache)
-BuildRequires:  php-composer(zendframework/zend-i18n)
-BuildRequires:  php-composer(zendframework/zend-loader)
-BuildRequires:  php-composer(guzzlehttp/guzzle)
-BuildRequires:  php-composer(jasig/phpcas)
-BuildRequires:  php-composer(iamcal/lib_autolink)
-BuildRequires:  php-composer(sabre/vobject)
-BuildRequires:  php-composer(michelf/php-markdown)
-BuildRequires:  php-composer(true/punycode) >= 2
+BuildRequires:  php-composer(zendframework/zend-cache)  >= 2.4
+BuildRequires:  php-composer(zendframework/zend-i18n)   >= 2.4
+BuildRequires:  php-composer(zendframework/zend-loader) >= 2.4
+BuildRequires:  php-composer(guzzlehttp/guzzle)         >= 5
+BuildRequires:  php-composer(guzzlehttp/guzzle)         < 6
+BuildRequires:  php-composer(jasig/phpcas)              >= 1.3
+BuildRequires:  php-composer(iamcal/lib_autolink)       >= 1.7
+BuildRequires:  php-composer(sabre/vobject)             >= 3.4
+BuildRequires:  php-composer(michelf/php-markdown)      >= 1.6
+BuildRequires:  php-composer(true/punycode)             >= 2
+BuildRequires:  php-composer(simplepie/simplepie)       >= 1.4
+BuildRequires:  php-composer(phpmailer/phpmailer)       >= 5.2
+BuildRequires:  php-composer(tecnickcom/tcpdf)          >= 6.2
 BuildRequires:  php-mysqli
 BuildRequires:  php-xmlrpc
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
@@ -116,19 +117,21 @@ Requires:       php-simplexml
 Requires:       php-wddx
 Requires:       php-xmlrpc
 Requires:       php-zlib
-Requires:       php-PHPMailer
-Requires:       php-tcpdf
 Requires:       php-htmLawed
-Requires:       php-simplepie
-Requires:       php-composer(zendframework/zend-cache)
-Requires:       php-composer(zendframework/zend-i18n)
-Requires:       php-composer(zendframework/zend-loader)
-Requires:       php-composer(guzzlehttp/guzzle)
-Requires:       php-composer(jasig/phpcas)
-Requires:       php-composer(iamcal/lib_autolink)
-Requires:       php-composer(sabre/vobject)
-Requires:       php-composer(michelf/php-markdown)
-Requires:       php-composer(true/punycode) >= 2
+Requires:       php-composer(zendframework/zend-cache)  >= 2.4
+Requires:       php-composer(zendframework/zend-i18n)   >= 2.4
+Requires:       php-composer(zendframework/zend-loader) >= 2.4
+Requires:       php-composer(guzzlehttp/guzzle)         >= 5
+Requires:       php-composer(guzzlehttp/guzzle)         <  6
+Requires:       php-composer(jasig/phpcas)              >= 1.3
+Requires:       php-composer(iamcal/lib_autolink)       >= 1.7
+Requires:       php-composer(sabre/vobject)             >= 3.4
+Requires:       php-composer(michelf/php-markdown)      >= 1.6
+# upstream ask 2.1, compatibility with 2.0 ensure by autoloader
+Requires:       php-composer(true/punycode)             >= 2.1
+Requires:       php-composer(simplepie/simplepie)       >= 1.4
+Requires:       php-composer(phpmailer/phpmailer)       >= 5.2
+Requires:       php-composer(tecnickcom/tcpdf)          >= 6.2
 
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 Requires:       php-composer(zetacomponents/graph)
