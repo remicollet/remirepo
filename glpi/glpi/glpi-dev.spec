@@ -329,8 +329,8 @@ cp %{SOURCE12} config/config_path.php
 cp %{SOURCE13} config/config_db.php
 
 : Run upstream test suite
-php tools/cliinstall.php --host=127.0.0.1:3308 --db=glpitest --user=root --tests --force --lang=en_US || ret=1
-%{_bindir}/phpunit --verbose || ret=1
+php tools/cliinstall.php --host=127.0.0.1:3308 --db=glpitest --user=root --tests --force --lang=en_US || RET=1
+%{_bindir}/phpunit --verbose || RET=1
 
 : Cleanup
 if [ -s $MYSQL_PID_FILE ]; then
