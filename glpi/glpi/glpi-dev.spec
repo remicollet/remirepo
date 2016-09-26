@@ -50,7 +50,6 @@ Source0:        https://github.com/%{gh_owner}/%{name}/archive/%{gh_commit}/%{na
 Source1:        %{name}-httpd.conf
 Source2:        %{name}-9.1-config_path.php
 Source12:       %{name}-9.1-config_path_test.php
-Source13:       %{name}-9.1-config_db_test.php
 Source3:        %{name}-logrotate
 Source4:        %{name}-nginx.conf
 Source5:        %{name}-fedora-autoloader.php
@@ -333,10 +332,11 @@ done
 
 : Set tests configuration
 cp %{SOURCE12} config/config_path.php
-cp %{SOURCE13} config/config_db.php
 
 : Run upstream test suite
 php tools/cliinstall.php --host=127.0.0.1:3308 --db=glpitest --user=root --tests --force --lang=en_US || RET=1
+cp tests/config_db.php config/
+
 %{_bindir}/phpunit --verbose || RET=1
 
 : Cleanup
