@@ -56,6 +56,8 @@ Elle pourra servir, par exemple, à :
 mv %{pluginname}/README.md README.md
 mv %{pluginname}/%{pluginname}.xml %{pluginname}.xml
 mv %{pluginname}/docs docs
+#not needed
+rm %{pluginname}/%{pluginname}.png
 
 # dos2unix to avoid rpmlint warnings
 for fic in docs/*; do
@@ -104,7 +106,6 @@ rm -rf %{buildroot}
 %{_datadir}/glpi/plugins/%{pluginname}/inc
 %{_datadir}/glpi/plugins/%{pluginname}/javascript
 %{_datadir}/glpi/plugins/%{pluginname}/pics
-%{_datadir}/glpi/plugins/%{pluginname}/%{pluginname}.png
 # Need here, required from the Interface
 %{_datadir}/glpi/plugins/%{pluginname}/LICENSE
 # Data
