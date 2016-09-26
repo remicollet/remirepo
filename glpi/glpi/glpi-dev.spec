@@ -55,6 +55,8 @@ Source3:        %{name}-logrotate
 Source4:        %{name}-nginx.conf
 Source5:        %{name}-fedora-autoloader.php
 
+Patch1:         %{name}-9.1-pr1056.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
@@ -169,6 +171,8 @@ techniciens grâce à une maintenance plus cohérente.
 
 %prep
 %setup -q -n %{name}-%{gh_commit}
+
+%patch1 -p1
 
 grep %{version} config/define.php
 
@@ -419,6 +423,8 @@ fi
 * Mon Sep 26 2016 Remi Collet <remi@fedoraproject.org> - 0.91-1
 - update to 0.91
   https://github.com/glpi-project/glpi/milestone/2?closed=1
+- add patch to ensure correct autolading
+  open https://github.com/glpi-project/glpi/pull/1056
 
 * Fri Sep 23 2016 Johan Cwiklinski <jcwiklinski@teclib.com> - 9.1-0.1.20160922gitf4143e3
 - First pre-build for 9.1 series

@@ -1,0 +1,30 @@
+From e58360e8f377e95ef96711b8b4466b0a7c066a89 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Mon, 26 Sep 2016 08:45:22 +0200
+Subject: [PATCH] ensure GLPI autoloader always first in the stack
+
+---
+ inc/autoload.function.php | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/inc/autoload.function.php b/inc/autoload.function.php
+index 12fc186..3fce416 100644
+--- a/inc/autoload.function.php
++++ b/inc/autoload.function.php
+@@ -336,12 +336,12 @@ function glpi_autoload($classname) {
+    }
+ }
+ 
+-// Use spl autoload to allow stackable autoload.
+-spl_autoload_register('glpi_autoload');
+-
+ // composer autoload
+ $autoload = dirname(__DIR__) . '/vendor/autoload.php';
+ if (!file_exists($autoload)) {
+    die('Run "composer install --no-dev" in the glpi tree');
+ }
+ require_once $autoload;
++
++// Use spl autoload to allow stackable autoload.
++spl_autoload_register('glpi_autoload', false, true);
+\ No newline at end of file
