@@ -1,0 +1,67 @@
+From ef8e4cb98cbd0e2c59b0059141559178e840b882 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Mon, 26 Sep 2016 11:07:53 +0200
+Subject: [PATCH] fix 1057, ensure tests use correct configuration
+
+---
+ .travis.yml         | 3 +--
+ phpunit.xml.dist    | 1 +
+ tests/bootstrap.php | 8 ++++----
+ tests/router.php    | 4 ++++
+ 4 files changed, 10 insertions(+), 6 deletions(-)
+ create mode 100644 tests/router.php
+
+diff --git a/.travis.yml b/.travis.yml
+index a4401e8..ffdef3a 100644
+--- a/.travis.yml
++++ b/.travis.yml
+@@ -8,8 +8,7 @@ before_script:
+   - composer install --no-dev
+   - mysql -u root -e 'create database glpitest;'
+   - php tools/cliinstall.php --lang=en_US --db=glpitest --user=root --tests
+-  - cp tests/config_db.php config/
+-  - php -S localhost:8088 > /dev/null 2>&1 &
++  - php -S localhost:8088 tests/router.php &>/dev/null &
+ 
+ script:
+   - mysql -u root -e 'select version();'
+diff --git a/phpunit.xml.dist b/phpunit.xml.dist
+index a25f179..e7d33da 100644
+--- a/phpunit.xml.dist
++++ b/phpunit.xml.dist
+@@ -16,5 +16,6 @@
+     <php>
+         <const name="GLPI_CONFIG_DIR" value="./tests" />
+         <const name="GLPI_LOG_DIR"    value="./tests/files/_log" />
++        <const name="GLPI_URI"        value="http://localhost:8088" />
+     </php>
+ </phpunit>
+diff --git a/tests/bootstrap.php b/tests/bootstrap.php
+index bfbe957..c4dbf3f 100644
+--- a/tests/bootstrap.php
++++ b/tests/bootstrap.php
+@@ -137,10 +137,10 @@ function loadDataset() {
+    $CFG_GLPI['root_doc']            = '/glpi';
+ 
+    // need to set theses in DB, because tests for API use http call and this bootstrap file is not called
+-   Config::setConfigurationValues('core', ['url_base'     => 'http://localhost:8088',
+-                                           'url_base_api' => 'http://localhost:8088/apirest.php']);
+-   $CFG_GLPI['url_base']      = 'http://localhost:8088';
+-   $CFG_GLPI['url_base_api'] = 'http://localhost:8088/apirest.php';
++   Config::setConfigurationValues('core', ['url_base'     => GLPI_URI,
++                                           'url_base_api' => GLPI_URI . '/apirest.php']);
++   $CFG_GLPI['url_base']      = GLPI_URI;
++   $CFG_GLPI['url_base_api']  = GLPI_URI . '/apirest.php';
+ 
+    @mkdir(GLPI_LOG_DIR, 0755, true);
+ 
+diff --git a/tests/router.php b/tests/router.php
+new file mode 100644
+index 0000000..8b39e8c
+--- /dev/null
++++ b/tests/router.php
+@@ -0,0 +1,4 @@
++<?php
++define('GLPI_CONFIG_DIR',     __DIR__);
++
++return false;

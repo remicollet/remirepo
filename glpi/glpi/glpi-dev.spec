@@ -55,6 +55,7 @@ Source4:        %{name}-nginx.conf
 Source5:        %{name}-fedora-autoloader.php
 
 Patch1:         %{name}-9.1-pr1056.patch
+Patch2:         %{name}-9.1-pr1058.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -180,6 +181,7 @@ techniciens grâce à une maintenance plus cohérente.
 %setup -q -n %{name}-%{gh_commit}
 
 %patch1 -p1
+%patch2 -p1
 
 grep %{version} config/define.php
 
@@ -298,8 +300,10 @@ done >%{name}.lang
 RET=0
 
 : Running a PHP server
-sed -e 's/localhost/127.0.0.1/' -i tests/bootstrap.php
-%{_bindir}/php -S 127.0.0.1:8088 &>/dev/null &
+sed -e 's/localhost:8088/127.0.0.1:8089/' phpunit.xml.dist >phpunit.xml
+
+%{_bindir}/php -S 127.0.0.1:8089 tests/router.php &>/dev/null &
+
 PHPPID=$!
 
 : Running a MariaDB server
@@ -335,7 +339,6 @@ cp %{SOURCE12} config/config_path.php
 
 : Run upstream test suite
 php tools/cliinstall.php --host=127.0.0.1:3308 --db=glpitest --user=root --tests --force --lang=en_US || RET=1
-cp tests/config_db.php config/
 
 %{_bindir}/phpunit --verbose || RET=1
 
@@ -435,6 +438,8 @@ fi
   https://github.com/glpi-project/glpi/milestone/2?closed=1
 - add patch to ensure correct autolading
   open https://github.com/glpi-project/glpi/pull/1056
+- add patch to ensure test suite use local server
+  open https://github.com/glpi-project/glpi/pull/1058
 
 * Fri Sep 23 2016 Johan Cwiklinski <jcwiklinski@teclib.com> - 9.1-0.1.20160922gitf4143e3
 - First pre-build for 9.1 series
