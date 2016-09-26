@@ -238,7 +238,7 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}/%{_datadir}/%{name}
 cp -a COPYING.txt *.php *.js %{buildroot}/%{_datadir}/%{name}/
 
-for i in ajax css front inc install lib locales pics plugins scripts
+for i in ajax css front inc install lib locales pics plugins scripts vendor
 do   cp -ar $i %{buildroot}/%{_datadir}/%{name}/$i
 done
 
@@ -428,6 +428,7 @@ fi
 %{_datadir}/%{name}/pics
 %{_datadir}/%{name}/plugins
 %{_datadir}/%{name}/scripts
+%{_datadir}/%{name}/vendor
 %attr(2770,root,apache) %dir %{_localstatedir}/log/%{name}
 %dir %{_datadir}/%{name}/locales
 
