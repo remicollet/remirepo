@@ -32,8 +32,12 @@
 %global with_nginx     0
 %global with_httpd     0
 %endif
-#%global with_tests  0%{?_with_tests:1}
-%global with_tests  1
+%if 0%{?fedora} < 19 && 0%{?rhel} < 7
+# MySQL need another bootstrap method
+%global with_tests  0%{?_with_tests:1}
+%else
+%global with_tests  0%{!?_without_tests:1}
+%endif
 
 Name:           %{gh_project}
 Version:        9.1
