@@ -27,8 +27,8 @@
 %global gh_project   redis
 
 Name:             redis
-Version:          3.2.3
-Release:          4%{?dist}
+Version:          3.2.4
+Release:          1%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -269,6 +269,11 @@ fi
 
 
 %changelog
+* Mon Sep 26 2016 Remi Collet <remi@fedoraproject.org> - 3.2.4-1
+- Redis 3.2.4 - Released Mon Sep 26 08:58:21 CEST 2016
+- Upgrade urgency CRITICAL: Redis 3.2 and unstable contained
+  a security vulnerability fixed by this release.
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 3.2.3-4
 - move redis-shutdown to libexec
 - add missing LSB headers to init scripts
