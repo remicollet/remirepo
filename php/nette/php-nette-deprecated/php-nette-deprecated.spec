@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9e3cac96c0796c2404f7da0fb8537c78815b55e5
+%global gh_commit    eb5c8276824e83d2fa8ab92261ad95cf24361b4c
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.2
+Version:        2.3.3
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        APIs and features removed from Nette Framework
@@ -45,6 +45,7 @@ BuildRequires:  php-tokenizer
 #        "nette/robot-loader": "^2.2",
 #        "nette/safe-stream": "^2.2",
 #        "nette/utils": "^2.2",
+#        "nette/security": "^2.2",
 #        "latte/latte": "^2.2",
 #        "tracy/tracy": "^2.2",
 #        "nette/tester": "^1.1"
@@ -56,6 +57,7 @@ BuildRequires:  php-composer(%{gh_owner}/mail) >= 2.2
 BuildRequires:  php-composer(%{gh_owner}/robot-loader) >= 2.2
 BuildRequires:  php-composer(%{gh_owner}/safe-stream) >= 2.2
 BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.2
+BuildRequires:  php-composer(%{gh_owner}/security) >= 2.2
 BuildRequires:  php-composer(latte/latte) >= 2.2
 BuildRequires:  php-composer(tracy/tracy) >= 2.2
 BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.1
@@ -145,6 +147,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 27 2016 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
+- update to 2.3.3
+
 * Sun Nov  8 2015 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
 - update to 2.3.2
 
