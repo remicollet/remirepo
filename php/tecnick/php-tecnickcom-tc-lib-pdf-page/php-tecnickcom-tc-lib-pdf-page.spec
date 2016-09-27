@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    ed31eae6fa69ea179bfaa737a521512058de64ce
+%global gh_commit    7599ff50379dce56a55cc78d24a9bad5b98ed5b9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.2.1
+Version:        2.3.0
 Release:        1%{?dist}
 Summary:        PHP library containing PDF page formats and definitions
 
@@ -124,6 +124,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 27 2016 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
+- update to 2.3.0
+
 * Fri Sep  2 2016 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - update to 2.2.1
 - raise dependency on tecnickcom/tc-lib-color >= 1.12.1
