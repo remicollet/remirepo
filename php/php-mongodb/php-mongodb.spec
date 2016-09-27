@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    faf8a1d86b5c10684ef91fa6c81475b0c7f95240
+%global gh_commit    3c742f3ceffc4dc67fee02dc6ebfc2e7cb403b7c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     mongodb
 #global gh_date      20151102
@@ -22,11 +22,11 @@
 #global prever       beta2
 
 Name:           php-%{gh_owner}
-Version:        1.0.2
+Version:        1.0.3
 %if 0%{?gh_date}
 Release:        0.2.%{gh_date}git%{gh_short}%{?dist}
 %else
-Release:        2%{?dist}
+Release:        1%{?dist}
 %endif
 Summary:        MongoDB driver library
 
@@ -162,11 +162,13 @@ rm -rf %{buildroot}
 %doc README.md
 %doc RELEASE-*
 %doc docs
-%doc examples
 %{_datadir}/php/%{psr0}
 
 
 %changelog
+* Tue Sep 27 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- update to 1.0.3
+
 * Thu Jul 28 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-2
 - only run upstream test suite when build --with tests
 
