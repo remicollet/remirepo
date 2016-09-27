@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    659e277017006edf12d4fc86bf54a060e56c71ac
+%global gh_commit    313a0b7a1a702af1652ff5cc279741ff1228a15f
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,12 +17,10 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.4.0
+Version:        2.4.1
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette HTTP Component
-
-Patch0:         %{name}-upstream.patch
 
 Group:          Development/Libraries
 License:        BSD or GPLv2 or GPLv3
@@ -45,12 +43,12 @@ BuildRequires:  php-pcre
 BuildRequires:  php-session
 BuildRequires:  php-spl
 # From composer.json, "require-dev": {
-#               "nette/di": "^2.3",
+#               "nette/di": "^2.4",
 #               "nette/tester": "~2.0",
-#               "tracy/tracy": "^2.3"
-BuildRequires:  php-composer(%{gh_owner}/di) >= 2.3
+#               "tracy/tracy": "^2.4"
+BuildRequires:  php-composer(%{gh_owner}/di) >= 2.4
 BuildRequires:  php-composer(%{gh_owner}/tester) >= 2.0
-BuildRequires:  php-composer(tracy/tracy) >= 2.3
+BuildRequires:  php-composer(tracy/tracy) >= 2.4
 %endif
 
 # from composer.json, "require": {
@@ -84,8 +82,6 @@ To use this library, you just have to add, in your project:
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
-
-%patch0 -p1
 
 
 %build
@@ -159,6 +155,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 27 2016 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
+- update to 2.4.1
+
 * Tue Aug  2 2016 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
 - update to 2.4.0
 - raise dependency on PHP >= 5.6
