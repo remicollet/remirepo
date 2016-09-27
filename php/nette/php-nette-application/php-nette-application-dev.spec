@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    d47e06c90589184f8846fe7483a885b34168c370
+%global gh_commit    95433f75bf33dbbd779ef331161ddf1e38325bed
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,8 +17,8 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.4.1
-%global specrel 2
+Version:        2.4.2
+%global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Application MVC Component
 
@@ -163,8 +163,8 @@ if which php56; then
    php56 %{_bindir}/nette-tester --colors 0 -p php56 -C tests -s
    run=1
 fi
-if which php70; then
-   php70 %{_bindir}/nette-tester --colors 0 -p php70 -C tests -s
+if which php71; then
+   php71 %{_bindir}/nette-tester --colors 0 -p php71 -C tests -s
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -192,6 +192,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 27 2016 Remi Collet <remi@fedoraproject.org> - 2.4.2-1
+- update to 2.4.2
+
 * Thu Aug  4 2016 Remi Collet <remi@fedoraproject.org> - 2.4.1-2
 - fix autoloader
 
