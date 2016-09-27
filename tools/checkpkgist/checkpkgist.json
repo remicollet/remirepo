@@ -45,5 +45,6 @@
     "php-simplepie": "simplepie\/simplepie",
     "php-theseer-fxsl": "theseer\/fxsl",
     "php-cs-fixer": "friendsofphp\/php-cs-fixer",
-    "php-morris-lessql": "morris/lessql"
+    "php-morris-lessql": "morris\/lessql",
+    "phinx": "robmorgan\/phinx"
 }
