@@ -1,6 +1,6 @@
 # remirepo spec file for php-PsrLog, from Fedora:
 #
-# RPM spec file for php-PsrLog
+# Fedora spec file for php-PsrLog
 #
 # Copyright (c) 2013-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
@@ -34,7 +34,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 
 Requires:  php(language) >= 5.3.0
-# phpcompatinfo requires (computed from version 1.0.0)
+# phpcompatinfo requires (computed from version 1.0.1)
 Requires:  php-date
 Requires:  php-spl
 
@@ -100,6 +100,9 @@ cp -rp Psr %{buildroot}%{_datadir}/php/
 
 
 %changelog
+* Sun Sep 25 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.1-1
+- Updated to 1.0.1 (RHBZ #1377513)
+
 * Mon Sep 19 2016 Remi Collet <remi@fedoraproject.org> 1.0.1-1
 - update to 1.0.1
 
