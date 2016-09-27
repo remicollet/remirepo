@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-twig-extensions
 #
-# Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2014-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -48,9 +48,8 @@ BuildRequires: php-composer(phpunit/phpunit)
 ## composer.json
 BuildRequires: php-composer(symfony/translation) >= %{symfony_min_ver}
 BuildRequires: php-composer(twig/twig)           >= %{twig_min_ver}
-## phpcompatinfo (computed from version 1.3.0)
+## phpcompatinfo (computed from version 1.4.0)
 BuildRequires: php-date
-BuildRequires: php-intl
 BuildRequires: php-mbstring
 BuildRequires: php-pcre
 BuildRequires: php-spl
@@ -62,8 +61,7 @@ Requires:      php-composer(twig/twig)           <  %{twig_max_ver}
 # composer.json: optional
 Requires:      php-composer(symfony/translation) >= %{symfony_min_ver}
 Requires:      php-composer(symfony/translation) <  %{symfony_max_ver}
-# phpcompatinfo (computed from version 1.3.0)
-Requires:      php-intl
+# phpcompatinfo (computed from version 1.4.0)
 Requires:      php-mbstring
 Requires:      php-pcre
 Requires:      php-spl
@@ -144,6 +142,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 25 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.4.0-1
+- Updated to 1.4.0 (RHBZ #1378643)
+
 * Fri Sep 23 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - update to 1.4.0
 
