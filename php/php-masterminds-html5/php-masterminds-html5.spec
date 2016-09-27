@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-masterminds-html5
 #
-# Copyright (c) 2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2015-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,8 +12,8 @@
 
 %global github_owner     Masterminds
 %global github_name      html5-php
-%global github_version   2.1.2
-%global github_commit    8f782e0f01a6e33a319bdc8f6de9cfd6569979a4
+%global github_version   2.2.2
+%global github_commit    7866e93dcf0245de22378414e0c2c7350abc45af
 
 %global composer_vendor  masterminds
 %global composer_project html5
@@ -45,7 +45,7 @@ BuildRequires: %{_bindir}/phpab
 ## composer.json
 BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language) >= %{php_min_ver}
-## phpcompatinfo (computed from version 2.1.2)
+## phpcompatinfo (computed from version 2.2.2)
 BuildRequires: php-ctype
 BuildRequires: php-dom
 BuildRequires: php-iconv
@@ -59,7 +59,7 @@ BuildRequires: php-xml
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 2.1.2)
+# phpcompatinfo (computed from version 2.2.2)
 Requires:      php-ctype
 Requires:      php-dom
 Requires:      php-iconv
@@ -87,7 +87,7 @@ refactoring work, we began a new parser.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-# Docs
+: Docs
 mkdir -p docs/{Parser,Serializer}
 mv composer.json *.md docs/
 mv src/HTML5/Parser/*.md docs/Parser/
@@ -123,7 +123,18 @@ require __DIR__ . '/../test/autoload.php';
 AUTOLOAD
 
 : Run tests
-%{_bindir}/phpunit -v
+run=0
+if which php56; then
+   php56 %{_bindir}/phpunit
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit
+   run=1
+fi
+if [ $run -eq 0 ]; then
+   %{_bindir}/phpunit -v
+fi
 %else
 : Tests skipped
 %endif
@@ -142,6 +153,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 25 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.2.2-1
+- Updated to 2.2.2 (RHBZ #1378444)
+
 * Sun Jun 28 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.1.2-1
 - Updated to 2.1.2 (RHBZ #1229011)
 
