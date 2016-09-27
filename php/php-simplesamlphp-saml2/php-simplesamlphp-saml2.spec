@@ -12,8 +12,8 @@
 
 %global github_owner     simplesamlphp
 %global github_name      saml2
-%global github_version   2.2
-%global github_commit    0d6861bc2966249702e623d325609adb2a782612
+%global github_version   2.3
+%global github_commit    4853f1e7f69e428afc1843d4170bbaa1038199b4
 
 %global composer_vendor  simplesamlphp
 %global composer_project saml2
@@ -25,7 +25,7 @@
 %global mockery_max_ver 1.0
 # "psr/log": "~1.0"
 #     NOTE: Min version not 1.0 because autoloader required
-%global psr_log_min_ver 1.0.0-8
+%global psr_log_min_ver 1.0.1
 %global psr_log_max_ver 2.0
 # "robrichards/xmlseclibs": "^2.0"
 %global robrichards_xmlseclibs_min_ver 2.0
@@ -38,7 +38,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       SAML2 PHP library from SimpleSAMLphp
 
 Group:         Development/Libraries
@@ -53,18 +53,16 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: php(language)                        >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-#BuildRequires: php-composer(psr/log)                >= %%{psr_log_min_ver}
-BuildRequires: php-PsrLog                           >= %{psr_log_min_ver}
+BuildRequires: php-composer(psr/log)                >= %{psr_log_min_ver}
 BuildRequires: php-composer(robrichards/xmlseclibs) >= %{robrichards_xmlseclibs_min_ver}
 BuildRequires: php-dom
 BuildRequires: php-openssl
 BuildRequires: php-composer(mockery/mockery)        >= %{mockery_min_ver}
-## phpcompatinfo (computed from version 2.2)
+## phpcompatinfo (computed from version 2.3)
 BuildRequires: php-date
 BuildRequires: php-libxml
 BuildRequires: php-mcrypt
 BuildRequires: php-pcre
-BuildRequires: php-soap
 BuildRequires: php-spl
 BuildRequires: php-zlib
 ## Autoloader
@@ -74,17 +72,15 @@ BuildRequires: php-composer(symfony/class-loader)
 # composer.json
 Requires:      php(language)                        >= %{php_min_ver}
 Requires:      php-composer(psr/log)                <  %{psr_log_max_ver}
-#Requires:      php-composer(psr/log)                >= %%{psr_log_min_ver}
-Requires:      php-PsrLog                           >= %{psr_log_min_ver}
+Requires:      php-composer(psr/log)                >= %{psr_log_min_ver}
 Requires:      php-composer(robrichards/xmlseclibs) <  %{robrichards_xmlseclibs_max_ver}
 Requires:      php-composer(robrichards/xmlseclibs) >= %{robrichards_xmlseclibs_min_ver}
 Requires:      php-dom
 Requires:      php-openssl
-# phpcompatinfo (computed from version 2.2)
+# phpcompatinfo (computed from version 2.3)
 Requires:      php-date
 Requires:      php-libxml
 Requires:      php-pcre
-Requires:      php-soap
 Requires:      php-spl
 Requires:      php-zlib
 # Autoloader
@@ -196,6 +192,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 25 2016 Shawn Iwinski <shawn@iwin.ski> - 2.3-1
+- Update to 2.3 (RHBZ #1376301)
+
 * Sat Jul 30 2016 Remi Collet <remi@remirepo.net> - 2.2-2
 - backport for remirepo
 

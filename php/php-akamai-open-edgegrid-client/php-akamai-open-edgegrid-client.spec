@@ -12,8 +12,8 @@
 
 %global github_owner     akamai-open
 %global github_name      AkamaiOPEN-edgegrid-php
-%global github_version   0.4.6
-%global github_commit    00bd7dbe59d52c19c9a465373cb58d2a65e46ec6
+%global github_version   0.5.0
+%global github_commit    6afbda43ade9dcb6e0335352aeedb51401464d96
 
 %global composer_vendor  akamai-open
 %global composer_project edgegrid-client
@@ -28,7 +28,7 @@
 %global monolog_max_ver 2.0
 # "psr/log": "^1.0"
 #     NOTE: Min version not 1.0 because autoloader required
-%global psr_log_min_ver 1.0.0-8
+%global psr_log_min_ver 1.0.1
 %global psr_log_max_ver 2.0
 
 # Build using "--without tests" to disable tests
@@ -52,15 +52,14 @@ BuildArch:     noarch
 BuildRequires: php-cli
 ## composer.json
 BuildRequires: php-composer(guzzlehttp/guzzle) >= %{guzzle_min_ver}
-#BuildRequires: php-composer(psr/log)           >= %%{psr_log_min_ver}
-BuildRequires: php-PsrLog                      >= %{psr_log_min_ver}
+BuildRequires: php-composer(psr/log)           >= %{psr_log_min_ver}
 # Tests
 %if %{with_tests}
 ## composer.json
 BuildRequires: php(language)                   >= %{php_min_ver}
 BuildRequires: php-composer(monolog/monolog)   >= %{monolog_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 0.4.6)
+## phpcompatinfo (computed from version 0.5.0)
 BuildRequires: php-date
 BuildRequires: php-hash
 BuildRequires: php-json
@@ -76,10 +75,9 @@ Requires:      php-composer(guzzlehttp/guzzle) >= %{guzzle_min_ver}
 Requires:      php-composer(guzzlehttp/guzzle) <  %{guzzle_max_ver}
 Requires:      php-composer(monolog/monolog)   >= %{monolog_min_ver}
 Requires:      php-composer(monolog/monolog)   <  %{monolog_max_ver}
-#Requires:      php-composer(psr/log)           >= %%{psr_log_min_ver}
-Requires:      php-PsrLog                      >= %{psr_log_min_ver}
+Requires:      php-composer(psr/log)           >= %{psr_log_min_ver}
 Requires:      php-composer(psr/log)           <  %{psr_log_max_ver}
-# phpcompatinfo (computed from version 0.4.6)
+# phpcompatinfo (computed from version 0.5.0)
 Requires:      php-date
 Requires:      php-hash
 Requires:      php-json
@@ -208,6 +206,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 25 2016 Shawn Iwinski <shawn@iwin.ski> - 0.5.0-1
+- Updated to 0.5.0 (RHBZ #1376273)
+
 * Sun Sep 11 2016 Shawn Iwinski <shawn@iwin.ski> - 0.4.6-1
 - Updated to 0.4.6 (RHBZ #1371149)
 
