@@ -12,8 +12,8 @@
 
 %global github_owner     simplesamlphp
 %global github_name      saml2
-%global github_version   1.9
-%global github_commit    be2b348c46cceb311a743a33fb51035158f6f69a
+%global github_version   1.10
+%global github_commit    6a4b1eece19b067b17fff718176689b82dc89fb9
 
 %global composer_vendor  simplesamlphp
 %global composer_project saml2
@@ -25,7 +25,7 @@
 %global mockery_max_ver 1.0
 # "psr/log": "~1.0"
 #     NOTE: Min version not 1.0 because autoloader required
-%global psr_log_min_ver 1.0.0-8
+%global psr_log_min_ver 1.0.1
 %global psr_log_max_ver 2.0
 # "robrichards/xmlseclibs": "^1.3"
 %global robrichards_xmlseclibs_min_ver 1.3
@@ -53,14 +53,13 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: php(language)                        >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-#BuildRequires: php-composer(psr/log)                >= %%{psr_log_min_ver}
-BuildRequires: php-PsrLog                           >= %{psr_log_min_ver}
+BuildRequires: php-composer(psr/log)                >= %{psr_log_min_ver}
 BuildRequires: php-composer(robrichards/xmlseclibs) <  %{robrichards_xmlseclibs_max_ver}
 BuildRequires: php-composer(robrichards/xmlseclibs) >= %{robrichards_xmlseclibs_min_ver}
 BuildRequires: php-dom
 BuildRequires: php-openssl
 BuildRequires: php-composer(mockery/mockery)        >= %{mockery_min_ver}
-## phpcompatinfo (computed from version 1.9)
+## phpcompatinfo (computed from version 1.10)
 BuildRequires: php-date
 BuildRequires: php-libxml
 BuildRequires: php-mcrypt
@@ -75,13 +74,12 @@ BuildRequires: php-composer(theseer/autoload)
 # composer.json
 Requires:      php(language)                        >= %{php_min_ver}
 Requires:      php-composer(psr/log)                <  %{psr_log_max_ver}
-#Requires:      php-composer(psr/log)                >= %%{psr_log_min_ver}
-Requires:      php-PsrLog                           >= %{psr_log_min_ver}
+Requires:      php-composer(psr/log)                >= %{psr_log_min_ver}
 Requires:      php-composer(robrichards/xmlseclibs) <  %{robrichards_xmlseclibs_max_ver}
 Requires:      php-composer(robrichards/xmlseclibs) >= %{robrichards_xmlseclibs_min_ver}
 Requires:      php-dom
 Requires:      php-openssl
-# phpcompatinfo (computed from version 1.9)
+# phpcompatinfo (computed from version 1.10)
 Requires:      php-date
 Requires:      php-libxml
 Requires:      php-pcre
@@ -171,6 +169,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 25 2016 Shawn Iwinski <shawn@iwin.ski> - 1.10-1
+- Update to 1.10 (RHBZ #1376300)
+
 * Sat Jul 30 2016 Remi Collet <remi@remirepo.net> - 1.9.1
 - backport for remirepo
 
