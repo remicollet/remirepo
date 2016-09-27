@@ -1,0 +1,28 @@
+{
+	"name": "morris/lessql",
+	"description": "LessQL: The agile PHP ORM alternative",
+	"keywords": [ "orm", "notorm", "sql", "pdo", "database" ],
+	"license": "MIT",
+	"homepage": "http://github.com/morris/lessql",
+	"authors": [
+		{
+			"name": "Morris Brodersen",
+			"homepage": "http://morrisbrodersen.de"
+		}
+	],
+
+	"autoload": {
+		"psr-0": {
+			"": "src"
+		}
+	},
+
+	"require": {
+		"php": ">=5.3.4"
+	},
+
+	"require-dev": {
+		"phpunit/phpunit": "~4.6",
+		"codeclimate/php-test-reporter": "dev-master"
+	}
+}

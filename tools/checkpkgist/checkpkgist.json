@@ -44,5 +44,6 @@
     "php-pimple-lib": "pimple\/pimple",
     "php-simplepie": "simplepie\/simplepie",
     "php-theseer-fxsl": "theseer\/fxsl",
-    "php-cs-fixer": "friendsofphp\/php-cs-fixer"
+    "php-cs-fixer": "friendsofphp\/php-cs-fixer",
+    "php-morris-lessql": "morris/lessql"
 }
