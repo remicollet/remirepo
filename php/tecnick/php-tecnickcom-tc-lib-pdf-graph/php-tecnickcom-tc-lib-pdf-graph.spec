@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    00b479529d98adacbbb9cc3a7ef7d6d73eb9cd60
+%global gh_commit    b5bf185951f019599f1d0729130125808adffd2c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.4.1
+Version:        1.4.2
 Release:        1%{?dist}
 Summary:        PHP library containing PDF graphic and geometric methods
 
@@ -122,6 +122,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Sep 27 2016 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
+- update to 1.4.2
+
 * Fri Sep  2 2016 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
 - update to 1.4.1
 - raise dependency on tecnickcom/tc-lib-color >= 1.12.1
