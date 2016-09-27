@@ -95,7 +95,7 @@ BuildRequires: php-openssl
 BuildRequires: php-pcre
 BuildRequires: php-simplexml
 BuildRequires: php-spl
-## phpcompatinfo (computed from version 3.18.24)
+## phpcompatinfo (computed from version 3.19.10)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -117,7 +117,7 @@ Requires:      php-composer(guzzlehttp/psr7)        <  %{guzzle_psr7_max_ver}
 Requires:      php-composer(guzzlehttp/psr7)        >= %{guzzle_psr7_min_ver}
 Requires:      php-composer(mtdowling/jmespath.php) <  %{jmespath_max_ver}
 Requires:      php-composer(mtdowling/jmespath.php) >= %{jmespath_min_ver}
-# phpcompatinfo (computed from version 3.18.24)
+# phpcompatinfo (computed from version 3.19.10)
 Requires:      php-date
 Requires:      php-filter
 Requires:      php-hash
@@ -285,6 +285,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Sep 25 2016 Shawn Iwinski <shawn@iwin.ski> - 3.19.10-1
+- Updated to 3.19.10 (RHBZ #1376241)
+
 * Fri Sep 23 2016 Remi Collet <remi@remirepo.net> - 3.19.10-1
 - update to 3.19.10
 
