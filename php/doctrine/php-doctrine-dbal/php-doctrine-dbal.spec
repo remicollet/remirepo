@@ -13,8 +13,8 @@
 
 %global github_owner     doctrine
 %global github_name      dbal
-%global github_version   2.5.4
-%global github_commit    abbdfd1cff43a7b99d027af3be709bc8fc7d4769
+%global github_version   2.5.5
+%global github_commit    9f8c05cd5225a320d56d4bfdb4772f10d045a0c9
 
 %global composer_vendor  doctrine
 %global composer_project dbal
@@ -25,9 +25,9 @@
 #     NOTE: Min version not 2.4 because autoloader required
 %global doctrine_common_min_ver 2.5.0
 %global doctrine_common_max_ver 2.7
-# "symfony/console": "2.*"
+# "symfony/console": "2.*||^3.0"
 %global symfony_console_min_ver 2.0
-%global symfony_console_max_ver 3.0
+%global symfony_console_max_ver 4
 
 %{!?phpdir:  %global phpdir  %{_datadir}/php}
 
@@ -57,6 +57,9 @@ Source1:       %{name}-get-source.sh
 # 2) Auto-load using Doctrine\Common\ClassLoader
 Patch0:        %{name}-bin.patch
 
+# Fix test suite using PHPUnit 5.4
+Patch1:        %{name}-phpunit54.patch
+
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 # Tests
@@ -69,7 +72,7 @@ BuildRequires: php-composer(doctrine/common) <  %{doctrine_common_max_ver}
 ## composer.json (optional)
 BuildRequires: php-composer(symfony/console) >= %{symfony_console_min_ver}
 BuildRequires: php-composer(symfony/console) <  %{symfony_console_max_ver}
-## phpcompatinfo (computed from version 2.5.4)
+## phpcompatinfo (computed from version 2.5.5)
 BuildRequires: php-date
 BuildRequires: php-json
 BuildRequires: php-pcre
@@ -85,7 +88,7 @@ Requires:      php-composer(doctrine/common) <  %{doctrine_common_max_ver}
 # composer.json (optional)
 Requires:      php-composer(symfony/console) >= %{symfony_console_min_ver}
 Requires:      php-composer(symfony/console) <  %{symfony_console_max_ver}
-# phpcompatinfo (computed from version 2.5.4)
+# phpcompatinfo (computed from version 2.5.5)
 Requires:      php-date
 Requires:      php-json
 Requires:      php-pcre
@@ -120,6 +123,10 @@ Autoloader: %{phpdir}/Doctrine/DBAL/autoload.php
 
 : Patch bin script
 %patch0 -p1
+
+if %{_bindir}/phpunit --atleast-version 5.4; then
+%patch1 -p0
+fi
 
 : Remove empty file
 rm -f lib/Doctrine/DBAL/README.markdown
@@ -182,11 +189,20 @@ $fedoraClassLoader->addPrefix(
 );
 BOOTSTRAP
 
-%{_bindir}/phpunit
-
-if which php70; then
-   php70 %{_bindir}/phpunit
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -207,6 +223,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Sep 26 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.5.5-1
+- Updated to 2.5.5 (RHBZ #1374891)
+
+* Mon Jun 13 2016 Remi Collet <remi@fedoraproject.org> - 2.5.4-2
+- add workaround for test suite with PHPUnit 5.4
+
 * Mon Mar 14 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.5.4-1
 - Updated to 2.5.4 (RHBZ #1153987)
 - Added autoloader
