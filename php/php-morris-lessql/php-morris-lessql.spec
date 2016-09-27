@@ -17,11 +17,11 @@
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        0.3.4
 Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
-Summary:        LessQL: The agile PHP ORM alternative
+Summary:        The agile PHP ORM alternative
 
 Group:          Development/Libraries
 License:        MIT
-URL:            https://github.com/%{gh_owner}/%{gh_project}
+URL:            http://lessql.net/
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{?gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
