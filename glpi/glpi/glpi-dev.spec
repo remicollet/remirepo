@@ -32,16 +32,18 @@
 %global with_nginx     0
 %global with_httpd     0
 %endif
+# remirepo:4
 %if 0%{?fedora} < 19 && 0%{?rhel} < 7
 # MySQL need another bootstrap method
 %global with_tests  0%{?_with_tests:1}
 %else
 %global with_tests  0%{!?_without_tests:1}
+# remirepo:1
 %endif
 
 Name:           %{gh_project}
 Version:        9.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
@@ -80,6 +82,7 @@ BuildRequires:  php-composer(iamcal/lib_autolink)       >= 1.7
 BuildRequires:  php-composer(sabre/vobject)             >= 3.4
 BuildRequires:  php-composer(michelf/php-markdown)      >= 1.6
 BuildRequires:  php-composer(true/punycode)             >= 2
+# See https://bugzilla.redhat.com/1353451
 BuildRequires:  php-simplepie
 # remirepo:1
 BuildRequires:  php-composer(simplepie/simplepie)       >= 1.4
@@ -87,8 +90,10 @@ BuildRequires:  php-composer(phpmailer/phpmailer)       >= 5.2
 BuildRequires:  php-composer(tecnickcom/tcpdf)          >= 6.2
 BuildRequires:  php-mysqli
 BuildRequires:  php-xmlrpc
+# remirepo:1
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 BuildRequires:  php-composer(zetacomponents/graph)
+# remirepo:1
 %endif
 %endif
 
@@ -142,9 +147,11 @@ Requires:       php-composer(simplepie/simplepie)       >= 1.4
 Requires:       php-composer(phpmailer/phpmailer)       >= 5.2
 Requires:       php-composer(tecnickcom/tcpdf)          >= 6.2
 
+# remirepo:1
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 Requires:       php-composer(zetacomponents/graph)
 Requires:       gnu-free-sans-fonts
+# remirepo:3
 %else
 Requires:       freefont
 %endif
@@ -199,12 +206,14 @@ rm -rf lib/htmlawed
 : bundled JS libraries
 ls lib
 
+# remirepo:5
 %if 0%{?fedora} < 9 && 0%{?rhel} < 6
 # fix font path on old version
 sed -e '/GLPI_FONT_FREESANS/s/gnu-free/freefont/' \
     %{SOURCE2} >config/config_path.php
 %else
 cp  %{SOURCE2}  config/config_path.php
+# remirepo:1
 %endif
 
 mkdir vendor
@@ -240,7 +249,7 @@ rm -rf %{buildroot}
 
 # ===== application =====
 mkdir -p %{buildroot}/%{_datadir}/%{name}
-cp -a COPYING.txt *.php *.js %{buildroot}/%{_datadir}/%{name}/
+cp -a COPYING.txt *.php *.js apirest.md %{buildroot}/%{_datadir}/%{name}/
 
 for i in ajax css front inc install lib locales pics plugins scripts vendor
 do   cp -ar $i %{buildroot}/%{_datadir}/%{name}/$i
@@ -271,6 +280,7 @@ mkdir -p %{buildroot}%{_localstatedir}/log
 mv %{buildroot}/%{_localstatedir}/lib/%{name}/files/_log %{buildroot}%{_localstatedir}/log/%{name}
 
 install -Dpm 0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
+# remirepo:4
 %if 0%{?rhel} == 5 || 0%{?rhel} == 6
 : Remove "su" option from logrotate configuration file - requires logrotate 3.8+
 sed -e '/su /d' -i %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
@@ -366,12 +376,14 @@ rm -rf %{buildroot}
 %if %{useselinux}
 (
 # New File context
+# remirepo:4
 %if 0%{?rhel} == 5
 semanage fcontext -a -s system_u -t httpd_sys_script_rw_t  -r s0 "%{_sysconfdir}/%{name}(/.*)?"
 semanage fcontext -a -s system_u -t httpd_sys_script_rw_t  -r s0 "%{_localstatedir}/lib/%{name}(/.*)?"
 %else
 semanage fcontext -a -s system_u -t httpd_sys_rw_content_t -r s0 "%{_sysconfdir}/%{name}(/.*)?"
 semanage fcontext -a -s system_u -t httpd_var_lib_t        -r s0 "%{_localstatedir}/lib/%{name}(/.*)?"
+# remirepo:1
 %endif
 semanage fcontext -a -s system_u -t httpd_sys_content_t    -r s0 "%{_datadir}/%{name}(/.*)?"
 semanage fcontext -a -s system_u -t httpd_log_t            -r s0 "%{_localstatedir}/log/%{name}(/.*)?"
@@ -420,6 +432,7 @@ fi
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/*.php
 %{_datadir}/%{name}/*.js
+%{_datadir}/%{name}/apirest.md
 # License file required by installation process
 %{_datadir}/%{name}/COPYING.txt
 %{_datadir}/%{name}/ajax
@@ -438,6 +451,9 @@ fi
 
 
 %changelog
+* Wed Sep 28 2016 Remi Collet <remi@fedoraproject.org> - 9.1-2
+- missing API documentation
+
 * Mon Sep 26 2016 Remi Collet <remi@fedoraproject.org> - 9.1-1
 - update to 9.1
   https://github.com/glpi-project/glpi/milestone/2?closed=1
