@@ -10,7 +10,7 @@
 %global lockname     ocsinventoryng.lock
 
 Name:           glpi-ocsinventoryng
-Version:        1.2.2
+Version:        1.2.3
 Release:        1%{?dist}
 Summary:        Plugin to synchronize GLPI with OCS Inventory NG
 
@@ -25,7 +25,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
 
-Requires:       glpi >= 0.90
+Requires:       glpi >= 9.1
 Requires:       glpi <  9.2
 Requires:       crontabs
 Requires:       php-cli
@@ -83,6 +83,9 @@ EOF
 # fix perms
 find %{pluginname} -type f -exec chmod -x {} \;
 chmod +x %{pluginname}/scripts/*.sh
+
+# Display compatibility check
+grep version_compare %{pluginname}/setup.php
 
 
 %build
@@ -153,6 +156,8 @@ grep %{lockname} %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}/setup.php |
 %dir %{_datadir}/glpi/plugins/%{pluginname}/locales
 %{_datadir}/glpi/plugins/%{pluginname}/*.php
 %{_datadir}/glpi/plugins/%{pluginname}/ajax
+%{_datadir}/glpi/plugins/%{pluginname}/css
+%{_datadir}/glpi/plugins/%{pluginname}/files
 %{_datadir}/glpi/plugins/%{pluginname}/front
 %{_datadir}/glpi/plugins/%{pluginname}/inc
 %{_datadir}/glpi/plugins/%{pluginname}/install
@@ -165,6 +170,9 @@ grep %{lockname} %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}/setup.php |
 
 
 %changelog
+* Wed Sep 28 2016 Remi Collet <remi@fedoraproject.org> - 1.2.3-1
+- Update to 1.2.3 for GLPI 9.1
+
 * Fri Sep 16 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
 - Update to 1.2.2 for GLPI 0.90 and 9.1
 - sources from github
