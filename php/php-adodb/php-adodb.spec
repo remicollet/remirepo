@@ -1,17 +1,19 @@
-%global         tarballversion %(echo %{version} | tr -d '.')
+%{!?_httpd_contentdir: %{expand: %%global _httpd_contentdir /var/www}}
 
 Name:           php-adodb
 Summary:        Database abstraction layer for PHP
-Version:        5.15
-Release:        1%{?dist}
+Version:        5.20.6
+Release:        2%{?dist}
 
 License:        BSD or LGPLv2+
-URL:            http://adodb.sf.net
+URL:            http://adodb.org
 Group:          Development/Libraries
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+# for macros
+BuildRequires:  httpd-devel
 
-Source0:        http://downloads.sourceforge.net/adodb/adodb%{tarballversion}.zip
+Source0:        http://downloads.sourceforge.net/adodb/adodb-%{version}.tar.gz
 
 Requires:       php-common
 
@@ -29,24 +31,27 @@ switch DBs without changing code.
 %prep
 %setup -q -n adodb5
 
+
 %build
 # fix dir perms
 find . -type d | xargs chmod 755
 # fix file perms
 find . -type f | xargs chmod 644
 
+
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT%{_var}/www/icons
+install -d $RPM_BUILD_ROOT%{_httpd_contentdir}/icons
 install -d $RPM_BUILD_ROOT%{_datadir}/php/adodb
 cp -pr * $RPM_BUILD_ROOT%{_datadir}/php/adodb/
 
-install -m644 cute_icons_for_site/* $RPM_BUILD_ROOT%{_var}/www/icons/
+install -m644 cute_icons_for_site/* $RPM_BUILD_ROOT%{_httpd_contentdir}/icons
 
 # cleanup
 rm -rf $RPM_BUILD_ROOT%{_datadir}/php/adodb/cute_icons_for_site
 rm -rf $RPM_BUILD_ROOT%{_datadir}/php/adodb/docs
+rm -rf $RPM_BUILD_ROOT%{_datadir}/php/adodb/tests
 rm -f $RPM_BUILD_ROOT%{_datadir}/adodb/*.txt
 
 %clean
@@ -54,11 +59,22 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc *.txt docs/*
+%{!?_licensedir:%global license %%doc}
+%license LICENSE.md
+%doc README.md docs
 %{_datadir}/php/adodb
-%{_var}/www/icons/*
+%{_httpd_contentdir}/icons/*
+
 
 %changelog
+* Tue Sep 20 2016 Gianluca Sforna <giallu@gmail.com> - 5.20.6-2
+- update to latest release
+- fix for CVE-2016-7405 (#1376365)
+- spec file clean up
+
+* Tue Sep  6 2016 Gianluca Sforna <giallu@gmail.com> - 5.15-10
+- fix for CVE-2016-4855 (#1373374)
+
 * Sat Feb 11 2012 Remi Collet <RPMS@FamilleCollet.com> - 5.15-1
 - upstream 5.15, rebuild for remi repository
 
