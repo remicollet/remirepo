@@ -51,12 +51,22 @@ Requires:      %{?scl_prefix}php(pdo-abi)  = %{php_pdo_api}
 Requires:      %{?scl_prefix}php-pdo%{?_isa}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:      %{?scl_prefix}php-pdo_%{extname}        = %{version}
-Provides:      %{?scl_prefix}php-pdo_%{extname}%{_isa} = %{version}
+Provides:      %{?scl_prefix}php-pdo_%{extname}              = %{version}
+Provides:      %{?scl_prefix}php-pdo_%{extname}%{_isa}       = %{version}
+# Also available as pecl packages
+Provides:      %{?scl_prefix}php-pecl(%{extname})            = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{extname})%{_isa}     = %{version}
+Provides:      %{?scl_prefix}php-pecl(pdo_%{extname})        = %{version}
+Provides:      %{?scl_prefix}php-pecl(pdo_%{extname})%{_isa} = %{version}
+
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 Obsoletes:     php70u-sqlsrv <= %{version}
 Obsoletes:     php70w-sqlsrv <= %{version}
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-sqlsrv <= %{version}
+Obsoletes:     php71w-sqlsrv <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
