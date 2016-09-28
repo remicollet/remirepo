@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    88c26372b1afac36d8db601cdf04ad8716f53d88
+%global gh_commit    96c6a07b05b716e89a44529d060bc7f5c263cb13
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150717
 %global gh_owner     composer
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-composer-spdx-licenses
-Version:        1.1.4
+Version:        1.1.5
 Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
 Summary:        SPDX licenses list and validation library
 
@@ -98,15 +98,29 @@ cp -pr res   %{buildroot}%{_datadir}/%{name}
 %check
 %if %{with_tests}
 export BUILDROOT_SPDX=%{buildroot}
+
+# remirepo:15
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit \
+      --bootstrap %{buildroot}%{php_home}/Composer/Spdx/autoload.php \
+      --verbose
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit \
+      --bootstrap %{buildroot}%{php_home}/Composer/Spdx/autoload.php \
+      --verbose
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/phpunit \
     --bootstrap %{buildroot}%{php_home}/Composer/Spdx/autoload.php \
     --verbose
-
-if which php70; then
-  php70 %{_bindir}/phpunit \
-    --bootstrap %{buildroot}%{php_home}/Composer/Spdx/autoload.php \
-    --verbose
+# remirepo:2
 fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -128,6 +142,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Sep 28 2016 Remi Collet <remi@fedoraproject.org> - 1.1.5-1
+- version 1.1.5 (new licenses)
+
 * Wed May  4 2016 Remi Collet <remi@fedoraproject.org> - 1.1.4-1
 - version 1.1.4 (new licenses)
 
