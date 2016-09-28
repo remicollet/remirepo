@@ -1,0 +1,115 @@
+#!/usr/bin/php
+<?php
+
+$ignorechangelog = false;
+$remi = false;
+$fedo = false;
+// Parsing arg
+for ($i=1 ; $i < $_SERVER['argc'] ; $i++) {
+	switch ($arg=$_SERVER['argv'][$i]) {
+		case '-n': 
+			$ignorechangelog = true;
+			break;
+		default:
+			if ($arg[0] == '-') {
+				die("Unkown option $arg\n");
+			} else if ($fedo) {
+				die("Too much arguments\n");
+			} else if ($remi) {
+				$fedo = $arg;
+			} else {
+				$remi = $arg;
+			}
+	}
+}
+
+if (!$remi) {
+   die("
+Usage  getspec [ -n ] <remispec>  [ <fedoraspec> ]
+
+Otions:
+    -n : no new changelog entry
+\n");
+}
+if (!$fedo) {
+    $fedo = basename($remi);
+}
+if (!file_exists($fedo) && strpos($fedo, '-dev')) {
+	$fedo = str_replace('-dev', '', $fedo);
+}
+
+printf("Reading remi's spec: %s\n", $remi);
+$rem = file_get_contents($remi);
+if (!$rem) {
+    die("Cannot read $remi\n");
+}
+$rem = explode("\n", $rem);
+
+printf("Reading fedora's spec: %s\n", $fedo);
+$fed = file_get_contents($fedo);
+if (!$fed) {
+    die("Cannot read $fedo\n");
+}
+$fed = explode("\n", $fed);
+
+printf("Merging\n");
+
+$out = [];
+$inchangelog = false;
+$empty = 0;
+$skip = 0;
+foreach ($rem as $l) {
+    if ($l == '%changelog') {
+        $inchangelog = true;
+    }
+    if (preg_match('/^BuildRoot:/', $l) ||
+        preg_match('/^rm -rf( )*%{buildroot}$/', $l) ||
+        preg_match('/^%defattr/', $l) ||
+        preg_match('/^# remirepo spec/', $l) ||
+        preg_match('/%clean/', $l)) {
+        continue;
+    }
+	if (preg_match("/# remirepo:([0-9]+)/", $l, $reg)) {
+		$skip = $reg[1];
+		continue;
+	}
+	if ($skip) {
+		$skip--;
+		continue;
+	}
+    if ($l) {
+        $out[] = $l;
+        $empty = 0;
+    } else {
+        if ($empty < 2) {
+            $out[] = $l;
+        }
+        $empty++;
+    }
+    
+    if ($inchangelog) {
+		if ($ignorechangelog) {
+		    // After entering changelog
+	        break;
+		}
+		if (!$l) { 
+		    // After 1st new Changelog entry
+	        break;
+		}
+    }
+}
+
+$inchangelog = false;
+foreach ($fed as $l) {
+    if ($l == '%changelog') {
+        $inchangelog = true;
+        continue;
+    }    
+    if ($inchangelog) {
+        $out[] = $l;
+    }
+}
+
+printf("Saving $fedo\n");
+file_put_contents($fedo, implode("\n", $out));
+
