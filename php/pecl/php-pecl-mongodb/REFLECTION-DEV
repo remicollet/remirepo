@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #139 mongodb version 1.2.0alpha1 ] {
+Extension [ <persistent> extension #147 mongodb version 1.2.0alpha3 ] {
 
   - INI {
     Entry [ mongodb.debug <ALL> ]
@@ -6,10 +6,9 @@ Extension [ <persistent> extension #139 mongodb version 1.2.0alpha1 ] {
     }
   }
 
-  - Constants [3] {
-    Constant [ string MONGODB_VERSION ] { 1.2.0alpha1 }
+  - Constants [2] {
+    Constant [ string MONGODB_VERSION ] { 1.2.0alpha3 }
     Constant [ string MONGODB_STABILITY ] { alpha }
-    Constant [ string BSON_NAMESPACE ] { MongoDB\BSON }
   }
 
   - Functions {
@@ -39,7 +38,576 @@ Extension [ <persistent> extension #139 mongodb version 1.2.0alpha1 ] {
     }
   }
 
-  - Classes [37] {
+  - Classes [38] {
+    Interface [ <internal:mongodb> interface MongoDB\BSON\Type ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Interface [ <internal:mongodb> interface MongoDB\BSON\Serializable extends MongoDB\BSON\Type ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:mongodb> abstract public method bsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Interface [ <internal:mongodb> interface MongoDB\BSON\Unserializable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [1] {
+        Method [ <internal:mongodb> abstract public method bsonUnserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $data ]
+          }
+        }
+      }
+    }
+
+    Interface [ <internal:mongodb> interface MongoDB\BSON\Persistable extends MongoDB\BSON\Unserializable, MongoDB\BSON\Serializable, MongoDB\BSON\Type ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:mongodb, inherits MongoDB\BSON\Unserializable> abstract public method bsonUnserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $data ]
+          }
+        }
+
+        Method [ <internal:mongodb, inherits MongoDB\BSON\Serializable> abstract public method bsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\Binary implements MongoDB\BSON\Type, Serializable ] {
+
+      - Constants [7] {
+        Constant [ integer TYPE_GENERIC ] { 0 }
+        Constant [ integer TYPE_FUNCTION ] { 1 }
+        Constant [ integer TYPE_OLD_BINARY ] { 2 }
+        Constant [ integer TYPE_OLD_UUID ] { 3 }
+        Constant [ integer TYPE_UUID ] { 4 }
+        Constant [ integer TYPE_MD5 ] { 5 }
+        Constant [ integer TYPE_USER_DEFINED ] { 128 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:mongodb> static public method __set_state ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $properties ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $data ]
+            Parameter #1 [ <required> $type ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method serialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serialized ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getData ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getType ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\Decimal128 implements MongoDB\BSON\Type, Serializable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:mongodb> static public method __set_state ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $properties ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method serialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serialized ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\Javascript implements MongoDB\BSON\Type, Serializable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:mongodb> static public method __set_state ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $properties ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $javascript ]
+            Parameter #1 [ <optional> $scope ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method serialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serialized ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getCode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getScope ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\MaxKey implements MongoDB\BSON\Type, Serializable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:mongodb> static public method __set_state ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $properties ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:mongodb, prototype Serializable> final public method serialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serialized ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\MinKey implements MongoDB\BSON\Type, Serializable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:mongodb> static public method __set_state ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $properties ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:mongodb, prototype Serializable> final public method serialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serialized ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\ObjectID implements MongoDB\BSON\Type, Serializable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:mongodb> static public method __set_state ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $properties ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $id ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getTimestamp ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method serialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serialized ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\Regex implements MongoDB\BSON\Type, Serializable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:mongodb> static public method __set_state ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $properties ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $pattern ]
+            Parameter #1 [ <required> $flags ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method serialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serialized ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getPattern ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getFlags ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\Timestamp implements MongoDB\BSON\Type, Serializable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:mongodb> static public method __set_state ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $properties ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $increment ]
+            Parameter #1 [ <required> $timestamp ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method serialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serialized ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\UTCDateTime implements MongoDB\BSON\Type, Serializable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:mongodb> static public method __set_state ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $properties ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $milliseconds ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method serialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serialized ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method toDateTime ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
     Class [ <internal:mongodb> final class MongoDB\Driver\Command ] {
 
       - Constants [0] {
@@ -274,7 +842,7 @@ Extension [ <persistent> extension #139 mongodb version 1.2.0alpha1 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $filter ]
-            Parameter #1 [ <optional> array $options ]
+            Parameter #1 [ <optional> array or NULL $options ]
           }
         }
 
@@ -286,11 +854,12 @@ Extension [ <persistent> extension #139 mongodb version 1.2.0alpha1 ] {
       }
     }
 
-    Class [ <internal:mongodb> final class MongoDB\Driver\ReadConcern ] {
+    Class [ <internal:mongodb> final class MongoDB\Driver\ReadConcern implements MongoDB\BSON\Serializable, MongoDB\BSON\Type ] {
 
-      - Constants [2] {
+      - Constants [3] {
         Constant [ string LOCAL ] { local }
         Constant [ string MAJORITY ] { majority }
+        Constant [ string LINEARIZABLE ] { linearizable }
       }
 
       - Static properties [0] {
@@ -316,7 +885,7 @@ Extension [ <persistent> extension #139 mongodb version 1.2.0alpha1 ] {
           }
         }
 
-        Method [ <internal:mongodb> public method __wakeup ] {
+        Method [ <internal:mongodb, prototype MongoDB\BSON\Serializable> final public method bsonSerialize ] {
 
           - Parameters [0] {
           }
@@ -324,7 +893,7 @@ Extension [ <persistent> extension #139 mongodb version 1.2.0alpha1 ] {
       }
     }
 
-    Class [ <internal:mongodb> final class MongoDB\Driver\ReadPreference ] {
+    Class [ <internal:mongodb> final class MongoDB\Driver\ReadPreference implements MongoDB\BSON\Serializable, MongoDB\BSON\Type ] {
 
       - Constants [5] {
         Constant [ integer RP_PRIMARY ] { 1 }
@@ -343,12 +912,19 @@ Extension [ <persistent> extension #139 mongodb version 1.2.0alpha1 ] {
       - Properties [0] {
       }
 
-      - Methods [4] {
+      - Methods [5] {
         Method [ <internal:mongodb, ctor> final public method __construct ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $mode ]
             Parameter #1 [ <optional> array or NULL $tagSets ]
+            Parameter #2 [ <optional> array or NULL $options ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getMaxStalenessMS ] {
+
+          - Parameters [0] {
           }
         }
 
@@ -364,7 +940,7 @@ Extension [ <persistent> extension #139 mongodb version 1.2.0alpha1 ] {
           }
         }
 
-        Method [ <internal:mongodb> public method __wakeup ] {
+        Method [ <internal:mongodb, prototype MongoDB\BSON\Serializable> final public method bsonSerialize ] {
 
           - Parameters [0] {
           }
@@ -563,7 +1139,7 @@ Extension [ <persistent> extension #139 mongodb version 1.2.0alpha1 ] {
       }
     }
 
-    Class [ <internal:mongodb> final class MongoDB\Driver\WriteConcern ] {
+    Class [ <internal:mongodb> final class MongoDB\Driver\WriteConcern implements MongoDB\BSON\Serializable, MongoDB\BSON\Type ] {
 
       - Constants [1] {
         Constant [ string MAJORITY ] { majority }
@@ -606,7 +1182,7 @@ Extension [ <persistent> extension #139 mongodb version 1.2.0alpha1 ] {
           }
         }
 
-        Method [ <internal:mongodb> public method __wakeup ] {
+        Method [ <internal:mongodb, prototype MongoDB\BSON\Serializable> final public method bsonSerialize ] {
 
           - Parameters [0] {
           }
@@ -1458,464 +2034,6 @@ Extension [ <persistent> extension #139 mongodb version 1.2.0alpha1 ] {
         }
 
         Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
-        }
-      }
-    }
-
-    Interface [ <internal:mongodb> interface MongoDB\BSON\Type ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [0] {
-      }
-    }
-
-    Interface [ <internal:mongodb> interface MongoDB\BSON\Serializable extends MongoDB\BSON\Type ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [1] {
-        Method [ <internal:mongodb> abstract public method bsonSerialize ] {
-
-          - Parameters [0] {
-          }
-        }
-      }
-    }
-
-    Interface [ <internal:mongodb> interface MongoDB\BSON\Unserializable ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [1] {
-        Method [ <internal:mongodb> abstract public method bsonUnserialize ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> array $data ]
-          }
-        }
-      }
-    }
-
-    Interface [ <internal:mongodb> interface MongoDB\BSON\Persistable extends MongoDB\BSON\Unserializable, MongoDB\BSON\Serializable, MongoDB\BSON\Type ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [2] {
-        Method [ <internal:mongodb, inherits MongoDB\BSON\Unserializable> abstract public method bsonUnserialize ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> array $data ]
-          }
-        }
-
-        Method [ <internal:mongodb, inherits MongoDB\BSON\Serializable> abstract public method bsonSerialize ] {
-
-          - Parameters [0] {
-          }
-        }
-      }
-    }
-
-    Class [ <internal:mongodb> final class MongoDB\BSON\Binary implements MongoDB\BSON\Type ] {
-
-      - Constants [7] {
-        Constant [ integer TYPE_GENERIC ] { 0 }
-        Constant [ integer TYPE_FUNCTION ] { 1 }
-        Constant [ integer TYPE_OLD_BINARY ] { 2 }
-        Constant [ integer TYPE_OLD_UUID ] { 3 }
-        Constant [ integer TYPE_UUID ] { 4 }
-        Constant [ integer TYPE_MD5 ] { 5 }
-        Constant [ integer TYPE_USER_DEFINED ] { 128 }
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [1] {
-        Method [ <internal:mongodb> static public method __set_state ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> array $properties ]
-          }
-        }
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [5] {
-        Method [ <internal:mongodb, ctor> final public method __construct ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $data ]
-            Parameter #1 [ <required> $type ]
-          }
-        }
-
-        Method [ <internal:mongodb> final public method __toString ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:mongodb> public method __wakeup ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:mongodb> final public method getData ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:mongodb> final public method getType ] {
-
-          - Parameters [0] {
-          }
-        }
-      }
-    }
-
-    Class [ <internal:mongodb> final class MongoDB\BSON\Javascript implements MongoDB\BSON\Type ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [1] {
-        Method [ <internal:mongodb> static public method __set_state ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> array $properties ]
-          }
-        }
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [5] {
-        Method [ <internal:mongodb, ctor> final public method __construct ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $javascript ]
-            Parameter #1 [ <optional> $scope ]
-          }
-        }
-
-        Method [ <internal:mongodb> final public method __toString ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:mongodb> public method __wakeup ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:mongodb> final public method getCode ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:mongodb> final public method getScope ] {
-
-          - Parameters [0] {
-          }
-        }
-      }
-    }
-
-    Class [ <internal:mongodb> final class MongoDB\BSON\MaxKey implements MongoDB\BSON\Type ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [1] {
-        Method [ <internal:mongodb> static public method __set_state ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> array $properties ]
-          }
-        }
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [1] {
-        Method [ <internal:mongodb> public method __wakeup ] {
-
-          - Parameters [0] {
-          }
-        }
-      }
-    }
-
-    Class [ <internal:mongodb> final class MongoDB\BSON\MinKey implements MongoDB\BSON\Type ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [1] {
-        Method [ <internal:mongodb> static public method __set_state ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> array $properties ]
-          }
-        }
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [1] {
-        Method [ <internal:mongodb> public method __wakeup ] {
-
-          - Parameters [0] {
-          }
-        }
-      }
-    }
-
-    Class [ <internal:mongodb> final class MongoDB\BSON\ObjectID implements MongoDB\BSON\Type ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [1] {
-        Method [ <internal:mongodb> static public method __set_state ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> array $properties ]
-          }
-        }
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [3] {
-        Method [ <internal:mongodb, ctor> final public method __construct ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <optional> $id ]
-          }
-        }
-
-        Method [ <internal:mongodb> final public method __toString ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:mongodb> public method __wakeup ] {
-
-          - Parameters [0] {
-          }
-        }
-      }
-    }
-
-    Class [ <internal:mongodb> final class MongoDB\BSON\Regex implements MongoDB\BSON\Type ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [1] {
-        Method [ <internal:mongodb> static public method __set_state ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> array $properties ]
-          }
-        }
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [5] {
-        Method [ <internal:mongodb, ctor> final public method __construct ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $pattern ]
-            Parameter #1 [ <required> $flags ]
-          }
-        }
-
-        Method [ <internal:mongodb> final public method __toString ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:mongodb> public method __wakeup ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:mongodb> final public method getPattern ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:mongodb> final public method getFlags ] {
-
-          - Parameters [0] {
-          }
-        }
-      }
-    }
-
-    Class [ <internal:mongodb> final class MongoDB\BSON\Timestamp implements MongoDB\BSON\Type ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [1] {
-        Method [ <internal:mongodb> static public method __set_state ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> array $properties ]
-          }
-        }
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [3] {
-        Method [ <internal:mongodb, ctor> final public method __construct ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $increment ]
-            Parameter #1 [ <required> $timestamp ]
-          }
-        }
-
-        Method [ <internal:mongodb> final public method __toString ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:mongodb> public method __wakeup ] {
-
-          - Parameters [0] {
-          }
-        }
-      }
-    }
-
-    Class [ <internal:mongodb> final class MongoDB\BSON\UTCDateTime implements MongoDB\BSON\Type ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [1] {
-        Method [ <internal:mongodb> static public method __set_state ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> array $properties ]
-          }
-        }
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [4] {
-        Method [ <internal:mongodb, ctor> final public method __construct ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $milliseconds ]
-          }
-        }
-
-        Method [ <internal:mongodb> final public method __toString ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:mongodb> public method __wakeup ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:mongodb> final public method toDateTime ] {
-
-          - Parameters [0] {
-          }
         }
       }
     }

@@ -25,7 +25,7 @@
 # After 40-smbclient.ini, see https://jira.mongodb.org/browse/PHPC-658
 %global ini_name   50-%{pecl_name}.ini
 %endif
-%global prever     alpha1
+%global prever     alpha3
 
 %ifarch x86_64
 %global with_tests   0%{?_with_tests:1}
@@ -36,10 +36,16 @@
 %global with_tests   0%{?_with_tests:1}
 %endif
 
+%if 0%{?fedora} > 99
+%global with_syslib 1
+%else
+%global with_syslib 0
+%endif
+
 Summary:        MongoDB driver for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.2.0
-Release:        0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        ASL 2.0
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -52,8 +58,10 @@ BuildRequires:  %{?scl_prefix}php-devel > 5.4
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  cyrus-sasl-devel
 BuildRequires:  openssl-devel
-BuildRequires:  pkgconfig(libbson-1.0)    >= 1.4
-BuildRequires:  pkgconfig(libmongoc-1.0)  >= 1.4
+%if %{with_syslib}
+BuildRequires:  pkgconfig(libbson-1.0)    >= 1.5
+BuildRequires:  pkgconfig(libmongoc-1.0)  >= 1.5
+%endif
 %if %{with_tests}
 BuildRequires:  mongodb-server
 %endif
@@ -119,7 +127,9 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
+%if %{with_syslib}
 %patch0 -p0 -b .rpm
+%endif
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define MONGODB_VERSION_S/{s/.* "//;s/".*$//;p}' php_phongo.h)
@@ -148,6 +158,7 @@ EOF
 peclbuild() {
   %{_bindir}/${1}ize
 
+%if %{with_syslib}
   # Ensure we use system library
   # Need to be removed only after phpize because of m4_include
   rm -r src/libbson
@@ -158,6 +169,13 @@ peclbuild() {
     --with-libbson \
     --with-libmongoc \
     --enable-mongodb
+
+%else
+
+  %configure \
+    --with-php-config=%{_bindir}/${1}-config \
+    --enable-mongodb
+%endif
 
   make %{?_smp_mflags}
 }
@@ -249,7 +267,6 @@ if [ -s server.pid ] ; then
 %if "%{mongo_version}" < "3.4"
     ### With mongodb 3.2
     rm ?TS/tests/manager/manager-debug-001.phpt
-    rm ?TS/tests/manager/manager-debug-003.phpt
     rm ?TS/tests/manager/manager-executequery-without-assignment.phpt
     rm ?TS/tests/standalone/bug0487-002.phpt
     rm ?TS/tests/standalone/bug0655.phpt
@@ -313,6 +330,10 @@ exit $ret
 
 
 %changelog
+* Wed Sep 28 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-0.2.alpha3
+- update to 1.2.0alpha3
+- use bundled libbson and libmongoc
+
 * Mon Aug  8 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-0.1.alpha1
 - update to 1.2.0alpha1
 - open https://jira.mongodb.org/browse/PHPC-762 missing symbols
