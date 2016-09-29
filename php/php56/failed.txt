@@ -1,13 +1,13 @@
-===== 5.6.26 (2016-09-15)
+===== 5.6.27RC1 (2016-09-29)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
-/var/lib/mock/el5i/build.log:Tests failed    :     7
+/var/lib/mock/el5i/build.log:Tests failed    :     8
 /var/lib/mock/el5x/build.log:Tests failed    :     2
 /var/lib/mock/el6i/build.log:Tests failed    :     5
 /var/lib/mock/el6x/build.log:Tests failed    :     0
 /var/lib/mock/el7x/build.log:Tests failed    :     0
-/var/lib/mock/fc22i/build.log:Tests failed    :    2
+/var/lib/mock/fc22i/build.log:Tests failed    :    3
 /var/lib/mock/fc22x/build.log:Tests failed    :    0
 /var/lib/mock/fc23i/build.log:Tests failed    :    2
 /var/lib/mock/fc23x/build.log:Tests failed    :    0
@@ -16,8 +16,13 @@ $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
 
 el5i, el5x
-    openssl_x509_parse() basic test for OpenSSL 0.9 [ext/openssl/tests/openssl_x509_parse_basic_v9.phpt]
+	openssl_error_string() tests [ext/openssl/tests/openssl_error_string_basic.phpt]
+el5i
+	Specific protocol method specification [ext/openssl/tests/stream_crypto_flags_004.phpt]
+el5i, el5x
     sni_server [ext/openssl/tests/sni_server.phpt]
+fc22i
+	openssl_pkey_new() basic usage tests [ext/openssl/tests/openssl_pkey_new_basic.phpt]
 el5i, el6i, fc21i, fc22i, fc23i, fc24i
     Bug #53437 DateInterval unserialize bad data, 32 bit [ext/date/tests/bug53437_var3.phpt]
     Bug #64146 (serialize incorrectly saving objects when they are cloned) [ext/standard/tests/serialize/bug64146.phpt]
