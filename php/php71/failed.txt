@@ -1,17 +1,21 @@
-===== 7.1.0RC2 (2016-09-15)
+===== 7.1.0RC3 (2016-09-29)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
 /var/lib/mock/el6i/build.log:Tests failed    :     0
 /var/lib/mock/el6x/build.log:Tests failed    :     0
-/var/lib/mock/el7x/build.log:Tests failed    :     0
+/var/lib/mock/el7x/build.log:Tests failed    :     1
 /var/lib/mock/fc23i/build.log:Tests failed    :    0
 /var/lib/mock/fc23x/build.log:Tests failed    :    0
 /var/lib/mock/fc24i/build.log:Tests failed    :    0
 /var/lib/mock/fc24x/build.log:Tests failed    :    0
-/var/lib/mock/fc25i/build.log:Tests failed    :    0
+/var/lib/mock/fc25i/build.log:Tests failed    :    1
 /var/lib/mock/fc25x/build.log:Tests failed    :    0
 
+el7x
+	*	Bug #64438 proc_open hangs with stdin/out with 4097+ bytes [ext/standard/tests/streams/proc_open_bug64438.phpt]
+fc25i
+	*	openssl_pkey_new() basic usage tests [ext/openssl/tests/openssl_pkey_new_basic.phpt]
 
 
 *   proc_open give erratic test results :(

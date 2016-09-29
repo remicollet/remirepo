@@ -1,18 +1,14 @@
-===== 7.1.0RC2 (2016-09-15)
+===== 7.1.0RC3 (2016-09-29)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl71*/build.log
 
 /var/lib/mock/scl70el6x/build.log:Tests failed    :     0
 /var/lib/mock/scl70el7x/build.log:Tests failed    :     0
 /var/lib/mock/scl70fc22x/build.log:Tests failed    :    0
-/var/lib/mock/scl70fc23x/build.log:Tests failed    :    1
+/var/lib/mock/scl70fc23x/build.log:Tests failed    :    0
 /var/lib/mock/scl70fc24x/build.log:Tests failed    :    0
-/var/lib/mock/scl70fc25x/build.log:Tests failed    :    1
+/var/lib/mock/scl70fc25x/build.log:Tests failed    :    0
 
-fc23x
-	*	Test session_set_save_handler() function : basic functionality [ext/session/tests/session_set_save_handler_basic.phpt]
-fc25x
-	*	Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
 
 
 *	proc_open give erratic test results :(
