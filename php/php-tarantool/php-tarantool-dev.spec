@@ -8,19 +8,6 @@
 # Please preserve changelog entries
 #
 
-%global github_owner     tarantool
-%global github_name      tarantool-php
-%global github_commit    96879c6df07c6f0ebeeee5c2c611b86fc2b7856a
-%global github_short     %(c=%{github_commit}; echo ${c:0:7})
-
-%global ext_name tarantool
-%global with_zts 0%{!?_without_zts:%{?__ztsphp:1}}
-%if "%{php_version}" < "5.6"
-%global ini_name %{ext_name}.ini
-%else
-%global ini_name 40-%{ext_name}.ini
-%endif
-
 %if 0%{?scl:1}
 # PHPUnit not available in SCL
 %if "%{scl}" == "rh-php56"
@@ -34,12 +21,26 @@
 %global pkg_name    %{name}
 %endif
 
+%global github_owner     tarantool
+%global github_name      tarantool-php
+%global github_commit    27697cf6c1bf0d87a46ac6412767d46aa04ce5f3
+%global github_short     %(c=%{github_commit}; echo ${c:0:7})
+%global github_date      20160906
+
+%global ext_name         tarantool
+%global with_zts         0%{!?_without_zts:%{?__ztsphp:1}}
+%global ini_name         40-%{ext_name}.ini
+
 # Test suite requires a running server
 %global with_tests 0
 
 Name:          %{?sub_prefix}php-%{ext_name}
-Version:       0.1.0
+Version:       0.1.1
+%if 0%{?github_date}
+Release:       0.1.%{?github_date}git%{?github_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+%else
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+%endif
 Summary:       PHP driver for Tarantool/Box
 
 Group:         Development/Libraries
@@ -48,8 +49,7 @@ License:       BSD
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{pkg_name}-%{version}-%{github_short}.tar.gz
 
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: %{?scl_prefix}php-devel >= 5.4
+BuildRequires: %{?scl_prefix}php-devel >= 7
 %if %{with_tests}
 # For tests
 BuildRequires: %{_bindir}/phpunit
@@ -69,17 +69,15 @@ Obsoletes:      php53-%{ext_name} <= %{version}
 Obsoletes:     php53u-%{ext_name} <= %{version}
 Obsoletes:      php54-%{ext_name} <= %{version}
 Obsoletes:     php54w-%{ext_name} <= %{version}
-%if "%{php_version}" > "5.5"
 Obsoletes:     php55u-%{ext_name} <= %{version}
 Obsoletes:     php55w-%{ext_name} <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
 Obsoletes:     php56u-%{ext_name} <= %{version}
 Obsoletes:     php56w-%{ext_name} <= %{version}
-%endif
-%if "%{php_version}" > "7.0"
 Obsoletes:     php70u-%{ext_name} <= %{version}
 Obsoletes:     php70w-%{ext_name} <= %{version}
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-%{ext_name} <= %{version}
+Obsoletes:     php71w-%{ext_name} <= %{version}
 %endif
 %endif
 
@@ -101,8 +99,19 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -qc 
-
 mv %{github_name}-%{github_commit} NTS
+
+cd NTS
+: Bump version to avoid user confusion
+sed -i -e '/PHP_TARANTOOL_VERSION/s/0.1.0/%{version}-dev/' php_tarantool.h
+
+extver=$(sed -n '/#define PHP_TARANTOOL_VERSION/{s/.* "//;s/".*$//;p}' php_tarantool.h)
+if test "x${extver}" != "x%{version}%{?pre}%{?github_date:-dev}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?pre}%{?github_date:-dev}.
+   exit 1
+fi
+cd ..
+
 %if %{with_zts}
 cp -pr NTS ZTS
 %endif
@@ -113,8 +122,9 @@ cat > %{ini_name} << 'INI'
 extension=%{ext_name}.so
 
 ; ----- Configuration options
-;tarantool.con_per_host  = '5'
-;tarantool.persistent = '0'
+;tarantool.persistent = 0
+;tarantool.use_namespace = 0
+;tarantool.connection_alias = 0
 ;tarantool.timeout = '10.0'
 ;tarantool.request_timeout = '10.0'
 ;tarantool.retry_count = '1'
@@ -141,8 +151,6 @@ popd
 
 
 %install
-rm -rf %{buildroot}
-
 : Ext -- NTS
 make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 0644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
@@ -168,12 +176,7 @@ install -D -m 0644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license NTS/LICENSE NTS/AUTHORS
 
@@ -187,6 +190,9 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu Mar 24 2016 Remi Collet <remi@fedoraproject.org> - 0.1.0
+* Thu Mar 24 2016 Remi Collet <remi@fedoraproject.org> - 0.1.1-0.1.20160906git27697cf
+- update to git snapshot for PHP 7
+
+* Thu Mar 24 2016 Remi Collet <remi@fedoraproject.org> - 0.1.0-1
 - Initial package
 
