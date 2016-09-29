@@ -28,7 +28,6 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  php-devel > 7
 BuildRequires:  php-pear
 BuildRequires:  v8-devel >= 4.6.76
-BuildRequires:  chromium
 
 Requires:       chromium%{?_isa}
 Requires:       php(zend-abi) = %{php_zend_api}
@@ -80,7 +79,7 @@ sed -e 's/role="test"/role="src"/' \
 
 cd NTS
 # Fix config script, use blob from chromium
-sed -e '/SEARCH_PATH/s:share/v8:$PHP_LIBDIR/chromium-browser:' -i config.m4
+sed -e '/SEARCH_PATH/s:V8_DIR/lib:V8_DIR/$PHP_LIBDIR:' -i config.m4
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_V8JS_VERSION/{s/.* "//;s/".*$//;p}' php_v8js_macros.h)
