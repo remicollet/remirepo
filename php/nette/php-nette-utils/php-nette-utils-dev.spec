@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c455ade9f24a1f99aa81772516764045296b8ca0
+%global gh_commit    a2c86f48afab41e4a68bd161aab6b14e2458ab8a
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -16,7 +16,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-nette-utils
-Version:        2.4.0
+Version:        2.4.1
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Utility Classes
@@ -58,29 +58,33 @@ BuildRequires:  php-composer(%{gh_owner}/tester)
 Requires:       php(language) >= 5.6
 # from composer.json, "suggest": {
 #        "ext-iconv": "to use Strings::webalize() and toAscii()",
+#        "ext-json": "to use Nette\\Utils\\Json",
 #        "ext-intl": "for script transliteration in Strings::webalize() and toAscii()",
 #        "ext-mbstring": "to use Strings::lower() etc...",
+#        "ext-xml": "to use Strings::length() etc. when mbstring is not available",
 #        "ext-gd": "to use Image"
 %if 0%{?fedora} > 21
 Recommends:     php-iconv
+Recommends:     php-json
 Recommends:     php-intl
 Recommends:     php-mbstring
+Recommends:     php-xml
 Recommends:     php-gd
 %else
 Requires:       php-iconv
+Requires:       php-json
 Requires:       php-intl
 Requires:       php-mbstring
+Requires:       php-xml
 Requires:       php-gd
 %endif
 # from phpcompatinfo report for version 2.4.0 (mcrypt is optional, openssl prefered)
 Requires:       php-date
 Requires:       php-fileinfo
-Requires:       php-json
 Requires:       php-openssl
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
-Requires:       php-xml
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
@@ -127,15 +131,16 @@ require_once '%{buildroot}%{php_home}/%{ns_vendor}/Utils/autoload.php';
 EOF
 
 : Run test suite in sources tree
-# remirepo:11
+# remirepo:12
 ret=0
 run=0
 if which php56; then
    php56 %{_bindir}/nette-tester --colors 0 -p php56 -C tests -s || ret=1
    run=1
 fi
-if which php71; then
-   php71 %{_bindir}/nette-tester --colors 0 -p php71 -C tests -s || ret=1
+if which php70; then
+   # Minor diff in json_encode output
+   php70 %{_bindir}/nette-tester --colors 0 -p php70 -C tests -s || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -164,6 +169,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 30 2016 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
+- update to 2.4.1
+
 * Tue Aug  2 2016 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
 - update to 2.4.0
 - raise dependency on PHP >= 5.6
