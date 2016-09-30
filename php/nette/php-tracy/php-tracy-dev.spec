@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    6b67ebb3a4ab663f7230f769627b6d1e138b1423
+%global gh_commit    9c352f10f41c374c5bb19191e385076430e39a20
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -16,7 +16,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_project}
-Version:        2.4.2
+Version:        2.4.3
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Tracy: useful PHP debugger
@@ -118,7 +118,7 @@ require_once '%{buildroot}%{php_home}/%{ns_vendor}/autoload.php';
 EOF
 
 : Run test suite in sources tree
-# remirepo:12
+# remirepo:11
 ret=0
 run=0
 if which php56; then
@@ -126,7 +126,6 @@ if which php56; then
    run=1
 fi
 if which php71; then
-   rm tests/Tracy/Dumper.to*phpt
    php71 %{_bindir}/nette-tester --colors 0 -p php71 -C tests -s || ret=1
    run=1
 fi
@@ -154,6 +153,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Sep 30 2016 Remi Collet <remi@fedoraproject.org> - 2.4.3-1
+- update to 2.4.3
+
 * Tue Aug  2 2016 Remi Collet <remi@fedoraproject.org> - 2.4.2-1
 - update to 2.4.2
 - raise dependency on PHP >= 5.4.4
