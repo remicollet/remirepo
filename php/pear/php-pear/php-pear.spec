@@ -40,7 +40,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.10.1
-Release: 6%{?dist}
+Release: 7%{?dist}
 Epoch: 1
 # PEAR, PEAR_Manpages, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -61,6 +61,9 @@ Source22: http://pear.php.net/get/Console_Getopt-%{getoptver}.tgz
 Source23: http://pear.php.net/get/Structures_Graph-%{structver}.tgz
 Source24: http://pear.php.net/get/XML_Util-%{xmlutil}.tgz
 Source25: http://pear.php.net/get/PEAR_Manpages-%{manpages}.tgz
+
+# https://github.com/pear/pear-core/pull/51
+Patch0:   pear-proxy.patch
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -158,7 +161,7 @@ done
 cp %{SOURCE1} .
 
 # apply patches on used PEAR during install
-# None \o/
+# Patch0 applied on installation tree
 
 sed -e 's/@SCL@/%{?scl:%{scl}_}/' \
     -e 's:@VARDIR@:%{_localstatedir}:' \
@@ -241,7 +244,7 @@ install -m 644 -D macros.pear \
 
 # apply patches on installed PEAR tree
 pushd $RPM_BUILD_ROOT%{peardir} 
-# none
+patch --no-backup --fuzz 0 -p1 < %{PATCH0}
 popd
 
 # Why this file here ?
@@ -304,7 +307,7 @@ echo 'Test suite disabled (missing "--with tests" option)'
 # Register newly installed PECL packages
 %transfiletriggerin -- %{pecl_xmldir}
 while read file; do
-  %{_bindir}/pecl install --nodeps --soft --force --register-only --nobuild "$file" || :
+  %{_bindir}/pecl install --nodeps --soft --force --register-only --nobuild "$file" >/dev/null || :
 done
 
 # Unregister to be removed PECL packages
@@ -320,7 +323,7 @@ while ($file=fgets(STDIN)) {
     fputs(STDERR, "Bad pecl package file ($file)\n");
   }
 }' | while read  name; do
-  %{_bindir}/pecl uninstall --nodeps --ignore-errors --register-only "$name" || :
+  %{_bindir}/pecl uninstall --nodeps --ignore-errors --register-only "$name" >/dev/null || :
 done
 %endif
 
@@ -427,6 +430,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Sep 30 2016 Remi Collet <remi@fedoraproject.org> 1:1.10.1-7
+- fix https connection via a proxy
+  patch from https://github.com/pear/pear-core/pull/51
+- silent the new scriplets (F24+)
+
 * Fri Aug  5 2016 Remi Collet <remi@fedoraproject.org> 1:1.10.1-6
 - improve default config, to avoid change in scriptlet
 - remove unneeded scriplets for Fedora 25
