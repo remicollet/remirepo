@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #118 swoole version 1.8.11 ] {
+Extension [ <persistent> extension #123 swoole version 1.8.12 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -24,7 +24,7 @@ Extension [ <persistent> extension #118 swoole version 1.8.11 ] {
     Constant [ integer SWOOLE_PROCESS ] { 3 }
     Constant [ integer SWOOLE_IPC_UNSOCK ] { 1 }
     Constant [ integer SWOOLE_IPC_MSGQUEUE ] { 2 }
-    Constant [ integer SWOOLE_IPC_CHANNEL ] { 3 }
+    Constant [ integer SWOOLE_IPC_PREEMPTIVE ] { 3 }
     Constant [ integer SWOOLE_SOCK_TCP ] { 1 }
     Constant [ integer SWOOLE_SOCK_TCP6 ] { 3 }
     Constant [ integer SWOOLE_SOCK_UDP ] { 2 }
@@ -63,7 +63,7 @@ Extension [ <persistent> extension #118 swoole version 1.8.11 ] {
     Constant [ integer SWOOLE_DTLSv1_CLIENT_METHOD ] { 17 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.8.11 }
+    Constant [ string SWOOLE_VERSION ] { 1.8.12 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 1 }
     Constant [ integer SWOOLE_FILELOCK ] { 2 }
@@ -239,7 +239,7 @@ Extension [ <persistent> extension #118 swoole version 1.8.11 ] {
     }
   }
 
-  - Classes [21] {
+  - Classes [22] {
     Class [ <internal:swoole> class swoole_server ] {
 
       - Constants [0] {
@@ -631,6 +631,75 @@ Extension [ <persistent> extension #118 swoole version 1.8.11 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $callback ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:swoole> class swoole_async ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [6] {
+        Method [ <internal:swoole> static public method read ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $filename ]
+            Parameter #1 [ <required> $callback ]
+            Parameter #2 [ <optional> $chunk_size ]
+            Parameter #3 [ <optional> $offset ]
+          }
+        }
+
+        Method [ <internal:swoole> static public method write ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $filename ]
+            Parameter #1 [ <required> $content ]
+            Parameter #2 [ <optional> $offset ]
+            Parameter #3 [ <optional> $callback ]
+          }
+        }
+
+        Method [ <internal:swoole> static public method readFile ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $filename ]
+            Parameter #1 [ <required> $callback ]
+          }
+        }
+
+        Method [ <internal:swoole> static public method writeFile ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $filename ]
+            Parameter #1 [ <required> $content ]
+            Parameter #2 [ <optional> $callback ]
+          }
+        }
+
+        Method [ <internal:swoole> static public method dnsLookup ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $domain_name ]
+            Parameter #1 [ <required> $content ]
+          }
+        }
+
+        Method [ <internal:swoole> static public method set ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $settings ]
           }
         }
       }
@@ -1940,7 +2009,7 @@ Extension [ <persistent> extension #118 swoole version 1.8.11 ] {
       }
 
       - Methods [10] {
-        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+        Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $message ]
