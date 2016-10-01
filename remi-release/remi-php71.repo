@@ -4,6 +4,7 @@
 [remi-php71]
 name=Remi's PHP 7.1 RPM repository for Enterprise Linux VERSION - $basearch
 #baseurl=http://rpms.remirepo.net/enterprise/VERSION/php71/$basearch/
+#mirrorlist=https://rpms.remirepo.net/enterprise/VERSION/php71/httpsmirror
 mirrorlist=http://rpms.remirepo.net/enterprise/VERSION/php71/mirror
 enabled=0
 gpgcheck=1
@@ -19,6 +20,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-remi
 [remi-php71-test]
 name=Remi's PHP 7.1 test RPM repository for Enterprise Linux VERSION - $basearch
 #baseurl=http://rpms.remirepo.net/enterprise/VERSION/test71/$basearch/
+#mirrorlist=https://rpms.remirepo.net/enterprise/VERSION/test71/httpsmirror
 mirrorlist=http://rpms.remirepo.net/enterprise/VERSION/test71/mirror
 enabled=0
 gpgcheck=1

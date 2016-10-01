@@ -5,7 +5,15 @@
 [remi-safe]
 name=Safe Remi's RPM repository for Enterprise Linux VERSION - $basearch
 #baseurl=http://rpms.remirepo.net/enterprise/VERSION/safe/$basearch/
+#mirrorlist=https://rpms.remirepo.net/enterprise/VERSION/safe/httpsmirror
 mirrorlist=http://rpms.remirepo.net/enterprise/VERSION/safe/mirror
 enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-remi
+
+[remi-safe-debuginfo]
+name=Remi's RPM repository for Enterprise Linux VERSION - $basearch - debuginfo
+baseurl=http://rpms.remirepo.net/enterprise/VERSION/debug-remi/$basearch/
+enabled=0
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-remi

@@ -134,6 +134,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+- add mirrorlist for https mirrors (as comment)
+
 * Thu Jun 30 2016 Remi Collet <remmi@remirepo.net> - 6.8-1 and 7.2-1
 - add remi-php71 repository
 
