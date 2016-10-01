@@ -23,6 +23,7 @@ License:       Distribuable
 Group:         Applications/Databases
 
 URL:           https://msdn.microsoft.com/library/hh568454(v=sql.110).aspx
+# See: https://github.com/Microsoft/msphpsql/blob/PHP-7.0-Linux/ODBC%20install%20scripts/installodbc_redhat.sh#L56
 Source0:       https://download.microsoft.com/download/B/C/D/BCDD264C-7517-4B7D-8159-C99FC5535680/msodbcsql-13.0.0.0.tar.gz
 
 BuildArch:     x86_64
