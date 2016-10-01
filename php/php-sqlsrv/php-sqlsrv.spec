@@ -12,6 +12,7 @@
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    Microsoft
 %global gh_project  msphpsql
+%global from_pecl   1
 
 %global extname       sqlsrv
 %global with_zts      0%{!?_without_zts:%{?__ztsphp:1}}
@@ -20,26 +21,22 @@
 
 Name:          %{?scl_prefix}php-sqlsrv
 Summary:       Microsoft Drivers for PHP for SQL Server
-Version:       4.0.4
-Release:       5%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:       4.0.5
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
 
 URL:           https://github.com/Microsoft/msphpsql
+%if %{from_pecl}
+Source0:        http://pecl.php.net/get/%{extname}-%{version}.tgz
+Source1:        http://pecl.php.net/get/pdo_%{extname}-%{version}.tgz
+%else
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+%endif
 
-# https://github.com/Microsoft/msphpsql/pull/153 - build
-Patch0:        %{extname}-pr153.patch
-# https://github.com/Microsoft/msphpsql/pull/154 - odbcver
-Patch1:        %{extname}-pr154.patch
-# https://github.com/Microsoft/msphpsql/pull/155 - PHP 7.1
-Patch2:        %{extname}-pr155.patch
-# https://github.com/Microsoft/msphpsql/pull/157 - buffer overflow
-Patch3:        %{extname}-pr157.patch
-
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 7
 BuildRequires: %{?scl_prefix}php-pdo
+BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: msodbcsql-devel >= 13
 BuildRequires: unixODBC-devel >= 2.3.1
 
@@ -91,28 +88,33 @@ Package built for PHP %(%{__php} -n -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VER
 
 
 %prep
-%setup -qc
-cd %{gh_project}-%{gh_commit}
-%patch0 -p1 -b .pr153
-%patch1 -p1 -b .pr154
-%patch2 -p1 -b .pr155
-%patch3 -p1 -b .pr157
-cd ..
+%if %{from_pecl}
+%setup -qcT
+mkdir NTS
 
+tar xf %{SOURCE0}
+mv %{extname}-%{version}/LICENSE .
+mv %{extname}-%{version} NTS/%{extname}
+mv package.xml NTS/%{extname}
+
+tar xf %{SOURCE1}
+mv pdo_%{extname}-%{version} NTS/pdo_%{extname}
+mv package.xml NTS/pdo_%{extname}
+%else
+%setup -qc
 mv %{gh_project}-%{gh_commit}/source NTS
+mv %{gh_project}-%{gh_commit}/LICENSE .
+%endif
 
 cd NTS
-sed -e '/VER_FILEVERSION_STR/s/4.0.0.0/%{version}/' \
-    -i sqlsrv/version.h pdo_sqlsrv/version.h
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define VER_FILEVERSION_STR/{s/.* "//;s/".*$//;p}' sqlsrv/version.h)
-if test "x${extver}" != "x%{version}%{?prever}"; then
+if test "x${extver}" != "x%{version}.0%{?prever}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
 extver=$(sed -n '/#define VER_FILEVERSION_STR/{s/.* "//;s/".*$//;p}' pdo_sqlsrv/version.h)
-if test "x${extver}" != "x%{version}%{?prever}"; then
+if test "x${extver}" != "x%{version}.0%{?prever}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
@@ -177,8 +179,8 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-ver=$(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')
+install -Dpm 644 NTS/%{extname}/package.xml %{buildroot}%{pecl_xmldir}/php-pecl-%{extname}.xml
+install -Dpm 644 NTS/pdo_%{extname}/package.xml %{buildroot}%{pecl_xmldir}/php-pecl-pdo-%{extname}.xml
 
 make -C NTS/%{extname}     install INSTALL_ROOT=%{buildroot}
 make -C NTS/pdo_%{extname} install INSTALL_ROOT=%{buildroot}
@@ -212,14 +214,34 @@ install -D  -m 644 %{ininame} %{buildroot}%{php_ztsinidir}/%{ininame}
 %endif
 
 
-%clean
-rm -rf %{buildroot}
+%if 0%{?fedora} < 24
+# when pear installed alone, after us
+%triggerin -- %{?scl_prefix}php-pear
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/php-pecl-%{extname}.xml     >/dev/null || :
+    %{pecl_install} %{pecl_xmldir}/php-pecl-pdo-%{extname}.xml >/dev/null || :
+fi
+
+# posttrans as pear can be installed after us
+%posttrans
+if [ -x %{__pecl} ] ; then
+    %{pecl_install} %{pecl_xmldir}/php-pecl-%{extname}.xml     >/dev/null || :
+    %{pecl_install} %{pecl_xmldir}/php-pecl-pdo-%{extname}.xml >/dev/null || :
+fi
+
+%postun
+if [ $1 -eq 0 -a -x %{__pecl} ] ; then
+    %{pecl_uninstall} %{extname}     >/dev/null || :
+    %{pecl_uninstall} pdo_%{extname} >/dev/null || :
+fi
+%endif
 
 
 %files
-%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license %{gh_project}-%{gh_commit}/LICENSE
+%license LICENSE
+%{pecl_xmldir}/php-pecl-%{extname}.xml
+%{pecl_xmldir}/php-pecl-pdo-%{extname}.xml
 
 %config(noreplace) %{php_inidir}/%{ininame}
 %{php_extdir}/%{extname}.so
@@ -233,6 +255,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct  1 2016 Remi Collet <remi@remirepo.net> - 4.0.5-1
+- update to 4.0.5, sources from PECL
+- drop all patches merged upstream
+- open https://github.com/Microsoft/msphpsql/issues/164
+
 * Tue Sep 20 2016 Remi Collet <remi@remirepo.net> - 4.0.4-5
 - use the splitted msodbcsql packages
 
