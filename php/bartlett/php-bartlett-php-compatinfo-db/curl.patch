@@ -1,0 +1,292 @@
+From 41a60e07b6a9d9a77acdefd300bf0a11b698bc75 Mon Sep 17 00:00:00 2001
+From: Laurent Laville <laurent.laville@gmail.com>
+Date: Wed, 28 Sep 2016 20:25:28 +0200
+Subject: [PATCH] FIX lib_curl dependency on some constants
+
+---
+ data/references/Curl.constants.json | 62 ++++++++++++++++++-------------------
+ 1 file changed, 31 insertions(+), 31 deletions(-)
+
+diff --git a/data/references/Curl.constants.json b/data/references/Curl.constants.json
+index d0838e0..7114a65 100644
+--- a/data/references/Curl.constants.json
++++ b/data/references/Curl.constants.json
+@@ -1230,7 +1230,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -1240,7 +1240,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -1250,7 +1250,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -1260,7 +1260,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -1888,7 +1888,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -2135,7 +2135,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -2145,7 +2145,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -2569,7 +2569,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -2579,7 +2579,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -2589,7 +2589,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -2599,7 +2599,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -2609,7 +2609,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -2619,7 +2619,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -3241,7 +3241,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -3251,7 +3251,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -3281,7 +3281,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -3291,7 +3291,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -3361,7 +3361,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -3391,7 +3391,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -3401,7 +3401,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -3765,7 +3765,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -3775,7 +3775,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -3785,7 +3785,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -3795,7 +3795,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -3805,7 +3805,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -3815,7 +3815,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -3825,7 +3825,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -3835,7 +3835,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -3845,7 +3845,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -3855,7 +3855,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,
+@@ -3865,7 +3865,7 @@
+         "php_min": "5.5.0",
+         "php_max": "",
+         "php_excludes": "",
+-        "lib_curl": "~7.19.6"
++        "lib_curl": "~7.20"
+     },
+     {
+         "ext_name_fk": 9,

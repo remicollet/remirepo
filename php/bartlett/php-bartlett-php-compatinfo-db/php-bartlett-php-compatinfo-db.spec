@@ -40,6 +40,7 @@ Source1:        %{name}-1.2.0-autoload.php
 Patch0:         %{name}-1.2.0-rpm.patch
 # CURL_SSLVERSION constants have been backported
 Patch1:         %{name}-curltls.patch
+Patch2:         curl.patch
 
 BuildArch:      noarch
 # Needed to build the database from sources
@@ -104,7 +105,8 @@ Conflicts:      php-bartlett-PHP-CompatInfo < 5
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
-%patch1 -p0 -b .old
+%patch1 -p0 -b .curltls
+%patch2 -p1 -b .curl
 
 cp %{SOURCE1} src/%{ns_vendor}/%{ns_project}/autoload.php
 
@@ -165,12 +167,6 @@ install -D -p -m 644 data/compatinfo.sqlite      %{buildroot}%{_datadir}/%{name}
 
 %if %{with_tests}
 %check
-# remirepo:5
-%if 0%{?rhel} == 6
-# https://github.com/llaville/php-compatinfo-db/issues/7
-rm tests/Reference/Extension/CurlExtensionTest.php
-%endif
-
 export BARTLETT_COMPATINFO_DB=%{buildroot}%{_datadir}/%{name}/compatinfo.sqlite
 
 %{_bindir}/phpunit \
