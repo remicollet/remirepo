@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    acf878ec292fc8fbd7d1cbf11e054d98fe980ae8
+%global gh_commit    204f33a12d9cd59646e1d8007d42e681a9b7b813
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-helpers
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.0.3
+Version:        2.1.0
 Release:        1%{?dist}
 Summary:        Helper/Utility classes for Expressive
 
@@ -46,9 +46,11 @@ BuildRequires:  php-composer(%{gh_owner}/zend-expressive-router)  >= 1.1
 # From composer, "require-dev": {
 #        "phpunit/phpunit": "^4.7",
 #        "squizlabs/php_codesniffer": "^2.3",
-#        "zendframework/zend-diactoros": "^1.2"
+#        "zendframework/zend-diactoros": "^1.2",
+#        "mockery/mockery": "^0.9.5"
 BuildRequires:  php-composer(phpunit/phpunit)                     >= 4.7
 BuildRequires:  php-composer(%{gh_owner}/zend-diactoros)          >= 1.2
+BuildRequires:  php-composer(mockery/mockery)                     >= 0.9.5
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)             >= 2.5
 # For dependencies autoloader
@@ -126,9 +128,8 @@ Zend\Loader\AutoloaderFactory::factory(array(
            'Zend\\%{library}\\%{sublib}'     => '%{buildroot}%{php_home}/Zend/%{library}/%{sublib}'
 ))));
 require_once '%{php_home}/Zend/autoload.php';
+require_once '%{php_home}/Mockery/autoload.php';
 EOF
-
-sed -e 's/Syntax error//' -i test/BodyParams/JsonStrategyTest.php
 
 # remirepo:11
 run=0
@@ -165,6 +166,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct  3 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- update to 2.1.0
+
 * Fri Sep  2 2016 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
 - update to 2.0.3
 
