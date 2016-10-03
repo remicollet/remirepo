@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a57126dc681b08289fef6ac96a48e30656f84350
+%global gh_commit    146e0fe0bb7f44d1cefade0c93e86fe0b206dd79
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.5
-%global minor        5
+%global minor        6
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -28,10 +28,11 @@ Summary:        The PHP Unit Testing framework
 Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
+Source1:        makesrc.sh
 
 # Autoload template, from version 3.7
-Source1:        %{gh_project}-5.4.0-Autoload.php.in
+Source2:        %{gh_project}-5.4.0-Autoload.php.in
 
 # Fix command for autoload
 Patch0:         %{gh_project}-rpm.patch
@@ -175,7 +176,7 @@ mv src PHPUnit
 %build
 %{_bindir}/phpab \
   --output   PHPUnit/Autoload.php \
-  --template %{SOURCE1} \
+  --template %{SOURCE2} \
   PHPUnit
 
 %{_bindir}/phpab \
@@ -233,6 +234,10 @@ fi
 
 
 %changelog
+* Mon Oct  3 2016 Remi Collet <remi@fedoraproject.org> - 5.5.6-1
+- Update to 5.5.6
+- sources from a git snapshot
+
 * Wed Sep 21 2016 Remi Collet <remi@fedoraproject.org> - 5.5.5-1
 - Update to 5.5.5
 
