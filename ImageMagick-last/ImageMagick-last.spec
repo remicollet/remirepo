@@ -8,8 +8,8 @@
 #
 # Please preserve changelog entries
 #
-%global VER        6.9.5
-%global Patchlevel 10
+%global VER        6.9.6
+%global Patchlevel 0
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -510,6 +510,9 @@ fi
 
 
 %changelog
+* Mon Oct  3 2016 Remi Collet <remi@remirepo.net> - 6.9.6.0-1
+- update to version 6.9.6
+
 * Wed Sep 21 2016 Remi Collet <remi@remirepo.net> - 6.9.5.10-1
 - update to version 6.9.5 patchlevel 10
 - flag configuration files as %%config
