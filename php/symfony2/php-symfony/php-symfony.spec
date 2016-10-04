@@ -13,8 +13,8 @@
 
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.8.11
-%global github_commit    f588c92c3e263b2eaa2f96a7b1359199eb209b3d
+%global github_version   2.8.12
+%global github_commit    6a5bc3257b60098c28fc1bbcacd52000dd2801d1
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -86,8 +86,8 @@
 #           instead of php-symfony-security-acl3
 %global symfony_security_acl_min_ver 2.7
 %global symfony_security_acl_max_ver 3.0
-# "twig/twig": "~1.23|~2.0"
-%global twig_min_ver 1.23
+# "twig/twig": "~1.26|~2.0"
+%global twig_min_ver 1.26
 %global twig_max_ver 3.0
 
 %if 0%{?fedora} < 21 && 0%{?rhel} < 7
@@ -2678,6 +2678,10 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Tue Oct  4 2016 Remi Collet <remi@fedoraproject.org> - 2.8.12-1
+- Update to 2.8.12
+- raise dependency on twig 1.26
+
 * Wed Sep  7 2016 Remi Collet <remi@fedoraproject.org> - 2.8.11-1
 - Update to 2.8.11
 
