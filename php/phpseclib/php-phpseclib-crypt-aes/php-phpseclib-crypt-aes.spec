@@ -11,7 +11,7 @@
 %global pear_name Crypt_AES
 
 Name:           php-phpseclib-crypt-aes
-Version:        1.0.3
+Version:        1.0.4
 Release:        1%{?dist}
 Summary:        Pure-PHP implementation of AES
 
@@ -83,6 +83,9 @@ fi
 
 
 %changelog
+* Tue Oct 04 2016 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- Update to 1.0.4 (no change)
+
 * Fri Sep 02 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - Update to 1.0.3 (no change)
 
