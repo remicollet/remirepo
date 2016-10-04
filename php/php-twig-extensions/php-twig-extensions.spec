@@ -32,13 +32,15 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Twig extensions
 
 Group:         Development/Libraries
 License:       MIT
 URL:           http://twig.sensiolabs.org/doc/extensions/index.html
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+
+Patch0:        %{name}-upstream.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -75,6 +77,8 @@ Common additional features for Twig that do not directly belong in core Twig.
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
+
+%patch0 -p1 -b .upstream
 
 : Create autoloader
 cat <<'AUTOLOAD' | tee lib/Twig/Extensions/autoload.php
@@ -142,6 +146,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct  4 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-2
+- add upstream patch for test suite with twig 1.26
+
 * Sun Sep 25 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.4.0-1
 - Updated to 1.4.0 (RHBZ #1378643)
 
