@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #137 couchbase version 2.2.2 ] {
+Extension [ <persistent> extension #144 couchbase version 2.2.3 ] {
 
   - Dependencies {
     Dependency [ json (Required) ]
@@ -158,7 +158,7 @@ Extension [ <persistent> extension #137 couchbase version 2.2.2 ] {
       }
 
       - Methods [10] {
-        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+        Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $message ]

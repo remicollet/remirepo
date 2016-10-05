@@ -29,8 +29,8 @@
 
 Summary:       Couchbase Server PHP extension
 Name:          %{?sub_prefix}php-pecl-couchbase2
-Version:       2.2.2
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:       2.2.3
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           pecl.php.net/package/couchbase
@@ -82,12 +82,12 @@ Obsoletes:     php56u-pecl-%{pecl_name}2 <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name}2 <= %{version}
 %endif
 %if "%{php_version}" > "7.0"
-Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70u-pecl-%{pecl_name}2 <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name}2 <= %{version}
 %endif
 %if "%{php_version}" > "7.1"
-Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71u-pecl-%{pecl_name}2 <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name}2 <= %{version}
 %endif
 %endif
 
@@ -241,6 +241,10 @@ fi
 
 
 %changelog
+* Wed Oct 05 2016 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
+- Update to 2.2.3
+- open https://issues.couchbase.com/browse/PCBC-437 - visibility error
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 2.2.2-2
 - rebuild for PHP 7.1 new API version
 
