@@ -22,12 +22,12 @@
 %global gh_owner    m6w6
 %global gh_project  ext-http
 #global gh_date     20150928
-%global prever      beta2
+%global prever      RC1
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
 %global pecl_name http
 %global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
-# after 20-iconv 40-propro 40-raphf
+# after 40-propro 40-raphf
 %global ini_name  50-%{pecl_name}.ini
 %ifarch %{arm}
 # Test suite disabled because of erratic results on slow ARM (timeout)
@@ -43,7 +43,7 @@ Version:        3.1.0
 Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.4.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 %endif
 Summary:        Extended HTTP support
@@ -58,13 +58,14 @@ Source1:        %{proj_name}.ini
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel >= 7
 BuildRequires:  %{?scl_prefix}php-hash
-BuildRequires:  %{?scl_prefix}php-iconv
 BuildRequires:  %{?scl_prefix}php-spl
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  pcre-devel
 BuildRequires:  zlib-devel >= 1.2.0.4
 BuildRequires:  curl-devel >= 7.18.2
 BuildRequires:  libidn-devel
+# Use same version than PHP to ensure we use libicu-last (EL 6)
+BuildRequires:  libicu-devel >= 50
 BuildRequires:  %{?scl_prefix}php-pecl-propro-devel >= 1.0.0
 BuildRequires:  %{?scl_prefix}php-pecl-raphf-devel  >= 1.1.0
 
@@ -91,7 +92,6 @@ BuildRequires: libevent-devel > 1.4
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Requires:       %{?scl_prefix}php-hash%{?_isa}
-Requires:       %{?scl_prefix}php-iconv%{?_isa}
 Requires:       %{?scl_prefix}php-spl%{?_isa}
 Requires:       %{?scl_prefix}php-pecl(propro)%{?_isa} >= 1.0.0
 Requires:       %{?scl_prefix}php-pecl(raphf)%{?_isa}  >= 1.1.0
@@ -191,6 +191,14 @@ mv %{proj_name}-%{version}%{?prever} NTS
 %{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
+# https://github.com/m6w6/ext-http/issues/53
+sed -e '/PHP_HTTP_CURL_VERSION/s/PHP_HTTP_HAVE_LIBCURL_TLSAUTH_TYPE/defined(PHP_HTTP_CURL_TLSAUTH_SRP)/' \
+    -i src/php_http_client_curl.c
+
+%if 0%{?rhel} == 6
+# https://github.com/m6w6/ext-http/issues/54
+sed -e '/pragma/d' -i src/php_http_url.c
+%endif
 
 extver=$(sed -n '/#define PHP_PECL_HTTP_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}%{?prever}%{?gh_date:dev}"; then
@@ -215,6 +223,7 @@ peclconf() {
   --with-http-zlib-dir=%{_root_prefix} \
   --with-http-libcurl-dir=%{_root_prefix} \
   --with-http-libidn-dir=%{_root_prefix} \
+  --with-http-libicu-dir=%{_root_prefix} \
   --with-http-libevent-dir=%{_event_prefix} \
   --with-libdir=%{_lib} \
   --with-php-config=$1
@@ -274,7 +283,7 @@ fi
 
 # Shared needed extensions
 modules=""
-for mod in hash iconv propro raphf; do
+for mod in hash  propro raphf; do
   if [ -f %{php_extdir}/${mod}.so ]; then
     modules="$modules -d extension=${mod}.so"
   fi
@@ -366,6 +375,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct  5 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-0.4.RC1
+- Update to 3.1.0beta2 (php 7, beta)
+- drop dependency on iconv extension
+- add dependency on libicu
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-0.3.beta2
 - rebuild for PHP 7.1 new API version
 

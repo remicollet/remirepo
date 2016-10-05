@@ -1,11 +1,10 @@
-Extension [ <persistent> extension #138 http version 3.1.0beta2 ] {
+Extension [ <persistent> extension #145 http version 3.1.0RC1 ] {
 
   - Dependencies {
     Dependency [ raphf (Required) ]
     Dependency [ propro (Required) ]
     Dependency [ spl (Required) ]
     Dependency [ hash (Required) ]
-    Dependency [ iconv (Required) ]
   }
 
   - INI {
@@ -33,9 +32,9 @@ Extension [ <persistent> extension #138 http version 3.1.0beta2 ] {
     Constant [ integer http\Client\Curl\Features\NTLM_WB ] { 32768 }
     Constant [ integer http\Client\Curl\Features\HTTP2 ] { 65536 }
     Constant [ integer http\Client\Curl\Features\UNIX_SOCKETS ] { 524288 }
-    Constant [ string http\Client\Curl\VERSIONS ] { libcurl/7.43.0 NSS/3.25 zlib/1.2.8 libidn/1.33 libssh2/1.6.0 nghttp2/1.7.1 }
+    Constant [ string http\Client\Curl\VERSIONS ] { libcurl/7.43.0 NSS/3.26 zlib/1.2.8 libidn/1.33 libssh2/1.6.0 nghttp2/1.7.1 }
     Constant [ string http\Client\Curl\Versions\CURL ] { 7.43.0 }
-    Constant [ string http\Client\Curl\Versions\SSL ] { NSS/3.25 }
+    Constant [ string http\Client\Curl\Versions\SSL ] { NSS/3.26 }
     Constant [ string http\Client\Curl\Versions\LIBZ ] { 1.2.8 }
     Constant [ integer http\Client\Curl\HTTP_VERSION_1_0 ] { 1 }
     Constant [ integer http\Client\Curl\HTTP_VERSION_1_1 ] { 2 }
@@ -1684,7 +1683,7 @@ Extension [ <persistent> extension #138 http version 3.1.0beta2 ] {
         Property [ <default> private $queryArray ]
       }
 
-      - Methods [21] {
+      - Methods [20] {
         Method [ <internal:http, ctor> final public method __construct ] {
 
           - Parameters [1] {
@@ -1791,14 +1790,6 @@ Extension [ <persistent> extension #138 http version 3.1.0beta2 ] {
         Method [ <internal:http, prototype IteratorAggregate> public method getIterator ] {
 
           - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:http> public method xlate ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $from_encoding ]
-            Parameter #1 [ <required> $to_encoding ]
           }
         }
 
@@ -2855,7 +2846,7 @@ Extension [ <persistent> extension #138 http version 3.1.0beta2 ] {
 
     Class [ <internal:http> class http\Url ] {
 
-      - Constants [20] {
+      - Constants [22] {
         Constant [ integer REPLACE ] { 0 }
         Constant [ integer JOIN_PATH ] { 1 }
         Constant [ integer JOIN_QUERY ] { 2 }
@@ -2872,6 +2863,8 @@ Extension [ <persistent> extension #138 http version 3.1.0beta2 ] {
         Constant [ integer PARSE_MBLOC ] { 65536 }
         Constant [ integer PARSE_MBUTF8 ] { 131072 }
         Constant [ integer PARSE_TOIDN ] { 1048576 }
+        Constant [ integer PARSE_TOIDN_2003 ] { 9437184 }
+        Constant [ integer PARSE_TOIDN_2008 ] { 5242880 }
         Constant [ integer PARSE_TOPCT ] { 2097152 }
         Constant [ integer IGNORE_ERRORS ] { 268435456 }
         Constant [ integer SILENT_ERRORS ] { 536870912 }
@@ -2935,7 +2928,7 @@ Extension [ <persistent> extension #138 http version 3.1.0beta2 ] {
 
     Class [ <internal:http> class http\Env\Url extends http\Url ] {
 
-      - Constants [17] {
+      - Constants [19] {
         Constant [ integer REPLACE ] { 0 }
         Constant [ integer JOIN_PATH ] { 1 }
         Constant [ integer JOIN_QUERY ] { 2 }
@@ -2952,6 +2945,8 @@ Extension [ <persistent> extension #138 http version 3.1.0beta2 ] {
         Constant [ integer PARSE_MBLOC ] { 65536 }
         Constant [ integer PARSE_MBUTF8 ] { 131072 }
         Constant [ integer PARSE_TOIDN ] { 1048576 }
+        Constant [ integer PARSE_TOIDN_2003 ] { 9437184 }
+        Constant [ integer PARSE_TOIDN_2008 ] { 5242880 }
         Constant [ integer PARSE_TOPCT ] { 2097152 }
       }
 
