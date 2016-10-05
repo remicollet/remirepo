@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #65 http version 2.6.0beta2 ] {
+Extension [ <persistent> extension #71 http version 2.6.0RC1 ] {
 
   - Dependencies {
     Dependency [ raphf (Required) ]
@@ -33,9 +33,9 @@ Extension [ <persistent> extension #65 http version 2.6.0beta2 ] {
     Constant [ integer http\Client\Curl\Features\NTLM_WB ] { 32768 }
     Constant [ integer http\Client\Curl\Features\HTTP2 ] { 65536 }
     Constant [ integer http\Client\Curl\Features\UNIX_SOCKETS ] { 524288 }
-    Constant [ string http\Client\Curl\VERSIONS ] { libcurl/7.43.0 NSS/3.25 zlib/1.2.8 libidn/1.33 libssh2/1.6.0 nghttp2/1.7.1 }
+    Constant [ string http\Client\Curl\VERSIONS ] { libcurl/7.43.0 NSS/3.26 zlib/1.2.8 libidn/1.33 libssh2/1.6.0 nghttp2/1.7.1 }
     Constant [ string http\Client\Curl\Versions\CURL ] { 7.43.0 }
-    Constant [ string http\Client\Curl\Versions\SSL ] { NSS/3.25 }
+    Constant [ string http\Client\Curl\Versions\SSL ] { NSS/3.26 }
     Constant [ string http\Client\Curl\Versions\LIBZ ] { 1.2.8 }
     Constant [ integer http\Client\Curl\HTTP_VERSION_1_0 ] { 1 }
     Constant [ integer http\Client\Curl\HTTP_VERSION_1_1 ] { 2 }

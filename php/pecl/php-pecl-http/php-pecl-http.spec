@@ -20,7 +20,7 @@
 %global _root_prefix %{_prefix}
 %endif
 
-%global prever    beta2
+%global prever    RC1
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
 %global pecl_name http
@@ -42,7 +42,7 @@
 #global prever RC1
 Name:           %{?sub_prefix}php-pecl-http
 Version:        2.6.0
-Release:        0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -366,6 +366,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct  5 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-0.3.RC1
+- Update to 2.6.0RC1 (php 5, beta)
+
 * Sun Sep 11 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-0.2.beta2
 - F25 build
 
