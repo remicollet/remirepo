@@ -34,8 +34,8 @@
 
 %global github_owner     twigphp
 %global github_name      Twig
-%global github_version   1.26.0
-%global github_commit    81c2b5fd36581370c7731387f05dcdb577050513
+%global github_version   1.26.1
+%global github_commit    a09d8ee17ac1cfea29ed60c83960ad685c6a898d
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %if "%{php_version}" < "7"
@@ -349,6 +349,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct  6 2016 Remi Collet <remi@fedoraproject.org> - 1.26.1-1
+- Update to 1.26.1
+
 * Mon Oct  2 2016 Remi Collet <remi@fedoraproject.org> - 1.26.0-1
 - Update to 1.26.0
 
