@@ -1,3 +1,4 @@
+# remirepo spec file for php-webmozart-assert, from
 #
 # Fedora spec file for php-webmozart-assert
 #
@@ -35,6 +36,7 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -105,20 +107,42 @@ AUTOLOAD
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}/Webmozart/Assert
 cp -rp src/* %{buildroot}%{phpdir}/Webmozart/Assert/
 
 
 %check
 %if %{with_tests}
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Webmozart/Assert/autoload.php || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Webmozart/Assert/autoload.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/phpunit --verbose \
     --bootstrap %{buildroot}%{phpdir}/Webmozart/Assert/autoload.php
+# remirepo:2
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -128,5 +152,8 @@ cp -rp src/* %{buildroot}%{phpdir}/Webmozart/Assert/
 
 
 %changelog
+* Thu Oct  6 2016 Remi Collet <remi@remirepo.net> - 1.1.0-1
+- backport for remi repo, add EL-5 stuff
+
 * Wed Sep 28 2016 Shawn Iwinski <shawn@iwin.ski> - 1.1.0-1
 - Initial package
