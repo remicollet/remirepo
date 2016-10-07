@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    db7ef240fc9de81cd093d4d7e401a30b79023196
+%global gh_commit    6ebf8087be2e4c6eb13fcd74f5dc549bea84a7de
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     alcaeus
 %global gh_project   mongo-php-adapter
@@ -21,8 +21,8 @@
 
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.0.5
-Release:        2%{?dist}
+Version:        1.0.6
+Release:        1%{?dist}
 Summary:        Mongo PHP Adapter
 
 Group:          Development/Libraries
@@ -171,6 +171,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct  7 2016 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
+- update to 1.0.6
+
 * Thu Jul 28 2016 Remi Collet <remi@fedoraproject.org> - 1.0.5-2
 - only run upstream test suite when build --with tests
 
