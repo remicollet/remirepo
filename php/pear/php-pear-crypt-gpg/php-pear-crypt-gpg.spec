@@ -12,7 +12,7 @@
 %global with_tests 0%{!?_without_tests:1}
 
 Name:           php-pear-crypt-gpg
-Version:        1.4.2
+Version:        1.4.3
 Release:        1%{?dist}
 Summary:        GNU Privacy Guard (GnuPG)
 
@@ -69,7 +69,7 @@ is intended only to facilitate public-key cryptography.
 
 if [ -x %{_bindir}/gpg1 ]; then
   sed -e "s:'%{_bindir}/gpg':'%{_bindir}/gpg1':" \
-      -i Crypt_GPG-1.4.2/Crypt/GPG/Engine.php
+      -i %{pear_name}-%{version}/Crypt/GPG/Engine.php
   sed -e 's/md5sum="[^"]*"//' \
       -i package.xml
 fi
@@ -137,6 +137,9 @@ fi
 
 
 %changelog
+* Fri Oct 07 2016 Remi Collet <remi@fedoraproject.org> - 1.4.3-1
+- Update to 1.4.3
+
 * Mon Jun 20 2016 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
 - Update to 1.4.2
 - always use gnupg v1
