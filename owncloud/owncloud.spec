@@ -8,7 +8,7 @@
 # Please preserve changelog entries
 #
 Name:           owncloud
-Version:        9.0.5
+Version:        9.1.1
 Release:        1%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
@@ -44,34 +44,28 @@ Source8:        %{name}-fedora-autoloader.php
 
 # Stop OC from trying to do stuff to .htaccess files. Just calm down, OC.
 # Distributors are on the case.
-Patch2:         %{name}-9.0.1-dont_update_htacess.patch
+Patch2:         %{name}-9.1.0-dont_update_htacess.patch
 
 # Remove explicit load of dropbox
-Patch3:         %{name}-9.0.3-dropbox-autoloader.patch
+Patch3:         %{name}-9.1.0-dropbox-autoloader.patch
 
 # Remove explicit load of google
-Patch4:         %{name}-9.0.1-google-autoloader.patch
+Patch4:         %{name}-9.1.0-google-autoloader.patch
 
 # Remove explicit load of aws
-Patch5:         %{name}-8.2.3-amazon-autoloader.patch
+Patch5:         %{name}-9.1.0-amazon-autoloader.patch
 
 # Display the appropriate upgrade command for fedora/epel users bz#1321417
 Patch6:         %{name}-8.2.3-correct-cli-upgrade-command.patch
 
 # Disable the integrity checking whilst a better way to deal with it is found
-Patch8:         %{name}-9.0.2-default_integrity_check_disabled.patch
-
-# There's additional htaccess calls to clean up
-Patch9:         %{name}-9.0.4-further_htaccess_cleanup.patch
-
-# Since we unbundle we don't want 3rdparty libraries to be repaired
-Patch10:        %{name}-9.0.4-no_3rdparty_repairs.patch
+Patch8:         %{name}-9.1.0-default_integrity_check_disabled.patch
 
 # Need to work around an NSS issue in el7.2, due to be fix el7.3 bz#1241172
-Patch11:         %{name}-8.1.6-work-arround-nss-issue.patch
+Patch9:         %{name}-9.1.1-work-arround-nss-issue.patch
 
 # RH provide support for php54 so don't tell users it's EOL
-Patch12:         %{name}-8.2.3-dont_warn_php54_eol.patch
+Patch10:         %{name}-9.1.1-dont_warn_php54_eol.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -84,26 +78,23 @@ BuildRequires:  php-pear
 BuildRequires:       php-cli
 BuildRequires:       php-composer(sabre/dav)  >= 3.0.8
 BuildRequires:       php-composer(sabre/dav)  < 4.0
-BuildRequires:       php-composer(doctrine/dbal) >= 2.5.2
+BuildRequires:       php-composer(doctrine/dbal) >= 2.5.4
 BuildRequires:       php-composer(doctrine/dbal) < 2.6
 BuildRequires:       php-composer(mcnetic/zipstreamer) >= 1.0
 BuildRequires:       php-composer(mcnetic/zipstreamer) < 2.0
 BuildRequires:       php-composer(phpseclib/phpseclib) >= 2.0
 BuildRequires:       php-composer(phpseclib/phpseclib) < 3.0
 BuildRequires:       php-opencloud >= 1.9.2
-BuildRequires:       php-composer(james-heinrich/getid3) >= 1.9.12
 BuildRequires:       php-composer(jeremeamia/superclosure) >= 2.1.0
-BuildRequires:       php-composer(ircmaxell/random-lib) >= 1.1
-BuildRequires:       php-composer(ircmaxell/random-lib) < 2.0
 BuildRequires:       php-composer(bantu/ini-get-wrapper) >= 1.0.1
 BuildRequires:       php-composer(natxet/CssMin) >= 3.0.4
 BuildRequires:       php-composer(punic/punic) >= 1.6.3
-BuildRequires:       php-composer(pear/archive_tar) >= 1.4.0
+BuildRequires:       php-composer(pear/archive_tar) >= 1.4.1
 BuildRequires:       php-composer(pear/archive_tar) < 2.0
 BuildRequires:       php-composer(patchwork/utf8) >= 1.2.6
 BuildRequires:       php-composer(patchwork/utf8) < 2.0
-BuildRequires:       php-composer(symfony/console) >= 2.8.1
-BuildRequires:       php-composer(symfony/event-dispatcher) >= 2.8.1
+BuildRequires:       php-composer(symfony/console) >= 2.8.3
+BuildRequires:       php-composer(symfony/event-dispatcher) >= 2.8.3
 BuildRequires:       php-composer(symfony/routing) >= 2.8.1
 BuildRequires:       php-composer(symfony/process) >= 2.8.1
 BuildRequires:       php-composer(pimple/pimple) >= 3.0.2
@@ -111,18 +102,18 @@ BuildRequires:       php-composer(pimple/pimple) < 4.0
 BuildRequires:       php-composer(ircmaxell/password-compat) >= 1.0.0
 BuildRequires:       php-composer(nikic/php-parser) >= 1.4.1
 BuildRequires:       php-composer(nikic/php-parser) < 2.0
-BuildRequires:       php-composer(icewind/streams) >= 0.4.0
+BuildRequires:       php-composer(icewind/streams) >= 0.4.1
 BuildRequires:       php-composer(swiftmailer/swiftmailer) >= 5.4.1
-BuildRequires:       php-composer(guzzlehttp/guzzle) >= 5.3.1
+BuildRequires:       php-composer(guzzlehttp/guzzle) >= 5.3.0
 BuildRequires:       php-composer(guzzlehttp/guzzle) < 6.0
-BuildRequires:       php-composer(league/flysystem) >= 1.0.16
+BuildRequires:       php-composer(league/flysystem) >= 1.0.20
 BuildRequires:       php-composer(interfasys/lognormalizer) >= 1.0
 BuildRequires:       php-composer(owncloud/tarstreamer) >= 0.1
 BuildRequires:       php-composer(patchwork/jsqueeze) >= 2.0
 BuildRequires:       php-composer(patchwork/jsqueeze) < 3.0
 BuildRequires:       php-composer(kriswallsmith/assetic) >= 1.3.2-3
 BuildRequires:       php-composer(kriswallsmith/assetic) < 2.0
-BuildRequires:       php-composer(icewind/smb)     >= 1.0.8
+BuildRequires:       php-composer(icewind/smb)     >= 1.1.0
 %if 0%{?rhel} != 5
 BuildRequires:       php-pecl(smbclient) >= 0.8.0
 %endif
@@ -137,7 +128,8 @@ BuildRequires:       php-composer(symfony/polyfill-php55) >= 1.0
 BuildRequires:       php-composer(symfony/polyfill-php55) < 2.0
 BuildRequires:       php-composer(symfony/polyfill-php56) >= 1.0
 BuildRequires:       php-composer(symfony/polyfill-php56) < 2.0
-
+BuildRequires:       php-composer(lukasreschke/id3parser) >= 0.0.1
+BuildRequires:       php-composer(lukasreschke/id3parser) < 1.0.0
 
 Requires:       %{name}-webserver = %{version}-%{release}
 Requires:       %{name}-database = %{version}-%{release}
@@ -165,10 +157,10 @@ Requires:       php-filter
 ### External PHP libs required by OC core
 
 
-# "doctrine/dbal": "2.5.2"
+# "doctrine/dbal": "2.5.4"
 # pulls in doctrine/common as a strict requires
 # which pulls in doctrine/{annotations,inflector,cache,collections,lexer} as strict requires
-Requires:       php-composer(doctrine/dbal) >= 2.5.2
+Requires:       php-composer(doctrine/dbal) >= 2.5.4
 Requires:       php-composer(doctrine/dbal) < 2.6
 
 #"mcnetic/zipstreamer": "^1.0"
@@ -184,16 +176,8 @@ Requires:       php-composer(phpseclib/phpseclib) < 3.0
 # guzzle/http package include common, parser and stream too
 Requires:       php-opencloud >= 1.9.2
 
-#"james-heinrich/getid3": "dev-master"
-Requires:       php-composer(james-heinrich/getid3) >= 1.9.12
-
 # "jeremeamia/superclosure": "2.1.0"
 Requires:       php-composer(jeremeamia/superclosure) >= 2.1.0
-
-# "ircmaxell/random-lib": "~1.1"
-# Also pulls in ircmaxell/security-lib which is a strict requires
-Requires:       php-composer(ircmaxell/random-lib) >= 1.1
-Requires:       php-composer(ircmaxell/random-lib) < 2.0
 
 # "bantu/ini-get-wrapper": "v1.0.1"
 Requires:       php-composer(bantu/ini-get-wrapper) >= 1.0.1
@@ -205,17 +189,17 @@ Requires:       php-composer(natxet/CssMin) >= 3.0.4
 Requires:       php-composer(punic/punic) >= 1.6.3
 
 # "pear/archive_tar": "1.4.1"
-Requires:       php-composer(pear/archive_tar) >= 1.4.0
+Requires:       php-composer(pear/archive_tar) >= 1.4.1
 Requires:       php-composer(pear/archive_tar) < 2.0
 
 # "patchwork/utf8": "1.2.6"
 Requires:       php-composer(patchwork/utf8) >= 1.2.6
 Requires:       php-composer(patchwork/utf8) < 2.0
 
-# "symfony/console": "2.8.1"
-Requires:       php-composer(symfony/console) >= 2.8.1
-# "symfony/event-dispatcher": "2.8.1"
-Requires:       php-composer(symfony/event-dispatcher) >= 2.8.1
+# "symfony/console": "2.8.3"
+Requires:       php-composer(symfony/console) >= 2.8.3
+# "symfony/event-dispatcher": "2.8.3"
+Requires:       php-composer(symfony/event-dispatcher) >= 2.8.3
 # "symfony/routing": "2.8.1"
 Requires:       php-composer(symfony/routing) >= 2.8.1
 # "symfony/process": "2.8.1"
@@ -232,21 +216,21 @@ Requires:       php-composer(ircmaxell/password-compat) >= 1.0.0
 Requires:       php-composer(nikic/php-parser) >= 1.4.1
 Requires:       php-composer(nikic/php-parser) < 2.0
 
-# "icewind/Streams": "0.4.0"
-Requires:       php-composer(icewind/streams) >= 0.4.0
+# "icewind/Streams": "0.4.1"
+Requires:       php-composer(icewind/streams) >= 0.4.1
 
 # "swiftmailer/swiftmailer": "@stable"
 # Version 5.4.1 for autoloader in /usr/share/php
 Requires:       php-composer(swiftmailer/swiftmailer) >= 5.4.1
 
-# "guzzlehttp/guzzle": "5.3.1"
+# "guzzlehttp/guzzle": "5.3.0"
 # pulls in guzzlehttp/ringphp as strict requires
 # ringphp pulls in guzzlehttp/streams and react/promise as strict requires
-Requires:       php-composer(guzzlehttp/guzzle) >= 5.3.1
+Requires:       php-composer(guzzlehttp/guzzle) >= 5.3.0
 Requires:       php-composer(guzzlehttp/guzzle) < 6.0
 
-# "league/flysystem": "1.0.16"
-Requires:       php-composer(league/flysystem) >= 1.0.16
+# "league/flysystem": "1.0.20"
+Requires:       php-composer(league/flysystem) >= 1.0.20
 
 
 # "pear/pear-core-minimal": "v1.10.1"
@@ -289,13 +273,17 @@ Requires:       php-composer(symfony/polyfill-php55) < 2.0
 Requires:       php-composer(symfony/polyfill-php56) >= 1.0
 Requires:       php-composer(symfony/polyfill-php56) < 2.0
 
+# "lukasreschke/id3parser" : "^0.0.1"
+Requires:       php-composer(lukasreschke/id3parser) >= 0.0.1
+Requires:       php-composer(lukasreschke/id3parser) < 1.0.0
+
 ### For dependencies of apps/files_external
 
 ## SMB/CIFS external storage stuff
 
-#"icewind/smb": "1.0.8"
+#"icewind/smb": "1.1.0"
 # note that streams is a dep but already required by core anyway
-Requires:       php-composer(icewind/smb)     >= 1.0.8
+Requires:       php-composer(icewind/smb)     >= 1.1.0
 # This makes smb external storage usable in performance
 # and doesn't break things like encryption due to timeouts
 %if 0%{?rhel} != 5
@@ -433,11 +421,9 @@ work with an SQLite 3 database stored on the local system.
 %patch5 -p1
 %patch6 -p1
 %patch8 -p1
+%if 0%{?rhel}
 %patch9 -p1
 %patch10 -p1
-%if 0%{?rhel}
-%patch11 -p1
-%patch12 -p1
 %endif
 
 # patch backup files and .git stuff
@@ -445,14 +431,17 @@ find . -name \*.orig    -type f        -exec rm    {} \; -print
 find . -name .gitignore -type f        -exec rm    {} \; -print
 find . -name .github    -type d -prune -exec rm -r {} \; -print
 
+
 # prepare package doc
 cp %{SOURCE3} README.fedora
 cp %{SOURCE4} README.mysql
 cp %{SOURCE5} README.postgresql
 
+
 mv 3rdparty/composer.json 3rdparty_composer.json
 mv apps/files_external/3rdparty/composer.json files_external_composer.json
 mv apps/gallery/composer.json gallery_composer.json
+
 
 # Explicitly remove the bundled libraries we're aware of
 pushd 3rdparty
@@ -460,9 +449,7 @@ rm -r doctrine/{annotations,cache,collections,common,dbal,inflector,lexer}
 rm -r mcnetic/zipstreamer
 rm -r phpseclib/phpseclib
 rm -r rackspace/php-opencloud guzzle/{http,common,parser,stream}
-rm -r james-heinrich/getid3
 rm -r jeremeamia/SuperClosure
-rm -r ircmaxell/{random-lib,security-lib}
 rm -r bantu/ini-get-wrapper
 rm -r natxet/CssMin
 rm -r punic/punic
@@ -487,6 +474,7 @@ rm -r kriswallsmith/assetic
 rm -r sabre/{dav,event,http,vobject,uri,xml}
 rm -r symfony/polyfill-{php55,php56,php70,mbstring,util}
 rm -r paragonie/random_compat
+rm -r lukasreschke/id3parser
 rm README.md
 
 # remove composer stuff
@@ -542,10 +530,11 @@ find . -size 0 -type f -exec rm {} \;
 # let's not ship upstream's 'updatenotification' app, which has zero chance of working and
 # a big chance of blowing things up
 rm -r apps/updatenotification
+
 # also remove the actual updater
 rm -r updater
-# removing the updater fixes as not required on our build
-rm -r resources/updater-fixes
+
+
 
 %check
 # files_external checks
@@ -579,7 +568,7 @@ php %{buildroot}%{_datadir}/%{name}/3rdparty/autoload.php
 
 # There should not be an composer.json files remaining
 nb=$(find -name 'composer.*' | wc -l)
-if [ $nb -gt 0 ]
+if [ $nb -gt 0  ]
   then
   false found unexpected composer.json files
 fi
@@ -749,6 +738,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 06 2016 James Hogarth <james.hogarth@gmail.com> - 9.1.1-1
+- Update to 9.1.1
+
 * Tue Sep 20 2016 Remi Collet <remi@fedoraproject.org> - 9.0.5-1
 - Update to 9.0.5
 

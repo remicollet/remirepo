@@ -1,5 +1,5 @@
 diff --git a/apps/files_external/ajax/oauth1.php b/apps/files_external/ajax/oauth1.php
-index ea7db25..4279cec 100644
+index e363e6c..d2aefbc 100644
 --- a/apps/files_external/ajax/oauth1.php
 +++ b/apps/files_external/ajax/oauth1.php
 @@ -23,7 +23,6 @@
@@ -10,15 +10,15 @@ index ea7db25..4279cec 100644
  
  OCP\JSON::checkAppEnabled('files_external');
  OCP\JSON::checkLoggedIn();
-diff --git a/apps/files_external/lib/dropbox.php b/apps/files_external/lib/dropbox.php
-index 8381ccb..174baec 100644
---- a/apps/files_external/lib/dropbox.php
-+++ b/apps/files_external/lib/dropbox.php
+diff --git a/apps/files_external/lib/Lib/Storage/Dropbox.php b/apps/files_external/lib/Lib/Storage/Dropbox.php
+index f0f62f9..1b20a62 100644
+--- a/apps/files_external/lib/Lib/Storage/Dropbox.php
++++ b/apps/files_external/lib/Lib/Storage/Dropbox.php
 @@ -34,8 +34,6 @@ use Icewind\Streams\IteratorDirectory;
  use Icewind\Streams\RetryWrapper;
  use OCP\Files\StorageNotAvailableException;
  
--require_once __DIR__ . '/../3rdparty/Dropbox/autoload.php';
+-require_once __DIR__ . '/../../../3rdparty/Dropbox/autoload.php';
 -
  class Dropbox extends \OC\Files\Storage\Common {
  

@@ -1,0 +1,13 @@
+diff --git a/lib/private/IntegrityCheck/Checker.php b/lib/private/IntegrityCheck/Checker.php
+index d4038f8..7901a2c 100644
+--- a/lib/private/IntegrityCheck/Checker.php
++++ b/lib/private/IntegrityCheck/Checker.php
+@@ -109,7 +109,7 @@ class Checker {
+ 		 * too prominent. So please do not add it to config.sample.php.
+ 		 */
+ 		if ($this->config !== null) {
+-			$isIntegrityCheckDisabled = $this->config->getSystemValue('integrity.check.disabled', false);
++			$isIntegrityCheckDisabled = $this->config->getSystemValue('integrity.check.disabled', true);
+ 		} else {
+ 			$isIntegrityCheckDisabled = false;
+ 		}

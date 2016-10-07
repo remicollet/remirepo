@@ -24,12 +24,8 @@ require_once $vendor . '/ZipStreamer/autoload.php';
 require_once $vendor . '/phpseclib/autoload.php';
 // "rackspace/php-opencloud"
 require_once $vendor . '/OpenCloud/autoload.php';
-// "james-heinrich/getid3"
-require_once $vendor . '/getid3/autoload.php';
 // "jeremeamia/superclosure"
 require_once $vendor . '/SuperClosure/autoload.php';
-// "ircmaxell/random-lib"
-require_once $vendor . '/RandomLib/autoload.php';
 // "bantu/ini-get-wrapper"
 require_once $vendor . '/bantu/IniGetWrapper/IniGetWrapper.php';
 // "natxet/CssMin"
@@ -70,4 +66,5 @@ require_once $vendor . '/Patchwork/JSqueeze.php';
 require_once $vendor . '/Assetic/autoload.php';
 // "symfony/polyfill-php{55,56,70}"
 require_once $vendor . '/Symfony/Polyfill/autoload.php';
-
+// "lukasreschke/id3parser"
+require_once $vendor . '/ID3Parser/autoload.php';
