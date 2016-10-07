@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a7f2db56518e50ab92f28f739810dfad2f223b6b
+%global gh_commit    60c32c5b5e79c2248001efa2560f831da11cc2d7
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.6
-%global minor        0
+%global minor        1
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -236,6 +236,9 @@ fi
 
 
 %changelog
+* Fri Oct  7 2016 Remi Collet <remi@fedoraproject.org> - 5.6.1-1
+- update to 5.6.1
+
 * Fri Oct  7 2016 Remi Collet <remi@fedoraproject.org> - 5.6.0-1
 - update to 5.6.0
 - drop dependency on php-tidy
