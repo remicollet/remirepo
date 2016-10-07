@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    3f67cee782c9abfaee5e32fd2f57cdd54bc257ba
+%global gh_commit    a7f2db56518e50ab92f28f739810dfad2f223b6b
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -16,8 +16,8 @@
 %global php_home     %{_datadir}/php
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
-%global major        5.5
-%global minor        7
+%global major        5.6
+%global minor        0
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -130,18 +130,16 @@ Requires:       php-xml
 Requires:       php-libxml
 # From composer.json, "suggest": {
 #        "phpunit/php-invoker": "~1.1",
-#        "ext-tidy": "*",
 #        "ext-xdebug": "*"
 Requires:       php-composer(phpunit/php-invoker) >= 1.1
 Requires:       php-composer(phpunit/php-invoker) <  2
-Requires:       php-tidy
 # For our autoload patch
 Requires:       php-composer(doctrine/instantiator) >= 1.0.4
 Requires:       php-composer(doctrine/instantiator) <  2
 Requires:       php-composer(symfony/class-loader) >= 2.0
 Requires:       php-composer(symfony/class-loader) <  3
 Requires:       php-composer(sebastian/recursion-context) >= 1.0
-# From phpcompatinfo report for version 5.5.5
+# From phpcompatinfo report for version 5.6.0
 Requires:       php-reflection
 Requires:       php-openssl
 Requires:       php-pcntl
@@ -238,6 +236,10 @@ fi
 
 
 %changelog
+* Fri Oct  7 2016 Remi Collet <remi@fedoraproject.org> - 5.6.0-1
+- update to 5.6.0
+- drop dependency on php-tidy
+
 * Mon Oct  3 2016 Remi Collet <remi@fedoraproject.org> - 5.5.7-1
 - Update to 5.5.7 (no change)
 - sources from github
