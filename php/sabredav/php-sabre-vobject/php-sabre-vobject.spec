@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b7d6005b9f8e18bfe2b953d9847df0b3e4098441
+%global gh_commit    129d80533a9ec0d9cacfb50b51180c34edb6874c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-vobject
@@ -14,7 +14,7 @@
 
 Name:           php-%{gh_project}
 Summary:        Library to parse and manipulate iCalendar and vCard objects
-Version:        3.5.2
+Version:        3.5.3
 Release:        1%{?dist}
 
 URL:            http://sabre.io/vobject/
@@ -98,11 +98,22 @@ cd tests
 sed -e 's:@BUILDROOT@:%{buildroot}:' -i bootstrap.php
 
 : Run upstream test suite against installed library
-%{_bindir}/phpunit --verbose
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Skip upstream test suite
 %endif
@@ -120,6 +131,9 @@ fi
 
 
 %changelog
+* Fri Oct  7 2016 Remi Collet <remi@fedoraproject.org> - 3.5.3-1
+- update to 3.5.3
+
 * Tue Apr 26 2016 Remi Collet <remi@fedoraproject.org> - 3.5.2-1
 - update to 3.5.2
 
