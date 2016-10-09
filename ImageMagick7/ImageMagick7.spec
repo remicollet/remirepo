@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        7.0.3
-%global Patchlevel 2
+%global Patchlevel 3
 %global incsuffixe -7
 %global libsuffixe -7.Q16HDRI
 %global with_tests 0%{!?_without_tests:1}
@@ -494,6 +494,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct  9 2016 Remi Collet <remi@remirepo.net> - 7.0.3.3-1
+- update to version 7.0.3 patchlevel 3
+- open https://github.com/ImageMagick/ImageMagick/issues/284
+  3 failed tests
+
 * Mon Oct  3 2016 Remi Collet <remi@remirepo.net> - 7.0.3.2-1
 - update to version 7.0.3 patchlevel 2
 
