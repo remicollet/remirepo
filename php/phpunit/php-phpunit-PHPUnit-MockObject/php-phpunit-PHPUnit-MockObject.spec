@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    03500345483e1e17b52e2e4d34a89c9408ab2902
+%global gh_commit    238d7a2723bce689c79eeac9c7d5e1d623bb9dc2
 #global gh_date      20150902
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -15,8 +15,8 @@
 %global php_home     %{_datadir}/php
 %global pear_name    PHPUnit_MockObject
 %global pear_channel pear.phpunit.de
-%global major        3.3
-%global minor        1
+%global major        3.4
+%global minor        0
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
@@ -109,9 +109,6 @@ cp -pr src %{buildroot}%{php_home}/PHPUnit
 
 %if %{with_tests}
 %check
-# No phpcov
-grep -v 'log' phpunit.xml.dist > phpunit.xml
-
 : Generate autoloader for tests
 phpab --output tests/_fixture/autoload.php tests/_fixture/
 
@@ -168,6 +165,9 @@ fi
 
 
 %changelog
+* Mon Oct 10 2016 Remi Collet <remi@fedoraproject.org> - 3.4.0-1
+- Update to 3.4.0
+
 * Tue Oct  4 2016 Remi Collet <remi@fedoraproject.org> - 3.3.1-1
 - Update to 3.3.1
 
