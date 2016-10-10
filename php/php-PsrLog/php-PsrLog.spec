@@ -12,8 +12,8 @@
 
 %global github_owner     php-fig
 %global github_name      log
-%global github_version   1.0.1
-%global github_commit    5277094ed527a1c4477177d102fe4c53551953e0
+%global github_version   1.0.2
+%global github_commit    4ebe3a8bf773a19edfe0a84b6585ba3d401b724d
 
 %global composer_vendor  psr
 %global composer_project log
@@ -100,6 +100,9 @@ cp -rp Psr %{buildroot}%{_datadir}/php/
 
 
 %changelog
+* Mon Oct 10 2016 Remi Collet <remi@fedoraproject.org> 1.0.2-1
+- update to 1.0.2
+
 * Sun Sep 25 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.0.1-1
 - Updated to 1.0.1 (RHBZ #1377513)
 
