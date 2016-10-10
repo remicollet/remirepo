@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-EasyRdf
 #
-# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -22,7 +22,7 @@
 %endif
 
 # php-redland not available in remirepo
-%global redland_support 0%{!?rhel}
+%global redland_support 0
 
 %if 0%{?fedora} > 9 || 0%{?rhel} > 5
 # Build using "--without tests" to disable tests
@@ -36,7 +36,7 @@
 
 Name:          php-EasyRdf
 Version:       0.9.0
-Release:       1%{?dist}
+Release:       4%{?dist}
 Summary:       A PHP library designed to make it easy to consume and produce RDF
 
 Group:         Development/Libraries
@@ -130,7 +130,7 @@ Group:   Documentation
 %setup -qn easyrdf-%{version}
 
 : Create autoloader
-(cat <<'AUTOLOAD'
+cat <<'AUTOLOAD' | tee lib/EasyRdf/autoload.php
 <?php
 /**
  * Autoloader created by %{name}-%{version}-%{release}
@@ -151,7 +151,6 @@ $fedoraClassLoader->addPrefix('EasyRdf_', dirname(__DIR__));
 
 return $fedoraClassLoader;
 AUTOLOAD
-) | tee lib/EasyRdf/autoload.php
 
 
 %build
@@ -173,7 +172,7 @@ sed -e 's/testSerialiseSvg/SKIP_testSerialiseSvg/' \
     -i test/EasyRdf/Serialiser/GraphVizTest.php
 
 : Create PHPUnit config
-(cat <<'PHPUNIT'
+cat <<'PHPUNIT' | tee phpunit.xml
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
     bootstrap="%{buildroot}%{phpdir}/EasyRdf/autoload.php"
@@ -185,7 +184,6 @@ sed -e 's/testSerialiseSvg/SKIP_testSerialiseSvg/' \
     </testsuites>
 </phpunit>
 PHPUNIT
-) | tee phpunit.xml
 
 %if !%{redland_support}
 : No redland support
@@ -193,7 +191,7 @@ rm -f test/EasyRdf/Parser/RedlandTest.php
 %endif
 
 : Run tests
-%{_bindir}/phpunit -v
+%{_bindir}/phpunit --verbose
 %else
 : Tests skipped
 %endif
@@ -221,6 +219,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct 09 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.9.0-4
+- No Redland support for Fedora 25+ (RHBZ #1350621)
+
 * Sun Jun 28 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.9.0-1
 - Updated to 0.9.0 (RHBZ #1163321)
 - Added autoloader
