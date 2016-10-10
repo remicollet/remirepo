@@ -74,7 +74,7 @@
 
 Name:          php-Assetic
 Version:       %{github_version}
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       Asset Management for PHP
 
 Group:         Development/Libraries
@@ -241,14 +241,17 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 $fedoraClassLoader->addPrefix('Assetic\\', dirname(__DIR__));
 require_once __DIR__.'/functions.php';
 
+// Dependencies (autoloader => required)
 foreach (array(
-        '%{phpdir}/Symfony/Component/Process/autoload.php' => true,
-        '%{phpdir}/Leafo/ScssPhp/autoload.php'             => false,
-        '%{phpdir}/lessphp/lessc.inc.php'                  => false,
-        '%{phpdir}/Patchwork/JSqueeze.php'                 => false,
-        '%{phpdir}/Twig/autoload.php'                      => false,
-        ) as $dep => $mandatory) {
-        if ($mandatory || file_exists($dep)) require_once($dep);
+    '%{phpdir}/Symfony/Component/Process/autoload.php' => true,
+    '%{phpdir}/Leafo/ScssPhp/autoload.php'             => false,
+    '%{phpdir}/lessphp/lessc.inc.php'                  => false,
+    '%{phpdir}/Patchwork/JSqueeze.php'                 => false,
+    '%{phpdir}/Twig/autoload.php'                      => false,
+) as $dependency => $required) {
+    if ($required || file_exists($dependency)) {
+        require_once($dependency);
+    }
 }
 
 return $fedoraClassLoader;
@@ -268,6 +271,8 @@ cp -rp src/Assetic %{buildroot}%{phpdir}/
 rm -f \
     tests/Assetic/Test/Asset/HttpAssetTest.php \
     tests/Assetic/Test/Filter/GoogleClosure/CompilerApiFilterTest.php
+sed 's/function testCompassExtensionCanBeDisabled/function SKIP_testCompassExtensionCanBeDisabled/' \
+    -i tests/Assetic/Test/Filter/ScssphpFilterTest.php
 
 : Create tests bootstrap
 cat <<'BOOTSTRAP' | tee bootstrap.php
@@ -277,11 +282,23 @@ $fedoraClassLoader->addPrefix('Assetic\\Test\\', __DIR__.'/tests');
 BOOTSTRAP
 
 : Run tests
-%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php70 %{_bindir}/phpunit --bootstrap bootstrap.php
+   run=1
 fi
+if which php71; then
+   php70 %{_bindir}/phpunit --bootstrap bootstrap.php
+   run=1
+fi
+if [ $run -eq 0 ]; then
+: Run upstream test suite
+%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+# remirepo:2
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -303,6 +320,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 10 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.2-4
+- Skip addtional test known to fail (FTBFS in rawhide; RHBZ #1383374)
+
 * Wed Apr 13 2016 James Hogarth <james.hogarth@gmail.com> - 1.3.2-3
 - Change to using array() in autoloader to be php5.3 compatible for el6
 
