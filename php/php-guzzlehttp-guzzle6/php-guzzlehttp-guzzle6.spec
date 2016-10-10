@@ -12,13 +12,13 @@
 
 %global github_owner     guzzle
 %global github_name      guzzle
-%global github_version   6.2.1
-%global github_commit    3f808fba627f2c5b69e2501217bf31af349c1427
+%global github_version   6.2.2
+%global github_commit    ebf29dee597f02f09f4d5bbecc68230ea9b08f60
 
 %global composer_vendor  guzzlehttp
 %global composer_project guzzle
 
-# "php": ">=5.5.0"
+# "php": ">=5.5"
 %global php_min_ver      5.5.0
 # "guzzlehttp/promises": "^1.0"
 %global promises_min_ver 1.0
@@ -28,7 +28,7 @@
 %global psr7_max_ver     2.0
 # "psr/log": "^1.0"
 #     NOTE: Min version not 1.0 because autoloader required
-%global psr_log_min_ver  1.0.0-8
+%global psr_log_min_ver  1.0.1
 %global psr_log_max_ver  2.0
 
 %if 0%{?rhel} == 5
@@ -66,9 +66,8 @@ BuildRequires: php(language)                     >= %{php_min_ver}
 BuildRequires: php-composer(guzzlehttp/promises) >= %{promises_min_ver}
 BuildRequires: php-composer(guzzlehttp/psr7)     >= %{psr7_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-#BuildRequires: php-composer(psr/log)             >= %%{psr_log_min_ver}
-BuildRequires: php-PsrLog                        >= %{psr_log_min_ver}
-## phpcompatinfo (computed from version 6.2.0)
+BuildRequires: php-composer(psr/log)             >= %{psr_log_min_ver}
+## phpcompatinfo (computed from version 6.2.2)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -92,10 +91,9 @@ Requires:      php-composer(guzzlehttp/promises) >= %{promises_min_ver}
 Requires:      php-composer(guzzlehttp/promises) <  %{promises_max_ver}
 Requires:      php-composer(guzzlehttp/psr7)     >= %{psr7_min_ver}
 Requires:      php-composer(guzzlehttp/psr7)     <  %{psr7_max_ver}
-#Requires:      php-composer(psr/log)             >= %%{psr_log_min_ver}
-Requires:      php-PsrLog                        >= %{psr_log_min_ver}
+Requires:      php-composer(psr/log)             >= %{psr_log_min_ver}
 Requires:      php-composer(psr/log)             <  %{psr_log_max_ver}
-# phpcompatinfo (computed from version 6.2.0)
+# phpcompatinfo (computed from version 6.2.2)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-filter
@@ -214,6 +212,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct 09 2016 Shawn Iwinski <shawn@iwin.ski> - 6.2.2-1
+- Update to 6.2.2 (RHBZ #1383050)
+
 * Mon Jul 18 2016 Shawn Iwinski <shawn@iwin.ski> - 6.2.1-1
 - Update to 6.2.1 (RHBZ #1357582 / CVE-2016-5385)
 - Removed "Fix failing test" patch
