@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    f48d98c22a4a4bef76cabb5968ffaddbb2bb593e
+%global gh_commit    59b20e5bbace9912607481634f97d05a776ffca7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-xml
@@ -19,7 +19,7 @@
 
 Name:           php-%{gh_project}
 Summary:        XML library that you may not hate
-Version:        1.4.2
+Version:        1.5.0
 Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
@@ -31,7 +31,7 @@ Source1:        %{name}-autoload.php
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.4.1
+BuildRequires:  php(language) >= 5.5.5
 BuildRequires:  php-xmlwriter
 BuildRequires:  php-xmlreader
 BuildRequires:  php-dom
@@ -39,7 +39,7 @@ BuildRequires:  php-composer(sabre/uri) >= 1.0
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
 # From composer.json, "require-dev": {
-#        "sabre/cs": "~0.0.1",
+#        "sabre/cs": "~1.0.0",
 #        "phpunit/phpunit" : "*"
 BuildRequires:  php-composer(phpunit/phpunit)
 # Autoloader
@@ -47,18 +47,18 @@ BuildRequires:  php-composer(symfony/class-loader)
 %endif
 
 # From composer.json, "require" : {
-#        "php" : ">=5.4.1",
+#        "php" : ">=5.5.5",
 #        "ext-xmlwriter" : "*",
 #        "ext-xmlreader" : "*",
 #        "ext-dom" : "*",
 #        "lib-libxml" : ">=2.6.20",
-#        "sabre/uri" : "~1.0"
-Requires:       php(language) >= 5.4.1
+#        "sabre/uri" : ">=1.0,<3.0.0"
+Requires:       php(language) >= 5.5.5
 Requires:       php-xmlwriter
 Requires:       php-xmlreader
 Requires:       php-dom
 Requires:       php-composer(sabre/uri) >= 1.0
-Requires:       php-composer(sabre/uri) <  2
+Requires:       php-composer(sabre/uri) <  3
 # From phpcompatinfo report for version 1.4.0
 Requires:       php-pcre
 Requires:       php-spl
@@ -94,21 +94,35 @@ cp -pr lib %{buildroot}%{_datadir}/php/Sabre/Xml
 
 %check
 %if %{with_tests}
-cd tests
-cat << 'EOF' | tee bootstrap.php
+mkdir vendor
+cat << 'EOF' | tee vendor/autoload.php
 <?php
 require_once '%{buildroot}%{_datadir}/php/Sabre/Xml/autoload.php';
-// Some extra classes
-include __DIR__ . '/Sabre/Xml/Element/Mock.php';
-include __DIR__ . '/Sabre/Xml/Element/Eater.php';
+// Tests
+require_once '%{_datadir}/php/Symfony/Component/ClassLoader/Psr4ClassLoader.php';
+$fedoraPsr4ClassLoader = new \Symfony\Component\ClassLoader\Psr4ClassLoader();
+$fedoraPsr4ClassLoader->register(true);
+$fedoraPsr4ClassLoader->addPrefix('Sabre\\Xml\\', dirname(__DIR__).'/tests/Sabre/Xml/');
 EOF
+cd tests
 
 : Run upstream test suite against installed library
-%{_bindir}/phpunit --verbose
-
-if which php70; then
-  php70 %{_bindir}/phpunit --verbose
+# remirepo:11
+ret=0
+run=0
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Skip upstream test suite
 %endif
@@ -128,6 +142,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 10 2016 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
+- update to 1.5.0
+- raise dependency on PHP 5.5
+
 * Fri May 20 2016 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
 - update to 1.4.2
 
