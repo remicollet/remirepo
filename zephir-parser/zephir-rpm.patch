@@ -1,11 +1,11 @@
 diff -up bin/zephir.rpm bin/zephir
---- bin/zephir.rpm	2016-07-30 18:49:46.000000000 +0200
-+++ bin/zephir	2016-07-30 18:52:16.000000000 +0200
-@@ -1,27 +1,9 @@
- #!/bin/bash
+--- bin/zephir.rpm	2016-10-10 10:45:24.937478208 +0200
++++ bin/zephir	2016-10-10 10:47:47.437248408 +0200
+@@ -1,26 +1,8 @@
+ #!/bin/sh
 -if [ -z "$ZEPHIRDIR" ]; then
 -  ZEPHIRDIR="%ZEPHIRDIR%"
--  if [[ "$ZEPHIRDIR" == "%""ZEPHIRDIR""%" ]]; then
+-  if [ "$ZEPHIRDIR" = "%""ZEPHIRDIR""%" ]; then
 -    if [ -h $0 ]; then
 -        REALPATH="`dirname $0`/`readlink $0`"
 -        CURDIR=`dirname $REALPATH`
@@ -24,11 +24,10 @@ diff -up bin/zephir.rpm bin/zephir
 -fi
 +export ZEPHIRDIR="@DATADIR@/zephir"
  
- if [[ $1 && $2 && $3 && "$1"=="-c" ]]; then
+ if [ ! -z $1 ] && [ ! -z $2 ] && [ ! -z $3 ] && [ "$1" = "-c" ]; then
 -    php -d safe_mode=Off -d enable_dl=On -c $2 $ZEPHIRDIR/compiler.php ${*:3}
 +    @BINDIR@/php -d memory_limit=1G -d extension=zephir_parser.so -c $2 $ZEPHIRDIR/compiler.php ${*:3}
  else
 -    php -d safe_mode=Off -d enable_dl=On $ZEPHIRDIR/compiler.php $*
 +    @BINDIR@/php -d memory_limit=1G -d extension=zephir_parser.so $ZEPHIRDIR/compiler.php $*
  fi
- 
