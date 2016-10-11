@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        7.0.3
-%global Patchlevel 3
+%global Patchlevel 4
 %global incsuffixe -7
 %global libsuffixe -7.Q16HDRI
 %global with_tests 0%{!?_without_tests:1}
@@ -68,8 +68,6 @@ Group:          Applications/Multimedia
 License:        ImageMagick
 Url:            http://www.imagemagick.org/
 Source0:        ftp://ftp.ImageMagick.org/pub/ImageMagick/ImageMagick-%{VER}-%{Patchlevel}.tar.xz
-
-Patch0:         https://github.com/ImageMagick/ImageMagick/commit/14d2cea959977a84f0eb65d7b270cf7007375df1.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  bzip2-devel, freetype-devel, libjpeg-devel, libpng-devel
@@ -282,8 +280,6 @@ however.
 
 %prep
 %setup -q -n %{libname}-%{VER}-%{Patchlevel}
-
-%patch0 -p1
 
 # for %%doc
 mkdir Magick++/examples
@@ -498,6 +494,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 11 2016 Remi Collet <remi@remirepo.net> - 7.0.3.4-1
+- update to version 7.0.3 patchlevel 4
+
 * Sun Oct  9 2016 Remi Collet <remi@remirepo.net> - 7.0.3.3-1
 - update to version 7.0.3 patchlevel 3
 - open https://github.com/ImageMagick/ImageMagick/issues/284
