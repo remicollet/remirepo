@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-ocramius-code-generator-utils
 #
-# Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2014-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -25,14 +25,13 @@
 %global php_parser_max_ver 3
 
 # Build using "--without tests" to disable tests
-%global with_tests  %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
 
-%{!?phpdir:     %global phpdir     %{_datadir}/php}
-%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}
 Summary:       A set of code generator utilities built on top of PHP-Parsers
 
 Group:         Development/Libraries
@@ -42,7 +41,6 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:     noarch
-BuildRequires: %{_bindir}/phpab
 %if %{with_tests}
 # composer.json
 BuildRequires: php(language) >= %{php_min_ver}
@@ -53,6 +51,8 @@ BuildRequires: php-composer(phpunit/phpunit)  >= 5.0
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
+# Autoloader
+BuildRequires: php-composer(symfony/class-loader)
 %endif
 
 # composer.json
@@ -62,6 +62,8 @@ Requires:      php-composer(nikic/php-parser) <  %{php_parser_max_ver}
 # phpcompatinfo (computed from version 0.4.0)
 Requires:      php-pcre
 Requires:      php-spl
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -78,27 +80,51 @@ Autoloader: %{phpdir}/CodeGenerationUtils/autoload.php
 
 
 %build
-%{_bindir}/phpab --output src/CodeGenerationUtils/autoload.php src/CodeGenerationUtils
-cat << 'EOF' | tee -a src/CodeGenerationUtils/autoload.php
+: Create autoloader
+cat <<'AUTOLOAD' | tee src/CodeGenerationUtils/autoload.php
+<?php
+/**
+ * Autoloader for %{name} and its' dependencies
+ * (created by %{name}-%{version}-%{release}).
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('CodeGenerationUtils\\', dirname(__DIR__));
+
+// Required dependency
 require_once '%{phpdir}/PhpParser2/autoload.php';
-EOF
+
+return $fedoraClassLoader;
+AUTOLOAD
 
 
 %install
 rm -rf %{buildroot}
-mkdir -pm 0755 %{buildroot}%{phpdir}
-cp -rp src/* %{buildroot}%{phpdir}/
+mkdir -p %{buildroot}%{phpdir}
+cp -rp src/CodeGenerationUtils %{buildroot}%{phpdir}/
 
 
 %check
 %if %{with_tests}
-mkdir vendor
-%{_bindir}/phpab --output vendor/autoload.php tests
-cat << 'EOF' | tee -a vendor/autoload.php
-require_once '%{buildroot}%{phpdir}/CodeGenerationUtils/autoload.php';
-EOF
+: Create tests bootstrap
+cat <<'BOOTSTRAP' | tee bootstrap.php
+<?php
+$fedoraClassLoader = require '%{buildroot}%{phpdir}/CodeGenerationUtils/autoload.php';
+$fedoraClassLoader->addPrefix('CodeGenerationUtilsTest\\', __DIR__.'/tests');
+$fedoraClassLoader->addPrefix('CodeGenerationUtilsTestAsset\\', __DIR__.'/tests');
+BOOTSTRAP
 
-%{_bindir}/phpunit --verbose
+%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
 %else
 : Tests skipped
 %endif
@@ -112,11 +138,15 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc *.md composer.json
+%doc *.md
+%doc composer.json
 %{phpdir}/CodeGenerationUtils
 
 
 %changelog
+* Wed Oct 12 2016 Remi Collet <remi@fedoraproject.org> - 0.4.0-2
+- switch from classmap autoloader to PSR-0 one (symfony)
+
 * Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 0.4.0-1
 - update to 0.4.0
 - raise dependency on php ~7.0
