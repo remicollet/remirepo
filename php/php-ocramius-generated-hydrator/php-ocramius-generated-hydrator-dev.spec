@@ -1,5 +1,6 @@
+# remirpeo spec file for php-ocramius-generated-hydrator, from
 #
-# RPM spec file for php-ocramius-generated-hydrator
+# Fedora spec file for php-ocramius-generated-hydrator
 #
 # Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
@@ -11,24 +12,24 @@
 
 %global github_owner     Ocramius
 %global github_name      GeneratedHydrator
-%global github_version   1.1.1
-%global github_commit    2c29e3aaa002991609f555a6c0ecea3427825a17
+%global github_version   2.0.0
+%global github_commit    98a731e7d4e393513cb6f4e7f120da853680fb50
 
 %global composer_vendor  ocramius
 %global composer_project generated-hydrator
 
-# "php": "~5.4"
+# "php": "~7.0"
 #     NOTE: Max version ignored on purpose
-%global php_min_ver 5.4
-# "nikic/php-parser": "~1.0"
-%global php_parser_min_ver 1.0
-%global php_parser_max_ver 2
-# "ocramius/code-generator-utils": "0.3.*"
-%global ocramius_cgu_min_ver 0.3.0
-%global ocramius_cgu_max_ver 0.4.0
-# "zendframework/zend-stdlib": "~2.3"
-%global zf_stdlib_min_ver 2.3
-%global zf_stdlib_max_ver 3.0
+%global php_min_ver 7.0
+# "nikic/php-parser": "~2.0"
+%global php_parser_min_ver 2.0
+%global php_parser_max_ver 3
+# "ocramius/code-generator-utils": "0.4.*"
+%global ocramius_cgu_min_ver 0.4.0
+%global ocramius_cgu_max_ver 0.5
+# "zendframework/zend-hydrator": "~2.0"
+%global zf_hydrator_min_ver 2.0
+%global zf_hydrator_max_ver 3
 
 # Build using "--without tests" to disable tests
 %global with_tests  %{?_without_tests:0}%{!?_without_tests:1}
@@ -48,6 +49,7 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+BuildRequires: %{_bindir}/phpab
 %if %{with_tests}
 # composer.json
 BuildRequires: php(language) >= %{php_min_ver}
@@ -55,10 +57,10 @@ BuildRequires: php-composer(nikic/php-parser) >= %{php_parser_min_ver}
 BuildRequires: php-composer(nikic/php-parser) <  %{php_parser_max_ver}
 BuildRequires: php-composer(ocramius/code-generator-utils) >= %{ocramius_cgu_min_ver}
 BuildRequires: php-composer(ocramius/code-generator-utils) <  %{ocramius_cgu_max_ver}
-BuildRequires: php-composer(zendframework/zend-stdlib) >= %{zf_stdlib_min_ver}
-BuildRequires: php-composer(zendframework/zend-stdlib) <  %{zf_stdlib_max_ver}
-BuildRequires: php-phpunit-PHPUnit
-# phpcompatinfo (computed from version 1.1.0)
+BuildRequires: php-composer(zendframework/zend-hydrator) >= %{zf_hydrator_min_ver}
+BuildRequires: php-composer(zendframework/zend-hydrator) <  %{zf_hydrator_max_ver}
+BuildRequires: php-composer(phpunit/phpunit) >= 5.0
+# phpcompatinfo (computed from version 2.0.0)
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
@@ -70,9 +72,9 @@ Requires:      php-composer(nikic/php-parser) >= %{php_parser_min_ver}
 Requires:      php-composer(nikic/php-parser) <  %{php_parser_max_ver}
 Requires:      php-composer(ocramius/code-generator-utils) >= %{ocramius_cgu_min_ver}
 Requires:      php-composer(ocramius/code-generator-utils) <  %{ocramius_cgu_max_ver}
-Requires:      php-composer(zendframework/zend-stdlib) >= %{zf_stdlib_min_ver}
-Requires:      php-composer(zendframework/zend-stdlib) <  %{zf_stdlib_max_ver}
-# phpcompatinfo (computed from version 1.1.0)
+Requires:      php-composer(zendframework/zend-hydrator) >= %{zf_hydrator_min_ver}
+Requires:      php-composer(zendframework/zend-hydrator) <  %{zf_hydrator_max_ver}
+# phpcompatinfo (computed from version 2.0.0)
 Requires:      php-reflection
 Requires:      php-spl
 
@@ -83,13 +85,20 @@ Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 GeneratedHydrator is a library about high performance transition of data from
 arrays to objects and from objects to arrays.
 
+Autoloader: %{phpdir}/GeneratedHydrator/autoload.php
+
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
 
 %build
-# Empty build section, nothing required
+%{_bindir}/phpab --output src/GeneratedHydrator/autoload.php src/GeneratedHydrator
+cat << 'EOF' | tee -a src/GeneratedHydrator/autoload.php
+require_once '%{phpdir}/CodeGenerationUtils/autoload.php';
+require_once '%{phpdir}/PhpParser2/autoload.php';
+require_once '%{phpdir}/Zend/autoload.php';
+EOF
 
 
 %install
@@ -100,23 +109,13 @@ cp -rp src/* %{buildroot}%{phpdir}/
 
 %check
 %if %{with_tests}
-# Create autoloader
-cat > autoload.php <<'AUTOLOAD'
-<?php
+mkdir vendor
+%{_bindir}/phpab --output vendor/autoload.php tests
+cat << 'EOF' | tee -a vendor/autoload.php
+require_once '%{buildroot}%{phpdir}/GeneratedHydrator/autoload.php';
+EOF
 
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', $class).'.php';
-    @include_once $src;
-});
-AUTOLOAD
-
-# Create PHPUnit config with colors turned off
-sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
-
-%{__phpunit} \
-    --bootstrap autoload.php \
-    --include-path %{buildroot}%{phpdir}:./tests \
-    -d date.timezone="UTC"
+%{_bindir}/phpunit --verbose
 %else
 : Tests skipped
 %endif
@@ -135,8 +134,18 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- update to 2.0.0
+- drop dependency on zendframework/zend-stdlib
+- raise dependency on php ~7.0
+- raise dependency on nikic/php-parser ~2.0
+- raise dependency on ocramius/code-generator-utils 0.4.*
+- add dependency on zendframework/zend-hydrator
+- add simple autoloader
+
 * Wed Feb 25 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
-- update to 1.1.1
+- update to 1.1.1 (no change)
+- raise nikic/php-parser max version
 
 * Sat Nov 29 2014 Remi Collet <rpms@famillecollet.com> - 1.1.0-1
 - backport for remi repo
