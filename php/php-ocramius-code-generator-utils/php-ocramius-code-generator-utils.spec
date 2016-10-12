@@ -1,8 +1,7 @@
-# remirepo spec file for php-ocramius-code-generator-utils, from
 #
-# Fedora spec file for php-ocramius-code-generator-utils
+# RPM spec file for php-ocramius-code-generator-utils
 #
-# Copyright (c) 2014-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,26 +11,27 @@
 
 %global github_owner     Ocramius
 %global github_name      CodeGenerationUtils
-%global github_version   0.4.0
-%global github_commit    7dc0be1dec3376d95ba094688f0d84f7cf95f300
+%global github_version   0.3.2
+%global github_commit    0e2f6c593fc82801cbb5c8fa90559d923bd1445c
 
 %global composer_vendor  ocramius
 %global composer_project code-generator-utils
 
-# "php": "~7.0"
-%global php_min_ver 7.0
-# "nikic/php-parser": "~2.0"
-%global php_parser_min_ver 2.0
-%global php_parser_max_ver 3
+# "php": ">=5.3.3"
+%global php_min_ver 5.3.3
+# "nikic/php-parser": "~1.3"
+%global php_parser_min_ver 1.3
+%global php_parser_max_ver 2
 
 # Build using "--without tests" to disable tests
-%global with_tests 0%{!?_without_tests:1}
+%global with_tests  %{?_without_tests:0}%{!?_without_tests:1}
 
-%{!?phpdir:  %global phpdir  %{_datadir}/php}
+%{!?phpdir:     %global phpdir     %{_datadir}/php}
+%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       A set of code generator utilities built on top of PHP-Parsers
 
 Group:         Development/Libraries
@@ -46,24 +46,21 @@ BuildArch:     noarch
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(nikic/php-parser) >= %{php_parser_min_ver}
 BuildRequires: php-composer(nikic/php-parser) <  %{php_parser_max_ver}
-BuildRequires: php-composer(phpunit/phpunit)  >= 5.0
-# phpcompatinfo (computed from version 0.4.0)
+BuildRequires: php-phpunit-PHPUnit
+# phpcompatinfo (computed from version 0.3.0)
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
-# Autoloader
-BuildRequires: php-composer(symfony/class-loader)
 %endif
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
 Requires:      php-composer(nikic/php-parser) >= %{php_parser_min_ver}
 Requires:      php-composer(nikic/php-parser) <  %{php_parser_max_ver}
-# phpcompatinfo (computed from version 0.4.0)
+# phpcompatinfo (computed from version 0.3.0)
 Requires:      php-pcre
+Requires:      php-reflection
 Requires:      php-spl
-# Autoloader
-Requires:      php-composer(symfony/class-loader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -72,59 +69,36 @@ Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 A set of code generator utilities built on top of PHP-Parsers that ease its use
 when combined with Reflection.
 
-Autoloader: %{phpdir}/CodeGenerationUtils/autoload.php
-
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
 
 %build
-: Create autoloader
-cat <<'AUTOLOAD' | tee src/CodeGenerationUtils/autoload.php
-<?php
-/**
- * Autoloader for %{name} and its' dependencies
- * (created by %{name}-%{version}-%{release}).
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
- */
-
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
-
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('CodeGenerationUtils\\', dirname(__DIR__));
-
-// Required dependency
-require_once '%{phpdir}/PhpParser2/autoload.php';
-
-return $fedoraClassLoader;
-AUTOLOAD
+# Empty build section, nothing required
 
 
 %install
 rm -rf %{buildroot}
-mkdir -p %{buildroot}%{phpdir}
-cp -rp src/CodeGenerationUtils %{buildroot}%{phpdir}/
+mkdir -pm 0755 %{buildroot}%{phpdir}
+cp -rp src/* %{buildroot}%{phpdir}/
 
 
 %check
 %if %{with_tests}
-: Create tests bootstrap
-cat <<'BOOTSTRAP' | tee bootstrap.php
+# Create autoloader
+cat > autoload.php <<'AUTOLOAD'
 <?php
-$fedoraClassLoader = require '%{buildroot}%{phpdir}/CodeGenerationUtils/autoload.php';
-$fedoraClassLoader->addPrefix('CodeGenerationUtilsTest\\', __DIR__.'/tests');
-$fedoraClassLoader->addPrefix('CodeGenerationUtilsTestAsset\\', __DIR__.'/tests');
-BOOTSTRAP
 
-%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+spl_autoload_register(function ($class) {
+    $src = str_replace('\\', '/', $class).'.php';
+    @include_once $src;
+});
+AUTOLOAD
+
+%{__phpunit} \
+    --bootstrap autoload.php \
+    --include-path %{buildroot}%{phpdir}:./tests
 %else
 : Tests skipped
 %endif
@@ -138,24 +112,13 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc *.md
-%doc composer.json
+%doc *.md composer.json
 %{phpdir}/CodeGenerationUtils
 
 
 %changelog
-* Wed Oct 12 2016 Remi Collet <remi@fedoraproject.org> - 0.4.0-2
-- switch from classmap autoloader to PSR-0 one (symfony)
-
-* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 0.4.0-1
-- update to 0.4.0
-- raise dependency on php ~7.0
-- raise dependency on nikic/php-parser ~2.0
-- add simple autoloader
-
 * Sun Aug  9 2015 Remi Collet <remi@fedoraproject.org> - 0.3.2-1
 - update to 0.3.2
-- raise dependency on nikic/php-parser ~1.3
 
 * Wed Feb 25 2015 Remi Collet <remi@fedoraproject.org> - 0.3.1-1
 - update to 0.3.1 (no change)
