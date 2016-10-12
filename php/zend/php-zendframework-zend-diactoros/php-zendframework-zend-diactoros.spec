@@ -12,8 +12,8 @@
 
 %global github_owner     zendframework
 %global github_name      zend-diactoros
-%global github_version   1.3.6
-%global github_commit    a60da179c37f2c4e44ef734d0b92824a58943f7f
+%global github_version   1.3.7
+%global github_commit    969ff423d3f201da3ff718a5831bb999bb0669b0
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  zendframework
@@ -157,11 +157,11 @@ BOOTSTRAP
 run=0
 ret=0
 if which php56; then
-   php56 %{_bindir}/phpunit --bootstrap ./bootstrap.php
+   php56 %{_bindir}/phpunit --bootstrap ./bootstrap.php || ret=1
    run=1
 fi
 if which php71; then
-   php71 %{_bindir}/phpunit --bootstrap ./bootstrap.php
+   php71 %{_bindir}/phpunit --bootstrap ./bootstrap.php || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -189,6 +189,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct 12 2016 Remi Collet <remi@remirepo.net> - 1.3.7-1
+- update to 1.3.7
+
 * Thu Sep  8 2016 Remi Collet <remi@remirepo.net> - 1.3.6-1
 - update to 1.3.6
 
