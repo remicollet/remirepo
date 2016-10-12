@@ -16,9 +16,9 @@
 
 %global pecl_name   xdebug
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
-%global gh_commit   9fe2994df1439546373440b72fb7623f357c680c
+%global gh_commit   81181b443b338543adfd219f1839f0d357d3bcd5
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date     20160731
+%global gh_date     20161004
 %global with_tests  0%{?_with_tests:1}
 #global prever      RC4
 
@@ -33,7 +33,7 @@ Name:           %{?scl_prefix}php-pecl-xdebug
 Summary:        PECL package for debugging PHP scripts
 Version:        2.5.0
 %if 0%{?gh_date:1}
-Release:        0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.5.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -310,6 +310,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct 12 2016 Remi Collet <remi@fedoraproject.org> - 2.5.0-0.4.20161004git81181b4
+- new snapshot of 2.5.0-dev
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 2.5.0-0.4.20160731git9fe2994
 - rebuild for PHP 7.1 new API version
 
