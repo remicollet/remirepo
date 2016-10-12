@@ -1,0 +1,62 @@
+Extension [ <persistent> extension #133 xdiff version 2.0.1 ] {
+
+  - Constants [3] {
+    Constant [ integer XDIFF_PATCH_NORMAL ] { 45 }
+    Constant [ integer XDIFF_PATCH_REVERSE ] { 43 }
+    Constant [ integer XDIFF_PATCH_IGNORESPACE ] { 256 }
+  }
+
+  - Functions {
+    Function [ <internal:xdiff> function xdiff_file_diff ] {
+    }
+    Function [ <internal:xdiff> function xdiff_file_bdiff ] {
+    }
+    Function [ <internal:xdiff> function xdiff_file_patch ] {
+    }
+    Function [ <internal:xdiff> function xdiff_file_bpatch ] {
+    }
+    Function [ <internal:xdiff> function xdiff_file_merge3 ] {
+    }
+    Function [ <internal:xdiff> function xdiff_file_rabdiff ] {
+    }
+    Function [ <internal:xdiff> function xdiff_file_bdiff_size ] {
+    }
+    Function [ <internal:xdiff> function xdiff_string_diff ] {
+    }
+    Function [ <internal:xdiff> function xdiff_string_bdiff ] {
+    }
+    Function [ <internal:xdiff> function xdiff_string_patch ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $param0 ]
+        Parameter #1 [ <required> $param1 ]
+        Parameter #2 [ <required> $param2 ]
+        Parameter #3 [ <required> &$param3 ]
+      }
+    }
+    Function [ <internal:xdiff> function xdiff_string_bpatch ] {
+    }
+    Function [ <internal:xdiff> function xdiff_string_merge3 ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $param0 ]
+        Parameter #1 [ <required> $param1 ]
+        Parameter #2 [ <required> $param2 ]
+        Parameter #3 [ <required> &$param3 ]
+      }
+    }
+    Function [ <internal:xdiff> function xdiff_string_rabdiff ] {
+    }
+    Function [ <internal:xdiff> function xdiff_string_bdiff_size ] {
+    }
+    Function [ <internal:xdiff> function xdiff_file_diff_binary ] {
+    }
+    Function [ <internal:xdiff> function xdiff_file_patch_binary ] {
+    }
+    Function [ <internal:xdiff> function xdiff_string_diff_binary ] {
+    }
+    Function [ <internal:xdiff> function xdiff_string_patch_binary ] {
+    }
+  }
+}
+

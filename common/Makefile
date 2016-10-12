@@ -109,11 +109,11 @@ php5build:
 
 php7build:
 	@if test -f $(NAME)-php7.spec ; then \
-		time rpmbuild $(RPMDEFINES) --define "scl php70" --without zts -bb $(NAME)-php7.spec ; \
+		time rpmbuild $(RPMDEFINES) -bb $(NAME)-php7.spec ; \
 	elif test -f $(NAME)-dev.spec ; then \
-		time rpmbuild $(RPMDEFINES) --define "scl php70" --without zts -bb $(NAME)-dev.spec ; \
+		time rpmbuild $(RPMDEFINES) -bb $(NAME)-dev.spec ; \
 	else \
-		time rpmbuild $(RPMDEFINES) --define "scl php70" --without zts -bb $(NAME).spec ; \
+		time rpmbuild $(RPMDEFINES) -bb $(NAME).spec ; \
 	fi
 
 php71build:
