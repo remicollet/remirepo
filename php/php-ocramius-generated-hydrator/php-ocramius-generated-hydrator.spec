@@ -1,7 +1,8 @@
+# remirpeo spec file for php-ocramius-generated-hydrator, from
 #
-# RPM spec file for php-ocramius-generated-hydrator
+# Fedora spec file for php-ocramius-generated-hydrator
 #
-# Copyright (c) 2014-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2014-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -11,30 +12,29 @@
 
 %global github_owner     Ocramius
 %global github_name      GeneratedHydrator
-%global github_version   1.1.1
-%global github_commit    2c29e3aaa002991609f555a6c0ecea3427825a17
+%global github_version   1.2.0
+%global github_commit    ba0c96cfbf311203cf7664c566463f4530024ad1
 
 %global composer_vendor  ocramius
 %global composer_project generated-hydrator
 
-# "php": "~5.4"
-#     NOTE: Max version ignored on purpose
+# "php": "~5.4|~7.0"
 %global php_min_ver 5.4
 # "nikic/php-parser": "~1.0"
 %global php_parser_min_ver 1.0
 %global php_parser_max_ver 2
 # "ocramius/code-generator-utils": "0.3.*"
-%global ocramius_cgu_min_ver 0.3.0
+#     NOTE: Min version not 0.3.0 because autoloader required
+%global ocramius_cgu_min_ver 0.3.2-4
 %global ocramius_cgu_max_ver 0.4.0
 # "zendframework/zend-stdlib": "~2.3"
 %global zf_stdlib_min_ver 2.3
 %global zf_stdlib_max_ver 3.0
 
 # Build using "--without tests" to disable tests
-%global with_tests  %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests 0%{!?_without_tests:1}
 
-%{!?phpdir:     %global phpdir     %{_datadir}/php}
-%{!?__phpunit:  %global __phpunit  %{_bindir}/phpunit}
+%{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
@@ -53,28 +53,34 @@ BuildArch:     noarch
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(nikic/php-parser) >= %{php_parser_min_ver}
 BuildRequires: php-composer(nikic/php-parser) <  %{php_parser_max_ver}
-BuildRequires: php-composer(ocramius/code-generator-utils) >= %{ocramius_cgu_min_ver}
+#BuildRequires: php-composer(ocramius/code-generator-utils) >= %%{ocramius_cgu_min_ver}
+BuildRequires: php-ocramius-code-generator-utils           >= %{ocramius_cgu_min_ver}
 BuildRequires: php-composer(ocramius/code-generator-utils) <  %{ocramius_cgu_max_ver}
+BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(zendframework/zend-stdlib) >= %{zf_stdlib_min_ver}
 BuildRequires: php-composer(zendframework/zend-stdlib) <  %{zf_stdlib_max_ver}
-BuildRequires: php-phpunit-PHPUnit
-# phpcompatinfo (computed from version 1.1.0)
+# phpcompatinfo (computed from version 1.2.0)
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
+# Autoloader
+BuildRequires: php-composer(symfony/class-loader)
 %endif
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
 Requires:      php-composer(nikic/php-parser) >= %{php_parser_min_ver}
 Requires:      php-composer(nikic/php-parser) <  %{php_parser_max_ver}
-Requires:      php-composer(ocramius/code-generator-utils) >= %{ocramius_cgu_min_ver}
+#Requires:      php-composer(ocramius/code-generator-utils) >= %%{ocramius_cgu_min_ver}
+Requires:      php-ocramius-code-generator-utils           >= %{ocramius_cgu_min_ver}
 Requires:      php-composer(ocramius/code-generator-utils) <  %{ocramius_cgu_max_ver}
 Requires:      php-composer(zendframework/zend-stdlib) >= %{zf_stdlib_min_ver}
 Requires:      php-composer(zendframework/zend-stdlib) <  %{zf_stdlib_max_ver}
-# phpcompatinfo (computed from version 1.1.0)
+# phpcompatinfo (computed from version 1.2.0)
 Requires:      php-reflection
 Requires:      php-spl
+# Autoloader
+Requires:      php-composer(symfony/class-loader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -83,40 +89,63 @@ Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 GeneratedHydrator is a library about high performance transition of data from
 arrays to objects and from objects to arrays.
 
+Autoloader: %{phpdir}/GeneratedHydrator/autoload.php
+
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
 
 %build
-# Empty build section, nothing required
+: Create autoloader
+cat <<'AUTOLOAD' | tee src/GeneratedHydrator/autoload.php
+<?php
+/**
+ * Autoloader for %{name} and its' dependencies
+ * (created by %{name}-%{version}-%{release}).
+ *
+ * @return \Symfony\Component\ClassLoader\ClassLoader
+ */
+
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
+
+$fedoraClassLoader->addPrefix('GeneratedHydrator\\', dirname(__DIR__));
+
+// Required dependencies
+require_once '%{phpdir}/CodeGenerationUtils/autoload.php';
+require_once '%{phpdir}/PhpParser/autoload.php';
+require_once '%{phpdir}/Zend/autoload.php';
+
+return $fedoraClassLoader;
+AUTOLOAD
 
 
 %install
 rm -rf %{buildroot}
-mkdir -pm 0755 %{buildroot}%{phpdir}
-cp -rp src/* %{buildroot}%{phpdir}/
+
+mkdir -p %{buildroot}%{phpdir}
+cp -rp src/GeneratedHydrator %{buildroot}%{phpdir}/
 
 
 %check
 %if %{with_tests}
-# Create autoloader
-cat > autoload.php <<'AUTOLOAD'
+: Create tests bootstrap
+cat <<'BOOTSTRAP' | tee bootstrap.php
 <?php
+$fedoraClassLoader = require '%{buildroot}%{phpdir}/GeneratedHydrator/autoload.php';
+$fedoraClassLoader->addPrefix('GeneratedHydratorPerformance\\', __DIR__.'/tests');
+$fedoraClassLoader->addPrefix('GeneratedHydratorTest\\', __DIR__.'/tests');
+$fedoraClassLoader->addPrefix('GeneratedHydratorTestAsset\\', __DIR__.'/tests');
+BOOTSTRAP
 
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/', $class).'.php';
-    @include_once $src;
-});
-AUTOLOAD
-
-# Create PHPUnit config with colors turned off
-sed 's/colors="true"/colors="false"/' phpunit.xml.dist > phpunit.xml
-
-%{__phpunit} \
-    --bootstrap autoload.php \
-    --include-path %{buildroot}%{phpdir}:./tests \
-    -d date.timezone="UTC"
+%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
 %else
 : Tests skipped
 %endif
@@ -130,11 +159,16 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc *.md composer.json
+%doc *.md
+%doc composer.json
 %{phpdir}/GeneratedHydrator
 
 
 %changelog
+* Wed Oct 12 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.0-1
+- Update to 1.2.0
+- Add autoloader
+
 * Wed Feb 25 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - update to 1.1.1
 
