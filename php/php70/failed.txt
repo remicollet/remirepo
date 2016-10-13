@@ -2,8 +2,8 @@
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
-/var/lib/mock/el6i/build.log:Tests failed    :     1
-/var/lib/mock/el6x/build.log:Tests failed    :     1
+/var/lib/mock/el6i/build.log:Tests failed    :     0
+/var/lib/mock/el6x/build.log:Tests failed    :     0
 /var/lib/mock/el7x/build.log:Tests failed    :     0
 /var/lib/mock/fc22i/build.log:Tests failed    :    0
 /var/lib/mock/fc22x/build.log:Tests failed    :    0
@@ -15,10 +15,6 @@ $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 /var/lib/mock/fc25x/build.log:Tests failed    :    3
 
 
-el6i:
-	*	Bug #65729: CN_match gives false positive when wildcard is used [ext/openssl/tests/bug65729.phpt]
-el6x:
-	*	Bug #69521      Segfault in gc_collect_cycles() [ext/standard/tests/streams/bug69521.phpt]
 fc23i:
 	*	Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
 fc24i, fc24x, fc25x:

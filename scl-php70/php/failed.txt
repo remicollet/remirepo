@@ -2,17 +2,13 @@
 
 $ grep -r 'Tests failed' /var/lib/mock/scl70*/build.log
 
-/var/lib/mock/scl70el6x/build.log:Tests failed    :     1
-/var/lib/mock/scl70el7x/build.log:Tests failed    :     1
+/var/lib/mock/scl70el6x/build.log:Tests failed    :     0
+/var/lib/mock/scl70el7x/build.log:Tests failed    :     0
 /var/lib/mock/scl70fc22x/build.log:Tests failed    :    0
 /var/lib/mock/scl70fc23x/build.log:Tests failed    :    0
 /var/lib/mock/scl70fc24x/build.log:Tests failed    :    3
 /var/lib/mock/scl70fc25x/build.log:Tests failed    :    3
 
-el6x:
-	*	openssl_pkey_new() basic usage tests [ext/openssl/tests/openssl_pkey_new_basic.phpt]
-el7x:
-	*	Bug #69900 Commandline input/output weird behaviour with STDIO [ext/standard/tests/streams/proc_open_bug69900.phpt]
 fc24x, fc25x:
 	***	Bug #20382 [2] (strtotime ("Monday", $date) produces wrong result on DST changeover) [ext/date/tests/bug20382-2.phpt]
 	***	Bug #33414 [1] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-1.phpt]
