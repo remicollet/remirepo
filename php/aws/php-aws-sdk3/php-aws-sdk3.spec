@@ -12,8 +12,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   3.19.13
-%global github_commit    57b0efed8fcf5d8c854bc1c26cf4a685af9108d9
+%global github_version   3.19.14
+%global github_commit    2d0c88883dac2f8dd21825b51ef1f04e04073f8f
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -252,18 +252,20 @@ export AWS_ACCESS_KEY_ID=foo
 export AWS_SECRET_ACCESS_KEY=bar
 
 run=0
+ret=0
 if which php56; then
-   php56 %{_bindir}/phpunit -d memory_limit=1G --testsuite=unit --bootstrap bootstrap.php
+   php56 %{_bindir}/phpunit -d memory_limit=1G --testsuite=unit --bootstrap bootstrap.php || ret=1
    run=1
 fi
 if which php71; then
-   php71 %{_bindir}/phpunit -d memory_limit=1G --testsuite=unit --bootstrap bootstrap.php
+   php71 %{_bindir}/phpunit -d memory_limit=1G --testsuite=unit --bootstrap bootstrap.php || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
 %{_bindir}/phpunit -d memory_limit=1G --verbose  --testsuite=unit \
     --bootstrap bootstrap.php
 fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -285,6 +287,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 13 2016 Remi Collet <remi@remirepo.net> - 3.19.14-1
+- update to 3.19.14
+
 * Fri Oct  7 2016 Remi Collet <remi@remirepo.net> - 3.19.13-1
 - update to 3.19.13
 
