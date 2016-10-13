@@ -20,7 +20,7 @@
 
 Name:           php-sebastian-global-state
 Version:        1.1.1
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Snapshotting of global state
 
 Group:          Development/Libraries
@@ -41,7 +41,11 @@ BuildRequires:  php-composer(phpunit/phpunit) > 4.2
 # from composer.json, "require": {
 #        "php": ">=5.3.3"
 Requires:       php(language) >= 5.3.3
-# Optional: php-pecl-uopz
+# from composer.json, "suggest": {
+#        "ext-uopz": "*"
+%if 0%{?fedora} > 21
+Suggests:       php-uopz
+%endif
 
 Provides:       php-composer(sebastian/global-state) = %{version}
 
@@ -77,10 +81,27 @@ require 'SebastianBergmann/GlobalState/autoload.php';
 require 'tests/autoload.php';
 EOF
 
+: Run upstream test suite
+# remirepo:13
+run=0
+ret=0
+if which php56; then
+   php56 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
+   %{_bindir}/phpunit --bootstrap bs.php tests || ret=1
+   run=1
+fi
+if which php71; then
+   php71 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
+   %{_bindir}/phpunit --bootstrap bs.php tests || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/php -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
-%{_bindir}/phpunit \
-  --bootstrap bs.php \
-  tests
+%{_bindir}/phpunit --bootstrap bs.php --verbose tests
+# remirepo:2
+fi
+exit $ret
+
 %else
 : bootstrap build with test suite disabled
 %endif
@@ -98,6 +119,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 13 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-3
+- add optional dependency on uopz extension
+
 * Mon Oct 12 2015 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - update to 1.1.1
 
