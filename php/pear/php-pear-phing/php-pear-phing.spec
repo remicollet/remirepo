@@ -15,7 +15,7 @@
 
 Summary:       A project build system based on Apache Ant
 Name:          php-pear-phing
-Version:       2.15.1
+Version:       2.15.2
 Release:       1%{?dist}
 
 License:       LGPLv2
@@ -122,6 +122,9 @@ fi
 
 
 %changelog
+* Thu Oct 13 2016 Remi Collet <remi@fedoraproject.org> - 2.15.2-1
+- Update to 2.15.2
+
 * Wed Oct 12 2016 Remi Collet <remi@fedoraproject.org> - 2.15.1-1
 - Update to 2.15.1
 
