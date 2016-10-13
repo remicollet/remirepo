@@ -6,7 +6,7 @@
 %global with_dtrace  0
 
 Name: mysql
-Version: 5.5.52
+Version: 5.5.53
 Release: 1%{?dist}
 
 Summary: MySQL client programs and shared libraries
@@ -330,6 +330,7 @@ cmake . -DBUILD_CONFIG=mysql_release \
 	-DINSTALL_SUPPORTFILESDIR=share/mysql \
 	-DMYSQL_DATADIR="/var/lib/mysql" \
 	-DMYSQL_UNIX_ADDR="/var/lib/mysql/mysql.sock" \
+	-DINSTALL_SECURE_FILE_PRIVDIR="/var/lib/mysql-files" \
 	-DENABLED_LOCAL_INFILE=ON \
 %if %{with_dtrace}
 	-DENABLE_DTRACE=ON \
@@ -440,6 +441,7 @@ touch $RPM_BUILD_ROOT/var/log/mysqld.log
 
 mkdir -p $RPM_BUILD_ROOT/var/run/mysqld
 install -m 0755 -d $RPM_BUILD_ROOT/var/lib/mysql
+install -m 0750 -d $RPM_BUILD_ROOT/var/lib/mysql-files
 
 mkdir -p $RPM_BUILD_ROOT/etc/my.cnf.d
 install -m 0644 %{SOURCE3} $RPM_BUILD_ROOT/etc/my.cnf
@@ -798,6 +800,7 @@ fi
 %endif
 %attr(0755,mysql,mysql) %dir /var/run/mysqld
 %attr(0755,mysql,mysql) %dir /var/lib/mysql
+%attr(0750,mysql,mysql) %dir /var/lib/mysql-files
 %attr(0640,mysql,mysql) %config(noreplace) %verify(not md5 size mtime) /var/log/mysqld.log
 %config(noreplace) %{_sysconfdir}/logrotate.d/mysqld
 
@@ -834,6 +837,11 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Thu Oct 13 2016 Remi Collet <RPMS@FamilleCollet.com> - 5.5.53-1
+- update to MySQL 5.5.53 Community Server GA
+  http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-53.html
+- add /var/lib/mysql-files directory
+
 * Wed Sep  7 2016 Remi Collet <RPMS@FamilleCollet.com> - 5.5.52-1
 - update to MySQL 5.5.52 Community Server GA
   http://dev.mysql.com/doc/relnotes/mysql/5.5/en/news-5-5-52.html
