@@ -1,4 +1,4 @@
-# spec file for php-pecl-uopz
+# remirepo spec file for php-pecl-uopz
 #
 # Copyright (c) 2014-2016 Remi Collet
 # License: CC-BY-SA

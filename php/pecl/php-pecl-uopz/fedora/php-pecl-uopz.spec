@@ -1,3 +1,6 @@
+# Fedora spec file for php-pecl-uopz
+# Without SCL compatibility stuff, from:
+#
 # remirepo spec file for php-pecl-uopz
 #
 # Copyright (c) 2014-2016 Remi Collet
@@ -6,75 +9,32 @@
 #
 # Please, preserve the changelog entries
 #
-%if 0%{?scl:1}
-%global sub_prefix %{scl_prefix}
-%scl_package       php-pecl-uopz
-%endif
-
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  uopz
 %global ini_name   05-%{pecl_name}.ini
 
-# see https://github.com/krakjoe/uopz/releases
-#global gh_commit  c335700be4dc4350605bc4fb1efd8e96ba51b733
-#global gh_short   %%(c=µ%{gh_commit}; echo ${c:0:7})
-#global gh_owner   krakjoe
-#global gh_project uopz
-
 Summary:        User Operations for Zend
-Name:           %{?sub_prefix}php-pecl-%{pecl_name}
+Name:           php-pecl-%{pecl_name}
 Version:        5.0.1
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-%if 0%{?gh_commit:1}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
-%else
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-%endif
 
+# Upstream patch for PHP 7.1
 Patch0:         %{pecl_name}-upstream.patch
 
-BuildRequires:  %{?scl_prefix}php-devel > 7
-BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  php-devel > 7
+BuildRequires:  php-pear
 
-Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
-Requires:       %{?scl_prefix}php(api) = %{php_core_api}
-%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
+Requires:       php(zend-abi) = %{php_zend_api}
+Requires:       php(api) = %{php_core_api}
 
-Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
-Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
-%if "%{?scl_prefix}" != "%{?sub_prefix}"
-Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
-Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
-%endif
-
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
-# Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
-Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
-Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
-%if "%{php_version}" > "7.1"
-Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
-%endif
-%endif
-
-%if 0%{?fedora} < 20 && 0%{?rhel} < 7
-# Filter shared private
-%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
-%{?filter_setup}
-%endif
+Provides:       php-%{pecl_name}               = %{version}
+Provides:       php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       php-pecl(%{pecl_name})         = %{version}
+Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
 
 
 %description
@@ -95,30 +55,14 @@ It supports the following activities:
 
 Documentation: http://php.net/uopz
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
-
 
 %prep
 %setup -q -c
-%if 0%{?gh_commit:1}
-mv %{gh_project}-%{gh_commit} NTS
-# Temporary, until released on PECL
-%{__php} -r '
-  $pkg = simplexml_load_file("NTS/package.xml");
-  $pkg->date = "2016-04-12";
-  $pkg->version->release = "%{version}";
-  $pkg->version->release = "%{version}";
-  $pkg->stability->release = "beta";
-  $pkg->stability->api = "beta";
-  $pkg->asXML("package.xml");
-'
-%else
 mv %{pecl_name}-%{version} NTS
-%endif
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' \
-    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -e '/LICENSE/s/role="doc"/role="src"/' \
     -i package.xml
 
 cd NTS
@@ -180,26 +124,6 @@ do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
 
 
-%if 0%{?fedora} < 24
-# when pear installed alone, after us
-%triggerin -- %{?scl_prefix}php-pear
-if [ -x %{__pecl} ] ; then
-    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
-fi
-
-# posttrans as pear can be installed after us
-%posttrans
-if [ -x %{__pecl} ] ; then
-    %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
-fi
-
-%postun
-if [ $1 -eq 0 -a -x %{__pecl} ] ; then
-    %{pecl_uninstall} %{pecl_name} >/dev/null || :
-fi
-%endif
-
-
 %check
 cd NTS
 : Minimal load test for NTS extension
@@ -231,7 +155,7 @@ REPORT_EXIT_STATUS=1 \
 
 
 %files
-%{?_licensedir:%license NTS/LICENSE}
+%license NTS/LICENSE
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -245,6 +169,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Thu Oct 13 2016 Remi Collet <remi@fedoraproject.org> - 5.0.1-1
+- cleanup for Fedora review
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 5.0.1-3
 - rebuild for PHP 7.1 new API version
 
