@@ -21,6 +21,8 @@
 # in MongoDB 3.2, and support is being removed in 3.4.
 %global with_tests   0%{?_with_tests:1}
 %endif
+# Because https://jira.mongodb.org/browse/CDRIVER-1702
+# segfault in test suite
 %global with_tests   0
 
 Name:      mongo-c-driver
