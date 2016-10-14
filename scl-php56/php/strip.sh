@@ -11,15 +11,27 @@ fi
 old=$(mktemp)
 new=$(mktemp)
 
+ver=$1
+shift
+
 echo "Untar..."
-tar xf php-$1.tar.xz
-rm -rf php-$1/ext/json
+tar xf php-$ver.tar.xz
+pushd php-$ver
+rm -rf ext/json
+if [ -n "$2" ]
+then
+	for i in $*
+	do
+		patch -p1 --no-backup <../$i
+	done
+fi
+popd
 echo "Tar..."
-tar cJf  php-$1-strip.tar.xz php-$1
+tar cJf  php-$ver-strip.tar.xz php-$ver
 
 echo "Diff..."
-tar tf php-$1.tar.xz | sort >$old
-tar tf php-$1-strip.tar.xz | sort >$new
+tar tf php-$ver.tar.xz | sort >$old
+tar tf php-$ver-strip.tar.xz | sort >$new
 diff $old $new
 
 rm -f $old $new

@@ -1,36 +1,40 @@
-===== 5.6.27RC1 (2016-09-29)
+===== 5.6.27 (2016-10-14)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
-/var/lib/mock/el5i/build.log:Tests failed    :     8
-/var/lib/mock/el5x/build.log:Tests failed    :     2
-/var/lib/mock/el6i/build.log:Tests failed    :     5
+/var/lib/mock/el5i/build.log:Tests failed    :     10
+/var/lib/mock/el5x/build.log:Tests failed    :     5
+/var/lib/mock/el6i/build.log:Tests failed    :     6
 /var/lib/mock/el6x/build.log:Tests failed    :     0
 /var/lib/mock/el7x/build.log:Tests failed    :     0
-/var/lib/mock/fc22i/build.log:Tests failed    :    3
+/var/lib/mock/fc22i/build.log:Tests failed    :    2
 /var/lib/mock/fc22x/build.log:Tests failed    :    0
 /var/lib/mock/fc23i/build.log:Tests failed    :    2
 /var/lib/mock/fc23x/build.log:Tests failed    :    0
-/var/lib/mock/fc24i/build.log:Tests failed    :    2
-/var/lib/mock/fc24x/build.log:Tests failed    :    0
+/var/lib/mock/fc24i/build.log:Tests failed    :    5
+/var/lib/mock/fc24x/build.log:Tests failed    :    3
 
 
+el5i, el5x, fc24i, fc24x
+	***	Bug #20382 [2] (strtotime ("Monday", $date) produces wrong result on DST changeover) [ext/date/tests/bug20382-2.phpt]
+	***	Bug #33414 [1] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-1.phpt]
+	***	Bug #33415 [1] (Possibly invalid non-one-hour DST or timezone shifts) [ext/date/tests/bug33415-1.phpt]
 el5i, el5x
-	openssl_error_string() tests [ext/openssl/tests/openssl_error_string_basic.phpt]
-el5i
-	Specific protocol method specification [ext/openssl/tests/stream_crypto_flags_004.phpt]
+		openssl_error_string() tests [ext/openssl/tests/openssl_error_string_basic.phpt]
 el5i, el5x
-    sni_server [ext/openssl/tests/sni_server.phpt]
-fc22i
-	openssl_pkey_new() basic usage tests [ext/openssl/tests/openssl_pkey_new_basic.phpt]
+		sni_server [ext/openssl/tests/sni_server.phpt]
 el5i, el6i, fc21i, fc22i, fc23i, fc24i
-    Bug #53437 DateInterval unserialize bad data, 32 bit [ext/date/tests/bug53437_var3.phpt]
-    Bug #64146 (serialize incorrectly saving objects when they are cloned) [ext/standard/tests/serialize/bug64146.phpt]
+		Bug #53437 DateInterval unserialize bad data, 32 bit [ext/date/tests/bug53437_var3.phpt]
+	**	Bug #64146 (serialize incorrectly saving objects when they are cloned) [ext/standard/tests/serialize/bug64146.phpt]
+el6i
+		openssl_pkey_new() basic usage tests [ext/openssl/tests/openssl_pkey_new_basic.phpt]
 el5i, el6i
-    Test date_sunrise() function : usage variation -  Passing high positive and negative float values to time argument. [ext/date/tests/date_sunrise_variation9.phpt]
-    Test date_sunset() function : usage variation - Passing high positive and negative float values to time argument. [ext/date/tests/date_sunset_variation9.phpt]
-    Test getdate() function : usage variation - Passing high positive and negative float values to timestamp. [ext/date/tests/getdate_variation7.phpt]
+		Test date_sunrise() function : usage variation -  Passing high positive and negative float values to time argument. [ext/date/tests/date_sunrise_variation9.phpt]
+		Test date_sunset() function : usage variation - Passing high positive and negative float values to time argument. [ext/date/tests/date_sunset_variation9.phpt]
+		Test getdate() function : usage variation - Passing high positive and negative float values to timestamp. [ext/date/tests/getdate_variation7.phpt]
 
 
-[1] #64146 known issue, no fix found
-[2] proc_open erratic results...
+*	proc_open have erratic results... :(
+**	#64146 known issue, no fix found
+***	Related to tzdata 2016g (f24+) vs 2016f
+

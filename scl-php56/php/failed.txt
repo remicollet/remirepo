@@ -1,4 +1,4 @@
-===== 5.6.27RC1 (2016-09-29)
+===== 5.6.27 (2016-10-14)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl56*/build.log
 
@@ -7,8 +7,15 @@ $ grep -r 'Tests failed' /var/lib/mock/scl56*/build.log
 /var/lib/mock/scl56fc21x/build.log:Tests failed    :    0
 /var/lib/mock/scl56fc22x/build.log:Tests failed    :    0
 /var/lib/mock/scl56fc23x/build.log:Tests failed    :    0
-/var/lib/mock/scl56fc24x/build.log:Tests failed    :    0
-/var/lib/mock/scl56fc25x/build.log:Tests failed    :    0
+/var/lib/mock/scl56fc24x/build.log:Tests failed    :    3
+/var/lib/mock/scl56fc25x/build.log:Tests failed    :    3
+
+fc24x, fc25x:
+	***	Bug #20382 [2] (strtotime ("Monday", $date) produces wrong result on DST changeover) [ext/date/tests/bug20382-2.phpt]
+	***	Bug #33414 [1] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-1.phpt]
+	***	Bug #33415 [1] (Possibly invalid non-one-hour DST or timezone shifts) [ext/date/tests/bug33415-1.phpt]
 
 
-* proc_open have erratic results... :(
+*	proc_open have erratic results... :(
+***	Related to tzdata 2016g (f24+) vs 2016f
+
