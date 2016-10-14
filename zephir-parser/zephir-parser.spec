@@ -16,16 +16,16 @@
 
 # Get commit from PHP_PHALCON_ZEPVERSION in 
 # https://github.com/phalcon/cphalcon/blob/master/ext/php_phalcon.h
-%global gh_commit    22f663212836d6dadd5c5d4239ada4f9d30406c9
+%global gh_commit    23856e1e8244a89ac1bc30ba56b417a4a1c1687f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20160929
+%global gh_date      20161014
 %global gh_owner     phalcon
 %global gh_project   zephir
 %global ext_name     zephir_parser
 
 Name:           %{?scl_prefix}%{gh_project}-parser
 Version:        0.9.4
-Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Zephir parser extension
 
 Group:          Development/Libraries
@@ -191,6 +191,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 14 2016 Remi Collet <remi@fedoraproject.org> - 0.9.4-2.20161014git23856e1
+- new snapshot to fix PHP 7.1 compatibility of generated code
+
 * Mon Oct 10 2016 Remi Collet <remi@fedoraproject.org> - 0.9.4-1.20160929git22f6632
 - new snapshot to fix PHP 7.1 compatibility of generated code
 
