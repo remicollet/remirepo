@@ -36,7 +36,7 @@
 %global with_tests   0%{?_with_tests:1}
 %endif
 
-%if 0%{?fedora} > 99
+%if 0%{?fedora} >= 26
 %global with_syslib 1
 %else
 %global with_syslib 0
