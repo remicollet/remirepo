@@ -10,8 +10,8 @@
 %global gh_project   mongo-c-driver
 %global libname      libmongoc
 %global libver       1.0
-#global prever       beta1
-%global bsonver      1.4
+%global prever       rc2
+%global bsonver      1.5
 
 %ifarch x86_64
 %global with_tests   0%{!?_without_tests:1}
@@ -21,12 +21,12 @@
 # in MongoDB 3.2, and support is being removed in 3.4.
 %global with_tests   0%{?_with_tests:1}
 %endif
-#global with_tests   0
+%global with_tests   0
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.4.0
-Release:   1%{?dist}
+Version:   1.5.0
+Release:   0.1.%{prever}%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -43,8 +43,8 @@ BuildRequires: cyrus-sasl-devel
 %if %{with_tests}
 BuildRequires: mongodb-server
 BuildRequires: openssl
-BuildRequires: perl
 %endif
+BuildRequires: perl
 # From man pages
 BuildRequires: python
 
@@ -94,11 +94,10 @@ sed -e 's/libbson-1.0 >= \$MONGOC_RELEASED_VERSION/libbson-1.0 >= %{bsonver}/' \
 export LIBS=-lpthread
 
 %configure \
-  --enable-hardening \
-  --enable-debug-symbols\
+  --enable-debug-symbols \
   --enable-shm-counters \
   --disable-automatic-init-and-cleanup \
-  --enable-system-crypto-profile \
+  --enable-crypto-system-profile \
 %if %{with_tests}
   --enable-tests \
 %else
@@ -142,8 +141,6 @@ make check || ret=1
 [ -s server.pid ] && kill $(cat server.pid)
 
 exit $ret
-%else
-make -C tests abicheck
 %endif
 
 
@@ -168,6 +165,10 @@ make -C tests abicheck
 
 
 %changelog
+* Fri Oct 14 2016 Remi Collet <remi@fedoraproject.org> - 1.5.0-0.1.rc2
+- update to 1.5.0-rc2
+- disable test suite
+
 * Thu Aug 11 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-1
 - update to 1.4.0
 - drop API patch merged upstream
