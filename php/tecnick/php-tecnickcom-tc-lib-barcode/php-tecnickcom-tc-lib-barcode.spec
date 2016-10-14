@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a64455fd9b7068d3b7cba31410f9d34de4de78fe
+%global gh_commit    30c40ae0e660adf04cd302ab86043a286ba4fecf
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.15.0
+Version:        1.15.2
 Release:        1%{?dist}
 Summary:        PHP library to generate linear and bidimensional barcodes
 
@@ -41,7 +41,7 @@ BuildRequires:  php-pecl-imagick
 
 # From composer.json, "require": {
 #        "php": ">=5.4"
-#        "tecnickcom/tc-lib-color": "^1.11.0"
+#        "tecnickcom/tc-lib-color": "^1.12.1"
 Requires:       php(language) >= 5.4
 Requires:       php-composer(%{c_vendor}/tc-lib-color) >= 1.12.1
 Requires:       php-composer(%{c_vendor}/tc-lib-color) <  2
@@ -139,6 +139,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 14 2016 Remi Collet <remi@fedoraproject.org> - 1.15.2-1
+- update to 1.15.2
+
 * Mon Sep  5 2016 Remi Collet <remi@fedoraproject.org> - 1.15.0-1
 - update to 1.15.0
 
