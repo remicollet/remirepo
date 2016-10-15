@@ -1,0 +1,269 @@
+Backported from 5.6.27 by Remi.
+
+
+From d946d102936525bc7dcd01f3827d0a6e0bb971b0 Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Tue, 4 Oct 2016 22:40:09 -0700
+Subject: [PATCH] Bug #73218: add mitigation for ICU int overflow
+
+---
+ ext/intl/resourcebundle/resourcebundle_class.c | 42 +++++++++++++++++---------
+ 1 file changed, 27 insertions(+), 15 deletions(-)
+
+diff --git a/ext/intl/resourcebundle/resourcebundle_class.c b/ext/intl/resourcebundle/resourcebundle_class.c
+index dc12124..90aebd4 100644
+--- a/ext/intl/resourcebundle/resourcebundle_class.c
++++ b/ext/intl/resourcebundle/resourcebundle_class.c
+@@ -77,7 +77,7 @@ static zend_object_value ResourceBundle_object_create( zend_class_entry *ce TSRM
+ /* }}} */
+ 
+ /* {{{ ResourceBundle_ctor */
+-static void resourcebundle_ctor(INTERNAL_FUNCTION_PARAMETERS) 
++static void resourcebundle_ctor(INTERNAL_FUNCTION_PARAMETERS)
+ {
+ 	const char	*bundlename;
+ 	int			bundlename_len = 0;
+@@ -90,7 +90,7 @@ static void resourcebundle_ctor(INTERNAL_FUNCTION_PARAMETERS)
+ 
+ 	intl_error_reset( NULL TSRMLS_CC );
+ 
+-	if( zend_parse_parameters( ZEND_NUM_ARGS() TSRMLS_CC, "s!s!|b", 
++	if( zend_parse_parameters( ZEND_NUM_ARGS() TSRMLS_CC, "s!s!|b",
+ 		&locale, &locale_len, &bundlename, &bundlename_len, &fallback ) == FAILURE )
+ 	{
+ 		intl_error_set( NULL, U_ILLEGAL_ARGUMENT_ERROR,
+@@ -100,11 +100,18 @@ static void resourcebundle_ctor(INTERNAL_FUNCTION_PARAMETERS)
+ 	}
+ 
+ 	INTL_CHECK_LOCALE_LEN_OBJ(locale_len, return_value);
+-	
++
+ 	if (locale == NULL) {
+ 		locale = intl_locale_get_default(TSRMLS_C);
+ 	}
+ 
++	if (bundlename_len >= MAXPATHLEN) {
++		intl_error_set( NULL, U_ILLEGAL_ARGUMENT_ERROR,	"Bundle name too long", 0 TSRMLS_CC );
++		zval_dtor(return_value);
++		ZVAL_NULL(return_value);
++		RETURN_NULL();
++	}
++
+ 	if (fallback) {
+ 		rb->me = ures_open(bundlename, locale, &INTL_DATA_ERROR_CODE(rb));
+ 	} else {
+@@ -151,7 +158,7 @@ PHP_METHOD( ResourceBundle, __construct )
+ /* {{{ proto ResourceBundle ResourceBundle::create( string $locale [, string $bundlename [, bool $fallback = true ]] )
+ proto ResourceBundle resourcebundle_create( string $locale [, string $bundlename [, bool $fallback = true ]] )
+ */
+-PHP_FUNCTION( resourcebundle_create ) 
++PHP_FUNCTION( resourcebundle_create )
+ {
+ 	object_init_ex( return_value, ResourceBundle_ce_ptr );
+ 	resourcebundle_ctor(INTERNAL_FUNCTION_PARAM_PASSTHRU);
+@@ -159,7 +166,7 @@ PHP_FUNCTION( resourcebundle_create )
+ /* }}} */
+ 
+ /* {{{ resourcebundle_array_fetch */
+-static void resourcebundle_array_fetch(zval *object, zval *offset, zval *return_value, int fallback TSRMLS_DC) 
++static void resourcebundle_array_fetch(zval *object, zval *offset, zval *return_value, int fallback TSRMLS_DC)
+ {
+ 	int32_t     meindex = 0;
+ 	char *      mekey = NULL;
+@@ -167,7 +174,7 @@ static void resourcebundle_array_fetch(zval *object, zval *offset, zval *return_
+ 	char         *pbuf;
+ 	ResourceBundle_object *rb;
+ 
+-	intl_error_reset( NULL TSRMLS_CC );	
++	intl_error_reset( NULL TSRMLS_CC );
+ 	RESOURCEBUNDLE_METHOD_FETCH_OBJECT;
+ 
+ 	if(Z_TYPE_P(offset) == IS_LONG) {
+@@ -178,12 +185,12 @@ static void resourcebundle_array_fetch(zval *object, zval *offset, zval *return_
+ 		mekey = Z_STRVAL_P(offset);
+ 		rb->child = ures_getByKey(rb->me, mekey, rb->child, &INTL_DATA_ERROR_CODE(rb) );
+ 	} else {
+-		intl_errors_set(INTL_DATA_ERROR_P(rb), U_ILLEGAL_ARGUMENT_ERROR,	
++		intl_errors_set(INTL_DATA_ERROR_P(rb), U_ILLEGAL_ARGUMENT_ERROR,
+ 			"resourcebundle_get: index should be integer or string", 0 TSRMLS_CC);
+ 		RETURN_NULL();
+ 	}
+ 
+-	intl_error_set_code( NULL, INTL_DATA_ERROR_CODE(rb) TSRMLS_CC );	
++	intl_error_set_code( NULL, INTL_DATA_ERROR_CODE(rb) TSRMLS_CC );
+ 	if (U_FAILURE(INTL_DATA_ERROR_CODE(rb))) {
+ 		if (is_numeric) {
+ 			spprintf( &pbuf, 0, "Cannot load resource element %d", meindex );
+@@ -213,7 +220,7 @@ static void resourcebundle_array_fetch(zval *object, zval *offset, zval *return_
+ /* }}} */
+ 
+ /* {{{ resourcebundle_array_get */
+-zval *resourcebundle_array_get(zval *object, zval *offset, int type TSRMLS_DC) 
++zval *resourcebundle_array_get(zval *object, zval *offset, int type TSRMLS_DC)
+ {
+ 	zval *retval;
+ 
+@@ -246,7 +253,7 @@ PHP_FUNCTION( resourcebundle_get )
+ 	zval *      object;
+ 
+ 	if (zend_parse_method_parameters(ZEND_NUM_ARGS() TSRMLS_CC, getThis(), "Oz|b",	&object, ResourceBundle_ce_ptr, &offset, &fallback ) == FAILURE) {
+-		intl_error_set(NULL, U_ILLEGAL_ARGUMENT_ERROR,	
++		intl_error_set(NULL, U_ILLEGAL_ARGUMENT_ERROR,
+ 			"resourcebundle_get: unable to parse input params", 0 TSRMLS_CC);
+ 		RETURN_FALSE;
+ 	}
+@@ -256,7 +263,7 @@ PHP_FUNCTION( resourcebundle_get )
+ /* }}} */
+ 
+ /* {{{ resourcebundle_array_count */
+-int resourcebundle_array_count(zval *object, long *count TSRMLS_DC) 
++int resourcebundle_array_count(zval *object, long *count TSRMLS_DC)
+ {
+ 	ResourceBundle_object *rb;
+ 	RESOURCEBUNDLE_METHOD_FETCH_OBJECT_NO_CHECK;
+@@ -288,7 +295,7 @@ PHP_FUNCTION( resourcebundle_count )
+ 	RESOURCEBUNDLE_METHOD_INIT_VARS;
+ 
+ 	if( zend_parse_method_parameters( ZEND_NUM_ARGS() TSRMLS_CC, getThis(), "O", &object, ResourceBundle_ce_ptr ) == FAILURE ) {
+-		intl_error_set(NULL, U_ILLEGAL_ARGUMENT_ERROR,	
++		intl_error_set(NULL, U_ILLEGAL_ARGUMENT_ERROR,
+ 			"resourcebundle_count: unable to parse input params", 0 TSRMLS_CC);
+ 		RETURN_FALSE;
+ 	}
+@@ -322,21 +329,26 @@ PHP_FUNCTION( resourcebundle_locales )
+ 
+ 	if( zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &bundlename, &bundlename_len ) == FAILURE )
+ 	{
+-		intl_error_set(NULL, U_ILLEGAL_ARGUMENT_ERROR,	
++		intl_error_set(NULL, U_ILLEGAL_ARGUMENT_ERROR,
+ 			"resourcebundle_locales: unable to parse input params", 0 TSRMLS_CC);
+ 		RETURN_FALSE;
+ 	}
+ 
++	if (bundlename_len >= MAXPATHLEN) {
++		intl_error_set( NULL, U_ILLEGAL_ARGUMENT_ERROR,	"resourcebundle_locales: bundle name too long", 0 TSRMLS_CC );
++		RETURN_FALSE;
++	}
++
+ 	if(bundlename_len == 0) {
+ 		// fetch default locales list
+ 		bundlename = NULL;
+ 	}
+ 
+ 	icuenum = ures_openAvailableLocales( bundlename, &icuerror );
+-	INTL_CHECK_STATUS(icuerror, "Cannot fetch locales list");		
++	INTL_CHECK_STATUS(icuerror, "Cannot fetch locales list");
+ 
+ 	uenum_reset( icuenum, &icuerror );
+-	INTL_CHECK_STATUS(icuerror, "Cannot iterate locales list");		
++	INTL_CHECK_STATUS(icuerror, "Cannot iterate locales list");
+ 
+ 	array_init( return_value );
+ 	while ((entry = uenum_next( icuenum, &entry_len, &icuerror ))) {
+-- 
+2.1.4
+
+From d3eb58332af433982f1e2ae9095fb087974a95f2 Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Tue, 4 Oct 2016 21:28:40 -0700
+Subject: [PATCH] Add more locale length checks, due to ICU bugs.
+
+---
+ ext/intl/locale/locale_methods.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/ext/intl/locale/locale_methods.c b/ext/intl/locale/locale_methods.c
+index 443856f..862b9f5 100644
+--- a/ext/intl/locale/locale_methods.c
++++ b/ext/intl/locale/locale_methods.c
+@@ -395,6 +395,8 @@ static void get_icu_value_src_php( char* tag_name, INTERNAL_FUNCTION_PARAMETERS)
+ 	if(loc_name_len == 0) {
+ 		loc_name = intl_locale_get_default(TSRMLS_C);
+ 	}
++	
++	INTL_CHECK_LOCALE_LEN(strlen(loc_name));
+ 
+ 	/* Call ICU get */
+ 	tag_value = get_icu_value_internal( loc_name , tag_name , &result ,0);
+@@ -1159,6 +1161,7 @@ PHP_FUNCTION(locale_get_all_variants)
+ 		loc_name = intl_locale_get_default(TSRMLS_C);
+ 	}
+ 
++	INTL_CHECK_LOCALE_LEN(strlen(loc_name));
+ 
+ 	array_init( return_value );
+ 
+@@ -1267,6 +1270,9 @@ PHP_FUNCTION(locale_filter_matches)
+ 		RETURN_TRUE;
+ 	}
+ 
++	INTL_CHECK_LOCALE_LEN(strlen(loc_range));
++	INTL_CHECK_LOCALE_LEN(strlen(lang_tag));
++
+ 	if( boolCanonical ){
+ 		/* canonicalize loc_range */
+ 		can_loc_range=get_icu_value_internal( loc_range , LOC_CANONICALIZE_TAG , &result , 0);
+@@ -1549,6 +1555,8 @@ PHP_FUNCTION(locale_lookup)
+ 		loc_range = intl_locale_get_default(TSRMLS_C);
+ 	}
+ 
++	INTL_CHECK_LOCALE_LEN(strlen(loc_range));
++
+ 	hash_arr = HASH_OF(arr);
+ 
+ 	if( !hash_arr || zend_hash_num_elements( hash_arr ) == 0 ) {
+-- 
+2.1.4
+
+From 082d1f237531ab71c3050dfb9f598344f654d9e1 Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Tue, 11 Oct 2016 16:16:20 -0700
+Subject: [PATCH] Fix tests
+
+---
+ ext/intl/tests/bug72241.phpt                            | 4 +---
+ ext/spl/spl_iterators.c                                 | 4 ----
+ ext/spl/tests/spl_cachingiterator___toString_basic.phpt | 2 +-
+ ext/standard/tests/serialize/bug69793.phpt              | 2 --
+ 4 files changed, 2 insertions(+), 10 deletions(-)
+
+diff --git a/ext/intl/tests/bug72241.phpt b/ext/intl/tests/bug72241.phpt
+index 397e1e7..7ac5a5b 100644
+--- a/ext/intl/tests/bug72241.phpt
++++ b/ext/intl/tests/bug72241.phpt
+@@ -9,6 +9,4 @@ $out = locale_get_primary_language($var1);
+ echo strlen($out) . PHP_EOL;
+ echo unpack('H*', $out)[1] . PHP_EOL;
+ --EXPECT--
+-1000
+-61616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161
+-
++0
+diff --git a/ext/spl/spl_iterators.c b/ext/spl/spl_iterators.c
+index c6d03e0..154aba0 100644
+--- a/ext/spl/spl_iterators.c
++++ b/ext/spl/spl_iterators.c
+@@ -2784,10 +2784,6 @@ SPL_METHOD(CachingIterator, __toString)
+ 
+ 	SPL_FETCH_AND_CHECK_DUAL_IT(intern, getThis());
+ 
+-	if (!spl_caching_it_valid(intern TSRMLS_CC)) {
+-		RETURN_EMPTY_STRING();
+-	}
+-
+ 	if (!(intern->u.caching.flags & (CIT_CALL_TOSTRING|CIT_TOSTRING_USE_KEY|CIT_TOSTRING_USE_CURRENT|CIT_TOSTRING_USE_INNER)))	{
+ 		zend_throw_exception_ex(spl_ce_BadMethodCallException, 0 TSRMLS_CC, "%s does not fetch string value (see CachingIterator::__construct)", Z_OBJCE_P(getThis())->name);
+ 		return;
+diff --git a/ext/spl/tests/spl_cachingiterator___toString_basic.phpt b/ext/spl/tests/spl_cachingiterator___toString_basic.phpt
+index 0395b37..57ca515 100644
+--- a/ext/spl/tests/spl_cachingiterator___toString_basic.phpt
++++ b/ext/spl/tests/spl_cachingiterator___toString_basic.phpt
+@@ -13,4 +13,4 @@ $ci->__toString() // if conversion to string is done by echo, for example, an ex
+ );
+ ?>
+ --EXPECTF--
+-NULL
++string(0) ""
+-- 
+2.1.4
+

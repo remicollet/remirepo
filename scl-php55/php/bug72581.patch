@@ -1,0 +1,56 @@
+Backported from 5.6.27 by Remi.
+
+
+From 7903276f4c18fcfda06c02785f0b4201421f9c7c Mon Sep 17 00:00:00 2001
+From: Xinchen Hui <laruence@gmail.com>
+Date: Tue, 12 Jul 2016 12:14:45 +0800
+Subject: [PATCH] backport to 5.6 (we should not unset the default value)
+
+---
+ NEWS                                       | 2 ++
+ Zend/zend_exceptions.c                     | 2 +-
+ ext/standard/tests/serialize/bug69152.phpt | 1 -
+ ext/standard/tests/serialize/bug69793.phpt | 2 --
+ 4 files changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/Zend/zend_exceptions.c b/Zend/zend_exceptions.c
+index 66476a1..fda4d21 100644
+--- a/Zend/zend_exceptions.c
++++ b/Zend/zend_exceptions.c
+@@ -222,7 +222,7 @@ ZEND_METHOD(exception, __construct)
+    Exception unserialize checks */
+ #define CHECK_EXC_TYPE(name, type) \
+ 	value = zend_read_property(default_exception_ce, object, name, sizeof(name)-1, 0 TSRMLS_CC); \
+-	if(value && Z_TYPE_P(value) != type) { \
++	if (value && Z_TYPE_P(value) != IS_NULL && Z_TYPE_P(value) != type) { \
+ 		zval *tmp; \
+ 		MAKE_STD_ZVAL(tmp); \
+ 		ZVAL_STRINGL(tmp, name, sizeof(name)-1, 1); \
+diff --git a/ext/standard/tests/serialize/bug69152.phpt b/ext/standard/tests/serialize/bug69152.phpt
+index bc2b302..4e74168 100644
+--- a/ext/standard/tests/serialize/bug69152.phpt
++++ b/ext/standard/tests/serialize/bug69152.phpt
+@@ -9,7 +9,6 @@ $x->test();
+ 
+ ?>
+ --EXPECTF--
+-Notice: Undefined property: Exception::$previous in %s on line %d
+ exception 'Exception' in %s:%d
+ Stack trace:
+ #0 {main}
+
+--- a/ext/standard/tests/serialize/bug69793.phpt	2016-07-20 10:41:48.000000000 +0200
++++ b/ext/standard/tests/serialize/bug69793.phpt	2016-10-14 13:03:12.000000000 +0200
+@@ -7,11 +7,7 @@
+ var_dump($e."");
+ ?>
+ --EXPECTF--
+-Notice: Undefined property: Exception::$message in %s/bug69793.php on line %d
+-
+-Notice: Undefined property: Exception::$file in %s/bug69793.php on line %d
+-
+-Notice: Undefined property: Exception::$previous in %s/bug69793.php on line %d
++Notice: Undefined property: Exception::$file in %s%ebug69793.php on line %d
+ string(53) "exception 'Exception' in :1337
+ Stack trace:
+ #0 {main}"

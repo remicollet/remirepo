@@ -1,0 +1,42 @@
+Backported from 5.6.27 by Remi.
+
+
+From 85a22a0af0722ef3a8d49a056a0b2b18be1fb981 Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Tue, 11 Oct 2016 13:37:47 -0700
+Subject: [PATCH] Fix bug #73276 - crash in openssl_random_pseudo_bytes
+ function
+
+---
+ ext/openssl/openssl.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/ext/openssl/openssl.c b/ext/openssl/openssl.c
+index 33593e7..01f2a09 100644
+--- a/ext/openssl/openssl.c
++++ b/ext/openssl/openssl.c
+@@ -5145,16 +5145,16 @@ PHP_FUNCTION(openssl_random_pseudo_bytes)
+ 		return;
+ 	}
+ 
+-	if (buffer_length <= 0) {
+-		RETURN_FALSE;
+-	}
+-
+ 	if (zstrong_result_returned) {
+ 		zval_dtor(zstrong_result_returned);
+ 		ZVAL_BOOL(zstrong_result_returned, 0);
+ 	}
+ 
+-	buffer = emalloc(buffer_length + 1);
++	if (buffer_length <= 0 || buffer_length > INT_MAX) {
++		RETURN_FALSE;
++	}
++
++	buffer = safe_emalloc(buffer_length, 1, 1);
+ 
+ #ifdef PHP_WIN32
+ 	/* random/urandom equivalent on Windows */
+-- 
+2.1.4
+

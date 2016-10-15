@@ -1,0 +1,46 @@
+Backported from 5.6.27 by Remi.
+
+
+From e1709b7e588cbda71c577f6e5b701713d0c70a23 Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Sun, 25 Sep 2016 16:07:14 -0700
+Subject: [PATCH] Fix bug #73082
+
+---
+ ext/mbstring/mbstring.c | 96 ++++++++++++++++++++++++-------------------------
+ 1 file changed, 48 insertions(+), 48 deletions(-)
+
+diff --git a/ext/mbstring/mbstring.c b/ext/mbstring/mbstring.c
+index 56f7cfa..cf5f8ed 100644
+--- a/ext/mbstring/mbstring.c
++++ b/ext/mbstring/mbstring.c
+@@ -3349,7 +3349,7 @@ PHP_FUNCTION(mb_encode_mimeheader)
+ 	mbfl_string_init(&result);
+ 	ret = mbfl_mime_header_encode(&string, &result, charset, transenc, linefeed, indent);
+ 	if (ret != NULL) {
+-		RETVAL_STRINGL((char *)ret->val, ret->len, 0);	/* the string is already strdup()'ed */
++		RETVAL_STRINGL_CHECK((char *)ret->val, ret->len, 0);	/* the string is already strdup()'ed */
+ 	} else {
+ 		RETVAL_FALSE;
+ 	}
+@@ -3476,7 +3476,7 @@ PHP_FUNCTION(mb_convert_kana)
+ 
+ 	ret = mbfl_ja_jp_hantozen(&string, &result, opt);
+ 	if (ret != NULL) {
+-		RETVAL_STRINGL((char *)ret->val, ret->len, 0);		/* the string is already strdup()'ed */
++		RETVAL_STRINGL_CHECK((char *)ret->val, ret->len, 0);		/* the string is already strdup()'ed */
+ 	} else {
+ 		RETVAL_FALSE;
+ 	}
+@@ -3772,7 +3772,7 @@ php_mb_numericentity_exec(INTERNAL_FUNCTION_PARAMETERS, int type)
+ 
+ 	ret = mbfl_html_numeric_entity(&string, &result, convmap, mapsize, type);
+ 	if (ret != NULL) {
+-		RETVAL_STRINGL((char *)ret->val, ret->len, 0);
++		RETVAL_STRINGL_CHECK((char *)ret->val, ret->len, 0);
+ 	} else {
+ 		RETVAL_FALSE;
+ 	}
+-- 
+2.1.4
+

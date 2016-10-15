@@ -1,0 +1,72 @@
+Backported from 5.6.27 by Remi.
+
+
+From 33a8af0510c5899cbf9148f53da08cf4f2df0013 Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Tue, 20 Sep 2016 22:59:12 -0700
+Subject: [PATCH] Fix bug #73073 - CachingIterator null dereference when
+ convert to string
+
+---
+ ext/spl/spl_iterators.c     | 254 +++++++++++++++++++++++---------------------
+ ext/spl/tests/bug73073.phpt |   9 ++
+ 2 files changed, 141 insertions(+), 122 deletions(-)
+ create mode 100644 ext/spl/tests/bug73073.phpt
+
+diff --git a/ext/spl/spl_iterators.c b/ext/spl/spl_iterators.c
+index a023b11..c6d03e0 100644
+--- a/ext/spl/spl_iterators.c
++++ b/ext/spl/spl_iterators.c
+@@ -2784,15 +2784,25 @@ SPL_METHOD(CachingIterator, __toString)
+ 
+ 	SPL_FETCH_AND_CHECK_DUAL_IT(intern, getThis());
+ 
++	if (!spl_caching_it_valid(intern TSRMLS_CC)) {
++		RETURN_EMPTY_STRING();
++	}
++
+ 	if (!(intern->u.caching.flags & (CIT_CALL_TOSTRING|CIT_TOSTRING_USE_KEY|CIT_TOSTRING_USE_CURRENT|CIT_TOSTRING_USE_INNER)))	{
+ 		zend_throw_exception_ex(spl_ce_BadMethodCallException, 0 TSRMLS_CC, "%s does not fetch string value (see CachingIterator::__construct)", Z_OBJCE_P(getThis())->name);
+ 		return;
+ 	}
+ 	if (intern->u.caching.flags & CIT_TOSTRING_USE_KEY) {
++		if (!intern->current.key) {
++			RETURN_EMPTY_STRING();
++		}
+ 		MAKE_COPY_ZVAL(&intern->current.key, return_value);
+ 		convert_to_string(return_value);
+ 		return;
+ 	} else if (intern->u.caching.flags & CIT_TOSTRING_USE_CURRENT) {
++		if (!intern->current.data) {
++			RETURN_EMPTY_STRING();
++		}
+ 		MAKE_COPY_ZVAL(&intern->current.data, return_value);
+ 		convert_to_string(return_value);
+ 		return;
+@@ -2800,7 +2810,7 @@ SPL_METHOD(CachingIterator, __toString)
+ 	if (intern->u.caching.zstr) {
+ 		RETURN_STRINGL(Z_STRVAL_P(intern->u.caching.zstr), Z_STRLEN_P(intern->u.caching.zstr), 1);
+ 	} else {
+-		RETURN_NULL();
++		RETURN_EMPTY_STRING();
+ 	}
+ } /* }}} */
+ 
+diff --git a/ext/spl/tests/bug73073.phpt b/ext/spl/tests/bug73073.phpt
+new file mode 100644
+index 0000000..218a28e
+--- /dev/null
++++ b/ext/spl/tests/bug73073.phpt
+@@ -0,0 +1,9 @@
++--TEST--
++Bug #73073: CachingIterator null dereference when convert to string
++--FILE--
++<?php
++$it = new CachingIterator(new ArrayIterator(array()), CachingIterator::TOSTRING_USE_KEY);
++var_dump((string)$it);
++?>
++--EXPECT--
++string(0) ""
+-- 
+2.1.4
+

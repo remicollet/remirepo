@@ -1,0 +1,28 @@
+Backported from 5.6.27 by Remi.
+
+
+From ef801b9bf96fb46b0418772a11a9b38f52cd93b4 Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Mon, 3 Oct 2016 00:12:14 -0700
+Subject: [PATCH] Fix bug #73208 - another missing length check
+
+---
+ ext/imap/php_imap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ext/imap/php_imap.c b/ext/imap/php_imap.c
+index 8fe9de9..564473b 100644
+--- a/ext/imap/php_imap.c
++++ b/ext/imap/php_imap.c
+@@ -2518,7 +2518,7 @@ PHP_FUNCTION(imap_8bit)
+ 		RETURN_FALSE;
+ 	}
+ 
+-	RETVAL_STRINGL(decode, newlength, 1);
++	RETVAL_STRINGL_CHECK(decode, newlength, 1);
+ 	fs_give((void**) &decode);
+ }
+ /* }}} */
+-- 
+2.1.4
+

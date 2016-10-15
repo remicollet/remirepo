@@ -1,0 +1,108 @@
+Backported from 5.6.27 by Remi.
+
+
+From 0e6fe3a4c96be2d3e88389a5776f878021b4c59f Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Sun, 25 Sep 2016 19:53:59 -0700
+Subject: [PATCH] Fix bug #73147: Use After Free in PHP7 unserialize()
+
+---
+ Zend/zend_API.c              | 24 ++++++++++++++++++++++++
+ Zend/zend_API.h              |  1 +
+ ext/curl/curl_file.c         |  5 ++++-
+ ext/curl/tests/bug73147.phpt | 20 ++++++++++++++++++++
+ 4 files changed, 49 insertions(+), 1 deletion(-)
+ create mode 100644 ext/curl/tests/bug73147.phpt
+
+diff --git a/Zend/zend_API.c b/Zend/zend_API.c
+index 8202b9a..0757cc9 100644
+--- a/Zend/zend_API.c
++++ b/Zend/zend_API.c
+@@ -3721,6 +3721,30 @@ ZEND_API void zend_update_property(zend_class_entry *scope, zval *object, const
+ }
+ /* }}} */
+ 
++ZEND_API void zend_unset_property(zend_class_entry *scope, zval *object, const char *name, int name_length TSRMLS_DC) /* {{{ */
++{
++	zval *property;
++	zend_class_entry *old_scope = EG(scope);
++
++	EG(scope) = scope;
++
++	if (!Z_OBJ_HT_P(object)->unset_property) {
++		const char *class_name;
++		zend_uint class_name_len;
++
++		zend_get_object_classname(object, &class_name, &class_name_len TSRMLS_CC);
++
++		zend_error(E_CORE_ERROR, "Property %s of class %s cannot be unset", name, class_name);
++	}
++	MAKE_STD_ZVAL(property);
++	ZVAL_STRINGL(property, name, name_length, 1);
++	Z_OBJ_HT_P(object)->unset_property(object, property, 0 TSRMLS_CC);
++	zval_ptr_dtor(&property);
++
++	EG(scope) = old_scope;
++}
++/* }}} */
++
+ ZEND_API void zend_update_property_null(zend_class_entry *scope, zval *object, const char *name, int name_length TSRMLS_DC) /* {{{ */
+ {
+ 	zval *tmp;
+diff --git a/Zend/zend_API.h b/Zend/zend_API.h
+index 53c1a4c..c57c003 100644
+--- a/Zend/zend_API.h
++++ b/Zend/zend_API.h
+@@ -327,6 +327,7 @@ ZEND_API void zend_update_property_long(zend_class_entry *scope, zval *object, c
+ ZEND_API void zend_update_property_double(zend_class_entry *scope, zval *object, const char *name, int name_length, double value TSRMLS_DC);
+ ZEND_API void zend_update_property_string(zend_class_entry *scope, zval *object, const char *name, int name_length, const char *value TSRMLS_DC);
+ ZEND_API void zend_update_property_stringl(zend_class_entry *scope, zval *object, const char *name, int name_length, const char *value, int value_length TSRMLS_DC);
++ZEND_API void zend_unset_property(zend_class_entry *scope, zval *object, const char *name, int name_length TSRMLS_DC);
+ 
+ ZEND_API int zend_update_static_property(zend_class_entry *scope, const char *name, int name_length, zval *value TSRMLS_DC);
+ ZEND_API int zend_update_static_property_null(zend_class_entry *scope, const char *name, int name_length TSRMLS_DC);
+diff --git a/ext/curl/curl_file.c b/ext/curl/curl_file.c
+index 56c1bbe..029a58a 100644
+--- a/ext/curl/curl_file.c
++++ b/ext/curl/curl_file.c
+@@ -137,7 +137,10 @@ ZEND_METHOD(CURLFile, setPostFilename)
+    Unserialization handler */
+ ZEND_METHOD(CURLFile, __wakeup)
+ {
+-	zend_update_property_string(curl_CURLFile_class, getThis(), "name", sizeof("name")-1, "" TSRMLS_CC);
++	zval *_this = getThis();
++
++	zend_unset_property(curl_CURLFile_class, _this, "name", sizeof("name")-1 TSRMLS_CC);
++	zend_update_property_string(curl_CURLFile_class, _this, "name", sizeof("name")-1, "" TSRMLS_CC);
+ 	zend_throw_exception(NULL, "Unserialization of CURLFile instances is not allowed", 0 TSRMLS_CC);
+ }
+ /* }}} */
+diff --git a/ext/curl/tests/bug73147.phpt b/ext/curl/tests/bug73147.phpt
+new file mode 100644
+index 0000000..118177d
+--- /dev/null
++++ b/ext/curl/tests/bug73147.phpt
+@@ -0,0 +1,20 @@
++--TEST--
++Bug #73147: Use After Free in PHP7 unserialize()
++--SKIPIF--
++<?php
++if (!extension_loaded("curl")) {
++        exit("skip curl extension not loaded");
++}
++?>
++--FILE--
++<?php
++
++$poc = 'a:1:{i:0;O:8:"CURLFile":1:{s:4:"name";R:1;}}';
++try {
++var_dump(unserialize($poc));
++} catch(Exception $e) {
++	echo $e->getMessage();
++}
++?>
++--EXPECT--
++Unserialization of CURLFile instances is not allowed
+-- 
+2.1.4
+

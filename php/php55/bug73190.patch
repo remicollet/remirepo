@@ -1,0 +1,134 @@
+Backported from 5.6.27 by Remi.
+
+
+From 40e7baab3c90001beee4c8f0ed0ef79ad18ee0d6 Mon Sep 17 00:00:00 2001
+From: Stanislav Malyshev <stas@php.net>
+Date: Mon, 3 Oct 2016 00:09:02 -0700
+Subject: [PATCH] Fix bug #73190: memcpy negative parameter _bc_new_num_ex
+
+---
+ Zend/zend_exceptions.c              | 32 ++++++++++++++++++++++++--------
+ ext/bcmath/libbcmath/src/init.c     |  5 ++++-
+ ext/bcmath/libbcmath/src/outofmem.c |  3 +--
+ main/php_version.h                  |  6 +++---
+ 4 files changed, 32 insertions(+), 14 deletions(-)
+
+diff --git a/Zend/zend_exceptions.c b/Zend/zend_exceptions.c
+index fda4d21..e656575 100644
+--- a/Zend/zend_exceptions.c
++++ b/Zend/zend_exceptions.c
+@@ -221,13 +221,9 @@ ZEND_METHOD(exception, __construct)
+ /* {{{ proto Exception::__wakeup()
+    Exception unserialize checks */
+ #define CHECK_EXC_TYPE(name, type) \
+-	value = zend_read_property(default_exception_ce, object, name, sizeof(name)-1, 0 TSRMLS_CC); \
++	value = zend_read_property(default_exception_ce, object, name, sizeof(name)-1, 1 TSRMLS_CC); \
+ 	if (value && Z_TYPE_P(value) != IS_NULL && Z_TYPE_P(value) != type) { \
+-		zval *tmp; \
+-		MAKE_STD_ZVAL(tmp); \
+-		ZVAL_STRINGL(tmp, name, sizeof(name)-1, 1); \
+-		Z_OBJ_HANDLER_P(object, unset_property)(object, tmp, 0 TSRMLS_CC); \
+-		zval_ptr_dtor(&tmp); \
++		zend_unset_property(default_exception_ce, object, name, sizeof(name)-1 TSRMLS_CC); \
+ 	}
+ 
+ ZEND_METHOD(exception, __wakeup)
+@@ -241,7 +237,12 @@ ZEND_METHOD(exception, __wakeup)
+ 	CHECK_EXC_TYPE("file", IS_STRING);
+ 	CHECK_EXC_TYPE("line", IS_LONG);
+ 	CHECK_EXC_TYPE("trace", IS_ARRAY);
+-	CHECK_EXC_TYPE("previous", IS_OBJECT);
++	value = zend_read_property(default_exception_ce, object, "previous", sizeof("previous")-1, 1 TSRMLS_CC);
++	if (value && Z_TYPE_P(value) != IS_NULL && (Z_TYPE_P(value) != IS_OBJECT ||
++			!instanceof_function(Z_OBJCE_P(value), default_exception_ce TSRMLS_CC) ||
++			value == object)) {
++		zend_unset_property(default_exception_ce, object, "previous", sizeof("previous")-1 TSRMLS_CC);
++	}
+ }
+ /* }}} */
+ 
+@@ -719,7 +720,11 @@ ZEND_METHOD(exception, __toString)
+ 		zval_dtor(&file);
+ 		zval_dtor(&line);
+ 
+-		exception = zend_read_property(default_exception_ce, exception, "previous", sizeof("previous")-1, 0 TSRMLS_CC);
++		Z_OBJPROP_P(exception)->nApplyCount++;
++		exception = zend_read_property(default_exception_ce, exception, "previous", sizeof("previous")-1, 1 TSRMLS_CC);
++		if (exception && Z_TYPE_P(exception) == IS_OBJECT && Z_OBJPROP_P(exception)->nApplyCount > 0) {
++			exception = NULL;
++		}
+ 
+ 		if (trace) {
+ 			zval_ptr_dtor(&trace);
+@@ -728,6 +733,17 @@ ZEND_METHOD(exception, __toString)
+ 	}
+ 	zval_dtor(&fname);
+ 
++	/* Reset apply counts */
++	exception = getThis();
++	while (exception && Z_TYPE_P(exception) == IS_OBJECT && instanceof_function(Z_OBJCE_P(exception), default_exception_ce TSRMLS_CC)) {
++		if(Z_OBJPROP_P(exception)->nApplyCount) {
++			Z_OBJPROP_P(exception)->nApplyCount--;
++		} else {
++			break;
++		}
++		exception = zend_read_property(default_exception_ce, exception, "previous", sizeof("previous")-1, 1 TSRMLS_CC);
++	}
++
+ 	/* We store the result in the private property string so we can access
+ 	 * the result in uncaught exception handlers without memleaks. */
+ 	zend_update_property_string(default_exception_ce, getThis(), "string", sizeof("string")-1, str TSRMLS_CC);
+diff --git a/ext/bcmath/libbcmath/src/init.c b/ext/bcmath/libbcmath/src/init.c
+index 986ad1d..c51133b 100644
+--- a/ext/bcmath/libbcmath/src/init.c
++++ b/ext/bcmath/libbcmath/src/init.c
+@@ -49,7 +49,10 @@ _bc_new_num_ex (length, scale, persistent)
+      int length, scale, persistent;
+ {
+   bc_num temp;
+-
++  /* PHP Change:  add length check */
++  if ((size_t)length+(size_t)scale > INT_MAX) {
++   zend_error(E_ERROR, "Result too long, max is %d", INT_MAX);
++  }
+   /* PHP Change:  malloc() -> pemalloc(), removed free_list code */
+   temp = (bc_num) safe_pemalloc (1, sizeof(bc_struct)+length, scale, persistent);
+ #if 0
+diff --git a/ext/bcmath/libbcmath/src/outofmem.c b/ext/bcmath/libbcmath/src/outofmem.c
+index 799a32d..05fa484 100644
+--- a/ext/bcmath/libbcmath/src/outofmem.c
++++ b/ext/bcmath/libbcmath/src/outofmem.c
+@@ -41,6 +41,5 @@
+ 
+ void bc_out_of_memory (void)
+ {
+-  (void) fprintf (stderr, "bcmath: out of memory!\n");
+-  exit (1);
++  zend_error_noreturn(E_ERROR, "bcmath: out of memory!");
+ }
+-- 
+2.1.4
+
+From e1f5b6d8dfe1543205d5b45d3dcf1d34f5e2e420 Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Fri, 14 Oct 2016 10:53:40 +0200
+Subject: [PATCH] use zend_error instead of zend_error_noreturn
+
+---
+ ext/bcmath/libbcmath/src/outofmem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ext/bcmath/libbcmath/src/outofmem.c b/ext/bcmath/libbcmath/src/outofmem.c
+index 05fa484..ba92450 100644
+--- a/ext/bcmath/libbcmath/src/outofmem.c
++++ b/ext/bcmath/libbcmath/src/outofmem.c
+@@ -41,5 +41,5 @@
+ 
+ void bc_out_of_memory (void)
+ {
+-  zend_error_noreturn(E_ERROR, "bcmath: out of memory!");
++  zend_error(E_ERROR, "bcmath: out of memory!");
+ }
+-- 
+2.1.4
+

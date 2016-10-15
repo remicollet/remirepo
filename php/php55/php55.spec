@@ -141,7 +141,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.38
-Release: 3%{?dist}
+Release: 4%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -231,6 +231,22 @@ Patch125: bug73029.patch
 Patch126: bug73052.patch
 Patch127: bug73035.patch
 Patch128: bug73065.patch
+Patch129: bug72581.patch
+Patch130: bug73189.patch
+Patch131: bug73147.patch
+Patch132: bug73190.patch
+Patch133: bug73150.patch
+Patch134: bug73284.patch
+Patch135: bug73073.patch
+Patch136: bug73218.patch
+Patch137: bug73208.patch
+Patch138: bug73082.patch
+Patch139: bug73174.patch
+Patch140: bug73275.patch
+Patch141: bug73276.patch
+Patch142: bug73293.patch
+Patch143: bug73240.patch
+Patch144: bug73017.patch
 
 # Security fixes (200+)
 
@@ -978,7 +994,7 @@ rm -rf ext/json
 %patch21 -p1 -b .odbctimer
 
 %patch40 -p1 -b .dlopen
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 5
+%if 0%{?fedora} >= 23 || 0%{?rhel} >= 5
 %patch42 -p1 -b .systzdata
 %endif
 %patch43 -p1 -b .headers
@@ -1025,6 +1041,22 @@ rm -rf ext/json
 %patch126 -p1 -b .bug73052
 %patch127 -p1 -b .bug73035
 %patch128 -p1 -b .bug73065
+%patch129 -p1 -b .bug73581
+%patch130 -p1 -b .bug73189
+%patch131 -p1 -b .bug73147
+%patch132 -p1 -b .bug73190
+%patch133 -p1 -b .bug73150
+%patch134 -p1 -b .bug73284
+%patch135 -p1 -b .bug73073
+%patch136 -p1 -b .bug73218
+%patch137 -p1 -b .bug73208
+%patch138 -p1 -b .bug73082
+%patch139 -p1 -b .bug73174
+%patch140 -p1 -b .bug73275
+%patch141 -p1 -b .bug73276
+%patch142 -p1 -b .bug73293
+%patch143 -p1 -b .bug73240
+%patch144 -p1 -b .bug73017
 
 # Fixes for tests
 %patch300 -p1 -b .datetests
@@ -2047,6 +2079,24 @@ EOF
 
 
 %changelog
+* Sat Oct 15 2016 Remi Collet <remi@remirepo.net> 5.5.38-4
+- fix #73189: Memcpy negative size parameter php_resolve_path
+- fix #72581: previous property undefined in Exception after deserialization
+- fix #73147: Use After Free in unserialize
+- fix #73190: memcpy negative parameter _bc_new_num_ex
+- fix #73150: missing NULL check in dom_document_save_html
+- fix #73284: heap overflow in php_ereg_replace function
+- fix #73073: CachingIterator null dereference when convert to string
+- fix #73218: add mitigation for ICU int overflow
+- fix #73208: integer overflow in imap_8bit caused heap corruption
+- fix #73082: string length overflow in mb_encode_* function
+- fix #73174: heap overflow in php_pcre_replace_impl
+- fix #73275: crash in openssl_encrypt function
+- fix #73275: crash in openssl_encrypt function
+- fix #73293: NULL pointer dereference in SimpleXMLElement::asXML
+- fix #73240: Write out of bounds at number_format
+- fix #73017: memory corruption in wordwrap function
+
 * Mon Sep 19 2016 Remi Collet <remi@remirepo.net> 5.5.38-3
 - fix #72910: Out of bounds heap read in mbc_to_code()
 - fix #72926: Uninitialized Thumbail Data Leads To Memory Leakage
