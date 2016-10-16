@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-doctrine-cache
 #
-# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,14 +12,15 @@
 
 %global github_owner     doctrine
 %global github_name      cache
-%global github_version   1.5.4
-%global github_commit    47cdc76ceb95cc591d9c79a36dc3794975b5d136
+%global github_version   1.6.0
+%global github_commit    f8af318d14bdb0eff0336795b428b547bd39ccb6
 
 %global composer_vendor  doctrine
 %global composer_project cache
 
-# "php": ">=5.3.2"
-%global php_min_ver      5.3.2
+# "php": "~5.5|~7.0"
+%global php_min_ver 5.5
+%global php_max_ver 8.0
 
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
@@ -43,10 +44,9 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 1.5.4)
+## phpcompatinfo (computed from version 1.6.0)
 BuildRequires: php-date
 BuildRequires: php-hash
-BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
 %if 0%{?rhel} != 5
@@ -58,10 +58,10 @@ BuildRequires: php-composer(symfony/class-loader)
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.5.4)
+Requires:      php(language) <  %{php_max_ver}
+# phpcompatinfo (computed from version 1.6.0)
 Requires:      php-date
 Requires:      php-hash
-Requires:      php-pcre
 Requires:      php-spl
 %if 0%{?rhel} != 5
 Requires:      php-sqlite3
@@ -162,10 +162,17 @@ rm  tests/Doctrine/Tests/Common/Cache/SQLite3CacheTest.php
 %endif
 
 : Run tests
+run=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap autoload.php
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap autoload.php
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/phpunit --verbose --bootstrap autoload.php
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose --bootstrap autoload.php
 fi
 %else
 : Tests skipped
@@ -188,6 +195,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Mar 12 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.6.0-1
+- Updated to 1.6.0 (RHBZ #1295634)
+- Removed "phpunit without assertNotFalse() function" patch since
+  this version will never be built for EL6 (b/c of PHP min version
+  dependency)
+
 * Fri Dec 25 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.5.4-1
 - Updated to 1.5.4 (RHBZ #1276019)
 - Added "Suggests" weak dependencies
