@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    7599ff50379dce56a55cc78d24a9bad5b98ed5b9
+%global gh_commit    a2bdafb3e9e2c1dca46c2a577d6e36e6b842ae57
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global c_vendor     tecnickcom
 %global gh_owner     tecnickcom
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.0
+Version:        2.4.0
 Release:        1%{?dist}
 Summary:        PHP library containing PDF page formats and definitions
 
@@ -124,6 +124,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct 16 2016 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
+- update to 2.4.0
+
 * Tue Sep 27 2016 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
 - update to 2.3.0
 
