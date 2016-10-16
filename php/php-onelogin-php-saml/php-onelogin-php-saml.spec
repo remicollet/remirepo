@@ -7,7 +7,7 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    17bfafe301bf21be1827c72f90e33a9c29d58553
+%global gh_commit    5e943886a695769dc35fe7f9ffdbe7d5fd8eeb99
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     onelogin
 %global gh_project   php-saml
@@ -17,8 +17,8 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Group:          Development/Libraries
-Version:        2.9.1
-Release:        3%{?dist}
+Version:        2.10.0
+Release:        1%{?dist}
 Summary:        SAML support for PHP
 
 License:        MIT
@@ -100,17 +100,13 @@ cp -pr lib/* %{buildroot}%{_datadir}/php/%{php_vendor}/
 
 
 %check
-# With PHP 7.1, There was 1 failure:
-# 1) OneLogin_Saml2_UtilsTest::testisSessionStarted
-# Failed asserting that false is true.
-
 run=0
 if which php56; then
-   php56 %{_bindir}/phpunit --bootstrap tests/bootstrap.php --configuration tests/phpunit.xml
+   php56 %{_bindir}/phpunit --bootstrap tests/bootstrap.php --configuration tests/phpunit.xml || ret=1
    run=1
 fi
-if which php70; then
-   php70 %{_bindir}/phpunit --bootstrap tests/bootstrap.php --configuration tests/phpunit.xml
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap tests/bootstrap.php --configuration tests/phpunit.xml || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -132,6 +128,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct 16 2016 Remi Collet <remi@remirepo.net> - 2.10.0-1
+- update to 2.10.0
+
 * Thu Jul 28 2016 Remi Collet <remi@remirepo.net> - 2.9.1-3
 - add needed backport stuff for remi repository
 
