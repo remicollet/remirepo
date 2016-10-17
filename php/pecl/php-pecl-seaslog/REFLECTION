@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #143 SeasLog version 1.6.2 ] {
+Extension [ <persistent> extension #155 SeasLog version 1.6.8 ] {
 
   - Dependencies {
   }
@@ -12,9 +12,6 @@ Extension [ <persistent> extension #143 SeasLog version 1.6.2 ] {
     }
     Entry [ seaslog.default_datetime_format <ALL> ]
       Current = 'Y:m:d H:i:s'
-    }
-    Entry [ seaslog.logger <ALL> ]
-      Current = 'default'
     }
     Entry [ seaslog.disting_type <ALL> ]
       Current = '0'
@@ -49,7 +46,7 @@ Extension [ <persistent> extension #143 SeasLog version 1.6.2 ] {
   }
 
   - Constants [16] {
-    Constant [ string SEASLOG_VERSION ] { 1.6.2 }
+    Constant [ string SEASLOG_VERSION ] { 1.6.8 }
     Constant [ string SEASLOG_AUTHOR ] { Chitao.Gao  [ neeke@php.net ] }
     Constant [ string SEASLOG_ALL ] { all }
     Constant [ string SEASLOG_DEBUG ] { debug }
