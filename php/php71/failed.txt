@@ -2,23 +2,29 @@
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
-/var/lib/mock/el6i/build.log:Tests failed    :     0
-/var/lib/mock/el6x/build.log:Tests failed    :     0
-/var/lib/mock/el7x/build.log:Tests failed    :     1
-/var/lib/mock/fc23i/build.log:Tests failed    :    0
-/var/lib/mock/fc23x/build.log:Tests failed    :    0
-/var/lib/mock/fc24i/build.log:Tests failed    :    0
+/var/lib/mock/el6i/build.log:Tests failed    :     6
+/var/lib/mock/el6x/build.log:Tests failed    :     4
+/var/lib/mock/el7x/build.log:Tests failed    :     4
+/var/lib/mock/fc23i/build.log:Tests failed    :    5
+/var/lib/mock/fc23x/build.log:Tests failed    :    4
+/var/lib/mock/fc24i/build.log:Tests failed    :    1
 /var/lib/mock/fc24x/build.log:Tests failed    :    0
-/var/lib/mock/fc25i/build.log:Tests failed    :    1
+/var/lib/mock/fc25i/build.log:Tests failed    :    5
 /var/lib/mock/fc25x/build.log:Tests failed    :    0
 
-el7x
-	*	Bug #64438 proc_open hangs with stdin/out with 4097+ bytes [ext/standard/tests/streams/proc_open_bug64438.phpt]
-fc25i
-	*	openssl_pkey_new() basic usage tests [ext/openssl/tests/openssl_pkey_new_basic.phpt]
+el6i
+	*	Test session_set_save_handler() function : basic functionality [ext/session/tests/session_set_save_handler_basic.phpt]
+el6x, el7x, fc23i, fc23x, fc25i
+	***	Bug #20382 [2] (strtotime ("Monday", $date) produces wrong result on DST changeover) [ext/date/tests/bug20382-2.phpt]
+	***	Bug #33414 [1] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-1.phpt]
+	***	Bug #33415 [1] (Possibly invalid non-one-hour DST or timezone shifts) [ext/date/tests/bug33415-1.phpt]
+	***	Bug #51819 (Case discrepancy in timezone names cause Uncaught exception and fatal error) [ext/date/tests/bug51819.phpt]
+el6i, fc23i, fc24i, fc25i
+	*** Bug #53437 DateInterval unserialize bad data, 32 bit [ext/date/tests/bug53437_var3.phpt]
 
 
 *   proc_open give erratic test results :(
 **  date tests vary with tzdata available in system
 *** test fixed upstream
+***	Related to tzdata 2016g (f24+) vs 2016f
 

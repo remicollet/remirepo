@@ -26,7 +26,7 @@
 %global zendver     20160303
 %global pdover      20150127
 # Extension version
-%global oci8ver     2.1.2
+%global oci8ver     2.1.3
 
 # Adds -z now to the linker flags
 %global _hardened_build 1
@@ -124,8 +124,8 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver        RC3
-%global rpmrel       10
+%global rcver        RC4
+%global rpmrel       11
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -169,7 +169,7 @@ Patch9: php-7.0.7-curl.patch
 
 # Functional changes
 Patch40: php-7.0.0-dlopen.patch
-Patch42: php-7.0.0-systzdata-v13.patch
+Patch42: php-7.1.0-systzdata-v14.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
 # Use -lldap_r for OpenLDAP
@@ -883,7 +883,9 @@ support for JavaScript Object Notation (JSON) to PHP.
 %endif
 
 %patch40 -p1 -b .dlopen
+%if 0%{?fedora} >= 23 || 0%{?rhel} >= 5
 %patch42 -p1 -b .systzdata
+%endif
 %patch43 -p1 -b .headers
 %if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
 %patch45 -p1 -b .ldap_r
@@ -1824,6 +1826,11 @@ fi
 
 
 %changelog
+* Mon Oct 17 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-0.11.RC4
+- Update to 7.1.0RC4
+- update tzdata patch to v14, improve check for valid tz file
+- oci8 version is now 2.1.3
+
 * Wed Oct  5 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-0.10.RC3
 - rebuild
 
