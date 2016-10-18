@@ -15,20 +15,20 @@
 %endif
 
 %global bootstrap  0
-%global gh_commit  e7a67846c2806cd70f4ea28c3aef4fe04430ad98
+%global gh_commit  b771cd50a7fe519b6aaccbe5dc97594e68e0c88f
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   krakjoe
 %global gh_project apcu
-#global gh_date    20151205
+%global gh_date    20161018
 %global pecl_name  apcu
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global ini_name   40-%{pecl_name}.ini
 
 Name:           %{?sub_prefix}php-pecl-apcu
 Summary:        APC User Cache
-Version:        5.1.6
+Version:        5.1.7
 %if 0%{?gh_date:1}
-Release:        0.3.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
@@ -154,8 +154,8 @@ cd NTS
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_APCU_VERSION/{s/.* "//;s/".*$//;p}' php_apc.h)
-if test "x${extver}" != "x%{version}%{?prever}%{?gh_date:dev}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}%{?gh_date:dev}.
+if test "x${extver}" != "x%{version}%{?prever}%{?gh_date:-dev}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}%{?gh_date:-dev}.
    exit 1
 fi
 cd ..
@@ -312,6 +312,9 @@ fi
 
 
 %changelog
+* Tue Oct 18 2016 Remi Collet <remi@fedoraproject.org> - 5.1.7-0.1.20161018gitb771cd5
+- test for upcoming 5.1.7
+
 * Thu Oct  6 2016 Remi Collet <remi@fedoraproject.org> - 5.1.6-1
 - Update to 5.1.6 (php 7, stable)
 
