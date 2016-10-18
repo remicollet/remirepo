@@ -1,7 +1,9 @@
-Extension [ <persistent> extension #63 igbinary version 1.2.2-dev ] {
+Extension [ <persistent> extension #93 igbinary version 1.2.2-dev ] {
 
   - Dependencies {
     Dependency [ standard (Required) ]
+    Dependency [ session (Required) ]
+    Dependency [ apcu (Optional) ]
   }
 
   - INI {

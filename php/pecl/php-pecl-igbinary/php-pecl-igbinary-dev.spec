@@ -20,9 +20,9 @@
 
 %global extname    igbinary
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
-%global gh_commit  332a3d7ca899531f063dab38608e69e0e18f62a2
+%global gh_commit  6a2d5b7ea71489c4d7065dc7746d37cfa80d501c
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date    20160724
+%global gh_date    20161018
 %global prever    -dev
 %if "%{php_version}" < "5.6"
 %global ini_name  %{extname}.ini
@@ -34,8 +34,8 @@ Summary:        Replacement for the standard PHP serializer
 Name:           %{?sub_prefix}php-pecl-igbinary
 Version:        1.2.2
 %if 0%{?gh_date}
-Release:        0.5.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
-Source0:        https://github.com/%{extname}/%{extname}7/archive/%{gh_commit}/%{extname}-%{version}-%{gh_short}.tar.gz
+Release:        0.6.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Source0:        https://github.com/%{extname}/%{extname}/archive/%{gh_commit}/%{extname}-%{version}-%{gh_short}.tar.gz
 %else
 Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        http://pecl.php.net/get/%{extname}-%{version}.tgz
@@ -49,7 +49,6 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-devel >= 5.2.0
 BuildRequires:  %{?sub_prefix}php-pecl-apcu-devel
-BuildRequires:  %{?sub_prefix}php-pecl-apcu-bc
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
@@ -125,7 +124,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %setup -q -c
 
 %if 0%{?gh_date}
-mv igbinary7-%{gh_commit} NTS
+mv igbinary-%{gh_commit} NTS
 %{__php} -r '
   $pkg = simplexml_load_file("NTS/package.xml");
   $pkg->date = substr("%{gh_date}",0,4)."-".substr("%{gh_date}",4,2)."-".substr("%{gh_date}",6,2);
@@ -142,7 +141,8 @@ mv %{extname}-%{version} NTS
 cd NTS
 
 # Check version
-extver=$(sed -n '/#define PHP_IGBINARY_VERSION/{s/.* "//;s/".*$//;p}' igbinary.h)
+subdir="php$(%{__php} -r 'echo PHP_MAJOR_VERSION;')"
+extver=$(sed -n '/#define PHP_IGBINARY_VERSION/{s/.* "//;s/".*$//;p}' src/$subdir/igbinary.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
    : Error: Upstream version is ${extver}, expecting %{version}%{?prever}.
    exit 1
@@ -303,6 +303,9 @@ fi
 
 
 %changelog
+* Tue Oct 18 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-0.6.20161018git6a2d5b7
+- refresh with sources from igbinary instead of old closed repo igbinary7
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-0.5.20160724git332a3d7
 - rebuild for PHP 7.1 new API version
 
