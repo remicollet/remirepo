@@ -13,8 +13,8 @@
 
 %global github_owner     google
 %global github_name      google-api-php-client
-%global github_version   1.1.8
-%global github_commit    85309a3520bb5f53368d43e35fd24f43c9556323
+%global github_version   1.1.7
+%global github_commit    400f250a30ae1dd4c4a0a4f750fe973fc70e6311
 
 %global composer_vendor  google
 %global composer_project apiclient
@@ -29,7 +29,9 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
+# Epoch bumped to permit downgrade to 1.1.7 due to breaking change in 1.1.8 from v2 to v3 google API bz#1386167
+Epoch:         2
 Summary:       Client library for Google APIs
 
 Group:         Development/Libraries
@@ -93,7 +95,7 @@ Autoloader: %{phpdir}/Google/autoload.php
 
 Summary:  Client library for Google APIs: Examples
 Group:    Development/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name} = %{epoch}:%{version}-%{release}
 
 %description examples
 %{summary}
@@ -171,6 +173,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 18 2016 James Hogarth <james.hogarth@gmail.com> - 2:1.1.7-2
+- Missed an %%{epoch} for the examples subpackage
+
+* Tue Oct 18 2016 James Hogarth <james.hogarth@gmail.com> - 2:1.1.7-1
+- Downgrade to 1.1.7 (RHBZ #1386167)
+
 * Sun Jul 24 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.1.8-1
 - Updated to 1.1.8 (RHBZ #1275453)
 - Added weak dependencies
