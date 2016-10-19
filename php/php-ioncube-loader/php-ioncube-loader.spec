@@ -172,7 +172,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license ioncube/LICENSE.txt
-#doc ioncube/USER-GUIDE.*
+%doc ioncube/USER-GUIDE.txt
 
 %config(noreplace) %{php_inidir}/%{ininame}
 %{php_extdir}/%{extname}.so
