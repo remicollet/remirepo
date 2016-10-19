@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    da827a7f4704cf99abcba2973496d4f2c623b32f
+%global gh_commit    7da6cc65f301e220acba4fd8a11d3afdc642be9e
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.5.1
+Version:        2.5.2
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Caching Component
@@ -158,6 +158,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct 19 2016 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
+- update to 2.5.2
+
 * Tue Aug  2 2016 Remi Collet <remi@fedoraproject.org> - 2.5.1-1
 - update to 2.5.1
 - raise dependency on PHP >= 5.6
