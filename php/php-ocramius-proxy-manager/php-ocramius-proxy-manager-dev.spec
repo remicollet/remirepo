@@ -12,26 +12,21 @@
 
 %global github_owner      Ocramius
 %global github_name       ProxyManager
-%global github_version    1.0.2
-%global github_commit     57e9272ec0e8deccf09421596e0e2252df440e11
+%global github_version    2.0.3
+%global github_commit     51c7fdd99dba53808aaab21b34f7a55b302c160c
+%global github_short      %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor   ocramius
 %global composer_project  proxy-manager
 
-# "php": ">=5.3.3"
-%global php_min_ver 5.3.3
-# "zendframework/zend-code": ">2.2.5,<3.0"
-%global zf_min_ver  2.2.5
-%global zf_max_ver  3.0
+# "php": "7.0.0 - 7.0.5 || ^7.0.7"
+%global php_min_ver 7.0.7
+# "zendframework/zend-code": "~3.0.0 - 3.0.2 || ^3.0.4"
+%global zf_min_ver  3.0.4
+%global zf_max_ver  4
 
-# Skip tests for EPEL 6 b/c PHPUnit < 4
-# TODO: Get tests running on EPEL 6!
-%if 0%{?el6}
-%global with_tests 0
-%else
 # Build using "--without tests" to disable tests
 %global with_tests %{?_without_tests:0}%{!?_without_tests:1}
-%endif
 
 %{!?phpdir:  %global phpdir  %{_datadir}/php}
 
@@ -43,7 +38,13 @@ Summary:       OOP proxy wrappers utilities
 Group:         Development/Libraries
 License:       MIT
 URL:           http://ocramius.github.io/ProxyManager/
-Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+Source0:       %{name}-%{github_version}-%{github_short}.tgz
+# git snapshot to retrieve test suite
+Source1:       makesrc.sh
+
+# Hardcode library version
+# drop dependency on ocramius/package-versions
+Patch0:        %{name}-rpm.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:     noarch
@@ -53,61 +54,59 @@ BuildRequires: %{_bindir}/phpab
 # Tests
 ## composer.json
 BuildRequires: %{_bindir}/phpunit
-BuildRequires: php(language)                         >= %{php_min_ver}
 BuildRequires: php-composer(zendframework/zend-code) >= %{zf_min_ver}
-BuildRequires: php-composer(zendframework/zend-code) <  %{zf_max_ver}
-## phpcompatinfo (computed from version 1.0.0)
+BuildRequires: php-composer(zendframework/zend-loader)
+## phpcompatinfo (computed from version 2.0.0)
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
+# Autoloader
+BuildRequires: php-composer(phpunit/phpunit)         >= 5.3.4
 %endif
 
 # composer.json
 Requires:      php(language)                         >= %{php_min_ver}
 Requires:      php-composer(zendframework/zend-code) >= %{zf_min_ver}
 Requires:      php-composer(zendframework/zend-code) <  %{zf_max_ver}
-# phpcompatinfo (computed from version 1.0.0)
+# phpcompatinfo (computed from version 2.0.0)
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
+# Autoloader
+Requires:      php-composer(zendframework/zend-loader)
+%if 0%{?fedora} >= 21
+Suggests:      php-composer(zendframework/zend-xmlrpc)
+Suggests:      php-composer(zendframework/zend-json)
+Suggests:      php-composer(zendframework/zend-soap)
+%endif
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 %description
-A library providing utilities to generate, instantiate and generally operate
-with Object Proxies.
+This library aims at providing abstraction for generating various kinds
+of proxy classes.
 
-Optional:
-* php-ZendFramework2-Json
-      To have the JsonRpc adapter (Remote Object feature)
-* php-ZendFramework2-Soap
-      To have the Soap adapter (Remote Object feature)
-* php-ZendFramework2-Stdlib
-      To use the hydrator proxy
-* php-ZendFramework2-XmlRpc
-      To have the XmlRpc adapter (Remote Object feature)
-* php-ocramius-generated-hydrator
-      To have very fast object to array to object conversion for ghost objects
+Autoloader: %{phpdir}/ProxyManager/autoload.php
 
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+%patch0 -p0
+sed -e 's/@VERSION@/%{version}/' \
+    -e 's/@COMMIT@/%{github_commit}/' \
+    -i src/ProxyManager/Version.php
+grep ' return' src/ProxyManager/Version.php
+
 
 %build
 : Generate autoloader
-%{_bindir}/phpab --nolower --output src/ProxyManager/autoload.php src/ProxyManager
-
-(cat <<'AUTOLOAD'
-
-// TODO: Add Zend/ZendXml/Ocramius autoloaders from their packages when they are available
-spl_autoload_register(function ($class) {
-    $src = str_replace('\\', '/',  $class) . '.php';
-    @include_once $src;
-});
-AUTOLOAD
-) | tee -a src/ProxyManager/autoload.php
+%{_bindir}/phpab --output src/ProxyManager/autoload.php src/ProxyManager
+cat << 'EOF' | tee -a     src/ProxyManager/autoload.php
+// For dependencies
+require_once '%{phpdir}/Zend/autoload.php';
+EOF
 
 
 %install
@@ -119,19 +118,14 @@ cp -rp src/* %{buildroot}%{phpdir}/
 %check
 %if %{with_tests}
 : Create tests autoload
-%{_bindir}/phpab --nolower --output tests/autoload.php tests %{phpdir}/PHPUnit
-
-: Create mock Composer "vendor/autoload.php"
 mkdir vendor
-(cat <<'AUTOLOAD'
-<?php
-require __DIR__ . '/../tests/autoload.php';
-require '%{buildroot}%{phpdir}/ProxyManager/autoload.php';
-AUTOLOAD
-) | tee vendor/autoload.php
+%{_bindir}/phpab --output vendor/autoload.php tests
+cat << 'EOF' | tee -a vendor/autoload.php
+require_once '%{buildroot}%{phpdir}/ProxyManager/autoload.php';
+EOF
 
 : Run tests
-%{_bindir}/phpunit -v --exclude-group Performance
+%{_bindir}/phpunit --verbose --exclude-group Performance
 %else
 : Tests skipped
 %endif
@@ -151,6 +145,15 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- update to 2.0.3
+- raise dependency on zendframework/zend-code 3.0.4
+
+* Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- update to 2.0.2
+- raise dependency on php 7.0.7
+- raise dependency on zendframework/zend-code 3.0
+
 * Mon Aug 10 2015 Remi Collet <remi@remirepo.net> - 1.0.2-1
 - update to 1.0.2
 
