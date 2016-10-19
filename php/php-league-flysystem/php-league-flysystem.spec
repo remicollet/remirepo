@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # Github
-%global gh_commit    75138bb14160f3ba963750aa95e08d1d394fb198
+%global gh_commit    521a233642773505222a5dd53231ccf5b0607d5a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     thephpleague
 %global gh_project   flysystem
@@ -19,7 +19,7 @@
 %global ns_project   Flysystem
 
 Name:           php-%{pk_vendor}-%{pk_name}
-Version:        1.0.30
+Version:        1.0.31
 Release:        1%{?dist}
 Summary:        Filesystem abstraction: Many filesystems, one API
 
@@ -159,6 +159,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct 19 2016 Remi Collet <remi@fedoraproject.org> - 1.0.30-1
+- update to 1.0.30
+
 * Wed Oct 19 2016 Remi Collet <remi@fedoraproject.org> - 1.0.30-1
 - update to 1.0.30 (no change)
 - lower dependency on PHP 5.5.9
