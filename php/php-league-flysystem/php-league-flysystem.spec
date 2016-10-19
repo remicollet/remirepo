@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # Github
-%global gh_commit    b732cc946c48cf102ddffd41ffcd54901a28ccdb
+%global gh_commit    75138bb14160f3ba963750aa95e08d1d394fb198
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     thephpleague
 %global gh_project   flysystem
@@ -19,7 +19,7 @@
 %global ns_project   Flysystem
 
 Name:           php-%{pk_vendor}-%{pk_name}
-Version:        1.0.29
+Version:        1.0.30
 Release:        1%{?dist}
 Summary:        Filesystem abstraction: Many filesystems, one API
 
@@ -34,7 +34,7 @@ Source2:        %{name}-autoload.php
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.6
+BuildRequires:  php(language) >= 5.5.9
 BuildRequires:  php-date
 BuildRequires:  php-fileinfo
 BuildRequires:  php-ftp
@@ -53,8 +53,7 @@ BuildRequires:  php-composer(phpspec/phpspec) >= 2.2
 BuildRequires:  php-composer(symfony/class-loader)
 
 # From composer.json, "require": {
-#        "php": ">=5.6.0"
-Requires:       php(language) >= 5.6
+Requires:       php(language) >= 5.5.9
 # From phpcompatifo report for 1.0.29
 Requires:       php-date
 Requires:       php-fileinfo
@@ -160,6 +159,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct 19 2016 Remi Collet <remi@fedoraproject.org> - 1.0.30-1
+- update to 1.0.30 (no change)
+- lower dependency on PHP 5.5.9
+
 * Tue Oct 18 2016 Remi Collet <remi@fedoraproject.org> - 1.0.29-1
 - update to 1.0.29
 - raise dependency on PHP 5.6
