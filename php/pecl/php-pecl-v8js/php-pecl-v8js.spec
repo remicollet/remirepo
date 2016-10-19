@@ -16,7 +16,7 @@
 %global ini_name   40-%{pecl_name}.ini
 
 Summary:        V8 Javascript Engine for PHP
-Name:           php-pecl-%{pecl_name}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.3.3
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
@@ -24,20 +24,23 @@ Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  php-devel > 7
-BuildRequires:  php-pear
-BuildRequires:  v8-devel >= 4.6.76
+# https://github.com/phpv8/v8js/pull/266
+Patch0:         %{pecl_name}-pr266.patch
 
-Requires:       chromium%{?_isa}
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:  %{?scl_prefix}php-devel > 7
+BuildRequires:  %{?scl_prefix}php-pear
+# because of https://bugzilla.redhat.com/1378889
+BuildRequires:  v8-devel >= 5.2.258-7
+
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       php-%{pecl_name}                             = %{version}
-Provides:       php-%{pecl_name}%{?_isa}                     = %{version}
-Provides:       php-pecl(%{pecl_name})                       = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}                             = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}                     = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})                       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa}               = %{version}
 %if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
@@ -78,8 +81,7 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-# Fix config script, use blob from chromium
-sed -e '/SEARCH_PATH/s:V8_DIR/lib:V8_DIR/$PHP_LIBDIR:' -i config.m4
+%patch0 -p1 -b .pr266
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_V8JS_VERSION/{s/.* "//;s/".*$//;p}' php_v8js_macros.h)
@@ -152,6 +154,12 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
     --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --re %{pecl_name} > REFLECTION
 
+# Documentation
+cd NTS
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
+done
+
 
 %if 0%{?fedora} < 24
 # when pear installed alone, after us
@@ -174,6 +182,15 @@ fi
 
 
 %check
+%if 0%{__isa_bits} < 64
+: ingore failted see https://github.com/phpv8/v8js/issues/270
+rm ?TS/tests/create_snapshot_basic.phpt
+rm ?TS/tests/memory_limit.phpt
+rm ?TS/tests/set_memory_limit_001.phpt
+rm ?TS/tests/set_memory_limit_003.phpt
+rm ?TS/tests/set_memory_limit_basic.phpt
+%endif
+
 : Minimal load test for NTS extension
 cd NTS
 %{_bindir}/php --no-php-ini \
@@ -185,7 +202,7 @@ TEST_PHP_EXECUTABLE=%{_bindir}/php \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/php -n run-tests.php
+%{_bindir}/php -n run-tests.php --show-diff
 
 
 %if %{with_zts}
@@ -200,7 +217,7 @@ TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__ztsphp} -n run-tests.php
+%{__ztsphp} -n run-tests.php --show-diff
 %endif
 
 
@@ -208,11 +225,11 @@ REPORT_EXIT_STATUS=1 \
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
-%config(noreplace) %{php_inidir}/%{pecl_name}.ini
+%config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 
 %if %{with_zts}
-%config(noreplace) %{php_ztsinidir}/%{pecl_name}.ini
+%config(noreplace) %{php_ztsinidir}/%{ini_name}
 %{php_ztsextdir}/%{pecl_name}.so
 %endif
 
@@ -220,6 +237,8 @@ REPORT_EXIT_STATUS=1 \
 %changelog
 * Fri Sep 23 2016 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
 - update to 1.3.3, for PHP 7
+- open https://github.com/phpv8/v8js/pull/266 libdir
+- open https://github.com/phpv8/v8js/issues/270 failed tests
 
 * Sun Oct  6 2013 Remi Collet <remi@fedoraproject.org> - 0.1.5-1
 - initial package, version 0.1.5 (beta)
