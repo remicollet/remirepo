@@ -25,7 +25,7 @@
 
 Name:          %{?scl_prefix}php-ioncube-loader
 Summary:       Loader for ionCube Encoded Files with ionCube 24 support
-Version:       5.1.2
+Version:       6.0.5
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       Distribuable
 Group:         Development/Languages
@@ -56,6 +56,10 @@ Obsoletes:     php55w-ioncube-loader <= %{version}
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-ioncube-loader <= %{version}
 Obsoletes:     php56w-ioncube-loader <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-ioncube-loader <= %{version}
+Obsoletes:     php70w-ioncube-loader <= %{version}
 %endif
 %endif
 
@@ -106,9 +110,9 @@ zend_extension = %{extname}.so
 ;ic24.home_dir = ''
 ;ic24.sec.block_stdin = '1'
 ;ic24.update_domains_retry_interval = '30'
-;ic24.dump_cache=0
-;ic24.phperr.enable=1
-;ic24.phperr.ignore=0
+;ic24.dump_cache = 0
+;ic24.phperr.enable = 'auto'
+;ic24.phperr.ignore = 0
 ;ioncube.loader.encoded_paths = ''
 ;phpd = 1
 ;phpd.t = 1
@@ -168,7 +172,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license ioncube/LICENSE.txt
-%doc ioncube/USER-GUIDE.*
+#doc ioncube/USER-GUIDE.*
 
 %config(noreplace) %{php_inidir}/%{ininame}
 %{php_extdir}/%{extname}.so
@@ -180,6 +184,18 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct  9 2016 Remi Collet <remi@remirepo.net> - 6.0.5-1
+- update to 6.0.5 (Oct 7, 2016)
+
+* Mon Sep 26 2016 Remi Collet <remi@remirepo.net> - 6.0.4-1
+- update to 6.0.4 (Sep 23, 2016)
+
+* Mon Sep 19 2016 Remi Collet <remi@remirepo.net> - 6.0.3-1
+- update to 6.0.3 (Sep 19, 2016)
+
+* Thu Sep 15 2016 Remi Collet <remi@remirepo.net> - 6.0.1-1
+- update to 6.0.1 (Sep 14, 2016)
+
 * Wed Mar 23 2016 Remi Collet <remi@remirepo.net> - 5.1.2-1
 - update to 5.1.2 (Mar 22, 2016)
 

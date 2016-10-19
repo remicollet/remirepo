@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #217 ionCube Loader version <no_version> ] {
+Extension [ <persistent> extension #155 ionCube Loader version <no_version> ] {
 
   - INI {
     Entry [ ic24.enable <SYSTEM> ]
@@ -47,7 +47,7 @@ Extension [ <persistent> extension #217 ionCube Loader version <no_version> ] {
       Current = '0'
     }
     Entry [ ic24.phperr.enable <SYSTEM> ]
-      Current = '1'
+      Current = 'auto'
     }
     Entry [ ic24.phperr.ignore <ALL> ]
       Current = '0'
@@ -148,6 +148,8 @@ Extension [ <persistent> extension #217 ionCube Loader version <no_version> ] {
     Function [ <internal:ionCube Loader> function ic24_update_domains ] {
     }
     Function [ <internal:ionCube Loader> function ic24_cache_status ] {
+    }
+    Function [ <internal:ionCube Loader> function ic24_phperr_set_ignore ] {
     }
     Function [ <internal:ionCube Loader> function _dyuweyrj4 ] {
     }
