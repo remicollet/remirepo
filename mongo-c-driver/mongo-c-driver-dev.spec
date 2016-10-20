@@ -10,7 +10,7 @@
 %global gh_project   mongo-c-driver
 %global libname      libmongoc
 %global libver       1.0
-%global prever       rc2
+%global prever       rc3
 %global bsonver      1.5
 
 %ifarch x86_64
@@ -21,14 +21,11 @@
 # in MongoDB 3.2, and support is being removed in 3.4.
 %global with_tests   0%{?_with_tests:1}
 %endif
-# Because https://jira.mongodb.org/browse/CDRIVER-1702
-# segfault in test suite
-%global with_tests   0
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.5.0
-Release:   0.1.%{prever}%{?dist}
+Release:   0.3.%{prever}%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -167,6 +164,15 @@ exit $ret
 
 
 %changelog
+* Thu Oct 20 2016 Remi Collet <remi@fedoraproject.org> - 1.5.0-0.3.rc3
+- update to 1.5.0-rc3
+- drop patches merged upstream
+
+* Fri Oct 14 2016 Remi Collet <remi@fedoraproject.org> - 1.5.0-0.2.rc2
+- open https://jira.mongodb.org/browse/CDRIVER-1703 missing files
+- open https://jira.mongodb.org/browse/CDRIVER-1702 broken test
+- enable test suite
+
 * Fri Oct 14 2016 Remi Collet <remi@fedoraproject.org> - 1.5.0-0.1.rc2
 - update to 1.5.0-rc2
 - disable test suite
