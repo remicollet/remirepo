@@ -125,7 +125,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu Sep  1 2016 Remi Collet <remi@fedoraproject.org> - 1.4.2-2
+* Thu Oct 20 2016 Remi Collet <remi@fedoraproject.org> - 1.4.2-2
 - switch from symfony/class-loader to fedora/autoloader
 
 * Thu Sep  1 2016 Remi Collet <remi@fedoraproject.org> - 1.4.2-1

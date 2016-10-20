@@ -16,7 +16,7 @@
 
 Name:           php-composer-spdx-licenses
 Version:        1.1.5
-Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
+Release:        2%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
 Summary:        SPDX licenses list and validation library
 
 Group:          Development/Libraries
@@ -44,7 +44,7 @@ BuildRequires:  php-spl
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.5
 BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 2.3
 # Autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 %endif
 
 # From composer.json, "require": {
@@ -55,7 +55,7 @@ Requires:       php-json
 Requires:       php-pcre
 Requires:       php-spl
 # Autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
@@ -142,6 +142,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 20 2016 Remi Collet <remi@fedoraproject.org> - 1.1.5-2
+- switch from symfony/class-loader to fedora/autoloader
+
 * Wed Sep 28 2016 Remi Collet <remi@fedoraproject.org> - 1.1.5-1
 - version 1.1.5 (new licenses)
 
