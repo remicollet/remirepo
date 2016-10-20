@@ -15,7 +15,7 @@
 
 Name:           php-composer-ca-bundle
 Version:        1.0.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Lets you find a path to the system CA
 
 Group:          Development/Libraries
@@ -38,7 +38,7 @@ BuildRequires:  php-openssl
 BuildRequires:  php-pcre
 BuildRequires:  php-cli
 # Autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 # ca-certificates
 BuildRequires:  %{_sysconfdir}/pki/tls/certs/ca-bundle.crt
 %endif
@@ -53,7 +53,7 @@ Requires:       php-pcre
 # From phpcompatinfo report for version 1.0.3
 #nothing
 # Autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 # ca-certificates
 Requires:       %{_sysconfdir}/pki/tls/certs/ca-bundle.crt
 
@@ -121,6 +121,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 20 2016 Remi Collet <remi@fedoraproject.org> - 1.0.4-2
+- switch from symfony/class-loader to fedora/autoloader
+
 * Mon Sep  5 2016 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
 - update to 1.0.4 (no change)
 

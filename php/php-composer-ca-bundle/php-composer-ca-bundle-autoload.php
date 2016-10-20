@@ -2,14 +2,9 @@
 /* Autoloader for composer/ca-bundle and its dependencies */
 
 $vendorDir = '/usr/share/php';
-// Use Symfony autoloader
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once $vendorDir . '/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
-
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
+if (!class_exists('Fedora\\Autoloader\\Autoload', false)) {
+    require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
 }
 
-$fedoraClassLoader->addPrefix('Composer\\CaBundle\\', dirname(dirname(__DIR__)));
+\Fedora\Autoloader\Autoload::addPsr4('Composer\\CaBundle\\', __DIR__);
+
