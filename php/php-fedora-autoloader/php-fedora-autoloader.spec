@@ -1,3 +1,4 @@
+# remirepo spec file for php-fedora-autoloader, from:
 #
 # Fedora spec file for php-fedora-autoloader
 #
@@ -40,6 +41,7 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -72,6 +74,7 @@ required and optional dependencies.
 %package devel
 
 Summary: %{name} devel
+Group:   Development/Libraries
 
 Requires: %{name} = %{version}-%{release}
 Requires: php-composer(theseer/autoload) >= %{phpab_min_ver}
@@ -98,6 +101,8 @@ sed "s#___AUTOLOAD_PATH___#'%{phpdir}/Fedora/Autoloader'#" \
 
 
 %install
+rm -rf     %{buildroot}
+
 : Main
 mkdir -p %{buildroot}%{phpdir}/Fedora/Autoloader/Test
 cp -rp src/* %{buildroot}%{phpdir}/Fedora/Autoloader/
@@ -110,13 +115,36 @@ cp -p res/phpab/fedora.php.tpl %{buildroot}%{phpab_template_dir}/
 
 %check
 %if %{with_tests}
+# remirepo:13
+run=0
+ret=0
+if which php56; then
+   : Run upstream test suite with PHP 5
+   php56 %{_bindir}/phpunit --verbose || ret=1
+   run=1
+fi
+if which php71; then
+   : Run upstream test suite with PHP 7
+   php71 %{_bindir}/phpunit --verbose || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+: Run upstream test suite
 %{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %dir %{phpdir}/Fedora
@@ -130,6 +158,9 @@ cp -p res/phpab/fedora.php.tpl %{buildroot}%{phpab_template_dir}/
 
 
 %changelog
+* Thu Oct 20 2016 Remi Collet <remi@remirepo.net> - 0.1.1-1
+- add backport stuff
+
 * Wed Oct 19 2016 Shawn Iwinski <shawn@iwin.ski> - 0.1.1-1
 - Update to 0.1.1
 - Fix phpab template
