@@ -16,7 +16,7 @@
 
 Name:           php-composer-semver
 Version:        1.4.2
-Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
+Release:        2%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
 Summary:        Semver library that offers utilities, version constraint parsing and validation
 
 Group:          Development/Libraries
@@ -41,7 +41,7 @@ BuildRequires:  php-spl
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.5
 BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 2.3
 # Autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 %endif
 
 # From composer.json, "require": {
@@ -51,7 +51,7 @@ Requires:       php(language) >= 5.3.2
 Requires:       php-pcre
 Requires:       php-spl
 # Autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
@@ -125,6 +125,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep  1 2016 Remi Collet <remi@fedoraproject.org> - 1.4.2-2
+- switch from symfony/class-loader to fedora/autoloader
+
 * Thu Sep  1 2016 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
 - update to 1.4.2
 
