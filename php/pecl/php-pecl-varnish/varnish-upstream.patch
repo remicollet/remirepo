@@ -1,0 +1,368 @@
+--- pecl/varnish/trunk/config.m4	2016/10/20 10:50:51	340568
++++ pecl/varnish/trunk/config.m4	2016/10/20 14:14:46	340569
+@@ -22,7 +22,11 @@
+ 
+       PHP_EVAL_INCLINE($VARNISH_INCLUDE)
+       PHP_EVAL_LIBLINE($VARNISH_LIBRARY, VARNISH_SHARED_LIBADD)
+-      if $PKG_CONFIG varnishapi --atleast-version=4 ; then
++      if $PKG_CONFIG varnishapi --atleast-version=5 ; then
++        AC_DEFINE(HAVE_VARNISHAPILIB,5,[ ])
++        AC_TYPE_UINTPTR_T
++        AC_TYPE_UINT64_T
++      elif $PKG_CONFIG varnishapi --atleast-version=4 ; then
+         AC_DEFINE(HAVE_VARNISHAPILIB,4,[ ])
+         AC_TYPE_UINTPTR_T
+         AC_TYPE_UINT64_T
+--- pecl/varnish/trunk/varnish_lib.h	2016/10/20 10:50:51	340568
++++ pecl/varnish/trunk/varnish_lib.h	2016/10/20 14:14:46	340569
+@@ -36,6 +36,9 @@
+ #endif
+ 
+ #ifndef PHP_WIN32
++#if HAVE_VARNISHAPILIB >= 5
++#include <vapi/vsm.h>
++#endif
+ #if HAVE_VARNISHAPILIB >= 4
+ #include <vcli.h>
+ #include <vapi/vsl.h>
+--- pecl/varnish/trunk/varnish.c	2016/10/20 14:14:46	340569
++++ pecl/varnish/trunk/varnish.c	2016/10/20 14:19:33	340570
+@@ -279,8 +279,11 @@
+ {
+ 	php_info_print_table_start();
+ 	php_info_print_table_header(2, "varnish support", "enabled");
+-	php_info_print_table_row(2, "Version", PHP_VARNISH_VERSION);
++	php_info_print_table_row(2, "Extension version", PHP_VARNISH_VERSION);
+ 	php_info_print_table_row(2, "Revision", "$Id: varnish.c 335937 2015-02-13 20:17:30Z ab $");
++#ifdef VMOD_ABI_Version
++	php_info_print_table_row(2, "Varnish version", VMOD_ABI_Version);
++#endif
+ 	php_info_print_table_end();
+ 
+ 	/* 
+--- pecl/varnish/trunk/varnish_lib.h	2016/10/20 14:14:46	340569
++++ pecl/varnish/trunk/varnish_lib.h	2016/10/20 14:19:33	340570
+@@ -41,6 +41,7 @@
+ #endif
+ #if HAVE_VARNISHAPILIB >= 4
+ #include <vcli.h>
++#include <vmod_abi.h>
+ #include <vapi/vsl.h>
+ #include <vapi/vsc.h>
+ #else
+Index: config.m4
+===================================================================
+--- pecl/varnish/trunk/config.m4	(révision 340569)
++++ pecl/varnish/trunk/config.m4	(copie de travail)
+@@ -23,16 +23,16 @@
+       PHP_EVAL_INCLINE($VARNISH_INCLUDE)
+       PHP_EVAL_LIBLINE($VARNISH_LIBRARY, VARNISH_SHARED_LIBADD)
+       if $PKG_CONFIG varnishapi --atleast-version=5 ; then
+-        AC_DEFINE(HAVE_VARNISHAPILIB,5,[ ])
+-        AC_TYPE_UINTPTR_T
+-        AC_TYPE_UINT64_T
++        AC_DEFINE(HAVE_VARNISHAPILIB,50,[ ])
++      elif $PKG_CONFIG varnishapi --atleast-version=4.1 ; then
++        AC_DEFINE(HAVE_VARNISHAPILIB,41,[ ])
+       elif $PKG_CONFIG varnishapi --atleast-version=4 ; then
+-        AC_DEFINE(HAVE_VARNISHAPILIB,4,[ ])
+-        AC_TYPE_UINTPTR_T
+-        AC_TYPE_UINT64_T
++        AC_DEFINE(HAVE_VARNISHAPILIB,40,[ ])
+       else
+-        AC_DEFINE(HAVE_VARNISHAPILIB,3,[ ])
++        AC_DEFINE(HAVE_VARNISHAPILIB,30,[ ])
+       fi
++      AC_TYPE_UINTPTR_T
++      AC_TYPE_UINT64_T
+     else
+       AC_MSG_RESULT(version too old)
+       AC_MSG_ERROR(Please reinstall varnish version >= 3.0)
+@@ -46,11 +46,11 @@
+       for j in $SEARCH_FOR ; do
+         if test -r $i/include/varnish/$j; then
+           VARNISH_INCDIR=$i/include/varnish
+-          VARNISH_LIBDIR=$i/lib
++          VARNISH_LIBDIR=$i/$PHP_LIBDIR
+           break
+         elif test -r $i/include/$j; then
+           VARNISH_INCDIR=$i/include
+-          VARNISH_LIBDIR=$i/lib
++          VARNISH_LIBDIR=$i/$PHP_LIBDIR
+           break
+         fi
+       done
+@@ -75,19 +75,22 @@
+ 
+       if test -f $VARNISH_INCDIR/varnishapi.h; then
+         dnl this is 3.x or earlier
+-        AC_DEFINE(HAVE_VARNISHAPILIB,1,[ ])
++        AC_DEFINE(HAVE_VARNISHAPILIB,30,[ ])
+         AC_CHECK_HEADER([$VARNISH_INCDIR/varnishapi.h], [], AC_MSG_ERROR('varnishapi.h' header not found))
+         AC_CHECK_HEADER([$VARNISH_INCDIR/vsl.h], [], AC_MSG_ERROR('vsl.h' header not found))
++      elif test -f $VARNISH_INCDIR/vapi/vsm.h; then
++        dnl this is approx at least 4.1.x, for later will probably have to check for some specific stuff
++        AC_DEFINE(HAVE_VARNISHAPILIB,41,[ ])
+       else
+         dnl this is approx at least 4.x, for later will probably have to check for some specific stuff
+-        AC_DEFINE(HAVE_VARNISHAPILIB,4,[ ])
++        AC_DEFINE(HAVE_VARNISHAPILIB,40,[ ])
+         dnl there's an issue with two lines below, it might be because STLM macro isn't defined,
+         dnl so the compiler decides them to be unusable
+         dnl AC_CHECK_HEADER([$VARNISH_INCDIR/tbl/vsl_tags.h], [], AC_MSG_ERROR('tbl/vsl_tags.h' header not found))
+         dnl AC_CHECK_HEADER([$VARNISH_INCDIR/vapi/vsl.h], [], AC_MSG_ERROR('vapi/vsl.h' header not found))
+-        AC_TYPE_UINTPTR_T
+-        AC_TYPE_UINT64_T
+       fi
++      AC_TYPE_UINTPTR_T
++      AC_TYPE_UINT64_T
+     ],[
+       AC_MSG_ERROR([wrong varnishapi lib version or lib not found])
+     ],[
+Index: log.c
+===================================================================
+--- pecl/varnish/trunk/log.c	(révision 340568)
++++ pecl/varnish/trunk/log.c	(copie de travail)
+@@ -140,7 +140,7 @@
+  *  Varnish admin constructor */
+ PHP_METHOD(VarnishLog, __construct)
+ {
+-#if defined(HAVE_VARNISHAPILIB) && HAVE_VARNISHAPILIB >= 4
++#if defined(HAVE_VARNISHAPILIB) && HAVE_VARNISHAPILIB >= 40
+ 	 php_varnish_throw_win_unimpl_exception("VarnishLog functionality isn't available for Varnish >= 4" TSRMLS_CC);
+ 	 return;
+ #elif !defined(PHP_WIN32)
+@@ -212,7 +212,7 @@
+ }
+ /* }}} */
+ 
+-#if defined(HAVE_VARNISHAPILIB) && HAVE_VARNISHAPILIB < 4
++#if defined(HAVE_VARNISHAPILIB) && HAVE_VARNISHAPILIB < 40
+ /* {{{ proto array VarnishLog::getLine(void)
+  * Get the next log entry */
+ PHP_METHOD(VarnishLog, getLine)
+Index: php_varnish.h
+===================================================================
+--- pecl/varnish/trunk/php_varnish.h	(révision 340568)
++++ pecl/varnish/trunk/php_varnish.h	(copie de travail)
+@@ -82,12 +82,12 @@
+ PHP_METHOD(VarnishAdmin, disconnect);
+ 
+ PHP_METHOD(VarnishStat, __construct);
+-#if defined(HAVE_VARNISHAPILIB) && HAVE_VARNISHAPILIB < 4
++#if defined(HAVE_VARNISHAPILIB) && HAVE_VARNISHAPILIB < 40
+ PHP_METHOD(VarnishStat, getSnapshot);
+ #endif
+ 
+ PHP_METHOD(VarnishLog, __construct);
+-#if defined(HAVE_VARNISHAPILIB) && HAVE_VARNISHAPILIB < 4
++#if defined(HAVE_VARNISHAPILIB) && HAVE_VARNISHAPILIB < 40
+ PHP_METHOD(VarnishLog, getLine);
+ PHP_METHOD(VarnishLog, getTagName);
+ #endif
+Index: stat.c
+===================================================================
+--- pecl/varnish/trunk/stat.c	(révision 340568)
++++ pecl/varnish/trunk/stat.c	(copie de travail)
+@@ -129,7 +129,7 @@
+  *  Varnish admin constructor */
+ PHP_METHOD(VarnishStat, __construct)
+ {
+-#if defined(HAVE_VARNISHAPILIB) && HAVE_VARNISHAPILIB >= 4
++#if defined(HAVE_VARNISHAPILIB) && HAVE_VARNISHAPILIB >= 40
+ 	 php_varnish_throw_win_unimpl_exception("VarnishStat functionality isn't available for Varnish >= 4" TSRMLS_CC);
+ 	 return;
+ #elif !defined(PHP_WIN32)
+@@ -181,7 +181,7 @@
+ }
+ /* }}} */
+ 
+-#if defined(HAVE_VARNISHAPILIB) && HAVE_VARNISHAPILIB < 4
++#if defined(HAVE_VARNISHAPILIB) && HAVE_VARNISHAPILIB < 40
+ /* {{{ proto array VarnishStat::getSnapshot(void)
+   Get a statistics snapshot */
+ PHP_METHOD(VarnishStat, getSnapshot)
+Index: varnish.c
+===================================================================
+--- pecl/varnish/trunk/varnish.c	(révision 340570)
++++ pecl/varnish/trunk/varnish.c	(copie de travail)
+@@ -98,7 +98,7 @@
+ /* {{{ VarnishStat_methods{} */
+ const zend_function_entry VarnishStat_methods[] = {
+ 	PHP_ME(VarnishStat, __construct, NULL, ZEND_ACC_PUBLIC)
+-#if defined(HAVE_VARNISHAPILIB) && HAVE_VARNISHAPILIB < 4
++#if defined(HAVE_VARNISHAPILIB) && HAVE_VARNISHAPILIB < 40
+ 	PHP_ME(VarnishStat, getSnapshot, NULL, ZEND_ACC_PUBLIC)
+ #endif
+ 	{NULL, NULL, NULL}
+@@ -108,7 +108,7 @@
+ /* {{{ VarnishLog_methods{} */
+ const zend_function_entry VarnishLog_methods[] = {
+ 	PHP_ME(VarnishLog, __construct, NULL, ZEND_ACC_PUBLIC)
+-#if defined(HAVE_VARNISHAPILIB) && HAVE_VARNISHAPILIB < 4
++#if defined(HAVE_VARNISHAPILIB) && HAVE_VARNISHAPILIB < 40
+ 	PHP_ME(VarnishLog, getLine, NULL, ZEND_ACC_PUBLIC)
+ 	PHP_ME(VarnishLog, getTagName, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+ #endif
+@@ -215,7 +215,7 @@
+ 
+ /* log is not working on windows at the time*/
+ #ifndef PHP_WIN32
+-#if HAVE_VARNISHAPILIB >= 4
++#if HAVE_VARNISHAPILIB >= 40
+ #define SLTM(name, flags, shortdesc, longdesc) \
+ zend_declare_class_constant_long(VarnishLog_ce, "TAG_"#name, strlen("TAG_"#name), SLT_##name TSRMLS_CC);
+ #include "tbl/vsl_tags.h"
+Index: varnish_lib.c
+===================================================================
+--- pecl/varnish/trunk/varnish_lib.c	(révision 340568)
++++ pecl/varnish/trunk/varnish_lib.c	(copie de travail)
+@@ -348,12 +348,12 @@
+ 	int sock = -1, j;
+ 	struct VSM_data *vsd;
+ 	char *t_arg, *t_start, *p, tmp_addr[41];
+-#if HAVE_VARNISHAPILIB >= 4
++#if HAVE_VARNISHAPILIB >= 40
+ 	struct VSM_fantom vt;
+ #endif
+ 
+ 	vsd = VSM_New();
+-#if HAVE_VARNISHAPILIB >= 4
++#if HAVE_VARNISHAPILIB >= 40
+ 	if (VSM_n_Arg(vsd, ident) > 0) {
+ 		if (VSM_Open(vsd)) {
+ #else
+@@ -363,7 +363,7 @@
+ 			zend_throw_exception_ex(
+ 				VarnishException_ce,
+ 				PHP_VARNISH_SHM_EXCEPTION TSRMLS_CC,
+-#if HAVE_VARNISHAPILIB >= 4
++#if HAVE_VARNISHAPILIB >= 40
+ 				VSM_Error(vsd)
+ #else
+ 				"Could not open shared memory"
+@@ -372,7 +372,7 @@
+ 			return sock;
+ 		}
+ 
+-#if HAVE_VARNISHAPILIB >= 4
++#if HAVE_VARNISHAPILIB >= 40
+ 		if (!VSM_Get(vsd, &vt, "Arg", "-T", "")) {
+ #else
+ 		p = VSM_Find_Chunk(vsd, "Arg", "-T", "", NULL);
+@@ -381,7 +381,7 @@
+ 			zend_throw_exception_ex(
+ 				VarnishException_ce,
+ 				PHP_VARNISH_SHM_EXCEPTION TSRMLS_CC,
+-#if HAVE_VARNISHAPILIB >= 4
++#if HAVE_VARNISHAPILIB >= 40
+ 				VSM_Error(vsd)
+ #else
+ 				"No address and port found in the shared memory"
+@@ -390,7 +390,7 @@
+ 			VSM_Delete(vsd);
+ 			return sock;
+ 		}
+-#if HAVE_VARNISHAPILIB >= 4
++#if HAVE_VARNISHAPILIB >= 40
+ 		t_start = t_arg = estrdup(vt.b);
+ #else
+ 		t_start = t_arg = estrdup(p);
+@@ -406,7 +406,7 @@
+ 		return sock;
+ 	}
+ 
+-#if HAVE_VARNISHAPILIB >= 4
++#if HAVE_VARNISHAPILIB >= 40
+ 	VSM_Delete(vsd);
+ #endif
+ 
+@@ -528,7 +528,7 @@
+ 	char *s_arg, *answer = NULL;
+ 	int fd;
+ 	char buf[CLI_AUTH_RESPONSE_LEN + 1];
+-#if HAVE_VARNISHAPILIB >= 4
++#if HAVE_VARNISHAPILIB >= 40
+ 	struct VSM_fantom vt;
+ #else
+ 	char *p;
+@@ -538,7 +538,7 @@
+ 	if (PHP_VARNISH_STATUS_AUTH == *status) {
+ 		vsd = VSM_New();
+ 		if (VSM_n_Arg(vsd, ident)) {
+-#if HAVE_VARNISHAPILIB >= 4
++#if HAVE_VARNISHAPILIB >= 40
+ 			if (VSM_Open(vsd)) {
+ #else
+ 			if (VSM_Open(vsd, 1)) {
+@@ -551,7 +551,7 @@
+ 				return sock;
+ 			}
+ 
+-#if HAVE_VARNISHAPILIB >= 4
++#if HAVE_VARNISHAPILIB >= 40
+ 			if (VSM_Get(vsd, &vt, "Arg", "-S", "")) {
+ 				s_arg = estrdup(vt.b);
+ #else
+@@ -570,7 +570,7 @@
+ 					return 0;
+ 				}
+ 				efree(s_arg);
+-#if HAVE_VARNISHAPILIB >= 4
++#if HAVE_VARNISHAPILIB >= 40
+ 			} else {
+ 				VSM_Delete(vsd);
+ 				return 0;
+@@ -775,7 +775,7 @@
+ }/*}}}*/
+ 
+ #ifndef PHP_WIN32
+-#if HAVE_VARNISHAPILIB < 4
++#if HAVE_VARNISHAPILIB < 40
+ static int
+ php_varnish_snap_stats_cb(void *priv, const struct VSC_point const *pt)
+ {/*{{{*/
+@@ -783,7 +783,7 @@
+ 	int f0, f1;
+ 	zval *storage, *current;
+ 	char buf0[128];
+-#if HAVE_VARNISHAPILIB >= 4
++#if HAVE_VARNISHAPILIB >= 40
+ 	const char *type  = pt->section->type;
+ 	const char *ident = pt->section->ident;
+ 	const char *name  = pt->desc->name;
+@@ -812,7 +812,7 @@
+ }/*}}}*/
+ #endif
+ 
+-#if HAVE_VARNISHAPILIB >= 4
++#if HAVE_VARNISHAPILIB >= 40
+ int
+ php_varnish_snap_stats(zval *storage, const char *ident TSRMLS_DC)
+ {/*{{{*/
+@@ -845,7 +845,7 @@
+ }/*}}}*/
+ #endif
+ 
+-#if HAVE_VARNISHAPILIB >= 4
++#if HAVE_VARNISHAPILIB >= 40
+ int
+ php_varnish_get_log(const struct VSM_data *vd, zval *line TSRMLS_DC)
+ {/*{{{*/ 
+Index: varnish_lib.h
+===================================================================
+--- pecl/varnish/trunk/varnish_lib.h	(révision 340570)
++++ pecl/varnish/trunk/varnish_lib.h	(copie de travail)
+@@ -36,10 +36,10 @@
+ #endif
+ 
+ #ifndef PHP_WIN32
+-#if HAVE_VARNISHAPILIB >= 5
++#if HAVE_VARNISHAPILIB >= 41
+ #include <vapi/vsm.h>
+ #endif
+-#if HAVE_VARNISHAPILIB >= 4
++#if HAVE_VARNISHAPILIB >= 40
+ #include <vcli.h>
+ #include <vmod_abi.h>
+ #include <vapi/vsl.h>
