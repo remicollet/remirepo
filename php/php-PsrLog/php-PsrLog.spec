@@ -22,7 +22,7 @@
 
 Name:      php-PsrLog
 Version:   %{github_version}
-Release:   1%{?dist}
+Release:   2%{?dist}
 Summary:   Common interface for logging libraries
 
 Group:     Development/Libraries
@@ -32,16 +32,23 @@ Source0:   https://github.com/%{github_owner}/%{github_name}/archive/%{github_co
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
+# For tests
+BuildRequires:  php-cli
+# Autoloader
+BuildRequires:  php-composer(fedora/autoloader)
 
 Requires:  php(language) >= 5.3.0
 # phpcompatinfo requires (computed from version 1.0.1)
 Requires:  php-date
 Requires:  php-spl
+# Autoloader
+Requires:  php-composer(fedora/autoloader)
 
 # php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}
 Provides:  php-%{composer_vendor}-%{composer_project}           = %{version}-%{release}
 # Composer
 Provides:  php-composer(%{composer_vendor}/%{composer_project}) = %{version}
+
 
 %description
 This package holds all interfaces/classes/traits related to PSR-3 [1].
@@ -65,19 +72,22 @@ cat <<'AUTOLOAD' | tee Psr/Log/autoload.php
  * @return \Symfony\Component\ClassLoader\ClassLoader
  */
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
-
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
+if (!class_exists('Fedora\\Autoloader\\Autoload', false)) {
+    require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 }
 
-$fedoraClassLoader->addPrefix('Psr\\Log\\', dirname(dirname(__DIR__)));
-
-return $fedoraClassLoader;
+\Fedora\Autoloader\Autoload::addPsr4('Psr\\Log\\', __DIR__);
 AUTOLOAD
+
+
+%check
+: Check if our autoloader works
+php -r '
+require "%{buildroot}%{_datadir}/php/Psr/Log/autoload.php";
+$a = new Psr\Log\NullLogger();
+echo "Ok\n";
+exit(0);
+'
 
 
 %build
@@ -100,6 +110,10 @@ cp -rp Psr %{buildroot}%{_datadir}/php/
 
 
 %changelog
+* Fri Oct 21 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-2
+- switch from symfony/class-loader to fedora/autoloader
+- add minimal %%check for autoloader
+
 * Mon Oct 10 2016 Remi Collet <remi@fedoraproject.org> 1.0.2-1
 - update to 1.0.2
 
