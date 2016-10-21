@@ -17,7 +17,7 @@
 
 Name:           composer
 Version:        1.2.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -52,7 +52,7 @@ BuildRequires:  php-zip
 #        "phpunit/phpunit-mock-objects": "^2.3 || ^3.0"
 BuildRequires:  php-composer(phpunit/phpunit)           >= 4.5
 # For autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 BuildRequires:  php-seld-phar-utils >= 1.0.1
 BuildRequires:  php-seld-cli-prompt >= 1.0.0-3
 BuildRequires:  php-PsrLog          >= 1.0.0-8
@@ -104,7 +104,7 @@ Requires:       php-composer(symfony/filesystem)        <  4
 Requires:       php-zip
 Requires:       php-openssl
 # For our autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 Requires:       php-seld-phar-utils >= 1.0.1
 Requires:       php-seld-cli-prompt >= 1.0.0-3
 Requires:       php-PsrLog          >= 1.0.0-8
@@ -251,6 +251,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 21 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-2
+- switch from symfony/class-loader to fedora/autoloader
+
 * Mon Sep 12 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - update to 1.2.1
 

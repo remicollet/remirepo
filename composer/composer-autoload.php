@@ -2,28 +2,22 @@
 /* Autoloader for composer/composer and its dependencies */
 
 $vendorDir = '/usr/share/php';
-// Use Symfony autoloader
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once $vendorDir . '/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
-
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
+if (!class_exists('Fedora\\Autoloader\\Autoload', false)) {
+    require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
 }
 
-$fedoraClassLoader->addPrefixes(array(
-    'Symfony\\Component\\'         => $vendorDir,
-    'Composer\\'                   => dirname(__DIR__)
-));
+\Fedora\Autoloader\Autoload::addPsr4('Composer\\', __DIR__);
 
 // Dependencies
-require_once $vendorDir . '/Seld/JsonLint/autoload.php';
-require_once $vendorDir . '/Seld/PharUtils/autoload.php';
-require_once $vendorDir . '/Seld/CliPrompt/autoload.php';
-require_once $vendorDir . '/Composer/CaBundle/autoload.php';
-require_once $vendorDir . '/Composer/Spdx/autoload.php';
-require_once $vendorDir . '/Composer/Semver/autoload.php';
-require_once $vendorDir . '/JsonSchema2/autoload.php';
-require_once $vendorDir . '/Psr/Log/autoload.php';
+\Fedora\Autoloader\Dependencies::required(array(
+	$vendorDir . '/Symfony/Component/autoload.php',
+	$vendorDir . '/Seld/JsonLint/autoload.php',
+	$vendorDir . '/Seld/PharUtils/autoload.php',
+	$vendorDir . '/Seld/CliPrompt/autoload.php',
+	$vendorDir . '/Composer/CaBundle/autoload.php',
+	$vendorDir . '/Composer/Spdx/autoload.php',
+	$vendorDir . '/Composer/Semver/autoload.php',
+	$vendorDir . '/JsonSchema2/autoload.php',
+	$vendorDir . '/Psr/Log/autoload.php',
+));
 
