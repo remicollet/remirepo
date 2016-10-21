@@ -30,7 +30,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.0.5
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A library to validate a json schema
 
 Group:          Development/Libraries
@@ -65,7 +65,7 @@ BuildRequires:  php-spl
 #        "phpdocumentor/phpdocumentor": "~2"
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.8.22
 # Autoloader
-BuildRequires:  php-composer(symfony/class-loader) >= 2.5
+BuildRequires:  php-composer(fedora/autoloader)
 # For composer schema
 BuildRequires:  composer
 %endif
@@ -81,8 +81,8 @@ Requires:       php-json
 Requires:       php-mbstring
 Requires:       php-pcre
 Requires:       php-spl
-# Autoloader (2.5 for PSR-4)
-Requires:       php-composer(symfony/class-loader) >= 2.5
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 %if %{eolv1}
 Obsoletes:      php-JsonSchema < 2
 %endif
@@ -158,7 +158,7 @@ install -Dpm 0755 bin/validate-json %{buildroot}%{_bindir}/validate-json
 cat << 'EOF' | tee vendor/autoload.php
 <?php
 require '%{buildroot}%{php_home}/JsonSchema2/autoload.php';
-$fedoraPsr4ClassLoader->addPrefix('JsonSchema\\Tests\\', 'tests/');
+\Fedora\Autoloader\Autoload::addPsr4('JsonSchema\\Tests\\', 'tests/');
 EOF
 
 : Test the command
@@ -209,6 +209,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 21 2016 Remi Collet <remi@fedoraproject.org> - 2.0.5-3
+- switch from symfony/class-loader to fedora/autoloader
+
 * Thu Jul 21 2016 Remi Collet <remi@fedoraproject.org> - 2.0.5-2
 - fix failed test, FTBFS detected by Koschei
   open https://github.com/justinrainbow/json-schema/pull/292
