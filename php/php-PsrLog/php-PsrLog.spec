@@ -80,6 +80,15 @@ if (!class_exists('Fedora\\Autoloader\\Autoload', false)) {
 AUTOLOAD
 
 
+%build
+# Empty build section, nothing to build
+
+
+%install
+mkdir -p %{buildroot}%{_datadir}/php
+cp -rp Psr %{buildroot}%{_datadir}/php/
+
+
 %check
 : Check if our autoloader works
 php -r '
@@ -88,15 +97,6 @@ $a = new Psr\Log\NullLogger();
 echo "Ok\n";
 exit(0);
 '
-
-
-%build
-# Empty build section, nothing to build
-
-
-%install
-mkdir -p %{buildroot}%{_datadir}/php
-cp -rp Psr %{buildroot}%{_datadir}/php/
 
 
 %files
