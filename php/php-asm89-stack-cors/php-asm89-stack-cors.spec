@@ -1,3 +1,4 @@
+# remirepo spec file for php-asm89-stack-cors, from:
 #
 # Fedora spec file for php-asm89-stack-cors
 #
@@ -44,6 +45,7 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 # https://github.com/asm89/stack-cors/pull/32
 Patch0:        %{name}-pull-request-32-add-license-file.patch
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Autoloader
 BuildRequires: %{_bindir}/phpab
@@ -85,7 +87,7 @@ Autoloader: %{phpdir}/Asm89/Stack/autoload-cors.php
 
 : Remove executable bits from non-executable files
 : https://github.com/asm89/stack-cors/pull/31
-find . -type f -executable -name '*.php' -print0 | xargs -0 chmod a-x
+find . -type f -name '*.php' -print0 | xargs -0 chmod a-x
 
 : Add LICENSE file
 : https://github.com/asm89/stack-cors/pull/32
@@ -105,20 +107,40 @@ AUTOLOAD
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}
 cp -rp src/* %{buildroot}%{phpdir}/
 
 
 %check
 %if %{with_tests}
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Asm89/Stack/autoload-cors.php || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Asm89/Stack/autoload-cors.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 -o $ret -eq 1 ]; then
 %{_bindir}/phpunit --verbose \
     --bootstrap %{buildroot}%{phpdir}/Asm89/Stack/autoload-cors.php
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -131,5 +153,8 @@ cp -rp src/* %{buildroot}%{phpdir}/
 
 
 %changelog
+* Fri Oct 21 2016 Remi Collet <remim@remirepo.net> - 1.0.0-1
+- add backport stuff
+
 * Sun Oct 09 2016 Shawn Iwinski <shawn@iwin.ski> - 1.0.0-1
 - Initial package
