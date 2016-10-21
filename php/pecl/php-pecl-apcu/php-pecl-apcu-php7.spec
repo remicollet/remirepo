@@ -19,7 +19,7 @@
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   krakjoe
 %global gh_project apcu
-%global gh_date    20161018
+#global gh_date    20161018
 %global pecl_name  apcu
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global ini_name   40-%{pecl_name}.ini
@@ -312,6 +312,9 @@ fi
 
 
 %changelog
+* Fri Oct 21 2016 Remi Collet <remi@fedoraproject.org> - 5.1.7-1
+- Update to 5.1.7 (php 7, stable)
+
 * Tue Oct 18 2016 Remi Collet <remi@fedoraproject.org> - 5.1.7-0.1.20161018gitb771cd5
 - test for upcoming 5.1.7
 
