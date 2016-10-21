@@ -1,3 +1,4 @@
+# remirepo spec file for php-akamai-open-edgegrid-auth, from:
 #
 # Fedora spec file for php-akamai-open-edgegrid-auth
 #
@@ -35,6 +36,7 @@ License:       ASL 2.0
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Autoloader
 BuildRequires: %{_bindir}/phpab
@@ -89,6 +91,8 @@ Autoloader: %{phpdir}/Akamai/Open/EdgeGrid/autoload-auth.php
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}/Akamai/Open/EdgeGrid
 cp -rp src/* %{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/
 
@@ -98,14 +102,33 @@ cp -rp src/* %{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/
 : Remove logging from PHPUnit config
 sed '/log/d' phpunit.xml.dist > phpunit.xml
 
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/autoload-auth.php || ret=1
+   run=1
+fi
+if which php70; then
+	# PHP 7.1 => 1 failure: Akamai\Open\EdgeGrid\Tests\Client\Authentication\TimestampTest::testTimestampFormat
+   php70 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/autoload-auth.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/phpunit --verbose \
     --bootstrap %{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/autoload-auth.php
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.md
@@ -119,5 +142,8 @@ sed '/log/d' phpunit.xml.dist > phpunit.xml
 
 
 %changelog
+* Fri Oct 21 2016 Remi Collet <remim@remirepo.net> - 0.6.0-1
+- add backport stuff
+
 * Mon Oct 10 2016 Shawn Iwinski <shawn@iwin.ski> - 0.6.0-1
 - Initial package
