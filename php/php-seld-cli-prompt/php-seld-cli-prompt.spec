@@ -13,7 +13,7 @@
 
 Name:           php-seld-cli-prompt
 Version:        1.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Allows you to prompt for user input on the command line
 
 Group:          Development/Libraries
@@ -30,7 +30,7 @@ BuildRequires:  php(language) >= 5.3
 # For test
 BuildRequires:  php-cli
 # Autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 
 # From composer.json
 #       "php": ">=5.3.0",
@@ -39,7 +39,7 @@ Requires:       php(language) >= 5.3.0
 Requires:       php-pcre
 Requires:       php-spl
 # Autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(seld/cli-prompt) = %{version}
 
@@ -94,6 +94,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 21 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-2
+- switch from symfony/class-loader to fedora/autoloader
+
 * Mon Apr 18 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - update to 1.0.2
 
