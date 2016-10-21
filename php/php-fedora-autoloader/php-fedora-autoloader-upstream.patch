@@ -1,0 +1,146 @@
+From 5b810402b041e69f67ad6b88d65f30e11a5b6683 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Fri, 21 Oct 2016 14:59:02 +0200
+Subject: [PATCH] Handle namespaced classes with PSR-0, fix #5
+
+---
+ src/Autoload.php       |  9 ++++-----
+ tests/AutoloadTest.php | 35 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 39 insertions(+), 5 deletions(-)
+
+diff --git a/src/Autoload.php b/src/Autoload.php
+index 74e86cf..5d08c84 100644
+--- a/src/Autoload.php
++++ b/src/Autoload.php
+@@ -251,11 +251,11 @@ public static function findFile($class)
+         // PSR-0
+         if (count(static::$psr0)) {
+             $pos = strrpos($class, '\\');
+-            $file = '';
++            $file = $namespace = '';
+             if ($pos) {
+-                $namespace = substr($class, 0, $pos);
++                $namespace = substr($class, 0, $pos + 1);
+                 $class = substr($class, $pos + 1);
+-                $file = str_replace('\\', DIRECTORY_SEPARATOR, $namespace).DIRECTORY_SEPARATOR;
++                $file = str_replace('\\', DIRECTORY_SEPARATOR, $namespace);
+             }
+             $file .= str_replace('_', DIRECTORY_SEPARATOR, $class).'.php';
+ 
+@@ -263,8 +263,7 @@ public static function findFile($class)
+             //       for PHP < 5.5 compatibility.
+             foreach (static::$psr0 as $psr0) {
+                 list($prefix, $path) = $psr0;
+-
+-                if (empty($prefix) || 0 === strpos($class, $prefix)) {
++                if (empty($prefix) || 0 === strpos($namespace.$class, $prefix)) {
+                     if (file_exists($path.$file)) {
+                         return $path.$file;
+                     }
+diff --git a/tests/AutoloadTest.php b/tests/AutoloadTest.php
+index e1e2783..087682c 100644
+--- a/tests/AutoloadTest.php
++++ b/tests/AutoloadTest.php
+@@ -14,6 +14,7 @@
+ class AutoloadTest extends \PHPUnit_Framework_TestCase
+ {
+     /**
++     * @group psr4
+      * @covers Fedora::Autoloader::Autoload::addPsr4
+      **/
+     public function testAddPsr4()
+@@ -24,6 +25,7 @@ public function testAddPsr4()
+     }
+ 
+     /**
++     * @group psr4
+      * @covers Fedora::Autoloader::Autoload::addPsr4
+      **/
+     public function testAddPsr4Order()
+@@ -37,6 +39,7 @@ public function testAddPsr4Order()
+     }
+ 
+     /**
++     * @group classmap
+      * @covers Fedora::Autoloader::Autoload::addClassMap
+      **/
+     public function testAddClassMap()
+@@ -52,6 +55,7 @@ public function testAddClassMap()
+     }
+ 
+     /**
++     * @group classmap
+      * @covers Fedora::Autoloader::Autoload::addClassMap
+      **/
+     public function testAddClassMapTemplate()
+@@ -62,6 +66,7 @@ public function testAddClassMapTemplate()
+     }
+ 
+     /**
++     * @group classmap
+      * @covers Fedora::Autoloader::Autoload::addClassMap
+      **/
+     public function testAddClassMapLowerCase()
+@@ -72,6 +77,7 @@ public function testAddClassMapLowerCase()
+     }
+ 
+     /**
++     * @group classmap
+      * @covers Fedora::Autoloader::Autoload::addClassMap
+      **/
+     public function testAddClassMapTemplateOrder()
+@@ -85,6 +91,7 @@ public function testAddClassMapTemplateOrder()
+     }
+ 
+     /**
++     * @group classmap
+      * @covers Fedora::Autoloader::Autoload::addClassMap
+      **/
+     public function testAddClassMapTemplateOrderBis()
+@@ -104,6 +111,7 @@ public function testAddClassMapTemplateOrderBis()
+     }
+ 
+     /**
++     * @group psr0
+      * @covers Fedora::Autoloader::Autoload::addIncludePath
+      **/
+     public function testAddIncludePath()
+@@ -129,6 +137,7 @@ public function testAddIncludePath()
+     }
+ 
+     /**
++     * @group psr0
+      * @covers Fedora::Autoloader::Autoload::addPsr0
+      **/
+     public function testAddPsr0Simple()
+@@ -145,4 +154,30 @@ public function testAddPsr0Simple()
+         $this->assertTrue(class_exists('One\\Two\\Foo'));
+         $this->assertTrue(class_exists('One_Two\\Foo'));
+     }
++
++    /**
++     * @group psr0
++     * @covers Fedora::Autoloader::Autoload::addPsr0
++     **/
++    public function testAddPsr0ns1()
++    {
++        $this->assertFalse(class_exists('One\\Two\\Foo'));
++
++        Autoload::addPsr0('One\\', __DIR__.'/fixtures/PSR0');
++
++        $this->assertTrue(class_exists('One\\Two\\Foo'));
++    }
++
++    /**
++     * @group psr0
++     * @covers Fedora::Autoloader::Autoload::addPsr0
++     **/
++    public function testAddPsr0ns2()
++    {
++        $this->assertFalse(class_exists('One\\Two\\Foo'));
++
++        Autoload::addPsr0('One\\Two\\', __DIR__.'/fixtures/PSR0');
++
++        $this->assertTrue(class_exists('One\\Two\\Foo'));
++    }
+ }

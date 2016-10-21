@@ -33,13 +33,15 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}
 Summary:       Fedora Autoloader
 
 Group:         Development/Libraries
 License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+
+Patch0:        %{name}-upstream.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -90,6 +92,8 @@ Provides needed tools to build other packages:
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
+
+%patch0 -p1 -b .pr6
 
 : Set PHP directory in phpab template
 sed "s#___AUTOLOAD_PATH___#'%{phpdir}/Fedora/Autoloader'#" \
@@ -158,6 +162,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 21 2016 Remi Collet <remi@remirepo.net> - 0.1.1-2
+- test build for PR #6
+
 * Thu Oct 20 2016 Remi Collet <remi@remirepo.net> - 0.1.1-1
 - add backport stuff
 
