@@ -24,7 +24,7 @@
 
 Name:          php-%{github_name}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       JSON Lint for PHP
 
 Group:         Development/Libraries
@@ -47,7 +47,7 @@ BuildRequires: php-composer(phpunit/phpunit)
 # For tests: phpcompatinfo (computed from version 1.3.1)
 BuildRequires: php-pcre
 # For autoloader
-BuildRequires: php-composer(symfony/class-loader)
+BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 Requires:      php(language) >= %{php_min_ver}
@@ -55,7 +55,7 @@ Requires:      php(language) >= %{php_min_ver}
 Requires:      php-cli
 Requires:      php-pcre
 # For autoloader
-Requires:      php-composer(symfony/class-loader)
+Requires:      php-composer(fedora/autoloader)
 
 Provides:      php-composer(seld/jsonlint) = %{version}
 
@@ -128,6 +128,9 @@ exit $ret
 
 
 %changelog
+* Fri Oct 21 2016 Remi Collet <remi@fedoraproject.org> - 1.4.1-2
+- switch from symfony/class-loader to fedora/autoloader
+
 * Thu Sep 15 2016 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
 - Updated to 1.4.1
 
