@@ -13,7 +13,7 @@
 
 Name:           php-seld-phar-utils
 Version:        1.0.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        PHAR file format utilities
 
 Group:          Development/Libraries
@@ -30,7 +30,7 @@ BuildRequires:  php(language) >= 5.3
 # For test
 BuildRequires:  php-cli
 # Autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 
 # From composer.json
 #       "php": ">=5.3.0",
@@ -41,7 +41,7 @@ Requires:       php-hash
 Requires:       php-pcre
 Requires:       php-spl
 # Autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(seld/phar-utils) = %{version}
 
@@ -94,6 +94,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 21 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-2
+- switch from symfony/class-loader to fedora/autoloader
+
 * Wed Oct 14 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - update to 1.0.1
 - add autoloader

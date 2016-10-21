@@ -1,15 +1,9 @@
 <?php
 /* Autoloader for seld/phar-utils and its dependencies */
 
-$vendorDir = '/usr/share/php';
-// Use Symfony autoloader
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once $vendorDir . '/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
-
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
+if (!class_exists('Fedora\\Autoloader\\Autoload', false)) {
+    require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
 }
 
-$fedoraClassLoader->addPrefix('Seld\\PharUtils\\', dirname(dirname(__DIR__)));
+\Fedora\Autoloader\Autoload::addPsr4('Seld\\PharUtils\\', __DIR__);
+
