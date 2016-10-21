@@ -12,8 +12,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   3.19.17
-%global github_commit    089ce29c428ce330b8e9eba8bbe8f2bdbb8b8af5
+%global github_version   3.19.18
+%global github_commit    d9004dac4bd7f5405952f963da3bcf986295a4de
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -68,6 +68,8 @@ URL:           http://aws.amazon.com/sdkforphp
 # Run php-aws-sdk3-get-source.sh to create full source.
 Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
 Source1:       %{name}-get-source.sh
+
+Patch0:        https://github.com/aws/aws-sdk-php/commit/309828f960b39d662302d23bcebb54346f911062.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -159,6 +161,7 @@ Autoloader: %{phpdir}/Aws3/autoload.php
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
+%patch0 -p1
 
 
 %build
@@ -287,6 +290,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 21 2016 Remi Collet <remi@remirepo.net> - 3.19.18-1
+- update to 3.19.18
+
 * Wed Oct 19 2016 Remi Collet <remi@remirepo.net> - 3.19.17-1
 - update to 3.19.17
 
