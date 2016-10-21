@@ -52,7 +52,7 @@ BuildRequires:  php-zip
 #        "phpunit/phpunit-mock-objects": "^2.3 || ^3.0"
 BuildRequires:  php-composer(phpunit/phpunit)           >= 4.5
 # For autoloader
-BuildRequires:  php-composer(fedora/autoloader)
+BuildRequires:  php-composer(fedora/autoloader) >= 0.1.2
 BuildRequires:  php-seld-phar-utils >= 1.0.1
 BuildRequires:  php-seld-cli-prompt >= 1.0.0-3
 BuildRequires:  php-PsrLog          >= 1.0.0-8
