@@ -21,15 +21,15 @@
 
 Name:          %{?scl_prefix}php-sqlsrv
 Summary:       Microsoft Drivers for PHP for SQL Server
-Version:       4.0.5
+Version:       4.0.6
 Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
 
 URL:           https://github.com/Microsoft/msphpsql
 %if %{from_pecl}
-Source0:        http://pecl.php.net/get/%{extname}-%{version}.tgz
-Source1:        http://pecl.php.net/get/pdo_%{extname}-%{version}.tgz
+Source0:       http://pecl.php.net/get/%{extname}-%{version}.tgz
+Source1:       http://pecl.php.net/get/pdo_%{extname}-%{version}.tgz
 %else
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 %endif
@@ -108,13 +108,19 @@ mv %{gh_project}-%{gh_commit}/LICENSE .
 
 cd NTS
 # Sanity check, really often broken
-extver=$(sed -n '/#define VER_FILEVERSION_STR/{s/.* "//;s/".*$//;p}' sqlsrv/version.h)
-if test "x${extver}" != "x%{version}.0%{?prever}"; then
+extmaj=$(sed -n '/#define SQLVERSION_MAJOR/{s/.*MAJOR //;s/\r//;p}' sqlsrv/version.h)
+extmin=$(sed -n '/#define SQLVERSION_MINOR/{s/.*MINOR //;s/\r//p}' sqlsrv/version.h)
+extrel=$(sed -n '/#define SQLVERSION_RELEASE/{s/.*ASE //;s/\r//p}' sqlsrv/version.h)
+extver=${extmaj}.${extmin}.${extrel}
+if test "x${extver}" != "x%{version}%{?prever}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
-extver=$(sed -n '/#define VER_FILEVERSION_STR/{s/.* "//;s/".*$//;p}' pdo_sqlsrv/version.h)
-if test "x${extver}" != "x%{version}.0%{?prever}"; then
+extmaj=$(sed -n '/#define SQLVERSION_MAJOR/{s/.*MAJOR //;s/\r//p}' pdo_sqlsrv/version.h)
+extmin=$(sed -n '/#define SQLVERSION_MINOR/{s/.*MINOR //;s/\r//p}' pdo_sqlsrv/version.h)
+extrel=$(sed -n '/#define SQLVERSION_RELEASE/{s/.*ASE //;s/\r//p}' pdo_sqlsrv/version.h)
+extver=$extmaj.$extmin.$extrel
+if test "x${extver}" != "x%{version}%{?prever}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever}.
    exit 1
 fi
@@ -255,6 +261,9 @@ fi
 
 
 %changelog
+* Sat Oct 22 2016 Remi Collet <remi@remirepo.net> - 4.0.6-1
+- update to 4.0.6 (devel)
+
 * Sat Oct  1 2016 Remi Collet <remi@remirepo.net> - 4.0.5-1
 - update to 4.0.5, sources from PECL
 - drop all patches merged upstream
