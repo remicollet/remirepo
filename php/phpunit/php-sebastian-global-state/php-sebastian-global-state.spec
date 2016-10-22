@@ -20,7 +20,7 @@
 
 Name:           php-sebastian-global-state
 Version:        1.1.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Snapshotting of global state
 
 Group:          Development/Libraries
@@ -31,7 +31,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php-fedora-autoloader-devel
 %if %{with_tests}
 # from composer.json, "require-dev": {
 #        "phpunit/phpunit": "~4.2"
@@ -46,6 +46,8 @@ Requires:       php(language) >= 5.3.3
 %if 0%{?fedora} > 21
 Suggests:       php-uopz
 %endif
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(sebastian/global-state) = %{version}
 
@@ -61,10 +63,10 @@ factored out of PHPUnit into a stand-alone component.
 
 %build
 # Generate the Autoloader
-phpab --output src/autoload.php src
+phpab --template fedora --output src/autoload.php src
 
 # For the test suite
-phpab --basedir tests --output tests/autoload.php tests/_fixture/
+phpab --template fedora --output tests/autoload.php tests/_fixture/
 
 
 %install
@@ -75,7 +77,8 @@ cp -pr src %{buildroot}%{php_home}/GlobalState
 
 %check
 %if %{with_tests}
-cat <<EOF | tee bs.php
+mkdir vendor
+cat <<EOF | tee vendor/autoload.php
 <?php
 require 'SebastianBergmann/GlobalState/autoload.php';
 require 'tests/autoload.php';
@@ -87,17 +90,17 @@ run=0
 ret=0
 if which php56; then
    php56 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
-   %{_bindir}/phpunit --bootstrap bs.php tests || ret=1
+   %{_bindir}/phpunit || ret=1
    run=1
 fi
 if which php71; then
    php71 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
-   %{_bindir}/phpunit --bootstrap bs.php tests || ret=1
+   %{_bindir}/phpunit || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
 %{_bindir}/php -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
-%{_bindir}/phpunit --bootstrap bs.php --verbose tests
+%{_bindir}/phpunit --verbose
 # remirepo:2
 fi
 exit $ret
@@ -119,6 +122,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 21 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-4
+- switch to fedora/autoloader
+
 * Thu Oct 13 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-3
 - add optional dependency on uopz extension
 
