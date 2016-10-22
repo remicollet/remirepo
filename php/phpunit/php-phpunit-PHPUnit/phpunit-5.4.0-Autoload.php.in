@@ -1,41 +1,19 @@
 <?php
 /* Autoloader for phpunit/phpunit and its dependencies */
 
-$vendorDir = stream_resolve_include_path('Symfony/Component/ClassLoader/ClassLoader.php');
-$vendorDir = dirname(dirname(dirname(dirname($vendorDir))));
-// Use Symfony autoloader
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once $vendorDir . '/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
-
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
+if (!class_exists('Fedora\\Autoloader\\Autoload', false)) {
+    require_once 'Fedora/Autoloader/autoload.php';
 }
 
-/* for symfony/yaml */
-$fedoraClassLoader->addPrefix('Symfony\\Component\\', $vendorDir);
-
-spl_autoload_register(
-  function ($class)
-  {
-      static $classes = NULL;
-
-      if ($classes === NULL) {
-          $classes = array(
-            ___CLASSLIST___
-          );
-      }
-
-      $cn = strtolower($class);
-
-      if (isset($classes[$cn])) {
-          require __DIR__ . $classes[$cn];
-      }
-  }
+\Fedora\Autoloader\Autoload::addClassMap(
+    array(
+        ___CLASSLIST___
+    ),
+    __DIR__
 );
 
 /* Required */
+require_once 'Symfony/Component/autoload.php';
 require_once 'File/Iterator/Autoload.php';
 require_once 'SebastianBergmann/CodeCoverage/autoload.php';
 require_once 'PHP/Timer/Autoload.php';

@@ -18,7 +18,7 @@
 %global pear_channel pear.phpunit.de
 %global major        5.6
 %global minor        1
-%global specrel      1
+%global specrel      2
 
 Name:           php-phpunit-PHPUnit
 Version:        %{major}.%{minor}
@@ -62,8 +62,10 @@ BuildRequires:  php-composer(sebastian/resource-operations) >= 1.0
 BuildRequires:  php-composer(sebastian/version) >= 1.0
 BuildRequires:  php-composer(myclabs/deep-copy) >= 1.3
 BuildRequires:  php-composer(symfony/yaml) >= 2.1
-BuildRequires:  php-composer(symfony/class-loader) >= 2.0
 BuildRequires:  php-composer(phpunit/php-invoker) >= 1.1.0
+BuildRequires:  php-composer(doctrine/instantiator) >= 1.0.4
+# Autoloader
+BuildRequires:  php-composer(fedora/autoloader)
 
 # From composer.json, "require": {
 #        "php": "^5.6 || ^7.0",
@@ -136,8 +138,7 @@ Requires:       php-composer(phpunit/php-invoker) <  2
 # For our autoload patch
 Requires:       php-composer(doctrine/instantiator) >= 1.0.4
 Requires:       php-composer(doctrine/instantiator) <  2
-Requires:       php-composer(symfony/class-loader) >= 2.0
-Requires:       php-composer(symfony/class-loader) <  3
+Requires:       php-composer(fedora/autoloader)
 Requires:       php-composer(sebastian/recursion-context) >= 1.0
 # From phpcompatinfo report for version 5.6.0
 Requires:       php-reflection
@@ -236,6 +237,9 @@ fi
 
 
 %changelog
+* Sat Oct 22 2016 Remi Collet <remi@fedoraproject.org> - 5.6.1-2
+- switch to fedora/autoloader
+
 * Fri Oct  7 2016 Remi Collet <remi@fedoraproject.org> - 5.6.1-1
 - update to 5.6.1
 
