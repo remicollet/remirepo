@@ -33,13 +33,15 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}
 Summary:       Fedora Autoloader
 
 Group:         Development/Libraries
 License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+
+Patch0:        %{name}.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -49,6 +51,7 @@ BuildArch:     noarch
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(theseer/autoload) >= %{phpab_min_ver}
+BuildRequires: php-pear
 ## phpcompatinfo (computed from version 0.1.0)
 BuildRequires: php-spl
 %endif
@@ -91,6 +94,8 @@ Provides needed tools to build other packages:
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+%patch0 -p1 -b .upstream
+
 : Set PHP directory in phpab template
 sed "s#___AUTOLOAD_PATH___#'%{phpdir}/Fedora/Autoloader'#" \
     -i res/phpab/fedora.php.tpl
@@ -102,7 +107,6 @@ sed "s#___AUTOLOAD_PATH___#'%{phpdir}/Fedora/Autoloader'#" \
 
 %install
 rm -rf     %{buildroot}
-
 : Main
 mkdir -p %{buildroot}%{phpdir}/Fedora/Autoloader/Test
 cp -rp src/* %{buildroot}%{phpdir}/Fedora/Autoloader/
@@ -115,22 +119,30 @@ cp -p res/phpab/fedora.php.tpl %{buildroot}%{phpab_template_dir}/
 
 %check
 %if %{with_tests}
-# remirepo:13
+# drop to avoid duplicated class (used for boostrap)
+if grep Fedora/Autoloader %{_datadir}/php/PHPUnit/Autoload.php; then
+  :> src/autoload.php
+fi
+
+# remirepo:15
 run=0
 ret=0
 if which php56; then
    : Run upstream test suite with PHP 5
-   php56 %{_bindir}/phpunit --verbose || ret=1
+   php56 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php:%{_datadir}/pear \
+         %{_bindir}/phpunit || ret=1
    run=1
 fi
 if which php71; then
    : Run upstream test suite with PHP 7
-   php71 %{_bindir}/phpunit --verbose || ret=1
+   php71 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php:%{_datadir}/pear \
+         %{_bindir}/phpunit || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
 : Run upstream test suite
-%{_bindir}/phpunit --verbose
+%{_bindir}/php -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php:%{_datadir}/pear \
+               %{_bindir}/phpunit --verbose
 # remirepo:2
 fi
 exit $ret
@@ -158,6 +170,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 22 2016 Remi Collet <remi@fedoraproject.org> - 0.1.2-2
+- ensure we use newly installed autoloader in buildroot
+
 * Fri Oct 21 2016 Remi Collet <remi@fedoraproject.org> - 0.1.2-1
 - update to 0.1.2
 
