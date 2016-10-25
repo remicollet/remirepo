@@ -27,18 +27,12 @@
 
 Summary:        Varnish Cache bindings
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.2.1
-Release:        9%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.2.2
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# Upstream patches
-# http://svn.php.net/viewvc?view=revision&revision=340569
-# http://svn.php.net/viewvc?view=revision&revision=340570
-# http://svn.php.net/viewvc?view=revision&revision=340571
-Patch0:         %{pecl_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -58,8 +52,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -111,7 +107,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-%patch0 -p3 -b .upstream
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_VARNISH_VERSION/{s/.* "//;s/".*$//;p}' php_varnish.h)
@@ -297,6 +292,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 25 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
+- Update to 1.2.2
+
 * Thu Oct 20 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-9
 - add patch for varnish 4.1 (F24) and 5.0 (F25)
 

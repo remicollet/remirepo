@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #153 varnish version 1.2.1 ] {
+Extension [ <persistent> extension #130 varnish version 1.2.2 ] {
 
   - Dependencies {
     Dependency [ hash (Required) ]
@@ -129,7 +129,7 @@ Extension [ <persistent> extension #153 varnish version 1.2.1 ] {
 
     Class [ <internal:varnish> class VarnishLog ] {
 
-      - Constants [82] {
+      - Constants [90] {
         Constant [ integer TAG_Debug ] { 1 }
         Constant [ integer TAG_Error ] { 2 }
         Constant [ integer TAG_CLI ] { 3 }
@@ -139,79 +139,87 @@ Extension [ <persistent> extension #153 varnish version 1.2.1 ] {
         Constant [ integer TAG_BackendReuse ] { 7 }
         Constant [ integer TAG_BackendClose ] { 8 }
         Constant [ integer TAG_HttpGarbage ] { 9 }
-        Constant [ integer TAG_Backend ] { 10 }
-        Constant [ integer TAG_Length ] { 11 }
-        Constant [ integer TAG_FetchError ] { 12 }
-        Constant [ integer TAG_ReqMethod ] { 13 }
-        Constant [ integer TAG_ReqURL ] { 14 }
-        Constant [ integer TAG_ReqProtocol ] { 15 }
-        Constant [ integer TAG_ReqStatus ] { 16 }
-        Constant [ integer TAG_ReqReason ] { 17 }
-        Constant [ integer TAG_ReqHeader ] { 18 }
-        Constant [ integer TAG_ReqUnset ] { 19 }
-        Constant [ integer TAG_ReqLost ] { 20 }
-        Constant [ integer TAG_RespMethod ] { 21 }
-        Constant [ integer TAG_RespURL ] { 22 }
-        Constant [ integer TAG_RespProtocol ] { 23 }
-        Constant [ integer TAG_RespStatus ] { 24 }
-        Constant [ integer TAG_RespReason ] { 25 }
-        Constant [ integer TAG_RespHeader ] { 26 }
-        Constant [ integer TAG_RespUnset ] { 27 }
-        Constant [ integer TAG_RespLost ] { 28 }
-        Constant [ integer TAG_BereqMethod ] { 29 }
-        Constant [ integer TAG_BereqURL ] { 30 }
-        Constant [ integer TAG_BereqProtocol ] { 31 }
-        Constant [ integer TAG_BereqStatus ] { 32 }
-        Constant [ integer TAG_BereqReason ] { 33 }
-        Constant [ integer TAG_BereqHeader ] { 34 }
-        Constant [ integer TAG_BereqUnset ] { 35 }
-        Constant [ integer TAG_BereqLost ] { 36 }
-        Constant [ integer TAG_BerespMethod ] { 37 }
-        Constant [ integer TAG_BerespURL ] { 38 }
-        Constant [ integer TAG_BerespProtocol ] { 39 }
-        Constant [ integer TAG_BerespStatus ] { 40 }
-        Constant [ integer TAG_BerespReason ] { 41 }
-        Constant [ integer TAG_BerespHeader ] { 42 }
-        Constant [ integer TAG_BerespUnset ] { 43 }
-        Constant [ integer TAG_BerespLost ] { 44 }
-        Constant [ integer TAG_ObjMethod ] { 45 }
-        Constant [ integer TAG_ObjURL ] { 46 }
-        Constant [ integer TAG_ObjProtocol ] { 47 }
-        Constant [ integer TAG_ObjStatus ] { 48 }
-        Constant [ integer TAG_ObjReason ] { 49 }
-        Constant [ integer TAG_ObjHeader ] { 50 }
-        Constant [ integer TAG_ObjUnset ] { 51 }
-        Constant [ integer TAG_ObjLost ] { 52 }
-        Constant [ integer TAG_BogoHeader ] { 53 }
-        Constant [ integer TAG_LostHeader ] { 54 }
-        Constant [ integer TAG_TTL ] { 55 }
-        Constant [ integer TAG_Fetch_Body ] { 56 }
-        Constant [ integer TAG_VCL_acl ] { 57 }
-        Constant [ integer TAG_VCL_call ] { 58 }
-        Constant [ integer TAG_VCL_trace ] { 59 }
-        Constant [ integer TAG_VCL_return ] { 60 }
-        Constant [ integer TAG_ReqStart ] { 61 }
-        Constant [ integer TAG_Hit ] { 62 }
-        Constant [ integer TAG_HitPass ] { 63 }
-        Constant [ integer TAG_ExpBan ] { 64 }
-        Constant [ integer TAG_ExpKill ] { 65 }
-        Constant [ integer TAG_WorkThread ] { 66 }
-        Constant [ integer TAG_ESI_xmlerror ] { 67 }
-        Constant [ integer TAG_Hash ] { 68 }
-        Constant [ integer TAG_Backend_health ] { 69 }
-        Constant [ integer TAG_VCL_Log ] { 70 }
-        Constant [ integer TAG_VCL_Error ] { 71 }
-        Constant [ integer TAG_Gzip ] { 72 }
-        Constant [ integer TAG_Link ] { 73 }
-        Constant [ integer TAG_Begin ] { 74 }
-        Constant [ integer TAG_End ] { 75 }
-        Constant [ integer TAG_VSL ] { 76 }
-        Constant [ integer TAG_Storage ] { 77 }
-        Constant [ integer TAG_Timestamp ] { 78 }
-        Constant [ integer TAG_ReqAcct ] { 79 }
-        Constant [ integer TAG_ESI_BodyBytes ] { 80 }
-        Constant [ integer TAG_PipeAcct ] { 81 }
-        Constant [ integer TAG_BereqAcct ] { 82 }
+        Constant [ integer TAG_Proxy ] { 10 }
+        Constant [ integer TAG_ProxyGarbage ] { 11 }
+        Constant [ integer TAG_Backend ] { 12 }
+        Constant [ integer TAG_Length ] { 13 }
+        Constant [ integer TAG_FetchError ] { 14 }
+        Constant [ integer TAG_ReqMethod ] { 15 }
+        Constant [ integer TAG_ReqURL ] { 16 }
+        Constant [ integer TAG_ReqProtocol ] { 17 }
+        Constant [ integer TAG_ReqStatus ] { 18 }
+        Constant [ integer TAG_ReqReason ] { 19 }
+        Constant [ integer TAG_ReqHeader ] { 20 }
+        Constant [ integer TAG_ReqUnset ] { 21 }
+        Constant [ integer TAG_ReqLost ] { 22 }
+        Constant [ integer TAG_RespMethod ] { 23 }
+        Constant [ integer TAG_RespURL ] { 24 }
+        Constant [ integer TAG_RespProtocol ] { 25 }
+        Constant [ integer TAG_RespStatus ] { 26 }
+        Constant [ integer TAG_RespReason ] { 27 }
+        Constant [ integer TAG_RespHeader ] { 28 }
+        Constant [ integer TAG_RespUnset ] { 29 }
+        Constant [ integer TAG_RespLost ] { 30 }
+        Constant [ integer TAG_BereqMethod ] { 31 }
+        Constant [ integer TAG_BereqURL ] { 32 }
+        Constant [ integer TAG_BereqProtocol ] { 33 }
+        Constant [ integer TAG_BereqStatus ] { 34 }
+        Constant [ integer TAG_BereqReason ] { 35 }
+        Constant [ integer TAG_BereqHeader ] { 36 }
+        Constant [ integer TAG_BereqUnset ] { 37 }
+        Constant [ integer TAG_BereqLost ] { 38 }
+        Constant [ integer TAG_BerespMethod ] { 39 }
+        Constant [ integer TAG_BerespURL ] { 40 }
+        Constant [ integer TAG_BerespProtocol ] { 41 }
+        Constant [ integer TAG_BerespStatus ] { 42 }
+        Constant [ integer TAG_BerespReason ] { 43 }
+        Constant [ integer TAG_BerespHeader ] { 44 }
+        Constant [ integer TAG_BerespUnset ] { 45 }
+        Constant [ integer TAG_BerespLost ] { 46 }
+        Constant [ integer TAG_ObjMethod ] { 47 }
+        Constant [ integer TAG_ObjURL ] { 48 }
+        Constant [ integer TAG_ObjProtocol ] { 49 }
+        Constant [ integer TAG_ObjStatus ] { 50 }
+        Constant [ integer TAG_ObjReason ] { 51 }
+        Constant [ integer TAG_ObjHeader ] { 52 }
+        Constant [ integer TAG_ObjUnset ] { 53 }
+        Constant [ integer TAG_ObjLost ] { 54 }
+        Constant [ integer TAG_BogoHeader ] { 55 }
+        Constant [ integer TAG_LostHeader ] { 56 }
+        Constant [ integer TAG_TTL ] { 57 }
+        Constant [ integer TAG_Fetch_Body ] { 58 }
+        Constant [ integer TAG_VCL_acl ] { 59 }
+        Constant [ integer TAG_VCL_call ] { 60 }
+        Constant [ integer TAG_VCL_trace ] { 61 }
+        Constant [ integer TAG_VCL_return ] { 62 }
+        Constant [ integer TAG_ReqStart ] { 63 }
+        Constant [ integer TAG_Hit ] { 64 }
+        Constant [ integer TAG_HitPass ] { 65 }
+        Constant [ integer TAG_ExpBan ] { 66 }
+        Constant [ integer TAG_ExpKill ] { 67 }
+        Constant [ integer TAG_WorkThread ] { 68 }
+        Constant [ integer TAG_ESI_xmlerror ] { 69 }
+        Constant [ integer TAG_Hash ] { 70 }
+        Constant [ integer TAG_Backend_health ] { 71 }
+        Constant [ integer TAG_VCL_Log ] { 72 }
+        Constant [ integer TAG_VCL_Error ] { 73 }
+        Constant [ integer TAG_Gzip ] { 74 }
+        Constant [ integer TAG_Link ] { 75 }
+        Constant [ integer TAG_Begin ] { 76 }
+        Constant [ integer TAG_End ] { 77 }
+        Constant [ integer TAG_VSL ] { 78 }
+        Constant [ integer TAG_Storage ] { 79 }
+        Constant [ integer TAG_Timestamp ] { 80 }
+        Constant [ integer TAG_ReqAcct ] { 81 }
+        Constant [ integer TAG_PipeAcct ] { 82 }
+        Constant [ integer TAG_BereqAcct ] { 83 }
+        Constant [ integer TAG_VfpAcct ] { 84 }
+        Constant [ integer TAG_Witness ] { 85 }
+        Constant [ integer TAG_BackendStart ] { 86 }
+        Constant [ integer TAG_H2RxHdr ] { 87 }
+        Constant [ integer TAG_H2RxBody ] { 88 }
+        Constant [ integer TAG_H2TxHdr ] { 89 }
+        Constant [ integer TAG_H2TxBody ] { 90 }
       }
 
       - Static properties [0] {
@@ -229,7 +237,7 @@ Extension [ <persistent> extension #153 varnish version 1.2.1 ] {
       }
     }
 
-    Class [ <internal:varnish> class VarnishException extends Exception ] {
+    Class [ <internal:varnish> class VarnishException extends Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -247,8 +255,8 @@ Extension [ <persistent> extension #153 varnish version 1.2.1 ] {
         Property [ <default> protected $line ]
       }
 
-      - Methods [9] {
-        Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $message ]
@@ -257,28 +265,31 @@ Extension [ <persistent> extension #153 varnish version 1.2.1 ] {
           }
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
