@@ -33,7 +33,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       3%{?github_release}%{?dist}
 Summary:       Fedora Autoloader
 
 Group:         Development/Libraries
@@ -170,6 +170,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 25 2016 Remi Collet <remi@fedoraproject.org> - 0.1.2-3
+- rename 1 method to avoid conflicts with symfony
+
 * Sat Oct 22 2016 Remi Collet <remi@fedoraproject.org> - 0.1.2-2
 - ensure we use newly installed autoloader in buildroot
 
