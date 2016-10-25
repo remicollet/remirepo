@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #123 swoole version 1.8.12 ] {
+Extension [ <persistent> extension #122 swoole version 1.8.13 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -63,7 +63,7 @@ Extension [ <persistent> extension #123 swoole version 1.8.12 ] {
     Constant [ integer SWOOLE_DTLSv1_CLIENT_METHOD ] { 17 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.8.12 }
+    Constant [ string SWOOLE_VERSION ] { 1.8.13 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 1 }
     Constant [ integer SWOOLE_FILELOCK ] { 2 }
@@ -198,18 +198,18 @@ Extension [ <persistent> extension #123 swoole version 1.8.12 ] {
     Function [ <internal:swoole> function swoole_client_select ] {
 
       - Parameters [4] {
-        Parameter #0 [ <required> $read_array ]
-        Parameter #1 [ <required> $write_array ]
-        Parameter #2 [ <required> $error_array ]
+        Parameter #0 [ <required> &$read_array ]
+        Parameter #1 [ <required> &$write_array ]
+        Parameter #2 [ <required> &$error_array ]
         Parameter #3 [ <optional> $timeout ]
       }
     }
     Function [ <internal:swoole> function swoole_select ] {
 
       - Parameters [4] {
-        Parameter #0 [ <required> $read_array ]
-        Parameter #1 [ <required> $write_array ]
-        Parameter #2 [ <required> $error_array ]
+        Parameter #0 [ <required> &$read_array ]
+        Parameter #1 [ <required> &$write_array ]
+        Parameter #2 [ <required> &$error_array ]
         Parameter #3 [ <optional> $timeout ]
       }
     }
@@ -958,11 +958,14 @@ Extension [ <persistent> extension #123 swoole version 1.8.12 ] {
       - Static properties [0] {
       }
 
-      - Static methods [5] {
+      - Static methods [6] {
         Method [ <internal:swoole> static public method wait ] {
         }
 
         Method [ <internal:swoole> static public method signal ] {
+        }
+
+        Method [ <internal:swoole> static public method alarm ] {
         }
 
         Method [ <internal:swoole> static public method kill ] {
@@ -2009,7 +2012,7 @@ Extension [ <persistent> extension #123 swoole version 1.8.12 ] {
       }
 
       - Methods [10] {
-        Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $message ]
