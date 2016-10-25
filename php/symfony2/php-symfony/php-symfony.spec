@@ -106,7 +106,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       3%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -1807,6 +1807,14 @@ cat << 'AUTOLOAD' | tee src/Symfony/autoload.php
 
 require_once __DIR__ . '/Component/autoload.php';
 
+if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
+    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
+        require_once __DIR__ . '/ClassLoader/ClassLoader.php';
+    }
+
+    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
+    $fedoraClassLoader->register();
+}
 $fedoraClassLoader->addPrefix('Symfony\\', dirname(__DIR__));
 
 // Dependency autoloaders
@@ -2678,6 +2686,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Tue Oct 25 2016 Remi Collet <remi@fedoraproject.org> - 2.8.12-3
+- fix autoloader
+
 * Tue Oct  4 2016 Remi Collet <remi@fedoraproject.org> - 2.8.12-1
 - Update to 2.8.12
 - raise dependency on twig 1.26
