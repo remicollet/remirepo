@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    60c32c5b5e79c2248001efa2560f831da11cc2d7
+%global gh_commit    cd13b23ac5a519a4708e00736c26ee0bb28b2e01
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,8 +17,8 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.6
-%global minor        1
-%global specrel      2
+%global minor        2
+%global specrel      1
 
 Name:           php-phpunit-PHPUnit
 Version:        %{major}.%{minor}
@@ -237,7 +237,8 @@ fi
 
 
 %changelog
-* Sat Oct 22 2016 Remi Collet <remi@fedoraproject.org> - 5.6.1-2
+* Tue Oct 25 2016 Remi Collet <remi@fedoraproject.org> - 5.6.2-1
+- update to 5.6.2 (no change)
 - switch to fedora/autoloader
 
 * Fri Oct  7 2016 Remi Collet <remi@fedoraproject.org> - 5.6.1-1
