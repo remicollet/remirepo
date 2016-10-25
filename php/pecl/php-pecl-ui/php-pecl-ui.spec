@@ -225,3 +225,4 @@ rm -rf %{buildroot}
 %changelog
 * Tue Oct 25 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package
+
