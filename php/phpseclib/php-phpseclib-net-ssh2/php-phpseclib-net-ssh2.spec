@@ -11,7 +11,7 @@
 %global pear_name Net_SSH2
 
 Name:           php-phpseclib-net-ssh2
-Version:        1.0.4
+Version:        1.0.5
 Release:        1%{?dist}
 Summary:        Pure-PHP implementation of SSHv2
 
@@ -102,6 +102,9 @@ fi
 
 
 %changelog
+* Tue Oct 25 2016 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
+- Update to 1.0.5 (no change)
+
 * Tue Oct 04 2016 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
 - Update to 1.0.4
 
