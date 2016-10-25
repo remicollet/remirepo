@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    c5272131d3acb0f470a2462ed088fca3b6ba61c2
+%global gh_commit    2899c17f83a7207f2d7f53ec2f421204d3beea27
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-code
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        3.0.4
+Version:        3.1.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -34,7 +34,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.5
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-pcre
 BuildRequires:  php-reflection
 BuildRequires:  php-spl
@@ -55,9 +55,9 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": "^5.5 || 7.0.0 - 7.0.4 || ^7.0.6",
+#        "php": "^5.6 || 7.0.0 - 7.0.4 || ^7.0.6",
 #        "zendframework/zend-eventmanager": "^2.6 || ^3.0""
-Requires:       php(language) >= 5.5
+Requires:       php(language) >= 5.6
 %if ! %{bootstrap}
 Requires:       php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6
 Requires:       php-composer(%{gh_owner}/zend-eventmanager)     <  4
@@ -158,6 +158,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Oct 25 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-1
+- update to 3.1.0
+- raise dependency on PHP 5.6
+
 * Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 3.0.4-1
 - update to 3.0.4
 
