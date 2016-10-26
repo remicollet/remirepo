@@ -26,7 +26,7 @@
 %global zendver     20151012
 %global pdover      20150127
 # Extension version
-%global oci8ver     2.1.2
+%global oci8ver     2.1.3
 
 # Adds -z now to the linker flags
 %global _hardened_build 1
@@ -124,13 +124,13 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver        RC1
-%global rpmrel       2
+%global rcver        RC1
+%global rpmrel       1
 
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
-Version: 7.0.12
+Version: 7.0.13
 Release: %{?rcver:0.}%{rpmrel}%{?rcver:.%{rcver}}%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -169,7 +169,7 @@ Patch9: php-7.0.7-curl.patch
 
 # Functional changes
 Patch40: php-7.0.0-dlopen.patch
-Patch42: php-7.0.0-systzdata-v13.patch
+Patch42: php-7.0.0-systzdata-v14.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
 # Use -lldap_r for OpenLDAP
@@ -883,7 +883,9 @@ support for JavaScript Object Notation (JSON) to PHP.
 %endif
 
 %patch40 -p1 -b .dlopen
+%if 0%{?fedora} >= 23 || 0%{?rhel} >= 5
 %patch42 -p1 -b .systzdata
+%endif
 %patch43 -p1 -b .headers
 %if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
 %patch45 -p1 -b .ldap_r
@@ -1824,6 +1826,11 @@ fi
 
 
 %changelog
+* Tue Oct 25 2016 Remi Collet <remi@fedoraproject.org> 7.0.13-0.1.RC1
+- Update to 7.0.13RC1
+- oci8 version is now 2.1.3
+- update tzdata patch to v14, improve check for valid tz file
+
 * Thu Oct 13 2016 Remi Collet <remi@fedoraproject.org> 7.0.12-2
 - Update to 7.0.12 - http://www.php.net/releases/7_0_12.php
 - rebuild with new sources
