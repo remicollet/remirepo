@@ -124,8 +124,8 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver        RC4
-%global rpmrel       11
+%global rcver        RC5
+%global rpmrel       12
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1826,6 +1826,9 @@ fi
 
 
 %changelog
+* Wed Oct 26 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-0.12.RC5
+- Update to 7.1.0RC5
+
 * Mon Oct 17 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-0.11.RC4
 - Update to 7.1.0RC4
 - update tzdata patch to v14, improve check for valid tz file
