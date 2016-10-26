@@ -13,8 +13,8 @@
 
 %global github_owner     php-fedora
 %global github_name      autoloader
-%global github_version   0.1.2
-%global github_commit    35f7b52f4682276620369bc4bc1a3a5fef93faad
+%global github_version   0.2.0
+%global github_commit    acadcf9f2511ac7b777117eb66728f95faabbe99
 
 %global composer_vendor  fedora
 %global composer_project autoloader
@@ -33,15 +33,13 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       3%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       Fedora Autoloader
 
 Group:         Development/Libraries
 License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
-
-Patch0:        %{name}.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -52,13 +50,13 @@ BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(theseer/autoload) >= %{phpab_min_ver}
 BuildRequires: php-pear
-## phpcompatinfo (computed from version 0.1.0)
+## phpcompatinfo (computed from version 0.2.0)
 BuildRequires: php-spl
 %endif
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 0.1.0)
+# phpcompatinfo (computed from version 0.2.0)
 Requires:      php-spl
 
 # Composer
@@ -93,8 +91,6 @@ Provides needed tools to build other packages:
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
-
-%patch0 -p1 -b .upstream
 
 : Set PHP directory in phpab template
 sed "s#___AUTOLOAD_PATH___#'%{phpdir}/Fedora/Autoloader'#" \
@@ -170,6 +166,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct 26 2016 Shawn Iwinski <shawn@iwin.ski> - 0.2.0-1
+- Update to 0.2.0
+- Remove applied patches that are included in 0.2.0
+
 * Tue Oct 25 2016 Remi Collet <remi@fedoraproject.org> - 0.1.2-3
 - rename 1 method to avoid conflicts with symfony
 
