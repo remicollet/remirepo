@@ -21,7 +21,7 @@
 %global ini_name  40-%{pecl_name}.ini
 
 Name:           %{?sub_prefix}php-pecl-ui
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        UI API
 
@@ -155,8 +155,8 @@ done
 
 # make the cli commands available in standard root for SCL build
 %if 0%{?scl:1}
-install -m 755 -d $RPM_BUILD_ROOT%{_root_bindir}
-ln -s %{_bindir}/phpui      $RPM_BUILD_ROOT%{_root_bindir}/%{scl_prefix}phpui
+install -m 755 -d %{buildroot}%{_root_bindir}
+ln -s %{_bindir}/phpui      %{buildroot}%{_root_bindir}/%{scl_prefix}phpui
 %endif
 
 
@@ -225,6 +225,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct 26 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1
+
 * Tue Oct 25 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package
 

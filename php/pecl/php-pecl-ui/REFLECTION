@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #155 ui version 1.0.0 ] {
+Extension [ <persistent> extension #155 ui version 1.0.1 ] {
 
   - Functions {
     Function [ <internal:ui> function UI\Draw\Text\Font\fontFamilies ] {
