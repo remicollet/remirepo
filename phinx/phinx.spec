@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    0d9293edb425b2d48ee1fd43cd2571e3ade77314
+%global gh_commit    6943cb4bb78bf9d3964967a032220b7c793b97b7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     robmorgan
 #global gh_date      20150820
@@ -20,7 +20,7 @@
 %endif
 
 Name:           %{gh_project}
-Version:        0.6.4
+Version:        0.6.5
 Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        Manage the database migrations for your PHP app
 
@@ -48,7 +48,7 @@ BuildRequires:  php-spl
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.8.26
 %endif
 # For autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 
 # From composer.json, "require": {
 #        "php": ">=5.4",
@@ -66,7 +66,7 @@ Requires:       php-json
 Requires:       php-pcre
 Requires:       php-spl
 # For autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 
 # Composer
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
@@ -124,11 +124,7 @@ mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
 require '%{buildroot}%{_datadir}/php/%{psr0}/autoload.php';
-
-require_once '/usr/share/php/Symfony/Component/ClassLoader/Psr4ClassLoader.php';
-$psr4 = new \Symfony\Component\ClassLoader\Psr4ClassLoader();
-$psr4->register(true);
-$psr4->addPrefix('Test\\Phinx\\', dirname(__DIR__).'/tests/Phinx');
+\Fedora\Autoloader\Autoload::addPsr4('Test\\Phinx\\', dirname(__DIR__).'/tests/Phinx');
 EOF
 
 sed -e '/_ENABLED/s/true/false/;/SQLITE_ENABLED/s/false/true/' \
@@ -171,6 +167,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 27 2016 Remi Collet <remi@fedoraproject.org> - 0.6.5-1
+- update to 0.6.5
+- switch from symfony/class-loader to fedora/autoloader
+
 * Tue Sep 27 2016 Remi Collet <remi@fedoraproject.org> - 0.6.4-1
 - initial package
 

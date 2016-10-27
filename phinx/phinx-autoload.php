@@ -1,19 +1,9 @@
 <?php
 /* Autoloader for robmorgan/phinx and its dependencies */
 
-$vendorDir = '/usr/share/php';
-// Use Symfony autoloader
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once $vendorDir . '/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefixes(array(
-    'Symfony\\Component\\'         => $vendorDir,
-    'Phinx\\'                      => dirname(__DIR__)
+\Fedora\Autoloader\Autoload::addPsr4('Phinx\\', __DIR__);
+\Fedora\Autoloader\Dependencies::required(array(
+    '/usr/share/php/Symfony/Component/autoload.php',
 ));
-
