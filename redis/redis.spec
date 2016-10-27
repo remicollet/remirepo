@@ -27,7 +27,7 @@
 %global gh_project   redis
 
 Name:             redis
-Version:          3.2.4
+Version:          3.2.5
 Release:          1%{?dist}
 Summary:          A persistent key-value database
 
@@ -51,7 +51,7 @@ Source9:          %{name}-limit-init
 # Update configuration for Fedora
 Patch0:           0001-redis-3.2-redis-conf.patch
 Patch1:           0002-redis-3.2-deps-library-fPIC-performance-tuning.patch
-Patch2:           0003-redis-2.8.11-use-system-jemalloc.patch
+Patch2:           0003-redis-3.2.5-use-system-jemalloc.patch
 
 # https://github.com/antirez/redis/pull/3491 - man pages
 Patch3:           %{name}-pr3491.patch
@@ -118,7 +118,7 @@ Documentation: http://redis.io/documentation
 
 %patch0 -p1 -b .rpmconf
 %patch1 -p1 -b .pic
-%patch2 -p1 -b .jem
+%patch2 -p0 -b .jem
 
 %patch3 -p1
 %patch4 -p1 -b .old
@@ -269,6 +269,10 @@ fi
 
 
 %changelog
+* Thu Oct 27 2016 Remi Collet <remi@fedoraproject.org> - 3.2.5-1
+- Redis 3.2.5 - Released Wed Oct 26 09:16:40 CEST 2016
+- Upgrade urgency LOW: This release only fixes a compilation issue
+
 * Mon Sep 26 2016 Remi Collet <remi@fedoraproject.org> - 3.2.4-1
 - Redis 3.2.4 - Released Mon Sep 26 08:58:21 CEST 2016
 - Upgrade urgency CRITICAL: Redis 3.2 and unstable contained

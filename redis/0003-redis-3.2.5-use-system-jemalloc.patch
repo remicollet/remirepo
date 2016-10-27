@@ -1,0 +1,15 @@
+diff -up src/Makefile.jem src/Makefile
+--- src/Makefile.jem	2016-10-27 11:00:29.486075147 +0200
++++ src/Makefile	2016-10-27 11:02:33.554729427 +0200
+@@ -103,9 +103,8 @@ ifeq ($(MALLOC),tcmalloc_minimal)
+ endif
+ 
+ ifeq ($(MALLOC),jemalloc)
+-	DEPENDENCY_TARGETS+= jemalloc
+-	FINAL_CFLAGS+= -DUSE_JEMALLOC -I../deps/jemalloc/include
+-	FINAL_LIBS+= ../deps/jemalloc/lib/libjemalloc.a
++	FINAL_CFLAGS+= -DUSE_JEMALLOC -DJEMALLOC_NO_DEMANGLE -I/usr/include/jemalloc
++	FINAL_LIBS+= -ljemalloc -ldl
+ endif
+ 
+ REDIS_CC=$(QUIET_CC)$(CC) $(FINAL_CFLAGS)

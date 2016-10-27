@@ -22,7 +22,7 @@ diff -up ./redis.conf.rpmconf ./redis.conf
 diff -up ./sentinel.conf.rpmconf ./sentinel.conf
 --- ./sentinel.conf.rpmconf	2015-12-23 13:35:32.000000000 +0100
 +++ ./sentinel.conf	2016-01-15 16:32:22.491355290 +0100
-@@ -4,6 +4,11 @@
+@@ -20,6 +20,11 @@
  # The port that this sentinel instance will run on
  port 26379
  
