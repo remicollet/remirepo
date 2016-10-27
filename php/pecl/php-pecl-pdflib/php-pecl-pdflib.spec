@@ -19,7 +19,7 @@
 
 Summary:        Package for generating PDF files
 Name:           %{?scl_prefix}php-pecl-pdflib
-Version:        4.0.0
+Version:        4.0.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # https://bugs.php.net/60396 ask license file
 License:        PHP
@@ -198,6 +198,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 27 2016 Remi Collet <remi@fedoraproject.org> - 4.0.1-1
+- Update to 4.0.1 (stable)
+
 * Thu Sep 22 2016 Remi Collet <remi@fedoraproject.org> - 4.0.0-1
 - update to 4.0.0 (beta) for PHP 7
 

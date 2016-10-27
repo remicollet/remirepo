@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #107 PDFlib version 4.0.0 ] {
+Extension [ <persistent> extension #156 PDFlib version 4.0.1 ] {
 
   - Functions {
     Function [ <internal:PDFlib> function pdf_activate_item ] {
@@ -397,7 +397,28 @@ Extension [ <persistent> extension #107 PDFlib version 4.0.0 ] {
       - Properties [0] {
       }
 
-      - Methods [132] {
+      - Methods [131] {
+        Method [ <internal:PDFlib, ctor> public method __construct ] {
+        }
+
+        Method [ <internal:PDFlib> final public method delete ] {
+        }
+
+        Method [ <internal:PDFlib> final public method get_pdi_parameter ] {
+        }
+
+        Method [ <internal:PDFlib> final public method open_pdi ] {
+        }
+
+        Method [ <internal:PDFlib> final public method open_image ] {
+        }
+
+        Method [ <internal:PDFlib> final public method setpolydash ] {
+        }
+
+        Method [ <internal:PDFlib> final public method show_boxed ] {
+        }
+
         Method [ <internal:PDFlib> final public method activate_item ] {
         }
 
@@ -768,30 +789,6 @@ Extension [ <persistent> extension #107 PDFlib version 4.0.0 ] {
         }
 
         Method [ <internal:PDFlib> final public method utf32_to_utf16 ] {
-        }
-
-        Method [ <internal:PDFlib, ctor> <visibility error> method __construct ] {
-        }
-
-        Method [ <internal:PDFlib> final public method delete ] {
-        }
-
-        Method [ <internal:PDFlib> final public method get_pdi_parameter ] {
-        }
-
-        Method [ <internal:PDFlib> final public method open_pdi ] {
-        }
-
-        Method [ <internal:PDFlib> final public method open_image ] {
-        }
-
-        Method [ <internal:PDFlib> final public method setpolydash ] {
-        }
-
-        Method [ <internal:PDFlib> final public method show_boxed ] {
-        }
-
-        Method [ <internal:PDFlib, dtor> final public method __destruct ] {
         }
       }
     }
