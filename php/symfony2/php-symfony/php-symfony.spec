@@ -13,8 +13,8 @@
 
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.8.12
-%global github_commit    6a5bc3257b60098c28fc1bbcacd52000dd2801d1
+%global github_version   2.8.13
+%global github_commit    d04e2eb13ae63068fc8862530b403756e3702896
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -106,15 +106,13 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       4%{?dist}
+Release:       1%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
 License:       MIT
 URL:           http://symfony.com
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_short}.tar.gz
-
-Patch0:        %{name}-upstream.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -1755,8 +1753,6 @@ The YAML Component loads and dumps YAML files.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
-%patch0 -p1
-
 : Remove unnecessary files
 find src -name '.git*' -delete
 
@@ -2690,6 +2686,10 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Thu Oct 27 2016 Remi Collet <remi@fedoraproject.org> - 2.8.12-1
+- Update to 2.8.12
+- raise dependency on twig 1.27
+
 * Wed Oct 26 2016 Remi Collet <remi@fedoraproject.org> - 2.8.12-4
 - add upstream patch for Twig 1.27
 
