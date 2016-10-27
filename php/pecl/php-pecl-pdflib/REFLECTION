@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #113 PDFlib version 3.0.4 ] {
+Extension [ <persistent> extension #107 PDFlib version 4.0.0 ] {
 
   - Functions {
     Function [ <internal:PDFlib> function pdf_activate_item ] {
@@ -316,7 +316,7 @@ Extension [ <persistent> extension #113 PDFlib version 3.0.4 ] {
   }
 
   - Classes [2] {
-    Class [ <internal:PDFlib> class PDFlibException extends Exception ] {
+    Class [ <internal:PDFlib> class PDFlibException extends Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -335,7 +335,7 @@ Extension [ <persistent> extension #113 PDFlib version 3.0.4 ] {
         Property [ <default> protected $apiname ]
       }
 
-      - Methods [12] {
+      - Methods [13] {
         Method [ <internal:PDFlib> public method get_apiname ] {
         }
 
@@ -354,28 +354,31 @@ Extension [ <persistent> extension #113 PDFlib version 3.0.4 ] {
           }
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
@@ -394,7 +397,7 @@ Extension [ <persistent> extension #113 PDFlib version 3.0.4 ] {
       - Properties [0] {
       }
 
-      - Methods [131] {
+      - Methods [132] {
         Method [ <internal:PDFlib> final public method activate_item ] {
         }
 
@@ -786,6 +789,9 @@ Extension [ <persistent> extension #113 PDFlib version 3.0.4 ] {
         }
 
         Method [ <internal:PDFlib> final public method show_boxed ] {
+        }
+
+        Method [ <internal:PDFlib, dtor> final public method __destruct ] {
         }
       }
     }

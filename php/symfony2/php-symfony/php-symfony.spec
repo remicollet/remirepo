@@ -86,8 +86,8 @@
 #           instead of php-symfony-security-acl3
 %global symfony_security_acl_min_ver 2.7
 %global symfony_security_acl_max_ver 3.0
-# "twig/twig": "~1.26|~2.0"
-%global twig_min_ver 1.26
+# "twig/twig": "~1.27|~2.0"
+%global twig_min_ver 1.27
 %global twig_max_ver 3.0
 
 %if 0%{?fedora} < 21 && 0%{?rhel} < 7
@@ -106,13 +106,15 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
 License:       MIT
 URL:           http://symfony.com
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_short}.tar.gz
+
+Patch0:        %{name}-upstream.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -1753,6 +1755,8 @@ The YAML Component loads and dumps YAML files.
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+%patch0 -p1
+
 : Remove unnecessary files
 find src -name '.git*' -delete
 
@@ -2686,6 +2690,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Wed Oct 26 2016 Remi Collet <remi@fedoraproject.org> - 2.8.12-4
+- add upstream patch for Twig 1.27
+
 * Tue Oct 25 2016 Remi Collet <remi@fedoraproject.org> - 2.8.12-3
 - fix autoloader
 
