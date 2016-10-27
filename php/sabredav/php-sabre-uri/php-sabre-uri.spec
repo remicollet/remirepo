@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9012116434d84ef6e5e37a89dfdbfbe2204a8704
+%global gh_commit    258b72540fe3f2c0bb395cb40e56f9ae409f93b5
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-uri
@@ -14,7 +14,7 @@
 
 Name:           php-%{gh_project}
 Summary:        Functions for making sense out of URIs
-Version:        1.1.0
+Version:        1.1.1
 Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
@@ -28,7 +28,7 @@ BuildArch:      noarch
 %if %{with_tests}
 BuildRequires:  php(language) > 5.4.7
 # From composer.json, "require-dev": {
-#        "sabre/cs": "~0.0.1",
+#        "sabre/cs": "~1.0.0",
 #        "phpunit/phpunit" : "*"
 BuildRequires:  php-pcre
 BuildRequires:  php-composer(phpunit/phpunit)
@@ -88,15 +88,24 @@ cp -pr lib %{buildroot}%{_datadir}/php/Sabre/Uri
 %if %{with_tests}
 : Run upstream test suite against installed library
 cd tests
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap=%{buildroot}%{_datadir}/php/Sabre/Uri/autoload.php || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap=%{buildroot}%{_datadir}/php/Sabre/Uri/autoload.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/phpunit \
   --bootstrap=%{buildroot}%{_datadir}/php/Sabre/Uri/autoload.php \
   --verbose
-
-if which php70; then
-  php70 %{_bindir}/phpunit \
-    --bootstrap=%{buildroot}%{_datadir}/php/Sabre/Uri/autoload.php \
-    --verbose
+# remirepo:2
 fi
+exit $ret
 %else
 : Skip upstream test suite
 %endif
@@ -117,6 +126,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 27 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- update to 1.1.1
+
 * Fri Mar 11 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - Initial packaging
 
