@@ -12,11 +12,11 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package       php-pecl-dbase
 %endif
 
-%{?scl:          %scl_package        php-pecl-dbase}
 
-%global with_zts   0%{?__ztsphp:1}
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  dbase
 #global versuf     -beta
 %if "%{php_version}" < "5.6"
@@ -28,19 +28,17 @@
 
 Summary:        dBase database file access functions
 Name:           %{?sub_prefix}php-pecl-dbase
-Version:        5.1.0
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        5.1.1
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 # Created from PHP 5.2.17 tarball
 Source1:        http://pecl.php.net/get/%{pecl_name}-tests-%{version}.tgz
-# From sources headers
-Source2:        http://www.php.net/license/3_01.txt
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-devel < 7
 BuildRequires:  %{?scl_prefix}php-pear
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
@@ -98,10 +96,13 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %prep
 %setup -q -c -a1
 
-cp %{SOURCE2} LICENSE
-
 mv %{pecl_name}-%{version} NTS
 mv tests NTS/tests
+
+# Don't install/register tests
+sed -e 's/role="test"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
+    -i package.xml
 
 cd NTS
 
@@ -166,7 +167,6 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 for i in $(grep 'role="doc"' package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 NTS/$i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
-%{!?_licensedir:install -Dpm 644 LICENSE %{buildroot}%{pecl_docdir}/%{pecl_name}/LICENSE}
 
 
 %if 0%{?fedora} < 24
@@ -229,7 +229,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%{?_licensedir:%license LICENSE}
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -243,6 +243,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 27 2016 Remi Collet <remi@fedoraproject.org> - 5.1.1-1
+- update to 5.1.1 (stable)
+
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 5.1.0-2
 - adapt for F24
 
