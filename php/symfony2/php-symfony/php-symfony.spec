@@ -2686,8 +2686,8 @@ exit $RET
 # ##############################################################################
 
 %changelog
-* Thu Oct 27 2016 Remi Collet <remi@fedoraproject.org> - 2.8.12-1
-- Update to 2.8.12
+* Thu Oct 27 2016 Remi Collet <remi@fedoraproject.org> - 2.8.13-1
+- Update to 2.8.13
 - raise dependency on twig 1.27
 
 * Wed Oct 26 2016 Remi Collet <remi@fedoraproject.org> - 2.8.12-4
