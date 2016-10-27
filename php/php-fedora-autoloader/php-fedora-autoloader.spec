@@ -33,7 +33,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}
 Summary:       Fedora Autoloader
 
 Group:         Development/Libraries
@@ -115,9 +115,12 @@ cp -p res/phpab/fedora.php.tpl %{buildroot}%{phpab_template_dir}/
 
 %check
 %if %{with_tests}
-# drop to avoid duplicated class (used for boostrap)
 if grep Fedora/Autoloader %{_datadir}/php/PHPUnit/Autoload.php; then
+  # drop to avoid duplicated class (used for boostrap)
   :> src/autoload.php
+else
+  # workaround when not in global autoloader
+  sed -e '/define(/d' -i src/autoload.php
 fi
 
 # remirepo:15
@@ -166,6 +169,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 27 2016 Remi Collet <remi@fedoraproject.org> - 0.2.0-2
+- workaround when not in global autoloader
+
 * Wed Oct 26 2016 Shawn Iwinski <shawn@iwin.ski> - 0.2.0-1
 - Update to 0.2.0
 - Remove applied patches that are included in 0.2.0
