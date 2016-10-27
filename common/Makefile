@@ -144,7 +144,7 @@ REFLECTION: $(NAME).spec
 
 	php --re $(shell pwd | sed -e 's/.*-//') >REFLECTION
 
-composer:
+composer: $(NAME).spec
 	tar xf $(shell spectool -l $(NAME).spec | head -n 1 | sed -e 's:.* ::' | sed -e 's:.*/::') --strip-components=1 '*/composer.json'
 
 devcomposer:

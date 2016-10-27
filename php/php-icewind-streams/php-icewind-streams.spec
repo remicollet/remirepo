@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # Github information
-%global gh_commit    d3620e8dc410c86c2ba55579803679c4e0b289ac
+%global gh_commit    0700f81441200b33d929c108b9ee6d76b0104fa2
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     icewind1991
 %global gh_project   Streams
@@ -19,7 +19,7 @@
 %global ns_name      Streams
 
 Name:           php-%{pk_vendor}-%{pk_name}
-Version:        0.4.1
+Version:        0.5.1
 Release:        1%{?dist}
 Summary:        A set of generic stream wrappers
 
@@ -39,7 +39,7 @@ BuildRequires:  php(language) >= 5.3
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.8
 BuildRequires:  php-composer(theseer/autoload)
 # Autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 
 # From composer.json, "require": {
 #      "php": ">=5.3"
@@ -47,7 +47,7 @@ Requires:       php(language) >= 5.3
 # From phpcompatinfo report for version 0.2.0
 Requires:       php-spl
 # Autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(%{pk_vendor}/%{pk_name}) = %{version}
 
@@ -84,11 +84,23 @@ cd tests
 echo "require '%{buildroot}%{_datadir}/php/%{ns_vendor}/%{ns_name}/autoload.php';" >> bootstrap.php
 
 : Run the test suite
-%{_bindir}/phpunit --verbose
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
+
 
 %clean
 rm -rf %{buildroot}
@@ -105,6 +117,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 27 2016 Remi Collet <remi@fedoraproject.org> - 0.5.1-1
+- update to 0.5.1
+- switch from symfony/class-loader to fedora/autoloader
+
 * Fri Jun  3 2016 Remi Collet <remi@fedoraproject.org> - 0.4.1-1
 - update to 0.4.1
 
