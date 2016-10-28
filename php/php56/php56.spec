@@ -143,12 +143,12 @@
 %global db_devel  libdb-devel
 %endif
 
-#global rcver  RC1
+%global rcver  RC1
 %global rpmrel 1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.6.27
+Version: 5.6.28
 %if 0%{?rcver:1}
 Release: 0.%{rpmrel}.%{rcver}%{?dist}
 %else
@@ -1997,6 +1997,9 @@ fi
 
 
 %changelog
+* Fri Oct 28 2016 Remi Collet <remi@fedoraproject.org> 5.6.28-0.1.RC1
+- update to 5.6.28RC1
+
 * Fri Oct 14 2016 Remi Collet <remi@fedoraproject.org> 5.6.27-1
 - Update to 5.6.27 - http://www.php.net/releases/5_6_27.php
 
