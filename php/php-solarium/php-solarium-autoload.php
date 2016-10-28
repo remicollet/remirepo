@@ -1,22 +1,13 @@
 <?php
 /* Autoloader for solarium/solarium and its dependencies */
 
-$vendorDir = '/usr/share/php';
-// Use Symfony autoloader
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once $vendorDir . '/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
+\Fedora\Autoloader\Autoload::addPsr4('Solarium\\', __DIR__);
+\Fedora\Autoloader\Dependencies::required(array(
+    array(
+        '/usr/share/php/Symfony/Component/autoload.php',
+        '/usr/share/php/Symfony/autoload.php',
+    ),
+));
 
-$fedoraClassLoader->addPrefix('Solarium\\', dirname(__DIR__));
-
-// dependencies
-if (file_exists($vendorDir . '/Symfony/Component/autoload.php')) {
-   require_once $vendorDir . '/Symfony/Component/autoload.php';
-} else {
-   $fedoraClassLoader->addPrefix('Symfony\\Component\\', $vendorDir);
-}

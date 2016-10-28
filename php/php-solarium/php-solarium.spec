@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b945cbe4e8f96b639d82c4d1e2cae4ef3ab6fce5
+%global gh_commit    0acdb2838ae551fe87e4e334e449a468973839f2
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     solariumphp
 %global gh_project   solarium
@@ -14,7 +14,7 @@
 
 Name:           php-%{gh_project}
 Summary:        Solarium PHP Solr client library
-Version:        3.6.0
+Version:        3.7.0
 Release:        1%{?dist}
 
 URL:            http://www.solarium-project.org/
@@ -29,7 +29,7 @@ BuildArch:      noarch
 # For tests
 BuildRequires:  php(language) >= 5.3.2
 BuildRequires:  php-composer(symfony/event-dispatcher) > 2.3
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 # From composer.json, "require-dev": {
 #        "phpunit/phpunit": "~3.7",
 #        "squizlabs/php_codesniffer": "~1.4",
@@ -44,14 +44,20 @@ BuildRequires:  php-composer(phpunit/phpunit) >= 3.7
 Requires:       php(language) >= 5.3.2
 Requires:       php-composer(symfony/event-dispatcher) > 2.3
 Requires:       php-composer(symfony/event-dispatcher) < 4
-# From phpcompatinfo report for version 3.4.1
+# From composer.json, "suggest": {
+#        "minimalcode/search": "Query builder compatible with Solarium, allows simplified solr-query handling"
+%if 0%{?fedora}> 21
+Suggests:       php-composer(minimalcode/search)
+%endif
+# From phpcompatinfo report for version 3.7.0
 Requires:       php-curl
 Requires:       php-date
 Requires:       php-json
 Requires:       php-pcre
 Requires:       php-spl
+# php-http optional, and only v1 suppported.
 # For our autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(solarium/solarium) = %{version}
 
@@ -92,11 +98,22 @@ mkdir vendor
 ln -s %{buildroot}%{_datadir}/php/Solarium/autoload.php vendor/autoload.php
 
 : Run upstream test suite against installed library
-%{_bindir}/phpunit --verbose
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Skip upstream test suite
 %endif
@@ -111,6 +128,11 @@ fi
 
 
 %changelog
+* Fri Oct 28 2016 Remi Collet <remi@fedoraproject.org> - 3.7.0-1
+- update to 3.7.0
+- add optional dependency on minimalcode/search
+- switch from symfony/class-loader to fedora/autoloader
+
 * Tue May  3 2016 Remi Collet <remi@fedoraproject.org> - 3.6.0-1
 - update to 3.6.0
 - allow symfony 3
