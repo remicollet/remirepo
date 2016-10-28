@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #155 ui version 1.0.1 ] {
+Extension [ <persistent> extension #156 ui version 1.0.2 ] {
 
   - Functions {
     Function [ <internal:ui> function UI\Draw\Text\Font\fontFamilies ] {
@@ -62,7 +62,9 @@ Extension [ <persistent> extension #155 ui version 1.0.1 ] {
       - Static properties [0] {
       }
 
-      - Static methods [0] {
+      - Static methods [1] {
+        Method [ <internal:ui> static public method at ] {
+        }
       }
 
       - Properties [2] {
@@ -117,7 +119,9 @@ Extension [ <persistent> extension #155 ui version 1.0.1 ] {
       - Static properties [0] {
       }
 
-      - Static methods [0] {
+      - Static methods [1] {
+        Method [ <internal:ui> static public method of ] {
+        }
       }
 
       - Properties [0] {

@@ -7,8 +7,8 @@
 # Please, preserve the changelog entries
 #
 
-%global gh_commit   0870a3065ed219c3dd2332972a6ffb3b95ce199a
-%global gh_date     20161023
+%global gh_commit   5de62d073f189a92af7b5386ad1ea184c21d1e14
+%global gh_date     20161026
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    andlabs
 %global gh_project  libui
@@ -18,7 +18,7 @@
 Name:          %{libname}
 Summary:       Simple and portable GUI library 
 Version:       0
-Release:       0.2.%{gh_date}git%{gh_short}%{?dist}
+Release:       0.3.%{gh_date}git%{gh_short}%{?dist}
 License:       MIT
 Group:         System Environment/Libraries
 
@@ -91,6 +91,9 @@ done
 
 
 %changelog
+* Fri Oct 28 2016 Remi Collet <remi@fedoraproject.org> - 0-0.3.20161026git5de62d0
+- refresh
+
 * Tue Oct 25 2016 Remi Collet <remi@fedoraproject.org> - 0-0.2.20161023git0870a30
 - update to latest upstream snapshot for pecl/ui
 

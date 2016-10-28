@@ -21,7 +21,7 @@
 %global ini_name  40-%{pecl_name}.ini
 
 Name:           %{?sub_prefix}php-pecl-ui
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        UI API
 
@@ -30,7 +30,6 @@ Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{proj_name}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel >= 7
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  libui-devel
@@ -132,8 +131,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # Install XML package description
@@ -202,12 +199,7 @@ fi
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{proj_name}
 %{pecl_xmldir}/%{name}.xml
@@ -225,6 +217,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 28 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- Update to 1.0.2
+
 * Wed Oct 26 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
 - Update to 1.0.1
 
