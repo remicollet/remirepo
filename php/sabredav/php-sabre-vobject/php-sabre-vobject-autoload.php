@@ -1,18 +1,7 @@
 <?php
-/**
- * Autoloader for sabre/vobject and its dependencies
- */
+/* Autoloader for sabre/vobject and its dependencies */
 
-$vendorDir = '/usr/share/php';
+require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
 
-// Use Symfony autoloader
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once $vendorDir . '/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+\Fedora\Autoloader\Autoload::addPsr4('Sabre\\VObject\\', __DIR__);
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('Sabre\\VObject\\', dirname(dirname(__DIR__)));
