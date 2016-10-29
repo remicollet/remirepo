@@ -67,6 +67,8 @@ a very complete library, with an easy to use API.
 This project is a spin-off from SabreDAV, where it has been used for several
 years. The VObject library has 100% unittest coverage.
 
+Autoloader: %{_datadir}/php/Sabre/VObject/autoload.php
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
