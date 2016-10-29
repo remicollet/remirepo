@@ -6,25 +6,29 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9f8c1939a3f66eb7170489fc48579ffd1461af62
+%global gh_commit    b42593965211de1ce99f73bd3aede99c41258e08
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-dav
-%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%if 0%{?rhel} == 5
+%global with_tests   0%{?_with_tests:1}
+%else
+%global with_tests   0%{!?_without_tests:1}
+%endif
 
 Name:           php-%{gh_project}
 Summary:        WebDAV Framework for PHP
-Version:        2.1.10
+Version:        3.0.9
 Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 License:        BSD
 Group:          Development/Libraries
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
-Source1:        %{name}-autoload.php
+Source1:        %{name}-autoload-dev.php
 
 # replace composer autoloader
-Patch0:         %{name}-autoload.patch
+Patch0:         %{name}-autoload-dev.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -32,8 +36,10 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.4.1
 BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php-composer(sabre/vobject) >= 3.3.4
-BuildRequires:  php-composer(sabre/event)   >= 2.0.0
-BuildRequires:  php-composer(sabre/http)    >= 3.0.0
+BuildRequires:  php-composer(sabre/event)   >= 2.0
+BuildRequires:  php-composer(sabre/xml)     >= 1.0
+BuildRequires:  php-composer(sabre/http)    >= 4.0
+BuildRequires:  php-composer(sabre/uri)     >= 1.0
 BuildRequires:  php-dom
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
@@ -53,8 +59,10 @@ BuildRequires:  php-pdo_sqlite
 # From composer.json,    "require": {
 #        "php": ">=5.4.1",
 #        "sabre/vobject": "^3.3.4",
-#        "sabre/event" : "^2.0.0",
-#        "sabre/http" : "^3.0.0",
+#        "sabre/event" : "~2.0",
+#        "sabre/xml"  : "~1.0",
+#        "sabre/http" : "~4.0",
+#        "sabre/uri" : "~1.0",
 #        "ext-dom": "*",
 #        "ext-pcre": "*",
 #        "ext-spl": "*",
@@ -67,10 +75,14 @@ BuildRequires:  php-pdo_sqlite
 Requires:       php(language) >= 5.4.1
 Requires:       php-composer(sabre/vobject) >= 3.3.4
 Requires:       php-composer(sabre/vobject) <  4
-Requires:       php-composer(sabre/event)   >= 2.0.0
-Requires:       php-composer(sabre/event)   <  2.1
-Requires:       php-composer(sabre/http)    >= 3.0.0
-Requires:       php-composer(sabre/http)    <  3.1
+Requires:       php-composer(sabre/event)   >= 2.0
+Requires:       php-composer(sabre/event)   <  3
+Requires:       php-composer(sabre/xml)     >= 1.0
+Requires:       php-composer(sabre/xml)     <  2
+Requires:       php-composer(sabre/http)    >= 4.0
+Requires:       php-composer(sabre/http)    <  5
+Requires:       php-composer(sabre/uri)     >= 1.0
+Requires:       php-composer(sabre/uri)     <  2
 Requires:       php-dom
 Requires:       php-pcre
 Requires:       php-spl
@@ -131,14 +143,11 @@ mkdir -p %{buildroot}%{_datadir}/php
 cp -pr lib %{buildroot}%{_datadir}/php/Sabre
 
 
-
 %check
 %if %{with_tests}
 %if 0%{?rhel} == 5
 sed -e 's/testMove/SKIP_testMove/' \
     -i tests/Sabre/DAV/PropertyStorage/Backend/AbstractPDOTest.php
-sed -e 's/testCalendarQueryReportWindowsPhone/SKIP_testCalendarQueryReportWindowsPhone/' \
-    -i tests/Sabre/CalDAV/PluginTest.php
 %endif
 
 : Fix bootstrap
@@ -149,7 +158,7 @@ sed -e 's:@BUILDROOT@:%{buildroot}:' -i bootstrap.php
 %{_bindir}/phpunit --verbose
 
 if which php70; then
-   php70 %{_bindir}/phpunit --verbose || : ignore test results
+   php70 %{_bindir}/phpunit --verbose
 fi
 %else
 : Skip upstream test suite
@@ -170,6 +179,12 @@ fi
 
 
 %changelog
+* Thu Apr  7 2016 Remi Collet <remi@fedoraproject.org> - 3.0.9-1
+- update to 3.0.9
+- add dependency on sabre/xml
+- add dependency on sabre/uri
+- raise dependency on sabre/http >= 4
+
 * Tue Mar 22 2016 Remi Collet <remi@fedoraproject.org> - 2.1.10-1
 - update to 2.1.10
 

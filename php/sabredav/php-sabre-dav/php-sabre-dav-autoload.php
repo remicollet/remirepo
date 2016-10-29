@@ -27,3 +27,5 @@ $fedoraClassLoader->addPrefixes(array(
 require_once $vendorDir . '/Sabre/Event/autoload.php';
 require_once $vendorDir . '/Sabre/HTTP/autoload.php';
 require_once $vendorDir . '/Sabre/VObject/autoload.php';
+require_once $vendorDir . '/Sabre/Xml/autoload.php';
+require_once $vendorDir . '/Sabre/Uri/autoload.php';
