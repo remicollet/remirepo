@@ -15,7 +15,7 @@
 Name:           php-%{gh_project}
 Summary:        Functions for making sense out of URIs
 Version:        1.1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 License:        BSD
@@ -33,7 +33,7 @@ BuildRequires:  php(language) > 5.4.7
 BuildRequires:  php-pcre
 BuildRequires:  php-composer(phpunit/phpunit)
 # Autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 %endif
 
 # From composer.json, "require" : {
@@ -42,7 +42,7 @@ Requires:       php(language) > 5.4.7
 # From phpcompatinfo report for version 1.1.0
 Requires:       php-pcre
 # Autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(sabre/uri) = %{version}
 
@@ -126,6 +126,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 29 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-2
+- switch from symfony/class-loader to fedora/autoloader
+
 * Thu Oct 27 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - update to 1.1.1
 
