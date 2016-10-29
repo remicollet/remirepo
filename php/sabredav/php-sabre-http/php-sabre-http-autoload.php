@@ -17,5 +17,10 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('Sabre\\HTTP\\', dirname(dirname(__DIR__)));
 
+// Functions
+require_once __DIR__ . '/functions.php';
+
 // dependencies
 require_once $vendorDir . '/Sabre/Event/autoload.php';
+require_once $vendorDir . '/Sabre/Uri/autoload.php';
+
