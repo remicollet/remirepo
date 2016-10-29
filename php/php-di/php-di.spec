@@ -12,8 +12,8 @@
 
 %global github_owner     PHP-DI
 %global github_name      PHP-DI
-%global github_version   5.3.0
-%global github_commit    854a6d8f54e2146f0a34f0a28f0adea688b634a3
+%global github_version   5.4.0
+%global github_commit    e348393488fa909e4bc0707ba5c9c44cd602a1cb
 
 %global composer_vendor  php-di
 %global composer_project php-di
@@ -32,8 +32,8 @@
 # "mnapoli/phpunit-easymock": "~0.2.0"
 %global phpunit_easymock_min_ver 0.2.0
 %global phpunit_easymock_max_ver 1.0
-# "php-di/invoker": "^1.1.1"
-%global di_invoker_min_ver 1.1.1
+# "php-di/invoker": "^1.3.2"
+%global di_invoker_min_ver 1.3.2
 %global di_invoker_max_ver 2.0
 # "php-di/phpdoc-reader": "^2.0.1"
 %global di_phpdoc_reader_min_ver 2.0.1
@@ -75,7 +75,7 @@ BuildRequires: php-composer(ocramius/proxy-manager)              >= %{proxy_mana
 BuildRequires: php-composer(php-di/invoker)                      >= %{di_invoker_min_ver}
 BuildRequires: php-composer(php-di/phpdoc-reader)                >= %{di_phpdoc_reader_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 5.2.2)
+## phpcompatinfo (computed from version 5.4.0)
 BuildRequires: php-json
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -92,7 +92,7 @@ Requires:      php-composer(php-di/invoker)                      >= %{di_invoker
 Requires:      php-composer(php-di/invoker)                      <  %{di_invoker_max_ver}
 Requires:      php-composer(php-di/phpdoc-reader)                >= %{di_phpdoc_reader_min_ver}
 Requires:      php-composer(php-di/phpdoc-reader)                <  %{di_phpdoc_reader_max_ver}
-# phpcompatinfo (computed from version 5.2.2)
+# phpcompatinfo (computed from version 5.4.0)
 Requires:      php-json
 Requires:      php-pcre
 Requires:      php-reflection
@@ -252,6 +252,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 28 2016 Remi Collet <remi@fedoraproject.org> - 5.4.0-1
+- update to 5.4.0
+- raise dependency on php-di/invoker >= 1.3.2
+
 * Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 5.3.0-1
 - update to 5.3.0
 - raise dependency on php >=5.5.0
