@@ -20,7 +20,7 @@
 Name:           php-%{gh_project}
 Summary:        XML library that you may not hate
 Version:        1.5.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 License:        BSD
@@ -43,7 +43,7 @@ BuildRequires:  php-spl
 #        "phpunit/phpunit" : "*"
 BuildRequires:  php-composer(phpunit/phpunit)
 # Autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 %endif
 
 # From composer.json, "require" : {
@@ -63,7 +63,7 @@ Requires:       php-composer(sabre/uri) <  3
 Requires:       php-pcre
 Requires:       php-spl
 # Autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(sabre/xml) = %{version}
 
@@ -100,9 +100,7 @@ cat << 'EOF' | tee vendor/autoload.php
 require_once '%{buildroot}%{_datadir}/php/Sabre/Xml/autoload.php';
 // Tests
 require_once '%{_datadir}/php/Symfony/Component/ClassLoader/Psr4ClassLoader.php';
-$fedoraPsr4ClassLoader = new \Symfony\Component\ClassLoader\Psr4ClassLoader();
-$fedoraPsr4ClassLoader->register(true);
-$fedoraPsr4ClassLoader->addPrefix('Sabre\\Xml\\', dirname(__DIR__).'/tests/Sabre/Xml/');
+\Fedora\Autoloader\Autoload::addPsr4('Sabre\\Xml\\', dirname(__DIR__).'/tests/Sabre/Xml/');
 EOF
 cd tests
 
@@ -142,6 +140,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 29 2016 Remi Collet <remi@fedoraproject.org> - 1.5.0-2
+- switch from symfony/class-loader to fedora/autoloader
+
 * Mon Oct 10 2016 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
 - update to 1.5.0
 - raise dependency on PHP 5.5
