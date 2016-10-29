@@ -16,13 +16,13 @@
 Name:           php-%{gh_project}
 Summary:        Library for dealing with http requests and responses
 Version:        4.2.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 License:        BSD
 Group:          Development/Libraries
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
-Source1:        %{name}-autoload-dev.php
+Source1:        %{name}-autoload.php
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -40,7 +40,7 @@ BuildRequires:  php-pcre
 BuildRequires:  php-spl
 BuildRequires:  php-xml
 # Autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 BuildRequires:  php-composer(sabre/event) >= 2.0.2
 %endif
 
@@ -66,7 +66,7 @@ Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-xml
 # Autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 Requires:       php-composer(sabre/event) >= 2.0.2
 
 # Was split from php-sabre-dav in version 1.9
@@ -119,17 +119,26 @@ cp -pr lib %{buildroot}%{_datadir}/php/Sabre/HTTP
 
 %check
 %if %{with_tests}
-: Run upstream test suite against installed library
 cd tests
+: Run upstream test suite against installed library
+# remirepo:11
+ret=0
+run=0
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap=%{buildroot}%{_datadir}/php/Sabre/HTTP/autoload.php || ret=1
+   run=1
+fi
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap=%{buildroot}%{_datadir}/php/Sabre/HTTP/autoload.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/phpunit \
   --bootstrap=%{buildroot}%{_datadir}/php/Sabre/HTTP/autoload.php \
   --verbose
-
-if which php70; then
-  php70 %{_bindir}/phpunit \
-    --bootstrap=%{buildroot}%{_datadir}/php/Sabre/HTTP/autoload.php \
-    --verbose
+# remirepo:2
 fi
+exit $ret
 %else
 : Skip upstream test suite
 %endif
@@ -149,6 +158,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 29 2016 Remi Collet <remi@fedoraproject.org> - 4.2.1-2
+- switch from symfony/class-loader to fedora/autoloader
+
 * Fri Mar 11 2016 Remi Collet <remi@fedoraproject.org> - 4.2.1-1
 - update to 4.2.1
 - add dependency on sabre/uri
