@@ -9,6 +9,7 @@ require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
 require_once __DIR__ . '/Deserializer/functions.php';
 require_once __DIR__ . '/Serializer/functions.php';
 
-// Dependencies
-require_once '/usr/share/php/Sabre/Uri/autoload.php';
+\Fedora\Autoloader\Dependencies::required(array(
+	'/usr/share/php/Sabre/Uri/autoload.php',
+));
 

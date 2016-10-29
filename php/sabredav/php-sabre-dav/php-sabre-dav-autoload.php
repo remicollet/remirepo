@@ -1,31 +1,18 @@
 <?php
-/**
- * Autoloader for sabre/dav and its dependencies
- */
+/* Autoloader for sabre/dav and its dependencies */
 
-$vendorDir = '/usr/share/php';
+require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
 
-// Use Symfony autoloader
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once $vendorDir . '/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+\Fedora\Autoloader\Autoload::addPsr4('Sabre\\DAV\\',     dirname(__DIR__) . '/DAV');
+\Fedora\Autoloader\Autoload::addPsr4('Sabre\\DAVACL\\',  dirname(__DIR__) . '/DAVACL');
+\Fedora\Autoloader\Autoload::addPsr4('Sabre\\CalDAV\\',  dirname(__DIR__) . '/CalDAV');
+\Fedora\Autoloader\Autoload::addPsr4('Sabre\\CardDAV\\', dirname(__DIR__) . '/CardDAV');
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$thisdir = dirname(dirname(__DIR__));
-$fedoraClassLoader->addPrefixes(array(
-  'Sabre\\DAV\\'     => $thisdir,
-  'Sabre\\DAVACL\\'  => $thisdir,
-  'Sabre\\CalDAV\\'  => $thisdir,
-  'Sabre\\CardDAV\\' => $thisdir,
+\Fedora\Autoloader\Dependencies::required(array(
+	'/usr/share/php/Sabre/Event/autoload.php',
+	'/usr/share/php/Sabre/HTTP/autoload.php',
+	'/usr/share/php/Sabre/VObject/autoload.php',
+	'/usr/share/php/Sabre/Xml/autoload.php',
+	'/usr/share/php/Sabre/Uri/autoload.php',
 ));
 
-// dependencies
-require_once $vendorDir . '/Sabre/Event/autoload.php';
-require_once $vendorDir . '/Sabre/HTTP/autoload.php';
-require_once $vendorDir . '/Sabre/VObject/autoload.php';
-require_once $vendorDir . '/Sabre/Xml/autoload.php';
-require_once $vendorDir . '/Sabre/Uri/autoload.php';

@@ -19,16 +19,16 @@
 Name:           php-%{gh_project}
 Summary:        WebDAV Framework for PHP
 Version:        3.0.9
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 License:        BSD
 Group:          Development/Libraries
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
-Source1:        %{name}-autoload-dev.php
+Source1:        %{name}-autoload.php
 
 # replace composer autoloader
-Patch0:         %{name}-autoload-dev.patch
+Patch0:         %{name}-autoload.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -52,7 +52,7 @@ BuildRequires:  php-libxml
 BuildRequires:  php-curl
 BuildRequires:  php-pdo
 # Autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 BuildRequires:  php-pdo_sqlite
 %endif
 
@@ -98,7 +98,7 @@ Requires:       php-libxml
 Requires:       php-curl
 Requires:       php-pdo
 # Autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(sabre/dav) = %{version}
 
@@ -121,6 +121,8 @@ Feature list:
 * CalDAV (tested with Evolution, iCal, iPhone and Lightning).
 * CardDAV (tested with OS/X addressbook, the iOS addressbook and Evolution).
 * Over 97% unittest code coverage.
+
+Autoloader: %{_datadir}/php/Sabre/DAV/autoload.php
 
 
 %prep
@@ -155,11 +157,23 @@ cd tests
 sed -e 's:@BUILDROOT@:%{buildroot}:' -i bootstrap.php
 
 : Run upstream test suite against installed library
-%{_bindir}/phpunit --verbose
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose
+# remirepo:12
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php70; then
+   # PHP 7.1, 1 failure: Sabre\DAV\ServerEventsTest::testMethod
+   php70 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Skip upstream test suite
 %endif
@@ -179,6 +193,9 @@ fi
 
 
 %changelog
+* Sat Oct 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.9-3
+- switch from symfony/class-loader to fedora/autoloader
+
 * Thu Apr  7 2016 Remi Collet <remi@fedoraproject.org> - 3.0.9-1
 - update to 3.0.9
 - add dependency on sabre/xml

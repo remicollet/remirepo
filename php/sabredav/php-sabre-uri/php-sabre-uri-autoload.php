@@ -7,3 +7,4 @@ require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
 
 // Functions
 require_once __DIR__ . '/functions.php';
+

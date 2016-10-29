@@ -47,6 +47,8 @@ Provides:       php-composer(sabre/event) = %{version}
 A lightweight library for event management in PHP.
 It's design is inspired by Node.js's EventEmitter. sabre/event requires PHP 5.4.
 
+Autoloader: %{_datadir}/php/Sabre/Event/autoload.php
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}

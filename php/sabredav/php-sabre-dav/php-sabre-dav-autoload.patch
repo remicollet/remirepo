@@ -11,7 +11,7 @@ diff -up tests/bootstrap.php.orig tests/bootstrap.php
  
  // SabreDAV tests auto loading
 -$autoLoader->add('Sabre\\', __DIR__);
-+$fedoraClassLoader->addPrefix('Sabre\\', __DIR__);
++\Fedora\Autoloader\Autoload::addPsr0('Sabre\\', __DIR__);
 +
  // VObject tests auto loading
 -$autoLoader->addPsr4('Sabre\\VObject\\',__DIR__ . '/../vendor/sabre/vobject/tests/VObject');

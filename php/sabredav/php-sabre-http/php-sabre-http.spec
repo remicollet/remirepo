@@ -98,6 +98,8 @@ For output:
 What this library provides, is a Request object, and a Response object.
 The objects are extendable and easily mockable.
 
+Autoloader: %{_datadir}/php/Sabre/HTTP/autoload.php
+
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
