@@ -15,7 +15,7 @@
 Name:           php-%{gh_project}
 Summary:        Lightweight library for event-based programming
 Version:        2.0.2
-Release:        1%{?dist}
+Release:        3%{?dist}
 
 URL:            http://sabre.io/event
 License:        BSD
@@ -29,7 +29,7 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.4.1
 BuildRequires:  php-composer(phpunit/phpunit)
 # Autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 %endif
 
 # From composer.json, "require": {
@@ -38,7 +38,7 @@ Requires:       php(language) >= 5.4.1
 # From phpcompatinfo report for version 2.0.2
 Requires:       php-spl
 # Autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(sabre/event) = %{version}
 
@@ -69,9 +69,24 @@ cp -pr lib %{buildroot}%{_datadir}/php/Sabre/Event
 %check
 %if %{with_tests}
 : Run upstream test suite against installed library
-phpunit \
+# remirepo:11
+ret=0
+run=0
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap=%{buildroot}%{_datadir}/php/Sabre/Event/autoload.php || ret=1
+   run=1
+fi
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap=%{buildroot}%{_datadir}/php/Sabre/Event/autoload.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit \
   --bootstrap=%{buildroot}%{_datadir}/php/Sabre/Event/autoload.php \
   --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Skip upstream test suite
 %endif
@@ -91,6 +106,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 29 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-3
+- switch from symfony/class-loader to fedora/autoloader
+
 * Mon Jul 20 2015 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - update to 2.0.2
 - add autoloader
