@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #156 ui version 1.0.2 ] {
+Extension [ <persistent> extension #156 ui version 1.0.3 ] {
 
   - Functions {
     Function [ <internal:ui> function UI\Draw\Text\Font\fontFamilies ] {
@@ -8,7 +8,121 @@ Extension [ <persistent> extension #156 ui version 1.0.2 ] {
     }
   }
 
-  - Classes [42] {
+  - Classes [44] {
+    Class [ <internal:ui> class UI\Exception\InvalidArgumentException extends InvalidArgumentException implements Throwable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:ui> class UI\Exception\RuntimeException extends RuntimeException implements Throwable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        }
+      }
+    }
+
     Class [ <internal:ui> class UI\App ] {
 
       - Constants [2] {
@@ -259,7 +373,8 @@ Extension [ <persistent> extension #156 ui version 1.0.2 ] {
       - Static methods [0] {
       }
 
-      - Properties [0] {
+      - Properties [1] {
+        Property [ <default> protected $controls ]
       }
 
       - Methods [27] {
@@ -464,7 +579,8 @@ Extension [ <persistent> extension #156 ui version 1.0.2 ] {
       - Static methods [0] {
       }
 
-      - Properties [0] {
+      - Properties [1] {
+        Property [ <default> protected $controls ]
       }
 
       - Methods [14] {
@@ -489,6 +605,7 @@ Extension [ <persistent> extension #156 ui version 1.0.2 ] {
             Parameter #1 [ <required> UI\Control $control ]
             Parameter #2 [ <optional> boolean $stretchy ]
           }
+          - Return [ integer ]
         }
 
         Method [ <internal:ui> public method delete ] {
@@ -496,6 +613,7 @@ Extension [ <persistent> extension #156 ui version 1.0.2 ] {
           - Parameters [1] {
             Parameter #0 [ <required> integer $index ]
           }
+          - Return [ boolean ]
         }
 
         Method [ <internal:ui, inherits UI\Control> public method getParent ] {
@@ -584,7 +702,8 @@ Extension [ <persistent> extension #156 ui version 1.0.2 ] {
       - Static methods [0] {
       }
 
-      - Properties [0] {
+      - Properties [1] {
+        Property [ <default> protected $controls ]
       }
 
       - Methods [13] {
@@ -695,7 +814,8 @@ Extension [ <persistent> extension #156 ui version 1.0.2 ] {
       - Static methods [0] {
       }
 
-      - Properties [0] {
+      - Properties [1] {
+        Property [ <default> protected $controls ]
       }
 
       - Methods [16] {
@@ -705,6 +825,7 @@ Extension [ <persistent> extension #156 ui version 1.0.2 ] {
             Parameter #0 [ <required> string $name ]
             Parameter #1 [ <required> UI\Control $control ]
           }
+          - Return [ integer ]
         }
 
         Method [ <internal:ui> public method delete ] {
@@ -712,6 +833,7 @@ Extension [ <persistent> extension #156 ui version 1.0.2 ] {
           - Parameters [1] {
             Parameter #0 [ <required> integer $index ]
           }
+          - Return [ boolean ]
         }
 
         Method [ <internal:ui> public method pages ] {
@@ -728,6 +850,7 @@ Extension [ <persistent> extension #156 ui version 1.0.2 ] {
             Parameter #1 [ <required> boolean $before ]
             Parameter #2 [ <required> UI\Control $control ]
           }
+          - Return [ integer ]
         }
 
         Method [ <internal:ui> public method setMargin ] {
@@ -826,7 +949,8 @@ Extension [ <persistent> extension #156 ui version 1.0.2 ] {
       - Static methods [0] {
       }
 
-      - Properties [0] {
+      - Properties [1] {
+        Property [ <default> protected $controls ]
       }
 
       - Methods [16] {
@@ -850,6 +974,7 @@ Extension [ <persistent> extension #156 ui version 1.0.2 ] {
             Parameter #0 [ <required> UI\Control $control ]
             Parameter #1 [ <optional> boolean $stretchy ]
           }
+          - Return [ integer ]
         }
 
         Method [ <internal:ui> public method delete ] {
@@ -857,6 +982,7 @@ Extension [ <persistent> extension #156 ui version 1.0.2 ] {
           - Parameters [1] {
             Parameter #0 [ <required> integer $index ]
           }
+          - Return [ boolean ]
         }
 
         Method [ <internal:ui> public method setPadded ] {
@@ -1638,7 +1764,8 @@ Extension [ <persistent> extension #156 ui version 1.0.2 ] {
       - Static methods [0] {
       }
 
-      - Properties [0] {
+      - Properties [1] {
+        Property [ <default> protected $controls ]
       }
 
       - Methods [16] {
@@ -3116,12 +3243,12 @@ Extension [ <persistent> extension #156 ui version 1.0.2 ] {
       - Properties [0] {
       }
 
-      - Methods [5] {
+      - Methods [8] {
         Method [ <internal:ui, ctor> public method __construct ] {
 
           - Parameters [7] {
             Parameter #0 [ <required> integer $type ]
-            Parameter #1 [ <optional> UI\Draw\Color $color ]
+            Parameter #1 [ <optional> UI\Draw\Color or NULL $color ]
             Parameter #2 [ <optional> float $X0 ]
             Parameter #3 [ <optional> float $Y0 ]
             Parameter #4 [ <optional> float $X1 ]
@@ -3156,6 +3283,33 @@ Extension [ <persistent> extension #156 ui version 1.0.2 ] {
           - Parameters [0] {
           }
           - Return [ UI\Draw\Color ]
+        }
+
+        Method [ <internal:ui> public method addStop ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> float $position ]
+            Parameter #1 [ <required> UI\Draw\Color $color ]
+          }
+          - Return [ integer ]
+        }
+
+        Method [ <internal:ui> public method delStop ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> integer $index ]
+          }
+          - Return [ integer ]
+        }
+
+        Method [ <internal:ui> public method setStop ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> integer $index ]
+            Parameter #1 [ <required> float $position ]
+            Parameter #2 [ <required> UI\Draw\Color $color ]
+          }
+          - Return [ boolean ]
         }
       }
     }
@@ -3368,7 +3522,7 @@ Extension [ <persistent> extension #156 ui version 1.0.2 ] {
       - Properties [0] {
       }
 
-      - Methods [1] {
+      - Methods [6] {
         Method [ <internal:ui, ctor> public method __construct ] {
 
           - Parameters [5] {
@@ -3378,6 +3532,41 @@ Extension [ <persistent> extension #156 ui version 1.0.2 ] {
             Parameter #3 [ <optional> integer $italic ]
             Parameter #4 [ <optional> integer $stretch ]
           }
+        }
+
+        Method [ <internal:ui> public method getFamily ] {
+
+          - Parameters [0] {
+          }
+          - Return [ string ]
+        }
+
+        Method [ <internal:ui> public method getSize ] {
+
+          - Parameters [0] {
+          }
+          - Return [ float ]
+        }
+
+        Method [ <internal:ui> public method getWeight ] {
+
+          - Parameters [0] {
+          }
+          - Return [ integer ]
+        }
+
+        Method [ <internal:ui> public method getItalic ] {
+
+          - Parameters [0] {
+          }
+          - Return [ integer ]
+        }
+
+        Method [ <internal:ui> public method getStretch ] {
+
+          - Parameters [0] {
+          }
+          - Return [ integer ]
         }
       }
     }
@@ -3473,12 +3662,47 @@ Extension [ <persistent> extension #156 ui version 1.0.2 ] {
       - Properties [0] {
       }
 
-      - Methods [1] {
+      - Methods [6] {
         Method [ <internal:ui, ctor> public method __construct ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> UI\Draw\Text\Font\Descriptor $descriptor ]
           }
+        }
+
+        Method [ <internal:ui> public method getAscent ] {
+
+          - Parameters [0] {
+          }
+          - Return [ float ]
+        }
+
+        Method [ <internal:ui> public method getDescent ] {
+
+          - Parameters [0] {
+          }
+          - Return [ float ]
+        }
+
+        Method [ <internal:ui> public method getLeading ] {
+
+          - Parameters [0] {
+          }
+          - Return [ float ]
+        }
+
+        Method [ <internal:ui> public method getUnderlinePosition ] {
+
+          - Parameters [0] {
+          }
+          - Return [ float ]
+        }
+
+        Method [ <internal:ui> public method getUnderlineThickness ] {
+
+          - Parameters [0] {
+          }
+          - Return [ float ]
         }
       }
     }
