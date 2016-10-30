@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    baa7112bef3b86c65fcfaae9a7a50436e3902b41
+%global gh_commit    78a820c16d13f593303511461eefa939502fb2de
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150717
 %global gh_owner     FriendsOfPHP
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-cs-fixer
-Version:        1.12.2
+Version:        1.12.3
 Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A tool to automatically fix PHP code style
 
@@ -55,7 +55,7 @@ BuildRequires:  php-xml
 #        "satooshi/php-coveralls": "^1.0"
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.5
 # Autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 %endif
 
 # From composer.json,     "require": {
@@ -87,7 +87,7 @@ Requires:       php-phar
 Requires:       php-spl
 Requires:       php-xml
 # Autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(friendsofphp/php-cs-fixer) = %{version}
 
@@ -167,6 +167,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct 30 2016 Remi Collet <remi@fedoraproject.org> - 1.12.3-1
+- update to 1.12.3
+- switch from symfony/class-loader to fedora/autoloader
+
 * Tue Sep 27 2016 Remi Collet <remi@fedoraproject.org> - 1.12.2-1
 - update to 1.12.2
 

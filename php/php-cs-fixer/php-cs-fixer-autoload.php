@@ -1,20 +1,12 @@
 <?php
 /* Autoloader for friendsofphp/php-cs-fixer and its dependencies */
 
-$vendorDir = '/usr/share/php';
-// Use Symfony autoloader
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once $vendorDir . '/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
+\Fedora\Autoloader\Autoload::addPsr4('Symfony\\CS\\', __DIR__);
 
-$fedoraClassLoader->addPrefix('Symfony\\CS\\', dirname(dirname(__DIR__)));
-
-// Dependencies
-require_once $vendorDir . '/Symfony/Component/autoload.php';
-require_once $vendorDir . '/SebastianBergmann/Diff/autoload.php';
+\Fedora\Autoloader\Dependencies::required(array(
+	'/usr/share/php/Symfony/Component/autoload.php',
+	'/usr/share/php/SebastianBergmann/Diff/autoload.php',
+));
 
