@@ -23,7 +23,7 @@
 
 Name:           php-sebastian-resource-operations
 Version:        1.0.0
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Provides a list of PHP built-in functions that operate on resources
 
@@ -38,7 +38,7 @@ Source1:        https://raw.githubusercontent.com/remicollet/resource-operations
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.6
-BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php-fedora-autoloader-devel
 %if %{with_tests}
 BuildRequires:  %{_bindir}/phpunit
 %endif
@@ -46,6 +46,8 @@ BuildRequires:  %{_bindir}/phpunit
 # from composer.json
 #        "php": ">=5.6.0"
 Requires:       php(language) >= 5.6
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 # from phpcompatinfo report for version 1.0.0: nothing
 
 Provides:       php-composer(sebastian/resource-operations) = %{version}
@@ -64,7 +66,7 @@ cp %{SOURCE1} tests/
 
 %build
 # Generate the Autoloader
-phpab --output src/autoload.php src
+phpab --template fedora --output src/autoload.php src
 
 
 %install
@@ -75,9 +77,26 @@ cp -pr src %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}
 
 %check
 %if %{with_tests}
-%{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
-%{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php tests
-: No test suite
+: Run upstream test suite
+# remirepo:13
+run=0
+ret=0
+if which php56; then
+  php56 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
+  %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php tests || ret=1
+   run=1
+fi
+if which php71; then
+  php71 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
+  %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php tests || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/php -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
+%{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php tests --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : bootstrap build with test suite disabled
 %endif
@@ -97,6 +116,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 31 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- switch to fedora/autoloader
+
 * Fri Oct  2 2015 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - Update to 1.0.0 (no change)
 
