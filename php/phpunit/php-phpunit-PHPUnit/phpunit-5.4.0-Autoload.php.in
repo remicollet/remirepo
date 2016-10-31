@@ -12,8 +12,11 @@ if (!class_exists('Fedora\\Autoloader\\Autoload', false)) {
     __DIR__
 );
 
+/* don't use symfony autoloader which pull some unwanted stuff (polyfill) */
+$vendorDir = stream_resolve_include_path('Symfony/Component/Yaml/Yaml.php');
+\Fedora\Autoloader\Autoload::addPsr4('Symfony\\Component\\', dirname(dirname($vendorDir)));
+
 /* Required */
-require_once 'Symfony/Component/autoload.php';
 require_once 'File/Iterator/Autoload.php';
 require_once 'SebastianBergmann/CodeCoverage/autoload.php';
 require_once 'PHP/Timer/Autoload.php';

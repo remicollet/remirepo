@@ -18,7 +18,7 @@
 %global pear_channel pear.phpunit.de
 %global major        5.6
 %global minor        2
-%global specrel      1
+%global specrel      2
 
 Name:           php-phpunit-PHPUnit
 Version:        %{major}.%{minor}
@@ -237,6 +237,9 @@ fi
 
 
 %changelog
+* Mon Oct 31 2016 Remi Collet <remi@fedoraproject.org> - 5.6.2-2
+- fix autoloader (don't use symfony one for symfony components)
+
 * Tue Oct 25 2016 Remi Collet <remi@fedoraproject.org> - 5.6.2-1
 - update to 5.6.2 (no change)
 - switch to fedora/autoloader
