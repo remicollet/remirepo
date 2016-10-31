@@ -14,7 +14,7 @@
 
 Name:           php-andrewsville-php-token-reflection
 Version:        1.4.0
-Release:        2%{?dist}
+Release:        5%{?dist}
 Summary:        Library emulating the PHP internal reflection
 
 Group:          Development/Libraries
@@ -28,8 +28,9 @@ Source1:        makesrc.sh
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3
+# Autoloader
+BuildRequires:  php-composer(fedora/autoloader)
 %if %{with_tests}
-BuildRequires:  %{_bindir}/phpab
 BuildRequires:  %{_bindir}/phpunit
 %endif
 
@@ -43,6 +44,8 @@ Requires:       php-pcre
 Requires:       php-phar
 Requires:       php-reflection
 Requires:       php-spl
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(andrewsville/php-token-reflection) = %{version}
 
@@ -50,12 +53,22 @@ Provides:       php-composer(andrewsville/php-token-reflection) = %{version}
 %description
 This library emulates the PHP reflection model using the tokenized PHP source.
 
+Autoloader: %{_datadir}/php/TokenReflection/autoload.php
+
+
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
 
 %build
-# Nothing
+cat << 'EOF' | tee TokenReflection/autoload.php
+<?php
+/* Autoloader for andrewsville/php-token-reflection and its dependencies */
+
+require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
+
+\Fedora\Autoloader\Autoload::addPsr4('TokenReflection\\', __DIR__);
+EOF
 
 
 %install
@@ -66,11 +79,8 @@ cp -pr TokenReflection %{buildroot}%{_datadir}/php/TokenReflection
 
 %if %{with_tests}
 %check
-: generate the bootstrap/autoloader
-%{_bindir}/phpab --output TokenReflection/bs.php TokenReflection
-
 : run test suite
-%{_bindir}/phpunit --bootstrap TokenReflection/bs.php \
+%{_bindir}/phpunit --bootstrap %{buildroot}%{_datadir}/php/TokenReflection/autoload.php \
   tests || : results ignored for now, known upstream issues
 %endif
 
@@ -88,6 +98,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 31 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-5
+- add autoloader using fedora/autoloader
+
 * Mon May  4 2015 Remi Collet <remi@fedoraproject.org> - 1.4.0-2
 - add mksrc.sh as source1, per review comment #1207591
 
