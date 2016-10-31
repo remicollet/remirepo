@@ -21,7 +21,7 @@
 
 Name:           php-bartlett-umlwriter
 Version:        1.1.0
-%global specrel 3
+%global specrel 4
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Create UML class diagrams from your PHP source
 
@@ -45,8 +45,9 @@ BuildRequires:  php-composer(sebastian/version)                 >= 1.0
 BuildRequires:  php-composer(bartlett/php-reflect)              >= 3.0
 BuildRequires:  php-composer(andrewsville/php-token-reflection) >= 1.4
 # For our patch / autoloader
-BuildRequires:   php-composer(symfony/class-loader)
+BuildRequires:   php-composer(fedora/autoloader)
 BuildRequires:   php-bartlett-PHP-Reflect >= 3.1.1-3
+BuildRequires:   php-andrewsville-php-token-reflection >= 1.4.0-5
 %endif
 
 # From composer.json
@@ -75,8 +76,9 @@ Requires:       php-composer(bartlett/php-reflect)              <  5
 Requires:       php-composer(andrewsville/php-token-reflection) >= 1.4
 Requires:       php-composer(andrewsville/php-token-reflection) <  2
 # For our patch / autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 Requires:       php-bartlett-PHP-Reflect >= 3.1.1-3
+Requires:       php-andrewsville-php-token-reflection >= 1.4.0-5
 
 Provides:       php-composer(bartlett/umlwriter) = %{version}
 
@@ -117,15 +119,24 @@ install -D -p -m 755 bin/umlwriter  %{buildroot}%{_bindir}/umlwriter
 
 %check
 %if %{with_tests}
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap %{buildroot}%{_datadir}/php/Bartlett/UmlWriter/autoload.php || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap %{buildroot}%{_datadir}/php/Bartlett/UmlWriter/autoload.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/phpunit \
   --bootstrap %{buildroot}%{_datadir}/php/Bartlett/UmlWriter/autoload.php \
   --verbose
-
-if which php70; then
-  php70 %{_bindir}/phpunit \
-    --bootstrap %{buildroot}%{_datadir}/php/Bartlett/UmlWriter/autoload.php \
-    --verbose
+# remirepo:2
 fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -141,6 +152,9 @@ fi
 
 
 %changelog
+* Mon Oct 31 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-4
+- switch to fedora/autoloader
+
 * Mon Apr 18 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-3
 - allow sebastian/version 2.0
 - run test suite with both PHP 5 and 7 when available
