@@ -21,7 +21,7 @@
 
 Name:           php-sebastian-%{gh_project}
 Version:        1.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Looks up which function or method a line of code belongs to
 
 Group:          Development/Libraries
@@ -32,7 +32,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.6
-BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php-fedora-autoloader-devel
 %if %{with_tests}
 # from composer.json, "require-dev": {
 #        "phpunit/phpunit": "~5"
@@ -45,6 +45,8 @@ BuildRequires:  php-composer(phpunit/phpunit)
 Requires:       php(language) >= 5.6
 # From phpcompatinfo report for version 1.0.0
 Requires:       php-reflection
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(sebastian/%{gh_project}) = %{version}
 
@@ -61,7 +63,7 @@ Autoloader: %{php_home}/%{ns_name}/autoload.php
 
 %build
 # Generate the Autoloader
-phpab --output src/autoload.php src
+phpab --template fedora --output src/autoload.php src
 
 
 %install
@@ -78,13 +80,26 @@ cat << 'EOF' | tee vendor/autoload.php
 require 'SebastianBergmann/%{ns_name}/autoload.php';
 EOF
 
+: Run upstream test suite
+# remirepo:13
+run=0
+ret=0
+if which php56; then
+  php56 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
+  %{_bindir}/phpunit --verbose
+   run=1
+fi
+if which php71; then
+  php71 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
+  %{_bindir}/phpunit --verbose
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/php -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
 %{_bindir}/phpunit --verbose
-
-if which php70; then
-  php70 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
-  %{_bindir}/phpunit --verbose
+# remirepo:2
 fi
+exit $ret
 %else
 : bootstrap build with test suite disabled
 %endif
@@ -105,5 +120,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 31 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- switch to fedora/autoloader
+
 * Sat Feb 13 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package
