@@ -20,7 +20,7 @@ Version:        1.0.9
 %if 0%{?gh_date}
 Release:        5.%{gh_date}git%{gh_short}%{?dist}
 %else
-Release:        1%{?dist}
+Release:        2%{?dist}
 %endif
 License:        MIT
 Group:          Development/Libraries
@@ -29,7 +29,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-fedora-autoloader-devel
+BuildRequires:  php-composer(fedora/autoloader)
 # For tests
 BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php-composer(psr/log)
@@ -91,14 +91,13 @@ Autoloader: %{_datadir}/php/%{real_name}/autoload.php
 
 
 %build
-: Generate a simple classmap autoloader
-%{_bindir}/phpab \
-  --template fedora \
-  --output lib/%{real_name}/autoload.php \
-  lib/%{real_name}
-
 cat << 'EOF' | tee -a lib/%{real_name}/autoload.php
+<?php
+/* Autoloader for analog/analog and its dependencies */
 
+require_once '%{_datadir}/php/Fedora/Autoloader/autoload.php';
+
+\Fedora\Autoloader\Autoload::addPsr4('Analog\\', __DIR__);
 \Fedora\Autoloader\Dependencies::required(array(
         '%{_datadir}/php/Psr/Log/autoload.php',
 ));
@@ -154,7 +153,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Mon Oct 31 2016 Remi Collet <remi@fedoraproject.org> - 1.0.9-1
+* Mon Oct 31 2016 Remi Collet <remi@fedoraproject.org> - 1.0.9-2
 - update to 1.0.9
 - switch to fedora/autoloader
 
