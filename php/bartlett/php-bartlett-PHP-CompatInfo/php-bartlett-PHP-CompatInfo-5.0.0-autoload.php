@@ -3,21 +3,11 @@
  * Autoloader for bartlett/php-compatinfo and its dependencies
  */
 
-$vendorDir = '/usr/share/php';
+require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
 
-// Use Symfony autoloader
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once $vendorDir . '/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
-
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-$fedoraClassLoader->addPrefixes(array(
-    'Bartlett\\CompatInfo'                  => dirname(dirname(__DIR__)),
+\Fedora\Autoloader\Autoload::addPsr4('Bartlett\\CompatInfo\\', __DIR__);
+\Fedora\Autoloader\Dependencies::required(array(
+    '/usr/share/php/Bartlett/Reflect/autoload.php',
+    '/usr/share/php/Bartlett/CompatInfoDb/autoload.php',
 ));
 
-// Dependencies
-require_once $vendorDir . '/Bartlett/Reflect/autoload.php';
-require_once $vendorDir . '/Bartlett/CompatInfoDb/autoload.php';

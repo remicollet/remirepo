@@ -17,7 +17,7 @@
 
 Name:           php-bartlett-PHP-CompatInfo
 Version:        5.0.1
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -44,7 +44,7 @@ BuildRequires:  php-pdo_sqlite
 BuildRequires:  php-composer(bartlett/php-reflect) >= 4.0
 BuildRequires:  php-composer(bartlett/php-compatinfo-db) >= 1.0
 # For our patch / autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 %endif
 
 # From composer.json, "require"
@@ -89,7 +89,7 @@ Requires:       php-composer(symfony/console)      <  3
 #        "doctrine/cache": "Allow caching results, since bartlett/php-reflect 2.2"
 #        "bartlett/umlwriter": "Allow writing UML class diagrams (Graphviz or PlantUML)"
 # Required by autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       phpcompatinfo = %{version}
 Provides:       php-composer(bartlett/php-compatinfo) = %{version}
@@ -177,6 +177,9 @@ fi
 
 
 %changelog
+* Mon Oct 31 2016 Remi Collet <remi@fedoraproject.org> - 5.0.1-2
+- switch to fedora/autoloader
+
 * Wed Jul  6 2016 Remi Collet <remi@fedoraproject.org> - 5.0.1-1
 - update to 5.0.1
 
