@@ -23,7 +23,7 @@
 
 Name:           php-sebastian-%{gh_project}
 Version:        1.0.0
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Traverses array and object to enumerate all referenced objects
 
@@ -35,7 +35,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.6
-BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php-fedora-autoloader-devel
 %if %{with_tests}
 BuildRequires:  php-composer(sebastian/recursion-context) >= 1.0
 # From composer.json"require-dev": {
@@ -52,6 +52,8 @@ Requires:       php-composer(sebastian/recursion-context) <  2
 # from phpcompatinfo report for version 1.0.0:
 Requires:       php-reflection
 Requires:       php-spl
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(sebastian/%{gh_project}) = %{version}
 
@@ -71,7 +73,7 @@ Autoloader: %{php_home}/%{ns_vendor}/%{ns_project}/autoload.php
 # Generate the Autoloader, from composer.json "autoload": {
 #        "classmap": [
 #            "src/"
-phpab --output src/autoload.php src
+phpab --template fedora --output src/autoload.php src
 cat << 'EOF' | tee -a src/autoload.php
 // Dependencies
 require_once 'SebastianBergmann/RecursionContext/autoload.php';
@@ -86,13 +88,26 @@ cp -pr src %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}
 
 %check
 %if %{with_tests}
-%{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
-%{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php tests
-
-if which php70; then
-   php70 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
-   %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php tests
+: Run upstream test suite
+# remirepo:13
+run=0
+ret=0
+if which php56; then
+  php56 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
+  %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php tests || ret=1
+   run=1
 fi
+if which php71; then
+  php71 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
+  %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php tests || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/php -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
+%{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php tests --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : bootstrap build with test suite disabled
 %endif
@@ -111,6 +126,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 31 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- switch to fedora/autoloader
+
 * Wed Mar 23 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package
 

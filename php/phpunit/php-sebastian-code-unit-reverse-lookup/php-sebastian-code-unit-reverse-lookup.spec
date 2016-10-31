@@ -86,12 +86,12 @@ run=0
 ret=0
 if which php56; then
   php56 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
-  %{_bindir}/phpunit --verbose
+  %{_bindir}/phpunit --verbose || ret=1
    run=1
 fi
 if which php71; then
   php71 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
-  %{_bindir}/phpunit --verbose
+  %{_bindir}/phpunit --verbose || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
