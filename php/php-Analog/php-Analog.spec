@@ -16,7 +16,7 @@
 
 Name:           php-Analog
 Summary:        PHP micro logging package
-Version:        1.0.8
+Version:        1.0.9
 %if 0%{?gh_date}
 Release:        5.%{gh_date}git%{gh_short}%{?dist}
 %else
@@ -29,7 +29,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php-fedora-autoloader-devel
 # For tests
 BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php-composer(psr/log)
@@ -48,6 +48,8 @@ Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-xml
 # mongo is optional
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(analog/analog) = %{version}
 
@@ -91,13 +93,15 @@ Autoloader: %{_datadir}/php/%{real_name}/autoload.php
 %build
 : Generate a simple classmap autoloader
 %{_bindir}/phpab \
+  --template fedora \
   --output lib/%{real_name}/autoload.php \
   lib/%{real_name}
 
 cat << 'EOF' | tee -a lib/%{real_name}/autoload.php
 
-// Dependencies
-require_once '%{_datadir}/php/Psr/Log/autoload.php';
+\Fedora\Autoloader\Dependencies::required(array(
+        '%{_datadir}/php/Psr/Log/autoload.php',
+));
 EOF
 
 
@@ -150,6 +154,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 31 2016 Remi Collet <remi@fedoraproject.org> - 1.0.9-1
+- update to 1.0.9
+- switch to fedora/autoloader
+
 * Thu Aug 11 2016 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
 - update to 1.0.8
 
