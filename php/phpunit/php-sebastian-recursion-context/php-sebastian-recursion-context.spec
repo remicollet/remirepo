@@ -20,7 +20,7 @@
 
 Name:           php-sebastian-recursion-context
 Version:        1.0.2
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Recursively process PHP variables
 
 Group:          Development/Libraries
@@ -31,7 +31,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php-fedora-autoloader-devel
 %if %{with_tests}
 # from composer.json, "require-dev": {
 #        "phpunit/phpunit": "~4.4"
@@ -43,6 +43,8 @@ BuildRequires:  php-composer(phpunit/phpunit) >= 4.4
 Requires:       php(language) >= 5.3.3
 # from phpcompatinfo report for version 1.0.2
 Requires:       php-spl
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(sebastian/recursion-context) = %{version}
 
@@ -57,7 +59,7 @@ Provides functionality to recursively process PHP variables.
 
 %build
 # Generate the Autoloader
-phpab --output src/autoload.php src
+phpab --template fedora --output src/autoload.php src
 
 
 %install
@@ -68,13 +70,26 @@ cp -pr src %{buildroot}%{php_home}/SebastianBergmann/RecursionContext
 
 %check
 %if %{with_tests}
-%{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
-%{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/SebastianBergmann/RecursionContext/autoload.php
-
-if which php70; then
-  %{_bindir}/php70 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
-  %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/SebastianBergmann/RecursionContext/autoload.php
+: Run upstream test suite
+# remirepo:13
+run=0
+ret=0
+if which php56; then
+  php56 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
+  %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/SebastianBergmann/RecursionContext/autoload.php || ret=1
+   run=1
 fi
+if which php71; then
+  php71 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
+  %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/SebastianBergmann/RecursionContext/autoload.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/php -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
+%{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/SebastianBergmann/RecursionContext/autoload.php --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : bootstrap build with test suite disabled
 %endif
@@ -94,6 +109,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 31 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-3
+- switch to fedora/autoloader
+
 * Tue Dec  8 2015 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - update to 1.0.2
 - drop dependency on hash extension
