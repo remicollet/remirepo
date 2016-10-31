@@ -21,7 +21,7 @@
 
 Name:           php-bartlett-PHP-Reflect
 Version:        4.0.2
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Adds the ability to reverse-engineer PHP
 
@@ -58,7 +58,7 @@ BuildRequires:  php-composer(monolog/monolog)                   >= 1.10
 # For our patch / autoloader
 BuildRequires:  php-doctrine-collections                        >= 1.3.0-2
 BuildRequires:  php-doctrine-cache                              >= 1.4.1
-BuildRequires:  php-composer(symfony/class-loader)              >= 2.5
+BuildRequires:  php-composer(fedora/autoloader)
 %endif
 
 # From composer.json, "require": {
@@ -134,8 +134,7 @@ Suggests:       php-composer(monolog/monolog)
 %endif
 %endif
 # For our patch / autoloader
-Requires:       php-composer(symfony/class-loader)     >= 2.5
-Requires:       php-composer(symfony/class-loader)     <  3
+Requires:       php-composer(fedora/autoloader)
 Requires:       php-doctrine-collections               >= 1.3.0-2
 Requires:       php-doctrine-cache                     >= 1.4.1
 Requires:       php-PsrLog                             >= 1.0.0-8
@@ -220,6 +219,9 @@ fi
 
 
 %changelog
+* Mon Oct 31 2016 Remi Collet <remi@fedoraproject.org> - 4.0.2-2
+- switch to fedora/autoloader
+
 * Fri Sep 23 2016 Remi Collet <remi@fedoraproject.org> - 4.0.2-1
 - update to 4.0.2
 

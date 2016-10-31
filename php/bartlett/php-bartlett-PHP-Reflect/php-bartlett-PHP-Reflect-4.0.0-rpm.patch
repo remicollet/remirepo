@@ -95,10 +95,10 @@ diff -up ./src/Bartlett/Reflect/Console/Application.php.rpm ./src/Bartlett/Refle
          $this->release = $appVersion;
  
          $defaultAnalyser = (strcasecmp($appName, 'phpcompatinfo') === 0)
-diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
---- ./tests/bootstrap.php.rpm	2015-06-18 13:30:46.000000000 +0200
-+++ ./tests/bootstrap.php	2015-06-26 10:07:14.589844514 +0200
-@@ -1,11 +1,9 @@
+diff -up tests/bootstrap.php.rpm tests/bootstrap.php
+--- ./tests/bootstrap.php.rpm	2016-09-22 20:49:42.000000000 +0200
++++ ./tests/bootstrap.php	2016-10-31 18:03:22.837465194 +0100
+@@ -1,11 +1,10 @@
  <?php
  
  $baseDir   = dirname(__DIR__);
@@ -108,26 +108,23 @@ diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
 -$loader = require_once $vendorDir . '/autoload.php';
 -$loader->addClassMap(
 -    array(
++require_once 'Bartlett/Reflect/autoload.php';
 +$tab = array(
          'Bartlett\Tests\Reflect\Analyser\FooAnalyser'
              => __DIR__ . '/Analyser/FooAnalyser.php',
          'Bartlett\Tests\Reflect\Analyser\BarAnalyser'
-@@ -14,5 +12,17 @@ $loader->addClassMap(
+@@ -14,5 +13,13 @@ $loader->addClassMap(
              => __DIR__ . '/Model/GenericModelTest.php',
          'Bartlett\Tests\Reflect\Environment\YourLogger'
              => __DIR__ . '/Environment/YourLogger.php',
 -    )
  );
 +
-+require_once 'Bartlett/Reflect/autoload.php';
-+$fedoraClassLoader->addPrefix('Bartlett\\Tests\\Reflect', $baseDir . '/tests');
++\Fedora\Autoloader\Autoload::addClassMap($tab, '/');
++\Fedora\Autoloader\Autoload::addPsr4('Bartlett\\Tests\\Reflect', $baseDir . '/tests');
 +
 +// Needed when installed for 'Bartlett\CompatInfo\Analyser\CompatibilityAnalyser'
 +if (is_file('/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite')) {
 +   putenv("BARTLETT_COMPATINFO_DB=/usr/share/php-bartlett-PHP-CompatInfo/compatinfo.sqlite");
 +}
-+//print_r($fedoraClassLoader->getPrefixes());
 +
-+foreach ($tab as $class => $file) {
-+    require_once $file;
-+}
