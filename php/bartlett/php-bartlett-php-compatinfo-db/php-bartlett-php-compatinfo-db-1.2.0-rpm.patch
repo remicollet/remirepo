@@ -6,7 +6,7 @@ diff -up ./data/handleDB.php.rpm ./data/handleDB.php
   */
  
 -require_once dirname(__DIR__) . '/vendor/autoload.php';
-+require_once '/usr/share/php/Symfony/autoload.php';
++require_once '/usr/share/php/Symfony/Component/autoload.php';
 +require_once dirname(__DIR__) . '/src/Bartlett/CompatInfoDb/autoload.php';
  require_once __DIR__ . '/ReferenceCollection.php';
  

@@ -24,7 +24,7 @@
 
 Name:           php-%{c_vendor}-%{c_project}
 Version:        1.14.0
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Reference Database to be used with php-compatinfo library
 
@@ -54,7 +54,7 @@ BuildRequires:  php-spl
 BuildRequires:  php-json
 BuildRequires:  php-pdo_sqlite
 # For our patch / autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 # From composer.json, "require-dev": {
 #        "symfony/console": "~2.5",
 #        "psr/log": "~1.0",
@@ -89,7 +89,7 @@ Requires:       php-spl
 Requires:       php-json
 Requires:       php-pdo_sqlite
 # Required by autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(%{c_vendor}/%{c_project}) = %{version}
 # Extracted from bartlett/php-compatinfo 4
@@ -184,6 +184,9 @@ export BARTLETT_COMPATINFO_DB=%{buildroot}%{_datadir}/%{name}/compatinfo.sqlite
 
 
 %changelog
+* Mon Oct 31 2016 Remi Collet <remi@fedoraproject.org> - 1.14.0-2
+- switch to fedora/autoloader
+
 * Sat Oct 15 2016 Remi Collet <remi@fedoraproject.org> - 1.14.0-1
 - update to 1.14.0
 
