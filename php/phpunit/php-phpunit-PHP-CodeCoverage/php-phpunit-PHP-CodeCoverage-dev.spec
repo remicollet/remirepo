@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    5f3f7e736d6319d5f1fc402aff8b026da26709a3
+%global gh_commit    6cba06ff75a1a63a71033e1a01b89056f3af1e8d
 #global gh_date      20150924
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHP_CodeCoverage
 %global pear_channel pear.phpunit.de
 %global major        4.0
-%global minor        1
+%global minor        2
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
@@ -38,7 +38,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.6
-BuildRequires:  php-theseer-autoload >= 1.19
+BuildRequires:  php-fedora-autoloader-devel
 %if %{with_tests}
 # From composer.json, "require-dev": {
 #        "phpunit/phpunit": "^5.4",
@@ -81,6 +81,8 @@ Requires:       php-date
 Requires:       php-json
 Requires:       php-spl
 Requires:       php-tokenizer
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(phpunit/php-code-coverage) = %{version}
 
@@ -98,8 +100,9 @@ for PHP code coverage information.
 
 
 %build
-phpab \
-  --output   src/autoload.php \
+%{_bindir}/phpab \
+  --format fedora \
+  --output src/autoload.php \
   src
 
 cat << 'EOF' | tee -a src/autoload.php
@@ -132,21 +135,22 @@ require __DIR__ . '/TestCase.php';
 define('TEST_FILES_PATH', __DIR__ . '/_files/');
 EOF
 
-# remirepo:17
+# remirepo:18
 run=0
 ret=0
 if which php56; then
   php56 $EXT \
     -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
     %{_bindir}/phpunit \
-        --configuration build
+        --configuration build || ret=1
   run=1
 fi
 if which php70; then
-  php70 -d precision=14 $EXT \
+  # php 7.1 issue with 66.666666666667,1  vs  66.666666666666657,1
+  php70 $EXT \
     -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
     %{_bindir}/phpunit \
-        --configuration build
+        --configuration build || ret=1
   run=1
 fi
 if [ $run -eq 0 ]; then
@@ -182,6 +186,10 @@ fi
 
 
 %changelog
+* Tue Nov  1 2016 Remi Collet <remi@fedoraproject.org> - 4.0.2-1
+- Update to 4.0.2
+- switch to fedora-autoloader
+
 * Tue Jul 26 2016 Remi Collet <remi@fedoraproject.org> - 4.0.1-1
 - Update to 4.0.1
 
