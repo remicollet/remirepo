@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #72 amqp version 1.7.1 ] {
+Extension [ <persistent> extension #72 amqp version 1.8.0beta1 ] {
 
   - INI {
     Entry [ amqp.host <ALL> ]
@@ -43,6 +43,18 @@ Extension [ <persistent> extension #72 amqp version 1.7.1 ] {
     Entry [ amqp.heartbeat <ALL> ]
       Current = '0'
     }
+    Entry [ amqp.cacert <ALL> ]
+      Current = ''
+    }
+    Entry [ amqp.cert <ALL> ]
+      Current = ''
+    }
+    Entry [ amqp.key <ALL> ]
+      Current = ''
+    }
+    Entry [ amqp.verify <ALL> ]
+      Current = '1'
+    }
   }
 
   - Constants [22] {
@@ -70,7 +82,7 @@ Extension [ <persistent> extension #72 amqp version 1.7.1 ] {
     Constant [ integer PHP_AMQP_MAX_CHANNELS ] { 256 }
   }
 
-  - Classes [10] {
+  - Classes [11] {
     Class [ <internal:amqp> class AMQPConnection ] {
 
       - Constants [0] {
@@ -82,7 +94,7 @@ Extension [ <persistent> extension #72 amqp version 1.7.1 ] {
       - Static methods [0] {
       }
 
-      - Properties [11] {
+      - Properties [15] {
         Property [ <default> private $login ]
         Property [ <default> private $password ]
         Property [ <default> private $host ]
@@ -94,9 +106,13 @@ Extension [ <persistent> extension #72 amqp version 1.7.1 ] {
         Property [ <default> private $channel_max ]
         Property [ <default> private $frame_max ]
         Property [ <default> private $heartbeat ]
+        Property [ <default> private $cacert ]
+        Property [ <default> private $key ]
+        Property [ <default> private $cert ]
+        Property [ <default> private $verify ]
       }
 
-      - Methods [29] {
+      - Methods [37] {
         Method [ <internal:amqp, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -279,6 +295,58 @@ Extension [ <persistent> extension #72 amqp version 1.7.1 ] {
           - Parameters [0] {
           }
         }
+
+        Method [ <internal:amqp> public method getCACert ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method setCACert ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $cacert ]
+          }
+        }
+
+        Method [ <internal:amqp> public method getCert ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method setCert ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $cert ]
+          }
+        }
+
+        Method [ <internal:amqp> public method getKey ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method setKey ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $key ]
+          }
+        }
+
+        Method [ <internal:amqp> public method getVerify ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method setVerify ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $verify ]
+          }
+        }
       }
     }
 
@@ -299,7 +367,7 @@ Extension [ <persistent> extension #72 amqp version 1.7.1 ] {
         Property [ <default> private $prefetch_size ]
       }
 
-      - Methods [13] {
+      - Methods [19] {
         Method [ <internal:amqp, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -308,6 +376,12 @@ Extension [ <persistent> extension #72 amqp version 1.7.1 ] {
         }
 
         Method [ <internal:amqp> public method isConnected ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method close ] {
 
           - Parameters [0] {
           }
@@ -381,6 +455,41 @@ Extension [ <persistent> extension #72 amqp version 1.7.1 ] {
 
           - Parameters [1] {
             Parameter #0 [ <optional> $requeue ]
+          }
+        }
+
+        Method [ <internal:amqp> public method confirmSelect ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method waitForConfirm ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $timeout ]
+          }
+        }
+
+        Method [ <internal:amqp> public method setConfirmCallback ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $ack_callback ]
+            Parameter #1 [ <optional> $nack_callback ]
+          }
+        }
+
+        Method [ <internal:amqp> public method setReturnCallback ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $return_callback ]
+          }
+        }
+
+        Method [ <internal:amqp> public method waitForBasicReturn ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $timeout ]
           }
         }
       }
@@ -755,7 +864,7 @@ Extension [ <persistent> extension #72 amqp version 1.7.1 ] {
       }
     }
 
-    Class [ <internal:amqp> class AMQPEnvelope ] {
+    Class [ <internal:amqp> class AMQPBasicProperties ] {
 
       - Constants [0] {
       }
@@ -766,12 +875,7 @@ Extension [ <persistent> extension #72 amqp version 1.7.1 ] {
       - Static methods [0] {
       }
 
-      - Properties [18] {
-        Property [ <default> private $body ]
-        Property [ <default> private $delivery_tag ]
-        Property [ <default> private $is_redelivery ]
-        Property [ <default> private $exchange_name ]
-        Property [ <default> private $routing_key ]
+      - Properties [14] {
         Property [ <default> private $content_type ]
         Property [ <default> private $content_encoding ]
         Property [ <default> private $headers ]
@@ -785,10 +889,123 @@ Extension [ <persistent> extension #72 amqp version 1.7.1 ] {
         Property [ <default> private $type ]
         Property [ <default> private $user_id ]
         Property [ <default> private $app_id ]
+        Property [ <default> private $cluster_id ]
       }
 
-      - Methods [21] {
+      - Methods [15] {
         Method [ <internal:amqp, ctor> public method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method getContentType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method getContentEncoding ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method getHeaders ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method getDeliveryMode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method getPriority ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method getCorrelationId ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method getReplyTo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method getExpiration ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method getMessageId ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method getTimestamp ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method getType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method getUserId ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method getAppId ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp> public method getClusterId ] {
+
+          - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:amqp> class AMQPEnvelope extends AMQPBasicProperties ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [5] {
+        Property [ <default> private $body ]
+        Property [ <default> private $delivery_tag ]
+        Property [ <default> private $is_redelivery ]
+        Property [ <default> private $exchange_name ]
+        Property [ <default> private $routing_key ]
+      }
+
+      - Methods [22] {
+        Method [ <internal:amqp, overwrites AMQPBasicProperties, ctor> public method __construct ] {
 
           - Parameters [0] {
           }
@@ -812,12 +1029,6 @@ Extension [ <persistent> extension #72 amqp version 1.7.1 ] {
           }
         }
 
-        Method [ <internal:amqp> public method getDeliveryMode ] {
-
-          - Parameters [0] {
-          }
-        }
-
         Method [ <internal:amqp> public method getExchangeName ] {
 
           - Parameters [0] {
@@ -825,78 +1036,6 @@ Extension [ <persistent> extension #72 amqp version 1.7.1 ] {
         }
 
         Method [ <internal:amqp> public method isRedelivery ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:amqp> public method getContentType ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:amqp> public method getContentEncoding ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:amqp> public method getType ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:amqp> public method getTimestamp ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:amqp> public method getPriority ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:amqp> public method getExpiration ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:amqp> public method getUserId ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:amqp> public method getAppId ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:amqp> public method getMessageId ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:amqp> public method getReplyTo ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:amqp> public method getCorrelationId ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:amqp> public method getHeaders ] {
 
           - Parameters [0] {
           }
@@ -913,6 +1052,90 @@ Extension [ <persistent> extension #72 amqp version 1.7.1 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $name ]
+          }
+        }
+
+        Method [ <internal:amqp, inherits AMQPBasicProperties> public method getContentType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp, inherits AMQPBasicProperties> public method getContentEncoding ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp, inherits AMQPBasicProperties> public method getHeaders ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp, inherits AMQPBasicProperties> public method getDeliveryMode ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp, inherits AMQPBasicProperties> public method getPriority ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp, inherits AMQPBasicProperties> public method getCorrelationId ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp, inherits AMQPBasicProperties> public method getReplyTo ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp, inherits AMQPBasicProperties> public method getExpiration ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp, inherits AMQPBasicProperties> public method getMessageId ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp, inherits AMQPBasicProperties> public method getTimestamp ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp, inherits AMQPBasicProperties> public method getType ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp, inherits AMQPBasicProperties> public method getUserId ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp, inherits AMQPBasicProperties> public method getAppId ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:amqp, inherits AMQPBasicProperties> public method getClusterId ] {
+
+          - Parameters [0] {
           }
         }
       }
