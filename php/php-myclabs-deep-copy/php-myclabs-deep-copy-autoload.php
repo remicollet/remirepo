@@ -1,15 +1,7 @@
 <?php
 /* Autoloader for myclabs/deep-copy and its dependencies */
 
-$vendorDir = '/usr/share/php';
-// Use Symfony autoloader
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once $vendorDir . '/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
+\Fedora\Autoloader\Autoload::addPsr4('DeepCopy\\', __DIR__);
 
-$fedoraClassLoader->addPrefix('DeepCopy\\', dirname(__DIR__));
