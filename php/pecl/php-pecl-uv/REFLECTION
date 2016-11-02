@@ -1,0 +1,1183 @@
+Extension [ <persistent> extension #131 uv version 0.1.0 ] {
+
+  - Functions {
+    Function [ <internal:uv> function uv_update_time ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $loop ]
+      }
+    }
+    Function [ <internal:uv> function uv_ref ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $loop ]
+      }
+    }
+    Function [ <internal:uv> function uv_unref ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $loop ]
+      }
+    }
+    Function [ <internal:uv> function uv_loop_new ] {
+    }
+    Function [ <internal:uv> function uv_default_loop ] {
+    }
+    Function [ <internal:uv> function uv_stop ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $loop ]
+      }
+    }
+    Function [ <internal:uv> function uv_run ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $loop ]
+      }
+    }
+    Function [ <internal:uv> function uv_run_once ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $loop ]
+      }
+    }
+    Function [ <internal:uv> function uv_ip4_addr ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $address ]
+        Parameter #1 [ <required> $port ]
+      }
+    }
+    Function [ <internal:uv> function uv_ip6_addr ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $address ]
+        Parameter #1 [ <required> $port ]
+      }
+    }
+    Function [ <internal:uv> function uv_ip4_name ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_ip6_name ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_write ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $client ]
+        Parameter #1 [ <required> $data ]
+        Parameter #2 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_write2 ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $client ]
+        Parameter #1 [ <required> $data ]
+        Parameter #2 [ <required> $send ]
+        Parameter #3 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_shutdown ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $stream ]
+        Parameter #1 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_close ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $stream ]
+        Parameter #1 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_now ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $loop ]
+      }
+    }
+    Function [ <internal:uv> function uv_loop_delete ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $loop ]
+      }
+    }
+    Function [ <internal:uv> function uv_read_start ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $server ]
+        Parameter #1 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_read2_start ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $server ]
+        Parameter #1 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_read_stop ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $server ]
+      }
+    }
+    Function [ <internal:uv> function uv_err_name ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $error ]
+      }
+    }
+    Function [ <internal:uv> function uv_strerror ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $error ]
+      }
+    }
+    Function [ <internal:uv> function uv_is_active ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_is_readable ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_is_writable ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_walk ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $callback ]
+        Parameter #2 [ <required> $opaque ]
+      }
+    }
+    Function [ <internal:uv> function uv_guess_handle ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $fd ]
+      }
+    }
+    Function [ <internal:uv> function uv_handle_type ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_idle_init ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $loop ]
+      }
+    }
+    Function [ <internal:uv> function uv_idle_start ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $timer ]
+        Parameter #1 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_idle_stop ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $idle ]
+      }
+    }
+    Function [ <internal:uv> function uv_timer_init ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $loop ]
+      }
+    }
+    Function [ <internal:uv> function uv_timer_start ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $timer ]
+        Parameter #1 [ <required> $timeout ]
+        Parameter #2 [ <required> $repeat ]
+        Parameter #3 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_timer_stop ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $timer ]
+      }
+    }
+    Function [ <internal:uv> function uv_timer_again ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $timer ]
+      }
+    }
+    Function [ <internal:uv> function uv_timer_set_repeat ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $timer ]
+        Parameter #1 [ <required> $timeout ]
+      }
+    }
+    Function [ <internal:uv> function uv_timer_get_repeat ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $timer ]
+      }
+    }
+    Function [ <internal:uv> function uv_tcp_init ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $loop ]
+      }
+    }
+    Function [ <internal:uv> function uv_tcp_nodelay ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $tcp ]
+        Parameter #1 [ <required> $enabled ]
+      }
+    }
+    Function [ <internal:uv> function uv_tcp_bind ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $resource ]
+        Parameter #1 [ <required> $address ]
+      }
+    }
+    Function [ <internal:uv> function uv_tcp_bind6 ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $resource ]
+        Parameter #1 [ <required> $address ]
+      }
+    }
+    Function [ <internal:uv> function uv_listen ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $resource ]
+        Parameter #1 [ <required> $backlog ]
+        Parameter #2 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_accept ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $server ]
+        Parameter #1 [ <required> $client ]
+      }
+    }
+    Function [ <internal:uv> function uv_tcp_connect ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $resource ]
+        Parameter #1 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_tcp_connect6 ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $resource ]
+        Parameter #1 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_udp_init ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $loop ]
+      }
+    }
+    Function [ <internal:uv> function uv_udp_bind ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $resource ]
+        Parameter #1 [ <required> $address ]
+        Parameter #2 [ <required> $flags ]
+      }
+    }
+    Function [ <internal:uv> function uv_udp_bind6 ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $resource ]
+        Parameter #1 [ <required> $address ]
+        Parameter #2 [ <required> $flags ]
+      }
+    }
+    Function [ <internal:uv> function uv_udp_set_multicast_loop ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $server ]
+        Parameter #1 [ <required> $enabled ]
+      }
+    }
+    Function [ <internal:uv> function uv_udp_set_multicast_ttl ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $server ]
+        Parameter #1 [ <required> $ttl ]
+      }
+    }
+    Function [ <internal:uv> function uv_udp_send ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $server ]
+        Parameter #1 [ <required> $buffer ]
+        Parameter #2 [ <required> $address ]
+        Parameter #3 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_udp_send6 ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $server ]
+        Parameter #1 [ <required> $buffer ]
+        Parameter #2 [ <required> $address ]
+        Parameter #3 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_udp_recv_start ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $server ]
+        Parameter #1 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_udp_recv_stop ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $server ]
+      }
+    }
+    Function [ <internal:uv> function uv_udp_set_membership ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $client ]
+        Parameter #1 [ <required> $multicast_addr ]
+        Parameter #2 [ <required> $interface_addr ]
+        Parameter #3 [ <required> $membership ]
+      }
+    }
+    Function [ <internal:uv> function uv_udp_set_broadcast ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $server ]
+        Parameter #1 [ <required> $enabled ]
+      }
+    }
+    Function [ <internal:uv> function uv_poll_init ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $fd ]
+      }
+    }
+    Function [ <internal:uv> function uv_poll_init_socket ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $fd ]
+      }
+    }
+    Function [ <internal:uv> function uv_poll_start ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $handle ]
+        Parameter #1 [ <required> $events ]
+        Parameter #2 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_poll_stop ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_poll_init ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $loop ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_poll_start ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $handle ]
+        Parameter #1 [ <required> $callback ]
+        Parameter #2 [ <required> $path ]
+        Parameter #3 [ <required> $interval ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_poll_stop ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $loop ]
+      }
+    }
+    Function [ <internal:uv> function uv_tcp_getsockname ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_tcp_getpeername ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_udp_getsockname ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_pipe_init ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $file ]
+      }
+    }
+    Function [ <internal:uv> function uv_pipe_bind ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $handle ]
+        Parameter #1 [ <required> $name ]
+      }
+    }
+    Function [ <internal:uv> function uv_pipe_open ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $file ]
+        Parameter #1 [ <required> $pipe ]
+      }
+    }
+    Function [ <internal:uv> function uv_pipe_connect ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $handle ]
+        Parameter #1 [ <required> $name ]
+        Parameter #2 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_pipe_pending_instances ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $handle ]
+        Parameter #1 [ <required> $count ]
+      }
+    }
+    Function [ <internal:uv> function uv_pipe_pending_count ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_pipe_pending_type ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_stdio_new ] {
+    }
+    Function [ <internal:uv> function uv_spawn ] {
+    }
+    Function [ <internal:uv> function uv_process_kill ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $process ]
+        Parameter #1 [ <required> $signal ]
+      }
+    }
+    Function [ <internal:uv> function uv_kill ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $pid ]
+        Parameter #1 [ <required> $signal ]
+      }
+    }
+    Function [ <internal:uv> function uv_getaddrinfo ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $resource ]
+        Parameter #1 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_rwlock_init ] {
+    }
+    Function [ <internal:uv> function uv_rwlock_rdlock ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_rwlock_tryrdlock ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_rwlock_rdunlock ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_rwlock_wrlock ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_rwlock_trywrlock ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_rwlock_wrunlock ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_mutex_init ] {
+    }
+    Function [ <internal:uv> function uv_mutex_lock ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_mutex_trylock ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_mutex_unlock ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_sem_init ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $val ]
+      }
+    }
+    Function [ <internal:uv> function uv_sem_post ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $resource ]
+      }
+    }
+    Function [ <internal:uv> function uv_sem_wait ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $resource ]
+      }
+    }
+    Function [ <internal:uv> function uv_sem_trywait ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $resource ]
+      }
+    }
+    Function [ <internal:uv> function uv_prepare_init ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> $loop ]
+      }
+    }
+    Function [ <internal:uv> function uv_prepare_start ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $handle ]
+        Parameter #1 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_prepare_stop ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_check_init ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $loop ]
+      }
+    }
+    Function [ <internal:uv> function uv_check_start ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $handle ]
+        Parameter #1 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_check_stop ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_async_init ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_async_send ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $handle ]
+      }
+    }
+    Function [ <internal:uv> function uv_queue_work ] {
+    }
+    Function [ <internal:uv> function uv_fs_open ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $path ]
+        Parameter #2 [ <required> $flag ]
+        Parameter #3 [ <required> $mode ]
+        Parameter #4 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_read ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $fd ]
+        Parameter #2 [ <required> $offset ]
+        Parameter #3 [ <optional> $size ]
+        Parameter #4 [ <optional> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_write ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $fd ]
+        Parameter #2 [ <required> $buffer ]
+        Parameter #3 [ <required> $offset ]
+        Parameter #4 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_close ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $fd ]
+        Parameter #2 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_fsync ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $fd ]
+        Parameter #2 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_fdatasync ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $fd ]
+        Parameter #2 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_ftruncate ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $fd ]
+        Parameter #2 [ <required> $offset ]
+        Parameter #3 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_mkdir ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $path ]
+        Parameter #2 [ <required> $mode ]
+        Parameter #3 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_rmdir ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $path ]
+        Parameter #2 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_unlink ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $path ]
+        Parameter #2 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_rename ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $from ]
+        Parameter #2 [ <required> $to ]
+        Parameter #3 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_utime ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $path ]
+        Parameter #2 [ <required> $utime ]
+        Parameter #3 [ <required> $atime ]
+        Parameter #4 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_futime ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $fd ]
+        Parameter #2 [ <required> $utime ]
+        Parameter #3 [ <required> $atime ]
+        Parameter #4 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_chmod ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $path ]
+        Parameter #2 [ <required> $mode ]
+        Parameter #3 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_fchmod ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $fd ]
+        Parameter #2 [ <required> $mode ]
+        Parameter #3 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_chown ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $path ]
+        Parameter #2 [ <required> $uid ]
+        Parameter #3 [ <required> $gid ]
+        Parameter #4 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_fchown ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $fd ]
+        Parameter #2 [ <required> $uid ]
+        Parameter #3 [ <required> $gid ]
+        Parameter #4 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_link ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $from ]
+        Parameter #2 [ <required> $to ]
+        Parameter #3 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_symlink ] {
+
+      - Parameters [5] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $from ]
+        Parameter #2 [ <required> $to ]
+        Parameter #3 [ <required> $callback ]
+        Parameter #4 [ <required> $flags ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_readlink ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $path ]
+        Parameter #2 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_stat ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $path ]
+        Parameter #2 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_lstat ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $path ]
+        Parameter #2 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_fstat ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $fd ]
+        Parameter #2 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_readdir ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $path ]
+        Parameter #2 [ <required> $flags ]
+        Parameter #3 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_scandir ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $path ]
+        Parameter #2 [ <required> $flags ]
+        Parameter #3 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_sendfile ] {
+
+      - Parameters [6] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $in ]
+        Parameter #2 [ <required> $out ]
+        Parameter #3 [ <required> $offset ]
+        Parameter #4 [ <required> $length ]
+        Parameter #5 [ <required> $callback ]
+      }
+    }
+    Function [ <internal:uv> function uv_fs_event_init ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $path ]
+        Parameter #2 [ <required> $callback ]
+        Parameter #3 [ <required> $flags ]
+      }
+    }
+    Function [ <internal:uv> function uv_tty_init ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $loop ]
+        Parameter #1 [ <required> $fd ]
+        Parameter #2 [ <required> $readable ]
+      }
+    }
+    Function [ <internal:uv> function uv_tty_get_winsize ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $tty ]
+        Parameter #1 [ <required> &$width ]
+        Parameter #2 [ <required> &$height ]
+      }
+    }
+    Function [ <internal:uv> function uv_tty_set_mode ] {
+    }
+    Function [ <internal:uv> function uv_tty_reset_mode ] {
+    }
+    Function [ <internal:uv> function uv_loadavg ] {
+    }
+    Function [ <internal:uv> function uv_uptime ] {
+    }
+    Function [ <internal:uv> function uv_cpu_info ] {
+    }
+    Function [ <internal:uv> function uv_interface_addresses ] {
+    }
+    Function [ <internal:uv> function uv_get_free_memory ] {
+    }
+    Function [ <internal:uv> function uv_get_total_memory ] {
+    }
+    Function [ <internal:uv> function uv_hrtime ] {
+    }
+    Function [ <internal:uv> function uv_exepath ] {
+    }
+    Function [ <internal:uv> function uv_cwd ] {
+    }
+    Function [ <internal:uv> function uv_chdir ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $dir ]
+      }
+    }
+    Function [ <internal:uv> function uv_resident_set_memory ] {
+    }
+    Function [ <internal:uv> function uv_signal_init ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $loop ]
+      }
+    }
+    Function [ <internal:uv> function uv_signal_start ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $sig_handle ]
+        Parameter #1 [ <required> $sig_callback ]
+        Parameter #2 [ <required> $sig_num ]
+      }
+    }
+    Function [ <internal:uv> function uv_signal_stop ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $sig_handle ]
+      }
+    }
+  }
+
+  - Classes [1] {
+    Class [ <internal:uv> class UV ] {
+
+      - Constants [196] {
+        Constant [ integer RUN_DEFAULT ] { 0 }
+        Constant [ integer RUN_ONCE ] { 1 }
+        Constant [ integer RUN_NOWAIT ] { 2 }
+        Constant [ integer CHANGE ] { 2 }
+        Constant [ integer RENAME ] { 1 }
+        Constant [ integer READABLE ] { 1 }
+        Constant [ integer WRITABLE ] { 2 }
+        Constant [ integer O_RDONLY ] { 0 }
+        Constant [ integer O_WRONLY ] { 1 }
+        Constant [ integer O_RDWR ] { 2 }
+        Constant [ integer O_CREAT ] { 64 }
+        Constant [ integer O_EXCL ] { 128 }
+        Constant [ integer O_TRUNC ] { 512 }
+        Constant [ integer O_APPEND ] { 1024 }
+        Constant [ integer S_IFDIR ] { 16384 }
+        Constant [ integer S_IFREG ] { 32768 }
+        Constant [ integer O_NOCTTY ] { 256 }
+        Constant [ integer S_IRWXU ] { 448 }
+        Constant [ integer S_IRUSR ] { 256 }
+        Constant [ integer S_IWUSR ] { 128 }
+        Constant [ integer S_IXUSR ] { 64 }
+        Constant [ integer S_IRWXG ] { 56 }
+        Constant [ integer S_IRGRP ] { 32 }
+        Constant [ integer S_IWGRP ] { 16 }
+        Constant [ integer S_IXGRP ] { 8 }
+        Constant [ integer S_IRWXO ] { 7 }
+        Constant [ integer S_IROTH ] { 4 }
+        Constant [ integer S_IWOTH ] { 2 }
+        Constant [ integer S_IXOTH ] { 1 }
+        Constant [ integer SIG_IGN ] { 1 }
+        Constant [ integer SIG_DFL ] { 0 }
+        Constant [ integer SIG_ERR ] { -1 }
+        Constant [ integer SIGHUP ] { 1 }
+        Constant [ integer SIGINT ] { 2 }
+        Constant [ integer SIGQUIT ] { 3 }
+        Constant [ integer SIGILL ] { 4 }
+        Constant [ integer SIGTRAP ] { 5 }
+        Constant [ integer SIGABRT ] { 6 }
+        Constant [ integer SIGIOT ] { 6 }
+        Constant [ integer SIGBUS ] { 7 }
+        Constant [ integer SIGFPE ] { 8 }
+        Constant [ integer SIGKILL ] { 9 }
+        Constant [ integer SIGUSR1 ] { 10 }
+        Constant [ integer SIGSEGV ] { 11 }
+        Constant [ integer SIGUSR2 ] { 12 }
+        Constant [ integer SIGPIPE ] { 13 }
+        Constant [ integer SIGALRM ] { 14 }
+        Constant [ integer SIGTERM ] { 15 }
+        Constant [ integer SIGSTKFLT ] { 16 }
+        Constant [ integer SIGCLD ] { 17 }
+        Constant [ integer SIGCHLD ] { 17 }
+        Constant [ integer SIGCONT ] { 18 }
+        Constant [ integer SIGSTOP ] { 19 }
+        Constant [ integer SIGTSTP ] { 20 }
+        Constant [ integer SIGTTIN ] { 21 }
+        Constant [ integer SIGTTOU ] { 22 }
+        Constant [ integer SIGURG ] { 23 }
+        Constant [ integer SIGXCPU ] { 24 }
+        Constant [ integer SIGXFSZ ] { 25 }
+        Constant [ integer SIGVTALRM ] { 26 }
+        Constant [ integer SIGPROF ] { 27 }
+        Constant [ integer SIGWINCH ] { 28 }
+        Constant [ integer SIGPOLL ] { 29 }
+        Constant [ integer SIGIO ] { 29 }
+        Constant [ integer SIGPWR ] { 30 }
+        Constant [ integer SIGSYS ] { 31 }
+        Constant [ integer SIGBABY ] { 31 }
+        Constant [ integer AF_INET ] { 2 }
+        Constant [ integer AF_INET6 ] { 10 }
+        Constant [ integer AF_UNSPEC ] { 0 }
+        Constant [ integer LEAVE_GROUP ] { 0 }
+        Constant [ integer JOIN_GROUP ] { 1 }
+        Constant [ integer IS_UV_TCP ] { 0 }
+        Constant [ integer IS_UV_UDP ] { 1 }
+        Constant [ integer IS_UV_PIPE ] { 2 }
+        Constant [ integer IS_UV_IDLE ] { 3 }
+        Constant [ integer IS_UV_TIMER ] { 4 }
+        Constant [ integer IS_UV_ASYNC ] { 5 }
+        Constant [ integer IS_UV_LOOP ] { 6 }
+        Constant [ integer IS_UV_HANDLE ] { 7 }
+        Constant [ integer IS_UV_STREAM ] { 8 }
+        Constant [ integer IS_UV_ADDRINFO ] { 9 }
+        Constant [ integer IS_UV_PROCESS ] { 10 }
+        Constant [ integer IS_UV_PREPARE ] { 11 }
+        Constant [ integer IS_UV_CHECK ] { 12 }
+        Constant [ integer IS_UV_WORK ] { 13 }
+        Constant [ integer IS_UV_FS ] { 14 }
+        Constant [ integer IS_UV_FS_EVENT ] { 15 }
+        Constant [ integer IS_UV_TTY ] { 16 }
+        Constant [ integer IS_UV_FS_POLL ] { 17 }
+        Constant [ integer IS_UV_POLL ] { 18 }
+        Constant [ integer UNKNOWN_HANDLE ] { 0 }
+        Constant [ integer FILE ] { 17 }
+        Constant [ integer ASYNC ] { 1 }
+        Constant [ integer CHECK ] { 2 }
+        Constant [ integer FS_EVENT ] { 3 }
+        Constant [ integer FS_POLL ] { 4 }
+        Constant [ integer HANDLE ] { 5 }
+        Constant [ integer IDLE ] { 6 }
+        Constant [ integer NAMED_PIPE ] { 7 }
+        Constant [ integer POLL ] { 8 }
+        Constant [ integer PREPARE ] { 9 }
+        Constant [ integer PROCESS ] { 10 }
+        Constant [ integer STREAM ] { 11 }
+        Constant [ integer TCP ] { 12 }
+        Constant [ integer TIMER ] { 13 }
+        Constant [ integer TTY ] { 14 }
+        Constant [ integer UDP ] { 15 }
+        Constant [ integer SIGNAL ] { 16 }
+        Constant [ integer HANDLE_TYPE_MAX ] { 18 }
+        Constant [ integer IGNORE ] { 0 }
+        Constant [ integer CREATE_PIPE ] { 1 }
+        Constant [ integer INHERIT_FD ] { 2 }
+        Constant [ integer INHERIT_STREAM ] { 4 }
+        Constant [ integer READABLE_PIPE ] { 16 }
+        Constant [ integer WRITABLE_PIPE ] { 32 }
+        Constant [ integer PROCESS_SETUID ] { 1 }
+        Constant [ integer PROCESS_SETGID ] { 2 }
+        Constant [ integer PROCESS_WINDOWS_VERBATIM_ARGUMENTS ] { 4 }
+        Constant [ integer PROCESS_DETACHED ] { 8 }
+        Constant [ integer E2BIG ] { -7 }
+        Constant [ integer EACCES ] { -13 }
+        Constant [ integer EADDRINUSE ] { -98 }
+        Constant [ integer EADDRNOTAVAIL ] { -99 }
+        Constant [ integer EAFNOSUPPORT ] { -97 }
+        Constant [ integer EAGAIN ] { -11 }
+        Constant [ integer EAI_ADDRFAMILY ] { -3000 }
+        Constant [ integer EAI_AGAIN ] { -3001 }
+        Constant [ integer EAI_BADFLAGS ] { -3002 }
+        Constant [ integer EAI_BADHINTS ] { -3013 }
+        Constant [ integer EAI_CANCELED ] { -3003 }
+        Constant [ integer EAI_FAIL ] { -3004 }
+        Constant [ integer EAI_FAMILY ] { -3005 }
+        Constant [ integer EAI_MEMORY ] { -3006 }
+        Constant [ integer EAI_NODATA ] { -3007 }
+        Constant [ integer EAI_NONAME ] { -3008 }
+        Constant [ integer EAI_OVERFLOW ] { -3009 }
+        Constant [ integer EAI_PROTOCOL ] { -3014 }
+        Constant [ integer EAI_SERVICE ] { -3010 }
+        Constant [ integer EAI_SOCKTYPE ] { -3011 }
+        Constant [ integer EALREADY ] { -114 }
+        Constant [ integer EBADF ] { -9 }
+        Constant [ integer EBUSY ] { -16 }
+        Constant [ integer ECANCELED ] { -125 }
+        Constant [ integer ECHARSET ] { -4080 }
+        Constant [ integer ECONNABORTED ] { -103 }
+        Constant [ integer ECONNREFUSED ] { -111 }
+        Constant [ integer ECONNRESET ] { -104 }
+        Constant [ integer EDESTADDRREQ ] { -89 }
+        Constant [ integer EEXIST ] { -17 }
+        Constant [ integer EFAULT ] { -14 }
+        Constant [ integer EFBIG ] { -27 }
+        Constant [ integer EHOSTUNREACH ] { -113 }
+        Constant [ integer EINTR ] { -4 }
+        Constant [ integer EINVAL ] { -22 }
+        Constant [ integer EIO ] { -5 }
+        Constant [ integer EISCONN ] { -106 }
+        Constant [ integer EISDIR ] { -21 }
+        Constant [ integer ELOOP ] { -40 }
+        Constant [ integer EMFILE ] { -24 }
+        Constant [ integer EMSGSIZE ] { -90 }
+        Constant [ integer ENAMETOOLONG ] { -36 }
+        Constant [ integer ENETDOWN ] { -100 }
+        Constant [ integer ENETUNREACH ] { -101 }
+        Constant [ integer ENFILE ] { -23 }
+        Constant [ integer ENOBUFS ] { -105 }
+        Constant [ integer ENODEV ] { -19 }
+        Constant [ integer ENOENT ] { -2 }
+        Constant [ integer ENOMEM ] { -12 }
+        Constant [ integer ENONET ] { -64 }
+        Constant [ integer ENOPROTOOPT ] { -92 }
+        Constant [ integer ENOSPC ] { -28 }
+        Constant [ integer ENOSYS ] { -38 }
+        Constant [ integer ENOTCONN ] { -107 }
+        Constant [ integer ENOTDIR ] { -20 }
+        Constant [ integer ENOTEMPTY ] { -39 }
+        Constant [ integer ENOTSOCK ] { -88 }
+        Constant [ integer ENOTSUP ] { -95 }
+        Constant [ integer EPERM ] { -1 }
+        Constant [ integer EPIPE ] { -32 }
+        Constant [ integer EPROTO ] { -71 }
+        Constant [ integer EPROTONOSUPPORT ] { -93 }
+        Constant [ integer EPROTOTYPE ] { -91 }
+        Constant [ integer ERANGE ] { -34 }
+        Constant [ integer EROFS ] { -30 }
+        Constant [ integer ESHUTDOWN ] { -108 }
+        Constant [ integer ESPIPE ] { -29 }
+        Constant [ integer ESRCH ] { -3 }
+        Constant [ integer ETIMEDOUT ] { -110 }
+        Constant [ integer ETXTBSY ] { -26 }
+        Constant [ integer EXDEV ] { -18 }
+        Constant [ integer UNKNOWN ] { -4094 }
+        Constant [ integer EOF ] { -4095 }
+        Constant [ integer ENXIO ] { -6 }
+        Constant [ integer EMLINK ] { -31 }
+        Constant [ integer EHOSTDOWN ] { -112 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [0] {
+      }
+    }
+  }
+}
+
