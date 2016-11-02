@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    ec21a59414b99501e723b63fd664aa8ead9c5680
+%global gh_commit    b698f6e839b39b4c2173cd84225e63002b847a74
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     composer
 %global gh_project   ca-bundle
@@ -14,8 +14,8 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-composer-ca-bundle
-Version:        1.0.4
-Release:        2%{?dist}
+Version:        1.0.5
+Release:        1%{?dist}
 Summary:        Lets you find a path to the system CA
 
 Group:          Development/Libraries
@@ -121,6 +121,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov  2 2016 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
+- update to 1.0.5 (no change)
+
 * Thu Oct 20 2016 Remi Collet <remi@fedoraproject.org> - 1.0.4-2
 - switch from symfony/class-loader to fedora/autoloader
 
