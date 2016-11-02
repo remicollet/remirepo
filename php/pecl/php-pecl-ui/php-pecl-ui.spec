@@ -21,7 +21,7 @@
 %global ini_name  40-%{pecl_name}.ini
 
 Name:           %{?sub_prefix}php-pecl-ui
-Version:        1.0.3
+Version:        2.0.0
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        UI API
 
@@ -217,6 +217,9 @@ fi
 
 
 %changelog
+* Wed Nov 02 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0
+
 * Sun Oct 30 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - Update to 1.0.3
 

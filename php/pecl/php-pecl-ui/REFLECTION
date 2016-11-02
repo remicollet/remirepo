@@ -1,6 +1,22 @@
-Extension [ <persistent> extension #156 ui version 1.0.3 ] {
+Extension [ <persistent> extension #157 ui version 2.0.0 ] {
+
+  - Constants [2] {
+    Constant [ integer UI\Loop ] { 1 }
+    Constant [ integer UI\Wait ] { 2 }
+  }
 
   - Functions {
+    Function [ <internal:ui> function UI\run ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <optional> integer $flags ]
+      }
+    }
+    Function [ <internal:ui> function UI\quit ] {
+
+      - Parameters [0] {
+      }
+    }
     Function [ <internal:ui> function UI\Draw\Text\Font\fontFamilies ] {
 
       - Parameters [0] {
@@ -8,7 +24,7 @@ Extension [ <persistent> extension #156 ui version 1.0.3 ] {
     }
   }
 
-  - Classes [44] {
+  - Classes [47] {
     Class [ <internal:ui> class UI\Exception\InvalidArgumentException extends InvalidArgumentException implements Throwable ] {
 
       - Constants [0] {
@@ -123,11 +139,9 @@ Extension [ <persistent> extension #156 ui version 1.0.3 ] {
       }
     }
 
-    Class [ <internal:ui> class UI\App ] {
+    Class [ <internal:ui> abstract class UI\Executor ] {
 
-      - Constants [2] {
-        Constant [ integer Loop ] { 1 }
-        Constant [ integer Wait ] { 2 }
+      - Constants [0] {
       }
 
       - Static properties [0] {
@@ -140,29 +154,32 @@ Extension [ <persistent> extension #156 ui version 1.0.3 ] {
       }
 
       - Methods [4] {
-        Method [ <internal:ui> public method run ] {
+        Method [ <internal:ui, ctor> public method __construct ] {
 
-          - Parameters [1] {
-            Parameter #0 [ <optional> integer $flags ]
+          - Parameters [2] {
+            Parameter #0 [ <optional> integer $seconds ]
+            Parameter #1 [ <optional> integer $microseconds ]
           }
         }
 
-        Method [ <internal:ui> public method quit ] {
+        Method [ <internal:ui> public method setInterval ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> integer $seconds ]
+            Parameter #1 [ <optional> integer $microseconds ]
+          }
+        }
+
+        Method [ <internal:ui> public method kill ] {
 
           - Parameters [0] {
           }
+          - Return [ boolean ]
         }
 
-        Method [ <internal:ui> protected method onTick ] {
+        Method [ <internal:ui> abstract protected method onExecute ] {
 
           - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:ui> protected method onShouldQuit ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> array $windows ]
           }
         }
       }
@@ -380,11 +397,10 @@ Extension [ <persistent> extension #156 ui version 1.0.3 ] {
       - Methods [27] {
         Method [ <internal:ui, ctor> public method __construct ] {
 
-          - Parameters [4] {
-            Parameter #0 [ <required> UI\App $app ]
-            Parameter #1 [ <required> string $title ]
-            Parameter #2 [ <required> UI\Size $size ]
-            Parameter #3 [ <required> boolean $menu ]
+          - Parameters [3] {
+            Parameter #0 [ <required> string $title ]
+            Parameter #1 [ <required> UI\Size $size ]
+            Parameter #2 [ <optional> boolean $menu ]
           }
         }
 
@@ -1316,7 +1332,7 @@ Extension [ <persistent> extension #156 ui version 1.0.3 ] {
         Method [ <internal:ui> public method setColor ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> UI\Draw\Color $color ]
+            Parameter #0 [ <required> $color ]
           }
         }
 
@@ -3038,7 +3054,7 @@ Extension [ <persistent> extension #156 ui version 1.0.3 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> UI\Draw\Path $path ]
-            Parameter #1 [ <required> UI\Draw\Brush $brush ]
+            Parameter #1 [ <required> $with ]
           }
         }
 
@@ -3046,7 +3062,7 @@ Extension [ <persistent> extension #156 ui version 1.0.3 ] {
 
           - Parameters [3] {
             Parameter #0 [ <required> UI\Draw\Path $path ]
-            Parameter #1 [ <required> UI\Draw\Brush $brush ]
+            Parameter #1 [ <required> $with ]
             Parameter #2 [ <required> UI\Draw\Stroke $stroke ]
           }
         }
@@ -3107,7 +3123,7 @@ Extension [ <persistent> extension #156 ui version 1.0.3 ] {
         Method [ <internal:ui, ctor> public method __construct ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> integer $mode ]
+            Parameter #0 [ <optional> integer $mode ]
           }
         }
 
@@ -3195,15 +3211,18 @@ Extension [ <persistent> extension #156 ui version 1.0.3 ] {
       - Static methods [0] {
       }
 
-      - Properties [0] {
+      - Properties [4] {
+        Property [ <default> public $r ]
+        Property [ <default> public $g ]
+        Property [ <default> public $b ]
+        Property [ <default> public $a ]
       }
 
       - Methods [3] {
         Method [ <internal:ui, ctor> public method __construct ] {
 
-          - Parameters [2] {
-            Parameter #0 [ <optional> integer $rgb ]
-            Parameter #1 [ <optional> float $alpha ]
+          - Parameters [1] {
+            Parameter #0 [ <optional> $rgba ]
           }
         }
 
@@ -3227,11 +3246,7 @@ Extension [ <persistent> extension #156 ui version 1.0.3 ] {
 
     Class [ <internal:ui> class UI\Draw\Brush ] {
 
-      - Constants [4] {
-        Constant [ integer Solid ] { 1 }
-        Constant [ integer LinearGradient ] { 2 }
-        Constant [ integer RadialGradient ] { 3 }
-        Constant [ integer Image ] { 4 }
+      - Constants [0] {
       }
 
       - Static properties [0] {
@@ -3243,38 +3258,18 @@ Extension [ <persistent> extension #156 ui version 1.0.3 ] {
       - Properties [0] {
       }
 
-      - Methods [8] {
+      - Methods [3] {
         Method [ <internal:ui, ctor> public method __construct ] {
 
-          - Parameters [7] {
-            Parameter #0 [ <required> integer $type ]
-            Parameter #1 [ <optional> UI\Draw\Color or NULL $color ]
-            Parameter #2 [ <optional> float $X0 ]
-            Parameter #3 [ <optional> float $Y0 ]
-            Parameter #4 [ <optional> float $X1 ]
-            Parameter #5 [ <optional> float $Y1 ]
-            Parameter #6 [ <optional> float $radius ]
-          }
-        }
-
-        Method [ <internal:ui> public method getType ] {
-
-          - Parameters [0] {
-          }
-          - Return [ integer ]
-        }
-
-        Method [ <internal:ui> public method setType ] {
-
           - Parameters [1] {
-            Parameter #0 [ <required> integer $type ]
+            Parameter #0 [ <required> $color ]
           }
         }
 
         Method [ <internal:ui> public method setColor ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> UI\Draw\Color $color ]
+            Parameter #0 [ <required> $color ]
           }
         }
 
@@ -3284,12 +3279,29 @@ Extension [ <persistent> extension #156 ui version 1.0.3 ] {
           }
           - Return [ UI\Draw\Color ]
         }
+      }
+    }
 
+    Class [ <internal:ui> class UI\Draw\Brush\Gradient extends UI\Draw\Brush ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
         Method [ <internal:ui> public method addStop ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> float $position ]
-            Parameter #1 [ <required> UI\Draw\Color $color ]
+            Parameter #1 [ <required> $color ]
           }
           - Return [ integer ]
         }
@@ -3310,6 +3322,160 @@ Extension [ <persistent> extension #156 ui version 1.0.3 ] {
             Parameter #2 [ <required> UI\Draw\Color $color ]
           }
           - Return [ boolean ]
+        }
+
+        Method [ <internal:ui, inherits UI\Draw\Brush, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $color ]
+          }
+        }
+
+        Method [ <internal:ui, inherits UI\Draw\Brush> public method setColor ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $color ]
+          }
+        }
+
+        Method [ <internal:ui, inherits UI\Draw\Brush> public method getColor ] {
+
+          - Parameters [0] {
+          }
+          - Return [ UI\Draw\Color ]
+        }
+      }
+    }
+
+    Class [ <internal:ui> class UI\Draw\Brush\LinearGradient extends UI\Draw\Brush\Gradient ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:ui, overwrites UI\Draw\Brush, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> UI\Point $start ]
+            Parameter #1 [ <required> UI\Point $end ]
+          }
+        }
+
+        Method [ <internal:ui, inherits UI\Draw\Brush\Gradient> public method addStop ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> float $position ]
+            Parameter #1 [ <required> $color ]
+          }
+          - Return [ integer ]
+        }
+
+        Method [ <internal:ui, inherits UI\Draw\Brush\Gradient> public method delStop ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> integer $index ]
+          }
+          - Return [ integer ]
+        }
+
+        Method [ <internal:ui, inherits UI\Draw\Brush\Gradient> public method setStop ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> integer $index ]
+            Parameter #1 [ <required> float $position ]
+            Parameter #2 [ <required> UI\Draw\Color $color ]
+          }
+          - Return [ boolean ]
+        }
+
+        Method [ <internal:ui, inherits UI\Draw\Brush> public method setColor ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $color ]
+          }
+        }
+
+        Method [ <internal:ui, inherits UI\Draw\Brush> public method getColor ] {
+
+          - Parameters [0] {
+          }
+          - Return [ UI\Draw\Color ]
+        }
+      }
+    }
+
+    Class [ <internal:ui> class UI\Draw\Brush\RadialGradient extends UI\Draw\Brush\Gradient ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:ui, overwrites UI\Draw\Brush, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> UI\Point $start ]
+            Parameter #1 [ <required> UI\Point $outer ]
+            Parameter #2 [ <required> float $radius ]
+          }
+        }
+
+        Method [ <internal:ui, inherits UI\Draw\Brush\Gradient> public method addStop ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> float $position ]
+            Parameter #1 [ <required> $color ]
+          }
+          - Return [ integer ]
+        }
+
+        Method [ <internal:ui, inherits UI\Draw\Brush\Gradient> public method delStop ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> integer $index ]
+          }
+          - Return [ integer ]
+        }
+
+        Method [ <internal:ui, inherits UI\Draw\Brush\Gradient> public method setStop ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> integer $index ]
+            Parameter #1 [ <required> float $position ]
+            Parameter #2 [ <required> UI\Draw\Color $color ]
+          }
+          - Return [ boolean ]
+        }
+
+        Method [ <internal:ui, inherits UI\Draw\Brush> public method setColor ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $color ]
+          }
+        }
+
+        Method [ <internal:ui, inherits UI\Draw\Brush> public method getColor ] {
+
+          - Parameters [0] {
+          }
+          - Return [ UI\Draw\Color ]
         }
       }
     }
@@ -3741,7 +3907,7 @@ Extension [ <persistent> extension #156 ui version 1.0.3 ] {
         Method [ <internal:ui> public method setColor ] {
 
           - Parameters [3] {
-            Parameter #0 [ <required> UI\Draw\Color $color ]
+            Parameter #0 [ <required> $color ]
             Parameter #1 [ <optional> integer $start ]
             Parameter #2 [ <optional> integer $end ]
           }
