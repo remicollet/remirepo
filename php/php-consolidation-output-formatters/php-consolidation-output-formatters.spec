@@ -12,8 +12,8 @@
 
 %global github_owner     consolidation-org
 %global github_name      output-formatters
-%global github_version   1.0.0
-%global github_commit    6428d8fb30c9ed3b96314580808b3e4415b46dd9
+%global github_version   2.0.1
+%global github_commit    8bce15438a97afba5dcf036a71d961977b64fa3e
 
 %global composer_vendor  consolidation
 %global composer_project output-formatters
@@ -21,6 +21,7 @@
 # "php": ">=5.4.0"
 %global php_min_ver 5.4.0
 # "symfony/console": "~2.5|~3.0"
+# "symfony/finder": "~2.5|~3.0"
 #     NOTE: Min version not 2.5 because autoloader required
 %global symfony_min_ver 2.7.1
 %global symfony_max_ver 4.0
@@ -45,11 +46,13 @@ BuildArch:     noarch
 # Tests
 %if %{with_tests}
 ## composer.json
-BuildRequires: php(language)                 >= %{php_min_ver}
+BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(symfony/console) <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/console) >= %{symfony_min_ver}
-## phpcompatinfo (computed from version 1.0.0)
+BuildRequires: php-composer(symfony/finder) <  %{symfony_max_ver}
+BuildRequires: php-composer(symfony/finder) >= %{symfony_min_ver}
+## phpcompatinfo (computed from version 2.0.1)
 BuildRequires: php-dom
 BuildRequires: php-json
 BuildRequires: php-pcre
@@ -60,12 +63,15 @@ BuildRequires: php-composer(symfony/class-loader)
 %endif
 
 # composer.json
-Requires:      php(language)                 >= %{php_min_ver}
+Requires:      php(language) >= %{php_min_ver}
 Requires:      php-composer(symfony/console) <  %{symfony_max_ver}
 Requires:      php-composer(symfony/console) >= %{symfony_min_ver}
-# phpcompatinfo (computed from version 1.0.0)
+Requires:      php-composer(symfony/finder) <  %{symfony_max_ver}
+Requires:      php-composer(symfony/finder) >= %{symfony_min_ver}
+# phpcompatinfo (computed from version 2.0.1)
 Requires:      php-dom
 Requires:      php-json
+Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
 # Autoloader
@@ -106,8 +112,9 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 
 $fedoraClassLoader->addPrefix('Consolidation\\OutputFormatters\\', dirname(dirname(__DIR__)));
 
-// Required dependency
+// Required dependencies
 require_once '%{phpdir}/Symfony/Component/Console/autoload.php';
+require_once '%{phpdir}/Symfony/Component/Finder/autoload.php';
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -145,7 +152,7 @@ if which php71; then
    run=1
 fi
 if [ $run -eq 0 ]; then
-   %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
 fi
 exit $ret
 %else
@@ -168,6 +175,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 01 2016 Shawn Iwinski <shawn@iwin.ski> - 2.0.1-1
+- Update to 2.0.1 (RHBZ #1376274)
+
 * Thu Jul 21 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - backport for remi repository
 
