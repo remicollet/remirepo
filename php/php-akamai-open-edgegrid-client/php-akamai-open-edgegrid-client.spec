@@ -11,15 +11,18 @@
 #
 
 %global github_owner     akamai-open
-%global github_name      AkamaiOPEN-edgegrid-php
-%global github_version   0.5.0
-%global github_commit    6afbda43ade9dcb6e0335352aeedb51401464d96
+%global github_name      AkamaiOPEN-edgegrid-php-client
+%global github_version   0.6.0
+%global github_commit    5f95fab43301f54b6928341686d5f2ca273e996e
 
 %global composer_vendor  akamai-open
 %global composer_project edgegrid-client
 
 # "php": ">=5.5"
 %global php_min_ver 5.5
+# "akamai-open/edgegrid-auth": "^0.6.0"
+%global akamai_open_edgegrid_auth_min_ver 0.6.0
+%global akamai_open_edgegrid_auth_max_ver 1.0.0
 # "guzzlehttp/guzzle": "~6.0"
 %global guzzle_min_ver 6.0
 %global guzzle_max_ver 7.0
@@ -48,58 +51,58 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
+# Autoloader
+BuildRequires: %{_bindir}/phpab
 # Library version value and autoloader check
 BuildRequires: php-cli
 ## composer.json
+BuildRequires: php-composer(akamai-open/edgegrid-auth) >= %{akamai_open_edgegrid_auth_min_ver}
 BuildRequires: php-composer(guzzlehttp/guzzle) >= %{guzzle_min_ver}
-BuildRequires: php-composer(psr/log)           >= %{psr_log_min_ver}
+BuildRequires: php-composer(monolog/monolog) >= %{monolog_min_ver}
+BuildRequires: php-composer(psr/log) >= %{psr_log_min_ver}
 # Tests
 %if %{with_tests}
 ## composer.json
-BuildRequires: php(language)                   >= %{php_min_ver}
-BuildRequires: php-composer(monolog/monolog)   >= %{monolog_min_ver}
+BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 0.5.0)
-BuildRequires: php-date
-BuildRequires: php-hash
+## phpcompatinfo (computed from version 0.6.0)
 BuildRequires: php-json
 BuildRequires: php-pcre
 BuildRequires: php-reflection
-## Autoloader
-BuildRequires: php-composer(symfony/class-loader)
 %endif
 
 # composer.json
-Requires:      php(language)                   >= %{php_min_ver}
-Requires:      php-composer(guzzlehttp/guzzle) >= %{guzzle_min_ver}
+Requires:      php(language) >= %{php_min_ver}
+Requires:      php-composer(akamai-open/edgegrid-auth) <  %{akamai_open_edgegrid_auth_max_ver}
+Requires:      php-composer(akamai-open/edgegrid-auth) >= %{akamai_open_edgegrid_auth_min_ver}
 Requires:      php-composer(guzzlehttp/guzzle) <  %{guzzle_max_ver}
-Requires:      php-composer(monolog/monolog)   >= %{monolog_min_ver}
-Requires:      php-composer(monolog/monolog)   <  %{monolog_max_ver}
-Requires:      php-composer(psr/log)           >= %{psr_log_min_ver}
-Requires:      php-composer(psr/log)           <  %{psr_log_max_ver}
-# phpcompatinfo (computed from version 0.5.0)
-Requires:      php-date
-Requires:      php-hash
+Requires:      php-composer(guzzlehttp/guzzle) >= %{guzzle_min_ver}
+Requires:      php-composer(monolog/monolog) <  %{monolog_max_ver}
+Requires:      php-composer(monolog/monolog) >= %{monolog_min_ver}
+Requires:      php-composer(psr/log) <  %{psr_log_max_ver}
+Requires:      php-composer(psr/log) >= %{psr_log_min_ver}
+# phpcompatinfo (computed from version 0.6.0)
 Requires:      php-json
 Requires:      php-pcre
-# Autoloader
-Requires:      php-composer(symfony/class-loader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
 %description
-Akamai {OPEN} EdgeGrid Authentication [1] for PHP
+Akamai {OPEN} EdgeGrid Authentication [1] Client for PHP
 
 This library implements the Akamai {OPEN} EdgeGrid Authentication scheme on top
-of Guzzle, as both a drop-in replacement client, and middleware.
+of Guzzle [2], as both a drop-in replacement client, and middleware.
 
-For more information visit the Akamai {OPEN} Developer Community [2].
+For more information visit the Akamai {OPEN} Developer Community [3].
 
-Autoloader: %{phpdir}/Akamai/Open/EdgeGrid/autoload.php
+Autoloader: %{phpdir}/Akamai/Open/EdgeGrid/autoload-client.php
+(Note: Compat autoloader %{phpdir}/Akamai/Open/EdgeGrid/autoload.php
+will be removed in version 1.0.0)
 
 [1] https://developer.akamai.com/introduction/Client_Auth.html
-[2] https://developer.akamai.com/
+[2] https://github.com/guzzle/guzzle
+[3] https://developer.akamai.com/
 
 
 %prep
@@ -110,33 +113,19 @@ rm -f src/Cli.php
 
 %build
 : Create autoloader
-cat <<'AUTOLOAD' | tee src/autoload.php
-<?php
-/**
- * Autoloader for %{name} and its' dependencies
- * (created by %{name}-%{version}-%{release}).
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
- */
+%{_bindir}/phpab --output src/autoload-client.php src/
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
-
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('Akamai\\Open\\EdgeGrid\\', dirname(dirname(dirname(__DIR__))));
+cat <<'AUTOLOAD' | tee -a src/autoload-client.php
 
 // Required dependencies
+require_once '%{phpdir}/Akamai/Open/EdgeGrid/autoload-auth.php';
 require_once '%{phpdir}/GuzzleHttp6/autoload.php';
 require_once '%{phpdir}/Monolog/autoload.php';
 require_once '%{phpdir}/Psr/Log/autoload.php';
-
-return $fedoraClassLoader;
 AUTOLOAD
+
+: Compat autoloader
+ln -s autoload-client.php src/autoload.php
 
 
 %install
@@ -163,7 +152,7 @@ ln -s ../../../../tests tests-psr0/Akamai/Open/EdgeGrid/Tests
 : Create tests bootstrap
 cat <<'BOOTSTRAP' | tee bootstrap.php
 <?php
-require_once '%{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/autoload.php';
+require_once '%{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/autoload-client.php';
 
 $fedoraClassLoader->addPrefix(
     'Akamai\\Open\\EdgeGrid\\Tests\\',
@@ -200,12 +189,19 @@ rm -rf %{buildroot}
 %license LICENSE
 %doc *.md
 %doc composer.json
-%dir %{phpdir}/Akamai
-%dir %{phpdir}/Akamai/Open
-     %{phpdir}/Akamai/Open/EdgeGrid
+%{phpdir}/Akamai/Open/EdgeGrid/autoload-client.php
+%{phpdir}/Akamai/Open/EdgeGrid/autoload.php
+%{phpdir}/Akamai/Open/EdgeGrid/Client.php
+%{phpdir}/Akamai/Open/EdgeGrid/Exception
+%{phpdir}/Akamai/Open/EdgeGrid/Exception.php
+%{phpdir}/Akamai/Open/EdgeGrid/Handler
 
 
 %changelog
+* Wed Nov 02 2016 Shawn Iwinski <shawn@iwin.ski> - 0.6.0-1
+- Updated to 0.6.0 (RHBZ #1382986)
+- Autoloader changed from Symfony ClassLoader to phpab classmap
+
 * Sun Sep 25 2016 Shawn Iwinski <shawn@iwin.ski> - 0.5.0-1
 - Updated to 0.5.0 (RHBZ #1376273)
 
