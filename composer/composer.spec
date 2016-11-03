@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    16422c4b1ac4286f7caecf5211136dc073191672
+%global gh_commit    5465af955800fa884a36f66ff65280584988efd0
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
 %global gh_owner     composer
@@ -16,8 +16,8 @@
 #global prever       RC
 
 Name:           composer
-Version:        1.2.1
-Release:        2%{?dist}
+Version:        1.2.2
+Release:        1%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -251,6 +251,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov  3 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
+- update to 1.2.2
+
 * Fri Oct 21 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-2
 - switch from symfony/class-loader to fedora/autoloader
 
