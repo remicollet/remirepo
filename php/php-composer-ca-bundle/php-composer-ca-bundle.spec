@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b698f6e839b39b4c2173cd84225e63002b847a74
+%global gh_commit    a795611394b3c05164fd0eb291b492b39339cba4
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     composer
 %global gh_project   ca-bundle
@@ -14,7 +14,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-composer-ca-bundle
-Version:        1.0.5
+Version:        1.0.6
 Release:        1%{?dist}
 Summary:        Lets you find a path to the system CA
 
@@ -121,6 +121,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov  3 2016 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
+- update to 1.0.6 (no change)
+
 * Wed Nov  2 2016 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
 - update to 1.0.5 (no change)
 
