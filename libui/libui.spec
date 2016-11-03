@@ -51,6 +51,10 @@ for %{name}.
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+%if 0%{?rhel}
+sed -e 's/NOT APPLE/0/' -i CMakeLists.txt
+%endif
+
 
 %build
 %if 0%{?rhel}
