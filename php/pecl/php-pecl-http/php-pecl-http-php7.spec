@@ -66,8 +66,8 @@ BuildRequires:  curl-devel >= 7.18.2
 BuildRequires:  libidn-devel
 # Use same version than PHP to ensure we use libicu-last (EL 6)
 BuildRequires:  libicu-devel >= 50
-BuildRequires:  %{?scl_prefix}php-pecl-propro-devel >= 1.0.0
-BuildRequires:  %{?scl_prefix}php-pecl-raphf-devel  >= 1.1.0
+BuildRequires:  %{?scl_prefix}php-pecl-propro-devel >= 2
+BuildRequires:  %{?scl_prefix}php-pecl-raphf-devel  >= 2
 
 %if 0%{?scl:1} && 0%{?fedora} < 15 && 0%{?rhel} < 7 && "%{?scl_vendor}" != "remi"
 # Filter in the SCL collection
