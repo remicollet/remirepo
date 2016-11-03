@@ -7,8 +7,8 @@
 # Please, preserve the changelog entries
 #
 
-%global gh_commit   5de62d073f189a92af7b5386ad1ea184c21d1e14
-%global gh_date     20161026
+%global gh_commit   f56411fde197481c00ad950e1a545452d47efa55
+%global gh_date     20161102
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    andlabs
 %global gh_project  libui
@@ -91,6 +91,9 @@ done
 
 
 %changelog
+* Thu Nov  3 2016 Remi Collet <remi@fedoraproject.org> - 0-0.3.20161102gitf56411f
+- refresh
+
 * Fri Oct 28 2016 Remi Collet <remi@fedoraproject.org> - 0-0.3.20161026git5de62d0
 - refresh
 
