@@ -11,23 +11,27 @@
 #
 
 %global github_owner     symfony-cmf
-%global github_name      Routing
-%global github_version   1.3.0
-%global github_commit    8e87981d72c6930a27585dcd3119f3199f6cb2a6
+%global github_name      routing
+%global github_version   1.4.0
+%global github_commit    b93704ca098334f56e9b317932f21a4362e620db
 
 %global composer_vendor  symfony-cmf
 %global composer_project routing
 
-# "php": ">=5.3.3"
-%global php_min_ver     5.3.3
-# "symfony/routing": "~2.2"
-# "symfony/http-kernel": "~2.2"
+# "php": "^5.3.9|^7.0"
+%global php_min_ver     5.3.9
+# "symfony/config": "^2.2|3.*"
+# "symfony/dependency-injection": "^2.0.5|3.*"
+# "symfony/event-dispatcher": "^2.1|3.*"
+# "symfony/http-kernel": "^2.2|3.*"
+# "symfony/routing": "^2.2|3.*"
 ## NOTE: Min version not 2.2 because autoloaders required
-%global symfony_min_ver 2.7.3
+## NOTE: Max version not 4.0 to force version 2
+%global symfony_min_ver 2.7.1
 %global symfony_max_ver 3.0
-# "psr/log": "~1.0"
+# "psr/log": "1.*"
 ## NOTE: Min version not 1.0 because autoloader required
-%global psr_log_min_ver 1.0.0-8
+%global psr_log_min_ver 1.0.1
 %global psr_log_max_ver 2.0
 
 # Build using "--without tests" to disable tests
@@ -37,7 +41,7 @@
 
 Name:          php-SymfonyCmfRouting
 Version:       %{github_version}
-Release:       4%{?dist}
+Release:       1%{?dist}
 Summary:       Extends the Symfony2 routing component for dynamic routes and chaining
 
 Group:         Development/Libraries
@@ -52,14 +56,13 @@ BuildArch:     noarch
 BuildRequires: php-composer(phpunit/phpunit)
 ## composer.json
 BuildRequires: php(language)                              >= %{php_min_ver}
-#BuildRequires: php-composer(psr/log)                      >= %%{psr_log_min_ver}
-BuildRequires: php-PsrLog                                 >= %{psr_log_min_ver}
+BuildRequires: php-composer(psr/log)                      >= %{psr_log_min_ver}
 BuildRequires: php-composer(symfony/config)               >= %{symfony_min_ver}
 BuildRequires: php-composer(symfony/dependency-injection) >= %{symfony_min_ver}
 BuildRequires: php-composer(symfony/event-dispatcher)     >= %{symfony_min_ver}
 BuildRequires: php-composer(symfony/http-kernel)          >= %{symfony_min_ver}
 BuildRequires: php-composer(symfony/routing)              >= %{symfony_min_ver}
-## phpcompatinfo (computed from version 1.3.0)
+## phpcompatinfo (computed from version 1.4.0)
 BuildRequires: php-pcre
 BuildRequires: php-spl
 ## Autoloader
@@ -68,14 +71,13 @@ BuildRequires: php-composer(symfony/class-loader)
 
 # composer.json
 Requires:      php(language)                     >= %{php_min_ver}
-#Requires:      php-composer(psr/log)             >= %%{psr_log_min_ver}
-Requires:      php-PsrLog                        >= %{psr_log_min_ver}
+Requires:      php-composer(psr/log)             >= %{psr_log_min_ver}
 Requires:      php-composer(psr/log)             <  %{psr_log_max_ver}
 Requires:      php-composer(symfony/http-kernel) >= %{symfony_min_ver}
 Requires:      php-composer(symfony/http-kernel) <  %{symfony_max_ver}
 Requires:      php-composer(symfony/routing)     >= %{symfony_min_ver}
 Requires:      php-composer(symfony/routing)     <  %{symfony_max_ver}
-# phpcompatinfo (computed from version 1.3.0)
+# phpcompatinfo (computed from version 1.4.0)
 Requires:      php-pcre
 Requires:      php-spl
 # composer.json: optional
@@ -134,7 +136,9 @@ require_once '%{phpdir}/Symfony/Component/HttpKernel/autoload.php';
 require_once '%{phpdir}/Symfony/Component/Routing/autoload.php';
 
 // Optional dependency
-@include_once '%{phpdir}/Symfony/Component/EventDispatcher/autoload.php';
+if (file_exists('%{phpdir}/Symfony/Component/EventDispatcher/autoload.php')) {
+    require_once '%{phpdir}/Symfony/Component/EventDispatcher/autoload.php';
+}
 
 return $fedoraClassLoader;
 AUTOLOAD
@@ -167,11 +171,20 @@ require_once '%{phpdir}/Symfony/Component/Config/autoload.php';
 require_once '%{phpdir}/Symfony/Component/DependencyInjection/autoload.php';
 BOOTSTRAP
 
-%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -195,6 +208,9 @@ fi
 
 
 %changelog
+* Thu Nov 03 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.4.0-1
+- Updated to 1.4.0 (RHBZ #1297159)
+
 * Thu Jan 21 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-4
 - sync with Fedora
 - run test suite with both PHP 5 and 7 when available
