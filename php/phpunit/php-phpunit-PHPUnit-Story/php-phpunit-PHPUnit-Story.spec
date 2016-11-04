@@ -14,11 +14,11 @@
 %global pear_name    PHPUnit_Story
 %global pear_channel pear.phpunit.de
 # Circular dependency with phpunit
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests   0%{?_with_tests:1}
 
 Name:           php-phpunit-PHPUnit-Story
 Version:        1.0.2
-Release:        4%{?dist}.1
+Release:        8%{?dist}
 Summary:        Story extension for PHPUnit to facilitate Behaviour-Driven Development
 
 Group:          Development/Libraries
@@ -29,33 +29,35 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
+BuildRequires:  php-fedora-autoloader-devel
 
 # From composer.json
 Requires:       php(language) >= 5.3.3
 Requires:       php-spl
 Requires:       php-phpunit-PHPUnit >= 3.6.0
+Requires:       php-composer(fedora/autoloader)
 
 # For compatibility with PEAR mode
 Provides:       php-pear(%{pear_channel}/%{pear_name}) = %{version}
+# Composer
+Provides:       php-composer(phpunit/phpunit-story) = %{version}
 
 
 %description
 Story extension for PHPUnit to facilitate Behaviour-Driven Development
 
+
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-rm PHPUnit/Extensions/Story/Autoload.php.in
+rm PHPUnit/Extensions/Story/Autoload.php*
 
 
 %build
-# Empty build section, most likely nothing required.
-
-# If upstream drop Autoload.php, command to generate it
-#phpab \
-#  --output   PHPUnit/Extensions/Story/Autoload.php \
-#  --template PHPUnit/Extensions/Story/Autoload.php.in \
-#  PHPUnit
+%{_bindir}/phpab \
+  --output   PHPUnit/Extensions/Story/Autoload.php \
+  --template fedora \
+  PHPUnit
 
 
 %install
@@ -66,8 +68,31 @@ cp -pr PHPUnit %{buildroot}%{php_home}
 
 %if %{with_tests}
 %check
-phpunit \
-  -d date.timezone=UTC
+sed -e 's/by Sebastian Bergmann/by Sebastian Bergmann and contributors/' \
+    -e 's/%sMb/%sMB/' \
+    -e 's/\.\.\.\..*$/....%s/' \
+    -i Tests/Functional/*phpt
+
+: Run upstream test suite
+# remirepo:13
+run=0
+ret=0
+if which php56; then
+   php56 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
+   %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if which php71; then
+   php71 -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
+   %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/php -d include_path=.:%{buildroot}%{_datadir}/php:%{_datadir}/php \
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %endif
 
 
@@ -89,6 +114,11 @@ fi
 
 
 %changelog
+* Fri Nov  4 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-8
+- switch to fedora/autoloader
+- provide php-composer(phpunit/phpunit-story)
+- enable test suite
+
 * Wed Apr 30 2014 Remi Collet <remi@fedoraproject.org> - 1.0.2-4
 - cleanup pear registry
 

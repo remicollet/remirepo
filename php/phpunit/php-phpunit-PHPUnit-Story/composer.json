@@ -1,0 +1,36 @@
+{
+    "name": "phpunit/phpunit-story",
+    "description": "Story extension for PHPUnit to facilitate Behaviour-Driven Development.",
+    "type": "library",
+    "keywords": [
+        "xunit",
+        "tdd",
+        "bdd"
+    ],
+    "homepage": "http://www.phpunit.de/",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Sebastian Bergmann",
+            "email": "sb@sebastian-bergmann.de",
+            "role": "lead"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/sebastianbergmann/phpunit-story/issues",
+        "irc": "irc://irc.freenode.net/phpunit"
+    },
+    "require": {
+        "php": ">=5.2.7",
+        "phpunit/phpunit": ">=3.6.0RC1@stable",
+        "ext-spl": "*"
+    },
+    "autoload": {
+        "classmap": [
+            "PHPUnit/"
+        ]
+    },
+    "include-path": [
+        ""
+    ]
+}
