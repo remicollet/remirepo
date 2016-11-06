@@ -1,10 +1,10 @@
 #!/bin/bash
 
 NAME=$(basename $PWD)
-OWNER=$(sed   -n '/^%global github_owner/{s/.* //;p}'   $NAME.spec)
-PROJECT=$(sed -n '/^%global github_name/{s/.* //;p}'    $NAME.spec)
-VERSION=$(sed -n '/^%global github_version/{s/.* //;p}' $NAME.spec)
-COMMIT=$(sed  -n '/^%global github_commit/{s/.* //;p}'  $NAME.spec)
+OWNER=$(sed   -n '/^%global github_owner/{s/.* //;p}'   $NAME$1.spec)
+PROJECT=$(sed -n '/^%global github_name/{s/.* //;p}'    $NAME$1.spec)
+VERSION=$(sed -n '/^%global github_version/{s/.* //;p}' $NAME$1.spec)
+COMMIT=$(sed  -n '/^%global github_commit/{s/.* //;p}'  $NAME$1.spec)
 SHORT=${COMMIT:0:7}
 
 echo -e "\nCreate git snapshot\nName=$NAME, Owner=$OWNER, Project=$PROJECT, Version=$VERSION\n"
@@ -16,7 +16,7 @@ git clone https://github.com/$OWNER/$PROJECT.git $PROJECT-$COMMIT
 echo "Getting commit..."
 pushd $PROJECT-$COMMIT
 git checkout $COMMIT
-cp composer.json ../composer.json
+cp composer.json ../composer$1.json
 popd
 
 echo "Archiving..."

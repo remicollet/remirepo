@@ -12,8 +12,8 @@
 
 %global github_owner      Ocramius
 %global github_name       ProxyManager
-%global github_version    2.0.3
-%global github_commit     51c7fdd99dba53808aaab21b34f7a55b302c160c
+%global github_version    2.0.4
+%global github_commit     a55d08229f4f614bf335759ed0cf63378feeb2e6
 %global github_short      %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor   ocramius
@@ -32,7 +32,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       OOP proxy wrappers utilities
 
 Group:         Development/Libraries
@@ -62,7 +62,7 @@ BuildRequires: php-composer(ocramius/generated-hydrator) >= 2
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
-BuildRequires: php-composer(phpunit/phpunit) >= 5.3.4
+BuildRequires: php-composer(phpunit/phpunit) >= 5.4.6
 %endif
 
 # composer.json
@@ -164,6 +164,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov  6 2016 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
+- update to 2.0.4
+
 * Wed Oct 19 2016 Remi Collet <remi@fedoraproject.org> - 2.0.3-2
 - Add weak dependencies
 - Use dependencies' autoloaders
