@@ -22,7 +22,7 @@
 %global php_min_ver     5.3.0
 # "psr/log": "~1.0"
 #     NOTE: Min version not 1.0 because autoloader required
-%global psrlog_min_ver  1.0.0-8
+%global psrlog_min_ver  1.0.1
 %global psrlog_max_ver  2.0
 # "raven/raven": "^0.13"
 %global raven_min_ver   0.13
@@ -42,13 +42,19 @@
 
 Name:      php-Monolog
 Version:   %{github_version}
-Release:   1%{?dist}
+Release:   2%{?dist}
 Summary:   Sends your logs to files, sockets, inboxes, databases and various web services
 
 Group:     Development/Libraries
 License:   MIT
 URL:       https://github.com/%{github_owner}/%{github_name}
 Source0:   %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+
+# Fix tests for sentry/sentry >= 0.16.0 (and < 1.0)
+#
+# Patch adapted for Monolog version 1.21.0 from
+#     https://github.com/Seldaek/monolog/pull/880
+Patch0:    %{name}-tests-sentry-gte-0-16-0.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -57,9 +63,7 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: php(language)                         >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-#BuildRequires: php-composer(psr/log)                 >= %%{psrlog_min_ver}
-BuildRequires: php-PsrLog                            >= %{psrlog_min_ver}
-BuildRequires: php-composer(psr/log)                 <  %{psrlog_max_ver}
+BuildRequires: php-composer(psr/log)                 >= %{psrlog_min_ver}
 ## optional
 BuildRequires: php-composer(swiftmailer/swiftmailer) >= %{swift_min_ver}
 BuildRequires: php-composer(raven/raven)             >= %{raven_min_ver}
@@ -83,8 +87,7 @@ BuildRequires: php-composer(symfony/class-loader)
 
 # composer.json
 Requires:      php(language)         >= %{php_min_ver}
-#Requires:      php-composer(psr/log) >= %%{psrlog_min_ver}
-Requires:      php-PsrLog            >= %{psrlog_min_ver}
+Requires:      php-composer(psr/log) >= %{psrlog_min_ver}
 Requires:      php-composer(psr/log) <  %{psrlog_max_ver}
 # phpcompatinfo (computed from version 1.21.0)
 Requires:      php-curl
@@ -147,6 +150,9 @@ at a later time.
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
+
+: Fix tests for sentry/sentry >= 0.16.0
+%patch0 -p1
 
 : Create autoloader
 cat <<'AUTOLOAD' | tee src/Monolog/autoload.php
@@ -229,7 +235,7 @@ if which php56; then
    run=1
 fi
 if [ $run -eq 0 ]; then
-   %{_bindir}/phpunit --verbose --bootstrap bootstrap.php || ret =1
+%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
 fi
 
 exit $ret;
@@ -253,6 +259,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov 06 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.21.0-2
+- Fix test suite for php-sentry >= 0.16.0
+- Modified php-psr-log dependency (min version 1.0.0-8 => 1.0.1)
+
 * Mon Aug 08 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.21.0-1
 - Updated to 1.21.0 (RHBZ #1362318)
 
