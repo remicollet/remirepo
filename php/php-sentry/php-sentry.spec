@@ -1,3 +1,4 @@
+# remirepo spec file for php-sentry, from
 #
 # Fedora spec file for php-sentry
 #
@@ -46,6 +47,7 @@ URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
 Source1:       %{name}-get-source.sh
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:     noarch
 # Library version value check
 BuildRequires: php-cli
@@ -138,6 +140,8 @@ AUTOLOAD
 
 
 %install
+rm -rf %{buildroot}
+
 mkdir -p %{buildroot}%{phpdir}
 cp -rp lib/* %{buildroot}%{phpdir}/
 
@@ -165,13 +169,33 @@ require_once '%{buildroot}%{phpdir}/Raven/autoload.php';
 BOOTSTRAP
 
 : Run tests
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+# remirepo:2
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc *.rst
@@ -184,5 +208,8 @@ BOOTSTRAP
 
 
 %changelog
+* Sun Nov  6 2016 Remi Collet <remi@remirepo.net> - 0.22.0-1
+- add backport stuff for remi repo.
+
 * Thu Nov 03 2016 Shawn Iwinski <shawn@iwin.ski> - 0.22.0-1
 - Initial package
