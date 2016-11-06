@@ -12,15 +12,14 @@
 
 %global github_owner     doctrine
 %global github_name      cache
-%global github_version   1.6.0
-%global github_commit    f8af318d14bdb0eff0336795b428b547bd39ccb6
+%global github_version   1.6.1
+%global github_commit    b6f544a20f4807e81f7044d31e679ccbb1866dc3
 
 %global composer_vendor  doctrine
 %global composer_project cache
 
 # "php": "~5.5|~7.0"
 %global php_min_ver 5.5
-%global php_max_ver 8.0
 
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
@@ -44,7 +43,7 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 1.6.0)
+## phpcompatinfo (computed from version 1.6.1)
 BuildRequires: php-date
 BuildRequires: php-hash
 BuildRequires: php-reflection
@@ -53,13 +52,12 @@ BuildRequires: php-spl
 BuildRequires: php-sqlite3
 %endif
 ## Autoloader
-BuildRequires: php-composer(symfony/class-loader)
+BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-Requires:      php(language) <  %{php_max_ver}
-# phpcompatinfo (computed from version 1.6.0)
+# phpcompatinfo (computed from version 1.6.1)
 Requires:      php-date
 Requires:      php-hash
 Requires:      php-spl
@@ -67,7 +65,7 @@ Requires:      php-spl
 Requires:      php-sqlite3
 %endif
 # Autoloader
-Requires:      php-composer(symfony/class-loader)
+Requires:      php-composer(fedora/autoloader)
 # Weak dependencies
 %if 0%{?fedora} > 21
 Suggests:      php-composer(predis/predis)
@@ -104,22 +102,10 @@ cat <<'AUTOLOAD' | tee lib/Doctrine/Common/Cache/autoload.php
 /**
  * Autoloader for %{name} and its' dependencies
  * (created by %{name}-%{version}-%{release}).
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
  */
+require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
-
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('Doctrine\\Common\\Cache\\', dirname(dirname(dirname(__DIR__))));
-
-return $fedoraClassLoader;
+\Fedora\Autoloader\Autoload::addPsr4('Doctrine\\Common\\Cache\\', __DIR__);
 AUTOLOAD
 
 
@@ -138,11 +124,8 @@ cp -rp lib/* %{buildroot}%{phpdir}/
 : Create tests autoloader
 cat <<'AUTOLOAD' | tee autoload.php
 <?php
-
-$fedoraClassLoader =
-    require_once '%{buildroot}%{phpdir}/Doctrine/Common/Cache/autoload.php';
-
-$fedoraClassLoader->addPrefix('Doctrine\\Tests', __DIR__ . '/tests');
+require_once '%{buildroot}%{phpdir}/Doctrine/Common/Cache/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr0('Doctrine\\Tests\\', __DIR__.'/tests');
 AUTOLOAD
 
 : Skip tests known to fail
@@ -195,6 +178,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 04 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.6.1-1
+- Updated to 1.6.1 (RHBZ #1389915)
+- Removed PHP max version dependency
+- Switched autoloader from "symfony/class-loader" to "fedora/autoloader"
+
 * Sat Mar 12 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.6.0-1
 - Updated to 1.6.0 (RHBZ #1295634)
 - Removed "phpunit without assertNotFalse() function" patch since
