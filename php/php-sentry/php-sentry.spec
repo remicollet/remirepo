@@ -77,7 +77,8 @@ BuildConflicts: php-Raven
 %endif
 
 Requires:      php-cli
-Requires:      ca-certificates
+# use path as ca-certificates doesn't exists on EL-5
+Requires:      /etc/pki/tls/cert.pem
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
 Requires:      php-composer(monolog/monolog) >= %{monolog_min_ver}
