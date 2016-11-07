@@ -9,7 +9,7 @@
 %{?scl:          %scl_package        php-pecl-zookeeper}
 
 %global pecl_name  zookeeper
-%global with_zts   0%{?__ztsphp:1}
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 %global ini_name   %{pecl_name}.ini
 %else
@@ -18,21 +18,17 @@
 
 Summary:        PHP extension for interfacing with Apache ZooKeeper
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.2.2
-Release:        6%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        0.2.3
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://github.com/andreiz/php-zookeeper
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-devel < 7
 BuildRequires:  %{?scl_prefix}php-pear
-%if 0%{?fedora} >= 21
 BuildRequires:  zookeeper-devel
-%else
-BuildRequires:  zookeeper-lib-devel
-%endif
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
@@ -41,8 +37,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -77,17 +75,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
 
-# https://github.com/andreiz/php-zookeeper/issues/31
-sed -e '/examples/s/role="php"/role="doc"/' -i package.xml
-
 %{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
-# https://github.com/andreiz/php-zookeeper/issues/27
-sed -e 's:/lib:/$PHP_LIBDIR:' -i config.m4
-
-# Fix version
-sed -e '/PHP_ZOOKEEPER_VERSION/s/0.1.0/%{version}/' -i php_zookeeper.h
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_ZOOKEEPER_VERSION/{s/.* "//;s/".*$//;p}' php_zookeeper.h)
@@ -214,6 +204,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 07 2016 Remi Collet <remi@fedoraproject.org> - 0.2.3-1
+- Update to 0.2.3
+
 * Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 0.2.2-6
 - adapt for F24
 - drop runtime dependency on pear, new scriptlets
