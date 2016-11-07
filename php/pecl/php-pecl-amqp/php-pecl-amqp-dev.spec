@@ -26,21 +26,16 @@
 %else
 %global ini_name    40-%{pecl_name}.ini
 %endif
-%global prever      beta1
+%global prever      beta2
 
 Summary:       Communicate with any AMQP compliant server
 Name:          %{?sub_prefix}php-pecl-amqp
 Version:       1.8.0
-Release:       0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/amqp
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
-
-Source1:       https://raw.githubusercontent.com/pdezwart/php-amqp/v1.8.0beta1/amqp_basic_properties.c
-Source2:       https://raw.githubusercontent.com/pdezwart/php-amqp/v1.8.0beta1/amqp_basic_properties.h
-Source3:       https://raw.githubusercontent.com/pdezwart/php-amqp/v1.8.0beta1/amqp_methods_handling.c
-Source4:       https://raw.githubusercontent.com/pdezwart/php-amqp/v1.8.0beta1/amqp_methods_handling.h
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 5.3.0
@@ -117,7 +112,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 mv %{pecl_name}-%{version}%{?prever} NTS
-cp %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} NTS
 
 cd NTS
 sed -e 's/CFLAGS="-I/CFLAGS="-fPIC -I/' -i config.m4
@@ -310,6 +304,9 @@ fi
 
 
 %changelog
+* Mon Nov  7 2016 Remi Collet <remi@fedoraproject.org> - 1.8.0-0.2.beta2
+- update to 1.8.0beta2
+
 * Tue Nov  1 2016 Remi Collet <remi@fedoraproject.org> - 1.8.0-0.1.beta1
 - update to 1.8.0beta1
 
