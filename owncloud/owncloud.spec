@@ -8,7 +8,7 @@
 # Please preserve changelog entries
 #
 Name:           owncloud
-Version:        9.1.1
+Version:        9.1.2
 Release:        1%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
@@ -65,7 +65,7 @@ Patch8:         %{name}-9.1.0-default_integrity_check_disabled.patch
 Patch9:         %{name}-9.1.1-work-arround-nss-issue.patch
 
 # RH provide support for php54 so don't tell users it's EOL
-Patch10:         %{name}-9.1.1-dont_warn_php54_eol.patch
+Patch10:         %{name}-9.1.2-dont_warn_php54_eol.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -738,6 +738,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov  8 2016 Remi Collet <remi@fedoraproject.org> - 9.1.2-1
+- Update to 9.1.2
+
 * Thu Oct 06 2016 James Hogarth <james.hogarth@gmail.com> - 9.1.1-1
 - Update to 9.1.1
 

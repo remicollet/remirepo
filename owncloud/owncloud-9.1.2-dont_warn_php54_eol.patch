@@ -1,0 +1,18 @@
+--- ./settings/Controller/CheckSetupController.php.old	2016-11-08 13:57:55.244970190 +0100
++++ ./settings/Controller/CheckSetupController.php	2016-11-08 13:57:59.087987805 +0100
+@@ -347,13 +347,8 @@
+ 	 * @return bool
+ 	 */
+ 	protected function isEndOfLive() {
+-		$eol = false;
+ 
+-		//PHP 5.4 is EOL on 14 Sep 2015
+-		if (version_compare(PHP_VERSION, '5.5.0') === -1) {
+-			$eol = true;
+-			return $eol;
+-		}
+-		return $eol;
++		// Red Hat provide support for the system PHP so never eol
++		return false;
+ 	}
+ }
