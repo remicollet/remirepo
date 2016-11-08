@@ -14,11 +14,11 @@
 %endif
 %endif
 
-%global gh_commit  8b9587df1a0859074eae6133c5210451d6527e38
+%global gh_commit  18570160a5cb427ed4d55a3a4dc4431d2bea6949
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   eduardok
 %global gh_project libsmbclient-php
-#global gh_date    20150909
+%global gh_date    20161104
 #global prever     RC1
 
 %{?scl:          %scl_package         php-smbclient}
@@ -35,23 +35,28 @@
 %global with_tests 0%{?_with_tests:1}
 
 Name:           %{?sub_prefix}php-smbclient
-Version:        0.8.0
+Version:        0.9.0
+%if 0%{?gh_date}
+Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+%else
 Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+%endif
+
 Summary:        PHP wrapper for libsmbclient
 
 Group:          Development/Languages
 License:        BSD
 URL:            https://github.com/eduardok/libsmbclient-php
-%if 0%{?ghdate}
-Source0:        %{pkg_name}-%{version}-%{gh_short}.tgz
-# git snapshot as upstream doesn't provide test suite
-Source1:        makesrc.sh
+%if 0%{?gh_date}
+Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 %if %{with_tests}
 Source2:        %{gh_project}-phpunit.xml
 %endif
+
+Patch0:         %{pecl_name}-zts.patch
 
 BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
@@ -122,7 +127,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -q -c
-%if 0%{?ghdate}
+%if 0%{?gh_date}
 mv %{gh_project}-%{gh_commit} NTS
 mv NTS/package.xml .
 %else
@@ -135,10 +140,12 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
+%patch0 -p1 -b .zts
+
 # Check extension version
 ver=$(sed -n '/define PHP_SMBCLIENT_VERSION/{s/.* "//;s/".*$//;p}' php_smbclient.h)
-if test "$ver" != "%{version}%{?prever}"; then
-   : Error: Upstream VERSION version is ${ver}, expecting %{version}%{?prever}.
+if test "$ver" != "%{version}%{?prever}%{?gh_date:-dev}"; then
+   : Error: Upstream VERSION version is ${ver}, expecting %{version}%{?prever}%{?gh_date:-dev}.
    exit 1
 fi
 cd ..
@@ -248,6 +255,9 @@ fi
 
 
 %changelog
+* Tue Nov  8 2016 Remi Collet <remi@fedoraproject.org> - 0.9.0-0.1.20161104git1857016
+- update to 0.9.0-dev for stream performance
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 0.8.0-2
 - rebuild for PHP 7.1 new API version
 
