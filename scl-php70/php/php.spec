@@ -124,7 +124,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver        RC1
+#global rcver        RC1
 %global rpmrel       1
 
 
@@ -1826,6 +1826,9 @@ fi
 
 
 %changelog
+* Tue Nov  8 2016 Remi Collet <remi@fedoraproject.org> 7.0.13-1
+- Update to 7.0.13 - http://www.php.net/releases/7_0_13.php
+
 * Tue Oct 25 2016 Remi Collet <remi@fedoraproject.org> 7.0.13-0.1.RC1
 - Update to 7.0.13RC1
 - oci8 version is now 2.1.3
