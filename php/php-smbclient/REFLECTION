@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #158 smbclient version 0.8.0 ] {
+Extension [ <persistent> extension #115 smbclient version 0.9.0-dev ] {
 
   - Constants [30] {
     Constant [ integer SMBCLIENT_XATTR_CREATE ] { 1 }

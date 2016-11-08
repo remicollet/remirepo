@@ -1,0 +1,49 @@
+From 2f30d7689efcb1e3c1c2f8e495884409a009fae1 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Tue, 8 Nov 2016 13:17:20 +0100
+Subject: [PATCH] fix ZTS build
+
+---
+ php_smbclient.h | 2 +-
+ smb_streams.c   | 2 +-
+ smbclient.c     | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/php_smbclient.h b/php_smbclient.h
+index ee6c936..34f7aa5 100644
+--- a/php_smbclient.h
++++ b/php_smbclient.h
+@@ -133,6 +133,6 @@ php_smbclient_state * php_smbclient_state_new  (php_stream_context *context, int
+ void                  php_smbclient_state_free (php_smbclient_state *state TSRMLS_DC);
+ int                   php_smbclient_state_init (php_smbclient_state *state TSRMLS_DC);
+ int                   flagstring_to_smbflags (const char *flags, int flags_len, int *retval TSRMLS_DC);
+-void                  php_smb_pool_cleanup(void);
++void                  php_smb_pool_cleanup(TSRMLS_D);
+ 
+ #endif /* PHP_SMBCLIENT_H */
+diff --git a/smb_streams.c b/smb_streams.c
+index 454708b..b6f73c6 100644
+--- a/smb_streams.c
++++ b/smb_streams.c
+@@ -149,7 +149,7 @@ static void php_smb_pool_drop(php_smbclient_state *state TSRMLS_DC)
+ 	}
+ }
+ 
+-void php_smb_pool_cleanup(void) {
++void php_smb_pool_cleanup(TSRMLS_D) {
+ 	struct _php_smb_pool *pool;
+ 
+ 	pool = SMBCLIENT_G(pool_first);
+diff --git a/smbclient.c b/smbclient.c
+index e247987..791f078 100644
+--- a/smbclient.c
++++ b/smbclient.c
+@@ -491,7 +491,7 @@ PHP_MSHUTDOWN_FUNCTION(smbclient)
+ 
+ PHP_RSHUTDOWN_FUNCTION(smbclient)
+ {
+-	php_smb_pool_cleanup();
++	php_smb_pool_cleanup(TSRMLS_C);
+ 	return SUCCESS;
+ }
+ 
