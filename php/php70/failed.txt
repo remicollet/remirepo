@@ -7,7 +7,7 @@ $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 /var/lib/mock/el7x/build.log:Tests failed    :     0
 /var/lib/mock/fc22i/build.log:Tests failed    :    0
 /var/lib/mock/fc22x/build.log:Tests failed    :    0
-/var/lib/mock/fc23i/build.log:Tests failed    :    4
+/var/lib/mock/fc23i/build.log:Tests failed    :    3
 /var/lib/mock/fc23x/build.log:Tests failed    :    3
 /var/lib/mock/fc24i/build.log:Tests failed    :    0
 /var/lib/mock/fc24x/build.log:Tests failed    :    0
@@ -15,8 +15,6 @@ $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 /var/lib/mock/fc25x/build.log:Tests failed    :    0
 
 
-fc23i:
-	*	Bug #64438 proc_open hangs with stdin/out with 4097+ bytes [ext/standard/tests/streams/proc_open_bug64438.phpt]
 fc23i, fc23x:
 	***	Bug #20382 [2] (strtotime ("Monday", $date) produces wrong result on DST changeover) [ext/date/tests/bug20382-2.phpt]
 	***	Bug #33414 [1] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-1.phpt]
