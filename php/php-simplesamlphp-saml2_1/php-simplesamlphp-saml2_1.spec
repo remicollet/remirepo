@@ -12,8 +12,8 @@
 
 %global github_owner     simplesamlphp
 %global github_name      saml2
-%global github_version   1.10
-%global github_commit    6a4b1eece19b067b17fff718176689b82dc89fb9
+%global github_version   1.10.1
+%global github_commit    6cb5cb844ba5ef9a7f98d149bdab5661d36268ed
 
 %global composer_vendor  simplesamlphp
 %global composer_project saml2
@@ -169,6 +169,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov  9 2016 Remi Collet <remi@remirepo.net> - 1.10.1-1
+- update to 1.10.1
+
 * Sun Sep 25 2016 Shawn Iwinski <shawn@iwin.ski> - 1.10-1
 - Update to 1.10 (RHBZ #1376300)
 
