@@ -141,7 +141,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.5.38
-Release: 4%{?dist}
+Release: 5%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -247,6 +247,10 @@ Patch141: bug73276.patch
 Patch142: bug73293.patch
 Patch143: bug73240.patch
 Patch144: bug73017.patch
+Patch145: bug73331.patch
+Patch146: bug73144.patch
+Patch147: bug73418.patch
+Patch148: bug73356.patch
 
 # Security fixes (200+)
 
@@ -1057,6 +1061,10 @@ rm -rf ext/json
 %patch142 -p1 -b .bug73293
 %patch143 -p1 -b .bug73240
 %patch144 -p1 -b .bug73017
+%patch145 -p1 -b .bug73331
+%patch146 -p1 -b .bug73144
+%patch147 -p1 -b .bug73418
+%patch148 -p1 -b .bug73356
 
 # Fixes for tests
 %patch300 -p1 -b .datetests
@@ -2079,6 +2087,12 @@ EOF
 
 
 %changelog
+* Wed Nov  9 2016 Remi Collet <remi@remirepo.net> 5.5.38-5
+- fix #73418: Integer Overflow in "_php_imap_mail" leads Heap Overflow
+- fix #73144: Use-after-free in ArrayObject Deserialization
+- fix #73356: crash in bzcompress function
+- fix #73331: NULL Pointer Deref. in WDDX Packet Deserialization with PDORow
+
 * Sat Oct 15 2016 Remi Collet <remi@remirepo.net> 5.5.38-4
 - fix #73189: Memcpy negative size parameter php_resolve_path
 - fix #72581: previous property undefined in Exception after deserialization

@@ -1,9 +1,9 @@
-==== PHP 5.5.38-4 (2016-10-15)
+==== PHP 5.5.38-5 (2016-11-09)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl55*/build.log
 
-/var/lib/mock/scl55el6x/build.log: Tests failed    :    0
-/var/lib/mock/scl55el7x/build.log: Tests failed    :    0
+/var/lib/mock/scl55el6x/build.log: Tests failed    :    3
+/var/lib/mock/scl55el7x/build.log: Tests failed    :    3
 /var/lib/mock/scl55fc22x/build.log:Tests failed    :    0
 /var/lib/mock/scl55fc23x/build.log:Tests failed    :    2
 /var/lib/mock/scl55fc24x/build.log:Tests failed    :    4
@@ -11,8 +11,9 @@ $ grep -r 'Tests failed' /var/lib/mock/scl55*/build.log
 
 fc23x, fc24x, fc25x:
 	Bug #64802: openssl_x509_parse fails to parse subject properly in some cases [ext/openssl/tests/bug64802.phpt]
+el6x, el7x, fc23x
 	Bug #33414 [1] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-1.phpt]
-fc24x, fc25x
+el6x, el7x, fc24x, fc25x
 	Bug #20382 [2] (strtotime ("Monday", $date) produces wrong result on DST changeover) [ext/date/tests/bug20382-2.phpt]
 	Bug #33415 [1] (Possibly invalid non-one-hour DST or timezone shifts) [ext/date/tests/bug33415-1.phpt]
 
