@@ -101,7 +101,7 @@ for PHP code coverage information.
 
 %build
 %{_bindir}/phpab \
-  --format fedora \
+  --template fedora \
   --output src/autoload.php \
   src
 
@@ -114,6 +114,7 @@ require_once 'SebastianBergmann/CodeUnitReverseLookup/autoload.php';
 require_once 'SebastianBergmann/Environment/autoload.php';
 require_once 'SebastianBergmann/Version/autoload.php';
 EOF
+
 
 %install
 rm -rf     %{buildroot}

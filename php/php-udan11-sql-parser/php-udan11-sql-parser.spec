@@ -77,7 +77,7 @@ Autoloader: %{_datadir}/php/%{psr0}/autoload.php
 
 %build
 : generate an simple autoloader
-%{_bindir}/phpab --format fedora --output src/autoload.php src
+%{_bindir}/phpab --template fedora --output src/autoload.php src
 
 
 %install
