@@ -12,8 +12,8 @@
 
 %global github_owner     simplesamlphp
 %global github_name      saml2
-%global github_version   2.3
-%global github_commit    4853f1e7f69e428afc1843d4170bbaa1038199b4
+%global github_version   2.3.1
+%global github_commit    d01b753d557917583292ba9bc64fb1b917d6ea63
 
 %global composer_vendor  simplesamlphp
 %global composer_project saml2
@@ -192,6 +192,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov  9 2016 Remi Collet <remi@remirepo.net> - 2.3.1-1
+- update to 2.3.1
+
 * Sun Sep 25 2016 Shawn Iwinski <shawn@iwin.ski> - 2.3-1
 - Update to 2.3 (RHBZ #1376301)
 
