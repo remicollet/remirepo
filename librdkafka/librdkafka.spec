@@ -7,13 +7,13 @@
 # Please, preserve the changelog entries
 #
 %global libname      librdkafka
-%global gh_commit    2213fb29f98a7a73f22da21ef85e0783f6fd67c4
+%global gh_commit    2f0986fb3f991187d8b67af002e8ec5b8b3dd141
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     edenhill
 %global gh_project   %{libname}
 
 Name:    %{libname}
-Version: 0.9.1
+Version: 0.9.2
 Release: 1%{?dist}
 Group:   System Environment/Libraries
 Summary: Apache Kafka C/C++ client library
@@ -62,6 +62,10 @@ cp -pr examples rpmdocs/examples
 # See https://github.com/edenhill/librdkafka/issues/277
 sed -e 's/-Werror //' -i mklove/modules/configure.good_cflags
 
+# See https://github.com/edenhill/librdkafka/issues/895
+sed -e 's/0x000902c9/0x000902ff/' \
+    -i src/rdkafka.h src-cpp/rdkafkacpp.h
+
 
 %build
 %configure
@@ -98,6 +102,9 @@ rm %{buildroot}%{_libdir}/*.a
 
 
 %changelog
+* Wed Nov  9 2016 Remi Collet <remi@fedoraproject.org> - 0.9.2-1
+- update to 0.9.2
+
 * Sun May 29 2016 Remi Collet <remi@fedoraproject.org> - 0.9.1-1
 - update to 0.9.1
 
