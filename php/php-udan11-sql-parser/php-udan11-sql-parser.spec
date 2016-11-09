@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9d95ec0d10f44561a189700a8180de5884522d42
+%global gh_commit    55e09604e3c75abb726d9739268b021b449c24bf
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpmyadmin
 #global gh_date      20150820
@@ -15,7 +15,7 @@
 %global psr0         SqlParser
 
 Name:           php-udan11-%{gh_project}
-Version:        3.4.11
+Version:        3.4.12
 Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A validating SQL lexer and parser with a focus on MySQL dialect
 
@@ -37,7 +37,7 @@ BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-composer(phpunit/phpunit)
 %endif
 # For autoloader
-BuildRequires:  php-composer(theseer/autoload)
+BuildRequires:  php-fedora-autoloader-devel
 
 # From composer.json, "require": {
 #        "php": ">=5.3.0",
@@ -48,7 +48,7 @@ Requires:       php-mbstring
 Requires:       php-ctype
 Requires:       php-pcre
 # For generated autoloader
-Requires:       php-spl
+Requires:       php-composer(fedora/autoloader)
 
 # Rename
 Obsoletes:      php-dmitry-php-sql-parser < 0-0.2
@@ -77,7 +77,7 @@ Autoloader: %{_datadir}/php/%{psr0}/autoload.php
 
 %build
 : generate an simple autoloader
-%{_bindir}/phpab --output src/autoload.php src
+%{_bindir}/phpab --format fedora --output src/autoload.php src
 
 
 %install
@@ -139,6 +139,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov  9 2016 Remi Collet <remi@fedoraproject.org> - 3.4.12-1
+- update to 3.4.12
+- switch to fedora/autoloader
+
 * Tue Oct 25 2016 Remi Collet <remi@fedoraproject.org> - 3.4.11-1
 - update to 3.4.11
 
