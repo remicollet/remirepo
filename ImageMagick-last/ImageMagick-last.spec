@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        6.9.6
-%global Patchlevel 3
+%global Patchlevel 4
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 
@@ -510,6 +510,9 @@ fi
 
 
 %changelog
+* Wed Nov  9 2016 Remi Collet <remi@remirepo.net> - 6.9.6.4-1
+- update to version 6.9.6 patchlevel 4
+
 * Tue Nov  1 2016 Remi Collet <remi@remirepo.net> - 6.9.6.3-1
 - update to version 6.9.6 patchlevel 3
 
