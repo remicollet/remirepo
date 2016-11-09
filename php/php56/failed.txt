@@ -1,8 +1,8 @@
-===== 5.6.28RC1 (2016-10-28)
+===== 5.6.28 (2016-11-10)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
-/var/lib/mock/el5i/build.log:Tests failed    :     7
+/var/lib/mock/el5i/build.log:Tests failed    :     8
 /var/lib/mock/el5x/build.log:Tests failed    :     2
 /var/lib/mock/el6i/build.log:Tests failed    :     5
 /var/lib/mock/el6x/build.log:Tests failed    :     0
@@ -19,6 +19,8 @@ fc23i, fc23x
 	***	Bug #20382 [2] (strtotime ("Monday", $date) produces wrong result on DST changeover) [ext/date/tests/bug20382-2.phpt]
 	***	Bug #33414 [1] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-1.phpt]
 	***	Bug #33415 [1] (Possibly invalid non-one-hour DST or timezone shifts) [ext/date/tests/bug33415-1.phpt]
+el5i
+		Specific protocol method specification [ext/openssl/tests/stream_crypto_flags_004.phpt]
 el5i, el5x
 		openssl_error_string() tests [ext/openssl/tests/openssl_error_string_basic.phpt]
 el5i, el5x
