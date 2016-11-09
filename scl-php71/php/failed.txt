@@ -1,12 +1,12 @@
-===== 7.1.0RC5 (2016-10-27)
+===== 7.1.0RC6 (2016-11-10)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl71*/build.log
 
 /var/lib/mock/scl70el6x/build.log:Tests failed    :     0
 /var/lib/mock/scl70el7x/build.log:Tests failed    :     0
-/var/lib/mock/scl70fc22x/build.log:Tests failed    :    1
-/var/lib/mock/scl70fc23x/build.log:Tests failed    :    4
-/var/lib/mock/scl70fc24x/build.log:Tests failed    :    0
+/var/lib/mock/scl70fc22x/build.log:Tests failed    :    0
+/var/lib/mock/scl70fc23x/build.log:Tests failed    :    5
+/var/lib/mock/scl70fc24x/build.log:Tests failed    :    1
 /var/lib/mock/scl70fc25x/build.log:Tests failed    :    0
 
 fc21x
@@ -16,6 +16,8 @@ fc23x
 	***	Bug #33414 [1] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-1.phpt]
 	***	Bug #33415 [1] (Possibly invalid non-one-hour DST or timezone shifts) [ext/date/tests/bug33415-1.phpt]
 	***	Bug #51819 (Case discrepancy in timezone names cause Uncaught exception and fatal error) [ext/date/tests/bug51819.phpt]
+fc23x, fc24x
+	*	Bug #64438 proc_open hangs with stdin/out with 4097+ bytes [ext/standard/tests/streams/proc_open_bug64438.phpt]
 
 
 *	proc_open give erratic test results :(
