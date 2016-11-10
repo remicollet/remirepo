@@ -55,10 +55,7 @@ Autoloader: %{_datadir}/php/Interop/Http/Middleware/autoload.php
 %build
 cat << 'AUTOLOAD' | tee src/autoload.php
 <?php
-/**
- * Autoloader for %{name} and its' dependencies
- * (created by %{name}-%{version}-%{release}).
- */
+/* Autoloader for %{name} and its dependencies */
 require_once '%{_datadir}/php/Fedora/Autoloader/autoload.php';
 
 \Fedora\Autoloader\Autoload::addPsr4('Interop\\Http\\Middleware\\', __DIR__);
