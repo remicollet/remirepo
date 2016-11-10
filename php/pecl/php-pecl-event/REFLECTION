@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #213 event version 2.1.0 ] {
+Extension [ <persistent> extension #157 event version 2.2.1 ] {
 
   - Dependencies {
     Dependency [ sockets (Required) ]
@@ -29,7 +29,7 @@ Extension [ <persistent> extension #213 event version 2.1.0 ] {
         Method [ <internal:event> static public method timer ] {
 
           - Parameters [3] {
-            Parameter #0 [ <required> &$base ]
+            Parameter #0 [ <required> EventBase $base ]
             Parameter #1 [ <required> $cb ]
             Parameter #2 [ <optional> $arg ]
           }
@@ -38,7 +38,7 @@ Extension [ <persistent> extension #213 event version 2.1.0 ] {
         Method [ <internal:event> static public method signal ] {
 
           - Parameters [4] {
-            Parameter #0 [ <required> &$base ]
+            Parameter #0 [ <required> EventBase $base ]
             Parameter #1 [ <required> $signum ]
             Parameter #2 [ <required> $cb ]
             Parameter #3 [ <optional> $arg ]
@@ -55,7 +55,7 @@ Extension [ <persistent> extension #213 event version 2.1.0 ] {
         Method [ <internal:event, ctor> public method __construct ] {
 
           - Parameters [5] {
-            Parameter #0 [ <required> &$base ]
+            Parameter #0 [ <required> EventBase $base ]
             Parameter #1 [ <required> $fd ]
             Parameter #2 [ <required> $what ]
             Parameter #3 [ <required> $cb ]
@@ -72,7 +72,7 @@ Extension [ <persistent> extension #213 event version 2.1.0 ] {
         Method [ <internal:event> public method set ] {
 
           - Parameters [5] {
-            Parameter #0 [ <required> &$base ]
+            Parameter #0 [ <required> EventBase $base ]
             Parameter #1 [ <required> $fd ]
             Parameter #2 [ <optional> $what ]
             Parameter #3 [ <optional> $cb ]
@@ -110,7 +110,7 @@ Extension [ <persistent> extension #213 event version 2.1.0 ] {
         Method [ <internal:event> public method setTimer ] {
 
           - Parameters [3] {
-            Parameter #0 [ <required> &$base ]
+            Parameter #0 [ <required> EventBase $base ]
             Parameter #1 [ <required> $cb ]
             Parameter #2 [ <optional> $arg ]
           }
@@ -315,7 +315,7 @@ Extension [ <persistent> extension #213 event version 2.1.0 ] {
         Method [ <internal:event> static public method createPair ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> &$base ]
+            Parameter #0 [ <required> EventBase $base ]
             Parameter #1 [ <optional> $options ]
           }
         }
@@ -324,8 +324,8 @@ Extension [ <persistent> extension #213 event version 2.1.0 ] {
 
           - Parameters [5] {
             Parameter #0 [ <required> $unused ]
-            Parameter #1 [ <required> $underlying ]
-            Parameter #2 [ <required> $ctx ]
+            Parameter #1 [ <required> EventBufferEvent $underlying ]
+            Parameter #2 [ <required> EventSslContext $ctx ]
             Parameter #3 [ <required> $state ]
             Parameter #4 [ <optional> $options ]
           }
@@ -334,8 +334,8 @@ Extension [ <persistent> extension #213 event version 2.1.0 ] {
         Method [ <internal:event> static public method createSslFilter ] {
 
           - Parameters [4] {
-            Parameter #0 [ <required> $underlying ]
-            Parameter #1 [ <required> $ctx ]
+            Parameter #0 [ <required> EventBufferEvent $underlying ]
+            Parameter #1 [ <required> EventSslContext $ctx ]
             Parameter #2 [ <required> $state ]
             Parameter #3 [ <optional> $options ]
           }
@@ -344,9 +344,9 @@ Extension [ <persistent> extension #213 event version 2.1.0 ] {
         Method [ <internal:event> static public method sslSocket ] {
 
           - Parameters [5] {
-            Parameter #0 [ <required> &$base ]
+            Parameter #0 [ <required> EventBase $base ]
             Parameter #1 [ <required> $socket ]
-            Parameter #2 [ <required> $ctx ]
+            Parameter #2 [ <required> EventSslContext $ctx ]
             Parameter #3 [ <required> $state ]
             Parameter #4 [ <optional> $options ]
           }
@@ -364,7 +364,7 @@ Extension [ <persistent> extension #213 event version 2.1.0 ] {
         Method [ <internal:event, ctor> public method __construct ] {
 
           - Parameters [6] {
-            Parameter #0 [ <required> &$base ]
+            Parameter #0 [ <required> EventBase $base ]
             Parameter #1 [ <optional> $socket ]
             Parameter #2 [ <optional> $options ]
             Parameter #3 [ <optional> $readcb ]
@@ -746,7 +746,7 @@ Extension [ <persistent> extension #213 event version 2.1.0 ] {
         Method [ <internal:event, ctor> public method __construct ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> &$base ]
+            Parameter #0 [ <required> EventBase $base ]
             Parameter #1 [ <required> $initialize ]
           }
         }
@@ -829,16 +829,22 @@ Extension [ <persistent> extension #213 event version 2.1.0 ] {
         Property [ <default> public $fd ]
       }
 
-      - Methods [7] {
+      - Methods [8] {
         Method [ <internal:event, ctor> public method __construct ] {
 
           - Parameters [6] {
-            Parameter #0 [ <required> &$base ]
+            Parameter #0 [ <required> EventBase $base ]
             Parameter #1 [ <required> $cb ]
             Parameter #2 [ <required> $data ]
             Parameter #3 [ <required> $flags ]
             Parameter #4 [ <required> $backlog ]
             Parameter #5 [ <required> $target ]
+          }
+        }
+
+        Method [ <internal:event> public method free ] {
+
+          - Parameters [0] {
           }
         }
 
@@ -903,11 +909,11 @@ Extension [ <persistent> extension #213 event version 2.1.0 ] {
         Method [ <internal:event, ctor> public method __construct ] {
 
           - Parameters [5] {
-            Parameter #0 [ <required> &$base ]
+            Parameter #0 [ <required> EventBase $base ]
             Parameter #1 [ <required> $dns_base ]
             Parameter #2 [ <required> $address ]
             Parameter #3 [ <required> $port ]
-            Parameter #4 [ <required> $ctx ]
+            Parameter #4 [ <required> EventSslContext $ctx ]
           }
         }
 
@@ -1004,8 +1010,8 @@ Extension [ <persistent> extension #213 event version 2.1.0 ] {
         Method [ <internal:event, ctor> public method __construct ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> &$base ]
-            Parameter #1 [ <optional> $ctx ]
+            Parameter #0 [ <required> EventBase $base ]
+            Parameter #1 [ <optional> EventSslContext $ctx ]
           }
         }
 
@@ -1293,16 +1299,16 @@ Extension [ <persistent> extension #213 event version 2.1.0 ] {
         Constant [ integer SOL_SOCKET ] { 1 }
         Constant [ integer SOL_TCP ] { 6 }
         Constant [ integer SOL_UDP ] { 17 }
-        Constant [ integer IPPROTO_IP ] { 0 }
         Constant [ integer SOCK_RAW ] { 3 }
+        Constant [ integer IPPROTO_IP ] { 0 }
         Constant [ integer IPPROTO_IPV6 ] { 41 }
-        Constant [ integer LIBEVENT_VERSION_NUMBER ] { 33559808 }
+        Constant [ integer LIBEVENT_VERSION_NUMBER ] { 33560064 }
       }
 
       - Static properties [0] {
       }
 
-      - Static methods [6] {
+      - Static methods [7] {
         Method [ <internal:event> static public method getLastSocketErrno ] {
 
           - Parameters [1] {
@@ -1348,6 +1354,13 @@ Extension [ <persistent> extension #213 event version 2.1.0 ] {
             Parameter #3 [ <required> $optval ]
           }
         }
+
+        Method [ <internal:event> static public method createSocket ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fd ]
+          }
+        }
       }
 
       - Properties [0] {
@@ -1361,12 +1374,10 @@ Extension [ <persistent> extension #213 event version 2.1.0 ] {
 
     Class [ <internal:event> final class EventSslContext ] {
 
-      - Constants [29] {
-        Constant [ integer SSLv2_CLIENT_METHOD ] { 1 }
+      - Constants [27] {
         Constant [ integer SSLv3_CLIENT_METHOD ] { 2 }
         Constant [ integer SSLv23_CLIENT_METHOD ] { 3 }
         Constant [ integer TLS_CLIENT_METHOD ] { 4 }
-        Constant [ integer SSLv2_SERVER_METHOD ] { 5 }
         Constant [ integer SSLv3_SERVER_METHOD ] { 6 }
         Constant [ integer SSLv23_SERVER_METHOD ] { 7 }
         Constant [ integer TLS_SERVER_METHOD ] { 8 }

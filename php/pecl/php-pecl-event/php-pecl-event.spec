@@ -34,8 +34,8 @@
 
 Summary:       Provides interface to libevent library
 Name:          %{?sub_prefix}php-pecl-%{pecl_name}
-Version:       2.1.0
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:       2.2.1
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/event
@@ -65,13 +65,13 @@ Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 Requires:      %{?scl_prefix}php-sockets%{?_isa}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:      %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:      %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:      %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:      %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 %if "%{?scl_prefix}" != "%{?sub_prefix}"
-Provides:      %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
-Provides:      %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 %endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
@@ -229,17 +229,21 @@ TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n $OPTS -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__php} -n run-tests.php
+%{__php} -n run-tests.php --show-diff
 
 %if %{with_zts}
 cd ../ZTS
+%if 0%{?rhel} == 6
+rm tests/27-event-util-create-socket.phpt
+%endif
+
 : Upstream test suite for ZTS extension
 SKIP_ONLINE_TESTS=1 \
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n $OPTS -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__ztsphp} -n run-tests.php
+%{__ztsphp} -n run-tests.php --show-diff
 %endif
 %endif
 
@@ -284,6 +288,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 10 2016 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
+- Update to 2.2.1 (php 5 and 7, stable)
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-2
 - rebuild for PHP 7.1 new API version
 
