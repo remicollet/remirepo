@@ -18,7 +18,7 @@
 %scl_package       php-pecl-ssh2
 %endif
 
-%global with_zts  0%{?__ztsphp:1}
+%global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name ssh2
 %if "%{php_version}" < "5.6"
 %global ini_name  %{pecl_name}.ini
@@ -28,7 +28,7 @@
 
 Name:           %{?sub_prefix}php-pecl-ssh2
 Version:        0.13
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Bindings for the libssh2 library
 
 %global buildver %(pkg-config --silence-errors --modversion libssh2  2>/dev/null || echo 65536)
@@ -39,9 +39,11 @@ URL:            http://pecl.php.net/package/ssh2
 Source0:        http://pecl.php.net/get/ssh2-%{version}.tgz
 Source2:        php-pecl-ssh2-0.10-README
 
+Patch0:         %{pecl_name}-php5628.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  libssh2-devel >= 1.2
-BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-devel < 7
 BuildRequires:  %{?scl_prefix}php-pear
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
@@ -100,13 +102,16 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 mv %{pecl_name}-%{version} NTS
+cd NTS
+%patch0 -p1 -b .php7013
 
-extver=$(sed -n '/#define PHP_SSH2_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_ssh2.h)
+extver=$(sed -n '/#define PHP_SSH2_VERSION/{s/.* "//;s/".*$//;p}' php_ssh2.h)
 if test "x${extver}" != "x%{version}"; then
    : Error: Upstream version is now ${extver}, expecting %{version}.
    : Update the pdover macro and rebuild.
    exit 1
 fi
+cd ..
 
 cp %{SOURCE2} README
 
@@ -216,6 +221,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 10 2016 Remi Collet <remi@fedoraproject.org> - 0.13-2
+- add patch for parse_url change in PHP 5.6.28
+
 * Sun Jun 12 2016 Remi Collet <remi@fedoraproject.org> - 0.13-1
 - update to 0.13
 
