@@ -38,7 +38,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}
 Summary:       SAML2 PHP library from SimpleSAMLphp
 
 Group:         Development/Libraries
@@ -58,7 +58,7 @@ BuildRequires: php-composer(robrichards/xmlseclibs) >= %{robrichards_xmlseclibs_
 BuildRequires: php-dom
 BuildRequires: php-openssl
 BuildRequires: php-composer(mockery/mockery)        >= %{mockery_min_ver}
-## phpcompatinfo (computed from version 2.3)
+## phpcompatinfo (computed from version 2.3.2)
 BuildRequires: php-date
 BuildRequires: php-libxml
 BuildRequires: php-mcrypt
@@ -66,7 +66,7 @@ BuildRequires: php-pcre
 BuildRequires: php-spl
 BuildRequires: php-zlib
 ## Autoloader
-BuildRequires: php-composer(symfony/class-loader)
+BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 # composer.json
@@ -77,14 +77,14 @@ Requires:      php-composer(robrichards/xmlseclibs) <  %{robrichards_xmlseclibs_
 Requires:      php-composer(robrichards/xmlseclibs) >= %{robrichards_xmlseclibs_min_ver}
 Requires:      php-dom
 Requires:      php-openssl
-# phpcompatinfo (computed from version 2.3)
+# phpcompatinfo (computed from version 2.3.2)
 Requires:      php-date
 Requires:      php-libxml
 Requires:      php-pcre
 Requires:      php-spl
 Requires:      php-zlib
 # Autoloader
-Requires:      php-composer(symfony/class-loader)
+Requires:      php-composer(fedora/autoloader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -117,26 +117,15 @@ cat <<'AUTOLOAD' | tee src/SAML2/autoload.php
 /**
  * Autoloader for %{name} and its' dependencies
  * (created by %{name}-%{version}-%{release}).
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
  */
+require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+\Fedora\Autoloader\Autoload::addPsr4('SAML2\\', __DIR__);
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('SAML2', dirname(__DIR__));
-
-// Required dependencies
-require_once '%{phpdir}/Psr/Log/autoload.php';
-require_once '%{phpdir}/RobRichards/XMLSecLibs/autoload.php';
-
-return $fedoraClassLoader;
+\Fedora\Autoloader\Dependencies::required(array(
+    '%{phpdir}/Psr/Log/autoload.php',
+    '%{phpdir}/RobRichards/XMLSecLibs/autoload.php',
+));
 AUTOLOAD
 
 
@@ -153,8 +142,8 @@ cp -rp src/* %{buildroot}%{phpdir}/
 mkdir vendor
 cat <<'AUTOLOAD' | tee vendor/autoload.php
 <?php
-$fedoraClassLoader = require '%{buildroot}%{phpdir}/SAML2/autoload.php';
-$fedoraClassLoader->addPrefix('SAML2', dirname(__DIR__).'/tests');
+require '%{buildroot}%{phpdir}/SAML2/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('SAML2\\', dirname(__DIR__).'/tests/SAML2');
 require_once '%{phpdir}/Mockery/autoload.php';
 AUTOLOAD
 
@@ -192,6 +181,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 09 2016 Shawn Iwinski <shawn@iwin.ski> - 2.3.2-1
+- Update to 2.3.2 (RHBZ #1393368)
+- Change autoloader from php-composer(symfony/class-loader) to
+  php-composer(fedora/autoloader)
+
 * Wed Nov  9 2016 Remi Collet <remi@remirepo.net> - 2.3.2-1
 - update to 2.3.2
 
