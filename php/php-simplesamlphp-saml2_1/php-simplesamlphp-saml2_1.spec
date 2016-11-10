@@ -38,7 +38,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}_1
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}
 Summary:       SAML2 PHP library from SimpleSAMLphp (version 1)
 
 Group:         Development/Libraries
