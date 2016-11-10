@@ -59,7 +59,7 @@ BuildRequires: php-composer(robrichards/xmlseclibs) >= %{robrichards_xmlseclibs_
 BuildRequires: php-dom
 BuildRequires: php-openssl
 BuildRequires: php-composer(mockery/mockery)        >= %{mockery_min_ver}
-## phpcompatinfo (computed from version 1.10)
+## phpcompatinfo (computed from version 1.10.2)
 BuildRequires: php-date
 BuildRequires: php-libxml
 BuildRequires: php-mcrypt
@@ -68,8 +68,8 @@ BuildRequires: php-soap
 BuildRequires: php-spl
 BuildRequires: php-zlib
 ## Autoloader
-BuildRequires: php-composer(theseer/autoload)
 %endif
+BuildRequires: php-fedora-autoloader-devel
 
 # composer.json
 Requires:      php(language)                        >= %{php_min_ver}
@@ -79,13 +79,15 @@ Requires:      php-composer(robrichards/xmlseclibs) <  %{robrichards_xmlseclibs_
 Requires:      php-composer(robrichards/xmlseclibs) >= %{robrichards_xmlseclibs_min_ver}
 Requires:      php-dom
 Requires:      php-openssl
-# phpcompatinfo (computed from version 1.10)
+# phpcompatinfo (computed from version 1.10.2)
 Requires:      php-date
 Requires:      php-libxml
 Requires:      php-pcre
 Requires:      php-soap
 Requires:      php-spl
 Requires:      php-zlib
+# Autoloader
+Requires:      php-composer(fedora/autoloader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -110,12 +112,13 @@ Autoloader: %{phpdir}/SAML2_1/autoload.php
 
 %build
 : Create autoloader
-%{_bindir}/phpab --nolower --output src/SAML2/autoload.php src/SAML2
+%{_bindir}/phpab --template fedora --output src/SAML2/autoload.php src/SAML2
 cat <<'AUTOLOAD' >> src/SAML2/autoload.php
 
-// Required dependencies
-require_once '%{phpdir}/Psr/Log/autoload.php';
-require_once '%{phpdir}/robrichards-xmlseclibs/autoload.php';
+\Fedora\Autoloader\Dependencies::required(array(
+    '%{phpdir}/Psr/Log/autoload.php',
+    '%{phpdir}/robrichards-xmlseclibs/autoload.php',
+));
 AUTOLOAD
 
 
@@ -129,7 +132,7 @@ cp -rp src/SAML2/* %{buildroot}%{phpdir}/SAML2_1/
 %if %{with_tests}
 : Create pseudo Composer autoloader
 mkdir vendor
-%{_bindir}/phpab --nolower --output vendor/autoload.php tests
+%{_bindir}/phpab --template fedora --output vendor/autoload.php tests
 cat <<'AUTOLOAD' | tee -a vendor/autoload.php
 require_once '%{buildroot}%{phpdir}/SAML2_1/autoload.php';
 require_once '%{phpdir}/Mockery/autoload.php';
@@ -169,6 +172,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 09 2016 Shawn Iwinski <shawn@iwin.ski> - 1.10.2-1
+- Update to 1.10.2 (RHBZ #1379182)
+- Use php-composer(fedora/autoloader)
+
 * Wed Nov  9 2016 Remi Collet <remi@remirepo.net> - 1.10.2-1
 - update to 1.10.2
 
