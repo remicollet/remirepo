@@ -28,7 +28,7 @@
 
 Name:           %{?sub_prefix}php-pecl-ssh2
 Version:        0.13
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Bindings for the libssh2 library
 
 %global buildver %(pkg-config --silence-errors --modversion libssh2  2>/dev/null || echo 65536)
@@ -221,7 +221,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu Nov 10 2016 Remi Collet <remi@fedoraproject.org> - 0.13-2
+* Thu Nov 10 2016 Remi Collet <remi@fedoraproject.org> - 0.13-3
 - add patch for parse_url change in PHP 5.6.28
 
 * Sun Jun 12 2016 Remi Collet <remi@fedoraproject.org> - 0.13-1
