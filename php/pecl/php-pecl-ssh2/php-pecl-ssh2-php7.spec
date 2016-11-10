@@ -30,12 +30,14 @@ Version:        1.0
 Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
 %else
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/ssh2-%{version}.tgz
 %endif
 Summary:        Bindings for the libssh2 library
 
 %global buildver %(pkg-config --silence-errors --modversion libssh2  2>/dev/null || echo 65536)
+
+Patch0:         %{pecl_name}-php7013.patch
 
 License:        PHP
 Group:          Development/Languages
@@ -114,12 +116,16 @@ sed -e 's/role="test"/role="src"/' \
     %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
     -i package.xml
 
-extver=$(sed -n '/#define PHP_SSH2_VERSION/{s/.* "//;s/".*$//;p}' NTS/php_ssh2.h)
+cd NTS
+%patch0 -p1 -b .php7013
+
+extver=$(sed -n '/#define PHP_SSH2_VERSION/{s/.* "//;s/".*$//;p}' php_ssh2.h)
 if test "x${extver}" != "x%{version}%{?gh_date:-dev}"; then
    : Error: Upstream version is now ${extver}, expecting %{version}%{?gh_date:-dev}.
    : Update the pdover macro and rebuild.
    exit 1
 fi
+cd ..
 
 cat > %{ini_name} << 'EOF'
 ; Enable ssh2 extension module
@@ -221,6 +227,9 @@ fi
 
 
 %changelog
+* Thu Nov 10 2016 Remi Collet <remi@fedoraproject.org> - 1.0-3
+- add patch for parse_url change in PHP 7.0.13
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.0-2
 - rebuild for PHP 7.1 new API version
 
