@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    b78388f096f669f9a9f15dabe5fa73c4d9fd9a09
+%global gh_commit    93e375eff90a3585fe13121528b9401083eae41c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-stratigility
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.2.1
-Release:        2%{?dist}
+Version:        1.3.0
+Release:        1%{?dist}
 Summary:        Middleware for PHP
 
 Group:          Development/Libraries
@@ -34,16 +34,17 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.4.8
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-composer(psr/http-message)                    >= 1.0
 BuildRequires:  php-composer(%{gh_owner}/zend-escaper)            >= 2.3
+BuildRequires:  php-composer(http-interop/http-middleware)        >= 0.2
 BuildRequires:  php-pcre
 BuildRequires:  php-reflection
 BuildRequires:  php-spl
 # From composer, "require-dev": {
-#    "zendframework/zend-diactoros": "~1.0",
-#    "phpunit/phpunit": "~4.7",
-#    "squizlabs/php_codesniffer": "^2.3.1"
+#    "zendframework/zend-diactoros": "^1.0",
+#    "phpunit/phpunit": "^4.7 || ^5.5",
+#    "squizlabs/php_codesniffer": "^2.6.2"
 BuildRequires:  php-composer(%{gh_owner}/zend-diactoros)          >= 1.0
 BuildRequires:  php-composer(phpunit/phpunit)                     >= 4.7
 # Autoloader
@@ -53,14 +54,16 @@ BuildRequires:  php-zendframework-zend-loader                     >= 2.5.1-4
 %endif
 
 # From composer, "require": {
-#    "php": "^5.4.8 || ^7.0",
-#    "psr/http-message": "~1.0.0",
-#    "zendframework/zend-escaper": "~2.3"
-Requires:       php(language) >= 5.4.8
+#    "php": "^5.6 || ^7.0",
+#    "psr/http-message": "^1.0",
+#    "zendframework/zend-escaper": "^2.3",
+#    "http-interop/http-middleware": "^0.2.0"
+Requires:       php(language) >= 5.6
 Requires:       php-composer(psr/http-message)                    >= 1.0
-Requires:       php-composer(psr/http-message)                    <  1.1
+Requires:       php-composer(psr/http-message)                    <  2
 Requires:       php-composer(%{gh_owner}/zend-escaper)            >= 2.3
 Requires:       php-composer(%{gh_owner}/zend-escaper)            <  3
+Requires:       php-composer(http-interop/http-middleware)        >= 0.2
 # From composer, "suggest": {
 #    "psr/http-message-implementation": "Please install a psr/http-message-implementation to consume Stratigility; e.g., zendframework/zend-diactoros"
 %if 0%{?fedora} >= 21
@@ -95,6 +98,12 @@ It allows you to create and dispatch middleware pipelines.
 
 mv LICENSE.md LICENSE
 
+: Create dependency autoloader
+cat << 'EOF' | tee autoload.php
+<?php
+require_once '%{php_home}/Interop/Http/Middleware/autoload.php';
+EOF
+
 
 %build
 # Empty build section, nothing required
@@ -105,6 +114,8 @@ rm -rf %{buildroot}
 
 mkdir -p   %{buildroot}%{php_home}/Zend/
 cp -pr src %{buildroot}%{php_home}/Zend/%{library}
+
+install -m644 autoload.php %{buildroot}%{php_home}/Zend/%{library}-autoload.php
 
 
 %check
@@ -156,9 +167,15 @@ rm -rf %{buildroot}
 %doc *.md
 %doc composer.json
 %{php_home}/Zend/%{library}
+%{php_home}/Zend/%{library}-autoload.php
 
 
 %changelog
+* Thu Nov 10 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- update to 1.3.0
+- raise dependency on PHP 5.6
+- add dependency on http-interop/http-middleware
+
 * Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-2
 - drop autoloader, rely on zend-loader >= 2.5.1-4
 
