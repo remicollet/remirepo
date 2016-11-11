@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    4e6b1821e116425c76a515cae9b78141f17b2e1a
+%global gh_commit    5b02b23aae7c8475a2b5f4ee8c296e803ca5029a
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive
@@ -20,8 +20,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.0.0
-Release:        2%{?dist}
+Version:        1.0.2
+Release:        1%{?dist}
 Summary:        PSR-7 Middleware Microframework based on Stratigility
 
 Group:          Development/Libraries
@@ -34,7 +34,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.5
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-composer(container-interop/container-interop)    >= 1.1
 BuildRequires:  php-composer(psr/http-message)                       >= 1.0
 BuildRequires:  php-composer(%{gh_owner}/zend-diactoros)             >= 1.1
@@ -44,13 +44,14 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stratigility)          >= 1.1
 BuildRequires:  php-reflection
 BuildRequires:  php-spl
 # From composer, "require-dev": {
-#        "filp/whoops": "^1.1",
+#        "filp/whoops": "^1.1 || ^2.0",
 #        "phpunit/phpunit": "^4.7",
-#        "squizlabs/php_codesniffer": "^2.3",
+#        "zendframework/zend-coding-standard": "~1.0.0",
 #        "zendframework/zend-expressive-aurarouter": "^1.0",
 #        "zendframework/zend-expressive-fastroute": "^1.0",
 #        "zendframework/zend-expressive-zendrouter": "^1.0",
-#        "zendframework/zend-servicemanager": "^2.6"
+#        "zendframework/zend-servicemanager": "^2.6",
+#        "malukenho/docheader": "^0.1.0"
 BuildRequires:  php-composer(phpunit/phpunit)                        >= 4.7
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)                >= 2.5
@@ -63,14 +64,14 @@ BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-4
 %endif
 
 # From composer, "require": {
-#        "php": "^5.5 || ^7.0",
+#        "php": "^5.6 || ^7.0",
 #        "container-interop/container-interop": "^1.1",
 #        "psr/http-message": "^1.0",
 #        "zendframework/zend-diactoros": "^1.1",
 #        "zendframework/zend-expressive-router": "^1.1",
 #        "zendframework/zend-expressive-template": "^1.0.1",
-#        "zendframework/zend-stratigility": "^1.1"
-Requires:       php(language) >= 5.5
+#        "zendframework/zend-stratigility": ">=1.1.0 < 1.3.0 || >=1.3.1 <2.0.0"
+Requires:       php(language) >= 5.6
 Requires:       php-composer(container-interop/container-interop)    >= 1.1
 Requires:       php-composer(container-interop/container-interop)    <  2
 Requires:       php-composer(psr/http-message)                       >= 1.0
@@ -88,26 +89,14 @@ Requires:       php-reflection
 Requires:       php-spl
 %if ! %{bootstrap}
 # From composer, "suggest": {
-#        "filp/whoops": "^1.1 to use the Whoops error handler",
+#        "filp/whoops": "^2.0 to use the Whoops error handler",
 #        "zendframework/zend-expressive-helpers": "^1.0 for its UrlHelper, ServerUrlHelper, and BodyParseMiddleware",
-#        "zendframework/zend-expressive-aurarouter": "^1.0 to use the Aura.Router routing adapter",
-#        "zendframework/zend-expressive-fastroute": "^1.0 to use the FastRoute routing adapter",
-#        "zendframework/zend-expressive-zendrouter": "^1.0 to use the zend-mvc routing adapter",
-#        "zendframework/zend-expressive-platesrenderer": "^1.0 to use the Plates template renderer",
-#        "zendframework/zend-expressive-twigrenderer": "^1.0 to use the Twig template renderer",
-#        "zendframework/zend-expressive-zendviewrenderer": "^1.0 to use the zend-view PhpRenderer template renderer",
 #        "aura/di": "3.0.*@beta to make use of Aura.Di dependency injection container",
 #        "xtreamwayz/pimple-container-interop": "^1.0 to use Pimple for dependency injection",
 #        "zendframework/zend-servicemanager": "^2.5 to use zend-servicemanager for dependency injection"
 %if 0%{?fedora} >= 21
 #Suggests:       php-composer(filp/whoops)
 Suggests:       php-composer(%{gh_owner}/zend-expressive-helpers)
-Suggests:       php-composer(%{gh_owner}/zend-expressive-aurarouter)
-Suggests:       php-composer(%{gh_owner}/zend-expressive-fastroute)
-Suggests:       php-composer(%{gh_owner}/zend-expressive-zendrouter)
-Suggests:       php-composer(%{gh_owner}/zend-expressive-platesrenderer)
-Suggests:       php-composer(%{gh_owner}/zend-expressive-twigrenderer)
-Suggests:       php-composer(%{gh_owner}/zend-expressive-zendviewrenderer)
 Suggests:       php-composer(aura/di)
 #Suggests:       php-composer(xtreamwayz/pimple-container-interop)
 Suggests:       php-composer(%{gh_owner}/zend-servicemanager)
@@ -221,6 +210,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 11 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
+- update to 1.0.2
+- raise dependency on PHP 5.6
+
 * Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
 - clean autoloader, rely on zend-loader >= 2.5.1-4
 
