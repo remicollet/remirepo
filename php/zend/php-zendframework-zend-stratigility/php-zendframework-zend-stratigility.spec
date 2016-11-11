@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    93e375eff90a3585fe13121528b9401083eae41c
+%global gh_commit    c410d367bb85f0a3cca44f112957d0ee28895d19
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-stratigility
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.3.0
+Version:        1.3.1
 Release:        1%{?dist}
 Summary:        Middleware for PHP
 
@@ -171,6 +171,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 11 2016 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
+- update to 1.3.1
+
 * Thu Nov 10 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - update to 1.3.0
 - raise dependency on PHP 5.6
