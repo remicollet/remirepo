@@ -30,12 +30,12 @@
 # After 20-sockets.so
 %global ini_name  40-%{pecl_name}.ini
 %endif
-#global prever    RC2
+%global prever    RC1
 
 Summary:       Provides interface to libevent library
 Name:          %{?sub_prefix}php-pecl-%{pecl_name}
-Version:       2.2.1
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:       2.3.0
+Release:       0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/event
@@ -288,6 +288,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 11 2016 Remi Collet <remi@fedoraproject.org> - 2.3.0-0.1.RC1
+- Update to 2.3.0RC1 (php 5 and 7, beta)
+
 * Thu Nov 10 2016 Remi Collet <remi@fedoraproject.org> - 2.2.1-1
 - Update to 2.2.1 (php 5 and 7, stable)
 

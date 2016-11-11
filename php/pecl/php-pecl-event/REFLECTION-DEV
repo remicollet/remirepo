@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #157 event version 2.2.1 ] {
+Extension [ <persistent> extension #157 event version 2.3.0RC1 ] {
 
   - Dependencies {
     Dependency [ sockets (Required) ]
@@ -1376,10 +1376,8 @@ Extension [ <persistent> extension #157 event version 2.2.1 ] {
 
       - Constants [27] {
         Constant [ integer SSLv3_CLIENT_METHOD ] { 2 }
-        Constant [ integer SSLv23_CLIENT_METHOD ] { 3 }
-        Constant [ integer TLS_CLIENT_METHOD ] { 4 }
         Constant [ integer SSLv3_SERVER_METHOD ] { 6 }
-        Constant [ integer SSLv23_SERVER_METHOD ] { 7 }
+        Constant [ integer TLS_CLIENT_METHOD ] { 4 }
         Constant [ integer TLS_SERVER_METHOD ] { 8 }
         Constant [ integer TLSv11_CLIENT_METHOD ] { 9 }
         Constant [ integer TLSv11_SERVER_METHOD ] { 10 }
@@ -1402,6 +1400,8 @@ Extension [ <persistent> extension #157 event version 2.2.1 ] {
         Constant [ integer OPT_CIPHER_SERVER_PREFERENCE ] { 15 }
         Constant [ integer OPT_REQUIRE_CLIENT_CERT ] { 16 }
         Constant [ integer OPT_VERIFY_CLIENT_ONCE ] { 17 }
+        Constant [ string OPENSSL_VERSION_TEXT ] { OpenSSL 1.0.2j-fips  26 Sep 2016 }
+        Constant [ integer OPENSSL_VERSION_NUMBER ] { 268443823 }
       }
 
       - Static properties [0] {
