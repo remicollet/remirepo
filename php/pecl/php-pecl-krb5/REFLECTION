@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #93 krb5 version 1.1.0 ] {
+Extension [ <persistent> extension #97 krb5 version 1.1.1 ] {
 
   - Constants [13] {
     Constant [ integer GSS_C_DELEG_FLAG ] { 1 }
@@ -25,7 +25,15 @@ Extension [ <persistent> extension #93 krb5 version 1.1.0 ] {
       - Static properties [0] {
       }
 
-      - Static methods [0] {
+      - Static methods [1] {
+        Method [ <internal:krb5> static public method changePassword ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $principal ]
+            Parameter #1 [ <required> $oldpass ]
+            Parameter #2 [ <required> $newpass ]
+          }
+        }
       }
 
       - Properties [0] {
@@ -436,7 +444,7 @@ Extension [ <persistent> extension #93 krb5 version 1.1.0 ] {
       - Properties [0] {
       }
 
-      - Methods [17] {
+      - Methods [23] {
         Method [ <internal:krb5, ctor> public method __construct ] {
 
           - Parameters [2] {
@@ -543,6 +551,45 @@ Extension [ <persistent> extension #93 krb5 version 1.1.0 ] {
         Method [ <internal:krb5> public method getReferenceCount ] {
 
           - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:krb5> public method getMaxFailureCount ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:krb5> public method setMaxFailureCount ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $failcnt ]
+          }
+        }
+
+        Method [ <internal:krb5> public method getFailureInterval ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:krb5> public method setFailureInterval ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $interval ]
+          }
+        }
+
+        Method [ <internal:krb5> public method getLockoutDuration ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:krb5> public method setLockoutDuration ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $duration ]
           }
         }
       }
