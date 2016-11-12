@@ -16,11 +16,11 @@
 
 %global pecl_name   xdebug
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
-%global gh_commit   81181b443b338543adfd219f1839f0d357d3bcd5
+%global gh_commit   9613c6f5c9bd1a45dd48a22e80b65c1eee78ac80
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date     20161004
+#global gh_date     20161004
 %global with_tests  0%{?_with_tests:1}
-#global prever      RC4
+%global prever      rc1
 
 # XDebug should be loaded after opcache
 %if "%{php_version}" < "5.6"
@@ -35,7 +35,7 @@ Version:        2.5.0
 %if 0%{?gh_date:1}
 Release:        0.5.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.6.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 
 # The Xdebug License, version 1.01
@@ -58,12 +58,10 @@ Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl(Xdebug) = %{version}
-Provides:       %{?scl_prefix}php-pecl(Xdebug)%{?_isa} = %{version}
-Provides:       %{?scl_prefix}php-pecl-%{pecl_name} = %{version}-%{release}
-Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
+Provides:       %{?scl_prefix}php-%{pecl_name}              = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}      = %{version}
+Provides:       %{?scl_prefix}php-pecl(Xdebug)              = %{version}
+Provides:       %{?scl_prefix}php-pecl(Xdebug)%{?_isa}      = %{version}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -310,7 +308,10 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Wed Oct 12 2016 Remi Collet <remi@fedoraproject.org> - 2.5.0-0.4.20161004git81181b4
+* Sat Nov 12 2016 Remi Collet <remi@fedoraproject.org> - 2.5.0-0.6.rc1
+- update to 2.5.0RC1
+
+* Wed Oct 12 2016 Remi Collet <remi@fedoraproject.org> - 2.5.0-0.5.20161004git81181b4
 - new snapshot of 2.5.0-dev
 
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 2.5.0-0.4.20160731git9fe2994
