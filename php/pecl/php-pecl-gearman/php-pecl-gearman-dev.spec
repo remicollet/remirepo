@@ -17,9 +17,9 @@
 %scl_package         php-pecl-gearman
 %endif
 
-%global gh_commit   f7ec3cf044f654a3db4c415658941898a6e4d42f
+%global gh_commit   bbc426f5609269de13a0edbea0a821c0c0b952f3
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date     20160816
+%global gh_date     20161112
 %global gh_owner    wcgallego
 %global gh_project  pecl-gearman
 %global with_tests  0%{?_with_tests:1}
@@ -31,7 +31,7 @@
 %global ini_name  40-%{pecl_name}.ini
 %endif
 
-%global extver 2.0.1
+%global extver 2.0.2
 %global libver 1.1.0
 
 
@@ -61,8 +61,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -228,6 +230,9 @@ fi
 
 
 %changelog
+* Sat Nov 12 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- update to 2.0.2
+
 * Tue Sep 20 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - update to 2.0.1 for PHP 7
 - use sources from https://github.com/wcgallego/pecl-gearman fork

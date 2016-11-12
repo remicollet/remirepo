@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #84 gearman version 2.0.1 ] {
+Extension [ <persistent> extension #85 gearman version 2.0.2 ] {
 
   - Constants [157] {
     Constant [ string GEARMAN_DEFAULT_TCP_HOST ] { localhost }
@@ -421,6 +421,14 @@ Extension [ <persistent> extension #84 gearman version 2.0.1 ] {
         Parameter #4 [ <optional> $unique ]
       }
     }
+    Function [ <internal:gearman> function gearman_client_add_task_status ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $client_object ]
+        Parameter #1 [ <required> $job_handle ]
+        Parameter #2 [ <optional> $context ]
+      }
+    }
     Function [ <internal:gearman> function gearman_client_set_workload_callback ] {
 
       - Parameters [2] {
@@ -840,32 +848,28 @@ Extension [ <persistent> extension #84 gearman version 2.0.1 ] {
 
         Method [ <internal:gearman> public method options ] {
 
-          - Parameters [1] {
-            Parameter #0 [ <required> $client_object ]
+          - Parameters [0] {
           }
         }
 
         Method [ <internal:gearman> public method setOptions ] {
 
-          - Parameters [2] {
-            Parameter #0 [ <required> $client_object ]
-            Parameter #1 [ <required> $option ]
+          - Parameters [1] {
+            Parameter #0 [ <required> $option ]
           }
         }
 
         Method [ <internal:gearman> public method addOptions ] {
 
-          - Parameters [2] {
-            Parameter #0 [ <required> $client_object ]
-            Parameter #1 [ <required> $option ]
+          - Parameters [1] {
+            Parameter #0 [ <required> $option ]
           }
         }
 
         Method [ <internal:gearman> public method removeOptions ] {
 
-          - Parameters [2] {
-            Parameter #0 [ <required> $client_object ]
-            Parameter #1 [ <required> $option ]
+          - Parameters [1] {
+            Parameter #0 [ <required> $option ]
           }
         }
 
@@ -1025,45 +1029,41 @@ Extension [ <persistent> extension #84 gearman version 2.0.1 ] {
 
         Method [ <internal:gearman> public method addTaskLow ] {
 
-          - Parameters [5] {
-            Parameter #0 [ <required> $client_object ]
-            Parameter #1 [ <required> $function_name ]
-            Parameter #2 [ <required> $workload ]
-            Parameter #3 [ <optional> $context ]
-            Parameter #4 [ <optional> $unique ]
+          - Parameters [4] {
+            Parameter #0 [ <required> $function_name ]
+            Parameter #1 [ <required> $workload ]
+            Parameter #2 [ <optional> $context ]
+            Parameter #3 [ <optional> $unique ]
           }
         }
 
         Method [ <internal:gearman> public method addTaskBackground ] {
 
-          - Parameters [5] {
-            Parameter #0 [ <required> $client_object ]
-            Parameter #1 [ <required> $function_name ]
-            Parameter #2 [ <required> $workload ]
-            Parameter #3 [ <optional> $context ]
-            Parameter #4 [ <optional> $unique ]
+          - Parameters [4] {
+            Parameter #0 [ <required> $function_name ]
+            Parameter #1 [ <required> $workload ]
+            Parameter #2 [ <optional> $context ]
+            Parameter #3 [ <optional> $unique ]
           }
         }
 
         Method [ <internal:gearman> public method addTaskHighBackground ] {
 
-          - Parameters [5] {
-            Parameter #0 [ <required> $client_object ]
-            Parameter #1 [ <required> $function_name ]
-            Parameter #2 [ <required> $workload ]
-            Parameter #3 [ <optional> $context ]
-            Parameter #4 [ <optional> $unique ]
+          - Parameters [4] {
+            Parameter #0 [ <required> $function_name ]
+            Parameter #1 [ <required> $workload ]
+            Parameter #2 [ <optional> $context ]
+            Parameter #3 [ <optional> $unique ]
           }
         }
 
         Method [ <internal:gearman> public method addTaskLowBackground ] {
 
-          - Parameters [5] {
-            Parameter #0 [ <required> $client_object ]
-            Parameter #1 [ <required> $function_name ]
-            Parameter #2 [ <required> $workload ]
-            Parameter #3 [ <optional> $context ]
-            Parameter #4 [ <optional> $unique ]
+          - Parameters [4] {
+            Parameter #0 [ <required> $function_name ]
+            Parameter #1 [ <required> $workload ]
+            Parameter #2 [ <optional> $context ]
+            Parameter #3 [ <optional> $unique ]
           }
         }
 
