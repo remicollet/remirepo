@@ -1,0 +1,59 @@
+Extension [ <persistent> extension #108 phpiredis version 1.0.0-dev ] {
+
+  - Constants [9] {
+    Constant [ integer PHPIREDIS_READER_STATE_INCOMPLETE ] { 2 }
+    Constant [ integer PHPIREDIS_READER_STATE_COMPLETE ] { 1 }
+    Constant [ integer PHPIREDIS_READER_STATE_ERROR ] { 3 }
+    Constant [ integer PHPIREDIS_REPLY_STRING ] { 1 }
+    Constant [ integer PHPIREDIS_REPLY_ARRAY ] { 2 }
+    Constant [ integer PHPIREDIS_REPLY_INTEGER ] { 3 }
+    Constant [ integer PHPIREDIS_REPLY_NIL ] { 4 }
+    Constant [ integer PHPIREDIS_REPLY_STATUS ] { 5 }
+    Constant [ integer PHPIREDIS_REPLY_ERROR ] { 6 }
+  }
+
+  - Functions {
+    Function [ <internal:phpiredis> function phpiredis_connect ] {
+    }
+    Function [ <internal:phpiredis> function phpiredis_pconnect ] {
+    }
+    Function [ <internal:phpiredis> function phpiredis_disconnect ] {
+    }
+    Function [ <internal:phpiredis> function phpiredis_command ] {
+    }
+    Function [ <internal:phpiredis> function phpiredis_command_bs ] {
+    }
+    Function [ <internal:phpiredis> function phpiredis_multi_command ] {
+    }
+    Function [ <internal:phpiredis> function phpiredis_multi_command_bs ] {
+    }
+    Function [ <internal:phpiredis> function phpiredis_format_command ] {
+    }
+    Function [ <internal:phpiredis> function phpiredis_reader_create ] {
+    }
+    Function [ <internal:phpiredis> function phpiredis_reader_reset ] {
+    }
+    Function [ <internal:phpiredis> function phpiredis_reader_feed ] {
+    }
+    Function [ <internal:phpiredis> function phpiredis_reader_get_state ] {
+    }
+    Function [ <internal:phpiredis> function phpiredis_reader_get_error ] {
+    }
+    Function [ <internal:phpiredis> function phpiredis_reader_get_reply ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ptr ]
+        Parameter #1 [ <optional> &$type ]
+      }
+    }
+    Function [ <internal:phpiredis> function phpiredis_reader_destroy ] {
+    }
+    Function [ <internal:phpiredis> function phpiredis_reader_set_error_handler ] {
+    }
+    Function [ <internal:phpiredis> function phpiredis_reader_set_status_handler ] {
+    }
+    Function [ <internal:phpiredis> function phpiredis_utils_crc16 ] {
+    }
+  }
+}
+
