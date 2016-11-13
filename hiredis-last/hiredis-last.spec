@@ -1,58 +1,95 @@
-Name:           hiredis
+# remirepo spec file for hiredis-last
+# renamed for parallel installation, from:
+#
+# Fedora spec file for hiredis
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please, preserve the changelog entries
+#
+%global libname hiredis
+
+%if 0%{?fedora} >= 24
+Name:           %{libname}
+%else
+Name:           %{libname}-last
+%endif
 Version:        0.13.3
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        Minimalistic C client library for Redis
+Group:          System Environment/Libraries
 License:        BSD
 URL:            https://github.com/redis/hiredis
-Source0:        https://github.com/redis/hiredis/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
+Source0:        https://github.com/redis/hiredis/archive/v%{version}.tar.gz#/%{libname}-%{version}.tar.gz
+
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  redis
 
 %description 
 Hiredis is a minimalistic C client library for the Redis database.
+%if "%{name}" != "%{libname}"
+This package could be installed beside official RPM of %{libname}
+for applications requiring this library version.
+%endif
 
 %package        devel
 Summary:        Development files for %{name}
+Group:          Development/Libraries
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+%if "%{name}" != "%{libname}"
+Conflicts:      %{libname}-devel         < %{version}
+Provides:       %{libname}-devel         = %{version}-%{release}
+Provides:       %{libname}-devel%{?_isa} = %{version}-%{release}
+%endif
 
 %description    devel
 This package contains libraries and header files for
 developing applications that use %{name}.
 
 %prep
-%setup -q
+%setup -q -n %{libname}-%{version}
 
 %build
-%make_build PREFIX="%{_prefix}" LIBRARY_PATH="%{_lib}"     \
+make %{?_smp_mflags} PREFIX="%{_prefix}" LIBRARY_PATH="%{_lib}"     \
             DEBUG="%{optflags}" LDFLAGS="%{?__global_ldflags}"
 
 %install
-%make_install PREFIX="%{_prefix}" LIBRARY_PATH="%{_lib}"
+rm -rf %{buildroot}
+make install DESTDIR=%{buildroot} PREFIX="%{_prefix}" LIBRARY_PATH="%{_lib}"
 
 find %{buildroot} -name '*.a' -delete -print
 
-# I don't believe it's stable, so keep previous schema here.
-cd %{buildroot}%{_libdir} && ln -sf libhiredis.so.0.13 libhiredis.so.0
 
 %check
 # TODO: Koji isolated environment may cause some tests fail to pass.
 make check || true
+
+
+%clean
+rm -rf %{buildroot}
+
 
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
 %files
+%defattr(-,root,root,-)
 %doc COPYING
-%{_libdir}/libhiredis.so.0
 %{_libdir}/libhiredis.so.0.13
 
 %files devel
+%defattr(-,root,root,-)
 %doc CHANGELOG.md README.md
-%{_includedir}/%{name}/
+%{_includedir}/%{libname}/
 %{_libdir}/libhiredis.so
 %{_libdir}/pkgconfig/hiredis.pc
 
 %changelog
+* Sun Nov 13 2016 Remi Collet <remi@remirepo.net> - 0.13.3-1
+- rename to hiredis-last for parallel installation
+
 * Wed Feb 03 2016 Fedora Release Engineering <releng@fedoraproject.org> - 0.13.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
