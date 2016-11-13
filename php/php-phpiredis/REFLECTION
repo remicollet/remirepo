@@ -14,30 +14,88 @@ Extension [ <persistent> extension #108 phpiredis version 1.0.0-dev ] {
 
   - Functions {
     Function [ <internal:phpiredis> function phpiredis_connect ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ip ]
+        Parameter #1 [ <optional> $port ]
+      }
     }
     Function [ <internal:phpiredis> function phpiredis_pconnect ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $ip ]
+        Parameter #1 [ <optional> $port ]
+      }
     }
     Function [ <internal:phpiredis> function phpiredis_disconnect ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $connection ]
+      }
     }
     Function [ <internal:phpiredis> function phpiredis_command ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $connection ]
+        Parameter #1 [ <required> $command ]
+      }
     }
     Function [ <internal:phpiredis> function phpiredis_command_bs ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $connection ]
+        Parameter #1 [ <required> array $args ]
+      }
     }
     Function [ <internal:phpiredis> function phpiredis_multi_command ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $connection ]
+        Parameter #1 [ <required> array $commands ]
+      }
     }
     Function [ <internal:phpiredis> function phpiredis_multi_command_bs ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $connection ]
+        Parameter #1 [ <required> array $commands ]
+      }
     }
     Function [ <internal:phpiredis> function phpiredis_format_command ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> array $args ]
+      }
     }
     Function [ <internal:phpiredis> function phpiredis_reader_create ] {
+
+      - Parameters [0] {
+      }
     }
     Function [ <internal:phpiredis> function phpiredis_reader_reset ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $connection ]
+      }
     }
     Function [ <internal:phpiredis> function phpiredis_reader_feed ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $connection ]
+        Parameter #1 [ <required> $buffer ]
+      }
     }
     Function [ <internal:phpiredis> function phpiredis_reader_get_state ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $connection ]
+      }
     }
     Function [ <internal:phpiredis> function phpiredis_reader_get_error ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $connection ]
+      }
     }
     Function [ <internal:phpiredis> function phpiredis_reader_get_reply ] {
 
@@ -47,12 +105,30 @@ Extension [ <persistent> extension #108 phpiredis version 1.0.0-dev ] {
       }
     }
     Function [ <internal:phpiredis> function phpiredis_reader_destroy ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $connection ]
+      }
     }
     Function [ <internal:phpiredis> function phpiredis_reader_set_error_handler ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $connection ]
+        Parameter #1 [ <required> $callback ]
+      }
     }
     Function [ <internal:phpiredis> function phpiredis_reader_set_status_handler ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $connection ]
+        Parameter #1 [ <required> $callback ]
+      }
     }
     Function [ <internal:phpiredis> function phpiredis_utils_crc16 ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $buffer ]
+      }
     }
   }
 }

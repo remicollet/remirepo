@@ -30,7 +30,7 @@
 Name:           %{?sub_prefix}php-%{pecl_name}
 Version:        1.0.0
 %if 0%{?gh_date}
-Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -42,9 +42,14 @@ License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 
+# https://github.com/nrk/phpiredis/pull/53
+Patch0:         %{pecl_name}-pr53.patch
+
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
-BuildRequires:  hiredis-devel
+# ensure we use hiredis-last when exists
+BuildRequires:  hiredis-devel >= 0.13.3
 %if %{with_tests}
 BuildRequires:  redis
 %endif
@@ -106,6 +111,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{gh_project}-%{gh_commit} NTS
 
 cd NTS
+%patch0 -p1 -b .pr53
 
 # Check extension version
 ver=$(sed -n '/define PHP_PHPIREDIS_VERSION/{s/.* "//;s/".*$//;p}' php_phpiredis.h)
@@ -142,6 +148,8 @@ make %{?_smp_mflags}
 
 
 %install
+rm -rf %{buildroot}
+
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install configuration
@@ -209,7 +217,12 @@ exit $ret
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
+%defattr(-, root, root, -)
 %{!?_licensedir:%global license %%doc}
 %license NTS/LICENSE
 %doc NTS/README.md
@@ -224,6 +237,11 @@ exit $ret
 
 
 %changelog
+* Sun Nov 13 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.20160715gita64e3bf
+- add minor fix for portability
+- add full reflection for all functions
+- open https://github.com/nrk/phpiredis/pull/53
+
 * Sat Nov 12 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.20160715gita64e3bf
 - Initial packaging of 1.0.0-dev
 
