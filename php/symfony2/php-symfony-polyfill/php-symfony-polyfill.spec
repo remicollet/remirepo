@@ -121,8 +121,8 @@ cat <<'AUTOLOAD' | tee -a src/autoload.php
     __DIR__ . '/Php56/bootstrap.php',
     __DIR__ . '/Php70/bootstrap.php',
     __DIR__ . '/Php71/bootstrap.php',
-	'%{phpdir}/password_compat/password.php',
-	'%{phpdir}/random_compat/autoload.php',
+    '%{phpdir}/password_compat/password.php',
+    '%{phpdir}/random_compat/autoload.php',
 ));
 AUTOLOAD
 
