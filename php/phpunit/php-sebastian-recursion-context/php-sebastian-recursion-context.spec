@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    913401df809e99e4f47b27cdd781f4a258d58791
+%global gh_commit    79860854756415e1cec8d186c9cf261cafd87dfc
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   recursion-context
@@ -19,8 +19,8 @@
 %endif
 
 Name:           php-sebastian-recursion-context
-Version:        1.0.2
-Release:        3%{?dist}
+Version:        1.0.3
+Release:        1%{?dist}
 Summary:        Recursively process PHP variables
 
 Group:          Development/Libraries
@@ -109,6 +109,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 14 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- update to 1.0.3
+
 * Mon Oct 31 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-3
 - switch to fedora/autoloader
 
