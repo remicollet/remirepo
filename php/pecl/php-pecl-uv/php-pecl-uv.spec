@@ -18,7 +18,7 @@
 
 Summary:        Libuv wrapper
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        0.1.0
+Version:        0.1.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -217,5 +217,8 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Mon Nov 14 2016 Remi Collet <remi@fedoraproject.org> - 0.1.1-1
+- Update to 0.1.1
+
 * Tue Nov  1 2016 Remi Collet <remi@fedoraproject.org> - 0.1.0-1
 - initial package, version 0.1.0 (beta)
