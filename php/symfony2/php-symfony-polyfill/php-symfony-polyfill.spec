@@ -12,8 +12,8 @@
 
 %global github_owner     symfony
 %global github_name      polyfill
-%global github_version   1.2.0
-%global github_commit    ee2c9c2576fdd4a42b024260a1906a9888770c34
+%global github_version   1.3.0
+%global github_commit    385d033a8e1d8778446d699ecbd886480716eba7
 
 %global composer_vendor  symfony
 %global composer_project polyfill
@@ -42,7 +42,7 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Autoloader
-BuildRequires: php-composer(theseer/autoload)
+BuildRequires: php-fedora-autoloader-devel
 # Tests
 %if %{with_tests}
 BuildRequires: php-composer(phpunit/phpunit)
@@ -50,7 +50,7 @@ BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(ircmaxell/password-compat)
 BuildRequires: php-composer(paragonie/random_compat) >= %{paragonie_random_compat_min_ver}
-## phpcompatinfo (computed from version 1.2.0)
+## phpcompatinfo (computed from version 1.3.0)
 BuildRequires: php-hash
 BuildRequires: php-json
 BuildRequires: php-ldap
@@ -65,13 +65,15 @@ Requires:      php(language) >= %{php_min_ver}
 Requires:      php-composer(ircmaxell/password-compat)
 Requires:      php-composer(paragonie/random_compat) >= %{paragonie_random_compat_min_ver}
 Requires:      php-composer(paragonie/random_compat) <  %{paragonie_random_compat_max_ver}
-# phpcompatinfo (computed from version 1.2.0)
+# phpcompatinfo (computed from version 1.3.0)
 Requires:      php-hash
 Requires:      php-json
 Requires:      php-mbstring
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
+# Autoloader
+Requires:      php-composer(fedora/autoloader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project})       = %{version}
@@ -80,6 +82,7 @@ Provides:      php-composer(%{composer_vendor}/%{composer_project}-php54) = %{ve
 Provides:      php-composer(%{composer_vendor}/%{composer_project}-php55) = %{version}
 Provides:      php-composer(%{composer_vendor}/%{composer_project}-php56) = %{version}
 Provides:      php-composer(%{composer_vendor}/%{composer_project}-php70) = %{version}
+Provides:      php-composer(%{composer_vendor}/%{composer_project}-php71) = %{version}
 
 %description
 %{summary}.
@@ -91,12 +94,13 @@ Autoloader: %{phpdir}/Symfony/Polyfill/autoload.php
 %setup -qn %{github_name}-%{github_commit}
 
 : Docs
-mkdir -p docs/{Php54,Php55,Php56,Php70,Util}
+mkdir -p docs/{Php54,Php55,Php56,Php70,Php71,Util}
 mv *.md composer.json docs/
 mv src/Php54/{*.md,composer.json} docs/Php54/
 mv src/Php55/{*.md,composer.json} docs/Php55/
 mv src/Php56/{*.md,composer.json} docs/Php56/
 mv src/Php70/{*.md,composer.json} docs/Php70/
+mv src/Php71/{*.md,composer.json} docs/Php71/
 mv src/Util/{*.md,composer.json}  docs/Util/
 
 : Remove unneeded polyfills
@@ -105,33 +109,21 @@ rm -rf {src,tests}/{Apcu,Iconv,Intl,Mbstring,Xml}
 
 %build
 : Create autoloader classmap
-%{_bindir}/phpab --nolower --tolerant --output src/autoload.classmap.php src/
-cat src/autoload.classmap.php
+%{_bindir}/phpab --template fedora --tolerant --output src/autoload.php src/
+cat src/autoload.php
 
 : Create autoloader
-cat <<'AUTOLOAD' | tee src/autoload.php
-<?php
-/**
- * Autoloader for %{name} and its' dependencies
- * (created by %{name}-%{version}-%{release}).
- */
+cat <<'AUTOLOAD' | tee -a src/autoload.php
 
-// Classmap
-require_once __DIR__ . '/autoload.classmap.php';
-
-// Php54
-require_once __DIR__ . '/Php54/bootstrap.php';
-
-// Php55
-require_once '%{phpdir}/password_compat/password.php';
-require_once __DIR__ . '/Php55/bootstrap.php';
-
-// Php56
-require_once __DIR__ . '/Php56/bootstrap.php';
-
-// Php70
-require_once '%{phpdir}/random_compat/autoload.php';
-require_once __DIR__ . '/Php70/bootstrap.php';
+\Fedora\Autoloader\Dependencies::required(array(
+    __DIR__ . '/Php54/bootstrap.php',
+    __DIR__ . '/Php55/bootstrap.php',
+    __DIR__ . '/Php56/bootstrap.php',
+    __DIR__ . '/Php70/bootstrap.php',
+    __DIR__ . '/Php71/bootstrap.php',
+	'%{phpdir}/password_compat/password.php',
+	'%{phpdir}/random_compat/autoload.php',
+));
 AUTOLOAD
 
 
@@ -145,13 +137,23 @@ cp -rp src/* %{buildroot}%{phpdir}/Symfony/Polyfill/
 
 %check
 %if %{with_tests}
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Symfony/Polyfill/autoload.php
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Symfony/Polyfill/autoload.php
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/phpunit --verbose \
     --bootstrap %{buildroot}%{phpdir}/Symfony/Polyfill/autoload.php
-
-if which php70; then
-  php70 %{_bindir}/phpunit --verbose \
-    --bootstrap %{buildroot}%{phpdir}/Symfony/Polyfill/autoload.php
+# remirepo:2
 fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -172,6 +174,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 14 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- Updated to 1.3.0
+- provide php-composer(symfony/polyfill-php71)
+- switch to fedora/autoloader
+
 * Thu Jun 16 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.0-1
 - Updated to 1.2.0 (RHBZ #1301791)
 
