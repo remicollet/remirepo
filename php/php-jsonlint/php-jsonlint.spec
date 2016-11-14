@@ -24,7 +24,7 @@
 
 Name:          php-%{github_name}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       JSON Lint for PHP
 
 Group:         Development/Libraries
@@ -37,6 +37,8 @@ Source1:        %{name}-autoload.php
 
 # Bin usage without Composer autoloader
 Patch0:        %{name}-bin-without-composer-autoloader.patch
+# https://github.com/Seldaek/jsonlint/pull/37
+Patch1:         %{name}-php71.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -75,6 +77,7 @@ To use this library, you just have to add, in your project:
 
 cp %{SOURCE1} src/Seld/JsonLint/autoload.php
 %patch0 -p1
+%patch1 -p1
 
 
 %build
@@ -101,8 +104,8 @@ if which php56; then
    php56 %{_bindir}/phpunit --bootstrap %{buildroot}%{_datadir}/php/Seld/JsonLint/autoload.php || ret=1
    run=1
 fi
-if which php70; then # With 7.1 '' => '_empty_' property names
-   php70 %{_bindir}/phpunit --bootstrap %{buildroot}%{_datadir}/php/Seld/JsonLint/autoload.php || ret=1
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap %{buildroot}%{_datadir}/php/Seld/JsonLint/autoload.php || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -128,6 +131,10 @@ exit $ret
 
 
 %changelog
+* Mon Nov 14 2016 Remi Collet <remi@fedoraproject.org> - 1.4.1-3
+- add patch for PHP 7.1
+  open https://github.com/Seldaek/jsonlint/pull/37
+
 * Fri Oct 21 2016 Remi Collet <remi@fedoraproject.org> - 1.4.1-2
 - switch from symfony/class-loader to fedora/autoloader
 
