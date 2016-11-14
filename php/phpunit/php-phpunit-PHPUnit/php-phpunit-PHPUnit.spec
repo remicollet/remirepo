@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    cd13b23ac5a519a4708e00736c26ee0bb28b2e01
+%global gh_commit    a9de0dbafeb6b1391b391fbb034734cb0af9f67c
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,8 +17,8 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.6
-%global minor        2
-%global specrel      2
+%global minor        3
+%global specrel      1
 
 Name:           php-phpunit-PHPUnit
 Version:        %{major}.%{minor}
@@ -237,6 +237,9 @@ fi
 
 
 %changelog
+* Mon Nov 14 2016 Remi Collet <remi@fedoraproject.org> - 5.6.3-1
+- update to 5.6.3
+
 * Mon Oct 31 2016 Remi Collet <remi@fedoraproject.org> - 5.6.2-2
 - fix autoloader (don't use symfony one for symfony components)
 
