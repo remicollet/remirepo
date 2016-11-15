@@ -1,0 +1,31 @@
+From 16291e8a59c5791518eaaa7007e024ff2baed788 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 15 Sep 2016 15:09:10 +0200
+Subject: [PATCH] fix #23 missing method in HashTiming (RandomLib 1.2)
+
+---
+ Source/HashTiming.php | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/Source/HashTiming.php b/Source/HashTiming.php
+index a50ce43..63d2894 100644
+--- a/Source/HashTiming.php
++++ b/Source/HashTiming.php
+@@ -62,6 +62,17 @@ public static function getStrength()
+     }
+ 
+     /**
++     * If the source is currently available.
++     * Reasons might be because the library is not installed
++     *
++     * @return bool
++     */
++    public static function isSupported()
++    {
++        return true;
++    }
++
++    /**
+      * Generate a random string of the specified size
+      *
+      * @param int $size The size of the requested random string

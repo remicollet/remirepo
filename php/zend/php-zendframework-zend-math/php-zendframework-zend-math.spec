@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.7.0
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -29,6 +29,9 @@ License:        BSD
 URL:            http://framework.zend.com/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
+
+# https://github.com/zendframework/zend-math/pull/24
+Patch0:         %{name}-pr24.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
@@ -40,8 +43,10 @@ BuildRequires:  php-gmp
 BuildRequires:  php-openssl
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
+%if 0%{?fedora} < 25
 # test suite hangs without (need investigation)
 BuildRequires:  php-mcrypt
+%endif
 # From composer, "require-dev": {
 #        "fabpot/php-cs-fixer": "1.7.*",
 #        "ircmaxell/random-lib": "~1.1",
@@ -88,6 +93,9 @@ So far the supported functionalities are:
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
+cd src
+%patch0 -p1
+
 
 %build
 # Empty build section, nothing required
@@ -118,8 +126,8 @@ EOF
 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
 
 # remirepo:3
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+if which php71; then
+   php71 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
 fi
 %else
 : Test suite disabled
@@ -140,6 +148,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 15 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-3
+- drop mcrypt build dependency
+
+* Thu Sep 15 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-2
+- fix FTBFS detected by Koschei, patch from
+  https://github.com/zendframework/zend-math/pull/24
+
 * Fri Apr  8 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
 - update to 2.7.0
 - add mandatory dependency on ircmaxell/random-lib
