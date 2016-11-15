@@ -13,8 +13,8 @@
 
 %global github_owner   Seldaek
 %global github_name    jsonlint
-%global github_version 1.4.1
-%global github_commit  e827b5254d3e58c736ea2c5616710983d80b0b70
+%global github_version 1.5.0
+%global github_commit  19495c181d6d53a0a13414154e52817e3b504189
 
 # "php": "^5.3 || ^7.0"
 %global php_min_ver    5.3
@@ -24,7 +24,7 @@
 
 Name:          php-%{github_name}
 Version:       %{github_version}
-Release:       3%{?dist}
+Release:       1%{?dist}
 Summary:       JSON Lint for PHP
 
 Group:         Development/Libraries
@@ -37,8 +37,6 @@ Source1:        %{name}-autoload.php
 
 # Bin usage without Composer autoloader
 Patch0:        %{name}-bin-without-composer-autoloader.patch
-# https://github.com/Seldaek/jsonlint/pull/37
-Patch1:         %{name}-php71.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -46,14 +44,15 @@ BuildArch:     noarch
 # For tests: composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-# For tests: phpcompatinfo (computed from version 1.3.1)
+# For tests: phpcompatinfo (computed from version 1.5.0)
+BuildRequires: php-json
 BuildRequires: php-pcre
 # For autoloader
 BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.3.1)
+# phpcompatinfo (computed from version 1.5.0)
 Requires:      php-cli
 Requires:      php-pcre
 # For autoloader
@@ -77,7 +76,6 @@ To use this library, you just have to add, in your project:
 
 cp %{SOURCE1} src/Seld/JsonLint/autoload.php
 %patch0 -p1
-%patch1 -p1
 
 
 %build
@@ -131,6 +129,9 @@ exit $ret
 
 
 %changelog
+* Tue Nov 15 2016 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
+- update to 1.5.0
+
 * Mon Nov 14 2016 Remi Collet <remi@fedoraproject.org> - 1.4.1-3
 - add patch for PHP 7.1
   open https://github.com/Seldaek/jsonlint/pull/37
