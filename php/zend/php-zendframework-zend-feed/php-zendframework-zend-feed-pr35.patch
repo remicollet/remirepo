@@ -1,0 +1,35 @@
+From 39a1255f47f849182f438e8f3d14a9e044925ca9 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Tue, 15 Nov 2016 13:47:28 +0100
+Subject: [PATCH] fix "A non-numeric value encountered" with PHP 7.1
+
+---
+ src/Reader/Extension/AbstractEntry.php | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/Reader/Extension/AbstractEntry.php b/src/Reader/Extension/AbstractEntry.php
+index c589146..aac03b9 100644
+--- a/src/Reader/Extension/AbstractEntry.php
++++ b/src/Reader/Extension/AbstractEntry.php
+@@ -135,18 +135,18 @@ public function setType($type)
+         if ($type === Reader\Reader::TYPE_RSS_10
+             || $type === Reader\Reader::TYPE_RSS_090
+         ) {
+-            $this->setXpathPrefix('//rss:item[' . ($this->entryKey + 1) . ']');
++            $this->setXpathPrefix('//rss:item[' . ((int)$this->entryKey + 1) . ']');
+             return $this;
+         }
+ 
+         if ($type === Reader\Reader::TYPE_ATOM_10
+             || $type === Reader\Reader::TYPE_ATOM_03
+         ) {
+-            $this->setXpathPrefix('//atom:entry[' . ($this->entryKey + 1) . ']');
++            $this->setXpathPrefix('//atom:entry[' . ((int)$this->entryKey + 1) . ']');
+             return $this;
+         }
+ 
+-        $this->setXpathPrefix('//item[' . ($this->entryKey + 1) . ']');
++        $this->setXpathPrefix('//item[' . ((int)$this->entryKey + 1) . ']');
+         return $this;
+     }
+ 
