@@ -44,7 +44,7 @@
 Name:           %{gh_project}
 Version:        9.1.1
 %global schema  9.1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
@@ -130,8 +130,6 @@ Requires:       php-htmLawed
 Requires:       php-composer(zendframework/zend-cache)  >= 2.4
 Requires:       php-composer(zendframework/zend-i18n)   >= 2.4
 Requires:       php-composer(zendframework/zend-loader) >= 2.4
-Requires:       php-composer(guzzlehttp/guzzle)         >= 5
-Requires:       php-composer(guzzlehttp/guzzle)         <  6
 Requires:       php-composer(jasig/phpcas)              >= 1.3
 Requires:       php-composer(iamcal/lib_autolink)       >= 1.7
 Requires:       php-composer(sabre/vobject)             >= 3.4
@@ -319,6 +317,12 @@ RET=0
 : Hack for vendor
 sed -e '/Development dependencies/s:^://:' -i tests/bootstrap.php
 
+: Add developement dependecies
+cat << 'EOF' | tee -a vendor/autoload.php
+//        "guzzlehttp/guzzle": "~5"
+require_once $vendor . '/GuzzleHttp/autoload.php';
+EOF
+
 : Running a PHP server
 sed -e 's/localhost:8088/127.0.0.1:8089/' phpunit.xml.dist >phpunit.xml
 
@@ -457,8 +461,9 @@ fi
 
 
 %changelog
-* Tue Nov 15 2016 Remi Collet <remi@fedoraproject.org> - 9.1.1-1
+* Tue Nov 15 2016 Remi Collet <remi@fedoraproject.org> - 9.1.1-2
 - update to 9.1.1
+- drop runtime dependency on guzzlehttp/guzzle
 
 * Wed Sep 28 2016 Remi Collet <remi@fedoraproject.org> - 9.1-2
 - missing API documentation

@@ -2,8 +2,6 @@
 $vendor = '##DATADIR##/php';
 
 // Dependencies from composer.json
-// "guzzlehttp/guzzle"
-require_once $vendor . '/GuzzleHttp/autoload.php';
 // "ircmaxell/password-compat"
 // => useless for php >= 5.5
 //require_once $vendor . '/password_compat/password.php';
