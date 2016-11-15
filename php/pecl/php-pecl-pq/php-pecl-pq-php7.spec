@@ -41,12 +41,14 @@ Version:        2.1.1
 Release:        0.5.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
+
+Patch0:         %{pecl_name}-upstream.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  postgresql-devel > 9
@@ -126,6 +128,7 @@ sed -e '/role="test"/d' \
     -i package.xml
 
 cd NTS
+%patch0 -p1 -b .upstream
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PQ_VERSION/{s/.* "//;s/".*$//;p}' php_pq.h)
@@ -213,9 +216,6 @@ if ! pkg-config libpq --atleast-version=9.3; then
   : ignore some tests only because of "diag" content
   rm ?TS/tests/{async003,async004,async005,async006,cancel001}.phpt
 fi
-%if "%{php_version}" > "7.1"
-  rm ?TS/tests/conv001.phpt
-%endif
 
 OPT="-n"
 [ -f %{php_extdir}/json.so ]  && OPT="$OPT -d extension=json.so"
@@ -305,6 +305,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 15 2016 Remi Collet <remi@fedoraproject.org> - 2.1.1-3
+- add upstream patch for 7.1
+  https://github.com/m6w6/ext-pq/issues/23
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 2.1.1-2
 - rebuild for PHP 7.1 new API version
 
