@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 
-%global gh_commit  06a1bceddbd0b635e7c35c87406b529be1f38a46
+%global gh_commit  80328baf38e2d6fe6cf269b43ed0edc80c64d89d
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date    20160923
 %global gh_owner   glpi-project
@@ -42,8 +42,9 @@
 %endif
 
 Name:           %{gh_project}
-Version:        9.1
-Release:        2%{?dist}
+Version:        9.1.1
+%global schema  9.1.1
+Release:        1%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
 
@@ -59,9 +60,6 @@ Source12:       %{name}-9.1-config_path_test.php
 Source3:        %{name}-logrotate
 Source4:        %{name}-nginx.conf
 Source5:        %{name}-fedora-autoloader.php
-
-Patch1:         %{name}-9.1-pr1056.patch
-Patch2:         %{name}-9.1-pr1058.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -191,9 +189,6 @@ techniciens grâce à une maintenance plus cohérente.
 %prep
 %setup -q -n %{name}-%{gh_commit}
 
-%patch1 -p1
-%patch2 -p1
-
 grep %{version} config/define.php
 
 find . -name \*.orig -exec rm {} \; -print
@@ -234,6 +229,15 @@ cat >cron <<EOF
 # Run cron to execute task even when no user connected
 * * * * * apache %{_bindir}/php %{_datadir}/%{name}/front/cron.php
 EOF
+
+# We only need 1 sql sdchema
+if [ "%{version}" != "%{schema}" -a -f install/mysql/glpi-%{version}-empty.sql ]; then
+  echo -e "\n*** check schema version as glpi-%{version}-empty.sql exists***\n"
+  exit 1;
+fi
+mv install/mysql/glpi-%{schema}-empty.sql .
+rm install/mysql/*.sql
+mv glpi-%{schema}-empty.sql install/mysql/
 
 
 %build
@@ -312,6 +316,8 @@ done >%{name}.lang
 %check
 %if %{with_tests}
 RET=0
+: Hack for vendor
+sed -e '/Development dependencies/s:^://:' -i tests/bootstrap.php
 
 : Running a PHP server
 sed -e 's/localhost:8088/127.0.0.1:8089/' phpunit.xml.dist >phpunit.xml
@@ -451,6 +457,9 @@ fi
 
 
 %changelog
+* Tue Nov 15 2016 Remi Collet <remi@fedoraproject.org> - 9.1.1-1
+- update to 9.1.1
+
 * Wed Sep 28 2016 Remi Collet <remi@fedoraproject.org> - 9.1-2
 - missing API documentation
 
