@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    74033cbe9fdd3eba597f8af501947a125b3b8087
+%global gh_commit    a4d0c11a36dd7f4e7cd7096076cab6d3378a071e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     true
 %global gh_project   php-punycode
@@ -15,7 +15,7 @@
 # Notice: single file / class, so no need to provide an autoloader for now
 
 Name:           php-true-punycode
-Version:        2.1.0
+Version:        2.1.1
 Release:        1%{?dist}
 Summary:        A Bootstring encoding of Unicode for IDNA
 
@@ -30,13 +30,16 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3
 BuildRequires:  php-mbstring
 BuildRequires:  %{_bindir}/phpunit
-BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php-fedora-autoloader-devel
 
 # From composer.json
-#      "php": ">=5.3.0"
-#      "ext-mbstring": "*"
+#               "symfony/polyfill-mbstring": "^1.3",
+#               "php": ">=5.3.0"
 Requires:       php(language) >= 5.3
+# Simpler, and we don't have symfony/polyfill-mbstring
 Requires:       php-mbstring
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(true/punycode) = %{version}
 
@@ -54,7 +57,7 @@ Autoloader: %{_datadir}/php/TrueBV/autoload.php
 
 %build
 : Generate a classmap autoloader
-%{_bindir}/phpab --output src/autoload.php src
+%{_bindir}/phpab --template fedora --output src/autoload.php src
 
 
 %install
@@ -104,6 +107,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 16 2016 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
+- update to 2.1.1 (no change)
+- switch to fedora/autoloader
+
 * Wed Aug 10 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - update to 2.1.0
 - add autoloader

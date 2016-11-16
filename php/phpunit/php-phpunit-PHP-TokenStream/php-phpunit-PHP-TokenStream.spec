@@ -66,7 +66,7 @@ Wrapper around PHP tokenizer extension.
 
 %build
 phpab \
-  --format   fedora \
+  --template fedora \
   --output   src/Token/Stream/Autoload.php \
   src
 
