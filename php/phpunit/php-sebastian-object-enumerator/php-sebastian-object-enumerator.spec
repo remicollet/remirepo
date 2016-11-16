@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    d4ca2fb70344987502567bc50081c03e6192fb26
+%global gh_commit    12dc92be4c9b1286fd37c15d54f7c9d8524f29e0
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -22,8 +22,8 @@
 %endif
 
 Name:           php-sebastian-%{gh_project}
-Version:        1.0.0
-%global specrel 2
+Version:        1.0.1
+%global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Traverses array and object to enumerate all referenced objects
 
@@ -37,7 +37,7 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-fedora-autoloader-devel
 %if %{with_tests}
-BuildRequires:  php-composer(sebastian/recursion-context) >= 1.0
+BuildRequires:  php-composer(sebastian/recursion-context) >= 1.0.4
 # From composer.json"require-dev": {
 #        "phpunit/phpunit": "~5"
 BuildRequires:  php-composer(phpunit/phpunit) >= 5
@@ -45,9 +45,9 @@ BuildRequires:  php-composer(phpunit/phpunit) >= 5
 
 # from composer.json
 #        "php": ">=5.6.0"
-#        "sebastian/recursion-context": "~1.0"
+#        "sebastian/recursion-context": "~1.0.4"
 Requires:       php(language) >= 5.6
-Requires:       php-composer(sebastian/recursion-context) >= 1.0
+Requires:       php-composer(sebastian/recursion-context) >= 1.0.4
 Requires:       php-composer(sebastian/recursion-context) <  2
 # from phpcompatinfo report for version 1.0.0:
 Requires:       php-reflection
@@ -126,6 +126,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 16 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- update to 1.0.1
+- raise dependency on sebastian/recursion-context 1.0.4
+
 * Mon Oct 31 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
 - switch to fedora/autoloader
 
