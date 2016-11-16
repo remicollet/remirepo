@@ -8,7 +8,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    3144ae21711fb6cac0b1ab4cbe63b75ce3d4e8da
+%global gh_commit    3b402f65a4cc90abf6e1104e388b896ce209631b
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-token-stream
@@ -22,7 +22,7 @@
 %endif
 
 Name:           php-phpunit-PHP-TokenStream
-Version:        1.4.8
+Version:        1.4.9
 Release:        1%{?dist}
 Summary:        Wrapper around PHP tokenizer extension
 
@@ -34,7 +34,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  php-theseer-autoload >= 1.19
+BuildRequires:  php-fedora-autoloader-devel
 %if %{with_tests}
 BuildRequires:  php-pear-PHPUnit >= 3.7.0
 %endif
@@ -47,6 +47,8 @@ Requires:       php-tokenizer
 # From phpcompatinfo report for version 1.2.2
 Requires:       php-pcre
 Requires:       php-spl
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(phpunit/php-token-stream) = %{version}
 
@@ -64,6 +66,7 @@ Wrapper around PHP tokenizer extension.
 
 %build
 phpab \
+  --format   fedora \
   --output   src/Token/Stream/Autoload.php \
   src
 
@@ -81,9 +84,26 @@ sed -e '/autoload.php/d' \
     -i tests/bootstrap.php
 
 cd build
-: Run tests - set include_path to ensure PHPUnit autoloader use it
+: Run upstream test suite
+# remirepo:13
+run=0
+ret=0
+if which php56; then
+  php56 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+  %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if which php71; then
+  php71 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+  %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
 %{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %endif
 
 
@@ -107,6 +127,10 @@ fi
 
 
 %changelog
+* Wed Nov 16 2016 Remi Collet <remi@fedoraproject.org> - 1.4.9-1
+- Update to 1.4.9
+- switch to fedora/autoloader
+
 * Tue Sep 15 2015 Remi Collet <remi@fedoraproject.org> - 1.4.8-1
 - Update to 1.4.8
 
