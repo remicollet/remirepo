@@ -17,7 +17,7 @@
 
 Name:           composer
 Version:        1.2.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -26,6 +26,9 @@ URL:            https://getcomposer.org/
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}%{?prever}-%{gh_short}.tar.gz
 Source1:        %{name}-autoload.php
 Source2:        %{name}-bootstrap.php
+# Profile scripts
+Source3:        %{name}.sh
+Source4:        %{name}.csh
 
 # Use our autoloader, resources path, fix for tests
 Patch0:         %{name}-rpm.patch
@@ -186,6 +189,10 @@ if (version_compare(PluginInterface::PLUGIN_API_VERSION, "%{api_version}")) {
 %install
 rm -rf       %{buildroot}
 
+: Profile scripts
+mkdir -p %{buildroot}%{_sysconfdir}/profile.d
+install -m 644 %{SOURCE3} %{SOURCE4} %{buildroot}%{_sysconfdir}/profile.d/
+
 : Library
 mkdir -p     %{buildroot}%{_datadir}/php
 cp -pr src/* %{buildroot}%{_datadir}/php
@@ -245,12 +252,17 @@ rm -rf %{buildroot}
 %license LICENSE
 %doc *.md doc
 %doc composer.json
+%config(noreplace) %{_sysconfdir}/profile.d/%{name}.*
 %{_bindir}/%{name}
 %{_datadir}/php/Composer
 %{_datadir}/%{name}
 
 
 %changelog
+* Thu Nov 17 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-2
+- add profile scripts so globally installed commands
+  will be found in default user path #1394577
+
 * Thu Nov  3 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
 - update to 1.2.2
 
