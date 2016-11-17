@@ -15,7 +15,7 @@
 %scl_package        php-lz4
 %endif
 
-%global gh_commit   d06c93e7c834d95d843edaa2c69fd6a6373841a5
+%global gh_commit   c22aa31ce7400dd9762c88db1f98ac6f5072618c
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    kjdev
 %global gh_project  php-ext-lz4
@@ -26,19 +26,16 @@
 
 Summary:       LZ4 Extension for PHP
 Name:          %{?sub_prefix}php-lz4
-Version:       0.2.7
+Version:       0.3.0
 %if 0%{?gh_date:1}
 Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 License:       MIT
 Group:         Development/Languages
 URL:           https://github.com/%{gh_owner}/%{gh_project}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
-
-# https://github.com/kjdev/php-ext-lz4/pull/13
-Patch0:        %{gh_project}-pr13.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
@@ -92,9 +89,8 @@ mv %{gh_project}-%{gh_commit} NTS
 cd NTS
 # Use the system library
 rm -r lz4
-
-%patch0 -p1 -b .pr13
-chmod 644 tests/010.phpt tests/*txt tests/*pr13
+# Only in LZ4 1.7.3
+sed -e 's/LZ4HC_MAX_CLEVEL/16/' -i lz4.c
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define LZ4_EXT_VERSION/{s/.* "//;s/".*$//;p}' php_lz4.h)
@@ -153,6 +149,9 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 
 %check
+: Ignore test relying on some specific LZ4 version
+rm ?TS/tests/{001,003,008,011}.phpt
+
 cd NTS
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
@@ -203,6 +202,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 17 2016 Remi Collet <remi@fedoraproject.org> - 0.3.0-1
+- update to 0.3.0
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 0.2.7-2
 - rebuild for PHP 7.1 new API version
 
