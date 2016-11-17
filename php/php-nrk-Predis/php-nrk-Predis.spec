@@ -18,13 +18,16 @@
 
 Name:           php-nrk-Predis
 Version:        1.1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        PHP client library for Redis
 
 Group:          Development/Libraries
 License:        MIT
 URL:            http://%{pear_channel}
 Source0:        http://%{pear_channel}/get/%{pear_name}-%{version}.tgz
+
+# https://github.com/nrk/predis/pull/393
+Patch0:         %{name}-pr393.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -61,7 +64,8 @@ Flexible and feature-complete PHP client library for Redis.
 %setup -q -c
 
 cd %{pear_name}-%{version}
-mv ../package.xml %{name}.xml
+%patch0 -p1
+sed -e '/test/s/md5sum="[^"]*"//' ../package.xml >%{name}.xml
 
 
 %build
@@ -89,24 +93,36 @@ sed -e 's:tests/::' \
 
 %check
 %if %{with_tests}
-
 : Launch redis server
-pidfile=$PWD/run/redis/redis.pid
-mkdir -p {run,log,lib}/redis
-sed -e "s:/var:$PWD:" \
-    /etc/redis.conf >redis.conf
-%{_bindir}/redis-server \
-    ./redis.conf \
-    --daemonize yes \
-    --pidfile $pidfile
+port=6379
+pidfile=$PWD/redis.pid
+mkdir -p data
+redis-server                   \
+    --bind      127.0.0.1      \
+    --port      $port          \
+    --daemonize yes            \
+    --logfile   $PWD/redis.log \
+    --dir       $PWD/data      \
+    --pidfile   $pidfile
 
 : Run the installed test Suite against the installed library
 pushd %{buildroot}%{pear_testdir}/%{pear_name}
 ret=0
-%{_bindir}/phpunit --include-path=%{buildroot}%{pear_phpdir} || ret=1
-
+# remirepo:10
+run=0
 if which php71; then
    php71 %{_bindir}/phpunit --include-path=%{buildroot}%{pear_phpdir} || ret=1
+   run=1
+fi
+if which php56; then
+   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{pear_phpdir} || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit \
+    --include-path=%{buildroot}%{pear_phpdir} \
+    --verbose || ret=1
+# remirepo:1
 fi
 popd
 
@@ -145,6 +161,11 @@ fi
 
 
 %changelog
+* Thu Nov 17 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-2
+- fix bootstraping to redis server for test suite
+- add patch for PHP 7.1
+- open https://github.com/nrk/predis/pull/393
+
 * Fri Jun 17 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - Update to 1.1.1
 
