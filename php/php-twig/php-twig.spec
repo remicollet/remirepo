@@ -34,8 +34,8 @@
 
 %global github_owner     twigphp
 %global github_name      Twig
-%global github_version   1.27.0
-%global github_commit    3c6c0033fd3b5679c6e1cb60f4f9766c2b424d97
+%global github_version   1.28.0
+%global github_commit    60ae30368f7ac50a95de032f16c1e882b0f69813
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %if "%{php_version}" < "7"
@@ -295,7 +295,7 @@ sed -e 's/function testGetAttributeWithTemplateAsObject/function skip_testGetAtt
 %endif
 
 : Test suite without extension
-# remirepo:15
+# remirepo:11
 run=0
 ret=0
 if which php56; then
@@ -304,10 +304,6 @@ if which php56; then
 fi
 if which php71; then
    php71 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Twig/autoload.php || ret=1
-   run=1
-fi
-if php -r 'exit (version_compare(PHP_VERSION, "7.1", "gt") ? 0 : 1);' ; then
-   : Skip test with 7.1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -353,6 +349,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 18 2016 Remi Collet <remi@fedoraproject.org> - 1.28.0-1
+- Update to 1.28.0
+
 * Wed Oct 26 2016 Remi Collet <remi@fedoraproject.org> - 1.27.0-1
 - Update to 1.27.0
 
