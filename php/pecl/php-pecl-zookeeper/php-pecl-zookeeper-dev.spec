@@ -18,7 +18,7 @@
 
 Summary:        PHP extension for interfacing with Apache ZooKeeper
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.2.3
+Version:        0.3.0
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -26,7 +26,7 @@ URL:            http://github.com/andreiz/php-zookeeper
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel < 7
+BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  zookeeper-devel
 
@@ -55,6 +55,14 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -204,6 +212,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 18 2016 Remi Collet <remi@fedoraproject.org> - 0.3.0-1
+- Update to 0.3.0 alpha (for PHP 7)
+
 * Mon Nov 07 2016 Remi Collet <remi@fedoraproject.org> - 0.2.3-1
 - Update to 0.2.3
 
