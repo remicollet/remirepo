@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #113 request version 1.0.0a1 ] {
+Extension [ <persistent> extension #113 request version 1.0.0a2 ] {
 
   - Dependencies {
     Dependency [ spl (Required) ]
