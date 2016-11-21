@@ -15,15 +15,15 @@
 %else
 %global sub_prefix %{scl_prefix}
 %endif
+%scl_package        php-pecl-igbinary
 %endif
 
-%{?scl:          %scl_package        php-pecl-igbinary}
-
-%global extname   igbinary
-%global with_zts  0%{?__ztsphp:1}
-#global commit    c35d48f3d14794373b2ef89a6d79020bb7418d7f
-#global short     %%(c=%%{commit}; echo ${c:0:7})
-#global prever    -dev
+%global extname    igbinary
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
+%global gh_commit  6a2d5b7ea71489c4d7065dc7746d37cfa80d501c
+%global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_date    20161018
+%global prever    -dev
 %if "%{php_version}" < "5.6"
 %global ini_name  %{extname}.ini
 %else
@@ -32,10 +32,10 @@
 
 Summary:        Replacement for the standard PHP serializer
 Name:           %{?sub_prefix}php-pecl-igbinary
-Version:        1.2.1
-%if 0%{?short:1}
-Release:        0.11.git%{short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
-Source0:        https://github.com/%{extname}/%{extname}/archive/%{commit}/%{extname}-%{version}-%{short}.tar.gz
+Version:        1.2.2
+%if 0%{?gh_date}
+Release:        0.6.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Source0:        https://github.com/%{extname}/%{extname}/archive/%{gh_commit}/%{extname}-%{version}-%{gh_short}.tar.gz
 %else
 Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        http://pecl.php.net/get/%{extname}-%{version}.tgz
@@ -54,13 +54,15 @@ Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Obsoletes:      %{?scl_prefix}php-%{extname}               <= 1.1.1
+Obsoletes:      %{?scl_prefix}php-%{extname}                <= 1.1.1
 Provides:       %{?scl_prefix}php-%{extname}                = %{version}
 Provides:       %{?scl_prefix}php-%{extname}%{?_isa}        = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{extname})          = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{extname})%{?_isa}  = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}         = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
 # Other third party repo stuff
@@ -75,6 +77,14 @@ Obsoletes:     php55w-pecl-%{extname}
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{extname}
 Obsoletes:     php56w-pecl-%{extname}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{extname}
+Obsoletes:     php70w-pecl-%{extname}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{extname}
+Obsoletes:     php71w-pecl-%{extname}
 %endif
 %endif
 
@@ -100,8 +110,8 @@ Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 Requires:      %{?scl_prefix}php-devel%{?_isa}
 
-Obsoletes:     %{?scl_prefix}php-%{extname}-devel <= 1.1.1
-Provides:      %{?scl_prefix}php-%{extname}-devel = %{version}-%{release}
+Obsoletes:     %{?scl_prefix}php-%{extname}-devel         <= 1.1.1
+Provides:      %{?scl_prefix}php-%{extname}-devel         = %{version}-%{release}
 Provides:      %{?scl_prefix}php-%{extname}-devel%{?_isa} = %{version}-%{release}
 
 %description devel
@@ -113,10 +123,15 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %prep
 %setup -q -c
 
-%if 0%{?short:1}
-mv igbinary-%{commit}/package.xml .
-mv igbinary-%{commit} NTS
-sed -e '/release/s/-dev/dev/' -i package.xml
+%if 0%{?gh_date}
+mv igbinary-%{gh_commit} NTS
+%{__php} -r '
+  $pkg = simplexml_load_file("NTS/package.xml");
+  $pkg->date = substr("%{gh_date}",0,4)."-".substr("%{gh_date}",4,2)."-".substr("%{gh_date}",6,2);
+  $pkg->version->release = "%{version}dev";
+  $pkg->stability->release = "devel";
+  $pkg->asXML("package.xml");
+'
 %else
 mv %{extname}-%{version} NTS
 %endif
@@ -126,7 +141,8 @@ mv %{extname}-%{version} NTS
 cd NTS
 
 # Check version
-extver=$(sed -n '/#define PHP_IGBINARY_VERSION/{s/.* "//;s/".*$//;p}' igbinary.h)
+subdir="php$(%{__php} -r 'echo PHP_MAJOR_VERSION;')"
+extver=$(sed -n '/#define PHP_IGBINARY_VERSION/{s/.* "//;s/".*$//;p}' src/$subdir/igbinary.h)
 if test "x${extver}" != "x%{version}%{?prever}"; then
    : Error: Upstream version is ${extver}, expecting %{version}%{?prever}.
    exit 1
@@ -172,7 +188,7 @@ rm -rf %{buildroot}
 
 make install -C NTS INSTALL_ROOT=%{buildroot}
 
-install -D -m 644 package2.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
+install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 
@@ -184,20 +200,28 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 # Test & Documentation
 cd NTS
-for i in $(grep 'role="test"' ../package2.xml | sed -e 's/^.*name="//;s/".*$//')
-do install -Dpm 644 $i %{buildroot}%{pecl_testdir}/%{extname}/$i
+for i in $(grep 'role="test"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
+do [ -f $i       ] && install -Dpm 644 $i       %{buildroot}%{pecl_testdir}/%{extname}/$i
+   [ -f tests/$i ] && install -Dpm 644 tests/$i %{buildroot}%{pecl_testdir}/%{extname}/tests/$i
 done
-for i in $(grep 'role="doc"' ../package2.xml | sed -e 's/^.*name="//;s/".*$//')
+for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{extname}/$i
 done
 
 
 %check
+MOD=""
+%if "%{php_version}" > "7.0"
+# See https://github.com/igbinary/igbinary7/issues/24
+rm */tests/igbinary_040.phpt
+%endif
+
 # APC required for test 045
 if [ -f %{php_extdir}/apcu.so ]; then
   MOD="-d extension=apcu.so"
-elif [ -f %{php_extdir}/apc.so ]; then
-  MOD="-d extension=apc.so"
+fi
+if [ -f %{php_extdir}/apc.so ]; then
+  MOD="$MOD -d extension=apc.so"
 fi
 
 : simple NTS module load test, without APC, as optional
@@ -279,8 +303,26 @@ fi
 
 
 %changelog
-* Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-3
-- adapt for F24
+* Tue Oct 18 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-0.6.20161018git6a2d5b7
+- refresh with sources from igbinary instead of old closed repo igbinary7
+
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-0.5.20160724git332a3d7
+- rebuild for PHP 7.1 new API version
+
+* Mon Jul 25 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-0.4.20160724git332a3d7
+- refresh
+
+* Sat Jul 23 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-0.3.20160715gita87a993
+- ignore 1 test with 7.1
+
+* Mon Jul 18 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-0.2.20160715gita87a993
+- refresh, newer snapshot
+
+* Wed Mar  2 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-0.1.20151217git2b7c703
+- update to 1.2.2dev for PHP 7
+- ignore test results, 4 failed tests: igbinary_009.phpt, igbinary_014.phpt
+  igbinary_026.phpt and igbinary_unserialize_v1_compatible.phpt
+- session support not yet available
 
 * Fri Jun 19 2015 Remi Collet <remi@fedoraproject.org> - 1.2.1-2
 - allow build against rh-php56 (as more-php56)
