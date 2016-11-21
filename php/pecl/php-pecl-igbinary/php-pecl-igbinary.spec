@@ -10,11 +10,7 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
-%endif
 %scl_package        php-pecl-igbinary
 %endif
 
@@ -22,8 +18,8 @@
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global gh_commit  6a2d5b7ea71489c4d7065dc7746d37cfa80d501c
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date    20161018
-%global prever    -dev
+#global gh_date    20161018
+#global prever    -dev
 %if "%{php_version}" < "5.6"
 %global ini_name  %{extname}.ini
 %else
@@ -32,12 +28,12 @@
 
 Summary:        Replacement for the standard PHP serializer
 Name:           %{?sub_prefix}php-pecl-igbinary
-Version:        1.2.2
+Version:        2.0.0
 %if 0%{?gh_date}
 Release:        0.6.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        https://github.com/%{extname}/%{extname}/archive/%{gh_commit}/%{extname}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        http://pecl.php.net/get/%{extname}-%{version}.tgz
 %endif
 License:        BSD
@@ -211,10 +207,8 @@ done
 
 %check
 MOD=""
-%if "%{php_version}" > "7.0"
-# See https://github.com/igbinary/igbinary7/issues/24
-rm */tests/igbinary_040.phpt
-%endif
+# drop extension load from phpt
+sed -e '/^extension=/d' -i ?TS/tests/*phpt
 
 # APC required for test 045
 if [ -f %{php_extdir}/apcu.so ]; then
@@ -303,6 +297,9 @@ fi
 
 
 %changelog
+* Mon Nov 21 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- update to 2.0.0 (php 5 and 7, stable)
+
 * Tue Oct 18 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-0.6.20161018git6a2d5b7
 - refresh with sources from igbinary instead of old closed repo igbinary7
 
