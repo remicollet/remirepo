@@ -7,11 +7,7 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
-%endif
 %scl_package        php-pecl-swoole
 %endif
 
@@ -34,7 +30,7 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.8.13
+Version:        1.9.0
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
@@ -268,6 +264,9 @@ cd ../ZTS
 
 
 %changelog
+* Tue Nov 22 2016 Remi Collet <remi@fedoraproject.org> - 1.9.0-1
+- Update to 1.9.0
+
 * Tue Oct 25 2016 Remi Collet <remi@fedoraproject.org> - 1.8.13-1
 - Update to 1.8.13
 
