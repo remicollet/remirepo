@@ -14,11 +14,7 @@
 %if 0%{?scl:1}
 # PHPUnit not available in SCL
 %global with_tests 0
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
-%endif
 %scl_package        php-twig
 %else
 %global pkg_name    %{name}
@@ -34,8 +30,8 @@
 
 %global github_owner     twigphp
 %global github_name      Twig
-%global github_version   1.28.0
-%global github_commit    60ae30368f7ac50a95de032f16c1e882b0f69813
+%global github_version   1.28.1
+%global github_commit    fff80c4a7ae1d47a81dfec10c76cbcb939170b45
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %if "%{php_version}" < "7"
@@ -349,6 +345,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 22 2016 Remi Collet <remi@fedoraproject.org> - 1.28.1-1
+- Update to 1.28.1
+
 * Fri Nov 18 2016 Remi Collet <remi@fedoraproject.org> - 1.28.0-1
 - Update to 1.28.0
 
