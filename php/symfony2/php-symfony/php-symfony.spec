@@ -13,8 +13,8 @@
 
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.8.13
-%global github_commit    d04e2eb13ae63068fc8862530b403756e3702896
+%global github_version   2.8.14
+%global github_commit    6ceca5b4154c80839270c38aa65373de76127df7
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -86,8 +86,8 @@
 #           instead of php-symfony-security-acl3
 %global symfony_security_acl_min_ver 2.7
 %global symfony_security_acl_max_ver 3.0
-# "twig/twig": "~1.27|~2.0"
-%global twig_min_ver 1.27
+# "twig/twig": "~1.28|~2.0"
+%global twig_min_ver 1.28
 %global twig_max_ver 3.0
 
 %if 0%{?fedora} < 21 && 0%{?rhel} < 7
@@ -1908,6 +1908,10 @@ sed 's/function testEncodeWithError/function SKIP_testEncodeWithError/' \
 : Skip online tests
 sed -e 's/testCopyForOriginUrlsAndExistingLocalFileDefaultsToCopy/SKIP_testCopyForOriginUrlsAndExistingLocalFileDefaultsToCopy/' \
     -i src/Symfony/Component/Filesystem/Tests/FilesystemTest.php
+%if 0%{?fedora} > 0 && 0%{?fedora} < 24
+: Skip test failing with old tzdata
+rm src/Symfony/Component/Form/Tests/Extension/Core/Type/DateTypeTest.php
+%endif
 %endif
 
 
@@ -1948,7 +1952,7 @@ for PKG in %{buildroot}%{phpdir}/Symfony/*/*; do
     continue
   elif [ -d $PKG ]; then
     echo -e "\n>>>>>>>>>>>>>>>>>>>>>>> ${PKG}\n"
-    %{_bindir}/php -d include_path=.:%{buildroot}%{phpdir}:%{phpdir} \
+    %{_bindir}/php -d serialize_precision=14 -d include_path=.:%{buildroot}%{phpdir}:%{phpdir} \
     %{_bindir}/phpunit \
         --exclude-group benchmark,intl-data,network,tty \
         --bootstrap bootstrap.php \
@@ -2686,6 +2690,11 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Tue Nov 22 2016 Remi Collet <remi@fedoraproject.org> - 2.8.14-1
+- Update to 2.8.14
+- raise dependency on twig 1.28
+- force serialize_precision=14 for PHP 7.1 (json tests)
+
 * Thu Oct 27 2016 Remi Collet <remi@fedoraproject.org> - 2.8.13-1
 - Update to 2.8.13
 - raise dependency on twig 1.27
