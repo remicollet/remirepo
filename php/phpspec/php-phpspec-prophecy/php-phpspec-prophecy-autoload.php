@@ -3,17 +3,9 @@
 
 // Rely on include_path as in PHPUnit dependencies + circular dependencies
 
-// Use Symfony autoloader
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once 'Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('Prophecy\\', dirname(__DIR__));
+\Fedora\Autoloader\Autoload::addPsr4('Prophecy\\', __DIR__);
 
 // Dependencies
 require_once 'Doctrine/Instantiator/autoload.php';
