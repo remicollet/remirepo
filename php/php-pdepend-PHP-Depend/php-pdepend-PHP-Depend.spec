@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b086687f3a01dc6bb92d633aef071d2c5dd0db06
+%global gh_commit    ea3cae1f7abb1141be94ad0a35970169a122df54
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     pdepend
 %global gh_project   pdepend
@@ -18,7 +18,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-pdepend-PHP-Depend
-Version:        2.2.4
+Version:        2.2.6
 Release:        1%{?dist}
 Summary:        PHP_Depend design quality metrics for PHP package
 
@@ -53,7 +53,7 @@ BuildRequires:  php-reflection
 BuildRequires:  php-simplexml
 BuildRequires:  php-spl
 BuildRequires:  php-tokenizer
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 %endif
 
 # From composer.json, "require": {
@@ -79,7 +79,7 @@ Requires:       php-simplexml
 Requires:       php-spl
 Requires:       php-tokenizer
 # Autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 
 # Single package in this channel
 Obsoletes:      php-channel-pdepend <= 1.3
@@ -134,24 +134,25 @@ rm src/test/php/PDepend/Report/Jdepend/ChartTest.php
 cat << 'EOF' | tee src/test/php/PDepend/bootstrap.php
 <?php
 require '%{buildroot}%{php_home}/autoload.php';
-$fedoraClassLoader->addPrefix('PDepend\\', dirname(__DIR__));
+\Fedora\Autoloader\Autoload::addPsr4('PDepend\\', __DIR__);
 EOF
 
+# remirepo=11
+ret=0
 run=0
-if which php70; then
-   	php70 %{_bindir}/phpunit -d memory_limit=1G --verbose
-	run=1
+if which php71; then
+    php71 %{_bindir}/phpunit -d memory_limit=1G --verbose || ret=1
+    run=1
 fi
-
 if which php56; then
-   	php56 %{_bindir}/phpunit -d memory_limit=1G --verbose
-	run=1
+    php56 %{_bindir}/phpunit -d memory_limit=1G --verbose || ret=1
+    run=1
 fi
-
 if [ $run -eq 0 ]; then
-   # No SCL available, run using with default PHP
-   %{_bindir}/phpunit -d memory_limit=1G --verbose
+%{_bindir}/phpunit -d memory_limit=1G --verbose
+# remirepo:2
 fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -180,6 +181,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 22 2016 Remi Collet <remi@fedoraproject.org> - 2.2.6-1
+- update to 2.2.6
+- switch to fedora/autoloader
+
 * Thu Mar 10 2016 Remi Collet <remi@fedoraproject.org> - 2.2.4-1
 - update to 2.2.4
 

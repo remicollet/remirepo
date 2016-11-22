@@ -1,19 +1,9 @@
 <?php
 /* Autoloader for pdepend/pdepend and its dependencies */
 
-$vendorDir = '/usr/share/php';
-// Use Symfony autoloader
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once $vendorDir . '/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('PDepend\\', __DIR__);
+\Fedora\Autoloader\Dependencies::required([
+	'/usr/share/php/Symfony/Component/autoload.php',
+]);
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-/* PDepend */
-$fedoraClassLoader->addPrefix('PDepend\\', dirname(__DIR__));
-
-/* for symfony/dependency-injection, filesystem and config */
-$fedoraClassLoader->addPrefix('Symfony\\Component\\', $vendorDir);
