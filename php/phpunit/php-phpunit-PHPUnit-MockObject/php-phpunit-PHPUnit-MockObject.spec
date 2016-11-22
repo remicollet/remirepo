@@ -41,7 +41,7 @@ Patch0:         %{gh_project}-3.0.0-rpm.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php-theseer-autoload
+BuildRequires:  php-fedora-autoloader-devel
 %if %{with_tests}
 BuildRequires:  php(language) >= 5.6
 # From composer.json, "require-dev": {
@@ -68,6 +68,8 @@ Requires:       php-soap
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 # From composer.json, "conflict": {
 #        "phpunit/phpunit": "<5.4.0"
 Conflicts:      php-composer(phpunit/phpunit) < 5.4
@@ -90,6 +92,7 @@ find . -name \*.orig -exec rm {} \; -print
 
 %build
 phpab \
+  --template fedora \
   --output src/Framework/MockObject/Autoload.php \
   src/Framework/MockObject
 
@@ -168,6 +171,7 @@ fi
 * Tue Nov 22 2016 Remi Collet <remi@fedoraproject.org> - 3.4.1-1
 - Update to 3.4.1 (no change)
 - allow sebastian/exporter 2.0
+- switch to fedora/autoloader
 
 * Mon Oct 10 2016 Remi Collet <remi@fedoraproject.org> - 3.4.0-1
 - Update to 3.4.0
