@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    238d7a2723bce689c79eeac9c7d5e1d623bb9dc2
+%global gh_commit    45026c8383187ad1dcb14fbfec77dced265b9cfc
 #global gh_date      20150902
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -16,7 +16,7 @@
 %global pear_name    PHPUnit_MockObject
 %global pear_channel pear.phpunit.de
 %global major        3.4
-%global minor        0
+%global minor        1
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
@@ -53,14 +53,14 @@ BuildRequires:  php-composer(phpunit/phpunit) >= 5.4
 #        "php": "^5.6 || ^7.0",
 #        "phpunit/php-text-template": "^1.2",
 #        "doctrine/instantiator": "^1.0.2",
-#        "sebastian/exporter": "^1.2"
+#        "sebastian/exporter": "^1.2 || ^2.0"
 Requires:       php(language) >= 5.6
 Requires:       php-composer(phpunit/php-text-template) >= 1.2
 Requires:       php-composer(phpunit/php-text-template) <  2
 Requires:       php-composer(doctrine/instantiator) >= 1.0.2
 Requires:       php-composer(doctrine/instantiator) <  2
 Requires:       php-composer(sebastian/exporter) >= 1.2
-Requires:       php-composer(sebastian/exporter) <  2
+Requires:       php-composer(sebastian/exporter) <  3
 # From composer.json, "suggest": {
 #        "ext-soap": "*"
 Requires:       php-soap
@@ -165,6 +165,10 @@ fi
 
 
 %changelog
+* Tue Nov 22 2016 Remi Collet <remi@fedoraproject.org> - 3.4.1-1
+- Update to 3.4.1 (no change)
+- allow sebastian/exporter 2.0
+
 * Mon Oct 10 2016 Remi Collet <remi@fedoraproject.org> - 3.4.0-1
 - Update to 3.4.0
 
