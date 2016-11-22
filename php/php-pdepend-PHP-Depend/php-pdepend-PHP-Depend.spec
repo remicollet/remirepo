@@ -53,6 +53,7 @@ BuildRequires:  php-reflection
 BuildRequires:  php-simplexml
 BuildRequires:  php-spl
 BuildRequires:  php-tokenizer
+# Autoloader
 BuildRequires:  php-composer(fedora/autoloader)
 %endif
 

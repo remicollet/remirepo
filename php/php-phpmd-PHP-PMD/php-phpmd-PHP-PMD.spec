@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    2b9c2417a18696dfb578b38c116cd0ddc19b256e
+%global gh_commit    148b605040ae6f7cc839e14a9e206beec9868d97
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpmd
 %global gh_project   phpmd
@@ -18,7 +18,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-phpmd-PHP-PMD
-Version:        2.4.3
+Version:        2.4.4
 Release:        1%{?dist}
 Summary:        PHPMD - PHP Mess Detector
 
@@ -40,20 +40,21 @@ BuildArch:      noarch
 #        "phpunit/phpunit": "^4.0",
 #        "squizlabs/php_codesniffer": "^2.0"
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.0
-BuildRequires:  php(language) >= 5.3
+BuildRequires:  php(language) >= 5.3.9
 BuildRequires:  php-composer(pdepend/pdepend) >= 2.0.4
 BuildRequires:  php-date
 BuildRequires:  php-libxml
 BuildRequires:  php-pcre
 BuildRequires:  php-simplexml
 BuildRequires:  php-spl
-BuildRequires:  php-composer(symfony/class-loader)
+# Autoloader
+BuildRequires:  php-composer(fedora/autoloader)
 %endif
 
 # From composer.json,     "require": {
-#        "php": ">=5.3.0",
+#        "php": ">=5.3.9",
 #        "pdepend/pdepend": "^2.0.4",
-Requires:       php(language) >= 5.3
+Requires:       php(language) >= 5.3.9
 Requires:       php-composer(pdepend/pdepend) >= 2.0.4
 Requires:       php-composer(pdepend/pdepend) <  3
 # From phpcompatinfo report for version 2.2.3
@@ -63,7 +64,7 @@ Requires:       php-pcre
 Requires:       php-simplexml
 Requires:       php-spl
 # Autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 
 # Single package in this channel
 Obsoletes:      php-channel-phpmd <= 1.3
@@ -110,17 +111,28 @@ install -Dpm 0755 src/bin/phpmd %{buildroot}%{_bindir}/phpmd
 
 %check
 %if %{with_tests}
-cat <<EOF | tee src/test/php/bootstrap.php
+cat << 'EOF' | tee src/test/php/bootstrap.php
 <?php
 require '%{buildroot}%{php_home}/autoload.php';
-\$fedoraClassLoader->addPrefix('PHPMD\\\\', __DIR__);
+\Fedora\Autoloader\Autoload::addPsr4('PHPMD\\',  __DIR__ . '/PHPMD');
 EOF
 
-%{_bindir}/phpunit --verbose
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose
+# remirepo:11
+ret=0
+run=0
+if which php71; then
+    php71 %{_bindir}/phpunit --verbose || ret=1
+    run=1
 fi
+if which php56; then
+    php56 %{_bindir}/phpunit --verbose || ret=1
+    run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -150,6 +162,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 22 2016 Remi Collet <remi@fedoraproject.org> - 2.4.4-1
+- update to 2.4.4
+- raise dependency on PHP 5.3.9
+- switch to fedora/autoloader
+
 * Thu Apr 21 2016 Remi Collet <remi@fedoraproject.org> - 2.4.3-1
 - update to 2.4.3
 
