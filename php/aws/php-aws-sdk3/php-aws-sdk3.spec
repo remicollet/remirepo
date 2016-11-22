@@ -12,8 +12,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   3.19.28
-%global github_commit    2655183122bc265d2a8f1e45f4f0d1a51b81203b
+%global github_version   3.19.30
+%global github_commit    1be75a77fb58eb0b0bdf8ff87495466934afb736
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -77,7 +77,7 @@ BuildRequires: php-composer(guzzlehttp/guzzle)      >= %{guzzle_min_ver}
 BuildRequires: php-composer(guzzlehttp/promises)    >= %{guzzle_promises_min_ver}
 BuildRequires: php-composer(guzzlehttp/psr7)        >= %{guzzle_psr7_min_ver}
 BuildRequires: php-composer(mtdowling/jmespath.php) >= %{jmespath_min_ver}
-BuildRequires: php-composer(symfony/class-loader)
+BuildRequires: php-composer(fedora/autoloader)
 # Tests
 %if %{with_tests}
 ## Classmap
@@ -95,7 +95,7 @@ BuildRequires: php-openssl
 BuildRequires: php-pcre
 BuildRequires: php-simplexml
 BuildRequires: php-spl
-## phpcompatinfo (computed from version 3.19.10)
+## phpcompatinfo (computed from version 3.19.30)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -117,7 +117,7 @@ Requires:      php-composer(guzzlehttp/psr7)        <  %{guzzle_psr7_max_ver}
 Requires:      php-composer(guzzlehttp/psr7)        >= %{guzzle_psr7_min_ver}
 Requires:      php-composer(mtdowling/jmespath.php) <  %{jmespath_max_ver}
 Requires:      php-composer(mtdowling/jmespath.php) >= %{jmespath_min_ver}
-# phpcompatinfo (computed from version 3.19.10)
+# phpcompatinfo (computed from version 3.19.30)
 Requires:      php-date
 Requires:      php-filter
 Requires:      php-hash
@@ -129,7 +129,7 @@ Requires:      php-simplexml
 Requires:      php-spl
 Requires:      php-xmlwriter
 # Autoloader
-Requires:      php-composer(symfony/class-loader)
+Requires:      php-composer(fedora/autoloader)
 
 # Weak dependencies
 ## composer.json: optional
@@ -169,37 +169,25 @@ cat <<'AUTOLOAD' | tee src/autoload.php
  * Autoloader for %{name} and its' dependencies
  * (created by %{name}-%{version}-%{release}).
  */
+require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 
-if (!isset($fedoraPsr4ClassLoader) || !($fedoraPsr4ClassLoader instanceof \Symfony\Component\ClassLoader\Psr4ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\Psr4ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/Psr4ClassLoader.php';
-    }
+\Fedora\Autoloader\Autoload::addPsr4('Aws\\', __DIR__);
 
-    $fedoraPsr4ClassLoader = new \Symfony\Component\ClassLoader\Psr4ClassLoader();
-    $fedoraPsr4ClassLoader->register(true);
-}
+\Fedora\Autoloader\Dependencies::required([
+    __DIR__.'/functions.php',
+    [
+        '%{phpdir}/GuzzleHttp6/autoload.php',
+        '%{phpdir}/GuzzleHttp/autoload.php',
+    ],
+    '%{phpdir}/GuzzleHttp/Promise/autoload.php',
+    '%{phpdir}/GuzzleHttp/Psr7/autoload.php',
+    '%{phpdir}/JmesPath/autoload.php',
+]);
 
-$fedoraPsr4ClassLoader->addPrefix('Aws\\', __DIR__);
-
-require_once __DIR__.'/functions.php';
-
-// Required dependency: Guzzle v6 (preferred) or v5
-require_once file_exists('%{phpdir}/GuzzleHttp6/autoload.php')
-    ? '%{phpdir}/GuzzleHttp6/autoload.php'
-    : '%{phpdir}/GuzzleHttp/autoload.php';
-
-// Dependencies (autoloader => required)
-foreach(array(
-    '%{phpdir}/Aws/Sns/autoload.php'               => false,
-    '%{phpdir}/Doctrine/Common/Cache/autoload.php' => false,
-    '%{phpdir}/GuzzleHttp/Promise/autoload.php'    => true,
-    '%{phpdir}/GuzzleHttp/Psr7/autoload.php'       => true,
-    '%{phpdir}/JmesPath/autoload.php'              => true,
-) as $dependencyAutoloader => $required) {
-    if ($required || file_exists($dependencyAutoloader)) {
-        require_once $dependencyAutoloader;
-    }
-}
+\Fedora\Autoloader\Dependencies::optional([
+    '%{phpdir}/Aws/Sns/autoload.php',
+    '%{phpdir}/Doctrine/Common/Cache/autoload.php',
+]);
 AUTOLOAD
 
 
@@ -220,10 +208,6 @@ cp -pr src/* %{buildroot}%{phpdir}/Aws3/
 '
 
 %if %{with_tests}
-: Make PSR-0 tests
-mkdir -p tests-psr0/Aws
-ln -s ../../tests tests-psr0/Aws/Test
-
 : Create tests classmap
 %{_bindir}/phpab --nolower --output bootstrap.classmap.php build/
 
@@ -235,12 +219,14 @@ date_default_timezone_set('UTC');
 
 require_once '%{buildroot}%{phpdir}/Aws3/autoload.php';
 
-$fedoraClassLoader->addPrefix('Aws\\Test\\', __DIR__.'/tests-psr0');
-$fedoraClassLoader->addPrefix('TokenReflection\\', '%{phpdir}');
+\Fedora\Autoloader\Autoload::addPsr4('Aws\\Test\\', __DIR__.'/tests');
+\Fedora\Autoloader\Autoload::addPsr4('TokenReflection\\', '%{phpdir}/TokenReflection');
 
-require_once __DIR__.'/bootstrap.classmap.php';
-require_once '%{phpdir}/Nette/Neon/autoload.php';
-require_once '%{phpdir}/Psr/Cache/autoload.php';
+\Fedora\Autoloader\Dependencies::required([
+    __DIR__.'/bootstrap.classmap.php',
+    '%{phpdir}/Nette/Neon/autoload.php',
+    '%{phpdir}/Psr/Cache/autoload.php',
+]);
 BOOTSTRAP
 
 : Skip tests known to fail
@@ -287,6 +273,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 21 2016 Shawn Iwinski <shawn@iwin.ski> - 3.19.30-1
+- Updated to 3.19.30 (RHBZ #1380046)
+- Switched autoloader from php-composer(symfony/class-loader) to
+  php-composer(fedora/autoloader)
+
 * Fri Nov 18 2016 Remi Collet <remi@remirepo.net> - 3.19.28-1
 - update to 3.19.28
 
