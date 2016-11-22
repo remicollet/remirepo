@@ -12,8 +12,8 @@
 
 %global github_owner     punic
 %global github_name      punic
-%global github_version   1.6.3
-%global github_commit    5805b35d6a574f754b49be1f539aaf3ae6484808
+%global github_version   1.6.4
+%global github_commit    c6a779cb0349948f093d40b9f6a4fe5c6f8a6a36
 
 %global composer_vendor  punic
 %global composer_project punic
@@ -166,6 +166,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 22 2016 Remi Collet <remi@remirepo.net> - 1.6.4-1
+- update to 1.6.4
+
 * Mon Sep 21 2015 Remi Collet <remi@remirepo.net> - 1.6.3-1
 - backport for #remirepo
 
