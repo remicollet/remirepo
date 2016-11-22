@@ -23,9 +23,7 @@
 
 %global github_owner     tarantool
 %global github_name      tarantool-php
-%global github_commit    27697cf6c1bf0d87a46ac6412767d46aa04ce5f3
-%global github_short     %(c=%{github_commit}; echo ${c:0:7})
-%global github_date      20160906
+%global github_version   0.2.0
 
 %global ext_name         tarantool
 %global with_zts         0%{!?_without_zts:%{?__ztsphp:1}}
@@ -35,19 +33,15 @@
 %global with_tests 0
 
 Name:          %{?sub_prefix}php-%{ext_name}
-Version:       0.1.1
-%if 0%{?github_date}
-Release:       0.1.%{?github_date}git%{?github_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
-%else
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
-%endif
+Version:       %{github_version}
+Release:       1%{?dist}
 Summary:       PHP driver for Tarantool/Box
 
 Group:         Development/Libraries
 # see https://github.com/tarantool/tarantool-php/issues/77
 License:       BSD
 URL:           https://github.com/%{github_owner}/%{github_name}
-Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{pkg_name}-%{version}-%{github_short}.tar.gz
+Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_version}.tar.gz
 
 BuildRequires: %{?scl_prefix}php-devel >= 7
 %if %{with_tests}
@@ -99,18 +93,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 
 %prep
 %setup -qc 
-mv %{github_name}-%{github_commit} NTS
-
-cd NTS
-: Bump version to avoid user confusion
-sed -i -e '/PHP_TARANTOOL_VERSION/s/0.1.0/%{version}-dev/' php_tarantool.h
-
-extver=$(sed -n '/#define PHP_TARANTOOL_VERSION/{s/.* "//;s/".*$//;p}' php_tarantool.h)
-if test "x${extver}" != "x%{version}%{?pre}%{?github_date:-dev}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?pre}%{?github_date:-dev}.
-   exit 1
-fi
-cd ..
+mv %{github_name}-%{github_version} NTS
 
 %if %{with_zts}
 cp -pr NTS ZTS
@@ -190,6 +173,9 @@ install -D -m 0644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 
 %changelog
+* Tue Nov 22 2016 Eugine Blikh <bigbes@tarantool.org> - 0.2.0-1
+- provide next release 0.2.0
+
 * Thu Mar 24 2016 Remi Collet <remi@fedoraproject.org> - 0.1.1-0.1.20160906git27697cf
 - update to git snapshot for PHP 7
 
