@@ -137,7 +137,7 @@ require '%{buildroot}%{php_home}/autoload.php';
 \Fedora\Autoloader\Autoload::addPsr4('PDepend\\', __DIR__);
 EOF
 
-# remirepo=11
+# remirepo:11
 ret=0
 run=0
 if which php71; then
