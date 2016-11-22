@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a9de0dbafeb6b1391b391fbb034734cb0af9f67c
+%global gh_commit    875145fabfa261fa9c1aea663dd29ddce92dca8f
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.6
-%global minor        3
+%global minor        5
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -51,13 +51,13 @@ BuildRequires:  php-composer(phpunit/php-code-coverage) >= 4.0
 BuildRequires:  php-composer(phpunit/php-timer) >= 1.0.6
 BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 3.2
 BuildRequires:  php-composer(phpspec/prophecy) >= 1.3.1
-BuildRequires:  php-composer(sebastian/comparator) >= 1.1
+BuildRequires:  php-composer(sebastian/comparator) >= 1.2.2
 BuildRequires:  php-composer(sebastian/diff) >= 1.2
 BuildRequires:  php-composer(sebastian/environment) >= 1.3
-BuildRequires:  php-composer(sebastian/exporter) >= 1.2
-BuildRequires:  php-composer(sebastian/recursion-context) >= 1.0
+BuildRequires:  php-composer(sebastian/exporter) >= 2.0
+BuildRequires:  php-composer(sebastian/recursion-context) >= 2.0
 BuildRequires:  php-composer(sebastian/global-state) >= 1.0
-BuildRequires:  php-composer(sebastian/object-enumerator) >= 1.0
+BuildRequires:  php-composer(sebastian/object-enumerator) >= 2.0
 BuildRequires:  php-composer(sebastian/resource-operations) >= 1.0
 BuildRequires:  php-composer(sebastian/version) >= 1.0
 BuildRequires:  php-composer(myclabs/deep-copy) >= 1.3
@@ -76,13 +76,12 @@ BuildRequires:  php-composer(fedora/autoloader)
 #        "phpunit/phpunit-mock-objects": "^3.2",
 #        "phpspec/prophecy": "^1.3.1",
 #        "symfony/yaml": "~2.1|~3.0",
-#        "sebastian/comparator": "~1.0",
+#        "sebastian/comparator": "~1.2.2",
 #        "sebastian/diff": "~1.2",
 #        "sebastian/environment": "^1.3 || ^2.0",
-#        "sebastian/exporter": "~1.1",
-#        "sebastian/recursion-context": "~1.0",
+#        "sebastian/exporter": "~2.0",
 #        "sebastian/global-state": "~1.0",
-#        "sebastian/object-enumerator": "~1.0",
+#        "sebastian/object-enumerator": "~2.0",
 #        "sebastian/resource-operations": "~1.0",
 #        "sebastian/version": "~1.0|~2.0",
 #        "myclabs/deep-copy": "~1.3",
@@ -105,18 +104,18 @@ Requires:       php-composer(phpunit/phpunit-mock-objects) >= 3.2
 Requires:       php-composer(phpunit/phpunit-mock-objects) <  4
 Requires:       php-composer(phpspec/prophecy) >= 1.3.1
 Requires:       php-composer(phpspec/prophecy) <  2
-Requires:       php-composer(sebastian/comparator) >= 1.1
+Requires:       php-composer(sebastian/comparator) >= 1.2.2
 Requires:       php-composer(sebastian/comparator) <  2
 Requires:       php-composer(sebastian/diff) >= 1.2
 Requires:       php-composer(sebastian/diff) <  2
 Requires:       php-composer(sebastian/environment) >= 1.3
 Requires:       php-composer(sebastian/environment) <  3
-Requires:       php-composer(sebastian/exporter) >= 1.2
-Requires:       php-composer(sebastian/exporter) <  2
+Requires:       php-composer(sebastian/exporter) >= 2.0
+Requires:       php-composer(sebastian/exporter) <  3
 Requires:       php-composer(sebastian/global-state) >= 1.0
 Requires:       php-composer(sebastian/global-state) <  2
-Requires:       php-composer(sebastian/object-enumerator) >= 1.0
-Requires:       php-composer(sebastian/object-enumerator) <  2
+Requires:       php-composer(sebastian/object-enumerator) >= 2.0
+Requires:       php-composer(sebastian/object-enumerator) <  3
 Requires:       php-composer(sebastian/resource-operations) >= 1.0
 Requires:       php-composer(sebastian/resource-operations) <  2
 Requires:       php-composer(sebastian/version) >= 1.0
@@ -139,7 +138,7 @@ Requires:       php-composer(phpunit/php-invoker) <  2
 Requires:       php-composer(doctrine/instantiator) >= 1.0.4
 Requires:       php-composer(doctrine/instantiator) <  2
 Requires:       php-composer(fedora/autoloader)
-Requires:       php-composer(sebastian/recursion-context) >= 1.0
+Requires:       php-composer(sebastian/recursion-context) >= 2.0
 # From phpcompatinfo report for version 5.6.0
 Requires:       php-reflection
 Requires:       php-openssl
@@ -237,6 +236,12 @@ fi
 
 
 %changelog
+* Tue Nov 22 2016 Remi Collet <remi@fedoraproject.org> - 5.6.5-1
+- update to 5.6.5
+- raise dependency on sebastian/comparator 1.2.2
+- raise dependency on sebastian/exporter 2.0
+- raise dependency on sebastian/object-enumerator 2.0
+
 * Mon Nov 14 2016 Remi Collet <remi@fedoraproject.org> - 5.6.3-1
 - update to 5.6.3
 
