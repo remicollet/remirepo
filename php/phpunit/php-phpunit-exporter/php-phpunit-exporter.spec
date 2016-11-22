@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    42c4c2eec485ee3e159ec9884f95b431287edde4
+%global gh_commit    ce474bdd1a34744d7ac5d6aad3a46d48d9bac4c4
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   exporter
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-phpunit-exporter
-Version:        1.2.2
+Version:        2.0.0
 Release:        1%{?dist}
 Summary:        Export PHP variables for visualization
 
@@ -33,26 +33,28 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php-fedora-autoloader-devel
 %if %{with_tests}
 # from composer.json, "require-dev": {
 #        "phpunit/phpunit": "~4.4",
 #        "ext-mbstring": "*"
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.4
 BuildRequires:  php-mbstring
-BuildRequires:  php-composer(sebastian/recursion-context) >= 1.0
+BuildRequires:  php-composer(sebastian/recursion-context) >= 2.0
 %endif
 
 # from composer.json
 #         "php": ">=5.3.3"
-#         "sebastian/recursion-context": "~1.0"
+#         "sebastian/recursion-context": "~2.0"
 Requires:       php(language) >= 5.3.3
-Requires:       php-composer(sebastian/recursion-context) >= 1.0
-Requires:       php-composer(sebastian/recursion-context) <  2
-# from phpcompatinfo report for version 1.2.2
+Requires:       php-composer(sebastian/recursion-context) >= 2.0
+Requires:       php-composer(sebastian/recursion-context) <  3
+# from phpcompatinfo report for version 2.0.0
 Requires:       php-mbstring
 Requires:       php-pcre
 Requires:       php-spl
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(sebastian/exporter) = %{version}
 
@@ -75,7 +77,7 @@ Provides the functionality to export PHP variables for visualization.
 
 %build
 # Generate the Autoloader (which was part of the Pear package)
-phpab --output src/autoload.php src
+phpab --template fedora --output src/autoload.php src
 
 # Rely on include_path as in PHPUnit dependencies
 cat <<EOF | tee -a src/autoload.php
@@ -92,13 +94,25 @@ cp -pr src %{buildroot}%{php_home}/SebastianBergmann/Exporter
 
 %if %{with_tests}
 %check
+# remirepo:13
+run=0
+ret=0
+if which php56; then
+  php56 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+  %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/SebastianBergmann/Exporter/autoload.php || ret=1
+   run=1
+fi
+if which php71; then
+  php71 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
+  %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/SebastianBergmann/Exporter/autoload.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
 %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/SebastianBergmann/Exporter/autoload.php
-
-if which php71; then
-  %{_bindir}/php71 -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
-  %{_bindir}/phpunit --bootstrap %{buildroot}%{php_home}/SebastianBergmann/Exporter/autoload.php
+# remirepo:2
 fi
+exit $ret
 %endif
 
 
@@ -123,6 +137,11 @@ fi
 
 
 %changelog
+* Tue Nov 22 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- update to 2.0.0
+- raise dependency on sebastian/recursion-context 2.0
+- switch to fedora/autoloader
+
 * Fri Jun 17 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
 - update to 1.2.2
 - run test suite with both PHP 5 and 7 when available
