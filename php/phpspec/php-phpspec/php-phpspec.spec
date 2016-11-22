@@ -14,7 +14,7 @@
 
 Name:           php-phpspec
 Version:        3.1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Specification-oriented BDD framework for PHP
 
 Group:          Development/Libraries
@@ -45,8 +45,8 @@ BuildRequires:  php-composer(doctrine/instantiator)    >= 1.0.1
 #         "ciaranmcnulty/versionbasedtestskipper": "^0.2.1"
 BuildRequires:  php-composer(symfony/filesystem)       >= 2.1
 BuildRequires:  php-composer(phpunit/phpunit)          >= 5.4
-# For our autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+# Autoloader
+BuildRequires:  php-composer(fedora/autoloader)
 
 # From composer.json, require
 #        "php":                      "^5.6 || ^7.0",
@@ -67,7 +67,7 @@ Requires:       php-composer(phpspec/prophecy)         <  2
 Requires:       php-composer(phpspec/php-diff)         >= 1.0.0
 Requires:       php-composer(phpspec/php-diff)         <  2
 Requires:       php-composer(sebastian/exporter)       >= 1.0
-Requires:       php-composer(sebastian/exporter)       <  2
+#Requires:       php-composer(sebastian/exporter)       <  2
 Requires:       php-composer(symfony/console)          >= 2.7
 Requires:       php-composer(symfony/console)          <  4
 Requires:       php-composer(symfony/event-dispatcher) >= 2.7
@@ -81,8 +81,8 @@ Requires:       php-composer(symfony/yaml)             <  4
 Requires:       php-composer(doctrine/instantiator)    >= 1.0.1
 Requires:       php-composer(doctrine/instantiator)    <  2
 Requires:       php-tokenizer
-# For our autoloader
-Requires:       php-composer(symfony/class-loader)
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 # From phpcompatinfo report
 Requires:       php-pcntl
 Requires:       php-pcre
@@ -187,6 +187,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 22 2016 Remi Collet <remi@fedoraproject.org> - 3.1.1-2
+- ignore sebastian/exporter max version
+- switch to fedora/autoloader
+
 * Tue Sep 27 2016 Remi Collet <remi@fedoraproject.org> - 3.1.1-1
 - update to 3.1.1
 

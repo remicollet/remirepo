@@ -1,26 +1,15 @@
 <?php
 /* Autoloader for phpspec/phpspec and its dependencies */
 
-$vendorDir = stream_resolve_include_path('Symfony/Component/ClassLoader/ClassLoader.php');
-$vendorDir = dirname(dirname(dirname(dirname($vendorDir))));
-// Use Symfony autoloader
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once $vendorDir . '/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefixes(array(
-    'Symfony\\Component\\'                  => $vendorDir,
-    'PhpSpec\\'                             => dirname(__DIR__),
-));
+\Fedora\Autoloader\Autoload::addPsr4('PhpSpec\\', __DIR__);
+$vendorDir = stream_resolve_include_path('Symfony/Component/Console/Application.php');
+\Fedora\Autoloader\Autoload::addPsr4('Symfony\\Component\\', dirname(dirname($vendorDir)));
 
 /* spec tree in current dir, when exists */
 if (is_dir(getcwd().'/spec')) {
-    $fedoraClassLoader->addPrefix('spec', getcwd());
+    \Fedora\Autoloader\Autoload::addPsr4('spec\\', getcwd().'/spec');
 }
 
 // Dependencies (Rely on include_path as in PHPUnit dependencies + circular dependencies)
