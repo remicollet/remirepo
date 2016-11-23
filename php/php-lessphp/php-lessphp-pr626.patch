@@ -1,0 +1,23 @@
+From 6cabd199faf47a2f38b70e3c98f563817b43273a Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Wed, 23 Nov 2016 15:20:43 +0100
+Subject: [PATCH 1/2] fix lib_luma
+
+---
+ lessc.inc.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lessc.inc.php b/lessc.inc.php
+index 2292f21..b639c3e 100644
+--- a/lessc.inc.php
++++ b/lessc.inc.php
+@@ -1273,7 +1273,7 @@ protected function lib_contrast($args) {
+ 
+ 	protected function lib_luma($color) {
+ 	    $color = $this->coerceColor($color);
+-	    return (0.2126 * $color[0] / 255) + (0.7152 * $color[1] / 255) + (0.0722 * $color[2] / 255);
++	    return (0.2126 * $color[1] / 255) + (0.7152 * $color[2] / 255) + (0.0722 * $color[3] / 255);
+ 	}
+ 
+ 
+

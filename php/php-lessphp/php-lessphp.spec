@@ -25,13 +25,16 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       4%{?dist}
 Summary:       A compiler for LESS written in PHP
 
 Group:         Development/Libraries
 License:       MIT or GPLv3
 URL:           http://leafo.net/lessphp
 Source0:       https://github.com/%{github_owner}/%{github_name}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+
+# https://github.com/leafo/lessphp/pull/626
+Patch0:        %{name}-pr626.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -69,6 +72,7 @@ suitable as a drop in replacement for PHP projects.
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
+%patch0 -p1
 
 : Update bin requires and shebang
 sed 's#$path\s*=.*#$path = "%{phpdir}/%{composer_project}/";#' \
@@ -92,7 +96,22 @@ cp -p plessc %{buildroot}%{_bindir}/
 
 %check
 %if %{with_tests}
-%{_bindir}/phpunit -v tests
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit tests || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit tests || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose tests
+# remirepo:2
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -114,6 +133,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 23 2016 Remi Collet <remi@fedoraproject.org> - 0.5.0-4
+- add patch for lib_luma and fix FTBFS with PHP 7.1
+  https://github.com/leafo/lessphp/pull/626
+
 * Sun Jun 28 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 0.5.0-2
 - Added php-composer(leafo/lessphp) virtual provide
 
