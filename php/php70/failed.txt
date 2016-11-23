@@ -1,24 +1,30 @@
-===== 7.0.13 (2016-11-10)
+===== 7.0.14RC1 (2016-11-24)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
-/var/lib/mock/el6i/build.log:Tests failed    :     0
-/var/lib/mock/el6x/build.log:Tests failed    :     0
+/var/lib/mock/el6i/build.log:Tests failed    :     1
+/var/lib/mock/el6x/build.log:Tests failed    :     1
 /var/lib/mock/el7x/build.log:Tests failed    :     0
 /var/lib/mock/fc22i/build.log:Tests failed    :    0
 /var/lib/mock/fc22x/build.log:Tests failed    :    0
 /var/lib/mock/fc23i/build.log:Tests failed    :    3
 /var/lib/mock/fc23x/build.log:Tests failed    :    3
-/var/lib/mock/fc24i/build.log:Tests failed    :    0
+/var/lib/mock/fc24i/build.log:Tests failed    :    1
 /var/lib/mock/fc24x/build.log:Tests failed    :    0
 /var/lib/mock/fc25i/build.log:Tests failed    :    1
 /var/lib/mock/fc25x/build.log:Tests failed    :    0
 
 
+el6i
+	Bug #70198 Checking liveness does not work as expected [ext/standard/tests/streams/bug70198.phpt]
+el6x
+	Bug #61977 Test exit code for various errors [sapi/cli/tests/bug43177.phpt]
 fc23i, fc23x:
 	***	Bug #20382 [2] (strtotime ("Monday", $date) produces wrong result on DST changeover) [ext/date/tests/bug20382-2.phpt]
 	***	Bug #33414 [1] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-1.phpt]
 	***	Bug #33415 [1] (Possibly invalid non-one-hour DST or timezone shifts) [ext/date/tests/bug33415-1.phpt]
+fc24i
+	*	Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
 fc25i:
 	*	Bug #64438 proc_open hangs with stdin/out with 4097+ bytes [ext/standard/tests/streams/proc_open_bug64438.phpt]
 
