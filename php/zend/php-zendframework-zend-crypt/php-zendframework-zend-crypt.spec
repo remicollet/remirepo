@@ -158,7 +158,7 @@ if which php56; then
    run=1
 fi
 if which php71; then
-   php70 %{_bindir}/phpunit || ret=1
+   php71 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
