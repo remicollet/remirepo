@@ -17,7 +17,7 @@
 
 Name:           php-%{gh_project}
 Version:        2.4.3
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Tracy: useful PHP debugger
 
@@ -126,11 +126,11 @@ if which php56; then
    run=1
 fi
 if which php71; then
-   php71 %{_bindir}/nette-tester --colors 0 -p php71 -C tests -s || ret=1
+   php71 %{_bindir}/nette-tester --colors 0 -p php71 -C tests -d serialize_precision=14 -s || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
-%{_bindir}/nette-tester --colors 0 -p php -C tests -s
+%{_bindir}/nette-tester --colors 0 -p php -C -d serialize_precision=14 tests -s
 # remirepo:2
 fi
 exit $ret
@@ -153,6 +153,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 23 2016 Remi Collet <remi@fedoraproject.org> - 2.4.3-2
+- set serialize_precision=14, fix FTBFS with php 7.1
+
 * Fri Sep 30 2016 Remi Collet <remi@fedoraproject.org> - 2.4.3-1
 - update to 2.4.3
 
