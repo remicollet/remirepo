@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # See https://github.com/llaville/php-compatinfo-db/releases
-%global gh_commit    fef5a0cf964436cc82abf8a266fb35f95f3b32b1
+%global gh_commit    fb7e67241a17fd0576bebd7c7eebd3e3e1f99177
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20151031
 %global gh_owner     llaville
@@ -19,12 +19,16 @@
 # Composer
 %global c_vendor     bartlett
 %global c_project    php-compatinfo-db
-
+%if 0%{?fedora} < 26
 %global with_tests   0%{!?_without_tests:1}
+%else
+# See https://github.com/llaville/php-compatinfo-db/issues/8 PHP 7.1
+%global with_tests   0%{?_with_tests:1}
+%endif
 
 Name:           php-%{c_vendor}-%{c_project}
-Version:        1.14.0
-%global specrel 2
+Version:        1.15.0
+%global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Reference Database to be used with php-compatinfo library
 
@@ -184,6 +188,11 @@ export BARTLETT_COMPATINFO_DB=%{buildroot}%{_datadir}/%{name}/compatinfo.sqlite
 
 
 %changelog
+* Wed Nov 23 2016 Remi Collet <remi@fedoraproject.org> - 1.15.0-1
+- update to 1.15.0
+- disable test suite with PHP 7.1, not yet supported
+  https://github.com/llaville/php-compatinfo-db/issues/8
+
 * Mon Oct 31 2016 Remi Collet <remi@fedoraproject.org> - 1.14.0-2
 - switch to fedora/autoloader
 

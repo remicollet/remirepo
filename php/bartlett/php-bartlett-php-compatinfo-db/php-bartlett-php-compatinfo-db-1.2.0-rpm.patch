@@ -11,20 +11,6 @@ diff -up ./data/handleDB.php.rpm ./data/handleDB.php
  require_once __DIR__ . '/ReferenceCollection.php';
  
  use Bartlett\CompatInfoDb\ExtensionFactory;
-@@ -238,12 +239,7 @@ class DbInitCommand extends Command
-             array(
-                 'build_string'  => date('M d Y H:i:s T', $time),
-                 'build_date'    => date('YmdHis', $time),
--                'build_version' => sprintf(
--                    '%4d.%4d.%6d',
--                    date('Y', $time),
--                    date('md', $time),
--                    date('His', $time)
--                )
-+                'build_version' => "@VERSION@"
-             )
-         );
-         $progress->setMessage('Database is built');
 diff -up ./src/Bartlett/CompatInfoDb/Environment.php.rpm ./src/Bartlett/CompatInfoDb/Environment.php
 --- ./src/Bartlett/CompatInfoDb/Environment.php.rpm	2015-12-04 21:15:12.000000000 +0100
 +++ ./src/Bartlett/CompatInfoDb/Environment.php	2015-12-05 16:55:03.461056102 +0100
