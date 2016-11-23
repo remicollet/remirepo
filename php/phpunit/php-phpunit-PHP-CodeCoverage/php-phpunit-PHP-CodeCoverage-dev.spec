@@ -18,7 +18,7 @@
 %global pear_channel pear.phpunit.de
 %global major        4.0
 %global minor        2
-%global specrel      1
+%global specrel      2
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 %else
@@ -146,9 +146,9 @@ if which php56; then
         --configuration build || ret=1
   run=1
 fi
-if which php70; then
-  # php 7.1 issue with 66.666666666667,1  vs  66.666666666666657,1
-  php70 $EXT \
+if which php71; then
+  php71 $EXT \
+    -d serialize_precision=14 \
     -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
     %{_bindir}/phpunit \
         --configuration build || ret=1
@@ -156,6 +156,7 @@ if which php70; then
 fi
 if [ $run -eq 0 ]; then
 %{_bindir}/php $EXT \
+    -d serialize_precision=14 \
     -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
     %{_bindir}/phpunit \
         --configuration build \
@@ -187,6 +188,10 @@ fi
 
 
 %changelog
+* Wed Nov 23 2016 Remi Collet <remi@fedoraproject.org> - 4.0.2-2
+- set serialize_precision=14 for the test suite
+  to fix FTBFS with PHP 7.1
+
 * Tue Nov  1 2016 Remi Collet <remi@fedoraproject.org> - 4.0.2-1
 - Update to 4.0.2
 - switch to fedora-autoloader
