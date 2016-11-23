@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #125 tarantool version 0.1.0 ] {
+Extension [ <persistent> extension #127 tarantool version 0.2.0 ] {
 
   - INI {
     Entry [ tarantool.persistent <ALL> ]
@@ -232,7 +232,7 @@ Extension [ <persistent> extension #125 tarantool version 0.1.0 ] {
       }
 
       - Methods [10] {
-        Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $message ]
@@ -289,7 +289,7 @@ Extension [ <persistent> extension #125 tarantool version 0.1.0 ] {
       }
 
       - Methods [10] {
-        Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $message ]
@@ -346,7 +346,7 @@ Extension [ <persistent> extension #125 tarantool version 0.1.0 ] {
       }
 
       - Methods [10] {
-        Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $message ]
@@ -403,7 +403,7 @@ Extension [ <persistent> extension #125 tarantool version 0.1.0 ] {
       }
 
       - Methods [10] {
-        Method [ <internal:Core, inherits Exception, ctor> <visibility error> method __construct ] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
 
           - Parameters [3] {
             Parameter #0 [ <optional> $message ]
