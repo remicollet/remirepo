@@ -19,7 +19,7 @@
 Name:           php-%{gh_project}
 Summary:        WebDAV Framework for PHP
 Version:        3.0.9
-Release:        2%{?dist}
+Release:        3%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 License:        BSD
@@ -29,6 +29,8 @@ Source1:        %{name}-autoload.php
 
 # replace composer autoloader
 Patch0:         %{name}-autoload.patch
+# upstream patch for 7.1
+Patch1:         %{name}-php71.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -129,6 +131,7 @@ Autoloader: %{_datadir}/php/Sabre/DAV/autoload.php
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p0
+%patch1 -p1
 cp %{SOURCE1} lib/DAV/autoload.php
 
 # drop executable as only provided as doc
@@ -157,16 +160,15 @@ cd tests
 sed -e 's:@BUILDROOT@:%{buildroot}:' -i bootstrap.php
 
 : Run upstream test suite against installed library
-# remirepo:12
+# remirepo:11
 run=0
 ret=0
 if which php56; then
    php56 %{_bindir}/phpunit || ret=1
    run=1
 fi
-if which php70; then
-   # PHP 7.1, 1 failure: Sabre\DAV\ServerEventsTest::testMethod
-   php70 %{_bindir}/phpunit || ret=1
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -193,7 +195,10 @@ exit $ret
 
 
 %changelog
-* Sat Oct 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.9-3
+* Wed Nov 23 2016 Remi Collet <remi@fedoraproject.org> - 3.0.9-3
+- add upstream patch to fix FTBFS with php 7.1
+
+* Sat Oct 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.9-2
 - switch from symfony/class-loader to fedora/autoloader
 
 * Thu Apr  7 2016 Remi Collet <remi@fedoraproject.org> - 3.0.9-1
