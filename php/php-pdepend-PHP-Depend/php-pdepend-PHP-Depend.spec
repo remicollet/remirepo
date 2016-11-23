@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    ea3cae1f7abb1141be94ad0a35970169a122df54
+%global gh_commit    3f7deab87836dd83d7a7b6a2098f75d8f38566aa
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     pdepend
 %global gh_project   pdepend
@@ -18,7 +18,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-pdepend-PHP-Depend
-Version:        2.2.6
+Version:        2.3.0
 Release:        1%{?dist}
 Summary:        PHP_Depend design quality metrics for PHP package
 
@@ -47,12 +47,15 @@ BuildRequires:  php-composer(symfony/config) >= 2.3.0
 BuildRequires:  php-bcmath
 BuildRequires:  php-date
 BuildRequires:  php-dom
+BuildRequires:  php-iconv
 BuildRequires:  php-libxml
+BuildRequires:  php-mbstring
 BuildRequires:  php-pcre
 BuildRequires:  php-reflection
 BuildRequires:  php-simplexml
 BuildRequires:  php-spl
 BuildRequires:  php-tokenizer
+BuildRequires:  php-xml
 # Autoloader
 BuildRequires:  php-composer(fedora/autoloader)
 %endif
@@ -69,16 +72,19 @@ Requires:       php-composer(symfony/filesystem) >= 2.3.0
 Requires:       php-composer(symfony/filesystem) <  4
 Requires:       php-composer(symfony/config) >= 2.3.0
 Requires:       php-composer(symfony/config) <  4
-# From phpcompatinfo report for version 2.1.0
+# From phpcompatinfo report for version 2.3.0
 Requires:       php-bcmath
 Requires:       php-date
 Requires:       php-dom
+Requires:       php-iconv
 Requires:       php-libxml
+Requires:       php-mbstring
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-simplexml
 Requires:       php-spl
 Requires:       php-tokenizer
+Requires:       php-xml
 # Autoloader
 Requires:       php-composer(fedora/autoloader)
 
@@ -142,11 +148,11 @@ EOF
 ret=0
 run=0
 if which php71; then
-    php71 %{_bindir}/phpunit -d memory_limit=1G --verbose || ret=1
+    php71 %{_bindir}/phpunit -d memory_limit=1G || ret=1
     run=1
 fi
 if which php56; then
-    php56 %{_bindir}/phpunit -d memory_limit=1G --verbose || ret=1
+    php56 %{_bindir}/phpunit -d memory_limit=1G || ret=1
     run=1
 fi
 if [ $run -eq 0 ]; then
@@ -182,6 +188,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 23 2016 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
+- update to 2.3.0
+- add dependency on iconv, mbstring and xml
+
 * Tue Nov 22 2016 Remi Collet <remi@fedoraproject.org> - 2.2.6-1
 - update to 2.2.6
 - switch to fedora/autoloader
