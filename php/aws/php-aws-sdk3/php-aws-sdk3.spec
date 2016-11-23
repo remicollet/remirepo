@@ -12,8 +12,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   3.19.31
-%global github_commit    3b7777e4091f4bf4de1dee19cfdad87249facb0e
+%global github_version   3.19.32
+%global github_commit    4c3093e320c4a34e30327043d24099787b702665
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -230,8 +230,6 @@ require_once '%{buildroot}%{phpdir}/Aws3/autoload.php';
 BOOTSTRAP
 
 : Skip tests known to fail
-sed 's/function testsIfExists/function SKIP_testsIfExists/' \
-    -i tests/S3/S3ClientTest.php
 rm -f \
     tests/Integ/GuzzleV5HandlerTest.php \
     tests/Integ/GuzzleV6StreamHandlerTest.php
@@ -275,6 +273,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 23 2016 Remi Collet <remi@remirepo.net> - 3.19.32-1
+- update to 3.19.32
+
 * Tue Nov 22 2016 Remi Collet <remi@remirepo.net> - 3.19.31-1
 - update to 3.19.31
 
