@@ -26,7 +26,7 @@ Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__ph
 %else
 Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
-License:       PHP
+License:       BSD
 Group:         Development/Languages
 URL:           https://github.com/%{gh_owner}/%{gh_project}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
@@ -151,8 +151,8 @@ REPORT_EXIT_STATUS=1 \
 %files
 %{!?_licensedir:%global license %%doc}
 %license NTS/LICENSE
-%doc NTS/EXPERIMENTAL
 %doc NTS/README.md
+%doc NTS/ast_stub.php
 %doc NTS/scripts
 %doc NTS/util.php
 

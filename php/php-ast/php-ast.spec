@@ -22,7 +22,7 @@ Summary:       Abstract Syntax Tree
 Name:          php-ast
 Version:       0.1.2
 Release:       1%{?dist}
-License:       PHP
+License:       BSD
 Group:         Development/Languages
 URL:           https://github.com/%{gh_owner}/%{gh_project}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
@@ -128,8 +128,8 @@ REPORT_EXIT_STATUS=1 \
 
 %files
 %license NTS/LICENSE
-%doc NTS/EXPERIMENTAL
 %doc NTS/README.md
+%doc NTS/ast_stub.php
 %doc NTS/scripts
 %doc NTS/util.php
 
