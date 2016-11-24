@@ -46,5 +46,6 @@
     "php-theseer-fxsl": "theseer\/fxsl",
     "php-cs-fixer": "friendsofphp\/php-cs-fixer",
     "php-morris-lessql": "morris\/lessql",
+    "phan": "etsy\/phan",
     "phinx": "robmorgan\/phinx"
 }
