@@ -1,6 +1,19 @@
+# remirepo spec file for vips, from:
+#
+# Fedora spec file for vips
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
 %global vips_version_base 8.4
 %global vips_version %{vips_version_base}.4
 %global vips_soname_major 42
+
+%global with_python2 1
+%global with_python3 0
+%global with_doc     0
 
 Name:		vips
 Version:	%{vips_version}
@@ -39,8 +52,6 @@ BuildRequires:	giflib-devel
 
 BuildRequires:	gcc-c++
 BuildRequires:	pkgconfig gettext
-BuildRequires:	python2-devel python3-devel
-BuildRequires:	swig gtk-doc
 
 
 %description
@@ -73,9 +84,11 @@ Requires:	vips%{?_isa} = %{version}-%{release}
 The %{name}-tools package contains command-line tools for working with VIPS.
 
 
+%if %{with_python2}
 %package python
 Summary:	Python 2 support for %{name}
 Group:		Development/Languages
+BuildRequires: python2-devel
 Requires:	vips%{?_isa} = %{version}-%{release}
 Requires:	pygobject3-base >= 3.12.0
 Provides:	python2-vipsCC = %{version}-%{release}
@@ -83,27 +96,34 @@ Provides:	python2-vipsCC = %{version}-%{release}
 
 %description python
 The %{name}-python package contains Python 2 support for VIPS.
+%endif
 
 
+%if %{with_python3}
 %package python3
 Summary:	Python 3 support for %{name}
 Group:		Development/Languages
+BuildRequires: python3-devel
 Requires:	vips%{?_isa} = %{version}-%{release}
 Requires:	python3-gobject >= 3.12.0
 # No provide for python3-vipsCC, since we only have the gi overrides
 
 %description python3
 The %{name}-python3 package contains Python 3 support for VIPS.
+%endif
 
 
+%if %{with_doc}
 %package doc
 Summary:	Documentation for %{name}
 Group:		Documentation
+BuildRequires: swig gtk-doc
 Conflicts:	%{name} < %{version}-%{release}, %{name} > %{version}-%{release}
 
 %description doc
 The %{name}-doc package contains extensive documentation about VIPS in both
 HTML and PDF formats.
+%endif
 
 
 %prep
@@ -125,7 +145,11 @@ sed -i 's|sys_lib_dlsearch_path_spec="|sys_lib_dlsearch_path_spec="/%{_lib} %{_l
 # https://github.com/jcupitt/libvips/pull/212#issuecomment-68177930
 export CFLAGS="%{optflags} -ftree-vectorize"
 export CXXFLAGS="%{optflags} -ftree-vectorize"
-%configure --disable-static --enable-gtk-doc
+%configure \
+%if %{with_doc}
+    --enable-gtk-doc \
+%endif
+    --disable-static
 make %{?_smp_mflags}
 
 
@@ -139,6 +163,7 @@ rm -rf ${RPM_BUILD_ROOT}%{_datadir}/doc/vips
 # locale stuff
 %find_lang vips%{vips_version_base}
 
+%if %{with_python3}
 # Upstream supports the GI override module on Python 3, but doesn't install
 # it into the Python 3 path
 mkdir -p ${RPM_BUILD_ROOT}%{python3_sitearch}
@@ -146,6 +171,7 @@ cp -a ${RPM_BUILD_ROOT}%{python2_sitearch}/gi \
 	${RPM_BUILD_ROOT}%{python3_sitearch}
 find ${RPM_BUILD_ROOT}%{python3_sitearch} \
 	\( -name '*.pyc' -o -name '*.pyo' \) -delete
+%endif
 
 
 %post -p /sbin/ldconfig
@@ -174,22 +200,32 @@ find ${RPM_BUILD_ROOT}%{python3_sitearch} \
 %{_mandir}/man1/*
 
 
+%if %{with_python2}
 %files python
 %{python2_sitearch}/gi/overrides/*
 %{python2_sitearch}/vipsCC/
+%endif
 
 
+%if %{with_python3}
 %files python3
 %{python3_sitearch}/gi/overrides/*.py
 %{python3_sitearch}/gi/overrides/__pycache__/*
+%endif
 
 
+%if %{with_doc}
 %files doc
 %doc doc/html
 %license COPYING
+%endif
 
 
 %changelog
+* Thu Nov 24 2016 Remi Collet <remi@remirepo.net> - 8.4.4-1
+- backport for repo repository
+- disable python3 and doc sub-package
+
 * Sun Nov 13 2016 Benjamin Gilbert <bgilbert@backtick.net> - 8.4.4-1
 - New release
 
