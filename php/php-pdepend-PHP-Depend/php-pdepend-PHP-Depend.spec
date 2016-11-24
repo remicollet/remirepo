@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    3f7deab87836dd83d7a7b6a2098f75d8f38566aa
+%global gh_commit    8d7ab8fe8c1f9de5056bb7ea2c0852f4ddd44f90
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     pdepend
 %global gh_project   pdepend
@@ -18,7 +18,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-pdepend-PHP-Depend
-Version:        2.3.0
+Version:        2.3.2
 Release:        1%{?dist}
 Summary:        PHP_Depend design quality metrics for PHP package
 
@@ -132,12 +132,6 @@ install -Dpm 0755 src/bin/pdepend %{buildroot}%{_bindir}/pdepend
 
 %check
 %if %{with_tests}
-%if 0%{?fedora} >= 22
-# Temporary ignore this test, BC break in libxml, see
-# https://bugzilla.redhat.com/1199396  incorrect identification of duplicate ID
-rm src/test/php/PDepend/Report/Jdepend/ChartTest.php
-%endif
-
 cat << 'EOF' | tee src/test/php/PDepend/bootstrap.php
 <?php
 require '%{buildroot}%{php_home}/autoload.php';
@@ -148,11 +142,11 @@ EOF
 ret=0
 run=0
 if which php71; then
-    php71 %{_bindir}/phpunit -d memory_limit=1G || ret=1
+    php71 %{_bindir}/phpunit -d memory_limit=1G --columns max || ret=1
     run=1
 fi
 if which php56; then
-    php56 %{_bindir}/phpunit -d memory_limit=1G || ret=1
+    php56 %{_bindir}/phpunit -d memory_limit=1G --columns max || ret=1
     run=1
 fi
 if [ $run -eq 0 ]; then
@@ -188,6 +182,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 24 2016 Remi Collet <remi@fedoraproject.org> - 2.3.2-1
+- update to 2.3.2
+
 * Wed Nov 23 2016 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
 - update to 2.3.0
 - add dependency on iconv, mbstring and xml
