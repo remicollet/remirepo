@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    148b605040ae6f7cc839e14a9e206beec9868d97
+%global gh_commit    9298602a922cd8c46666df8d540a60bc5925ce55
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpmd
 %global gh_project   phpmd
@@ -18,7 +18,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-phpmd-PHP-PMD
-Version:        2.4.4
+Version:        2.5.0
 Release:        1%{?dist}
 Summary:        PHPMD - PHP Mess Detector
 
@@ -121,11 +121,11 @@ EOF
 ret=0
 run=0
 if which php71; then
-    php71 %{_bindir}/phpunit --verbose || ret=1
+    php71 %{_bindir}/phpunit --verbose --columns max || ret=1
     run=1
 fi
 if which php56; then
-    php56 %{_bindir}/phpunit --verbose || ret=1
+    php56 %{_bindir}/phpunit --verbose --columns max || ret=1
     run=1
 fi
 if [ $run -eq 0 ]; then
@@ -162,6 +162,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 24 2016 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
+- update to 2.5.0
+
 * Tue Nov 22 2016 Remi Collet <remi@fedoraproject.org> - 2.4.4-1
 - update to 2.4.4
 - raise dependency on PHP 5.3.9
