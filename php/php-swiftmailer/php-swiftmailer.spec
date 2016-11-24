@@ -6,7 +6,7 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    4cc92842069c2bbc1f28daaaf1d2576ec4dfe153
+%global gh_commit    545ce9136690cea74f98f86fbb9c92dd9ab1a756
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     swiftmailer
 %global gh_project   swiftmailer
@@ -14,7 +14,7 @@
 %global php_home     %{_datadir}/php
 
 Name:           php-%{gh_project}
-Version:        5.4.3
+Version:        5.4.4
 Release:        1%{?dist}
 Summary:        Free Feature-rich PHP Mailer
 
@@ -144,8 +144,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 24 2016 Remi Collet <remi@fedoraproject.org> - 5.4.4-1
+- update to 5.4.4
+
 * Fri Jul  8 2016 Remi Collet <remi@fedoraproject.org> - 5.4.3-1
-- update to 5.4.2
+- update to 5.4.3
 - drop patch merged upstream
 
 * Tue Jun 14 2016 Remi Collet <remi@fedoraproject.org> - 5.4.2-2
