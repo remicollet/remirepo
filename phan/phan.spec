@@ -86,7 +86,6 @@ and narrow types based on conditionals.
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1
-
 cp %{SOURCE1} src/%{psr0}/autoload.php
 
 
@@ -112,14 +111,24 @@ ln -s ../share/php/%{psr0}/prep.php %{buildroot}%{_bindir}/phan-prep
 
 %check
 %if %{with_tests}
-mkdir vendor
-cat << 'EOF' | tee vendor/autoload.php
+cat << 'EOF' | tee tests/autoload.php
 <?php
 require '%{buildroot}%{_datadir}/php/%{psr0}/Bootstrap.php';
-\Fedora\Autoloader\Autoload::addPsr4('Phan\\Tests\\', dirname(__DIR__).'/tests/Phan');
+\Fedora\Autoloader\Autoload::addPsr4('Phan\\Tests\\', __DIR__ . '/Phan');
 EOF
 
-%{_bindir}/phpunit -d memory_limit=1G --bootstrap vendor/autoload.php --verbose
+# remirepo:6
+run=0
+ret=0
+if which php71; then
+   php71 %{_bindir}/phpunit -d memory_limit=1G --bootstrap tests/autoload.php || : ignore segfaults...
+   run=1
+fi
+%{_bindir}/phpunit -d memory_limit=1G --bootstrap tests/autoload.php --verbose
+# remirepo:1
+exit $ret
+
+
 %else
 : Test suite disabled
 %endif
