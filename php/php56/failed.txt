@@ -1,8 +1,8 @@
-===== 5.6.28 (2016-11-10)
+===== 5.6.29RC1 (2016-11-24)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
-/var/lib/mock/el5i/build.log:Tests failed    :     8
+/var/lib/mock/el5i/build.log:Tests failed    :     9
 /var/lib/mock/el5x/build.log:Tests failed    :     2
 /var/lib/mock/el6i/build.log:Tests failed    :     5
 /var/lib/mock/el6x/build.log:Tests failed    :     0
@@ -21,6 +21,7 @@ fc23i, fc23x
 	***	Bug #33415 [1] (Possibly invalid non-one-hour DST or timezone shifts) [ext/date/tests/bug33415-1.phpt]
 el5i
 		Specific protocol method specification [ext/openssl/tests/stream_crypto_flags_004.phpt]
+	*	Bug #64438 proc_open hangs with stdin/out with 4097+ bytes [ext/standard/tests/streams/proc_open_bug64438.phpt]
 el5i, el5x
 		openssl_error_string() tests [ext/openssl/tests/openssl_error_string_basic.phpt]
 el5i, el5x
