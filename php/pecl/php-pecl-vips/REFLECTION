@@ -1,0 +1,109 @@
+Extension [ <persistent> extension #135 vips version 1.0.0 ] {
+
+  - Functions {
+    Function [ <internal:vips> function vips_image_new_from_file ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $filename ]
+        Parameter #1 [ <required> $options ]
+      }
+    }
+    Function [ <internal:vips> function vips_image_new_from_buffer ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $buffer ]
+        Parameter #1 [ <required> $option_string ]
+        Parameter #2 [ <required> $options ]
+      }
+    }
+    Function [ <internal:vips> function vips_image_new_from_array ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $array ]
+        Parameter #1 [ <required> $scale ]
+        Parameter #2 [ <required> $offset ]
+      }
+    }
+    Function [ <internal:vips> function vips_image_write_to_file ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $image ]
+        Parameter #1 [ <required> $filename ]
+        Parameter #2 [ <required> $options ]
+      }
+    }
+    Function [ <internal:vips> function vips_image_write_to_buffer ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $image ]
+        Parameter #1 [ <required> $options ]
+      }
+    }
+    Function [ <internal:vips> function vips_call ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $operation_name ]
+        Parameter #1 [ <required> $instance ]
+      }
+    }
+    Function [ <internal:vips> function vips_image_get ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $image ]
+        Parameter #1 [ <required> $field ]
+      }
+    }
+    Function [ <internal:vips> function vips_image_get_typeof ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $image ]
+        Parameter #1 [ <required> $field ]
+      }
+    }
+    Function [ <internal:vips> function vips_image_set ] {
+
+      - Parameters [3] {
+        Parameter #0 [ <required> $image ]
+        Parameter #1 [ <required> $field ]
+        Parameter #2 [ <required> $value ]
+      }
+    }
+    Function [ <internal:vips> function vips_image_remove ] {
+
+      - Parameters [2] {
+        Parameter #0 [ <required> $image ]
+        Parameter #1 [ <required> $field ]
+      }
+    }
+    Function [ <internal:vips> function vips_error_buffer ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:vips> function vips_cache_set_max ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $value ]
+      }
+    }
+    Function [ <internal:vips> function vips_cache_set_max_mem ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $value ]
+      }
+    }
+    Function [ <internal:vips> function vips_cache_set_max_files ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $value ]
+      }
+    }
+    Function [ <internal:vips> function vips_concurrency_set ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $value ]
+      }
+    }
+  }
+}
+
