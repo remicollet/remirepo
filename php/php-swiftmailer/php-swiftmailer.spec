@@ -51,11 +51,13 @@ Requires:       php-reflection
 Requires:       php-simplexml
 Requires:       php-spl
 
-# Removal for official repo not yet planed
+# Removed from official repo in Fedora 25
+%if 1
 Obsoletes:      php-swift-Swift   <= 5.4.1
 # Single package in this channel
 Obsoletes:      php-channel-swift <= 1.3
 Provides:       php-pear(pear.swiftmailer.org/Swift) = %{version}
+%endif
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
