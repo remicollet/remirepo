@@ -18,7 +18,7 @@
 
 Summary:        PHP extension for interfacing with libvips
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -206,6 +206,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Fri Nov 25 2016 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- Update to 1.0.1
+
 * Thu Nov 24 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - initial package, version 1.0.0 (php 7, stable)
 
