@@ -1327,12 +1327,6 @@ make -C build-cgi install \
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/
 install -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/php.ini
 
-%if %{with_libpcre}
-if ! pkg-config libpcre --atleast-version 8.38 ; then
-   sed -e 's/;pcre.jit=1/pcre.jit=0/' -i $RPM_BUILD_ROOT%{_sysconfdir}/php.ini
-fi
-%endif
-
 # For third-party packaging:
 install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/php
 
@@ -1826,6 +1820,8 @@ fi
 
 
 %changelog
+- disable pcre.jit everywhere as it raise AVC #1398474
+
 * Wed Nov 23 2016 Remi Collet <remi@fedoraproject.org> 7.0.14-0.1.RC1
 - Update to 7.0.14RC1
 
