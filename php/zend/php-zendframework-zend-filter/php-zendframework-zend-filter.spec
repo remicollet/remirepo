@@ -21,7 +21,7 @@
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.7.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
@@ -130,11 +130,25 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+# For mcrypt and PHP 7.1
+sed -e '/error_reporting/s/. E_STRICT/- E_DEPRECATED/' -i test/bootstrap.php
 
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -154,6 +168,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 25 2016 Remi Collet <remi@fedoraproject.org> - 2.7.1-2
+- fix FTBFS, disable E_DEPRECATED during test suite
+
 * Tue Apr 19 2016 Remi Collet <remi@fedoraproject.org> - 2.7.1-1
 - update to 2.7.1
 
