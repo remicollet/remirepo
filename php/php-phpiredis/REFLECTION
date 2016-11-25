@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #108 phpiredis version 1.0.0-dev ] {
+Extension [ <persistent> extension #108 phpiredis version 1.0.0 ] {
 
   - Constants [9] {
     Constant [ integer PHPIREDIS_READER_STATE_INCOMPLETE ] { 2 }
@@ -15,16 +15,18 @@ Extension [ <persistent> extension #108 phpiredis version 1.0.0-dev ] {
   - Functions {
     Function [ <internal:phpiredis> function phpiredis_connect ] {
 
-      - Parameters [2] {
+      - Parameters [3] {
         Parameter #0 [ <required> $ip ]
         Parameter #1 [ <optional> $port ]
+        Parameter #2 [ <optional> $timeout_ms ]
       }
     }
     Function [ <internal:phpiredis> function phpiredis_pconnect ] {
 
-      - Parameters [2] {
+      - Parameters [3] {
         Parameter #0 [ <required> $ip ]
         Parameter #1 [ <optional> $port ]
+        Parameter #2 [ <optional> $timeout_ms ]
       }
     }
     Function [ <internal:phpiredis> function phpiredis_disconnect ] {

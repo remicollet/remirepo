@@ -11,11 +11,11 @@
 %scl_package         php-phpiredis
 %endif
 
-%global gh_commit  a64e3bfe78c06c9013d5f78651aa3f631d94622f
+%global gh_commit  981d455034a48bb19db39c578e9c16d889289b99
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   nrk
 %global gh_project phpiredis
-%global gh_date    20160715
+#global gh_date    20160715
 #global prever     RC1
 
 %global pecl_name  phpiredis
@@ -41,9 +41,6 @@ Group:          Development/Languages
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
-
-# https://github.com/nrk/phpiredis/pull/53
-Patch0:         %{pecl_name}-pr53.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -111,8 +108,6 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{gh_project}-%{gh_commit} NTS
 
 cd NTS
-%patch0 -p1 -b .pr53
-
 # Check extension version
 ver=$(sed -n '/define PHP_PHPIREDIS_VERSION/{s/.* "//;s/".*$//;p}' php_phpiredis.h)
 if test "$ver" != "%{version}%{?prever}%{?gh_date:-dev}"; then
@@ -237,6 +232,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 24 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- update to 1.0.0 release
+
 * Sun Nov 13 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.20160715gita64e3bf
 - add minor fix for portability
 - add full reflection for all functions
