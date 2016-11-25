@@ -1,0 +1,97 @@
+From 81e2938b02ffb734bb85ef2a0fbc74f87b4ba377 Mon Sep 17 00:00:00 2001
+From: Nikita Popov <nikic@php.net>
+Date: Thu, 24 Nov 2016 21:49:21 +0100
+Subject: [PATCH] Fix issue #36
+
+The emulation of PHP 7.0 list() structure did not account for
+skipped elements.
+---
+ ast.c                              |  4 ++--
+ tests/array_destructuring_old.phpt | 19 +++++++++++++++++++
+ 2 files changed, 21 insertions(+), 2 deletions(-)
+
+diff --git a/ast.c b/ast.c
+index ad24ce8..755af14 100644
+--- a/ast.c
++++ b/ast.c
+@@ -241,7 +241,7 @@ static inline zend_bool ast_array_is_list(zend_ast *ast) {
+ 	}
+ 
+ 	for (i = 0; i < list->children; i++) {
+-		if (list->child[i]->child[1] != NULL || list->child[i]->attr) {
++		if (list->child[i] && (list->child[i]->child[1] != NULL || list->child[i]->attr)) {
+ 			return 0;
+ 		}
+ 	}
+@@ -400,7 +400,7 @@ static void ast_fill_children_ht(HashTable *ht, zend_ast *ast, zend_long version
+ 			/* Skip docComment child -- It's handled separately */
+ 			continue;
+ #if PHP_VERSION_ID >= 70100
+-		} else if (ast->kind == ZEND_AST_LIST) {
++		} else if (ast->kind == ZEND_AST_LIST && child != NULL) {
+ 			/* Emulate simple variable list */
+ 			ast_to_zval(&child_zv, child->child[0], version);
+ #else
+diff --git a/tests/array_destructuring_old.phpt b/tests/array_destructuring_old.phpt
+index 6699a80..0aa378d 100644
+--- a/tests/array_destructuring_old.phpt
++++ b/tests/array_destructuring_old.phpt
+@@ -8,6 +8,7 @@ require __DIR__ . '/../util.php';
+ $code = <<<'PHP'
+ <?php
+ list($a, $b) = $x;
++list(, $b) = $x;
+ PHP;
+ 
+ echo ast_dump(ast\parse_code($code, $version=30)), "\n";
+@@ -24,6 +25,13 @@ AST_STMT_LIST
+                 name: "b"
+         expr: AST_VAR
+             name: "x"
++    1: AST_ASSIGN
++        var: AST_LIST
++            0: null
++            1: AST_VAR
++                name: "b"
++        expr: AST_VAR
++            name: "x"
+ AST_STMT_LIST
+     0: AST_ASSIGN
+         var: AST_ARRAY
+@@ -40,3 +48,14 @@ AST_STMT_LIST
+                 key: null
+         expr: AST_VAR
+             name: "x"
++    1: AST_ASSIGN
++        var: AST_ARRAY
++            flags: ARRAY_SYNTAX_LIST (1)
++            0: null
++            1: AST_ARRAY_ELEM
++                flags: 0
++                value: AST_VAR
++                    name: "b"
++                key: null
++        expr: AST_VAR
++            name: "x"
+From fbab0c35d4c7851f32384073798a0031ecb4499e Mon Sep 17 00:00:00 2001
+From: Nikita Popov <nikic@php.net>
+Date: Thu, 24 Nov 2016 22:13:38 +0100
+Subject: [PATCH] Fix PHP 7 build
+
+---
+ ast.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ast.c b/ast.c
+index 4c4095d..62a9f48 100644
+--- a/ast.c
++++ b/ast.c
+@@ -405,7 +405,7 @@ static void ast_fill_children_ht(HashTable *ht, zend_ast *ast, zend_long version
+ 			ast_to_zval(&child_zv, child->child[0], version);
+ #else
+ 		} else if (version >= 35 && ast->kind == ZEND_AST_ARRAY
+-				&& ast->attr == ZEND_ARRAY_SYNTAX_LIST) {
++				&& ast->attr == ZEND_ARRAY_SYNTAX_LIST && child != NULL) {
+ 			/* Emulate ARRAY_ELEM list */
+ 			zval ch0, ch1;
+ 			ast_to_zval(&ch0, child, version);

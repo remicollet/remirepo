@@ -24,12 +24,14 @@ Version:       0.1.2
 %if 0%{?gh_date:1}
 Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 License:       BSD
 Group:         Development/Languages
 URL:           https://github.com/%{gh_owner}/%{gh_project}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+
+Patch0:        %{gh_project}-upstream.patch
 
 BuildRequires: %{?scl_prefix}php-devel > 7
 BuildRequires: %{?scl_prefix}php-tokenizer
@@ -66,6 +68,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{gh_project}-%{gh_commit} NTS
 
 cd NTS
+%patch0 -p1 -b .upstream
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_AST_VERSION/{s/.* "//;s/".*$//;p}' php_ast.h)
@@ -166,6 +169,10 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Fri Nov 25 2016 Remi Collet <remi@fedoraproject.org> - 0.1.2-3
+- fix LICENSE, drop empty file, from review #1398355
+- add upstream patch for php 7.1
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 0.1.2-2
 - rebuild for PHP 7.1 new API version
 
