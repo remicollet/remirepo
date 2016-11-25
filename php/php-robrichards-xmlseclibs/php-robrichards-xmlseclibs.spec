@@ -28,7 +28,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}
 Summary:       A PHP library for XML Security
 
 Group:         Development/Libraries
@@ -134,19 +134,23 @@ sed 's#require.*xmlseclibs.*#require_once "%{buildroot}%{phpdir}/RobRichards/XML
 : Skip tests known to fail
 rm -f tests/extract-win-cert.phpt
 
+: Disable deprecation warning with php 7.1
+for test in tests/*phpt; do
+  echo -e "\n--INI--\nerror_reporting=24575" >>$test
+done
+
 : Run tests
 run=0
 if which php56; then
    php56 %{_bindir}/phpunit tests
    run=1
 fi
-if which php70; then
-   # use 7.0 as 7.1 have mcrypt deprecated
-   php70 %{_bindir}/phpunit tests
+if which php71; then
+   php71 %{_bindir}/phpunit tests
    run=1
 fi
 if [ $run -eq 0 ]; then
-   %{_bindir}/phpunit --verbose tests
+%{_bindir}/phpunit --verbose tests
 fi
 %else
 : Tests skipped
@@ -169,6 +173,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 25 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
+- fix FTBFS, disable deprecation messages
+
 * Thu Sep  8 2016 Remi Collet <remi@remirepo.net> - 2.0.1-1
 - update to 2.0.1 (no change)
 
