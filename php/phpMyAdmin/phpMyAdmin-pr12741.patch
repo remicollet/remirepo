@@ -1,0 +1,24 @@
+From 546dda3fdce7ee8d71707a970baf3bfe19afb01f Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Sat, 26 Nov 2016 16:05:07 +0100
+Subject: [PATCH] make PMA_isAllowedDomain case insensitive, fix links on home
+ page
+
+Signed-off-by: Remi Collet <fedora@famillecollet.com>
+---
+ libraries/core.lib.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libraries/core.lib.php b/libraries/core.lib.php
+index cb7161d..1b345d2 100644
+--- a/libraries/core.lib.php
++++ b/libraries/core.lib.php
+@@ -765,7 +765,7 @@ function PMA_isAllowedDomain($url)
+             return false;
+         }
+     }
+-    $domain = $arr["host"];
++    $domain = strtolower($arr["host"]);
+     $domainWhiteList = array(
+         /* Include current domain */
+         $_SERVER['SERVER_NAME'],

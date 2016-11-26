@@ -37,6 +37,8 @@ Source1: https://files.phpmyadmin.net/%{name}/%{version}%{?prever:-%prever}/%{na
 Source2: phpMyAdmin.htaccess
 Source3: phpMyAdmin.nginx
 
+Patch0:  %{name}-pr12741.patch
+
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: unzip
@@ -95,6 +97,8 @@ is available in 50 languages
 
 %prep
 %setup -qn phpMyAdmin-%{version}%{?prever:-%prever}-all-languages
+
+%patch0 -p1
 
 # Fix links on home page to match allowed domains
 # see https://github.com/phpmyadmin/phpmyadmin/pull/1291
@@ -228,6 +232,8 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 %changelog
 * Sat Nov 26 2016 Remi Collet <remi@remirepo.net> 4.6.5.1-1
 - update to 4.6.5.1 (2016-11-26, bug fixes)
+- add patch to fix broken links on home page,
+  open https://github.com/phpmyadmin/phpmyadmin/pull/12741
 
 * Fri Nov 25 2016 Remi Collet <remi@remirepo.net> 4.6.5-1
 - update to 4.6.5 (2016-11-25, security and bug fixes)
