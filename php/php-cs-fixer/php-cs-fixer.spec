@@ -19,7 +19,7 @@ Version:        1.12.4
 Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A tool to automatically fix PHP code style
 
-Group:          Development/Libraries
+Group:          Development/Tools
 License:        MIT
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 # git snapshot to get upstream test suite
