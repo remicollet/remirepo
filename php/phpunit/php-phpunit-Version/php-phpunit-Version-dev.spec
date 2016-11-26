@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c829badbd8fdf16a0bad8aa7fa7971c029f1b9c5
+%global gh_commit    99732be0ddb3361e16ad77b68ba41efc8e979019
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   version
@@ -14,7 +14,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_withou_tests:1}
 
 Name:           php-phpunit-Version
-Version:        2.0.0
+Version:        2.0.1
 Release:        1%{?dist}
 Summary:        Managing the version number of Git-hosted PHP projects
 
@@ -26,13 +26,15 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.6
-BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php-fedora-autoloader-devel
 
 # From composer.json, "require": {
 #        "php": ">=5.6"
 Requires:       php(language) >= 5.6
 Requires:       php-spl
 Requires:       git
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(sebastian/version) = %{version}
 
@@ -52,8 +54,8 @@ mkdir src/Version
 %build
 : Generate autoloader
 %{_bindir}/phpab \
+  --template fedora \
   --output  src/Version/autoload.php \
-  --basedir src/Version \
   src
 
 
@@ -86,6 +88,10 @@ fi
 
 
 %changelog
+* Sat Nov 26 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- update to 2.0.1 (no change)
+- switch to fedora/autoloader
+
 * Mon Apr 18 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - update to 2.0.0
 - raise minimal php version to 5.6
