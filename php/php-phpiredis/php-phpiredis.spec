@@ -1,3 +1,6 @@
+# Fedora spec file for php-phpiredis
+# Without SCL compatibility stuff, from:
+#
 # remirepo spec file for php-phpiredis
 #
 # Copyright (c) 2016 Remi Collet
@@ -6,17 +9,10 @@
 #
 # Please, preserve the changelog entries
 #
-%if 0%{?scl:1}
-%global sub_prefix %{scl_prefix}
-%scl_package         php-phpiredis
-%endif
-
 %global gh_commit  981d455034a48bb19db39c578e9c16d889289b99
 %global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner   nrk
 %global gh_project phpiredis
-#global gh_date    20160715
-#global prever     RC1
 
 %global pecl_name  phpiredis
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
@@ -27,13 +23,9 @@
 %endif
 %global with_tests 0%{!?_without_tests:1}
 
-Name:           %{?sub_prefix}php-%{pecl_name}
+Name:           php-%{pecl_name}
 Version:        1.0.0
-%if 0%{?gh_date}
-Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
-%else
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
-%endif
+Release:        2%{?dist}
 
 Summary:        Client extension for Redis
 
@@ -42,51 +34,15 @@ License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel
-BuildRequires:  %{?scl_prefix}php-pear
-# ensure we use hiredis-last when exists
-BuildRequires:  hiredis-devel >= 0.13.3
+BuildRequires:  php-devel
+BuildRequires:  php-pear
+BuildRequires:  hiredis-devel
 %if %{with_tests}
 BuildRequires:  redis
 %endif
 
-Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
-Requires:       %{?scl_prefix}php(api) = %{php_core_api}
-%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
-
-%if "%{?scl_prefix}" != "%{?sub_prefix}"
-Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}-%{release}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}-%{release}
-%endif
-
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
-# Other third party repo stuff
-%if "%{php_version}" > "5.5"
-Obsoletes:     php55u-%{pecl_name}      <= %{version}
-Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php55w-%{pecl_name}      <= %{version}
-Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
-Obsoletes:     php56u-%{pecl_name}      <= %{version}
-Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php56w-%{pecl_name}      <= %{version}
-Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "7.0"
-Obsoletes:     php70u-%{pecl_name}      <= %{version}
-Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php70w-%{pecl_name}      <= %{version}
-Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
-%endif
-%if "%{php_version}" > "7.1"
-Obsoletes:     php71u-%{pecl_name}      <= %{version}
-Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php71w-%{pecl_name}      <= %{version}
-Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
-%endif
-%endif
+Requires:       php(zend-abi) = %{php_zend_api}
+Requires:       php(api) = %{php_core_api}
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
 # Filter private shared
@@ -99,8 +55,6 @@ Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 Phpiredis is an extension for PHP 5.x and 7.x based on hiredis
 that provides a simple and efficient client for Redis and a fast
 incremental parser / serializer for the RESP protocol.
-
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -143,8 +97,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install configuration
@@ -212,13 +164,7 @@ exit $ret
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-, root, root, -)
-%{!?_licensedir:%global license %%doc}
 %license NTS/LICENSE
 %doc NTS/README.md
 
@@ -232,6 +178,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Nov 26 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- cleanup for fedora review
+
 * Thu Nov 24 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - update to 1.0.0 release
 
