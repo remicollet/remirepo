@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    6150bf2c35d3fc379e50c7602b75caceaa39dbf0
+%global gh_commit    3cc8f69b3028d0f96a9078e6295d86e9bf019be5
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   php-file-iterator
@@ -18,7 +18,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-phpunit-File-Iterator
-Version:        1.4.1
+Version:        1.4.2
 Release:        1%{?dist}
 Summary:        FilterIterator implementation that filters files based on a list of suffixes
 
@@ -30,7 +30,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php-fedora-autoloader-devel
 
 # From composer.json
 #        "php": ">=5.3.3"
@@ -38,6 +38,8 @@ Requires:       php(language) >= 5.3.3
 # From phpcompatinfo report for 1.3.4
 Requires:       php-pcre
 Requires:       php-spl
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(phpunit/php-file-iterator) = %{version}
 
@@ -61,8 +63,8 @@ mv       File/Iterator/Iterator.php File/Iterator.php
 
 %build
 %{_bindir}/phpab \
+   --template fedora \
    --output   File/Iterator/Autoload.php \
-   --basedir  File/Iterator \
    File
 
 
@@ -92,6 +94,10 @@ fi
 
 
 %changelog
+* Sat Nov 26 2016 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
+- update to 1.4.2 (no change)
+- switch to fedora/autoloader
+
 * Sun Jul 26 2015 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
 - Update to 1.4.1 (only CS)
 
