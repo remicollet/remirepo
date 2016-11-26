@@ -1,18 +1,14 @@
 <?php
 /* Autoloader for mockery/mockery and its dependencies */
 
-$vendorDir = '/usr/share/php';
-// Use Symfony autoloader
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once $vendorDir . '/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
+\Fedora\Autoloader\Autoload::addPsr4('Mockery\\', __DIR__);
+\Fedora\Autoloader\Autoload::addClassMap(
+    array('mockery' => '/../Mockery.php'),
+    __DIR__
+);
+\Fedora\Autoloader\Dependencies::required(array(
+    '/usr/share/php/Hamcrest/autoload.php',
+));
 
-$fedoraClassLoader->addPrefix('Mockery', dirname(__DIR__));
-
-// dependencies
-require_once $vendorDir . '/Hamcrest/autoload.php';

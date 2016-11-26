@@ -7,14 +7,14 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    4db079511a283e5aba1b3c2fb19037c645e70fc2
+%global gh_commit    65d4ca18e15cb02eeb1e5336f884e46b9b905be0
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     padraic
 %global gh_project   mockery
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-deepend-Mockery
-Version:        0.9.5
+Version:        0.9.6
 Release:        1%{?dist}
 Summary:        Mockery is a simple but flexible PHP mock object framework
 
@@ -39,7 +39,7 @@ BuildRequires:  php-composer(phpunit/phpunit) >= 4.0
 BuildRequires:  php(language) >= 5.3.2
 BuildRequires:  php-composer(hamcrest/hamcrest-php) >= 1.1
 # Autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 %endif
 
 # From composer.json, "require": {
@@ -54,7 +54,7 @@ Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-reflection
 # Autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(mockery/mockery) = %{version}
 Provides:       php-pear(pear.survivethedeepend.com/Mockery) = %{version}
@@ -120,6 +120,10 @@ fi
 
 
 %changelog
+* Sat Nov 26 2016 Remi Collet <remi@fedoraproject.org> - 0.9.6-1
+- Update to 0.9.6
+- switch to fedora/autoloader
+
 * Tue Jun 14 2016 Remi Collet <remi@fedoraproject.org> - 0.9.5-1
 - Update to 0.9.5
 
