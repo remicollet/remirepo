@@ -12,8 +12,8 @@
 
 %global github_owner     Seldaek
 %global github_name      monolog
-%global github_version   1.21.0
-%global github_commit    f42fbdfd53e306bda545845e4dbfd3e72edb4952
+%global github_version   1.22.0
+%global github_commit    bad29cb8d18ab0315e6c477751418a82c850d558
 
 %global composer_vendor  monolog
 %global composer_project monolog
@@ -27,10 +27,10 @@
 # "raven/raven": "^0.13"
 %global raven_min_ver   0.13
 %global raven_max_ver   1.0
-# "aws/aws-sdk-php": "^2.4.9"
+# "aws/aws-sdk-php": "^2.4.9 || ^3.0"
 #     NOTE: Min version not 2.4.9 because autoloader required
 %global aws_min_ver     2.8.13
-%global aws_max_ver     3.0
+%global aws_max_ver     4.0
 # "swiftmailer/swiftmailer": "~5.3"
 %global swift_min_ver   5.3
 %global swift_max_ver   6
@@ -42,7 +42,7 @@
 
 Name:      php-Monolog
 Version:   %{github_version}
-Release:   2%{?dist}
+Release:   1%{?dist}
 Summary:   Sends your logs to files, sockets, inboxes, databases and various web services
 
 Group:     Development/Libraries
@@ -68,7 +68,7 @@ BuildRequires: php-composer(psr/log)                 >= %{psrlog_min_ver}
 BuildRequires: php-composer(swiftmailer/swiftmailer) >= %{swift_min_ver}
 BuildRequires: php-composer(raven/raven)             >= %{raven_min_ver}
 BuildRequires: php-composer(aws/aws-sdk-php)         >= %{aws_min_ver}
-## phpcompatinfo (computed from version 1.21.0)
+## phpcompatinfo (computed from version 1.22.0)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -82,14 +82,14 @@ BuildRequires: php-sockets
 BuildRequires: php-spl
 BuildRequires: php-xml
 ## Autoloader
-BuildRequires: php-composer(symfony/class-loader)
+BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 # composer.json
 Requires:      php(language)         >= %{php_min_ver}
 Requires:      php-composer(psr/log) >= %{psrlog_min_ver}
 Requires:      php-composer(psr/log) <  %{psrlog_max_ver}
-# phpcompatinfo (computed from version 1.21.0)
+# phpcompatinfo (computed from version 1.22.0)
 Requires:      php-curl
 Requires:      php-date
 Requires:      php-filter
@@ -102,7 +102,7 @@ Requires:      php-sockets
 Requires:      php-spl
 Requires:      php-xml
 # Autoloader
-Requires:      php-composer(symfony/class-loader)
+Requires:      php-composer(fedora/autoloader)
 
 # Standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming
 Provides:      php-%{composer_vendor}-%{composer_project} = %{version}-%{release}
@@ -160,34 +160,23 @@ cat <<'AUTOLOAD' | tee src/Monolog/autoload.php
 /**
  * Autoloader for %{name} and its' dependencies
  * (created by %{name}-%{version}-%{release}).
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
  */
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
+\Fedora\Autoloader\Autoload::addPsr4('Monolog\\', __DIR__);
 
-$fedoraClassLoader->addPrefix('Monolog\\', dirname(__DIR__));
-
-// Dependencies (autoloader => required)
-foreach(array(
-    '%{phpdir}/Psr/Log/autoload.php'     => true,
-    '%{phpdir}/Aws/autoload.php'         => false,
-    '%{phpdir}/Raven/autoload.php'       => false,
-    '%{phpdir}/Swift/swift_required.php' => false,
-) as $dependencyAutoloader => $required) {
-    if ($required || file_exists($dependencyAutoloader)) {
-        require_once $dependencyAutoloader;
-    }
-}
-
-return $fedoraClassLoader;
+\Fedora\Autoloader\Dependencies::required(array(
+    '%{phpdir}/Psr/Log/autoload.php',
+));
+\Fedora\Autoloader\Dependencies::optional(array(
+    array(
+        '%{phpdir}/Aws3/autoload.php',
+        '%{phpdir}/Aws/autoload.php',
+    ),
+    '%{phpdir}/Raven/autoload.php',
+    '%{phpdir}/Swift/swift_required.php',
+));
 AUTOLOAD
 
 
@@ -207,9 +196,8 @@ cp -pr src/* %{buildroot}%{phpdir}/
 : Create tests bootstrap
 cat <<'BOOTSTRAP' | tee bootstrap.php
 <?php
-
-$fedoraClassLoader = require_once '%{buildroot}%{phpdir}/Monolog/autoload.php';
-$fedoraClassLoader->addPrefix(false, __DIR__.'/tests');
+require_once '%{buildroot}%{phpdir}/Monolog/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('Monolog\\', __DIR__ . '/tests/Monolog');
 BOOTSTRAP
 
 : Remove MongoDBHandlerTest because it requires a running MongoDB server
@@ -259,6 +247,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Nov 26 2016 Remi Collet <remi@fedoraproject.org> - 1.22.0-1
+- update to 1.22.0
+- switch from symfony/class-loader to fedora/autoloader
+- allow aws/aws-sdk-php version 3
+
 * Sun Nov 06 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.21.0-2
 - Fix test suite for php-sentry >= 0.16.0
 - Modified php-psr-log dependency (min version 1.0.0-8 => 1.0.1)
