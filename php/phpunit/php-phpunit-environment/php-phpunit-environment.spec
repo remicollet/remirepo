@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    be2c607e43ce4c89ecd60e75c6a85c126e754aea
+%global gh_commit    5795ffe5dc5b02460c3e34222fee8cbe245d8fac
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   environment
@@ -19,7 +19,7 @@
 %endif
 
 Name:           php-phpunit-environment
-Version:        1.3.8
+Version:        2.0.0
 Release:        1%{?dist}
 Summary:        Handle HHVM/PHP environments
 
@@ -30,20 +30,22 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  php(language) >= 5.3.3
-BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php(language) >= 5.6
+BuildRequires:  php-fedora-autoloader-devel
 %if %{with_tests}
 # from composer.json, "require-dev": {
-#        "phpunit/phpunit": "^4.8 || ^5."
-BuildRequires:  php-composer(phpunit/phpunit) >= 4.8
+#        "phpunit/phpunit": "^5.0"
+BuildRequires:  php-composer(phpunit/phpunit) >= 5.0
 %endif
 
 # from composer.json, "require": {
-#        "php": "^5.3.3 || ^7.0"
-Requires:       php(language) >= 5.3.3
-# From phpcompatinfo report for 1.3.7
+#        "php": "^5.6 || ^7.0"
+Requires:       php(language) >= 5.6
+# From phpcompatinfo report for 2.0.0
 Requires:       php-pcre
 Requires:       php-posix
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(sebastian/environment) = %{version}
 
@@ -64,6 +66,7 @@ mv src SebastianBergmann/Environment
 %build
 # Generate the Autoloader
 %{_bindir}/phpab \
+   --template fedora \
    --output SebastianBergmann/Environment/autoload.php \
    SebastianBergmann/Environment
 
@@ -114,6 +117,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Nov 26 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- update to 2.0.0
+- raise dependency on PHP 5.6
+- switch to fedora/autoloader
+
 * Wed Aug 31 2016 Remi Collet <remi@fedoraproject.org> - 1.3.8-1
 - update to 1.3.8
 
