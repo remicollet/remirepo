@@ -7,14 +7,14 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    9b775e88ba1128fa14c69ff94ab954d86067de2a
+%global gh_commit    2a24b6e74aa9bf33243020f52895fe77efe94ccf
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     simplepie
 %global gh_project   simplepie
 %global with_tests   0%{!?_without_tests:1}
 
 Name:       php-simplepie
-Version:    1.4.2
+Version:    1.4.3
 Release:    1%{?dist}
 Summary:    A simple Atom/RSS parsing library for PHP
 
@@ -27,8 +27,6 @@ Source1:    makesrc.sh
 
 # Adapt autoloader for installation tree
 Patch0:     %{name}-rpm.patch
-# https://github.com/simplepie/simplepie/pull/458
-Patch1:     %{name}-php71.patch
 
 BuildRoot:  %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildArch:  noarch
@@ -63,7 +61,6 @@ Autoloader: %{_datadir}/php/%{name}/autoloader.php
 %setup -q -n %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
-%patch1 -p1
 
 find . -type f -exec chmod -x {} \;
 rm demo/cache/.gitignore
@@ -86,23 +83,24 @@ install -pm 644 autoloader.php \
 sed -e 's:@PATH@:%{buildroot}/%{_datadir}/php/%{name}:' \
     -i tests/bootstrap.php
 
+# Known failed test with PHP 7+
+rm tests/IRITest.php
+rm tests/oldtests/first_item_title/SPtests/bugs/179.0.10.php
+
+# remirepo:11
 run=0
 ret=0
 if which php56; then
    php56 %{_bindir}/phpunit || ret=1
    run=1
 fi
-
-# Known failed test with PHP 7+
-rm tests/IRITest.php
-rm tests/oldtests/first_item_title/SPtests/bugs/179.0.10.php
-
 if which php71; then
    php71 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
 %{_bindir}/phpunit --verbose
+# remirepo:2
 fi
 exit $ret
 
@@ -118,6 +116,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Sun Nov 27 2016 Remi Collet <remi@fedoraproject.org> - 1.4.3-1
+- update to 1.4.3
+
 * Thu Jul  7 2016 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
 - update to 1.4.2
 - sources from git snapshot
