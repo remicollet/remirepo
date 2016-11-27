@@ -30,7 +30,9 @@ Patch0:     %{name}-rpm.patch
 
 BuildRoot:  %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildArch:  noarch
+%if %{with_tests}
 BuildRequires: php-phpunit-PHPUnit
+%endif
 
 Requires:   php-IDNA_Convert
 Requires:   php-curl
@@ -79,6 +81,7 @@ install -pm 644 autoloader.php \
     %{buildroot}/%{_datadir}/php/%{name}/autoloader.php
 
 
+%if %{with_tests}
 %check
 sed -e 's:@PATH@:%{buildroot}/%{_datadir}/php/%{name}:' \
     -i tests/bootstrap.php
@@ -103,6 +106,7 @@ if [ $run -eq 0 ]; then
 # remirepo:2
 fi
 exit $ret
+%endif
 
 
 %clean
