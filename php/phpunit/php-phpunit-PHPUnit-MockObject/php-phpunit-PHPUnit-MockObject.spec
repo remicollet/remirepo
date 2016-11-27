@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    45026c8383187ad1dcb14fbfec77dced265b9cfc
+%global gh_commit    90a08f5deed5f7ac35463c161f2e8fa0e5652faf
 #global gh_date      20150902
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -16,7 +16,7 @@
 %global pear_name    PHPUnit_MockObject
 %global pear_channel pear.phpunit.de
 %global major        3.4
-%global minor        1
+%global minor        2
 %global specrel      1
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
@@ -168,6 +168,9 @@ fi
 
 
 %changelog
+* Sun Nov 27 2016 Remi Collet <remi@fedoraproject.org> - 3.4.2-1
+- Update to 3.4.2
+
 * Tue Nov 22 2016 Remi Collet <remi@fedoraproject.org> - 3.4.1-1
 - Update to 3.4.1 (no change)
 - allow sebastian/exporter 2.0
