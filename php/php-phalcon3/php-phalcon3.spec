@@ -7,22 +7,18 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
-%endif
 %scl_package       php-phalcon3
 %else
 %global pkg_name   %{name}
 %endif
 
-%global gh_commit    23b4100faa3ef91863d7f05de3f1c7a450cd52bc
+%global gh_commit    877266877c88a0e3fcccd1a232b9537e73a641ad
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phalcon
 %global gh_project   cphalcon
-%global with_zts     0%{?__ztsphp:1}
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%global with_zts     0%{!?_without_zts:%{?__ztsphp:1}}
+%global with_tests   0%{?_with_tests:1}
 %global ext_name     phalcon
 %if "%{php_version}" < "5.6"
 # after pdo.ini, json.ini, igbinary.ini
@@ -33,7 +29,7 @@
 %endif
 
 Name:           %{?sub_prefix}php-phalcon3
-Version:        3.0.1
+Version:        3.0.2
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Phalcon Framework
 
@@ -54,7 +50,7 @@ BuildRequires: %{?scl_prefix}php-devel > 5.5
 BuildRequires: %{?scl_prefix}php-json
 BuildRequires: %{?scl_prefix}php-pdo
 # For sources generation
-BuildRequires: %{?scl_prefix}zephir
+BuildRequires: %{?scl_prefix}zephir >= 0.9.5
 BuildRequires: %{?scl_prefix}php-gd
 BuildRequires: %{?scl_prefix}php-libsodium
 BuildRequires: %{?scl_prefix}php-mbstring
@@ -249,6 +245,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov 27 2016 Remi Collet <remi@fedoraproject.org> - 3.0.2-1
+- update to 3.0.2
+
 * Fri Sep  2 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
 - update to 3.0.1
 
