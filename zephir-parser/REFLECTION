@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #144 zephir_parser version 0.1.0 ] {
+Extension [ <persistent> extension #15 zephir_parser version 0.9.5 ] {
 
   - Functions {
     Function [ <internal:zephir_parser> function zephir_parse_file ] {

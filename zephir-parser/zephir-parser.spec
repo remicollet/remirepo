@@ -11,21 +11,25 @@
 %global with_tests   0
 %scl_package zephyr-parser
 %else
+%if "%{php_version}" > "5.6"
 %global with_tests   0%{!?_without_tests:1}
+%else
+%global with_tests   0%{?_with_tests:1}
+%endif
 %endif
 
 # Get commit from PHP_PHALCON_ZEPVERSION in 
 # https://github.com/phalcon/cphalcon/blob/master/ext/php_phalcon.h
-%global gh_commit    23856e1e8244a89ac1bc30ba56b417a4a1c1687f
+%global gh_commit    cae68c4205a93a7a1ea6165bcd5ce5cb470f5bdd
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date      20161014
+#global gh_date      20161126
 %global gh_owner     phalcon
 %global gh_project   zephir
 %global ext_name     zephir_parser
 
 Name:           %{?scl_prefix}%{gh_project}-parser
-Version:        0.9.4
-Release:        2%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        0.9.5
+Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Zephir parser extension
 
 Group:          Development/Libraries
@@ -76,11 +80,13 @@ Requires:       %{name} = %{version}-%{release}
 #        "php": ">=5.4",
 #        "ext-json": "*",
 #        "ext-hash": "*",
-#        "ext-ctype": "*"
+#        "ext-ctype": "*",
+#        "ext-xml": "*"
 Requires:       %{?scl_prefix}php(language)                    >= 5.4
 Requires:       %{?scl_prefix}php-json
 Requires:       %{?scl_prefix}php-hash
 Requires:       %{?scl_prefix}php-ctype
+Requires:       %{?scl_prefix}php-xml
 # From phpcompatinfo
 Requires:       %{?scl_prefix}php-reflection
 Requires:       %{?scl_prefix}php-date
@@ -88,7 +94,6 @@ Requires:       %{?scl_prefix}php-gmp
 Requires:       %{?scl_prefix}php-pcre
 Requires:       %{?scl_prefix}php-pdo
 Requires:       %{?scl_prefix}php-spl
-Requires:       %{?scl_prefix}php-xml
 
 Provides:       %{?scl_prefix}php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
@@ -115,6 +120,10 @@ Compiler design goals:
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+
+: Fix versions
+sed -e 's/0.9.4a-dev/%{version}/' -i Library/Compiler.php
+sed -e '/PHP_ZEPHIR_PARSER_VERSION/s/0.1.0/%{version}/' -i parser/php_zephir_parser.h
 
 %patch0 -p0 -b .rpm
 sed -e 's:@DATADIR@:%{_datadir}:;s:@BINDIR@:%{_bindir}:' \
@@ -191,6 +200,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov 27 2016 Remi Collet <remi@fedoraproject.org> - 0.9.5-1
+- version 0.9.5
+
 * Fri Oct 14 2016 Remi Collet <remi@fedoraproject.org> - 0.9.4-2.20161014git23856e1
 - new snapshot to fix PHP 7.1 compatibility of generated code
 
