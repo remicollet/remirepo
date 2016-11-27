@@ -1,6 +1,6 @@
-Extension [ <persistent> extension #143 sync version 1.0.1 ] {
+Extension [ <persistent> extension #126 sync version 1.1.0 ] {
 
-  - Classes [4] {
+  - Classes [5] {
     Class [ <internal:sync> class SyncMutex ] {
 
       - Constants [0] {
@@ -169,6 +169,59 @@ Extension [ <persistent> extension #143 sync version 1.0.1 ] {
         Method [ <internal:sync> public method writeunlock ] {
 
           - Parameters [0] {
+          }
+        }
+      }
+    }
+
+    Class [ <internal:sync> class SyncSharedMemory ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [5] {
+        Method [ <internal:sync, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <required> $size ]
+          }
+        }
+
+        Method [ <internal:sync> public method first ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:sync> public method size ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:sync> public method write ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $string ]
+            Parameter #1 [ <optional> $start ]
+          }
+        }
+
+        Method [ <internal:sync> public method read ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $start ]
+            Parameter #1 [ <optional> $length ]
           }
         }
       }
