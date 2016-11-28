@@ -23,7 +23,7 @@
 
 Name: phpMyAdmin
 Version: 4.6.5.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Web based MySQL browser written in php
 
 Group: Applications/Internet
@@ -36,8 +36,6 @@ Source0: https://files.phpmyadmin.net/%{name}/%{version}%{?prever:-%prever}/%{na
 Source1: https://files.phpmyadmin.net/%{name}/%{version}%{?prever:-%prever}/%{name}-%{version}%{?prever:-%prever}-all-languages.tar.xz.asc
 Source2: phpMyAdmin.htaccess
 Source3: phpMyAdmin.nginx
-
-Patch0:  %{name}-pr12741.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
@@ -97,13 +95,6 @@ is available in 50 languages
 
 %prep
 %setup -qn phpMyAdmin-%{version}%{?prever:-%prever}-all-languages
-
-%patch0 -p1
-
-# Fix links on home page to match allowed domains
-# see https://github.com/phpmyadmin/phpmyadmin/pull/1291
-sed -e 's/www.phpmyadmin.net/www.phpMyAdmin.net/' \
-    -i index.php
 
 # Minimal configuration file
 sed -e "/'extension'/s@'mysql'@'mysqli'@"  \
@@ -230,6 +221,9 @@ sed -e "/'blowfish_secret'/s/MUSTBECHANGEDONINSTALL/$SECRET/" \
 
 
 %changelog
+* Mon Nov 28 2016 Remi Collet <remi@remirepo.net> 4.6.5.1-2
+- drop unneeded patch
+
 * Sat Nov 26 2016 Remi Collet <remi@remirepo.net> 4.6.5.1-1
 - update to 4.6.5.1 (2016-11-26, bug fixes)
 - add patch to fix broken links on home page,
