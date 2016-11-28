@@ -6,15 +6,15 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    53d89ff6d328032c0e434a75af6b0e80ff2d669d
+%global gh_commit    3ee05c39b6b25342b84d66a24ec8525575e3875f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpspec
 %global gh_project   phpspec
 #global prever       beta3
 
 Name:           php-phpspec
-Version:        3.1.1
-Release:        2%{?dist}
+Version:        3.2.0
+Release:        1%{?dist}
 Summary:        Specification-oriented BDD framework for PHP
 
 Group:          Development/Libraries
@@ -187,6 +187,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 28 2016 Remi Collet <remi@fedoraproject.org> - 3.2.0-1
+- update to 3.2.0
+
 * Tue Nov 22 2016 Remi Collet <remi@fedoraproject.org> - 3.1.1-2
 - ignore sebastian/exporter max version
 - switch to fedora/autoloader
