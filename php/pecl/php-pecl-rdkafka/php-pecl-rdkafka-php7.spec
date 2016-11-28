@@ -18,8 +18,8 @@
 
 Summary:        Kafka client based on librdkafka
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        2.0.0
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        2.0.1
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -86,9 +86,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-# See https://github.com/arnaud-lb/php-rdkafka/issues/71
-sed -e 's/ LOG_/RD_KAFKA_LOG_/' -i rdkafka.c
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_RDKAFKA_VERSION/{s/.* "//;s/".*$//;p}' php_rdkafka.h)
 if test "x${extver}" != "x%{version}"; then
@@ -199,6 +196,9 @@ cd ../ZTS
 
 
 %changelog
+* Mon Nov 28 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
 - rebuild for PHP 7.1 new API version
 
