@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    6cba06ff75a1a63a71033e1a01b89056f3af1e8d
+%global gh_commit    903fd6318d0a90b4770a009ff73e4a4e9c437929
 #global gh_date      20150924
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,8 +17,8 @@
 %global pear_name    PHP_CodeCoverage
 %global pear_channel pear.phpunit.de
 %global major        4.0
-%global minor        2
-%global specrel      2
+%global minor        3
+%global specrel      1
 %if %{bootstrap}
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 %else
@@ -188,6 +188,9 @@ fi
 
 
 %changelog
+* Mon Nov 28 2016 Remi Collet <remi@fedoraproject.org> - 4.0.3-1
+- Update to 4.0.3
+
 * Wed Nov 23 2016 Remi Collet <remi@fedoraproject.org> - 4.0.2-2
 - set serialize_precision=14 for the test suite
   to fix FTBFS with PHP 7.1
