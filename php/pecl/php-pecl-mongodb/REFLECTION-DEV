@@ -1,4 +1,11 @@
-Extension [ <persistent> extension #147 mongodb version 1.2.0alpha3 ] {
+Extension [ <persistent> extension #155 mongodb version 1.2.0 ] {
+
+  - Dependencies {
+    Dependency [ date (Required) ]
+    Dependency [ json (Required) ]
+    Dependency [ spl (Required) ]
+    Dependency [ standard (Required) ]
+  }
 
   - INI {
     Entry [ mongodb.debug <ALL> ]
@@ -7,8 +14,8 @@ Extension [ <persistent> extension #147 mongodb version 1.2.0alpha3 ] {
   }
 
   - Constants [2] {
-    Constant [ string MONGODB_VERSION ] { 1.2.0alpha3 }
-    Constant [ string MONGODB_STABILITY ] { alpha }
+    Constant [ string MONGODB_VERSION ] { 1.2.0 }
+    Constant [ string MONGODB_STABILITY ] { stable }
   }
 
   - Functions {
@@ -134,7 +141,7 @@ Extension [ <persistent> extension #147 mongodb version 1.2.0alpha3 ] {
       }
     }
 
-    Class [ <internal:mongodb> final class MongoDB\BSON\Binary implements MongoDB\BSON\Type, Serializable ] {
+    Class [ <internal:mongodb> final class MongoDB\BSON\Binary implements JsonSerializable, MongoDB\BSON\Type, Serializable ] {
 
       - Constants [7] {
         Constant [ integer TYPE_GENERIC ] { 0 }
@@ -161,7 +168,7 @@ Extension [ <persistent> extension #147 mongodb version 1.2.0alpha3 ] {
       - Properties [0] {
       }
 
-      - Methods [6] {
+      - Methods [7] {
         Method [ <internal:mongodb, ctor> final public method __construct ] {
 
           - Parameters [2] {
@@ -171,6 +178,12 @@ Extension [ <persistent> extension #147 mongodb version 1.2.0alpha3 ] {
         }
 
         Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype JsonSerializable> final public method jsonSerialize ] {
 
           - Parameters [0] {
           }
@@ -203,7 +216,7 @@ Extension [ <persistent> extension #147 mongodb version 1.2.0alpha3 ] {
       }
     }
 
-    Class [ <internal:mongodb> final class MongoDB\BSON\Decimal128 implements MongoDB\BSON\Type, Serializable ] {
+    Class [ <internal:mongodb> final class MongoDB\BSON\Decimal128 implements JsonSerializable, MongoDB\BSON\Type, Serializable ] {
 
       - Constants [0] {
       }
@@ -223,7 +236,7 @@ Extension [ <persistent> extension #147 mongodb version 1.2.0alpha3 ] {
       - Properties [0] {
       }
 
-      - Methods [4] {
+      - Methods [5] {
         Method [ <internal:mongodb, ctor> final public method __construct ] {
 
           - Parameters [1] {
@@ -232,6 +245,12 @@ Extension [ <persistent> extension #147 mongodb version 1.2.0alpha3 ] {
         }
 
         Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype JsonSerializable> final public method jsonSerialize ] {
 
           - Parameters [0] {
           }
@@ -252,7 +271,7 @@ Extension [ <persistent> extension #147 mongodb version 1.2.0alpha3 ] {
       }
     }
 
-    Class [ <internal:mongodb> final class MongoDB\BSON\Javascript implements MongoDB\BSON\Type, Serializable ] {
+    Class [ <internal:mongodb> final class MongoDB\BSON\Javascript implements JsonSerializable, MongoDB\BSON\Type, Serializable ] {
 
       - Constants [0] {
       }
@@ -272,7 +291,7 @@ Extension [ <persistent> extension #147 mongodb version 1.2.0alpha3 ] {
       - Properties [0] {
       }
 
-      - Methods [6] {
+      - Methods [7] {
         Method [ <internal:mongodb, ctor> final public method __construct ] {
 
           - Parameters [2] {
@@ -282,6 +301,12 @@ Extension [ <persistent> extension #147 mongodb version 1.2.0alpha3 ] {
         }
 
         Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype JsonSerializable> final public method jsonSerialize ] {
 
           - Parameters [0] {
           }
@@ -314,7 +339,7 @@ Extension [ <persistent> extension #147 mongodb version 1.2.0alpha3 ] {
       }
     }
 
-    Class [ <internal:mongodb> final class MongoDB\BSON\MaxKey implements MongoDB\BSON\Type, Serializable ] {
+    Class [ <internal:mongodb> final class MongoDB\BSON\MaxKey implements JsonSerializable, MongoDB\BSON\Type, Serializable ] {
 
       - Constants [0] {
       }
@@ -334,93 +359,8 @@ Extension [ <persistent> extension #147 mongodb version 1.2.0alpha3 ] {
       - Properties [0] {
       }
 
-      - Methods [2] {
-        Method [ <internal:mongodb, prototype Serializable> final public method serialize ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:mongodb, prototype Serializable> final public method unserialize ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $serialized ]
-          }
-        }
-      }
-    }
-
-    Class [ <internal:mongodb> final class MongoDB\BSON\MinKey implements MongoDB\BSON\Type, Serializable ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [1] {
-        Method [ <internal:mongodb> static public method __set_state ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> array $properties ]
-          }
-        }
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [2] {
-        Method [ <internal:mongodb, prototype Serializable> final public method serialize ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:mongodb, prototype Serializable> final public method unserialize ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $serialized ]
-          }
-        }
-      }
-    }
-
-    Class [ <internal:mongodb> final class MongoDB\BSON\ObjectID implements MongoDB\BSON\Type, Serializable ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [1] {
-        Method [ <internal:mongodb> static public method __set_state ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> array $properties ]
-          }
-        }
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [5] {
-        Method [ <internal:mongodb, ctor> final public method __construct ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <optional> $id ]
-          }
-        }
-
-        Method [ <internal:mongodb> final public method getTimestamp ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:mongodb> final public method __toString ] {
+      - Methods [3] {
+        Method [ <internal:mongodb, prototype JsonSerializable> final public method jsonSerialize ] {
 
           - Parameters [0] {
           }
@@ -441,7 +381,49 @@ Extension [ <persistent> extension #147 mongodb version 1.2.0alpha3 ] {
       }
     }
 
-    Class [ <internal:mongodb> final class MongoDB\BSON\Regex implements MongoDB\BSON\Type, Serializable ] {
+    Class [ <internal:mongodb> final class MongoDB\BSON\MinKey implements JsonSerializable, MongoDB\BSON\Type, Serializable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:mongodb> static public method __set_state ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $properties ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [3] {
+        Method [ <internal:mongodb, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method serialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serialized ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\ObjectID implements JsonSerializable, MongoDB\BSON\Type, Serializable ] {
 
       - Constants [0] {
       }
@@ -464,6 +446,67 @@ Extension [ <persistent> extension #147 mongodb version 1.2.0alpha3 ] {
       - Methods [6] {
         Method [ <internal:mongodb, ctor> final public method __construct ] {
 
+          - Parameters [1] {
+            Parameter #0 [ <optional> $id ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method getTimestamp ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method serialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serialized ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\Regex implements MongoDB\BSON\Type, Serializable, JsonSerializable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:mongodb> static public method __set_state ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $properties ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [7] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
           - Parameters [2] {
             Parameter #0 [ <required> $pattern ]
             Parameter #1 [ <required> $flags ]
@@ -471,6 +514,12 @@ Extension [ <persistent> extension #147 mongodb version 1.2.0alpha3 ] {
         }
 
         Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype JsonSerializable> final public method jsonSerialize ] {
 
           - Parameters [0] {
           }
@@ -503,57 +552,7 @@ Extension [ <persistent> extension #147 mongodb version 1.2.0alpha3 ] {
       }
     }
 
-    Class [ <internal:mongodb> final class MongoDB\BSON\Timestamp implements MongoDB\BSON\Type, Serializable ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [1] {
-        Method [ <internal:mongodb> static public method __set_state ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> array $properties ]
-          }
-        }
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [4] {
-        Method [ <internal:mongodb, ctor> final public method __construct ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $increment ]
-            Parameter #1 [ <required> $timestamp ]
-          }
-        }
-
-        Method [ <internal:mongodb> final public method __toString ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:mongodb, prototype Serializable> final public method serialize ] {
-
-          - Parameters [0] {
-          }
-        }
-
-        Method [ <internal:mongodb, prototype Serializable> final public method unserialize ] {
-
-          - Parameters [1] {
-            Parameter #0 [ <required> $serialized ]
-          }
-        }
-      }
-    }
-
-    Class [ <internal:mongodb> final class MongoDB\BSON\UTCDateTime implements MongoDB\BSON\Type, Serializable ] {
+    Class [ <internal:mongodb> final class MongoDB\BSON\Timestamp implements JsonSerializable, MongoDB\BSON\Type, Serializable ] {
 
       - Constants [0] {
       }
@@ -576,12 +575,74 @@ Extension [ <persistent> extension #147 mongodb version 1.2.0alpha3 ] {
       - Methods [5] {
         Method [ <internal:mongodb, ctor> final public method __construct ] {
 
+          - Parameters [2] {
+            Parameter #0 [ <required> $increment ]
+            Parameter #1 [ <required> $timestamp ]
+          }
+        }
+
+        Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype JsonSerializable> final public method jsonSerialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method serialize ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype Serializable> final public method unserialize ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $serialized ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:mongodb> final class MongoDB\BSON\UTCDateTime implements JsonSerializable, MongoDB\BSON\Type, Serializable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [1] {
+        Method [ <internal:mongodb> static public method __set_state ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $properties ]
+          }
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:mongodb, ctor> final public method __construct ] {
+
           - Parameters [1] {
             Parameter #0 [ <required> $milliseconds ]
           }
         }
 
         Method [ <internal:mongodb> final public method __toString ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:mongodb, prototype JsonSerializable> final public method jsonSerialize ] {
 
           - Parameters [0] {
           }
@@ -895,12 +956,14 @@ Extension [ <persistent> extension #147 mongodb version 1.2.0alpha3 ] {
 
     Class [ <internal:mongodb> final class MongoDB\Driver\ReadPreference implements MongoDB\BSON\Serializable, MongoDB\BSON\Type ] {
 
-      - Constants [5] {
+      - Constants [7] {
         Constant [ integer RP_PRIMARY ] { 1 }
         Constant [ integer RP_PRIMARY_PREFERRED ] { 5 }
         Constant [ integer RP_SECONDARY ] { 2 }
         Constant [ integer RP_SECONDARY_PREFERRED ] { 6 }
         Constant [ integer RP_NEAREST ] { 10 }
+        Constant [ integer NO_MAX_STALENESS ] { -1 }
+        Constant [ integer SMALLEST_MAX_STALENESS_SECONDS ] { 90 }
       }
 
       - Static properties [0] {
@@ -922,7 +985,7 @@ Extension [ <persistent> extension #147 mongodb version 1.2.0alpha3 ] {
           }
         }
 
-        Method [ <internal:mongodb> final public method getMaxStalenessMS ] {
+        Method [ <internal:mongodb> final public method getMaxStalenessSeconds ] {
 
           - Parameters [0] {
           }
