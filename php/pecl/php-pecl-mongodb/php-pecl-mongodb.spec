@@ -7,11 +7,7 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
-%endif
 %scl_package       php-pecl-mongodb
 %else
 %global _root_prefix %{_prefix}
@@ -25,9 +21,7 @@
 # After 40-smbclient.ini, see https://jira.mongodb.org/browse/PHPC-658
 %global ini_name   50-%{pecl_name}.ini
 %endif
-#global prever     RC0
-# Still needed because of some private API
-%global buildver %(pkg-config --silence-errors --modversion libmongoc-priv 2>/dev/null || echo 65536)
+#global prever     alpha3
 
 %ifarch x86_64
 %global with_tests   0%{?_with_tests:1}
@@ -38,9 +32,15 @@
 %global with_tests   0%{?_with_tests:1}
 %endif
 
+%if 0%{?fedora} >= 26
+%global with_syslib 1
+%else
+%global with_syslib 0
+%endif
+
 Summary:        MongoDB driver for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.1.9
+Version:        1.2.0
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        ASL 2.0
 Group:          Development/Languages
@@ -52,19 +52,20 @@ Patch0:         %{pecl_name}-tests.patch
 
 BuildRequires:  %{?scl_prefix}php-devel > 5.4
 BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  %{?scl_prefix}php-json
 BuildRequires:  cyrus-sasl-devel
 BuildRequires:  openssl-devel
-BuildRequires:  pkgconfig(libbson-1.0)    >= 1.3.0
-BuildRequires:  pkgconfig(libmongoc-1.0)  >= 1.3.0
-BuildRequires:  pkgconfig(libmongoc-priv) >= 1.3.0
-BuildRequires:  pkgconfig(libmongoc-priv) <  1.4
+%if %{with_syslib}
+BuildRequires:  pkgconfig(libbson-1.0)    >= 1.5
+BuildRequires:  pkgconfig(libmongoc-1.0)  >= 1.5
+%endif
 %if %{with_tests}
 BuildRequires:  mongodb-server
 %endif
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
-Requires:       mongo-c-driver%{?_isa} >= %{buildver}
+Requires:       %{?scl_prefix}php-json%{?_isa}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 # Don't provide php-mongodb which is the pure PHP library
@@ -124,7 +125,9 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
+%if %{with_syslib}
 %patch0 -p0 -b .rpm
+%endif
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define MONGODB_VERSION_S/{s/.* "//;s/".*$//;p}' php_phongo.h)
@@ -153,6 +156,7 @@ EOF
 peclbuild() {
   %{_bindir}/${1}ize
 
+%if %{with_syslib}
   # Ensure we use system library
   # Need to be removed only after phpize because of m4_include
   rm -r src/libbson
@@ -163,6 +167,13 @@ peclbuild() {
     --with-libbson \
     --with-libmongoc \
     --enable-mongodb
+
+%else
+
+  %configure \
+    --with-php-config=%{_bindir}/${1}-config \
+    --enable-mongodb
+%endif
 
   make %{?_smp_mflags}
 }
@@ -220,14 +231,17 @@ fi
 
 
 %check
+OPT="-n"
+[ -f %{php_extdir}/json.so ] && OPT="$OPT -d extension=json.so"
+
 : Minimal load test for NTS extension
-%{__php} --no-php-ini \
+%{__php} $OPT \
     --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 %if %{with_zts}
 : Minimal load test for ZTS extension
-%{__ztsphp} --no-php-ini \
+%{__ztsphp} $OPT \
     --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 %endif
@@ -236,6 +250,7 @@ fi
 ret=0
 
 %global mongo_version  %(mongod --version | sed -n '/db version/{s/.*v//;p}' 2>/dev/null)
+#global mongo_version 4
 
 : Run a mongodb server version %{mongo_version}
 mkdir dbtest
@@ -250,10 +265,9 @@ mongod \
 
 if [ -s server.pid ] ; then
   : Drop known to fail tests
-%if 1
+%if "%{mongo_version}" < "3.4"
     ### With mongodb 3.2
     rm ?TS/tests/manager/manager-debug-001.phpt
-    rm ?TS/tests/manager/manager-debug-003.phpt
     rm ?TS/tests/manager/manager-executequery-without-assignment.phpt
     rm ?TS/tests/standalone/bug0487-002.phpt
     rm ?TS/tests/standalone/bug0655.phpt
@@ -276,7 +290,7 @@ if [ -s server.pid ] ; then
 
   pushd NTS
     TEST_PHP_EXECUTABLE=%{__php} \
-    TEST_PHP_ARGS="-n -d extension=json.so -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so" \
+    TEST_PHP_ARGS="$OPT -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so" \
     NO_INTERACTION=1 \
     REPORT_EXIT_STATUS=1 \
     php -n run-tests.php --show-diff || ret=1
@@ -285,7 +299,7 @@ if [ -s server.pid ] ; then
 %if %{with_zts}
   pushd ZTS
     TEST_PHP_EXECUTABLE=%{__ztsphp} \
-    TEST_PHP_ARGS="-n -d extension=json.so -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so" \
+    TEST_PHP_ARGS="$OPT -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so" \
     NO_INTERACTION=1 \
     REPORT_EXIT_STATUS=1 \
     php -n run-tests.php --show-diff || ret=1
@@ -317,11 +331,17 @@ exit $ret
 
 
 %changelog
-* Fri Oct 21 2016 Remi Collet <remi@fedoraproject.org> - 1.1.9-1
-- Update to 1.1.9 (no change)
+* Tue Nov 29 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- update to 1.2.0
+- internal dependency on date, json, spl and standard
 
-* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.1.8-5
-- rebuild for PHP 7.1 new API version
+* Wed Sep 28 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-0.2.alpha3
+- update to 1.2.0alpha3
+- use bundled libbson and libmongoc
+
+* Mon Aug  8 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-0.1.alpha1
+- update to 1.2.0alpha1
+- open https://jira.mongodb.org/browse/PHPC-762 missing symbols
 
 * Tue Jul 19 2016 Remi Collet <remi@fedoraproject.org> - 1.1.8-4
 - License is ASL 2.0, from review #1269056
