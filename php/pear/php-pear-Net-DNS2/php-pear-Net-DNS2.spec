@@ -1,4 +1,4 @@
-# spec file for php-pear-Net-DNS2
+# fedora/remirepo spec file for php-pear-Net-DNS2
 #
 # Copyright (c) 2012-2016 Remi Collet
 # License: CC-BY-SA
@@ -7,12 +7,12 @@
 # Please, preserve the changelog entries
 #
 
-%{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
+%{!?__pear: %global __pear %{_bindir}/pear}
 %global pear_name Net_DNS2
 
 Name:           php-pear-Net-DNS2
-Version:        1.4.1
-Release:        1%{?dist}
+Version:        1.4.2
+Release:        2%{?dist}
 Summary:        PHP Resolver library used to communicate with a DNS server
 
 Group:          Development/Libraries
@@ -20,21 +20,24 @@ License:        BSD
 URL:            http://pear.php.net/package/Net_DNS2
 Source0:        http://pear.php.net/get/%{pear_name}-%{version}.tgz
 
+# Fix include path furing the test suite
+Patch0:         %{pear_name}-incl.patch
+# Upstream patch for PHP 7
+Patch1:         %{pear_name}-php7.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-pear(PEAR)
 # for tests
-BuildRequires:  php-pear(pear.phpunit.de/PHPUnit)
+BuildRequires:  %{_bindir}/phpunit
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php-pear(PEAR)
 
-# From phpcompatinfo report for version 1.3.2
+# From phpcompatinfo report for version 1.4.2
 Requires:       php-ctype
 Requires:       php-date
-Requires:       php-hash
 Requires:       php-json
 Requires:       php-pcre
 Requires:       php-shmop
@@ -42,6 +45,7 @@ Requires:       php-sockets
 Requires:       php-spl
 # Optional
 Requires:       php-filter
+Requires:       php-hash
 Requires:       php-openssl
 
 Provides:       php-pear(%{pear_name}) = %{version}
@@ -64,11 +68,13 @@ The main features for this package include:
 
 %prep
 %setup -q -c
-# https://github.com/mikepultz/netdns2/issues/32
-sed -e '/README/s/role="data"/role="doc"/' -i package.xml
+sed -e 's/md5sum="[^"]*"//' \
+    -i package.xml
 
 cd %{pear_name}-%{version}
 mv ../package.xml %{name}.xml
+%patch0 -p1
+%patch1 -p1
 
 
 %build
@@ -128,6 +134,14 @@ fi
 
 
 %changelog
+* Tue Nov 29 2016 Remi Collet <remi@fedoraproject.org> - 1.4.2-2
+- use upstream patch for PHP 7
+
+* Mon Nov 28 2016 Remi Collet <remi@fedoraproject.org> - 1.4.2-1
+- Update to 1.4.2 (stable)
+- add patch for PHP 7
+  open https://github.com/mikepultz/netdns2/pull/56
+
 * Mon Apr 13 2015 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
 - Update to 1.4.1
 
