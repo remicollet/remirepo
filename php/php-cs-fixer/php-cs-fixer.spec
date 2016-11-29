@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c5a9d66dd27f02a3ffba4ec451ce27702604cdc8
+%global gh_commit    ac04a510bed5407e91664f8a37b9d58072d96768
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150717
 %global gh_owner     FriendsOfPHP
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-cs-fixer
-Version:        1.12.4
+Version:        1.13.0
 Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A tool to automatically fix PHP code style
 
@@ -167,6 +167,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 29 2016 Remi Collet <remi@fedoraproject.org> - 1.13.0-1
+- update to 1.13.0
+
 * Tue Nov 15 2016 Remi Collet <remi@fedoraproject.org> - 1.12.4-1
 - update to 1.12.4
 
