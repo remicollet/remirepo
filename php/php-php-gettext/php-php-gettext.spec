@@ -10,8 +10,8 @@
 
 Summary:	Gettext emulation in PHP
 Name:		php-php-gettext
-Version:	1.0.11
-Release:	12%{?dist}
+Version:	1.0.12
+Release:	1%{?dist}
 License:	GPLv2+
 Group:		Development/Libraries
 URL:		https://launchpad.net/php-gettext
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/php/gettext/
 
 %changelog
+* Tue Nov 29 2016 Robert Scheck <robert@fedoraproject.org> 1.0.12-1
+- Upgrade to 1.0.12 (#1367462)
+
 * Fri Sep 04 2015 Robert Scheck <robert@fedoraproject.org> 1.0.11-12
 - Added a patch for compatibility with PHP 7
 
