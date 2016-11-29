@@ -10,7 +10,7 @@
 %global lockname     ocsinventoryng.lock
 
 Name:           glpi-ocsinventoryng
-Version:        1.2.3
+Version:        1.3.0
 Release:        1%{?dist}
 Summary:        Plugin to synchronize GLPI with OCS Inventory NG
 
@@ -25,7 +25,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
 
-Requires:       glpi >= 9.1
+Requires:       glpi >= 9.1.1
 Requires:       glpi <  9.2
 Requires:       crontabs
 Requires:       php-cli
@@ -67,7 +67,7 @@ rm     %{pluginname}/TOKNOW.txt
 rm     %{pluginname}/ocsinventoryng.png
 
 # For Windows only
-rm %{pluginname}/scripts/run.**
+rm %{pluginname}/scripts/*.bat
 
 # Access retricted in apache config
 rm ocsinventoryng/scripts/.htaccess \
@@ -170,6 +170,11 @@ grep %{lockname} %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}/setup.php |
 
 
 %changelog
+* Tue Nov 29 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- Update to 1.3.0 for GLPI 9.1.1
+- update script is broken
+  open https://github.com/pluginsGLPI/ocsinventoryng/issues/58
+
 * Wed Sep 28 2016 Remi Collet <remi@fedoraproject.org> - 1.2.3-1
 - Update to 1.2.3 for GLPI 9.1
 
