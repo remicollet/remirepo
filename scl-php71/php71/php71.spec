@@ -20,7 +20,7 @@
 Summary:       Package that installs PHP 7.1
 Name:          %scl_name
 Version:       1.0
-Release:       0.1%{?dist}
+Release:       1%{?dist}
 Group:         Development/Languages
 License:       GPLv2+
 
@@ -42,9 +42,6 @@ Requires:      %{?scl_name}-runtime%{?_isa}      = %{version}-%{release}
 %description
 This is the main package for %scl Software Collection,
 that install PHP 7.1 language.
-
-WARNING: this an experimental collection for
-the development version of PHP 7.1.
 
 
 %package runtime
@@ -206,8 +203,10 @@ restorecon -R %{_localstatedir} &>/dev/null || :
 %defattr(-,root,root)
 %{macrosdir}/macros.%{scl_name_base}-scldevel
 
-## TODO: clean warning in description when stable
 %changelog
+* Tue Nov 29 2016 Remi Collet <remi@fedoraproject.org> 1.0-1
+- drop experimental warning
+
 * Wed Jun  8 2016 Remi Collet <remi@fedoraproject.org> 1.0-0.1
 - initial packaging
 
