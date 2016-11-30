@@ -19,12 +19,12 @@
 
 Summary:       Yet Another Configurations Container
 Name:          %{?scl_prefix}php-pecl-yaconf
-Version:       1.0.2
+Version:       1.0.3
 %if 0%{?gh_date:1}
 Release:       0.8.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 License:       PHP
@@ -234,6 +234,9 @@ fi
 
 
 %changelog
+* Wed Nov 30 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-2
 - rebuild for PHP 7.1 new API version
 
