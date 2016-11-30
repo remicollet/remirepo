@@ -12,17 +12,17 @@
 
 %global github_owner      Ocramius
 %global github_name       ProxyManager
-%global github_version    2.0.4
-%global github_commit     a55d08229f4f614bf335759ed0cf63378feeb2e6
+%global github_version    2.1.0
+%global github_commit     d9e5a00ca2d87b7e0f1bff36b897e02afd7d5435
 %global github_short      %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor   ocramius
 %global composer_project  proxy-manager
 
-# "php": "7.0.0 - 7.0.5 || ^7.0.7"
-%global php_min_ver 7.0.7
-# "zendframework/zend-code": "~3.0.0 - 3.0.2 || ^3.0.4"
-%global zf_min_ver  3.0.4
+# "php": "^7.1.0"
+%global php_min_ver 7.1.0
+# "zendframework/zend-code": "^3.1.0"
+%global zf_min_ver  3.1.0
 %global zf_max_ver  4
 
 # Build using "--without tests" to disable tests
@@ -62,7 +62,7 @@ BuildRequires: php-composer(ocramius/generated-hydrator) >= 2
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
-BuildRequires: php-composer(phpunit/phpunit) >= 5.4.6
+BuildRequires: php-composer(phpunit/phpunit) >= 5.6.4
 %endif
 
 # composer.json
@@ -144,7 +144,18 @@ require_once '%{buildroot}%{phpdir}/ProxyManager/autoload.php';
 EOF
 
 : Run tests
-php71 %{_bindir}/phpunit --verbose --exclude-group Performance
+# remirepo:7
+run=0
+ret=0
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -164,6 +175,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 30 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- update to 2.1.0
+- raise dependency on php 7.1
+- raise dependency on zend-code 3.1
+
 * Sun Nov  6 2016 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - update to 2.0.4
 

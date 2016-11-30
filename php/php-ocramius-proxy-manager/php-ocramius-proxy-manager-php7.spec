@@ -144,7 +144,7 @@ require_once '%{buildroot}%{phpdir}/ProxyManager/autoload.php';
 EOF
 
 : Run tests
-php71 %{_bindir}/phpunit --verbose --exclude-group Performance
+%{_bindir}/phpunit --verbose --exclude-group Performance
 %else
 : Tests skipped
 %endif
