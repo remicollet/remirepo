@@ -1,0 +1,22 @@
+From 58552b8035d4b0a72040f0c8aed91ae849172eda Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 1 Dec 2016 17:40:42 +0100
+Subject: [PATCH] fix segfault with 7.1.0, fix #7
+
+---
+ php7/php_env.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/php7/php_env.c b/php7/php_env.c
+index 22c19b4..b891ba7 100644
+--- a/php7/php_env.c
++++ b/php7/php_env.c
+@@ -37,7 +37,7 @@ void php_env_module_init(HashTable *vars TSRMLS_DC) {
+ 				fh.filename = ENV_G(file);
+ 				fh.type = ZEND_HANDLE_FP;
+ 
+-				if (zend_parse_ini_file(&fh, 0, 0 /* ZEND_INI_SCANNER_NORMAL */,
++				if (zend_parse_ini_file(&fh, 1, 0 /* ZEND_INI_SCANNER_NORMAL */,
+ 							php_env_ini_parser_cb, vars) == FAILURE || ENV_G(parse_err)) {
+ 					if (ENV_G(parse_err)) {
+ 						php_error(E_WARNING, "env: parsing '%s' failed", ENV_G(file));

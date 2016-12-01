@@ -30,6 +30,7 @@ URL:           http://pecl.php.net/package/%{pecl_name}
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 Patch0:        %{pecl_name}-pr4.patch
+Patch1:        %{pecl_name}-pr8.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # ignore min PHP version 5.5 (as work with 5.4)
@@ -92,6 +93,7 @@ sed -e 's/role="test"/role="src"/' \
 
 cd NTS
 %patch0 -p1 -b .pr4
+%patch1 -p1 -b .pr8
 
 # Check upstream version (often broken)
 extver=$(sed -n '/#define PHP_ENV_VERSION/{s/.* "//;s/".*$//;p}' php_env.h)
@@ -227,6 +229,7 @@ fi
 %changelog
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 0.2.1-4
 - rebuild with PHP 7.1.0 GA
+- add patch fixing segfault with 7.1
 
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 0.2.1-3
 - rebuild for PHP 7.1 new API version
