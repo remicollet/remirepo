@@ -21,7 +21,7 @@
 Summary:        dBase database file access functions
 Name:           %{?sub_prefix}php-pecl-dbase
 Version:        7.0.0
-Release:        0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -229,6 +229,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 7.0.0-0.2.beta1
+- rebuild with PHP 7.1.0 GA
+
 * Wed Oct 26 2016 Remi Collet <remi@fedoraproject.org> - 7.0.0-0.1.beta1
 - update to 7.0.0beta1 for PHP 7
 

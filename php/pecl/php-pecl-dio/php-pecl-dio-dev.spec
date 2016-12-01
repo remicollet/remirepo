@@ -22,7 +22,7 @@
 Summary:        Direct I/O functions
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        0.0.8
-Release:        0.2.%{svn_date}svn%{svn_rev}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.3.%{svn_date}svn%{svn_rev}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -234,6 +234,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 0.0.8-0.3.20161113svn340995
+- rebuild with PHP 7.1.0 GA
+
 * Sun Nov 13 2016 Remi Collet <remi@fedoraproject.org> - 0.0.8-0.2.20161113svn340995
 - update to 0.0.8dev for PHP 7+
 

@@ -9,11 +9,7 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
-%endif
 %scl_package         php-pecl-gearman
 %endif
 
@@ -37,7 +33,7 @@
 
 Name:           %{?sub_prefix}php-pecl-gearman
 Version:        %{extver}
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Summary:        PHP wrapper to libgearman
 
 Group:          Development/Tools
@@ -230,6 +226,9 @@ fi
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-2
+- rebuild with PHP 7.1.0 GA
+
 * Sat Nov 12 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - update to 2.0.2
 

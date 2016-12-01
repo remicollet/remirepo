@@ -7,12 +7,8 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
-%endif
-%scl_package         php-pecl-couchbase2
+%scl_package       php-pecl-couchbase2
 %endif
 
 %global pecl_name couchbase
@@ -30,7 +26,7 @@
 Summary:       Couchbase Server PHP extension
 Name:          %{?sub_prefix}php-pecl-couchbase2
 Version:       2.2.3
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           pecl.php.net/package/couchbase
@@ -241,6 +237,9 @@ fi
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 2.2.3-2
+- rebuild with PHP 7.1.0 GA
+
 * Wed Oct 05 2016 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
 - Update to 2.2.3
 - open https://issues.couchbase.com/browse/PCBC-437 - visibility error
