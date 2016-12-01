@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5465af955800fa884a36f66ff65280584988efd0
+%global gh_commit    e7f19286a7e7f940950c9069a0f549d483c30ba7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
 %global gh_owner     composer
@@ -16,8 +16,8 @@
 #global prever       RC
 
 Name:           composer
-Version:        1.2.2
-Release:        2%{?dist}
+Version:        1.2.3
+Release:        1%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -259,6 +259,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.2.3-1
+- update to 1.2.3
+
 * Thu Nov 17 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-2
 - add profile scripts so globally installed commands
   will be found in default user path #1394577
