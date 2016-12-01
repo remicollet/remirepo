@@ -49,12 +49,13 @@ BuildRequires:  php-json
 BuildRequires:  php-pcre
 BuildRequires:  php-phar
 BuildRequires:  php-spl
-BuildRequires:  php-tokenizer
 BuildRequires:  php-xml
 # From composer.json,     "require-dev": {
+#        "gecko-packages/gecko-php-unit": "^2.0",
 #        "phpunit/phpunit": "^4.5|^5",
 #        "satooshi/php-coveralls": "^1.0"
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.5
+BuildRequires:  php-composer(gecko-packages/gecko-php-unit) >= 2.0
 # Autoloader
 BuildRequires:  php-composer(fedora/autoloader)
 %endif
@@ -89,7 +90,6 @@ Requires:       php-pcre
 Requires:       php-phar
 Requires:       php-spl
 Requires:       php-xml
-Requires:       php-tokenizer
 # Autoloader
 Requires:       php-composer(fedora/autoloader)
 
@@ -133,6 +133,7 @@ install -Dpm755 %{name} %{buildroot}%{_bindir}/%{name}
 mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
+require_once '%{php_home}/GeckoPackages/PHPUnit/autoload.php';
 require_once '%{buildroot}%{php_home}/PhpCsFixer/autoload.php';
 \Fedora\Autoloader\Autoload::addPsr4('PhpCsFixer\\Tests\\', dirname(__DIR__) . '/tests');
 EOF
@@ -170,8 +171,6 @@ rm -rf %{buildroot}
 %doc composer.json
 %doc *.md *.rst
 %{php_home}/PhpCsFixer
-%exclude %{php_home}/PhpCsFixer/Tests
-%exclude %{php_home}/PhpCsFixer/Resources
 %{_bindir}/%{name}
 
 
