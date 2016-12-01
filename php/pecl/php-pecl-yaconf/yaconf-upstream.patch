@@ -1,0 +1,99 @@
+From 950ed708b9da956025597c006a202ce1a0dc8b3f Mon Sep 17 00:00:00 2001
+From: Xinchen Hui <laruence@gmail.com>
+Date: Thu, 1 Dec 2016 18:13:33 +0800
+Subject: [PATCH] Fixed issue #20 (Segfault during test suite with 7.1.0GA
+ (TS))
+
+---
+ yaconf.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/yaconf.c b/yaconf.c
+index f98ab30..4606eff 100644
+--- a/yaconf.c
++++ b/yaconf.c
+@@ -527,7 +527,7 @@ PHP_MINIT_FUNCTION(yaconf)
+ 				            ZVAL_UNDEF(&active_ini_file_section);
+ 							YACONF_G(parse_err) = 0;
+ 							php_yaconf_hash_init(&result, 128);
+-							if (zend_parse_ini_file(&fh, 0, 0 /* ZEND_INI_SCANNER_NORMAL */,
++							if (zend_parse_ini_file(&fh, 1, 0 /* ZEND_INI_SCANNER_NORMAL */,
+ 									php_yaconf_ini_parser_cb, (void *)&result) == FAILURE || YACONF_G(parse_err)) {
+ 								if (!YACONF_G(parse_err)) {
+ 									php_error(E_WARNING, "Parsing '%s' failed", ini_file);
+@@ -622,12 +622,12 @@ PHP_RINIT_FUNCTION(yaconf)
+ 							ZVAL_UNDEF(&active_ini_file_section);
+ 							YACONF_G(parse_err) = 0;
+ 							php_yaconf_hash_init(&result, 128);
+-							if (zend_parse_ini_file(&fh, 0, 0 /* ZEND_INI_SCANNER_NORMAL */,
++							if (zend_parse_ini_file(&fh, 1, 0 /* ZEND_INI_SCANNER_NORMAL */,
+ 									php_yaconf_ini_parser_cb, (void *)&result) == FAILURE || YACONF_G(parse_err)) {
+-								YACONF_G(parse_err) = 0;
+ 								if (!YACONF_G(parse_err)) {
+ 									php_error(E_WARNING, "Parsing '%s' failed", ini_file);
+ 								}
++								YACONF_G(parse_err) = 0;
+ 								php_yaconf_hash_destroy(Z_ARRVAL(result));
+ 								free(namelist[i]);
+ 								continue;
+From 0ca4a280b6db9095f74f74fbd9edbae61017a22d Mon Sep 17 00:00:00 2001
+From: Xinchen Hui <laruence@gmail.com>
+Date: Thu, 1 Dec 2016 18:28:10 +0800
+Subject: [PATCH] Added test for issue #20
+
+---
+ tests/009.phpt           | 11 +++++++++++
+ tests/inis/err/err/a.ini |  1 +
+ yaconf.c                 |  6 ------
+ 3 files changed, 12 insertions(+), 6 deletions(-)
+ create mode 100644 tests/009.phpt
+ create mode 100644 tests/inis/err/err/a.ini
+
+diff --git a/tests/009.phpt b/tests/009.phpt
+new file mode 100644
+index 0000000..e689f71
+--- /dev/null
++++ b/tests/009.phpt
+@@ -0,0 +1,11 @@
++--TEST--
++Check for INI errors
++--SKIPIF--
++<?php if (!extension_loaded("yaconf")) print "skip"; ?>
++--INI--
++yaconf.directory={PWD}/inis/err/err
++--FILE--
++<?php 
++?>
++--EXPECTF--
++PHP:  syntax error, unexpected ')' in %sa.ini on line 1
+diff --git a/tests/inis/err/err/a.ini b/tests/inis/err/err/a.ini
+new file mode 100644
+index 0000000..ffb9485
+--- /dev/null
++++ b/tests/inis/err/err/a.ini
+@@ -0,0 +1 @@
++skdjflksdjfkl.2)X(D)*_)(_
+diff --git a/yaconf.c b/yaconf.c
+index 4606eff..c7c2eff 100644
+--- a/yaconf.c
++++ b/yaconf.c
+@@ -529,9 +529,6 @@ PHP_MINIT_FUNCTION(yaconf)
+ 							php_yaconf_hash_init(&result, 128);
+ 							if (zend_parse_ini_file(&fh, 1, 0 /* ZEND_INI_SCANNER_NORMAL */,
+ 									php_yaconf_ini_parser_cb, (void *)&result) == FAILURE || YACONF_G(parse_err)) {
+-								if (!YACONF_G(parse_err)) {
+-									php_error(E_WARNING, "Parsing '%s' failed", ini_file);
+-								}
+ 								YACONF_G(parse_err) = 0;
+ 								php_yaconf_hash_destroy(Z_ARRVAL(result));
+ 								free(namelist[i]);
+@@ -624,9 +621,6 @@ PHP_RINIT_FUNCTION(yaconf)
+ 							php_yaconf_hash_init(&result, 128);
+ 							if (zend_parse_ini_file(&fh, 1, 0 /* ZEND_INI_SCANNER_NORMAL */,
+ 									php_yaconf_ini_parser_cb, (void *)&result) == FAILURE || YACONF_G(parse_err)) {
+-								if (!YACONF_G(parse_err)) {
+-									php_error(E_WARNING, "Parsing '%s' failed", ini_file);
+-								}
+ 								YACONF_G(parse_err) = 0;
+ 								php_yaconf_hash_destroy(Z_ARRVAL(result));
+ 								free(namelist[i]);

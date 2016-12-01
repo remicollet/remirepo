@@ -14,8 +14,7 @@
 %global gh_project  yaconf
 #global gh_date     20150910
 %global pecl_name   yaconf
-# https://github.com/laruence/yaconf/issues/20
-%global with_zts    0
+%global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global ini_name    40-%{pecl_name}.ini
 
 Summary:       Yet Another Configurations Container
@@ -25,12 +24,14 @@ Version:       1.0.3
 Release:       0.8.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 License:       PHP
 Group:         Development/Languages
 URL:           https://github.com/%{gh_owner}/%{gh_project}
+
+Patch0:        %{pecl_name}-upstream.patch
 
 BuildRequires: %{?scl_prefix}php-devel > 7
 BuildRequires: %{?scl_prefix}php-pear
@@ -94,6 +95,7 @@ mv %{pecl_name}-%{version} NTS
 %{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
+%patch0 -p1 -b .upstream
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_YACONF_VERSION/{s/.* "//;s/".*$//;p}' php_yaconf.h)
@@ -235,6 +237,10 @@ fi
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-3
+- add upstream patch to fix segfaults
+- re-enable ZTS extension
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-2
 - rebuild with PHP 7.1.0 GA
 - disable ZTS extension which raise segfaults
