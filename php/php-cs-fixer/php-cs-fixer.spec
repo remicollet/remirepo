@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    ac04a510bed5407e91664f8a37b9d58072d96768
+%global gh_commit    f3baf72eb2f58bf275b372540f5b47d25aed910f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20150717
 %global gh_owner     FriendsOfPHP
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-cs-fixer
-Version:        1.13.0
+Version:        2.0.0
 Release:        1%{?gh_date:.%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A tool to automatically fix PHP code style
 
@@ -34,12 +34,12 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 # For tests
-BuildRequires:  php(language) >= 5.3.6
+BuildRequires:  php(language) >= 5.4
 BuildRequires:  php-tokenizer
 BuildRequires:  php-composer(symfony/console)          >= 2.3
 BuildRequires:  php-composer(symfony/event-dispatcher) >= 2.1
-BuildRequires:  php-composer(symfony/filesystem)       >= 2.1
-BuildRequires:  php-composer(symfony/finder)           >= 2.1
+BuildRequires:  php-composer(symfony/filesystem)       >= 2.4
+BuildRequires:  php-composer(symfony/finder)           >= 2.4
 BuildRequires:  php-composer(symfony/process)          >= 2.3
 BuildRequires:  php-composer(symfony/stopwatch)        >= 2.5
 BuildRequires:  php-composer(sebastian/diff)           >= 1.1
@@ -49,6 +49,7 @@ BuildRequires:  php-json
 BuildRequires:  php-pcre
 BuildRequires:  php-phar
 BuildRequires:  php-spl
+BuildRequires:  php-tokenizer
 BuildRequires:  php-xml
 # From composer.json,     "require-dev": {
 #        "phpunit/phpunit": "^4.5|^5",
@@ -63,21 +64,23 @@ BuildRequires:  php-composer(fedora/autoloader)
 #        "ext-tokenizer": "*",
 #        "symfony/console": "^2.3 || ^3.0",
 #        "symfony/event-dispatcher": "^2.1 || ^3.0",
-#        "symfony/filesystem": "^2.1 || ^3.0",
-#        "symfony/finder": "^2.1 || ^3.0",
+#        "symfony/filesystem": "^2.4 || ^3.0",
+#        "symfony/finder": "^2.2 || ^3.0",
+#        "symfony/polyfill-php54": "^1.0",
 #        "symfony/process": "^2.3 || ^3.0",
 #        "symfony/stopwatch": "^2.5 || ^3.0",
 #        "sebastian/diff": "^1.1"
-Requires:       php(language) >= 5.3.6
+# use 5.4 to avoid polyfill
+Requires:       php(language) >= 5.4
 Requires:       php-tokenizer
 Requires:       php-composer(symfony/console)          >= 2.3
 Requires:       php-composer(symfony/event-dispatcher) >= 2.1
-Requires:       php-composer(symfony/filesystem)       >= 2.1
-Requires:       php-composer(symfony/finder)           >= 2.1
+Requires:       php-composer(symfony/filesystem)       >= 2.4
+Requires:       php-composer(symfony/finder)           >= 2.4
 Requires:       php-composer(symfony/process)          >= 2.3
 Requires:       php-composer(symfony/stopwatch)        >= 2.5
 Requires:       php-composer(sebastian/diff)           >= 1.1
-# From phpcompatinfo report for version 1.12.1
+# From phpcompatinfo report for version 2.0.0
 Requires:       php-cli
 Requires:       php-reflection
 Requires:       php-dom
@@ -86,6 +89,7 @@ Requires:       php-pcre
 Requires:       php-phar
 Requires:       php-spl
 Requires:       php-xml
+Requires:       php-tokenizer
 # Autoloader
 Requires:       php-composer(fedora/autoloader)
 
@@ -106,7 +110,7 @@ projects. This tool does not only detect them, but also fixes them for you.
 %setup -q -n %{gh_project}-%{gh_commit}
 %patch0 -p1 -b .rpm
 
-cp %{SOURCE2} Symfony/CS/autoload.php
+cp %{SOURCE2} src/autoload.php
 
 
 %build
@@ -117,8 +121,8 @@ cp %{SOURCE2} Symfony/CS/autoload.php
 rm -rf %{buildroot}
 
 : Library
-mkdir -p       %{buildroot}%{php_home}
-cp -pr Symfony %{buildroot}%{php_home}/Symfony
+mkdir -p   %{buildroot}%{php_home}
+cp -pr src %{buildroot}%{php_home}/PhpCsFixer
 
 : Command
 install -Dpm755 %{name} %{buildroot}%{_bindir}/%{name}
@@ -127,7 +131,12 @@ install -Dpm755 %{name} %{buildroot}%{_bindir}/%{name}
 %check
 %if %{with_tests}
 mkdir vendor
-ln -s %{buildroot}%{php_home}/Symfony/CS/autoload.php vendor/
+cat << 'EOF' | tee vendor/autoload.php
+<?php
+require_once '%{buildroot}%{php_home}/PhpCsFixer/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('PhpCsFixer\\Tests\\', dirname(__DIR__) . '/tests');
+EOF
+
 
 # remirepo:11
 run=0
@@ -160,13 +169,16 @@ rm -rf %{buildroot}
 %license LICENSE
 %doc composer.json
 %doc *.md *.rst
-%{php_home}/Symfony/CS
-%exclude %{php_home}/Symfony/CS/Tests
-%exclude %{php_home}/Symfony/CS/Resources
+%{php_home}/PhpCsFixer
+%exclude %{php_home}/PhpCsFixer/Tests
+%exclude %{php_home}/PhpCsFixer/Resources
 %{_bindir}/%{name}
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- update to 2.0.0
+
 * Tue Nov 29 2016 Remi Collet <remi@fedoraproject.org> - 1.13.0-1
 - update to 1.13.0
 

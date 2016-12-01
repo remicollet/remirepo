@@ -1,7 +1,7 @@
 diff -up ./php-cs-fixer.rpm ./php-cs-fixer
---- ./php-cs-fixer.rpm	2016-09-09 16:14:16.000000000 +0200
-+++ ./php-cs-fixer	2016-09-09 16:36:48.052810179 +0200
-@@ -31,12 +31,7 @@ set_error_handler(function ($severity, $
+--- ./php-cs-fixer.rpm	2016-12-01 15:13:25.882871262 +0100
++++ ./php-cs-fixer	2016-12-01 15:14:08.756051245 +0100
+@@ -32,12 +32,7 @@ set_error_handler(function ($severity, $
      }
  });
  
@@ -11,7 +11,7 @@ diff -up ./php-cs-fixer.rpm ./php-cs-fixer
 -} else {
 -    require_once __DIR__.'/vendor/autoload.php';
 -}
-+require_once '/usr/share/php/Symfony/CS/autoload.php';
++require_once '/usr/share/php/PhpCsFixer/autoload.php';
  
- use Symfony\CS\Console\Application;
+ use PhpCsFixer\Console\Application;
  
