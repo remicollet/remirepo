@@ -22,7 +22,7 @@
 
 Name:           %{?sub_prefix}php-pecl-ui
 Version:        2.0.0
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        UI API
 
 License:        PHP
@@ -217,6 +217,9 @@ fi
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
+- rebuild with PHP 7.1.0 GA
+
 * Wed Nov 02 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - Update to 2.0.0
 

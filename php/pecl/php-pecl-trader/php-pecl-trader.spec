@@ -7,14 +7,9 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
+%scl_package       php-pecl-trader
 %endif
-%endif
-
-%{?scl:          %scl_package        php-pecl-trader}
 
 #### TODO : bundle ta-lib
 
@@ -240,6 +235,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 0.4.0-5
+- rebuild with PHP 7.1.0 GA
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 0.4.0-4
 - rebuild for PHP 7.1 new API version
 

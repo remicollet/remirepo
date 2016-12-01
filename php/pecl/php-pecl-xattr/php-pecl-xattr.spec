@@ -7,14 +7,9 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
+%scl_package       php-pecl-xattr
 %endif
-%endif
-
-%{?scl:          %scl_package        php-pecl-xattr}
 
 %global pecl_name xattr
 %global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
@@ -27,7 +22,7 @@
 Summary:        Extended attributes
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.3.0
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -231,6 +226,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-3
+- rebuild with PHP 7.1.0 GA
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-2
 - rebuild for PHP 7.1 new API version
 

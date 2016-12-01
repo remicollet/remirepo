@@ -32,7 +32,7 @@ Version:        1.0.0
 %if 0%{?gh_date}
 Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 
 Summary:        Client extension for Redis
@@ -232,6 +232,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-2
+- rebuild with PHP 7.1.0 GA
+
 * Thu Nov 24 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - update to 1.0.0 release
 

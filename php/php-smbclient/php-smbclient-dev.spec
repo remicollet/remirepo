@@ -7,11 +7,10 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
-%endif
+%scl_package       php-smbclient
+%else
+%global pkg_name   %{name}
 %endif
 
 %global gh_commit  18570160a5cb427ed4d55a3a4dc4431d2bea6949
@@ -20,9 +19,6 @@
 %global gh_project libsmbclient-php
 %global gh_date    20161104
 #global prever     RC1
-
-%{?scl:          %scl_package         php-smbclient}
-%{!?scl:         %global pkg_name     %{name}}
 
 %global pecl_name  smbclient
 %global with_zts   0%{?__ztsphp:1}
@@ -37,7 +33,7 @@
 Name:           %{?sub_prefix}php-smbclient
 Version:        0.9.0
 %if 0%{?gh_date}
-Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -255,6 +251,9 @@ fi
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 0.9.0-0.2.20161104git1857016
+- rebuild with PHP 7.1.0 GA
+
 * Tue Nov  8 2016 Remi Collet <remi@fedoraproject.org> - 0.9.0-0.1.20161104git1857016
 - update to 0.9.0-dev for stream performance
 

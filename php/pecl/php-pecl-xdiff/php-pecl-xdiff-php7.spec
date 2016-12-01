@@ -7,11 +7,7 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
-%endif
 %scl_package       php-pecl-xdiff
 %endif
 
@@ -21,7 +17,7 @@
 
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        2.0.1
-Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        File differences/patches
 Group:          Development/Languages
 # libxdiff is LGPLv2+, xdiff extension is PHP
@@ -217,6 +213,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
+- rebuild with PHP 7.1.0 GA
+
 * Wed Oct 12 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
 - initial package, version 2.0.2 with bundled libxdiff 0.23
 

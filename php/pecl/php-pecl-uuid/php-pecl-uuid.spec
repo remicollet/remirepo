@@ -10,14 +10,9 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
+%scl_package       php-pecl-uuid
 %endif
-%endif
-
-%{?scl:          %scl_package        php-pecl-uuid}
 
 %global pecl_name   uuid
 %global with_zts    0%{?__ztsphp:1}
@@ -31,7 +26,7 @@
 Summary:       Universally Unique Identifier extension for PHP
 Name:          %{?sub_prefix}php-pecl-uuid
 Version:       1.0.4
-Release:       8%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       9%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       LGPLv2+
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/uuid
@@ -228,6 +223,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.0.4-9
+- rebuild with PHP 7.1.0 GA
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.0.4-8
 - rebuild for PHP 7.1 new API version
 

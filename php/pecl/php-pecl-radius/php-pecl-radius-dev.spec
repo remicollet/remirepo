@@ -32,7 +32,7 @@
 
 Name:           %{?sub_prefix}php-pecl-radius
 Version:        1.4.0
-Release:        0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Radius client library
 
 License:        BSD
@@ -244,6 +244,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-0.3.b1
+- rebuild with PHP 7.1.0 GA
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.4.0-0.2.b1
 - rebuild for PHP 7.1 new API version
 

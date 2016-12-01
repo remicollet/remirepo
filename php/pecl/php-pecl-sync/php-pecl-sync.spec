@@ -22,7 +22,7 @@
 Summary:        Named and unnamed synchronization objects
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.1.0
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -224,6 +224,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-2
+- rebuild with PHP 7.1.0 GA
+
 * Sun Nov 27 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - Update to 1.1.0
 

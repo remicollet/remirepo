@@ -22,7 +22,7 @@
 Summary:       PHP Bindings for yaml
 Name:          %{?sub_prefix}php-pecl-yaml
 Version:       2.0.0
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/yaml
@@ -234,6 +234,9 @@ fi
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
+- rebuild with PHP 7.1.0 GA
+
 * Mon Sep 26 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - update to 2.0.0 (php 7)
 

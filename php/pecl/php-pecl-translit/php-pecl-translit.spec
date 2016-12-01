@@ -7,11 +7,7 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
-%endif
 %scl_package       php-pecl-translit
 %endif
 
@@ -34,7 +30,7 @@
 Summary:      Transliterates non-latin character sets to latin
 Name:         %{?sub_prefix}php-pecl-%{pecl_name}
 Version:      0.6.2
-Release:      4%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:      5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:      BSD
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -253,6 +249,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 0.6.2-5
+- rebuild with PHP 7.1.0 GA
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 0.6.2-4
 - rebuild for PHP 7.1 new API version
 

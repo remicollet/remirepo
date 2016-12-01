@@ -61,7 +61,7 @@ BuildArch: noarch
 
 Name:          %{?sub_prefix}php-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:       The flexible, fast, and secure template engine for PHP
 
 Group:         Development/Libraries
@@ -346,6 +346,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.28.2-2
+- rebuild with PHP 7.1.0 GA
+
 * Thu Nov 24 2016 Remi Collet <remi@fedoraproject.org> - 1.28.2-1
 - Update to 1.28.2
 

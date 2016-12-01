@@ -19,7 +19,7 @@
 Summary:        Server-side request and response objects
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        0.2.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.3.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -227,6 +227,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.a2
+- rebuild with PHP 7.1.0 GA
+
 * Mon Nov 21 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.a2
 - update to 1.0.0a2 (alpha)
 

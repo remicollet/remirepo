@@ -35,7 +35,7 @@ Version:       0.2.0
 %if 0%{?github_date}
 Release:       0.1.%{?github_date}git%{?github_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 Summary:       PHP driver for Tarantool/Box
 
@@ -183,6 +183,9 @@ install -D -m 0644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 0.2.0-2
+- rebuild with PHP 7.1.0 GA
+
 * Wed Nov 23 2016 Remi Collet <remi@fedoraproject.org> - 0.2.0-1
 - update to 0.2.0
 

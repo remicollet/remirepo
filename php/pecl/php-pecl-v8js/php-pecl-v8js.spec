@@ -18,7 +18,7 @@
 Summary:        V8 Javascript Engine for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.3.3
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -235,6 +235,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.3.3-2
+- rebuild with PHP 7.1.0 GA
+
 * Fri Sep 23 2016 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
 - update to 1.3.3, for PHP 7
 - open https://github.com/phpv8/v8js/pull/266 libdir

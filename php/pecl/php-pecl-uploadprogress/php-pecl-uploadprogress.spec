@@ -7,14 +7,9 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
+%scl_package       php-pecl-uploadprogress
 %endif
-%endif
-
-%{?scl:          %scl_package        php-pecl-uploadprogress}
 
 %global with_zts  0%{?__ztsphp:1}
 %global pecl_name uploadprogress
@@ -27,7 +22,7 @@
 Summary:        An extension to track progress of a file upload
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.3.1
-Release:        13%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        14%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -231,6 +226,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3.1-14
+- rebuild with PHP 7.1.0 GA
+
 * Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3.1-13
 - rebuild for PHP 7.1 new API version
 

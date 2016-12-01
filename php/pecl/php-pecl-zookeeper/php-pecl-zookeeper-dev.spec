@@ -19,7 +19,7 @@
 Summary:        PHP extension for interfacing with Apache ZooKeeper
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        0.3.0
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://github.com/andreiz/php-zookeeper
@@ -212,6 +212,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 0.3.0-2
+- rebuild with PHP 7.1.0 GA
+
 * Fri Nov 18 2016 Remi Collet <remi@fedoraproject.org> - 0.3.0-1
 - Update to 0.3.0 alpha (for PHP 7)
 
