@@ -78,7 +78,7 @@
 %global with_sqlite3   1
 %global with_enchant   1
 %global with_recode    1
-%if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
+%if 0%{?fedora} >= 22 || 0%{?rhel} >= 8
 %global with_libpcre      1
 %else
 %global with_libpcre      0
@@ -124,8 +124,8 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver        RC6
-%global rpmrel       13
+#global rcver        RC6
+%global rpmrel       1
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -883,7 +883,7 @@ support for JavaScript Object Notation (JSON) to PHP.
 %endif
 
 %patch40 -p1 -b .dlopen
-%if 0%{?fedora} >= 23 || 0%{?rhel} >= 5
+%if 0%{?fedora} >= 24 || 0%{?rhel} >= 5
 %patch42 -p1 -b .systzdata
 %endif
 %patch43 -p1 -b .headers
@@ -1117,7 +1117,9 @@ ln -sf ../configure
     --with-layout=GNU \
     --with-kerberos \
     --with-libxml-dir=%{_root_prefix} \
+%if 0%{?fedora} >= 24 || 0%{?rhel} >= 5
     --with-system-tzdata \
+%endif
     --with-mhash \
 %if %{with_dtrace}
     --enable-dtrace \
@@ -1820,6 +1822,9 @@ fi
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-1
+- Update to 7.1.0 - http://www.php.net/releases/7_1_0.php
+- use bundled pcre library 8.38 on EL-7
 - disable pcre.jit everywhere as it raise AVC #1398474
 - sync provided configuration with upstream production defaults
 
