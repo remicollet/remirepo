@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    38810e97481723ef918f6e35c03cb1014a645bd5
+%global gh_commit    00d72b8dbd2bb7d6f02a820e6db5cb70df6ac55c
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -16,8 +16,8 @@
 %global php_home     %{_datadir}/php
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
-%global major        5.6
-%global minor        7
+%global major        5.7
+%global minor        0
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -53,7 +53,7 @@ BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 3.2
 BuildRequires:  php-composer(phpspec/prophecy) >= 1.3.1
 BuildRequires:  php-composer(sebastian/comparator) >= 1.2.2
 BuildRequires:  php-composer(sebastian/diff) >= 1.2
-BuildRequires:  php-composer(sebastian/environment) >= 1.3
+BuildRequires:  php-composer(sebastian/environment) >= 1.3.4
 BuildRequires:  php-composer(sebastian/exporter) >= 2.0
 BuildRequires:  php-composer(sebastian/recursion-context) >= 2.0
 BuildRequires:  php-composer(sebastian/global-state) >= 1.0
@@ -78,7 +78,7 @@ BuildRequires:  php-composer(fedora/autoloader)
 #        "symfony/yaml": "~2.1|~3.0",
 #        "sebastian/comparator": "~1.2.2",
 #        "sebastian/diff": "~1.2",
-#        "sebastian/environment": "^1.3 || ^2.0",
+#        "sebastian/environment": "^1.3.4 || ^2.0",
 #        "sebastian/exporter": "~2.0",
 #        "sebastian/global-state": "~1.0",
 #        "sebastian/object-enumerator": "~2.0",
@@ -108,7 +108,7 @@ Requires:       php-composer(sebastian/comparator) >= 1.2.2
 Requires:       php-composer(sebastian/comparator) <  2
 Requires:       php-composer(sebastian/diff) >= 1.2
 Requires:       php-composer(sebastian/diff) <  2
-Requires:       php-composer(sebastian/environment) >= 1.3
+Requires:       php-composer(sebastian/environment) >= 1.3.4
 Requires:       php-composer(sebastian/environment) <  3
 Requires:       php-composer(sebastian/exporter) >= 2.0
 Requires:       php-composer(sebastian/exporter) <  3
@@ -184,6 +184,7 @@ mv src PHPUnit
 %{_bindir}/phpab \
   --output   tests/autoload.php \
   --exclude  '*/BankAccountTest2.php' \
+  --exclude  '*/Regression/Trac/783/OneTest.php' \
   tests
 
 
@@ -236,6 +237,9 @@ fi
 
 
 %changelog
+* Fri Dec  2 2016 Remi Collet <remi@fedoraproject.org> - 5.7.0-1
+- update to 5.7.0
+
 * Mon Nov 28 2016 Remi Collet <remi@fedoraproject.org> - 5.6.7-1
 - update to 5.6.7
 
