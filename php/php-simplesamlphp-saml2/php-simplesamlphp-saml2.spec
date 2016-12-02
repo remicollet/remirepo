@@ -12,8 +12,8 @@
 
 %global github_owner     simplesamlphp
 %global github_name      saml2
-%global github_version   2.3.2
-%global github_commit    9a2ffdd7d05ec520b172c5442f4724cab8800bc7
+%global github_version   2.3.3
+%global github_commit    5e12d7ec0d2d64b45aaa31bbf235d1be4d6450b5
 
 %global composer_vendor  simplesamlphp
 %global composer_project saml2
@@ -38,7 +38,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       SAML2 PHP library from SimpleSAMLphp
 
 Group:         Development/Libraries
@@ -181,6 +181,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec  2 2016 Remi Collet <remi@remirepo.net> - 2.3.3-1
+- update to 2.3.3
+
 * Wed Nov 09 2016 Shawn Iwinski <shawn@iwin.ski> - 2.3.2-1
 - Update to 2.3.2 (RHBZ #1393368)
 - Change autoloader from php-composer(symfony/class-loader) to
