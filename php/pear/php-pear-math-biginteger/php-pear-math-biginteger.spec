@@ -34,11 +34,13 @@ Requires:       php-openssl
 Provides:       php-pear(%{pear_name}) = %{version}
 Provides:       php-composer(pear/math_biginteger) = %{version}
 %if 0%{?fedora} < 26
-Conflicts:      php-phpseclib-math-biginteger < 1.0.3
+Conflicts:      php-phpseclib-math-biginteger < 2
 %else
-Obsoletes:      php-phpseclib-math-biginteger < 1.0.3
-Provides        php-phpseclib-math-biginteger = %{version}
-Provides        php-pear(phpseclib.sourceforge.net/%{pear_name}) = %{version}
+Obsoletes:      php-phpseclib-math-biginteger < 2
+# Use epoch to avoid self-obsoletion php-phpseclib-math-biginteger
+# as phpseclib latest upstream version is 1.0.5 which is > 1.0.3
+Provides:       php-phpseclib-math-biginteger = 1:%{version}
+Provides:       php-pear(phpseclib.sourceforge.net/%{pear_name}) = %{version}
 %endif
 
 
@@ -101,6 +103,9 @@ fi
 
 
 %changelog
+* Fri Dec  2 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- cleanup
+
 * Thu Aug 11 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - initial package, version 1.0.3
 - fix documentation files role
