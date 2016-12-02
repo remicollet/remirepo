@@ -27,8 +27,8 @@
 
 Summary:        Provides interface to libev library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.0.3
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        1.0.4
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -188,20 +188,20 @@ fi
 
 
 %check
-DEPMOD=
+DEPMOD="-n"
 [ -f %{php_extdir}/sockets.so ] && DEPMOD="$DEPMOD -d extension=sockets.so"
 [ -f %{php_extdir}/posix.so ]   && DEPMOD="$DEPMOD -d extension=posix.so"
 
 : Minimal load test for NTS extension
 cd NTS
-%{_bindir}/php --no-php-ini \
+%{_bindir}/php \
     $DEPMOD \
     --define extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 : Upstream test suite for NTS extension
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
-TEST_PHP_ARGS="-n $DEPMOD -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so" \
+TEST_PHP_ARGS="$DEPMOD -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php --show-diff
@@ -211,14 +211,14 @@ REPORT_EXIT_STATUS=1 \
 : Minimal load test for ZTS extension
 cd ../ZTS
 
-%{__ztsphp} --no-php-ini \
+%{__ztsphp} \
     $DEPMOD \
     --define extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
     --modules | grep %{pecl_name}
 
 : Upstream test suite for ZTS extension
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-TEST_PHP_ARGS="-n $DEPMOD -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so" \
+TEST_PHP_ARGS="$DEPMOD -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php --show-diff
@@ -245,6 +245,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec  2 2016 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- Update to 1.0.4
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-3
 - rebuild with PHP 7.1.0 GA
 
