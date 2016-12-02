@@ -12,8 +12,8 @@
 
 %global github_owner     simplesamlphp
 %global github_name      saml2
-%global github_version   1.10.2
-%global github_commit    fbc457e774a1cd57945ca2684a2198a0984497c1
+%global github_version   1.10.3
+%global github_commit    3f268c25ca5e9748652834faad04525746227ef7
 
 %global composer_vendor  simplesamlphp
 %global composer_project saml2
@@ -38,7 +38,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}_1
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       SAML2 PHP library from SimpleSAMLphp (version 1)
 
 Group:         Development/Libraries
@@ -172,6 +172,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec  2 2016 Remi Collet <remi@remirepo.net> - 1.10.3-1
+- update to 1.10.3
+
 * Wed Nov 09 2016 Shawn Iwinski <shawn@iwin.ski> - 1.10.2-1
 - Update to 1.10.2 (RHBZ #1379182)
 - Use php-composer(fedora/autoloader)
