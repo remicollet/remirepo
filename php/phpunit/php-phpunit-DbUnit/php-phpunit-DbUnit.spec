@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    390cefcb101e07e1d6400dbdfc3b90ecf2c1279f
+%global gh_commit    5c35d74549c21ba55d0ea74ba89d191a51f8cf25
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
 %global gh_project   dbunit
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-phpunit-DbUnit
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        DbUnit port for PHP/PHPUnit
 
@@ -36,16 +36,16 @@ Patch0:         %{gh_project}-2.0.0-autoload.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php(language) >= 5.4
-BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php-fedora-autoloader-devel
 %if %{with_tests}
 BuildRequires:  php-pdo
 BuildRequires:  php-composer(phpunit/phpunit) >= 4
 %endif
 
 # From composer.json
-#        "php": ">=5.4",
-#        "phpunit/phpunit": "~4|~5",
-#        "symfony/yaml": "~2.1|~3.0",
+#        "php": "^5.4 || ^7.0",
+#        "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0",
+#        "symfony/yaml": "^2.1 || ^3.0",
 #        "ext-pdo": "*",
 #        "ext-simplexml": "*"
 Requires:       php(language) >= 5.4
@@ -59,6 +59,8 @@ Requires:       php-composer(symfony/yaml)    <  4
 Requires:       php-libxml
 Requires:       php-reflection
 Requires:       php-spl
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(phpunit/dbunit) = %{version}
 
@@ -91,7 +93,7 @@ install -D -p -m 755 dbunit %{buildroot}%{_bindir}/dbunit
 %if %{with_tests}
 %check
 : Generate tests autoloader
-%{_bindir}/phpab --output tests/bs.php tests
+%{_bindir}/phpab --template fedora --output tests/bs.php tests
 
 : Run tests - set include_path to ensure PHPUnit autoloader use it
 %{_bindir}/php -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
@@ -125,6 +127,10 @@ fi
 
 
 %changelog
+* Sun Dec  4 2016 Remi Collet <remi@fedoraproject.org> - 2.0.3-1
+- update to 2.0.3
+- switch to fedora/autoloader
+
 * Tue Nov  3 2015 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
 - update to 2.0.2 (no change)
 - lower dependency on PHP version 5.4
