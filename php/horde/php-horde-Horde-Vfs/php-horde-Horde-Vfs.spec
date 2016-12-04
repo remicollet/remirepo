@@ -14,7 +14,7 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-horde-Horde-Vfs
-Version:        2.3.3
+Version:        2.3.4
 Release:        1%{?dist}
 Summary:        Virtual File System API
 
@@ -178,6 +178,9 @@ fi
 
 
 %changelog
+* Sun Dec 04 2016 Remi Collet <remi@fedoraproject.org> - 2.3.4-1
+- Update to 2.3.4
+
 * Sun Jul 03 2016 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
 - Update to 2.3.3
 
