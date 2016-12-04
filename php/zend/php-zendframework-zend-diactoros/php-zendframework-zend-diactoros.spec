@@ -32,7 +32,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}
 Summary:       PSR HTTP Message implementations
 
 Group:         Development/Libraries
@@ -52,7 +52,7 @@ BuildArch:     noarch
 BuildRequires: php(language)                  >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(psr/http-message) >= %{psr_http_message_min_ver}
-## phpcompatinfo (computed from version 1.1.4)
+## phpcompatinfo (computed from version 1.3.7)
 ### NOTE: curl, gd, gmp, and shmop are all optional for
 ###       ZendTest\Diactoros\StreamTest::getResourceFor67()
 ###       (test/StreamTest.php) but the first one found wins
@@ -63,19 +63,19 @@ BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
 ## Autoloader
-BuildRequires: php-composer(symfony/class-loader)
+BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 # composer.json
 Requires:      php(language)                  >= %{php_min_ver}
 Requires:      php-composer(psr/http-message) >= %{psr_http_message_min_ver}
 Requires:      php-composer(psr/http-message) <  %{psr_http_message_max_ver}
-# phpcompatinfo (computed from version 1.1.4)
+# phpcompatinfo (computed from version 1.3.7)
 Requires:      php-json
 Requires:      php-pcre
 Requires:      php-spl
 # Autoloader
-Requires:      php-composer(symfony/class-loader)
+Requires:      php-composer(fedora/autoloader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -99,36 +99,22 @@ Autoloader: %{phpdir}/Zend/Diactoros/autoload.php
 
 mv LICENSE.md LICENSE
 
+%build
 : Create autoloader
 cat <<'AUTOLOAD' | tee src/autoload.php
 <?php
 /**
  * Autoloader for %{name} and its' dependencies
  * (created by %{name}-%{version}-%{release}).
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
  */
+require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+\Fedora\Autoloader\Autoload::addPsr4('Zend\\Diactoros\\', __DIR__);
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('Zend\\Diactoros\\', dirname(dirname(__DIR__)));
-
-// Required dependency
-require_once '%{phpdir}/Psr/Http/Message/autoload.php';
-
-return $fedoraClassLoader;
+\Fedora\Autoloader\Dependencies::required(array(
+    '%{phpdir}/Psr/Http/Message/autoload.php',
+));
 AUTOLOAD
-
-
-%build
-# Empty build section, nothing required
 
 
 %install
@@ -144,13 +130,13 @@ cp -rp src/* %{buildroot}%{phpdir}/Zend/Diactoros/
 cat <<'BOOTSTRAP' | tee bootstrap.php
 <?php
 
-$fedoraClassLoader =
-    require_once '%{buildroot}%{phpdir}/Zend/Diactoros/autoload.php';
+require_once '%{buildroot}%{phpdir}/Zend/Diactoros/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('ZendTest\\Diactoros\\', __DIR__.'/test');
 
-$fedoraClassLoader->addPrefix('ZendTest\\Diactoros\\', __DIR__ . '/test');
-
-require_once __DIR__ . '/test/TestAsset/Functions.php';
-require_once __DIR__ . '/test/TestAsset/SapiResponse.php';
+\Fedora\Autoloader\Dependencies::required(array(
+    __DIR__.'/test/TestAsset/Functions.php',
+    __DIR__.'/test/TestAsset/SapiResponse.php',
+));
 BOOTSTRAP
 
 # remirepo:11
@@ -189,6 +175,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Dec 03 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.7-1
+- Updated to 1.3.7 (RHBZ #1318837)
+- Switch autoloader from php-composer(symfony/class-loader) to
+  php-composer(fedora/autoloader)
+
 * Wed Oct 12 2016 Remi Collet <remi@remirepo.net> - 1.3.7-1
 - update to 1.3.7
 
