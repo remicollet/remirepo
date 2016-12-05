@@ -20,22 +20,22 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 # Pre-version are only available in github
-#global prever       rc3
-%global gh_commit    d5dab73127a3f02cf5c4964c66a6c7c7147b9dc0
+%global prever       RC1
+%global gh_commit    2dd344d2e1f0bf8c29cc83ec2fbf55d44b66d5e7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     antirez
 %global gh_project   redis
 
 Name:             redis
-Version:          3.2.5
-Release:          1%{?dist}
+Version:          4.0.0
+Release:          0.1.%{prever}%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
 License:          BSD
 URL:              http://redis.io
 %if 0%{?prever:1}
-Source0:          https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{name}-%{version}-%{gh_short}.tar.gz
+Source0:          https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{name}-%{version}%{prever}-%{gh_short}.tar.gz
 %else
 Source0:          http://download.redis.io/releases/%{name}-%{version}.tar.gz
 %endif
@@ -50,7 +50,7 @@ Source9:          %{name}-limit-init
 
 # Update configuration for Fedora
 Patch0:           0001-redis-3.2-redis-conf.patch
-Patch1:           0002-redis-3.2-deps-library-fPIC-performance-tuning.patch
+Patch1:           0002-redis-4.0-deps-library-fPIC-performance-tuning.patch
 Patch2:           0003-redis-3.2.5-use-system-jemalloc.patch
 
 # https://github.com/antirez/redis/pull/3491 - man pages
@@ -269,6 +269,9 @@ fi
 
 
 %changelog
+* Mon Dec  5 2016 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.1.RC1
+- update to 4.0.0-RC1 (3.9.101)
+
 * Thu Oct 27 2016 Remi Collet <remi@fedoraproject.org> - 3.2.5-1
 - Redis 3.2.5 - Released Wed Oct 26 09:16:40 CEST 2016
 - Upgrade urgency LOW: This release only fixes a compilation issue
