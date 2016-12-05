@@ -16,11 +16,11 @@
 
 %global pecl_name   xdebug
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
-%global gh_commit   9613c6f5c9bd1a45dd48a22e80b65c1eee78ac80
+%global gh_commit   150336d1fa29e311636c682db0c1550117762947
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date     20161004
 %global with_tests  0%{?_with_tests:1}
-%global prever      rc1
+#global prever      rc1
 
 # XDebug should be loaded after opcache
 %if "%{php_version}" < "5.6"
@@ -35,7 +35,7 @@ Version:        2.5.0
 %if 0%{?gh_date:1}
 Release:        0.5.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:        0.7.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 
 # The Xdebug License, version 1.01
@@ -47,7 +47,7 @@ Source0:        https://github.com/%{pecl_name}/%{pecl_name}/archive/%{gh_commit
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-pear  > 1.9.1
-BuildRequires:  %{?scl_prefix}php-devel > 5.4
+BuildRequires:  %{?scl_prefix}php-devel > 5.5
 BuildRequires:  libedit-devel
 BuildRequires:  libtool
 %if %{with_tests}
@@ -63,7 +63,7 @@ Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}      = %{version}
 Provides:       %{?scl_prefix}php-pecl(Xdebug)              = %{version}
 Provides:       %{?scl_prefix}php-pecl(Xdebug)%{?_isa}      = %{version}
 
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
@@ -308,6 +308,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec  5 2016 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
+- update to 2.5.0
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 2.5.0-0.7.rc1
 - rebuild with PHP 7.1.0 GA
 
