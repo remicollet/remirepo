@@ -11,9 +11,9 @@
 %global pecl_name   pthreads
 %global ini_name    40-%{pecl_name}.ini
 # https://github.com/krakjoe/pthreads/commits/master
-%global gh_commit   d814b0cf701a2a5fa93bb69f61d1c29178086e82
+%global gh_commit   959ab0ff5fbd59d29a9d77f0309065cdfe62531f
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date     20160529
+%global gh_date     20161111
 %global gh_owner    krakjoe
 %global gh_project  pthreads
 
@@ -21,7 +21,7 @@ Summary:        Threading API
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        3.1.7
 %if 0%{?gh_date:1}
-Release:        0.3.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
 Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
@@ -201,6 +201,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec  5 2016 Remi Collet <remi@fedoraproject.org> - 3.1.7-0.4.20161111git959ab0f
+- refresh with a newer snapshot
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 3.1.7-0.3.20160529gitd814b0c
 - rebuild with PHP 7.1.0 GA
 
