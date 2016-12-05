@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # Github information
-%global gh_commit    0700f81441200b33d929c108b9ee6d76b0104fa2
+%global gh_commit    6bfd2fdbd99319f5e010d0a684409189a562cb1e
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     icewind1991
 %global gh_project   Streams
@@ -19,7 +19,7 @@
 %global ns_name      Streams
 
 Name:           php-%{pk_vendor}-%{pk_name}
-Version:        0.5.1
+Version:        0.5.2
 Release:        1%{?dist}
 Summary:        A set of generic stream wrappers
 
@@ -117,6 +117,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec  5 2016 Remi Collet <remi@fedoraproject.org> - 0.5.2-1
+- update to 0.5.2
+
 * Thu Oct 27 2016 Remi Collet <remi@fedoraproject.org> - 0.5.1-1
 - update to 0.5.1
 - switch from symfony/class-loader to fedora/autoloader
