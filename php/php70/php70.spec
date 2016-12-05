@@ -120,12 +120,12 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver         RC1
-%global rpmrel        1
+#global rcver         RC1
+%global rpmrel        2
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 7.0.14
+Version: 7.0.13
 Release: %{?rcver:0.}%{rpmrel}%{?rcver:.%{rcver}}%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1988,6 +1988,7 @@ fi
 
 
 %changelog
+* Mon Dec  5 2016 Remi Collet <remi@fedoraproject.org> 7.0.13-2
 - disable pcre.jit everywhere as it raise AVC #1398474
 
 * Wed Nov 23 2016 Remi Collet <remi@fedoraproject.org> 7.0.14-0.1.RC1
