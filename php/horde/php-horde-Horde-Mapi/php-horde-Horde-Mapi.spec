@@ -6,14 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
-%{!?pear_metadir: %global pear_metadir %{pear_phpdir}}
 %{!?__pear:       %global __pear       %{_bindir}/pear}
 %global pear_name    Horde_Mapi
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Mapi
 Version:        1.0.8
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        MAPI utility library
 
 Group:          Development/Libraries
@@ -30,7 +29,11 @@ BuildRequires:  php-channel(%{pear_channel})
 BuildRequires:  php-bcmath
 BuildRequires:  php-pear(%{pear_channel}/Horde_Test) >= 2.1.0
 BuildRequires:  php-pear(%{pear_channel}/Horde_Date) >= 2.3.0
+%if 0%{?fedora} >= 26
+BuildRequires:  php-pear(Math_BigInteger)
+%else
 BuildRequires:  php-pear(phpseclib.sourceforge.net/Math_BigInteger)
+%endif
 
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
@@ -42,8 +45,12 @@ Requires:       php-pear(%{pear_channel}/Horde_Date) >= 2.3.0
 Requires:       php-pear(%{pear_channel}/Horde_Date) <  3.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) >= 2.0.0
 Requires:       php-pear(%{pear_channel}/Horde_Exception) <  3.0.0
+%if 0%{?fedora} >= 26
+Requires:       php-pear(Math_BigInteger)
+%else
 # Use phpseclib version instead of the one from pear
 Requires:       php-pear(phpseclib.sourceforge.net/Math_BigInteger)
+%endif
 # From phpcompatinfo report for version 1.0.0
 Requires:       php-date
 
@@ -115,6 +122,9 @@ fi
 
 
 %changelog
+* Mon Dec  5 2016 Remi Collet <remi@fedoraproject.org> - 1.0.8-2
+- switch to php-pear(Math_BigInteger) in F26+
+
 * Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
 - Update to 1.0.8
 - raise dependency on Horde_Date >= 2.3.0
