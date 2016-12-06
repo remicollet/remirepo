@@ -6,14 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b3063faa68b258d9423bf83e32f074919d069d3c
+%global gh_commit    019a113b657aed90a4aa8f5e39696800779b8b2c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpspec
 %global gh_project   phpspec
 #global prever       beta3
 
 Name:           php-phpspec
-Version:        3.2.1
+Version:        3.2.2
 Release:        1%{?dist}
 Summary:        Specification-oriented BDD framework for PHP
 
@@ -52,7 +52,7 @@ BuildRequires:  php-composer(fedora/autoloader)
 #        "php":                      "^5.6 || ^7.0",
 #        "phpspec/prophecy":         "^1.5",
 #        "phpspec/php-diff":         "^1.0.0",
-#        "sebastian/exporter":       "^1.0",
+#        "sebastian/exporter":       "^1.0 || ^2.0",
 #        "symfony/console":          "^2.7 || ^3.0",
 #        "symfony/event-dispatcher": "^2.7 || ^3.0",
 #        "symfony/process":          "^2.7 || ^3.0",
@@ -67,7 +67,7 @@ Requires:       php-composer(phpspec/prophecy)         <  2
 Requires:       php-composer(phpspec/php-diff)         >= 1.0.0
 Requires:       php-composer(phpspec/php-diff)         <  2
 Requires:       php-composer(sebastian/exporter)       >= 1.0
-#Requires:       php-composer(sebastian/exporter)       <  2
+Requires:       php-composer(sebastian/exporter)       <  3
 Requires:       php-composer(symfony/console)          >= 2.7
 Requires:       php-composer(symfony/console)          <  4
 Requires:       php-composer(symfony/event-dispatcher) >= 2.7
@@ -187,6 +187,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec  6 2016 Remi Collet <remi@fedoraproject.org> - 3.2.2-1
+- update to 3.2.2
+
 * Mon Dec  5 2016 Remi Collet <remi@fedoraproject.org> - 3.2.1-1
 - update to 3.2.1
 
