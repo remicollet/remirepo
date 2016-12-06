@@ -20,15 +20,15 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 # Pre-version are only available in github
-%global prever       RC1
-%global gh_commit    2dd344d2e1f0bf8c29cc83ec2fbf55d44b66d5e7
+%global prever       RC2
+%global gh_commit    8226f2c3a717649788dc5f06c4d9ebdfbe8bb9c9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     antirez
 %global gh_project   redis
 
 Name:             redis
 Version:          4.0.0
-Release:          0.1.%{prever}%{?dist}
+Release:          0.2.%{prever}%{?dist}
 Summary:          A persistent key-value database
 
 Group:            Applications/Databases
@@ -269,6 +269,9 @@ fi
 
 
 %changelog
+* Tue Dec  6 2016 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.2.RC2
+- update to 4.0.0-RC2 (3.9.102)
+
 * Mon Dec  5 2016 Remi Collet <remi@fedoraproject.org> - 4.0.0-0.1.RC1
 - update to 4.0.0-RC1 (3.9.101)
 
