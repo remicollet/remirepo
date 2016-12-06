@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        7.0.3
-%global Patchlevel 8
+%global Patchlevel 9
 %global incsuffixe -7
 %global libsuffixe -7.Q16HDRI
 %global with_tests 0%{!?_without_tests:1}
@@ -420,7 +420,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc ChangeLog
 %doc README.txt LICENSE NOTICE AUTHORS.txt NEWS.txt
-%{_libdir}/libMagickCore%{?libsuffixe}.so.0*
+%{_libdir}/libMagickCore%{?libsuffixe}.so.1*
 %{_libdir}/libMagickWand%{?libsuffixe}.so.0*
 %{_libdir}/%{libname}-%{VER}
 %if %{move}
@@ -474,7 +474,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc Magick++/AUTHORS Magick++/ChangeLog Magick++/NEWS Magick++/README
 %doc www/Magick++/COPYING
-%{_libdir}/libMagick++%{?libsuffixe}.so.0*
+%{_libdir}/libMagick++%{?libsuffixe}.so.1*
 
 %files c++-devel
 %defattr(-,root,root,-)
@@ -494,6 +494,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec  6 2016 Remi Collet <remi@remirepo.net> - 7.0.3.9-1
+- update to version 7.0.3 patchlevel 9
+- libMagickCore soname bump to 1
+- libMagick++ soname bump to 1
+
 * Sat Nov 26 2016 Remi Collet <remi@remirepo.net> - 7.0.3.8-1
 - update to version 7.0.3 patchlevel 8
 
