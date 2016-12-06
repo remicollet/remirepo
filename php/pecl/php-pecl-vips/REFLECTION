@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #135 vips version 1.0.1 ] {
+Extension [ <persistent> extension #136 vips version 1.0.2 ] {
 
   - Functions {
     Function [ <internal:vips> function vips_image_new_from_file ] {
