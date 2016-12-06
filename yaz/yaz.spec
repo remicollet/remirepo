@@ -1,3 +1,13 @@
+# remirepo spec file for yaz, from:
+#
+# Fedora spec file for redis
+#
+# License: MIT
+# http://opensource.org/licenses/MIT
+#
+# Please preserve changelog entries
+#
+
 Name:           yaz
 Version:        5.14.11
 Release:        1%{?dist}
@@ -142,9 +152,13 @@ make check
 %{_mandir}/man1/yaz-config.*
 
 %files -n %{name}-doc
-%{_pkgdocdir}
+%{_datadir}/doc/yaz/
+
 
 %changelog
+* Mon Dec  5 2016 Remi Collet <remi@remirepo.net> - 5.14.11-1
+- rebuild for remi repo waiting #1366650
+
 * Sat Oct 24 2015 Christopher Meng <rpm@cicku.me> - 5.14.11-1
 - Update to 5.14.11
 
