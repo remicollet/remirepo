@@ -9,9 +9,10 @@
 # Please preserve changelog entries
 #
 %global VER        6.9.6
-%global Patchlevel 6
+%global Patchlevel 7
 %global incsuffixe -6
 %global libsuffixe -6.Q16
+%global with_tests 0%{!?_without_tests:1}
 
 %if 0%{?rhel} >= 6 || 0%{?fedora} >= 5
 %global with_djvu 1
@@ -386,9 +387,11 @@ multilibFileVersions %{buildroot}%{_includedir}/%{libname}-6/magick/version.h
 rm PerlMagick/demo/Generic.ttf
 
 
+%if %{with_tests}
 %check
 export LD_LIBRARY_PATH=%{buildroot}/%{_libdir}
 make %{?_smp_mflags} check
+%endif
 
 
 %clean
@@ -510,6 +513,9 @@ fi
 
 
 %changelog
+* Tue Dec  6 2016 Remi Collet <remi@remirepo.net> - 6.9.6.7-1
+- update to version 6.9.6 patchlevel 7
+
 * Sat Nov 26 2016 Remi Collet <remi@remirepo.net> - 6.9.6.6-1
 - update to version 6.9.6 patchlevel 6
 
