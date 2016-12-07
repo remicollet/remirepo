@@ -18,7 +18,7 @@
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^2.3.1",
-        "phpunit/PHPUnit": "~4.8"
+        "phpunit/PHPUnit": "^5.6.7"
     },
     "suggest": {
         "ext-openssl": "Required for most features of Zend\\Crypt"
@@ -38,5 +38,16 @@
             "dev-master": "3.1-dev",
             "dev-develop": "3.2-dev"
         }
+    },
+    "scripts": {
+        "check": [
+            "@cs-check",
+            "@test"
+        ],
+        "upload-coverage": "coveralls -v",
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     }
 }

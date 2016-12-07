@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    caadff93c6a5a3d17aab72f026a4a883e33a3e94
+%global gh_commit    274cdcb77a2165d6aff36b606e9d1c687ba9386c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-crypt
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        3.1.0
+Version:        3.2.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -45,8 +45,8 @@ BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 BuildRequires:  php-composer(container-interop/container-interop) >= 1.0
 # From composer, "require-dev": {
 #        "squizlabs/php_codesniffer": "^2.3.1",
-#        "phpunit/PHPUnit": "~4.8"
-BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.8
+#        "phpunit/PHPUnit": "^5.6.7"
+BuildRequires:  php-composer(phpunit/phpunit)                   >= 5.6.7
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 # For dependencies autoloader
@@ -150,10 +150,6 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-# Ignore failed test with 7.1
-# https://github.com/zendframework/zend-crypt/issues/40
-rm test/PublicKey/DiffieHellmanTest.php
-
 # remirepo:11
 run=0
 ret=0
@@ -190,6 +186,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec  7 2016 Remi Collet <remi@fedoraproject.org> - 3.2.0-1
+- update to 3.2.0
+
 * Fri Aug 12 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-1
 - update to 3.1.0
 
