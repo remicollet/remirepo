@@ -8,7 +8,7 @@
 #
 %if 0%{?scl:1}
 %global sub_prefix %{scl_prefix}
-%scl_package        php-pecl-swoole
+%scl_package       php-pecl-swoole
 %endif
 
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
@@ -30,8 +30,8 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.9.0
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.9.1
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -64,7 +64,7 @@ Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{rele
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 %endif
 
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
@@ -264,6 +264,9 @@ cd ../ZTS
 
 
 %changelog
+* Wed Dec  7 2016 Remi Collet <remi@fedoraproject.org> - 1.9.1-1
+- Update to 1.9.1
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.9.0-2
 - rebuild with PHP 7.1.0 GA
 

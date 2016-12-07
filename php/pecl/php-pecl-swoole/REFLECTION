@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
+Extension [ <persistent> extension #125 swoole version 1.9.1 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -63,7 +63,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
     Constant [ integer SWOOLE_DTLSv1_CLIENT_METHOD ] { 17 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.9.0 }
+    Constant [ string SWOOLE_VERSION ] { 1.9.1 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 1 }
     Constant [ integer SWOOLE_FILELOCK ] { 2 }
@@ -396,7 +396,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $data ]
-            Parameter #1 [ <required> $worker_id ]
+            Parameter #1 [ <optional> $worker_id ]
           }
         }
 
@@ -459,7 +459,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $fd ]
-            Parameter #1 [ <required> $reactor_id ]
+            Parameter #1 [ <optional> $reactor_id ]
           }
         }
 
@@ -467,7 +467,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $start_fd ]
-            Parameter #1 [ <required> $find_count ]
+            Parameter #1 [ <optional> $find_count ]
           }
         }
 
@@ -475,7 +475,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $fd ]
-            Parameter #1 [ <required> $reactor_id ]
+            Parameter #1 [ <optional> $reactor_id ]
           }
         }
 
@@ -483,7 +483,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $start_fd ]
-            Parameter #1 [ <required> $find_count ]
+            Parameter #1 [ <optional> $find_count ]
           }
         }
 
@@ -722,7 +722,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
       }
     }
 
-    Class [ <internal:swoole> <iterateable> class swoole_connection_iterator implements Iterator, Traversable, Countable ] {
+    Class [ <internal:swoole> <iterateable> class swoole_connection_iterator implements Iterator, Traversable, Countable, ArrayAccess ] {
 
       - Constants [0] {
       }
@@ -736,7 +736,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
       - Properties [0] {
       }
 
-      - Methods [6] {
+      - Methods [10] {
         Method [ <internal:swoole, prototype Iterator> public method rewind ] {
 
           - Parameters [0] {
@@ -770,6 +770,35 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
         Method [ <internal:swoole, prototype Countable> public method count ] {
 
           - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:swoole, prototype ArrayAccess> public method offsetExists ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fd ]
+          }
+        }
+
+        Method [ <internal:swoole, prototype ArrayAccess> public method offsetGet ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fd ]
+          }
+        }
+
+        Method [ <internal:swoole, prototype ArrayAccess> public method offsetSet ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $fd ]
+            Parameter #1 [ <required> $value ]
+          }
+        }
+
+        Method [ <internal:swoole, prototype ArrayAccess> public method offsetUnset ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $fd ]
           }
         }
       }
@@ -1444,7 +1473,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $data ]
-            Parameter #1 [ <required> $worker_id ]
+            Parameter #1 [ <optional> $worker_id ]
           }
         }
 
@@ -1507,7 +1536,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $fd ]
-            Parameter #1 [ <required> $reactor_id ]
+            Parameter #1 [ <optional> $reactor_id ]
           }
         }
 
@@ -1515,7 +1544,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $start_fd ]
-            Parameter #1 [ <required> $find_count ]
+            Parameter #1 [ <optional> $find_count ]
           }
         }
 
@@ -1523,7 +1552,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $fd ]
-            Parameter #1 [ <required> $reactor_id ]
+            Parameter #1 [ <optional> $reactor_id ]
           }
         }
 
@@ -1531,7 +1560,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $start_fd ]
-            Parameter #1 [ <required> $find_count ]
+            Parameter #1 [ <optional> $find_count ]
           }
         }
 
@@ -1867,7 +1896,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $data ]
-            Parameter #1 [ <required> $worker_id ]
+            Parameter #1 [ <optional> $worker_id ]
           }
         }
 
@@ -1930,7 +1959,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $fd ]
-            Parameter #1 [ <required> $reactor_id ]
+            Parameter #1 [ <optional> $reactor_id ]
           }
         }
 
@@ -1938,7 +1967,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $start_fd ]
-            Parameter #1 [ <required> $find_count ]
+            Parameter #1 [ <optional> $find_count ]
           }
         }
 
@@ -1946,7 +1975,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $fd ]
-            Parameter #1 [ <required> $reactor_id ]
+            Parameter #1 [ <optional> $reactor_id ]
           }
         }
 
@@ -1954,7 +1983,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $start_fd ]
-            Parameter #1 [ <required> $find_count ]
+            Parameter #1 [ <optional> $find_count ]
           }
         }
 
@@ -2148,9 +2177,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
 
     Class [ <internal:swoole> class swoole_mmap ] {
 
-      - Constants [2] {
-        Constant [ integer MAP_SHARED ] { 1 }
-        Constant [ integer MAP_PRIVATE ] { 2 }
+      - Constants [0] {
       }
 
       - Static properties [0] {
@@ -2443,7 +2470,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $data ]
-            Parameter #1 [ <required> $worker_id ]
+            Parameter #1 [ <optional> $worker_id ]
           }
         }
 
@@ -2506,7 +2533,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $fd ]
-            Parameter #1 [ <required> $reactor_id ]
+            Parameter #1 [ <optional> $reactor_id ]
           }
         }
 
@@ -2514,7 +2541,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $start_fd ]
-            Parameter #1 [ <required> $find_count ]
+            Parameter #1 [ <optional> $find_count ]
           }
         }
 
@@ -2522,7 +2549,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $fd ]
-            Parameter #1 [ <required> $reactor_id ]
+            Parameter #1 [ <optional> $reactor_id ]
           }
         }
 
@@ -2530,7 +2557,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.0 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $start_fd ]
-            Parameter #1 [ <required> $find_count ]
+            Parameter #1 [ <optional> $find_count ]
           }
         }
 
