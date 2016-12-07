@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    302de20d8302183e1c70b335d81798cec5bcebd4
+%global gh_commit    9dfb2c5fc917d7438b44eb8f4d247ba3e3984e75
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     mongodb
 #global gh_date      20151102
@@ -22,7 +22,7 @@
 #global prever       beta2
 
 Name:           php-%{gh_owner}
-Version:        1.0.4
+Version:        1.1.0
 %if 0%{?gh_date}
 Release:        0.2.%{gh_date}git%{gh_short}%{?dist}
 %else
@@ -45,22 +45,24 @@ BuildRequires:  php(language) >= 5.4
 BuildRequires:  php-reflection
 BuildRequires:  php-spl
 BuildRequires:  php-pecl(mongodb)
-BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  mongodb-server >= 2.4
+# From composer.json, "require-dev": {
+#        "phpunit/phpunit": "^4.8"
+BuildRequires:  php-composer(phpunit/phpunit) >= 4.8
 # For autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 %endif
 
 # From composer.json, "require": {
 #        "php": ">=5.4"
-#        "ext-mongodb": "^1.1.0"
+#        "ext-mongodb": "^1.2.0"
 Requires:       php(language) >= 5.4
-Requires:       php-pecl(mongodb) >= 1.1.0
+Requires:       php-pecl(mongodb) >= 1.2.0
 # From phpcompatinfo report for 1.0.0alpha1
 Requires:       php-reflection
 Requires:       php-spl
 # For autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 
 # Composer
 Provides:       php-composer(%{gh_owner}/%{gh_owner}) = %{version}%{?prever}
@@ -116,12 +118,8 @@ cat << 'EOF' | tee tests/bootstrap.php
 <?php
 // Library
 require_once '%{buildroot}%{_datadir}/php/%{psr0}/autoload.php';
-
 // Test suite
-require_once '%{_datadir}/php/Symfony/Component/ClassLoader/Psr4ClassLoader.php';
-$Loader = new \Symfony\Component\ClassLoader\Psr4ClassLoader();
-$Loader->addPrefix("MongoDB\\Tests\\", __DIR__);
-$Loader->register();
+\Fedora\Autoloader\Autoload::addPsr4('MongoDB\\Tests\\', __DIR__);
 EOF
 
 : Run the test suite
@@ -159,13 +157,17 @@ rm -rf %{buildroot}
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc composer.json
-%doc README.md
-%doc RELEASE-*
+%doc *.md
 %doc docs
 %{_datadir}/php/%{psr0}
 
 
 %changelog
+* Wed Dec  7 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
+- update to 1.1.0
+- raise dependency on php-pecl-mongodb 1.2.0
+- switch to fedora/autoloader
+
 * Tue Dec  6 2016 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
 - update to 1.0.4
 
