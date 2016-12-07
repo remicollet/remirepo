@@ -31,21 +31,17 @@
 
 Summary:       API for communicating with MessagePack serialization
 Name:          %{?sub_prefix}php-pecl-msgpack
-Version:       2.0.1
+Version:       2.0.2
 %if 0%{?gh_date:1}
 Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       5%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 License:       BSD
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/msgpack
-
-Patch0:        %{pecl_name}-pr87.patch
-# Temp for https://github.com/msgpack/msgpack-php/issues/100
-Patch1:        %{pecl_name}-php71.patch
 
 BuildRequires: %{?scl_prefix}php-devel >= 7
 BuildRequires: %{?scl_prefix}php-pear
@@ -67,7 +63,7 @@ Provides:      %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:      %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 %endif
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
@@ -133,9 +129,6 @@ mv %{pecl_name}-%{version} NTS
 %{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml} \
 
 cd NTS
-%patch0 -p1 -b .pr87
-%patch1 -p1 -b .php71
-
 %if %{with_msgpack}
 # use system library
 rm -rf msgpack
@@ -210,6 +203,8 @@ done
 
 
 %check
+# Erratic results
+rm */tests/034.phpt
 # Known by upstream as failed test (travis result)
 rm */tests/041.phpt
 rm */tests/040*.phpt
@@ -287,6 +282,9 @@ fi
 
 
 %changelog
+* Wed Dec  7 2016 Remi Collet <remi@fedoraproject.org> - 2.0.2-1
+- update to 2.0.2
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-5
 - rebuild with PHP 7.1.0 GA
 

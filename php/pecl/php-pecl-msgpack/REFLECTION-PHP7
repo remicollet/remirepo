@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #67 msgpack version 2.0.1 ] {
+Extension [ <persistent> extension #107 msgpack version 2.0.2 ] {
 
   - INI {
     Entry [ msgpack.error_display <ALL> ]
