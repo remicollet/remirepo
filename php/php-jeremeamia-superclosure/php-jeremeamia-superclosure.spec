@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # Github
-%global gh_commit    29a88be2a4846d27c1613aed0c9071dfad7b5938
+%global gh_commit    443c3df3207f176a1b41576ee2a66968a507b3db
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     jeremeamia
 %global gh_project   super_closure
@@ -18,8 +18,8 @@
 %global namespace    SuperClosure
 
 Name:           php-%{pk_vendor}-%{pk_name}
-Version:        2.2.0
-Release:        3%{?dist}
+Version:        2.3.0
+Release:        1%{?dist}
 Summary:        Serialize Closure objects, including their context and binding
 
 Group:          Development/Libraries
@@ -40,16 +40,16 @@ BuildRequires:  php-composer(symfony/polyfill-php56) >= 1.0
 #        "phpunit/phpunit": "^4.0|^5.0",
 BuildRequires:  php-composer(phpunit/phpunit)  >= 4.0
 # Autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 
 # From composer.json, "require": {
 #        "php": ">=5.4",
-#        "nikic/php-parser": "^1.2|^2.0",
+#        "nikic/php-parser": "^1.2|^2.0|^3.0",
 #        "symfony/polyfill-php56": "^1.0"
 # php-parser 1.4 for autoloader
 Requires:       php(language) >= 5.4
 Requires:       php-composer(nikic/php-parser) >= 1.4
-Requires:       php-composer(nikic/php-parser) <  3
+Requires:       php-composer(nikic/php-parser) <  4
 Requires:       php-composer(symfony/polyfill-php56) >= 1.0
 Requires:       php-composer(symfony/polyfill-php56) <  2
 # From phpcompatifo report for 2.1.0
@@ -58,7 +58,7 @@ Requires:       php-reflection
 Requires:       php-spl
 Requires:       php-tokenizer
 # Autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(%{pk_vendor}/%{pk_name}) = %{version}
 
@@ -96,11 +96,23 @@ require dirname(__DIR__) . '/tests/Integ/Fixture/Collection.php';
 require dirname(__DIR__) . '/tests/Integ/Fixture/Foo.php';
 EOF
 
-%{_bindir}/phpunit -v
-
-if which php70; then
-  php70 %{_bindir}/phpunit -v
+: Run the test suite
+# remirepo:10
+ret=0
+run=0
+if which php56; then
+  php56 %{_bindir}/phpunit || ret=1
+  run=1
 fi
+if which php71; then
+  php71 %{_bindir}/phpunit || ret=1
+  run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:1
+fi
+
 
 %clean
 rm -rf %{buildroot}
@@ -115,6 +127,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec  7 2016 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
+- update to 2.3.0
+- switch to fedora/autoloader
+- allow nikic/php-parser v3
+
 * Sat May 21 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-3
 - use nikic/php-parser v2 when available
 
