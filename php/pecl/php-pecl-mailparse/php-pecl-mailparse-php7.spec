@@ -13,9 +13,8 @@
 #
 %if 0%{?scl:1}
 %global sub_prefix %{scl_prefix}
+%scl_package       php-pecl-mailparse
 %endif
-
-%{?scl:          %scl_package         php-pecl-mailparse}
 
 %global pecl_name mailparse
 %global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
@@ -23,14 +22,13 @@
 
 Summary:   PHP PECL package for parsing and working with email messages
 Name:      %{?sub_prefix}php-pecl-mailparse
-Version:   3.0.1
-Release:   4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:   3.0.2
+Release:   1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:   PHP
 Group:     Development/Languages
 URL:       http://pecl.php.net/package/mailparse
 Source0:   http://pecl.php.net/get/mailparse-%{version}.tgz
 
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel > 7
 BuildRequires: %{?scl_prefix}php-pear
 # mbstring need for tests
@@ -47,10 +45,12 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
@@ -128,7 +128,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
 make -C NTS install INSTALL_ROOT=%{buildroot}
 # Drop in the bit of configuration
 install -Dpm 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
@@ -182,10 +181,6 @@ php run-tests.php \
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
@@ -207,7 +202,6 @@ fi
 
 
 %files
-%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -222,6 +216,9 @@ fi
 
 
 %changelog
+* Wed Dec  7 2016 Remi Collet <remi@fedoraproject.org> - 3.0.2-1
+- update to 3.0.2
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-4
 - rebuild with PHP 7.1.0 GA
 

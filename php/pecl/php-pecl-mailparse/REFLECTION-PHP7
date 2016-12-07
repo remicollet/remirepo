@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #61 mailparse version 3.0.1 ] {
+Extension [ <persistent> extension #104 mailparse version 3.0.2 ] {
 
   - INI {
     Entry [ mailparse.def_charset <ALL> ]
