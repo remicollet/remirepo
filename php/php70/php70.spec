@@ -121,11 +121,11 @@
 %endif
 
 #global rcver         RC1
-%global rpmrel        2
+%global rpmrel        1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 7.0.13
+Version: 7.0.14
 Release: %{?rcver:0.}%{rpmrel}%{?rcver:.%{rcver}}%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -945,7 +945,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %endif
 
 %patch40 -p1 -b .dlopen
-%if 0%{?fedora} >= 23 || 0%{?rhel} >= 5
+%if 0%{?fedora} >= 24 || 0%{?rhel} >= 5
 %patch42 -p1 -b .systzdata
 %endif
 %patch43 -p1 -b .headers
@@ -1185,7 +1185,7 @@ ln -sf ../configure
     --with-layout=GNU \
     --with-kerberos \
     --with-libxml-dir=%{_prefix} \
-%if 0%{?fedora} >= 21 || 0%{?rhel} >= 5
+%if 0%{?fedora} >= 24 || 0%{?rhel} >= 5
     --with-system-tzdata \
 %endif
     --with-mhash \
@@ -1988,6 +1988,10 @@ fi
 
 
 %changelog
+* Wed Dec  7 2016 Remi Collet <remi@fedoraproject.org> 7.0.14-1
+- Update to 7.0.14 - http://www.php.net/releases/7_0_14.php
+- disable pcre.jit everywhere as it raise AVC #1398474
+
 * Mon Dec  5 2016 Remi Collet <remi@fedoraproject.org> 7.0.13-2
 - disable pcre.jit everywhere as it raise AVC #1398474
 

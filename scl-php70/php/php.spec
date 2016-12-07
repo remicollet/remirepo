@@ -124,7 +124,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver        RC1
+#global rcver        RC1
 %global rpmrel       1
 
 
@@ -883,7 +883,7 @@ support for JavaScript Object Notation (JSON) to PHP.
 %endif
 
 %patch40 -p1 -b .dlopen
-%if 0%{?fedora} >= 23 || 0%{?rhel} >= 5
+%if 0%{?fedora} >= 24 || 0%{?rhel} >= 5
 %patch42 -p1 -b .systzdata
 %endif
 %patch43 -p1 -b .headers
@@ -1117,7 +1117,9 @@ ln -sf ../configure
     --with-layout=GNU \
     --with-kerberos \
     --with-libxml-dir=%{_root_prefix} \
+%if 0%{?fedora} >= 24 || 0%{?rhel} >= 5
     --with-system-tzdata \
+%endif
     --with-mhash \
 %if %{with_dtrace}
     --enable-dtrace \
@@ -1820,6 +1822,8 @@ fi
 
 
 %changelog
+* Wed Dec  7 2016 Remi Collet <remi@fedoraproject.org> 7.0.14-1
+- Update to 7.0.14 - http://www.php.net/releases/7_0_14.php
 - disable pcre.jit everywhere as it raise AVC #1398474
 
 * Wed Nov 23 2016 Remi Collet <remi@fedoraproject.org> 7.0.14-0.1.RC1
