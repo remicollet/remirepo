@@ -97,7 +97,7 @@ require dirname(__DIR__) . '/tests/Integ/Fixture/Foo.php';
 EOF
 
 : Run the test suite
-# remirepo:10
+# remirepo:11
 ret=0
 run=0
 if which php56; then
