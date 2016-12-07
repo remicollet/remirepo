@@ -15,15 +15,16 @@
 %global with_tests   0%{!?_without_tests:1}
 
 %global eolv1   0
-%if 0
 %global script  0
-%else
+%if 0%{?fedora} >= 24 && 0%{?fedora} < 26
 %global script  1
 %endif
+# remirepo:1
+%global script  0
 
 Name:           php-%{gh_owner}-%{pk_project}
 Version:        2.1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A PHP parser written in PHP
 
 Group:          Development/Libraries
@@ -80,10 +81,11 @@ Its purpose is to simplify static code analysis and manipulation.
 This package provides the library version 2 and the php-parse command.
 %else
 This package provides the library version 2.
-The php-PHPParser package provides the library version 1
-and the  php-parse command.
 %endif
-Documentation: https://github.com/nikic/PHP-Parser/tree/master/doc
+The %{name}3 packages provides the library version 3.
+The php-PHPParser package provides the library version 1.
+
+Documentation: https://github.com/nikic/PHP-Parser/tree/2.x/doc
 
 Autoloader: %{php_home}/PhpParser2/autoload.php
 
@@ -167,6 +169,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec  7 2016 Remi Collet <remi@fedoraproject.org> - 2.1.1-2
+- drop the php-parse command, provided by php-nikic-php-parser3
+
 * Mon Sep 19 2016 Remi Collet <remi@fedoraproject.org> - 2.1.1-1
 - update to 2.1.1
 
