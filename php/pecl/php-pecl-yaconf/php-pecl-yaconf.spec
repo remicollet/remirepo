@@ -19,19 +19,17 @@
 
 Summary:       Yet Another Configurations Container
 Name:          %{?scl_prefix}php-pecl-yaconf
-Version:       1.0.3
+Version:       1.0.4
 %if 0%{?gh_date:1}
 Release:       0.8.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 License:       PHP
 Group:         Development/Languages
 URL:           https://github.com/%{gh_owner}/%{gh_project}
-
-Patch0:        %{pecl_name}-upstream.patch
 
 BuildRequires: %{?scl_prefix}php-devel > 7
 BuildRequires: %{?scl_prefix}php-pear
@@ -95,8 +93,6 @@ mv %{pecl_name}-%{version} NTS
 %{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
-%patch0 -p1 -b .upstream
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_YACONF_VERSION/{s/.* "//;s/".*$//;p}' php_yaconf.h)
 if test "x${extver}" != "x%{version}%{?gh_date:-dev}"; then
@@ -237,6 +233,9 @@ fi
 
 
 %changelog
+* Wed Dec  7 2016 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- Update to 1.0.4
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-3
 - add upstream patch to fix segfaults
 - re-enable ZTS extension

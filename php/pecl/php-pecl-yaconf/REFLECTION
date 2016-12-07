@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #143 yaconf version 1.0.3 ] {
+Extension [ <persistent> extension #143 yaconf version 1.0.4 ] {
 
   - INI {
     Entry [ yaconf.directory <SYSTEM> ]
