@@ -1,27 +1,20 @@
-===== 5.6.29RC1 (2016-11-24)
+===== 5.6.29 (2016-12-08)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
-/var/lib/mock/el5i/build.log:Tests failed    :     9
+/var/lib/mock/el5i/build.log:Tests failed    :     7
 /var/lib/mock/el5x/build.log:Tests failed    :     2
 /var/lib/mock/el6i/build.log:Tests failed    :     5
 /var/lib/mock/el6x/build.log:Tests failed    :     0
 /var/lib/mock/el7x/build.log:Tests failed    :     0
 /var/lib/mock/fc22i/build.log:Tests failed    :    2
 /var/lib/mock/fc22x/build.log:Tests failed    :    0
-/var/lib/mock/fc23i/build.log:Tests failed    :    5
-/var/lib/mock/fc23x/build.log:Tests failed    :    3
+/var/lib/mock/fc23i/build.log:Tests failed    :    2
+/var/lib/mock/fc23x/build.log:Tests failed    :    0
 /var/lib/mock/fc24i/build.log:Tests failed    :    2
 /var/lib/mock/fc24x/build.log:Tests failed    :    0
 
 
-fc23i, fc23x
-	***	Bug #20382 [2] (strtotime ("Monday", $date) produces wrong result on DST changeover) [ext/date/tests/bug20382-2.phpt]
-	***	Bug #33414 [1] (Comprehensive list of incorrect days returned after strotime() / date() tests) [ext/date/tests/bug33414-1.phpt]
-	***	Bug #33415 [1] (Possibly invalid non-one-hour DST or timezone shifts) [ext/date/tests/bug33415-1.phpt]
-el5i
-		Specific protocol method specification [ext/openssl/tests/stream_crypto_flags_004.phpt]
-	*	Bug #64438 proc_open hangs with stdin/out with 4097+ bytes [ext/standard/tests/streams/proc_open_bug64438.phpt]
 el5i, el5x
 		openssl_error_string() tests [ext/openssl/tests/openssl_error_string_basic.phpt]
 el5i, el5x
