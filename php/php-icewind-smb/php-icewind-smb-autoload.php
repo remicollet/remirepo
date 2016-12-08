@@ -1,18 +1,10 @@
 <?php
 /* Autoloader for icewind/smb and its dependencies */
 
-$vendorDir = '/usr/share/php';
-// Use Symfony autoloader
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once $vendorDir . '/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+require_once '/usr/share/php/Fedora/Autoloader/autoload.php';
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
+\Fedora\Autoloader\Autoload::addPsr4('Icewind\\SMB\\', __DIR__);
+\Fedora\Autoloader\Dependencies::required(array(
+    '/usr/share/php/Icewind/Streams/autoload.php',
+));
 
-$fedoraClassLoader->addPrefix('Icewind\\SMB\\', dirname(dirname(__DIR__)));
-
-// Dependencies
-require_once $vendorDir . '/Icewind/Streams/autoload.php';

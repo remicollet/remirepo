@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # Github information
-%global gh_commit    2a101e73bc6a354eab8c1dd6f7d113af63e255e8
+%global gh_commit    5e073449ee3b4b8142c4eeb265f27ce72ebe3932
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     icewind1991
 %global gh_project   SMB
@@ -28,7 +28,7 @@
 %global with_tests   0%{?_with_tests:1}
 
 Name:           php-%{pk_vendor}-%{pk_name}
-Version:        1.1.1
+Version:        1.1.2
 Release:        1%{?dist}
 Summary:        php wrapper for smbclient and libsmbclient-php
 
@@ -46,7 +46,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 # For tests
-BuildRequires:  php(language) >= 5.3
+BuildRequires:  php(language) >= 5.4
 BuildRequires:  php-composer(%{pk_vendor}/streams) >= 0.2
 BuildRequires:  php-date
 BuildRequires:  php-mbstring
@@ -58,21 +58,22 @@ BuildRequires:  php-posix
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.8
 BuildRequires:  php-composer(theseer/autoload)
 # Autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 %endif
 
 # From composer.json, "require": {
-#      "php": ">=5.3"
+#      "php": ">=5.4"
 #      "icewind/streams": ">=0.2.0"
-Requires:       php(language) >= 5.3
+Requires:       php(language) >= 5.4
 Requires:       php-composer(%{pk_vendor}/streams) >= 0.2
 # From phpcompatinfo report for version 1.0.4
+Requires:       %{_bindir}/smbclient
 Requires:       php-date
 Requires:       php-mbstring
 Requires:       php-pcre
 Requires:       php-posix
 # Autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 %if 0%{?fedora} > 21
 Recommends:     php-smbclient
 %endif
@@ -144,6 +145,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec  8 2016 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
+- update to 1.1.2
+- raise dependency on PHP 5.4
+- add dependency on smbclient command
+- switch to fedora/autoloader
+
 * Tue Jun 14 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - update to 1.1.1
 
