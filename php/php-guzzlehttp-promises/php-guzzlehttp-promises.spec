@@ -12,8 +12,8 @@
 
 %global github_owner     guzzle
 %global github_name      promises
-%global github_version   1.2.0
-%global github_commit    c10d860e2a9595f8883527fa0021c7da9e65f579
+%global github_version   1.3.0
+%global github_commit    2693c101803ca78b27972d84081d027fca790a1e
 
 %global composer_vendor  guzzlehttp
 %global composer_project promises
@@ -43,20 +43,21 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 1.2.0)
+## phpcompatinfo (computed from version 1.3.0)
 BuildRequires: php-json
+BuildRequires: php-reflection
 BuildRequires: php-spl
 ## Autoloader
-BuildRequires: php-composer(symfony/class-loader)
+BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.2.0)
+# phpcompatinfo (computed from version 1.3.0)
 Requires:      php-json
 Requires:      php-spl
 # Autoloader
-Requires:      php-composer(symfony/class-loader)
+Requires:      php-composer(fedora/autoloader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -80,24 +81,12 @@ cat <<'AUTOLOAD' | tee src/autoload.php
 /**
  * Autoloader for %{name} and its' dependencies
  * (created by %{name}-%{version}-%{release}).
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
  */
+require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
-
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('GuzzleHttp\\Promise\\', dirname(dirname(__DIR__)));
+\Fedora\Autoloader\Autoload::addPsr4('GuzzleHttp\\Promise\\', __DIR__);
 
 require_once __DIR__ . '/functions_include.php';
-
-return $fedoraClassLoader;
 AUTOLOAD
 
 
@@ -117,11 +106,22 @@ cp -rp src/* %{buildroot}%{phpdir}/GuzzleHttp/Promise/
 sed "s#require.*autoload.*#require '%{buildroot}%{phpdir}/GuzzleHttp/Promise/autoload.php';#" \
     -i tests/bootstrap.php
 
-%{_bindir}/phpunit --verbose
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -142,6 +142,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 07 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.0-1
+- Updated to 1.3.0 (RHBZ #1396687)
+- Change autoloader from php-composer(symfony/class-loader) to
+  php-composer(fedora/autoloader)
+
 * Sun May 29 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.2.0-1
 - Updated to 1.2.0 (RHBZ #1337366)
 
