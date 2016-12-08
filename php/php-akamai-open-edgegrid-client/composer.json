@@ -24,24 +24,41 @@
         "squizlabs/php_codesniffer": "^2.3",
         "friendsofphp/php-cs-fixer": "^1.9",
         "kherge/box": "^2.5",
-        "apigen/apigen": "^4.1"
+        "apigen/apigen": "dev-master"
     },
     "autoload": {
         "psr-4": {
-            "Akamai\\Open\\EdgeGrid\\": "src/",
-            "Monolog\\": "src/Monolog"
+            "Akamai\\Open\\EdgeGrid\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Akamai\\Open\\EdgeGrid\\Tests\\": ["tests", "vendor/akamai-open/edgegrid-auth/tests"],
-            "GuzzleHttp\\Tests\\": "vendor/guzzlehttp/guzzle/tests",
-            "Monolog\\": "tests/Monolog"
+            "Akamai\\Open\\EdgeGrid\\Tests\\": ["tests", "vendor/akamai-open/edgegrid-auth/tests"]
         }
     },
     "config": {
         "platform": {
             "php": "5.5"
         }
+    },
+    "bin": [
+        "bin/http"
+    ],
+    "scripts": {
+        "build": [
+            "@test",
+            "@build-docs",
+            "@build-phar",
+            "@fix-cs"
+        ],
+        "test": "phpunit",
+        "build-docs": [
+            "rm -Rf docs",
+            "composer install",
+            "apigen generate"
+        ],
+        "build-phar": "./tools/build-phar.sh",
+        "fix-cs": "./tools/fix-cs.sh",
+        "check-version": "./tools/check-version.sh"
     }
 }

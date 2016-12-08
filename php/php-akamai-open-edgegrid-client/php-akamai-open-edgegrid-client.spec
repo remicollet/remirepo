@@ -12,8 +12,8 @@
 
 %global github_owner     akamai-open
 %global github_name      AkamaiOPEN-edgegrid-php-client
-%global github_version   0.6.0
-%global github_commit    5f95fab43301f54b6928341686d5f2ca273e996e
+%global github_version   0.6.1
+%global github_commit    ca3cd8321756e5fe55d6729c24aadc4cdf5598f0
 
 %global composer_vendor  akamai-open
 %global composer_project edgegrid-client
@@ -65,7 +65,7 @@ BuildRequires: php-composer(psr/log) >= %{psr_log_min_ver}
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 0.6.0)
+## phpcompatinfo (computed from version 0.6.1)
 BuildRequires: php-json
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -81,7 +81,7 @@ Requires:      php-composer(monolog/monolog) <  %{monolog_max_ver}
 Requires:      php-composer(monolog/monolog) >= %{monolog_min_ver}
 Requires:      php-composer(psr/log) <  %{psr_log_max_ver}
 Requires:      php-composer(psr/log) >= %{psr_log_min_ver}
-# phpcompatinfo (computed from version 0.6.0)
+# phpcompatinfo (computed from version 0.6.1)
 Requires:      php-json
 Requires:      php-pcre
 
@@ -198,6 +198,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 07 2016 Shawn Iwinski <shawn@iwin.ski> - 0.6.1-1
+- Updated to 0.6.1 (RHBZ #1392697)
+
 * Wed Nov 02 2016 Shawn Iwinski <shawn@iwin.ski> - 0.6.0-1
 - Updated to 0.6.0 (RHBZ #1382986)
 - Autoloader changed from Symfony ClassLoader to phpab classmap
