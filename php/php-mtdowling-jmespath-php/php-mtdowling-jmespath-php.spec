@@ -12,8 +12,8 @@
 
 %global github_owner     jmespath
 %global github_name      jmespath.php
-%global github_version   2.3.0
-%global github_commit    192f93e43c2c97acde7694993ab171b3de284093
+%global github_version   2.4.0
+%global github_commit    adcc9531682cf87dfda21e1fd5d0e7a41d292fac
 
 %global composer_vendor  mtdowling
 %global composer_project jmespath.php
@@ -43,21 +43,21 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 2.3.0)
+## phpcompatinfo (computed from version 2.4.0)
 BuildRequires: php-json
 BuildRequires: php-spl
 ## Autoloader
-BuildRequires: php-composer(symfony/class-loader)
+BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 Requires:      php-cli
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 2.3.0)
+# phpcompatinfo (computed from version 2.4.0)
 Requires:      php-json
 Requires:      php-spl
 # Autoloader
-Requires:      php-composer(symfony/class-loader)
+Requires:      php-composer(fedora/autoloader)
 
 # php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}
 Provides:      php-%{composer_vendor}-%{composer_project}           = %{version}-%{release}
@@ -79,24 +79,12 @@ cat <<'AUTOLOAD' | tee src/autoload.php
 /**
  * Autoloader for %{name} and its' dependencies
  * (created by %{name}-%{version}-%{release}).
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
  */
+require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
-
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('JmesPath\\', dirname(__DIR__));
+\Fedora\Autoloader\Autoload::addPsr4('JmesPath\\', __DIR__);
 
 require_once __DIR__ . '/JmesPath.php';
-
-return $fedoraClassLoader;
 AUTOLOAD
 
 : Modify bin script
@@ -126,13 +114,23 @@ sed 's/function testTokenizesJsonNumbers/function SKIP_testTokenizesJsonNumbers/
     -i tests/LexerTest.php
 
 : Run tests
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/JmesPath/autoload.php || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/JmesPath/autoload.php || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/phpunit --verbose \
     --bootstrap %{buildroot}%{phpdir}/JmesPath/autoload.php
-
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose \
-      --bootstrap %{buildroot}%{phpdir}/JmesPath/autoload.php
+# remirepo:2
 fi
+exit $ret
 %else
 : Tests skipped
 %endif
@@ -154,6 +152,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 07 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.4.0-1
+- Update to 2.4.0 (RHBZ #1401271)
+- Change autoloader from php-composer(symfony/class-loader) to
+  php-composer(fedora/autoloader)
+
 * Sun Jun 28 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.3.0-1
 - Updated to 2.3.0 (RHBZ #1295982)
 - Added "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" ("php-mtdowling-jmespath.php")
