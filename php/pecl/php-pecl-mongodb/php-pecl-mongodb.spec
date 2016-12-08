@@ -40,8 +40,8 @@
 
 Summary:        MongoDB driver for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.2.0
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.2.1
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        ASL 2.0
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -58,6 +58,9 @@ BuildRequires:  openssl-devel
 %if %{with_syslib}
 BuildRequires:  pkgconfig(libbson-1.0)    >= 1.5
 BuildRequires:  pkgconfig(libmongoc-1.0)  >= 1.5
+%else
+Provides:       bundled(libbson) = 1.5.0
+Provides:       bundled(mongo-c-driver) = 1.5.0
 %endif
 %if %{with_tests}
 BuildRequires:  mongodb-server
@@ -188,8 +191,7 @@ peclbuild zts-php
 
 
 %install
-make -C NTS \
-     install INSTALL_ROOT=%{buildroot}
+make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
@@ -198,8 +200,7 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
-make -C ZTS \
-     install INSTALL_ROOT=%{buildroot}
+make -C ZTS install INSTALL_ROOT=%{buildroot}
 
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
@@ -331,6 +332,9 @@ exit $ret
 
 
 %changelog
+* Thu Dec  8 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- Update to 1.2.1
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-2
 - rebuild with PHP 7.1.0 GA
 
