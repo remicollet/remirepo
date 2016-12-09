@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #85 memcached version 3.0.0-dev ] {
+Extension [ <persistent> extension #155 memcached version 3.0.0-dev ] {
 
   - Dependencies {
     Dependency [ session (Required) ]
@@ -12,10 +12,10 @@ Extension [ <persistent> extension #85 memcached version 3.0.0-dev ] {
       Current = '1'
     }
     Entry [ memcached.sess_lock_wait_min <ALL> ]
-      Current = '0'
+      Current = '1000'
     }
     Entry [ memcached.sess_lock_wait_max <ALL> ]
-      Current = '0'
+      Current = '2000'
     }
     Entry [ memcached.sess_lock_retries <ALL> ]
       Current = '5'
@@ -27,7 +27,7 @@ Extension [ <persistent> extension #85 memcached version 3.0.0-dev ] {
       Current = '1'
     }
     Entry [ memcached.sess_consistent_hash <ALL> ]
-      Current = ''
+      Current = '1'
     }
     Entry [ memcached.sess_number_of_replicas <ALL> ]
       Current = '0'
@@ -36,7 +36,7 @@ Extension [ <persistent> extension #85 memcached version 3.0.0-dev ] {
       Current = ''
     }
     Entry [ memcached.sess_remove_failed_servers <ALL> ]
-      Current = '0'
+      Current = ''
     }
     Entry [ memcached.sess_server_failure_limit <ALL> ]
       Current = '0'
@@ -54,7 +54,7 @@ Extension [ <persistent> extension #85 memcached version 3.0.0-dev ] {
       Current = 'memc.sess.key.'
     }
     Entry [ memcached.sess_persistent <ALL> ]
-      Current = '0'
+      Current = ''
     }
     Entry [ memcached.sess_lock_wait <ALL> ]
       Current = 'not set'
@@ -78,10 +78,10 @@ Extension [ <persistent> extension #85 memcached version 3.0.0-dev ] {
       Current = '2'
     }
     Entry [ memcached.default_consistent_hash <ALL> ]
-      Current = '0'
+      Current = ''
     }
     Entry [ memcached.default_binary_protocol <ALL> ]
-      Current = '0'
+      Current = ''
     }
     Entry [ memcached.default_connect_timeout <ALL> ]
       Current = '0'
@@ -227,18 +227,20 @@ Extension [ <persistent> extension #85 memcached version 3.0.0-dev ] {
 
         Method [ <internal:memcached> public method get ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $key ]
             Parameter #1 [ <optional> $cache_cb ]
+            Parameter #2 [ <optional> $get_flags ]
           }
         }
 
         Method [ <internal:memcached> public method getByKey ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $server_key ]
             Parameter #1 [ <required> $key ]
             Parameter #2 [ <optional> $cache_cb ]
+            Parameter #3 [ <optional> $get_flags ]
           }
         }
 

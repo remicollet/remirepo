@@ -22,9 +22,9 @@
 %global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
 %global pecl_name   memcached
 # https://github.com/php-memcached-dev/php-memcached/commits/php7
-%global gh_commit   6ace07da69a5ebc021e56a9d2f52cdc8897b4f23
+%global gh_commit   e65be324557eda7167c4831b4bfb1ad23a152beb
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
-%global gh_date     20160217
+%global gh_date     20161207
 %global gh_owner    php-memcached-dev
 %global gh_project  php-memcached
 #global prever      RC1
@@ -40,7 +40,7 @@
 Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?sub_prefix}php-pecl-memcached
 Version:      3.0.0
-Release:      0.3.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:      0.4.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      PHP
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -100,16 +100,16 @@ Requires:     %{?sub_prefix}php-pecl-msgpack%{?_isa}
 %endif
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:     %{?scl_prefix}php-%{pecl_name} = %{version}
-Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa} = %{version}
-Provides:     %{?scl_prefix}php-pecl(%{pecl_name}) = %{version}
+Provides:     %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:     %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:     %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:     %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 %if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:     %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:     %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 %endif
 
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
@@ -369,6 +369,9 @@ exit $ret
 
 
 %changelog
+* Fri Dec  9 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.4.20161207gite65be32
+- refresh to more recent snapshot
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-0.3.20160217git6ace07d
 - rebuild with PHP 7.1.0 GA
 
