@@ -27,7 +27,9 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 # https://github.com/phpv8/v8js/pull/266
 Patch0:         %{pecl_name}-pr266.patch
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+# See http://pkgs.fedoraproject.org/cgit/rpms/v8.git/tree/v8.spec#n49
+# arm is excluded because of bz1334406
+ExclusiveArch:	%{ix86} x86_64 ppc ppc64 aarch64 %{mips} s390 s390x
 BuildRequires:  %{?scl_prefix}php-devel > 7
 BuildRequires:  %{?scl_prefix}php-pear
 # because of https://bugzilla.redhat.com/1378889
@@ -134,8 +136,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
