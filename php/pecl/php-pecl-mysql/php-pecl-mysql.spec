@@ -12,11 +12,11 @@
 %endif
 
 # https://github.com/php/pecl-database-mysql/commits/master
-%global gh_commit   45881bd8d817cef3254877f9ace22ff85b8637ca
+%global gh_commit   230a8287c04c69dfc49f6a68a5debb4e4198e98f
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    php
 %global gh_project  pecl-database-mysql
-%global gh_date     20160428
+%global gh_date     20160812
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name   mysql
 %global with_tests  0%{?_with_tests:1}
@@ -28,7 +28,7 @@ Summary:        MySQL database access functions
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
 %if 0%{?gh_date:1}
-Release:        0.14.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.15.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:        3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -37,9 +37,8 @@ License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
-
 Source1:        %{pecl_name}.ini
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
 BuildRequires:  %{?scl_prefix}php-devel > 7
 BuildRequires:  %{?scl_prefix}php-mysqlnd
 BuildRequires:  %{?scl_prefix}php-pear
@@ -62,7 +61,7 @@ Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{rele
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 %endif
 
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
 Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
@@ -145,7 +144,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
 # Install the NTS stuff
 make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{SOURCE1} %{buildroot}%{php_inidir}/%{ini_name}
@@ -262,12 +260,7 @@ fi
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
@@ -282,6 +275,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec  9 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.15.20160812git230a828
+- refresh to more recent snapshot
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.14.20160428git45881bd
 - rebuild with PHP 7.1.0 GA
 
