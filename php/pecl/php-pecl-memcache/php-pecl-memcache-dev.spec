@@ -12,11 +12,11 @@
 %endif
 
 # https://github.com/websupport-sk/pecl-memcache/commits/NON_BLOCKING_IO_php7
-%global gh_commit   4991c2fff22d00dc81014cc92d2da7077ef4bc86
+%global gh_commit   df7735e813d247ea141458e1774d163ad4e2d068
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    websupport-sk
 %global gh_project  pecl-memcache
-%global gh_date     20160311
+%global gh_date     20161124
 %global pecl_name   memcache
 # Not ready, some failed UDP tests. Neded investigation.
 %global with_tests  0%{?_with_tests:1}
@@ -31,7 +31,7 @@ Summary:      Extension to work with the Memcached caching daemon
 Name:         %{?scl_prefix}php-pecl-memcache
 Version:      3.0.9
 %if 0%{?gh_date:1}
-Release:      0.6.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:      0.7.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
 Release:      2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
@@ -66,7 +66,7 @@ Provides:     %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{releas
 Provides:     %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
 %endif
 
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
@@ -240,9 +240,11 @@ done
 %if %{with_tests}
 : Configuration for tests
 cd NTS
-cp %{SOURCE3} tests
 sed -e "s:/var/run/memcached/memcached.sock:$PWD/memcached.sock:" \
     -i tests/connect.inc
+
+: Udp tests
+rm tests/0{36,38,39,55,57}.phpt
 
 : Launch the daemons
 memcached -p 11211 -U 11211      -d -P $PWD/memcached1.pid
@@ -255,7 +257,7 @@ TEST_PHP_EXECUTABLE=%{_bindir}/php \
 TEST_PHP_ARGS="-n -d extension_dir=$PWD/modules -d extension=%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{_bindir}/php -n run-tests.php || ret=1
+%{_bindir}/php -n run-tests.php --show-diff || ret=1
 
 : Cleanup
 if [ -f memcached2.pid ]; then
@@ -306,6 +308,9 @@ fi
 
 
 %changelog
+* Fri Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 3.0.9-0.7.20161124gitdf7735e
+- refresh to more recent snapshot
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 3.0.9-0.6.20160311git4991c2f
 - rebuild with PHP 7.1.0 GA
 

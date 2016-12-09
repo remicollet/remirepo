@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #59 memcache version 3.0.9-dev ] {
+Extension [ <persistent> extension #105 memcache version 3.0.9-dev ] {
 
   - INI {
     Entry [ memcache.allow_failover <ALL> ]
