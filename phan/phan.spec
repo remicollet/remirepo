@@ -121,7 +121,7 @@ EOF
 run=0
 ret=0
 if which php71; then
-   php71 %{_bindir}/phpunit -d memory_limit=1G --bootstrap tests/autoload.php || : ignore segfaults...
+   php71 %{_bindir}/phpunit -d memory_limit=1G --bootstrap tests/autoload.php
    run=1
 fi
 %{_bindir}/phpunit -d memory_limit=1G --bootstrap tests/autoload.php --verbose
