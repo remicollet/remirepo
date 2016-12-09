@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    336aff0ac52e306c98e7455bc3e8d7b0bf777a5e
+%global gh_commit    de164acc2f2bb0b79beb892a36260264b2a03233
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.7
-%global minor        2
+%global minor        3
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -50,7 +50,7 @@ BuildRequires:  php-composer(phpunit/php-text-template) >= 1.2
 BuildRequires:  php-composer(phpunit/php-code-coverage) >= 4.0
 BuildRequires:  php-composer(phpunit/php-timer) >= 1.0.6
 BuildRequires:  php-composer(phpunit/phpunit-mock-objects) >= 3.2
-BuildRequires:  php-composer(phpspec/prophecy) >= 1.3.1
+BuildRequires:  php-composer(phpspec/prophecy) >= 1.6.2
 BuildRequires:  php-composer(sebastian/comparator) >= 1.2.2
 BuildRequires:  php-composer(sebastian/diff) >= 1.2
 BuildRequires:  php-composer(sebastian/environment) >= 1.3.4
@@ -74,7 +74,7 @@ BuildRequires:  php-composer(fedora/autoloader)
 #        "phpunit/php-code-coverage": "^4.0.3",
 #        "phpunit/php-timer": "^1.0.6",
 #        "phpunit/phpunit-mock-objects": "^3.2",
-#        "phpspec/prophecy": "^1.3.1",
+#        "phpspec/prophecy": "^1.6.2",
 #        "symfony/yaml": "~2.1|~3.0",
 #        "sebastian/comparator": "~1.2.2",
 #        "sebastian/diff": "~1.2",
@@ -102,7 +102,7 @@ Requires:       php-composer(phpunit/php-timer) >= 1.0.6
 Requires:       php-composer(phpunit/php-timer) <  2
 Requires:       php-composer(phpunit/phpunit-mock-objects) >= 3.2
 Requires:       php-composer(phpunit/phpunit-mock-objects) <  4
-Requires:       php-composer(phpspec/prophecy) >= 1.3.1
+Requires:       php-composer(phpspec/prophecy) >= 1.6.2
 Requires:       php-composer(phpspec/prophecy) <  2
 Requires:       php-composer(sebastian/comparator) >= 1.2.2
 Requires:       php-composer(sebastian/comparator) <  2
@@ -237,6 +237,10 @@ fi
 
 
 %changelog
+* Fri Dec  9 2016 Remi Collet <remi@fedoraproject.org> - 5.7.3-1
+- update to 5.7.3
+- raise dependency on phpspec/prophecy 1.6.2
+
 * Sun Dec  4 2016 Remi Collet <remi@fedoraproject.org> - 5.7.2-1
 - update to 5.7.2
 
