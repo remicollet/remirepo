@@ -12,8 +12,8 @@
 
 %global github_owner     bobthecow
 %global github_name      psysh
-%global github_version   0.7.2
-%global github_commit    e64e10b20f8d229cac76399e1f3edddb57a0f280
+%global github_version   0.8.0
+%global github_commit    4a8860e13aa68a4bbf2476c014f8a1f14f1bf991
 
 %global composer_vendor  psy
 %global composer_project psysh
@@ -26,11 +26,11 @@
 # "jakub-onderka/php-console-highlighter": "0.3.*"
 %global php_console_highlighter_min_ver 0.3.0
 %global php_console_highlighter_max_ver 0.4.0
-# "nikic/php-parser": "^1.2.1|~2.0"
+# "nikic/php-parser": "~1.3|~2.0|~3.0"
 #     NOTE: Min version not 1.2.1 to force 2.x so 1.x is not
 #           a dependency so it could possibly be retired
 %global php_parser_min_ver 2.0
-%global php_parser_max_ver 3.0
+%global php_parser_max_ver 4
 # "symfony/console": "~2.3.10|^2.4.2|~3.0"
 # "symfony/finder": "~2.1|~3.0"
 # "symfony/var-dumper": "~2.7|~3.0"
@@ -45,7 +45,7 @@
 
 Name:          psysh
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       A runtime developer console, interactive debugger and REPL for PHP
 
 Group:         Development/Libraries
@@ -75,7 +75,7 @@ BuildRequires: php-pcntl
 BuildRequires: php-pdo_sqlite
 BuildRequires: php-posix
 BuildRequires: php-readline
-## phpcompatinfo (computed from version 0.7.2)
+## phpcompatinfo (computed from version 0.8.0)
 BuildRequires: php-ctype
 BuildRequires: php-date
 BuildRequires: php-dom
@@ -86,7 +86,7 @@ BuildRequires: php-reflection
 BuildRequires: php-spl
 BuildRequires: php-tokenizer
 ## Autoloader
-BuildRequires: php-composer(symfony/class-loader)
+BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 Requires:      php-cli
@@ -107,7 +107,7 @@ Requires:      php-pcntl
 Requires:      php-pdo_sqlite
 Requires:      php-posix
 Requires:      php-readline
-# phpcompatinfo (computed from version 0.7.2)
+# phpcompatinfo (computed from version 0.8.0)
 Requires:      php-ctype
 Requires:      php-date
 Requires:      php-json
@@ -117,7 +117,7 @@ Requires:      php-reflection
 Requires:      php-spl
 Requires:      php-tokenizer
 # Autoloader
-Requires:      php-composer(symfony/class-loader)
+Requires:      php-composer(fedora/autoloader)
 
 # Standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming
 Provides:      php-%{composer_vendor}-%{composer_project} = %{version}-%{release}
@@ -148,27 +148,18 @@ cat <<'AUTOLOAD' | tee src/Psy/autoload.php
  * (created by %{name}-%{version}-%{release}).
  */
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
-
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('Psy\\', dirname(__DIR__));
-
+require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('Psy\\', __DIR__);
+\Fedora\Autoloader\Dependencies::required(array(
+    '%{phpdir}/JakubOnderka/PhpConsoleHighlighter/autoload.php',
+    '%{phpdir}/Symfony/Component/Console/autoload.php',
+    '%{phpdir}/Symfony/Component/VarDumper/autoload.php',
+    '%{phpdir}/XdgBaseDir/autoload.php',
+    array(
+        '%{phpdir}/PhpParser3/autoload.php',
+        '%{phpdir}/PhpParser2/autoload.php',
+)));
 require_once __DIR__.'/functions.php';
-
-// Required dependencies
-require_once '%{phpdir}/JakubOnderka/PhpConsoleHighlighter/autoload.php';
-require_once '%{phpdir}/PhpParser2/autoload.php';
-require_once '%{phpdir}/Symfony/Component/Console/autoload.php';
-require_once '%{phpdir}/Symfony/Component/VarDumper/autoload.php';
-require_once '%{phpdir}/XdgBaseDir/autoload.php';
-
-return $fedoraClassLoader;
 AUTOLOAD
 
 
@@ -189,9 +180,8 @@ install -pm 0755 bin/psysh %{buildroot}%{_bindir}/
 : Create tests bootstrap
 cat <<'BOOTSTRAP' | tee bootstrap.php
 <?php
-$fedoraClassLoader =
-    require '%{buildroot}%{phpdir}/Psy/autoload.php';
-$fedoraClassLoader->addPrefix('Psy\\Test\\', __DIR__.'/test');
+require '%{buildroot}%{phpdir}/Psy/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('Psy\\Test\\', __DIR__.'/test/Psy/Test');
 BOOTSTRAP
 
 : Skip tests known to fail
@@ -204,6 +194,11 @@ sed 's/function testFormat/function SKIP_testFormat/' \
 sed 's/function testWriteReturnValue/function SKIP_testWriteReturnValue/' \
     -i test/Psy/Test/ShellTest.php
 
+: Drop unneeded test as readline is always there
+rm test/Psy/Test/Readline/HoaConsoleTest.php
+
+: Run upstream test suite
+# remirepo:11
 run=0
 ret=0
 if which php56; then
@@ -216,6 +211,7 @@ if which php71; then
 fi
 if [ $run -eq 0 ]; then
    %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+# remirepo:2
 fi
 exit $ret
 %else
@@ -238,6 +234,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec  9 2016 Remi Collet <remi@fedoraproject.org> - 0.8.0-1
+- update to 0.8.0
+- allow nikic/php-parser version 3
+- switch to fedora/autoloader
+
 * Thu Jul 21 2016 Remi Collet <remi@fedoraproject.org> - 0.7.2-2
 - backport for remi repository
 
