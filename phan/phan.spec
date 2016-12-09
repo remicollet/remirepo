@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    ea92e93008491b780fbaf3e97487845e3f60c78f
+%global gh_commit    f34fd878924c8b46f96ce60560b2c1fe37e3150f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     etsy
 #global gh_date      20150820
@@ -15,7 +15,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           %{gh_project}
-Version:        0.6
+Version:        0.7
 Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A static analyzer for PHP
 
@@ -42,10 +42,10 @@ BuildRequires:  php-spl
 BuildRequires:  php-sysvmsg
 BuildRequires:  php-sysvsem
 # For tests, from composer.json "require-dev": {
-#        "phpunit/phpunit": "~5",
+#        "phpunit/phpunit": "5.4.8",
 #        "phpdocumentor/phpdocumentor": "dev-master",
 #        "squizlabs/php_codesniffer": "^2.5"
-BuildRequires:  php-composer(phpunit/phpunit) >= 5
+BuildRequires:  php-composer(phpunit/phpunit) >= 5.4.8
 %endif
 # For autoloader
 BuildRequires:  php-composer(fedora/autoloader)
@@ -149,6 +149,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec  9 2016 Remi Collet <remi@fedoraproject.org> - 0.7-1
+- update to 0.7
+
 * Thu Nov 24 2016 Remi Collet <remi@fedoraproject.org> - 0.6-1
 - initial package
 
