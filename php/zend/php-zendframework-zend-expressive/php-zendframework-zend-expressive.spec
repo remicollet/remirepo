@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    e8fdf7648ddf86e6bcc5fe5404a857ff32ade319
+%global gh_commit    815671d4571cfcdb85ae23a811f1df190c07a1ce
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.0.4
+Version:        1.0.5
 Release:        1%{?dist}
 Summary:        PSR-7 Middleware Microframework based on Stratigility
 
@@ -51,7 +51,7 @@ BuildRequires:  php-spl
 #        "zendframework/zend-expressive-fastroute": "^1.0",
 #        "zendframework/zend-expressive-zendrouter": "^1.0",
 #        "zendframework/zend-servicemanager": "^2.6",
-#        "malukenho/docheader": "^0.1.0"
+#        "malukenho/docheader": "^0.1.5"
 BuildRequires:  php-composer(phpunit/phpunit)                        >= 4.7
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)                >= 2.5
@@ -210,6 +210,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec  9 2016 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
+- update to 1.0.5
+
 * Thu Dec  8 2016 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
 - update to 1.0.4
 
