@@ -9,15 +9,15 @@
 #
 %global github_user  PHPMailer
 %global github_app   PHPMailer
-%global github_tag   1d85f9ef3ecfc42bbc4f3c70d5e37ca9a65f629a
+%global github_tag   208913c6042967ba404f4bfa0819bf5bef79dbec
 %global github_short %(c=%{github_tag}; echo ${c:0:7})
 
 %global		arch_name	%{github_app}-%{github_tag}
 
 Name:		php-PHPMailer
 Summary:	PHP email transport class with a lot of features
-Version:	5.2.16
-Release:	2%{?dist}
+Version:	5.2.17
+Release:	1%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
 URL:		http://phpmailer.worxware.com/
@@ -79,8 +79,6 @@ Full Featured Email Transfer Class for PHP. PHPMailer features:
 %setup -q -n %{arch_name}
 
 %patch0 -p1 -b .rpm
-
-rm docs/generatedocs.sh
 
 
 #-------------------------------------------------------------------------------
@@ -146,14 +144,18 @@ rm -rf "${RPM_BUILD_ROOT}"
 %defattr(-, root, root, -)
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
-%doc docs/* README.md changelog.md
 %doc examples
+%doc composer.json
 %{_datadir}/php/PHPMailer
 %dir %{_datadir}/PHPMailer
 %dir %{_datadir}/PHPMailer/language
 
 
 %changelog
+* Fri Dec  9 2016 Remi Collet <remi@fedoraproject.org> - 5.2.17-1
+- update to 5.2.17
+- drop documentation removed by upstream
+
 * Sat Jun 25 2016 Johan Cwiklinski <johan AT x-tnd DOT be> - 5.2.16-2
 - add a check on version
 
