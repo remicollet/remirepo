@@ -218,7 +218,9 @@ BuildRequires: systemtap-sdt-devel
 %endif
 #BuildRequires: bison
 
-Obsoletes: php53, php53u, php54w, php55u, php55w, php56u, php56w, php70u, php70w, mod_php70u
+%if 0%{?rhel}
+Obsoletes: php53, php53u, php54w, php55u, php55w, php56u, php56w, mod_php70u, php70w, mod_php71u, mod_php71w
+%endif
 # Avoid obsoleting php54 from RHSCL
 Obsoletes: php54 > 5.4
 %if %{with_zts}
@@ -268,7 +270,9 @@ Requires: php-common%{?_isa} = %{version}-%{release}
 Provides: php-cgi = %{version}-%{release}, php-cgi%{?_isa} = %{version}-%{release}
 Provides: php-pcntl, php-pcntl%{?_isa}
 Provides: php-readline, php-readline%{?_isa}
-Obsoletes: php53-cli, php53u-cli, php54-cli, php54w-cli, php55u-cli, php55w-cli, php56u-cli, php56w-cli, php70u-cli, php70w-cli
+%if 0%{?rhel}
+Obsoletes: php53-cli, php53u-cli, php54-cli, php54w-cli, php55u-cli, php55w-cli, php56u-cli, php56w-cli, php70u-cli, php70w-cli, php71u-cli, php71w-cli
+%endif
 
 %description cli
 The php-cli package contains the command-line interface
@@ -279,8 +283,9 @@ executing PHP scripts, /usr/bin/php, and the CGI interface.
 Group: Development/Languages
 Summary: The interactive PHP debugger
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: php56u-dbg, php56w-dbg, php70u-dbg, php70w-phpdbg
-
+%if 0%{?rhel}
+Obsoletes: php56u-dbg, php56w-dbg, php70u-dbg, php70w-phpdbg, php70u-dbg, php71w-phpdbg
+%endif
 %description dbg
 The php-dbg package contains the interactive PHP debugger.
 
@@ -324,7 +329,9 @@ Provides: php(httpd)
 # for /etc/nginx ownership
 Requires: nginx-filesystem
 %endif
-Obsoletes: php53-fpm, php53u-fpm, php54-fpm, php54w-fpm, php55u-fpm, php55w-fpm, php56u-fpm, php56w-fpm, php70u-fpm, php70w-fpm
+%if 0%{?rhel}
+Obsoletes: php53-fpm, php53u-fpm, php54-fpm, php54w-fpm, php55u-fpm, php55w-fpm, php56u-fpm, php56w-fpm, php70u-fpm, php70w-fpm, php71u-fpm, php71w-fpm
+%endif
 
 %description fpm
 PHP-FPM (FastCGI Process Manager) is an alternative PHP FastCGI
@@ -336,7 +343,9 @@ any size, especially busier sites.
 Summary: LiteSpeed Web Server PHP support
 Group: Development/Languages
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: php53-litespeed, php53u-litespeed, php54-litespeed, php54w-litespeed, php55u-litespeed, php55w-litespeed, php56u-litespeed, php56w-litespeed, php70u-litespeed, php70w-litespeed
+%if 0%{?rhel}
+Obsoletes: php53-litespeed, php53u-litespeed, php54-litespeed, php54w-litespeed, php55u-litespeed, php55w-litespeed, php56u-litespeed, php56w-litespeed, php70u-litespeed, php70w-litespeed, php70w-litespeed, php71w-litespeed
+%endif
 
 %description litespeed
 The php-litespeed package provides the %{_bindir}/lsphp command
@@ -390,8 +399,10 @@ Obsoletes: php-pecl-Fileinfo < 1.0.5
 Provides:  php-pecl-Fileinfo = %{fileinfover}, php-pecl-Fileinfo%{?_isa} = %{fileinfover}
 Provides:  php-pecl(Fileinfo) = %{fileinfover}, php-pecl(Fileinfo)%{?_isa} = %{fileinfover}
 Obsoletes: php-mhash < 5.3.0
+%if 0%{?rhel}
 Obsoletes: php53-mhash, php53u-mhash
-Obsoletes: php53-common, php53u-common, php54-common, php54w-common, php55u-common, php55w-common, php56u-common, php56w-common, php70u-common, php70w-common
+Obsoletes: php53-common, php53u-common, php54-common, php54w-common, php55u-common, php55w-common, php56u-common, php56w-common, php70u-common, php70w-common, php71u-common, php71w-common
+%endif
 
 %description common
 The php-common package contains files used by both the php
@@ -411,7 +422,9 @@ Obsoletes: php-pecl-jsonc-devel < %{jsonver}
 Provides: php-zts-devel = %{version}-%{release}
 Provides: php-zts-devel%{?_isa} = %{version}-%{release}
 %endif
-Obsoletes: php53-devel, php53u-devel, php54-devel, php54w-devel, php55u-devel, php55w-devel, php56u-devel, php56w-devel, php70u-devel, php70w-devel
+%if 0%{?rhel}
+Obsoletes: php53-devel, php53u-devel, php54-devel, php54w-devel, php55u-devel, php55w-devel, php56u-devel, php56w-devel, php70u-devel, php70w-devel, php71u-devel, php71w-devel
+%endif
 
 %description devel
 The php-devel package contains the files needed for building PHP
@@ -428,7 +441,9 @@ Provides:  php-pecl-zendopcache = %{version}
 Provides:  php-pecl-zendopcache%{?_isa} = %{version}
 Provides:  php-pecl(opcache) = %{version}
 Provides:  php-pecl(opcache)%{?_isa} = %{version}
-Obsoletes: php55u-opcache, php55w-opcache, php56u-opcache, php56w-opcache, php70u-opcache, php70w-opcache
+%if 0%{?rhel}
+Obsoletes: php55u-opcache, php55w-opcache, php56u-opcache, php56w-opcache, php70u-opcache, php70w-opcache, php71u-opcache, php71w-opcache
+%endif
 
 %description opcache
 The Zend OPcache provides faster PHP execution through opcode caching and
@@ -445,7 +460,9 @@ License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 Obsoletes: mod_php3-imap, stronghold-php-imap
 BuildRequires: krb5-devel, openssl-devel, libc-client-devel
-Obsoletes: php53-imap, php53u-imap, php54-imap, php54w-imap, php55u-imap, php55w-imap, php56u-imap, php56w-imap, php70u-imap, php70w-imap
+%if 0%{?rhel}
+Obsoletes: php53-imap, php53u-imap, php54-imap, php54w-imap, php55u-imap, php55w-imap, php56u-imap, php56w-imap, php70u-imap, php70w-imap, php71u-imap, php71w-imap
+%endif
 
 %description imap
 The php-imap module will add IMAP (Internet Message Access Protocol)
@@ -459,7 +476,9 @@ Group: Development/Languages
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: cyrus-sasl-devel, openldap-devel, openssl-devel
-Obsoletes: php53-ldap, php53u-ldap, php54-ldap, php54w-ldap, php55u-ldap, php55w-ldap, php56u-ldap, php56w-ldap, php70u-ldap, php70w-ldap
+%if 0%{?rhel}
+Obsoletes: php53-ldap, php53u-ldap, php54-ldap, php54w-ldap, php55u-ldap, php55w-ldap, php56u-ldap, php56w-ldap, php70u-ldap, php70w-ldap, php71u-ldap, php71w-ldap
+%endif
 
 %description ldap
 The php-ldap adds Lightweight Directory Access Protocol (LDAP)
@@ -480,7 +499,9 @@ Provides: php(pdo-abi) = %{pdover}%{isasuffix}
 Provides: php-sqlite3, php-sqlite3%{?_isa}
 %endif
 Provides: php-pdo_sqlite, php-pdo_sqlite%{?_isa}
-Obsoletes: php53-pdo, php53u-pdo, php54-pdo, php54w-pdo, php55u-pdo, php55w-pdo, php56u-pdo, php56w-pdo, php70u-pdo, php70w-pdo
+%if 0%{?rhel}
+Obsoletes: php53-pdo, php53u-pdo, php54-pdo, php54w-pdo, php55u-pdo, php55w-pdo, php56u-pdo, php56w-pdo, php70u-pdo, php70w-pdo, php71u-pdo, php71w-pdo
+%endif
 
 %description pdo
 The php-pdo package contains a dynamic shared object that will add
@@ -499,8 +520,10 @@ Provides: php-mysqli = %{version}-%{release}
 Provides: php-mysqli%{?_isa} = %{version}-%{release}
 Provides: php-pdo_mysql, php-pdo_mysql%{?_isa}
 Obsoletes: php-mysql < %{version}-%{release}
-Obsoletes: php53-mysqlnd, php53u-mysqlnd, php54-mysqlnd, php54w-mysqlnd, php55u-mysqlnd, php55w-mysqlnd, php56u-mysqlnd, php56w-mysqlnd, php70u-mysqlnd, php70w-mysqlnd
-Obsoletes: php53-mysql, php53u-mysql, php54-mysql, php54w-mysql, php55u-mysql, php55w-mysql, php56u-mysql, php56w-mysql, php70u-mysql, php70w-mysql
+%if 0%{?rhel}
+Obsoletes: php53-mysqlnd, php53u-mysqlnd, php54-mysqlnd, php54w-mysqlnd, php55u-mysqlnd, php55w-mysqlnd, php56u-mysqlnd, php56w-mysqlnd, php70u-mysqlnd, php70w-mysqlnd, php71u-mysqlnd, php71w-mysqlnd
+Obsoletes: php53-mysql, php53u-mysql, php54-mysql, php54w-mysql, php55u-mysql, php55w-mysql, php56u-mysql, php56w-mysql, php70u-mysql, php70w-mysql, php71u-mysql, php71w-mysql
+%endif
 
 %description mysqlnd
 The php-mysqlnd package contains a dynamic shared object that will add
@@ -520,7 +543,9 @@ Requires: php-pdo%{?_isa} = %{version}-%{release}
 Provides: php_database
 Provides: php-pdo_pgsql, php-pdo_pgsql%{?_isa}
 BuildRequires: krb5-devel, openssl-devel, postgresql-devel
-Obsoletes: php53-pgsql, php53u-pgsql, php54-pgsql, php54w-pgsql, php55u-pgsql, php55w-pgsql, php56u-pgsql, php56w-pgsql, php70u-pgsql, php70w-pgsql
+%if 0%{?rhel}
+Obsoletes: php53-pgsql, php53u-pgsql, php54-pgsql, php54w-pgsql, php55u-pgsql, php55w-pgsql, php56u-pgsql, php56w-pgsql, php70u-pgsql, php70w-pgsql, php71u-pgsql, php71w-pgsql
+%endif
 
 %description pgsql
 The php-pgsql package add PostgreSQL database support to PHP.
@@ -541,7 +566,9 @@ Provides: php-shmop, php-shmop%{?_isa}
 Provides: php-sysvsem, php-sysvsem%{?_isa}
 Provides: php-sysvshm, php-sysvshm%{?_isa}
 Provides: php-sysvmsg, php-sysvmsg%{?_isa}
-Obsoletes: php53-process, php53u-process, php54-process, php54w-process, php55u-process, php55w-process, php56u-process, php56w-process, php70u-process, php70w-process
+%if 0%{?rhel}
+Obsoletes: php53-process, php53u-process, php54-process, php54w-process, php55u-process, php55w-process, php56u-process, php56w-process, php70u-process, php70w-process, php71u-process, php71w-process
+%endif
 
 %description process
 The php-process package contains dynamic shared objects which add
@@ -558,7 +585,9 @@ Requires: php-pdo%{?_isa} = %{version}-%{release}
 Provides: php_database
 Provides: php-pdo_odbc, php-pdo_odbc%{?_isa}
 BuildRequires: unixODBC-devel
-Obsoletes: php53-odbc, php53u-odbc, php54-odbc, php54w-odbc, php55u-odbc, php55w-odbc, php56u-odbc, php56w-odbc, php70u-odbc, php70w-odbc
+%if 0%{?rhel}
+Obsoletes: php53-odbc, php53u-odbc, php54-odbc, php54w-odbc, php55u-odbc, php55w-odbc, php56u-odbc, php56w-odbc, php70u-odbc, php70w-odbc, php71u-odbc, php71w-odbc
+%endif
 
 %description odbc
 The php-odbc package contains a dynamic shared object that will add
@@ -576,7 +605,9 @@ Group: Development/Languages
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: libxml2-devel
-Obsoletes: php53-soap, php53u-soap, php54-soap, php54w-soap, php55u-soap, php55w-soap, php56u-soap, php56w-soap, php70u-soap, php70w-soap
+%if 0%{?rhel}
+Obsoletes: php53-soap, php53u-soap, php54-soap, php54w-soap, php55u-soap, php55w-soap, php56u-soap, php56w-soap, php70u-soap, php70w-soap, php71u-soap, php71w-soap
+%endif
 
 %description soap
 The php-soap package contains a dynamic shared object that will add
@@ -592,7 +623,9 @@ Requires: php-pdo%{?_isa} = %{version}-%{release}
 Provides: php_database
 Provides: php-firebird, php-firebird%{?_isa}
 Provides: php-pdo_firebird, php-pdo_firebird%{?_isa}
-Obsoletes: php53-interbase, php53u-interbase, php54-interbase, php54w-interbase, php55u-interbase, php55w-interbase, php56u-interbase, php56w-interbase, php70u-interbase, php70w-interbase
+%if 0%{?rhel}
+Obsoletes: php53-interbase, php53u-interbase, php54-interbase, php54w-interbase, php55u-interbase, php55w-interbase, php56u-interbase, php56w-interbase, php70u-interbase, php70w-interbase, php71u-interbase, php71w-interbase
+%endif
 
 %description interbase
 The php-interbase package contains a dynamic shared object that will add
@@ -622,7 +655,9 @@ Conflicts:      php-pecl-oci8 >= %{oci8ver}
 Provides:       php-pecl(oci8) = %{oci8ver}, php-pecl(oci8)%{?_isa} = %{oci8ver}
 # Should requires libclntsh.so.12.1, but it's not provided by Oracle RPM.
 AutoReq:        0
-Obsoletes:      php53-oci8, php53u-oci8, php54-oci8, php54w-oci8, php55u-oci8, php55w-oci8, php56u-oci8, php56w-oci8, php70u-oci8, php70w-oci8
+%if 0%{?rhel}
+Obsoletes:      php53-oci8, php53u-oci8, php54-oci8, php54w-oci8, php55u-oci8, php55w-oci8, php56u-oci8, php56w-oci8, php70u-oci8, php70w-oci8, php71u-oci8, php71w-oci8
+%endif
 
 %description oci8
 The php-oci8 packages provides the OCI8 extension version %{oci8ver}
@@ -650,7 +685,9 @@ Group: Development/Languages
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}, net-snmp
 BuildRequires: net-snmp-devel
-Obsoletes: php53-snmp, php53u-snmp, php54-snmp, php54w-snmp, php55u-snmp, php55w-snmp, php56u-snmp, php56w-snmp, php70u-snmp, php70w-snmp
+%if 0%{?rhel}
+Obsoletes: php53-snmp, php53u-snmp, php54-snmp, php54w-snmp, php55u-snmp, php55w-snmp, php56u-snmp, php56w-snmp, php70u-snmp, php70w-snmp, php71u-snmp, php71w-snmp
+%endif
 
 %description snmp
 The php-snmp package contains a dynamic shared object that will add
@@ -672,7 +709,9 @@ Provides: php-xmlreader, php-xmlreader%{?_isa}
 Provides: php-xmlwriter, php-xmlwriter%{?_isa}
 Provides: php-xsl, php-xsl%{?_isa}
 BuildRequires: libxslt-devel >= 1.0.18-1, libxml2-devel >= 2.4.14-1
-Obsoletes: php53-xml, php53u-xml, php54-xml, php54w-xml, php55u-xml, php55w-xml, php56u-xml, php56w-xml, php70u-xml, php70w-xml
+%if 0%{?rhel}
+Obsoletes: php53-xml, php53u-xml, php54-xml, php54w-xml, php55u-xml, php55w-xml, php56u-xml, php56w-xml, php70u-xml, php70w-xml, php71u-xml, php71w-xml
+%endif
 
 %description xml
 The php-xml package contains dynamic shared objects which add support
@@ -686,7 +725,9 @@ Group: Development/Languages
 # libXMLRPC is licensed under BSD
 License: PHP and BSD
 Requires: php-xml%{?_isa} = %{version}-%{release}
-Obsoletes: php53-xmlrpc, php53u-xmlrpc, php54-xmlrpc, php54w-xmlrpc, php55u-xmlrpc, php55w-xmlrpc, php56u-xmlrpc, php56w-xmlrpc, php70u-xmlrpc, php70w-xmlrpc
+%if 0%{?rhel}
+Obsoletes: php53-xmlrpc, php53u-xmlrpc, php54-xmlrpc, php54w-xmlrpc, php55u-xmlrpc, php55w-xmlrpc, php56u-xmlrpc, php56w-xmlrpc, php70u-xmlrpc, php70w-xmlrpc, php71u-xmlrpc, php71w-xmlrpc
+%endif
 
 %description xmlrpc
 The php-xmlrpc package contains a dynamic shared object that will add
@@ -701,7 +742,9 @@ Group: Development/Languages
 # ucgendat is licensed under OpenLDAP
 License: PHP and LGPLv2 and BSD and OpenLDAP
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: php53-mbstring, php53u-mbstring, php54-mbstring, php54w-mbstring, php55u-mbstring, php55w-mbstring, php56u-mbstring, php56w-mbstring, php70u-mbstring, php70w-mbstring
+%if 0%{?rhel}
+Obsoletes: php53-mbstring, php53u-mbstring, php54-mbstring, php54w-mbstring, php55u-mbstring, php55w-mbstring, php56u-mbstring, php56w-mbstring, php70u-mbstring, php70w-mbstring, php71u-mbstring, php71w-mbstring
+%endif
 
 %description mbstring
 The php-mbstring package contains a dynamic shared object that will add
@@ -733,8 +776,9 @@ BuildRequires: freetype-devel
 BuildRequires: libXpm-devel
 BuildRequires: libwebp-devel
 %endif
-
-Obsoletes: php53-gd, php53u-gd, php54-gd, php54w-gd, php55u-gd, php55w-gd, php56u-gd, php56w-gd, php70u-gd, php70w-gd
+%if 0%{?rhel}
+Obsoletes: php53-gd, php53u-gd, php54-gd, php54w-gd, php55u-gd, php55w-gd, php56u-gd, php56w-gd, php70u-gd, php70w-gd, php71u-gd, php71w-gd
+%endif
 
 %description gd
 The php-gd package contains a dynamic shared object that will add
@@ -747,7 +791,9 @@ Group: Development/Languages
 # libbcmath is licensed under LGPLv2+
 License: PHP and LGPLv2+
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: php53-bcmath, php53u-bcmath, php54-bcmath, php54w-bcmath, php55u-bcmath, php55w-bcmath, php56u-bcmath, php56w-bcmath, php70u-bcmath, php70w-bcmath
+%if 0%{?rhel}
+Obsoletes: php53-bcmath, php53u-bcmath, php54-bcmath, php54w-bcmath, php55u-bcmath, php55w-bcmath, php56u-bcmath, php56w-bcmath, php70u-bcmath, php70w-bcmath, php71u-bcmath, php71w-bcmath
+%endif
 
 %description bcmath
 The php-bcmath package contains a dynamic shared object that will add
@@ -760,7 +806,9 @@ Group: Development/Languages
 License: PHP
 BuildRequires: gmp-devel
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: php53-gmp, php53u-gmp, php54-gmp, php54w-gmp, php55u-gmp, php55w-gmp, php56u-gmp, php56w-gmp, php70u-gmp, php70w-gmp
+%if 0%{?rhel}
+Obsoletes: php53-gmp, php53u-gmp, php54-gmp, php54w-gmp, php55u-gmp, php55w-gmp, php56u-gmp, php56w-gmp, php70u-gmp, php70w-gmp, php71u-gmp, php71w-gmp
+%endif
 
 %description gmp
 These functions allow you to work with arbitrary-length integers
@@ -773,7 +821,9 @@ Group: Development/Languages
 License: PHP
 BuildRequires: %{db_devel}, gdbm-devel, tokyocabinet-devel
 Requires: php-common%{?_isa} = %{version}-%{release}
-Obsoletes: php53-dba, php53u-dba, php54-dba, php54w-dba, php55u-dba, php55w-dba, php56u-dba, php56w-dba, php70u-dba, php70w-dba
+%if 0%{?rhel}
+Obsoletes: php53-dba, php53u-dba, php54-dba, php54w-dba, php55u-dba, php55w-dba, php56u-dba, php56w-dba, php70u-dba, php70w-dba, php71u-dba, php71w-dba
+%endif
 
 %description dba
 The php-dba package contains a dynamic shared object that will add
@@ -786,7 +836,9 @@ Group: Development/Languages
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: libmcrypt-devel
-Obsoletes: php53-mcrypt, php53u-mcrypt, php54-mcrypt, php54w-mcrypt, php55u-mcrypt, php55w-mcrypt, php56u-mcrypt, php56w-mcrypt, php70u-mcrypt, php70w-mcrypt
+%if 0%{?rhel}
+Obsoletes: php53-mcrypt, php53u-mcrypt, php54-mcrypt, php54w-mcrypt, php55u-mcrypt, php55w-mcrypt, php56u-mcrypt, php56w-mcrypt, php70u-mcrypt, php70w-mcrypt, php71u-mcrypt, php71w-mcrypt
+%endif
 
 %description mcrypt
 The php-mcrypt package contains a dynamic shared object that will add
@@ -799,7 +851,9 @@ Group: Development/Languages
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: libtidy-devel
-Obsoletes: php53-tidy, php53u-tidy, php54-tidy, php54w-tidy, php55u-tidy, php55w-tidy, php56u-tidy, php56w-tidy, php70u-tidy, php70w-tidy
+%if 0%{?rhel}
+Obsoletes: php53-tidy, php53u-tidy, php54-tidy, php54w-tidy, php55u-tidy, php55w-tidy, php56u-tidy, php56w-tidy, php70u-tidy, php70w-tidy, php71u-tidy, php71w-tidy
+%endif
 
 %description tidy
 The php-tidy package contains a dynamic shared object that will add
@@ -813,7 +867,9 @@ Requires: php-pdo%{?_isa} = %{version}-%{release}
 BuildRequires: freetds-devel >= 0.91
 Provides: php-pdo_dblib, php-pdo_dblib%{?_isa}
 Obsoletes: php-mssql < %{version}-%{release}
-Obsoletes: php53-mssql, php53u-mssql, php54-mssql, php54w-mssql, php55u-mssql, php55w-mssql, php56u-mssql, php56w-mssql, php70u-pdo-dblib, php70w-pdo_dblib
+%if 0%{?rhel}
+Obsoletes: php53-mssql, php53u-mssql, php54-mssql, php54w-mssql, php55u-mssql, php55w-mssql, php56u-mssql, php56w-mssql, php70u-pdo-dblib, php70w-pdo_dblib, php71u-pdo-dblib, php71w-pdo_dblib
+%endif
 
 %description pdo-dblib
 The php-pdo-dblib package contains a dynamic shared object
@@ -827,7 +883,9 @@ Requires: php-common%{?_isa} = %{version}-%{release}
 # doing a real -devel package for just the .so symlink is a bit overkill
 Provides: php-embedded-devel = %{version}-%{release}
 Provides: php-embedded-devel%{?_isa} = %{version}-%{release}
-Obsoletes: php53-embedded, php53u-embedded, php54-embedded, php54w-embedded, php55u-embedded, php55w-embedded, php56u-embedded, php56w-embedded, php70u-embedded, php70w-embedded
+%if 0%{?rhel}
+Obsoletes: php53-embedded, php53u-embedded, php54-embedded, php54w-embedded, php55u-embedded, php55w-embedded, php56u-embedded, php56w-embedded, php70u-embedded, php70w-embedded, php71u-embedded, php71w-embedded
+%endif
 
 %description embedded
 The php-embedded package contains a library which can be embedded
@@ -840,7 +898,9 @@ Group: System Environment/Libraries
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: aspell-devel >= 0.50.0
-Obsoletes: php53-pspell, php53u-pspell, php54-pspell, php54w-pspell, php55u-pspell, php55w-pspell, php56u-pspell, php56w-pspell, php70u-pspell, php70w-pspell
+%if 0%{?rhel}
+Obsoletes: php53-pspell, php53u-pspell, php54-pspell, php54w-pspell, php55u-pspell, php55w-pspell, php56u-pspell, php56w-pspell, php70u-pspell, php70w-pspell, php71u-pspell, php71w-pspell
+%endif
 
 %description pspell
 The php-pspell package contains a dynamic shared object that will add
@@ -853,7 +913,9 @@ Group: System Environment/Libraries
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: recode-devel
-Obsoletes: php53-recode, php53u-recode, php54-recode, php54w-recode, php55u-recode, php55w-recode, php56u-recode, php56w-recode, php70u-recode, php70w-recode
+%if 0%{?rhel}
+Obsoletes: php53-recode, php53u-recode, php54-recode, php54w-recode, php55u-recode, php55w-recode, php56u-recode, php56w-recode, php70u-recode, php70w-recode, php71u-recode, php71w-recode
+%endif
 
 %description recode
 The php-recode package contains a dynamic shared object that will add
@@ -867,7 +929,9 @@ License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 # Upstream requires 4.0, we require 50 to ensure use of libicu-last
 BuildRequires: libicu-devel >= 50
-Obsoletes: php53-intl, php53u-intl, php54-intl, php54w-intl, php55u-intl, php55w-intl, php56u-intl, php56w-intl, php70u-intl, php70w-intl
+%if 0%{?rhel}
+Obsoletes: php53-intl, php53u-intl, php54-intl, php54w-intl, php55u-intl, php55w-intl, php56u-intl, php56w-intl, php70u-intl, php70w-intl, php71u-intl, php71w-intl
+%endif
 
 %description intl
 The php-intl package contains a dynamic shared object that will add
@@ -880,7 +944,9 @@ Group: System Environment/Libraries
 License: PHP
 Requires: php-common%{?_isa} = %{version}-%{release}
 BuildRequires: enchant-devel >= 1.2.4
-Obsoletes: php53-enchant, php53u-enchant, php54-enchant, php54w-enchant, php55u-enchant, php55w-enchant, php56u-enchant, php56w-enchant, php70u-enchant, php70w-enchant
+%if 0%{?rhel}
+Obsoletes: php53-enchant, php53u-enchant, php54-enchant, php54w-enchant, php55u-enchant, php55w-enchant, php56u-enchant, php56w-enchant, php70u-enchant, php70w-enchant, php71u-enchant, php71w-enchant
+%endif
 
 %description enchant
 The php-enchant package contains a dynamic shared object that will add
@@ -898,7 +964,9 @@ Provides:  php-pecl(zip)         = %{zipver}
 Provides:  php-pecl(zip)%{?_isa} = %{zipver}
 Provides:  php-pecl-zip          = %{zipver}
 Provides:  php-pecl-zip%{?_isa}  = %{zipver}
-Obsoletes: php53-zip, php53u-zip, php54-zip, php54w-zip, php55u-zip, php55w-zip, php56u-zip, php56w-zip, php70u-zip, php70w-zip
+%if 0%{?rhel}
+Obsoletes: php53-zip, php53u-zip, php54-zip, php54w-zip, php55u-zip, php55w-zip, php56u-zip, php56w-zip, php70u-zip, php70w-zip, php71u-zip, php71w-zip
+%endif
 %if %{with_libzip}
 # 0.11.1 required, but 1.0.1 is bundled
 BuildRequires: pkgconfig(libzip) >= 1.0.1
@@ -921,7 +989,9 @@ Provides:  php-pecl(json)         = %{jsonver}
 Provides:  php-pecl(json)%{?_isa} = %{jsonver}
 Provides:  php-pecl-json          = %{jsonver}
 Provides:  php-pecl-json%{?_isa}  = %{jsonver}
-Obsoletes: php53-json, php53u-json, php54-json, php54w-json, php55u-json, php55w-json, php56u-json, php56w-json, php70u-json, php70w-json
+%if 0%{?rhel}
+Obsoletes: php53-json, php53u-json, php54-json, php54w-json, php55u-json, php55w-json, php56u-json, php56w-json, php70u-json, php70w-json, php71u-json, php71w-json
+%endif
 
 %description json
 The php-json package provides an extension that will add
