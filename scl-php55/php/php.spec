@@ -140,7 +140,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
 Version: 5.5.38
-Release: 5%{?dist}
+Release: 6%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -241,6 +241,7 @@ Patch145: bug73331.patch
 Patch146: bug73144.patch
 Patch147: bug73418.patch
 Patch148: bug73356.patch
+Patch149: bug73631.patch
 
 # Security fixes (200+)
 
@@ -982,6 +983,7 @@ support for using the enchant library to PHP.
 %patch146 -p1 -b .bug73144
 %patch147 -p1 -b .bug73418
 %patch148 -p1 -b .bug73356
+%patch149 -p1 -b .bug73631
 : ------------------------
 
 # Fixes for tests
@@ -1887,16 +1889,20 @@ EOF
 
 
 %changelog
-* Wed Nov  9 2016 Remi Collet <remi@remirepo.net> 5.5.38-5
+* Sat Dec 10 2016 Remi Collet <remi@remirepo.net> - 5.5.38-6
+- fix #73631: Invalid read when wddx decodes empty boolean element
+
+* Wed Nov  9 2016 Remi Collet <remi@remirepo.net> - 5.5.38-5
 - fix #73418: Integer Overflow in "_php_imap_mail" leads Heap Overflow
 - fix #73144: Use-after-free in ArrayObject Deserialization
 - fix #73356: crash in bzcompress function
 - fix #73331: NULL Pointer Deref. in WDDX Packet Deserialization with PDORow
 
-* Sat Oct 15 2016 Remi Collet <remi@remirepo.net> 5.5.38-4
+* Sat Oct 15 2016 Remi Collet <remi@remirepo.net> - 5.5.38-4
 - fix #73189: Memcpy negative size parameter php_resolve_path
 - fix #72581: previous property undefined in Exception after deserialization
 - fix #73147: Use After Free in unserialize
+  CVE-2016-9137
 - fix #73190: memcpy negative parameter _bc_new_num_ex
 - fix #73150: missing NULL check in dom_document_save_html
 - fix #73284: heap overflow in php_ereg_replace function
@@ -1905,7 +1911,6 @@ EOF
 - fix #73208: integer overflow in imap_8bit caused heap corruption
 - fix #73082: string length overflow in mb_encode_* function
 - fix #73174: heap overflow in php_pcre_replace_impl
-- fix #73275: crash in openssl_encrypt function
 - fix #73275: crash in openssl_encrypt function
 - fix #73293: NULL pointer dereference in SimpleXMLElement::asXML
 - fix #73240: Write out of bounds at number_format
