@@ -40,7 +40,7 @@
 Summary: PHP Extension and Application Repository framework
 Name: %{?scl_prefix}php-pear
 Version: 1.10.1
-Release: 7%{?dist}
+Release: 8%{?dist}
 Epoch: 1
 # PEAR, PEAR_Manpages, Archive_Tar, XML_Util, Console_Getopt are BSD
 # Structures_Graph is LGPLv3+
@@ -93,7 +93,7 @@ Provides:  %{?scl_prefix}php-composer(pear/pear-core-minimal) = %{version}
 Provides:  %{?scl_prefix}php-composer(pear/structures_graph) = %{structver}
 Provides:  %{?scl_prefix}php-composer(pear/xml_util) = %{xmlutil}
 
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # From other third party
 Obsoletes: php53-pear  <= %{epoch}:%{version}
 Obsoletes: php53u-pear <= %{epoch}:%{version}
@@ -106,6 +106,7 @@ Obsoletes: php56w-pear <= %{epoch}:%{version}
 Obsoletes: php70u-pear <= %{epoch}:%{version}
 Obsoletes: php70w-pear <= %{epoch}:%{version}
 Obsoletes: php71u-pear <= %{epoch}:%{version}
+Obsoletes: pear1u      <= %{epoch}:%{version}
 Obsoletes: php71w-pear <= %{epoch}:%{version}
 %endif
 
@@ -302,8 +303,6 @@ echo 'Test suite disabled (missing "--with tests" option)'
 
 
 %if 0%{?fedora} >= 24
-## TODO: silent the pecl commands
-
 # Register newly installed PECL packages
 %transfiletriggerin -- %{pecl_xmldir}
 while read file; do
@@ -430,6 +429,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Dec 10 2016 Remi Collet <remi@fedoraproject.org> 1:1.10.1-8
+- obsolete pear1u to allow simple upgrade
+
 * Fri Sep 30 2016 Remi Collet <remi@fedoraproject.org> 1:1.10.1-7
 - fix https connection via a proxy
   patch from https://github.com/pear/pear-core/pull/51
