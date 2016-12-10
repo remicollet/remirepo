@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9c352f10f41c374c5bb19191e385076430e39a20
+%global gh_commit    c1ec73ea7661b79aa9fade863b75f8cad9f47bb5
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -16,8 +16,8 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_project}
-Version:        2.4.3
-%global specrel 2
+Version:        2.4.4
+%global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Tracy: useful PHP debugger
 
@@ -153,6 +153,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Dec 10 2016 Remi Collet <remi@fedoraproject.org> - 2.4.4-1
+- update to 2.4.4
+
 * Wed Nov 23 2016 Remi Collet <remi@fedoraproject.org> - 2.4.3-2
 - set serialize_precision=14, fix FTBFS with php 7.1
 
