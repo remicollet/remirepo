@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        7.0.3
-%global Patchlevel 9
+%global Patchlevel 10
 %global incsuffixe -7
 %global libsuffixe -7.Q16HDRI
 %global with_tests 0%{!?_without_tests:1}
@@ -336,8 +336,6 @@ make install DESTDIR=%{buildroot} INSTALL="install -p"
 # Delete *ONLY* _libdir/*.la files! .la files used internally to handle plugins - BUG#185237!!!
 rm %{buildroot}%{_libdir}/*.la
 
-# fix weird perl Magick.so permissions
-chmod 755 %{buildroot}%{perl_vendorarch}/auto/Image/Magick/Magick.so
 
 # perlmagick: fix perl path of demo files
 %{__perl} -MExtUtils::MakeMaker -e 'MY->fixin(@ARGV)' PerlMagick/demo/*.pl
@@ -494,6 +492,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 11 2016 Remi Collet <remi@remirepo.net> - 7.0.3.10-1
+- update to version 7.0.3 patchlevel 10
+
 * Tue Dec  6 2016 Remi Collet <remi@remirepo.net> - 7.0.3.9-1
 - update to version 7.0.3 patchlevel 9
 - libMagickCore soname bump to 1
