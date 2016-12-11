@@ -48,7 +48,7 @@ Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 Provides:       %{?scl_prefix}php-pecl-spl-types             = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-spl-types%{?_isa}     = %{version}-%{release}
 
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Package have been renamed
 Obsoletes:     php-pecl-SPL-Types < 0.4.0-2
 

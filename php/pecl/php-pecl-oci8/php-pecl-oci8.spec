@@ -57,7 +57,7 @@ Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
 
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
 Obsoletes:      php53-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}

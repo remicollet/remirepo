@@ -58,7 +58,7 @@ Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 Provides:       %{?scl_prefix}php-suhosin         = %{version}-%{release}
 Provides:       %{?scl_prefix}php-suhosin%{?_isa} = %{version}-%{release}
 
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
 Obsoletes:     php53-%{ext_name}  <= %{version}
 Obsoletes:     php53u-%{ext_name} <= %{version}

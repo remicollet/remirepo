@@ -63,7 +63,7 @@ Obsoletes:     %{?scl_prefix}php-pecl-couchbase < 2
 Conflicts:     %{?scl_prefix}php-pecl-couchbase < 2
 %endif
 
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
 Obsoletes:     php53-pecl-%{pecl_name}2  <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name}2 <= %{version}

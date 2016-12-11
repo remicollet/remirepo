@@ -54,7 +54,7 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}-%{rele
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}-%{release}
 %endif
 
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
 Obsoletes:     php54-%{pecl_name}       <= %{version}
 Obsoletes:     php54w-%{pecl_name}      <= %{version}

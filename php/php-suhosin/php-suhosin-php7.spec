@@ -56,7 +56,7 @@ Provides:       %{?scl_prefix}php-suhosin%{?_isa}  = %{version}-%{release}
 Provides:       %{?scl_prefix}php-suhosin7         = %{version}-%{release}
 Provides:       %{?scl_prefix}php-suhosin7%{?_isa} = %{version}-%{release}
 
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
 Obsoletes:     php53-%{ext_name}   <= %{version}
 Obsoletes:     php53u-%{ext_name}  <= %{version}

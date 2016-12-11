@@ -77,7 +77,7 @@ Conflicts:      %{?sub_prefix}php-pecl-%{pecl_name}          < 2
 Conflicts:      %{?scl_prefix}php-pecl-%{pecl_name}          < 2
 %endif
 
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 Obsoletes:     php53-pecl-%{pecl_name}2  <= %{version}
 Obsoletes:     php53u-pecl-%{pecl_name}2 <= %{version}
 Obsoletes:     php54-pecl-%{pecl_name}2  <= %{version}
