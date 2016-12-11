@@ -11,7 +11,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Service-Weather
-Version:        2.5.2
+Version:        2.5.3
 Release:        1%{?dist}
 Summary:        Horde Weather Provider
 
@@ -37,6 +37,7 @@ BuildRequires:  php-pear(%{pear_channel}/Horde_Url) >= 2.0.0
 Requires(post): %{__pear}
 Requires(postun): %{__pear}
 Requires:       php(language) >= 5.3.0
+Requires:       php-cli
 Requires:       php-date
 Requires:       php-gettext
 Requires:       php-spl
@@ -160,9 +161,14 @@ fi
      %{pear_datadir}/%{pear_name}/migration
 %{pear_testdir}/%{pear_name}
 %{pear_hordedir}/themes
+%{_bindir}/horde-service-weather-metar-database
 
 
 %changelog
+* Sun Dec 11 2016 Remi Collet <remi@fedoraproject.org> - 2.5.3-1
+- Update to 2.5.3
+- add horde-service-weather-metar-database command
+
 * Thu Nov 10 2016 Remi Collet <remi@fedoraproject.org> - 2.5.2-1
 - Update to 2.5.2
 
