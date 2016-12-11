@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        6.9.6
-%global Patchlevel 7
+%global Patchlevel 8
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 %global with_tests 0%{!?_without_tests:1}
@@ -53,10 +53,10 @@
 %endif
 
 %global libname ImageMagick
-%if 0%{?fedora} > 20
+%if 0%{?fedora} > 99
 Name:           %{libname}
 %else
-Name:           %{libname}-last
+Name:           %{libname}6
 %endif
 Version:        %{VER}.%{Patchlevel}
 Release:        1%{?dist}
@@ -100,8 +100,9 @@ BuildRequires:  graphviz-devel >= 2.9.0
 %endif
 
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
+Obsoletes:      ImageMagick-last   < %{version}
+Obsoletes:      ImageMagick2-tools < %{version}
 
-Obsoletes:      ImageMagick2-tools
 %if "%{name}" != "%{libname}"
 # This could be improved in the future
 # https://bugzilla.redhat.com/849065
@@ -159,6 +160,7 @@ Requires: pkgconfig
 Conflicts: %{libname}-devel         < %{version}
 Provides:  %{libname}-devel         = %{version}-%{release}
 Provides:  %{libname}-devel%{?_isa} = %{version}-%{release}
+Obsoletes: ImageMagick-last-devel < %{version}
 %endif
 
 %description devel
@@ -175,7 +177,8 @@ however.
 %package libs
 Summary: Commands for ImageMagick
 Group: Applications/Multimedia
-Obsoletes: ImageMagick2
+Obsoletes: ImageMagick2          < %{version}
+Obsoletes: ImageMagick-last-libs < %{version}
 
 %description libs
 Provides the shared libraries and plugins of %{name}.
@@ -190,6 +193,7 @@ for applications requiring this libraries.
 Summary: DjVu plugin for ImageMagick
 Group: Applications/Multimedia
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
+Obsoletes: ImageMagick-last-djvu < %{version}
 
 %description djvu
 This packages contains a plugin for ImageMagick which makes it possible to
@@ -204,6 +208,7 @@ for applications requiring this libraries.
 %package doc
 Summary: ImageMagick html documentation
 Group: Documentation
+Obsoletes: ImageMagick-last-doc < %{version}
 
 %description doc
 ImageMagick documentation, this package contains usage (for the
@@ -224,6 +229,7 @@ Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Conflicts: %{libname}-perl         < %{version}
 Provides:  %{libname}-perl         = %{version}-%{release}
 Provides:  %{libname}-perl%{?_isa} = %{version}-%{release}
+Obsoletes: ImageMagick-last-perl   < %{version}
 %endif
 
 %description perl
@@ -237,6 +243,7 @@ ImageMagick.
 Summary: ImageMagick Magick++ library (C++ bindings)
 Group: System Environment/Libraries
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
+Obsoletes: ImageMagick-last-c++ < %{version}
 
 %description c++
 This package contains the Magick++ library, a C++ binding to the ImageMagick
@@ -258,6 +265,7 @@ Requires: %{name}-devel%{?_isa} = %{version}-%{release}
 Conflicts: %{libname}-c++-devel         < %{version}
 Provides:  %{libname}-c++-devel         = %{version}-%{release}
 Provides:  %{libname}-c++-devel%{?_isa} = %{version}-%{release}
+Obsoletes: ImageMagick-last-c++-devel < %{version}
 %endif
 
 %description c++-devel
@@ -332,9 +340,6 @@ rm -rf %{buildroot}
 make install DESTDIR=%{buildroot} INSTALL="install -p"
 # Delete *ONLY* _libdir/*.la files! .la files used internally to handle plugins - BUG#185237!!!
 rm %{buildroot}%{_libdir}/*.la
-
-# fix weird perl Magick.so permissions
-chmod 755 %{buildroot}%{perl_vendorarch}/auto/Image/Magick/Magick.so
 
 # perlmagick: fix perl path of demo files
 %{__perl} -MExtUtils::MakeMaker -e 'MY->fixin(@ARGV)' PerlMagick/demo/*.pl
@@ -431,8 +436,8 @@ fi
 %defattr(-,root,root,-)
 %doc ChangeLog
 %doc README.txt LICENSE NOTICE AUTHORS.txt NEWS.txt
-%{_libdir}/libMagickCore%{?libsuffixe}.so.2*
-%{_libdir}/libMagickWand%{?libsuffixe}.so.2*
+%{_libdir}/libMagickCore%{?libsuffixe}.so.3*
+%{_libdir}/libMagickWand%{?libsuffixe}.so.3*
 %{_libdir}/%{libname}-%{VER}
 %if "%{name}" != "%{libname}"
 %dir %{_datadir}/%{name}
@@ -491,7 +496,7 @@ fi
 %defattr(-,root,root,-)
 %doc Magick++/AUTHORS Magick++/ChangeLog Magick++/NEWS Magick++/README
 %doc www/Magick++/COPYING
-%{_libdir}/libMagick++%{?libsuffixe}.so.6*
+%{_libdir}/libMagick++%{?libsuffixe}.so.7*
 
 %files c++-devel
 %defattr(-,root,root,-)
@@ -513,6 +518,11 @@ fi
 
 
 %changelog
+* Sun Dec 11 2016 Remi Collet <remi@remirepo.net> - 6.9.6.8-1
+- update to version 6.9.6 patchlevel 8
+- new soname libMagickCore=3, libMagickWand=3, libMagick++=7
+- rename to ImageMagick6
+
 * Tue Dec  6 2016 Remi Collet <remi@remirepo.net> - 6.9.6.7-1
 - update to version 6.9.6 patchlevel 7
 
