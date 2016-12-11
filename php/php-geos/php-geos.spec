@@ -45,14 +45,14 @@ Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-# Dropped from geos
-Obsoletes:      geos-php        <= 3.5.0
-Provides:       geos-php         = 1:%{version}-%{release}
-Provides:       geos-php%{?_isa} = 1:%{version}-%{release}
 %if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}-%{release}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}-%{release}
 %endif
+# Dropped from geos
+Obsoletes:      %{?scl_prefix}geos-php        <= 3.5.0
+Provides:       %{?scl_prefix}geos-php         = 1:%{version}-%{release}
+Provides:       %{?scl_prefix}geos-php%{?_isa} = 1:%{version}-%{release}
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
