@@ -21,16 +21,17 @@
 %global ts_project   JSON-Schema-Test-Suite
 %global ts_version   1.2.0
 
-%global eolv1   0
-%if 0
+%global eolv1        0
 %global with_script  0
-%else
+%if 0%{?fedora} >= 24 && 0%{?fedora} < 26
 %global with_script  1
 %endif
+# remirepo:1
+%global with_script  0
 
 Name:           php-%{gh_owner}-%{gh_project}
 Version:        2.0.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A library to validate a json schema
 
 Group:          Development/Libraries
@@ -60,7 +61,7 @@ BuildRequires:  php-mbstring
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
 # From composer.json, "require-dev": {
-#        "json-schema/JSON-Schema-Test-Suite": "1.1.0",
+#        "json-schema/JSON-Schema-Test-Suite": "1.2.0",
 #        "phpunit/phpunit": "^4.8.22",
 #        "phpdocumentor/phpdocumentor": "~2"
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.8.22
@@ -99,12 +100,11 @@ Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 A PHP Implementation for validating JSON Structures against a given Schema.
 %if %{with_script}
 This package provides the library version 2 and the validate-json command.
-The php-JsonSchema package provides the library version 1.
 %else
 This package provides the library version 2.
-The php-JsonSchema package provides the library version 1
-and the validate-json command.
 %endif
+The php-JsonSchema package provides the library version 1.
+
 See http://json-schema.org/
 
 Autoloader: %{php_home}/JsonSchema2/autoload.php
@@ -209,6 +209,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec  7 2016 Remi Collet <remi@fedoraproject.org> - 2.0.5-4
+- drop the validate-json command, provided by php-nikic-php-parser3
+
 * Fri Oct 21 2016 Remi Collet <remi@fedoraproject.org> - 2.0.5-3
 - switch from symfony/class-loader to fedora/autoloader
 
