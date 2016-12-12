@@ -1,5 +1,5 @@
-ImageMagick-last
-----------------
+ImageMagick6
+------------
 
 Backport of the latest fedora package to get
 all features in php-pecl-imagick and php-magickwand extensions.
@@ -26,10 +26,14 @@ ImageMagick: (in F20)
 	libMagickCore-6.Q16.so.1
 	libMagickWand-6.Q16.so.1
 
-ImageMagick: (in F21)
+ImageMagick: (in F21-25)
 ImageMagick-last-libs:
 	libMagickCore-6.Q16.so.2
 	libMagickWand-6.Q16.so.2
 
-ImageMagick-last could NOT be installed with ImageMagick
+Since 6.9.6-8
+	libMagickCore-6.Q16.so.3
+	libMagickWand-6.Q16.so.3
+
+On Enterprise Linux, ImageMagick6 could NOT be installed with ImageMagick.
 

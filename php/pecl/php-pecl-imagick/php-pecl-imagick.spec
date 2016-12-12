@@ -35,7 +35,7 @@ Version:       3.4.3
 Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.4.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:       PHP
@@ -47,12 +47,12 @@ BuildRequires: %{?scl_prefix}php-devel > 5.4
 BuildRequires: %{?scl_prefix}php-pear
 BuildRequires: pcre-devel
 %if "%{?vendor}" == "Remi Collet"
-%if 0%{?fedora} > 20
-BuildRequires: ImageMagick-devel >= 6.8.8
+%if 0%{?fedora} > 99
+BuildRequires: ImageMagick-devel
 Requires:      ImageMagick-libs%{?_isa}  >= %{imbuildver}
 %else
-BuildRequires: ImageMagick-last-devel >= 6.9.3
-Requires:      ImageMagick-last-libs%{?_isa}  >= %{imbuildver}
+BuildRequires: ImageMagick6-devel
+Requires:      ImageMagick6-libs%{?_isa}  >= %{imbuildver}
 %endif
 %else
 BuildRequires: ImageMagick-devel >= 6.5.3
@@ -242,17 +242,7 @@ fi
 
 
 %check
-%if 0%{?fedora} > 20
-%ifnarch x86_64
-rm ?TS/tests/025-get-color.phpt
-%endif
-%endif
-
-# See https://github.com/mkoppanen/imagick/issues/158
-if pkg-config ImageMagick --atleast-version 6.9.3
-then export REPORT_EXIT_STATUS=0
-else export REPORT_EXIT_STATUS=1
-fi
+export REPORT_EXIT_STATUS=1
 
 : simple module load test for NTS extension
 cd NTS
@@ -312,6 +302,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 11 2016 Remi Collet <remi@fedoraproject.org> - 3.4.3-0.4.RC1
+- rebuild against ImageMagick6 (6.9.6-8)
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 3.4.3-0.3.RC1
 - rebuild with PHP 7.1.0 GA
 
