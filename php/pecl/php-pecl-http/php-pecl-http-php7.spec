@@ -22,7 +22,7 @@
 %global gh_owner    m6w6
 %global gh_project  ext-http
 #global gh_date     20150928
-%global prever      RC1
+#global prever      RC1
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
 %global pecl_name http
@@ -43,7 +43,7 @@ Version:        3.1.0
 Release:        0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        0.5.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 %endif
 Summary:        Extended HTTP support
@@ -55,7 +55,6 @@ URL:            http://pecl.php.net/package/pecl_http
 # From http://www.php.net/manual/en/http.configuration.php
 Source1:        %{proj_name}.ini
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel >= 7
 BuildRequires:  %{?scl_prefix}php-hash
 BuildRequires:  %{?scl_prefix}php-spl
@@ -191,15 +190,6 @@ mv %{proj_name}-%{version}%{?prever} NTS
 %{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
-# https://github.com/m6w6/ext-http/issues/53
-sed -e '/PHP_HTTP_CURL_VERSION/s/PHP_HTTP_HAVE_LIBCURL_TLSAUTH_TYPE/defined(PHP_HTTP_CURL_TLSAUTH_SRP)/' \
-    -i src/php_http_client_curl.c
-
-%if 0%{?rhel} == 6
-# https://github.com/m6w6/ext-http/issues/54
-sed -e '/pragma/d' -i src/php_http_url.c
-%endif
-
 extver=$(sed -n '/#define PHP_PECL_HTTP_VERSION/{s/.* "//;s/".*$//;p}' php_http.h)
 if test "x${extver}" != "x%{version}%{?prever}%{?gh_date:dev}"; then
    : Error: Upstream HTTP version is now ${extver}, expecting %{version}%{?prever}%{?gh_date:dev}.
@@ -327,13 +317,13 @@ NO_INTERACTION=1 \
 %endif
 
 
+%if 0%{?fedora} < 24
 # when pear installed alone, after us
 %triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
     %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
 fi
 
-%if 0%{?fedora} < 24
 # posttrans as pear can be installed after us
 %posttrans
 if [ -x %{__pecl} ] ; then
@@ -375,6 +365,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 12 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-1
+- update to 3.1.0
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-0.5.RC1
 - rebuild with PHP 7.1.0 GA
 
