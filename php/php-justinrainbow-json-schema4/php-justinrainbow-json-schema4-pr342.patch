@@ -1,0 +1,24 @@
+From b0a382eaee1e5084e2785d516a31897f90c2b219 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Mon, 12 Dec 2016 10:17:02 +0100
+Subject: [PATCH] fix  #341 validate-json command
+
+---
+ bin/validate-json | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/bin/validate-json b/bin/validate-json
+index 8184e7b..e9c1809 100755
+--- a/bin/validate-json
++++ b/bin/validate-json
+@@ -207,8 +207,8 @@ try {
+     echo $e->getMessage() . "\n";
+     exit(2);
+ }
+-$refResolver = new JsonSchema\RefResolver($retriever, $resolver);
+-$schema = $refResolver->resolve($urlSchema);
++$refResolver = new JsonSchema\SchemaStorage($retriever, $resolver);
++$schema = $refResolver->resolveRef($urlSchema);
+ 
+ if (isset($arOptions['--dump-schema'])) {
+     $options = defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : 0;
