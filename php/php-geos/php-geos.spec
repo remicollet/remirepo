@@ -13,7 +13,7 @@
 %global pkg_name     php-geos
 %endif
 
-%global prever     rc1
+%global prever     rc2
 
 %global pecl_name  geos
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
@@ -26,7 +26,7 @@
 
 Name:           %{?sub_prefix}php-%{pecl_name}
 Version:        1.0.0
-Release:        0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.2.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 
 Summary:        PHP module for GEOS
 
@@ -95,6 +95,7 @@ mv %{pkg_name} NTS
 
 cd NTS
 sed -e '/PHP_GEOS_VERSION/s/"0.0"/"%{version}%{?prever}"/' -i php_geos.h
+
 # Check extension version
 ver=$(sed -n '/define PHP_GEOS_VERSION/{s/.* "//;s/".*$//;p}' php_geos.h)
 if test "$ver" != "%{version}%{?prever}%{?gh_date:-dev}"; then
@@ -142,6 +143,7 @@ install -Dpm 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 
 %check
+# https://git.osgeo.org/gogs/geos/php-geos/pulls/13
 : Fix test for old PHP versions
 sed -e 's/GEOSWKTWriter::class/"GEOSWKTWriter"/'  \
     -e 's/GEOSGeometry::class/"GEOSGeometry"/' \
@@ -197,6 +199,10 @@ exit $ret
 
 
 %changelog
+* Mon Dec 12 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.2.rc2
+- update to 1.0.0-rc2
+- open https://git.osgeo.org/gogs/geos/php-geos/pulls/13 - fix for tests
+
 * Sun Dec 11 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.1.rc1
 - Initial packaging of 1.0.0rc1
 
