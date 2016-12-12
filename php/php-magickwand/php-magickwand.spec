@@ -10,13 +10,11 @@
 #
 
 %{?scl:          %scl_package         php-magickwand}
-%{!?php_inidir:  %global php_inidir   %{_sysconfdir}/php.d}
-%{!?__php:       %global __php        %{_bindir}/php}
 
 %global pecl_name     magickwand
 %global mainversion   1.0.9
 %global patchlevel    2
-%global with_zts      0%{?__ztsphp:1}
+%global with_zts      0%{!?_without_zts:%{?__ztsphp:1}}
 
 # We don't really rely on upstream ABI
 %global imbuildver %(pkg-config --silence-errors --modversion ImageMagick 2>/dev/null || echo 65536)
@@ -30,7 +28,7 @@
 Summary:       PHP API for ImageMagick
 Name:          %{?scl_prefix}php-magickwand
 Version:       %{mainversion}%{?patchlevel:.%{patchlevel}}
-Release:       9%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}.1
+Release:       10%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:       ImageMagick
 Group:         Development/Languages
 URL:           http://www.magickwand.org/
@@ -40,7 +38,7 @@ Source1:       magickwand.ini
 
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: %{?scl_prefix}php-devel
+BuildRequires: %{?scl_prefix}php-devel < 7
 BuildRequires: autoconf, automake, libtool
 
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
@@ -49,12 +47,12 @@ Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 
 %if "%{?vendor}" == "Remi Collet"
 # Ensure we use the more recent version from remi repo
-%if 0%{?fedora} > 20
-BuildRequires: ImageMagick-devel >= 6.8.2
+%if 0%{?fedora} > 99
+BuildRequires: ImageMagick-devel
 Requires:      ImageMagick-libs%{?_isa}  >= %{imbuildver}
 %else
-BuildRequires: ImageMagick-last-devel >= 6.8.2
-Requires:      ImageMagick-last-libs%{?_isa}  >= %{imbuildver}
+BuildRequires: ImageMagick6-devel
+Requires:      ImageMagick6-libs%{?_isa}  >= %{imbuildver}
 %endif
 %else
 # From upstream documentation
@@ -62,7 +60,7 @@ BuildRequires: ImageMagick-devel >= 6.8.2
 Requires:      ImageMagick-libs%{?_isa}  >= %{imbuildver}
 %endif
 
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
 Obsoletes:      php53-magickwand
 Obsoletes:      php53u-magickwand
@@ -174,6 +172,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 11 2016 Remi Collet <remi@fedoraproject.org> - 1.0.9.2-10
+- rebuild against ImageMagick6 (6.9.6-8)
+
 * Wed Dec 24 2014 Remi Collet <remi@fedoraproject.org> - 1.0.9.2-8.1
 - Fedora 21 SCL mass rebuild
 
