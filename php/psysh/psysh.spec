@@ -30,7 +30,7 @@
 #     NOTE: Min version not 1.2.1 to force 2.x so 1.x is not
 #           a dependency so it could possibly be retired
 %global php_parser_min_ver 2.0
-%global php_parser_max_ver 4
+%global php_parser_max_ver 4.0
 # "symfony/console": "~2.3.10|^2.4.2|~3.0"
 # "symfony/finder": "~2.1|~3.0"
 # "symfony/var-dumper": "~2.7|~3.0"
@@ -147,9 +147,11 @@ cat <<'AUTOLOAD' | tee src/Psy/autoload.php
  * Autoloader for %{name} and its' dependencies
  * (created by %{name}-%{version}-%{release}).
  */
-
 require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
+
 \Fedora\Autoloader\Autoload::addPsr4('Psy\\', __DIR__);
+require_once __DIR__.'/functions.php';
+
 \Fedora\Autoloader\Dependencies::required(array(
     '%{phpdir}/JakubOnderka/PhpConsoleHighlighter/autoload.php',
     '%{phpdir}/Symfony/Component/Console/autoload.php',
@@ -158,8 +160,8 @@ require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
     array(
         '%{phpdir}/PhpParser3/autoload.php',
         '%{phpdir}/PhpParser2/autoload.php',
-)));
-require_once __DIR__.'/functions.php';
+    ),
+));
 AUTOLOAD
 
 
@@ -210,7 +212,7 @@ if which php71; then
    run=1
 fi
 if [ $run -eq 0 ]; then
-   %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
 # remirepo:2
 fi
 exit $ret
@@ -234,6 +236,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 11 2016 Shawn Iwinski <shawn@iwin.ski> - 0.8.0-1
+- Update to 0.8.0 (RHBZ #1403040)
+- Switch autoloader from php-composer(symfony/class-loader) to
+  php-composer(fedora/autoloader)
+
 * Fri Dec  9 2016 Remi Collet <remi@fedoraproject.org> - 0.8.0-1
 - update to 0.8.0
 - allow nikic/php-parser version 3
