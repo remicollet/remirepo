@@ -17,7 +17,7 @@
 
 Name:		vips
 Version:	%{vips_version}
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	C/C++ library for processing large images
 
 Group:		System Environment/Libraries
@@ -31,7 +31,7 @@ BuildRequires:	pkgconfig(pygobject-3.0)
 BuildRequires:	pkgconfig(libxml-2.0)
 BuildRequires:	pkgconfig(fftw3)
 # Ensure we use version 6 (same as imagick ext).
-BuildRequires:	pkgconfig(MagickWand) < 7
+BuildRequires:	ImageMagick6-devel
 BuildRequires:	pkgconfig(orc-0.4)
 BuildRequires:	pkgconfig(lcms2)
 BuildRequires:	pkgconfig(OpenEXR)
@@ -223,6 +223,9 @@ find ${RPM_BUILD_ROOT}%{python3_sitearch} \
 
 
 %changelog
+* Mon Dec 12 2016 Remi Collet <remi@remirepo.net> - 8.4.4-3
+- rebuild against ImageMagick6
+
 * Tue Dec  6 2016 Remi Collet <remi@remirepo.net> - 8.4.4-2
 - ensure ImageMagick v6 is used
 
