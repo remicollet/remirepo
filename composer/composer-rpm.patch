@@ -1,6 +1,6 @@
 diff -up ./bin/composer.rpm ./bin/composer
---- ./bin/composer.rpm	2016-04-29 18:32:14.000000000 +0200
-+++ ./bin/composer	2016-04-30 10:07:31.835289957 +0200
+--- ./bin/composer.rpm	2016-12-12 10:30:58.174009561 +0100
++++ ./bin/composer	2016-12-12 10:32:17.465427241 +0100
 @@ -5,7 +5,7 @@ if (PHP_SAPI !== 'cli') {
      echo 'Warning: Composer should be invoked via the CLI version of PHP, not the '.PHP_SAPI.' SAPI'.PHP_EOL;
  }
@@ -8,12 +8,12 @@ diff -up ./bin/composer.rpm ./bin/composer
 -require __DIR__.'/../src/bootstrap.php';
 +require '/usr/share/php/Composer/autoload.php';
  
- use Composer\Console\Application;
- 
+ use Composer\Factory;
+ use Composer\XdebugHandler;
 diff -up ./src/Composer/Autoload/AutoloadGenerator.php.rpm ./src/Composer/Autoload/AutoloadGenerator.php
---- ./src/Composer/Autoload/AutoloadGenerator.php.rpm	2016-04-30 10:07:31.836289961 +0200
-+++ ./src/Composer/Autoload/AutoloadGenerator.php	2016-04-30 10:08:50.489640789 +0200
-@@ -288,7 +288,7 @@ EOF;
+--- ./src/Composer/Autoload/AutoloadGenerator.php.rpm	2016-12-11 17:04:50.000000000 +0100
++++ ./src/Composer/Autoload/AutoloadGenerator.php	2016-12-12 10:30:58.175009567 +0100
+@@ -305,7 +305,7 @@ EOF;
          file_put_contents($targetDir.'/autoload_real.php', $this->getAutoloadRealFile(true, (bool) $includePathFileContents, $targetDirLoader, (bool) $includeFilesFileContents, $vendorPathCode, $appBaseDirCode, $suffix, $useGlobalIncludePath, $prependAutoloader, $staticPhpVersion));
  
          $this->safeCopy(__DIR__.'/ClassLoader.php', $targetDir.'/ClassLoader.php');
@@ -23,8 +23,8 @@ diff -up ./src/Composer/Autoload/AutoloadGenerator.php.rpm ./src/Composer/Autolo
          if ($this->runScripts) {
              $this->eventDispatcher->dispatchScript(ScriptEvents::POST_AUTOLOAD_DUMP, $this->devMode, array(), array(
 diff -up ./src/Composer/Compiler.php.rpm ./src/Composer/Compiler.php
---- ./src/Composer/Compiler.php.rpm	2016-04-29 18:32:14.000000000 +0200
-+++ ./src/Composer/Compiler.php	2016-04-30 10:07:31.836289961 +0200
+--- ./src/Composer/Compiler.php.rpm	2016-12-11 17:04:50.000000000 +0100
++++ ./src/Composer/Compiler.php	2016-12-12 10:30:58.175009567 +0100
 @@ -97,7 +97,7 @@ class Compiler
          $finder = new Finder();
          $finder->files()
@@ -35,8 +35,8 @@ diff -up ./src/Composer/Compiler.php.rpm ./src/Composer/Compiler.php
              ->sort($finderSort)
          ;
 diff -up ./src/Composer/Json/JsonFile.php.rpm ./src/Composer/Json/JsonFile.php
---- ./src/Composer/Json/JsonFile.php.rpm	2016-04-29 18:32:14.000000000 +0200
-+++ ./src/Composer/Json/JsonFile.php	2016-04-30 10:07:31.836289961 +0200
+--- ./src/Composer/Json/JsonFile.php.rpm	2016-12-11 17:04:50.000000000 +0100
++++ ./src/Composer/Json/JsonFile.php	2016-12-12 10:30:58.175009567 +0100
 @@ -156,7 +156,7 @@ class JsonFile
              self::validateSyntax($content, $this->path);
          }
@@ -47,9 +47,9 @@ diff -up ./src/Composer/Json/JsonFile.php.rpm ./src/Composer/Json/JsonFile.php
  
          if ($schema === self::LAX_SCHEMA) {
 diff -up ./tests/Composer/Test/Json/ComposerSchemaTest.php.rpm ./tests/Composer/Test/Json/ComposerSchemaTest.php
---- ./tests/Composer/Test/Json/ComposerSchemaTest.php.rpm	2016-04-29 18:32:14.000000000 +0200
-+++ ./tests/Composer/Test/Json/ComposerSchemaTest.php	2016-04-30 10:07:31.836289961 +0200
-@@ -87,7 +87,7 @@ class ComposerSchemaTest extends \PHPUni
+--- ./tests/Composer/Test/Json/ComposerSchemaTest.php.rpm	2016-12-11 17:04:50.000000000 +0100
++++ ./tests/Composer/Test/Json/ComposerSchemaTest.php	2016-12-12 10:30:58.175009567 +0100
+@@ -95,7 +95,7 @@ class ComposerSchemaTest extends \PHPUni
  
      private function check($json)
      {

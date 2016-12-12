@@ -6,18 +6,18 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    7895e4a7e0e05b06e0ebfae96fc154c6a2ba75f0
+%global gh_commit    a72a8caa9ae569581449cec4a263cf77ead7ecd6
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 %global api_version  1.1.0
-#global prever       RC
+%global prever       RC
 
 Name:           composer
-Version:        1.2.4
-Release:        1%{?dist}
+Version:        1.3.0
+Release:        0.1.%{prever}%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -63,22 +63,22 @@ BuildRequires:  php-PsrLog          >= 1.0.0-8
 
 # From composer.json, "require": {
 #        "php": "^5.3.2 || ^7.0",
-#        "justinrainbow/json-schema": "^1.6 || ^2.0",
+#        "justinrainbow/json-schema": "^1.6 || ^2.0 || ^3.0 || ^4.0",
 #        "composer/ca-bundle": "^1.0",
 #        "composer/semver": "^1.0",
 #        "composer/spdx-licenses": "^1.0",
 #        "seld/jsonlint": "~1.4",
-#        "symfony/console": "^2.5 || ^3.0",
-#        "symfony/finder": "^2.2 || ^3.0",
-#        "symfony/process": "^2.1 || ^3.0",
-#        "symfony/filesystem": "^2.5 || ^3.0",
+#        "symfony/console": "^2.7 || ^3.0",
+#        "symfony/finder": "^2.7 || ^3.0",
+#        "symfony/process": "^2.7 || ^3.0",
+#        "symfony/filesystem": "^2.7 || ^3.0",
 #        "seld/phar-utils": "^1.0",
 #        "seld/cli-prompt": "^1.0",
 #        "psr/log": "^1.0"
 Requires:       php(language)                           >= 5.3.2
 Requires:       php-cli
 Requires:       php-composer(justinrainbow/json-schema) >= 2.0
-Requires:       php-composer(justinrainbow/json-schema) <  3
+Requires:       php-composer(justinrainbow/json-schema) <  5
 Requires:       php-composer(composer/spdx-licenses)    >= 1.0
 Requires:       php-composer(composer/spdx-licenses)    <  2
 Requires:       php-composer(composer/ca-bundle)        >= 1.0
@@ -93,13 +93,13 @@ Requires:       php-composer(seld/cli-prompt)           >= 1.0
 Requires:       php-composer(seld/cli-prompt)           <  2
 Requires:       php-composer(psr/log)                   >= 1.0
 Requires:       php-composer(psr/log)                   <  2
-Requires:       php-composer(symfony/console)           >= 2.5
+Requires:       php-composer(symfony/console)           >= 2.7
 Requires:       php-composer(symfony/console)           <  4
-Requires:       php-composer(symfony/finder)            >= 2.2
+Requires:       php-composer(symfony/finder)            >= 2.7
 Requires:       php-composer(symfony/finder)            <  4
-Requires:       php-composer(symfony/process)           >= 2.1
+Requires:       php-composer(symfony/process)           >= 2.7
 Requires:       php-composer(symfony/process)           <  4
-Requires:       php-composer(symfony/filesystem)        >= 2.5
+Requires:       php-composer(symfony/filesystem)        >= 2.7
 Requires:       php-composer(symfony/filesystem)        <  4
 # From composer.json, suggest
 #        "ext-zip": "Enabling the zip extension allows you to unzip archives, and allows gzip compression of all internet traffic",
@@ -259,6 +259,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 12 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-0.1.RC
+- update to 1.3.0-RC
+- raise dependency on symfony 2.7
+- allow justinrainbow/json-schema 4
+
 * Wed Dec  7 2016 Remi Collet <remi@fedoraproject.org> - 1.2.4-1
 - update to 1.2.4
 

@@ -17,7 +17,9 @@ if (!class_exists('Fedora\\Autoloader\\Autoload', false)) {
 	$vendorDir . '/Composer/CaBundle/autoload.php',
 	$vendorDir . '/Composer/Spdx/autoload.php',
 	$vendorDir . '/Composer/Semver/autoload.php',
-	$vendorDir . '/JsonSchema2/autoload.php',
 	$vendorDir . '/Psr/Log/autoload.php',
-));
+	array(
+		$vendorDir . '/JsonSchema4/autoload.php',
+		$vendorDir . '/JsonSchema2/autoload.php',
+)));
 
