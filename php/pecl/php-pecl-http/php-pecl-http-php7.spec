@@ -232,8 +232,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # Install XML package description
@@ -337,12 +335,7 @@ fi
 %endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{proj_name}
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -366,7 +359,7 @@ rm -rf %{buildroot}
 
 %changelog
 * Mon Dec 12 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-1
-- update to 3.1.0
+- update to 3.1.0 (php 7, stable)
 
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-0.5.RC1
 - rebuild with PHP 7.1.0 GA

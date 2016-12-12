@@ -10,17 +10,13 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
-%endif
 %scl_package       php-pecl-http
 %else
 %global _root_prefix %{_prefix}
 %endif
 
-%global prever    RC1
+#global prever    RC1
 # The project is pecl_http but the extension is only http
 %global proj_name pecl_http
 %global pecl_name http
@@ -42,7 +38,7 @@
 #global prever RC1
 Name:           %{?sub_prefix}php-pecl-http
 Version:        2.6.0
-Release:        0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Extended HTTP support
 
 License:        BSD
@@ -54,7 +50,7 @@ Source0:        http://pecl.php.net/get/%{proj_name}-%{version}%{?prever}.tgz
 Source1:        %{proj_name}.ini
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel >= 5.3.0
+BuildRequires:  %{?scl_prefix}php-devel < 7
 BuildRequires:  %{?scl_prefix}php-hash
 BuildRequires:  %{?scl_prefix}php-iconv
 BuildRequires:  %{?scl_prefix}php-spl
@@ -259,12 +255,8 @@ done
 
 
 %check
-%if "%{php_version}" < "5.4"
-# Known failed test with 5.3.3 (need investigations)
-export REPORT_EXIT_STATUS=0
-%else
 export REPORT_EXIT_STATUS=1
-%endif
+
 user=$(id -un)
 : all tests when rpmbuild is used
 if [ "$user" = "remi" ]; then
@@ -366,6 +358,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 12 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- update to 2.6.0 (php 5, stable)
+
 * Wed Oct  5 2016 Remi Collet <remi@fedoraproject.org> - 2.6.0-0.3.RC1
 - Update to 2.6.0RC1 (php 5, beta)
 

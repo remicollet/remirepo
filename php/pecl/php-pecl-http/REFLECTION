@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #71 http version 2.6.0RC1 ] {
+Extension [ <persistent> extension #77 http version 2.6.0 ] {
 
   - Dependencies {
     Dependency [ raphf (Required) ]
@@ -14,8 +14,8 @@ Extension [ <persistent> extension #71 http version 2.6.0RC1 ] {
     }
   }
 
-  - Constants [53] {
-    Constant [ integer http\Client\Curl\FEATURES ] { 1017757 }
+  - Constants [55] {
+    Constant [ integer http\Client\Curl\FEATURES ] { 2066333 }
     Constant [ integer http\Client\Curl\Features\IPV6 ] { 1 }
     Constant [ integer http\Client\Curl\Features\KERBEROS4 ] { 2 }
     Constant [ integer http\Client\Curl\Features\KERBEROS5 ] { 262144 }
@@ -33,13 +33,15 @@ Extension [ <persistent> extension #71 http version 2.6.0RC1 ] {
     Constant [ integer http\Client\Curl\Features\NTLM_WB ] { 32768 }
     Constant [ integer http\Client\Curl\Features\HTTP2 ] { 65536 }
     Constant [ integer http\Client\Curl\Features\UNIX_SOCKETS ] { 524288 }
-    Constant [ string http\Client\Curl\VERSIONS ] { libcurl/7.43.0 NSS/3.26 zlib/1.2.8 libidn/1.33 libssh2/1.6.0 nghttp2/1.7.1 }
-    Constant [ string http\Client\Curl\Versions\CURL ] { 7.43.0 }
-    Constant [ string http\Client\Curl\Versions\SSL ] { NSS/3.26 }
+    Constant [ integer http\Client\Curl\Features\PSL ] { 1048576 }
+    Constant [ string http\Client\Curl\VERSIONS ] { libcurl/7.51.0 NSS/3.27 zlib/1.2.8 libidn2/0.11 libpsl/0.14.0 (+libidn2/0.10) libssh2/1.8.0 nghttp2/1.13.0 }
+    Constant [ string http\Client\Curl\Versions\CURL ] { 7.51.0 }
+    Constant [ string http\Client\Curl\Versions\SSL ] { NSS/3.27 }
     Constant [ string http\Client\Curl\Versions\LIBZ ] { 1.2.8 }
     Constant [ integer http\Client\Curl\HTTP_VERSION_1_0 ] { 1 }
     Constant [ integer http\Client\Curl\HTTP_VERSION_1_1 ] { 2 }
     Constant [ integer http\Client\Curl\HTTP_VERSION_2_0 ] { 3 }
+    Constant [ integer http\Client\Curl\HTTP_VERSION_2TLS ] { 4 }
     Constant [ integer http\Client\Curl\HTTP_VERSION_ANY ] { 0 }
     Constant [ integer http\Client\Curl\SSL_VERSION_TLSv1 ] { 1 }
     Constant [ integer http\Client\Curl\SSL_VERSION_TLSv1_0 ] { 4 }
