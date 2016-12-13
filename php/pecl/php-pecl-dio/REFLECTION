@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #80 dio version 0.0.8-dev ] {
+Extension [ <persistent> extension #80 dio version 0.0.8 ] {
 
   - Constants [36] {
     Constant [ integer O_RDONLY ] { 0 }

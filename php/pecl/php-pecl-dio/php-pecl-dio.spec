@@ -8,9 +8,7 @@
 #
 %{?scl:          %scl_package             php-pecl-dio}
 
-%global svn_date   20161113
-%global svn_rev    340995
-%global prever     dev
+#global prever     dev
 %global pecl_name  dio
 %global with_zts   0%{?__ztsphp:1}
 %if "%{php_version}" < "5.6"
@@ -22,11 +20,11 @@
 Summary:        Direct I/O functions
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        0.0.8
-Release:        0.3.%{svn_date}svn%{svn_rev}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{prever}.tgz
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -91,7 +89,7 @@ more than adequate.
 
 %prep
 %setup -q -c
-mv %{pecl_name}-%{version}%{prever} NTS
+mv %{pecl_name}-%{version}%{?prever} NTS
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' \
@@ -234,6 +232,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec 13 2016 Remi Collet <remi@fedoraproject.org> - 0.0.8-1
+- update to 0.0.8
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 0.0.8-0.3.20161113svn340995
 - rebuild with PHP 7.1.0 GA
 
