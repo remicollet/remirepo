@@ -1,6 +1,3 @@
-# Fedora spec file for php-pecl-dio
-# Without SCL compatibility stuff, from:
-#
 # remirepo spec file for php-pecl-dio
 #
 # Copyright (c) 2013-2016 Remi Collet
@@ -9,6 +6,9 @@
 #
 # Please, preserve the changelog entries
 #
+%{?scl:          %scl_package             php-pecl-dio}
+
+#global prever     dev
 %global pecl_name  dio
 %global with_zts   0%{?__ztsphp:1}
 %if "%{php_version}" < "5.6"
@@ -18,24 +18,60 @@
 %endif
 
 Summary:        Direct I/O functions
-Name:           php-pecl-%{pecl_name}
+Name:           %{?scl_prefix}php-pecl-%{pecl_name}
 Version:        0.0.8
-Release:        2%{?dist}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
-BuildRequires:  php-devel
-BuildRequires:  php-pear
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRequires:  %{?scl_prefix}php-devel
+BuildRequires:  %{?scl_prefix}php-pear
 
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
+Requires:       %{?scl_prefix}php(api) = %{php_core_api}
+%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
-Provides:       php-%{pecl_name}               = %{version}
-Provides:       php-%{pecl_name}%{?_isa}       = %{version}
-Provides:       php-pecl(%{pecl_name})         = %{version}
-Provides:       php-pecl(%{pecl_name})%{?_isa} = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
+Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
+Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
+
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
+# Other third party repo stuff
+Obsoletes:     php53-pecl-%{pecl_name}
+Obsoletes:     php53u-pecl-%{pecl_name}
+Obsoletes:     php54-pecl-%{pecl_name}
+Obsoletes:     php54w-pecl-%{pecl_name}
+%if "%{php_version}" > "5.5"
+Obsoletes:     php55u-pecl-%{pecl_name}
+Obsoletes:     php55w-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "5.6"
+Obsoletes:     php56u-pecl-%{pecl_name}
+Obsoletes:     php56w-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name}
+Obsoletes:     php70w-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name}
+Obsoletes:     php71w-pecl-%{pecl_name}
+%endif
+%endif
+
+%if 0%{?fedora} < 20 && 0%{?rhel} < 7
+# Filter shared private
+%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
+%{?filter_setup}
+%endif
 
 
 %description
@@ -57,7 +93,7 @@ mv %{pecl_name}-%{version}%{?prever} NTS
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' \
-    -e '/LICENSE/s/role="doc"/role="src"/' \
+    %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
     -i package.xml
 
 cd NTS
@@ -103,6 +139,8 @@ make %{?_smp_mflags}
 
 
 %install
+rm -rf %{buildroot}
+
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
@@ -125,7 +163,7 @@ done
 
 %if 0%{?fedora} < 24
 # when pear installed alone, after us
-%triggerin -- php-pear
+%triggerin -- %{?scl_prefix}php-pear
 if [ -x %{__pecl} ] ; then
     %{pecl_install} %{pecl_xmldir}/%{name}.xml >/dev/null || :
 fi
@@ -174,8 +212,14 @@ REPORT_EXIT_STATUS=1 \
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
-%license NTS/LICENSE
+%defattr(-,root,root,-)
+%{?_licensedir:%license NTS/LICENSE}
+%{!?_licensedir:%doc %{pecl_docdir}/%{pecl_name}}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -188,9 +232,6 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
-* Tue Dec 13 2016 Remi Collet <remi@fedoraproject.org> - 0.0.8-2
-- cleanup for Fedora review
-
 * Tue Dec 13 2016 Remi Collet <remi@fedoraproject.org> - 0.0.8-1
 - update to 0.0.8
 
