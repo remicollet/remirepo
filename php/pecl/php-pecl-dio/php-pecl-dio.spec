@@ -8,6 +8,9 @@
 #
 %{?scl:          %scl_package             php-pecl-dio}
 
+%global svn_date   20161113
+%global svn_rev    340995
+%global prever     dev
 %global pecl_name  dio
 %global with_zts   0%{?__ztsphp:1}
 %if "%{php_version}" < "5.6"
@@ -18,22 +21,12 @@
 
 Summary:        Direct I/O functions
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.0.7
-Release:        5%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        0.0.8
+Release:        0.3.%{svn_date}svn%{svn_rev}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
-Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://bugs.php.net/65869 Please Provides LICENSE file
-# Link from the headers
-Source1:        http://www.php.net/license/3_01.txt
-
-# Fix build warnings
-# http://svn.php.net/viewvc?view=revision&revision=331749
-# http://svn.php.net/viewvc?view=revision&revision=331750
-# http://svn.php.net/viewvc?view=revision&revision=331751
-Patch0:         %{pecl_name}-svn.patch
+Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{prever}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -47,8 +40,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
@@ -63,6 +58,14 @@ Obsoletes:     php55w-pecl-%{pecl_name}
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name}
 Obsoletes:     php56w-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name}
+Obsoletes:     php70w-pecl-%{pecl_name}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name}
+Obsoletes:     php71w-pecl-%{pecl_name}
 %endif
 %endif
 
@@ -88,7 +91,7 @@ more than adequate.
 
 %prep
 %setup -q -c
-mv %{pecl_name}-%{version} NTS
+mv %{pecl_name}-%{version}%{prever} NTS
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' \
@@ -96,14 +99,9 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-cp %{SOURCE1} LICENSE
-%patch0 -p3
-
-# http://svn.php.net/viewvc?view=revision&revision=331748
-chmod -x *.c *.h
 
 # Sanity check, really often broken
-extver=$(sed -n '/#define PHP_DIO_VERSION/{s/.* "//;s/".*$//;p}' php_dio.h)
+extver=$(sed -n '/#define PHP_DIO_VERSION/{s/.* "//;s/".*$//;p}' php7/php_dio.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?prever:-%{prever}}.
    exit 1
@@ -163,7 +161,6 @@ cd NTS
 for i in $(grep 'role="doc"' ../package.xml | sed -e 's/^.*name="//;s/".*$//')
 do install -Dpm 644 $i %{buildroot}%{pecl_docdir}/%{pecl_name}/$i
 done
-%{!?_licensedir:install -Dpm 644 LICENSE %{buildroot}%{pecl_docdir}/%{pecl_name}/LICENSE}
 
 
 %if 0%{?fedora} < 24
@@ -224,7 +221,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{?_licensedir:%license NTS/LICENSE}
-#doc %%{pecl_docdir}/%%{pecl_name}
+%{!?_licensedir:%doc %{pecl_docdir}/%{pecl_name}}
 %{pecl_xmldir}/%{name}.xml
 
 %config(noreplace) %{php_inidir}/%{ini_name}
@@ -237,6 +234,15 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 0.0.8-0.3.20161113svn340995
+- rebuild with PHP 7.1.0 GA
+
+* Sun Nov 13 2016 Remi Collet <remi@fedoraproject.org> - 0.0.8-0.2.20161113svn340995
+- update to 0.0.8dev for PHP 7+
+
+* Sun Nov 13 2016 Remi Collet <remi@fedoraproject.org> - 0.0.8-0.1.20161113svn340993
+- update to 0.0.8dev for PHP 7+
+
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 0.0.7-5
 - adapt for F24
 - drop runtime dependency on pear, new scriptlets
