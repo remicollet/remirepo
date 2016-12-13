@@ -14,6 +14,8 @@ if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Compo
 $fedoraClassLoader->setUseIncludePath(true);
 
 // Dependencies from 3rdparty composer.json
+// "guzzlehttp/guzzle"
+require_once $vendor . '/GuzzleHttp/autoload.php';
 // "sabre/dav"
 require_once $vendor . '/Sabre/DAV/autoload.php';
 // "doctrine/dbal"
@@ -52,8 +54,6 @@ require_once $vendor . '/PhpParser/autoload.php';
 require_once $vendor . '/Icewind/Streams/autoload.php';
 // "swiftmailer/swiftmailer
 require_once $vendor . '/Swift/swift_required.php';
-// "guzzlehttp/guzzle"
-require_once $vendor . '/GuzzleHttp/autoload.php';
 // "league/flysystem"
 require_once $vendor . '/League/Flysystem/autoload.php';
 // "interfasys/lognormalizer"

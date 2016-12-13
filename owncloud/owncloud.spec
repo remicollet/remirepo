@@ -8,7 +8,7 @@
 # Please preserve changelog entries
 #
 Name:           owncloud
-Version:        9.1.2
+Version:        9.1.3
 Release:        1%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
@@ -738,6 +738,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec 13 2016 Remi Collet <remi@fedoraproject.org> - 9.1.3-1
+- Update to 9.1.3
+- fix autoloader to ensure Guzzle v5 is used by updater
+
 * Tue Nov  8 2016 Remi Collet <remi@fedoraproject.org> - 9.1.2-1
 - Update to 9.1.2
 
