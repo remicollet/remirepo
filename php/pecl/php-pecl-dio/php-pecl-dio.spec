@@ -19,8 +19,8 @@
 
 Summary:        Direct I/O functions
 Name:           php-pecl-%{pecl_name}
-Version:        0.0.8
-Release:        2%{?dist}
+Version:        0.0.9
+Release:        1%{?dist}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -61,7 +61,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_DIO_VERSION/{s/.* "//;s/".*$//;p}' php7/php_dio.h)
 if test "x${extver}" != "x%{version}%{?prever:-%{prever}}"; then
@@ -155,7 +154,7 @@ TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__php} -n run-tests.php
+%{__php} -n run-tests.php --show-diff
 
 
 %if %{with_zts}
@@ -170,7 +169,7 @@ TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__ztsphp} -n run-tests.php
+%{__ztsphp} -n run-tests.php --show-diff
 %endif
 
 
@@ -188,6 +187,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Tue Dec 13 2016 Remi Collet <remi@fedoraproject.org> - 0.0.9-1
+- update to 0.0.9
+
 * Tue Dec 13 2016 Remi Collet <remi@fedoraproject.org> - 0.0.8-2
 - cleanup for Fedora review
 

@@ -19,8 +19,8 @@
 
 Summary:        Direct I/O functions
 Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.0.8
-Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Version:        0.0.9
+Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -193,7 +193,7 @@ TEST_PHP_EXECUTABLE=%{__php} \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__php} -n run-tests.php
+%{__php} -n run-tests.php --show-diff
 
 
 %if %{with_zts}
@@ -208,7 +208,7 @@ TEST_PHP_EXECUTABLE=%{__ztsphp} \
 TEST_PHP_ARGS="-n -d extension=$PWD/modules/%{pecl_name}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
-%{__ztsphp} -n run-tests.php
+%{__ztsphp} -n run-tests.php --show-diff
 %endif
 
 
@@ -232,6 +232,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec 13 2016 Remi Collet <remi@fedoraproject.org> - 0.0.9-2
+- update to 0.0.9
+
 * Tue Dec 13 2016 Remi Collet <remi@fedoraproject.org> - 0.0.8-1
 - update to 0.0.8
 
