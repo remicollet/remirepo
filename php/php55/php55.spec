@@ -2091,12 +2091,14 @@ EOF
 %changelog
 * Sat Dec 10 2016 Remi Collet <remi@remirepo.net> - 5.5.38-6
 - fix #73631: Invalid read when wddx decodes empty boolean element
+  CVE-2016-9935
 
 * Wed Nov  9 2016 Remi Collet <remi@remirepo.net> - 5.5.38-5
 - fix #73418: Integer Overflow in "_php_imap_mail" leads Heap Overflow
 - fix #73144: Use-after-free in ArrayObject Deserialization
 - fix #73356: crash in bzcompress function
 - fix #73331: NULL Pointer Deref. in WDDX Packet Deserialization with PDORow
+  CVE-2016-9934
 
 * Sat Oct 15 2016 Remi Collet <remi@remirepo.net> - 5.5.38-4
 - fix #73189: Memcpy negative size parameter php_resolve_path
