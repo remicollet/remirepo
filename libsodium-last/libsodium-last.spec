@@ -23,7 +23,7 @@ Name:           %{libname}
 Name:           %{libname}-last
 %endif
 Version:        1.0.11
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The Sodium crypto library
 Group:          System Environment/Libraries
 License:        ISC
@@ -55,6 +55,25 @@ implementations of the NIST standards.
 This package can be installed beside system %{libname}.
 %endif
 
+%package        static
+Summary:        Static library for %{name}
+Group:          Development/Libraries
+Requires:       %{name}-devel%{?_isa} = %{version}-%{release}
+%if "%{libname}" != "%{name}"
+Conflicts:      %{libname}-static         < %{version}
+Provides:       %{libname}-static         = %{version}-%{release}
+Provides:       %{libname}-static%{?_isa} = %{version}-%{release}
+%else
+Obsoletes:      %{libname}-last-static   <= %{version}
+%endif
+
+%description    static
+This package contains the static library for statically
+linking applications to use %{name}.
+%if "%{libname}" != "%{name}"
+This package can't be installed with system %{libname}-static.
+%endif
+
 
 %package        devel
 Summary:        Development files for %{name}
@@ -82,7 +101,6 @@ This package can't be installed with system %{libname}-devel.
 
 %build
 %configure \
-  --disable-static \
   --disable-silent-rules \
   --disable-opt
 
@@ -125,8 +143,14 @@ rm -rf %{buildroot}
 %{_libdir}/%{libname}.so
 %{_libdir}/pkgconfig/%{libname}.pc
 
+%files static
+%defattr (-,root,root,-)
+%{_libdir}/libsodium.a
 
 %changelog
+* Mon Dec 12 2016 Neal Gompa <ngompa13@gmail.com> - 1.0.11-2
+- Add static library subpackage
+
 * Mon Aug  1 2016 Remi Collet <remi@fedoraproject.org> - 1.0.11-1
 - update to 1.0.11
 
