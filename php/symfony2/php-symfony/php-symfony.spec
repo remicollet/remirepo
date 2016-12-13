@@ -13,8 +13,8 @@
 
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.8.14
-%global github_commit    6ceca5b4154c80839270c38aa65373de76127df7
+%global github_version   2.8.15
+%global github_commit    3ec15b9379ebb0758e296d4193926a7b4121a964
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -2690,6 +2690,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Tue Dec 13 2016 Remi Collet <remi@fedoraproject.org> - 2.8.15-1
+- Update to 2.8.15
+
 * Tue Nov 22 2016 Remi Collet <remi@fedoraproject.org> - 2.8.14-1
 - Update to 2.8.14
 - raise dependency on twig 1.28
