@@ -8,7 +8,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    de164acc2f2bb0b79beb892a36260264b2a03233
+%global gh_commit    af91da3f2671006ff5d0628023de3b7ac4d1ef09
 #global gh_date      20150927
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,7 +17,7 @@
 %global pear_name    PHPUnit
 %global pear_channel pear.phpunit.de
 %global major        5.7
-%global minor        3
+%global minor        4
 %global specrel      1
 
 Name:           php-phpunit-PHPUnit
@@ -80,7 +80,7 @@ BuildRequires:  php-composer(fedora/autoloader)
 #        "sebastian/diff": "~1.2",
 #        "sebastian/environment": "^1.3.4 || ^2.0",
 #        "sebastian/exporter": "~2.0",
-#        "sebastian/global-state": "~1.0",
+#        "sebastian/global-state": "^1.0 || ^2.0",
 #        "sebastian/object-enumerator": "~2.0",
 #        "sebastian/resource-operations": "~1.0",
 #        "sebastian/version": "~1.0|~2.0",
@@ -113,7 +113,7 @@ Requires:       php-composer(sebastian/environment) <  3
 Requires:       php-composer(sebastian/exporter) >= 2.0
 Requires:       php-composer(sebastian/exporter) <  3
 Requires:       php-composer(sebastian/global-state) >= 1.0
-Requires:       php-composer(sebastian/global-state) <  2
+Requires:       php-composer(sebastian/global-state) <  3
 Requires:       php-composer(sebastian/object-enumerator) >= 2.0
 Requires:       php-composer(sebastian/object-enumerator) <  3
 Requires:       php-composer(sebastian/resource-operations) >= 1.0
@@ -237,6 +237,9 @@ fi
 
 
 %changelog
+* Wed Dec 14 2016 Remi Collet <remi@fedoraproject.org> - 5.7.4-1
+- update to 5.7.4
+
 * Fri Dec  9 2016 Remi Collet <remi@fedoraproject.org> - 5.7.3-1
 - update to 5.7.3
 - raise dependency on phpspec/prophecy 1.6.2
