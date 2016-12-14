@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    9deb8dab09b78b42fba9832901e43bdd3f4af4da
+%global gh_commit    50c9e4dff0cf65d9937c56b597c530e1bf5f8ef0
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-router
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.3.1
+Version:        1.3.2
 Release:        1%{?dist}
 Summary:        %{sublib} subcomponent for %{library}
 
@@ -179,6 +179,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 14 2016 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
+- update to 1.3.2
+
 * Wed Dec 14 2016 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
 - update to 1.3.1
 - raise dependency on PHP 5.6
