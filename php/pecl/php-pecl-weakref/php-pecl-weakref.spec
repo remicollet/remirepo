@@ -28,7 +28,7 @@ URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel > 5.3
+BuildRequires:  %{?scl_prefix}php-devel < 7
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  Judy-devel
 BuildRequires:  pcre-devel
