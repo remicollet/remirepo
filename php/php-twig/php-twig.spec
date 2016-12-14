@@ -30,8 +30,8 @@
 
 %global github_owner     twigphp
 %global github_name      Twig
-%global github_version   1.28.2
-%global github_commit    b22ce0eb070e41f7cba65d78fe216de29726459c
+%global github_version   1.29.0
+%global github_commit    74f723e542368ca2080b252740be5f1113ebb898
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %if "%{php_version}" < "7"
@@ -61,7 +61,7 @@ BuildArch: noarch
 
 Name:          %{?sub_prefix}php-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:       The flexible, fast, and secure template engine for PHP
 
 Group:         Development/Libraries
@@ -346,8 +346,8 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.28.2-2
-- rebuild with PHP 7.1.0 GA
+* Wed Dec 14 2016 Remi Collet <remi@fedoraproject.org> - 1.29.0-1
+- Update to 1.29.0
 
 * Thu Nov 24 2016 Remi Collet <remi@fedoraproject.org> - 1.28.2-1
 - Update to 1.28.2
