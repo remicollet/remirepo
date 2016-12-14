@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    2d08527ee8b4ac8709a9dae626f868eaaa1d84e6
+%global gh_commit    7bbc70d1e5b5d8be1e2e786ef36230a5f26110d3
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-fastroute
@@ -21,8 +21,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.2.0
-Release:        2%{?dist}
+Version:        1.2.1
+Release:        1%{?dist}
 Summary:        FastRoute integration for %{library}
 
 Group:          Development/Libraries
@@ -42,7 +42,7 @@ BuildRequires:  php-composer(%{gh_owner}/zend-expressive-router)     >= 1.0
 BuildRequires:  php-pcre
 # From composer, "require-dev": {
 #        "phpunit/phpunit": "^4.7",
-#        "squizlabs/php_codesniffer": "^2.3"
+#        "zendframework/zend-coding-standard": "~1.0.0"
 BuildRequires:  php-composer(phpunit/phpunit)                        >= 4.7
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)                >= 2.5
@@ -158,6 +158,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 14 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- update to 1.2.1
+
 * Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-2
 - clean autoloader, rely on zend-loader >= 2.5.1-4
 
