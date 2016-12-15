@@ -14,7 +14,7 @@
 
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  crypto
-%global with_tests %{!?_without_tests:1}%{?_without_tests:0}
+%global with_tests 0%{!?_without_tests:1}
 %if "%{php_version}" < "5.6"
 %global ini_name   %{pecl_name}.ini
 %else
@@ -23,14 +23,14 @@
 
 Summary:        Wrapper for OpenSSL Crypto Library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        0.2.2
-Release:        5%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        0.3.0
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-Patch0:         %{pecl_name}-upstream.patch
+Patch0:         %{pecl_name}-pr20.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -101,7 +101,7 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-%patch0 -p1 -b .upstream
+%patch0 -p1 -b .pr20
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_CRYPTO_VERSION/{s/.* "//;s/".*$//;p}' php_crypto.h)
@@ -238,6 +238,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec 15 2016 Remi Collet <remi@fedoraproject.org> - 0.3.0-1
+- Update to 0.3.0
+- open https://github.com/bukka/php-crypto/issues/19 segfault
+- open https://github.com/bukka/php-crypto/pull/20 fix for PHP 5
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 0.2.2-5
 - rebuild with PHP 7.1.0 GA
 

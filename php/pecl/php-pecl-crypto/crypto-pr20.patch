@@ -1,0 +1,66 @@
+From 536aae8e608a0f6977816eb4a1e6ab085e82e32c Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 15 Dec 2016 11:19:12 +0100
+Subject: [PATCH 1/2] fix #19 segfault in KDF::setLength and PHP 5
+
+---
+ crypto_kdf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/crypto_kdf.c b/crypto_kdf.c
+index dca4a1b..8018324 100644
+--- a/crypto_kdf.c
++++ b/crypto_kdf.c
+@@ -356,7 +356,7 @@ PHP_CRYPTO_METHOD(KDF, getLength)
+ PHP_CRYPTO_METHOD(KDF, setLength)
+ {
+ 	PHPC_THIS_DECLARE(crypto_kdf);
+-	phpc_str_size_t key_len;
++	phpc_long_t key_len;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l",
+ 			&key_len) == FAILURE) {
+
+From 932bb0c65be0c389449400bfc21ca8d4860b3723 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Thu, 15 Dec 2016 11:35:45 +0100
+Subject: [PATCH 2/2] fix more zpp calls
+
+---
+ crypto_kdf.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/crypto_kdf.c b/crypto_kdf.c
+index 8018324..3fda8dc 100644
+--- a/crypto_kdf.c
++++ b/crypto_kdf.c
+@@ -321,7 +321,8 @@ PHP_CRYPTO_METHOD(KDF, __construct)
+ {
+ 	PHPC_THIS_DECLARE(crypto_kdf);
+ 	char *salt = NULL;
+-	phpc_str_size_t key_len, salt_len;
++	phpc_str_size_t salt_len;
++	phpc_long_t key_len;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l|s",
+ 			&key_len, &salt, &salt_len) == FAILURE) {
+@@ -447,8 +448,8 @@ PHP_CRYPTO_METHOD(PBKDF2, __construct)
+ {
+ 	PHPC_THIS_DECLARE(crypto_kdf);
+ 	char *hash_alg, *salt = NULL;
+-	phpc_str_size_t key_len, hash_alg_len, salt_len;
+-	phpc_long_t iterations = PHP_CRYPTO_PBKDF2_ITER_DEFAULT;
++	phpc_str_size_t hash_alg_len, salt_len;
++	phpc_long_t key_len, iterations = PHP_CRYPTO_PBKDF2_ITER_DEFAULT;
+ 
+ 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sl|sl",
+ 			&hash_alg, &hash_alg_len, &key_len, &salt, &salt_len, &iterations) == FAILURE) {
+@@ -560,7 +561,7 @@ PHP_CRYPTO_METHOD(PBKDF2, setHashAlgorithm)
+ 	char *hash_alg;
+ 	phpc_str_size_t hash_alg_len;
+ 
+-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|sl",
++	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s",
+ 			&hash_alg, &hash_alg_len) == FAILURE) {
+ 		return;
+ 	}

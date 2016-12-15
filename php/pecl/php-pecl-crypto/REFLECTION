@@ -1,7 +1,7 @@
-Extension [ <persistent> extension #84 crypto version 0.2.2 ] {
+Extension [ <persistent> extension #78 crypto version 0.3.0 ] {
 
-  - Classes [13] {
-    Class [ <internal:crypto> class Crypto\CryptoException extends Exception ] {
+  - Classes [17] {
+    Class [ <internal:crypto> class Crypto\CryptoException extends Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -32,33 +32,33 @@ Extension [ <persistent> extension #84 crypto version 0.2.2 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:crypto> class Crypto\CipherException extends Crypto\CryptoException ] {
+    Class [ <internal:crypto> class Crypto\CipherException extends Crypto\CryptoException implements Throwable ] {
 
       - Constants [30] {
         Constant [ integer ALGORITHM_NOT_FOUND ] { 1 }
@@ -119,28 +119,28 @@ Extension [ <persistent> extension #84 crypto version 0.2.2 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
@@ -371,10 +371,10 @@ Extension [ <persistent> extension #84 crypto version 0.2.2 ] {
       }
     }
 
-    Class [ <internal:crypto> class Crypto\HashException extends Crypto\CryptoException ] {
+    Class [ <internal:crypto> class Crypto\HashException extends Crypto\CryptoException implements Throwable ] {
 
       - Constants [7] {
-        Constant [ integer ALGORITHM_NOT_FOUND ] { 1 }
+        Constant [ integer HASH_ALGORITHM_NOT_FOUND ] { 1 }
         Constant [ integer STATIC_METHOD_NOT_FOUND ] { 2 }
         Constant [ integer STATIC_METHOD_TOO_MANY_ARGS ] { 3 }
         Constant [ integer INIT_FAILED ] { 4 }
@@ -409,28 +409,28 @@ Extension [ <persistent> extension #84 crypto version 0.2.2 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
@@ -505,16 +505,17 @@ Extension [ <persistent> extension #84 crypto version 0.2.2 ] {
       }
     }
 
-    Class [ <internal:crypto> class Crypto\MACException extends Crypto\HashException ] {
+    Class [ <internal:crypto> class Crypto\MACException extends Crypto\HashException implements Throwable ] {
 
-      - Constants [8] {
-        Constant [ integer ALGORITHM_NOT_FOUND ] { 1 }
+      - Constants [9] {
+        Constant [ integer HASH_ALGORITHM_NOT_FOUND ] { 1 }
         Constant [ integer STATIC_METHOD_NOT_FOUND ] { 2 }
         Constant [ integer STATIC_METHOD_TOO_MANY_ARGS ] { 3 }
         Constant [ integer INIT_FAILED ] { 4 }
         Constant [ integer UPDATE_FAILED ] { 5 }
         Constant [ integer DIGEST_FAILED ] { 6 }
         Constant [ integer INPUT_DATA_LENGTH_HIGH ] { 7 }
+        Constant [ integer MAC_ALGORITHM_NOT_FOUND ] { 1 }
         Constant [ integer KEY_LENGTH_INVALID ] { 2 }
       }
 
@@ -544,28 +545,28 @@ Extension [ <persistent> extension #84 crypto version 0.2.2 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
@@ -763,7 +764,7 @@ Extension [ <persistent> extension #84 crypto version 0.2.2 ] {
       }
     }
 
-    Class [ <internal:crypto> class Crypto\Base64Exception extends Crypto\CryptoException ] {
+    Class [ <internal:crypto> class Crypto\Base64Exception extends Crypto\CryptoException implements Throwable ] {
 
       - Constants [6] {
         Constant [ integer ENCODE_UPDATE_FORBIDDEN ] { 1 }
@@ -800,28 +801,28 @@ Extension [ <persistent> extension #84 crypto version 0.2.2 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
@@ -878,7 +879,7 @@ Extension [ <persistent> extension #84 crypto version 0.2.2 ] {
       }
     }
 
-    Class [ <internal:crypto> class Crypto\RandException extends Crypto\CryptoException ] {
+    Class [ <internal:crypto> class Crypto\RandException extends Crypto\CryptoException implements Throwable ] {
 
       - Constants [4] {
         Constant [ integer GENERATE_PREDICTABLE ] { 1 }
@@ -913,28 +914,280 @@ Extension [ <persistent> extension #84 crypto version 0.2.2 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:crypto> abstract class Crypto\KDF ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [6] {
+        Method [ <internal:crypto, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $length ]
+            Parameter #1 [ <optional> $salt ]
+          }
+        }
+
+        Method [ <internal:crypto> abstract public method derive ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $password ]
+          }
+        }
+
+        Method [ <internal:crypto> public method getLength ] {
+        }
+
+        Method [ <internal:crypto> public method setLength ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $length ]
+          }
+        }
+
+        Method [ <internal:crypto> public method getSalt ] {
+        }
+
+        Method [ <internal:crypto> public method setSalt ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $salt ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:crypto> class Crypto\KDFException extends Crypto\CryptoException implements Throwable ] {
+
+      - Constants [5] {
+        Constant [ integer KEY_LENGTH_LOW ] { 1 }
+        Constant [ integer KEY_LENGTH_HIGH ] { 2 }
+        Constant [ integer SALT_LENGTH_HIGH ] { 3 }
+        Constant [ integer PASSWORD_LENGTH_INVALID ] { 4 }
+        Constant [ integer DERIVATION_FAILED ] { 5 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:crypto> class Crypto\PBKDF2 extends Crypto\KDF ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [10] {
+        Method [ <internal:crypto, overwrites Crypto\KDF, ctor> public method __construct ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $hashAlgorithm ]
+            Parameter #1 [ <required> $length ]
+            Parameter #2 [ <optional> $salt ]
+            Parameter #3 [ <optional> $iterations ]
+          }
+        }
+
+        Method [ <internal:crypto, overwrites Crypto\KDF, prototype Crypto\KDF> public method derive ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $password ]
+          }
+        }
+
+        Method [ <internal:crypto> public method getIterations ] {
+        }
+
+        Method [ <internal:crypto> public method setIterations ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $iterations ]
+          }
+        }
+
+        Method [ <internal:crypto> public method getHashAlgorithm ] {
+        }
+
+        Method [ <internal:crypto> public method setHashAlgorithm ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $hashAlgorithm ]
+          }
+        }
+
+        Method [ <internal:crypto, inherits Crypto\KDF> public method getLength ] {
+        }
+
+        Method [ <internal:crypto, inherits Crypto\KDF> public method setLength ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $length ]
+          }
+        }
+
+        Method [ <internal:crypto, inherits Crypto\KDF> public method getSalt ] {
+        }
+
+        Method [ <internal:crypto, inherits Crypto\KDF> public method setSalt ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $salt ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:crypto> class Crypto\PBKDF2Exception extends Crypto\KDFException implements Throwable ] {
+
+      - Constants [7] {
+        Constant [ integer KEY_LENGTH_LOW ] { 1 }
+        Constant [ integer KEY_LENGTH_HIGH ] { 2 }
+        Constant [ integer SALT_LENGTH_HIGH ] { 3 }
+        Constant [ integer PASSWORD_LENGTH_INVALID ] { 4 }
+        Constant [ integer DERIVATION_FAILED ] { 5 }
+        Constant [ integer HASH_ALGORITHM_NOT_FOUND ] { 1 }
+        Constant [ integer ITERATIONS_HIGH ] { 2 }
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [4] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+      }
+
+      - Methods [10] {
+        Method [ <internal:Core, inherits Exception, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $code ]
+            Parameter #2 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
