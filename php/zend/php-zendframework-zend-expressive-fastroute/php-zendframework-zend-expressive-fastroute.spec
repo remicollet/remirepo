@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    7bbc70d1e5b5d8be1e2e786ef36230a5f26110d3
+%global gh_commit    825c93ff72c0f629bb427a6da8ebfe9d4735c296
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-fastroute
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.2.1
+Version:        1.3.0
 Release:        1%{?dist}
 Summary:        FastRoute integration for %{library}
 
@@ -35,14 +35,16 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.5
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-composer(nikic/fast-route)                       >= 1.0.0
 BuildRequires:  php-composer(psr/http-message)                       >= 1.0
-BuildRequires:  php-composer(%{gh_owner}/zend-expressive-router)     >= 1.0
+BuildRequires:  php-composer(%{gh_owner}/zend-expressive-router)     >= 1.3.2
+BuildRequires:  php-composer(fig/http-message-util)                  >= 1.1
 BuildRequires:  php-pcre
 # From composer, "require-dev": {
-#        "phpunit/phpunit": "^4.7",
-#        "zendframework/zend-coding-standard": "~1.0.0"
+#        "phpunit/phpunit": "^4.7 || ^5.6",
+#        "zendframework/zend-coding-standard": "~1.0.0",
+#        "malukenho/docheader": "^0.1.5"
 BuildRequires:  php-composer(phpunit/phpunit)                        >= 4.7
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)                >= 2.5
@@ -51,18 +53,21 @@ BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-4
 %endif
 
 # From composer, "require": {
-#        "php": "^5.5 || ^7.0",
+#        "php": "^5.6 || ^7.0",
 #        "nikic/fast-route": "^1.0.0",
 #        "psr/http-message": "^1.0",
-#        "zendframework/zend-expressive-router": "^1.0"
-Requires:       php(language) >= 5.5
+#        "zendframework/zend-expressive-router": "^1.3.2",
+#        "fig/http-message-util": "^1.1"
+Requires:       php(language) >= 5.6
 Requires:       php-composer(nikic/fast-route)                       >= 1.0.0
 Requires:       php-composer(nikic/fast-route)                       <  2
 Requires:       php-composer(psr/http-message)                       >= 1.0
 Requires:       php-composer(psr/http-message)                       <  2
-Requires:       php-composer(%{gh_owner}/zend-expressive-router)     >= 1.0
+Requires:       php-composer(%{gh_owner}/zend-expressive-router)     >= 1.3.2
 Requires:       php-composer(%{gh_owner}/zend-expressive-router)     <  2
-# From phpcompatinfo report for version 1.2.0
+Requires:       php-composer(fig/http-message-util)                  >= 1.1
+Requires:       php-composer(fig/http-message-util)                  <  2
+# From phpcompatinfo report for version 1.3.0
 Requires:       php-pcre
 %if ! %{bootstrap}
 # Autoloader
@@ -89,6 +94,7 @@ mv LICENSE.md LICENSE
 cat << 'EOF' | tee autoload.php
 <?php
 require_once '%{php_home}/FastRoute/bootstrap.php';
+require_once '%{php_home}/Fig/Http/Message/autoload.php';
 EOF
 
 
@@ -155,9 +161,16 @@ rm -rf %{buildroot}
 %doc composer.json
 %{php_home}/Zend/%{library}/%{sublib}/Fast*
 %{php_home}/Zend/%{library}-%{sublib}-fast-autoload.php
+%{php_home}/Zend/%{library}/%{sublib}/Exception/Invalid*
 
 
 %changelog
+* Thu Dec 15 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- update to 1.3.0
+- raise dependency on PHP 5.6
+- raise dependency on zendframework/zend-expressive-router 1.3.2
+- add dependency on fig/http-message-util
+
 * Wed Dec 14 2016 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
 - update to 1.2.1
 
