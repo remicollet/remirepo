@@ -12,8 +12,8 @@
 
 %global github_owner     simplesamlphp
 %global github_name      saml2
-%global github_version   2.3.3
-%global github_commit    5e12d7ec0d2d64b45aaa31bbf235d1be4d6450b5
+%global github_version   2.3.4
+%global github_commit    967edad97f38578f9b4561d6f624c974dd2c14a9
 
 %global composer_vendor  simplesamlphp
 %global composer_project saml2
@@ -58,7 +58,7 @@ BuildRequires: php-composer(robrichards/xmlseclibs) >= %{robrichards_xmlseclibs_
 BuildRequires: php-dom
 BuildRequires: php-openssl
 BuildRequires: php-composer(mockery/mockery)        >= %{mockery_min_ver}
-## phpcompatinfo (computed from version 2.3.2)
+## phpcompatinfo (computed from version 2.3.4)
 BuildRequires: php-date
 BuildRequires: php-libxml
 BuildRequires: php-mcrypt
@@ -77,7 +77,7 @@ Requires:      php-composer(robrichards/xmlseclibs) <  %{robrichards_xmlseclibs_
 Requires:      php-composer(robrichards/xmlseclibs) >= %{robrichards_xmlseclibs_min_ver}
 Requires:      php-dom
 Requires:      php-openssl
-# phpcompatinfo (computed from version 2.3.2)
+# phpcompatinfo (computed from version 2.3.4)
 Requires:      php-date
 Requires:      php-libxml
 Requires:      php-pcre
@@ -181,6 +181,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec 15 2016 Shawn Iwinski <shawn@iwin.ski> - 2.3.4-1
+- Update to 2.3.4 (RHBZ #1405027)
+
+* Sat Dec 03 2016 Shawn Iwinski <shawn@iwin.ski> - 2.3.3-1
+- Update to 2.3.3 (RHBZ #1401147)
+- 201612-01 (https://simplesamlphp.org/security/201612-01)
+
 * Fri Dec  2 2016 Remi Collet <remi@remirepo.net> - 2.3.3-1
 - update to 2.3.3
 
