@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    bbd3cc499f3dcaeb0ce483e7975c238719b0104f
+%global gh_commit    b00ef3a314bbe92da0a33e42ef0c575ddd4a4ba9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-zendrouter
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.2.0
+Version:        1.3.0
 Release:        1%{?dist}
 Summary:        zend-mvc router support for %{library}
 
@@ -37,13 +37,15 @@ BuildArch:      noarch
 %if %{with_tests}
 BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-composer(psr/http-message)                       >= 1.0
-BuildRequires:  php-composer(%{gh_owner}/zend-expressive-router)     >= 1.2
+BuildRequires:  php-composer(%{gh_owner}/zend-expressive-router)     >= 1.3.2
 BuildRequires:  php-composer(%{gh_owner}/zend-router)                >= 3.0
 BuildRequires:  php-composer(%{gh_owner}/zend-psr7bridge)            >= 0.2.2
+BuildRequires:  php-composer(fig/http-message-util)                  >= 1.1
 BuildRequires:  php-pcre
 # From composer, "require-dev": {
-#        "phpunit/phpunit": "^4.8",
-#        "squizlabs/php_codesniffer": "^2.6.2"
+#        "phpunit/phpunit": "^4.8 || ^5.6",
+#        "zendframework/zend-coding-standard": "~1.0.0",
+#        "malukenho/docheader": "^0.1.5"
 BuildRequires:  php-composer(phpunit/phpunit)                        >= 4.8
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)                >= 2.5
@@ -54,17 +56,20 @@ BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-4
 # From composer, "require": {
 #        "php": "^5.6 || ^7.0",
 #        "psr/http-message": "^1.0",
-#        "zendframework/zend-expressive-router": "^1.2",
+#        "zendframework/zend-expressive-router": "^1.3.2",
 #        "zendframework/zend-router": "^3.0",
-#        "zendframework/zend-psr7bridge": "^0.2.2"
+#        "zendframework/zend-psr7bridge": "^0.2.2",
+#        "fig/http-message-util": "^1.1"
 Requires:       php(language) >= 5.6
 Requires:       php-composer(psr/http-message)                       >= 1.0
 Requires:       php-composer(psr/http-message)                       <  2
-Requires:       php-composer(%{gh_owner}/zend-expressive-router)     >= 1.2
+Requires:       php-composer(%{gh_owner}/zend-expressive-router)     >= 1.3.2
 Requires:       php-composer(%{gh_owner}/zend-expressive-router)     <  2
 Requires:       php-composer(%{gh_owner}/zend-router)                >= 3.0
 Requires:       php-composer(%{gh_owner}/zend-router)                <  4
 Requires:       php-composer(%{gh_owner}/zend-psr7bridge)            >= 0.2.2
+Requires:       php-composer(fig/http-message-util)                  >= 1.1
+Requires:       php-composer(fig/http-message-util)                  <  2
 # From phpcompatinfo report for version 1.2.0
 Requires:       php-pcre
 %if ! %{bootstrap}
@@ -88,6 +93,12 @@ https://zendframework.github.io/zend-expressive/features/router/zf2/
 
 mv LICENSE.md LICENSE
 
+: Create dependency autoloader
+cat << 'EOF' | tee autoload.php
+<?php
+require_once '%{php_home}/Fig/Http/Message/autoload.php';
+EOF
+
 
 %build
 # Empty build section, nothing required
@@ -98,6 +109,8 @@ rm -rf %{buildroot}
 
 mkdir -p   %{buildroot}%{php_home}/Zend/%{library}
 cp -pr src %{buildroot}%{php_home}/Zend/%{library}/%{sublib}
+
+install -m644 autoload.php %{buildroot}%{php_home}/Zend/%{library}-%{sublib}-zendrouter-autoload.php
 
 
 %check
@@ -149,9 +162,15 @@ rm -rf %{buildroot}
 %doc *.md
 %doc composer.json
 %{php_home}/Zend/%{library}/%{sublib}/Zend*
+%{php_home}/Zend/%{library}-%{sublib}-zendrouter-autoload.php
 
 
 %changelog
+* Thu Dec 15 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- update to 1.3.0
+- raise dependency on zendframework/zend-expressive-router 1.3.2
+- add dependency on fig/http-message-util
+
 * Fri Aug 12 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - update to 1.2.0
 
