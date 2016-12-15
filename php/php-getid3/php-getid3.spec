@@ -7,19 +7,26 @@
 #
 # Please preserve changelog entries
 #
-Name:      php-getid3
-Version:   1.9.12
+%global gh_commit    b9a8564e56bdcc294dc7ade32a7f67885bed3778
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     JamesHeinrich
+%global gh_project   getID3
+%global pk_owner     james-heinrich
+%global pk_project   getid3
+
+Name:      php-%{pk_project}
+Version:   1.9.13
 Release:   1%{?dist}
 Epoch:     1
 License:   LGPLv3+
 Summary:   The PHP media file parser
 Group:     Development/Libraries
-URL:       http://getid3.sourceforge.net/
-Source0:   http://downloads.sourceforge.net/getid3/getID3-%{version}.zip
+URL:       http://www.getid3.org/
+Source0:   https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: %{_bindir}/phpab
+BuildRequires: php-fedora-autoloader-devel
 
 # from composer.json
 #        "php": ">=5.3.0"
@@ -34,9 +41,11 @@ Requires:  php-iconv
 Requires:  php-libxml
 Requires:  php-pcre
 Requires:  php-xml
-# Optional: dba, mysql, sqlite3, rar
+# Optional: dba, mysql, mysqli, sqlite3, rar
+# Autoloader
+Requires:  php-composer(fedora/autoloader)
 
-Provides:  php-composer(james-heinrich/getid3) = %{version}
+Provides:  php-composer(%{pk_owner}/%{pk_project}) = %{version}
 
 
 %description
@@ -49,21 +58,14 @@ Autoloader: %{_datadir}/php/getid3/autoload.php
 
 
 %prep
-%setup -q -n getID3-%{version}
+%setup -q -n %{gh_project}-%{gh_commit}
 
-for i in ./*.txt licenses/*.txt demos/*.php; do
-      iconv -f iso-8859-1 -t utf-8 < "$i" > "${i}_"
-      touch -r "$i" "${i}_"
-      mv "${i}_" "$i"
-done
-sed -i 's/\r//' demos/index.php
-sed -i 's/\r//' changelog.txt
 
 
 %build
 # From composer.json, "autoload": {
 #        "classmap": ["getid3/getid3.php"]
-%{_bindir}/phpab --output getid3/autoload.php getid3/getid3.php
+%{_bindir}/phpab --template fedora --output getid3/autoload.php getid3/getid3.php
 
 
 %install
@@ -73,20 +75,36 @@ mkdir -p %{buildroot}%{_datadir}/php
 cp -a getid3 %{buildroot}%{_datadir}/php/
 
 
+%check
+php -r '
+require "%{buildroot}%{_datadir}/php/getid3/autoload.php";
+$ok = class_exists("getID3");
+echo "Autoload " . ($ok ? "Ok\n" : "fails\n");
+exit ($ok ? 0 : 1);
+'
+
+
 %clean
 rm -rf %{buildroot}
 
 
 %files
 %defattr(-,root,root,-)
+%{!?_licensedir:%global license %%doc}
+%license licenses license.txt
 %doc changelog.txt dependencies.txt readme.txt structure.txt demos
 %doc composer.json
-%{?_licensedir:%license licenses license.txt}
-%{!?_licensedir:%doc    licenses license.txt}
 %{_datadir}/php/getid3
 
 
 %changelog
+* Thu Dec 15 2016 Remi Collet <remi@fedoraproject.org> - 1:1.9.13-1
+- update to 1.9.13
+- use new URL http://www.getid3.org/
+- use sources from github
+- switch to fedora/autoloader
+- add minimal check for autoloader
+
 * Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 1:1.9.12-1
 - update to 1.9.12
 - add simple classmap autoloader
