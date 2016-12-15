@@ -12,8 +12,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   3.20.5
-%global github_commit    5a05ae6851405587f0bdeedb67abfe997a079ac0
+%global github_version   3.20.6
+%global github_commit    f30cacdedd5cf932d471b13e16a48eeef399c97f
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -95,7 +95,7 @@ BuildRequires: php-openssl
 BuildRequires: php-pcre
 BuildRequires: php-simplexml
 BuildRequires: php-spl
-## phpcompatinfo (computed from version 3.20.0)
+## phpcompatinfo (computed from version 3.20.6)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -117,7 +117,7 @@ Requires:      php-composer(guzzlehttp/psr7)        <  %{guzzle_psr7_max_ver}
 Requires:      php-composer(guzzlehttp/psr7)        >= %{guzzle_psr7_min_ver}
 Requires:      php-composer(mtdowling/jmespath.php) <  %{jmespath_max_ver}
 Requires:      php-composer(mtdowling/jmespath.php) >= %{jmespath_min_ver}
-# phpcompatinfo (computed from version 3.20.0)
+# phpcompatinfo (computed from version 3.20.6)
 Requires:      php-date
 Requires:      php-filter
 Requires:      php-hash
@@ -273,6 +273,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec 15 2016 Shawn Iwinski <shawn@iwin.ski> - 3.20.6-1
+- Updated to 3.20.6 (RHBZ #1402170)
+
 * Tue Dec 13 2016 Remi Collet <remi@remirepo.net> - 3.20.5-1
 - update to 3.20.5
 
