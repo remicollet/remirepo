@@ -1,6 +1,5 @@
 {
     "php-ZendFramework": "zendframework\/zendframework1",
-    "php-phpunit-PHPUnit-Story": "phpunit\/phpunit-story",
     "php-phpunit-phpdcd": "sebastian\/phpdcd",
     "php-tecnickcom-tc-lib-pdf-parser": "tecnickcom\/tc-lib-pdf-parser",
     "php-tecnickcom-tc-lib-file": "tecnickcom\/tc-lib-file",
@@ -14,9 +13,7 @@
     "php-phine-path": "phine\/path",
     "php-phine-exception": "phine\/exception",
     "php-pimple-lib": "pimple\/pimple",
-    "php-simplepie": "simplepie\/simplepie",
     "php-theseer-fxsl": "theseer\/fxsl",
-    "php-cs-fixer": "friendsofphp\/php-cs-fixer",
     "php-morris-lessql": "morris\/lessql",
     "phan": "etsy\/phan",
     "phinx": "robmorgan\/phinx"
