@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    81d5d9c602ca292a16e32001dcbd2adab5350e28
+%global gh_commit    76824bdeae99e46e6ae06f29e4bdf86063da86b9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     auraphp
 %global gh_project   Aura.Di
@@ -19,47 +19,50 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{pk_owner}-%{pk_project}
-Version:        2.2.4
+Version:        3.2.0
 Release:        1%{?dist}
-Summary:        Dependency injection container system
+Summary:        A serializable dependency injection container
 
 Group:          Development/Libraries
-License:        BSD
+License:        MIT
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php-composer(fedora/autoloader)
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.3.0
+BuildRequires:  php(language) >= 5.5.0
+BuildRequires:  php-composer(container-interop/container-interop) >= 1.0
 BuildRequires:  php-reflection
 BuildRequires:  php-spl
 BuildRequires:  php-composer(phpunit/phpunit)
+# From composer.json, "require-dev": {
+#        "mouf/picotainer": "~1.0",
+#        "acclimate/container": "~1.0"
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.3.0"
-Requires:       php(language) >= 5.3.0
-# From phpcompatinfo report for version 2.2.4
+#        "php": ">=5.5.0"
+#        "container-interop/container-interop": "~1.0"
+Requires:       php(language) >= 5.5.0
+Requires:       php-composer(container-interop/container-interop) >= 1.0
+Requires:       php-composer(container-interop/container-interop) <  2
+# From phpcompatinfo report for version 3.2.0
 Requires:       php-reflection
 Requires:       php-spl
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(%{pk_owner}/%{pk_project}) = %{version}
+Provides:       php-composer(container-interop/container-interop-implementation) = 1.0
 
 
 %description
-The Aura.Di package provides a dependency injection container system
-with the following features:
-
-* constructor and setter injection
-* explicit and implicit auto-resolution of typehinted constructor
-  parameter values
-* configuration of setters across interfaces and traits
-* inheritance of constructor parameter and setter method values
-* lazy-loaded services, values, and instances
-* instance factories
+A serializable dependency injection container with constructor and setter
+injection, interface and trait awareness, configuration inheritance, and
+much more.
 
 Autoloader: %{php_home}/%{ns_owner}/%{ns_project}/autoload.php
 
@@ -67,14 +70,18 @@ Autoloader: %{php_home}/%{ns_owner}/%{ns_project}/autoload.php
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-# Uggly hack, need by this package and others
-# Only usable in phpunit environment
-mv tests/_Config src/_Config
-
 
 %build
-: Generate a classmap autoloader
-%{_bindir}/phpab --output src/autoload.php src
+cat << 'EOF' | tee -a src/autoload.php
+<?php
+/* Autoloader for %{pk_owner}/%{pk_project} and its dependencies */
+
+require_once '%{_datadir}/php/Fedora/Autoloader/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('Aura\\Di\\', __DIR__);
+\Fedora\Autoloader\Dependencies::required(array(
+    '%{php_home}/Interop/Container/autoload.php',
+));
+EOF
 
 
 %install
@@ -86,10 +93,14 @@ cp -pr src %{buildroot}%{php_home}/%{ns_owner}/%{ns_project}
 
 %check
 %if %{with_tests}
+: Ignore test using not available dependency
+rm tests/ContainerTest.php
+
 mkdir vendor
-%{_bindir}/phpab --output vendor/autoload.php tests
 cat << 'EOF' | tee -a vendor/autoload.php
+<?php
 require '%{buildroot}/%{php_home}/%{ns_owner}/%{ns_project}/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('Aura\\Di\\', dirname(__DIR__) . '/tests');
 EOF
 
 # remirepo:11
@@ -100,7 +111,7 @@ if which php56; then
    run=1
 fi
 if which php71; then
-   php70 %{_bindir}/phpunit --verbose || ret=1
+   php71 %{_bindir}/phpunit --verbose || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -128,6 +139,15 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec 15 2016 Remi Collet <remi@fedoraproject.org> - 3.2.0-1
+- update to 3.2.0
+- License is now MIT
+- update package Summary and Description
+- raise dependency on PHP 5.5
+- add dependency on container-interop/container-interop
+- provide container-interop/container-interop-implementation
+- switch to fedora/autoloader
+
 * Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 2.2.4-1
 - initial package
 
