@@ -8,14 +8,14 @@
 # Please preserve changelog entries
 #
 
-%global gh_commit    ed2b7f1146cfda13df1eea8a5f707a1b771b6e7e
+%global gh_commit    c7d42e4a327c402897dd587871434888fde1e7a9
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     smarty-php
 %global gh_project   smarty
 
 Name:           php-Smarty
 Summary:        Template/Presentation Framework for PHP
-Version:        3.1.30
+Version:        3.1.31
 Release:        1%{?dist}
 
 URL:            http://www.smarty.net
@@ -30,7 +30,7 @@ BuildRequires:  php-cli
 
 # From composer.json
 Requires:       php(language) >= 5.2.0
-# From phpcompatinfo report for 3.1.30
+# From phpcompatinfo report for 3.1.31
 Requires:       php-ctype
 Requires:       php-date
 Requires:       php-mbstring
@@ -56,11 +56,7 @@ Autoloader: %{_datadir}/php/Smarty/autoload.php
 %prep
 %setup -qn %{gh_project}-%{gh_commit}
 
-cat << 'EOF' | tee libs/autoload.php
-<?php
-require_once __DIR__ . '/Autoloader.php';
-Smarty_Autoloader::register();
-EOF
+ln -s bootstrap.php libs/autoload.php
 
 
 %build
@@ -91,14 +87,15 @@ version_compare(Smarty::SMARTY_VERSION, "%{version}", "=") or exit(1);
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license COPYING.lib
-%doc README change_log.txt SMARTY*.txt
-%doc INHERITANCE_RELEASE_NOTES.txt
-%doc composer.json
+%license LICENSE
+%doc README *.txt
 %{_datadir}/php/Smarty
 
 
 %changelog
+* Thu Dec 15 2016 Remi Collet <remi@remirepo.net> - 3.1.31-1
+- update to 3.1.31
+
 * Mon Aug  8 2016 Remi Collet <remi@remirepo.net> - 3.1.30-1
 - update to 3.1.30
 
