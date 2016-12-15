@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    34f6ffd4b84df614303f4c6e9fd3aebf331dc84b
+%global gh_commit    a9b5559f129c2e6cc3f3f32e54c2daa02b336301
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-mvc-console
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.1.10
+Version:        1.1.11
 Release:        1%{?dist}
 Summary:        Zend Framework Mvc-%{library} component
 
@@ -39,7 +39,7 @@ BuildRequires:  php-composer(container-interop/container-interop) >= 1.1
 BuildRequires:  php-composer(%{gh_owner}/zend-console)            >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)       >= 2.6.2
 BuildRequires:  php-composer(%{gh_owner}/zend-modulemanager)      >= 2.7.1
-BuildRequires:  php-composer(%{gh_owner}/zend-mvc)                >= 3.0
+BuildRequires:  php-composer(%{gh_owner}/zend-mvc)                >= 3.0.3
 BuildRequires:  php-composer(%{gh_owner}/zend-router)             >= 3.0
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)     >= 2.7.5
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)             >= 2.7.5
@@ -66,7 +66,7 @@ BuildRequires:  php-zendframework-zend-loader                   >= 2.5.1-3
 #        "zendframework/zend-console": "^2.6",
 #        "zendframework/zend-eventmanager": "^2.6.2 || ^3.0",
 #        "zendframework/zend-modulemanager": "^2.7.1",
-#        "zendframework/zend-mvc": "^3.0.0-dev || ^3.0",
+#        "zendframework/zend-mvc": "^3.0.3",
 #        "zendframework/zend-router": "^3.0",
 #        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
 #        "zendframework/zend-stdlib": "^2.7.5 || ^3.0",
@@ -81,7 +81,7 @@ Requires:       php-composer(%{gh_owner}/zend-eventmanager)       >= 2.6.2
 Requires:       php-composer(%{gh_owner}/zend-eventmanager)       <  4
 Requires:       php-composer(%{gh_owner}/zend-modulemanager)      >= 2.7.1
 Requires:       php-composer(%{gh_owner}/zend-modulemanager)      <  3
-Requires:       php-composer(%{gh_owner}/zend-mvc)                >= 3.0
+Requires:       php-composer(%{gh_owner}/zend-mvc)                >= 3.0.3
 Requires:       php-composer(%{gh_owner}/zend-mvc)                <  4
 Requires:       php-composer(%{gh_owner}/zend-router)             >= 3.0
 Requires:       php-composer(%{gh_owner}/zend-router)             <  4
@@ -174,7 +174,7 @@ if which php56; then
    run=1
 fi
 if which php71; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php71 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -202,6 +202,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec 15 2016 Remi Collet <remi@fedoraproject.org> - 1.1.11-1
+- update to 1.1.11
+- raise dependency on zendframework/zend-mvc 3.0.3
+
 * Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 1.1.10-1
 - initial package
 
