@@ -14,7 +14,7 @@
 %global with_sabre   0
 
 Name:           php-horde-Horde-Dav
-Version:        1.1.3
+Version:        1.1.4
 Release:        1%{?dist}
 Summary:        Horde library for WebDAV, CalDAV, CardDAV
 
@@ -57,17 +57,17 @@ Obsoletes:      php-sabredav-Sabre_CardDAV                < 1:1.8
 Provides:       php-sabredav-Sabre_CardDAV                = 1:1.8.7
 Provides:       php-pear(pear.sabredav.org/Sabre_CardDAV) =   1.8.7
 Obsoletes:      php-sabredav-Sabre_DAV                    < 1:1.8
-Provides:       php-sabredav-Sabre_DAV                    = 1:1.8.10
-Provides:       php-pear(pear.sabredav.org/Sabre_DAV)     =   1.8.10
+Provides:       php-sabredav-Sabre_DAV                    = 1:1.8.12
+Provides:       php-pear(pear.sabredav.org/Sabre_DAV)     =   1.8.12
 Obsoletes:      php-sabredav-Sabre_DAVACL                 < 1:1.8
 Provides:       php-sabredav-Sabre_DAVACL                 = 1:1.8.7
 Provides:       php-pear(ppear.sabredav.org/Sabre_HTTP)   =   1.8.7
 Obsoletes:      php-sabredav-Sabre_HTTP                   < 1:1.8
-Provides:       php-sabredav-Sabre_HTTP                   = 1:1.8.9
-Provides:       php-pear(pear.sabredav.org/Sabre_HTTP)    =   1.8.9
+Provides:       php-sabredav-Sabre_HTTP                   = 1:1.8.12
+Provides:       php-pear(pear.sabredav.org/Sabre_HTTP)    =   1.8.12
 %endif
 # php-sabredav-Sabre_VObject is 2.1, php-sabre-vobject is  3.1
-Requires:       php-pear(Sabre_VObject) >= 2.1.4
+Requires:       php-pear(Sabre_VObject) >= 2.1.7
 # For rpmclassmap
 Requires:       php-horde-Horde-Autoloader >= 2.1.1-3
 
@@ -173,6 +173,10 @@ fi
 
 
 %changelog
+* Thu Dec 15 2016 Remi Collet <remi@fedoraproject.org> - 1.1.4-1
+- Update to 1.1.4
+- Update bundled SabreDAV to 1.8.12
+
 * Tue Apr 05 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
 - Update to 1.1.3
 
