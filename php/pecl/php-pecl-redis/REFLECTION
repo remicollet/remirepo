@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #206 redis version 2.2.8 ] {
+Extension [ <persistent> extension #161 redis version 3.1.0 ] {
 
   - INI {
     Entry [ redis.arrays.names <ALL> ]
@@ -65,7 +65,7 @@ Extension [ <persistent> extension #206 redis version 2.2.8 ] {
       - Properties [0] {
       }
 
-      - Methods [206] {
+      - Methods [212] {
         Method [ <internal:redis, ctor> public method __construct ] {
         }
 
@@ -591,6 +591,24 @@ Extension [ <persistent> extension #206 redis version 2.2.8 ] {
         Method [ <internal:redis> public method rawcommand ] {
         }
 
+        Method [ <internal:redis> public method geoadd ] {
+        }
+
+        Method [ <internal:redis> public method geohash ] {
+        }
+
+        Method [ <internal:redis> public method geopos ] {
+        }
+
+        Method [ <internal:redis> public method geodist ] {
+        }
+
+        Method [ <internal:redis> public method georadius ] {
+        }
+
+        Method [ <internal:redis> public method georadiusbymember ] {
+        }
+
         Method [ <internal:redis> public method getHost ] {
         }
 
@@ -854,7 +872,7 @@ Extension [ <persistent> extension #206 redis version 2.2.8 ] {
       - Properties [0] {
       }
 
-      - Methods [158] {
+      - Methods [164] {
         Method [ <internal:redis, ctor> public method __construct ] {
         }
 
@@ -1356,10 +1374,28 @@ Extension [ <persistent> extension #206 redis version 2.2.8 ] {
 
         Method [ <internal:redis> public method slowlog ] {
         }
+
+        Method [ <internal:redis> public method geoadd ] {
+        }
+
+        Method [ <internal:redis> public method geohash ] {
+        }
+
+        Method [ <internal:redis> public method geopos ] {
+        }
+
+        Method [ <internal:redis> public method geodist ] {
+        }
+
+        Method [ <internal:redis> public method georadius ] {
+        }
+
+        Method [ <internal:redis> public method georadiusbymember ] {
+        }
       }
     }
 
-    Class [ <internal:redis> class RedisException extends RuntimeException ] {
+    Class [ <internal:redis> class RedisException extends RuntimeException implements Throwable ] {
 
       - Constants [0] {
       }
@@ -1390,33 +1426,33 @@ Extension [ <persistent> extension #206 redis version 2.2.8 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:redis> class RedisClusterException extends RuntimeException ] {
+    Class [ <internal:redis> class RedisClusterException extends RuntimeException implements Throwable ] {
 
       - Constants [0] {
       }
@@ -1447,28 +1483,28 @@ Extension [ <persistent> extension #206 redis version 2.2.8 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
