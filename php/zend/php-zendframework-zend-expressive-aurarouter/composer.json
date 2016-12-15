@@ -13,19 +13,21 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0-dev",
-            "dev-develop": "1.1-dev"
+            "dev-master": "1.1-dev",
+            "dev-develop": "1.2-dev"
         }
     },
     "require": {
-        "php": "^5.5 || ^7.0",
-        "aura/router": "^2.3",
+        "php": "^5.6 || ^7.0",
+        "aura/router": "^3.0",
         "psr/http-message": "^1.0",
-        "zendframework/zend-expressive-router": "^1.0"
+        "zendframework/zend-expressive-router": "^1.3.2",
+        "fig/http-message-util": "^1.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.7",
-        "squizlabs/php_codesniffer": "^2.3"
+        "phpunit/phpunit": "^4.7 || ^5.6",
+        "zendframework/zend-coding-standard": "~1.0.0",
+        "malukenho/docheader": "^0.1.5"
     },
     "autoload": {
       "psr-4": {
@@ -39,11 +41,13 @@
     },
     "scripts": {
         "check": [
-            "@cs",
+            "@license-check",
+            "@cs-check",
             "@test"
         ],
-        "cs": "phpcs",
+        "cs-check": "phpcs",
         "cs-fix": "phpcbf",
+        "license-check": "docheader check src/ test/",
         "test": "phpunit"
     }
 }
