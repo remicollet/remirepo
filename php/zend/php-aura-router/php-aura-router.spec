@@ -6,7 +6,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    457efd185e4306fa671d659a66a2d9d28bf91a56
+%global gh_commit    6daebc9747e26a6fdd545d1ed5982b276f17b7a2
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     auraphp
 %global gh_project   Aura.Router
@@ -18,46 +18,51 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{pk_owner}-%{pk_project}
-Version:        2.3.0
+Version:        3.0.1
 Release:        1%{?dist}
-Summary:        A web router implementation
+Summary:        Powerful, flexible web routing for PSR-7 requests
 
 Group:          Development/Libraries
-License:        BSD
+License:        MIT
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
-BuildRequires:  %{_bindir}/phpab
+BuildRequires:  php-composer(fedora/autoloader)
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.3.0
+BuildRequires:  php(language) >= 5.5.0
+BuildRequires:  php-composer(psr/http-message) >= 1.0
+BuildRequires:  php-composer(psr/log) >= 1.0
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
 BuildRequires:  php-composer(phpunit/phpunit)
 # From composer.json, "require-dev": {
-#        "aura/di": "~2.0"
-BuildRequires:  php-composer(%{pk_owner}/di) >= 2.0
+#        "zendframework/zend-diactoros": "~1.0"
+BuildRequires:  php-composer(zendframework/zend-diactoros) >= 1.0
 %endif
 
 # From composer, "require": {
-#        "php": ">=5.3.0"
-Requires:       php(language) >= 5.3.0
+#        "php": ">=5.5.0",
+#        "psr/http-message": "~1.0",
+#        "psr/log": "~1.0"
+Requires:       php(language) >= 5.5.0
+Requires:       php-composer(psr/http-message) >= 1.0
+Requires:       php-composer(psr/http-message) <  2
+Requires:       php-composer(psr/log) >= 1.0
+Requires:       php-composer(psr/log) <  2
 # From phpcompatinfo report for version 2.3.0
 Requires:       php-pcre
 Requires:       php-spl
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(%{pk_owner}/%{pk_project}) = %{version}
 
 
 %description
-Provides a web router implementation: given a URL path and a copy of
-$_SERVER, it will extract path-info and $_SERVER values for a specific route.
-
-This package does not provide a dispatching mechanism. Your application is
-expected to take the information provided by the matching route and dispatch
-it on its own. For one possible dispatch system, please see Aura.Dispatcher.
+Powerful, flexible web routing for PSR-7 requests.
 
 Autoloader: %{php_home}/%{ns_owner}/%{ns_project}/autoload.php
 
@@ -65,13 +70,19 @@ Autoloader: %{php_home}/%{ns_owner}/%{ns_project}/autoload.php
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-# Restore sources tree matching namespaces
-mv config src/_Config
-
 
 %build
-: Generate a classmap autoloader
-%{_bindir}/phpab --output src/autoload.php src
+cat << 'EOF' | tee -a src/autoload.php
+<?php
+/* Autoloader for %{pk_owner}/%{pk_project} and its dependencies */
+
+require_once '%{_datadir}/php/Fedora/Autoloader/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('Aura\\Router\\', __DIR__);
+\Fedora\Autoloader\Dependencies::required(array(
+    '%{php_home}/Psr/Http/Message/autoload.php',
+    '%{php_home}/Psr/Log/autoload.php',
+));
+EOF
 
 
 %install
@@ -86,8 +97,9 @@ cp -pr src %{buildroot}%{php_home}/%{ns_owner}/%{ns_project}
 mkdir vendor
 cat << 'EOF' | tee -a vendor/autoload.php
 <?php
-require '%{php_home}/%{ns_owner}/Di/autoload.php';
 require '%{buildroot}/%{php_home}/%{ns_owner}/%{ns_project}/autoload.php';
+require '%{php_home}/Zend/Diactoros/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('Aura\\Router\\', dirname(__DIR__) . '/tests');
 EOF
 
 # remirepo:11
@@ -98,7 +110,7 @@ if which php56; then
    run=1
 fi
 if which php71; then
-   php70 %{_bindir}/phpunit --verbose || ret=1
+   php71 %{_bindir}/phpunit --verbose || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -126,6 +138,14 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec 15 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
+- update to 3.0.0
+- License is now MIT
+- update package Summary and Description
+- raise dependency on PHP 5.5
+- add dependency on psr/http-message and psr/log
+- switch to fedora/autoloader
+
 * Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 2.3.0-1
 - initial package
 

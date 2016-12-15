@@ -1,14 +1,15 @@
 {
     "name": "aura/router",
     "type": "library",
-    "description": "A web router implementation; given a URI path and a copy of $_SERVER, it will extract path-info parameter values for a specific route.",
+    "description": "Powerful, flexible web routing for PSR-7 requests.",
     "keywords": [
         "route",
         "router",
-        "routing"
+        "routing",
+        "psr-7"
     ],
     "homepage": "https://github.com/auraphp/Aura.Router",
-    "license": "BSD-2-Clause",
+    "license": "MIT",
     "authors": [
         {
             "name": "Aura.Router Contributors",
@@ -16,29 +17,21 @@
         }
     ],
     "require": {
-        "php": ">=5.3.0"
+        "php": ">=5.5.0",
+        "psr/http-message": "~1.0",
+        "psr/log": "~1.0"
     },
     "autoload": {
         "psr-4": {
-            "Aura\\Router\\": "src/",
-            "Aura\\Router\\_Config\\": "config/"
-        }
-    },
-    "extra": {
-        "aura": {
-            "type": "library",
-            "config": {
-                "common": "Aura\\Router\\_Config\\Common"
-            }
+            "Aura\\Router\\": "src/"
         }
     },
     "require-dev": {
-        "aura/di": "~2.0"
+        "zendframework/zend-diactoros": "~1.0"
     },
     "autoload-dev": {
         "psr-4": {
-            "Aura\\Router\\": "tests/",
-            "Aura\\Di\\": "vendor/aura/di/tests"
+            "Aura\\Router\\": "tests/"
         }
     }
 }
