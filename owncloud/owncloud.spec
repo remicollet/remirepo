@@ -9,7 +9,7 @@
 #
 Name:           owncloud
 Version:        9.1.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Private file sync and share server
 Group:          Applications/Internet
 
@@ -59,13 +59,19 @@ Patch5:         %{name}-9.1.0-amazon-autoloader.patch
 Patch6:         %{name}-8.2.3-correct-cli-upgrade-command.patch
 
 # Disable the integrity checking whilst a better way to deal with it is found
-Patch8:         %{name}-9.1.0-default_integrity_check_disabled.patch
+Patch7:         %{name}-9.1.0-default_integrity_check_disabled.patch
 
-# Need to work around an NSS issue in el7.2, due to be fix el7.3 bz#1241172
-Patch9:         %{name}-9.1.1-work-arround-nss-issue.patch
+# No need to check PHP versions, Fedora maintainers are on the job
+Patch8:         %{name}-9.1.2-dont_warn_about_php_versions.patch
 
-# RH provide support for php54 so don't tell users it's EOL
-Patch10:         %{name}-9.1.2-dont_warn_php54_eol.patch
+#Backport of php7.1 fixes
+Patch9:         %{name}-b129d5d-php71-backport.patch
+Patch10:        %{name}-463e2ea-php71-backport.patch
+
+# Need to work around an NSS issue
+# fixed in 7.3         https://bugzilla.redhat.com/1241172,
+# not yet fixed in 6.8 https://bugzilla.redhat.com/1260678
+Patch11:        %{name}-9.1.1-work-arround-nss-issue.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -251,7 +257,8 @@ Requires:       php-composer(patchwork/jsqueeze) >= 2.0
 Requires:       php-composer(patchwork/jsqueeze) < 3.0
 
 # "kriswallsmith/assetic": "1.3.2"
-Requires:       php-composer(kriswallsmith/assetic) >= 1.3.2
+# Need release 3 for the autoloader fix to avoid it spamming the logs
+Requires:       php-composer(kriswallsmith/assetic) >= 1.3.2-3
 Requires:       php-composer(kriswallsmith/assetic) < 2.0
 
 # "sabre/dav" : "3.0.8"
@@ -421,9 +428,10 @@ work with an SQLite 3 database stored on the local system.
 %patch5 -p1
 %patch6 -p1
 %patch8 -p1
-%if 0%{?rhel}
 %patch9 -p1
 %patch10 -p1
+%if 0%{?rhel} >= 5 && 0%{?rhel} <= 6
+%patch11 -p1
 %endif
 
 # patch backup files and .git stuff
@@ -738,6 +746,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 14 2016 James Hogarth <james.hogarth@gmail.com> - 9.1.3-1
+- Fix bz#1404441 - php7 does not get the httpd php settings
+- No need to check PHP versions within the code
+- Backport php7.1 fixes
+- Update to 9.1.3
+
 * Tue Dec 13 2016 Remi Collet <remi@fedoraproject.org> - 9.1.3-1
 - Update to 9.1.3
 - fix autoloader to ensure Guzzle v5 is used by updater

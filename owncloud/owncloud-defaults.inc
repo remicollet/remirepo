@@ -36,6 +36,19 @@ ErrorDocument 404 /owncloud/core/templates/404.php
     </IfModule>
 </IfModule>
 
+<IfModule mod_php7.c>
+    php_value upload_max_filesize 10G
+    php_value post_max_size 10G
+    php_value memory_limit 512M
+    php_value mbstring.func_overload 0
+    php_value always_populate_raw_post_data -1
+    php_value default_charset 'UTF-8'
+    php_value output_buffering off
+    <IfModule mod_env.c>
+        SetEnv htaccessWorking true
+    </IfModule>
+</IfModule>
+
 # The rewrites for legacy caldav and carddav URLs are omitted here
 # because they do not work with Fedora's ownCloud directory layout.
 # See https://github.com/owncloud/core/issues/243#issuecomment-75426453
