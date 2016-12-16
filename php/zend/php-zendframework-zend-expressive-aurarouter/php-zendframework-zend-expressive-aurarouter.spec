@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    3131e2bc488a3e77cae688ba23f7cd020b860a19
+%global gh_commit    e97009e4fd0f2d91d02c719bc94e60ea4fe461f2
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-aurarouter
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.1.1
+Version:        1.1.3
 Release:        1%{?dist}
 Summary:        Aura.Router integration for %{library}
 
@@ -162,6 +162,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec 16 2016 Remi Collet <remi@fedoraproject.org> - 1.1.3-1
+- update to 1.1.3
+
 * Thu Dec 15 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - update to 1.1.1
 - raise dependency on PHP 5.6
