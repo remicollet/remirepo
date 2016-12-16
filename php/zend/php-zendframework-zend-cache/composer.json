@@ -21,9 +21,9 @@
     "require-dev": {
         "zendframework/zend-serializer": "^2.6",
         "zendframework/zend-session": "^2.6.2",
-        "fabpot/php-cs-fixer": "1.7.*",
-        "phpunit/phpunit": "^4.5",
-        "phpbench/phpbench": "^0.10.0"
+        "phpunit/phpunit": "^4.8",
+        "phpbench/phpbench": "^0.10.0",
+        "zendframework/zend-coding-standard": "~1.0.0"
     },
     "suggest": {
         "zendframework/zend-serializer": "Zend\\Serializer component",
@@ -56,5 +56,16 @@
             "ZendTest\\Cache\\": "test/",
             "ZendBench\\Cache\\": "benchmark/"
         }
+    },
+    "scripts": {
+        "check": [
+            "@cs-check",
+            "@test"
+        ],
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
+        "upload-coverage": "coveralls -v"
     }
 }

@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    2c68def8f96ce842d2f2a9a69e2f3508c2f5312d
+%global gh_commit    c98331b96d3b9d9b24cf32d02660602edb34d039
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-cache
@@ -20,13 +20,13 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.1
+Version:        2.7.2
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
 License:        BSD
-URL:            https://framework.zend.com/
+URL:            https://zendframework.github.io/%{gh_project}/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
 
@@ -45,12 +45,12 @@ BuildRequires:  php-composer(%{gh_owner}/zend-eventmanager)     >= 2.6.2
 # From composer, "require-dev": {
 #        "zendframework/zend-serializer": "^2.6",
 #        "zendframework/zend-session": "^2.6.2",
-#        "fabpot/php-cs-fixer": "1.7.*",
-#        "phpunit/phpunit": "^4.5",
-#        "phpbench/phpbench": "^0.10.0"
+#        "phpunit/phpunit": "^4.8",
+#        "phpbench/phpbench": "^0.10.0",
+#        "zendframework/zend-coding-standard": "~1.0.0"
 BuildRequires:  php-composer(%{gh_owner}/zend-serializer)       >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-session)          >= 2.6.2
-BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.5
+BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.8
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 %endif
@@ -151,11 +151,22 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
-
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -175,6 +186,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec 16 2016 Remi Collet <remi@fedoraproject.org> - 2.7.2-1
+- update to 2.7.2
+
 * Fri May 13 2016 Remi Collet <remi@fedoraproject.org> - 2.7.1-1
 - update to 2.7.1
 
