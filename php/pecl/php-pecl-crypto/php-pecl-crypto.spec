@@ -23,14 +23,12 @@
 
 Summary:        Wrapper for OpenSSL Crypto Library
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        0.3.0
+Version:        0.3.1
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-Patch0:         %{pecl_name}-pr20.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -101,7 +99,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-%patch0 -p1 -b .pr20
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_CRYPTO_VERSION/{s/.* "//;s/".*$//;p}' php_crypto.h)
@@ -238,6 +235,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec 16 2016 Remi Collet <remi@fedoraproject.org> - 0.3.1-1
+- Update to 0.3.1
+- drop patch merged upstream
+
 * Thu Dec 15 2016 Remi Collet <remi@fedoraproject.org> - 0.3.0-1
 - Update to 0.3.0
 - open https://github.com/bukka/php-crypto/issues/19 segfault
