@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %{!?php_version:  %global php_version  %(php -r 'echo PHP_VERSION;' 2>/dev/null)}
-%global gh_commit    300a1689891aa97a6733ef496081ec394f53486b
+%global gh_commit    49d67523234b35697a0b5b6b2dd8e9b6a23f44cb
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 #global gh_date      20151005
 %global gh_owner     llaville
@@ -16,8 +16,8 @@
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:           php-bartlett-PHP-CompatInfo
-Version:        5.0.1
-%global specrel 2
+Version:        5.0.2
+%global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Find out version and the extensions required for a piece of code to run
 
@@ -42,7 +42,7 @@ BuildRequires:  php(language) >= 5.4.0
 BuildRequires:  %{_bindir}/phpunit
 BuildRequires:  php-pdo_sqlite
 BuildRequires:  php-composer(bartlett/php-reflect) >= 4.0
-BuildRequires:  php-composer(bartlett/php-compatinfo-db) >= 1.0
+BuildRequires:  php-composer(bartlett/php-compatinfo-db) >= 1.15
 # For our patch / autoloader
 BuildRequires:  php-composer(fedora/autoloader)
 %endif
@@ -66,7 +66,7 @@ Requires:       php-pdo_sqlite
 Requires:       php-spl
 Requires:       php-composer(bartlett/php-reflect) >= 4.0
 Requires:       php-composer(bartlett/php-reflect) <  5
-Requires:       php-composer(bartlett/php-compatinfo-db) >= 1.0
+Requires:       php-composer(bartlett/php-compatinfo-db) >= 1.15
 Requires:       php-composer(bartlett/php-compatinfo-db) <  2
 Requires:       php-composer(symfony/console)      >= 2.5
 Requires:       php-composer(symfony/console)      <  3
@@ -177,6 +177,9 @@ fi
 
 
 %changelog
+* Fri Dec 16 2016 Remi Collet <remi@fedoraproject.org> - 5.0.2-1
+- update to 5.0.2
+
 * Mon Oct 31 2016 Remi Collet <remi@fedoraproject.org> - 5.0.1-2
 - switch to fedora/autoloader
 
