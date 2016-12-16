@@ -1,3 +1,6 @@
+# Fedora spec file for php-geos
+# Without SCL compatibility stuff, from:
+#
 # remirepo spec file for php-geos
 #
 # Copyright (c) 2016 Remi Collet
@@ -6,27 +9,15 @@
 #
 # Please, preserve the changelog entries
 #
-%if 0%{?scl:1}
-%global sub_prefix %{scl_prefix}
-%scl_package         php-geos
-%else
-%global pkg_name     php-geos
-%endif
-
 %global prever     rc3
-
 %global pecl_name  geos
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
-%if "%{php_version}" < "5.6"
-%global ini_name   %{pecl_name}.ini
-%else
 %global ini_name   40-%{pecl_name}.ini
-%endif
 %global with_tests 0%{!?_without_tests:1}
 
-Name:           %{?sub_prefix}php-%{pecl_name}
+Name:           php-%{pecl_name}
 Version:        1.0.0
-Release:        0.3.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        0.4.%{prever}%{?dist}
 
 Summary:        PHP module for GEOS
 
@@ -36,62 +27,27 @@ License:        LGPLv2+ and MIT
 URL:            http://trac.osgeo.org/geos
 Source0:        https://git.osgeo.org/gogs/geos/php-geos/archive/%{version}%{prever}.tar.gz
 
-BuildRequires:  %{?scl_prefix}php-devel
-BuildRequires:  %{?scl_prefix}php-pear
+BuildRequires:  php-devel
+BuildRequires:  php-pear
 # Test failures with 3.3 (EL-6)
 BuildRequires:  geos-devel >= 3.4
 
-Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
-Requires:       %{?scl_prefix}php(api) = %{php_core_api}
-%{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
+Requires:       php(zend-abi) = %{php_zend_api}
+Requires:       php(api) = %{php_core_api}
 
-%if "%{?scl_prefix}" != "%{?sub_prefix}"
-Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}-%{release}
-Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}-%{release}
-%endif
 # Dropped from geos
-Obsoletes:      %{?scl_prefix}geos-php        <= 3.5.0
-Provides:       %{?scl_prefix}geos-php         = 1:%{version}-%{release}
-Provides:       %{?scl_prefix}geos-php%{?_isa} = 1:%{version}-%{release}
-
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
-# Other third party repo stuff
-Obsoletes:     php54-%{pecl_name}       <= %{version}
-Obsoletes:     php54w-%{pecl_name}      <= %{version}
-%if "%{php_version}" > "5.5"
-Obsoletes:     php55u-%{pecl_name}      <= %{version}
-Obsoletes:     php55w-%{pecl_name}      <= %{version}
-%endif
-%if "%{php_version}" > "5.6"
-Obsoletes:     php56u-%{pecl_name}      <= %{version}
-Obsoletes:     php56w-%{pecl_name}      <= %{version}
-%endif
-%if "%{php_version}" > "7.0"
-Obsoletes:     php70u-%{pecl_name}      <= %{version}
-Obsoletes:     php70w-%{pecl_name}      <= %{version}
-%endif
-%if "%{php_version}" > "7.1"
-Obsoletes:     php71u-%{pecl_name}      <= %{version}
-Obsoletes:     php71w-%{pecl_name}      <= %{version}
-%endif
-%endif
-
-%if 0%{?fedora} < 20 && 0%{?rhel} < 7
-# Filter private shared
-%{?filter_provides_in: %filter_provides_in %{_libdir}/.*\.so$}
-%{?filter_setup}
-%endif
+Obsoletes:      geos-php        <= 3.5.0
+Provides:       geos-php         = 1:%{version}-%{release}
+Provides:       geos-php%{?_isa} = 1:%{version}-%{release}
 
 
 %description
 PHP module for GEOS.
 
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
-
 
 %prep
 %setup -q -c
-mv %{pkg_name} NTS
+mv %{name} NTS
 
 cd NTS
 sed -e '/PHP_GEOS_VERSION/s/"0.0"/"%{version}%{?prever}"/' -i php_geos.h
@@ -179,7 +135,6 @@ exit $ret
 
 
 %files
-%{!?_licensedir:%global license %%doc}
 %license NTS/{COPYING,LGPL-2,MIT-LICENSE}
 %doc NTS/{CREDITS,NEWS,README.md,TODO}
 
@@ -193,6 +148,9 @@ exit $ret
 
 
 %changelog
+* Fri Dec 16 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.4.rc3
+- cleanup for Fedora review
+
 * Fri Dec 16 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.rc3
 - update to 1.0.0-rc3
 
