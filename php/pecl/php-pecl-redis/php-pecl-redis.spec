@@ -18,7 +18,7 @@
 
 %global pecl_name   redis
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
-%global with_tests  0%{?_with_tests:1}
+%global with_tests  1%{?_with_tests:1}
 %global with_igbin  1
 %if "%{php_version}" < "5.6"
 # after igbinary
@@ -320,6 +320,7 @@ rm -rf %{buildroot}
 %changelog
 * Thu Dec 15 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-2
 - test build
+- open https://github.com/phpredis/phpredis/issues/1060 broken impl
 
 * Thu Dec 15 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-1
 - update to 3.1.0
