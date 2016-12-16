@@ -18,7 +18,7 @@
 
 %global pecl_name   redis
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
-%global with_tests  1%{?_with_tests:1}
+%global with_tests  0%{?_with_tests:1}
 %global with_igbin  1
 %if "%{php_version}" < "5.6"
 # after igbinary
@@ -37,7 +37,9 @@ License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/redis
 
-Patch0:        1057.patch
+Patch0:        %{pecl_name}-pr1057.patch
+Patch1:        %{pecl_name}-pr1063.patch
+Patch2:        %{pecl_name}-pr1064.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
@@ -121,6 +123,8 @@ sed -e 's/role="test"/role="src"/' \
 
 cd NTS
 %patch0 -p1 -b .pr1057
+%patch1 -p1 -b .pr1063
+%patch2 -p1 -b .pr1064
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_REDIS_VERSION/{s/.* "//;s/".*$//;p}' php_redis.h)
@@ -319,8 +323,11 @@ rm -rf %{buildroot}
 
 %changelog
 * Thu Dec 15 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-2
-- test build
+- test build for open upcoming 3.1.1
 - open https://github.com/phpredis/phpredis/issues/1060 broken impl
+  with https://github.com/phpredis/phpredis/pull/1064
+- reed https://github.com/phpredis/phpredis/issues/1062 session php 7.1
+  with https://github.com/phpredis/phpredis/pull/1063
 
 * Thu Dec 15 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-1
 - update to 3.1.0
