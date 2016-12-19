@@ -8,8 +8,8 @@
 #
 # Please preserve changelog entries
 #
-%global VER        6.9.6
-%global Patchlevel 8
+%global VER        6.9.7
+%global Patchlevel 0
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 %global with_tests 0%{!?_without_tests:1}
@@ -518,6 +518,9 @@ fi
 
 
 %changelog
+* Mon Dec 19 2016 Remi Collet <remi@remirepo.net> - 6.9.7.0-1
+- update to version 6.9.7
+
 * Sun Dec 11 2016 Remi Collet <remi@remirepo.net> - 6.9.6.8-1
 - update to version 6.9.6 patchlevel 8
 - new soname libMagickCore=3, libMagickWand=3, libMagick++=7
