@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #125 swoole version 1.9.1 ] {
+Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -18,7 +18,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.1 ] {
     }
   }
 
-  - Constants [58] {
+  - Constants [59] {
     Constant [ integer SWOOLE_BASE ] { 4 }
     Constant [ integer SWOOLE_THREAD ] { 2 }
     Constant [ integer SWOOLE_PROCESS ] { 3 }
@@ -63,7 +63,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.1 ] {
     Constant [ integer SWOOLE_DTLSv1_CLIENT_METHOD ] { 17 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.9.1 }
+    Constant [ string SWOOLE_VERSION ] { 1.9.2 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 1 }
     Constant [ integer SWOOLE_FILELOCK ] { 2 }
@@ -73,6 +73,7 @@ Extension [ <persistent> extension #125 swoole version 1.9.1 ] {
     Constant [ integer SWOOLE_SPINLOCK ] { 5 }
     Constant [ integer WEBSOCKET_OPCODE_TEXT ] { 1 }
     Constant [ integer WEBSOCKET_OPCODE_BINARY ] { 2 }
+    Constant [ integer WEBSOCKET_OPCODE_PING ] { 9 }
     Constant [ integer WEBSOCKET_STATUS_CONNECTION ] { 1 }
     Constant [ integer WEBSOCKET_STATUS_HANDSHAKE ] { 2 }
     Constant [ integer WEBSOCKET_STATUS_FRAME ] { 3 }
@@ -91,6 +92,11 @@ Extension [ <persistent> extension #125 swoole version 1.9.1 ] {
       }
     }
     Function [ <internal:swoole> function swoole_clear_dns_cache ] {
+
+      - Parameters [0] {
+      }
+    }
+    Function [ <internal:swoole> function swoole_last_error ] {
 
       - Parameters [0] {
       }
@@ -1052,7 +1058,8 @@ Extension [ <persistent> extension #125 swoole version 1.9.1 ] {
 
     Class [ <internal:swoole> class swoole_process ] {
 
-      - Constants [0] {
+      - Constants [1] {
+        Constant [ integer IPC_NOWAIT ] { 256 }
       }
 
       - Static properties [0] {
@@ -1355,6 +1362,9 @@ Extension [ <persistent> extension #125 swoole version 1.9.1 ] {
         }
 
         Method [ <internal:swoole, overwrites swoole_server, prototype swoole_server> public method start ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole, inherits swoole_server, ctor> public method __construct ] {
@@ -1633,30 +1643,80 @@ Extension [ <persistent> extension #125 swoole version 1.9.1 ] {
 
       - Methods [9] {
         Method [ <internal:swoole> public method cookie ] {
+
+          - Parameters [7] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <optional> $value ]
+            Parameter #2 [ <optional> $expires ]
+            Parameter #3 [ <optional> $path ]
+            Parameter #4 [ <optional> $domain ]
+            Parameter #5 [ <optional> $secure ]
+            Parameter #6 [ <optional> $httponly ]
+          }
         }
 
         Method [ <internal:swoole> public method rawcookie ] {
+
+          - Parameters [7] {
+            Parameter #0 [ <required> $name ]
+            Parameter #1 [ <optional> $value ]
+            Parameter #2 [ <optional> $expires ]
+            Parameter #3 [ <optional> $path ]
+            Parameter #4 [ <optional> $domain ]
+            Parameter #5 [ <optional> $secure ]
+            Parameter #6 [ <optional> $httponly ]
+          }
         }
 
         Method [ <internal:swoole> public method status ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $http_code ]
+          }
         }
 
         Method [ <internal:swoole> public method gzip ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $compress_level ]
+          }
         }
 
         Method [ <internal:swoole> public method header ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <required> $value ]
+            Parameter #2 [ <optional> $ucwords ]
+          }
         }
 
         Method [ <internal:swoole> public method write ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $content ]
+          }
         }
 
         Method [ <internal:swoole> public method end ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $content ]
+          }
         }
 
         Method [ <internal:swoole> public method sendfile ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $filename ]
+            Parameter #1 [ <optional> $offset ]
+          }
         }
 
         Method [ <internal:swoole, dtor> public method __destruct ] {
+
+          - Parameters [0] {
+          }
         }
       }
     }
@@ -1677,9 +1737,15 @@ Extension [ <persistent> extension #125 swoole version 1.9.1 ] {
 
       - Methods [2] {
         Method [ <internal:swoole> public method rawcontent ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole, dtor> public method __destruct ] {
+
+          - Parameters [0] {
+          }
         }
       }
     }
@@ -1785,6 +1851,9 @@ Extension [ <persistent> extension #125 swoole version 1.9.1 ] {
         }
 
         Method [ <internal:swoole, inherits swoole_http_server, prototype swoole_server> public method start ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole, inherits swoole_server, ctor> public method __construct ] {
