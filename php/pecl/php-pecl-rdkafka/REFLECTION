@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #113 rdkafka version 2.0.1 ] {
+Extension [ <persistent> extension #114 rdkafka version 3.0.0 ] {
 
   - Constants [89] {
     Constant [ integer RD_KAFKA_CONSUMER ] { 1 }
@@ -145,7 +145,7 @@ Extension [ <persistent> extension #113 rdkafka version 2.0.1 ] {
         Property [ <default> private $dr_cb ]
       }
 
-      - Methods [11] {
+      - Methods [10] {
         Method [ <internal:rdkafka> public method addBrokers ] {
 
           - Parameters [1] {
@@ -217,12 +217,6 @@ Extension [ <persistent> extension #113 rdkafka version 2.0.1 ] {
             Parameter #0 [ <required> $logger ]
           }
         }
-
-        Method [ <internal:rdkafka, dtor> public method __destruct ] {
-
-          - Parameters [0] {
-          }
-        }
       }
     }
 
@@ -240,7 +234,7 @@ Extension [ <persistent> extension #113 rdkafka version 2.0.1 ] {
       - Properties [0] {
       }
 
-      - Methods [12] {
+      - Methods [11] {
         Method [ <internal:rdkafka, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -317,12 +311,6 @@ Extension [ <persistent> extension #113 rdkafka version 2.0.1 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $logger ]
-          }
-        }
-
-        Method [ <internal:rdkafka, inherits RdKafka, dtor> public method __destruct ] {
-
-          - Parameters [0] {
           }
         }
       }
@@ -342,7 +330,7 @@ Extension [ <persistent> extension #113 rdkafka version 2.0.1 ] {
       - Properties [0] {
       }
 
-      - Methods [12] {
+      - Methods [11] {
         Method [ <internal:rdkafka, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -419,12 +407,6 @@ Extension [ <persistent> extension #113 rdkafka version 2.0.1 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $logger ]
-          }
-        }
-
-        Method [ <internal:rdkafka, inherits RdKafka, dtor> public method __destruct ] {
-
-          - Parameters [0] {
           }
         }
       }

@@ -1,0 +1,22 @@
+From 317d4d9daa7af9f0607d5c99524947be1776e0ee Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Mon, 19 Dec 2016 17:59:21 +0100
+Subject: [PATCH] Fix #98 failed build with old gcc
+
+---
+ rdkafka.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/rdkafka.c b/rdkafka.c
+index 3597a92..d50e47d 100644
+--- a/rdkafka.c
++++ b/rdkafka.c
+@@ -56,7 +56,7 @@ typedef struct _kafka_object {
+ #if PHP_MAJOR_VERSION >= 7
+     zend_object             std;
+ #endif
+-} kafka_object;
++};
+ 
+ typedef struct _toppar {
+     rd_kafka_topic_t    *rkt;

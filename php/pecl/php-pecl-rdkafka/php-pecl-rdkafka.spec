@@ -7,12 +7,8 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%if "%{scl}" == "rh-php56"
-%global sub_prefix more-php56-
-%else
 %global sub_prefix %{scl_prefix}
-%endif
-%scl_package        php-pecl-rdkafka
+%scl_package       php-pecl-rdkafka
 %endif
 
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
@@ -26,16 +22,18 @@
 
 Summary:        Kafka client based on librdkafka
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.0.0
+Version:        3.0.0
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        MIT
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
+Patch0:         %{pecl_name}-build.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  librdkafka-devel > 0.8
-BuildRequires:  %{?scl_prefix}php-devel > 5.4
+BuildRequires:  %{?scl_prefix}php-devel > 5.3
 BuildRequires:  %{?scl_prefix}php-pear
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
@@ -65,6 +63,14 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
 %endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
+%endif
 %endif
 
 %if 0%{?fedora} < 20 && 0%{?rhel} < 7
@@ -93,6 +99,7 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
+%patch0 -p1 -b .build
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_RDKAFKA_VERSION/{s/.* "//;s/".*$//;p}' php_rdkafka.h)
@@ -211,6 +218,24 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 19 2016 Remi Collet <remi@fedoraproject.org> - 3.0.0-1
+- update to 3.0.0 (php 5 and 7, stable)
+- open https://github.com/arnaud-lb/php-rdkafka/issues/98 failed build
+  fixed by https://github.com/arnaud-lb/php-rdkafka/pull/99
+
+* Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-2
+- rebuild with PHP 7.1.0 GA
+
+* Mon Nov 28 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1
+
+* Wed Sep 14 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
+- rebuild for PHP 7.1 new API version
+
+* Fri Sep 09 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- Update to 2.0.0 (php 7)
+- open https://github.com/arnaud-lb/php-rdkafka/issues/71
+
 * Fri Sep 09 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
 - Update to 1.0.0 (php 5)
 
