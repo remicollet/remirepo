@@ -10,13 +10,13 @@
 %global glpi_version  9.1
 %global glpi_min      9.1.1
 %global glpi_max      9.2
-%global plug_version  1.0
-%global gh_tag        glpi9.1+1.0
+%global plug_version  1.1
+%global gh_tag        glpi9.1+1.1
 
 Name:           glpi-fusioninventory
 # New version schema : 2.4.0 = 0.80+1.0 < 0.80+1.1 < 0.83+1.0
 Epoch:          1
-Version:        %{glpi_version}.0.%{plug_version}
+Version:        %{glpi_min}.%{plug_version}
 Release:        1%{?dist}
 Summary:        FusionInventory Server embedded as a GLPI plugin
 Summary(fr):    Serveur FusionInventory en extension pour GLPI
@@ -149,6 +149,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 19 2016 Remi Collet <remi@fedoraproject.org> - 1:9.1.0.1.1-1
+- update to 9.1+1.1
+
 * Tue Nov 22 2016 Remi Collet <remi@fedoraproject.org> - 1:9.1.0.1.0-1
 - update to 9.1+1.0
 
