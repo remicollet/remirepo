@@ -14,12 +14,12 @@
 %global pecl_name request
 %global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
 %global ini_name  40-%{pecl_name}.ini
-%global prever    a2
+%global prever    b1
 
 Summary:        Server-side request and response objects
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        1.0.0
-Release:        0.3.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        0.4.%{prever}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -227,6 +227,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Mon Dec 19 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.4.b1
+- update to 1.0.0b1 (beta)
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.3.a2
 - rebuild with PHP 7.1.0 GA
 

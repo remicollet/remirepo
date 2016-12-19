@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #113 request version 1.0.0a2 ] {
+Extension [ <persistent> extension #115 request version 1.0.0b1 ] {
 
   - Dependencies {
     Dependency [ spl (Required) ]
@@ -41,7 +41,7 @@ Extension [ <persistent> extension #113 request version 1.0.0a2 ] {
         }
       }
 
-      - Properties [27] {
+      - Properties [31] {
         Property [ <default> private $_initialized ]
         Property [ <default> public $accept ]
         Property [ <default> public $acceptCharset ]
@@ -59,6 +59,10 @@ Extension [ <persistent> extension #113 request version 1.0.0a2 ] {
         Property [ <default> public $cookie ]
         Property [ <default> public $env ]
         Property [ <default> public $files ]
+        Property [ <default> public $forwarded ]
+        Property [ <default> public $forwardedFor ]
+        Property [ <default> public $forwardedHost ]
+        Property [ <default> public $forwardedProto ]
         Property [ <default> public $get ]
         Property [ <default> public $headers ]
         Property [ <default> public $input ]
