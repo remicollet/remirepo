@@ -6,10 +6,13 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package         php-pecl-vld}
+%if 0%{?scl:1}
+%global sub_prefix %{scl_prefix}
+%scl_package       php-pecl-vld
+%endif
 
 %global pecl_name vld
-%global with_zts  0%{?__ztsphp:1}
+%global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
 %global ini_name  %{pecl_name}.ini
 %else
@@ -17,16 +20,13 @@
 %endif
 
 Summary:        Dump the internal representation of PHP scripts
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.13.0
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
+Version:        0.14.0
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/derickr/vld/commits/master
-Patch0:         %{pecl_name}-git.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel
@@ -40,8 +40,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
@@ -56,6 +58,14 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php70w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.1"
+Obsoletes:     php71u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -77,10 +87,17 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %setup -q -c
 mv %{pecl_name}-%{version} NTS
 
-cd NTS
-%patch0 -p1 -b .fromgit
-chmod +r LICENS*
-cd ..
+%{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
+
+: Fix version
+sed -e 's/"0.14.0-dev"/"%{version}"/' -i NTS/vld.c
+
+: Check version
+if ! grep -q '"%{version}"' NTS/vld.c; then
+   : Error: Upstream extension version, expecting %{version}%{?prever:-%{prever}}.
+   exit 1
+fi
+
 
 %if %{with_zts}
 # Duplicate source tree for NTS / ZTS build
@@ -200,6 +217,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 19 2016 Remi Collet <remi@fedoraproject.org> - 0.14.0-1
+- Update to 0.14.0
+
 * Tue Mar  8 2016 Remi Collet <remi@fedoraproject.org> - 0.13.0-2
 - adapt for F24
 - fix license management
