@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    f701b0d322741b0c8d8ca1288f249a49438029cd
+%global gh_commit    596a2cde85a92c3366514ae0f55ea32ef59536ac
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-servicemanager
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        3.1.1
+Version:        3.2.0
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -34,16 +34,22 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.5
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-composer(container-interop/container-interop) >= 1.0
+BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)             >= 3.1
+BuildRequires:  php-reflection
+BuildRequires:  php-date
+BuildRequires:  php-json
 BuildRequires:  php-spl
 # From composer, "require-dev": {
-#        "phpunit/phpunit": "^4.6 || ^5.2.10",
 #        "ocramius/proxy-manager": "^1.0 || ^2.0",
-#        "squizlabs/php_codesniffer": "^2.5.1",
-#        "phpbench/phpbench": "^0.10.0"
+#        "phpbench/phpbench": "^0.10.0",
+#        "phpunit/phpunit": "^4.6 || ^5.2.10",
+#        "mikey179/vfsStream": "^1.6",
+#        "zendframework/zend-coding-standard": "~1.0.0"
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.6
 BuildRequires:  php-composer(ocramius/proxy-manager)            >= 1.0
+BuildRequires:  php-composer(mikey179/vfsStream)                >= 1.6
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
 # For dependencies autoloader
@@ -51,12 +57,18 @@ BuildRequires:  php-zendframework-zend-loader                   >= 2.5.1-3
 %endif
 
 # From composer, "require": {
-#        "php": "^5.5 || ^7.0"
-#        "container-interop/container-interop": "~1.0"
-Requires:       php(language) >= 5.5
+#        "php": "^5.6 || ^7.0",
+#        "container-interop/container-interop": "~1.0",
+#        "zendframework/zend-stdlib": "^3.1"
+Requires:       php(language) >= 5.6
 Requires:       php-composer(container-interop/container-interop) >= 1.0
 Requires:       php-composer(container-interop/container-interop) <  2
-# From phpcompatinfo report for version 2.7.4
+Requires:       php-composer(%{gh_owner}/zend-stdlib)             >= 3.1
+Requires:       php-composer(%{gh_owner}/zend-stdlib)             <  4
+# From phpcompatinfo report for version 3.2.0
+Requires:       php-reflection
+Requires:       php-date
+Requires:       php-json
 Requires:       php-spl
 %if ! %{bootstrap}
 # From composer, "suggest": {
@@ -64,7 +76,6 @@ Requires:       php-spl
 #        "zendframework/zend-stdlib": "zend-stdlib ^2.5 if you wish to use the MergeReplaceKey or MergeRemoveKey features in Config instances"
 %if 0%{?fedora} >= 21
 Suggests:       php-composer(ocramius/proxy-manager)
-Suggests:       php-composer(%{gh_owner}/zend-stdlib)
 %endif
 # Autoloader
 Requires:       php-composer(%{gh_owner}/zend-loader)           >= 2.5
@@ -166,6 +177,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 3.2.0-1
+- update to 3.2.0
+- raise dependency on PHP 5.6
+- add dependency on zendframework/zend-stdlib
+
 * Sun Jul 17 2016 Remi Collet <remi@fedoraproject.org> - 3.1.1-1
 - update to 3.1.1
 
