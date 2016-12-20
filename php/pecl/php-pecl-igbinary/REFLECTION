@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #94 igbinary version 2.0.0 ] {
+Extension [ <persistent> extension #96 igbinary version 2.0.1 ] {
 
   - Dependencies {
     Dependency [ standard (Required) ]

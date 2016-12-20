@@ -11,7 +11,7 @@
 #
 %if 0%{?scl:1}
 %global sub_prefix %{scl_prefix}
-%scl_package        php-pecl-igbinary
+%scl_package       php-pecl-igbinary
 %endif
 
 %global extname    igbinary
@@ -28,12 +28,12 @@
 
 Summary:        Replacement for the standard PHP serializer
 Name:           %{?sub_prefix}php-pecl-igbinary
-Version:        2.0.0
+Version:        2.0.1
 %if 0%{?gh_date}
 Release:        0.6.%{gh_date}git%{gh_short}%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        https://github.com/%{extname}/%{extname}/archive/%{gh_commit}/%{extname}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 Source0:        http://pecl.php.net/get/%{extname}-%{version}.tgz
 %endif
 License:        BSD
@@ -297,6 +297,9 @@ fi
 
 
 %changelog
+* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 2.0.1-1
+- Update to 2.0.1
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
 - rebuild with PHP 7.1.0 GA
 
