@@ -13,7 +13,7 @@
 %global with_sysjs   0
 
 Name:           php-horde-horde
-Version:        5.2.12
+Version:        5.2.13
 Release:        1%{?dist}
 Summary:        Horde Application Framework
 
@@ -299,6 +299,9 @@ fi
 
 
 %changelog
+* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 5.2.13-1
+- Update to 5.2.13
+
 * Wed Sep 07 2016 Remi Collet <remi@fedoraproject.org> - 5.2.12-1
 - Update to 5.2.12
 - drop old %%pretrans scriptlet not needed anymore
