@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    5c80bdee0e952be112dcec0968bad770082c3a6e
+%global gh_commit    c3bce7b7d47c54040b9ae51bc55491c72513b75d
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-eventmanager
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        3.0.1
+Version:        3.1.0
 Release:        1%{?dist}
 Summary:        Trigger and listen to events within a PHP application
 
@@ -34,16 +34,16 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.5
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-spl
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)      >= 2.5
 # From composer, "require-dev": {
-#        "phpunit/PHPUnit": "~4.0",
+#        "phpunit/PHPUnit": "~5.6",
 #        "athletic/athletic": "^0.1",
-#        "squizlabs/php_codesniffer": "^2.0",
 #        "zendframework/zend-stdlib": "^2.7.3 || ^3.0",
-#        "container-interop/container-interop": "^1.1.0"
-BuildRequires:  php-composer(phpunit/phpunit)              >= 4.0
+#        "container-interop/container-interop": "^1.1.0",
+#        "zendframework/zend-coding-standard": "~1.0.0"
+BuildRequires:  php-composer(phpunit/phpunit)              >= 5.6
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)      >= 2.7.3
 BuildRequires:  php-composer(container-interop/container-interop) >= 1.1.0
 # Autoloader
@@ -51,8 +51,8 @@ BuildRequires:  php-composer(%{gh_owner}/zend-loader)      >= 2.5
 %endif
 
 # From composer, "require": {
-#        "php": "^5.5 || ^7.0",
-Requires:       php(language) >= 5.5
+#        "php": "^5.6 || ^7.0",
+Requires:       php(language) >= 5.6
 %if ! %{bootstrap}
 # From composer, "suggest": {
 #        "container-interop/container-interop": "^1.1.0, to use the lazy listeners feature",
@@ -124,7 +124,7 @@ if which php56; then
    run=1
 fi
 if which php71; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php71 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -151,6 +151,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-1
+- update to 3.1.0
+- raise dependency on PHP 5.6
+
 * Wed Jun 29 2016 Remi Collet <remi@fedoraproject.org> - 3.0.1-1
 - update to 3.0.1 for ZendFramework 3
 - dependency on zend-stdlib is optional
