@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    5aeaa40d478d60216cfba8ae94187f2b3cfbdfcb
+%global gh_commit    e547c81b36bae6cb5a6ba0c498314940f5d428ed
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.4.0
+Version:        2.4.1
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Security: Access Control Component
@@ -39,14 +39,14 @@ BuildRequires:  php-session
 BuildRequires:  php-spl
 BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.4
 # From composer.json, "require-dev": {
-#               "nette/di": "~2.3",
-#               "nette/http": "~2.3",
+#               "nette/di": "~2.4",
+#               "nette/http": "~2.4",
 #               "nette/tester": "~2.0",
-#               "tracy/tracy": "^2.3"
-BuildRequires:  php-composer(%{gh_owner}/di) >= 2.3
-BuildRequires:  php-composer(%{gh_owner}/http) >= 2.3
+#               "tracy/tracy": "^2.4"
+BuildRequires:  php-composer(%{gh_owner}/di) >= 2.4
+BuildRequires:  php-composer(%{gh_owner}/http) >= 2.4
 BuildRequires:  php-composer(%{gh_owner}/tester) >= 2.0
-BuildRequires:  php-composer(tracy/tracy) >= 2.3
+BuildRequires:  php-composer(tracy/tracy) >= 2.4
 %endif
 
 # from composer.json, "require": {
@@ -146,6 +146,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
+- update to 2.4.1
+
 * Thu Aug  4 2016 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
 - update to 2.4.0
 - raise dependency on PHP >= 5.6
