@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Browser
-Version:        2.0.12
+Version:        2.0.13
 Release:        1%{?dist}
 Summary:        Horde Browser API
 
@@ -114,6 +114,9 @@ fi
 
 
 %changelog
+* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 2.0.13-1
+- Update to 2.0.13
+
 * Mon Mar 21 2016 Remi Collet <remi@fedoraproject.org> - 2.0.12-1
 - Update to 2.0.12
 
