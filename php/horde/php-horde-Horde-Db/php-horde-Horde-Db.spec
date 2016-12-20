@@ -12,7 +12,7 @@
 %global pear_channel pear.horde.org
 
 Name:           php-horde-Horde-Db
-Version:        2.3.3
+Version:        2.3.4
 Release:        1%{?dist}
 Summary:        Horde Database Libraries
 
@@ -128,6 +128,9 @@ fi
 
 
 %changelog
+* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.4-1
+- Update to 2.3.4
+
 * Fri Sep 02 2016 Remi Collet <remi@fedoraproject.org> - 2.3.3-1
 - Update to 2.3.3
 
