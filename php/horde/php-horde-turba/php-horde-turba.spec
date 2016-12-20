@@ -12,7 +12,7 @@
 
 Name:           php-horde-turba
 Version:        4.2.18
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A web based address book
 
 Group:          Development/Libraries
@@ -140,7 +140,7 @@ cd %{pear_name}-%{version}
 # Regenerate the locales
 for po in $(find locale -name \*.po)
 do
-   msgfmt --statistics $po -o $(dirname $po)/$(basename $po .po).mo
+   : msgfmt --statistics $po -o $(dirname $po)/$(basename $po .po).mo
 done
 
 
@@ -242,8 +242,9 @@ fi
 
 
 %changelog
-* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 4.2.18-1
+* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 4.2.18-2
 - Update to 4.2.18
+- use upstream locale files
 
 * Thu Nov 03 2016 Remi Collet <remi@fedoraproject.org> - 4.2.17-1
 - Update to 4.2.17

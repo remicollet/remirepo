@@ -14,7 +14,7 @@
 
 Name:           php-horde-mnemo
 Version:        4.2.12
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A web based notes manager
 
 Group:          Development/Libraries
@@ -120,7 +120,7 @@ cd %{pear_name}-%{version}
 # Regenerate the locales
 for po in $(find locale -name \*.po)
 do
-   msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
+   : msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
 done
 
 
@@ -221,8 +221,9 @@ fi
 
 
 %changelog
-* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 4.2.12-1
+* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 4.2.12-2
 - Update to 4.2.12
+- use upstream locale files
 
 * Sat Jul 02 2016 Remi Collet <remi@fedoraproject.org> - 4.2.11-1
 - Update to 4.2.11

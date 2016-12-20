@@ -14,7 +14,7 @@
 
 Name:           php-horde-passwd
 Version:        5.0.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde password changing application
 
 Group:          Development/Libraries
@@ -101,7 +101,7 @@ cd %{pear_name}-%{version}
 # Regenerate the locales
 for po in $(find locale -name \*.po)
 do
-   msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
+   : msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
 done
 
 
@@ -195,8 +195,9 @@ fi
 
 
 %changelog
-* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 5.0.6-1
+* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 5.0.6-2
 - Update to 5.0.6
+- use upstream locale files
 
 * Sat Jul 02 2016 Remi Collet <remi@fedoraproject.org> - 5.0.5-1
 - Update to 5.0.5

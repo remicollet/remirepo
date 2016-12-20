@@ -15,7 +15,7 @@
 
 Name:           php-horde-wicked
 Version:        2.0.7
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Wiki application
 
 Group:          Development/Libraries
@@ -140,7 +140,7 @@ cd %{pear_name}-%{version}
 # Regenerate the locales
 for po in $(find locale -name \*.po)
 do
-   msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
+   : msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
 done
 
 
@@ -241,8 +241,9 @@ fi
 
 
 %changelog
-* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
+* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 2.0.7-2
 - Update to 2.0.7
+- use upstream locale files
 
 * Sat Jul 02 2016 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
 - Update to 2.0.6

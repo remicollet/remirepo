@@ -12,7 +12,7 @@
 
 Name:           php-horde-kronolith
 Version:        4.2.19
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A web based calendar
 
 Group:          Development/Libraries
@@ -173,7 +173,7 @@ cd %{pear_name}-%{version}
 # Regenerate the locales
 for po in $(find locale -name \*.po)
 do
-   msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
+   : msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
 done
 
 
@@ -273,8 +273,9 @@ fi
 
 
 %changelog
-* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 4.2.19-1
+* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 4.2.19-2
 - Update to 4.2.19
+- use upstream locale files
 
 * Wed Sep 07 2016 Remi Collet <remi@fedoraproject.org> - 4.2.18-1
 - Update to 4.2.18

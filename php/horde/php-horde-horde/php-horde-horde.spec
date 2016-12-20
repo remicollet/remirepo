@@ -14,7 +14,7 @@
 
 Name:           php-horde-horde
 Version:        5.2.13
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Horde Application Framework
 
 Group:          Development/Libraries
@@ -179,7 +179,7 @@ cd %{pear_name}-%{version}
 # Regenerate the locales
 for po in $(find locale -name \*.po)
 do
-   msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
+   : msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
 done
 
 
@@ -299,8 +299,9 @@ fi
 
 
 %changelog
-* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 5.2.13-1
+* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 5.2.13-2
 - Update to 5.2.13
+- use upstream locale files
 
 * Wed Sep 07 2016 Remi Collet <remi@fedoraproject.org> - 5.2.12-1
 - Update to 5.2.12

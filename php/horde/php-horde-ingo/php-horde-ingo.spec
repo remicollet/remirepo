@@ -13,7 +13,7 @@
 
 Name:           php-horde-ingo
 Version:        3.2.13
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An email filter rules manager
 
 Group:          Development/Libraries
@@ -119,7 +119,7 @@ cd %{pear_name}-%{version}
 # Regenerate the locales
 for po in $(find locale -name \*.po)
 do
-   msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
+   : msgfmt $po -o $(dirname $po)/$(basename $po .po).mo
 done
 
 
@@ -221,8 +221,9 @@ fi
 
 
 %changelog
-* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 3.2.13-1
+* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 3.2.13-2
 - Update to 3.2.13
+- use upstream locale files
 
 * Wed Sep 07 2016 Remi Collet <remi@fedoraproject.org> - 3.2.12-1
 - Update to 3.2.12
