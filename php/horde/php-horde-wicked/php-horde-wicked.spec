@@ -14,7 +14,7 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:           php-horde-wicked
-Version:        2.0.6
+Version:        2.0.7
 Release:        1%{?dist}
 Summary:        Wiki application
 
@@ -241,6 +241,9 @@ fi
 
 
 %changelog
+* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 2.0.7-1
+- Update to 2.0.7
+
 * Sat Jul 02 2016 Remi Collet <remi@fedoraproject.org> - 2.0.6-1
 - Update to 2.0.6
 
