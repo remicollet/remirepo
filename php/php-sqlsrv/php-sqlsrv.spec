@@ -21,8 +21,8 @@
 
 Name:          %{?scl_prefix}php-sqlsrv
 Summary:       Microsoft Drivers for PHP for SQL Server
-Version:       4.0.7
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:       4.0.8
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       MIT
 Group:         Development/Languages
 
@@ -57,7 +57,7 @@ Provides:      %{?scl_prefix}php-pecl(pdo_%{extname})        = %{version}
 Provides:      %{?scl_prefix}php-pecl(pdo_%{extname})%{_isa} = %{version}
 
 
-%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1}
+%if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 Obsoletes:     php70u-sqlsrv <= %{version}
 Obsoletes:     php70w-sqlsrv <= %{version}
 %if "%{php_version}" > "7.1"
@@ -253,6 +253,9 @@ fi
 
 
 %changelog
+* Tue Dec 20 2016 Remi Collet <remi@remirepo.net> - 4.0.8-1
+- update to 4.0.8 (stable)
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 4.0.7-2
 - rebuild with PHP 7.1.0 GA
 
