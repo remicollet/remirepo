@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    95433f75bf33dbbd779ef331161ddf1e38325bed
+%global gh_commit    58a8d2288dd2aae755538ccb380af183a356892d
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.4.2
+Version:        2.4.3
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Application MVC Component
@@ -48,7 +48,8 @@ BuildRequires:  php-spl
 #               "nette/robot-loader": "~2.4",
 #               "nette/security": "~2.4",
 #               "latte/latte": "^2.4.1",
-#               "tracy/tracy": "^2.4"
+#               "tracy/tracy": "^2.4",
+#               "mockery/mockery": "^0.9.5"
 BuildRequires:  php-composer(%{gh_owner}/tester) >= 2.0
 BuildRequires:  php-composer(%{gh_owner}/di) >= 2.4
 BuildRequires:  php-composer(%{gh_owner}/forms) >= 2.4
@@ -56,6 +57,7 @@ BuildRequires:  php-composer(%{gh_owner}/robot-loader) >= 2.4
 BuildRequires:  php-composer(%{gh_owner}/security) >= 2.4
 BuildRequires:  php-composer(latte/latte) >= 2.4.1
 BuildRequires:  php-composer(tracy/tracy) >= 2.4
+BuildRequires:  php-composer(mockery/mockery) >= 0.9.5
 %endif
 
 # from composer.json, "require": {
@@ -152,6 +154,7 @@ require_once '%{php_home}/Tester/autoload.php';
 require_once '%{php_home}/%{ns_vendor}/DI/autoload.php';
 require_once '%{php_home}/%{ns_vendor}/RobotLoader/autoload.php';
 require_once '%{php_home}/%{ns_vendor}/Security/autoload.php';
+require_once '%{php_home}/Mockery/autoload.php';
 require_once '%{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php';
 EOF
 
@@ -160,11 +163,11 @@ EOF
 run=0
 ret=0
 if which php56; then
-   php56 %{_bindir}/nette-tester --colors 0 -p php56 -C tests -s
+   php56 %{_bindir}/nette-tester --colors 0 -p php56 -C tests -s || ret=1
    run=1
 fi
 if which php71; then
-   php71 %{_bindir}/nette-tester --colors 0 -p php71 -C tests -s
+   php71 %{_bindir}/nette-tester --colors 0 -p php71 -C tests -s || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -192,6 +195,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 21 2016 Remi Collet <remi@fedoraproject.org> - 2.4.3-1
+- update to 2.4.3
+
 * Tue Sep 27 2016 Remi Collet <remi@fedoraproject.org> - 2.4.2-1
 - update to 2.4.2
 
