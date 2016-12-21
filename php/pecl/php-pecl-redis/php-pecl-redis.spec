@@ -18,7 +18,7 @@
 
 %global pecl_name   redis
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
-%global with_tests  0%{?_with_tests:1}
+%global with_tests  1%{?_with_tests:1}
 %global with_igbin  1
 %if "%{php_version}" < "5.6"
 # after igbinary
@@ -30,16 +30,12 @@
 
 Summary:       Extension for communicating with the Redis key-value store
 Name:          %{?sub_prefix}php-pecl-redis
-Version:       3.1.0
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:       3.1.1
+Release:       0%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/redis
-
-Patch0:        %{pecl_name}-pr1057.patch
-Patch1:        %{pecl_name}-pr1063.patch
-Patch2:        %{pecl_name}-pr1064.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
@@ -122,9 +118,6 @@ sed -e 's/role="test"/role="src"/' \
     -i package.xml
 
 cd NTS
-%patch0 -p1 -b .pr1057
-%patch1 -p1 -b .pr1063
-%patch2 -p1 -b .pr1064
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_REDIS_VERSION/{s/.* "//;s/".*$//;p}' php_redis.h)
@@ -240,17 +233,7 @@ cd NTS/tests
 # Launch redis server
 mkdir -p data
 pidfile=$PWD/redis.pid
-# port number to allow 32/64 build at same time
-# and avoid conflict with a possible running server
-%if 0%{?__isa_bits}
-port=$(expr %{__isa_bits} + 6350)
-%else
-%ifarch x86_64
-port=6414
-%else
-port=6382
-%endif
-%endif
+port=$(%{__php} -r 'echo 9000 + PHP_MAJOR_VERSION*100 + PHP_MINOR_VERSION*10 + PHP_INT_SIZE;')
 %{_root_bindir}/redis-server   \
     --bind      127.0.0.1      \
     --port      $port          \
@@ -275,8 +258,7 @@ if [ -f $pidfile ]; then
    %{_root_bindir}/redis-cli -p $port shutdown
 fi
 
-exit $ret
-
+#exit $ret
 %else
 : Upstream test suite disabled
 %endif
@@ -322,6 +304,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 21 2016 Remi Collet <remi@fedoraproject.org> - 3.1.1-0
+- test build for open upcoming 3.1.1
+
 * Thu Dec 15 2016 Remi Collet <remi@fedoraproject.org> - 3.1.0-2
 - test build for open upcoming 3.1.1
 - open https://github.com/phpredis/phpredis/issues/1060 broken impl
