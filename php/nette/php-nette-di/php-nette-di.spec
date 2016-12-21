@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    aed06c37a722a1450854176f1d0b11de473092f1
+%global gh_commit    fe4d3264d1b1907a934e8a6627a5b87f35046089
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.12
+Version:        2.3.13
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Dependency Injection Component
@@ -120,24 +120,7 @@ require_once '%{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php';
 EOF
 
 : Run test suite in sources tree
-# remirepo:13
-ret=0
-run=0
-if which php56; then
-   cat /opt/remi/php56/root/etc/php.ini /opt/remi/php56/root/etc/php.d/*ini >php.ini
-   php56 %{_bindir}/nette-tester --colors 0 -p php56 -c ./php.ini tests -s || ret=1
-   run=1
-fi
-if which php71; then
-   cat /etc/opt/remi/php71/php.ini /etc/opt/remi/php71/php.d/*ini >php.ini
-   php71 %{_bindir}/nette-tester --colors 0 -p php71 -c ./php.ini tests -s || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
 %{_bindir}/nette-tester --colors 0 -p php -c ./php.ini tests -s
-# remirepo:2
-fi
-exit $ret
 %else
 : Test suite disabled
 %endif
@@ -158,6 +141,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 21 2016 Remi Collet <remi@fedoraproject.org> - 2.3.13-1
+- update to 2.3.13
+
 * Sun Jul 31 2016 Remi Collet <remi@fedoraproject.org> - 2.3.12-1
 - update to 2.3.12
 
