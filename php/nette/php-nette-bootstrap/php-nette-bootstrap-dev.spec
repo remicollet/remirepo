@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    322f41597c935110e3611ca7cdf9b2f855841cda
+%global gh_commit    4db37e6d42ddf41b50417950741113b5dfc86e27
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.4.1
+Version:        2.4.2
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Bootstrap
@@ -150,8 +150,8 @@ if which php56; then
    php56 %{_bindir}/nette-tester --colors 0 -p php56 -C tests -s
    run=1
 fi
-if which php70; then
-   php70 %{_bindir}/nette-tester --colors 0 -p php70 -C tests -s
+if which php71; then
+   php71 %{_bindir}/nette-tester --colors 0 -p php71 -C tests -s
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -179,6 +179,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 21 2016 Remi Collet <remi@fedoraproject.org> - 2.4.2-1
+- update to 2.4.2
+
 * Thu Aug  4 2016 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
 - update to 2.4.1
 - raise dependency on PHP >= 5.6
