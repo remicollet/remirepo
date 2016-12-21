@@ -6,8 +6,8 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    7d29c02f3216a1c4debe4c6475830b5884786922
-%global gh_date      20160714
+%global gh_commit    72dbafd21029770cb0ea01fceb2cb344bf13bd91
+%global gh_date      20161216
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
 %global gh_project   tester
@@ -16,7 +16,7 @@
 
 Name:           php-nette-tester
 Version:        2.0.0
-%global specrel 1
+%global specrel 2
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        An easy-to-use PHP unit testing framework
 
@@ -139,6 +139,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 21 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.2.20161216git72dbafd
+- refresh
+
 * Tue Aug  2 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-0.1.20160414git7d29c02
 - update to 2.0.0-dev
 
