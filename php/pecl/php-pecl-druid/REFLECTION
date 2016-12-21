@@ -1,0 +1,83 @@
+Extension [ <persistent> extension #78 Druid version 0.3.0 ] {
+
+  - INI {
+    Entry [ druid.host <SYSTEM> ]
+      Current = ''
+    }
+    Entry [ druid.base_auth_user <PERDIR> ]
+      Current = ''
+    }
+    Entry [ druid.base_auth_passport <PERDIR> ]
+      Current = ''
+    }
+    Entry [ druid.tpl_path <PERDIR> ]
+      Current = '/data/php-druid/tpl'
+    }
+    Entry [ druid.debug <ALL> ]
+      Current = '0'
+    }
+  }
+
+  - Classes [1] {
+    Class [ <internal:Druid> class Druid ] {
+
+      - Constants [1] {
+        Constant [ string DRUID_CONTENT_TYPE ] { Content-Type:application/json }
+      }
+
+      - Static properties [1] {
+        Property [ protected static $Druid ]
+      }
+
+      - Static methods [1] {
+        Method [ <internal:Druid> static public method getInstance ] {
+        }
+      }
+
+      - Properties [6] {
+        Property [ <default> protected $response_debug_info ]
+        Property [ <default> protected $response_code ]
+        Property [ <default> protected $_curl_error_no ]
+        Property [ <default> protected $_curl_error_str ]
+        Property [ <default> protected $hosts ]
+        Property [ <default> protected $host_rand ]
+      }
+
+      - Methods [11] {
+        Method [ <internal:Druid, ctor> private method __construct ] {
+        }
+
+        Method [ <internal:Druid> private method __clone ] {
+        }
+
+        Method [ <internal:Druid> private method __sleep ] {
+        }
+
+        Method [ <internal:Druid> private method __wakeup ] {
+        }
+
+        Method [ <internal:Druid, dtor> public method __destruct ] {
+        }
+
+        Method [ <internal:Druid> public method debugWitch ] {
+        }
+
+        Method [ <internal:Druid> public method setDruidHosts ] {
+        }
+
+        Method [ <internal:Druid> public method setTplPath ] {
+        }
+
+        Method [ <internal:Druid> public method getData ] {
+        }
+
+        Method [ <internal:Druid> public method getDataByTpl ] {
+        }
+
+        Method [ <internal:Druid> public method getDebugInfo ] {
+        }
+      }
+    }
+  }
+}
+
