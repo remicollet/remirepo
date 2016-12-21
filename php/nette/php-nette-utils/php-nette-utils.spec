@@ -145,6 +145,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 21 2016 Remi Collet <remi@fedoraproject.org> - 2.3.11-1
+- update to 2.3.11
+
 * Mon Jun 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.10-1
 - update to 2.3.10
 
