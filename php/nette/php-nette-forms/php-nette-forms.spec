@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    d7135330459168fc34ee6c5db1661d335b76cbb2
+%global gh_commit    30b4887e8661ee53c06a7683508f1a888a1b944b
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.11
+Version:        2.3.12
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Forms: greatly facilitates web forms
@@ -126,26 +126,7 @@ require_once '%{buildroot}%{php_home}/%{ns_vendor}/%{ns_project}/autoload.php';
 EOF
 
 : Run test suite in sources tree
-# remirepo:15
-run=0
-ret=0
-if which php56; then
-   cat /opt/remi/php56/root/etc/php.ini /opt/remi/php56/root/etc/php.d/*ini >php.ini
-   echo 'session.save_path = "/tmp"' >>php.ini
-   php56 %{_bindir}/nette-tester --colors 0 -p php56 -c ./php.ini tests -s
-   run=1
-fi
-if which php70; then
-   cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
-   echo 'session.save_path = "/tmp"' >>php.ini
-   php70 %{_bindir}/nette-tester --colors 0 -p php70 -c ./php.ini tests -s
-   run=1
-fi
-if [ $run -eq 0 ]; then
 %{_bindir}/nette-tester --colors 0 -p php -c ./php.ini tests -s
-# remirepo:2
-fi
-exit $ret
 %else
 : Test suite disabled
 %endif
@@ -168,6 +149,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 21 2016 Remi Collet <remi@fedoraproject.org> - 2.3.12-1
+- update to 2.3.12
+
 * Tue Sep 27 2016 Remi Collet <remi@fedoraproject.org> - 2.3.11-1
 - update to 2.3.11
 
