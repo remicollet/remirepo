@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    66ceba196e4535ca3bf8f835db50d7e02339fdb0
+%global gh_commit    f213ad4d9dfb7221322bd2808e2004b61c8ece8e
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -16,7 +16,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-nette-utils
-Version:        2.3.10
+Version:        2.3.11
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Utility Classes
@@ -56,29 +56,24 @@ BuildRequires:  php-composer(%{gh_owner}/tester)
 Requires:       php(language) >= 5.3.1
 # from composer.json, "suggest": {
 #        "ext-iconv": "to use Strings::webalize() and toAscii()",
+#        "ext-json": "to use Nette\\Utils\\Json",
 #        "ext-intl": "for script transliteration in Strings::webalize() and toAscii()",
 #        "ext-mbstring": "to use Strings::lower() etc...",
+#        "ext-xml": "to use Strings::length() etc. when mbstring is not available",
 #        "ext-gd": "to use Image"
-%if 0%{?fedora} > 21
-Recommends:     php-iconv
-Recommends:     php-intl
-Recommends:     php-mbstring
-Recommends:     php-gd
-%else
 Requires:       php-iconv
+Requires:       php-json
 Requires:       php-intl
 Requires:       php-mbstring
+Requires:       php-xml
 Requires:       php-gd
-%endif
 # from phpcompatinfo report for version 2.3.6 (mcrypt is optional, openssl prefered)
 Requires:       php-date
 Requires:       php-fileinfo
-Requires:       php-json
 Requires:       php-openssl
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
-Requires:       php-xml
 
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
 
@@ -129,11 +124,6 @@ EOF
 
 : Run test suite in sources tree
 nette-tester --colors 0 -p php -c ./php.ini tests -s
-
-if which php70; then
-  cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
-  php70 %{_bindir}/nette-tester --colors 0 -p php70 -c ./php.ini tests -s
-fi
 %else
 : Test suite disabled
 %endif
