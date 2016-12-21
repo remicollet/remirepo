@@ -33,7 +33,7 @@ BuildRequires:  php(language) >= 5.3.1
 # From composer.json, "require-dev": {
 #        "phpunit/phpunit": "~4.0|~5.0",
 #        "squizlabs/php_codesniffer": "~1.5"
-BuildRequires:  php-composer(phpunit/phpunit) >= 4.0
+BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php-composer(theseer/directoryscanner) >= 1.3
 BuildRequires:  php-composer(theseer/directoryscanner) <  2
 BuildRequires:  php-composer(zetacomponents/console-tools) >= 1.7
