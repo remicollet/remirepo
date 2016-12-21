@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    69ac3e4dcf0639101ac71478dcb39941ba4e7e7e
+%global gh_commit    e25f04a71b70985620f5ff3e762475848d049025
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-mvc
@@ -20,13 +20,13 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        3.0.3
+Version:        3.0.4
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
 License:        BSD
-URL:            https://framework.zend.com/
+URL:            https://zendframework.github.io/%{gh_project}/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
 
@@ -194,7 +194,7 @@ if which php56; then
    run=1
 fi
 if which php71; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   php71 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -222,6 +222,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 21 2016 Remi Collet <remi@fedoraproject.org> - 3.0.4-1
+- update to 3.0.4
+
 * Fri Sep  2 2016 Remi Collet <remi@fedoraproject.org> - 3.0.3-1
 - update to 3.0.3
 
