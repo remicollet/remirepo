@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    07bce436051fd92d084642ce7a47f00045e0d1e5
+%global gh_commit    fb232ed9ccd90873625bfdcc115c406e3ab34ebb
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,8 +17,8 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.2.4
-%global specrel 2
+Version:        2.2.5
+%global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Component Model
 
@@ -125,6 +125,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 21 2016 Remi Collet <remi@fedoraproject.org> - 2.2.5-1
+- update to 2.2.5
+
 * Tue Nov  3 2015 Remi Collet <remi@fedoraproject.org> - 2.2.4-2
 - fix package description and summary
 
