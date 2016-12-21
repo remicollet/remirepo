@@ -106,6 +106,7 @@ cp -pr src/* %{buildroot}%{php_home}/%{ns_vendor}/
 rm tests/Utils/Image.alpha1.phpt
 rm tests/Utils/Json.decode\(\).phpt
 rm tests/Utils/Image.drawing.phpt
+rm tests/Utils/Image.place.phpt
 
 : Generate configuration
 cat /etc/php.ini /etc/php.d/*ini >php.ini
