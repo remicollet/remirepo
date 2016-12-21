@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #156 PDFlib version 4.0.1 ] {
+Extension [ <persistent> extension #165 PDFlib version 4.1.0 ] {
 
   - Functions {
     Function [ <internal:PDFlib> function pdf_activate_item ] {
