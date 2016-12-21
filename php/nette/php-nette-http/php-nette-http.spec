@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b2f28f2437d53af8788ea80605a16501c86848e9
+%global gh_commit    dccceb20f346744927472b88732804cef6a73669
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.3.7
+Version:        2.3.8
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette HTTP Component
@@ -121,11 +121,6 @@ EOF
 
 : Run test suite in sources tree
 %{_bindir}/nette-tester --colors 0 -p php -c ./php.ini tests -s
-
-if which php70; then
-  cat /etc/opt/remi/php70/php.ini /etc/opt/remi/php70/php.d/*ini >php.ini
-  php70 %{_bindir}/nette-tester --colors 0 -p php70 -c ./php.ini tests -s
-fi
 %else
 : Test suite disabled
 %endif
@@ -146,6 +141,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 21 2016 Remi Collet <remi@fedoraproject.org> - 2.3.8-1
+- update to 2.3.8
+
 * Mon Jun 20 2016 Remi Collet <remi@fedoraproject.org> - 2.3.7-1
 - update to 2.3.7
 
