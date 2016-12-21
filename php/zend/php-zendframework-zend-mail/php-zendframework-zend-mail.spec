@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    2e817b58ebaa2b422a25d854106a91f74b6a7976
+%global gh_commit    8210faa6865f94962f9a5c76269703bfdcf2fa4c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-mail
@@ -20,13 +20,13 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.1
+Version:        2.7.2
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
 Group:          Development/Libraries
 License:        BSD
-URL:            https://framework.zend.com/
+URL:            https://zendframework.github.io/%{gh_project}/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
 
@@ -136,11 +136,22 @@ Zend\Loader\AutoloaderFactory::factory(array(
 require_once '%{php_home}/Zend/autoload.php';
 EOF
 
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
-
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
 fi
+if which php71; then
+   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home} || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --include-path=%{buildroot}%{php_home} --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -160,6 +171,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 21 2016 Remi Collet <remi@fedoraproject.org> - 2.7.2-1
+- update to 2.7.2
+
 * Wed May 11 2016 Remi Collet <remi@fedoraproject.org> - 2.7.1-1
 - update to 2.7.1
 
