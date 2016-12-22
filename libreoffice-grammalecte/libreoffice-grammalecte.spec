@@ -27,8 +27,6 @@ License:       GPLv3+ and MPLv2.0
 URL:           http://www.dicollecte.org/grammalecte/
 Source0:       http://www.dicollecte.org/grammalecte/oxt/Grammalecte-fr-v%{version}.oxt
 
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 Requires:      libreoffice-writer
 
 
@@ -59,19 +57,11 @@ Grammalecte est en cours de développement.
 
 
 %install
-rm -rf %{buildroot}
-
 install -d -m 0755 %{buildroot}%{_libdir}/libreoffice/share/extensions/%{extname}
 cp -pr * %{buildroot}%{_libdir}/libreoffice/share/extensions/%{extname}
 
 
-%clean
-rm -rf %{buildroot}
-
-
-
 %files
-%defattr (-,root,root,-)
 %{!?_licensedir:%global license %%doc}
 %license README_fr.txt
 %{_libdir}/libreoffice/share/extensions/%{extname}
