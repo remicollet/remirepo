@@ -12,18 +12,18 @@
 
 %global github_owner     akamai-open
 %global github_name      AkamaiOPEN-edgegrid-php-client
-%global github_version   0.6.1
-%global github_commit    ca3cd8321756e5fe55d6729c24aadc4cdf5598f0
+%global github_version   0.6.2
+%global github_commit    b2eda5e5b9d10818dc0ef95d177eb8a311844e55
 
 %global composer_vendor  akamai-open
 %global composer_project edgegrid-client
 
 # "php": ">=5.5"
 %global php_min_ver 5.5
-# "akamai-open/edgegrid-auth": "^0.6.0"
+# "akamai-open/edgegrid-auth": "^0.6"
 %global akamai_open_edgegrid_auth_min_ver 0.6.0
 %global akamai_open_edgegrid_auth_max_ver 1.0.0
-# "guzzlehttp/guzzle": "~6.0"
+# "guzzlehttp/guzzle": "^6.0"
 %global guzzle_min_ver 6.0
 %global guzzle_max_ver 7.0
 # "monolog/monolog": "^1.15"
@@ -52,7 +52,7 @@ Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{githu
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Autoloader
-BuildRequires: %{_bindir}/phpab
+BuildRequires: php-fedora-autoloader-devel
 # Library version value and autoloader check
 BuildRequires: php-cli
 ## composer.json
@@ -84,6 +84,8 @@ Requires:      php-composer(psr/log) >= %{psr_log_min_ver}
 # phpcompatinfo (computed from version 0.6.1)
 Requires:      php-json
 Requires:      php-pcre
+# Autoloader
+Requires:      php-composer(fedora/autoloader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -113,15 +115,16 @@ rm -f src/Cli.php
 
 %build
 : Create autoloader
-%{_bindir}/phpab --output src/autoload-client.php src/
+%{_bindir}/phpab --template fedora --output src/autoload-client.php src/
 
 cat <<'AUTOLOAD' | tee -a src/autoload-client.php
 
-// Required dependencies
-require_once '%{phpdir}/Akamai/Open/EdgeGrid/autoload-auth.php';
-require_once '%{phpdir}/GuzzleHttp6/autoload.php';
-require_once '%{phpdir}/Monolog/autoload.php';
-require_once '%{phpdir}/Psr/Log/autoload.php';
+\Fedora\Autoloader\Dependencies::required(array(
+    '%{phpdir}/Akamai/Open/EdgeGrid/autoload-auth.php',
+    '%{phpdir}/GuzzleHttp6/autoload.php',
+    '%{phpdir}/Monolog/autoload.php',
+    '%{phpdir}/Psr/Log/autoload.php',
+));
 AUTOLOAD
 
 : Compat autoloader
@@ -145,19 +148,11 @@ cp -rp src/* %{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/
 '
 
 %if %{with_tests}
-: Make PSR-0 tests
-mkdir -p tests-psr0/Akamai/Open/EdgeGrid
-ln -s ../../../../tests tests-psr0/Akamai/Open/EdgeGrid/Tests
-
 : Create tests bootstrap
 cat <<'BOOTSTRAP' | tee bootstrap.php
 <?php
 require_once '%{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/autoload-client.php';
-
-$fedoraClassLoader->addPrefix(
-    'Akamai\\Open\\EdgeGrid\\Tests\\',
-    __DIR__.'/tests-psr0'
-);
+\Fedora\Autoloader\Autoload::addPsr4('Akamai\\Open\\EdgeGrid\\Tests\\', __DIR__ . '/tests');
 BOOTSTRAP
 
 run=0
@@ -198,6 +193,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec 22 2016 Remi Collet <remim@remirepo.net> - 0.6.2-1
+- update to 0.6.2
+- Use php-composer(fedora/autoloader)
+
 * Wed Dec 07 2016 Shawn Iwinski <shawn@iwin.ski> - 0.6.1-1
 - Updated to 0.6.1 (RHBZ #1392697)
 
