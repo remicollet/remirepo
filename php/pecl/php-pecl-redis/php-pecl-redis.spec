@@ -27,12 +27,13 @@
 # after 40-igbinary
 %global ini_name    50-%{pecl_name}.ini
 %endif
+%global prever      RC1
 
 Summary:       Extension for communicating with the Redis key-value store
 Name:          %{?sub_prefix}php-pecl-redis
 Version:       3.1.1
-Release:       0%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
-Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+Release:       0.1.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 License:       PHP
 Group:         Development/Languages
 URL:           http://pecl.php.net/package/redis
@@ -110,7 +111,7 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %prep
 %setup -q -c
 # rename source folder
-mv %{pecl_name}-%{version} NTS
+mv %{pecl_name}-%{version}%{?prever} NTS
 
 # Don't install/register tests
 sed -e 's/role="test"/role="src"/' \
@@ -121,8 +122,8 @@ cd NTS
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_REDIS_VERSION/{s/.* "//;s/".*$//;p}' php_redis.h)
-if test "x${extver}" != "x%{version}%{?gh_date:-dev}"; then
-   : Error: Upstream extension version is ${extver}, expecting %{version}%{?gh_date:-devphp7}.
+if test "x${extver}" != "x%{version}%{?gh_date:-dev}%{?prever}"; then
+   : Error: Upstream extension version is ${extver}, expecting %{version}%{?gh_date:-dev}%{?prever}.
    exit 1
 fi
 cd ..
@@ -258,7 +259,7 @@ if [ -f $pidfile ]; then
    %{_root_bindir}/redis-cli -p $port shutdown
 fi
 
-#exit $ret
+exit $ret
 %else
 : Upstream test suite disabled
 %endif
@@ -304,6 +305,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec 22 2016 Remi Collet <remi@fedoraproject.org> - 3.1.1-0.1.RC1
+- test build for open upcoming 3.1.1RC1
+
 * Wed Dec 21 2016 Remi Collet <remi@fedoraproject.org> - 3.1.1-0
 - test build for open upcoming 3.1.1
 
