@@ -12,8 +12,8 @@
 
 %global github_owner     akamai-open
 %global github_name      AkamaiOPEN-edgegrid-php
-%global github_version   0.6.0
-%global github_commit    1617cf4bdeba7b5c46a1d55bb969d0e45c7f52f5
+%global github_version   0.6.1
+%global github_commit    a97a2194067800bb552c8b4cc0d1770588db00ad
 
 %global composer_vendor  akamai-open
 %global composer_project edgegrid-auth
@@ -28,7 +28,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       Implements the Akamai {OPEN} EdgeGrid Authentication
 
 Group:         Development/Libraries
@@ -153,6 +153,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec 22 2016 Remi Collet <remim@remirepo.net> - 0.6.1-1
+- update to 0.6.1
+
 * Fri Dec 09 2016 Shawn Iwinski <shawn@iwin.ski> - 0.6.0-2
 - Temporarily skip test known to fail for PHP 7.1 (see
   https://github.com/akamai-open/AkamaiOPEN-edgegrid-php/issues/2 )
