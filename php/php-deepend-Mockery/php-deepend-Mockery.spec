@@ -7,14 +7,14 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    65d4ca18e15cb02eeb1e5336f884e46b9b905be0
+%global gh_commit    4de7969f4664da3cef1ccd83866c9f59378c3371
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     padraic
 %global gh_project   mockery
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-deepend-Mockery
-Version:        0.9.6
+Version:        0.9.7
 Release:        1%{?dist}
 Summary:        Mockery is a simple but flexible PHP mock object framework
 
@@ -49,7 +49,7 @@ BuildRequires:  php-composer(fedora/autoloader)
 Requires:       php(language) >= 5.3.2
 Requires:       php-composer(hamcrest/hamcrest-php) >= 1.1
 Requires:       php-composer(hamcrest/hamcrest-php) <  2
-# From phpcompatinfo report for version 0.9.4
+# From phpcompatinfo report for version 0.9.7
 Requires:       php-pcre
 Requires:       php-spl
 Requires:       php-reflection
@@ -98,7 +98,22 @@ rm -rf %{buildroot}
 sed -e 's:@BUILD@:%{buildroot}/%{_datadir}/php:' -i tests/Bootstrap.php
 
 : Run upstream test suite
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
 %{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %endif
 
 
@@ -120,6 +135,9 @@ fi
 
 
 %changelog
+* Fri Dec 23 2016 Remi Collet <remi@fedoraproject.org> - 0.9.7-1
+- Update to 0.9.7
+
 * Sat Nov 26 2016 Remi Collet <remi@fedoraproject.org> - 0.9.6-1
 - Update to 0.9.6
 - switch to fedora/autoloader
