@@ -6,14 +6,14 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    10d1f6977f6be5f177dded8f585a11debdc27591
+%global gh_commit    d39c56a46b3ebe1f3696479966cd2b9f50aaa24f
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     justinrainbow
 %global gh_project   json-schema
 %global php_home     %{_datadir}/php
 %global with_tests   0%{!?_without_tests:1}
 %global major        4
-%global minor        0.1
+%global minor        1.0
 
 
 # Some sample files, only used for tests
@@ -49,8 +49,6 @@ Source3:        %{name}-makesrc.sh
 
 # Autoloader
 Patch0:         %{name}-rpm.patch
-# https://github.com/justinrainbow/json-schema/issues/341
-Patch1:        %{name}-pr342.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -122,7 +120,6 @@ Autoloader: %{php_home}/JsonSchema%{major}/autoload.php
 %prep
 %setup -q -n %{gh_project}-%{gh_commit} -a 1
 
-%patch1 -p1 -b .342
 %patch0 -p0 -b .rpm
 
 cp %{SOURCE2} src/JsonSchema/autoload.php
@@ -218,6 +215,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec 23 2016 Remi Collet <remi@fedoraproject.org> - 4.1.0-1
+- update to 4.1.0
+- dro ppatch merged upstream
+
 * Mon Dec 12 2016 Remi Collet <remi@fedoraproject.org> - 4.0.1-1
 - rename to php-justinrainbow-json-schema4
 - update to 4.0.1
