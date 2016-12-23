@@ -217,7 +217,7 @@ rm -rf %{buildroot}
 %changelog
 * Fri Dec 23 2016 Remi Collet <remi@fedoraproject.org> - 4.1.0-1
 - update to 4.1.0
-- dro ppatch merged upstream
+- drop patch merged upstream
 
 * Mon Dec 12 2016 Remi Collet <remi@fedoraproject.org> - 4.0.1-1
 - rename to php-justinrainbow-json-schema4
