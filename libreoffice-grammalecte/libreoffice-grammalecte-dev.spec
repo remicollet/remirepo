@@ -17,7 +17,7 @@
 
 Name:          libreoffice-%{extname}
 Version:       0.5.14
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       French grammar corrector
 Summary(fr):   Correcteur grammatical Français
 Group:         System Environment/Libraries
@@ -28,6 +28,8 @@ URL:           http://www.dicollecte.org/grammalecte/
 Source0:       http://www.dicollecte.org/grammalecte/oxt/Grammalecte-fr-v%{version}.oxt
 
 BuildRequires: python3-devel
+
+Supplements:   libreoffice-langpack-fr
 
 Requires:      libreoffice-writer
 Requires:      libreoffice-langpack-fr
@@ -73,8 +75,11 @@ cp -pr * %{buildroot}%{_libdir}/libreoffice/share/extensions/%{extname}
 
 
 %changelog
+* Fri Dec 23 2016 Remi Collet <remi@fedoraproject.org> - 0.5.14-3
+- add Supplements libreoffice-langpack-fr
+
 * Fri Dec 23 2016 Remi Collet <remi@fedoraproject.org> - 0.5.14-2
-- require libreoffice-langpack-fr
+- add dependencies on libreoffice-langpack-fr and libreoffice-pyuno
 - enable byte compile
 
 * Thu Dec 22 2016 Remi Collet <remi@fedoraproject.org> - 0.5.14-1
