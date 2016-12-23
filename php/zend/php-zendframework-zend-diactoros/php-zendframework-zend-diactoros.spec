@@ -37,7 +37,7 @@ Summary:       PSR HTTP Message implementations
 
 Group:         Development/Libraries
 License:       BSD
-URL:           https://github.com/%{github_owner}/%{github_name}
+URL:           https://zendframework.github.io/%{gh_project}/
 
 # GitHub export does not include tests.
 # Run php-zendframework-zend-diactoros-get-source.sh to create full source.
