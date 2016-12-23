@@ -10,14 +10,14 @@
 %global   extname grammalecte
 # data-only package
 %global   debug_package %{nil}
-%undefine py_auto_byte_compile
+%global   __python %{_bindir}/python3
 
 # NOTE: this package is not noarch because LibreOffice has no
 # arch-independent extension location
 
 Name:          libreoffice-%{extname}
 Version:       0.5.14
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       French grammar corrector
 Summary(fr):   Correcteur grammatical Français
 Group:         System Environment/Libraries
@@ -27,7 +27,12 @@ License:       GPLv3+ and MPLv2.0
 URL:           http://www.dicollecte.org/grammalecte/
 Source0:       http://www.dicollecte.org/grammalecte/oxt/Grammalecte-fr-v%{version}.oxt
 
+BuildRequires: python3-devel
+
 Requires:      libreoffice-writer
+Requires:      libreoffice-langpack-fr
+Requires:      libreoffice-pyuno
+Requires:      python(abi) >= 3
 
 
 %description
@@ -68,6 +73,10 @@ cp -pr * %{buildroot}%{_libdir}/libreoffice/share/extensions/%{extname}
 
 
 %changelog
+* Fri Dec 23 2016 Remi Collet <remi@fedoraproject.org> - 0.5.14-2
+- require libreoffice-langpack-fr
+- enable byte compile
+
 * Thu Dec 22 2016 Remi Collet <remi@fedoraproject.org> - 0.5.14-1
 - initial package
 
