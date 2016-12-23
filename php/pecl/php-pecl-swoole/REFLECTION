@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
+Extension [ <persistent> extension #126 swoole version 1.9.3 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -63,7 +63,7 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
     Constant [ integer SWOOLE_DTLSv1_CLIENT_METHOD ] { 17 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.9.2 }
+    Constant [ string SWOOLE_VERSION ] { 1.9.3 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 1 }
     Constant [ integer SWOOLE_FILELOCK ] { 2 }
@@ -103,12 +103,21 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
     }
     Function [ <internal:swoole> function swoole_event_add ] {
 
-      - Parameters [2] {
+      - Parameters [4] {
         Parameter #0 [ <required> $fd ]
-        Parameter #1 [ <required> $cb ]
+        Parameter #1 [ <required> $read_callback ]
+        Parameter #2 [ <optional> $write_callback ]
+        Parameter #3 [ <optional> $events ]
       }
     }
     Function [ <internal:swoole> function swoole_event_set ] {
+
+      - Parameters [4] {
+        Parameter #0 [ <required> $fd ]
+        Parameter #1 [ <optional> $read_callback ]
+        Parameter #2 [ <optional> $write_callback ]
+        Parameter #3 [ <optional> $events ]
+      }
     }
     Function [ <internal:swoole> function swoole_event_del ] {
 
@@ -169,7 +178,7 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
     Function [ <internal:swoole> function swoole_async_set ] {
 
       - Parameters [1] {
-        Parameter #0 [ <required> $settings ]
+        Parameter #0 [ <required> array $settings ]
       }
     }
     Function [ <internal:swoole> function swoole_async_read ] {
@@ -199,10 +208,11 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
     }
     Function [ <internal:swoole> function swoole_async_writefile ] {
 
-      - Parameters [3] {
+      - Parameters [4] {
         Parameter #0 [ <required> $filename ]
         Parameter #1 [ <required> $content ]
         Parameter #2 [ <optional> $callback ]
+        Parameter #3 [ <optional> $flags ]
       }
     }
     Function [ <internal:swoole> function swoole_async_dns_lookup ] {
@@ -303,15 +313,15 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
         Method [ <internal:swoole> public method on ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> $name ]
-            Parameter #1 [ <required> $cb ]
+            Parameter #0 [ <required> $event_name ]
+            Parameter #1 [ <required> $callback ]
           }
         }
 
         Method [ <internal:swoole> public method set ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> $zset ]
+            Parameter #0 [ <required> array $settings ]
           }
         }
 
@@ -332,10 +342,11 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
         Method [ <internal:swoole> public method sendto ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $ip ]
             Parameter #1 [ <required> $port ]
-            Parameter #2 [ <optional> $send_data ]
+            Parameter #2 [ <required> $send_data ]
+            Parameter #3 [ <optional> $server_socket ]
           }
         }
 
@@ -364,16 +375,18 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
         Method [ <internal:swoole> public method sendfile ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $conn_fd ]
             Parameter #1 [ <required> $filename ]
+            Parameter #2 [ <optional> $offset ]
           }
         }
 
         Method [ <internal:swoole> public method close ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $fd ]
+            Parameter #1 [ <optional> $reset ]
           }
         }
 
@@ -400,9 +413,10 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
         Method [ <internal:swoole> public method task ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $data ]
             Parameter #1 [ <optional> $worker_id ]
+            Parameter #2 [ <optional> $finish_callback ]
           }
         }
 
@@ -418,7 +432,7 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
         Method [ <internal:swoole> public method taskWaitMulti ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> $tasks ]
+            Parameter #0 [ <required> array $tasks ]
             Parameter #1 [ <optional> $timeout ]
           }
         }
@@ -444,7 +458,8 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
         Method [ <internal:swoole> public method stop ] {
 
-          - Parameters [0] {
+          - Parameters [1] {
+            Parameter #0 [ <optional> $worker_id ]
           }
         }
 
@@ -525,15 +540,31 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
         }
 
         Method [ <internal:swoole> public method sendMessage ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $dst_worker_id ]
+            Parameter #1 [ <required> $data ]
+          }
         }
 
         Method [ <internal:swoole> public method addProcess ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> swoole_process $process ]
+          }
         }
 
         Method [ <internal:swoole> public method stats ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method getSocket ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $port ]
+          }
         }
 
         Method [ <internal:swoole> public method bind ] {
@@ -605,9 +636,11 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
       - Static methods [7] {
         Method [ <internal:swoole> static public method add ] {
 
-          - Parameters [2] {
+          - Parameters [4] {
             Parameter #0 [ <required> $fd ]
-            Parameter #1 [ <required> $cb ]
+            Parameter #1 [ <required> $read_callback ]
+            Parameter #2 [ <optional> $write_callback ]
+            Parameter #3 [ <optional> $events ]
           }
         }
 
@@ -620,7 +653,11 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
         Method [ <internal:swoole> static public method set ] {
 
-          - Parameters [0] {
+          - Parameters [4] {
+            Parameter #0 [ <required> $fd ]
+            Parameter #1 [ <optional> $read_callback ]
+            Parameter #2 [ <optional> $write_callback ]
+            Parameter #3 [ <optional> $events ]
           }
         }
 
@@ -698,10 +735,11 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
         Method [ <internal:swoole> static public method writeFile ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $filename ]
             Parameter #1 [ <required> $content ]
             Parameter #2 [ <optional> $callback ]
+            Parameter #3 [ <optional> $flags ]
           }
         }
 
@@ -716,7 +754,7 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
         Method [ <internal:swoole> static public method set ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> $settings ]
+            Parameter #0 [ <required> array $settings ]
           }
         }
       }
@@ -883,18 +921,36 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
       - Methods [5] {
         Method [ <internal:swoole, ctor> private method __construct ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole, dtor> public method __destruct ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method set ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $settings ]
+          }
         }
 
         Method [ <internal:swoole> public method on ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $event_name ]
+            Parameter #1 [ <required> $callback ]
+          }
         }
 
         Method [ <internal:swoole> public method getSocket ] {
+
+          - Parameters [0] {
+          }
         }
       }
     }
@@ -922,69 +978,156 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
       - Methods [22] {
         Method [ <internal:swoole, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $type ]
+            Parameter #1 [ <optional> $async ]
+          }
         }
 
         Method [ <internal:swoole, dtor> public method __destruct ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method set ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $settings ]
+          }
         }
 
         Method [ <internal:swoole> public method connect ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $host ]
+            Parameter #1 [ <optional> $port ]
+            Parameter #2 [ <optional> $timeout ]
+            Parameter #3 [ <optional> $sock_flag ]
+          }
         }
 
         Method [ <internal:swoole> public method recv ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $size ]
+            Parameter #1 [ <optional> $flag ]
+          }
         }
 
         Method [ <internal:swoole> public method send ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $data ]
+            Parameter #1 [ <optional> $flag ]
+          }
         }
 
         Method [ <internal:swoole> public method pipe ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $dst_socket ]
+          }
         }
 
         Method [ <internal:swoole> public method sendfile ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $filename ]
+            Parameter #1 [ <optional> $offset ]
+          }
         }
 
         Method [ <internal:swoole> public method sendto ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $ip ]
+            Parameter #1 [ <required> $port ]
+            Parameter #2 [ <required> $data ]
+          }
         }
 
         Method [ <internal:swoole> public method sleep ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method wakeup ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method pause ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method resume ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method enableSSL ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $callback ]
+          }
         }
 
         Method [ <internal:swoole> public method getPeerCert ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method verifyPeerCert ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method isConnected ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method getsockname ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method getpeername ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method close ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $force ]
+          }
         }
 
         Method [ <internal:swoole> public method on ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $event_name ]
+            Parameter #1 [ <required> $callback ]
+          }
         }
 
         Method [ <internal:swoole> public method getSocket ] {
+
+          - Parameters [0] {
+          }
         }
       }
     }
@@ -1005,53 +1148,138 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
         Property [ <default> public $sock ]
       }
 
-      - Methods [16] {
+      - Methods [17] {
         Method [ <internal:swoole, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $host ]
+            Parameter #1 [ <optional> $port ]
+            Parameter #2 [ <optional> $ssl ]
+          }
         }
 
         Method [ <internal:swoole, dtor> public method __destruct ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method set ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $settings ]
+          }
         }
 
         Method [ <internal:swoole> public method setMethod ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $method ]
+          }
         }
 
         Method [ <internal:swoole> public method setHeaders ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $headers ]
+          }
         }
 
         Method [ <internal:swoole> public method setCookies ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $cookies ]
+          }
         }
 
         Method [ <internal:swoole> public method setData ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $data ]
+          }
         }
 
         Method [ <internal:swoole> public method addFile ] {
+
+          - Parameters [5] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <required> $name ]
+            Parameter #2 [ <optional> $type ]
+            Parameter #3 [ <optional> $filename ]
+            Parameter #4 [ <optional> $offset ]
+          }
         }
 
         Method [ <internal:swoole> public method execute ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <required> $callback ]
+          }
         }
 
         Method [ <internal:swoole> public method push ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $data ]
+            Parameter #1 [ <optional> $opcode ]
+            Parameter #2 [ <optional> $finish ]
+          }
         }
 
         Method [ <internal:swoole> public method get ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <required> $callback ]
+          }
         }
 
         Method [ <internal:swoole> public method post ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <required> $data ]
+            Parameter #2 [ <required> $callback ]
+          }
         }
 
         Method [ <internal:swoole> public method upgrade ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <required> $callback ]
+          }
+        }
+
+        Method [ <internal:swoole> public method download ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <required> $path ]
+            Parameter #1 [ <required> $file ]
+            Parameter #2 [ <required> $callback ]
+            Parameter #3 [ <optional> $offset ]
+          }
         }
 
         Method [ <internal:swoole> public method isConnected ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method close ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method on ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $event_name ]
+            Parameter #1 [ <required> $callback ]
+          }
         }
       }
     }
@@ -1067,21 +1295,48 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
       - Static methods [6] {
         Method [ <internal:swoole> static public method wait ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $blocking ]
+          }
         }
 
         Method [ <internal:swoole> static public method signal ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $signal_no ]
+            Parameter #1 [ <required> $callback ]
+          }
         }
 
         Method [ <internal:swoole> static public method alarm ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $usec ]
+          }
         }
 
         Method [ <internal:swoole> static public method kill ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $pid ]
+            Parameter #1 [ <optional> $signal_no ]
+          }
         }
 
         Method [ <internal:swoole> static public method daemon ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $nochdir ]
+            Parameter #1 [ <optional> $noclose ]
+          }
         }
 
         Method [ <internal:swoole> static public method setaffinity ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> array $cpu_settings ]
+          }
         }
       }
 
@@ -1090,45 +1345,100 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
       - Methods [14] {
         Method [ <internal:swoole, ctor> public method __construct ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $callback ]
+            Parameter #1 [ <optional> $redirect_stdin_and_stdout ]
+            Parameter #2 [ <optional> $pipe_type ]
+          }
         }
 
         Method [ <internal:swoole, dtor> public method __destruct ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method useQueue ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $key ]
+            Parameter #1 [ <optional> $mode ]
+          }
         }
 
         Method [ <internal:swoole> public method statQueue ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method freeQueue ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method start ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method write ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $data ]
+          }
         }
 
         Method [ <internal:swoole> public method close ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method read ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $size ]
+          }
         }
 
         Method [ <internal:swoole> public method push ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $data ]
+          }
         }
 
         Method [ <internal:swoole> public method pop ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $size ]
+          }
         }
 
         Method [ <internal:swoole> public method exit ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $exit_code ]
+          }
         }
 
         Method [ <internal:swoole> public method exec ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $exec_file ]
+            Parameter #1 [ <required> $args ]
+          }
         }
 
         Method [ <internal:swoole> public method name ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $process_name ]
+          }
         }
       }
     }
@@ -1162,7 +1472,7 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
           - Parameters [3] {
             Parameter #0 [ <required> $name ]
-            Parameter #1 [ <optional> $type ]
+            Parameter #1 [ <required> $type ]
             Parameter #2 [ <optional> $size ]
           }
         }
@@ -1183,7 +1493,7 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $key ]
-            Parameter #1 [ <required> $value ]
+            Parameter #1 [ <required> array $value ]
           }
         }
 
@@ -1280,24 +1590,47 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
       - Methods [7] {
         Method [ <internal:swoole, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <optional> $type ]
+            Parameter #1 [ <optional> $filename ]
+          }
         }
 
         Method [ <internal:swoole, dtor> public method __destruct ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method lock ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method trylock ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method lock_read ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method trylock_read ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method unlock ] {
+
+          - Parameters [0] {
+          }
         }
       }
     }
@@ -1318,21 +1651,45 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
       - Methods [6] {
         Method [ <internal:swoole, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $value ]
+          }
         }
 
         Method [ <internal:swoole> public method add ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $add_value ]
+          }
         }
 
         Method [ <internal:swoole> public method sub ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $sub_value ]
+          }
         }
 
         Method [ <internal:swoole> public method get ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method set ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $value ]
+          }
         }
 
         Method [ <internal:swoole> public method cmpset ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $cmp_value ]
+            Parameter #1 [ <required> $new_value ]
+          }
         }
       }
     }
@@ -1356,8 +1713,8 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
         Method [ <internal:swoole, overwrites swoole_server, prototype swoole_server> public method on ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> $ha_name ]
-            Parameter #1 [ <required> $cb ]
+            Parameter #0 [ <required> $event_name ]
+            Parameter #1 [ <required> $callback ]
           }
         }
 
@@ -1398,7 +1755,7 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
         Method [ <internal:swoole, inherits swoole_server> public method set ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> $zset ]
+            Parameter #0 [ <required> array $settings ]
           }
         }
 
@@ -1413,10 +1770,11 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
         Method [ <internal:swoole, inherits swoole_server> public method sendto ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $ip ]
             Parameter #1 [ <required> $port ]
-            Parameter #2 [ <optional> $send_data ]
+            Parameter #2 [ <required> $send_data ]
+            Parameter #3 [ <optional> $server_socket ]
           }
         }
 
@@ -1445,16 +1803,18 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
         Method [ <internal:swoole, inherits swoole_server> public method sendfile ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $conn_fd ]
             Parameter #1 [ <required> $filename ]
+            Parameter #2 [ <optional> $offset ]
           }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method close ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $fd ]
+            Parameter #1 [ <optional> $reset ]
           }
         }
 
@@ -1481,9 +1841,10 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
         Method [ <internal:swoole, inherits swoole_server> public method task ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $data ]
             Parameter #1 [ <optional> $worker_id ]
+            Parameter #2 [ <optional> $finish_callback ]
           }
         }
 
@@ -1499,7 +1860,7 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
         Method [ <internal:swoole, inherits swoole_server> public method taskWaitMulti ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> $tasks ]
+            Parameter #0 [ <required> array $tasks ]
             Parameter #1 [ <optional> $timeout ]
           }
         }
@@ -1525,7 +1886,8 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
         Method [ <internal:swoole, inherits swoole_server> public method stop ] {
 
-          - Parameters [0] {
+          - Parameters [1] {
+            Parameter #0 [ <optional> $worker_id ]
           }
         }
 
@@ -1606,15 +1968,31 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method sendMessage ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $dst_worker_id ]
+            Parameter #1 [ <required> $data ]
+          }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method addProcess ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> swoole_process $process ]
+          }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method stats ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method getSocket ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $port ]
+          }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method bind ] {
@@ -1766,30 +2144,67 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
       - Methods [9] {
         Method [ <internal:swoole, ctor> public method __construct ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $size ]
+          }
         }
 
         Method [ <internal:swoole, dtor> public method __destruct ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method __toString ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method substr ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> $offset ]
+            Parameter #1 [ <optional> $length ]
+            Parameter #2 [ <optional> $seek ]
+          }
         }
 
         Method [ <internal:swoole> public method write ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $offset ]
+            Parameter #1 [ <required> $data ]
+          }
         }
 
         Method [ <internal:swoole> public method read ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $offset ]
+            Parameter #1 [ <required> $length ]
+          }
         }
 
         Method [ <internal:swoole> public method append ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $data ]
+          }
         }
 
         Method [ <internal:swoole> public method expand ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $size ]
+          }
         }
 
         Method [ <internal:swoole> public method clear ] {
+
+          - Parameters [0] {
+          }
         }
       }
     }
@@ -1887,7 +2302,7 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
         Method [ <internal:swoole, inherits swoole_server> public method set ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> $zset ]
+            Parameter #0 [ <required> array $settings ]
           }
         }
 
@@ -1902,10 +2317,11 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
         Method [ <internal:swoole, inherits swoole_server> public method sendto ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $ip ]
             Parameter #1 [ <required> $port ]
-            Parameter #2 [ <optional> $send_data ]
+            Parameter #2 [ <required> $send_data ]
+            Parameter #3 [ <optional> $server_socket ]
           }
         }
 
@@ -1927,16 +2343,18 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
         Method [ <internal:swoole, inherits swoole_server> public method sendfile ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $conn_fd ]
             Parameter #1 [ <required> $filename ]
+            Parameter #2 [ <optional> $offset ]
           }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method close ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $fd ]
+            Parameter #1 [ <optional> $reset ]
           }
         }
 
@@ -1963,9 +2381,10 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
         Method [ <internal:swoole, inherits swoole_server> public method task ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $data ]
             Parameter #1 [ <optional> $worker_id ]
+            Parameter #2 [ <optional> $finish_callback ]
           }
         }
 
@@ -1981,7 +2400,7 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
         Method [ <internal:swoole, inherits swoole_server> public method taskWaitMulti ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> $tasks ]
+            Parameter #0 [ <required> array $tasks ]
             Parameter #1 [ <optional> $timeout ]
           }
         }
@@ -2007,7 +2426,8 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
         Method [ <internal:swoole, inherits swoole_server> public method stop ] {
 
-          - Parameters [0] {
+          - Parameters [1] {
+            Parameter #0 [ <optional> $worker_id ]
           }
         }
 
@@ -2088,15 +2508,31 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method sendMessage ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $dst_worker_id ]
+            Parameter #1 [ <required> $data ]
+          }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method addProcess ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> swoole_process $process ]
+          }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method stats ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method getSocket ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $port ]
+          }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method bind ] {
@@ -2143,21 +2579,45 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
       - Methods [6] {
         Method [ <internal:swoole, ctor> public method __construct ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole, dtor> public method __destruct ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method connect ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> array $server_config ]
+            Parameter #1 [ <required> $callback ]
+          }
         }
 
         Method [ <internal:swoole> public method query ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $sql ]
+            Parameter #1 [ <required> $callback ]
+          }
         }
 
         Method [ <internal:swoole> public method close ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole> public method on ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $event_name ]
+            Parameter #1 [ <required> $callback ]
+          }
         }
       }
     }
@@ -2446,15 +2906,15 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
         Method [ <internal:swoole, inherits swoole_server> public method on ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> $name ]
-            Parameter #1 [ <required> $cb ]
+            Parameter #0 [ <required> $event_name ]
+            Parameter #1 [ <required> $callback ]
           }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method set ] {
 
           - Parameters [1] {
-            Parameter #0 [ <required> $zset ]
+            Parameter #0 [ <required> array $settings ]
           }
         }
 
@@ -2469,10 +2929,11 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
         Method [ <internal:swoole, inherits swoole_server> public method sendto ] {
 
-          - Parameters [3] {
+          - Parameters [4] {
             Parameter #0 [ <required> $ip ]
             Parameter #1 [ <required> $port ]
-            Parameter #2 [ <optional> $send_data ]
+            Parameter #2 [ <required> $send_data ]
+            Parameter #3 [ <optional> $server_socket ]
           }
         }
 
@@ -2501,16 +2962,18 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
         Method [ <internal:swoole, inherits swoole_server> public method sendfile ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $conn_fd ]
             Parameter #1 [ <required> $filename ]
+            Parameter #2 [ <optional> $offset ]
           }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method close ] {
 
-          - Parameters [1] {
+          - Parameters [2] {
             Parameter #0 [ <required> $fd ]
+            Parameter #1 [ <optional> $reset ]
           }
         }
 
@@ -2537,9 +3000,10 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
         Method [ <internal:swoole, inherits swoole_server> public method task ] {
 
-          - Parameters [2] {
+          - Parameters [3] {
             Parameter #0 [ <required> $data ]
             Parameter #1 [ <optional> $worker_id ]
+            Parameter #2 [ <optional> $finish_callback ]
           }
         }
 
@@ -2555,7 +3019,7 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
         Method [ <internal:swoole, inherits swoole_server> public method taskWaitMulti ] {
 
           - Parameters [2] {
-            Parameter #0 [ <required> $tasks ]
+            Parameter #0 [ <required> array $tasks ]
             Parameter #1 [ <optional> $timeout ]
           }
         }
@@ -2581,7 +3045,8 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
 
         Method [ <internal:swoole, inherits swoole_server> public method stop ] {
 
-          - Parameters [0] {
+          - Parameters [1] {
+            Parameter #0 [ <optional> $worker_id ]
           }
         }
 
@@ -2662,15 +3127,31 @@ Extension [ <persistent> extension #126 swoole version 1.9.2 ] {
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method sendMessage ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $dst_worker_id ]
+            Parameter #1 [ <required> $data ]
+          }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method addProcess ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> swoole_process $process ]
+          }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method stats ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method getSocket ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $port ]
+          }
         }
 
         Method [ <internal:swoole, inherits swoole_server> public method bind ] {
