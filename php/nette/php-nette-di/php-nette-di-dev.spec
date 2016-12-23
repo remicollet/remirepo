@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    54dbce99e3355e201607874bdbcde8a0b8a1e98e
+%global gh_commit    b265f305e1fef2dad1cb2e7340b49d274d3dd14c
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.4.4
+Version:        2.4.5
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Dependency Injection Component
@@ -158,6 +158,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec 23 2016 Remi Collet <remi@fedoraproject.org> - 2.4.5-1
+- update to 2.4.5
+
 * Wed Nov  9 2016 Remi Collet <remi@fedoraproject.org> - 2.4.4-1
 - update to 2.4.4
 
