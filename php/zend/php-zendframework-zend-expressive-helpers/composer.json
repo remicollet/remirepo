@@ -12,8 +12,8 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-master": "2.1-dev",
-            "dev-develop": "2.2-dev",
+            "dev-master": "2.2-dev",
+            "dev-develop": "2.3-dev",
             "dev-dev-3.0.0": "3.0.0-dev"
         }
     },
@@ -25,9 +25,9 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^4.7",
-        "squizlabs/php_codesniffer": "^2.3",
         "zendframework/zend-diactoros": "^1.2",
-        "mockery/mockery": "^0.9.5"
+        "mockery/mockery": "^0.9.5",
+        "zendframework/zend-coding-standard": "~1.0.0"
     },
     "autoload": {
       "psr-4": {
@@ -51,6 +51,7 @@
         ],
         "cs": "phpcs",
         "cs-fix": "phpcbf",
-        "test": "phpunit"
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-clover clover.xml"
     }
 }

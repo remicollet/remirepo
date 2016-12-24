@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    204f33a12d9cd59646e1d8007d42e681a9b7b813
+%global gh_commit    b60666a7a2928bda15fceadcf15116c7df03b5e3
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-helpers
@@ -21,13 +21,13 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.1.0
+Version:        2.2.0
 Release:        1%{?dist}
 Summary:        Helper/Utility classes for Expressive
 
 Group:          Development/Libraries
 License:        BSD
-URL:            https://framework.zend.com/
+URL:            https://docs.zendframework.com/zend-expressive/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
 
@@ -45,9 +45,9 @@ BuildRequires:  php-composer(psr/http-message)                    >= 1.0
 BuildRequires:  php-composer(%{gh_owner}/zend-expressive-router)  >= 1.1
 # From composer, "require-dev": {
 #        "phpunit/phpunit": "^4.7",
-#        "squizlabs/php_codesniffer": "^2.3",
 #        "zendframework/zend-diactoros": "^1.2",
-#        "mockery/mockery": "^0.9.5"
+#        "mockery/mockery": "^0.9.5",
+#        "zendframework/zend-coding-standard": "~1.0.0"
 BuildRequires:  php-composer(phpunit/phpunit)                     >= 4.7
 BuildRequires:  php-composer(%{gh_owner}/zend-diactoros)          >= 1.2
 BuildRequires:  php-composer(mockery/mockery)                     >= 0.9.5
@@ -134,12 +134,12 @@ EOF
 # remirepo:11
 run=0
 ret=0
-if which php71; then
-   php71 %{_bindir}/phpunit || ret=1
-   run=1
-fi
 if which php56; then
    php56 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
    run=1
 fi
 if [ $run -eq 0 ]; then
@@ -166,6 +166,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Dec 24 2016 Remi Collet <remi@fedoraproject.org> - 2.2.0-1
+- update to 2.2.0
+
 * Mon Oct  3 2016 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
 - update to 2.1.0
 
