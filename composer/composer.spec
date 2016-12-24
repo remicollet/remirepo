@@ -6,18 +6,18 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    a72a8caa9ae569581449cec4a263cf77ead7ecd6
+%global gh_commit    e53f9e5381e70f76e098136343e27d92601eade7
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_branch    1.0-dev
 %global gh_owner     composer
 %global gh_project   composer
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 %global api_version  1.1.0
-%global prever       RC
+#global prever       RC
 
 Name:           composer
 Version:        1.3.0
-Release:        0.1.%{prever}%{?dist}
+Release:        1%{?dist}
 Summary:        Dependency Manager for PHP
 
 Group:          Development/Libraries
@@ -259,6 +259,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Dec 24 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- update to 1.3.0
+
 * Mon Dec 12 2016 Remi Collet <remi@fedoraproject.org> - 1.3.0-0.1.RC
 - update to 1.3.0-RC
 - raise dependency on symfony 2.7
