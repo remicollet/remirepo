@@ -1,18 +1,14 @@
 # remirepo spec file for libcouchbase
 #
-# Copyright (c) 2013-2015 Remi Collet
+# Copyright (c) 2013-2016 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
-%global gh_owner    couchbase
-# see https://github.com/couchbase/libcouchbase/tags
-%global gh_commit   I19e8e1463ba8c20a969b63adab6cc63b8bc9a7d6
-%global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 
 # Tests require some need which are downloaded during make
-%global with_tests  %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests  0%{?_with_tests:1}
 
 %if 0%{?fedora} >= 15 || 0%{?rhel} >= 6
 %global with_dtrace 1
@@ -28,7 +24,6 @@ Group:         System Environment/Libraries
 License:       ASL 2.0
 URL:           http://www.couchbase.com/communities/c/getting-started
 Source0:       http://packages.couchbase.com/clients/c/%{name}-%{version}.tar.gz
-#Source0:      https://github.com/%{gh_owner}/%{name}/archive/%{gh_commit}/%{name}-%{version}-%{gh_short}.tar.gz
 
 BuildRequires: libtool
 BuildRequires: openssl-devel
@@ -128,6 +123,9 @@ make check
 
 
 %changelog
+* Sat Dec 24 2016 Remi Collet <remi@feoraproject.org> - 2.7.0-1
+- update to 2.7.0
+
 * Tue Nov 29 2016 Remi Collet <remi@feoraproject.org> - 2.6.4-1
 - update to 2.6.4
 
