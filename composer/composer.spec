@@ -210,11 +210,15 @@ install -Dpm 755 bin/%{name} %{buildroot}%{_bindir}/%{name}
 
 %check
 %if %{with_tests}
+# remirepo:4
 %if 0%{?rhel} == 5
 rm tests/Composer/Test/Downloader/XzDownloaderTest.php
 %endif
-sed -e 's/testDispatcherCanConvertScriptEventToCommandEventForListener/SKIP1/' \
-    -i tests/Composer/Test/EventDispatcher/EventDispatcherTest.php
+if [ "$(whoami)" != "remi" ]; then
+: Online tests
+rm tests/Composer/Test/Util/RemoteFilesystemTest.php
+# remirepo:1
+fi
 
 : Ensure not used
 rm -rf res
