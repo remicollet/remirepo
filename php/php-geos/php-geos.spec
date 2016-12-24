@@ -9,7 +9,6 @@
 #
 # Please, preserve the changelog entries
 #
-%global prever     rc3
 %global pecl_name  geos
 %global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global ini_name   40-%{pecl_name}.ini
@@ -17,7 +16,7 @@
 
 Name:           php-%{pecl_name}
 Version:        1.0.0
-Release:        0.4.%{prever}%{?dist}
+Release:        1%{?dist}
 
 Summary:        PHP module for GEOS
 
@@ -25,7 +24,7 @@ Group:          Development/Languages
 # See COPYING
 License:        LGPLv2+ and MIT
 URL:            http://trac.osgeo.org/geos
-Source0:        https://git.osgeo.org/gogs/geos/php-geos/archive/%{version}%{prever}.tar.gz
+Source0:        https://git.osgeo.org/gogs/geos/php-geos/archive/%{version}%{?prever}.tar.gz
 
 BuildRequires:  php-devel
 BuildRequires:  php-pear
@@ -148,6 +147,9 @@ exit $ret
 
 
 %changelog
+* Sat Dec 24 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- update to 1.0.0
+
 * Fri Dec 16 2016 Remi Collet <remi@fedoraproject.org> - 1.0.0-0.4.rc3
 - cleanup for Fedora review
 
