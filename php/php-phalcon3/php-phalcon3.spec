@@ -13,7 +13,7 @@
 %global pkg_name   %{name}
 %endif
 
-%global gh_commit    877266877c88a0e3fcccd1a232b9537e73a641ad
+%global gh_commit    74ffe4e9794389d533e430161375736226d85e06
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phalcon
 %global gh_project   cphalcon
@@ -29,7 +29,7 @@
 %endif
 
 Name:           %{?sub_prefix}php-phalcon3
-Version:        3.0.2
+Version:        3.0.3
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Summary:        Phalcon Framework
 
@@ -55,6 +55,7 @@ BuildRequires: %{?scl_prefix}php-gd
 BuildRequires: %{?scl_prefix}php-libsodium
 BuildRequires: %{?scl_prefix}php-mbstring
 BuildRequires: %{?scl_prefix}php-msgpack
+BuildRequires: %{?scl_prefix}php-imagick
 
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
@@ -245,6 +246,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 25 2016 Remi Collet <remi@fedoraproject.org> - 3.0.3-1
+- update to 3.0.3
+
 * Sun Nov 27 2016 Remi Collet <remi@fedoraproject.org> - 3.0.2-1
 - update to 3.0.2
 

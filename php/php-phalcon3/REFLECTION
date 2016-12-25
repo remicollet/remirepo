@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #157 phalcon version 3.0.2 ] {
+Extension [ <persistent> extension #160 phalcon version 3.0.3 ] {
 
   - INI {
     Entry [ phalcon.db.escape_identifiers <ALL> ]
@@ -2307,6 +2307,40 @@ Extension [ <persistent> extension #157 phalcon version 3.0.2 ] {
       }
     }
 
+    Interface [ <internal:phalcon> interface Phalcon\Mvc\Collection\BehaviorInterface ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [2] {
+        Method [ <internal:phalcon> abstract public method notify ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $type ]
+            Parameter #1 [ <required> Phalcon\Mvc\CollectionInterface $collection ]
+          }
+        }
+
+        Method [ <internal:phalcon> abstract public method missingMethod ] {
+
+          - Parameters [3] {
+            Parameter #0 [ <required> Phalcon\Mvc\CollectionInterface $collection ]
+            Parameter #1 [ <required> $method ]
+            Parameter #2 [ <optional> $arguments ]
+          }
+        }
+      }
+    }
+
     Interface [ <internal:phalcon> interface Phalcon\Mvc\Model\BehaviorInterface ] {
 
       - Constants [0] {
@@ -2584,40 +2618,6 @@ Extension [ <persistent> extension #157 phalcon version 3.0.2 ] {
         }
 
         Method [ <internal:phalcon> abstract public method getResources ] {
-        }
-      }
-    }
-
-    Interface [ <internal:phalcon> interface Phalcon\Mvc\Collection\BehaviorInterface ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [2] {
-        Method [ <internal:phalcon> abstract public method notify ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $type ]
-            Parameter #1 [ <required> Phalcon\Mvc\CollectionInterface $collection ]
-          }
-        }
-
-        Method [ <internal:phalcon> abstract public method missingMethod ] {
-
-          - Parameters [3] {
-            Parameter #0 [ <required> Phalcon\Mvc\CollectionInterface $collection ]
-            Parameter #1 [ <required> $method ]
-            Parameter #2 [ <optional> $arguments ]
-          }
         }
       }
     }
@@ -11127,7 +11127,7 @@ Extension [ <persistent> extension #157 phalcon version 3.0.2 ] {
       }
     }
 
-    Class [ <internal:phalcon> abstract class Phalcon\Mvc\Collection\Behavior ] {
+    Class [ <internal:phalcon> abstract class Phalcon\Mvc\Collection\Behavior implements Phalcon\Mvc\Collection\BehaviorInterface ] {
 
       - Constants [0] {
       }
@@ -11164,7 +11164,7 @@ Extension [ <persistent> extension #157 phalcon version 3.0.2 ] {
           }
         }
 
-        Method [ <internal:phalcon> public method notify ] {
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\Collection\BehaviorInterface> public method notify ] {
 
           - Parameters [2] {
             Parameter #0 [ <required> $type ]
@@ -11172,7 +11172,7 @@ Extension [ <persistent> extension #157 phalcon version 3.0.2 ] {
           }
         }
 
-        Method [ <internal:phalcon> public method missingMethod ] {
+        Method [ <internal:phalcon, prototype Phalcon\Mvc\Collection\BehaviorInterface> public method missingMethod ] {
 
           - Parameters [3] {
             Parameter #0 [ <required> Phalcon\Mvc\CollectionInterface $model ]
@@ -25351,7 +25351,7 @@ Extension [ <persistent> extension #157 phalcon version 3.0.2 ] {
         Method [ <internal:phalcon> public method create ] {
 
           - Parameters [2] {
-            Parameter #0 [ <optional> $name ]
+            Parameter #0 [ <required> $name ]
             Parameter #1 [ <optional> $entity ]
           }
         }
@@ -25876,14 +25876,6 @@ Extension [ <persistent> extension #157 phalcon version 3.0.2 ] {
         Method [ <internal:phalcon, prototype Phalcon\Http\RequestInterface> public method getHTTPReferer ] {
         }
 
-        Method [ <internal:phalcon> final protected method _getQualityHeader ] {
-
-          - Parameters [2] {
-            Parameter #0 [ <required> $serverIndex ]
-            Parameter #1 [ <required> $name ]
-          }
-        }
-
         Method [ <internal:phalcon> final protected method _getBestQuality ] {
 
           - Parameters [2] {
@@ -25917,6 +25909,14 @@ Extension [ <persistent> extension #157 phalcon version 3.0.2 ] {
         }
 
         Method [ <internal:phalcon, prototype Phalcon\Http\RequestInterface> public method getDigestAuth ] {
+        }
+
+        Method [ <internal:phalcon> final protected method _getQualityHeader ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $serverIndex ]
+            Parameter #1 [ <required> $name ]
+          }
         }
       }
     }
@@ -31062,7 +31062,7 @@ Extension [ <persistent> extension #157 phalcon version 3.0.2 ] {
           }
         }
 
-        Method [ <internal:phalcon> public method order ] {
+        Method [ <internal, deprecated:phalcon> public method order ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $orderColumns ]
@@ -34515,7 +34515,7 @@ Extension [ <persistent> extension #157 phalcon version 3.0.2 ] {
         Method [ <internal:phalcon, prototype Phalcon\Mvc\Model\Query\BuilderInterface> public method limit ] {
 
           - Parameters [2] {
-            Parameter #0 [ <optional> $limit ]
+            Parameter #0 [ <required> $limit ]
             Parameter #1 [ <optional> $offset ]
           }
         }
