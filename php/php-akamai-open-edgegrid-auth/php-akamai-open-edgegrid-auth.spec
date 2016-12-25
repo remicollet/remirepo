@@ -12,8 +12,8 @@
 
 %global github_owner     akamai-open
 %global github_name      AkamaiOPEN-edgegrid-php
-%global github_version   0.6.1
-%global github_commit    a97a2194067800bb552c8b4cc0d1770588db00ad
+%global github_version   0.6.2
+%global github_commit    af67da2d65f8a267f675bfbd7e01f54d78ee0931
 
 %global composer_vendor  akamai-open
 %global composer_project edgegrid-auth
@@ -141,6 +141,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 25 2016 Remi Collet <remim@remirepo.net> - 0.6.2-1
+- update to 0.6.2
+
 * Sat Dec 24 2016 Shawn Iwinski <shawn@iwin.ski> - 0.6.1-1
 - Update to 0.6.1 (RHBZ #1405779)
 - Run upstream tests with SCLs if they are available
