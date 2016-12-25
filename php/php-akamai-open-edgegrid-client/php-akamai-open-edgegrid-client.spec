@@ -21,8 +21,8 @@
 # "php": ">=5.5"
 %global php_min_ver 5.5
 # "akamai-open/edgegrid-auth": "^0.6"
-%global akamai_open_edgegrid_auth_min_ver 0.6.0
-%global akamai_open_edgegrid_auth_max_ver 1.0.0
+%global akamai_open_edgegrid_auth_min_ver 0.6
+%global akamai_open_edgegrid_auth_max_ver 1.0
 # "guzzlehttp/guzzle": "^6.0"
 %global guzzle_min_ver 6.0
 %global guzzle_max_ver 7.0
@@ -41,7 +41,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}
 Summary:       Implements the Akamai {OPEN} EdgeGrid Authentication
 
 Group:         Development/Libraries
@@ -65,7 +65,7 @@ BuildRequires: php-composer(psr/log) >= %{psr_log_min_ver}
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 0.6.1)
+## phpcompatinfo (computed from version 0.6.2)
 BuildRequires: php-json
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -81,7 +81,7 @@ Requires:      php-composer(monolog/monolog) <  %{monolog_max_ver}
 Requires:      php-composer(monolog/monolog) >= %{monolog_min_ver}
 Requires:      php-composer(psr/log) <  %{psr_log_max_ver}
 Requires:      php-composer(psr/log) >= %{psr_log_min_ver}
-# phpcompatinfo (computed from version 0.6.1)
+# phpcompatinfo (computed from version 0.6.2)
 Requires:      php-json
 Requires:      php-pcre
 # Autoloader
@@ -152,23 +152,17 @@ cp -rp src/* %{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/
 cat <<'BOOTSTRAP' | tee bootstrap.php
 <?php
 require_once '%{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/autoload-client.php';
-\Fedora\Autoloader\Autoload::addPsr4('Akamai\\Open\\EdgeGrid\\Tests\\', __DIR__ . '/tests');
+\Fedora\Autoloader\Autoload::addPsr4('Akamai\\Open\\EdgeGrid\\Tests\\', __DIR__.'/tests');
 BOOTSTRAP
 
-run=0
-ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
-fi
-exit $ret
+TESTS_RETURN_CODE=0
+for SCL in php56 php70 php71; do
+    if which $SCL; then
+       $SCL %{_bindir}/phpunit --bootstrap bootstrap.php || TESTS_RETURN_CODE=1
+    fi
+done
+%{_bindir}/phpunit --verbose --bootstrap bootstrap.php || TESTS_RETURN_CODE=1
+exit $TESTS_RETURN_CODE
 %else
 : Tests skipped
 %endif
@@ -193,6 +187,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Dec 24 2016 Shawn Iwinski <shawn@iwin.ski> - 0.6.2-2
+- Minor spec-only modifications
+
 * Thu Dec 22 2016 Remi Collet <remim@remirepo.net> - 0.6.2-1
 - update to 0.6.2
 - Use php-composer(fedora/autoloader)
