@@ -12,8 +12,8 @@
 
 %global github_owner     reactphp
 %global github_name      promise
-%global github_version   2.4.1
-%global github_commit    8025426794f1944de806618671d4fa476dc7626f
+%global github_version   2.5.0
+%global github_commit    2760f3898b7e931aa71153852dcd48a75c9b95db
 
 %global composer_vendor  react
 %global composer_project promise
@@ -43,22 +43,22 @@ BuildArch:     noarch
 BuildRequires: php-composer(phpunit/phpunit)
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
-## phpcompatinfo (computed from version 2.4.1)
+## phpcompatinfo (computed from version 2.5.0)
 BuildRequires: php-json
 BuildRequires: php-reflection
 BuildRequires: php-spl
 ## Autoloader
-BuildRequires: php-composer(symfony/class-loader)
+BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 2.4.1)
+# phpcompatinfo (computed from version 2.5.0)
 Requires:      php-json
 Requires:      php-reflection
 Requires:      php-spl
 # Autoloader
-Requires:      php-composer(symfony/class-loader)
+Requires:      php-composer(fedora/autoloader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -78,24 +78,14 @@ cat <<'AUTOLOAD' | tee src/autoload.php
 /**
  * Autoloader for %{name} and its' dependencies
  * (created by %{name}-%{version}-%{release}).
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
  */
+require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+\Fedora\Autoloader\Autoload::addPsr4('React\\Promise\\', __DIR__);
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('React\\Promise\\', dirname(dirname(__DIR__)));
-
-require_once __DIR__ . '/functions_include.php';
-
-return $fedoraClassLoader;
+\Fedora\Autoloader\Dependencies::required(array(
+    __DIR__.'/functions_include.php',
+));
 AUTOLOAD
 
 
@@ -111,26 +101,25 @@ cp -rp src/* %{buildroot}%{phpdir}/React/Promise/
 
 %check
 %if %{with_tests}
-: Restore PSR-0 for tests
-mkdir -p psr-0/React/
-mv tests psr-0/React/Promise
-mv psr-0 tests
-mv tests/React/Promise/fixtures/* tests/React/Promise/
-
 : Create tests bootstrap
 cat <<'BOOTSTRAP' | tee bootstrap.php
 <?php
-
 require_once '%{buildroot}%{phpdir}/React/Promise/autoload.php';
-
-$fedoraClassLoader->addPrefix(null, __DIR__ . '/tests');
+\Fedora\Autoloader\Autoload::addPsr4('React\\Promise\\', __DIR__.'/tests');
+\Fedora\Autoloader\Autoload::addPsr4('React\\Promise\\', __DIR__.'/tests/fixtures');
 BOOTSTRAP
 
+: Upstream tests
 %{_bindir}/phpunit --verbose --bootstrap ./bootstrap.php
 
-if which php70; then
-   php70 %{_bindir}/phpunit --verbose --bootstrap ./bootstrap.php
-fi
+: Upstream tests with SCLs if available
+SCL_RETURN_CODE=0
+for SCL in php56 php70 php71; do
+    if which $SCL; then
+       $SCL %{_bindir}/phpunit --bootstrap ./bootstrap.php || SCL_RETURN_CODE=1
+    fi
+done
+exit $SCL_RETURN_CODE
 %else
 : Tests skipped
 %endif
@@ -151,6 +140,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Dec 24 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.5.0-1
+- Updated to 2.5.0 (RHBZ #1408344)
+- Use php-composer(fedora/autoloader)
+- Run upstream tests with SCLs if they are available
+
 * Mon May 30 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.4.1-1
 - Updated to 2.4.1 (RHBZ #1332742)
 
