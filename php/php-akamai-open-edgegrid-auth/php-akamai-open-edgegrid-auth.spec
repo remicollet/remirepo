@@ -45,7 +45,7 @@ BuildRequires: php-fedora-autoloader-devel
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 0.6.0)
+## phpcompatinfo (computed from version 0.6.1)
 BuildRequires: php-date
 BuildRequires: php-hash
 BuildRequires: php-json
@@ -55,7 +55,7 @@ BuildRequires: php-reflection
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 0.6.0)
+# phpcompatinfo (computed from version 0.6.1)
 Requires:      php-date
 Requires:      php-hash
 Requires:      php-pcre
@@ -104,31 +104,19 @@ cp -rp src/* %{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/
 : Remove logging from PHPUnit config
 sed '/log/d' phpunit.xml.dist > phpunit.xml
 
-%if 0%{?fedora} > 25
-: Temporarily skip test known to fail for PHP 7.1
-: See https://github.com/akamai-open/AkamaiOPEN-edgegrid-php/issues/2
-sed 's/function testTimestampFormat/function SKIP_testTimestampFormat/' \
-    -i tests/Authentication/TimestampTest.php
-%endif
+BOOTSTRAP=%{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/autoload-auth.php
 
-# remirepo:11
-run=0
-ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/autoload-auth.php || ret=1
-   run=1
-fi
-if which php71; then
-   sed 's/function testTimestampFormat/function SKIP_testTimestampFormat/' -i tests/Authentication/TimestampTest.php
-   php71 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/autoload-auth.php || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --verbose \
-    --bootstrap %{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/autoload-auth.php
-# remirepo:2
-fi
-exit $ret
+: Upstream tests
+%{_bindir}/phpunit --verbose --bootstrap $BOOTSTRAP
+
+: Upstream tests with SCLs if available
+SCL_RETURN_CODE=0
+for SCL in php56 php70 php71; do
+    if which $SCL; then
+       $SCL %{_bindir}/phpunit --bootstrap $BOOTSTRAP || SCL_RETURN_CODE=1
+    fi
+done
+exit $SCL_RETURN_CODE
 %else
 : Tests skipped
 %endif
@@ -153,6 +141,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Dec 24 2016 Shawn Iwinski <shawn@iwin.ski> - 0.6.1-1
+- Update to 0.6.1 (RHBZ #1405779)
+- Run upstream tests with SCLs if they are available
+
 * Thu Dec 22 2016 Remi Collet <remim@remirepo.net> - 0.6.1-1
 - update to 0.6.1
 
