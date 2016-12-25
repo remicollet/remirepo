@@ -12,8 +12,8 @@
 
 %global github_owner     guzzle
 %global github_name      promises
-%global github_version   1.3.0
-%global github_commit    2693c101803ca78b27972d84081d027fca790a1e
+%global github_version   1.3.1
+%global github_commit    a59da6cf61d80060647ff4d3eb2c03a2bc694646
 
 %global composer_vendor  guzzlehttp
 %global composer_project promises
@@ -34,7 +34,11 @@ Summary:       Guzzle promises library
 Group:         Development/Libraries
 License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
-Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
+
+# GitHub export does not include tests.
+# Run php-guzzlehttp-promises.sh to create full source.
+Source0:       %{name}-%{github_version}-%{github_commit}.tar.gz
+Source1:       %{name}-get-source.sh
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -43,7 +47,7 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 1.3.0)
+## phpcompatinfo (computed from version 1.3.1)
 BuildRequires: php-json
 BuildRequires: php-reflection
 BuildRequires: php-spl
@@ -53,7 +57,7 @@ BuildRequires: php-composer(fedora/autoloader)
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.3.0)
+# phpcompatinfo (computed from version 1.3.1)
 Requires:      php-json
 Requires:      php-spl
 # Autoloader
@@ -106,22 +110,17 @@ cp -rp src/* %{buildroot}%{phpdir}/GuzzleHttp/Promise/
 sed "s#require.*autoload.*#require '%{buildroot}%{phpdir}/GuzzleHttp/Promise/autoload.php';#" \
     -i tests/bootstrap.php
 
-# remirepo:11
-run=0
-ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
+: Upstream tests
 %{_bindir}/phpunit --verbose
-# remirepo:2
-fi
-exit $ret
+
+: Upstream tests with SCLs if available
+SCL_RETURN_CODE=0
+for SCL in php56 php70 php71; do
+    if which $SCL; then
+       $SCL %{_bindir}/phpunit || SCL_RETURN_CODE=1
+    fi
+done
+exit $SCL_RETURN_CODE
 %else
 : Tests skipped
 %endif
@@ -142,6 +141,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 07 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.1-1
+- Updated to 1.3.1 (RHBZ #1406764)
+- Run upstream tests with SCLs if they are available
+
 * Wed Dec 07 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.0-1
 - Updated to 1.3.0 (RHBZ #1396687)
 - Change autoloader from php-composer(symfony/class-loader) to
