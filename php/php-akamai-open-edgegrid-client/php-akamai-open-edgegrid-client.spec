@@ -41,7 +41,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       Implements the Akamai {OPEN} EdgeGrid Authentication
 
 Group:         Development/Libraries
