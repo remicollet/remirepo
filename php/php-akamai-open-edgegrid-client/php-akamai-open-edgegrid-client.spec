@@ -12,8 +12,8 @@
 
 %global github_owner     akamai-open
 %global github_name      AkamaiOPEN-edgegrid-php-client
-%global github_version   0.6.2
-%global github_commit    b2eda5e5b9d10818dc0ef95d177eb8a311844e55
+%global github_version   0.6.3
+%global github_commit    28ae61fcfbf51633a2f1ee8a94f59bcd50a5a5a0
 
 %global composer_vendor  akamai-open
 %global composer_project edgegrid-client
@@ -21,7 +21,7 @@
 # "php": ">=5.5"
 %global php_min_ver 5.5
 # "akamai-open/edgegrid-auth": "^0.6"
-%global akamai_open_edgegrid_auth_min_ver 0.6
+%global akamai_open_edgegrid_auth_min_ver 0.6.2
 %global akamai_open_edgegrid_auth_max_ver 1.0
 # "guzzlehttp/guzzle": "^6.0"
 %global guzzle_min_ver 6.0
@@ -187,6 +187,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 25 2016 Remi Collet <remim@remirepo.net> - 0.6.3-1
+- update to 0.6.3
+
 * Sat Dec 24 2016 Shawn Iwinski <shawn@iwin.ski> - 0.6.2-2
 - Minor spec-only modifications
 
