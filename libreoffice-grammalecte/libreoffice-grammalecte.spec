@@ -22,7 +22,7 @@ Summary:       French grammar corrector
 Summary(fr):   Correcteur grammatical Français
 Group:         System Environment/Libraries
 
-# *.py are MPLv2.0, extension is GPLv3 and later
+# *.py from Lightproof are MPLv2.0, extension is GPLv3 and later
 License:       GPLv3+ and MPLv2.0
 URL:           http://www.dicollecte.org/grammalecte/
 Source0:       http://www.dicollecte.org/grammalecte/oxt/Grammalecte-v%{version}-py27.oxt
@@ -37,7 +37,13 @@ Requires:      python(abi) = 2.7
 
 
 %description
-French grammar corrector for Writer (LibreOffice).
+Grammalecte is a open source grammar corrector dedicated to French,
+for Writer (LibreOffice, OpenOffice) and Firefox.
+It is based on Lightproof, which was written for Hungarian.
+
+Grammalecte is under development.
+
+This package provides the LibreOffice Writer extension.
 
 
 %description -l fr
@@ -52,6 +58,8 @@ possible ; s’il n’est pas possible de déterminer avec de fortes chances qu�
 suite de mots douteuse est erronée, le correcteur ne signalera rien.
 
 Grammalecte est en cours de développement.
+
+Ce paquet fournit l'extension pour LibreOffice Writer.
 
 
 %prep
