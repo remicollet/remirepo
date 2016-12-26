@@ -125,7 +125,7 @@
 %endif
 
 #global rcver        RC6
-%global rpmrel       1
+%global rpmrel       2
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -194,15 +194,13 @@ Patch301: php-7.0.0-oldpcre.patch
 
 # WIP
 
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 BuildRequires: bzip2-devel, curl-devel >= 7.9, %{db_devel}
 BuildRequires: httpd-devel >= 2.0.46-1, pam-devel
 %if %{with_httpd2410}
 # to ensure we are using httpd with filesystem feature (see #1081453)
 BuildRequires: httpd-filesystem
 %endif
-BuildRequires: libstdc++-devel, openssl-devel
+BuildRequires: %{?dtsprefix}libstdc++-devel, openssl-devel
 %if %{with_sqlite3}
 # For SQLite3 extension
 BuildRequires: sqlite-devel >= 3.6.0
@@ -214,10 +212,10 @@ BuildRequires: zlib-devel, smtpdaemon, libedit-devel
 %if %{with_libpcre}
 BuildRequires: pcre-devel >= 8.20
 %endif
-BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
+BuildRequires: bzip2, perl, libtool >= 1.4.3, %{?dtsprefix}gcc-c++
 BuildRequires: libtool-ltdl-devel
 %if %{with_dtrace}
-BuildRequires: systemtap-sdt-devel
+BuildRequires: %{?dtsprefix}systemtap-sdt-devel
 %endif
 %if 0%{?gh_date}
 BuildRequires: bison
@@ -1043,6 +1041,8 @@ exit 1
 
 
 %build
+%{?dtsenable}
+
 # aclocal workaround - to be improved
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 cat $(aclocal --print-ac-dir)/{libtool,ltoptions,ltsugar,ltversion,lt~obsolete}.m4 >>aclocal.m4
@@ -1311,7 +1311,7 @@ unset NO_INTERACTION REPORT_EXIT_STATUS MALLOC_CHECK_
 %endif
 
 %install
-[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
+%{?dtsenable}
 
 # Install the version for embedded script language in applications + php_embed.h
 make -C build-embedded install-sapi install-headers \
@@ -1578,9 +1578,6 @@ rm -rf $RPM_BUILD_ROOT%{_libdir}/php/modules/*.a \
 # Remove irrelevant docs
 rm -f README.{Zeus,QNX,CVS-RULES}
 
-%clean
-[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
-rm files.* macros.*
 
 %if ! %{with_httpd2410}
 %pre fpm
@@ -1644,7 +1641,6 @@ fi
 %{!?_licensedir:%global license %%doc}
 
 %files
-%defattr(-,root,root)
 %{_httpd_moddir}/libphp7.so
 %if 0%{?scl:1}
 %dir %{_libdir}/httpd
@@ -1661,7 +1657,6 @@ fi
 %{_httpd_contentdir}/icons/%{name}.gif
 
 %files common -f files.common
-%defattr(-,root,root)
 %doc CODING_STANDARDS CREDITS EXTENSIONS NEWS README*
 %license LICENSE Zend/ZEND_* TSRM_LICENSE
 %license libmagic_LICENSE
@@ -1681,7 +1676,6 @@ fi
 %endif
 
 %files cli
-%defattr(-,root,root)
 %{_bindir}/php
 %{_bindir}/php-cgi
 %{_bindir}/phar.phar
@@ -1701,7 +1695,6 @@ fi
 %endif
 
 %files dbg
-%defattr(-,root,root)
 %{_bindir}/phpdbg
 %{_mandir}/man1/phpdbg.1*
 %doc sapi/phpdbg/{README.md,CREDITS}
@@ -1710,7 +1703,6 @@ fi
 %endif
 
 %files fpm
-%defattr(-,root,root)
 %doc php-fpm.conf.default www.conf.default
 %license fpm_LICENSE
 %attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
@@ -1741,7 +1733,6 @@ fi
 
 %if %{with_lsws}
 %files litespeed
-%defattr(-,root,root)
 %{_bindir}/lsphp
 %if 0%{?scl:1}
 %{_root_bindir}/ls%{scl}
@@ -1749,12 +1740,10 @@ fi
 %endif
 
 %files embedded
-%defattr(-,root,root,-)
 %{_libdir}/libphp7.so
 %{_libdir}/libphp7-%{embed_version}.so
 
 %files devel
-%defattr(-,root,root)
 %{_bindir}/php-config
 %{_includedir}/php
 %{_libdir}/php/build
@@ -1771,19 +1760,16 @@ fi
 %files xml -f files.xml
 %files xmlrpc -f files.xmlrpc
 %files mbstring -f files.mbstring
-%defattr(-,root,root,-)
 %license libmbfl_LICENSE
 %license oniguruma_COPYING
 %license ucgendat_LICENSE
 %files gd -f files.gd
-%defattr(-,root,root,-)
 %if ! %{with_libgd}
 %license libgd_README
 %license libgd_COPYING
 %endif
 %files soap -f files.soap
 %files bcmath -f files.bcmath
-%defattr(-,root,root,-)
 %license libbcmath_COPYING
 %files gmp -f files.gmp
 %files dba -f files.dba
@@ -1822,6 +1808,9 @@ fi
 
 
 %changelog
+* Mon Dec 26 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-2
+- test optimized build using GCC 6.2
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-1
 - Update to 7.1.0 - http://www.php.net/releases/7_1_0.php
 - use bundled pcre library 8.38 on EL-7

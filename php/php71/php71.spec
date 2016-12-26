@@ -121,7 +121,7 @@
 %endif
 
 #global rcver         RC6
-%global rpmrel        1
+%global rpmrel        2
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -188,8 +188,6 @@ Patch301: php-7.0.0-oldpcre.patch
 
 # WIP
 
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 BuildRequires: bzip2-devel, curl-devel >= 7.9
 BuildRequires: httpd-devel >= 2.0.46-1, pam-devel
 %if %{with_httpd2410}
@@ -200,7 +198,7 @@ BuildRequires: httpd-filesystem
 # to ensure we are using nginx with filesystem feature (see #1142298)
 BuildRequires: nginx-filesystem
 %endif
-BuildRequires: libstdc++-devel, openssl-devel
+BuildRequires: %{?dtsprefix}libstdc++-devel, openssl-devel
 %if %{with_sqlite3}
 # For Sqlite3 extension
 BuildRequires: sqlite-devel >= 3.6.0
@@ -211,10 +209,10 @@ BuildRequires: zlib-devel, smtpdaemon, libedit-devel
 %if %{with_libpcre}
 BuildRequires: pcre-devel >= 8.20
 %endif
-BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
+BuildRequires: bzip2, perl, libtool >= 1.4.3, %{?dtsprefix}gcc-c++
 BuildRequires: libtool-ltdl-devel
 %if %{with_dtrace}
-BuildRequires: systemtap-sdt-devel
+BuildRequires: %{?dtsprefix}systemtap-sdt-devel
 %endif
 #BuildRequires: bison
 
@@ -1178,6 +1176,8 @@ fi
 
 
 %build
+%{?dtsenable}
+
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 # aclocal workaround - to be improved
 cat $(aclocal --print-ac-dir)/{libtool,ltoptions,ltsugar,ltversion,lt~obsolete}.m4 >>aclocal.m4
@@ -1559,6 +1559,8 @@ unset NO_INTERACTION REPORT_EXIT_STATUS MALLOC_CHECK_
 
 
 %install
+%{?dtsenable}
+
 %if %{with_zts}
 # Install the extensions for the ZTS version
 make -C build-ztscli install \
@@ -1884,7 +1886,6 @@ fi
 %{!?_licensedir:%global license %%doc}
 
 %files
-%defattr(-,root,root)
 %{_httpd_moddir}/libphp7.so
 %if %{with_zts}
 %{_httpd_moddir}/libphp7-zts.so
@@ -1899,7 +1900,6 @@ fi
 %{_httpd_contentdir}/icons/php.gif
 
 %files common -f files.common
-%defattr(-,root,root)
 %doc CODING_STANDARDS CREDITS EXTENSIONS NEWS README*
 %license LICENSE Zend/ZEND_* TSRM_LICENSE
 %license libmagic_LICENSE
@@ -1924,7 +1924,6 @@ fi
 %dir %{_datadir}/php
 
 %files cli
-%defattr(-,root,root)
 %{_bindir}/php
 %{_bindir}/zts-php
 %{_bindir}/php-cgi
@@ -1942,7 +1941,6 @@ fi
 %doc sapi/cgi/README* sapi/cli/README
 
 %files dbg
-%defattr(-,root,root)
 %{_bindir}/phpdbg
 %{_mandir}/man1/phpdbg.1*
 %if %{with_zts}
@@ -1952,7 +1950,6 @@ fi
 %doc sapi/phpdbg/{README.md,CREDITS}
 
 %files fpm
-%defattr(-,root,root)
 %doc php-fpm.conf.default www.conf.default
 %license fpm_LICENSE
 %attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
@@ -1988,12 +1985,10 @@ fi
 
 %if %{with_lsws}
 %files litespeed
-%defattr(-,root,root)
 %{_bindir}/lsphp
 %endif
 
 %files devel
-%defattr(-,root,root)
 %{_bindir}/php-config
 %{_includedir}/php
 %{_libdir}/php/build
@@ -2008,7 +2003,6 @@ fi
 %{macrosdir}/macros.php
 
 %files embedded
-%defattr(-,root,root,-)
 %{_libdir}/libphp7.so
 %{_libdir}/libphp7-%{embed_version}.so
 
@@ -2024,7 +2018,6 @@ fi
 %license oniguruma_COPYING
 %license ucgendat_LICENSE
 %files gd -f files.gd
-%defattr(-,root,root,-)
 %if ! %{with_libgd}
 %license libgd_README
 %license libgd_COPYING
@@ -2058,6 +2051,9 @@ fi
 
 
 %changelog
+* Mon Dec 26 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-2
+- test optimized build using GCC 6.2
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> 7.1.0-1
 - Update to 7.1.0 - http://www.php.net/releases/7_1_0.php
 - use bundled pcre library 8.38 on EL-7
