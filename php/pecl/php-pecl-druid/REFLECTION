@@ -1,4 +1,9 @@
-Extension [ <persistent> extension #78 Druid version 0.3.0 ] {
+Extension [ <persistent> extension #78 Druid version 0.6.0 ] {
+
+  - Dependencies {
+    Dependency [ curl (Required) ]
+    Dependency [ json (Required) ]
+  }
 
   - INI {
     Entry [ druid.host <SYSTEM> ]
@@ -15,6 +20,15 @@ Extension [ <persistent> extension #78 Druid version 0.3.0 ] {
     }
     Entry [ druid.debug <ALL> ]
       Current = '0'
+    }
+    Entry [ druid.curl_dns_cache_timeout <ALL> ]
+      Current = '1'
+    }
+    Entry [ druid.curl_connect_timeout <ALL> ]
+      Current = '3'
+    }
+    Entry [ druid.curl_timeout <ALL> ]
+      Current = '5'
     }
   }
 
@@ -34,7 +48,8 @@ Extension [ <persistent> extension #78 Druid version 0.3.0 ] {
         }
       }
 
-      - Properties [6] {
+      - Properties [7] {
+        Property [ <default> protected $tpl_path ]
         Property [ <default> protected $response_debug_info ]
         Property [ <default> protected $response_code ]
         Property [ <default> protected $_curl_error_no ]

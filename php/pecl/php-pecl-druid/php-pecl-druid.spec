@@ -24,7 +24,7 @@
 
 Summary:        A Druid driver for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        0.3.0
+Version:        0.6.0
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        ASL 2.0
 Group:          Development/Languages
@@ -127,10 +127,15 @@ extension=%{pecl_name}.so
 ;druid.base_auth_passport = ''
 ;druid.tpl_path = '/data/php-druid/tpl'
 ;druid.debug = 0
+;druid.curl_dns_cache_timeout=1
+;druid.curl_connect_timeout=3
+;druid.curl_timeout=5
 EOF
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure \
@@ -154,6 +159,7 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
+%{?dtsenable}
 
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
@@ -233,6 +239,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 26 2016 Remi Collet <remi@fedoraproject.org> - 0.6.0-1
+- update to 0.6.0 (stable)
+- open https://github.com/Neeke/PHP-Druid/issues/5 PHP 7 broken
+
 * Wed Dec 21 2016 Remi Collet <remi@fedoraproject.org> - 0.3.0-1
 - initial package, version 0.3.0 (php 5, beta)
 - open https://github.com/Neeke/PHP-Druid/issues/1 mising reflection
