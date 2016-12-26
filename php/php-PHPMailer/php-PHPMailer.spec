@@ -9,14 +9,14 @@
 #
 %global github_user  PHPMailer
 %global github_app   PHPMailer
-%global github_tag   ed4e7ce8ad877a8f578139c491c256ab1933c7c9
+%global github_tag   9e4b8fb3deb7d9cfa515c04cec41f71bc37ce9a9
 %global github_short %(c=%{github_tag}; echo ${c:0:7})
 
 %global		arch_name	%{github_app}-%{github_tag}
 
 Name:		php-PHPMailer
 Summary:	PHP email transport class with a lot of features
-Version:	5.2.18
+Version:	5.2.19
 Release:	1%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
@@ -152,6 +152,9 @@ rm -rf "${RPM_BUILD_ROOT}"
 
 
 %changelog
+* Mon Dec 26 2016 Remi Collet <remi@fedoraproject.org> - 5.2.19-1
+- update to 5.2.19
+
 * Sun Dec 25 2016 Remi Collet <remi@fedoraproject.org> - 5.2.18-1
 - update to 5.2.18
 
