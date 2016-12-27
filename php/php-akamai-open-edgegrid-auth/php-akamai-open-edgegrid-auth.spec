@@ -45,7 +45,7 @@ BuildRequires: php-fedora-autoloader-devel
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 0.6.1)
+## phpcompatinfo (computed from version 0.6.2)
 BuildRequires: php-date
 BuildRequires: php-hash
 BuildRequires: php-json
@@ -55,7 +55,7 @@ BuildRequires: php-reflection
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 0.6.1)
+# phpcompatinfo (computed from version 0.6.2)
 Requires:      php-date
 Requires:      php-hash
 Requires:      php-pcre
@@ -141,6 +141,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 26 2016 Shawn Iwinski <shawn@iwin.ski> - 0.6.2-1
+- Update to 0.6.2 (RHBZ #1408684)
+
 * Sun Dec 25 2016 Remi Collet <remim@remirepo.net> - 0.6.2-1
 - update to 0.6.2
 
