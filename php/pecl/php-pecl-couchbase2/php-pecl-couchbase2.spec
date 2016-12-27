@@ -15,18 +15,18 @@
 %global with_zts  0%{!?_without_zts:%{?__ztsphp:1}}
 
 %if "%{php_version}" < "5.6"
-# After igbinary (and XDebug for 5.4)
+# After igbinary, pcs (and XDebug for 5.4)
 %global ini_name  z-%{pecl_name}.ini
 %else
-# After 40-igbinary and 40-json
+# After 40-igbinary, 40-pcs and 40-json
 %global ini_name  50-%{pecl_name}.ini
 %endif
 #global        prever beta4
 
 Summary:       Couchbase Server PHP extension
 Name:          %{?sub_prefix}php-pecl-couchbase2
-Version:       2.2.3
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:       2.2.4
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:       PHP
 Group:         Development/Languages
 URL:           pecl.php.net/package/couchbase
@@ -34,6 +34,7 @@ Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRequires: %{?scl_prefix}php-devel >= 5.3.0
 BuildRequires: %{?scl_prefix}php-pear
+BuildRequires: %{?scl_prefix}php-pecl-pcs-devel
 BuildRequires: %{?scl_prefix}php-json
 BuildRequires: libcouchbase-devel
 BuildRequires: fastlz-devel
@@ -43,9 +44,10 @@ BuildRequires: %{?scl_prefix}php-pecl-xdebug
 
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
+Requires:      %{?scl_prefix}php-pcs%{?_isa}
+Requires:      %{?scl_prefix}php-json%{?_isa}
 # used in embded php code
 Requires:      %{?scl_prefix}php-igbinary%{?_isa}
-Requires:      %{?scl_prefix}php-json%{?_isa}
 %{?_sclreq:Requires: %{?scl_prefix}runtime%{?_sclreq}%{?_isa}}
 
 Provides:      %{?scl_prefix}php-%{pecl_name}               = %{version}
@@ -145,6 +147,8 @@ cp -pr NTS ZTS
 
 
 %build
+%{?dtsenable}
+
 peclconf() {
 %configure \
      --with-system-fastlz \
@@ -165,6 +169,8 @@ make %{?_smp_mflags}
 
 
 %install
+%{?dtsenable}
+
 # Install the NTS stuff
 make install -C NTS INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
@@ -188,6 +194,8 @@ done
 %check
 : minimal NTS load test
 %{__php} -n \
+   -d extension=tokenizer.so \
+   -d extension=pcs.so \
    -d extension=json.so \
    -d extension=%{buildroot}%{php_extdir}/%{pecl_name}.so \
    -m | grep %{pecl_name}
@@ -195,6 +203,8 @@ done
 %if %{with_zts}
 : minimal ZTS load test
 %{__ztsphp} -n \
+   -d extension=tokenizer.so \
+   -d extension=pcs.so \
    -d extension=json.so \
    -d extension=%{buildroot}%{php_ztsextdir}/%{pecl_name}.so \
    -m | grep %{pecl_name}
@@ -237,6 +247,10 @@ fi
 
 
 %changelog
+* Tue Dec 27 2016 Remi Collet <remi@fedoraproject.org> - 2.2.4-1
+- Update to 2.2.4
+- add dependency on pcs extension
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 2.2.3-2
 - rebuild with PHP 7.1.0 GA
 
