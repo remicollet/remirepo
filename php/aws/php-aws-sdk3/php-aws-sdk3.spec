@@ -95,7 +95,7 @@ BuildRequires: php-openssl
 BuildRequires: php-pcre
 BuildRequires: php-simplexml
 BuildRequires: php-spl
-## phpcompatinfo (computed from version 3.20.6)
+## phpcompatinfo (computed from version 3.20.11)
 BuildRequires: php-curl
 BuildRequires: php-date
 BuildRequires: php-filter
@@ -117,7 +117,7 @@ Requires:      php-composer(guzzlehttp/psr7)        <  %{guzzle_psr7_max_ver}
 Requires:      php-composer(guzzlehttp/psr7)        >= %{guzzle_psr7_min_ver}
 Requires:      php-composer(mtdowling/jmespath.php) <  %{jmespath_max_ver}
 Requires:      php-composer(mtdowling/jmespath.php) >= %{jmespath_min_ver}
-# phpcompatinfo (computed from version 3.20.6)
+# phpcompatinfo (computed from version 3.20.11)
 Requires:      php-date
 Requires:      php-filter
 Requires:      php-hash
@@ -237,21 +237,19 @@ rm -f \
 export AWS_ACCESS_KEY_ID=foo
 export AWS_SECRET_ACCESS_KEY=bar
 
-run=0
-ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit -d memory_limit=1G --testsuite=unit --bootstrap bootstrap.php || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit -d memory_limit=1G --testsuite=unit --bootstrap bootstrap.php || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
+: Upstream tests
 %{_bindir}/phpunit -d memory_limit=1G --verbose  --testsuite=unit \
     --bootstrap bootstrap.php
-fi
-exit $ret
+
+: Upstream tests with SCLs if available
+SCL_RETURN_CODE=0
+for SCL in php56 php70 php71; do
+    if which $SCL; then
+        $SCL %{_bindir}/phpunit -d memory_limit=1G --verbose  --testsuite=unit \
+            --bootstrap bootstrap.php || SCL_RETURN_CODE=1
+    fi
+done
+exit $SCL_RETURN_CODE
 %else
 : Tests skipped
 %endif
@@ -273,6 +271,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 26 2016 Shawn Iwinski <shawn@iwin.ski> - 3.20.11-1
+- Updated to 3.20.11 (RHBZ #1405254)
+- Run upstream tests with SCLs if they are available
+
 * Fri Dec 23 2016 Remi Collet <remi@remirepo.net> - 3.20.11-1
 - update to 3.20.11
 
