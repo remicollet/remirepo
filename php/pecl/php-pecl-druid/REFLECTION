@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #78 Druid version 0.6.0 ] {
+Extension [ <persistent> extension #156 Druid version 0.9.0 ] {
 
   - Dependencies {
     Dependency [ curl (Required) ]
@@ -45,6 +45,9 @@ Extension [ <persistent> extension #78 Druid version 0.6.0 ] {
 
       - Static methods [1] {
         Method [ <internal:Druid> static public method getInstance ] {
+
+          - Parameters [0] {
+          }
         }
       }
 
@@ -60,6 +63,9 @@ Extension [ <persistent> extension #78 Druid version 0.6.0 ] {
 
       - Methods [11] {
         Method [ <internal:Druid, ctor> private method __construct ] {
+
+          - Parameters [0] {
+          }
         }
 
         Method [ <internal:Druid> private method __clone ] {
@@ -75,18 +81,40 @@ Extension [ <persistent> extension #78 Druid version 0.6.0 ] {
         }
 
         Method [ <internal:Druid> public method debugWitch ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $debug ]
+          }
         }
 
         Method [ <internal:Druid> public method setDruidHosts ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $hosts ]
+          }
         }
 
         Method [ <internal:Druid> public method setTplPath ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $tpl_path ]
+          }
         }
 
         Method [ <internal:Druid> public method getData ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $request_json ]
+            Parameter #1 [ <optional> $content_array ]
+          }
         }
 
         Method [ <internal:Druid> public method getDataByTpl ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $request_json_tpl ]
+            Parameter #1 [ <optional> $content_array ]
+          }
         }
 
         Method [ <internal:Druid> public method getDebugInfo ] {

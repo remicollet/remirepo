@@ -24,7 +24,7 @@
 
 Summary:        A Druid driver for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        0.6.0
+Version:        0.9.0
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        ASL 2.0
 Group:          Development/Languages
@@ -32,7 +32,7 @@ URL:            http://pecl.php.net/package/%{proj_name}
 Source0:        http://pecl.php.net/get/%{proj_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel < 7
+BuildRequires:  %{?scl_prefix}php-devel
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-json
 BuildRequires:  %{?scl_prefix}php-curl
@@ -239,6 +239,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec 27 2016 Remi Collet <remi@fedoraproject.org> - 0.9.0-1
+- update to 0.9.0 (stable)
+
 * Mon Dec 26 2016 Remi Collet <remi@fedoraproject.org> - 0.6.0-1
 - update to 0.6.0 (stable)
 - open https://github.com/Neeke/PHP-Druid/issues/5 PHP 7 broken
