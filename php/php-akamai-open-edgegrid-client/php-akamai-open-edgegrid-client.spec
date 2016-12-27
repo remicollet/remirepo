@@ -21,6 +21,7 @@
 # "php": ">=5.5"
 %global php_min_ver 5.5
 # "akamai-open/edgegrid-auth": "^0.6"
+#     See https://github.com/akamai-open/AkamaiOPEN-edgegrid-php-client/pull/29
 %global akamai_open_edgegrid_auth_min_ver 0.6.2
 %global akamai_open_edgegrid_auth_max_ver 1.0
 # "guzzlehttp/guzzle": "^6.0"
@@ -65,7 +66,7 @@ BuildRequires: php-composer(psr/log) >= %{psr_log_min_ver}
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 0.6.2)
+## phpcompatinfo (computed from version 0.6.3)
 BuildRequires: php-json
 BuildRequires: php-pcre
 BuildRequires: php-reflection
@@ -81,7 +82,7 @@ Requires:      php-composer(monolog/monolog) <  %{monolog_max_ver}
 Requires:      php-composer(monolog/monolog) >= %{monolog_min_ver}
 Requires:      php-composer(psr/log) <  %{psr_log_max_ver}
 Requires:      php-composer(psr/log) >= %{psr_log_min_ver}
-# phpcompatinfo (computed from version 0.6.2)
+# phpcompatinfo (computed from version 0.6.3)
 Requires:      php-json
 Requires:      php-pcre
 # Autoloader
@@ -155,14 +156,17 @@ require_once '%{buildroot}%{phpdir}/Akamai/Open/EdgeGrid/autoload-client.php';
 \Fedora\Autoloader\Autoload::addPsr4('Akamai\\Open\\EdgeGrid\\Tests\\', __DIR__.'/tests');
 BOOTSTRAP
 
-TESTS_RETURN_CODE=0
+: Upstream tests
+%{_bindir}/phpunit --verbose --bootstrap bootstrap.php
+
+: Upstream tests with SCLs if available
+SCL_RETURN_CODE=0
 for SCL in php56 php70 php71; do
     if which $SCL; then
-       $SCL %{_bindir}/phpunit --bootstrap bootstrap.php || TESTS_RETURN_CODE=1
+       $SCL %{_bindir}/phpunit --bootstrap bootstrap.php || SCL_RETURN_CODE=1
     fi
 done
-%{_bindir}/phpunit --verbose --bootstrap bootstrap.php || TESTS_RETURN_CODE=1
-exit $TESTS_RETURN_CODE
+exit $SCL_RETURN_CODE
 %else
 : Tests skipped
 %endif
@@ -187,6 +191,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 26 2016 Shawn Iwinski <shawn@iwin.ski> - 0.6.3-1
+- Update to 0.6.3 (RHBZ #1408612)
+
 * Sun Dec 25 2016 Remi Collet <remim@remirepo.net> - 0.6.3-1
 - update to 0.6.3
 
