@@ -20,7 +20,7 @@
 
 Name:           php-%{pk_vendor}-%{pk_name}
 Version:        3.3.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Native PHP template system
 
 Group:          Development/Libraries
@@ -44,7 +44,7 @@ BuildRequires:  php-spl
 BuildRequires:  php-composer(mikey179/vfsStream) >= 1.4
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.0
 # Autoloader
-BuildRequires:  php-composer(symfony/class-loader)
+BuildRequires:  php-composer(fedora/autoloader)
 
 # From composer.json, "require": {
 #        "php": "^5.3 | ^7.0"
@@ -53,7 +53,7 @@ Requires:       php(language) >= 5.3
 Requires:       php-pcre
 Requires:       php-spl
 # Autoloader
-Requires:       php-composer(symfony/class-loader)
+Requires:       php-composer(fedora/autoloader)
 
 Provides:       php-composer(%{pk_vendor}/%{pk_name}) = %{version}
 
@@ -131,8 +131,9 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Wed Dec 28 2016 Remi Collet <remi@fedoraproject.org> - 3.3.0-1
+* Wed Dec 28 2016 Remi Collet <remi@fedoraproject.org> - 3.3.0-2
 - update to 3.3.0
+- switch to fedora/autoloader
 
 * Thu Apr  7 2016 Remi Collet <remi@fedoraproject.org> - 3.1.1-1
 - initial package, version 3.1.1
