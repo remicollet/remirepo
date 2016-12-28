@@ -7,12 +7,12 @@
 #
 # Please preserve changelog entries
 
-%global gh_commit   a685fe91a9435e1432e8eeb7cf516e2f5cee7f64
+%global gh_commit   4254e40d81559e35cdf856bcbaca5f3af468b7ef
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    slimphp
 %global gh_project  Slim
 %global pk_project  slim
-%global gh_version  3.6.0
+%global gh_version  3.7.0
 %global php_home    %{_datadir}/php
 %global slim_home   %{php_home}/Slim3
 
@@ -27,7 +27,7 @@ Source0:       %{name}-%{gh_version}-%{gh_short}.tgz
 # Script to pull the git snapshot
 Source1:       %{name}-makesrc.sh
 
-URL:            http://www.slimframework.com/
+URL:            https://slimframework.com
 License:        MIT
 Group:          Development/Libraries
 
@@ -168,7 +168,10 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Sun Nov 27 2016 Johan Cwiklinski <Johan AT x-tnd DOT be> - 3.6.0-1
+* Sun Dec 25 2016 Johan Cwiklinski <johan AT x-tnd DOT be> - 3.7.0-1
+- New upstream release
+
+* Sun Nov 27 2016 Johan Cwiklinski <johan AT x-tnd DOT be> - 3.6.0-1
 - New upstream release
 
 * Tue Jun 21 2016 Remi Collet <remi@fedoraproject.org> - 3.4.2-1
