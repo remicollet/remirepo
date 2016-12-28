@@ -116,6 +116,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 28 2016 Remi Collet <remi@remirepo.net> - 1.1.0-1
+- update to 1.1.0
+
 * Sat Jun 25 2016 Johan Cwiklinski <johan AT x-tnd DOT be> - 1.0.1-1
 - Last upstream release
 
