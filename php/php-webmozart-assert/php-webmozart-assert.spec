@@ -12,13 +12,13 @@
 
 %global github_owner     webmozart
 %global github_name      assert
-%global github_version   1.1.0
-%global github_commit    bb2d123231c095735130cc8f6d31385a44c7b308
+%global github_version   1.2.0
+%global github_commit    2db61e59ff05fe5126d152bd0655c9ea113e550f
 
 %global composer_vendor  webmozart
 %global composer_project assert
 
-# "php": "^5.3.3|^7.0"
+# "php": "^5.3.3 || ^7.0"
 %global php_min_ver 5.3.3
 
 # Build using "--without tests" to disable tests
@@ -43,24 +43,24 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 1.1.0)
+## phpcompatinfo (computed from version 1.2.0)
 BuildRequires: php-ctype
 BuildRequires: php-mbstring
 BuildRequires: php-pcre
 BuildRequires: php-spl
 ## Autoloader
-BuildRequires: php-composer(symfony/class-loader)
+BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.1.0)
+# phpcompatinfo (computed from version 1.2.0)
 Requires:      php-ctype
 Requires:      php-mbstring
 Requires:      php-pcre
 Requires:      php-spl
 # Autoloader
-Requires:      php-composer(symfony/class-loader)
+Requires:      php-composer(fedora/autoloader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -87,22 +87,10 @@ cat <<'AUTOLOAD' | tee src/autoload.php
 /**
  * Autoloader for %{name} and its' dependencies
  * (created by %{name}-%{version}-%{release}).
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
  */
+require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
-
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('Webmozart\\Assert\\', dirname(dirname(__DIR__)));
-
-return $fedoraClassLoader;
+\Fedora\Autoloader\Autoload::addPsr4('Webmozart\\Assert\\', __DIR__);
 AUTOLOAD
 
 
@@ -115,23 +103,19 @@ cp -rp src/* %{buildroot}%{phpdir}/Webmozart/Assert/
 
 %check
 %if %{with_tests}
-# remirepo:11
-run=0
-ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Webmozart/Assert/autoload.php || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit --bootstrap %{buildroot}%{phpdir}/Webmozart/Assert/autoload.php || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --verbose \
-    --bootstrap %{buildroot}%{phpdir}/Webmozart/Assert/autoload.php
-# remirepo:2
-fi
-exit $ret
+BOOTSTRAP=%{buildroot}%{phpdir}/Webmozart/Assert/autoload.php
+
+: Upstream tests
+%{_bindir}/phpunit --verbose --bootstrap $BOOTSTRAP
+
+: Upstream tests with SCLs if available
+SCL_RETURN_CODE=0
+for SCL in php56 php70 php71; do
+    if which $SCL; then
+        $SCL %{_bindir}/phpunit --verbose --bootstrap $BOOTSTRAP || SCL_RETURN_CODE=1
+    fi
+done
+exit $SCL_RETURN_CODE
 %else
 : Tests skipped
 %endif
@@ -152,6 +136,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Dec 27 2016 Shawn Iwinski <shawn@iwin.ski> - 1.2.0-1
+- Update to 1.2.0 (RHBZ #1398043)
+- Use php-composer(fedora/autoloader)
+- Run upstream tests with SCLs if they are available
+
 * Thu Oct  6 2016 Remi Collet <remi@remirepo.net> - 1.1.0-1
 - backport for remi repo, add EL-5 stuff
 
