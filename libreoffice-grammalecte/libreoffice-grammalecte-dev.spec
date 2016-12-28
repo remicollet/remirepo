@@ -10,14 +10,14 @@
 %global   extname grammalecte
 # data-only package
 %global   debug_package %{nil}
-%global   __python %{_bindir}/python3
+%global   _python_bytecompile_errors_terminate_build 0
 
 # NOTE: this package is not noarch because LibreOffice has no
 # arch-independent extension location
 
 Name:          libreoffice-%{extname}
-Version:       0.5.14
-Release:       4%{?dist}
+Version:       0.4.10.7
+Release:       1%{?dist}
 Summary:       French grammar corrector
 Summary(fr):   Correcteur grammatical Français
 Group:         System Environment/Libraries
@@ -25,18 +25,15 @@ Group:         System Environment/Libraries
 # *.py from Lightproof are MPLv2.0, extension is GPLv3 and later
 License:       GPLv3+ and MPLv2.0
 URL:           http://www.dicollecte.org/grammalecte/
-Source0:       http://www.dicollecte.org/grammalecte/oxt/Grammalecte-fr-v%{version}.oxt
-Source1:       %{name}.metainfo.xml
+Source0:       http://www.dicollecte.org/grammalecte/oxt/Grammalecte-v%{version}-py27.oxt
 
-BuildRequires: python3-devel
-BuildRequires: libappstream-glib
-
-Supplements:   libreoffice-langpack-fr
+BuildRequires: python2-devel > 2.7
+BuildRequires: python2-devel < 3
 
 Requires:      libreoffice-writer
 Requires:      libreoffice-langpack-fr
 Requires:      libreoffice-pyuno
-Requires:      python(abi) >= 3
+Requires:      python(abi) = 2.7
 
 
 %description
@@ -77,30 +74,14 @@ Ce paquet fournit l'extension pour LibreOffice Writer.
 install -d -m 0755 %{buildroot}%{_libdir}/libreoffice/share/extensions/%{extname}
 cp -pr * %{buildroot}%{_libdir}/libreoffice/share/extensions/%{extname}
 
-DESTDIR=%{buildroot} appstream-util install %{SOURCE1}
-
-
-%check
-appstream-util validate-relax -v %{buildroot}%{_datadir}/appdata/%{name}.metainfo.xml
-
 
 %files
+%{!?_licensedir:%global license %%doc}
 %license README_fr.txt
 %{_libdir}/libreoffice/share/extensions/%{extname}
-%{_datadir}/appdata/%{name}.metainfo.xml
 
 
 %changelog
-* Sun Dec 25 2016 Remi Collet <remi@fedoraproject.org> - 0.5.14-4
-- Add Appstream metadata
-
-* Fri Dec 23 2016 Remi Collet <remi@fedoraproject.org> - 0.5.14-3
-- add Supplements libreoffice-langpack-fr
-
-* Fri Dec 23 2016 Remi Collet <remi@fedoraproject.org> - 0.5.14-2
-- add dependencies on libreoffice-langpack-fr and libreoffice-pyuno
-- enable byte compile
-
-* Thu Dec 22 2016 Remi Collet <remi@fedoraproject.org> - 0.5.14-1
+* Fri Dec 23 2016 Remi Collet <remi@fedoraproject.org> - 0.4.10.7-1
 - initial package
 
