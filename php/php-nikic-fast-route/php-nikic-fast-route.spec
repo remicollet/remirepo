@@ -7,7 +7,7 @@
 #
 # Please preserve changelog entries
 
-%global gh_commit    8ea928195fa9b907f0d6e48312d323c1a13cc2af
+%global gh_commit    f3dcf5130e634b6123d40727d612ec6aa4f61fb3
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nikic
 %global gh_project   FastRoute
@@ -16,7 +16,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{pk_project}
-Version:        1.0.1
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        Fast implementation of a regular expression based router
 
@@ -80,12 +80,23 @@ rm -rf src
 cp %{SOURCE1}       test/bootstrap.php
 sed -e "s|BUILDROOT_PATH|%{buildroot}/%{php_home}/%{gh_project}|" -i test/bootstrap.php
 
-: Upstream test suite
-%{_bindir}/phpunit --verbose
-
-if which php71; then
-    php71 %{_bindir}/phpunit --verbose
+: Run upstream test suite
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
