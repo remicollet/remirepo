@@ -17,9 +17,12 @@
             "role": "Developer"
         }
     ],
+    "require" : {
+        "php": "^5.3 | ^7.0"
+    },
     "require-dev": {
+        "mikey179/vfsStream": "^1.4",
         "phpunit/phpunit": "~4.0",
-        "mikey179/vfsStream": "~1.4.0",
         "squizlabs/php_codesniffer": "~1.5"
     },
     "autoload": {
@@ -31,5 +34,8 @@
         "branch-alias": {
             "dev-master": "3.0-dev"
         }
+    },
+    "scripts": {
+        "test": "phpunit"
     }
 }

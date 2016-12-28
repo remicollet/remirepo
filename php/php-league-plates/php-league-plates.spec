@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # Github
-%global gh_commit    2d8569e9f140a70d6a05db38006926f7547cb802
+%global gh_commit    b1684b6f127714497a0ef927ce42c0b44b45a8af
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     thephpleague
 %global gh_project   plates
@@ -19,7 +19,7 @@
 %global ns_project   Plates
 
 Name:           php-%{pk_vendor}-%{pk_name}
-Version:        3.1.1
+Version:        3.3.0
 Release:        1%{?dist}
 Summary:        Native PHP template system
 
@@ -34,17 +34,21 @@ Source2:        %{name}-autoload.php
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  php(language) >= 5.3
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
 # From composer.json, "require-dev": {
+#        "mikey179/vfsStream": "^1.4",
 #        "phpunit/phpunit": "~4.0",
-#        "mikey179/vfsStream": "~1.4.0",
 #        "squizlabs/php_codesniffer": "~1.5"
+BuildRequires:  php-composer(mikey179/vfsStream) >= 1.4
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.0
-BuildRequires:  php-composer(mikey179/vfsStream) >= 0.9
 # Autoloader
 BuildRequires:  php-composer(symfony/class-loader)
 
+# From composer.json, "require": {
+#        "php": "^5.3 | ^7.0"
+Requires:       php(language) >= 5.3
 # From phpcompatifo report for 3.1.1
 Requires:       php-pcre
 Requires:       php-spl
@@ -95,11 +99,22 @@ require_once '%{_datadir}/php/org/bovigo/vfs/autoload.php';
 EOF
 
 : Run upstream test suite
-%{_bindir}/phpunit --verbose
-
-if which php70
-then php70 %{_bindir}/phpunit --verbose
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 
 
 %clean
@@ -116,6 +131,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Dec 28 2016 Remi Collet <remi@fedoraproject.org> - 3.3.0-1
+- update to 3.3.0
+
 * Thu Apr  7 2016 Remi Collet <remi@fedoraproject.org> - 3.1.1-1
 - initial package, version 3.1.1
 
