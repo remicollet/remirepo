@@ -99,6 +99,8 @@ igbinary stores PHP data structures in a compact binary form.
 Savings are significant when using memcached or similar memory
 based storages for serialized data.
 
+Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
+
 
 %package devel
 Summary:       Igbinary developer files (header)
@@ -112,8 +114,6 @@ Provides:      %{?scl_prefix}php-%{extname}-devel%{?_isa} = %{version}-%{release
 
 %description devel
 These are the files needed to compile programs using Igbinary
-
-Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')%{?scl: as Software Collection (%{scl} by %{?scl_vendor}%{!?scl_vendor:rh})}.
 
 
 %prep
@@ -226,7 +226,7 @@ fi
 : upstream test suite
 cd NTS
 TEST_PHP_EXECUTABLE=%{_bindir}/php \
-TEST_PHP_ARGS="-n $MOD -d extension=$PWD/modules/%{extname}.so" \
+TEST_PHP_ARGS="-n $MOD -d extension=%{buildroot}%{php_extdir}/%{extname}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{_bindir}/php -n run-tests.php --show-diff
@@ -240,7 +240,7 @@ REPORT_EXIT_STATUS=1 \
 : upstream test suite
 cd ../ZTS
 TEST_PHP_EXECUTABLE=%{__ztsphp} \
-TEST_PHP_ARGS="-n $MOD -d extension=$PWD/modules/%{extname}.so" \
+TEST_PHP_ARGS="-n $MOD -d extension=%{buildroot}%{php_ztsextdir}/%{extname}.so" \
 NO_INTERACTION=1 \
 REPORT_EXIT_STATUS=1 \
 %{__ztsphp} -n run-tests.php --show-diff
