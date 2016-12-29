@@ -6,7 +6,7 @@
 #
 # Please preserve changelog entries
 #
-%global gh_commit    545ce9136690cea74f98f86fbb9c92dd9ab1a756
+%global gh_commit    cd142238a339459b10da3d8234220963f392540c
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     swiftmailer
 %global gh_project   swiftmailer
@@ -14,7 +14,7 @@
 %global php_home     %{_datadir}/php
 
 Name:           php-%{gh_project}
-Version:        5.4.4
+Version:        5.4.5
 Release:        1%{?dist}
 Summary:        Free Feature-rich PHP Mailer
 
@@ -27,10 +27,12 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 BuildRequires:  php-composer(phpunit/phpunit)
-BuildRequires:  php-composer(theseer/autoload)
+BuildRequires:  php-fedora-autoloader-devel
 # From composer.json, "require-dev": {
-#        "mockery/mockery": "~0.9.1"
+#        "mockery/mockery": "~0.9.1",
+#        "symfony/phpunit-bridge": "~3.2"
 BuildRequires:  php-composer(mockery/mockery) >= 0.9.1
+BuildRequires:  php-composer(symfony/phpunit-bridge) >= 0.9.1
 %endif
 
 # From composer.json, "require": {
@@ -96,10 +98,11 @@ cp -pr lib/dependency_maps %{buildroot}/%{php_home}/Swift/
 %if %{with_tests}
 : Use installed tree and autoloader
 mkdir vendor
-%{_bindir}/phpab --output vendor/autoload.php tests
+%{_bindir}/phpab --format fedora --output vendor/autoload.php tests
 cat << 'EOF' | tee -a vendor/autoload.php
 require_once '%{buildroot}/%{php_home}/Swift/swift_required.php';
 require_once '%{php_home}/Mockery/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('Symfony\\Bridge\\PhpUnit\\', '%{php_home}/Symfony/Bridge/PhpUnit');
 EOF
 
 TMPDIR=$(mktemp -d $PWD/rpmtests-XXXXXXXX)
@@ -146,6 +149,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec 29 2016 Remi Collet <remi@fedoraproject.org> - 5.4.5-1
+- update to 5.4.5
+
 * Thu Nov 24 2016 Remi Collet <remi@fedoraproject.org> - 5.4.4-1
 - update to 5.4.4
 
