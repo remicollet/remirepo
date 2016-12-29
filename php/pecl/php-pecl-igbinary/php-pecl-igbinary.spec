@@ -56,8 +56,8 @@ Provides:       %{?scl_prefix}php-%{extname}%{?_isa}        = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{extname})          = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{extname})%{?_isa}  = %{version}
 %if "%{?scl_prefix}" != "%{?sub_prefix}"
-Provides:       %{?scl_prefix}php-pecl-%{pecl_name}         = %{version}-%{release}
-Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa} = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{extname}           = %{version}-%{release}
+Provides:       %{?scl_prefix}php-pecl-%{extname}%{?_isa}   = %{version}-%{release}
 %endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
@@ -108,9 +108,13 @@ Group:         Development/Libraries
 Requires:      %{name}%{?_isa} = %{version}-%{release}
 Requires:      %{?scl_prefix}php-devel%{?_isa}
 
-Obsoletes:     %{?scl_prefix}php-%{extname}-devel         <= 1.1.1
-Provides:      %{?scl_prefix}php-%{extname}-devel         = %{version}-%{release}
-Provides:      %{?scl_prefix}php-%{extname}-devel%{?_isa} = %{version}-%{release}
+Obsoletes:     %{?scl_prefix}php-%{extname}-devel             <= 1.1.1
+Provides:      %{?scl_prefix}php-%{extname}-devel              = %{version}-%{release}
+Provides:      %{?scl_prefix}php-%{extname}-devel%{?_isa}      = %{version}-%{release}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
+Provides:      %{?scl_prefix}php-pecl-%{extname}-devel         = %{version}-%{release}
+Provides:      %{?scl_prefix}php-pecl-%{extname}-devel%{?_isa} = %{version}-%{release}
+%endif
 
 %description devel
 These are the files needed to compile programs using Igbinary
