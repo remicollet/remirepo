@@ -18,7 +18,7 @@
 
 Name:          libreoffice-%{extname}
 Version:       0.5.14
-Release:       4%{?dist}
+Release:       5%{?dist}
 Summary:       French grammar corrector
 Summary(fr):   Correcteur grammatical Français
 Group:         System Environment/Libraries
@@ -26,18 +26,24 @@ Group:         System Environment/Libraries
 # *.py from Lightproof are MPLv2.0, extension is GPLv3 and later
 License:       GPLv3+ and MPLv2.0
 URL:           http://www.dicollecte.org/grammalecte/
-Source0:       http://www.dicollecte.org/grammalecte/oxt/Grammalecte-fr-v%{version}.oxt
+Source0:       http://www.dicollecte.org/grammalecte/oxt/Grammalecte-v%{version}.7z
 Source1:       %{name}.metainfo.xml
 
+# Don't use lowercase
+Patch0:        %{name}-make.patch
+
+BuildRequires: p7zip
 BuildRequires: python3-devel
 BuildRequires: libappstream-glib
+%if 0%{?fedora} >= 24
+BuildRequires: glibc-langpack-fr
+%endif
 
 Supplements:   libreoffice-langpack-fr
 
 Requires:      libreoffice-writer
 Requires:      libreoffice-langpack-fr
 Requires:      libreoffice-pyuno
-Requires:      python(abi) >= 3
 
 
 %description
@@ -67,16 +73,25 @@ Ce paquet fournit l'extension pour LibreOffice Writer.
 
 
 %prep
-%setup -q -c
+%setup -qcT
+7za x %{SOURCE0}
+%patch0 -b .rpm
+
+for file in $(find . -name \*.py)
+do
+  sed -e '/#!python3/d' -e 's/\r//' -i $file
+done
 
 
 %build
-: Nothing to build
+export LANG=fr_FR.UTF-8
+python3 ./make.py -b fr
 
 
 %install
 install -d -m 0755 %{buildroot}%{_libdir}/libreoffice/share/extensions/%{extname}
-cp -pr * %{buildroot}%{_libdir}/libreoffice/share/extensions/%{extname}
+unzip -d %{buildroot}%{_libdir}/libreoffice/share/extensions/%{extname} _build/Grammalecte-fr-v0.5.14.oxt
+chmod -R +rX %{buildroot}%{_libdir}/libreoffice/share/extensions/%{extname}
 
 DESTDIR=%{buildroot} appstream-util install %{SOURCE1}
 
@@ -86,12 +101,15 @@ appstream-util validate-relax -v %{buildroot}%{_datadir}/appdata/%{name}.metainf
 
 
 %files
-%license README_fr.txt
+%license README.txt LICENSE.*
 %{_libdir}/libreoffice/share/extensions/%{extname}
 %{_datadir}/appdata/%{name}.metainfo.xml
 
 
 %changelog
+* Thu Dec 29 2016 Remi Collet <remi@fedoraproject.org> - 0.5.14-5
+- build from sources
+
 * Sun Dec 25 2016 Remi Collet <remi@fedoraproject.org> - 0.5.14-4
 - Add Appstream metadata
 
