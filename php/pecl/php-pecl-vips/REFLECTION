@@ -1,4 +1,5 @@
-Extension [ <persistent> extension #136 vips version 1.0.2 ] {
+php-vips-ext: unable to lock libvips -- graceful may be unreliable
+Extension [ <persistent> extension #138 vips version 1.0.3 ] {
 
   - Functions {
     Function [ <internal:vips> function vips_image_new_from_file ] {

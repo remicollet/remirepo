@@ -8,7 +8,7 @@
 #
 %if 0%{?scl:1}
 %global sub_prefix %{scl_prefix}
-%scl_package        php-pecl-vips
+%scl_package       php-pecl-vips
 %endif
 
 %global pecl_name vips
@@ -18,7 +18,7 @@
 
 Summary:        PHP extension for interfacing with libvips
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
@@ -27,7 +27,7 @@ Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 
 BuildRequires:  %{?scl_prefix}php-devel > 7
 BuildRequires:  %{?scl_prefix}php-pear
-BuildRequires:  pkgconfig(vips) >= 8.3
+BuildRequires:  pkgconfig(vips) >= 8.2
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:       %{?scl_prefix}php(api) = %{php_core_api}
@@ -96,6 +96,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure \
@@ -118,6 +120,8 @@ make %{?_smp_mflags}
 
 
 %install
+%{?dtsenable}
+
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
@@ -206,6 +210,10 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Thu Dec 29 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
+- Update to 1.0.3 (broken)
+  open https://github.com/jcupitt/php-vips/issues/27
+
 * Tue Dec 06 2016 Remi Collet <remi@fedoraproject.org> - 1.0.2-1
 - Update to 1.0.2
 
