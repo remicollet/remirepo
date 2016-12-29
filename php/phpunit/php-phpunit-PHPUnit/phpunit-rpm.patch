@@ -1,7 +1,7 @@
 diff -up ./phpunit.rpm ./phpunit
 --- ./phpunit.rpm	2015-08-10 13:22:08.674131079 +0200
 +++ ./phpunit	2015-08-10 13:23:53.882702518 +0200
-@@ -22,24 +22,21 @@ if (!ini_get('date.timezone')) {
+@@ -27,24 +27,21 @@ if (!ini_get('date.timezone')) {
      ini_set('date.timezone', 'UTC');
  }
  
@@ -24,9 +24,9 @@ diff -up ./phpunit.rpm ./phpunit
 -
 -if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
 -    fwrite(STDERR,
--        'You need to set up the project dependencies using the following commands:' . PHP_EOL .
--        'wget http://getcomposer.org/composer.phar' . PHP_EOL .
--        'php composer.phar install' . PHP_EOL
+-        'You need to set up the project dependencies using Composer:' . PHP_EOL . PHP_EOL .
+-        '    composer install' . PHP_EOL . PHP_EOL .
+-        'You can learn all about Composer on https://getcomposer.org/.' . PHP_EOL
 -    );
 -
 -    die(1);
