@@ -151,6 +151,7 @@ rm -rf %{buildroot}
 %changelog
 * Thu Dec 29 2016 Remi Collet <remi@fedoraproject.org> - 5.4.5-1
 - update to 5.4.5
+- fix Remote Code Execution CVE-2016-10074
 
 * Thu Nov 24 2016 Remi Collet <remi@fedoraproject.org> - 5.4.4-1
 - update to 5.4.4
