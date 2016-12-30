@@ -2,8 +2,8 @@
 
 NAME=$(basename $PWD)
 OWNER=$(sed   -n '/^%global github_owner/{s/.* //;p}'   $NAME.spec)
-PROJECT=$(sed -n '/^%global github_name/{s/.* //;p}' $NAME.spec)
-VERSION=$(sed -n '/^Version:/{s/.* //;p}'           $NAME.spec)
+PROJECT=$(sed -n '/^%global github_name/{s/.* //;p}'    $NAME.spec)
+VERSION=$(sed -n '/^%global github_version/{s/.* //;p}' $NAME.spec)
 COMMIT=$(sed  -n '/^%global github_commit/{s/.* //;p}'  $NAME.spec)
 SHORT=${COMMIT:0:7}
 
@@ -16,7 +16,7 @@ git clone https://github.com/$OWNER/$PROJECT.git $PROJECT-$COMMIT
 echo "Getting commit..."
 pushd $PROJECT-$COMMIT
 git checkout $COMMIT
-cp composer.json ../composer-$VERSION.json
+cp composer.json ../composer.json
 popd
 
 echo "Archiving..."

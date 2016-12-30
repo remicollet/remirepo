@@ -12,7 +12,8 @@
 
 %global github_owner     paragonie
 %global github_name      random_compat
-%global github_commit    c7e26a21ba357863de030f0b9e701c7d04593774
+%global github_version   2.0.4
+%global github_commit    a9b97968bcde1c4de2a5ec6cbd06a0f6c919b46e
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  paragonie
@@ -27,7 +28,7 @@
 %{!?phpdir:  %global phpdir  %{_datadir}/php}
 
 Name:          php-%{composer_vendor}-random-compat
-Version:       1.4.1
+Version:       %{github_version}
 Release:       1%{?github_release}%{?dist}
 Summary:       PHP 5.x polyfill for random_bytes() and random_int() from PHP 7
 
@@ -47,14 +48,14 @@ BuildArch:     noarch
 ## composer.json
 BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-## phpcompatinfo (computed from version 1.4.1)
+## phpcompatinfo (computed from version 2.0.4)
 BuildRequires: php-pcre
 BuildRequires: php-zlib
 %endif
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-# phpcompatinfo (computed from version 1.4.1)
+# phpcompatinfo (computed from version 2.0.4)
 Requires:      php-pcre
 # Weak dependencies
 %if 0%{?fedora} >= 21
@@ -94,13 +95,18 @@ cp -rp lib/* %{buildroot}%{phpdir}/random_compat/
 
 %check
 %if %{with_tests}
-%{_bindir}/phpunit --verbose \
-    --bootstrap %{buildroot}%{phpdir}/random_compat/autoload.php
+BOOTSTRAP=%{buildroot}%{phpdir}/random_compat/autoload.php
 
-if which php70; then
-  php70 %{_bindir}/phpunit --verbose \
-    --bootstrap %{buildroot}%{phpdir}/random_compat/autoload.php
-fi
+%{_bindir}/phpunit --verbose --bootstrap $BOOTSTRAP
+
+: Upstream tests with SCLs if available
+SCL_RETURN_CODE=0
+for SCL in php56 php70 php71; do
+    if which $SCL; then
+        $SCL %{_bindir}/phpunit --verbose --bootstrap $BOOTSTRAP || SCL_RETURN_CODE=1
+    fi
+done
+exit $SCL_RETURN_CODE
 %else
 : Tests skipped
 %endif
@@ -120,6 +126,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec 29 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.0.4-1
+- Updated to 2.0.4 (RHBZ #1385987)
+- Run upstream tests with SCLs if they are available
+
 * Mon Apr 04 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.4.1-1
 - Updated to 1.4.1 (RHBZ #1318836)
 
