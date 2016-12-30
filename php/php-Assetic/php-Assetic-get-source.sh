@@ -43,6 +43,8 @@ print "GIT_REPO = $GIT_REPO"
 print "GIT_DIR = $GIT_DIR"
 
 TEMP_DIR=$(mktemp --dir)
+TAR_FILE=$PWD/${NAME}-${VERSION}-${GIT_COMMIT}.tar.gz
+CMP_FILE=$PWD/composer.json
 
 pushd $TEMP_DIR
     print "Cloning git repo..."
@@ -51,6 +53,7 @@ pushd $TEMP_DIR
     pushd $GIT_DIR
         print "Checking out commit..."
         $GIT checkout $GIT_COMMIT
+        cp composer.json $CMP_FILE
     popd
 
     TAR_DIR=${GIT_NAME}-${GIT_COMMIT}
@@ -58,7 +61,6 @@ pushd $TEMP_DIR
 
     mv $GIT_DIR $TAR_DIR
 
-    TAR_FILE=`$RPM --eval='%{_sourcedir}'`/${NAME}-${VERSION}-${GIT_COMMIT}.tar.gz
     print "TAR_FILE = $TAR_FILE"
 
     [ -e $TAR_FILE ] && rm -f $TAR_FILE

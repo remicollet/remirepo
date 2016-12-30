@@ -12,8 +12,8 @@
 
 %global github_owner     kriswallsmith
 %global github_name      assetic
-%global github_version   1.3.2
-%global github_commit    9928f7c4ad98b234e3559d1049abd13387f86db5
+%global github_version   1.4.0
+%global github_commit    e911c437dbdf006a8f62c2f59b15b2d69a5e0aa1
 
 %global composer_vendor  kriswallsmith
 %global composer_project assetic
@@ -44,7 +44,7 @@
 %global jsqueeze_max_ver 3.0
 # "psr/log": "~1.0"
 #     NOTE: Min version not 1.0 because autoloader required
-%global psr_log_min_ver 1.0.0-8
+%global psr_log_min_ver 1.0.1
 %global psr_log_max_ver 2.0
 # "ptachoire/cssembed": "~1.0"
 %global cssembed_min_ver 1.0
@@ -53,9 +53,9 @@
 #     NOTE: Min version not 2.1 because autoloader required
 %global symfony_min_ver %{?el6:2.3.31}%{!?el6:2.7.1}
 %global symfony_max_ver 4.0
-# twig/twig": "~1.8|~2.0"
-#     "conflict": "twig/twig": "<1.23"
-%global twig_min_ver 1.23
+# twig/twig": "~1.23|~2.0"
+#     "conflict": "twig/twig": "<1.27"
+%global twig_min_ver 1.27
 %global twig_max_ver 3.0
 
 # Conditionals for BuildRequires and Suggests
@@ -74,7 +74,7 @@
 
 Name:          php-Assetic
 Version:       %{github_version}
-Release:       4%{?dist}
+Release:       1%{?dist}
 Summary:       Asset Management for PHP
 
 Group:         Development/Libraries
@@ -96,11 +96,10 @@ BuildRequires: php-composer(leafo/lessphp)      >= %{lessphp_min_ver}
 BuildRequires: php-composer(leafo/scssphp)      >= %{scssphp_min_ver}
 BuildRequires: php-composer(patchwork/jsqueeze) >= %{jsqueeze_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
-#BuildRequires: php-composer(psr/log)            >= %%{psr_log_min_ver}
-BuildRequires: php-PsrLog                       >= %{psr_log_min_ver}
+BuildRequires: php-composer(psr/log)            >= %{psr_log_min_ver}
 BuildRequires: php-composer(symfony/process)    >= %{symfony_min_ver}
 BuildRequires: php-composer(twig/twig)          >= %{twig_min_ver}
-## phpcompatinfo (computed from version 1.3.2)
+## phpcompatinfo (computed from version 1.4.0)
 BuildRequires: php-ctype
 BuildRequires: php-curl
 BuildRequires: php-date
@@ -113,7 +112,7 @@ BuildRequires: php-simplexml
 BuildRequires: php-spl
 BuildRequires: php-tokenizer
 ## Autoloader
-BuildRequires: php-composer(symfony/class-loader)
+BuildRequires: php-composer(fedora/autoloader)
 ## package.json
 %if %{with_npm_clean_css}
 BuildRequires: npm(clean-css)
@@ -145,7 +144,7 @@ BuildRequires: optipng
 Requires:      php(language)                 >= %{php_min_ver}
 Requires:      php-composer(symfony/process) >= %{symfony_min_ver}
 Requires:      php-composer(symfony/process) <  %{symfony_max_ver}
-# phpcompatinfo (computed from version 1.3.2)
+# phpcompatinfo (computed from version 1.4.0)
 Requires:      php-ctype
 Requires:      php-curl
 Requires:      php-date
@@ -156,7 +155,7 @@ Requires:      php-reflection
 Requires:      php-spl
 Requires:      php-tokenizer
 # Autoloader
-Requires:      php-composer(symfony/class-loader)
+Requires:      php-composer(fedora/autoloader)
 
 # Weak dependencies
 %if 0%{?fedora} >= 21
@@ -198,7 +197,7 @@ Conflicts:     php-composer(twig/twig)          <  %{twig_min_ver}
 Conflicts:     php-composer(twig/twig)          >= %{twig_max_ver}
 
 # Standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming
-Provides:      php-%{composer_vendor}-%{composer_project}           = %{version}-%{release}
+Provides:      php-%{composer_vendor}-%{composer_project} = %{version}-%{release}
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
@@ -225,36 +224,22 @@ cat <<'AUTOLOAD' | tee src/Assetic/autoload.php
 /**
  * Autoloader for %{name} and its' dependencies
  * (created by %{name}-%{version}-%{release}).
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
  */
+require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+\Fedora\Autoloader\Autoload::addPsr4('Assetic\\', __DIR__);
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
+\Fedora\Autoloader\Dependencies::required(array(
+    __DIR__.'/functions.php',
+    '%{phpdir}/Symfony/Component/Process/autoload.php',
+));
 
-$fedoraClassLoader->addPrefix('Assetic\\', dirname(__DIR__));
-require_once __DIR__.'/functions.php';
-
-// Dependencies (autoloader => required)
-foreach (array(
-    '%{phpdir}/Symfony/Component/Process/autoload.php' => true,
-    '%{phpdir}/Leafo/ScssPhp/autoload.php'             => false,
-    '%{phpdir}/lessphp/lessc.inc.php'                  => false,
-    '%{phpdir}/Patchwork/JSqueeze.php'                 => false,
-    '%{phpdir}/Twig/autoload.php'                      => false,
-) as $dependency => $required) {
-    if ($required || file_exists($dependency)) {
-        require_once($dependency);
-    }
-}
-
-return $fedoraClassLoader;
+\Fedora\Autoloader\Dependencies::optional(array(
+    '%{phpdir}/Leafo/ScssPhp/autoload.php',
+    '%{phpdir}/lessphp/lessc.inc.php',
+    '%{phpdir}/Patchwork/JSqueeze.php',
+    '%{phpdir}/Twig/autoload.php',
+));
 AUTOLOAD
 
 
@@ -271,34 +256,25 @@ cp -rp src/Assetic %{buildroot}%{phpdir}/
 rm -f \
     tests/Assetic/Test/Asset/HttpAssetTest.php \
     tests/Assetic/Test/Filter/GoogleClosure/CompilerApiFilterTest.php
-sed 's/function testCompassExtensionCanBeDisabled/function SKIP_testCompassExtensionCanBeDisabled/' \
-    -i tests/Assetic/Test/Filter/ScssphpFilterTest.php
 
 : Create tests bootstrap
 cat <<'BOOTSTRAP' | tee bootstrap.php
 <?php
-$fedoraClassLoader = require '%{buildroot}%{phpdir}/Assetic/autoload.php';
-$fedoraClassLoader->addPrefix('Assetic\\Test\\', __DIR__.'/tests');
+require '%{buildroot}%{phpdir}/Assetic/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('Assetic\\Test\\', __DIR__.'/tests/Assetic/Test');
 BOOTSTRAP
 
-: Run tests
-# remirepo:11
-run=0
-ret=0
-if which php56; then
-   php70 %{_bindir}/phpunit --bootstrap bootstrap.php
-   run=1
-fi
-if which php71; then
-   php70 %{_bindir}/phpunit --bootstrap bootstrap.php
-   run=1
-fi
-if [ $run -eq 0 ]; then
-: Run upstream test suite
+: Upstream tests
 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
-# remirepo:2
-fi
-exit $ret
+
+: Upstream tests with SCLs if available
+SCL_RETURN_CODE=0
+for SCL in php56 php70 php71; do
+    if which $SCL; then
+        $SCL %{_bindir}/phpunit --verbose --bootstrap bootstrap.php || SCL_RETURN_CODE=1
+    fi
+done
+exit $SCL_RETURN_CODE
 %else
 : Tests skipped
 %endif
@@ -320,6 +296,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Dec 29 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.4.0-1
+- Updated to 1.4.0 (RHBZ #1394441)
+- Use php-composer(fedora/autoloader)
+- Run upstream tests with SCLs if they are available
+
 * Mon Oct 10 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.2-4
 - Skip addtional test known to fail (FTBFS in rawhide; RHBZ #1383374)
 
