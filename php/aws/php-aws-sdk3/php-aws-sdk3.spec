@@ -12,8 +12,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   3.20.11
-%global github_commit    39d122b903813da2f53312fd3146acaa83a6d9f6
+%global github_version   3.20.12
+%global github_commit    8725e67cb77b057b55596b4468ce9a1a95c5fe96
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -271,6 +271,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec 30 2016 Remi Collet <remi@remirepo.net> - 3.20.12-1
+- update to 3.20.12
+
 * Mon Dec 26 2016 Shawn Iwinski <shawn@iwin.ski> - 3.20.11-1
 - Updated to 3.20.11 (RHBZ #1405254)
 - Run upstream tests with SCLs if they are available
