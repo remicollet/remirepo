@@ -165,6 +165,11 @@ peclbuild() {
     --enable-openssl \
     --with-openssl \
     --enable-sockets \
+%if "%{php_version}" > "5.5"
+    --enable-coroutine \
+%else
+    --disable-coroutine \
+%endif
 %if %{with_nghttpd2}
     --enable-http2 \
 %endif
