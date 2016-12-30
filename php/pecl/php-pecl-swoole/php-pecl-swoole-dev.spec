@@ -11,7 +11,7 @@
 %scl_package       php-pecl-swoole
 %endif
 
-%global with_zts   0
+%global with_zts   0%{!?_without_zts:%{?__ztsphp:1}}
 %global pecl_name  swoole
 %if "%{php_version}" < "5.6"
 # After sockets
@@ -30,14 +30,14 @@
 
 Summary:        PHP's asynchronous concurrent distributed networking framework
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        2.0.4
+Version:        2.0.5
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
-BuildRequires:  %{?scl_prefix}php-devel >= 5.3.10
+BuildRequires:  %{?scl_prefix}php-devel >= 5.5
 BuildRequires:  %{?scl_prefix}php-pear
 BuildRequires:  %{?scl_prefix}php-sockets
 BuildRequires:  %{?scl_prefix}php-mysqli
@@ -163,13 +163,8 @@ peclbuild() {
 %configure \
     --with-swoole \
     --enable-openssl \
-    --with-openssl \
     --enable-sockets \
-%if "%{php_version}" > "5.5"
     --enable-coroutine \
-%else
-    --disable-coroutine \
-%endif
 %if %{with_nghttpd2}
     --enable-http2 \
 %endif
@@ -270,6 +265,10 @@ cd ../ZTS
 
 
 %changelog
+* Fri Dec 30 2016 Remi Collet <remi@fedoraproject.org> - 2.0.5-1
+- Update to 2.0.5 (beta)
+- raise dependency on PHP 5.5
+
 * Fri Dec 30 2016 Remi Collet <remi@fedoraproject.org> - 2.0.4-1
 - Update to 2.0.4 (beta)
 - open https://github.com/swoole/swoole-src/issues/987 - Options

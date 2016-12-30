@@ -2,7 +2,7 @@
 
 vendor="Remi Collet <remi@fedoraproject.org>"
 rpmdate=$(LC_ALL="C" date +"%a %b %d %Y")
-name=$(basename $PWD)
+name=$(basename $PWD)$1
 
 if [ $# -lt 2 ]; then
     echo "usage $0 old new"
