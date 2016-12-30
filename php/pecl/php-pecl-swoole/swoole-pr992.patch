@@ -1,0 +1,23 @@
+From dc26ffb786701033cb2fe7eae01ccb09a5f829b1 Mon Sep 17 00:00:00 2001
+From: Remi Collet <fedora@famillecollet.com>
+Date: Fri, 30 Dec 2016 19:32:47 +0100
+Subject: [PATCH] another fix for ZTS
+
+---
+ swoole_redis_coro.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/swoole_redis_coro.c b/swoole_redis_coro.c
+index a0a650e..28b907c 100755
+--- a/swoole_redis_coro.c
++++ b/swoole_redis_coro.c
+@@ -3732,6 +3732,9 @@ void swoole_redis_coro_onClose(const redisAsyncContext *c, int status)
+ 
+ static int swoole_redis_onError(swReactor *reactor, swEvent *event)
+ {
++#if PHP_MAJOR_VERSION < 7
++    TSRMLS_FETCH_FROM_CTX(sw_thread_ctx ? sw_thread_ctx : NULL);
++#endif
+     swRedisClient *redis = event->socket->object;
+     redisAsyncContext *c = redis->context;
+ 	zend_update_property_long(swoole_redis_coro_class_entry_ptr, redis->object, ZEND_STRL("errCode"), c->err TSRMLS_CC);
