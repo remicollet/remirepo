@@ -1,0 +1,31 @@
+From c990361e61467c4f4a7ff4f08d3cd6d7c6cd784d Mon Sep 17 00:00:00 2001
+From: Shawn Iwinski <siwinski@redhat.com>
+Date: Fri, 30 Dec 2016 14:19:53 -0500
+Subject: [PATCH] Fix tests after #246 was merged (header case normalization)
+
+---
+ Goutte/Tests/ClientTest.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Goutte/Tests/ClientTest.php b/Goutte/Tests/ClientTest.php
+index b5b8583..4a633e4 100644
+--- a/Goutte/Tests/ClientTest.php
++++ b/Goutte/Tests/ClientTest.php
+@@ -380,7 +380,7 @@ public function testResetHeaders()
+ 
+         $reflectionProperty = new \ReflectionProperty('Goutte\Client', 'headers');
+         $reflectionProperty->setAccessible(true);
+-        $this->assertEquals(array('X-Test' => 'test'), $reflectionProperty->getValue($client));
++        $this->assertEquals(array('x-test' => 'test'), $reflectionProperty->getValue($client));
+ 
+         $client->resetHeaders();
+         $this->assertEquals([], $reflectionProperty->getValue($client));
+@@ -394,7 +394,7 @@ public function testRestart()
+ 
+         $headersReflectionProperty = new \ReflectionProperty('Goutte\Client', 'headers');
+         $headersReflectionProperty->setAccessible(true);
+-        $this->assertEquals(array('X-Test' => 'test'), $headersReflectionProperty->getValue($client));
++        $this->assertEquals(array('x-test' => 'test'), $headersReflectionProperty->getValue($client));
+ 
+         $authReflectionProperty = new \ReflectionProperty('Goutte\Client', 'auth');
+         $authReflectionProperty->setAccessible(true);

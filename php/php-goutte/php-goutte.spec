@@ -12,8 +12,8 @@
 
 %global github_owner    FriendsOfPHP
 %global github_name     Goutte
-%global github_version  3.1.2
-%global github_commit   3cbc6ed222422a28400e470050f14928a153207e
+%global github_version  3.2.0
+%global github_commit   8cc89de5e71daf84051859616891d3320d88a9e8
 
 %global composer_vendor  fabpot
 %global composer_project goutte
@@ -45,6 +45,10 @@ License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
 
+# Fix tests after #246 was merged (header case normalization)
+# https://patch-diff.githubusercontent.com/raw/FriendsOfPHP/Goutte/pull/290.patch
+Patch0:        %{name}-pull-request-290.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
@@ -57,10 +61,10 @@ BuildRequires: php-composer(guzzlehttp/guzzle)    >= %{guzzle_min_ver}
 BuildRequires: php-composer(symfony/browser-kit)  >= %{symfony_min_ver}
 BuildRequires: php-composer(symfony/css-selector) >= %{symfony_min_ver}
 BuildRequires: php-composer(symfony/dom-crawler)  >= %{symfony_min_ver}
-## phpcompatinfo (computed from version 3.1.2)
-# <none>
+## phpcompatinfo (computed from version 3.2.0)
+BuildRequires: php-reflection
 ## Autoloader
-BuildRequires: php-composer(symfony/class-loader)
+BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 # composer.json
@@ -73,8 +77,10 @@ Requires:      php-composer(symfony/css-selector) <  %{symfony_max_ver}
 Requires:      php-composer(symfony/css-selector) >= %{symfony_min_ver}
 Requires:      php-composer(symfony/dom-crawler)  <  %{symfony_max_ver}
 Requires:      php-composer(symfony/dom-crawler)  >= %{symfony_min_ver}
-# phpcompatinfo (computed from version 3.1.2)
+# phpcompatinfo (computed from version 3.2.0)
 # <none>
+# Autoloader
+Requires:      php-composer(fedora/autoloader)
 
 # Standard "php-{COMPOSER_VENDOR}-{COMPOSER_PROJECT}" naming
 Provides:      php-%{composer_vendor}-%{composer_project} = %{version}-%{release}
@@ -93,38 +99,29 @@ Autoloader: %{phpdir}/Goutte/autoload.php
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+: Fix tests after #246 was merged (header case normalization)
+%patch0 -p1
+
+
+%build
 : Create autoloader
 cat <<'AUTOLOAD' | tee Goutte/autoload.php
 <?php
 /**
  * Autoloader for %{name} and its' dependencies
  * (created by %{name}-%{version}-%{release}).
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
  */
+require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+\Fedora\Autoloader\Autoload::addPsr4('Goutte\\', __DIR__);
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('Goutte\\', dirname(__DIR__));
-
-require_once '%{phpdir}/GuzzleHttp6/autoload.php';
-require_once '%{phpdir}/Symfony/Component/BrowserKit/autoload.php';
-require_once '%{phpdir}/Symfony/Component/CssSelector/autoload.php';
-require_once '%{phpdir}/Symfony/Component/DomCrawler/autoload.php';
-
-return $fedoraClassLoader;
+\Fedora\Autoloader\Dependencies::required([
+    '%{phpdir}/GuzzleHttp6/autoload.php',
+    '%{phpdir}/Symfony/Component/BrowserKit/autoload.php',
+    '%{phpdir}/Symfony/Component/CssSelector/autoload.php',
+    '%{phpdir}/Symfony/Component/DomCrawler/autoload.php',
+]);
 AUTOLOAD
-
-
-%build
-# Empty build section, nothing required
 
 
 %install
@@ -136,24 +133,18 @@ cp -p Goutte/{autoload,Client}.php %{buildroot}/%{phpdir}/Goutte/
 
 %check
 %if %{with_tests}
+BOOTSTRAP=%{buildroot}/%{phpdir}/Goutte/autoload.php
 
-ret=0
-run=0
-if which php56; then
-  php56 %{_bindir}/phpunit --verbose \
-    --bootstrap %{buildroot}/%{phpdir}/Goutte/autoload.php || ret=1
-  run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit --verbose \
-    --bootstrap %{buildroot}/%{phpdir}/Goutte/autoload.php || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
-%{_bindir}/phpunit --verbose \
-    --bootstrap %{buildroot}/%{phpdir}/Goutte/autoload.php
-fi
-exit $ret
+%{_bindir}/phpunit --verbose --bootstrap $BOOTSTRAP
+
+: Upstream tests with SCLs if available
+SCL_RETURN_CODE=0
+for SCL in php56 php70 php71; do
+    if which $SCL; then
+        $SCL %{_bindir}/phpunit --verbose --bootstrap $BOOTSTRAP || SCL_RETURN_CODE=1
+    fi
+done
+exit $SCL_RETURN_CODE
 %else
 : Tests skipped
 %endif
@@ -173,6 +164,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec 30 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.2.0-1
+- Updated to 3.2.0 (RHBZ #1395456)
+- Use php-composer(fedora/autoloader)
+- Run upstream tests with SCLs if they are available
+
 * Sat Jul 09 2016 Shawn Iwinski <shawn@iwin.ski> - 3.1.2-1
 - Update to 3.1.2 (RHBZ #1100719, 1289798)
 
