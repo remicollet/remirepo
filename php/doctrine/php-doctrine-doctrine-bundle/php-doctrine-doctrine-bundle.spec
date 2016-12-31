@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-doctrine-doctrine-bundle
 #
-# Copyright (c) 2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2015-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,8 +12,8 @@
 
 %global github_owner     doctrine
 %global github_name      DoctrineBundle
-%global github_version   1.5.2
-%global github_commit    d63be7eb9a95d46720f7d6badac4e5bc2bcff2e3
+%global github_version   1.6.4
+%global github_commit    dd40b0a7fb16658cda9def9786992b8df8a49be7
 
 %global composer_vendor  doctrine
 %global composer_project doctrine-bundle
@@ -33,11 +33,13 @@
 %global sql_formatter_min_ver 1.1
 %global sql_formatter_max_ver 2.0
 # "symfony/console": "~2.3|~3.0"
+# "symfony/dependency-injection": "~2.3|~3.0"
 # "symfony/doctrine-bridge": "~2.2|~3.0"
 # "symfony/framework-bundle": "~2.3|~3.0"
+# "symfony/property-info": "~2.8|~3.0"
 # "symfony/validator": "~2.2|~3.0"
 # "symfony/yaml": "~2.2|~3.0"
-%global symfony_min_ver 2.3
+%global symfony_min_ver 2.8
 %global symfony_max_ver 4.0
 # "twig/twig": "~1.10"
 %global twig_min_ver 1.10
@@ -63,25 +65,27 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # Tests
 %if %{with_tests}
 ## composer.json
-BuildRequires: %{_bindir}/phpunit
 BuildRequires: php(language)                                >= %{php_min_ver}
 BuildRequires: php-composer(doctrine/dbal)                  >= %{dbal_min_ver}
 BuildRequires: php-composer(doctrine/doctrine-cache-bundle) >= %{cache_bundle_min_ver}
 BuildRequires: php-composer(doctrine/orm)                   >= %{orm_min_ver}
 BuildRequires: php-composer(jdorn/sql-formatter)            >= %{sql_formatter_min_ver}
+BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(symfony/console)                >= %{symfony_min_ver}
+BuildRequires: php-composer(symfony/dependency-injection)   >= %{symfony_min_ver}
 BuildRequires: php-composer(symfony/doctrine-bridge)        >= %{symfony_min_ver}
 BuildRequires: php-composer(symfony/framework-bundle)       >= %{symfony_min_ver}
+BuildRequires: php-composer(symfony/property-info)          >= %{symfony_min_ver}
 BuildRequires: php-composer(symfony/validator)              >= %{symfony_min_ver}
 BuildRequires: php-composer(symfony/yaml)                   >= %{symfony_min_ver}
 BuildRequires: php-composer(twig/twig)                      >= %{twig_min_ver}
-## phpcompatinfo (computed from version 1.5.2)
+## phpcompatinfo (computed from version 1.6.4)
 BuildRequires: php-dom
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
 ## Autoloader
-BuildRequires: php-composer(symfony/class-loader)
+BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 # composer.json
@@ -94,21 +98,28 @@ Requires:      php-composer(jdorn/sql-formatter)            >= %{sql_formatter_m
 Requires:      php-composer(jdorn/sql-formatter)            <  %{sql_formatter_max_ver}
 Requires:      php-composer(symfony/console)                >= %{symfony_min_ver}
 Requires:      php-composer(symfony/console)                <  %{symfony_max_ver}
+Requires:      php-composer(symfony/dependency-injection)   >= %{symfony_min_ver}
+Requires:      php-composer(symfony/dependency-injection)   <  %{symfony_max_ver}
 Requires:      php-composer(symfony/doctrine-bridge)        >= %{symfony_min_ver}
 Requires:      php-composer(symfony/doctrine-bridge)        <  %{symfony_max_ver}
 Requires:      php-composer(symfony/framework-bundle)       >= %{symfony_min_ver}
 Requires:      php-composer(symfony/framework-bundle)       <  %{symfony_max_ver}
-# phpcompatinfo (computed from version 1.5.2)
+# phpcompatinfo (computed from version 1.6.4)
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
 # Autoloader
-Requires:      php-composer(symfony/class-loader)
+Requires:      php-composer(fedora/autoloader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 
-# Optional dependency version conflicts
+# Weak dependencies
+%if 0%{?fedora} >= 21
+Suggests:      php-composer(doctrine/orm)
+Suggests:      php-composer(symfony/web-profiler-bundle)
+Suggests:      php-composer(twig/twig)
+%endif
 Conflicts:     php-composer(doctrine/orm)                <  %{orm_min_ver}
 Conflicts:     php-composer(doctrine/orm)                >= %{orm_max_ver}
 Conflicts:     php-composer(symfony/web-profiler-bundle) <  %{symfony_min_ver}
@@ -119,63 +130,71 @@ Conflicts:     php-composer(twig/twig)                   >= %{twig_max_ver}
 %description
 Doctrine DBAL & ORM Bundle for the Symfony Framework.
 
-Optional:
-* Doctrine ORM (%{orm_min_ver} <= php-doctrine-orm < %{orm_max_ver})
-* Symfony Web Profile Bundle (%{symfony_min_ver} <= php-symfony-web-profiler-bundle < %{symfony_max_ver})
-* Twig (%{twig_min_ver} <= php-twig < %{twig_max_ver})
+Autoloader: %{phpdir}/Doctrine/Bundle/DoctrineBundle/autoload.php
 
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
 
+: Licenses and docs
+mkdir -p .rpm/{docs,licenses}
+mv *.md composer.* .rpm/docs
+mkdir -p .rpm/docs/Resources
+mv Resources/doc .rpm/docs/Resources/
+mv LICENSE .rpm/licenses
+
+
+%build
 : Create autoloader
 cat <<'AUTOLOAD' | tee autoload.php
 <?php
 /**
  * Autoloader for %{name} and its' dependencies
- *
- * Created by %{name}-%{version}-%{release}
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
+ * (created by %{name}-%{version}-%{release}).
  */
+require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+\Fedora\Autoloader\Autoload::addPsr4('Doctrine\\Bundle\\DoctrineBundle\\', __DIR__);
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
+\Fedora\Autoloader\Dependencies::required(array(
+    '%{phpdir}/Doctrine/Bundle/DoctrineCacheBundle/autoload.php',
+    '%{phpdir}/Doctrine/DBAL/autoload.php',
+    '%{phpdir}/jdorn-sql-formatter/autoload.php',
+    '%{phpdir}/Symfony/Bridge/Doctrine/autoload.php',
+    '%{phpdir}/Symfony/Bundle/FrameworkBundle/autoload.php',
+    '%{phpdir}/Symfony/Component/Console/autoload.php',
+    '%{phpdir}/Symfony/Component/DependencyInjection/autoload.php',
+));
 
-$fedoraClassLoader->addPrefix('Doctrine\\Bundle\\DoctrineBundle\\', dirname(dirname(dirname(__DIR__))));
-
-require_once '%{phpdir}/Doctrine/Bundle/DoctrineCacheBundle/autoload.php';
-require_once '%{phpdir}/jdorn-sql-formatter/autoload.php';
-
-// Not all dependency autoloaders exist or are in every dist yet so fallback
-// to using include path for dependencies for now
-$fedoraClassLoader->setUseIncludePath(true);
-
-return $fedoraClassLoader;
+\Fedora\Autoloader\Dependencies::optional(array(
+    '%{phpdir}/Doctrine/ORM/autoload.php',
+    '%{phpdir}/Symfony/Bundle/WebProfilerBundle/autoload.php',
+    '%{phpdir}/Twig/autoload.php',
+));
 AUTOLOAD
-
-
-%build
-# Empty build section, nothing required
 
 
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{phpdir}/Doctrine/Bundle/DoctrineBundle
-cp -pr Command Controller DataCollector DependencyInjection Mapping Resources Tests Twig *.php \
-    %{buildroot}%{phpdir}/Doctrine/Bundle/DoctrineBundle/
+cp -pr * %{buildroot}%{phpdir}/Doctrine/Bundle/DoctrineBundle/
 
 
 %check
 %if %{with_tests}
-%{_bindir}/phpunit --verbose \
-    --bootstrap %{buildroot}%{phpdir}/Doctrine/Bundle/DoctrineBundle/autoload.php
+BOOTSTRAP=%{buildroot}%{phpdir}/Doctrine/Bundle/DoctrineBundle/autoload.php
+
+: Upstream tests
+%{_bindir}/phpunit --verbose --bootstrap $BOOTSTRAP
+
+: Upstream tests with SCLs if available
+SCL_RETURN_CODE=0
+for SCL in php56 php70 php71; do
+    if which $SCL; then
+        $SCL %{_bindir}/phpunit --verbose --bootstrap $BOOTSTRAP || SCL_RETURN_CODE=1
+    fi
+done
+exit $SCL_RETURN_CODE
 %else
 : Tests skipped
 %endif
@@ -188,14 +207,20 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %{!?_licensedir:%global license %%doc}
-%license LICENSE
-%doc *.md
-%doc composer.json
+%license .rpm/licenses/*
+%doc .rpm/docs/*
 %{phpdir}/Doctrine/Bundle/DoctrineBundle
+%exclude %{phpdir}/Doctrine/Bundle/DoctrineBundle/phpunit.*
 %exclude %{phpdir}/Doctrine/Bundle/DoctrineBundle/Tests
 
 
 %changelog
+* Fri Dec 30 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.6.4-1
+- Updated to 1.6.4 (RHBZ #1279827)
+- Use php-composer(fedora/autoloader)
+- Run upstream tests with SCLs if they are available
+- Set Resources/doc as %%doc
+
 * Sat Sep 05 2015 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.5.2-1
 - Updated to 1.5.2 (RHBZ #1253092 / CVE-2015-5723)
 - Updated autoloader to load dependencies after self registration
