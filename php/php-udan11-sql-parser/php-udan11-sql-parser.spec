@@ -1,12 +1,12 @@
 # remirepo/fedora spec file for php-udan11-sql-parser
 #
-# Copyright (c) 2015-2016 Remi Collet
+# Copyright (c) 2015-2017 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    7078697d6dde394cdfec16e0e7e8c4194f50149a
+%global gh_commit    c5d382ed39dafa01ed2e3f861a95ad69fb609267
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpmyadmin
 #global gh_date      20150820
@@ -15,7 +15,7 @@
 %global psr0         SqlParser
 
 Name:           php-udan11-%{gh_project}
-Version:        3.4.14
+Version:        3.4.15
 Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A validating SQL lexer and parser with a focus on MySQL dialect
 
@@ -139,6 +139,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan  2 2017 Remi Collet <remi@fedoraproject.org> - 3.4.15-1
+- update to 3.4.15
+
 * Wed Nov 30 2016 Remi Collet <remi@fedoraproject.org> - 3.4.14-1
 - update to 3.4.14
 
