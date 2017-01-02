@@ -1,6 +1,6 @@
 # remirepo spec file for remi-release (RHEL, CentOS)
 #
-# Copyright (c) 2006-2016 Remi Collet
+# Copyright (c) 2006-2017 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #

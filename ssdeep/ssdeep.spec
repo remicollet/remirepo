@@ -1,6 +1,6 @@
 # spec file for ssdeep
 #
-# Copyright (c) 2014-2015 Remi Collet
+# Copyright (c) 2014-2017 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #

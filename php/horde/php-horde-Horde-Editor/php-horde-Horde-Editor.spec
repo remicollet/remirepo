@@ -1,6 +1,6 @@
 # remirepo/fedora spec file for php-horde-Horde-Editor
 #
-# Copyright (c) 2013-2016 Remi Collet
+# Copyright (c) 2013-2017 Remi Collet
 #
 # License: MIT
 # https://fedoraproject.org/wiki/Licensing:MIT#Modern_Style_with_sublicense

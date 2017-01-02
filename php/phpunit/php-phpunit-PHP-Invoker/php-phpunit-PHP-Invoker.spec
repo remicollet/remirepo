@@ -1,6 +1,6 @@
 # remirepo/fedora spec file for php-phpunit-PHP-Invoker
 #
-# Copyright (c) 2011-2016 Remi Collet
+# Copyright (c) 2011-2017 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #

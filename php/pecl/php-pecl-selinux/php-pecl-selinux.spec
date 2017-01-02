@@ -1,7 +1,7 @@
 # remirepo spec file for php-pecl-selinux
 # adapted for SCL
 #
-# Copyright (c) 2011-2016 Remi Collet
+# Copyright (c) 2011-2017 Remi Collet
 #
 # Fedora spec file for php-pecl-selinux
 #

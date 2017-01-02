@@ -3,7 +3,7 @@
 #
 # Fedora spec file for php-pecl-mongo
 #
-# Copyright (c) 2014-2016 Remi Collet
+# Copyright (c) 2014-2017 Remi Collet
 # Copyright (c) 2010-2013 Christof Damian
 #
 # License: MIT

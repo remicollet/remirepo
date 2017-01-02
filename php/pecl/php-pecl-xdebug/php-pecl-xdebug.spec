@@ -3,7 +3,7 @@
 #
 # Fedora spec file for php-pecl-xdebug
 #
-# Copyright (c) 2010-2016 Remi Collet
+# Copyright (c) 2010-2017 Remi Collet
 # Copyright (c) 2006-2009 Christopher Stone
 #
 # License: MIT

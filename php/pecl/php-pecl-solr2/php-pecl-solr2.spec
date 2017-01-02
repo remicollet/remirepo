@@ -3,7 +3,7 @@
 #
 # Fedora spec file for php-pecl-solr2
 #
-# Copyright (c) 2011-2016 Remi Collet
+# Copyright (c) 2011-2017 Remi Collet
 # Copyright (c) 2010 Johan Cwiklinski
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/

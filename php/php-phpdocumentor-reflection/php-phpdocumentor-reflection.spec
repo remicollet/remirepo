@@ -1,6 +1,6 @@
 # spec file for php-phpdocumentor-reflection
 #
-# Copyright (c) 2016 Remi Collet
+# Copyright (c) 2016-2017 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #

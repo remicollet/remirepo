@@ -1,6 +1,6 @@
 # spec file for php-pecl-apc
 #
-# Copyright (c) 2009-2016 Remi Collet
+# Copyright (c) 2009-2017 Remi Collet
 # Copyright (c) 2008      Tim Jackson
 # Copyright (c) 2006-2007 Chris Chabot
 # License: MIT

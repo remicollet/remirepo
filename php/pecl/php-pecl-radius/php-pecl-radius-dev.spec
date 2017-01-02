@@ -3,7 +3,7 @@
 #
 # Fedora spec file for php-pecl-radius
 #
-# Copyright (c) 2009-2016 Remi Collet
+# Copyright (c) 2009-2017 Remi Collet
 # Copyright (c) 2006-2009 Christopher Stone
 #
 # License: MIT

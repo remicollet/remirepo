@@ -1,6 +1,6 @@
 # remirepo spec file for phpMyAdmin
 #
-# Copyright (c) 2008-2016 Remi Collet
+# Copyright (c) 2008-2017 Remi Collet
 #
 # Fedora spec file for phpMyAdmin
 #

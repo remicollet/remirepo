@@ -3,7 +3,7 @@
 #
 # Fedora spec file for php-pecl-mailparse
 #
-# Copyright (c) 2008-2016 Remi Collet
+# Copyright (c) 2008-2017 Remi Collet
 # Copyright (c) 2004-2007 Matthias Saou
 #
 # License: MIT

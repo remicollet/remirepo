@@ -1,6 +1,6 @@
 # spec file for php-pecl-haru
 #
-# Copyright (c) 2012-2016 Remi Collet
+# Copyright (c) 2012-2017 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #

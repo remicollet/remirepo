@@ -1,6 +1,6 @@
 # remirepo/Fedora spec file for php-tcpdf
 #
-# Copyright (c) 2013-2016 Remi Collet, Johan Cwiklinski
+# Copyright (c) 2013-2017 Remi Collet, Johan Cwiklinski
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #

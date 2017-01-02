@@ -1,6 +1,6 @@
 # spec file for php-andrewsville-php-token-reflection
 #
-# Copyright (c) 2015-2016 Remi Collet
+# Copyright (c) 2015-2017 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #

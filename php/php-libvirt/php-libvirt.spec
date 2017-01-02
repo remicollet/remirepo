@@ -3,7 +3,7 @@
 #
 # Fedora spec file for php-libvirt
 #
-# Copyright (c) 2012-2016 Remi Collet
+# Copyright (c) 2012-2017 Remi Collet
 # Copyright (c) 2011 Michal Novotny
 #
 # License: MIT

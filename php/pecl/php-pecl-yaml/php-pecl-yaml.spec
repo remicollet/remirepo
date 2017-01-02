@@ -1,6 +1,6 @@
 # remirepo spec file for php-pecl-yaml
 #
-# Copyright (c) 2012-2016 Remi Collet
+# Copyright (c) 2012-2017 Remi Collet
 
 # Fedora spec file for php-pecl-yaml
 #

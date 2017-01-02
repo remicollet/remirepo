@@ -1,6 +1,6 @@
 # spec file for php-magickwand
 #
-# Copyright (c) 2010-2016 Remi Collet
+# Copyright (c) 2010-2017 Remi Collet
 # Copyright (c) 2006-2010 Robert Scheck
 #
 # License: MIT

@@ -1,6 +1,6 @@
 # remirepo spec file for php-suhosin (from old fedora spec)
 #
-# Copyright (c) 2008-2016 Remi Collet
+# Copyright (c) 2008-2017 Remi Collet
 # Copyright (c) 2007-2009 Bart Vanbrabant
 #
 # License: MIT
