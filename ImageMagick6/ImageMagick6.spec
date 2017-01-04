@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        6.9.7
-%global Patchlevel 1
+%global Patchlevel 2
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 %global with_tests 0%{!?_without_tests:1}
@@ -341,6 +341,9 @@ make install DESTDIR=%{buildroot} INSTALL="install -p"
 # Delete *ONLY* _libdir/*.la files! .la files used internally to handle plugins - BUG#185237!!!
 rm %{buildroot}%{_libdir}/*.la
 
+# fix weird perl module permissions
+chmod 755 %{buildroot}%{perl_vendorarch}/auto/Image/Magick/Q16/Q16.so
+
 # perlmagick: fix perl path of demo files
 %{__perl} -MExtUtils::MakeMaker -e 'MY->fixin(@ARGV)' PerlMagick/demo/*.pl
 
@@ -518,8 +521,12 @@ fi
 
 
 %changelog
+* Wed Jan  4 2017 Remi Collet <remi@remirepo.net> - 6.9.7.1-1
+- update to version 6.9.7 patchlevel 2
+
 * Mon Jan  2 2017 Remi Collet <remi@remirepo.net> - 6.9.7.1-1
-- update to version 6.9.7 patchlevel 1
+- update to version 6.9.7 patchlevel 1 (broken)
+- open https://github.com/ImageMagick/ImageMagick/issues/340
 
 * Mon Dec 19 2016 Remi Collet <remi@remirepo.net> - 6.9.7.0-1
 - update to version 6.9.7
