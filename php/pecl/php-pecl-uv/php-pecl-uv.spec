@@ -19,7 +19,7 @@
 Summary:        Libuv wrapper
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
 Version:        0.1.1
-Release:        2%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -98,6 +98,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure \
@@ -118,6 +120,8 @@ make %{?_smp_mflags}
 
 
 %install
+%{?dtsenable}
+
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
@@ -217,6 +221,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Wed Jan  4 2017 Remi Collet <remi@fedoraproject.org> - 0.1.1-3
+- rebuild against new libuv (EL-7)
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 0.1.1-2
 - rebuild with PHP 7.1.0 GA
 
