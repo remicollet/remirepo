@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    980d7c5f20f4792d0be49285c7b2ffde8c8d9fe5
+%global gh_commit    f23f8885624b249d5ec7bb525b9d6b007ab00293
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.4.1
+Version:        2.4.2
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette RobotLoader: comfortable autoloading
@@ -157,6 +157,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan  4 2017 Remi Collet <remi@fedoraproject.org> - 2.4.2-1
+- update to 2.4.2
+
 * Fri Oct 28 2016 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
 - update to 2.4.1
 
