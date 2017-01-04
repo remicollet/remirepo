@@ -32,7 +32,7 @@
 Summary:      DataStax PHP Driver for Apache Cassandra
 Name:         %{?sub_prefix}php-pecl-%{pecl_name}
 Version:      1.2.2
-Release:      3%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:      4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:      ASL 2.0
 Group:        Development/Languages
 URL:          http://pecl.php.net/package/%{pecl_name}
@@ -141,6 +141,8 @@ cp -pr NTS ZTS
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure  \
@@ -159,6 +161,8 @@ make %{?_smp_mflags}
 
 
 %install
+%{?dtsenable}
+
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # Drop in the bit of configuration
@@ -247,6 +251,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Wed Jan  4 2017 Remi Collet <remi@fedoraproject.org> - 1.2.2-4
+- rebuild against new libuv (EL-7)
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-3
 - rebuild with PHP 7.1.0 GA
 
