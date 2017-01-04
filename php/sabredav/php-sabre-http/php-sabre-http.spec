@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    2e93bc8321524c67be4ca5b8415daebd4c8bf85e
+%global gh_commit    dd50e7260356f4599d40270826f9548b23efa204
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-http
@@ -15,8 +15,8 @@
 
 Name:           php-%{gh_project}
 Summary:        Library for dealing with http requests and responses
-Version:        4.2.1
-Release:        2%{?dist}
+Version:        4.2.2
+Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 License:        BSD
@@ -29,10 +29,10 @@ BuildArch:      noarch
 %if %{with_tests}
 BuildRequires:  php(language) > 5.4
 BuildRequires:  php-mbstring
+BuildRequires:  php-ctype
 BuildRequires:  php-composer(phpunit/phpunit)
 BuildRequires:  php-composer(sabre/event) >= 1.0.0
 BuildRequires:  php-composer(sabre/uri)   >= 1.0
-BuildRequires:  php-ctype
 BuildRequires:  php-curl
 BuildRequires:  php-date
 BuildRequires:  php-hash
@@ -47,10 +47,12 @@ BuildRequires:  php-composer(sabre/event) >= 2.0.2
 # From composer.json, "require" : {
 #        "php"          : ">=5.4",
 #        "ext-mbstring" : "*",
+#        "ext-ctype"    : "*",
 #        "sabre/event"  : ">=1.0.0,<4.0.0",
 #        "sabre/uri"    : "~1.0"
 Requires:       php(language) > 5.4
 Requires:       php-mbstring
+Requires:       php-ctype
 Requires:       php-composer(sabre/event) >= 1.0.0
 Requires:       php-composer(sabre/event) <  4
 Requires:       php-composer(sabre/uri)   >= 1.0
@@ -59,7 +61,6 @@ Requires:       php-composer(sabre/uri)   <  2
 #        "ext-curl" : " to make http requests with the Client class"
 Requires:       php-curl
 # From phpcompatinfo report for version 3.0.5
-Requires:       php-ctype
 Requires:       php-date
 Requires:       php-hash
 Requires:       php-pcre
@@ -160,6 +161,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan  4 2017 Remi Collet <remi@fedoraproject.org> - 4.2.2-1
+- update to 4.2.2
+
 * Sat Oct 29 2016 Remi Collet <remi@fedoraproject.org> - 4.2.1-2
 - switch from symfony/class-loader to fedora/autoloader
 
