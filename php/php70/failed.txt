@@ -1,4 +1,4 @@
-===== 7.0.14 (2016-12-08)
+===== 7.0.15RC1 (2017-01-05)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
@@ -7,19 +7,17 @@ $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 /var/lib/mock/el7x/build.log:Tests failed    :     0
 /var/lib/mock/fc22i/build.log:Tests failed    :    0
 /var/lib/mock/fc22x/build.log:Tests failed    :    0
-/var/lib/mock/fc23i/build.log:Tests failed    :    1
+/var/lib/mock/fc23i/build.log:Tests failed    :    0
 /var/lib/mock/fc23x/build.log:Tests failed    :    0
 /var/lib/mock/fc24i/build.log:Tests failed    :    0
 /var/lib/mock/fc24x/build.log:Tests failed    :    0
-/var/lib/mock/fc25i/build.log:Tests failed    :    0
+/var/lib/mock/fc25i/build.log:Tests failed    :    1
 /var/lib/mock/fc25x/build.log:Tests failed    :    0
 
 
-fc23i
-	*	Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
+fc25i
+	*	Bug #64438 proc_open hangs with stdin/out with 4097+ bytes [ext/standard/tests/streams/proc_open_bug64438.phpt]
 
 
 *	proc_open give erratic test results :(
 **	test fixed upstream
-***	Related to tzdata 2016g (f24+) vs 2016f
-

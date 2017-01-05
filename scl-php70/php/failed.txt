@@ -1,4 +1,4 @@
-===== 7.0.14 (2016-12-08)
+===== 7.0.15RC1 (2017-01-05)
 
 $ grep -r 'Tests failed' /var/lib/mock/scl70*/build.log
 
@@ -13,5 +13,3 @@ $ grep -r 'Tests failed' /var/lib/mock/scl70*/build.log
 
 *	proc_open give erratic test results :(
 **	fixed upstream
-***	Related to tzdata 2016g (f24+) vs 2016f
-
