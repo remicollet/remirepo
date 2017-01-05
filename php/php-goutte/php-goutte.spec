@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-goutte
 #
-# Copyright (c) 2014-2016 Shawn Iwinski <shawn@iwin.ski>
+# Copyright (c) 2014-2017 Shawn Iwinski <shawn@iwin.ski>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,8 +12,8 @@
 
 %global github_owner    FriendsOfPHP
 %global github_name     Goutte
-%global github_version  3.2.0
-%global github_commit   8cc89de5e71daf84051859616891d3320d88a9e8
+%global github_version  3.2.1
+%global github_commit   db5c28f4a010b4161d507d5304e28a7ebf211638
 
 %global composer_vendor  fabpot
 %global composer_project goutte
@@ -44,10 +44,6 @@ Group:         Development/Libraries
 License:       MIT
 URL:           https://github.com/%{github_owner}/%{github_name}
 Source0:       %{url}/archive/%{github_commit}/%{name}-%{github_version}-%{github_commit}.tar.gz
-
-# Fix tests after #246 was merged (header case normalization)
-# https://patch-diff.githubusercontent.com/raw/FriendsOfPHP/Goutte/pull/290.patch
-Patch0:        %{name}-pull-request-290.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
@@ -98,9 +94,6 @@ Autoloader: %{phpdir}/Goutte/autoload.php
 
 %prep
 %setup -qn %{github_name}-%{github_commit}
-
-: Fix tests after #246 was merged (header case normalization)
-%patch0 -p1
 
 
 %build
@@ -164,6 +157,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan  5 2017 Remi Collet <remi@remirepo.net> - 3.2.1-1
+- update to 3.2.1
+
 * Fri Dec 30 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 3.2.0-1
 - Updated to 3.2.0 (RHBZ #1395456)
 - Use php-composer(fedora/autoloader)
