@@ -11,7 +11,7 @@
 %scl_package        php-lz4
 %endif
 
-%global gh_commit   c22aa31ce7400dd9762c88db1f98ac6f5072618c
+%global gh_commit   08a5e24ea13a35e820dc222aa13230d313caa6ae
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    kjdev
 %global gh_project  php-ext-lz4
@@ -22,11 +22,11 @@
 
 Summary:       LZ4 Extension for PHP
 Name:          %{?sub_prefix}php-lz4
-Version:       0.3.0
+Version:       0.3.1
 %if 0%{?gh_date:1}
 Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 License:       MIT
 Group:         Development/Languages
@@ -86,7 +86,7 @@ cd NTS
 # Use the system library
 rm -r lz4
 # Only in LZ4 1.7.3
-sed -e 's/LZ4HC_MAX_CLEVEL/16/' -i lz4.c
+sed -e 's/LZ4HC_CLEVEL_MAX/12/' -i lz4.c
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define LZ4_EXT_VERSION/{s/.* "//;s/".*$//;p}' php_lz4.h)
@@ -146,7 +146,11 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 
 %check
 : Ignore test relying on some specific LZ4 version
+%if 0%{?fedora} < 24 && 0%{?rhel} < 7
 rm ?TS/tests/{001,003,008,011}.phpt
+%else
+rm ?TS/tests/011.phpt
+%endif
 
 cd NTS
 : Minimal load test for NTS extension
@@ -198,6 +202,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan  5 2017 Remi Collet <remi@fedoraproject.org> - 0.3.1-1
+- update to 0.3.1
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 0.3.0-2
 - rebuild with PHP 7.1.0 GA
 

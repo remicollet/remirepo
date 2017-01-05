@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #101 lz4 version 0.3.0 ] {
+Extension [ <persistent> extension #103 lz4 version 0.3.1 ] {
 
   - Functions {
     Function [ <internal:lz4> function lz4_compress ] {
