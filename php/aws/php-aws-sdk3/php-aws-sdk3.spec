@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-aws-sdk3
 #
-# Copyright (c) 2016 Shawn Iwinski <shawn@iwin.ski>
+# Copyright (c) 2016-2017 Shawn Iwinski <shawn@iwin.ski>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,8 +12,8 @@
 
 %global github_owner     aws
 %global github_name      aws-sdk-php
-%global github_version   3.20.12
-%global github_commit    8725e67cb77b057b55596b4468ce9a1a95c5fe96
+%global github_version   3.20.13
+%global github_commit    343c6c96468de5087ae5e7df4ccee2668857a5aa
 
 %global composer_vendor  aws
 %global composer_project aws-sdk-php
@@ -271,6 +271,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan  5 2017 Remi Collet <remi@remirepo.net> - 3.20.13-1
+- update to 3.20.13
+
 * Fri Dec 30 2016 Remi Collet <remi@remirepo.net> - 3.20.12-1
 - update to 3.20.12
 
