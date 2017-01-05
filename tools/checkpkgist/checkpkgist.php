@@ -103,7 +103,7 @@ function run($name, $rpm) {
 			if (strpos($pkver, 'dev') !== false) {
 				continue;
 			}
-			$date = new DateTime($pkg['time']);
+			$date = new DateTime($pkg['time']??'now');
 			if (version_compare($pkver, $maxver, 'gt')) {
 				$maxver = $pkver;
 				$maxdat = $date;
