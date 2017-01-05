@@ -1,24 +1,19 @@
-===== 7.1.0 (2016-12-01)
+===== 7.1.1RC1 (2017-01-05)
 
 $ grep -r 'Tests failed' /var/lib/mock/*/build.log
 
-/var/lib/mock/el6i/build.log:Tests failed    :     2
-/var/lib/mock/el6x/build.log:Tests failed    :     1
+/var/lib/mock/el6i/build.log:Tests failed    :     0
+/var/lib/mock/el6x/build.log:Tests failed    :     0
 /var/lib/mock/el7x/build.log:Tests failed    :     0
 /var/lib/mock/fc23i/build.log:Tests failed    :    0
-/var/lib/mock/fc23x/build.log:Tests failed    :    0
-/var/lib/mock/fc24i/build.log:Tests failed    :    1
+/var/lib/mock/fc23x/build.log:Tests failed    :    1
+/var/lib/mock/fc24i/build.log:Tests failed    :    0
 /var/lib/mock/fc24x/build.log:Tests failed    :    0
 /var/lib/mock/fc25i/build.log:Tests failed    :    0
 /var/lib/mock/fc25x/build.log:Tests failed    :    0
 
-el6i
-	*	Capture SSL session meta array in stream context [ext/openssl/tests/session_meta_capture.phpt]
-	*	sni_server [ext/openssl/tests/sni_server.phpt]
-el6x
-	*	Bug #69521      Segfault in gc_collect_cycles() [ext/standard/tests/streams/bug69521.phpt]
-fc24i
-	*	Bug #60120 proc_open hangs with stdin/out with 2048+ bytes [ext/standard/tests/streams/proc_open_bug60120.phpt]
+fc23x
+	*	Bug #64438 proc_open hangs with stdin/out with 4097+ bytes [ext/standard/tests/streams/proc_open_bug64438.phpt]
 
 
 *	proc_open give erratic test results :(
