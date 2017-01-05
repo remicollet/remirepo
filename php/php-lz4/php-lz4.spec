@@ -26,12 +26,15 @@ Version:       0.3.1
 %if 0%{?gh_date:1}
 Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 License:       MIT
 Group:         Development/Languages
 URL:           https://github.com/%{gh_owner}/%{gh_project}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+
+# https://github.com/kjdev/php-ext-lz4/pull/18
+Patch0:        %{gh_project}-pr18.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
@@ -83,10 +86,9 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{gh_project}-%{gh_commit} NTS
 
 cd NTS
+%patch0 -p1 -b .pr18
 # Use the system library
 rm -r lz4
-# Only in LZ4 1.7.3
-sed -e 's/LZ4HC_CLEVEL_MAX/12/' -i lz4.c
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define LZ4_EXT_VERSION/{s/.* "//;s/".*$//;p}' php_lz4.h)
@@ -148,8 +150,6 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 : Ignore test relying on some specific LZ4 version
 %if 0%{?fedora} < 24 && 0%{?rhel} < 7
 rm ?TS/tests/{001,003,008,011}.phpt
-%else
-rm ?TS/tests/011.phpt
 %endif
 
 cd NTS
@@ -202,6 +202,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan  5 2017 Remi Collet <remi@fedoraproject.org> - 0.3.1-2
+- test build for https://github.com/kjdev/php-ext-lz4/pull/18
+
 * Thu Jan  5 2017 Remi Collet <remi@fedoraproject.org> - 0.3.1-1
 - update to 0.3.1
 
