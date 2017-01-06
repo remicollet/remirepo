@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    c410d367bb85f0a3cca44f112957d0ee28895d19
+%global gh_commit    ffbf29ceb92a9223b8383ea2b021b242591141d2
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-stratigility
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.3.1
+Version:        1.3.2
 Release:        1%{?dist}
 Summary:        Middleware for PHP
 
@@ -43,10 +43,10 @@ BuildRequires:  php-reflection
 BuildRequires:  php-spl
 # From composer, "require-dev": {
 #    "zendframework/zend-diactoros": "^1.0",
-#    "phpunit/phpunit": "^4.7 || ^5.5",
-#    "squizlabs/php_codesniffer": "^2.6.2"
+#    "phpunit/phpunit": "^5.6",
+#    "zendframework/zend-coding-standard": "~1.0.0"
 BuildRequires:  php-composer(%{gh_owner}/zend-diactoros)          >= 1.0
-BuildRequires:  php-composer(phpunit/phpunit)                     >= 4.7
+BuildRequires:  php-composer(phpunit/phpunit)                     >= 5.6
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)             >= 2.5
 # For dependencies autoloader
@@ -171,6 +171,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan  6 2017 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
+- update to 1.3.2
+
 * Fri Nov 11 2016 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
 - update to 1.3.1
 
