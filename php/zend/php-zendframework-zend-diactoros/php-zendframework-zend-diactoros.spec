@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-zendframework-zend-diactoros
 #
-# Copyright (c) 2015-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2015-2017 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,8 +12,8 @@
 
 %global github_owner     zendframework
 %global github_name      zend-diactoros
-%global github_version   1.3.7
-%global github_commit    969ff423d3f201da3ff718a5831bb999bb0669b0
+%global github_version   1.3.8
+%global github_commit    d9c1fd7c4b024179d49faf367da544b4eef7cfe8
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  zendframework
@@ -32,7 +32,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       PSR HTTP Message implementations
 
 Group:         Development/Libraries
@@ -175,6 +175,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan  6 2017 Remi Collet <remi@remirepo.net> - 1.3.8-1
+- update to 1.3.8
+
 * Sat Dec 03 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.3.7-1
 - Updated to 1.3.7 (RHBZ #1318837)
 - Switch autoloader from php-composer(symfony/class-loader) to
