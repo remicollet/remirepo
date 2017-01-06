@@ -11,7 +11,7 @@
 %scl_package        php-lz4
 %endif
 
-%global gh_commit   08a5e24ea13a35e820dc222aa13230d313caa6ae
+%global gh_commit   1cf284648c3e40317ea77a06a5636722bbf2be35
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    kjdev
 %global gh_project  php-ext-lz4
@@ -22,19 +22,16 @@
 
 Summary:       LZ4 Extension for PHP
 Name:          %{?sub_prefix}php-lz4
-Version:       0.3.1
+Version:       0.3.2
 %if 0%{?gh_date:1}
 Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 License:       MIT
 Group:         Development/Languages
 URL:           https://github.com/%{gh_owner}/%{gh_project}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
-
-# https://github.com/kjdev/php-ext-lz4/pull/18
-Patch0:        %{gh_project}-pr18.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: %{?scl_prefix}php-devel
@@ -86,7 +83,6 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{gh_project}-%{gh_commit} NTS
 
 cd NTS
-%patch0 -p1 -b .pr18
 # Use the system library
 rm -r lz4
 
@@ -202,6 +198,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan  6 2017 Remi Collet <remi@fedoraproject.org> - 0.3.2-1
+- update to 0.3.2
+
 * Thu Jan  5 2017 Remi Collet <remi@fedoraproject.org> - 0.3.1-2
 - test build for https://github.com/kjdev/php-ext-lz4/pull/18
 

@@ -1,4 +1,10 @@
-Extension [ <persistent> extension #103 lz4 version 0.3.1 ] {
+Extension [ <persistent> extension #103 lz4 version 0.3.2 ] {
+
+  - Constants [3] {
+    Constant [ integer LZ4_CLEVEL_MIN ] { 3 }
+    Constant [ integer LZ4_CLEVEL_MAX ] { 16 }
+    Constant [ integer LZ4_VERSION ] { 10705 }
+  }
 
   - Functions {
     Function [ <internal:lz4> function lz4_compress ] {
