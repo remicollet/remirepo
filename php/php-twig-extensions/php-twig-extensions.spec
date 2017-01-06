@@ -33,7 +33,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Twig extensions
 
 Group:         Development/Libraries
@@ -48,6 +48,9 @@ BuildArch:     noarch
 BuildRequires: php-composer(phpunit/phpunit)
 ## composer.json
 BuildRequires: php-composer(symfony/translation) >= %{symfony_min_ver}
+%if 0%{?fedora} < 25
+BuildRequires: php-composer(twig/twig)           <  2
+%endif
 BuildRequires: php-composer(twig/twig)           >= %{twig_min_ver}
 ## phpcompatinfo (computed from version 1.4.0)
 BuildRequires: php-date
@@ -57,8 +60,12 @@ BuildRequires: php-spl
 %endif
 
 # composer.json
-Requires:      php-composer(twig/twig)           >= %{twig_min_ver}
+%if 0%{?fedora} < 25
+Requires:      php-composer(twig/twig)           <  2
+%else
 Requires:      php-composer(twig/twig)           <  %{twig_max_ver}
+%endif
+Requires:      php-composer(twig/twig)           >= %{twig_min_ver}
 # composer.json: optional
 Requires:      php-composer(symfony/translation) >= %{symfony_min_ver}
 Requires:      php-composer(symfony/translation) <  %{symfony_max_ver}
@@ -89,7 +96,11 @@ cat <<'AUTOLOAD' | tee lib/Twig/Extensions/autoload.php
 require_once __DIR__ . '/Autoloader.php';
 Twig_Extensions_Autoloader::register();
 
-require_once '%{phpdir}/Twig/autoload.php';
+if (file_exists($dep='%{phpdir}/Twig2/autoload.php')) {
+    require_once $dep;
+} else if (file_exists($dep='%{phpdir}/Twig/autoload.php')) {
+    require_once $dep;
+}
 AUTOLOAD
 
 
@@ -146,6 +157,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan  6 2017 Remi Collet <remi@fedoraproject.org> - 1.4.1-2
+- use Twig 2 when installed but ensure it is not pulled
+  by defaut to avoid pulling PHP 7
+
 * Wed Oct 26 2016 Remi Collet <remi@fedoraproject.org> - 1.4.1-1
 - update to 1.4.1
 
