@@ -106,7 +106,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       3%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -141,6 +141,9 @@ BuildRequires: php-composer(symfony/polyfill-php56)   >= %{symfony_polyfill_min_
 BuildRequires: php-composer(symfony/polyfill-php70)   >= %{symfony_polyfill_min_ver}
 BuildRequires: php-composer(symfony/polyfill-util)    >= %{symfony_polyfill_min_ver}
 BuildRequires: php-composer(symfony/security-acl)     >= %{symfony_security_acl_min_ver}
+# Notice Symfony\Bridge\Twig\Tests\Node\TransNodeTest::testCompileStrict fails with v2
+# Legacy deprecation notices (13)
+BuildRequires: php-composer(twig/twig)                <  2
 BuildRequires: php-composer(twig/twig)                >= %{twig_min_ver}
 ## phpcompatinfo (computed from version 2.8.6)
 BuildRequires: php-ctype
@@ -409,7 +412,11 @@ Summary:  Symfony Twig Bridge
 Group:    Development/Libraries
 
 # composer.json
+%if 0%{?fedora} < 25
+Requires: php-composer(twig/twig)                              <  2
+%else
 Requires: php-composer(twig/twig)                              <  %{twig_max_ver}
+%endif
 Requires: php-composer(twig/twig)                              >= %{twig_min_ver}
 # composer.json: optional
 Requires: php-composer(%{composer_vendor}/asset)               =  %{version}
@@ -1834,13 +1841,16 @@ foreach (array(
     '%{phpdir}/Swift/swift_required.php',
     '%{phpdir}/Symfony/Polyfill/autoload.php',
     '%{phpdir}/Symfony/Security/Acl/autoload.php',
-    '%{phpdir}/Twig/autoload.php',
 ) as $dependencyAutoloader) {
     if (file_exists($dependencyAutoloader)) {
         require_once $dependencyAutoloader;
     }
 }
-
+if (file_exists($dep='%{phpdir}/Twig2/autoload.php')) {
+    require_once $dep;
+} else if (file_exists($dep='%{phpdir}/Twig/autoload.php')) {
+    require_once $dep;
+}
 return $fedoraClassLoader;
 AUTOLOAD
 
@@ -1912,6 +1922,9 @@ sed -e 's/testCopyForOriginUrlsAndExistingLocalFileDefaultsToCopy/SKIP_testCopyF
 : Skip test failing with old tzdata
 rm src/Symfony/Component/Form/Tests/Extension/Core/Type/DateTypeTest.php
 %endif
+: Issue with tzdata
+sed -e 's/function testDate/function skipDate/' \
+    -i src/Symfony/Component/Form/Tests/Abstract*Test.php
 %endif
 
 
@@ -2690,6 +2703,10 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Fri Jan  6 2017 Remi Collet <remi@fedoraproject.org> - 2.8.15-3
+- use Twig 2 when installed but ensure it is not pulled
+  by defaut to avoid pulling PHP 7
+
 * Tue Dec 13 2016 Remi Collet <remi@fedoraproject.org> - 2.8.15-1
 - Update to 2.8.15
 
