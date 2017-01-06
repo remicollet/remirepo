@@ -21,8 +21,8 @@
 
 Summary:        High resolution timing
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        0.5.1
-Release:        9%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        0.6.0
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        BSD
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
@@ -40,8 +40,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
@@ -114,6 +116,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure \
@@ -130,10 +134,10 @@ make %{?_smp_mflags}
 
 
 %install
+%{?dtsenable}
 rm -rf %{buildroot}
 
-make -C NTS \
-     install INSTALL_ROOT=%{buildroot}
+make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
@@ -142,8 +146,7 @@ install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
 install -D -m 644 package.xml %{buildroot}%{pecl_xmldir}/%{name}.xml
 
 %if %{with_zts}
-make -C ZTS \
-     install INSTALL_ROOT=%{buildroot}
+make -C ZTS install INSTALL_ROOT=%{buildroot}
 
 install -D -m 644 %{ini_name} %{buildroot}%{php_ztsinidir}/%{ini_name}
 %endif
@@ -227,6 +230,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan  6 2017 Remi Collet <remi@fedoraproject.org> - 0.6.0-1
+- Update to 0.6.0
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 0.5.1-9
 - rebuild with PHP 7.1.0 GA
 

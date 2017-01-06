@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #96 hrtime version 0.5.1 ] {
+Extension [ <persistent> extension #95 hrtime version 0.6.0 ] {
 
   - Classes [3] {
     Class [ <internal:hrtime> class HRTime\PerformanceCounter ] {
@@ -9,13 +9,47 @@ Extension [ <persistent> extension #96 hrtime version 0.5.1 ] {
       - Static properties [0] {
       }
 
-      - Static methods [0] {
+      - Static methods [3] {
+        Method [ <internal:hrtime> static public method getFrequency ] {
+        }
+
+        Method [ <internal:hrtime> static public method getTicks ] {
+        }
+
+        Method [ <internal:hrtime> static public method getTicksSince ] {
+        }
       }
 
       - Properties [0] {
       }
 
-      - Methods [6] {
+      - Methods [0] {
+      }
+    }
+
+    Class [ <internal:hrtime> class HRTime\StopWatch extends HRTime\PerformanceCounter ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [3] {
+        Method [ <internal:hrtime, inherits HRTime\PerformanceCounter> static public method getFrequency ] {
+        }
+
+        Method [ <internal:hrtime, inherits HRTime\PerformanceCounter> static public method getTicks ] {
+        }
+
+        Method [ <internal:hrtime, inherits HRTime\PerformanceCounter> static public method getTicksSince ] {
+        }
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [7] {
         Method [ <internal:hrtime> public method start ] {
         }
 
@@ -28,51 +62,13 @@ Extension [ <persistent> extension #96 hrtime version 0.5.1 ] {
         Method [ <internal:hrtime> public method getLastElapsedTicks ] {
         }
 
-        Method [ <internal:hrtime> public method getFrequency ] {
-        }
-
         Method [ <internal:hrtime> public method isRunning ] {
         }
-      }
-    }
 
-    Class [ <internal:hrtime> class HRTime\StopWatch extends HRTime\PerformanceCounter ] {
-
-      - Constants [0] {
-      }
-
-      - Static properties [0] {
-      }
-
-      - Static methods [0] {
-      }
-
-      - Properties [0] {
-      }
-
-      - Methods [8] {
         Method [ <internal:hrtime> public method getElapsedTime ] {
         }
 
         Method [ <internal:hrtime> public method getLastElapsedTime ] {
-        }
-
-        Method [ <internal:hrtime, inherits HRTime\PerformanceCounter> public method start ] {
-        }
-
-        Method [ <internal:hrtime, inherits HRTime\PerformanceCounter> public method stop ] {
-        }
-
-        Method [ <internal:hrtime, inherits HRTime\PerformanceCounter> public method getElapsedTicks ] {
-        }
-
-        Method [ <internal:hrtime, inherits HRTime\PerformanceCounter> public method getLastElapsedTicks ] {
-        }
-
-        Method [ <internal:hrtime, inherits HRTime\PerformanceCounter> public method getFrequency ] {
-        }
-
-        Method [ <internal:hrtime, inherits HRTime\PerformanceCounter> public method isRunning ] {
         }
       }
     }
