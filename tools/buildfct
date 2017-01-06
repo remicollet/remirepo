@@ -306,11 +306,10 @@ fi
 }
 
 # Build All distribution / version / noarch for remi/remi-php56
-mock56t()
+mock56n()
 {
 quiet="--quiet"
 if [ "$1" = "-q" ]; then
-    quiet="--quiet"
     shift
 fi
 
@@ -320,13 +319,49 @@ if [ -f "$1" ]; then
   for i in 25 24 23 22
   do
     echo -n ""
-    (mock $quiet --configdir=$mocketc -r fc${i}xt  rebuild $1 && echo "$(date +%X) (56) fc$i  Ok." || echo "fc$1 Error !")&
+    (mock $quiet --configdir=$mocketc -r fc${i}x  rebuild $1 && echo "$(date +%X) (56) fc$i  Ok." || echo "fc$1 Error !")&
     pids="$pids $!"
   done
   for i in 7 6 5
   do
     echo -n ""
-    (mock $quiet --configdir=$mocketc -r el${i}t56 rebuild $1 && echo "$(date +%X) (56) el$i   Ok." || echo "el$i  Error !")&
+    (mock $quiet --configdir=$mocketc -r el${i}x56 rebuild $1 && echo "$(date +%X) (56) el$i   Ok." || echo "el$i  Error !")&
+    pids="$pids $!"
+  done
+  wait $pids
+  date +%X
+else
+  echo "file not found '$1'"
+fi
+}
+
+# Build All distribution / version / noarch for remi/remi-php56
+mock70n()
+{
+quiet="--quiet"
+if [ "$1" = "-q" ]; then
+    shift
+fi
+
+if [ -f "$1" ]; then
+  date +%X
+  pids=""
+  for i in 25
+  do
+    echo -n ""
+    (mock $quiet --configdir=$mocketc -r fc${i}x    rebuild $1 && echo "$(date +%X) (70) fc$i  Ok." || echo "fc$1 Error !")&
+    pids="$pids $!"
+  done
+  for i in 24 23 22
+  do
+    echo -n ""
+    (mock $quiet --configdir=$mocketc -r fc${i}x70  rebuild $1 && echo "$(date +%X) (70) fc$i  Ok." || echo "fc$1 Error !")&
+    pids="$pids $!"
+  done
+  for i in 7 6
+  do
+    echo -n ""
+    (mock $quiet --configdir=$mocketc -r el${i}x70 rebuild $1 && echo "$(date +%X) (70) el$i   Ok." || echo "el$i  Error !")&
     pids="$pids $!"
   done
   wait $pids

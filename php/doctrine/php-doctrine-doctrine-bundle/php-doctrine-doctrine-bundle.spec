@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-doctrine-doctrine-bundle
 #
-# Copyright (c) 2015-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2015-2017 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -52,7 +52,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Symfony Bundle for Doctrine
 
 Group:         Development/Libraries
@@ -78,6 +78,7 @@ BuildRequires: php-composer(symfony/framework-bundle)       >= %{symfony_min_ver
 BuildRequires: php-composer(symfony/property-info)          >= %{symfony_min_ver}
 BuildRequires: php-composer(symfony/validator)              >= %{symfony_min_ver}
 BuildRequires: php-composer(symfony/yaml)                   >= %{symfony_min_ver}
+BuildRequires: php-composer(twig/twig)                      <  %{twig_max_ver}
 BuildRequires: php-composer(twig/twig)                      >= %{twig_min_ver}
 ## phpcompatinfo (computed from version 1.6.4)
 BuildRequires: php-dom
@@ -118,14 +119,13 @@ Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
 %if 0%{?fedora} >= 21
 Suggests:      php-composer(doctrine/orm)
 Suggests:      php-composer(symfony/web-profiler-bundle)
-Suggests:      php-composer(twig/twig)
+Suggests:      php-composer(twig/twig)                   <  %{twig_max_ver}
 %endif
 Conflicts:     php-composer(doctrine/orm)                <  %{orm_min_ver}
 Conflicts:     php-composer(doctrine/orm)                >= %{orm_max_ver}
 Conflicts:     php-composer(symfony/web-profiler-bundle) <  %{symfony_min_ver}
 Conflicts:     php-composer(symfony/web-profiler-bundle) >= %{symfony_max_ver}
 Conflicts:     php-composer(twig/twig)                   <  %{twig_min_ver}
-Conflicts:     php-composer(twig/twig)                   >= %{twig_max_ver}
 
 %description
 Doctrine DBAL & ORM Bundle for the Symfony Framework.
@@ -215,6 +215,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan  6 2017 Remi Collet <remi@fedoraproject.org> - 1.6.4-2
+- drop conflict with twig 2
+- ensure twig 1 is used during the build
+
 * Fri Dec 30 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.6.4-1
 - Updated to 1.6.4 (RHBZ #1279827)
 - Use php-composer(fedora/autoloader)
