@@ -1,0 +1,21 @@
+From db890956ecc11c090716a536b00a07f2499fa73a Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@php.net>
+Date: Fri, 6 Jan 2017 06:23:59 +0100
+Subject: [PATCH] add skip when json not loaded
+
+---
+ ext/standard/tests/serialize/bug72610_3.phpt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/ext/standard/tests/serialize/bug72610_3.phpt b/ext/standard/tests/serialize/bug72610_3.phpt
+index 4e69087..86941f2 100644
+--- a/ext/standard/tests/serialize/bug72610_3.phpt
++++ b/ext/standard/tests/serialize/bug72610_3.phpt
+@@ -1,5 +1,7 @@
+ --TEST--
+ __wakeup should be able to modify dynamic properties without affecting copies of those properties
++--SKIPIF--
++<?php if (!extension_loaded("json")) print "skip json_encode needed"; ?>
+ --FILE--
+ <?php
+ 
