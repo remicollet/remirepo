@@ -1,5 +1,5 @@
 # remirepo spec file for php-simplepie, from:
-
+#
 # Fedora spec file for php-simplepie
 #
 # License: MIT
@@ -60,12 +60,14 @@ Autoloader: %{_datadir}/php/%{name}/autoloader.php
 
 
 %prep
-%setup -q -n %{gh_project}-%{gh_commit}
+%setup -qn %{gh_project}-%{gh_commit}
 
 %patch0 -p1 -b .rpm
 
+# fix rpmlint warnings
 find . -type f -exec chmod -x {} \;
-rm demo/cache/.gitignore
+# drop demo; contains flash files
+rm -rf demo
 
 
 %build
@@ -115,11 +117,14 @@ rm -rf  %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE.txt demo
+%doc LICENSE.txt
 %{_datadir}/php/%{name}
 
 
 %changelog
+* Sat Jan 07 2017 Johan Cwiklinski <johan AT x-tnd DOT be> - 1.4.3-2
+- Drop demo directory that contains flash files (bz #1000260)
+
 * Sun Nov 27 2016 Remi Collet <remi@fedoraproject.org> - 1.4.3-1
 - update to 1.4.3
 
