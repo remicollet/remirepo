@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    50c9e4dff0cf65d9937c56b597c530e1bf5f8ef0
+%global gh_commit    14f8e8e1ca6a0469779d9df2c569f420fc41bd01
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-router
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.3.2
+Version:        2.0.0
 Release:        1%{?dist}
 Summary:        %{sublib} subcomponent for %{library}
 
@@ -179,6 +179,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jan  7 2017 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
+- update to 2.0.0
+
 * Wed Dec 14 2016 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
 - update to 1.3.2
 
