@@ -1,4 +1,4 @@
-# remirepo spec file for php-twig2, from
+# fedora/remirepo spec file for php-twig2, from
 #
 # Fedora spec file for php-twig
 #
@@ -38,6 +38,7 @@ BUildArch:     noarch
 BuildRequires: php-fedora-autoloader-devel
 %if %{with_tests}
 # For tests
+BuildRequires: php(language) >= %{php_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
 BuildRequires: php-composer(symfony/phpunit-bridge)
 BuildRequires: php-composer(symfony/debug)
@@ -122,16 +123,16 @@ require_once '%{phpdir}/Symfony/Component/Debug/autoload.php';
 EOF
 
 : Upstream test suite
-%{_bindir}/phpunit --verbose
+RETURN_CODE=0
+%{_bindir}/phpunit --verbose || RETURN_CODE=1
 
 : Upstream tests with SCLs if available
-SCL_RETURN_CODE=0
 for SCL in php70 php71; do
     if which $SCL; then
-        $SCL %{_bindir}/phpunit --verbose || SCL_RETURN_CODE=1
+        $SCL %{_bindir}/phpunit --verbose || RETURN_CODE=1
     fi
 done
-exit $SCL_RETURN_CODE
+exit $RETURN_CODE
 %else
 : Tests skipped
 %endif
