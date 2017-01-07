@@ -12,8 +12,8 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-master": "2.0-dev",
-            "dev-develop": "2.1-dev"
+            "dev-master": "1.3.x-dev",
+            "dev-develop": "2.0.x-dev"
         }
     },
     "require": {
@@ -47,7 +47,6 @@
             "@license-check",
             "@test"
         ],
-        "check-coverage": "vendor/bin/php-coverage-checker clover.xml 100",
         "coveralls": "coveralls -v",
         "cs": "phpcs",
         "cs-fix": "phpcbf",
