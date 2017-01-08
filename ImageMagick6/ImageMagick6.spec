@@ -9,7 +9,7 @@
 # Please preserve changelog entries
 #
 %global VER        6.9.7
-%global Patchlevel 2
+%global Patchlevel 3
 %global incsuffixe -6
 %global libsuffixe -6.Q16
 %global with_tests 0%{!?_without_tests:1}
@@ -521,7 +521,10 @@ fi
 
 
 %changelog
-* Wed Jan  4 2017 Remi Collet <remi@remirepo.net> - 6.9.7.1-1
+* Sun Jan  8 2017 Remi Collet <remi@remirepo.net> - 6.9.7.3-1
+- update to version 6.9.7 patchlevel 3
+
+* Wed Jan  4 2017 Remi Collet <remi@remirepo.net> - 6.9.7.2-1
 - update to version 6.9.7 patchlevel 2
 
 * Mon Jan  2 2017 Remi Collet <remi@remirepo.net> - 6.9.7.1-1
