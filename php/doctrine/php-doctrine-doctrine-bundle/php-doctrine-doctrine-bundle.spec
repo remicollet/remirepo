@@ -12,14 +12,14 @@
 
 %global github_owner     doctrine
 %global github_name      DoctrineBundle
-%global github_version   1.6.4
-%global github_commit    dd40b0a7fb16658cda9def9786992b8df8a49be7
+%global github_version   1.6.6
+%global github_commit    0f0c4df366bd1d36d38a27e2f5ff128e118ac969
 
 %global composer_vendor  doctrine
 %global composer_project doctrine-bundle
 
-# "php": ">=5.3.2"
-%global php_min_ver 5.3.2
+# "php": ">=5.5.9"
+%global php_min_ver 5.5.9
 # "doctrine/dbal": "~2.3"
 %global dbal_min_ver 2.3
 %global dbal_max_ver 3.0
@@ -32,18 +32,18 @@
 # "jdorn/sql-formatter": "~1.1"
 %global sql_formatter_min_ver 1.1
 %global sql_formatter_max_ver 2.0
-# "symfony/console": "~2.3|~3.0"
-# "symfony/dependency-injection": "~2.3|~3.0"
-# "symfony/doctrine-bridge": "~2.2|~3.0"
-# "symfony/framework-bundle": "~2.3|~3.0"
+# "symfony/console": "~2.7|~3.0"
+# "symfony/dependency-injection": "~2.7|~3.0"
+# "symfony/doctrine-bridge": "~2.7|~3.0"
+# "symfony/framework-bundle": "~2.7|~3.0"
 # "symfony/property-info": "~2.8|~3.0"
-# "symfony/validator": "~2.2|~3.0"
-# "symfony/yaml": "~2.2|~3.0"
+# "symfony/validator": "~2.7|~3.0"
+# "symfony/yaml": "~2.7|~3.0"
 %global symfony_min_ver 2.8
-%global symfony_max_ver 4.0
-# "twig/twig": "~1.10"
+%global symfony_max_ver 3.0
+# "twig/twig": "~1.10|~2.0"
 %global twig_min_ver 1.10
-%global twig_max_ver 2.0
+%global twig_max_ver 3
 
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
@@ -52,7 +52,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?dist}
+Release:       1%{?dist}
 Summary:       Symfony Bundle for Doctrine
 
 Group:         Development/Libraries
@@ -71,12 +71,19 @@ BuildRequires: php-composer(doctrine/doctrine-cache-bundle) >= %{cache_bundle_mi
 BuildRequires: php-composer(doctrine/orm)                   >= %{orm_min_ver}
 BuildRequires: php-composer(jdorn/sql-formatter)            >= %{sql_formatter_min_ver}
 BuildRequires: php-composer(phpunit/phpunit)
+BuildRequires: php-composer(symfony/console)                <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/console)                >= %{symfony_min_ver}
+BuildRequires: php-composer(symfony/dependency-injection)   <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/dependency-injection)   >= %{symfony_min_ver}
+BuildRequires: php-composer(symfony/doctrine-bridge)        <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/doctrine-bridge)        >= %{symfony_min_ver}
+BuildRequires: php-composer(symfony/framework-bundle)       <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/framework-bundle)       >= %{symfony_min_ver}
+BuildRequires: php-composer(symfony/property-info)          <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/property-info)          >= %{symfony_min_ver}
+BuildRequires: php-composer(symfony/validator)              <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/validator)              >= %{symfony_min_ver}
+BuildRequires: php-composer(symfony/yaml)                   <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/yaml)                   >= %{symfony_min_ver}
 BuildRequires: php-composer(twig/twig)                      <  %{twig_max_ver}
 BuildRequires: php-composer(twig/twig)                      >= %{twig_min_ver}
@@ -122,9 +129,7 @@ Suggests:      php-composer(symfony/web-profiler-bundle)
 Suggests:      php-composer(twig/twig)                   <  %{twig_max_ver}
 %endif
 Conflicts:     php-composer(doctrine/orm)                <  %{orm_min_ver}
-Conflicts:     php-composer(doctrine/orm)                >= %{orm_max_ver}
 Conflicts:     php-composer(symfony/web-profiler-bundle) <  %{symfony_min_ver}
-Conflicts:     php-composer(symfony/web-profiler-bundle) >= %{symfony_max_ver}
 Conflicts:     php-composer(twig/twig)                   <  %{twig_min_ver}
 
 %description
@@ -169,7 +174,10 @@ require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 \Fedora\Autoloader\Dependencies::optional(array(
     '%{phpdir}/Doctrine/ORM/autoload.php',
     '%{phpdir}/Symfony/Bundle/WebProfilerBundle/autoload.php',
-    '%{phpdir}/Twig/autoload.php',
+    array(
+        '%{phpdir}/Twig2/autoload.php',
+        '%{phpdir}/Twig/autoload.php',
+    ),
 ));
 AUTOLOAD
 
@@ -215,6 +223,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan  8 2017 Remi Collet <remi@fedoraproject.org> - 1.6.6-1
+- update to 1.6.6
+- allow twig 2
+- don't allow symfony 3 (autoloader not ready)
+- raise dependency on PHP 5.5.9
+
 * Fri Jan  6 2017 Remi Collet <remi@fedoraproject.org> - 1.6.4-2
 - drop conflict with twig 2
 - ensure twig 1 is used during the build
