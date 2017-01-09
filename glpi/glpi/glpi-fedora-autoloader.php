@@ -16,7 +16,7 @@ require_once $vendor . '/Sabre/VObject/autoload.php';
 // "simplepie/simplepie"
 require_once $vendor . '/php-simplepie/autoloader.php';
 // "tecnickcom/tcpdf"
-require_once $vendor . '/tcpdf/tcpdf.php';
+require_once $vendor . '/tcpdf/autoload.php';
 // "zendframework/zend-cache"
 // "zendframework/zend-i18n"
 // "zendframework/zend-loader"
