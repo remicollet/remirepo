@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 # see https://github.com/tecnickcom/TCPDF/releases
-%global gh_commit    2f732eaa91b5665274689b1d40b285a7bacdc37f
+%global gh_commit    009f2304c3a9c8152b89a5321a8825f250911dc3
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     tecnickcom
 %global gh_project   TCPDF
@@ -15,7 +15,7 @@
 
 Name:           php-tcpdf
 Summary:        PHP class for generating PDF documents and barcodes
-Version:        6.2.12
+Version:        6.2.13
 Release:        1%{?dist}
 
 URL:            http://www.tcpdf.org
@@ -27,6 +27,7 @@ Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  php-cli
+BuildRequires:  php-fedora-autoloader-devel
 
 Requires:       php(language) >= 5.3
 # From phpcompatinfo report form version 6.2.10
@@ -44,6 +45,8 @@ Requires:       php-tidy
 Requires:       php-xml
 Requires:       php-zlib
 # imagick is optionnal (and conflicts with gmagick)
+# Autoloader
+Requires:       php-composer(fedora/autoloader)
 
 # Old name for compatibility
 Provides:       php-composer(tecnick.com/tcpdf) = %{version}
@@ -223,13 +226,6 @@ do
 done
 ls fonts | sed -e 's|^|%{_datadir}/php/%{real_name}/fonts/|' >corefonts.lst
 
-: Sanity check
-libver=$(sed -n '/"version"/{s/.*: "//;s/".*$//;p}' composer.json)
-if test "x${libver}" != "x%{version}"; then
-   : Error: Upstream version is ${libver}, expecting %{version}.
-   exit 1
-fi
-
 
 %build
 : empty build section, nothing required
@@ -245,6 +241,13 @@ cp -a fonts    %{buildroot}%{_datadir}/php/%{real_name}/
 install -d     %{buildroot}%{_datadir}/php/%{real_name}/images
 install -m 0644 examples/images/_blank.png \
                %{buildroot}%{_datadir}/php/%{real_name}/images/
+
+: Autoloader
+php -d memory_limit=2G\
+  %{_bindir}/phpab \
+    --template fedora \
+    --output %{buildroot}%{_datadir}/php/%{real_name}/autoload.php \
+    %{buildroot}%{_datadir}/php/%{real_name}
 
 : Configuration
 install -d     %{buildroot}%{_sysconfdir}/%{name}
@@ -276,13 +279,20 @@ php tools/tcpdf_addfont.php \
     --outpath %{buildroot}%{_datadir}/php/%{real_name}/fonts/
 
 
+%check
+php -r 'require "%{buildroot}%{_datadir}/php/%{real_name}/autoload.php";
+  printf("%{name} version %s\n", $ver=TCPDF_STATIC::getTCPDFVersion());
+  exit ($ver === "%{version}" ? 0 : 1);
+'
+
+
 %clean
 rm -rf %{buildroot}
 
 
 %files -f corefonts.lst
 %defattr(-,root,root,-)
-%doc README.TXT CHANGELOG.TXT examples
+%doc README.md CHANGELOG.TXT examples
 %doc composer.json
 %{!?_licensedir:%global license %%doc}
 %license LICENSE.TXT
@@ -335,6 +345,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan  9 2017 Remi Collet <remi@fedoraproject.org> - 6.2.13-1
+- update to 6.2.13
+- add classmap autoloader using fedora/autoloader
+
 * Sun Sep 13 2015 Remi Collet <remi@fedoraproject.org> - 6.2.12-1
 - update to 6.2.12
 - provide php-composer(tecnickcom/tcpdf)
