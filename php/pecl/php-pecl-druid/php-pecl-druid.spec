@@ -24,7 +24,7 @@
 
 Summary:        A Druid driver for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        0.9.0
+Version:        0.9.2
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        ASL 2.0
 Group:          Development/Languages
@@ -239,6 +239,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan 09 2017 Remi Collet <remi@fedoraproject.org> - 0.9.2-1
+- Update to 0.9.2
+
 * Tue Dec 27 2016 Remi Collet <remi@fedoraproject.org> - 0.9.0-1
 - update to 0.9.0 (stable)
 
