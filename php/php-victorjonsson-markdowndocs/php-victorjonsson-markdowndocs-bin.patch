@@ -1,0 +1,19 @@
+diff --git a/bin/phpdoc-md b/bin/phpdoc-md
+index 280a8c0..f74b4e9 100755
+--- a/bin/phpdoc-md
++++ b/bin/phpdoc-md
+@@ -1,13 +1,7 @@
+ #!/usr/bin/env php
+ <?php
+ 
+-$autoLoadPaths = array(__DIR__.'/vendor/autoload.php', __DIR__.'/../vendor/autoload.php', __DIR__.'/../../../autoload.php');
+-foreach($autoLoadPaths as $autoloader) {
+-    if( file_exists($autoloader) ) {
+-        require $autoloader;
+-        break;
+-    }
+-}
++require_once '__PHPDIR__/PHPDocsMD/autoload.php';
+ 
+ use PHPDocsMD\Console\CLI;
+ 
