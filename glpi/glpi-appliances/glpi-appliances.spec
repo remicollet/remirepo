@@ -9,7 +9,7 @@
 %global pluginname   appliances
 
 Name:           glpi-appliances
-Version:        2.1
+Version:        2.2.1
 Release:        1%{?dist}
 Summary:        GLPI Plugin to manage appliances
 Summary(fr):    Extension GLPI de gestion des applicatifs
@@ -18,14 +18,14 @@ Group:          Applications/Internet
 License:        GPLv2+
 URL:            https://forge.glpi-project.org/projects/appliances
 
-Source0:        https://forge.glpi-project.org/attachments/download/2147/glpi-appliances-2.1.tar.gz
+Source0:        https://forge.glpi-project.org/attachments/download/2168/glpi-appliances-2.2.1.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
 
 Requires:       glpi >= 0.90
-Requires:       glpi <  0.91
+Requires:       glpi <  9.2
 
 
 %description
@@ -108,6 +108,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan  9 2017 Remi Collet <remi@fedoraproject.org> - 2.2.1
+- version 2.2.1
+  https://forge.glpi-project.org/versions/1203
+
 * Tue Jun 28 2016 Johan Cwiklinski <jcwiklinski AT teclib DOT com> - 2.1-1
 - Last upstream release
 - Clean rpmlint mixed tabs and spaces warning
