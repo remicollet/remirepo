@@ -1,3 +1,4 @@
+# remirepo spec file for php-victorjonsson-markdowndocs, from:
 #
 # Fedora spec file for php-victorjonsson-markdowndocs
 #
@@ -47,6 +48,7 @@ Patch1:        %{name}-cli-version.patch
 Patch2:        %{name}-bin.patch
 
 
+BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:     noarch
 # Tests
 %if %{with_tests}
@@ -128,6 +130,8 @@ AUTOLOAD
 
 
 %install
+rm -rf %{buildroot}
+
 : Library
 mkdir -p %{buildroot}%{phpdir}
 cp -rp src/PHPDocsMD %{buildroot}%{phpdir}/
@@ -157,6 +161,10 @@ exit $SCL_RETURN_CODE
 %endif
 
 
+%clean
+rm -rf %{buildroot}
+
+
 %files
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
@@ -167,5 +175,8 @@ exit $SCL_RETURN_CODE
 
 
 %changelog
+* Mon Jan  9 2017 Remi Collet <remi@remirepo.net> - 1.3.7-1
+- add backport stuff
+
 * Mon Dec 26 2016 Shawn Iwinski <shawn@iwin.ski> - 1.3.7-1
 - Initial package
