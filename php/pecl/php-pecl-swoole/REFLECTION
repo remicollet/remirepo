@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #126 swoole version 1.9.3 ] {
+Extension [ <persistent> extension #80 swoole version 1.9.4 ] {
 
   - INI {
     Entry [ swoole.aio_thread_num <ALL> ]
@@ -63,7 +63,7 @@ Extension [ <persistent> extension #126 swoole version 1.9.3 ] {
     Constant [ integer SWOOLE_DTLSv1_CLIENT_METHOD ] { 17 }
     Constant [ integer SWOOLE_EVENT_READ ] { 512 }
     Constant [ integer SWOOLE_EVENT_WRITE ] { 1024 }
-    Constant [ string SWOOLE_VERSION ] { 1.9.3 }
+    Constant [ string SWOOLE_VERSION ] { 1.9.4 }
     Constant [ integer SWOOLE_AIO_BASE ] { 0 }
     Constant [ integer SWOOLE_AIO_LINUX ] { 1 }
     Constant [ integer SWOOLE_FILELOCK ] { 2 }
@@ -970,10 +970,11 @@ Extension [ <persistent> extension #126 swoole version 1.9.3 ] {
       - Static methods [0] {
       }
 
-      - Properties [3] {
+      - Properties [4] {
         Property [ <default> public $errCode ]
         Property [ <default> public $sock ]
         Property [ <default> public $reuse ]
+        Property [ <default> public $reuseCount ]
       }
 
       - Methods [22] {
@@ -2142,7 +2143,7 @@ Extension [ <persistent> extension #126 swoole version 1.9.3 ] {
       - Properties [0] {
       }
 
-      - Methods [9] {
+      - Methods [10] {
         Method [ <internal:swoole, ctor> public method __construct ] {
 
           - Parameters [1] {
@@ -2198,6 +2199,12 @@ Extension [ <persistent> extension #126 swoole version 1.9.3 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $size ]
+          }
+        }
+
+        Method [ <internal:swoole> public method recycle ] {
+
+          - Parameters [0] {
           }
         }
 
