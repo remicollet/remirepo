@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    815671d4571cfcdb85ae23a811f1df190c07a1ce
+%global gh_commit    b315ea9269ea3ee2e5fd3adb712fc278a2904eb1
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.0.5
+Version:        1.0.6
 Release:        1%{?dist}
 Summary:        PSR-7 Middleware Microframework based on Stratigility
 
@@ -210,6 +210,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 10 2017 Remi Collet <remi@fedoraproject.org> - 1.0.6-1
+- update to 1.0.6
+
 * Fri Dec  9 2016 Remi Collet <remi@fedoraproject.org> - 1.0.5-1
 - update to 1.0.5
 
