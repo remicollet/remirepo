@@ -255,6 +255,7 @@ export YAR_API_PORT=8964
 
 
 %files
+%{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
