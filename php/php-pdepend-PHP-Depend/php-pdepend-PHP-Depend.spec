@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    64ba7e6d0507729e2bb482cf20cd12c4d96d99bc
+%global gh_commit    3acfa4fcadbb8b65b8b2ec077408c5ef0e112e68
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     pdepend
 %global gh_project   pdepend
@@ -18,7 +18,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-pdepend-PHP-Depend
-Version:        2.4.0
+Version:        2.4.1
 Release:        1%{?dist}
 Summary:        PHP_Depend design quality metrics for PHP package
 
@@ -182,6 +182,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 11 2017 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
+- update to 2.4.1
+
 * Tue Jan 10 2017 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
 - update to 2.4.0
 
