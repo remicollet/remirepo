@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    8936999f244011525671db8d6e35a2f2232d5060
+%global gh_commit    888fd4852432ee61ffd48a66b6812387b4f83c02
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-file
@@ -20,7 +20,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.7.0
+Version:        2.7.1
 Release:        1%{?dist}
 Summary:        Zend Framework %{library} component
 
@@ -42,14 +42,15 @@ BuildRequires:  php-spl
 BuildRequires:  php-tokenizer
 BuildRequires:  php-composer(%{gh_owner}/zend-stdlib)           >= 2.5
 # From composer, "require-dev": {
+#        "fabpot/php-cs-fixer": "1.7.*",
+#        "phpunit/phpunit": "~4.0",
+#        "zendframework/zend-coding-standard": "~1.0.0",
 #        "zendframework/zend-filter": "^2.6.1",
 #        "zendframework/zend-i18n": "^2.6",
 #        "zendframework/zend-progressbar": "^2.5.2",
 #        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
 #        "zendframework/zend-session": "^2.6.2",
-#        "zendframework/zend-validator": "^2.6",
-#        "fabpot/php-cs-fixer": "1.7.*",
-#        "phpunit/PHPUnit": "~4.0"
+#        "zendframework/zend-validator": "^2.6"
 BuildRequires:  php-composer(%{gh_owner}/zend-filter)           >= 2.6.1
 BuildRequires:  php-composer(%{gh_owner}/zend-i18n)             >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-progressbar)      >= 2.5.2
@@ -130,11 +131,22 @@ require_once '%{php_home}/Zend/autoload.php';
 EOF
 
 # Notice: test fail in CLI mode with APC
-%{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
-
-if which php70; then
-   php70 %{_bindir}/phpunit --include-path=%{buildroot}%{php_home}
+# remirepo:11
+run=0
+ret=0
+if which php56; then
+   php56 %{_bindir}/phpunit || ret=1
+   run=1
 fi
+if which php71; then
+   php71 %{_bindir}/phpunit || ret=1
+   run=1
+fi
+if [ $run -eq 0 ]; then
+%{_bindir}/phpunit --verbose
+# remirepo:2
+fi
+exit $ret
 %else
 : Test suite disabled
 %endif
@@ -154,6 +166,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 11 2017 Remi Collet <remi@fedoraproject.org> - 2.7.1-1
+- update to 2.7.1
+
 * Fri Apr 29 2016 Remi Collet <remi@fedoraproject.org> - 2.7.0-1
 - update to 2.7.0
 
