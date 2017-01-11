@@ -68,6 +68,8 @@ class PkgClient {
 function run($name, $rpm) {
 	global $quiet, $verb, $client;
 
+	$len = 50;
+
 	if (in_array($name, ['znerol/php-stringprep', 'psr/http-message-implementation'])) {
 		return;
 	}
@@ -110,8 +112,10 @@ function run($name, $rpm) {
 			}
 			if (version_compare($pkver, $rpmver, 'gt')) {
 				$diff = $date->diff(new DateTime("now"));
+				$rpm2 = $rpm;
 				if ($diff->days <2) {
 					$note = "(Just released)";
+					$rpm2 = substr($rpm . ' ' . str_repeat('.', $len), 0, $len);
 				} else if ($diff->days <20) {
 					$note = $diff->format("(%a days)");
 				} else {
@@ -119,7 +123,7 @@ function run($name, $rpm) {
 				}
 
 				//print_r($pkg);
-				printf(" %-40s %15s %15s %15s %s\n", $rpm, $rpmver, $pkver, $date->format("Y-m-d"), $note);
+				printf(" %-{$len}s %15s %15s %15s %s\n", $rpm2, $rpmver, $pkver, $date->format("Y-m-d"), $note);
 				if ($pkg['source']['type']=='git' && $verb) {
 					printf("\tURL:  %s\n\tHash: %s\n",
 						($pkg['source']['url']?:'unkown'),
@@ -131,7 +135,7 @@ function run($name, $rpm) {
 				}
 			}
 			else if (version_compare($pkver, $rpmver, 'eq') && $verb && !$display) {
-				printf(" %-40s %15s %15s %15s\n", $rpm, $rpmver, $pkver, $date->format("Y-m-d"));
+				printf(" %-{$len}s %15s %15s %15s\n", $rpm, $rpmver, $pkver, $date->format("Y-m-d"));
 				$display = true;
 				if (!$verb) {
 					break;
@@ -139,10 +143,10 @@ function run($name, $rpm) {
 			}
 		}
 		if ($verb && !$display) {
-			printf(" %-40s %15s %15s %15s\n", $rpm, $rpmver, ($maxver ?: 'unkown'), ($maxdat ? $date->format("Y-m-d") : ''));
+			printf(" %-{$len}s %15s %15s %15s\n", $rpm, $rpmver, ($maxver ?: 'unkown'), ($maxdat ? $date->format("Y-m-d") : ''));
 		}
 	} else {
-		printf(" %-40s %15s %15s\n", $rpm, $rpmver, 'Not found !');
+		printf(" %-{$len}s %15s %15s\n", $rpm, $rpmver, 'Not found !');
 	}
 }
 
@@ -208,7 +212,7 @@ if ($change) {
 if ($sort) {
 	natcasesort($pkgs);
 }
-printf(" %-40s %15s %15s %15s\n", "Name", "Version", "Upstream", "Date");
+printf(" %-50s %15s %15s %15s\n", "Name", "Version", "Upstream", "Date");
 
 $tmp = array();
 for ($i=1 ; $i<$_SERVER['argc'] ; $i++) {
