@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    2aac4050ebcf9a2c883dc23cf74671da02a66a7b
+%global gh_commit    23922f96b32ab6e64fc551ec06b81fd047828765
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-template
@@ -21,8 +21,8 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.0.3
-Release:        2%{?dist}
+Version:        1.0.4
+Release:        1%{?dist}
 Summary:        %{sublib} subcomponent for %{library}
 
 Group:          Development/Libraries
@@ -39,7 +39,7 @@ BuildRequires:  php(language) >= 5.5
 BuildRequires:  php-spl
 # From composer, "require-dev": {
 #        "phpunit/phpunit": "^4.7",
-#        "squizlabs/php_codesniffer": "^2.3"
+#        "zendframework/zend-coding-standard": "~1.0.0"
 BuildRequires:  php-composer(phpunit/phpunit)                   >= 4.7
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)           >= 2.5
@@ -156,9 +156,12 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-2
+* Thu Jan 12 2017 Remi Collet <remi@fedoraproject.org> - 1.0.4-1
+- update to 1.0.4
+
+* Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-2
 - cleanup
 
-* Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+* Fri Jul  1 2016 Remi Collet <remi@fedoraproject.org> - 1.0.3-1
 - initial package
 
