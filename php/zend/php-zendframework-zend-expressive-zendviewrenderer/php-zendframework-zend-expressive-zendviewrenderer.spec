@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    163e684ba3772a729a5e71abc9db14fb2574971f
+%global gh_commit    10dfc00405df10e74fc047e2ad31be5245ef1c13
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-zendviewrenderer
@@ -21,13 +21,13 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.1.0
+Version:        1.2.0
 Release:        1%{?dist}
 Summary:        zend-view PhpRenderer integration for Expressive
 
 Group:          Development/Libraries
 License:        BSD
-URL:            https://framework.zend.com/
+URL:            https://zendframework.github.io/zend-expressive/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
 
@@ -35,24 +35,26 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.5
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-composer(psr/http-message)                       >= 1.0
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
 BuildRequires:  php-composer(container-interop/container-interop)    >= 1.1
 BuildRequires:  php-composer(psr/http-message)                       >= 1.0
 BuildRequires:  php-composer(%{gh_owner}/zend-expressive-helpers)    >= 1.1
+BuildRequires:  php-composer(%{gh_owner}/zend-expressive-router)     >= 1.3.2
 BuildRequires:  php-composer(%{gh_owner}/zend-expressive-template)   >= 1.0.1
 BuildRequires:  php-composer(%{gh_owner}/zend-filter)                >= 2.6.1
 BuildRequires:  php-composer(%{gh_owner}/zend-i18n)                  >= 2.6
 BuildRequires:  php-composer(%{gh_owner}/zend-servicemanager)        >= 2.7.5
-BuildRequires:  php-composer(%{gh_owner}/zend-view)                  >= 2.6.5
+BuildRequires:  php-composer(%{gh_owner}/zend-view)                  >= 2.8.1
 # not in composer.json (dev dep of zend-expressive-helpers)
 BuildRequires:  php-composer(%{gh_owner}/zend-diactoros)
 # From composer, "require-dev": {
-#        "phpunit/phpunit": "^4.7",
-#        "squizlabs/php_codesniffer": "^2.3",
-BuildRequires:  php-composer(phpunit/phpunit)                        >= 4.7
+#        "phpunit/phpunit": "^5.7",
+#        "zendframework/zend-coding-standard": "~1.0.0",
+#        "malukenho/docheader": "^0.1.5"
+BuildRequires:  php-composer(phpunit/phpunit)                        >= 5.7
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)                >= 2.5
 # For dependencies autoloader
@@ -60,23 +62,24 @@ BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-4
 %endif
 
 # From composer, "require": {
-#        "php": "^5.5 || ^7.0",
+#        "php": "^5.6 || ^7.0",
 #        "container-interop/container-interop": "^1.1",
 #        "psr/http-message": "^1.0",
-#        "zendframework/zend-expressive-helpers": "^1.1 || ^2.0",
-#        "zendframework/zend-expressive-template": "^1.0.1",
-#        "zendframework/zend-filter": "^2.6.1",
-#        "zendframework/zend-i18n": "^2.6",
+#        "zendframework/zend-expressive-helpers": "^1.1 || ^2.2 || ^3.0",
+#        "zendframework/zend-expressive-router": "^1.3.2 || ^2.0",
+#        "zendframework/zend-expressive-template": "^1.0.4",
 #        "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
-#        "zendframework/zend-view": "^2.6.5"
-Requires:       php(language) >= 5.5
+#        "zendframework/zend-view": "^2.8.1"
+Requires:       php(language) >= 5.6
 Requires:       php-composer(container-interop/container-interop)    >= 1.1
 Requires:       php-composer(container-interop/container-interop)    <  2
 Requires:       php-composer(psr/http-message)                       >= 1.0
 Requires:       php-composer(psr/http-message)                       <  2
 Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    >= 1.1
-Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    <  3
-Requires:       php-composer(%{gh_owner}/zend-expressive-template)   >= 1.0.1
+Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    <  4
+Requires:       php-composer(%{gh_owner}/zend-expressive-router)     >= 1.3.2
+Requires:       php-composer(%{gh_owner}/zend-expressive-router)     <  3
+Requires:       php-composer(%{gh_owner}/zend-expressive-template)   >= 1.0.4
 Requires:       php-composer(%{gh_owner}/zend-expressive-template)   <  2
 Requires:       php-composer(%{gh_owner}/zend-filter)                >= 2.6.1
 Requires:       php-composer(%{gh_owner}/zend-filter)                <  3
@@ -84,7 +87,7 @@ Requires:       php-composer(%{gh_owner}/zend-i18n)                  >= 2.6
 Requires:       php-composer(%{gh_owner}/zend-i18n)                  <  3
 Requires:       php-composer(%{gh_owner}/zend-servicemanager)        >= 2.7.5
 Requires:       php-composer(%{gh_owner}/zend-servicemanager)        <  4
-Requires:       php-composer(%{gh_owner}/zend-view)                  >= 2.6.5
+Requires:       php-composer(%{gh_owner}/zend-view)                  >= 2.8.1
 Requires:       php-composer(%{gh_owner}/zend-view)                  <  3
 # From phpcompatinfo report for version 1.1.0
 Requires:       php-pcre
@@ -171,6 +174,15 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 11 2017 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- update to 1.2.0
+- raise dependency on PHP version 5.6
+- allow zend-expressive-helpers version 3.0
+- add dependency on zend-expressive-router
+- raise dependency on zend-expressive-template version 1.0.4
+- drop dependency on zend-filter and zend-i18n
+- raise dependency on zend-view version 2.8.1
+
 * Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - initial package
 

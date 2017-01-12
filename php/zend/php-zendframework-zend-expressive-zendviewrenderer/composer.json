@@ -13,24 +13,24 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-master": "1.1-dev",
-            "dev-develop": "1.2-dev"
+            "dev-master": "1.2-dev",
+            "dev-develop": "1.3-dev"
         }
     },
     "require": {
-        "php": "^5.5 || ^7.0",
+        "php": "^5.6 || ^7.0",
         "container-interop/container-interop": "^1.1",
         "psr/http-message": "^1.0",
-        "zendframework/zend-expressive-helpers": "^1.1 || ^2.0",
-        "zendframework/zend-expressive-template": "^1.0.1",
-        "zendframework/zend-filter": "^2.6.1",
-        "zendframework/zend-i18n": "^2.6",
+        "zendframework/zend-expressive-helpers": "^1.1 || ^2.2 || ^3.0",
+        "zendframework/zend-expressive-router": "^1.3.2 || ^2.0",
+        "zendframework/zend-expressive-template": "^1.0.4",
         "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
-        "zendframework/zend-view": "^2.6.5"
+        "zendframework/zend-view": "^2.8.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.7",
-        "squizlabs/php_codesniffer": "^2.3"
+        "phpunit/phpunit": "^5.7",
+        "zendframework/zend-coding-standard": "~1.0.0",
+        "malukenho/docheader": "^0.1.5"
     },
     "autoload": {
       "psr-4": {
@@ -44,11 +44,13 @@
     },
     "scripts": {
         "check": [
+            "@license-check",
             "@cs",
             "@test"
         ],
         "cs": "phpcs",
         "cs-fix": "phpcbf",
-        "test": "phpunit"
+        "license-check": "docheader check src/ test/",
+        "test": "phpunit --colors=always"
     }
 }
