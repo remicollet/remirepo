@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    57bbf534e27161d720a7689cefd6829db9a8eacb
+%global gh_commit    592ecd7754e1263b5c120fd186bc95af921233ec
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     alcaeus
 %global gh_project   mongo-php-adapter
@@ -14,14 +14,14 @@
 # Server only available on LE arch (ExcludeArch: ppc ppc64 %{sparc} s390 s390x)
 %global with_tests   0%{?_with_tests:1}
 # remirepo:3
-%if 0%{?fedora} >= 22 || 0%{?rhel} >= 7
+%if 0%{?fedora} >= 24
 %global with_tests   0%{!?_without_tests:1}
 %endif
 %global ns_vendor    Alcaeus
 
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.0.7
+Version:        1.0.8
 Release:        1%{?dist}
 Summary:        Mongo PHP Adapter
 
@@ -44,7 +44,7 @@ BuildRequires:  php-spl
 # from composer.json, require-dev": {
 #        "phpunit/phpunit": "^4.8 || ^5.0"
 BuildRequires:  php-composer(phpunit/phpunit)
-BuildRequires:  mongodb-server >= 2.6
+BuildRequires:  mongodb-server >= 3.2
 %endif
 
 # From composer.json, "require": {
@@ -62,7 +62,7 @@ Requires:       php-spl
 
 # Composer
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
-Provides:       php-composer(ext-mongo) = 1.6.13
+Provides:       php-composer(ext-mongo) = 1.6.14
 
 
 %description
@@ -171,6 +171,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 12 2017 Remi Collet <remi@fedoraproject.org> - 1.0.8-1
+- update to 1.0.8
+
 * Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 1.0.7-1
 - update to 1.0.7
 
