@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    02f644ebb6a2afbe8d5561176895c2dccda281a3
+%global gh_commit    558dcec1f8c99c93bd112e5613fca531bfd2f983
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-twigrenderer
@@ -21,13 +21,13 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.1.1
+Version:        1.2.0
 Release:        1%{?dist}
 Summary:        Twig integration for %{library}
 
 Group:          Development/Libraries
 License:        BSD
-URL:            https://framework.zend.com/
+URL:            https://zendframework.github.io/zend-expressive/
 Source0:        %{gh_commit}/%{name}-%{version}-%{gh_short}.tgz
 Source1:        makesrc.sh
 
@@ -35,18 +35,20 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 # Tests
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.5
+BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-composer(container-interop/container-interop)    >= 1.1
 BuildRequires:  php-composer(twig/twig)                              <  2
 BuildRequires:  php-composer(twig/twig)                              >= 1.19
 BuildRequires:  php-composer(%{gh_owner}/zend-expressive-helpers)    >= 1.1
+BuildRequires:  php-composer(%{gh_owner}/zend-expressive-router)     >= 1.3.2
 BuildRequires:  php-composer(%{gh_owner}/zend-expressive-template)   >= 1.0
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
 # From composer, "require-dev": {
-#        "phpunit/phpunit": "^4.7",
-#        "squizlabs/php_codesniffer": "^2.3"
-BuildRequires:  php-composer(phpunit/phpunit)                        >= 4.7
+#        "phpunit/phpunit": "^5.7",
+#        "zendframework/zend-coding-standard": "~1.0.0",
+#        "malukenho/docheader": "^0.1.5"
+BuildRequires:  php-composer(phpunit/phpunit)                        >= 5.7
 # Autoloader
 BuildRequires:  php-composer(%{gh_owner}/zend-loader)                >= 2.5
 # For dependencies autoloader
@@ -54,19 +56,22 @@ BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-4
 %endif
 
 # From composer, "require": {
-#        "php": "^5.5 || ^7.0",
+#        "php": "^5.6 || ^7.0",
 #        "container-interop/container-interop": "^1.1",
-#        "twig/twig": "^1.19",
-#        "zendframework/zend-expressive-helpers": "^1.1 || ^2.0",
-#        "zendframework/zend-expressive-template": "^1.0"
-Requires:       php(language) >= 5.5
+#        "twig/twig": "^1.26",
+#        "zendframework/zend-expressive-helpers": "^1.1 || ^2.0 || ^3.0",
+#        "zendframework/zend-expressive-router": "^1.3.2 || ^3.0",
+#        "zendframework/zend-expressive-template": "^1.0.4"
+Requires:       php(language) >= 5.6
 Requires:       php-composer(container-interop/container-interop)    >= 1.1
 Requires:       php-composer(container-interop/container-interop)    <  2
 Requires:       php-composer(twig/twig)                              >= 1.19
 Requires:       php-composer(twig/twig)                              <  2
 Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    >= 1.1
-Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    <  3
-Requires:       php-composer(%{gh_owner}/zend-expressive-template)   >= 1.0
+Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    <  4
+Requires:       php-composer(%{gh_owner}/zend-expressive-router)     >= 1.3.2
+Requires:       php-composer(%{gh_owner}/zend-expressive-router)     <  4
+Requires:       php-composer(%{gh_owner}/zend-expressive-template)   >= 1.0.4
 Requires:       php-composer(%{gh_owner}/zend-expressive-template)   <  2
 # From phpcompatinfo report for version 1.2.0
 Requires:       php-pcre
@@ -175,6 +180,13 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 12 2017 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- update to 1.2.0
+- raise dependency on PHP version 5.6
+- allow zend-expressive-helpers version 3.0
+- add dependency on zend-expressive-router
+- raise dependency on zend-expressive-template version 1.0.4
+
 * Sat Jul  2 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - initial package
 
