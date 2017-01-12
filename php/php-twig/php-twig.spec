@@ -30,8 +30,8 @@
 
 %global github_owner     twigphp
 %global github_name      Twig
-%global github_version   1.30.0
-%global github_commit    c6ff71094fde15d12398eaba029434b013dc5e59
+%global github_version   1.31.0
+%global github_commit    ddc9e3e20ee9c0b6908f401ac8353635b750eca7
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %if "%{php_version}" < "7"
@@ -346,6 +346,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 12 2017 Remi Collet <remi@fedoraproject.org> - 1.31.0-1
+- Update to 1.31.0
+
 * Fri Dec 23 2016 Remi Collet <remi@fedoraproject.org> - 1.30.0-1
 - Update to 1.30.0
 
