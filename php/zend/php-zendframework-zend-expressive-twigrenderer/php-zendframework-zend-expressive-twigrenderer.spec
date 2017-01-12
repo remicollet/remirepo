@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    558dcec1f8c99c93bd112e5613fca531bfd2f983
+%global gh_commit    786c2b971856c810106b37e9e9b8a90cc28ae454
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-twigrenderer
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.2.0
+Version:        1.2.1
 Release:        1%{?dist}
 Summary:        Twig integration for %{library}
 
@@ -60,7 +60,7 @@ BuildRequires:  php-zendframework-zend-loader                        >= 2.5.1-4
 #        "container-interop/container-interop": "^1.1",
 #        "twig/twig": "^1.26",
 #        "zendframework/zend-expressive-helpers": "^1.1 || ^2.0 || ^3.0",
-#        "zendframework/zend-expressive-router": "^1.3.2 || ^3.0",
+#        "zendframework/zend-expressive-router": "^1.3.2 || ^2.0",
 #        "zendframework/zend-expressive-template": "^1.0.4"
 Requires:       php(language) >= 5.6
 Requires:       php-composer(container-interop/container-interop)    >= 1.1
@@ -70,7 +70,7 @@ Requires:       php-composer(twig/twig)                              <  2
 Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    >= 1.1
 Requires:       php-composer(%{gh_owner}/zend-expressive-helpers)    <  4
 Requires:       php-composer(%{gh_owner}/zend-expressive-router)     >= 1.3.2
-Requires:       php-composer(%{gh_owner}/zend-expressive-router)     <  4
+Requires:       php-composer(%{gh_owner}/zend-expressive-router)     <  3
 Requires:       php-composer(%{gh_owner}/zend-expressive-template)   >= 1.0.4
 Requires:       php-composer(%{gh_owner}/zend-expressive-template)   <  2
 # From phpcompatinfo report for version 1.2.0
@@ -180,6 +180,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 12 2017 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- update to 1.2.1 (no change)
+
 * Thu Jan 12 2017 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - update to 1.2.0
 - raise dependency on PHP version 5.6
