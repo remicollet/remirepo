@@ -65,10 +65,46 @@ class PkgClient {
 	}
 }
 
+function getMax($name, $rpm) {
+	static $vers = NULL;
+	global $pkgs;
+
+	if (is_null($vers)) {
+		if ($vers = file_get_contents(__DIR__."/multiver.json")) {
+			$vers = json_decode($vers, true, 5);
+		} else {
+			$vers = [];
+		}
+	}
+
+	$rpms = array_keys($pkgs, $name);
+	$crt  = 0;
+	$max  = 9999;
+
+	if (preg_match('/[0-9]+$/', $rpm, $reg)) {
+		// This already a versionned name
+		$crt = intval($reg[0]);
+	}
+	if (isset($vers[$rpm])) {
+		$crt = $vers[$rpm];
+		$max = $crt+1;
+	}
+	foreach($rpms as $alt) {
+		if ($alt != $rpm && preg_match('/[0-9]+$/', $alt, $reg)) {
+			$ver = intval($reg[0]);
+			if ($ver>$crt && $ver<$max) {
+				$max = $ver;
+			}
+		}
+	}
+	return $max;
+}
+
 function run($name, $rpm) {
 	global $quiet, $verb, $client;
 
 	$len = 50;
+	$limit = getMax($name, $rpm);
 
 	if (in_array($name, ['znerol/php-stringprep', 'psr/http-message-implementation'])) {
 		return;
@@ -109,6 +145,9 @@ function run($name, $rpm) {
 			if (version_compare($pkver, $maxver, 'gt')) {
 				$maxver = $pkver;
 				$maxdat = $date;
+			}
+			if (version_compare($pkver, $limit, 'ge')) {
+				continue;
 			}
 			if (version_compare($pkver, $rpmver, 'gt')) {
 				$diff = $date->diff(new DateTime("now"));
@@ -225,9 +264,11 @@ for ($i=1 ; $i<$_SERVER['argc'] ; $i++) {
 }
 if (count($tmp)) {
 	$verb = true;
-	$pkgs = $tmp;
+	$scan = $tmp;
+} else {
+	$scan = $pkgs;
 }
-foreach ($pkgs as $rpm => $name) {
+foreach ($scan as $rpm => $name) {
 	run($name, $rpm);
 }
 echo str_repeat(' ', 80)."\n";
