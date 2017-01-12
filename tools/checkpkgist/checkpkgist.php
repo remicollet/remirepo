@@ -119,7 +119,7 @@ function run($name, $rpm) {
 	}
 
 	if (!$quiet) {
-		printf(" %-40s\r", $rpm);
+		printf(" %-80s\r", $rpm);
 	}
 
 	$rpmver = exec("rpm -q --qf '%{VERSION}' $rpm", $out, $ret);
