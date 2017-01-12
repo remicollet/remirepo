@@ -13,7 +13,7 @@
 %global with_tests       0%{!?_without_tests:1}
 %global github_owner     twigphp
 %global github_name      Twig
-%global github_commit    2a86dde1288d7270169083d0e078dc7ebe0f48b6
+%global github_commit    9062992538bc5855a683c6737257bfa18d25a4b8
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  twig
@@ -24,7 +24,7 @@
 %global phpdir      %{_datadir}/php
 
 Name:          php-%{composer_project}2
-Version:       2.0.0
+Version:       2.1.0
 Release:       1%{?dist}
 Summary:       The flexible, fast, and secure template engine for PHP
 
@@ -146,6 +146,9 @@ exit $RETURN_CODE
 
 
 %changelog
+* Thu Jan 11 2017 Remi Collet <remi@fedoraproject.org> - 2.1.0-1
+- update to 2.1.0
+
 * Fri Jan  6 2017 Remi Collet <remi@fedoraproject.org> - 2.0.0-1
 - update to 2.0.0
 - rename to php-twig2
