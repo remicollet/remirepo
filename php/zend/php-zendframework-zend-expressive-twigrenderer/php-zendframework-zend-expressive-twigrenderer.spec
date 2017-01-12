@@ -38,7 +38,7 @@ BuildArch:      noarch
 BuildRequires:  php(language) >= 5.6
 BuildRequires:  php-composer(container-interop/container-interop)    >= 1.1
 BuildRequires:  php-composer(twig/twig)                              <  2
-BuildRequires:  php-composer(twig/twig)                              >= 1.19
+BuildRequires:  php-composer(twig/twig)                              >= 1.26
 BuildRequires:  php-composer(%{gh_owner}/zend-expressive-helpers)    >= 1.1
 BuildRequires:  php-composer(%{gh_owner}/zend-expressive-router)     >= 1.3.2
 BuildRequires:  php-composer(%{gh_owner}/zend-expressive-template)   >= 1.0
