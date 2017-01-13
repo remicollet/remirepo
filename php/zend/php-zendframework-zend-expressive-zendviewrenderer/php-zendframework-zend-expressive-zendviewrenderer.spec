@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 %global bootstrap    0
-%global gh_commit    10dfc00405df10e74fc047e2ad31be5245ef1c13
+%global gh_commit    eb67a42ce90e338547a6fc11e4d1837650e63105
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     zendframework
 %global gh_project   zend-expressive-zendviewrenderer
@@ -21,7 +21,7 @@
 %endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        1.2.0
+Version:        1.2.1
 Release:        1%{?dist}
 Summary:        zend-view PhpRenderer integration for Expressive
 
@@ -174,6 +174,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan 13 2017 Remi Collet <remi@fedoraproject.org> - 1.2.1-1
+- update to 1.2.1
+
 * Wed Jan 11 2017 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
 - update to 1.2.0
 - raise dependency on PHP version 5.6
