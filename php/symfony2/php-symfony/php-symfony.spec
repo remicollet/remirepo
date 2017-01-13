@@ -13,8 +13,8 @@
 
 %global github_owner     symfony
 %global github_name      symfony
-%global github_version   2.8.15
-%global github_commit    3ec15b9379ebb0758e296d4193926a7b4121a964
+%global github_version   2.8.16
+%global github_commit    9fef72a3ab561c4bfa703a70369db028dec387d2
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  symfony
@@ -106,7 +106,7 @@
 
 Name:          php-%{composer_project}
 Version:       %{github_version}
-Release:       3%{?dist}
+Release:       1%{?dist}
 Summary:       PHP framework for web projects
 
 Group:         Development/Libraries
@@ -1922,9 +1922,6 @@ sed -e 's/testCopyForOriginUrlsAndExistingLocalFileDefaultsToCopy/SKIP_testCopyF
 : Skip test failing with old tzdata
 rm src/Symfony/Component/Form/Tests/Extension/Core/Type/DateTypeTest.php
 %endif
-: Issue with tzdata
-sed -e 's/function testDate/function skipDate/' \
-    -i src/Symfony/Component/Form/Tests/Abstract*Test.php
 %endif
 
 
@@ -2703,6 +2700,9 @@ exit $RET
 # ##############################################################################
 
 %changelog
+* Fri Jan 13 2017 Remi Collet <remi@fedoraproject.org> - 2.8.16-1
+- Update to 2.8.16
+
 * Fri Jan  6 2017 Remi Collet <remi@fedoraproject.org> - 2.8.15-3
 - use Twig 2 when installed but ensure it is not pulled
   by defaut to avoid pulling PHP 7
