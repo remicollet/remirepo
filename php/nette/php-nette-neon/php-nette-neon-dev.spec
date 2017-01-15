@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c40c63f2afa4196844ac40d9d2a2cfb313f76906
+%global gh_commit    1a78ff64b1e161ebccc03bdf9366450a69365f5b
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.4.0
+Version:        2.4.1
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette NEON: parser and generator for Nette Object Notation
@@ -47,13 +47,14 @@ BuildRequires:  php-composer(%{gh_owner}/tester) >= 1.4
 %endif
 
 # from composer.json, "require": {
-#        "php": ">=5.6.0"
-#        "ext-iconv": "*"
+#               "php": ">=5.6.0"
+#               "ext-iconv": "*",
+#               "ext-json": "*"
 Requires:       php(language) >= 5.6
 Requires:       php-iconv
+Requires:       php-json
 # from phpcompatinfo report for version 2.4.0
 Requires:       php-date
-Requires:       php-json
 Requires:       php-pcre
 Requires:       php-spl
 
@@ -130,6 +131,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan 15 2017 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
+- update to 2.4.1
+
 * Tue Aug  2 2016 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
 - update to 2.4.0
 - raise dependency on PHP >= 5.6
