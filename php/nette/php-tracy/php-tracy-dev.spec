@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    c1ec73ea7661b79aa9fade863b75f8cad9f47bb5
+%global gh_commit    f1ec2f25347ca75dbadcb43244a9ac04dea29fc2
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -16,7 +16,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_project}
-Version:        2.4.4
+Version:        2.4.5
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Tracy: useful PHP debugger
@@ -153,6 +153,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan 15 2017 Remi Collet <remi@fedoraproject.org> - 2.4.5-1
+- update to 2.4.5
+
 * Sat Dec 10 2016 Remi Collet <remi@fedoraproject.org> - 2.4.4-1
 - update to 2.4.4
 
