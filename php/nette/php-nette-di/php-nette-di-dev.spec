@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b265f305e1fef2dad1cb2e7340b49d274d3dd14c
+%global gh_commit    28767a0abef69faa08bfa700e2e3f80ac58ab58e
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.4.5
+Version:        2.4.6
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Dependency Injection Component
@@ -39,8 +39,8 @@ BuildRequires:  php-pcre
 BuildRequires:  php-reflection
 BuildRequires:  php-spl
 BuildRequires:  php-composer(%{gh_owner}/neon) >= 2.3.3
-BuildRequires:  php-composer(%{gh_owner}/php-generator) >= 2.4
-BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.3.5
+BuildRequires:  php-composer(%{gh_owner}/php-generator) >= 2.5
+BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.4.3
 # From composer.json, "require-dev": {
 #               "nette/tester": "~2.0",
 #               "tracy/tracy": "^2.3"
@@ -51,19 +51,19 @@ BuildRequires:  php-composer(%{gh_owner}/tester) >= 2.0
 #               "php": ">=5.6.0",
 #               "ext-tokenizer": "*",
 #               "nette/neon": "^2.3.3",
-#               "nette/php-generator": "^2.4",
-#               "nette/utils": "^2.4"
+#               "nette/php-generator": "^2.5",
+#               "nette/utils": "^2.4.3"
 Requires:       php(language) >= 5.6
 Requires:       php-tokenizer
 Requires:       php-composer(%{gh_owner}/neon) >= 2.3.3
 Requires:       php-composer(%{gh_owner}/neon) <  3
-Requires:       php-composer(%{gh_owner}/php-generator) >= 2.4
+Requires:       php-composer(%{gh_owner}/php-generator) >= 2.5
 Requires:       php-composer(%{gh_owner}/php-generator) <  3
-Requires:       php-composer(%{gh_owner}/utils) >= 2.4
+Requires:       php-composer(%{gh_owner}/utils) >= 2.4.3
 Requires:       php-composer(%{gh_owner}/utils) <  3
 # from composer.json, "conflict": {
 Conflicts:      php-composer(%{gh_owner}/bootstrap) < 2.4
-# from phpcompatinfo report for version 2.4.2
+# from phpcompatinfo report for version 2.4.6
 Requires:       php-pcre
 Requires:       php-reflection
 Requires:       php-spl
@@ -158,6 +158,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan 15 2017 Remi Collet <remi@fedoraproject.org> - 2.4.6-1
+- update to 2.4.6
+- raise dependency on nette/php-generator 2.5
+- raise dependency on nette/php-utils 2.4.3
+
 * Fri Dec 23 2016 Remi Collet <remi@fedoraproject.org> - 2.4.5-1
 - update to 2.4.5
 
