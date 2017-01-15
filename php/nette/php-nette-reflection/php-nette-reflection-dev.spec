@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    1922f2502e5d2bf6be51859721855e8e72ebde96
+%global gh_commit    ca6bafe1f73c19719238b58f91e6a399f281069b
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.4.0
+Version:        2.4.1
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette PHP Reflection Component
@@ -40,25 +40,25 @@ BuildRequires:  php-reflection
 BuildRequires:  php-composer(%{gh_owner}/caching) >= 2.2
 BuildRequires:  php-composer(%{gh_owner}/utils) >= 2.4
 # From composer.json, "require-dev": {
-#               "nette/di": "~2.3",
-#               "nette/tester": "~2.0",
-#               "tracy/tracy": "^2.3"
-BuildRequires:  php-composer(%{gh_owner}/di) >= 2.3
+#               "nette/di": "^2.4 || ^3.0",
+#               "nette/tester": "^2.0",
+#               "tracy/tracy": "^2.4"
+BuildRequires:  php-composer(%{gh_owner}/di) >= 2.4
 BuildRequires:  php-composer(%{gh_owner}/tester) >= 2.0
-BuildRequires:  php-composer(tracy/tracy) >= 2.3
+BuildRequires:  php-composer(tracy/tracy) >= 2.4
 %endif
 
 # from composer.json, "require": {
-#        "php": ">=5.6.0"
-#        "ext-tokenizer": "*",
-#        "nette/caching": "~2.2",
-#        "nette/utils": "~2.4"
+#               "php": ">=5.6.0"
+#               "ext-tokenizer": "*",
+#               "nette/caching": "^2.2 || ^3.0",
+#               "nette/utils": "^2.4 || ^3.0"
 Requires:       php(language) >= 5.6
 Requires:       php-tokenizer
 Requires:       php-composer(%{gh_owner}/caching) >= 2.2
-Requires:       php-composer(%{gh_owner}/caching) <  3
+Requires:       php-composer(%{gh_owner}/caching) <  4
 Requires:       php-composer(%{gh_owner}/utils) >= 2.4
-Requires:       php-composer(%{gh_owner}/utils) <  3
+Requires:       php-composer(%{gh_owner}/utils) <  4
 # from phpcompatinfo report for version 2.3.1
 Requires:       php-reflection
 Requires:       php-pcre
@@ -149,6 +149,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan 15 2017 Remi Collet <remi@fedoraproject.org> - 2.4.1-1
+- update to 2.4.1
+
 * Thu Aug  4 2016 Remi Collet <remi@fedoraproject.org> - 2.4.0-1
 - update to 2.4.0
 - raise dependency on PHP >= 5.6
