@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    d552403bd9337eafd646a7e252c0256e281115dc
+%global gh_commit    714afb64d0da07d0da7178cbf5680008e4b0180b
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -16,7 +16,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-nette-utils
-Version:        2.4.3
+Version:        2.4.4
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Utility Classes
@@ -169,6 +169,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan 16 2017 Remi Collet <remi@fedoraproject.org> - 2.4.4-1
+- update to 2.4.4
+
 * Wed Jan 11 2017 Remi Collet <remi@fedoraproject.org> - 2.4.3-1
 - update to 2.4.3
 
