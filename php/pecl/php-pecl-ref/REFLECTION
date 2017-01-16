@@ -1,0 +1,278 @@
+Extension [ <persistent> extension #116 ref version 0.4.1 ] {
+
+  - Functions {
+    Function [ <internal:ref> function Ref\refcounted ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $value ]
+      }
+      - Return [ boolean ]
+    }
+    Function [ <internal:ref> function Ref\refcount ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $value ]
+      }
+      - Return [ integer ]
+    }
+    Function [ <internal:ref> function Ref\softrefcounted ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $object ]
+      }
+      - Return [ boolean ]
+    }
+    Function [ <internal:ref> function Ref\softrefcount ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $object ]
+      }
+      - Return [ integer ]
+    }
+    Function [ <internal:ref> function Ref\softrefs ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $object ]
+      }
+      - Return [ array ]
+    }
+    Function [ <internal:ref> function Ref\weakrefcounted ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $object ]
+      }
+      - Return [ boolean ]
+    }
+    Function [ <internal:ref> function Ref\weakrefcount ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $object ]
+      }
+      - Return [ integer ]
+    }
+    Function [ <internal:ref> function Ref\weakrefs ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $object ]
+      }
+      - Return [ array ]
+    }
+    Function [ <internal:ref> function Ref\object_handle ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $object ]
+      }
+      - Return [ integer ]
+    }
+    Function [ <internal:ref> function Ref\is_obj_destructor_called ] {
+
+      - Parameters [1] {
+        Parameter #0 [ <required> $object ]
+      }
+      - Return [ boolean ]
+    }
+  }
+
+  - Classes [4] {
+    Class [ <internal:ref> class Ref\NotifierException extends Exception implements Throwable ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [5] {
+        Property [ <default> protected $message ]
+        Property [ <default> protected $code ]
+        Property [ <default> protected $file ]
+        Property [ <default> protected $line ]
+        Property [ <default> private $exceptions ]
+      }
+
+      - Methods [11] {
+        Method [ <internal:ref, overwrites Exception, ctor> public method __construct ] {
+
+          - Parameters [4] {
+            Parameter #0 [ <optional> $message ]
+            Parameter #1 [ <optional> $exceptions ]
+            Parameter #2 [ <optional> $code ]
+            Parameter #3 [ <optional> $previous ]
+          }
+        }
+
+        Method [ <internal:ref> public method getExceptions ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:Core, inherits Exception> public method __wakeup ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
+        }
+
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
+        }
+      }
+    }
+
+    Class [ <internal:ref> abstract class Ref\AbstractReference ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:ref, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $referent ]
+            Parameter #1 [ <optional> $notify ]
+          }
+        }
+
+        Method [ <internal:ref> public method get ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:ref> public method valid ] {
+
+          - Parameters [0] {
+          }
+          - Return [ boolean ]
+        }
+
+        Method [ <internal:ref> public method notifier ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $notify ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:ref> class Ref\SoftReference extends Ref\AbstractReference ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:ref, inherits Ref\AbstractReference, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $referent ]
+            Parameter #1 [ <optional> $notify ]
+          }
+        }
+
+        Method [ <internal:ref, inherits Ref\AbstractReference> public method get ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:ref, inherits Ref\AbstractReference> public method valid ] {
+
+          - Parameters [0] {
+          }
+          - Return [ boolean ]
+        }
+
+        Method [ <internal:ref, inherits Ref\AbstractReference> public method notifier ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $notify ]
+          }
+        }
+      }
+    }
+
+    Class [ <internal:ref> class Ref\WeakReference extends Ref\AbstractReference ] {
+
+      - Constants [0] {
+      }
+
+      - Static properties [0] {
+      }
+
+      - Static methods [0] {
+      }
+
+      - Properties [0] {
+      }
+
+      - Methods [4] {
+        Method [ <internal:ref, inherits Ref\AbstractReference, ctor> public method __construct ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $referent ]
+            Parameter #1 [ <optional> $notify ]
+          }
+        }
+
+        Method [ <internal:ref, inherits Ref\AbstractReference> public method get ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:ref, inherits Ref\AbstractReference> public method valid ] {
+
+          - Parameters [0] {
+          }
+          - Return [ boolean ]
+        }
+
+        Method [ <internal:ref, inherits Ref\AbstractReference> public method notifier ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <optional> $notify ]
+          }
+        }
+      }
+    }
+  }
+}
+
