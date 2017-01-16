@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #85 gearman version 2.0.2 ] {
+Extension [ <persistent> extension #86 gearman version 2.0.3 ] {
 
   - Constants [157] {
     Constant [ string GEARMAN_DEFAULT_TCP_HOST ] { localhost }
@@ -493,9 +493,8 @@ Extension [ <persistent> extension #85 gearman version 2.0.2 ] {
     }
     Function [ <internal:gearman> function gearman_client_run_tasks ] {
 
-      - Parameters [2] {
+      - Parameters [1] {
         Parameter #0 [ <required> $client_object ]
-        Parameter #1 [ <required> $data ]
       }
     }
     Function [ <internal:gearman> function gearman_task_return_code ] {
@@ -1139,8 +1138,7 @@ Extension [ <persistent> extension #85 gearman version 2.0.2 ] {
 
         Method [ <internal:gearman> public method runTasks ] {
 
-          - Parameters [1] {
-            Parameter #0 [ <required> $data ]
+          - Parameters [0] {
           }
         }
       }
