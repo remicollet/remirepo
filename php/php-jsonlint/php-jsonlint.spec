@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-jsonlint
 #
-# Copyright (c) 2013-2015 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2013-2017 Shawn Iwinski <shawn.iwinski@gmail.com>
 #                         Remi Collet <remi@fedoraproject.org>
 #
 # License: MIT
@@ -24,7 +24,7 @@
 
 Name:          php-%{github_name}
 Version:       %{github_version}
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       JSON Lint for PHP
 
 Group:         Development/Libraries
@@ -67,8 +67,11 @@ Provides:      php-composer(seld/jsonlint) = %{version}
 This library is a port of the JavaScript jsonlint
 (https://github.com/zaach/jsonlint) library.
 
-To use this library, you just have to add, in your project:
-  require_once '%{_datadir}/php/Seld/JsonLint/autoload.php';
+Bin: %{_bindir}/jsonlint-php [1]
+Autoloader: %{_datadir}/php/Seld/JsonLint/autoload.php
+
+[1] Package python2-demjson installs %{_bindir}/jsonlint so this package's bin
+    script has been renamed to %{_bindir}/jsonlint-php
 
 
 %prep
@@ -89,7 +92,7 @@ cp -rp src/Seld/JsonLint %{buildroot}%{_datadir}/php/Seld/
 
 # Bin
 mkdir -p %{buildroot}%{_bindir}
-install -pm 0755 bin/jsonlint %{buildroot}%{_bindir}/
+install -pm 0755 bin/jsonlint %{buildroot}%{_bindir}/jsonlint-php
 
 
 %check
@@ -125,10 +128,14 @@ exit $ret
 %doc *.mdown composer.json
 %dir %{_datadir}/php/Seld
      %{_datadir}/php/Seld/JsonLint
-%{_bindir}/jsonlint
+%{_bindir}/jsonlint-php
 
 
 %changelog
+* Fri Jan 13 2017 Shawn Iwinski <shawn.iwinski@gmail.com> - 1.5.0-2
+- Rename bin from %%{_bindir}/jsonlint to %%{_bindir}/jsonlint-php to avoid
+  conflict with package python2-demjson (RHBZ #1409281)
+
 * Tue Nov 15 2016 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
 - update to 1.5.0
 
