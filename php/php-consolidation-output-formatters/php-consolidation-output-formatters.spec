@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-consolidation-output-formatters
 #
-# Copyright (c) 2016 Shawn Iwinski <shawn@iwin.ski>
+# Copyright (c) 2016-2017 Shawn Iwinski <shawn@iwin.ski>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,8 +12,8 @@
 
 %global github_owner     consolidation-org
 %global github_name      output-formatters
-%global github_version   2.0.1
-%global github_commit    8bce15438a97afba5dcf036a71d961977b64fa3e
+%global github_version   3.1.6
+%global github_commit    c8ea5734985cea4acd6343a2465a2f71cf011c82
 
 %global composer_vendor  consolidation
 %global composer_project output-formatters
@@ -23,8 +23,9 @@
 # "symfony/console": "~2.5|~3.0"
 # "symfony/finder": "~2.5|~3.0"
 #     NOTE: Min version not 2.5 because autoloader required
+#     NOTE: Min version not 4.0 because v3 not packaged yet
 %global symfony_min_ver 2.7.1
-%global symfony_max_ver 4.0
+%global symfony_max_ver 3.0
 
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
@@ -33,7 +34,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       1%{?github_release}%{?dist}
+Release:       2%{?github_release}%{?dist}
 Summary:       Format text by applying transformations provided by plug-in formatters
 
 Group:         Development/Libraries
@@ -52,14 +53,14 @@ BuildRequires: php-composer(symfony/console) <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/console) >= %{symfony_min_ver}
 BuildRequires: php-composer(symfony/finder) <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/finder) >= %{symfony_min_ver}
-## phpcompatinfo (computed from version 2.0.1)
+## phpcompatinfo (computed from version 3.1.6)
 BuildRequires: php-dom
 BuildRequires: php-json
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
 ## Autoloader
-BuildRequires: php-composer(symfony/class-loader)
+BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 # composer.json
@@ -68,14 +69,14 @@ Requires:      php-composer(symfony/console) <  %{symfony_max_ver}
 Requires:      php-composer(symfony/console) >= %{symfony_min_ver}
 Requires:      php-composer(symfony/finder) <  %{symfony_max_ver}
 Requires:      php-composer(symfony/finder) >= %{symfony_min_ver}
-# phpcompatinfo (computed from version 2.0.1)
+# phpcompatinfo (computed from version 3.1.6)
 Requires:      php-dom
 Requires:      php-json
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
 # Autoloader
-Requires:      php-composer(symfony/class-loader)
+Requires:      php-composer(fedora/autoloader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -97,26 +98,15 @@ cat <<'AUTOLOAD' | tee src/autoload.php
 /**
  * Autoloader for %{name} and its' dependencies
  * (created by %{name}-%{version}-%{release}).
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
  */
+require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+\Fedora\Autoloader\Autoload::addPsr4('Consolidation\\OutputFormatters\\', __DIR__);
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('Consolidation\\OutputFormatters\\', dirname(dirname(__DIR__)));
-
-// Required dependencies
-require_once '%{phpdir}/Symfony/Component/Console/autoload.php';
-require_once '%{phpdir}/Symfony/Component/Finder/autoload.php';
-
-return $fedoraClassLoader;
+\Fedora\Autoloader\Dependencies::required([
+    '%{phpdir}/Symfony/Component/Console/autoload.php',
+    '%{phpdir}/Symfony/Component/Finder/autoload.php',
+]);
 AUTOLOAD
 
 
@@ -129,32 +119,27 @@ cp -rp src/* %{buildroot}%{phpdir}/Consolidation/OutputFormatters/
 
 %check
 %if %{with_tests}
-: Mock PSR-0 tests
-mkdir -p tests-psr0/Consolidation
-ln -s ../../tests/src tests-psr0/Consolidation/TestUtils
-
 : Create tests bootstrap
 cat <<'BOOTSTRAP' | tee bootstrap.php
 <?php
-$fedoraClassLoader =
-    require '%{buildroot}%{phpdir}/Consolidation/OutputFormatters/autoload.php';
-$fedoraClassLoader->addPrefix('Consolidation\\TestUtils\\', __DIR__.'/tests-psr0');
+require_once '%{buildroot}%{phpdir}/Consolidation/OutputFormatters/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('Consolidation\\TestUtils\\', __DIR__.'/tests/src');
 BOOTSTRAP
 
-run=0
-ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
+: Skip API documentation test
+rm -f tests/testAPIDocs.php
+
+: Upstream tests
 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
-fi
-exit $ret
+
+: Upstream tests with SCLs if available
+SCL_RETURN_CODE=0
+for SCL in php56 php70 php71; do
+    if which $SCL; then
+       $SCL %{_bindir}/phpunit --bootstrap bootstrap.php || SCL_RETURN_CODE=1
+    fi
+done
+exit $SCL_RETURN_CODE
 %else
 : Tests skipped
 %endif
@@ -175,6 +160,14 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan 16 2017 Remi Collet <remi@fedoraproject.org> - 3.1.6-2
+- fix autoloader dependency
+
+* Sun Jan 15 2017 Shawn Iwinski <shawn@iwin.ski> - 3.1.6-1
+- Update to 3.1.6 (RHBZ #1392720)
+- Use php-composer(fedora/autoloader)
+- Run upstream tests with SCLs if they are available
+
 * Tue Nov 01 2016 Shawn Iwinski <shawn@iwin.ski> - 2.0.1-1
 - Update to 2.0.1 (RHBZ #1376274)
 
