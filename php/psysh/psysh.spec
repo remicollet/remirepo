@@ -2,7 +2,7 @@
 #
 # Fedora spec file for psysh
 #
-# Copyright (c) 2016 Shawn Iwinski <shawn@iwin.ski>
+# Copyright (c) 2016-2017 Shawn Iwinski <shawn@iwin.ski>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,8 +12,8 @@
 
 %global github_owner     bobthecow
 %global github_name      psysh
-%global github_version   0.8.0
-%global github_commit    4a8860e13aa68a4bbf2476c014f8a1f14f1bf991
+%global github_version   0.8.1
+%global github_commit    701e8a1cc426ee170f1296f5d9f6b8a26ad25c4a
 
 %global composer_vendor  psy
 %global composer_project psysh
@@ -236,6 +236,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan 16 2017 Remi Collet <remi@fedoraproject.org> - 0.8.1-1
+- update to 0.8.1
+
 * Sun Dec 11 2016 Shawn Iwinski <shawn@iwin.ski> - 0.8.0-1
 - Update to 0.8.0 (RHBZ #1403040)
 - Switch autoloader from php-composer(symfony/class-loader) to
