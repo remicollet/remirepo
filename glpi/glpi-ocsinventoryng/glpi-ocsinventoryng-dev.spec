@@ -10,7 +10,7 @@
 %global lockname     ocsinventoryng.lock
 
 Name:           glpi-ocsinventoryng
-Version:        1.3.1
+Version:        1.3.2
 Release:        1%{?dist}
 Summary:        Plugin to synchronize GLPI with OCS Inventory NG
 
@@ -170,6 +170,9 @@ grep %{lockname} %{buildroot}/%{_datadir}/glpi/plugins/%{pluginname}/setup.php |
 
 
 %changelog
+* Mon Jan 16 2017 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
+- Update to 1.3.2 for GLPI 9.1.1
+
 * Tue Nov 29 2016 Remi Collet <remi@fedoraproject.org> - 1.3.1-1
 - Update to 1.3.1 for GLPI 9.1.1
 
