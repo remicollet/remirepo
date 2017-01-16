@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #73 apcu version 5.1.7-dev ] {
+Extension [ <persistent> extension #73 apcu version 5.1.8 ] {
 
   - INI {
     Entry [ apc.enabled <SYSTEM> ]
@@ -23,10 +23,10 @@ Extension [ <persistent> extension #73 apcu version 5.1.7-dev ] {
       Current = '0'
     }
     Entry [ apc.mmap_file_mask <SYSTEM> ]
-      Current = '/tmp/apc.gJCR2q'
+      Current = '/tmp/apc.XXXXXX'
     }
     Entry [ apc.enable_cli <SYSTEM> ]
-      Current = '1'
+      Current = '0'
     }
     Entry [ apc.slam_defense <SYSTEM> ]
       Current = '1'
@@ -48,8 +48,7 @@ Extension [ <persistent> extension #73 apcu version 5.1.7-dev ] {
     }
   }
 
-  - Constants [16] {
-    Constant [ integer  ] { 140243124351904 }
+  - Constants [15] {
     Constant [ integer APC_LIST_ACTIVE ] { 1 }
     Constant [ integer APC_LIST_DELETED ] { 2 }
     Constant [ integer APC_ITER_TYPE ] { 1 }

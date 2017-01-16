@@ -26,12 +26,12 @@
 
 Name:           %{?sub_prefix}php-pecl-apcu
 Summary:        APC User Cache
-Version:        5.1.7
+Version:        5.1.8
 %if 0%{?gh_date:1}
 Release:        0.1.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 %endif
 Source1:        %{pecl_name}-5.1.2.ini
@@ -165,10 +165,14 @@ cd ..
 cp -pr NTS ZTS
 %endif
 
+%if 0%{!?scl:1}
 # Fix path to configuration file
 sed -e s:apc.conf.php:%{_sysconfdir}/apcu-panel/conf.php:g \
-    -i  NTS/apc.php
-
+    -i NTS/apc.php
+%else
+# Provide the control panel as doc
+sed -e '/"apc.php"/s/role="src"/role="doc"/' -i package.xml
+%endif
 
 %build
 cd NTS
@@ -279,9 +283,6 @@ fi
 %{?_licensedir:%license NTS/LICENSE}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
-%if 0%{?scl:1}
-%doc NTS/apc.php
-%endif
 
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
@@ -312,6 +313,9 @@ fi
 
 
 %changelog
+* Mon Jan 16 2017 Remi Collet <remi@fedoraproject.org> - 5.1.8-1
+- Update to 5.1.8 (php 7, stable)
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 5.1.7-2
 - rebuild with PHP 7.1.0 GA
 
