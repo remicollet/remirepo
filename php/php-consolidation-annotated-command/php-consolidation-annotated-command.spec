@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-consolidation-annotated-command
 #
-# Copyright (c) 2016 Shawn Iwinski <shawn@iwin.ski>
+# Copyright (c) 2016-2017 Shawn Iwinski <shawn@iwin.ski>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -12,30 +12,31 @@
 
 %global github_owner     consolidation-org
 %global github_name      annotated-command
-%global github_version   2.0.1
-%global github_commit    2a6ef0b39ed904dabefd796eeaf5f8feeaa881c4
+%global github_version   2.2.2
+%global github_commit    1f1d92807f72901e049e9df048b412c3bc3652c9
 
 %global composer_vendor  consolidation
 %global composer_project annotated-command
 
 # "php": ">=5.4.0"
 %global php_min_ver 5.4.0
-# "consolidation/output-formatters": "~2"
-%global consolidation_output_formatters_min_ver 2
-%global consolidation_output_formatters_max_ver 3
-# "psr/log": "~1.0"
+# "consolidation/output-formatters": "^3.1.5"
+%global consolidation_output_formatters_min_ver 3.1.5
+%global consolidation_output_formatters_max_ver 4
+# "psr/log": "~1"
 #     NOTE: Min version not 1.0 because autoloader required
 %global psr_log_min_ver 1.0.1
 %global psr_log_max_ver 2.0
 # "phpdocumentor/reflection-docblock": "^2.0|^3.0.2"
-%global phpdocumentor_reflection_docblock_min_ver 2
-%global phpdocumentor_reflection_docblock_max_ver 4
-# "symfony/console": "~2.5|~3.0"
-# "symfony/event-dispatcher": "~2.5|~3.0"
-# "symfony/finder": "~2.5|~3.0"
-#     NOTE: Min version not 2.5 because autoloader required
-%global symfony_min_ver 2.7.1
-%global symfony_max_ver 4.0
+#     NOTE: Min version not 4.0 because v3 not packaged yet
+%global phpdocumentor_reflection_docblock_min_ver 2.0
+%global phpdocumentor_reflection_docblock_max_ver 3.0
+# "symfony/console": "^2.8|~3.0"
+# "symfony/event-dispatcher": "^2.5|~3.0"
+# "symfony/finder": "^2.5|~3.0"
+#     NOTE: Min version not 4.0 because v3 not packaged yet
+%global symfony_min_ver 2.8
+%global symfony_max_ver 3.0
 
 # Build using "--without tests" to disable tests
 %global with_tests 0%{!?_without_tests:1}
@@ -44,7 +45,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       Initialize Symfony Console commands from annotated command class methods
 
 Group:         Development/Libraries
@@ -71,16 +72,19 @@ BuildRequires: php-composer(symfony/event-dispatcher)          <  %{symfony_max_
 BuildRequires: php-composer(symfony/event-dispatcher)          >= %{symfony_min_ver}
 BuildRequires: php-composer(symfony/finder)                    <  %{symfony_max_ver}
 BuildRequires: php-composer(symfony/finder)                    >= %{symfony_min_ver}
-## phpcompatinfo (computed from version 2.0.1)
+## phpcompatinfo (computed from version 2.2.2)
+BuildRequires: php-dom
 BuildRequires: php-pcre
 BuildRequires: php-reflection
 BuildRequires: php-spl
 ## Autoloader
-BuildRequires: php-composer(symfony/class-loader)
+BuildRequires: php-composer(fedora/autoloader)
 %endif
 
 # composer.json
 Requires:      php(language)                                   >= %{php_min_ver}
+Requires:      php-composer(consolidation/output-formatters)   <  %{consolidation_output_formatters_max_ver}
+Requires:      php-composer(consolidation/output-formatters)   >= %{consolidation_output_formatters_min_ver}
 Requires:      php-composer(phpdocumentor/reflection-docblock) <  %{phpdocumentor_reflection_docblock_max_ver}
 Requires:      php-composer(phpdocumentor/reflection-docblock) >= %{phpdocumentor_reflection_docblock_min_ver}
 Requires:      php-composer(psr/log)                           <  %{psr_log_max_ver}
@@ -91,12 +95,13 @@ Requires:      php-composer(symfony/event-dispatcher)          <  %{symfony_max_
 Requires:      php-composer(symfony/event-dispatcher)          >= %{symfony_min_ver}
 Requires:      php-composer(symfony/finder)                    <  %{symfony_max_ver}
 Requires:      php-composer(symfony/finder)                    >= %{symfony_min_ver}
-# phpcompatinfo (computed from version 2.0.1)
+# phpcompatinfo (computed from version 2.2.2)
+Requires:      php-dom
 Requires:      php-pcre
 Requires:      php-reflection
 Requires:      php-spl
 # Autoloader
-Requires:      php-composer(symfony/class-loader)
+Requires:      php-composer(fedora/autoloader)
 
 # Composer
 Provides:      php-composer(%{composer_vendor}/%{composer_project}) = %{version}
@@ -118,29 +123,19 @@ cat <<'AUTOLOAD' | tee src/autoload.php
 /**
  * Autoloader for %{name} and its' dependencies
  * (created by %{name}-%{version}-%{release}).
- *
- * @return \Symfony\Component\ClassLoader\ClassLoader
  */
+require_once '%{phpdir}/Fedora/Autoloader/autoload.php';
 
-if (!isset($fedoraClassLoader) || !($fedoraClassLoader instanceof \Symfony\Component\ClassLoader\ClassLoader)) {
-    if (!class_exists('Symfony\\Component\\ClassLoader\\ClassLoader', false)) {
-        require_once '%{phpdir}/Symfony/Component/ClassLoader/ClassLoader.php';
-    }
+\Fedora\Autoloader\Autoload::addPsr4('Consolidation\\AnnotatedCommand\\', __DIR__);
 
-    $fedoraClassLoader = new \Symfony\Component\ClassLoader\ClassLoader();
-    $fedoraClassLoader->register();
-}
-
-$fedoraClassLoader->addPrefix('Consolidation\\AnnotatedCommand\\', dirname(dirname(__DIR__)));
-
-// Required dependencies
-require_once '%{phpdir}/phpDocumentor/Reflection/DocBlock/autoload.php';
-require_once '%{phpdir}/Psr/Log/autoload.php';
-require_once '%{phpdir}/Symfony/Component/Console/autoload.php';
-require_once '%{phpdir}/Symfony/Component/EventDispatcher/autoload.php';
-require_once '%{phpdir}/Symfony/Component/Finder/autoload.php';
-
-return $fedoraClassLoader;
+\Fedora\Autoloader\Dependencies::required([
+    '%{phpdir}/Consolidation/OutputFormatters/autoload.php',
+    '%{phpdir}/phpDocumentor/Reflection/DocBlock/autoload.php',
+    '%{phpdir}/Psr/Log/autoload.php',
+    '%{phpdir}/Symfony/Component/Console/autoload.php',
+    '%{phpdir}/Symfony/Component/EventDispatcher/autoload.php',
+    '%{phpdir}/Symfony/Component/Finder/autoload.php',
+]);
 AUTOLOAD
 
 
@@ -153,38 +148,27 @@ cp -rp src/* %{buildroot}%{phpdir}/Consolidation/AnnotatedCommand/
 
 %check
 %if %{with_tests}
-: Mock PSR-0 tests
-mkdir -p tests-psr0/Consolidation
-ln -s ../../tests/src tests-psr0/Consolidation/TestUtils
-
 : Create tests bootstrap
 cat <<'BOOTSTRAP' | tee bootstrap.php
 <?php
-$fedoraClassLoader =
-    require '%{buildroot}%{phpdir}/Consolidation/AnnotatedCommand/autoload.php';
-$fedoraClassLoader->addPrefix('Consolidation\\TestUtils\\', __DIR__.'/tests-psr0');
-
-require_once '%{phpdir}/Consolidation/OutputFormatters/autoload.php';
+require_once '%{buildroot}%{phpdir}/Consolidation/AnnotatedCommand/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('Consolidation\\TestUtils\\', __DIR__.'/tests/src');
 BOOTSTRAP
 
 : Skip test known to fail
 sed 's/function testInteractAndValidate/function SKIP_testInteractAndValidate/' \
     -i tests/testAnnotatedCommandFactory.php
 
-run=0
-ret=0
-if which php56; then
-   php56 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
-   run=1
-fi
-if which php71; then
-   php71 %{_bindir}/phpunit --bootstrap bootstrap.php || ret=1
-   run=1
-fi
-if [ $run -eq 0 ]; then
+: Upstream tests
 %{_bindir}/phpunit --verbose --bootstrap bootstrap.php
-fi
-exit $ret
+
+: Upstream tests with SCLs if available
+SCL_RETURN_CODE=0
+for SCL in php56 php70 php71; do
+    if which $SCL; then
+       $SCL %{_bindir}/phpunit --bootstrap bootstrap.php || SCL_RETURN_CODE=1
+    fi
+done
 %else
 : Tests skipped
 %endif
@@ -205,6 +189,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Jan 15 2017 Shawn Iwinski <shawn@iwin.ski> - 2.2.2-1
+- Update to 2.2.2 (RHBZ #1395001)
+- Use php-composer(fedora/autoloader)
+- Run upstream tests with SCLs if they are available
+
 * Tue Nov 01 2016 Shawn Iwinski <shawn@iwin.ski> - 2.0.1-2
 - Skip test known to fail
 
