@@ -1,0 +1,66 @@
+diff -up ./bin/generate_vcards.rpm ./bin/generate_vcards
+--- ./bin/generate_vcards.rpm	2017-01-17 14:09:13.368837753 +0100
++++ ./bin/generate_vcards	2017-01-17 14:12:49.417890498 +0100
+@@ -6,8 +6,7 @@ namespace Sabre\VObject;
+ // This sucks.. we have to try to find the composer autoloader. But chances
+ // are, we can't find it this way. So we'll do our bestest
+ $paths = [
+-    __DIR__ . '/../vendor/autoload.php',  // In case vobject is cloned directly
+-    __DIR__ . '/../../../autoload.php',   // In case vobject is a composer dependency.
++    '/usr/share/php/Sabre/VObject4/autoload.php',  // RPM installation
+ ];
+ 
+ foreach($paths as $path) {
+@@ -18,7 +17,7 @@ foreach($paths as $path) {
+ }
+ 
+ if (!class_exists('Sabre\\VObject\\Version')) {
+-    fwrite(STDERR, "Composer autoloader could not be properly loaded.\n");
++    fwrite(STDERR, "Autoloader could not be properly loaded.\n");
+     die(1);
+ }
+ 
+diff -up ./bin/vobject.rpm ./bin/vobject
+--- ./bin/vobject.rpm	2017-01-17 14:12:09.586696412 +0100
++++ ./bin/vobject	2017-01-17 14:12:40.301846078 +0100
+@@ -6,8 +6,7 @@ namespace Sabre\VObject;
+ // This sucks.. we have to try to find the composer autoloader. But chances
+ // are, we can't find it this way. So we'll do our bestest
+ $paths = [
+-    __DIR__ . '/../vendor/autoload.php',  // In case vobject is cloned directly
+-    __DIR__ . '/../../../autoload.php',   // In case vobject is a composer dependency.
++    '/usr/share/php/Sabre/VObject4/autoload.php',  // RPM installation
+ ];
+ 
+ foreach($paths as $path) {
+@@ -18,7 +17,7 @@ foreach($paths as $path) {
+ }
+ 
+ if (!class_exists('Sabre\\VObject\\Version')) {
+-    fwrite(STDERR, "Composer autoloader could not be loaded.\n");
++    fwrite(STDERR, "Autoloader could not be loaded.\n");
+     die(1);
+ }
+ 
+diff -up ./tests/bootstrap.php.rpm ./tests/bootstrap.php
+--- ./tests/bootstrap.php.rpm	2016-12-06 05:14:09.000000000 +0100
++++ ./tests/bootstrap.php	2017-01-17 14:14:50.960482740 +0100
+@@ -3,8 +3,7 @@
+ date_default_timezone_set('UTC');
+ 
+ $try = [
+-    __DIR__ . '/../vendor/autoload.php',
+-    __DIR__ . '/../../../autoload.php',
++    '@BUILDROOT@/usr/share/php/Sabre/VObject4/autoload.php',  // RPM installation
+ ];
+ 
+ foreach ($try as $path) {
+@@ -14,7 +13,7 @@ foreach ($try as $path) {
+     }
+ }
+ 
+-$autoLoader->addPsr4('Sabre\\VObject\\', __DIR__ . '/VObject');
++\Fedora\Autoloader\Autoload::addPsr4('Sabre\\VObject\\', __DIR__ . '/VObject');
+ 
+ if (!defined('SABRE_TEMPDIR')) {
+   define('SABRE_TEMPDIR', __DIR__ . '/temp/');
