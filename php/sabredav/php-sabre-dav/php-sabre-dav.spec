@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    b42593965211de1ce99f73bd3aede99c41258e08
+%global gh_commit    5b9737cc2f0182e368d14c80df7f6b2d77dc1457
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     fruux
 %global gh_project   sabre-dav
@@ -18,8 +18,8 @@
 
 Name:           php-%{gh_project}
 Summary:        WebDAV Framework for PHP
-Version:        3.0.9
-Release:        3%{?dist}
+Version:        3.2.0
+Release:        1%{?dist}
 
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 License:        BSD
@@ -35,13 +35,12 @@ Patch1:         %{name}-php71.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
-BuildRequires:  php(language) >= 5.4.1
-BuildRequires:  php-composer(phpunit/phpunit)
-BuildRequires:  php-composer(sabre/vobject) >= 3.3.4
+BuildRequires:  php(language) >= 5.5
+BuildRequires:  php-composer(sabre/vobject) >= 4.1.0
 BuildRequires:  php-composer(sabre/event)   >= 2.0
-BuildRequires:  php-composer(sabre/xml)     >= 1.0
-BuildRequires:  php-composer(sabre/http)    >= 4.0
-BuildRequires:  php-composer(sabre/uri)     >= 1.0
+BuildRequires:  php-composer(sabre/xml)     >= 1.4.0
+BuildRequires:  php-composer(sabre/http)    >= 4.2.1
+BuildRequires:  php-composer(sabre/uri)     >= 1.0.1
 BuildRequires:  php-dom
 BuildRequires:  php-pcre
 BuildRequires:  php-spl
@@ -51,20 +50,30 @@ BuildRequires:  php-ctype
 BuildRequires:  php-date
 BuildRequires:  php-iconv
 BuildRequires:  php-libxml
+BuildRequires:  php-composer(psr/log)       >= 1.0.1
 BuildRequires:  php-curl
 BuildRequires:  php-pdo
+# From composer.json, "require-dev" : {
+#        "phpunit/phpunit" : "> 4.8, <=6.0.0",
+#        "evert/phpdoc-md" : "~0.1.0",
+#        "squizlabs/php_codesniffer": "~1.5.3"
+#        "sabre/cs"        : "~0.0.5",
+#        "monolog/monolog": "^1.18"
+BuildRequires:  php-composer(phpunit/phpunit) >= 4.8
+BuildRequires:  php-composer(monolog/monolog) >= 1.18
+
 # Autoloader
 BuildRequires:  php-composer(fedora/autoloader)
 BuildRequires:  php-pdo_sqlite
 %endif
 
 # From composer.json,    "require": {
-#        "php": ">=5.4.1",
-#        "sabre/vobject": "^3.3.4",
-#        "sabre/event" : "~2.0",
-#        "sabre/xml"  : "~1.0",
-#        "sabre/http" : "~4.0",
-#        "sabre/uri" : "~1.0",
+#        "php": ">=5.5.0",
+#        "sabre/vobject": "^4.1.0",
+#        "sabre/event" : ">=2.0.0, <4.0.0",
+#        "sabre/xml"  : "^1.4.0",
+#        "sabre/http" : "^4.2.1",
+#        "sabre/uri" : "^1.0.1",
 #        "ext-dom": "*",
 #        "ext-pcre": "*",
 #        "ext-spl": "*",
@@ -73,17 +82,18 @@ BuildRequires:  php-pdo_sqlite
 #        "ext-ctype" : "*",
 #        "ext-date" : "*",
 #        "ext-iconv" : "*",
-#        "ext-libxml" : "*"
+#        "lib-libxml" : ">=2.7.0",
+#        "psr/log": "^1.0"
 Requires:       php(language) >= 5.4.1
-Requires:       php-composer(sabre/vobject) >= 3.3.4
-Requires:       php-composer(sabre/vobject) <  4
+Requires:       php-composer(sabre/vobject) >= 4.1.0
+Requires:       php-composer(sabre/vobject) <  5
 Requires:       php-composer(sabre/event)   >= 2.0
 Requires:       php-composer(sabre/event)   <  3
-Requires:       php-composer(sabre/xml)     >= 1.0
+Requires:       php-composer(sabre/xml)     >= 1.4.0
 Requires:       php-composer(sabre/xml)     <  2
-Requires:       php-composer(sabre/http)    >= 4.0
+Requires:       php-composer(sabre/http)    >= 4.2.1
 Requires:       php-composer(sabre/http)    <  5
-Requires:       php-composer(sabre/uri)     >= 1.0
+Requires:       php-composer(sabre/uri)     >= 1.0.1
 Requires:       php-composer(sabre/uri)     <  2
 Requires:       php-dom
 Requires:       php-pcre
@@ -94,6 +104,8 @@ Requires:       php-ctype
 Requires:       php-date
 Requires:       php-iconv
 Requires:       php-libxml
+Requires:       php-composer(psr/log)       >= 1.0.1
+Requires:       php-composer(psr/log)       <  2
 # From composer.json, "suggest" : {
 #        "ext-curl" : "*",
 #        "ext-pdo" : "*"
@@ -130,8 +142,9 @@ Autoloader: %{_datadir}/php/Sabre/DAV/autoload.php
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
 
-%patch0 -p0
-%patch1 -p1
+%patch0 -p1 -b .rpm
+%patch1 -p1 -b .php71
+
 cp %{SOURCE1} lib/DAV/autoload.php
 
 # drop executable as only provided as doc
@@ -195,6 +208,15 @@ exit $ret
 
 
 %changelog
+* Tue Jan 17 2017 Remi Collet <remi@fedoraproject.org> - 3.2.0-1
+- update to 3.2.0
+- raise dependency on PHP version 5.5
+- raise dependency on sabre/vobject version 4.1
+- raise dependency on sabre/xml version 1.4
+- raise dependency on sabre/http version 4.2.1
+- raise dependency on sabre/uri version 1.0.1
+- add dependency on psr/log
+
 * Wed Nov 23 2016 Remi Collet <remi@fedoraproject.org> - 3.0.9-3
 - add upstream patch to fix FTBFS with php 7.1
 

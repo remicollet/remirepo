@@ -1,0 +1,23 @@
+From 072589cd5dbce0f3e3a28b29ee778a1183c6d45d Mon Sep 17 00:00:00 2001
+From: Evert Pot <me@evertpot.com>
+Date: Fri, 7 Oct 2016 17:23:14 -0400
+Subject: [PATCH] PHP 7.1 tweak
+
+---
+ tests/Sabre/DAV/ServerEventsTest.php | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tests/Sabre/DAV/ServerEventsTest.php b/tests/Sabre/DAV/ServerEventsTest.php
+index 7f995c6..e41b827 100644
+--- a/tests/Sabre/DAV/ServerEventsTest.php
++++ b/tests/Sabre/DAV/ServerEventsTest.php
+@@ -118,7 +118,8 @@ class ServerEventsTest extends AbstractS
+             );
+         } catch (Exception $e) {}
+ 
+-        $this->assertEquals(2, $k);
++        // Fun fact, PHP 7.1 changes the order when sorting-by-callback.
++        $this->assertTrue($k>=2 && $k <=3);
+ 
+ 
+     }
