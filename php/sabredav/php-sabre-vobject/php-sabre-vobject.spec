@@ -12,10 +12,16 @@
 %global gh_project   sabre-vobject
 %global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
 
+%if 0%{?fedora} > 25
+%global with_cmd 0
+%else
+%global with_cmd 1
+%endif
+
 Name:           php-%{gh_project}
 Summary:        Library to parse and manipulate iCalendar and vCard objects
 Version:        3.5.3
-Release:        2%{?dist}
+Release:        4%{?dist}
 
 URL:            http://sabre.io/vobject/
 License:        BSD
@@ -47,7 +53,9 @@ BuildRequires:  php-composer(fedora/autoloader)
 Requires:       php(language) >= 5.3.1
 Requires:       php-mbstring
 # From phpcompatinfo report for version 3.4.5
+%if %{with_cmd}
 Requires:       php-cli
+%endif
 Requires:       php-date
 Requires:       php-json
 Requires:       php-pcre
@@ -86,11 +94,13 @@ cp %{SOURCE1} lib/autoload.php
 mkdir -p %{buildroot}%{_datadir}/php/Sabre
 cp -pr lib %{buildroot}%{_datadir}/php/Sabre/VObject
 
+%if %{with_cmd}
 # Install the commands
 install -Dpm 0755 bin/vobject \
          %{buildroot}/%{_bindir}/vobject
 install -Dpm 0755 bin/generate_vcards \
          %{buildroot}/%{_bindir}/generate_vcards
+%endif
 
 
 %check
@@ -128,11 +138,16 @@ exit $ret
 %doc *md
 %doc composer.json
 %{_datadir}/php/Sabre
+%if %{with_cmd}
 %{_bindir}/vobject
 %{_bindir}/generate_vcards
+%endif
 
 
 %changelog
+* Tue Jan 17 2017 Remi Collet <remi@fedoraproject.org> - 3.5.3-4
+- commands moved to php-sabre-vobject4 in F26
+
 * Sat Oct 29 2016 Remi Collet <remi@fedoraproject.org> - 3.5.3-3
 - switch from symfony/class-loader to fedora/autoloader
 
