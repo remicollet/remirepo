@@ -1,4 +1,8 @@
-Extension [ <persistent> extension #161 redis version 3.1.0 ] {
+Extension [ <persistent> extension #167 redis version 3.1.1RC2 ] {
+
+  - Dependencies {
+    Dependency [ igbinary (Required) ]
+  }
 
   - INI {
     Entry [ redis.arrays.names <ALL> ]
@@ -48,10 +52,10 @@ Extension [ <persistent> extension #161 redis version 3.1.0 ] {
         Constant [ integer OPT_READ_TIMEOUT ] { 3 }
         Constant [ integer SERIALIZER_NONE ] { 0 }
         Constant [ integer SERIALIZER_PHP ] { 1 }
+        Constant [ integer SERIALIZER_IGBINARY ] { 2 }
         Constant [ integer OPT_SCAN ] { 4 }
         Constant [ integer SCAN_RETRY ] { 1 }
         Constant [ integer SCAN_NORETRY ] { 0 }
-        Constant [ integer SERIALIZER_IGBINARY ] { 2 }
         Constant [ string AFTER ] { after }
         Constant [ string BEFORE ] { before }
       }
@@ -850,6 +854,7 @@ Extension [ <persistent> extension #161 redis version 3.1.0 ] {
         Constant [ integer OPT_READ_TIMEOUT ] { 3 }
         Constant [ integer SERIALIZER_NONE ] { 0 }
         Constant [ integer SERIALIZER_PHP ] { 1 }
+        Constant [ integer SERIALIZER_IGBINARY ] { 2 }
         Constant [ integer OPT_SCAN ] { 4 }
         Constant [ integer SCAN_RETRY ] { 1 }
         Constant [ integer SCAN_NORETRY ] { 0 }
@@ -858,7 +863,6 @@ Extension [ <persistent> extension #161 redis version 3.1.0 ] {
         Constant [ integer FAILOVER_ERROR ] { 1 }
         Constant [ integer FAILOVER_DISTRIBUTE ] { 2 }
         Constant [ integer FAILOVER_DISTRIBUTE_SLAVES ] { 3 }
-        Constant [ integer SERIALIZER_IGBINARY ] { 2 }
         Constant [ string AFTER ] { after }
         Constant [ string BEFORE ] { before }
       }
