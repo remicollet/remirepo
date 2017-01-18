@@ -124,7 +124,7 @@
 %global db_devel  libdb-devel
 %endif
 
-%global rcver        RC1
+#global rcver        RC1
 %global rpmrel       1
 
 
@@ -1808,6 +1808,9 @@ fi
 
 
 %changelog
+* Wed Jan 18 2017 Remi Collet <remi@fedoraproject.org> 7.1.1-1
+- Update to 7.1.1 - http://www.php.net/releases/7_1_1.php
+
 * Thu Jan  5 2017 Remi Collet <remi@fedoraproject.org> 7.1.1-0.1.RC1
 - Update to 7.1.1RC1
 
