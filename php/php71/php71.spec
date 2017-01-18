@@ -2053,7 +2053,7 @@ fi
 %changelog
 * Wed Jan 18 2017 Remi Collet <remi@fedoraproject.org> 7.1.1-2
 - EL-7: rebuild using gcc 4.8 instead of 6.2
-  because of https://bugzilla.redhat.com/1242110
+  because of https://bugzilla.redhat.com/1414348
 
 * Wed Jan 18 2017 Remi Collet <remi@fedoraproject.org> 7.1.1-1
 - Update to 7.1.1 - http://www.php.net/releases/7_1_1.php
