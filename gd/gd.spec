@@ -24,7 +24,7 @@ Name:          gd
 %else
 Name:          gd-last
 %endif
-Version:       2.2.3
+Version:       2.2.4
 Release:       1%{?prever}%{?short}%{?dist}
 Group:         System Environment/Libraries
 License:       MIT
@@ -38,6 +38,8 @@ Source0:       https://github.com/libgd/libgd/releases/download/gd-%{version}/li
 %endif
 
 Patch1:        gd-2.1.0-multilib.patch
+# https://github.com/libgd/libgd/issues/360
+Patch2:        gd-upstream.patch
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: freetype-devel
@@ -56,6 +58,12 @@ BuildRequires: pkgconfig
 BuildRequires: libtool
 BuildRequires: perl
 BuildRequires: perl-generators
+# for fontconfig/basic test
+%if 0%{?rhel} == 5
+BuildRequires: liberation-fonts
+%else
+BuildRequires: liberation-sans-fonts
+%endif
 
 %if "%{name}" != "gd-last"
 Obsoletes: gd-last <= %{version}
@@ -119,6 +127,7 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 %prep
 %setup -q -n libgd-%{version}%{?prever:-%{prever}}
 %patch1 -p1 -b .mlib
+%patch2 -p1 -b .upstream
 
 : $(perl config/getver.pl)
 
@@ -166,12 +175,23 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/libgd.a
 
 
 %check
-%if 0%{?rhel} > 0 && 0%{?rhel} <= 6
-export XFAIL_TESTS="freetype/bug00132"
+%ifarch %{ix86} ppc64 ppc64le aarch64
+# See https://github.com/libgd/libgd/issues/359
+XFAIL_TESTS="gdimagegrayscale/basic $XFAIL_TESTS"
 %endif
-%if 0%{?rhel} > 0 && 0%{?rhel} <= 5
-export XFAIL_TESTS="gdimagestringft/gdimagestringft_bbox $XFAIL_TESTS"
+%ifarch ppc64 ppc64le aarch64
+# See https://github.com/libgd/libgd/issues/364
+XFAIL_TESTS="gdimagecopyresampled/bug00201 $XFAIL_TESTS"
 %endif
+%if 0%{?rhel} > 0 && 0%{?rhel} <= 6 || 0%{?fedora} >= 26
+# See https://github.com/libgd/libgd/issues/363
+XFAIL_TESTS="freetype/bug00132 $XFAIL_TESTS"
+%endif
+%if 0%{?rhel} > 0 && 0%{?rhel} <= 5 || 0%{?fedora} >= 26
+XFAIL_TESTS="gdimagestringft/gdimagestringft_bbox $XFAIL_TESTS"
+%endif
+
+export XFAIL_TESTS
 
 : Upstream test suite
 make check
@@ -198,7 +218,6 @@ grep %{version} $RPM_BUILD_ROOT%{_libdir}/pkgconfig/gdlib.pc
 
 %files devel
 %defattr(-,root,root,-)
-%doc ChangeLog
 %{_bindir}/gdlib-config
 %{_includedir}/*
 %{_libdir}/*.so
@@ -206,6 +225,9 @@ grep %{version} $RPM_BUILD_ROOT%{_libdir}/pkgconfig/gdlib.pc
 
 
 %changelog
+* Wed Jan 18 2017 Remi Collet <remi@fedoraproject.org> - 2.2.4-1
+- Update to 2.2.4
+
 * Fri Jul 22 2016 Remi Collet <remi@fedoraproject.org> - 2.2.3-1
 - Update to 2.2.3
 
