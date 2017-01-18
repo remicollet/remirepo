@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #108 imagick version 3.4.3RC1 ] {
+Extension [ <persistent> extension #97 imagick version 3.4.3RC2 ] {
 
   - Dependencies {
     Dependency [ spl (Required) ]
@@ -17,7 +17,7 @@ Extension [ <persistent> extension #108 imagick version 3.4.3RC1 ] {
   }
 
   - Classes [10] {
-    Class [ <internal:imagick> class ImagickException extends Exception ] {
+    Class [ <internal:imagick> class ImagickException extends Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -48,33 +48,33 @@ Extension [ <persistent> extension #108 imagick version 3.4.3RC1 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:imagick> class ImagickDrawException extends Exception ] {
+    Class [ <internal:imagick> class ImagickDrawException extends Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -105,33 +105,33 @@ Extension [ <persistent> extension #108 imagick version 3.4.3RC1 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:imagick> class ImagickPixelIteratorException extends Exception ] {
+    Class [ <internal:imagick> class ImagickPixelIteratorException extends Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -162,33 +162,33 @@ Extension [ <persistent> extension #108 imagick version 3.4.3RC1 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:imagick> class ImagickPixelException extends Exception ] {
+    Class [ <internal:imagick> class ImagickPixelException extends Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -219,33 +219,33 @@ Extension [ <persistent> extension #108 imagick version 3.4.3RC1 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
-    Class [ <internal:imagick> class ImagickKernelException extends Exception ] {
+    Class [ <internal:imagick> class ImagickKernelException extends Exception implements Throwable ] {
 
       - Constants [0] {
       }
@@ -276,35 +276,35 @@ Extension [ <persistent> extension #108 imagick version 3.4.3RC1 ] {
         Method [ <internal:Core, inherits Exception> public method __wakeup ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getMessage ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getMessage ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getCode ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getCode ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getFile ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getFile ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getLine ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getLine ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTrace ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTrace ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getPrevious ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getPrevious ] {
         }
 
-        Method [ <internal:Core, inherits Exception> final public method getTraceAsString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> final public method getTraceAsString ] {
         }
 
-        Method [ <internal:Core, inherits Exception> public method __toString ] {
+        Method [ <internal:Core, inherits Exception, prototype Throwable> public method __toString ] {
         }
       }
     }
 
     Class [ <internal:imagick> <iterateable> class Imagick implements Iterator, Traversable, Countable ] {
 
-      - Constants [569] {
+      - Constants [570] {
         Constant [ integer COLOR_BLACK ] { 11 }
         Constant [ integer COLOR_BLUE ] { 12 }
         Constant [ integer COLOR_CYAN ] { 13 }
@@ -316,7 +316,7 @@ Extension [ <persistent> extension #108 imagick version 3.4.3RC1 ] {
         Constant [ integer COLOR_ALPHA ] { 19 }
         Constant [ integer COLOR_FUZZ ] { 20 }
         Constant [ integer IMAGICK_EXTNUM ] { 30403 }
-        Constant [ string IMAGICK_EXTVER ] { 3.4.3RC1 }
+        Constant [ string IMAGICK_EXTVER ] { 3.4.3RC2 }
         Constant [ integer QUANTUM_RANGE ] { 65535 }
         Constant [ integer USE_ZEND_MM ] { 0 }
         Constant [ integer COMPOSITE_DEFAULT ] { 40 }
@@ -788,6 +788,7 @@ Extension [ <persistent> extension #108 imagick version 3.4.3RC1 ] {
         Constant [ integer SPARSECOLORMETHOD_SPEPARDS ] { 16 }
         Constant [ integer SPARSECOLORMETHOD_VORONOI ] { 18 }
         Constant [ integer SPARSECOLORMETHOD_INVERSE ] { 19 }
+        Constant [ integer SPARSECOLORMETHOD_MANHATTAN ] { 20 }
         Constant [ integer DITHERMETHOD_UNDEFINED ] { 0 }
         Constant [ integer DITHERMETHOD_NO ] { 1 }
         Constant [ integer DITHERMETHOD_RIEMERSMA ] { 2 }
@@ -1019,7 +1020,7 @@ Extension [ <persistent> extension #108 imagick version 3.4.3RC1 ] {
       - Properties [0] {
       }
 
-      - Methods [350] {
+      - Methods [351] {
         Method [ <internal:imagick> public method optimizeimagelayers ] {
 
           - Parameters [0] {
@@ -3636,6 +3637,14 @@ Extension [ <persistent> extension #108 imagick version 3.4.3RC1 ] {
             Parameter #2 [ <required> $GRAVITY ]
           }
         }
+
+        Method [ <internal:imagick> public method localcontrastimage ] {
+
+          - Parameters [2] {
+            Parameter #0 [ <required> $radius ]
+            Parameter #1 [ <required> $strength ]
+          }
+        }
       }
     }
 
@@ -3653,7 +3662,7 @@ Extension [ <persistent> extension #108 imagick version 3.4.3RC1 ] {
       - Properties [0] {
       }
 
-      - Methods [130] {
+      - Methods [134] {
         Method [ <internal:imagick> public method resetvectorgraphics ] {
 
           - Parameters [0] {
@@ -4562,6 +4571,19 @@ Extension [ <persistent> extension #108 imagick version 3.4.3RC1 ] {
           }
         }
 
+        Method [ <internal:imagick> public method getopacity ] {
+
+          - Parameters [0] {
+          }
+        }
+
+        Method [ <internal:imagick> public method setopacity ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $opacity ]
+          }
+        }
+
         Method [ <internal:imagick> public method getfontresolution ] {
 
           - Parameters [0] {
@@ -4586,6 +4608,19 @@ Extension [ <persistent> extension #108 imagick version 3.4.3RC1 ] {
 
           - Parameters [1] {
             Parameter #0 [ <required> $bordercolor ]
+          }
+        }
+
+        Method [ <internal:imagick> public method setdensity ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> $density ]
+          }
+        }
+
+        Method [ <internal:imagick> public method getdensity ] {
+
+          - Parameters [0] {
           }
         }
 
@@ -4768,7 +4803,7 @@ Extension [ <persistent> extension #108 imagick version 3.4.3RC1 ] {
       - Properties [0] {
       }
 
-      - Methods [21] {
+      - Methods [22] {
         Method [ <internal:imagick> public method gethsl ] {
 
           - Parameters [0] {
@@ -4913,6 +4948,13 @@ Extension [ <persistent> extension #108 imagick version 3.4.3RC1 ] {
           - Parameters [0] {
           }
         }
+
+        Method [ <internal:imagick> public method setcolorfrompixel ] {
+
+          - Parameters [1] {
+            Parameter #0 [ <required> ImagickPixel $srcPixel ]
+          }
+        }
       }
     }
 
@@ -4945,7 +4987,13 @@ Extension [ <persistent> extension #108 imagick version 3.4.3RC1 ] {
       - Properties [0] {
       }
 
-      - Methods [5] {
+      - Methods [6] {
+        Method [ <internal:imagick, ctor> private method __construct ] {
+
+          - Parameters [0] {
+          }
+        }
+
         Method [ <internal:imagick> public method addkernel ] {
 
           - Parameters [1] {

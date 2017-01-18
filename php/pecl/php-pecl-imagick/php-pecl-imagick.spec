@@ -7,8 +7,8 @@
 # Please, preserve the changelog entries
 #
 %if 0%{?scl:1}
-%global sub_prefix %{scl_prefix}
-%scl_package       php-pecl-imagick
+%global sub_prefix  %{scl_prefix}
+%scl_package        php-pecl-imagick
 %endif
 
 %global gh_commit   623a3ac0386c93d62c60cbfe610505f2e35780f3
@@ -17,12 +17,12 @@
 %global gh_project  imagick
 #global gh_date     20151204
 %global pecl_name   imagick
-%global prever      RC1
+%global prever      RC2
 %global with_zts    0%{!?_without_zts:%{?__ztsphp:1}}
 %if "%{php_version}" < "5.6"
-%global ini_name  %{pecl_name}.ini
+%global ini_name    %{pecl_name}.ini
 %else
-%global ini_name  40-%{pecl_name}.ini
+%global ini_name    40-%{pecl_name}.ini
 %endif
 
 # We don't really rely on upstream ABI
@@ -35,7 +35,7 @@ Version:       3.4.3
 Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{pecl_name}-%{version}-%{gh_short}.tar.gz
 %else
-Release:       0.4.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       0.5.%{prever}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 Source0:       http://pecl.php.net/get/%{pecl_name}-%{version}%{?prever}.tgz
 %endif
 License:       PHP
@@ -178,6 +178,8 @@ cp -r NTS ZTS
 
 
 %build
+%{?dtsenable}
+
 : Standard NTS build
 cd NTS
 %{_bindir}/phpize
@@ -194,6 +196,7 @@ make %{?_smp_mflags}
 
 
 %install
+%{?dtsenable}
 rm -rf %{buildroot}
 
 make install INSTALL_ROOT=%{buildroot} -C NTS
@@ -302,6 +305,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 18 2017 Remi Collet <remi@fedoraproject.org> - 3.4.3-0.5.RC2
+- Update to 3.4.3RC2
+
 * Sun Dec 11 2016 Remi Collet <remi@fedoraproject.org> - 3.4.3-0.4.RC1
 - rebuild against ImageMagick6 (6.9.6-8)
 
