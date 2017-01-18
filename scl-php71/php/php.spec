@@ -125,7 +125,7 @@
 %endif
 
 #global rcver        RC1
-%global rpmrel       1
+%global rpmrel       2
 
 
 Summary: PHP scripting language for creating dynamic web sites
@@ -1808,6 +1808,10 @@ fi
 
 
 %changelog
+* Wed Jan 18 2017 Remi Collet <remi@fedoraproject.org> 7.1.1-2
+- EL-7: rebuild using gcc 4.8 instead of 6.2
+  because of https://bugzilla.redhat.com/1242110
+
 * Wed Jan 18 2017 Remi Collet <remi@fedoraproject.org> 7.1.1-1
 - Update to 7.1.1 - http://www.php.net/releases/7_1_1.php
 
