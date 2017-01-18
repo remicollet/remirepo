@@ -40,7 +40,7 @@
 
 Summary:        MongoDB driver for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.2.2
+Version:        1.2.3
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        ASL 2.0
 Group:          Development/Languages
@@ -156,6 +156,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 peclbuild() {
   %{_bindir}/${1}ize
 
@@ -191,6 +193,8 @@ peclbuild zts-php
 
 
 %install
+%{?dtsenable}
+
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
 # install config file
@@ -332,6 +336,9 @@ exit $ret
 
 
 %changelog
+* Wed Jan 18 2017 Remi Collet <remi@fedoraproject.org> - 1.2.3-1
+- Update to 1.2.3
+
 * Wed Dec 14 2016 Remi Collet <remi@fedoraproject.org> - 1.2.2-1
 - Update to 1.2.2
 
