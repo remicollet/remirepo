@@ -121,7 +121,7 @@
 %endif
 
 #global rcver         RC1
-%global rpmrel        2
+%global rpmrel        3
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -177,6 +177,7 @@ Patch47: php-5.6.3-phpinfo.patch
 Patch91: php-5.6.3-oci8conf.patch
 
 # Upstream fixes (100+)
+Patch100: php-intl.patch
 
 # Security fixes (200+)
 
@@ -1026,6 +1027,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %patch91 -p1 -b .remi-oci8
 
 # upstream patches
+%patch100 -p1 -b .73956
 
 # security patches
 
@@ -2051,6 +2053,10 @@ fi
 
 
 %changelog
+* Wed Jan 18 2017 Remi Collet <remi@fedoraproject.org> 7.1.1-3
+- EL-7: add patch for https://bugs.php.net/73956
+- switch back to gcc 6.2
+
 * Wed Jan 18 2017 Remi Collet <remi@fedoraproject.org> 7.1.1-2
 - EL-7: rebuild using gcc 4.8 instead of 6.2
   because of https://bugzilla.redhat.com/1414348
