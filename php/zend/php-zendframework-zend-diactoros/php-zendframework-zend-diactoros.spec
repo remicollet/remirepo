@@ -12,8 +12,8 @@
 
 %global github_owner     zendframework
 %global github_name      zend-diactoros
-%global github_version   1.3.8
-%global github_commit    d9c1fd7c4b024179d49faf367da544b4eef7cfe8
+%global github_version   1.3.9
+%global github_commit    d5d74ca5548753e0e427fcffca89b134943bac89
 %global github_short     %(c=%{github_commit}; echo ${c:0:7})
 
 %global composer_vendor  zendframework
@@ -175,6 +175,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Jan 18 2017 Remi Collet <remi@remirepo.net> - 1.3.9-1
+- update to 1.3.9
+
 * Fri Jan  6 2017 Remi Collet <remi@remirepo.net> - 1.3.8-1
 - update to 1.3.8
 
