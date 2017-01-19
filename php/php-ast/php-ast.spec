@@ -8,7 +8,7 @@
 #
 %{?scl:          %scl_package         php-ast}
 
-%global gh_commit   abfef40846cb5454dafa1808769fde851ba8dd70
+%global gh_commit   ae55a198e64b14fd70f467476789c60ba06f61f6
 %global gh_short    %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner    nikic
 %global gh_project  php-ast
@@ -20,18 +20,16 @@
 
 Summary:       Abstract Syntax Tree
 Name:          %{?scl_prefix}php-ast
-Version:       0.1.2
+Version:       0.1.3
 %if 0%{?gh_date:1}
 Release:       0.2.%{gh_date}git%{gh_short}%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %else
-Release:       4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 %endif
 License:       BSD
 Group:         Development/Languages
 URL:           https://github.com/%{gh_owner}/%{gh_project}
 Source0:       https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
-
-Patch0:        %{gh_project}-upstream.patch
 
 BuildRequires: %{?scl_prefix}php-devel > 7
 BuildRequires: %{?scl_prefix}php-tokenizer
@@ -68,8 +66,6 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 mv %{gh_project}-%{gh_commit} NTS
 
 cd NTS
-%patch0 -p1 -b .upstream
-
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_AST_VERSION/{s/.* "//;s/".*$//;p}' php_ast.h)
 if test "x${extver}" != "x%{version}%{?gh_date:-dev}"; then
@@ -91,6 +87,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure \
@@ -109,6 +107,8 @@ make %{?_smp_mflags}
 
 
 %install
+%{?dtsenable}
+
 # Install the NTS stuff
 make -C NTS install INSTALL_ROOT=%{buildroot}
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
@@ -169,6 +169,9 @@ REPORT_EXIT_STATUS=1 \
 
 
 %changelog
+* Thu Jan 19 2017 Remi Collet <remi@fedoraproject.org> - 0.1.3-1
+- update to 0.1.3
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 0.1.2-4
 - rebuild with PHP 7.1.0 GA
 
