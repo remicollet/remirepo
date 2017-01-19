@@ -20,6 +20,16 @@ index c2904ca..049c4c5 100644
  #include <string.h>
  #include "gd.h"
  #include "gd_errors.h"
+
+
+From 55ac28a293eaa8c531870c8bb8ecc04b333975f4 Mon Sep 17 00:00:00 2001
+From: "Christoph M. Becker" <cmbecker69@gmx.de>
+Date: Thu, 19 Jan 2017 01:02:58 +0100
+Subject: [PATCH] Fix #357: 2.2.4: Segfault in test suite.
+
+We make sure to never pass a negative `int` as argument to a `size_t`
+parameter.
+---
  src/gd_io_dp.c | 4 ++++
  1 file changed, 4 insertions(+)
 
