@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9dfb2c5fc917d7438b44eb8f4d247ba3e3984e75
+%global gh_commit    318d4b95438a2ea68a550c2878678097f63fb9fe
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     mongodb
 #global gh_date      20151102
@@ -22,7 +22,7 @@
 #global prever       beta2
 
 Name:           php-%{gh_owner}
-Version:        1.1.0
+Version:        1.1.1
 %if 0%{?gh_date}
 Release:        0.2.%{gh_date}git%{gh_short}%{?dist}
 %else
@@ -42,7 +42,8 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 %if %{with_tests}
 BuildRequires:  php(language) >= 5.4
-BuildRequires:  php-reflection
+BuildRequires:  php-hash
+BuildRequires:  php-json
 BuildRequires:  php-spl
 BuildRequires:  php-pecl(mongodb)
 BuildRequires:  mongodb-server >= 2.4
@@ -58,8 +59,9 @@ BuildRequires:  php-composer(fedora/autoloader)
 #        "ext-mongodb": "^1.2.0"
 Requires:       php(language) >= 5.4
 Requires:       php-pecl(mongodb) >= 1.2.0
-# From phpcompatinfo report for 1.0.0alpha1
-Requires:       php-reflection
+# From phpcompatinfo report for 1.1.1
+Requires:       php-hash
+Requires:       php-json
 Requires:       php-spl
 # For autoloader
 Requires:       php-composer(fedora/autoloader)
@@ -163,6 +165,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 19 2017 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- update to 1.1.1
+
 * Wed Dec  7 2016 Remi Collet <remi@fedoraproject.org> - 1.1.0-1
 - update to 1.1.0
 - raise dependency on php-pecl-mongodb 1.2.0
