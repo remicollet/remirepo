@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    71602f2ab582312b5ae016a9f0b8df1a8a116f86
+%global gh_commit    7727507129934e18c59bdc4060fd32730b0d9e87
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.4.3
+Version:        2.4.4
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette HTTP Component
@@ -43,10 +43,10 @@ BuildRequires:  php-pcre
 BuildRequires:  php-session
 BuildRequires:  php-spl
 # From composer.json, "require-dev": {
-#               "nette/di": "^2.4",
+#               "nette/di": "^2.4.6",
 #               "nette/tester": "~2.0",
 #               "tracy/tracy": "^2.4"
-BuildRequires:  php-composer(%{gh_owner}/di) >= 2.4
+BuildRequires:  php-composer(%{gh_owner}/di) >= 2.4.6
 BuildRequires:  php-composer(%{gh_owner}/tester) >= 2.0
 BuildRequires:  php-composer(tracy/tracy) >= 2.4
 %endif
@@ -155,6 +155,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 19 2017 Remi Collet <remi@fedoraproject.org> - 2.4.4-1
+- update to 2.4.4
+
 * Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 2.4.3-1
 - update to 2.4.3
 
