@@ -23,12 +23,15 @@
 
 Summary:        PHP Code Service
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.3.1
-Release:        4%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.3.2
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
+
+# https://github.com/flaupretre/pecl-pcs/issues/8
+Source1:        https://raw.githubusercontent.com/flaupretre/pecl-pcs/%{version}/pecl-compat/src/zend_resource.h
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -107,6 +110,7 @@ mv %{pecl_name}-%{version} NTS
 %{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
 
 cd NTS
+cp %{SOURCE1} pecl-compat/src/zend_resource.h
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PCS_VERSION/{s/.* "//;s/".*$//;p}' php_pcs.h)
@@ -132,6 +136,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure \
@@ -151,6 +157,7 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
+%{?dtsenable}
 
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
@@ -267,6 +274,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 19 2017 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
+- Update to 1.3.2 (beta)
+- open https://github.com/flaupretre/pecl-pcs/issues/8 missing file
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.3.1-4
 - rebuild with PHP 7.1.0 GA
 
