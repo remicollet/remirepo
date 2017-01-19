@@ -175,13 +175,9 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/libgd.a
 
 
 %check
-%ifarch %{ix86} ppc64 ppc64le aarch64
+%ifarch %{ix86}
 # See https://github.com/libgd/libgd/issues/359
 XFAIL_TESTS="gdimagegrayscale/basic $XFAIL_TESTS"
-%endif
-%ifarch ppc64 ppc64le aarch64
-# See https://github.com/libgd/libgd/issues/364
-XFAIL_TESTS="gdimagecopyresampled/bug00201 $XFAIL_TESTS"
 %endif
 %if 0%{?rhel} > 0 && 0%{?rhel} <= 6 || 0%{?fedora} >= 26
 # See https://github.com/libgd/libgd/issues/363
