@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    58a8d2288dd2aae755538ccb380af183a356892d
+%global gh_commit    3e30a1ec941717668bcdab336d690484700207cd
 #global gh_date      20150728
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     nette
@@ -17,7 +17,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        2.4.3
+Version:        2.4.4
 %global specrel 1
 Release:        %{?gh_date:0.%{specrel}.%{?prever}%{!?prever:%{gh_date}git%{gh_short}}}%{!?gh_date:%{specrel}}%{?dist}
 Summary:        Nette Application MVC Component
@@ -45,7 +45,7 @@ BuildRequires:  php-spl
 #               "nette/tester": "~2.0",
 #               "nette/di": "~2.4",
 #               "nette/forms": "~2.4",
-#               "nette/robot-loader": "~2.4",
+#               "nette/robot-loader": "~2.4.2 || ^3.0",
 #               "nette/security": "~2.4",
 #               "latte/latte": "^2.4.1",
 #               "tracy/tracy": "^2.4",
@@ -53,7 +53,7 @@ BuildRequires:  php-spl
 BuildRequires:  php-composer(%{gh_owner}/tester) >= 2.0
 BuildRequires:  php-composer(%{gh_owner}/di) >= 2.4
 BuildRequires:  php-composer(%{gh_owner}/forms) >= 2.4
-BuildRequires:  php-composer(%{gh_owner}/robot-loader) >= 2.4
+BuildRequires:  php-composer(%{gh_owner}/robot-loader) >= 2.4.2
 BuildRequires:  php-composer(%{gh_owner}/security) >= 2.4
 BuildRequires:  php-composer(latte/latte) >= 2.4.1
 BuildRequires:  php-composer(tracy/tracy) >= 2.4
@@ -195,6 +195,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Jan 19 2017 Remi Collet <remi@fedoraproject.org> - 2.4.4-1
+- update to 2.4.4
+
 * Wed Dec 21 2016 Remi Collet <remi@fedoraproject.org> - 2.4.3-1
 - update to 2.4.3
 
