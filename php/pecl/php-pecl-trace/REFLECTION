@@ -1,4 +1,4 @@
-Extension [ <persistent> extension #194 trace version 0.3.0 ] {
+Extension [ <persistent> extension #134 trace version 1.0.0 ] {
 
   - INI {
     Entry [ trace.enable <SYSTEM> ]
@@ -9,12 +9,6 @@ Extension [ <persistent> extension #194 trace version 0.3.0 ] {
     }
     Entry [ trace.data_dir <SYSTEM> ]
       Current = '/tmp'
-    }
-    Entry [ trace.recv_size <SYSTEM> ]
-      Current = '4m'
-    }
-    Entry [ trace.send_size <SYSTEM> ]
-      Current = '64m'
     }
   }
 }

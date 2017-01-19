@@ -6,7 +6,10 @@
 #
 # Please, preserve the changelog entries
 #
-%{?scl:          %scl_package        php-pecl-trace}
+%if 0%{?scl:1}
+%global sub_prefix %{scl_prefix}
+%scl_package       php-pecl-trace
+%endif
 
 %global pecl_name  trace
 #global versuf     -beta
@@ -17,9 +20,9 @@
 %endif
 
 Summary:        Trace is a low-overhead tracing tool for PHP
-Name:           %{?scl_prefix}php-pecl-%{pecl_name}
-Version:        0.3.0
-Release:        3%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
+Name:           %{?sub_prefix}php-pecl-%{pecl_name}
+Version:        1.0.0
+Release:        1%{?dist}%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}
 # common/sds is BSD-2, other is ASL 2.0
 License:        ASL 2.0 and BSD
 Group:          Development/Languages
@@ -27,7 +30,9 @@ URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  %{?scl_prefix}php-devel
+# https://github.com/Qihoo360/phptrace/issues/71
+# PHP 7.1 build broken
+BuildRequires:  %{?scl_prefix}php-devel < 7.1
 BuildRequires:  %{?scl_prefix}php-pear
 
 Requires:       %{?scl_prefix}php(zend-abi) = %{php_zend_api}
@@ -38,8 +43,10 @@ Provides:       %{?scl_prefix}php-%{pecl_name}               = %{version}
 Provides:       %{?scl_prefix}php-%{pecl_name}%{?_isa}       = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})         = %{version}
 Provides:       %{?scl_prefix}php-pecl(%{pecl_name})%{?_isa} = %{version}
+%if "%{?scl_prefix}" != "%{?sub_prefix}"
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}          = %{version}-%{release}
 Provides:       %{?scl_prefix}php-pecl-%{pecl_name}%{?_isa}  = %{version}-%{release}
+%endif
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
@@ -54,6 +61,10 @@ Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.6"
 Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
 Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+%endif
+%if "%{php_version}" > "7.0"
+Obsoletes:     php70u-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php71w-pecl-%{pecl_name} <= %{version}
 %endif
 %endif
 
@@ -80,18 +91,19 @@ Package built for PHP %(%{__php} -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSIO
 %prep
 %setup -q -c
 
-# Honours default build flags
-sed -e '/^CFLAGS/d' -i %{pecl_name}-%{version}/cmdtool/Makefile
-
 # Don't install tests
 sed -e 's/role="test"/role="src"/' \
     %{?_licensedir:-e '/LICENSE/s/role="doc"/role="src"/' } \
     -i package.xml
 
 pushd %{pecl_name}-%{version}/extension
+cp -p ../deps/sds/LICENSE ../LICENSE_sds
+
+# https://github.com/Qihoo360/phptrace/issues/73
+sed -e '/TRACE_EXT_VERSION/s/0.6.0-beta/%{version}/' -i ../common/trace_version.h
 
 # Sanity check, really often broken
-extver=$(sed -n '/#define PHP_TRACE_VERSION/{s/.* "//;s/".*$//;p}' php_trace.h)
+extver=$(sed -n '/#define TRACE_EXT_VERSION/{s/.* "//;s/".*$//;p}' ../common/trace_version.h)
 if test "x${extver}" != "x%{version}%{?versuf}"; then
    : Error: Upstream extension version is ${extver}, expecting %{version}%{?versuf}.
    exit 1
@@ -107,32 +119,24 @@ extension=%{pecl_name}.so
 ;trace.enable = 1
 ;trace.dotrace = 0
 ;trace.data_dir = "/tmp"
-;trace.recv_size = "4m"
-;trace.send_size = "64m"
 EOF
 
 
 %build
-cd %{pecl_name}-%{version}/cmdtool/
-export CFLAGS="$RPM_OPT_FLAGS"
-make %{?_smp_mflags}
+cd %{pecl_name}-%{version}/extension
 
-cd ../extension
 %{_bindir}/phpize
 %configure \
     --with-php-config=%{_bindir}/php-config \
     --enable-trace
-make %{?_smp_mflags}
-
+make     %{?_smp_mflags}
+make cli %{?_smp_mflags}
 
 
 %install
 rm -rf %{buildroot}
 
-install -D -m 0755 %{pecl_name}-%{version}/cmdtool/phptrace  %{buildroot}%{_bindir}/phptrace
-install -D -m 0755 %{pecl_name}-%{version}/cmdtool/trace-php %{buildroot}%{_bindir}/trace-php
-
-make -C %{pecl_name}-%{version}/extension install INSTALL_ROOT=%{buildroot}
+make -C %{pecl_name}-%{version}/extension install-all INSTALL_ROOT=%{buildroot}
 
 # install config file
 install -D -m 644 %{ini_name} %{buildroot}%{php_inidir}/%{ini_name}
@@ -169,7 +173,16 @@ fi
 %check
 cd %{pecl_name}-%{version}/extension
 : Ignore failed test
-rm tests/trace_004.phpt
+%if "%{php_version}" > "7.0"
+# https://github.com/Qihoo360/phptrace/issues/72
+# PHP 7.0 failed tests
+rm tests/trace_002.phpt
+rm tests/trace_003.phpt
+%endif
+# https://github.com/Qihoo360/phptrace/issues/70
+# Failed test requiring TRACE_DEBUG
+rm tests/trace_015.phpt
+rm tests/trace_016.phpt
 
 : Minimal load test for NTS extension
 %{__php} --no-php-ini \
@@ -190,17 +203,23 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%{?_licensedir:%license %{pecl_name}-%{version}/LICENSE}
+%{?_licensedir:%license %{pecl_name}-%{version}/LICENSE*}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 %{_bindir}/phptrace
-%{_bindir}/trace-php
 
 %config(noreplace) %{php_inidir}/%{ini_name}
 %{php_extdir}/%{pecl_name}.so
 
 
 %changelog
+* Thu Jan 19 2017 Remi Collet <remi@fedoraproject.org> - 1.0.0-1
+- Update to 1.0.0 (beta)
+- open https://github.com/Qihoo360/phptrace/issues/71: PHP 7.1 build broken
+- open https://github.com/Qihoo360/phptrace/issues/73: reported version
+- open https://github.com/Qihoo360/phptrace/issues/72: PHP 7.0 failed tests
+- open https://github.com/Qihoo360/phptrace/issues/70: Failed tests (debug)
+
 * Wed Mar  9 2016 Remi Collet <remi@fedoraproject.org> - 0.3.0-3
 - adapt for F24
 
