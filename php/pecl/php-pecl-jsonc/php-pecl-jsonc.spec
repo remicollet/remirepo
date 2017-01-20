@@ -32,7 +32,7 @@
 Summary:       Support for JSON serialization
 Name:          %{?scl_prefix}php-pecl-%{proj_name}
 Version:       1.3.10
-Release:       1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Release:       2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 # PHP extension is PHP
 # jsonc-c is MIT
 # json-c/linkhask.c is Public Domain
@@ -66,17 +66,13 @@ Provides:      %{?scl_prefix}php-pecl-json%{?_isa}          = %{version}-%{relea
 
 %if "%{?vendor}" == "Remi Collet" && 0%{!?scl:1} && 0%{?rhel}
 # Other third party repo stuff
-Obsoletes:     php53-pecl-%{pecl_name}  <= %{version}
-Obsoletes:     php53u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php54-pecl-%{pecl_name}  <= %{version}
-Obsoletes:     php54w-pecl-%{pecl_name} <= %{version}
 %if "%{php_version}" > "5.5"
-Obsoletes:     php55u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php55w-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php55u-pecl-%{proj_name} <= %{version}
+Obsoletes:     php55w-pecl-%{proj_name} <= %{version}
 %endif
 %if "%{php_version}" > "5.6"
-Obsoletes:     php56u-pecl-%{pecl_name} <= %{version}
-Obsoletes:     php56w-pecl-%{pecl_name} <= %{version}
+Obsoletes:     php56u-pecl-%{proj_name} <= %{version}
+Obsoletes:     php56w-pecl-%{proj_name} <= %{version}
 %endif
 %endif
 
@@ -294,6 +290,9 @@ rm -rf %{buildroot}
 # Note to remi : remember to always build in remi-php55(56) first
 #
 %changelog
+* Fri Jan 20 2017 Remi Collet <remi@fedoraproject.org> - 1.3.10-2
+- fix obsoletes
+
 * Wed Jun 15 2016 Remi Collet <remi@fedoraproject.org> - 1.3.10-1
 - release 1.3.10 (stable)
 
