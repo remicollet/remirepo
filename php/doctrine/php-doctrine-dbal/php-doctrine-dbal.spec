@@ -13,18 +13,18 @@
 
 %global github_owner     doctrine
 %global github_name      dbal
-%global github_version   2.5.5
-%global github_commit    9f8c05cd5225a320d56d4bfdb4772f10d045a0c9
+%global github_version   2.5.9
+%global github_commit    0d2f8187d4b4c7b72d8e2acba359e25c36feaf5e
 
 %global composer_vendor  doctrine
 %global composer_project dbal
 
 # "php": ">=5.3.2"
 %global php_min_ver 5.3.2
-# "doctrine/common": ">=2.4,<2.7-dev"
+# "doctrine/common": ">=2.4,<2.8-dev"
 #     NOTE: Min version not 2.4 because autoloader required
 %global doctrine_common_min_ver 2.5.0
-%global doctrine_common_max_ver 2.7
+%global doctrine_common_max_ver 2.8
 # "symfony/console": "2.*||^3.0"
 %global symfony_console_min_ver 2.0
 %global symfony_console_max_ver 4
@@ -223,6 +223,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan 20 2017 Remi Collet <remi@remirepo.net> - 2.5.9-1
+- update to 2.5.9
+
 * Mon Sep 26 2016 Shawn Iwinski <shawn.iwinski@gmail.com> - 2.5.5-1
 - Updated to 2.5.5 (RHBZ #1374891)
 
