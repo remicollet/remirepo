@@ -23,15 +23,12 @@
 
 Summary:        PHP Code Service
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.3.2
+Version:        1.3.3
 Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        PHP
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{pecl_name}
 Source0:        http://pecl.php.net/get/%{pecl_name}-%{version}.tgz
-
-# https://github.com/flaupretre/pecl-pcs/issues/8
-Source1:        https://raw.githubusercontent.com/flaupretre/pecl-pcs/%{version}/pecl-compat/src/zend_resource.h
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{?scl_prefix}php-devel > 5.3
@@ -108,9 +105,8 @@ These are the files needed to compile programs using PCS.
 mv %{pecl_name}-%{version} NTS
 
 %{?_licensedir:sed -e '/LICENSE/s/role="doc"/role="src"/' -i package.xml}
-
 cd NTS
-cp %{SOURCE1} pecl-compat/src/zend_resource.h
+%{?_licensedir:cp pecl-compat/LICENSE LICENSE_pecl_compat}
 
 # Sanity check, really often broken
 extver=$(sed -n '/#define PHP_PCS_VERSION/{s/.* "//;s/".*$//;p}' php_pcs.h)
@@ -250,7 +246,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%{?_licensedir:%license NTS/LICENSE}
+%{?_licensedir:%license NTS/LICENSE*}
 %doc %{pecl_docdir}/%{pecl_name}
 %{pecl_xmldir}/%{name}.xml
 
@@ -274,6 +270,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan 20 2017 Remi Collet <remi@fedoraproject.org> - 1.3.3-1
+- Update to 1.3.3 (rc)
+
 * Thu Jan 19 2017 Remi Collet <remi@fedoraproject.org> - 1.3.2-1
 - Update to 1.3.2 (beta)
 - open https://github.com/flaupretre/pecl-pcs/issues/8 missing file
