@@ -138,7 +138,7 @@
 %endif
 
 #global rcver  RC1
-%global rpmrel 2
+%global rpmrel 3
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: %{?scl_prefix}php
@@ -1820,7 +1820,7 @@ fi
 
 
 %changelog
-* Fri Jan 20 2017 Remi Collet <remi@fedoraproject.org> 5.6.30-2
+* Fri Jan 20 2017 Remi Collet <remi@fedoraproject.org> 5.6.30-3
 - disable dtrace by default, this may be enabled again using
   environment variable USE_ZEND_DTRACE=1, backported from PHP 7
 
