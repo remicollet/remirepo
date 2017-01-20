@@ -1,0 +1,44 @@
+Backported from PHP 7 for PHP 5 by Remi
+
+From 0c78fe4bb55a9d39afc79cbcbadb9a273f2ec2ef Mon Sep 17 00:00:00 2001
+From: Dmitry Stogov <dmitry@zend.com>
+Date: Fri, 18 Nov 2016 13:19:30 +0300
+Subject: [PATCH] Disabled PHP call tracing by default (it makes significant
+ overhead). This may be enabled again using envirionment variable
+ USE_ZEND_DTRACE=1.
+
+---
+ NEWS        |  5 +++++
+ Zend/zend.c | 16 +++++++++++++---
+ 2 files changed, 18 insertions(+), 3 deletions(-)
+
+diff --git a/Zend/zend.c b/Zend/zend.c
+index d036152..87cdead 100644
+--- a/Zend/zend.c
++++ b/Zend/zend.c
+@@ -682,9 +682,19 @@ int zend_startup(zend_utility_functions *utility_functions, char **extensions) /
+ 
+ #if HAVE_DTRACE
+ /* build with dtrace support */
+-	zend_compile_file = dtrace_compile_file;
+-	zend_execute_ex = dtrace_execute_ex;
+-	zend_execute_internal = dtrace_execute_internal;
++	{
++		char *tmp = getenv("USE_ZEND_DTRACE");
++
++		if (tmp && zend_atoi(tmp, 0)) {
++			zend_compile_file = dtrace_compile_file;
++			zend_execute_ex = dtrace_execute_ex;
++			zend_execute_internal = dtrace_execute_internal;
++		} else {
++			zend_compile_file = compile_file;
++			zend_execute_ex = execute_ex;
++			zend_execute_internal = NULL;
++		}
++	}
+ #else
+ 	zend_compile_file = compile_file;
+ 	zend_execute_ex = execute_ex;
+-- 
+2.1.4
+

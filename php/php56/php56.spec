@@ -144,7 +144,7 @@
 %endif
 
 #global rcver  RC1
-%global rpmrel 1
+%global rpmrel 2
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
@@ -193,6 +193,7 @@ Patch9: php-5.5.30-curl.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
+Patch41: php-5.6.30-dtrace.patch
 Patch42: php-5.6.13-systzdata-v12.patch
 # See http://bugs.php.net/53436
 Patch43: php-5.4.0-phpize.patch
@@ -957,6 +958,7 @@ httpd -V  | grep -q 'threaded:.*yes' && exit 1
 %endif
 
 %patch40 -p1 -b .dlopen
+%patch41 -p1 -b .dtrace
 %if 0%{?fedora} >= 24 || 0%{?rhel} >= 5
 %patch42 -p1 -b .systzdata
 %endif
@@ -1999,6 +2001,10 @@ fi
 
 
 %changelog
+* Fri Jan 20 2017 Remi Collet <remi@fedoraproject.org> 5.6.30-2
+- disable dtrace by default, this may be enabled again using
+  environment variable USE_ZEND_DTRACE=1, backported from PHP 7
+
 * Thu Jan 19 2017 Remi Collet <remi@fedoraproject.org> 5.6.30-1
 - Update to 5.6.30 - http://www.php.net/releases/5_6_30.php
 
