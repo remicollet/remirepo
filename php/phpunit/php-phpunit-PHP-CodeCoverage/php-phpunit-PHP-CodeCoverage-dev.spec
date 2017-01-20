@@ -8,7 +8,7 @@
 #
 
 %global bootstrap    0
-%global gh_commit    c14196e64a78570034afd0b7a9f3757ba71c2a0a
+%global gh_commit    c19cfc7cbb0e9338d8c469c7eedecc2a428b0971
 #global gh_date      20150924
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     sebastianbergmann
@@ -17,12 +17,12 @@
 %global pear_name    PHP_CodeCoverage
 %global pear_channel pear.phpunit.de
 %global major        4.0
-%global minor        4
+%global minor        5
 %global specrel      1
 %if %{bootstrap}
-%global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
+%global with_tests   0%{?_with_tests:1}
 %else
-%global with_tests   %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests   0%{!?_without_tests:1}
 %endif
 
 Name:           php-phpunit-PHP-CodeCoverage
@@ -137,22 +137,30 @@ require __DIR__ . '/TestCase.php';
 define('TEST_FILES_PATH', __DIR__ . '/_files/');
 EOF
 
-# remirepo:18
+# https://github.com/sebastianbergmann/php-code-coverage/issues/495
+sed -e 's/testCloverForFileWithIgnoredLines/skip_testCloverForFileWithIgnoredLines/' \
+    -i tests/tests/CloverTest.php
+sed -e 's/testForFileWithIgnoredLines/skip_testForFileWithIgnoredLines/' \
+    -i tests/tests/HTMLTest.php
+sed -e 's/testTextForFileWithIgnoredLines/skip_testTextForFileWithIgnoredLines/' \
+    -i tests/tests/TextTest.php
+sed -e 's/testForFileWithIgnoredLines/skip_testForFileWithIgnoredLines/' \
+    -i tests/tests/XMLTest.php
+
+# remirepo:16
 run=0
 ret=0
 if which php56; then
   php56 $EXT \
     -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
-    %{_bindir}/phpunit \
-        --configuration build || ret=1
+    %{_bindir}/phpunit || ret=1
   run=1
 fi
 if which php71; then
   php71 $EXT \
     -d serialize_precision=14 \
     -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
-    %{_bindir}/phpunit \
-        --configuration build || ret=1
+    %{_bindir}/phpunit || ret=1
   run=1
 fi
 if [ $run -eq 0 ]; then
@@ -160,11 +168,10 @@ if [ $run -eq 0 ]; then
     -d serialize_precision=14 \
     -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
     %{_bindir}/phpunit \
-        --configuration build \
-        --verbose || : ignore
+        --verbose
 # remirepo:2
 fi
-#exit $ret
+exit $ret
 %endif
 
 
@@ -189,6 +196,9 @@ fi
 
 
 %changelog
+* Fri Jan 20 2017 Remi Collet <remi@fedoraproject.org> - 4.0.5-1
+- Update to 4.0.5
+
 * Wed Dec 21 2016 Remi Collet <remi@fedoraproject.org> - 4.0.4-1
 - Update to 4.0.4
 - ignore test suite for now
