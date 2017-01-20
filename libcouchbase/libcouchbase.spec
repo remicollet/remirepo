@@ -17,7 +17,7 @@
 %endif
 
 Name:          libcouchbase
-Version:       2.7.0
+Version:       2.7.1
 Release:       1%{?dist}
 Summary:       Couchbase client library
 Group:         System Environment/Libraries
@@ -123,6 +123,9 @@ make check
 
 
 %changelog
+* Fri Jan 20 2017 Remi Collet <remi@feoraproject.org> - 2.7.1-1
+- update to 2.7.1
+
 * Sat Dec 24 2016 Remi Collet <remi@feoraproject.org> - 2.7.0-1
 - update to 2.7.0
 
