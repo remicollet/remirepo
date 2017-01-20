@@ -9,7 +9,7 @@
 %global pluginname   reports
 
 Name:           glpi-reports
-Version:        1.9.1
+Version:        1.10
 Release:        1%{?dist}
 Summary:        GLPI Plugin providing additional reports
 Summary(fr):    Extension GLPI fournissant des rapports supplémentaires
@@ -18,14 +18,14 @@ Group:          Applications/Internet
 License:        GPLv2+
 URL:            https://forge.glpi-project.org/projects/reports
 
-Source0:        https://forge.glpi-project.org/attachments/download/2123/glpi-reports-1.9.1.tar.gz
+Source0:        https://forge.glpi-project.org/attachments/download/2173/glpi-reports-1.10.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
 
 Requires:       glpi >= 0.85
-Requires:       glpi <  0.91
+Requires:       glpi <  9.2
 
 
 %description
@@ -95,6 +95,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan 20 2017 Remi Collet <remi@fedoraproject.org> - 1.10-1
+- version 1.10 for GLPI 0.85, 0.90 and 9.1
+
 * Wed Feb 24 2016 Remi Collet <remi@fedoraproject.org> - 1.9.1-1
 - version 1.9.1 for GLPI 0.85 and 0.90
 
