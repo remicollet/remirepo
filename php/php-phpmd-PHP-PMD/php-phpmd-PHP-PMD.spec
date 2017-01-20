@@ -7,7 +7,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    9298602a922cd8c46666df8d540a60bc5925ce55
+%global gh_commit    4e9924b2c157a3eb64395460fcf56b31badc8374
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpmd
 %global gh_project   phpmd
@@ -18,7 +18,7 @@
 %global with_tests   0%{!?_without_tests:1}
 
 Name:           php-phpmd-PHP-PMD
-Version:        2.5.0
+Version:        2.6.0
 Release:        1%{?dist}
 Summary:        PHPMD - PHP Mess Detector
 
@@ -41,7 +41,7 @@ BuildArch:      noarch
 #        "squizlabs/php_codesniffer": "^2.0"
 BuildRequires:  php-composer(phpunit/phpunit) >= 4.0
 BuildRequires:  php(language) >= 5.3.9
-BuildRequires:  php-composer(pdepend/pdepend) >= 2.0.4
+BuildRequires:  php-composer(pdepend/pdepend) >= 2.5
 BuildRequires:  php-date
 BuildRequires:  php-libxml
 BuildRequires:  php-pcre
@@ -53,11 +53,13 @@ BuildRequires:  php-composer(fedora/autoloader)
 
 # From composer.json,     "require": {
 #        "php": ">=5.3.9",
-#        "pdepend/pdepend": "^2.0.4",
+#        "pdepend/pdepend": "^2.5",
+#        "ext-xml": "*"
 Requires:       php(language) >= 5.3.9
-Requires:       php-composer(pdepend/pdepend) >= 2.0.4
+Requires:       php-composer(pdepend/pdepend) >= 2.5
 Requires:       php-composer(pdepend/pdepend) <  3
-# From phpcompatinfo report for version 2.2.3
+Requires:       php-xml
+# From phpcompatinfo report for version 2.6.0
 Requires:       php-date
 Requires:       php-libxml
 Requires:       php-pcre
@@ -162,6 +164,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan 20 2017 Remi Collet <remi@fedoraproject.org> - 2.6.0-1
+- update to 2.6.0
+- raise dependency on pdepend/pdepend version 2.5
+
 * Thu Nov 24 2016 Remi Collet <remi@fedoraproject.org> - 2.5.0-1
 - update to 2.5.0
 
