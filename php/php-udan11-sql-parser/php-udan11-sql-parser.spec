@@ -6,7 +6,7 @@
 #
 # Please, preserve the changelog entries
 #
-%global gh_commit    18a18d5106aa04ad7c7b79d9b92f123069ceea6e
+%global gh_commit    2b59d9e19432a385d952bcc94b3ffe6b11f22cbf
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpmyadmin
 #global gh_date      20150820
@@ -15,14 +15,15 @@
 %global psr0         SqlParser
 
 Name:           php-udan11-%{gh_project}
-Version:        3.4.16
+Version:        3.4.17
 Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A validating SQL lexer and parser with a focus on MySQL dialect
 
 Group:          Development/Libraries
 License:        GPLv2+
 URL:            https://github.com/%{gh_owner}/%{gh_project}
-Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{?gh_short}.tar.gz
+Source0:        %{name}-%{version}-%{gh_short}.tgz
+Source1:        makesrc.sh
 
 # Use our autoloader
 Patch0:         %{name}-autoload.patch
@@ -37,7 +38,7 @@ BuildRequires:  php(language) >= 5.3.0
 BuildRequires:  php-composer(phpunit/phpunit)
 %endif
 # For autoloader
-BuildRequires:  php-fedora-autoloader-devel
+BuildRequires:  php-composer(fedora/autoloader)
 
 # From composer.json, "require": {
 #        "php": ">=5.3.0",
@@ -76,8 +77,14 @@ Autoloader: %{_datadir}/php/%{psr0}/autoload.php
 
 
 %build
-: generate an simple autoloader
-%{_bindir}/phpab --template fedora --output src/autoload.php src
+: Create autoloader
+cat <<'AUTOLOAD' | tee src/autoload.php
+<?php
+/* Autoloader for %{name} and its dependencies */
+require_once '%{_datadir}/php/Fedora/Autoloader/autoload.php';
+
+\Fedora\Autoloader\Autoload::addPsr4('%{psr0}\\', __DIR__);
+AUTOLOAD
 
 
 %install
@@ -98,6 +105,7 @@ mkdir vendor
 cat << 'EOF' | tee vendor/autoload.php
 <?php
 require '%{buildroot}%{_datadir}/php/%{psr0}/autoload.php';
+\Fedora\Autoloader\Autoload::addPsr4('%{psr0}\\Tests\\', dirname(__DIR__).'/tests');
 EOF
 
 # remirepo:11
@@ -139,6 +147,11 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan 20 2017 Remi Collet <remi@fedoraproject.org> - 3.4.17-1
+- update to 3.4.17
+- sources from a git snapshot to retrieve test suite
+- switch to PSR-4 autoloader
+
 * Fri Jan  6 2017 Remi Collet <remi@fedoraproject.org> - 3.4.16-1
 - update to 3.4.16
 
