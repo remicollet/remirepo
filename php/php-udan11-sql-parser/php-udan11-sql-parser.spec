@@ -6,6 +6,9 @@
 #
 # Please, preserve the changelog entries
 #
+
+##TODO next version will have tests back
+
 %global gh_commit    2b59d9e19432a385d952bcc94b3ffe6b11f22cbf
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpmyadmin
