@@ -1,5 +1,8 @@
 {
     "php-sabre-vobject4": "sabre\/vobject",
+	"php-google-recaptcha": "google/recaptcha",
+	"php-phpmyadmin-shapefile": "phpmyadmin\/shapefile",
+	"php-phpmyadmin-motranslator": "phpmyadmin\/motranslator",
     "php-ZendFramework": "zendframework\/zendframework1",
     "php-phpunit-phpdcd": "sebastian\/phpdcd",
     "php-tecnickcom-tc-lib-pdf-parser": "tecnickcom\/tc-lib-pdf-parser",
