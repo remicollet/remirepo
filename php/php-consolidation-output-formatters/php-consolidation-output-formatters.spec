@@ -12,8 +12,8 @@
 
 %global github_owner     consolidation-org
 %global github_name      output-formatters
-%global github_version   3.1.6
-%global github_commit    c8ea5734985cea4acd6343a2465a2f71cf011c82
+%global github_version   3.1.7
+%global github_commit    da39a0f14d5aaaee06732bb7cef2aea1de056b40
 
 %global composer_vendor  consolidation
 %global composer_project output-formatters
@@ -34,7 +34,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       1%{?github_release}%{?dist}
 Summary:       Format text by applying transformations provided by plug-in formatters
 
 Group:         Development/Libraries
@@ -160,6 +160,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jan 21 2017 Remi Collet <remi@remirepo.net> - 3.1.7-1
+- Update to 3.1.7
+
 * Mon Jan 16 2017 Remi Collet <remi@fedoraproject.org> - 3.1.6-2
 - fix autoloader dependency
 
