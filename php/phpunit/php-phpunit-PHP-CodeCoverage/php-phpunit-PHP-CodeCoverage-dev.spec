@@ -18,7 +18,7 @@
 %global pear_channel pear.phpunit.de
 %global major        4.0
 %global minor        5
-%global specrel      1
+%global specrel      2
 %if %{bootstrap}
 %global with_tests   0%{?_with_tests:1}
 %else
@@ -34,6 +34,9 @@ Group:          Development/Libraries
 License:        BSD
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
+
+Patch0:         %{name}-upstream.patch
+Patch1:         %{name}-pr503.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -98,6 +101,8 @@ for PHP code coverage information.
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+%patch0 -p1
+%patch1 -p1
 
 
 %build
@@ -137,17 +142,7 @@ require __DIR__ . '/TestCase.php';
 define('TEST_FILES_PATH', __DIR__ . '/_files/');
 EOF
 
-# https://github.com/sebastianbergmann/php-code-coverage/issues/495
-sed -e 's/testCloverForFileWithIgnoredLines/skip_testCloverForFileWithIgnoredLines/' \
-    -i tests/tests/CloverTest.php
-sed -e 's/testForFileWithIgnoredLines/skip_testForFileWithIgnoredLines/' \
-    -i tests/tests/HTMLTest.php
-sed -e 's/testTextForFileWithIgnoredLines/skip_testTextForFileWithIgnoredLines/' \
-    -i tests/tests/TextTest.php
-sed -e 's/testForFileWithIgnoredLines/skip_testForFileWithIgnoredLines/' \
-    -i tests/tests/XMLTest.php
-
-# remirepo:16
+# remirepo:15
 run=0
 ret=0
 if which php56; then
@@ -158,14 +153,12 @@ if which php56; then
 fi
 if which php71; then
   php71 $EXT \
-    -d serialize_precision=14 \
     -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
     %{_bindir}/phpunit || ret=1
   run=1
 fi
 if [ $run -eq 0 ]; then
 %{_bindir}/php $EXT \
-    -d serialize_precision=14 \
     -d include_path=.:%{buildroot}%{php_home}:%{php_home} \
     %{_bindir}/phpunit \
         --verbose
@@ -196,6 +189,11 @@ fi
 
 
 %changelog
+* Sun Jan 22 2017 Remi Collet <remi@fedoraproject.org> - 4.0.5-2
+- add upstream patch for test suite to fix
+  https://github.com/sebastianbergmann/php-code-coverage/issues/495
+- open https://github.com/sebastianbergmann/php-code-coverage/pull/503
+
 * Fri Jan 20 2017 Remi Collet <remi@fedoraproject.org> - 4.0.5-1
 - Update to 4.0.5
 
