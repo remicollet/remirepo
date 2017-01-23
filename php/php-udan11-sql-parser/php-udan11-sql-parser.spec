@@ -16,11 +16,6 @@
 %global gh_project   sql-parser
 %global with_tests   0%{!?_without_tests:1}
 %global psr0         SqlParser
-%if 0%{?fedora} >= 26
-%global with_cmd     0
-%else
-%global with_cmd     1
-%endif
 
 Name:           php-udan11-%{gh_project}
 Version:        3.4.17
@@ -58,9 +53,8 @@ Requires:       php-ctype
 Requires:       php-pcre
 # For generated autoloader
 Requires:       php-composer(fedora/autoloader)
-%if %{with_cmd}
+# For commands
 Requires:       php-cli
-%endif
 
 # Rename
 Obsoletes:      php-dmitry-php-sql-parser < 0-0.2
@@ -103,11 +97,9 @@ rm -rf     %{buildroot}
 mkdir -p   %{buildroot}%{_datadir}/php
 cp -pr src %{buildroot}%{_datadir}/php/%{psr0}
 
-%if %{with_cmd}
 : Commands
 install -Dpm 0755 bin/highlight-query %{buildroot}%{_bindir}/%{gh_project}-highlight-query
 install -Dpm 0755 bin/lint-query      %{buildroot}%{_bindir}/%{gh_project}-lint-query
-%endif
 
 
 %check
@@ -153,13 +145,14 @@ rm -rf %{buildroot}
 %doc composer.json
 %doc README.md
 %{_datadir}/php/%{psr0}
-%if %{with_cmd}
 %{_bindir}/%{gh_project}-highlight-query
 %{_bindir}/%{gh_project}-lint-query
-%endif
 
 
 %changelog
+* Mon Jan 23 2017 Remi Collet <remi@fedoraproject.org> - 3.4.17-3
+- always provide the commands
+
 * Mon Jan 23 2017 Remi Collet <remi@fedoraproject.org> - 3.4.17-2
 - drop commands on F26
 
