@@ -25,8 +25,8 @@
 
 Summary:        A effective,fast,stable log extension for PHP
 Name:           %{?sub_prefix}php-pecl-%{pecl_name}
-Version:        1.6.8
-Release:        2%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
+Version:        1.6.9
+Release:        1%{?dist}%{!?scl:%{!?nophptag:%(%{__php} -r 'echo ".".PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')}}
 License:        ASL 2.0
 Group:          Development/Languages
 URL:            http://pecl.php.net/package/%{proj_name}
@@ -139,6 +139,8 @@ EOF
 
 
 %build
+%{?dtsenable}
+
 cd NTS
 %{_bindir}/phpize
 %configure \
@@ -158,6 +160,7 @@ make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
+%{?dtsenable}
 
 make -C NTS install INSTALL_ROOT=%{buildroot}
 
@@ -237,6 +240,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan 23 2017 Remi Collet <remi@fedoraproject.org> - 1.6.9-1
+- Update to 1.6.9
+
 * Thu Dec  1 2016 Remi Collet <remi@fedoraproject.org> - 1.6.8-2
 - rebuild with PHP 7.1.0 GA
 
