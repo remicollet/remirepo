@@ -83,7 +83,6 @@ BuildRequires:  php-composer(sabre/vobject)             >= 3.4
 BuildRequires:  php-composer(michelf/php-markdown)      >= 1.6
 BuildRequires:  php-composer(true/punycode)             >= 2
 BuildRequires:  php-composer(simplepie/simplepie)       >= 1.4
-# remirepo:1
 BuildRequires:  php-composer(phpmailer/phpmailer)       >= 5.2
 # 6.2.13 to ensure we have the classmap autoloader
 BuildRequires:  php-composer(tecnickcom/tcpdf)          >= 6.2.13
@@ -138,7 +137,6 @@ Requires:       php-composer(michelf/php-markdown)      >= 1.6
 # upstream ask 2.1, compatibility with 2.0 ensure by autoloader
 Requires:       php-composer(true/punycode)             >= 2.1
 Requires:       php-composer(simplepie/simplepie)       >= 1.4
-# remirepo:1
 Requires:       php-composer(phpmailer/phpmailer)       >= 5.2
 # 6.2.13 to ensure we have the classmap autoloader
 Requires:       php-composer(tecnickcom/tcpdf)          >= 6.2.13
