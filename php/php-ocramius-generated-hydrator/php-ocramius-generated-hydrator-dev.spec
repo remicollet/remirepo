@@ -2,7 +2,7 @@
 #
 # Fedora spec file for php-ocramius-generated-hydrator
 #
-# Copyright (c) 2014-2016 Shawn Iwinski <shawn.iwinski@gmail.com>
+# Copyright (c) 2014-2017 Shawn Iwinski <shawn.iwinski@gmail.com>
 #
 # License: MIT
 # http://opensource.org/licenses/MIT
@@ -37,7 +37,7 @@
 
 Name:          php-%{composer_vendor}-%{composer_project}
 Version:       %{github_version}
-Release:       2%{?github_release}%{?dist}
+Release:       3%{?github_release}%{?dist}
 Summary:       An object hydrator
 
 Group:         Development/Libraries
@@ -50,8 +50,8 @@ BuildArch:     noarch
 %if %{with_tests}
 # composer.json
 BuildRequires: php(language) >= %{php_min_ver}
-BuildRequires: php-composer(nikic/php-parser) >= %{php_parser_min_ver}
 BuildRequires: php-composer(nikic/php-parser) <  %{php_parser_max_ver}
+BuildRequires: php-composer(nikic/php-parser) >= %{php_parser_min_ver}
 BuildRequires: php-composer(ocramius/code-generator-utils) >= %{ocramius_cgu_min_ver}
 BuildRequires: php-composer(ocramius/code-generator-utils) <  %{ocramius_cgu_max_ver}
 BuildRequires: php-composer(phpunit/phpunit) >= 5.0
@@ -67,8 +67,8 @@ BuildRequires: php-composer(symfony/class-loader)
 
 # composer.json
 Requires:      php(language) >= %{php_min_ver}
-Requires:      php-composer(nikic/php-parser) >= %{php_parser_min_ver}
 Requires:      php-composer(nikic/php-parser) <  %{php_parser_max_ver}
+Requires:      php-composer(nikic/php-parser) >= %{php_parser_min_ver}
 Requires:      php-composer(ocramius/code-generator-utils) >= %{ocramius_cgu_min_ver}
 Requires:      php-composer(ocramius/code-generator-utils) <  %{ocramius_cgu_max_ver}
 Requires:      php-composer(zendframework/zend-hydrator) >= %{zf_hydrator_min_ver}
@@ -160,6 +160,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Jan 23 2017 Remi Collet <remi@fedoraproject.org> - 2.0.0-3
+- change BR order, fix FTBFS from Koschei
+
 * Wed Oct 12 2016 Remi Collet <remi@fedoraproject.org> - 2.0.0-2
 - switch symfony autoloader
 
