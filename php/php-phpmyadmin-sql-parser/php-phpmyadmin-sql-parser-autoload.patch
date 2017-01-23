@@ -1,6 +1,6 @@
 diff -up bin/highlight-query.rpm bin/highlight-query
---- bin/highlight-query.rpm	2016-09-13 13:04:29.517214693 +0200
-+++ bin/highlight-query	2016-09-13 13:05:35.400519256 +0200
+--- bin/highlight-query.rpm	2017-01-23 14:31:05.207518012 +0100
++++ bin/highlight-query	2017-01-23 14:30:38.429411132 +0100
 @@ -1,29 +1,7 @@
  #!/usr/bin/env php
  <?php
@@ -30,11 +30,11 @@ diff -up bin/highlight-query.rpm bin/highlight-query
 -}
 +require '/usr/share/php/PhpMyAdmin/SqlParser/autoload.php';
  
- $cli = new SqlParser\Utils\CLI();
+ $cli = new PhpMyAdmin\SqlParser\Utils\CLI();
  exit($cli->runHighlight());
 diff -up bin/lint-query.rpm bin/lint-query
---- bin/lint-query.rpm	2016-09-13 13:04:29.517214693 +0200
-+++ bin/lint-query	2016-09-13 13:05:58.585626435 +0200
+--- bin/lint-query.rpm	2017-01-23 14:29:14.954077962 +0100
++++ bin/lint-query	2017-01-23 14:31:11.744544102 +0100
 @@ -1,29 +1,7 @@
  #!/usr/bin/env php
  <?php
@@ -64,5 +64,18 @@ diff -up bin/lint-query.rpm bin/lint-query
 -}
 +require '/usr/share/php/PhpMyAdmin/SqlParser/autoload.php';
  
- $cli = new SqlParser\Utils\CLI();
+ $cli = new PhpMyAdmin\SqlParser\Utils\CLI();
  exit($cli->runLint());
+
+diff -up src/Translator.php.rpm src/Translator.php
+--- src/Translator.php.rpm	2017-01-23 15:20:46.092415469 +0100
++++ src/Translator.php	2017-01-23 15:21:01.738477917 +0100
+@@ -40,7 +40,7 @@ class Translator
+             self::$loader->textdomain('sqlparser');
+ 
+             // Set path where to look for a domain
+-            self::$loader->bindtextdomain('sqlparser', __DIR__ . '/../locale/');
++            self::$loader->bindtextdomain('sqlparser', __DIR__ . '/locale/');
+         }
+ 
+         if (is_null(self::$translator)) {

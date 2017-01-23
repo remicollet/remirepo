@@ -7,7 +7,7 @@
 # Please, preserve the changelog entries
 #
 
-%global gh_commit    d070a5263f16128cb777c084981c7061a9a2dda3
+%global gh_commit    4e886a6aec1870b2660b9985c2d72cd276da5683
 %global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
 %global gh_owner     phpmyadmin
 #global gh_date      20150820
@@ -15,14 +15,9 @@
 %global with_tests   0%{!?_without_tests:1}
 %global ns_vendor    PhpMyAdmin
 %global ns_project   SqlParser
-%if 0%{?fedora} >= 26
-%global with_cmd     1
-%else
-%global with_cmd     0
-%endif
 
 Name:           php-%{gh_owner}-%{gh_project}
-Version:        4.0.0
+Version:        4.1.0
 Release:        1%{?gh_date?%{gh_date}git%{gh_short}}%{?dist}
 Summary:        A validating SQL lexer and parser with a focus on MySQL dialect
 
@@ -31,12 +26,16 @@ License:        GPLv2+
 URL:            https://github.com/%{gh_owner}/%{gh_project}
 Source0:        https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{name}-%{version}-%{?gh_short}.tar.gz
 
-# Use our autoloader
+# Use our autoloader and locale relocation
 Patch0:         %{name}-autoload.patch
 
 BuildArch:      noarch
+BuildRequires:  gettext
 %if %{with_tests}
 BuildRequires:  php(language) >= 5.3.0
+BuildRequires:  php-composer(phpmyadmin/motranslator) <  4
+BuildRequires:  php-composer(phpmyadmin/motranslator) >= 3.0
+BuildRequires:  php-mbstring
 # For tests, from composer.json "require-dev": {
 #        "phpunit/php-code-coverage": "~2.0 || ~3.0",
 #        "phpunit/phpunit": "~4.8 || ~5.1"
@@ -47,17 +46,19 @@ BuildRequires:  php-composer(fedora/autoloader)
 
 # From composer.json, "require": {
 #        "php": ">=5.3.0",
+#        "phpmyadmin/motranslator": "~3.0",
 #        "ext-mbstring": "*"
 Requires:       php(language) >= 5.3
+Requires:       php-composer(phpmyadmin/motranslator) <  4
+Requires:       php-composer(phpmyadmin/motranslator) >= 3.0
 Requires:       php-mbstring
-# From phpcompatinfo report for 3.4.5
-Requires:       php-ctype
+# From phpcompatinfo report for 4.1.0
 Requires:       php-pcre
+Requires:       php-spl
 # For generated autoloader
 Requires:       php-composer(fedora/autoloader)
-%if %{with_cmd}
+# For commands
 Requires:       php-cli
-%endif
 
 # Composer
 Provides:       php-composer(%{gh_owner}/%{gh_project}) = %{version}
@@ -74,10 +75,10 @@ Autoloader: %{_datadir}/php/%{ns_vendor}/%{ns_project}/autoload.php
 
 %prep
 %setup -q -n %{gh_project}-%{gh_commit}
+
 %patch0 -p0 -b .rpm
+find src -name \*rpm -exec rm {} \;
 
-
-%build
 : Create autoloader
 cat <<'AUTOLOAD' | tee src/autoload.php
 <?php
@@ -85,18 +86,35 @@ cat <<'AUTOLOAD' | tee src/autoload.php
 require_once '%{_datadir}/php/Fedora/Autoloader/autoload.php';
 
 \Fedora\Autoloader\Autoload::addPsr4('%{ns_vendor}\\%{ns_project}\\', __DIR__);
+\Fedora\Autoloader\Dependencies::required(array(
+    '%{_datadir}/php/PhpMyAdmin/MoTranslator/autoload.php',
+));
 AUTOLOAD
+
+
+%build
+: Generate the locales
+for loc in $(find locale -name \*.po)
+do
+   msgfmt --statistics --check -o ${loc%.po}.mo $loc
+   rm $loc
+done
+rm locale/sqlparser.pot
 
 
 %install
 : Library
-mkdir -p   %{buildroot}%{_datadir}/php/%{ns_vendor}
-cp -pr src %{buildroot}%{_datadir}/php/%{ns_vendor}/%{ns_project}
+mkdir -p      %{buildroot}%{_datadir}/php/%{ns_vendor}
+cp -pr src    %{buildroot}%{_datadir}/php/%{ns_vendor}/%{ns_project}
+# keep locale in project dir as name seems too generic
+cp -pr locale %{buildroot}%{_datadir}/php/%{ns_vendor}/%{ns_project}/locale
 
-%if %{with_cmd}
 : Commands
-install -Dpm 0755 bin/highlight-query %{buildroot}%{_bindir}/%{gh_project}-highlight-query
-install -Dpm 0755 bin/lint-query      %{buildroot}%{_bindir}/%{gh_project}-lint-query
+install -Dpm 0755 bin/highlight-query %{buildroot}%{_bindir}/%{name}-highlight-query
+install -Dpm 0755 bin/lint-query      %{buildroot}%{_bindir}/%{name}-lint-query
+
+%if 0%{?fedora} >= 12 || 0%{?rhel} >= 7
+%find_lang sqlparser
 %endif
 
 
@@ -130,20 +148,37 @@ exit $ret
 %endif
 
 
+%if 0%{?rhel} >= 12 || 0%{?rhel} >= 7
+%files -f sqlparser.lang
+%else
 %files
+%{_datadir}/php/%{ns_vendor}/%{ns_project}/locale/*/LC_MESSAGES/*.mo
+%endif
 %{!?_licensedir:%global license %%doc}
 %license LICENSE.txt
 %doc composer.json
 %doc README.md
-%if %{with_cmd}
-%{_bindir}/%{gh_project}-highlight-query
-%{_bindir}/%{gh_project}-lint-query
-%endif
-%dir %{_datadir}/php/%{ns_vendor}/
-     %{_datadir}/php/%{ns_vendor}/%{ns_project}
+%{_bindir}/%{name}-highlight-query
+%{_bindir}/%{name}-lint-query
+%dir %{_datadir}/php/%{ns_vendor}/%{ns_project}
+     %{_datadir}/php/%{ns_vendor}/%{ns_project}/*php
+     %{_datadir}/php/%{ns_vendor}/%{ns_project}/Components/
+     %{_datadir}/php/%{ns_vendor}/%{ns_project}/Contexts/
+     %{_datadir}/php/%{ns_vendor}/%{ns_project}/Exceptions/
+     %{_datadir}/php/%{ns_vendor}/%{ns_project}/Statements/
+     %{_datadir}/php/%{ns_vendor}/%{ns_project}/Utils/
+%dir %{_datadir}/php/%{ns_vendor}/%{ns_project}/locale/
+%dir %{_datadir}/php/%{ns_vendor}/%{ns_project}/locale/*/
+%dir %{_datadir}/php/%{ns_vendor}/%{ns_project}/locale/*/LC_MESSAGES/
 
 
 %changelog
+* Mon Jan 23 2017 Remi Collet <remi@fedoraproject.org> - 4.1.0-1
+- update to 4.1.0
+- add dependency on phpmyadmin/motranslator
+- rename commands and always provide them
+- manage locales
+
 * Mon Jan 23 2017 Remi Collet <remi@fedoraproject.org> - 4.0.0-1
 - update to 4.0.0
 - rename to php-phpmyadmin-sql-parser
