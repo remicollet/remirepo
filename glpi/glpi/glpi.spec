@@ -7,6 +7,13 @@
 # Please, preserve the changelog entries
 #
 
+%global gh_commit  3dedf3453ae2f4b3e0e26772e7ce00182aeb4e5d
+%global gh_short   %(c=%{gh_commit}; echo ${c:0:7})
+#global gh_date    20160923
+%global gh_owner   glpi-project
+%global gh_project glpi
+
+
 %if 0%{?fedora} < 20
 # See https://bugzilla.redhat.com/1033025
 # selinux-policy : Please include policy for GLPI
@@ -25,9 +32,18 @@
 %global with_nginx     0
 %global with_httpd     0
 %endif
+# remirepo:4
+%if 0%{?fedora} < 19 && 0%{?rhel} < 7
+# MySQL need another bootstrap method
+%global with_tests  0%{?_with_tests:1}
+%else
+%global with_tests  0%{!?_without_tests:1}
+# remirepo:1
+%endif
 
-Name:           glpi
-Version:        0.90.5
+Name:           %{gh_project}
+Version:        9.1.2
+%global schema  9.1.1
 Release:        1%{?dist}
 Summary:        Free IT asset management software
 Summary(fr):    Gestion Libre de Parc Informatique
@@ -36,23 +52,51 @@ Group:          Applications/Internet
 License:        GPLv2+ and GPLv3+
 URL:            http://www.glpi-project.org/
 # Upstream sources (not the github auto-generated archive)
-Source0:        https://github.com/glpi-project/%{name}/releases/download/%{version}%{?prever}/glpi-%{version}%{?prever}.tar.gz
+Source0:        https://github.com/%{gh_owner}/%{name}/archive/%{gh_commit}/%{name}-%{version}-%{gh_short}.tar.gz
 
-Source1:        glpi-httpd.conf
-Source2:        glpi-0.90-config_path.php
-Source3:        glpi-logrotate
-Source4:        glpi-nginx.conf
-
-# Switch all internal cron tasks to system
-Patch0:         glpi-0.90-cron.patch
-# Fix autoloader
-Patch1:         glpi-0.90-autoload.patch
-# Upstream patches
-Patch2:         glpi-0.90-upstream.patch
+Source1:        %{name}-httpd.conf
+Source2:        %{name}-9.1-config_path.php
+Source12:       %{name}-9.1-config_path_test.php
+Source3:        %{name}-logrotate
+Source4:        %{name}-nginx.conf
+Source5:        %{name}-fedora-autoloader.php
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  gettext
+%if %{with_tests}
+BuildRequires:  php-cli
+BuildRequires:  %{_bindir}/phpunit
+BuildRequires:  mariadb-server
+# Missing in mariadb
+BuildRequires:  hostname
+# PHP libs
+BuildRequires:  php-htmLawed
+BuildRequires:  php-composer(zendframework/zend-cache)  >= 2.4
+BuildRequires:  php-composer(zendframework/zend-i18n)   >= 2.4
+BuildRequires:  php-composer(zendframework/zend-loader) >= 2.4
+BuildRequires:  php-composer(guzzlehttp/guzzle)         >= 5
+BuildRequires:  php-composer(guzzlehttp/guzzle)         < 6
+BuildRequires:  php-composer(jasig/phpcas)              >= 1.3
+BuildRequires:  php-composer(iamcal/lib_autolink)       >= 1.7
+BuildRequires:  php-composer(sabre/vobject)             >= 3.4
+BuildRequires:  php-composer(michelf/php-markdown)      >= 1.6
+BuildRequires:  php-composer(true/punycode)             >= 2
+# See https://bugzilla.redhat.com/1353451
+BuildRequires:  php-simplepie
+# remirepo:1
+BuildRequires:  php-composer(simplepie/simplepie)       >= 1.4
+BuildRequires:  php-composer(phpmailer/phpmailer)       >= 5.2
+# 6.2.13 to ensure we have the classmap autoloader
+BuildRequires:  php-composer(tecnickcom/tcpdf)          >= 6.2.13
+BuildRequires:  php-mysqli
+BuildRequires:  php-xmlrpc
+# remirepo:1
+%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
+BuildRequires:  php-composer(zetacomponents/graph)
+# remirepo:1
+%endif
+%endif
 
 %if %{with_nginx}
 Requires:       nginx-filesystem
@@ -66,7 +110,8 @@ Requires:       php(httpd)
 %else
 Requires:       httpd, mod_php
 %endif
-Requires:       php(language) >= 5.4
+# use 5.5+ to avoid dependency on ircmaxell/password-compat and ramsey/array_column
+Requires:       php(language) >= 5.5
 Requires:       php-ctype
 Requires:       php-curl
 Requires:       php-date
@@ -84,18 +129,29 @@ Requires:       php-simplexml
 Requires:       php-wddx
 Requires:       php-xmlrpc
 Requires:       php-zlib
-Requires:       php-PHPMailer
-Requires:       php-tcpdf
-Requires:       php-pear-CAS >= 1.2.0
 Requires:       php-htmLawed
+Requires:       php-composer(zendframework/zend-cache)  >= 2.4
+Requires:       php-composer(zendframework/zend-i18n)   >= 2.4
+Requires:       php-composer(zendframework/zend-loader) >= 2.4
+Requires:       php-composer(jasig/phpcas)              >= 1.3
+Requires:       php-composer(iamcal/lib_autolink)       >= 1.7
+Requires:       php-composer(sabre/vobject)             >= 3.4
+Requires:       php-composer(michelf/php-markdown)      >= 1.6
+# upstream ask 2.1, compatibility with 2.0 ensure by autoloader
+Requires:       php-composer(true/punycode)             >= 2.1
+# See https://bugzilla.redhat.com/1353451
 Requires:       php-simplepie
-Requires:       php-composer(zendframework/zend-cache)
-Requires:       php-composer(zendframework/zend-i18n)
-Requires:       php-composer(zendframework/zend-loader)
-Requires:       php-composer(ircmaxell/password-compat)
+# remirepo:1
+Requires:       php-composer(simplepie/simplepie)       >= 1.4
+Requires:       php-composer(phpmailer/phpmailer)       >= 5.2
+# 6.2.13 to ensure we have the classmap autoloader
+Requires:       php-composer(tecnickcom/tcpdf)          >= 6.2.13
+
+# remirepo:1
 %if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
 Requires:       php-composer(zetacomponents/graph)
 Requires:       gnu-free-sans-fonts
+# remirepo:3
 %else
 Requires:       freefont
 %endif
@@ -133,13 +189,9 @@ techniciens grâce à une maintenance plus cohérente.
 
 
 %prep
-%setup -q -n glpi
+%setup -q -n %{name}-%{gh_commit}
 
 grep %{version} config/define.php
-
-%patch0 -p0
-%patch1 -p0
-%patch2 -p1
 
 find . -name \*.orig -exec rm {} \; -print
 
@@ -147,34 +199,29 @@ find . -name \*.orig -exec rm {} \; -print
 find lib -name \*.swf -exec rm {} \; -print
 
 # Use system lib
-rm -rf lib/phpmailer
-rm -rf lib/phpcas
 rm -rf lib/htmlawed
-rm -rf lib/Zend
-rm -rf lib/simplepie
-rm -rf lib/tcpdf
-rm -rf lib/password_compat
-%if 0%{?fedora} >= 11 || 0%{?rhel} >= 6
-rm -rf lib/zeta
-%endif
-rm -rf lib/FreeSans.ttf
 : bundled JS libraries
 ls lib
 
+# remirepo:5
 %if 0%{?fedora} < 9 && 0%{?rhel} < 6
 # fix font path on old version
 sed -e '/GLPI_FONT_FREESANS/s/gnu-free/freefont/' \
     %{SOURCE2} >config/config_path.php
 %else
 cp  %{SOURCE2}  config/config_path.php
+# remirepo:1
 %endif
 
+mkdir vendor
+sed -e "s,##DATADIR##,%{_datadir}," \
+    %{SOURCE5} > vendor/autoload.php
+
 mv lib/tiny_mce/license.txt LICENSE.tiny_mce
-mv lib/icalcreator/lgpl.txt LICENSE.icalcreator
 rm scripts/glpi_cron_*.sh
 
 sed -i -e 's/\r//' LICENSE.tiny_mce
-for fic in LISEZMOI.txt README.txt
+for fic in LISEZMOI.txt
 do
    iconv -f ISO-8859-15 -t UTF-8 $fic >a && mv a $fic
 done
@@ -184,6 +231,15 @@ cat >cron <<EOF
 # Run cron to execute task even when no user connected
 * * * * * apache %{_bindir}/php %{_datadir}/%{name}/front/cron.php
 EOF
+
+# We only need 1 sql sdchema
+if [ "%{version}" != "%{schema}" -a -f install/mysql/glpi-%{version}-empty.sql ]; then
+  echo -e "\n*** check schema version as glpi-%{version}-empty.sql exists***\n"
+  exit 1;
+fi
+mv install/mysql/glpi-%{schema}-empty.sql .
+rm install/mysql/*.sql
+mv glpi-%{schema}-empty.sql install/mysql/
 
 
 %build
@@ -195,13 +251,13 @@ done
 
 
 %install
-rm -rf %{buildroot} 
+rm -rf %{buildroot}
 
 # ===== application =====
 mkdir -p %{buildroot}/%{_datadir}/%{name}
-cp -a COPYING.txt *.php *.js %{buildroot}/%{_datadir}/%{name}/
+cp -a COPYING.txt *.php *.js apirest.md %{buildroot}/%{_datadir}/%{name}/
 
-for i in ajax css front inc install lib locales pics plugins scripts
+for i in ajax css front inc install lib locales pics plugins scripts vendor
 do   cp -ar $i %{buildroot}/%{_datadir}/%{name}/$i
 done
 
@@ -230,6 +286,7 @@ mkdir -p %{buildroot}%{_localstatedir}/log
 mv %{buildroot}/%{_localstatedir}/lib/%{name}/files/_log %{buildroot}%{_localstatedir}/log/%{name}
 
 install -Dpm 0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
+# remirepo:4
 %if 0%{?rhel} == 5 || 0%{?rhel} == 6
 : Remove "su" option from logrotate configuration file - requires logrotate 3.8+
 sed -e '/su /d' -i %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
@@ -258,20 +315,92 @@ do
 done >%{name}.lang
 
 
+%check
+%if %{with_tests}
+RET=0
+: Hack for vendor
+sed -e '/Development dependencies/s:^://:' -i tests/bootstrap.php
+
+: Ignore bad date
+sed -e 's/testGetCopyrightMessage/skipGetCopyrightMessage/' -i tests/HtmlTest.php
+
+: Add developement dependecies
+cat << 'EOF' | tee -a vendor/autoload.php
+//        "guzzlehttp/guzzle": "~5"
+require_once $vendor . '/GuzzleHttp/autoload.php';
+EOF
+
+: Running a PHP server
+sed -e 's/localhost:8088/127.0.0.1:8089/' phpunit.xml.dist >phpunit.xml
+
+%{_bindir}/php -S 127.0.0.1:8089 tests/router.php &>/dev/null &
+
+PHPPID=$!
+
+: Running a MariaDB server
+MYSQL_TEST_HOST=127.0.0.1
+MYSQL_TEST_PORT=3308
+MYSQL_TEST_SOCKET=$PWD/mysql.sock
+MYSQL_PID_FILE=$PWD/mysql.pid
+
+rm -rf data
+mkdir  data
+%{_bindir}/mysql_install_db \
+   --datadir=$PWD/data
+
+%{_libexecdir}/mysqld \
+   --socket=$MYSQL_TEST_SOCKET \
+   --log-error=$PWD/mysql.log \
+   --pid-file=$MYSQL_PID_FILE \
+   --port=$MYSQL_TEST_PORT \
+   --datadir=$PWD/data &
+
+n=15
+while [ $n -gt 0 ]; do
+  RESPONSE=$(%{_bindir}/mysqladmin --no-defaults --socket="$MYSQL_TEST_SOCKET" --user=root ping 2>&1 || :)
+  if [ "$RESPONSE" == "mysqld is alive" ]; then
+    break
+  fi
+  n=$(expr $n - 1)
+  sleep 1
+done
+
+: Set tests configuration
+cp %{SOURCE12} config/config_path.php
+
+: Run upstream test suite
+php tools/cliinstall.php --host=127.0.0.1:3308 --db=glpitest --user=root --tests --force --lang=en_GB || RET=1
+
+%{_bindir}/phpunit --verbose || RET=1
+
+: Cleanup
+if [ -s $MYSQL_PID_FILE ]; then
+  kill $(cat $MYSQL_PID_FILE)
+fi
+kill $PHPPID
+
+exit $RET
+%else
+: Test disabled
+%endif
+
+
 %clean
-rm -rf %{buildroot} 
+rm -rf %{buildroot}
 
 
 %post
 %if %{useselinux}
 (
 # New File context
+# remirepo:4
 %if 0%{?rhel} == 5
 semanage fcontext -a -s system_u -t httpd_sys_script_rw_t  -r s0 "%{_sysconfdir}/%{name}(/.*)?"
 semanage fcontext -a -s system_u -t httpd_sys_script_rw_t  -r s0 "%{_localstatedir}/lib/%{name}(/.*)?"
 %else
 semanage fcontext -a -s system_u -t httpd_sys_rw_content_t -r s0 "%{_sysconfdir}/%{name}(/.*)?"
 semanage fcontext -a -s system_u -t httpd_var_lib_t        -r s0 "%{_localstatedir}/lib/%{name}(/.*)?"
+# remirepo:1
 %endif
 semanage fcontext -a -s system_u -t httpd_sys_content_t    -r s0 "%{_datadir}/%{name}(/.*)?"
 semanage fcontext -a -s system_u -t httpd_log_t            -r s0 "%{_localstatedir}/log/%{name}(/.*)?"
@@ -304,7 +433,7 @@ fi
 %defattr(-,root,root,-)
 %doc *.txt LICENSE.*
 
-%attr(770,root,apache) %dir %{_sysconfdir}/%{name}
+%attr(2770,root,apache) %dir %{_sysconfdir}/%{name}
 %ghost %config(noreplace,missingok) %{_sysconfdir}/%{name}/config_db.php
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/glpi.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
@@ -315,11 +444,12 @@ fi
 
 # This folder can contain private information (sessions, docs, ...)
 %dir %_localstatedir/lib/%{name}
-%attr(770,root,apache) %{_localstatedir}/lib/%{name}/files
+%attr(2770,root,apache) %{_localstatedir}/lib/%{name}/files
 
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/*.php
 %{_datadir}/%{name}/*.js
+%{_datadir}/%{name}/apirest.md
 # License file required by installation process
 %{_datadir}/%{name}/COPYING.txt
 %{_datadir}/%{name}/ajax
@@ -332,11 +462,39 @@ fi
 %{_datadir}/%{name}/pics
 %{_datadir}/%{name}/plugins
 %{_datadir}/%{name}/scripts
-%attr(770,root,apache) %dir %{_localstatedir}/log/%{name}
+%{_datadir}/%{name}/vendor
+%attr(2770,root,apache) %dir %{_localstatedir}/log/%{name}
 %dir %{_datadir}/%{name}/locales
 
 
 %changelog
+* Mon Jan 23 2017 Johan Cwiklinski <jcwiklinski AT teclib DOT com> - 9.1.2-1
+- update to 9.1.2
+- add missing hostname BR from MariaDB package
+
+* Mon Jan  9 2017 Remi Collet <remi@fedoraproject.org> - 9.1.1-3
+- use new tcpdf classmap autoloader
+
+* Tue Nov 15 2016 Remi Collet <remi@fedoraproject.org> - 9.1.1-2
+- update to 9.1.1
+- drop runtime dependency on guzzlehttp/guzzle
+
+* Wed Sep 28 2016 Remi Collet <remi@fedoraproject.org> - 9.1-2
+- missing API documentation
+
+* Mon Sep 26 2016 Remi Collet <remi@fedoraproject.org> - 9.1-1
+- update to 9.1
+  https://github.com/glpi-project/glpi/milestone/2?closed=1
+- add patch to ensure correct autolading
+  open https://github.com/glpi-project/glpi/pull/1056
+- add patch to ensure test suite use local server
+  open https://github.com/glpi-project/glpi/pull/1058
+
+* Fri Sep 23 2016 Johan Cwiklinski <jcwiklinski@teclib.com> - 9.1-0.1.20160922gitf4143e3
+- First pre-build for 9.1 series
+- Drop upstream patches
+- Add unit tests
+
 * Wed Jul 27 2016 Remi Collet <remi@fedoraproject.org> - 0.90.5-1
 - update to 0.90.5
   https://github.com/glpi-project/glpi/issues?q=milestone:0.90.5
